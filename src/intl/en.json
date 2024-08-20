@@ -87,10 +87,7 @@
     "country": "Country",
     "noCountry": "No matching country found"
   },
-  "documentTitle": {
-    "default": "Koyeb",
-    "suffix": " - Koyeb"
-  },
+  "documentTitle": "{prefix, select, undefined {Koyeb} other {{prefix} - Koyeb}}",
   "deploymentFailedInfo": {
     "labels": {
       "cause": "Why it happened?",

@@ -8,11 +8,13 @@ import { CopyIconButton } from 'src/application/copy-icon-button';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
+import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { usePathname, useRouteParam } from 'src/hooks/router';
+import { useServiceName } from 'src/hooks/service';
 import { Translate } from 'src/intl/translate';
 
 import { RedeployButton } from './redeploy-button';
@@ -30,6 +32,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   const serviceQuery = useServiceQuery(serviceId);
   const appQuery = useAppQuery(serviceQuery.data?.appId);
   const activeDeploymentQuery = useDeploymentQuery(serviceQuery.data?.activeDeploymentId);
+  const serviceName = useServiceName(serviceId);
 
   if (appQuery.isPending || serviceQuery.isPending) {
     return <Loading />;
@@ -53,6 +56,8 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
 
   return (
     <div className="col gap-8">
+      <DocumentTitle title={serviceName ?? undefined} />
+
       <div className="col sm:row items-start justify-between gap-4">
         <Header app={app} service={service} deployment={activeDeployment} />
         <RedeployButton service={service} />

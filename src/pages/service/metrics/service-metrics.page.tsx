@@ -7,10 +7,8 @@ import { useInstance } from 'src/api/hooks/catalog';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
 import { parseBytes } from 'src/application/memory';
-import { DocumentTitle } from 'src/components/document-title';
 import { Title } from 'src/components/title';
 import { useRouteParam, useSearchParam } from 'src/hooks/router';
-import { useServiceName } from 'src/hooks/service';
 import { Translate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { HttpThroughputGraph } from 'src/modules/metrics/graphs/http-throughput-graph';
@@ -25,14 +23,11 @@ const T = Translate.prefix('pages.service.metrics');
 
 export function ServiceMetricsPage() {
   const serviceId = useRouteParam('serviceId');
-  const serviceName = useServiceName(serviceId);
 
   const [timeFrame, setTimeFrame] = useTimeFrame();
 
   return (
     <>
-      <DocumentTitle title={`${serviceName} Service Metrics`} />
-
       <Title
         title="Metrics"
         end={
