@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
+import IconChevronLeft from 'lucide-static/icons/chevron-left.svg?react';
 import IconMenu from 'lucide-static/icons/menu.svg?react';
 import IconPlus from 'lucide-static/icons/plus.svg?react';
 import IconX from 'lucide-static/icons/x.svg?react';
@@ -15,14 +16,13 @@ import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
+import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useLocation, usePathname, useSearchParams } from 'src/hooks/router';
-import { useSessionStorage } from 'src/hooks/storage';
+import { useLocalStorage, useSessionStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
-
-import { OrganizationAvatar } from '../../components/organization-avatar';
 
 import { AppHeader } from './app-header';
 import { EstimatedCosts } from './estimated-costs';
@@ -257,6 +257,7 @@ function PageContext({ children }: { children: React.ReactNode }) {
   const token = getAccessToken();
   const theme = useThemeModeOrPreferred();
   const pageContextFlag = useFeatureFlag('page-context');
+  const [expanded, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
 
   if (!pageContextFlag || pageContextBaseUrl === undefined || !user?.flags.includes('ADMIN')) {
     return children;
@@ -270,13 +271,18 @@ function PageContext({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="row">
-      <div className="min-w-0 flex-1">{children}</div>
+      <div className="relative min-w-0 flex-1">
+        {children}
+        <button onClick={() => setExpanded(!expanded)} className="absolute right-0 top-0 m-2 p-2">
+          <IconChevronLeft className={clsx('size-6 text-dim', expanded && 'rotate-180')} />
+        </button>
+      </div>
 
       <iframe
         src={`${pageContextBaseUrl}/context${pathname}?${search.toString()}`}
         allow="clipboard-write"
         className="sticky right-0 top-0 h-screen border-l"
-        width={500}
+        width={expanded ? 500 : 0}
       />
     </div>
   );
