@@ -45,7 +45,7 @@ jobs:
             --build-arg SENTRY_AUTH_TOKEN \
             -t "$DOCKER_IMAGE:$GITHUB_SHA" .
         env:
-          ENVIRONMENT: ${{ github.ref }}
+          ENVIRONMENT: ${{ github.ref_name }}
           APP_VERSION: ${{ github.sha }}
           API_URL:
           PAGE_CONTEXT_BASE_URL: ${{ secrets.PAGE_CONTEXT_BASE_URL }}
