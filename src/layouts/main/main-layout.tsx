@@ -50,13 +50,13 @@ export function MainLayout({ children }: LayoutProps) {
 
       {isMobile && <SidebarMobile />}
 
-      <PageContext>
-        <Content>
-          <AppHeader />
-          <GlobalAlert />
-          {children}
-        </Content>
-      </PageContext>
+      <Content>
+        <AppHeader />
+        <GlobalAlert />
+        {children}
+      </Content>
+
+      <PageContext />
 
       {isDesktop && <SidebarDesktop />}
       {isTablet && <SidebarTablet />}
@@ -208,12 +208,16 @@ function Content({ children }: { children: React.ReactNode }) {
   const organizationQuery = useOrganizationQuery();
   const isAuthenticated = userQuery.data !== undefined && organizationQuery.data !== undefined;
 
+  const hasPageContext = useHasPageContext();
+  const [pageContextExpanded] = useLocalStorage<boolean>('page-context-expanded');
+
   if (!isAuthenticated) {
     return null;
   }
 
   return (
-    <div className="sm:pl-16 xl:pl-64">
+    // eslint-disable-next-line tailwindcss/no-arbitrary-value
+    <div className={clsx('sm:pl-16 xl:pl-64', hasPageContext && pageContextExpanded && 'pr-[32rem]')}>
       <SessionTokenBanner />
       <main className="col relative mx-auto max-w-main gap-8 p-4">
         <Suspense>{children}</Suspense>
@@ -249,18 +253,18 @@ function SessionTokenBanner() {
   );
 }
 
-function PageContext({ children }: { children: React.ReactNode }) {
-  const { data: user } = useUserQuery();
+function PageContext() {
   const { pageContextBaseUrl } = getConfig();
+  const hasPageContext = useHasPageContext();
+  const [expanded, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
+
   const pathname = usePathname();
   const search = useSearchParams();
   const token = getAccessToken();
   const theme = useThemeModeOrPreferred();
-  const pageContextFlag = useFeatureFlag('page-context');
-  const [expanded, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
 
-  if (!pageContextFlag || pageContextBaseUrl === undefined || !user?.flags.includes('ADMIN')) {
-    return children;
+  if (!hasPageContext) {
+    return null;
   }
 
   search.set('theme', theme);
@@ -270,10 +274,10 @@ function PageContext({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="row">
-      <div className="relative min-w-0 flex-1">
-        {children}
-        <button onClick={() => setExpanded(!expanded)} className="absolute right-0 top-0 m-2 p-2">
+    // eslint-disable-next-line tailwindcss/no-arbitrary-value
+    <div className={clsx('fixed inset-y-0 right-0 w-0', expanded && 'w-[32rem]')}>
+      <div className="col absolute inset-y-0 right-full justify-center">
+        <button onClick={() => setExpanded(!expanded)}>
           <IconChevronLeft className={clsx('size-6 text-dim', expanded && 'rotate-180')} />
         </button>
       </div>
@@ -281,9 +285,16 @@ function PageContext({ children }: { children: React.ReactNode }) {
       <iframe
         src={`${pageContextBaseUrl}/context${pathname}?${search.toString()}`}
         allow="clipboard-write"
-        className="sticky right-0 top-0 h-screen border-l"
-        width={expanded ? 500 : 0}
+        className="size-full border-l"
       />
     </div>
   );
+}
+
+function useHasPageContext() {
+  const { data: user } = useUserQuery();
+  const { pageContextBaseUrl } = getConfig();
+  const pageContextFlag = useFeatureFlag('page-context');
+
+  return pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN') && pageContextFlag;
 }
