@@ -1,0 +1,42 @@
+export const routes = {
+  home: () => '/',
+  volumes: () => '/volumes',
+  domains: () => '/domains',
+  secrets: () => '/secrets',
+  activity: () => '/activity',
+  team: () => '/team',
+  appsList: () => '/services',
+  deploy: () => '/services/deploy',
+  createService: () => '/services/new',
+  initialDeployment: (serviceId: string) => `/services/new?step=initialDeployment&serviceId=${serviceId}`,
+  services: () => `/services`,
+  service: {
+    overview: (serviceId: string, deploymentId?: string) =>
+      `/services/${serviceId}${deploymentId ? `?deploymentId=${deploymentId}` : ''}`,
+    metrics: (serviceId: string) => `/services/${serviceId}/metrics`,
+    console: (serviceId: string) => `/services/${serviceId}/console`,
+    settings: (serviceId: string) => `/services/${serviceId}/settings`,
+  },
+  createDatabaseService: () => '/database-services/new',
+  database: {
+    overview: (databaseServiceId: string) => `/database-services/${databaseServiceId}`,
+    logicalDatabases: (databaseServiceId: string) => `/database-services/${databaseServiceId}/databases`,
+    roles: (databaseServiceId: string) => `/database-services/${databaseServiceId}/roles`,
+    settings: (databaseServiceId: string) => `/database-services/${databaseServiceId}/settings`,
+  },
+  organizationSettings: {
+    index: () => '/settings',
+    billing: () => '/settings/billing',
+    plans: () => '/settings/plans',
+    api: () => '/settings/api',
+    registrySecrets: () => '/settings/registry-configuration',
+  },
+  userSettings: {
+    index: () => '/user/settings',
+    organizations: () => '/user/settings/organizations',
+    api: () => '/user/settings/api',
+  },
+  signIn: () => '/auth/signin',
+  signUp: () => '/auth/signup',
+  resetPassword: () => '/auth/reset-password',
+};

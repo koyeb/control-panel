@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script defer>
+      document.documentElement.classList.add(getTheme());
+
+      function getTheme() {
+        const theme = localStorage.getItem('koyeb.theme');
+
+        if (theme === 'dark' || theme === 'light') {
+          return theme;
+        }
+
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+
+        return 'light';
+      }
+    </script>
+  </body>
+</html>

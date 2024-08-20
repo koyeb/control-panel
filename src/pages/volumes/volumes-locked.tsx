@@ -1,0 +1,36 @@
+import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
+
+import { routes } from 'src/application/routes';
+import { DocumentationLink } from 'src/components/documentation-link';
+import { LinkButton } from 'src/components/link';
+import { Title } from 'src/components/title';
+import { Translate } from 'src/intl/translate';
+
+const T = Translate.prefix('pages.volumes.volumesLocked');
+
+export const VolumesLocked = () => {
+  return (
+    <div className="col items-start gap-4 rounded-md border p-6">
+      <div className="col gap-2">
+        <Title title={<T id="title" />} />
+
+        <p className="font-medium">
+          <T id="description" />
+        </p>
+      </div>
+
+      <p>
+        <T id="line1" />
+      </p>
+
+      <DocumentationLink path="/docs/reference/volumes">
+        <T id="docs" />
+      </DocumentationLink>
+
+      <LinkButton href={routes.organizationSettings.plans()}>
+        <T id="upgrade" />
+        <IconArrowRight className="size-icon" />
+      </LinkButton>
+    </div>
+  );
+};

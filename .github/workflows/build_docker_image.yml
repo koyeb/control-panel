@@ -1,0 +1,70 @@
+name: Build docker image
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - production
+      - staging
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT }}
+  DOCKER_IMAGE: eu.gcr.io/${{ secrets.GCP_PROJECT }}/koyeb-console
+  GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}
+
+jobs:
+  build-push:
+    name: Build and push docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure docker registry
+        run: |
+          echo "$GCP_CREDENTIALS" | base64 -d > "$HOME/gcp-key.json"
+
+          gcloud auth activate-service-account --key-file "$HOME/gcp-key.json"
+          gcloud --quiet config set project "$PROJECT_ID"
+
+          gcloud auth configure-docker
+
+      - name: Build docker image
+        run: |
+          docker build --rm=false \
+            --build-arg ENVIRONMENT \
+            --build-arg APP_VERSION \
+            --build-arg API_URL \
+            --build-arg PAGE_CONTEXT_BASE_URL \
+            --build-arg RECAPTCHA_CLIENT_KEY \
+            --build-arg SEGMENT_WRITE_KEY \
+            --build-arg POSTHOG_KEY \
+            --build-arg STRIPE_PUBLIC_KEY \
+            --build-arg MAPBOX_TOKEN \
+            --build-arg SENTRY_AUTH_TOKEN \
+            -t "$DOCKER_IMAGE:$GITHUB_SHA" .
+        env:
+          ENVIRONMENT: ${{ github.ref }}
+          APP_VERSION: ${{ github.sha }}
+          API_URL:
+          PAGE_CONTEXT_BASE_URL: ${{ secrets.PAGE_CONTEXT_BASE_URL }}
+          RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}
+          SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
+          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
+          STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
+          MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+      - name: Push docker image
+        run: |
+          REF_NAME=${{ github.ref_name }}
+          SHORT_SHA1="${GITHUB_SHA:0:7}"
+          DATE=$(date +%s)
+
+          docker tag "$DOCKER_IMAGE:$GITHUB_SHA" "$DOCKER_IMAGE:$REF_NAME-$SHORT_SHA1-$DATE"
+          docker tag "$DOCKER_IMAGE:$GITHUB_SHA" "$DOCKER_IMAGE:$REF_NAME-latest"
+
+          docker push "$DOCKER_IMAGE:$GITHUB_SHA"
+          docker push "$DOCKER_IMAGE:$REF_NAME-$SHORT_SHA1-$DATE"
+          docker push "$DOCKER_IMAGE:$REF_NAME-latest"

@@ -1,0 +1,54 @@
+name: Code quality
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Run prettier
+        run: pnpm exec prettier --check src
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Run eslint on the design system
+        working-directory: ./design-system
+        run: pnpm run lint
+
+      - name: Run eslint
+        run: pnpm run lint
+
+  check-types:
+    name: Check types
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Run typescript
+        run: pnpm exec tsc
+
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Run tests
+        run: pnpm test

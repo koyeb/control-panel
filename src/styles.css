@@ -1,0 +1,142 @@
+@import '../design-system/src/styles.css';
+
+@font-face {
+  font-family: Gilroy;
+  font-weight: 400;
+  src: url(./layouts/secondary/gilroy/gilroy-regular.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: Gilroy;
+  font-weight: 500;
+  src: url(./layouts/secondary/gilroy/gilroy-medium.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: Gilroy;
+  font-weight: 600;
+  src: url(./layouts/secondary/gilroy/gilroy-semibold.ttf) format('truetype');
+}
+
+@layer base {
+  body {
+    @apply bg-neutral;
+    @apply text-sm text-default;
+  }
+
+  .dark {
+    @apply bg-neutral text-default;
+  }
+
+  .secondary-layout,
+  .secondary-layout .dark {
+    --color-background-green: theme(colors.rgb.emerald.300);
+    --color-text-green: theme(colors.rgb.emerald.200);
+    --color-background-red: theme(colors.rgb.red.400);
+    --color-text-red: theme(colors.rgb.red.400);
+  }
+
+  .secondary-layout .dark {
+    --color-background-neutral: 18 18 18;
+  }
+}
+
+@layer utilities {
+  .text-security-disc {
+    -webkit-text-security: disc;
+  }
+}
+
+@layer components {
+  .authenticate-button {
+    @apply w-full rounded-full py-4 bg-green;
+    @apply text-xs font-semibold uppercase text-inverted;
+    @apply hover:shadow-none hover:bg-green/80;
+
+    transition: box-shadow 220ms ease-out;
+
+    box-shadow:
+      rgb(135 252 196 / 14%) 0px 81.5873px 65.2699px,
+      rgb(135 252 196 / 10%) 0px 34.0852px 27.2682px,
+      rgb(135 252 196 / 8%) 0px 18.2236px 14.5789px,
+      rgb(135 252 196 / 7%) 0px 10.216px 8.1728px,
+      rgb(135 252 196 / 6%) 0px 5.42564px 4.34051px,
+      rgb(135 252 196 / 4%) 0px 2.25773px 1.80619px;
+  }
+
+  .github-oauth-button {
+    @apply relative py-4;
+    @apply row items-center justify-center gap-2;
+    @apply text-xs font-semibold uppercase tracking-wider;
+
+    &:hover {
+      box-shadow: 0px 20px 15px 0px #000;
+    }
+
+    &::before,
+    &::after {
+      @apply absolute inset-0 -z-10 rounded-full;
+      content: '';
+    }
+
+    &::before {
+      /* prettier-ignore */
+      background: linear-gradient(10deg, theme(colors.green), transparent 30%, transparent 60%, theme(colors.green));
+      transition: background 220ms ease-out;
+
+      &:hover {
+        @apply bg-green;
+      }
+    }
+
+    &::after {
+      @apply bg-muted m-px;
+    }
+  }
+}
+
+/* react-toastify */
+
+@keyframes notification {
+  0% {
+    transform: translateY(-1rem);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.notification-enter {
+  animation: 240ms both notification;
+}
+
+.notification-exit {
+  animation: 240ms reverse both notification;
+}
+
+.Toastify__toast-container {
+  z-index: 9999;
+  position: fixed;
+  width: 440px;
+  top: max(16px, env(safe-area-inset-top));
+  right: max(16px, env(safe-area-inset-right));
+}
+
+@media only screen and (max-width: 480px) {
+  .Toastify__toast-container {
+    width: 100vw;
+    top: env(safe-area-inset-top);
+    left: env(safe-area-inset-left);
+  }
+}
+
+.intercom-contact-us {
+}
+
+/* hide reCAPTCHA badge */
+.grecaptcha-badge {
+  visibility: hidden;
+}

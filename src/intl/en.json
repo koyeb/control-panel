@@ -1,0 +1,2211 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "create": "Create",
+    "close": "Close",
+    "save": "Save",
+    "next": "Next",
+    "override": "Override",
+    "noValue": "--",
+    "notApplicable": "N/A",
+    "new": "New",
+    "plusCount": "+{count}",
+    "clickToCopy": "Click to copy",
+    "dragFileHere": "Drag your file here",
+    "instanceSpec": "{cpu} vCPU, {ram} RAM, {disk} Disk",
+    "errorMessage": "Error: {message}",
+    "unknownError": "An unknown error has occurred",
+    "clipboardError": "There was an error accessing your clipboard",
+    "apiError": "API error",
+    "failedPrecondition": "Failed precondition",
+    "validationError": "Validation error",
+    "upgradePlan": "Upgrade plan",
+    "invalidGithubRepositoryFormat": "Invalid GitHub repository format",
+    "githubRepositoryNotFound": "GitHub repository not found",
+    "githubApiQuotaExceeded": "GitHub API quota exceeded, please try again later",
+    "dockerImageVerification": {
+      "pending": "Validating the provided path",
+      "verified": "The image is accessible",
+      "error": "{error} <dim><retry>Click here to retry.</retry></dim>"
+    },
+    "destructiveAction": "This can not be undone.",
+    "confirmationDialogText": "Type <value>{confirmationText}</value> to confirm",
+    "appServiceName": "{appName}/{serviceName}",
+    "serviceType": {
+      "web": "Web service",
+      "private": "Private service",
+      "worker": "Worker",
+      "database": "Database"
+    },
+    "validation": {
+      "fallbackLabel": "This field",
+      "required": "{label} is required",
+      "min": "{label} must be greater than {min}",
+      "max": "{label} must be lower than {max}",
+      "minLength": "{label} must be at least {min} {min, plural, =1 {character} other {characters}}",
+      "maxLength": "{label} must be at most {max} {max, plural, =1 {character} other {characters}}",
+      "email": "{label} must be a valid email address",
+      "startsWith": "{label} must start with \"{startsWith}\"",
+      "slug": "{label} must only contain lowercase letters, numbers, dashes and dots"
+    }
+  },
+  "activity": {
+    "tokenInfo": "Action performed on behalf of the {credentialType, select, user {user} organization {organization} other {credentialType}} using API token {credentialName}",
+    "sentences": {
+      "appPaused": "Paused all services within {name}",
+      "appResumed": "Resumed all services within {name}",
+      "appDeleted": "Deleted all services within {name}",
+      "serviceScaled": "Scaled {direction, select, up {up} down {down} other {}} from {previousCount} to {count, plural, =1 {{count} instance} other {{count} instances}}",
+      "deploymentFailed": "Deployment {name} failed",
+      "loggedIn": "Logged in",
+      "loggedOut": "Logged out",
+      "subscriptionCreated": "A new subscription was created",
+      "subscriptionCanceled": "A subscription was canceled",
+      "paymentFailed": "Payment was not successfully processed",
+      "paymentSucceeded": "A payment succeeded",
+      "organizationPlanUpdated": "Updated organization plan",
+      "organizationInvitationCreated": "Invited a new member to the organization",
+      "organizationInvitationResent": "Resent an invitation to join the organization",
+      "organizationInvitationDeleted": "Revoked an invitation to join the organization",
+      "organizationInvitationAccepted": "Accepted an invitation to join the organization",
+      "organizationInvitationDeclined": "Declined an invitation to join the organization",
+      "organizationMemberJoined": "Joined the organization",
+      "organizationMemberLeft": "Left the organization",
+      "organizationMemberRemoved": "Removed an organization member",
+      "fallback": "{verb} {object} {name}"
+    }
+  },
+  "addressAutocomplete": {
+    "searchAddress": "Type to search",
+    "addressNotFound": "No address found",
+    "cantFindAddress": "Can't find your address?",
+    "line1": "Address 1",
+    "line2": "Address 2",
+    "city": "City",
+    "postalCode": "Zip / Postal Code",
+    "state": "State / Province / Region",
+    "country": "Country",
+    "noCountry": "No matching country found"
+  },
+  "documentTitle": {
+    "default": "Koyeb",
+    "suffix": " - Koyeb"
+  },
+  "deploymentFailedInfo": {
+    "labels": {
+      "cause": "Why it happened?",
+      "solution": "How to solve the problem?"
+    },
+    "buildFailed": {
+      "title": "An error occurred while building your application",
+      "cause": {
+        "before": "Different reasons can result in a build failure. The most common ones are:",
+        "reason1": "The language or package manager used by your application is not supported",
+        "reason2": "Your application is missing required dependencies",
+        "reason3": "An invalid configuration results in an error during the build process"
+      },
+      "solution": {
+        "line1": "First, make sure that your application builds properly on your machine. Build logs also provide useful information to help you identify and resolve the root cause. Read our troubleshooting <link>documentation</link> to view and resolve common errors.",
+        "line2": "Check the build logs for more details."
+      }
+    },
+    "runtimeFailed": {
+      "title": "An error occurred while deploying your application",
+      "cause": {
+        "before": "Different reasons can result in a deployment failure. The most common ones are:",
+        "reason1": "The command to launch your application is not defined",
+        "reason2": "Your application failed to pass the the initial health checks",
+        "reason3": "The selected Instance type doesn't have enough resource to properly run your application"
+      },
+      "solution": {
+        "line1": "First, make sure that your application runs properly on your machine. Deployment logs also provide useful information to help you identify and resolve the root cause. Read our troubleshooting <link>documentation</link> to view and resolve common errors.",
+        "line2": "Check the deployment logs for more details."
+      }
+    }
+  },
+  "deploymentInfo": {
+    "overview": "Overview",
+    "deploymentDetails": "Deployment details",
+    "externalUrlLabel": "Public URL",
+    "externalUrlValueForwardedPort": "(forwarded to port {portNumber})",
+    "internalUrlLabel": "Private Address",
+    "repositoryLabel": "Repository",
+    "branchLabel": "Branch",
+    "commitLabel": "Commit",
+    "dockerImageLabel": "Docker image",
+    "builderLabel": "Builder type",
+    "buildpack": "Buildpack",
+    "dockerfile": "Dockerfile",
+    "autoDeployLabel": "Auto deploy",
+    "privilegedLabel": "Privileged",
+    "true": "True",
+    "false": "False",
+    "instanceTypeLabel": "Instance type",
+    "scalingLabel": "Scaling",
+    "fixedScalingValue": "{instances} {instances, plural, one {instance} other {instances}}",
+    "autoScalingValue": "{min}-{max} instances",
+    "regionsLabel": "Regions",
+    "environmentVariablesLabel": "Environment variables",
+    "environmentVariablesValue": "{count} {count, plural, one {variable} other {variables}}",
+    "volumesLabel": "Volumes",
+    "volumesValue": "{count} {count, plural, one {volume} other {volumes}} attached",
+    "attachedVolume": "{volumeName} mounted at {mountPath}"
+  },
+  "deploymentLogs": {
+    "build": {
+      "title": "Build",
+      "buildSkipped": "This deployment uses a previous build originally created during deployment <link>{deploymentId}</link>",
+      "completed": "<dim>Completed in</dim> {elapsed}s",
+      "waitingForLogs": {
+        "title": "Getting ready to build your service",
+        "description": "Hang tight while we get everything ready to start building your service"
+      }
+    },
+    "runtime": {
+      "title": "Deployment",
+      "notStarted": "Not started",
+      "filters": {
+        "allRegions": "All regions",
+        "allInstances": "All instances",
+        "logs": "Logs",
+        "events": "Events"
+      },
+      "waitingForLogs": {
+        "title": "Booting up the magic",
+        "description": "We're juicing up the servers and provisioning the resources to deploy your service"
+      }
+    },
+    "replicas": {
+      "title": "Scaling",
+      "helpTooltip": "Instances scaling",
+      "replicaIndex": "#{index}",
+      "cpu": "CPU",
+      "memory": "Memory",
+      "regionLabel": "Region",
+      "instanceTypeLabel": "Instance type",
+      "filters": {
+        "allRegions": "All regions",
+        "allStatuses": "All statuses"
+      }
+    }
+  },
+  "errorBoundary": {
+    "accountLocked": {
+      "title": "We cannot offer you access to Koyeb",
+      "line1": "Your account matches patterns often associated with violations of our <terms>terms of service</terms>",
+      "line2": "While we cannot provide details about the reason(s) triggering this behavior, we have determined that providing access to Koyeb is not possible",
+      "line3": "If you believe this is a bug, you can <validate>validate your account</validate>"
+    },
+    "unhandledError": {
+      "title": "Whoops!",
+      "httpStatus": "{httpStatus} - ERROR",
+      "statusLink": "If this keeps happening, check out <link>status.koyeb.com</link>.",
+      "code": "Code: {code}",
+      "button": "Back to home"
+    }
+  },
+  "instanceSelector": {
+    "tabs": {
+      "standard": "CPU Standard ✨",
+      "eco": "CPU Eco 🌱",
+      "gpu": "GPU 🚀"
+    },
+    "descriptions": {
+      "standard": "High-performance CPU instances ideal for production workloads",
+      "eco": "Designed for development and non-production environments",
+      "gpu": "High-performance GPU instances for LLMs, Computer Vision, and AI inference"
+    },
+    "cpu": "{value} vCPU",
+    "ram": "{value} RAM",
+    "disk": "{value} Disk",
+    "free": "Free",
+    "freeInstanceDescription": "Run 1x web service for free",
+    "inUse": "In use",
+    "comingSoon": "Coming soon",
+    "new": "New",
+    "pricePerMonth": "{price}/month",
+    "pricePerSecond": "{price}/second"
+  },
+  "invitation": {
+    "title": "You have been invited to join the {organizationName} organization on Koyeb",
+    "description": "You were invited by {name} ({email})",
+    "accept": "Join organization",
+    "decline": "Decline",
+    "alreadyAccepted": "This invitation was already accepted",
+    "alreadyDeclined": "this invitation was declined",
+    "expired": "this invitation has expired",
+    "acceptSuccess": "The invitation was accepted",
+    "declineSuccess": "The invitation was declined"
+  },
+  "logs": {
+    "title": "Logs",
+    "fullScreen": "Toggle full screen",
+    "tail": "Tail logs",
+    "stream": "Show stream",
+    "date": "Show timestamp",
+    "wordWrap": "Word wrap",
+    "download": "Download",
+    "copy": "Copy",
+    "copySuccess": "Logs copied to clipboard",
+    "noLogs": {
+      "title": "Waiting for logs...",
+      "description": "Logs will show up here, and they'll be kept for 72 hours. If there are no logs, it might be because there haven't been any in the last 72 hours."
+    },
+    "logsFiltered": {
+      "title": "No logs to show",
+      "description": "No results match the current filters"
+    },
+    "logsExpired": {
+      "title": "No logs to show",
+      "description": "There are no logs to show, the latest logs may be older than 72 hours."
+    }
+  },
+  "paymentDialog": {
+    "cardNumberLabel": "Card number",
+    "expirationLabel": "Expiration",
+    "cvcLabel": "CVC",
+    "addressLabel": "Address",
+    "addressPlaceholder": "Street address",
+    "temporaryHoldMessage": "A temporary hold of USD $1 will be placed on the card and then refunded immediately. One free service available, pay-per-use for the rest with per-second precision.",
+    "paymentMethodTimeoutTitle": "We could not register your payment method",
+    "paymentMethodTimeoutDescription": "Please try again later or {contactUs} if the problem persists"
+  },
+  "platformStatus": {
+    "up": "All systems operational",
+    "underMaintenance": "Service under maintenance",
+    "degradedPerformance": "Degraded performances",
+    "partialOutage": "Partial system outage",
+    "majorOutage": "Major system outage"
+  },
+  "regionLatency": {
+    "latency": "{ms, number, :: precision-integer}ms latency",
+    "checkingLatency": "Checking latency...",
+    "unavailable": "Unavailable"
+  },
+  "onboarding": {
+    "emailValidation": {
+      "title": "Confirm your email address",
+      "line1": "We sent an email to {email}",
+      "line2": "Please confirm your email address by clicking the link we just sent to your inbox",
+      "resendValidationEmail": "Resend validation email",
+      "resendInvitationSuccessNotification": "An email validation was sent again to <strong>{email}</strong>",
+      "emailAddressValidated": "Your email address was validated"
+    },
+    "joinOrganization": {
+      "title": "What is your organization's name?",
+      "tooltip": "An organization is a space containing all your Koyeb resources that you can use for your own projects or to collaborate as a team. The organization name must be unique and is used to compose your apps public URL. You can change it at any time.",
+      "continue": "Continue",
+      "organizationNameRules": {
+        "maxLength": "Maximum 39 characters",
+        "letters": "Letters are only lowercase",
+        "whitespace": "No whitespace",
+        "alphanumeric": "No non-alphanumeric symbol except \"-\""
+      }
+    },
+    "qualification": {
+      "title": "Tell us a bit about you",
+      "line1": "Your answers will help us improve your experience",
+      "continue": "Continue",
+      "fullName": {
+        "label": "What is your full name?"
+      },
+      "usage": {
+        "label": "I'm using Koyeb for",
+        "personal": "Myself",
+        "education": "School",
+        "professional": "Work",
+        "required": "This information is required"
+      },
+      "companyName": {
+        "label": "What is your company name?"
+      },
+      "occupation": {
+        "label": "What is your role?",
+        "founder": "Founder",
+        "cto": "CTO/VP Engineering",
+        "devops": "DevOps Engineer",
+        "software": "Software Engineer",
+        "engineering": "Engineering Manager",
+        "freelancer": "Freelancer or Consultant",
+        "hobbyist": "Hobbyist",
+        "student": "Student",
+        "teacher": "Teacher",
+        "other": "Other"
+      },
+      "currentSpending": {
+        "label": "How much do you spend on cloud infrastructure monthly?",
+        "lessThan500": "< $500",
+        "500To2000": "$500 - $2,000",
+        "2000To10000": "$2,001 - $10,000",
+        "moreThan10000": "> $10,000"
+      },
+      "primaryUseCase": {
+        "label": "What do you plan to build on Koyeb?",
+        "ai": "AI agents",
+        "training": "Training and fine-tuning",
+        "inference": "Inference workloads",
+        "video": "Video or live-streaming platform",
+        "web": "Web & mobile applications",
+        "api": "APIs",
+        "company": "Company website",
+        "blog": "Blog",
+        "personal": "Personal project",
+        "school": "School project",
+        "bot": "Bot (Discord/Telegram)",
+        "other": "Other"
+      },
+      "primaryLanguage": {
+        "label": "Which language do you use for the project you intend to deploy?",
+        "ruby": "Ruby",
+        "php": "PHP",
+        "python": "Python",
+        "golang": "Golang",
+        "node": "Node.js",
+        "java": "Java",
+        "rust": "Rust",
+        "elixir": "Elixir",
+        "scala": "Scala",
+        "clojure": "Clojure",
+        "docker": "Docker",
+        "other": "I use another language",
+        "notDeveloper": "I'm not a developer"
+      },
+      "referralSource": {
+        "label": "How did you hear about Koyeb?",
+        "searchEngine": "Search engine",
+        "recommendation": "Recommendation from a friend or colleague",
+        "socialMedia": "Social Media",
+        "hackerNews": "Hacker News",
+        "reddit": "Reddit",
+        "podcast": "Podcast",
+        "meetup": "Conferences and meetups",
+        "other": "Other"
+      }
+    },
+    "paymentMethod": {
+      "title": "Get started for free",
+      "line1": "To prevent abuse, a credit card is required",
+      "submit": "Get started"
+    },
+    "automaticReview": {
+      "pending": "Your account is being validated"
+    }
+  },
+  "commandPalette": {
+    "searchPlaceholder": "Search",
+    "shortcuts": {
+      "navigate": "to navigate",
+      "select": "to select",
+      "close": "to close",
+      "return": "to return"
+    },
+    "navigation": {
+      "create": "Create",
+      "webService": "Web service",
+      "worker": "Worker",
+      "database": "Database",
+      "exampleApps": "one-click apps",
+      "source": "Source",
+      "github": "GitHub",
+      "docker": "Docker",
+      "yourRepository": "Your repository",
+      "publicRepository": "Public repository",
+      "settings": "Settings",
+      "dockerImage": "Docker image",
+      "registryConfiguration": "Registry configuration"
+    },
+    "webService": "Web service",
+    "webServiceDescription": "A web service accessible from the Internet and the service mesh",
+    "worker": "Worker",
+    "workerDescription": "Runs in the background and is not internet accessible",
+    "database": "Database",
+    "databaseDescription": "Fully managed, serverless Postgres database",
+    "createService": "Create {serviceType}",
+    "github": "GitHub",
+    "githubDescription": "Connect, build and deploy your code from a GitHub repository",
+    "installGithubApp": "Install GitHub app",
+    "docker": "Docker",
+    "dockerDescription": "Deploy docker images from any public or private registries",
+    "deployExampleApp": "Deploy {name}",
+    "deployWith": "Deploy with {type}",
+    "publicRepositoryLabel": "Public repository URL",
+    "publicRepositoryPlaceholder": "e.g. https://github.com/koyeb/example-golang",
+    "deployRepository": "Deploy repository",
+    "invalidGithubRepositoryUrl": "Please provide a GitHub repository URL",
+    "repositories": "Repositories",
+    "githubAppLinks": "Missing Git repository? <resynchronizeLink>Re-synchronize</resynchronizeLink> repositories or <githubAppLink>edit GitHub app permissions</githubAppLink>.",
+    "repositoriesSynchronized": "Repositories synchronized",
+    "dockerImagePath": "Docker image path",
+    "deployImage": "Deploy image",
+    "privateImage": "Private",
+    "registryConfigurationLabel": "Registry configuration",
+    "noRegistrySecrets": "No registry configuration secret found",
+    "createRegistrySecret": "Missing registry configuration secret? <link>Create secret</link>"
+  },
+  "volumes": {
+    "createDialog": {
+      "title": "Create volume",
+      "description": "Set the name, region and size of your volume"
+    },
+    "editDialog": {
+      "title": "Edit volume",
+      "description": "Change the name of your volume"
+    },
+    "form": {
+      "nameLabel": "Name",
+      "namePlaceholder": "my-volume",
+      "regionLabel": "Region",
+      "regionPlaceholder": "Select a region",
+      "sizeLabel": "Size",
+      "sizePlaceholder": "Select a size",
+      "sizeUnit": "GB",
+      "createSuccess": "Volume <strong>{name}</strong> created",
+      "editSuccess": "Volume <strong>{name}</strong> edited"
+    }
+  },
+  "secrets": {
+    "simpleSecretForm": {
+      "title": "Create secret",
+      "description": "All Secret values are automatically encrypted server-side to ensure secure storage",
+      "nameLabel": "Name",
+      "namePlaceholder": "e.g. api-key",
+      "valueLabel": "Value",
+      "createSuccess": "Secret <strong>{name}</strong> created",
+      "editSuccess": "Secret <strong>{name}</strong> updated"
+    },
+    "registrySecretForm": {
+      "title": "Create registry credential",
+      "description": "Securely store registry credentials to deploy private Docker images from any registries",
+      "nameLabel": "Name",
+      "namePlaceholder": "My credential",
+      "typeLabel": "Type",
+      "typePlaceholder": "Select a registry",
+      "usernameLabel": "Username",
+      "usernamePlaceholder": "Registry username",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Registry password",
+      "registryNameLabel": "Registry name",
+      "registryNamePlaceholder": "Registry name",
+      "registryUrlLabel": "URL",
+      "registryUrlPlaceholder": "Registry URL",
+      "uploadKeyFile": "Upload key file",
+      "noKeyFile": "No key file selected",
+      "keyFile": "Key file: <strong>{fileName}</strong>"
+    },
+    "registries": {
+      "docker-hub": "Docker Hub container registry",
+      "digital-ocean": "DigitalOcean container registry",
+      "github": "GitHub container registry",
+      "gitlab": "GitLab container registry",
+      "azure": "Azure container registry",
+      "gcp": "GCP container registry",
+      "private": "Private container registry"
+    }
+  },
+  "serviceCreation": {
+    "stepper": {
+      "deploymentSource": "Select deployment source",
+      "importProject": "Import project",
+      "instanceRegions": "Choose instance and regions",
+      "review": "Review and deploy 🚀"
+    },
+    "activeStep": "{position} of {total}",
+    "serviceType": {
+      "title": "Let's deploy a new service",
+      "navigation": {
+        "createService": "Create service",
+        "deployOneClickApp": "Deploy one-click app",
+        "moreOneClickApps": "More one-click apps"
+      },
+      "web": {
+        "title": "Create web service",
+        "description": "Can be accessed accessible from the Internet or the private network"
+      },
+      "private": {
+        "title": "Create private service",
+        "description": "Only exposed to your other services via the internal private network"
+      },
+      "worker": {
+        "title": "Create worker service",
+        "description": "For long running processes like background processing and task execution"
+      },
+      "database": {
+        "title": "Create database service",
+        "description": "A fully managed, serverless Postgres database",
+        "button": "Create database service"
+      },
+      "deploymentSource": {
+        "github": {
+          "title": "GitHub",
+          "description": "Connect, build and deploy your code from a GitHub repository"
+        },
+        "docker": {
+          "title": "Docker",
+          "description": "Deploy docker images from any public or private registries"
+        }
+      }
+    },
+    "importProject": {
+      "title": "Create a new service",
+      "description": "Import the GitHub repository you want to deploy or use an existing public repository",
+      "github": {
+        "refresh": "Refresh",
+        "import": "Import",
+        "synchronizingRepositories": "Synchronizing repositories...",
+        "repositoriesSynchronized": "Repositories synchronized",
+        "missingRepositoryLink": "Missing a GitHub repository? <link>Edit GitHub app permissions</link>",
+        "noRepository": {
+          "title": "No repositories found",
+          "description": "This can happen when Koyeb doesn't have access to the repositories in your GitHub organization.",
+          "searchEmptyResults": "Your search for \"{search}\" did not return any results."
+        },
+        "publicRepository": {
+          "title": "Public GitHub repository",
+          "description": "Use a public repository by entering the URL below. Features like auto-deploy are not available when using a public repository.",
+          "placeholder": "https://github.com/koyeb/example-golang",
+          "invalidGithubRepositoryUrl": "Please provide a GitHub repository URL"
+        },
+        "installGithubApp": {
+          "title": "Connect to GitHub",
+          "description": "Install the GitHub app to allow Koyeb access and deploy your GitHub repositories.",
+          "button": "Install GitHub app"
+        }
+      },
+      "docker": {
+        "title": "Deploy a Docker image",
+        "imageFieldLabel": "Image",
+        "imageFieldDescription": "The Docker image and tag you want to deploy",
+        "imagePlaceholder": "docker.io/koyeb/demo:latest",
+        "registryFieldLabel": "Registry",
+        "registryFieldDescription": "If your image is private, create or select the registry configuration secret to allow Koyeb to pull your image",
+        "registryFieldPlaceholder": "No credential (optional)",
+        "noRegistrySecret": "No credential",
+        "createRegistrySecret": "Create new registry secret",
+        "imageVerification": {
+          "pending": "Validating the provided path",
+          "validated": "The image is accessible"
+        }
+      }
+    },
+    "instanceRegions": {
+      "title": "Create a new service",
+      "description": "Pick the instance and regions to deploy",
+      "alerts": {
+        "requiresUpgrade": "The selected instance is available on the {plan} plan. You will be asked to upgrade at the end of the creation process.",
+        "freeMessage": "The Free instance can be deployed in {fra} or {was} and doesn't support scaling. Select another instance to access more features and regions."
+      }
+    },
+    "review": {
+      "title": "Create a new service",
+      "description": "Go with the recommended settings or adjust them according to your needs",
+      "tips": {
+        "title": "Did you know?",
+        "fallback": "Koyeb natively supports real-time protocols, including WebSocket, gRPC, and HTTP/2"
+      }
+    },
+    "initialDeployment": {
+      "title": "You're almost done",
+      "description": "Follow the steps to track the creation process",
+      "deploymentStatusDetails": {
+        "deploymentQueued": {
+          "title": "Deployment queued",
+          "details": "Your deployment is queued and will start in a few seconds"
+        },
+        "deploymentQueuedLong": {
+          "title": "Deployment queued",
+          "details": "Your build is taking too long to start",
+          "cta": "Report the issue",
+          "reportSuccessNotification": "The team has been notified and will investigate"
+        },
+        "deploymentScheduled": {
+          "title": "Deployment ready to start",
+          "details": "Your deployment is ready and will start in a few seconds"
+        },
+        "deploymentScheduledLong": {
+          "title": "Deployment ready to start",
+          "details": "Your deployment is taking too long to start",
+          "cta": "Report the issue",
+          "reportSuccessNotification": "The team has been notified and will investigate"
+        },
+        "serviceReady": {
+          "title": "Your service is ready",
+          "details": "Your just deployed a new service to Koyeb. Check out the next steps.",
+          "inspectService": "Inspect and manage your service",
+          "accessService": "Visit your service public domain"
+        },
+        "inspectService": "Inspect and manage your service"
+      },
+      "nextSteps": {
+        "title": "Your service is ready",
+        "description": "Your just deployed a new service to Koyeb. Check out the next steps.",
+        "serviceDetails": {
+          "title": "View service details",
+          "description": "Inspect and manage your service",
+          "cta": "View service"
+        },
+        "accessService": {
+          "title": "Access your service",
+          "description": "Visit <link>{externalUrl}</link> to access your service"
+        }
+      }
+    }
+  },
+  "serviceForm": {
+    "gpuAlertHobby": "Want to access the Serverless GPUs public preview? <upgrade>Upgrade to the Starter or Startup plan</upgrade>.",
+    "gpuAlert": "Serverless GPUs are available in public preview. <cta>Get started now</cta>.",
+    "submitButton": {
+      "deploy": "Deploy",
+      "withBuild": {
+        "label": "With build",
+        "description": "Recommended if your changes alter the build process"
+      },
+      "withoutBuild": {
+        "label": "Without rebuild",
+        "description": "Recommended if changes do not affect the build process"
+      },
+      "save": "Save",
+      "noPreviousBuild": "Your service doesn't have any successful build yet"
+    },
+    "paymentDialog": {
+      "title": "Start for free with $20 of credit over 30 days",
+      "description": "The current selected instance is available on the {plan} plan at ${price}/mo. Add a payment method to upgrade and deploy.",
+      "submitButton": "Upgrade and deploy"
+    },
+    "errors": {
+      "min": "{label} must be greater than {min}",
+      "max": "{label} must be lower than {max}",
+      "minLength": "{label} must be at least {min} characters",
+      "maxLength": "{label} must be at most {max} characters",
+      "slug": "{label} must only contain lowercase letters, numbers, dashes and dots",
+      "source.git.organizationRepository.repositoryName": "Please select a repository",
+      "source.git.publicRepository.url": "Please provide a GitHub repository URL",
+      "source.docker.image": "Docker image URL is required",
+      "environmentVariable.name": "Please provide a name for this variable",
+      "environmentVariable.secretValue": "Please select a secret or create a new one",
+      "scaling.fixedLabel": "Instances",
+      "scaling.autoScalingMinLabel": "Min",
+      "scaling.autoScalingMaxLabel": "Max",
+      "scaling.targetEmpty": "When enabled, the target cannot be empty",
+      "scaling.targetTooSmall": "When enabled, the target must be greater than {min}",
+      "scaling.targetTooBig": "When enabled, the target must be lower than {max}",
+      "port.portNumber.min": "Port must be greater than 0",
+      "port.portNumber.max": "Port must be lower than 65000",
+      "port.path.startWithSlash": "Path must start with /",
+      "port.path.noWhiteSpaces": "Path must not contain any white space",
+      "healthCheck.gracePeriod": "Grace period",
+      "healthCheck.interval": "Interval",
+      "healthCheck.restartLimit": "Restart limit",
+      "healthCheck.timeout": "Timeout",
+      "healthCheck.path.startWithSlash": "Path must start with /",
+      "healthCheck.headerName": "Please provide a header name",
+      "healthCheck.headerValue": "Please provide a header value",
+      "volumes.mountPath.startWithSlash": "Mount path must start with /",
+      "appName": "App name",
+      "serviceName": "Service name"
+    },
+    "serviceType": {
+      "description": "Service type",
+      "expandedTitle": "Change service type",
+      "webService": "Web service",
+      "webServiceDescription": "A web service accessible from the Internet and the service mesh",
+      "worker": "Worker",
+      "workerDescription": "Runs in the background and is not internet accessible",
+      "alerts": {
+        "workerNotAvailableFreeInstanceTitle": "Workers are not available with the {instanceName} Instance",
+        "workerNotAvailableFreeInstanceDescription": "Select another Instance to deploy a worker"
+      }
+    },
+    "source": {
+      "description": "Source",
+      "noRepositorySelected": "No repository selected",
+      "noDockerImageSelected": "No docker image selected",
+      "expandedTitle": "Configure deployment source",
+      "archiveSourceLabel": "Archive",
+      "archiveSourceTooltip": "Build and deploy your code using the <code>koyeb deploy</code> or <code>koyeb archive</code> command",
+      "githubSourceLabel": "GitHub",
+      "githubSourceTooltip": "Connect, build and deploy your code from a GitHub repository",
+      "dockerSourceLabel": "Docker",
+      "dockerSourceTooltip": "Deploy Docker images from any public or private registries",
+      "archive": {
+        "title": "Archive",
+        "description": "Your service is managed using the <code>koyeb deploy</code> or <code>koyeb archive</code> command",
+        "documentationLink": "Learn more about deploying a directory"
+      },
+      "git": {
+        "repositoryTypeLabel": "Private or public repository",
+        "repositoryLabel": "Select repository",
+        "repositoryTooltip": "Choose the repository you want to deploy on Koyeb",
+        "organizationRepository": "Your repository",
+        "organizationRepositoryPlaceholder": "Select a repository",
+        "organizationRepositoryNoResults": "No repository found",
+        "publicRepository": "Public repository",
+        "publicRepositoryLabel": "Public repository URL",
+        "publicRepositoryTooltip": "Use a public repository by entering the URL below. Features like auto-deploy are not available when using a public repository.",
+        "publicRepositoryPlaceholder": "e.g. https://github.com/koyeb/example-golang",
+        "branchLabel": "Select branch",
+        "branchTooltip": "Select the repository branch you want to deploy on Koyeb",
+        "branchNoResults": "No branch found",
+        "autoDeploy": "Autodeploy",
+        "autoDeployTooltip": "When enabled, every time an update is made to this branch, your application will be re-deployed",
+        "githubAppLinks": "Missing Git repository? <resynchronizeLink>Re-synchronize</resynchronizeLink> repositories or edit <githubAppLink>GitHub app permissions</githubAppLink>.",
+        "synchronizingRepositories": "Synchronizing repositories...",
+        "repositoriesSynchronized": "Repositories synchronized",
+        "installGithubApp": {
+          "title": "GitHub app not installed",
+          "description": "You haven't connected any GitHub account to Koyeb. To continue deployment using the repository, install the application.",
+          "button": "Install GitHub app"
+        }
+      },
+      "docker": {
+        "imageLabel": "Image path",
+        "imagePlaceholder": "docker.io/koyeb/demo:latest",
+        "imageTooltip": "Add the url of the Docker image you want to deploy on Koyeb",
+        "privateLabel": "Private",
+        "registrySecretLabel": "Registry credential (optional)",
+        "registrySecretPlaceholder": "No registry credential selected",
+        "registrySecretTooltip": "If your image is private, create or select the registry configuration secret to allow Koyeb to pull your image",
+        "noRegistrySecret": "No credential",
+        "createRegistrySecret": "Create new registry secret",
+        "imageVerification": {
+          "pending": "Validating the provided path",
+          "validated": "The image is accessible"
+        }
+      }
+    },
+    "builder": {
+      "description": "Builder",
+      "expandedTitle": "Configure builder",
+      "buildpack": "Buildpack",
+      "buildpackDescription": "Uses buildpacks to detect your project's language, install dependencies, and package the environment into a runnable image",
+      "dockerfile": "Dockerfile",
+      "dockerfileDescription": "If your repository contains a Dockerfile, Koyeb can use it to build a runnable container image for your project",
+      "buildpackConfiguration": {
+        "title": "Configure Buildpack",
+        "description": "Customize Buildpack configuration to meet the needs of your repository",
+        "buildCommandLabel": "Build command",
+        "buildCommandTooltip": "The command to build your application during the build phase. If your application does not require a build command, leave this field empty.",
+        "runCommandLabel": "Run command",
+        "runCommandTooltip": "The command to run your application once the build is completed",
+        "workDirectoryLabel": "Work directory",
+        "workDirectoryTooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
+        "workDirectoryPlaceholder": "./api",
+        "privilegedLabel": "Privileged",
+        "privilegedTooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+      },
+      "dockerfileConfiguration": {
+        "title": "Configure Dockerfile",
+        "description": "Customize Dockerfile configuration to meet the needs of your repository",
+        "dockerfileLocationLabel": "Dockerfile location",
+        "dockerfileLocationTooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository.",
+        "dockerfileLocationPlaceholder": "./Dockerfile",
+        "entrypointLabel": "Entrypoint",
+        "entrypointTooltip": "Override the default entrypoint to execute on the container",
+        "commandLabel": "Command",
+        "commandTooltip": "Override the command to execute on the container",
+        "argsLabel": "Command args",
+        "argsTooltip": "Override the arguments passed to the Docker command. To pass build-time variables similar to the ARG instruction, use environment variables.",
+        "targetLabel": "Target",
+        "targetTooltip": "Target build stage: If your Dockerfile contains multi-stage builds, you can choose the target stage to build and deploy by entering its name",
+        "workDirectoryLabel": "Work directory",
+        "workDirectoryTooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
+        "workDirectoryPlaceholder": "./api",
+        "privilegedLabel": "Privileged",
+        "privilegedTooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+      }
+    },
+    "deployment": {
+      "description": "Deployment",
+      "expandedTitle": "Configure deployment",
+      "defaultConfiguration": "Default configuration",
+      "customConfiguration": "Custom configuration",
+      "entrypointLabel": "Entrypoint",
+      "entrypointTooltip": "Override the default entrypoint to execute on the container",
+      "entrypointPlaceholder": "entrypoint.sh",
+      "commandLabel": "Command",
+      "commandPlaceholder": "./launch.sh",
+      "commandTooltip": "Override the command to execute on the container",
+      "argsLabel": "Command args",
+      "argsPlaceholder": "[\"arg1\", \"arg2\"]",
+      "argsTooltip": "Override the arguments passed to the Docker command",
+      "privilegedLabel": "Privileged",
+      "privilegedTooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+    },
+    "regions": {
+      "noRegions": "No region selected",
+      "plus": "+{count}",
+      "description": "Regions",
+      "expandedTitle": "Select regions",
+      "alerts": {
+        "freeInstanceTitle": "The {instanceName} instance can be deployed to either {fra} or {was}",
+        "freeInstanceDescription": "Choose a different instance type for other deployment options",
+        "ecoInstancesTitle": "The Eco Instances can only be deployed to {fra}, {sin}, and {was}",
+        "ecoInstancesDescription": "Choose a Standard Instance to access additional regions",
+        "noRegionSelectedTitle": "At least, one region must be selected",
+        "noRegionSelectedDescription": "Select one or more regions to deploy your service",
+        "hasVolumesTitle": "Regions can't be changed when volumes are attached",
+        "hasVolumesDescription": "Detach all the <volumesLink>volumes</volumesLink> from your service to change the regions. <documentationLink>Learn more</documentationLink>"
+      }
+    },
+    "instance": {
+      "description": "Instance",
+      "expandedTitle": "Select instances",
+      "noInstanceSelected": "No instance selected",
+      "instanceSpec": "<dim>({spec})</dim>",
+      "category": {
+        "eco": "Eco",
+        "standard": "Standard",
+        "gpu": "GPU"
+      },
+      "alerts": {
+        "ecoHasVolumesTitle": "Volumes are not supported on Eco instances",
+        "ecoHasVolumesDescription": "Select a Standard or GPU instance to keep the volumes attached to your service",
+        "freeInstanceAlreadyUsedTitle": "You have already used the {instanceName} Instance",
+        "freeInstanceAlreadyUsedDescription": "Please <upgrade>upgrade your plan</upgrade> to get access to additional instance types",
+        "freeInstanceTitle": "The {instanceName} instance is only available in {fra} and {was}",
+        "freeInstanceDescription": "Choose a different instance type for other deployment options",
+        "ecoInstancesTitle": "The Eco Instances can only be deployed to {fra}, {sin}, and {was}",
+        "ecoInstancesDescription": "Choose a Standard Instance to access additional regions",
+        "noInstanceSelectedTitle": "No instance selected",
+        "noInstanceSelectedDescription": "Select an instance to deploy your service",
+        "hobbyPlanTitle": "The Hobby plan includes a {instanceName} instance only",
+        "hobbyPlanDescription": "Please <upgrade>upgrade your plan</upgrade> to get access to additional instance types",
+        "instanceRequiresUpgradeTitle": "The selected instance is available on the {plan} plan",
+        "instanceRequiresUpgradeDescription": "You will be asked to upgrade when submitting the form"
+      }
+    },
+    "scaling": {
+      "description": "Scaling",
+      "expandedTitle": "Configure scaling",
+      "instancePerRegion": "({value} instance/region)",
+      "instancesPerRegion": "({min}-{max} instances/region)",
+      "fixed": "Fixed",
+      "fixedDescription": "Fixed number of instances in a region regardless of load level",
+      "autoscaling": "Autoscaling",
+      "autoscalingDescription": "Automatically adjusted number of instances in the region depending on the load",
+      "scalingLabel": "Number of instances per region",
+      "autoscalingSettings": {
+        "min": "Min",
+        "max": "Max",
+        "cpuLabel": "Target CPU usage",
+        "cpuDescription": "Autoscale to target {value, number, :: percent} CPU usage on average, per instance",
+        "cpuUnit": "%",
+        "memoryLabel": "Target memory usage",
+        "memoryDescription": "Autoscale to target {value, number, :: percent} memory usage on average, per instance",
+        "memoryUnit": "%",
+        "requestsLabel": "Target number of requests per second",
+        "requestsDescription": "Autoscale to target {value} requests per second on average, per instance",
+        "requestsUnit": "#",
+        "concurrentRequestsLabel": "Target number of concurrent requests",
+        "concurrentRequestsDescription": "Autoscale to target {value} concurrent connections, per instance",
+        "concurrentRequestsUnit": "#",
+        "responseTimeLabel": "Target P95 response time",
+        "responseTimeDescription": "Autoscale to target a P95 response time of {value}ms or less, per instance",
+        "responseTimeUnit": "ms",
+        "criteriaNotAvailableWhenMax1": "Scaling criteria are not available when the maximum scaling is set to 1",
+        "criterionNotAvailableWorker": "This criterion is not available for workers"
+      },
+      "alerts": {
+        "freeInstanceAlertTitle": "Services with the {instanceName} instance type cannot be scaled",
+        "freeInstanceAlertDescription": "Select a different instance type if you need to scale",
+        "ecoInstanceAlertTitle": "Services with the {instanceName} instance type cannot be scaled automatically",
+        "ecoInstanceAlertDescription": "Select a Standard instance type if you need to set up autoscaling",
+        "noTargetAlertTitle": "One scaling criteria must be set",
+        "noTargetAlertDescription": "Choose at least 1 criteria and set the value to meet your requirements",
+        "hasVolumesTitle": "Scaling settings can't be changed when volumes are attached",
+        "hasVolumesDescription": "Detach all the <volumesLink>volumes</volumesLink> from your service if you need to scale. <documentationLink>Learn more</documentationLink>"
+      }
+    },
+    "environmentVariables": {
+      "title": "{count, plural, =0 {No variables} =1 {{count} variable} other {{count} variables}} configured",
+      "description": "Environment variables",
+      "expandedTitle": "Edit environment variables",
+      "info": "Configure manually or drag and drop file with multiple variables",
+      "infoTooltip": "Add the environment variables required by your project at build and runtime",
+      "nameLabel": "Name",
+      "typeLabel": "Type",
+      "plaintext": "Plaintext",
+      "secret": "Secret",
+      "valueLabel": "Value",
+      "noVariablesToInterpolate": "No matching variables",
+      "secretLabel": "Secret",
+      "addVariable": "Add another",
+      "deleteVariable": "Delete variable",
+      "bulkEdit": "Bulk import",
+      "bulkEdition": {
+        "title": "Edit multiple variables",
+        "description": "Add, delete or edit environment variables",
+        "line1": "Paste your environment variables below, one per line with the format <code>key=value</code>. Empty lines and lines starting with <code>#</code> will be ignored.",
+        "variablesPlaceholder": "Add variables here",
+        "unknownSecret": "Secret \"{name}\" does not exist",
+        "cancel": "Cancel",
+        "save": "Save"
+      },
+      "fileUpload": {
+        "notPlainText": "You must provide a text file",
+        "noEnvVars": "No environment variables were identified in the provided file"
+      },
+      "createSecret": "Create new secret"
+    },
+    "ports": {
+      "titleSinglePort": "Port {portNumber} exposed {public, select, true {on {path}} other {to the service mesh}}",
+      "titleMultiplePorts": "{count, plural, =0 {No ports exposed} other {{count} ports exposed}}",
+      "description": "Exposed ports",
+      "expandedTitle": "Configure ports",
+      "info": "Configure the ports and protocols required by your services",
+      "noPorts": "No ports configured",
+      "portLabel": "Port",
+      "protocolLabel": "Protocol",
+      "tcp": "TCP",
+      "http": "HTTP",
+      "http2": "HTTP/2",
+      "pathLabel": "Path",
+      "pathTooltip": "Your service will be publicly accessible at https://[subdomain].koyeb.app{path}. Requests will be sent to the port you selected and load-balanced between your instances.",
+      "publicLabel": "Public",
+      "publicTooltip": "If public, the port will be accessible from the Internet. If private, the port will only be accessible to other services running on Koyeb's service mesh.",
+      "addPort": "Add another",
+      "deletePort": "Delete port"
+    },
+    "healthChecks": {
+      "titleSingleHealthCheck": "{protocol} health check configured on port {portNumber}",
+      "titleMultipleHealthChecks": "{count, plural, =0 {No health checks configured} other {{count} health checks configured}}",
+      "description": "Health checks",
+      "expandedTitle": "Configure health checks for exposed ports",
+      "tcp": "TCP",
+      "http": "HTTP",
+      "healthCheck": {
+        "portNumberLabel": "Port",
+        "protocolLabel": "Protocol",
+        "gracePeriodLabel": "Grace period",
+        "gracePeriodTooltip": "The initial period to wait for the instance to become healthy",
+        "gracePeriodUnit": "s",
+        "intervalLabel": "Interval",
+        "intervalTooltip": "The period between two checks",
+        "intervalUnit": "s",
+        "restartLimitLabel": "Restart limit",
+        "restartLimitTooltip": "The number of consecutive failures before attempting to restart the instance",
+        "timeoutLabel": "Timeout",
+        "timeoutUnit": "s",
+        "timeoutTooltip": "The maximum time to wait before considering the check as a failure",
+        "httpPathLabel": "Path",
+        "httpPathTooltip": "The path to perform the HTTP health check",
+        "httpMethodLabel": "Method",
+        "httpMethodTooltip": "The HTTP method to use to perform the health check",
+        "httpHeaderNameLabel": "Header name",
+        "httpHeaderValueLabel": "Header value",
+        "addHeader": "Add header",
+        "removeHeader": "Remove header",
+        "defaultValues": "Restore defaults"
+      }
+    },
+    "volumes": {
+      "title": "{count, plural, =0 {No volumes} =1 {{count} volume} other {{count} volumes}} configured",
+      "titleExpanded": "Edit volumes",
+      "noDowntimeAlert": "Attaching volumes to your service will prevent zero-downtime deployments. <documentationLink>Learn more</documentationLink>",
+      "noVolumesAttached": "Attach and mount a volume to your service to persist data",
+      "description": "Volumes",
+      "addVolume": "Add volume",
+      "createVolume": "Create volume",
+      "detachVolume": "Detach volume",
+      "detachVolumeNotSupported": "Detaching volumes is not supported yet",
+      "volumeNameLabel": "Volume",
+      "volumeNamePlaceholder": "Select a volume",
+      "noVolumes": "No volumes found in {region}",
+      "mountPathLabel": "Mount path",
+      "createDialog": {
+        "title": "Create volume",
+        "description": "Set the name, size and mount path of your volume",
+        "nameLabel": "Name",
+        "namePlaceholder": "my-volume",
+        "sizeLabel": "Size",
+        "sizePlaceholder": "Select a size",
+        "sizeUnit": "GB",
+        "mountPathLabel": "Mount path"
+      },
+      "volumesUnavailable": {
+        "unavailableForInstanceTitle": "Volumes are not supported on the {instanceName} instance type",
+        "unavailableForInstanceDescription": "Select another <instancesLink>instance</instancesLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
+        "multipleInstancesTitle": "Volumes are not supported for services deployed with more than one instance or with autoscaling enabled",
+        "multipleInstancesDescription": "Select fixed <scalingLink>scaling</scalingLink> and one instance in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>",
+        "unavailableForRegionTitle": "Volumes are not supported in {regionName}",
+        "unavailableForRegionDescription": "Select another <regionsLink>region</regionsLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
+        "multipleRegionsTitle": "Volumes are not supported for services deployed across multiple regions",
+        "multipleRegionsDescription": "Select a single <regionsLink>region</regionsLink> in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>"
+      }
+    },
+    "serviceName": {
+      "titleExpanded": "Edit service name",
+      "titleServiceNameMissing": "The service name is missing",
+      "description": "Service name",
+      "serviceNameLabel": "Name",
+      "serviceNameTooltip": "Give a name to easily identify this service inside your app"
+    },
+    "exampleApp": {
+      "overview": "Overview",
+      "environmentVariables": "Environment variables",
+      "nameLabel": "Name",
+      "valueLabel": "Value",
+      "estimatedCost": "Estimated cost",
+      "submitButton": "Deploy"
+    }
+  },
+  "serviceEstimatedCost": {
+    "title": "Estimated Cost",
+    "descriptionFreeInstance": "Below is the estimated cost based on your current service configuration",
+    "descriptionFixedScaling": "Below is the estimated cost based on your current service configuration. Resources are billed by the second.",
+    "descriptionAutoScaling": "Below are the minimum and maximum estimated costs based on your current service configuration. Resources are billed by the second.",
+    "free": "Free",
+    "fixedInstanceCount": "{count} {instance} {count, plural, =1 {instance} other {instances}}",
+    "autoScalingInstanceCount": "{min} to {max} {instance} instances",
+    "autoScalingEnabled": "Autoscaling enabled",
+    "min": "min.",
+    "max": "max.",
+    "regionCount": "{count} {count, plural, =1 {region} other {regions}}",
+    "regionDescriptionFixedScaling": "You will have {instanceCount} {instanceName} {instanceCount, plural, =1 {instance} other {instances}} running per region",
+    "regionDescriptionAutoScaling": "You will have between {minInstanceCount} and {maxInstanceCount} {instanceName} {maxInstanceCount, plural, =1 {instance} other {instances}} running per region",
+    "total": "Total cost",
+    "pricePerMonth": "{price}/mo",
+    "pricePerHour": "{price}/hr"
+  },
+  "databaseForm": {
+    "engine": {
+      "description": "Engine",
+      "title": "Postgres",
+      "titleVersion": "(v{version})",
+      "expandedTitle": "Select database engine",
+      "engineLabel": "Engine",
+      "engineItem": "Postgres (v{version})"
+    },
+    "region": {
+      "description": "Region",
+      "expandedTitle": "Select region"
+    },
+    "instance": {
+      "description": "Instance",
+      "expandedTitle": "Select instance",
+      "instanceSpec": "<dim>({spec})</dim>"
+    },
+    "defaultRole": {
+      "description": "Default role",
+      "defaultRoleMissing": "The default role is missing",
+      "expandedTitle": "Configure default role",
+      "defaultRoleLabel": "Default role"
+    },
+    "serviceName": {
+      "expandedTitle": "Edit service name",
+      "serviceNameMissing": "The service name is missing",
+      "description": "Service name",
+      "serviceNameLabel": "Service name"
+    },
+    "estimatedCost": {
+      "title": "Estimated Cost",
+      "tooltip": "Estimated Cost",
+      "free": "Free",
+      "total": "Total cost",
+      "pricePerMonth": "{price}/month"
+    },
+    "paymentDialog": {
+      "title": "Start for free with $20 of credit over 30 days",
+      "description": "The current selected instance is available on the {plan} plan at ${price}/mo. Add a payment method to upgrade and deploy.",
+      "submitButton": "Upgrade and deploy"
+    }
+  },
+  "layouts": {
+    "createOrganization": "Create organization",
+    "main": {
+      "accountUnderReview": "We need more information to approve your account. Please answer <form>this validation form</form> to prevent account suspension.",
+      "sessionTokenWarning": "You are currently seeing the organization {organizationName}",
+      "paymentFailure": "We tried to charge your card, but the payment has failed. Please <stripe>update your payment method</stripe> and pay your past due invoices.",
+      "subscriptionHasPendingUpdate": "The provided payment details could not be processed. Please check your payment information in the <stripe>billing portal</stripe> to resolve the issue.",
+      "createService": "Create service",
+      "navigation": {
+        "overview": "Overview",
+        "services": "Services",
+        "volumes": "Volumes",
+        "domains": "Domains",
+        "secrets": "Secrets",
+        "activity": "Activity",
+        "team": "Team",
+        "settings": "Settings"
+      },
+      "helpLinks": {
+        "label": "Help and more",
+        "documentation": "Documentation",
+        "community": "Community support",
+        "feedback": "Feedback",
+        "status": "Status",
+        "changelog": "Changelog",
+        "blog": "Blog"
+      },
+      "userMenu": {
+        "userSettings": "User settings",
+        "theme": "Theme",
+        "dark": "Dark",
+        "light": "Light",
+        "system": "System",
+        "logout": "Log out"
+      },
+      "estimatedCost": {
+        "currentPlan": "{plan} plan",
+        "free": "Free",
+        "usage": "Usage",
+        "estimatedCost": "Estimated cost",
+        "upsell": {
+          "title": "Get the full experience",
+          "description": "Upgrade to the Starter plan and get $20 of credit to try the full Koyeb experience over 30 days",
+          "cta": "Upgrade"
+        }
+      },
+      "breadcrumbs": {
+        "services": "Services",
+        "volumes": "Volumes",
+        "domains": "Domains",
+        "secrets": "Secrets",
+        "activity": "Activity",
+        "deploy": "Deploy",
+        "team": "Team",
+        "organizationSettings": {
+          "index": "Settings",
+          "billing": "Usage and billing",
+          "plans": "Plans",
+          "api": "API"
+        },
+        "userSettings": {
+          "index": "User settings",
+          "organizations": "Organizations",
+          "api": "Personal access tokens"
+        },
+        "createService": "Create new service",
+        "service": {
+          "metrics": "Metrics",
+          "console": "Console",
+          "deployments": "Deployments",
+          "settings": "Settings"
+        },
+        "database": {
+          "databases": "Databases",
+          "roles": "Roles",
+          "settings": "Settings"
+        }
+      }
+    },
+    "secondary": {
+      "startForFree": {
+        "title": "Start for free, pay as you grow",
+        "description": "Deploy a service for free and enjoy our simple, predictable, and flexible pricing for all your projects"
+      },
+      "deploy": {
+        "title": "Deploy in seconds",
+        "description": "Deploy your apps from Docker images, or connect your git repositories and simply push to deploy"
+      },
+      "global": {
+        "title": "Run globally in a click",
+        "description": "Run your apps in one or more of our regions according to your needs. Go global with 255+ edge locations"
+      },
+      "autoscaling": {
+        "title": "Native autoscaling",
+        "description": "Enjoy autoscaling with high-end performance thanks to high-frequency CPUs and secure Firecracker microVMs"
+      },
+      "deleteAccount": "Delete account",
+      "logout": "Log out"
+    }
+  },
+  "pages": {
+    "authentication": {
+      "signIn": {
+        "title": "Sign in",
+        "githubSignIn": "Sign in with GitHub",
+        "or": "or",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Email",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Password",
+        "signIn": "Sign in",
+        "invalidCredential": "Incorrect email or password",
+        "signUpLink": "Don't have an account? <link>Sign up</link>",
+        "forgotPasswordLink": "<link>Forgot password</link>",
+        "communityLink": "<link>Join the community</link>"
+      },
+      "signUp": {
+        "title": "Create your account",
+        "githubSignUp": "Sign up with GitHub",
+        "emailSignUp": "Sign up with email",
+        "nameLabel": "Name",
+        "namePlaceholder": "Full name",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Email",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Pick a strong password",
+        "signUp": "Sign up",
+        "reCAPTCHA": "protected by reCAPTCHA - <privacy>Privacy</privacy> • <terms>Terms</terms>",
+        "signInLink": "Already have an account? <link>Sign in</link>",
+        "agreements": "By signing up, you agree to the <tos>Terms of Services</tos> and <privacy>Privacy Policy</privacy>."
+      },
+      "resetPassword": {
+        "title": "Reset password",
+        "description": "Enter your account email address and we will send you a link to reset your password",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Email address",
+        "resetPassword": "Reset password",
+        "successNotification": "We've sent you an email with a password reset link",
+        "signInLink": "Already have an account? <link>Sign in</link>",
+        "signUpLink": "Don't have an account? <link>Sign up</link>"
+      },
+      "sso": {
+        "cannyError": "Error: failed to sign in to canny",
+        "discourseError": "Error: failed to sign in to discourse"
+      }
+    },
+    "account": {
+      "changePassword": {
+        "title": "Reset password",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "New password",
+        "resetPassword": "Reset password",
+        "successNotification": "Your password was updated successfully"
+      },
+      "githubOAuthCallback": {
+        "accountNotFound": {
+          "title": "No Koyeb account is linked to this GitHub profile",
+          "link": "Do you want to <link>sign up</link>?"
+        },
+        "accountAlreadyExists": {
+          "title": "A Koyeb account is already linked to this GitHub profile",
+          "link": "Do you want to <link>sign in</link>?"
+        }
+      },
+      "invitation": {
+        "notFound": {
+          "title": "Invitation not found",
+          "description": "Make sure you are authenticated with the account to which the invitation was sent to"
+        }
+      }
+    },
+    "home": {
+      "title": "Overview",
+      "services": "Services",
+      "servicesSummary": "{web} {web, plural, one {web service} other {web services}}, {worker} {worker, plural, one {worker} other {workers}}, {database} {database, plural, one {database} other {databases}}",
+      "serviceType": {
+        "all": "All services",
+        "web": "Web services",
+        "worker": "Workers",
+        "database": "Database services"
+      },
+      "appTooltip": "Apps allow you to group your services together and provide a gateway to expose web services under the same domain",
+      "appActions": {
+        "label": "App Actions",
+        "addService": "Add service",
+        "addDomain": "Add domain",
+        "edit": "Edit app",
+        "pauseServices": "Pause all services",
+        "deleteApp": "Delete app"
+      },
+      "editAppDialog": {
+        "title": "Edit app",
+        "appNameLabel": "App name",
+        "appDomainLabel": "Koyeb subdomain",
+        "successNotification": "Your app was edited"
+      },
+      "pauseAppConfirmationDialog": {
+        "title": "Pause app services",
+        "description": "Your app's services will be paused and all their deployments stopped. Are you sure you want to continue?",
+        "confirm": "Pause services",
+        "successNotification": "Your app's service are being paused"
+      },
+      "deleteAppConfirmationDialog": {
+        "title": "Delete app",
+        "description": "Your app and all its associated services will be permanently deleted. Are you sure you want to continue?",
+        "confirm": "Delete app",
+        "successNotification": "Your app is being deleted"
+      },
+      "deploymentSource": {
+        "archive": "Archive"
+      },
+      "deploymentTrigger": {
+        "initial": "This is your first deployment",
+        "redeploy": "Triggered by a manual action on the service",
+        "resume": "Triggered because you resumed this service",
+        "git": "{commit} {branch} <by>by</by> {author}"
+      },
+      "copyServiceUrlSuccess": "Service URL copied to clipboard",
+      "postgresVersion": "Postgres (v{version})",
+      "noServices": "This app has no services",
+      "deleteApp": "Delete app",
+      "deletingApp": "App <strong>{name}</strong> is being deleted",
+      "activity": {
+        "title": "Activity",
+        "viewAll": "View all",
+        "systemUser": "Koyeb"
+      },
+      "news": {
+        "title": "News",
+        "dismissAll": "Dismiss all",
+        "learnMore": "Learn more"
+      }
+    },
+    "createDatabaseService": {
+      "documentTitle": "Create database service",
+      "title": "Create new service",
+      "description": "Go with the recommended settings or adjust them according to your needs",
+      "tips": {
+        "title": "Did you know?",
+        "tip": "The pgvector extension provides powerful functionalities for working with vectors in high-dimensional space"
+      }
+    },
+    "database": {
+      "layout": {
+        "alerts": {
+          "databasePaused": {
+            "description": "Your database is currently paused. Resume it to list your connection details, databases, and roles.",
+            "resume": "Resume",
+            "resuming": "Your database service is being resumed"
+          },
+          "quotaReached": {
+            "upgradePlan": "Upgrade plan",
+            "changeSettings": "Change settings",
+            "hobbyPlan": {
+              "data-transfer": "You have reached the outbound data transfer limit for the free database Instance this month. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited data transfer.",
+              "written-data": "You have reached the data write limit for the free database Instance this month. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited written data.",
+              "active-time": "You have reached the active time limit for the free database Instance this month. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited active time.",
+              "storage-size": "You have reached the storage size limit for the free database Instance. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited storage."
+            },
+            "paidPlan": {
+              "data-transfer": "You have reached the outbound data transfer limit for the free database Instance this month. Select a larger database Instance with unlimited data transfer.",
+              "written-data": "You have reached the data write limit for the free database Instance this month. Select a larger database Instance with unlimited written data.",
+              "active-time": "You have reached the active time limit for the free database Instance this month. Select a larger database Instance with unlimited active time.",
+              "storage-size": "You have reached the storage size limit for the free database Instance. Select a larger database Instance with unlimited storage."
+            }
+          },
+          "preview": {
+            "title": "Welcome to our databases preview!",
+            "description": "We've introduced larger PostgreSQL databases with up to 4GB of RAM. We're still welcoming feedback.",
+            "cta": "Leave feedback",
+            "successNotification": "Thank you for your valuable feedback!"
+          }
+        },
+        "databaseStarting": {
+          "title": "We are getting your database service ready",
+          "description": "When available, connection details will be displayed here"
+        },
+        "databaseNotHealthy": {
+          "title": "Your database is not healthy",
+          "description": "You can either contact us or delete your database if you do not have any stored data",
+          "contactUs": "Contact us",
+          "delete": "Delete database service",
+          "deleteSuccessNotification": "Your database service is being deleted"
+        },
+        "navigation": {
+          "overview": "Overview",
+          "logicalDatabases": "Databases",
+          "roles": "Roles",
+          "settings": "Settings"
+        }
+      },
+      "overview": {
+        "noDatabase": {
+          "title": "No database",
+          "description": "Create the first database to use this database service",
+          "cta": "Create database"
+        },
+        "info": {
+          "title": "Database information",
+          "status": "Status",
+          "activeTime": "Active time",
+          "activeTimeValue": "{used} h {max, select, null {} other {/ {max} h}}",
+          "instance": "Instance type",
+          "disk": "Used storage",
+          "region": "Region",
+          "engine": "Engine",
+          "engineValue": "Postgres (v{version})",
+          "created": "Created"
+        },
+        "connectionDetails": {
+          "title": "Connection details",
+          "roleLabel": "Role",
+          "databaseLabel": "Database",
+          "copySuccess": "Snippet content copied to clipboard",
+          "psql": "psql",
+          "dotenv": ".env",
+          "nextJs": "Next.js",
+          "prisma": "Prisma",
+          "node": "Node.js",
+          "django": "Django",
+          "sqlAlchemy": "SQLAlchemy",
+          "java": "Java",
+          "symfony": "Symfony",
+          "pq": "Go",
+          "rubyOnRails": "Ruby On Rails"
+        }
+      },
+      "logicalDatabases": {
+        "title": "Databases",
+        "createDatabase": "Create database",
+        "name": "Name",
+        "owner": "Owner",
+        "actions": {
+          "delete": "Delete"
+        },
+        "noDatabase": {
+          "title": "No database",
+          "description": "Create the first database to use this database service",
+          "cta": "Create database"
+        },
+        "createDialog": {
+          "title": "Create database",
+          "nameLabel": "Name",
+          "ownerLabel": "Owner",
+          "noRoles": "No roles found, create a database role first",
+          "successNotification": "Database <strong>{name}</strong> created"
+        },
+        "deleteDialog": {
+          "title": "Delete database",
+          "description": "Your database will be permanently deleted. Are you sure you want to continue?",
+          "confirm": "Delete database",
+          "successNotification": "Your database <strong>{name}</strong> has been deleted"
+        }
+      },
+      "roles": {
+        "title": "Roles",
+        "createRole": "Create role",
+        "name": "Name",
+        "password": "Password",
+        "copySuccess": "Database role password to clipboard",
+        "actions": {
+          "reset": "Reset",
+          "delete": "Delete"
+        },
+        "noRole": {
+          "title": "No role",
+          "description": "Create your first role to use this database service",
+          "cta": "Create role"
+        },
+        "createDialog": {
+          "title": "Create role",
+          "nameLabel": "Role name",
+          "successNotification": "Role <strong>{name}</strong> created"
+        },
+        "deleteDialog": {
+          "title": "Delete role",
+          "description": "Your database role will be permanently deleted. Are you sure you want to continue?",
+          "confirm": "Delete role",
+          "successNotification": "Your role <strong>{name}</strong> has been deleted"
+        }
+      },
+      "settings": {
+        "delete": {
+          "title": "Delete database service",
+          "description": "This action will permanently delete your database service. This means that you will not be able to use it.",
+          "delete": "Delete",
+          "successNotification": "Your database service <strong>{serviceName}</strong> is being deleted",
+          "confirmationDialog": {
+            "title": "Delete database service",
+            "description": "Your database service and all the data it contains will be permanently deleted. Are you sure you want to continue?",
+            "confirm": "Delete database"
+          }
+        }
+      }
+    },
+    "createService": {
+      "documentTitle": "Create new service"
+    },
+    "deploy": {
+      "documentTitle": "Deploy",
+      "title": "Deploy on Koyeb",
+      "exampleApp": {
+        "title": "Deploy {appName}"
+      }
+    },
+    "volumes": {
+      "documentTitle": "Volumes",
+      "header": {
+        "title": "Volumes",
+        "createVolume": "Create volume"
+      },
+      "volumesList": {
+        "id": "Id",
+        "name": "Name",
+        "created": "Created",
+        "region": "Region",
+        "size": "Size",
+        "status": "Status",
+        "attachedTo": "Attached to",
+        "actions": {
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "noVolumes": {
+          "title": "You don't have any volumes yet",
+          "description": "Volumes provide additional, persistent, storage capacity for your services",
+          "cta": "Create volume"
+        }
+      },
+      "deleteVolume": {
+        "title": "Delete volume",
+        "description": "Are you sure you want to delete the {name} volume?",
+        "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
+        "confirm": "Delete volume",
+        "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
+      },
+      "volumesLocked": {
+        "title": "Enable volumes",
+        "description": "Volumes provide additional, persistent, storage capacity for your services",
+        "line1": "Upgrade your plan and get started creating your first volume",
+        "docs": "Learn more about volumes",
+        "upgrade": "Upgrade to unlock"
+      }
+    },
+    "domains": {
+      "documentTitle": "Domains",
+      "title": "Domains",
+      "createDomain": "Add domain",
+      "createDialog": {
+        "title": "Create domain",
+        "description": "Create a custom domain and assign it to one of your Koyeb app",
+        "domainNameLabel": "Domain name",
+        "domainNamePlaceholder": "e.g. domain.tld",
+        "appLabel": "Assign to Koyeb app",
+        "noApps": "No apps found",
+        "submitButton": "Create domain",
+        "successNotification": "Domain <strong>{domainName}</strong> created"
+      },
+      "deleteDialog": {
+        "title": "Delete domain",
+        "description": "Are you sure you want to delete the <strong>{domainName}</strong> domain?",
+        "confirm": "Delete domain",
+        "successNotification": "Domain <strong>{domainName}</strong> is being deleted"
+      },
+      "domainsList": {
+        "name": "Name",
+        "status": "Status",
+        "assignedTo": "Assigned to",
+        "updated": "Last updated",
+        "actions": {
+          "delete": "Remove"
+        },
+        "error": "Invalid configuration",
+        "dnsConfiguration": {
+          "title": "DNS configuration",
+          "apexDescription": "Create a flattened CNAME record for {apex} pointing to {target}",
+          "subdomainDescription": "Point {subdomain} CNAME record for {apex} to {target}.",
+          "type": "Type",
+          "cname": "CNAME",
+          "name": "Name",
+          "value": "Value",
+          "lastVerified": "Last verified",
+          "never": "Never",
+          "docs": "View docs",
+          "refresh": "Refresh",
+          "refreshSuccess": "Domain <strong>{domainName}</strong> is being verified"
+        },
+        "changeApp": {
+          "appLabel": "Change the app assigned to domain <strong>{domainName}</strong>",
+          "appPlaceholder": "Select an app",
+          "noApp": "No app",
+          "appAttachedSuccessNotification": "Domain <strong>{domainName}</strong> is now attached to app <strong>{appName}</strong>",
+          "appDetachedSuccessNotification": "Domain <strong>{domainName}</strong> was detached from app"
+        },
+        "noDomains": {
+          "title": "You don't have any domains yet",
+          "description": "Domains allow you to access your Apps using your own domains",
+          "cta": "Add domain"
+        }
+      },
+      "domainsLocked": {
+        "title": "Enable domains",
+        "description": "Domains allow you to access your apps using your own domains",
+        "line1": "Domains make your apps accessible via your own domain names like www.mydomain.tld or api.example.io.<br></br>Upgrade your plan and get started adding your first domain.",
+        "docs": "Learn more about domains",
+        "upgrade": "Upgrade to unlock"
+      }
+    },
+    "secrets": {
+      "title": "Secrets",
+      "createSecret": "Create secret",
+      "noSecrets": {
+        "title": "You don't have any secrets yet",
+        "description": "Secrets enable you to secure your code by removing hardcoded credentials and let you pass environment variables securely to your applications",
+        "cta": "Create secret"
+      },
+      "secretsList": {
+        "name": "Name",
+        "value": "Value",
+        "updated": "Last updated",
+        "copySuccess": "Secret value copied to clipboard",
+        "actions": {
+          "edit": "Edit",
+          "delete": "Remove"
+        }
+      },
+      "editSecretDialog": {
+        "title": "Edit secret",
+        "description": "All Secret values are automatically encrypted server-side to ensure secure storage",
+        "confirm": "Edit secret",
+        "successNotification": "Secret {name} edited"
+      },
+      "deleteSecretDialog": {
+        "title": "Delete secret",
+        "description": "Are you sure you want to delete the <strong>{name}</strong> secret?",
+        "confirm": "Delete secret",
+        "successNotification": "Secret {name} deleted"
+      }
+    },
+    "activity": {
+      "documentTitle": "Activity",
+      "title": "Recent activity",
+      "loadMore": "Load more"
+    },
+    "team": {
+      "title": "Team",
+      "membersList": {
+        "title": "Organization members",
+        "description": "Below are all members and invitations of the <strong>{organizationName}</strong> organization",
+        "member": "Team member",
+        "invited": "Invite pending",
+        "role": "Role",
+        "owner": "Owner",
+        "joined": "Joined",
+        "actions": {
+          "deleteInvitation": "Remove",
+          "deleteInvitationSuccessNotification": "The invitation sent to <strong>{email}</strong> was removed",
+          "resendInvitation": "Resend",
+          "resendInvitationSuccessNotification": "The invitation was sent again to <strong>{email}</strong>",
+          "removeMember": "Remove",
+          "removeMemberSuccessNotification": "<strong>{memberName}</strong> was removed from the organization <strong>{organizationName}</strong>",
+          "leave": "Leave",
+          "leaveSuccessNotification": "You left the organization <strong>{organizationName}</strong>"
+        },
+        "removeMember": {
+          "title": "Remove member",
+          "description": "Are you sure you want to remove <strong>{name}</strong> from the <strong>{organizationName}</strong> organization?",
+          "submitButton": "Remove member"
+        },
+        "leaveOrganization": {
+          "title": "Leave organization",
+          "description": "Are you sure you want to leave the <strong>{organizationName}</strong> organization?",
+          "submitButton": "Leave organization"
+        }
+      },
+      "inviteMember": {
+        "title": "Invite new member",
+        "description": "Invite teammate to join <strong>{organizationName}</strong> organization",
+        "emailPlaceholder": "team@example.com",
+        "submitButton": "Invite",
+        "successNotification": "Invitation sent to {email}",
+        "hobbyPlanUpgrade": "This feature is available on the Starter and Startup plans. <upgrade>View all plans and upgrade →</upgrade>"
+      }
+    },
+    "service": {
+      "layout": {
+        "redeploy": "Redeploy",
+        "redeploying": "Your service's latest deployment is being redeployed",
+        "redeployDialog": {
+          "title": "Redeploy service",
+          "descriptionWithoutBuild": "You are about to create a new deployment of your service",
+          "descriptionWithBuild": "Before redeploying service, chose between those two options",
+          "skipBuild": {
+            "title": "Use previous build",
+            "description": "Reuse the previous build for faster deployment if unchanged build process",
+            "cta": "Skip build"
+          },
+          "triggerBuild": {
+            "title": "Create build",
+            "description": "If you wish to rebuild your service, use the build cache for faster deployment",
+            "useCache": "Use build cache",
+            "cta": "Trigger build"
+          },
+          "submitButton": "Redeploy service"
+        },
+        "servicePaused": {
+          "title": "Service paused",
+          "description": "Your service is currently paused, deployments are stopped, and no traffic will be handled by the service",
+          "resume": "Resume",
+          "resuming": "Your service is being resumed"
+        },
+        "navigation": {
+          "overview": "Overview",
+          "metrics": "Metrics",
+          "console": "Console",
+          "settings": "Settings"
+        }
+      },
+      "overview": {
+        "deployments": {
+          "actions": {
+            "toggleDeploymentsList": "Toggle deployments list",
+            "activeDeployment": "View active deployment",
+            "noActiveDeployment": "The service does not have an active deployment",
+            "latestDeployment": "View latest deployment"
+          },
+          "active": {
+            "title": "Active deployment",
+            "description": "The deployment currently running your service",
+            "activeDeployment": "Active deployment",
+            "noActiveDeployment": "No active deployment"
+          },
+          "upcoming": {
+            "title": "Upcoming",
+            "inQueue": "In queue...",
+            "cancel": "Cancel",
+            "cancelSuccess": "Your deployment has been canceled"
+          },
+          "past": {
+            "title": "History"
+          },
+          "loadMore": "Load more",
+          "+99": "+99"
+        },
+        "deploymentTrigger": {
+          "initial": "Initial deployment",
+          "redeploy": "Triggered because service has been updated or redeployed",
+          "resume": "Triggered because service has been resumed"
+        },
+        "deploymentStashedAlert": {
+          "title": "Deployment stashed",
+          "description": "The service was saved without executing a new deployment"
+        },
+        "serviceErrorAlert": {
+          "cta": "See deployment",
+          "unhealthy": {
+            "title": "Service unhealthy",
+            "description": "The latest deployment <latestDeploymentLink>{latestDeploymentName}</latestDeploymentLink> did not complete successfully"
+          },
+          "degraded": {
+            "title": "Service degraded",
+            "description": "The latest deployment <latestDeploymentLink>{latestDeploymentName}</latestDeploymentLink> did not complete successfully. The service continues to operate with the active deployment <activeDeploymentLink>{activeDeploymentName}</activeDeploymentLink>."
+          }
+        }
+      },
+      "metrics": {
+        "title": "Metrics",
+        "timeFrames": {
+          "5m": "5M",
+          "15m": "15M",
+          "1h": "15H",
+          "6h": "6H",
+          "1d": "1D",
+          "2d": "2D",
+          "7d": "7D"
+        },
+        "loading": "Loading data",
+        "noData": "No data available",
+        "noValue": "No data",
+        "cpu": {
+          "label": "CPU usage",
+          "tooltip": "Percentage of used CPU for the selected instance"
+        },
+        "memory": {
+          "label": "Memory usage",
+          "tooltip": "The amount of memory held in RAM (RSS)",
+          "maxLabel": "Max"
+        },
+        "responseTime": {
+          "label": "Response time",
+          "tooltip": "The median, max, 95th, and 99th percentile response time of HTTP requests",
+          "50pLabel": "50th percentile",
+          "90pLabel": "90th percentile",
+          "99pLabel": "99th percentile",
+          "maxLabel": "Max"
+        },
+        "httpThroughput": {
+          "label": "Request throughput",
+          "tooltip": "The number of HTTP requests grouped by status code",
+          "1xxLabel": "1xx",
+          "2xxLabel": "2xx",
+          "3xxLabel": "3xx",
+          "4xxLabel": "4xx",
+          "5xxLabel": "5xx"
+        },
+        "publicDataTransfer": {
+          "label": "Public data transfer",
+          "tooltip": "The service ingress and egress public data transfer",
+          "inLabel": "In",
+          "outLabel": "Out"
+        }
+      },
+      "console": {
+        "noInstance": {
+          "title": "No running instances",
+          "description": "You don't have any instances running, check your service's status"
+        },
+        "instanceLabel": "Instance",
+        "prompt": "Customize your command, then hit `return` to run. $ ",
+        "restart": "Press any key to restart",
+        "commandExited": "Command exited with code ",
+        "unexpectedError": "Unexpected error"
+      },
+      "settings": {
+        "documentTitle": "{serviceName} service settings",
+        "title": "Service settings",
+        "description": "Updating your service settings will create a new deployment.",
+        "pauseServiceCard": {
+          "title": "Pause service",
+          "description": "Once this operation is performed, your service will be paused and all active deployments stopped. You can wake-up your service by clicking the \"Resume\" button below.",
+          "pause": "Pause",
+          "resume": "Resume",
+          "pausing": "Your service is being paused",
+          "resuming": "Your service is being resumed",
+          "confirmationDialog": {
+            "title": "Pause service",
+            "description": "Your service will be paused and all its deployments stopped. Are you sure you want to continue?",
+            "confirm": "Pause service"
+          }
+        },
+        "deleteServiceCard": {
+          "title": "Delete service",
+          "description": "Once this operation is performed, your service will be permanently deleted.",
+          "delete": "Delete",
+          "deleting": "Your service is being deleted",
+          "confirmationDialog": {
+            "title": "Delete service",
+            "description": "Your service will be permanently deleted. Are you sure you want to continue?",
+            "confirm": "Delete service"
+          }
+        }
+      }
+    },
+    "organizationSettings": {
+      "layout": {
+        "documentTitle": "Settings",
+        "title": "Settings",
+        "navigation": {
+          "general": "General",
+          "billing": "Usage and billing",
+          "plans": "Plans",
+          "api": "API",
+          "registrySecrets": "Registry configuration"
+        }
+      },
+      "general": {
+        "organizationName": {
+          "title": "Organization name",
+          "description": "This is your organization's visible name within Koyeb"
+        },
+        "organizationQuotas": {
+          "title": "Organization limits",
+          "description": "This is your organization's current limit",
+          "resource": "Resource",
+          "instanceType": "Instance",
+          "volumes": "Volumes",
+          "quota": "Allowed",
+          "apps": "Apps",
+          "services": "Services",
+          "domains": "Custom domains",
+          "maxOrganizationMembers": "Number of seats",
+          "serviceTypes": "Service types",
+          "web": "Web",
+          "worker": "Worker",
+          "database": "Database",
+          "regions": "Regions",
+          "maximumMemory": "Maximum allowed memory across all services",
+          "volumeQuota": "Per volume: {maxVolumeSize}, total: {maxTotalSize}",
+          "zero": "0",
+          "infinity": "∞",
+          "requestIncrease": "Request increase",
+          "hobbyPlanAlert": {
+            "description": "You're on the Hobby plan which let you run one Web Service and Database for free. Upgrade to Starter to get the full Koyeb experience.",
+            "cta": "Upgrade plan"
+          }
+        },
+        "deactivateOrganization": {
+          "title": "Deactivate the organization",
+          "description": "When you deactivate an organization, all associated resources will be deleted: Apps, Services, Secrets, Domains, GitHub app and API credentials. You can reactivate an organization at any time.",
+          "deactivate": "Deactivate",
+          "deactivationRequestSuccessNotification": "We've sent you an email to confirm the deactivation of your organization",
+          "deactivationSuccessNotification": "Your organization is being deactivated",
+          "deactivating": "Your organization is being deactivated..."
+        },
+        "reactivateOrganization": {
+          "title": "Reactivate the organization",
+          "description": "Activate the organization to start using this Koyeb organization again.",
+          "reactivate": "Reactivate",
+          "successNotification": "Your organization was reactivated"
+        },
+        "deleteOrganization": {
+          "title": "Delete the organization",
+          "description": "Permanently delete the organization and the associated payment information",
+          "delete": "Delete",
+          "successNotification": "Your organization {organizationName} was deleted",
+          "unpaidInvoicesPending": "Checking for unpaid invoices...",
+          "deactivating": "Your organization is being deactivated...",
+          "hasUnpaidInvoices": "Your organization has unpaid invoices. Settle the outstanding payment to be able to delete the organization.",
+          "mustBeDeactivated": "The organization must first be deactivated before it can be deleted"
+        }
+      },
+      "billing": {
+        "usage": {
+          "title": "Usage summary",
+          "description": "You are currently on the <strong>{plan}</strong> plan. <upgrade>View all plans and upgrade →</upgrade>",
+          "noUsage": "You have not used any resources this month",
+          "startEnd": "{start} - {end}",
+          "hoursMinutesSeconds": "{hours}h {minutes}m {seconds}s",
+          "usageSeconds": "{seconds} seconds",
+          "pricePerHour": "{price} / h (billed per second)",
+          "subtotal": "Subtotal",
+          "total": "Estimated cost (excluding taxes)",
+          "downloadUsage": "Download usage",
+          "downloadUsageDialog": {
+            "title": "Download usage CSV",
+            "description": "Choose the billing cycle you want to download",
+            "submit": "Download"
+          }
+        },
+        "stripePortal": {
+          "title": "Manage billing",
+          "description": "Access your invoices and manage your payment methods",
+          "noBillingInformation": "You need to provide your billing information using the form bellow before you can access your invoices and manage your payment methods",
+          "cta": "Manage billing"
+        },
+        "billingInformation": {
+          "title": "Billing information",
+          "description": "This information appears on your monthly invoice and should be the legal address of your home or business",
+          "nameLabel": "Name",
+          "emailLabel": "Email",
+          "addressLabel": "Address",
+          "companyLabel": "For business",
+          "vatNumberLabel": "VAT Number",
+          "successNotification": "Your organization's billing information were updated"
+        }
+      },
+      "plans": {
+        "title": "Change your organisation plan",
+        "description": "Need more? Upgrade your plan! No commitment, downgrade when you need. Reach out for quota upgrades.",
+        "currentPlan": "Current plan",
+        "downgrade": "Downgrade",
+        "upgrade": "Upgrade now",
+        "upgradeEnterprise": "Get in touch",
+        "maxOrganizationMembers": "Seats",
+        "regions": "Regions",
+        "customDomains": "Custom domains",
+        "customDomainsDetails": "($0.20 per additional domain / month)",
+        "apps": "Apps",
+        "services": "Services",
+        "maximumMemory": "Maximum allowed memory across all services",
+        "concurrentBuilds": "Concurrent builds",
+        "logRetention": "Log retention",
+        "instances": "Instances",
+        "bandwidth": "Included bandwidth",
+        "bandwidthDetails": "($0.04 per additional GB / month)",
+        "support": "Support",
+        "sla": "SLA",
+        "securityCompliance": "SOC2 & ISO27001 compliance",
+        "starter": {
+          "displayName": "Starter",
+          "planPrice": "$0 per month + compute",
+          "planDetails": "Run a free Web service and free Postgres Database. Pay-per-use for more, per-second.",
+          "maxOrganizationMembers": "3",
+          "regions": "All",
+          "customDomains": "10",
+          "apps": "25",
+          "services": "50",
+          "maximumMemory": "50 GB",
+          "concurrentBuilds": "1",
+          "logRetention": "72 hours",
+          "instances": "Access to instances up to 3XLarge (32 GB RAM / 24 vCPU)",
+          "bandwidth": "100 GB",
+          "support": "Basic",
+          "sla": "--",
+          "securityCompliance": "No"
+        },
+        "startup": {
+          "displayName": "Startup",
+          "planPrice": "$79 per month + compute",
+          "planDetails": "Priority support with access to all instance types for projects and organizations of all sizes",
+          "maxOrganizationMembers": "6",
+          "regions": "All",
+          "customDomains": "100",
+          "apps": "50",
+          "services": "100",
+          "maximumMemory": "250 GB",
+          "concurrentBuilds": "3",
+          "logRetention": "30 days",
+          "instances": "Access to all instances",
+          "bandwidth": "100 GB",
+          "support": "Priority support with Slack cross-connect",
+          "sla": "99.9%",
+          "securityCompliance": "No"
+        },
+        "enterprise": {
+          "displayName": "Enterprise",
+          "planPrice": "Starting at $1000/mo",
+          "planDetails": "Premium support with maximum uptime SLA. SOC2 and ISO27001 certified.",
+          "maxOrganizationMembers": "Unlimited",
+          "regions": "All and access to private dedicated locations",
+          "customDomains": "500",
+          "apps": "Unlimited",
+          "services": "Unlimited",
+          "maximumMemory": "Unlimited",
+          "concurrentBuilds": "Custom",
+          "logRetention": "Custom",
+          "instances": "Access to custom RAM, CPU, and GPU instances",
+          "bandwidth": "100 GB",
+          "support": "Premium support 24/7",
+          "sla": "99.9%",
+          "securityCompliance": "Yes"
+        },
+        "paymentDialog": {
+          "title": "Upgrade to the {plan} plan",
+          "submit": "Upgrade",
+          "successNotification": {
+            "title": "Welcome to the {plan} plan",
+            "details": "We successfully {upgraded, select, true {upgraded} other {downgraded}} your subscription to the {plan} plan"
+          }
+        }
+      },
+      "apiCredential": {
+        "title": "API access Tokens",
+        "createApiCredential": "Create API token",
+        "list": {
+          "name": "Name",
+          "description": "Description",
+          "created": "Created",
+          "actions": {
+            "delete": "Delete"
+          },
+          "noApiCredentials": {
+            "title": "You don't have any API tokens yet",
+            "description": "Generate Koyeb API access tokens to interact with your organization's resources programmatically or use the Koyeb CLI",
+            "cta": "Create API token"
+          }
+        },
+        "createDialog": {
+          "title": "Create API token",
+          "description": "Create an API token to access Koyeb programmatically. Those API access tokens will only be able to perform actions within the organization <strong>{organizationName}</strong>.",
+          "nameLabel": "Name",
+          "descriptionLabel": "Description",
+          "submitButton": "Create API token",
+          "successNotification": "API token <strong>{name}</strong> created",
+          "createdTitle": "API token created",
+          "createdDescription": "Your API token was created. Make sure you keep it stored it in a secure place, you won't be able to see it again."
+        },
+        "deleteDialog": {
+          "title": "Delete API token",
+          "description": "Are you sure you want to delete the <strong>{name}</strong> API token?",
+          "confirm": "Delete token",
+          "successNotification": "The API token <strong>{name}</strong> was deleted"
+        }
+      },
+      "registrySecrets": {
+        "title": "Registry configuration",
+        "createRegistrySecret": "Create registry configuration",
+        "list": {
+          "name": "Name",
+          "type": "Type",
+          "actions": {
+            "edit": "Edit",
+            "delete": "Delete"
+          },
+          "noSecrets": {
+            "title": "You don't have any registry credential",
+            "description": "Registry credentials hold information to access Docker registries and pull private images",
+            "cta": "Create registry credential"
+          }
+        },
+        "editDialog": {
+          "title": "Edit registry configuration",
+          "description": "All registry configuration values are automatically encrypted server-side to ensure secure storage",
+          "successNotification": "Registry configuration <strong>{name}</strong> edited"
+        },
+        "deleteDialog": {
+          "title": "Delete registry configuration",
+          "description": "Are you sure you want to delete the <strong>{name}</strong> registry configuration?",
+          "confirm": "Delete registry configuration",
+          "successNotification": "Registry configuration <strong>{name}</strong> deleted"
+        }
+      }
+    },
+    "userSettings": {
+      "layout": {
+        "documentTitle": "Account settings",
+        "title": "Personal account settings",
+        "navigation": {
+          "general": "General",
+          "organizations": "Organizations",
+          "apiCredential": "Personal access tokens"
+        }
+      },
+      "general": {
+        "name": {
+          "label": "Your name",
+          "footer": "The full name of the person owning this account",
+          "successNotification": "Your name was successfully changed to {name}"
+        },
+        "githubAccount": {
+          "label": "Your GitHub account",
+          "noGithubAccountRegistered": "You didn't link a GitHub account to Koyeb yet",
+          "registerAccount": "Link GitHub account",
+          "accountRegistered": "Your GitHub account <strong>{githubUser}</strong> is linked to this Koyeb account",
+          "footer": "Connect your Koyeb account to GitHub to make logging in easier"
+        },
+        "email": {
+          "label": "Your email",
+          "footer": "The email address associated to this account and use to log in with Koyeb",
+          "successNotification": "We've sent you a confirmation email to {email}"
+        },
+        "password": {
+          "label": "Your password",
+          "description": "Need to change your password? Click the button below.",
+          "footer": "We will send you a link to reset your password",
+          "changePassword": "Change password",
+          "successNotification": "We've sent you an email with a password reset link"
+        },
+        "deleteAccount": {
+          "label": "Delete account",
+          "description": "Once this operation is performed, your account will be permanently deleted",
+          "mustLeaveOrganizations": "You must leave or delete all your organizations before you can delete your account",
+          "deleteAccount": "Delete account",
+          "confirmationText": "Your user account will be deleted. Are you sure?"
+        }
+      },
+      "organizations": {
+        "title": "Organizations",
+        "owner": "Owner",
+        "manage": "Manage",
+        "switch": "Switch",
+        "createOrganization": "Create organization",
+        "createOrganizationDialog": {
+          "title": "Create organization",
+          "description": "Create a new organization to collaborate with others. To get started, name your new Koyeb organization.",
+          "organizationNameLabel": "Organization name",
+          "successNotification": "The organization {organizationName} was created"
+        }
+      },
+      "apiCredential": {
+        "title": "Personal access tokens",
+        "createApiCredential": "Create access token",
+        "list": {
+          "name": "Name",
+          "description": "Description",
+          "created": "Created",
+          "actions": {
+            "delete": "Delete"
+          },
+          "noApiCredentials": {
+            "title": "You don't have any personal access tokens yet",
+            "description": "Generate Koyeb personal access tokens to interact with your account and resources programmatically or use the Koyeb CLI",
+            "cta": "Create access token"
+          }
+        },
+        "createDialog": {
+          "title": "Create personal access token",
+          "description": "Create a personal token to access Koyeb programmatically. Those access tokens will be able to perform actions on behalf of your user <strong>{userName}</strong>.",
+          "nameLabel": "Name",
+          "descriptionLabel": "Description",
+          "submitButton": "Create access token",
+          "successNotification": "Personal access token <strong>{name}</strong> created",
+          "createdTitle": "Access token created",
+          "createdDescription": "Your personal access token was created. Make sure you keep it stored it in a secure place, you won't be able to see it again."
+        },
+        "deleteDialog": {
+          "title": "Delete personal access token",
+          "description": "Are you sure you want to delete the <strong>{name}</strong> personal access token?",
+          "confirm": "Delete token",
+          "successNotification": "The personal access token <strong>{name}</strong> was deleted"
+        }
+      }
+    },
+    "notFound": {
+      "title": "That page is gone!",
+      "line1": "Maybe this page used to exist or you just spelled something wrong",
+      "back": "Back to home"
+    }
+  }
+}

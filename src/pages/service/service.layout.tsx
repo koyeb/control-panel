@@ -1,0 +1,173 @@
+import { useMutation } from '@tanstack/react-query';
+
+import { Alert, Button, TabButtons } from '@koyeb/design-system';
+import { useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
+import { App, Deployment, Service } from 'src/api/model';
+import { useApiMutationFn } from 'src/api/use-api';
+import { CopyIconButton } from 'src/application/copy-icon-button';
+import { notify } from 'src/application/notify';
+import { routes } from 'src/application/routes';
+import { getServiceUrls } from 'src/application/service-functions';
+import { ExternalLink, TabButtonLink } from 'src/components/link';
+import { Loading } from 'src/components/loading';
+import { QueryError } from 'src/components/query-error';
+import { ServiceTypeIcon } from 'src/components/service-type-icon';
+import { usePathname, useRouteParam } from 'src/hooks/router';
+import { Translate } from 'src/intl/translate';
+
+import { RedeployButton } from './redeploy-button';
+import { ServiceErrorAlert } from './service-error-alert';
+
+const T = Translate.prefix('pages.service.layout');
+
+type ServiceLayoutProps = {
+  children: React.ReactNode;
+};
+
+export function ServiceLayout({ children }: ServiceLayoutProps) {
+  const serviceId = useRouteParam('serviceId');
+
+  const serviceQuery = useServiceQuery(serviceId);
+  const appQuery = useAppQuery(serviceQuery.data?.appId);
+  const activeDeploymentQuery = useDeploymentQuery(serviceQuery.data?.activeDeploymentId);
+
+  if (appQuery.isPending || serviceQuery.isPending) {
+    return <Loading />;
+  }
+
+  if (appQuery.isError) {
+    return <QueryError error={appQuery.error} />;
+  }
+
+  if (serviceQuery.isError) {
+    return <QueryError error={serviceQuery.error} />;
+  }
+
+  if (activeDeploymentQuery.isError) {
+    return <QueryError error={activeDeploymentQuery.error} />;
+  }
+
+  const app = appQuery.data;
+  const service = serviceQuery.data;
+  const activeDeployment = activeDeploymentQuery.data;
+
+  return (
+    <div className="col gap-8">
+      <div className="col sm:row items-start justify-between gap-4">
+        <Header app={app} service={service} deployment={activeDeployment} />
+        <RedeployButton service={service} />
+      </div>
+
+      <ServiceErrorAlert service={service} />
+      <ServicePausedAlert service={service} />
+
+      <Navigation />
+
+      {children}
+    </div>
+  );
+}
+
+type HeaderProps = {
+  app: App;
+  service: Service;
+  deployment?: Deployment;
+};
+
+function Header({ app, service, deployment }: HeaderProps) {
+  const url = getServiceUrls(app, service, deployment).find((url) => url.externalUrl !== undefined);
+
+  return (
+    <div className="row min-w-0 max-w-full items-center gap-2">
+      <ServiceTypeIcon type={service.type} size="big" />
+
+      <div className="col min-w-0 gap-1">
+        <div className="row items-center gap-2">
+          <div className="typo-heading">{service.name}</div>
+          <CopyIconButton text={`${app.name}/${service.name}`} className="size-4" />
+        </div>
+
+        <div className="row gap-2 text-dim">
+          <div className="whitespace-nowrap">
+            <Translate id={`common.serviceType.${service.type}`} />
+          </div>
+
+          {url !== undefined && (
+            <>
+              <div className="border-l" />
+              <ExternalLink openInNewTab href={`https://${url.externalUrl}`} className="text-link truncate">
+                {url.externalUrl}
+              </ExternalLink>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Navigation() {
+  const serviceId = useRouteParam('serviceId');
+
+  return (
+    <TabButtons className="self-start">
+      <Tab href={routes.service.overview(serviceId)}>
+        <T id="navigation.overview" />
+      </Tab>
+
+      <Tab href={routes.service.metrics(serviceId)}>
+        <T id="navigation.metrics" />
+      </Tab>
+
+      <Tab href={routes.service.console(serviceId)}>
+        <T id="navigation.console" />
+      </Tab>
+
+      <Tab href={routes.service.settings(serviceId)}>
+        <T id="navigation.settings" />
+      </Tab>
+    </TabButtons>
+  );
+}
+
+function Tab(props: { href: string; children: React.ReactNode }) {
+  const pathname = usePathname();
+
+  return <TabButtonLink selected={pathname === props.href} className="whitespace-nowrap" {...props} />;
+}
+
+function ServicePausedAlert({ service }: { service: Service }) {
+  const t = T.useTranslate();
+
+  const { mutate: resume, isPending } = useMutation({
+    ...useApiMutationFn('resumeService', {
+      path: { id: service.id },
+    }),
+    onSuccess() {
+      notify.info(t('servicePaused.resuming'));
+    },
+  });
+
+  if (service.status !== 'paused') {
+    return null;
+  }
+
+  return (
+    <Alert
+      variant="info"
+      style="outline"
+      title={<T id="servicePaused.title" />}
+      description={<T id="servicePaused.description" />}
+    >
+      <Button
+        variant="outline"
+        color="blue"
+        loading={isPending}
+        onClick={() => resume()}
+        className="ml-auto self-center"
+      >
+        <T id="servicePaused.resume" />
+      </Button>
+    </Alert>
+  );
+}

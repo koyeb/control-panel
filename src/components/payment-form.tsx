@@ -1,0 +1,320 @@
+import {
+  CardCvcElement,
+  CardExpiryElement,
+  CardNumberElement,
+  useElements,
+  useStripe,
+} from '@stripe/react-stripe-js';
+import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
+import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { Controller, FormState, useForm } from 'react-hook-form';
+
+import { Button, Dialog, Field, FieldLabel } from '@koyeb/design-system';
+import { api, ApiEndpointParams } from 'src/api/api';
+import { useOrganization } from 'src/api/hooks/session';
+import { Address, OrganizationPlan } from 'src/api/model';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { notify } from 'src/application/notify';
+import { reportError } from 'src/application/report-error';
+import { getAccessToken, useAccessToken } from 'src/application/token';
+import { AddressField } from 'src/components/address-field/address-field';
+import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
+import { Translate } from 'src/intl/translate';
+import { inArray } from 'src/utils/arrays';
+import { assert } from 'src/utils/assert';
+import { wait } from 'src/utils/promises';
+
+const T = Translate.prefix('paymentDialog');
+
+const waitForPaymentMethodTimeout = 12 * 1000;
+
+class StripeError extends Error {
+  constructor(public readonly error: BaseStripeError) {
+    super(error.message);
+  }
+}
+
+class TimeoutError extends Error {}
+
+const classes = {
+  base: clsx('col h-10 w-full justify-center rounded border px-2 -outline-offset-1'),
+  focus: clsx('focused'),
+};
+
+const stylesLight = {
+  base: {
+    color: 'rgb(9 9 11)',
+    '::placeholder': {
+      color: 'rgb(113 113 122)',
+    },
+  },
+};
+
+const stylesDark = {
+  base: {
+    color: 'rgb(250 250 250)',
+    '::placeholder': {
+      color: 'rgb(161 161 170)',
+    },
+  },
+};
+
+type PaymentFormProps = {
+  theme?: 'dark' | 'light';
+  plan?: OrganizationPlan;
+  onPlanChanged?: () => void;
+  renderFooter: (formState: FormState<{ address: Address }>) => React.ReactNode;
+};
+
+export function PaymentForm({ theme: themeProp, plan, onPlanChanged, renderFooter }: PaymentFormProps) {
+  const t = T.useTranslate();
+  const organization = useOrganization();
+
+  const form = useForm<{ address: Address }>({
+    defaultValues: {
+      address: organization.billing.address ?? {
+        line1: '',
+        postalCode: '',
+        city: '',
+        country: '',
+      },
+    },
+  });
+
+  const { token } = useAccessToken();
+  const invalidate = useInvalidateApiQuery();
+
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleFormError = useFormErrorHandler(form, (error) => ({
+    'address.line1': error.address1,
+    'address.line2': error.address2,
+    'address.city': error.city,
+    'address.postalCode': error.postal_code,
+    'address.state': error.state,
+    'address.country': error.country,
+  }));
+
+  const mutation = useMutation({
+    async mutationFn({ address }: FormValues<typeof form>) {
+      await updateBillingInformation(address);
+
+      assert(stripe !== null);
+      assert(elements !== null);
+      await submitPaymentMethod(stripe, elements);
+
+      await waitForPaymentMethod();
+
+      await api.changePlan({
+        token,
+        path: { id: organization.id },
+        body: { plan },
+      });
+    },
+    onError(error) {
+      if (error instanceof StripeError) {
+        notify.error(error.message);
+
+        if (!inArray(error.error.type, ['validation_error', 'card_error'])) {
+          reportError(error, { type: error.error.type, code: error.error.code });
+        }
+      } else if (error instanceof TimeoutError) {
+        notify.error(<PaymentMethodTimeout />);
+      } else {
+        handleFormError(error);
+      }
+    },
+    async onSuccess() {
+      await invalidate('getCurrentOrganization');
+      onPlanChanged?.();
+    },
+  });
+
+  const theme = useThemeModeOrPreferred();
+  const style = (themeProp ?? theme) === ThemeMode.light ? stylesLight : stylesDark;
+
+  return (
+    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-6">
+      <div className="col gap-3">
+        <Field>
+          <FieldLabel>
+            <T id="cardNumberLabel" />
+          </FieldLabel>
+          <CardNumberElement options={{ classes, style }} />
+        </Field>
+
+        <div className="row gap-2">
+          <Field className="flex-1">
+            <FieldLabel>
+              <T id="cardNumberLabel" />
+            </FieldLabel>
+            <CardExpiryElement options={{ classes, style }} />
+          </Field>
+
+          <Field className="flex-1">
+            <FieldLabel>
+              <T id="cardNumberLabel" />
+            </FieldLabel>
+            <CardCvcElement options={{ classes, style }} />
+          </Field>
+        </div>
+
+        <Controller
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <AddressField
+              required
+              size={3}
+              label={<T id="addressLabel" />}
+              placeholder={t('addressPlaceholder')}
+              value={field.value}
+              onChange={field.onChange}
+              errors={{
+                line1: form.formState.errors.address?.line1?.message,
+                line2: form.formState.errors.address?.line2?.message,
+                city: form.formState.errors.address?.city?.message,
+                postalCode: form.formState.errors.address?.postalCode?.message,
+                state: form.formState.errors.address?.state?.message,
+                country: form.formState.errors.address?.country?.message,
+              }}
+            />
+          )}
+        />
+
+        <p className="text-xs text-dim">
+          <T id="temporaryHoldMessage" />
+        </p>
+      </div>
+
+      {renderFooter(form.formState)}
+    </form>
+  );
+}
+
+type PaymentDialogProps = {
+  open: boolean;
+  onClose: () => void;
+  title: React.ReactNode;
+  description: React.ReactNode;
+  submit: React.ReactNode;
+} & Omit<PaymentFormProps, 'renderFooter'>;
+
+export function PaymentDialog({ open, onClose, title, description, submit, ...props }: PaymentDialogProps) {
+  return (
+    <Dialog isOpen={open} onClose={onClose} width="lg" title={title} description={description}>
+      <PaymentForm
+        {...props}
+        renderFooter={(formState) => (
+          <footer className="row justify-end gap-2">
+            <Button variant="outline" color="gray" size={3} onClick={onClose}>
+              <Translate id="common.cancel" />
+            </Button>
+
+            <Button type="submit" size={3} loading={formState.isSubmitting}>
+              {submit}
+            </Button>
+          </footer>
+        )}
+      />
+    </Dialog>
+  );
+}
+
+function PaymentMethodTimeout() {
+  return (
+    <div className="col gap-1">
+      <strong>
+        <T id="paymentMethodTimeoutTitle" />
+      </strong>
+
+      <p>
+        <T
+          id="paymentMethodTimeoutDescription"
+          values={{
+            contactUs: (children) => (
+              <span className="intercom-contact-us cursor-pointer underline">{children}</span>
+            ),
+          }}
+        />
+      </p>
+    </div>
+  );
+}
+
+async function updateBillingInformation(address: Address) {
+  const token = getAccessToken() ?? undefined;
+  const { user } = await api.getCurrentUser({ token });
+  const { organization } = await api.getCurrentOrganization({ token });
+
+  const body: ApiEndpointParams<'updateOrganization'>['body'] = {
+    address1: address.line1,
+    address2: address.line2,
+    city: address.city,
+    postal_code: address.postalCode,
+    state: address.state,
+    country: address.country,
+  };
+
+  if (organization?.billing_name === '') {
+    body.billing_name = user?.name;
+  }
+
+  if (organization?.billing_email === '') {
+    body.billing_email = user?.email;
+  }
+
+  await api.updateOrganization({
+    token,
+    path: { id: organization!.id! },
+    query: {},
+    body,
+  });
+}
+
+async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
+  const token = getAccessToken() ?? undefined;
+  const { payment_method } = await api.createPaymentAuthorization({ token });
+
+  try {
+    const card = elements.getElement(CardNumberElement);
+    assert(card !== null);
+
+    const result = await stripe.confirmCardPayment(
+      payment_method!.authorization_stripe_payment_intent_client_secret!,
+      { payment_method: { card } },
+    );
+
+    if (result.error) {
+      throw new StripeError(result.error);
+    }
+  } finally {
+    await api.confirmPaymentAuthorization({
+      token,
+      path: { id: payment_method!.id! },
+    });
+  }
+}
+
+async function waitForPaymentMethod() {
+  const token = getAccessToken() ?? undefined;
+  let hasPaymentMethod = false;
+
+  const start = new Date().getTime();
+  const elapsed = () => new Date().getTime() - start;
+
+  while (!hasPaymentMethod && elapsed() <= waitForPaymentMethodTimeout) {
+    const organization = await api.getCurrentOrganization({ token });
+
+    hasPaymentMethod = Boolean(organization.organization?.has_payment_method);
+
+    await wait(1000);
+  }
+
+  if (elapsed() > waitForPaymentMethodTimeout) {
+    throw new TimeoutError();
+  }
+}

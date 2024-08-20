@@ -1,0 +1,42 @@
+name: E2E Tests
+
+on:
+  workflow_dispatch:
+  # deployment_status:
+
+jobs:
+  test:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    # if: github.event.deployment_status.state == 'success'
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+
+      - name: Install Playwright dependencies
+        run: pnpm exec playwright install --with-deps
+
+      - name: Run end-to-end tests
+        run: pnpm e2e
+        env:
+          CI: 'true'
+          # BASE_URL: ${{ github.event.deployment_status.environment_url }}
+          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+          E2E_USER_TOKEN: ${{ secrets.E2E_USER_TOKEN }}
+          E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+          E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
+          E2E_USER_GITHUB_PASSWORD: ${{ secrets.E2E_USER_GITHUB_PASSWORD }}
+          E2E_USER_GITHUB_TOTP_KEY: ${{ secrets.E2E_USER_GITHUB_TOTP_KEY }}
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() || cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() || cancelled() }}
+        with:
+          name: test-results
+          path: test-results

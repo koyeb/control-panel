@@ -1,0 +1,134 @@
+import { useMutation } from '@tanstack/react-query';
+import { FieldValues, FormState, useForm } from 'react-hook-form';
+import { z } from 'zod';
+
+import { InputEnd } from '@koyeb/design-system';
+import { api } from 'src/api/api';
+import { useRegions } from 'src/api/hooks/catalog';
+import { mapVolume } from 'src/api/mappers/volume';
+import { Volume } from 'src/api/model';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { notify } from 'src/application/notify';
+import { useAccessToken } from 'src/application/token';
+import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { FormValues, useFormErrorHandler } from 'src/hooks/form';
+import { useZodResolver } from 'src/hooks/validation';
+import { Translate } from 'src/intl/translate';
+import { hasProperty } from 'src/utils/object';
+
+const T = Translate.prefix('volumes.form');
+
+const schema = z.object({
+  name: z.string().min(2).max(63),
+  region: z.string().min(1),
+  size: z.number(),
+});
+
+type VolumeFormProps = {
+  volume?: Volume;
+  onSubmitted: (volume: Volume) => void;
+  renderFooter: (formState: FormState<FieldValues>) => React.ReactNode;
+};
+
+export function VolumeForm({ volume, onSubmitted, renderFooter }: VolumeFormProps) {
+  const { token } = useAccessToken();
+  const invalidate = useInvalidateApiQuery();
+  const regions = useRegions().filter(hasProperty('hasVolumes', true));
+  const t = T.useTranslate();
+
+  const form = useForm<z.infer<typeof schema>>({
+    defaultValues: {
+      name: volume?.name ?? '',
+      region: volume?.region ?? '',
+      size: volume?.size ? volume.size / Math.pow(10, 9) : NaN,
+    },
+    resolver: useZodResolver(schema, {
+      name: t('nameLabel'),
+      region: t('regionLabel'),
+      size: t('sizeLabel'),
+    }),
+  });
+
+  const mutation = useMutation({
+    async mutationFn({ name, region, size }: FormValues<typeof form>) {
+      if (volume) {
+        return api
+          .updateVolume({
+            token,
+            path: { id: volume.id },
+            body: { name },
+          })
+          .then(({ volume }) => mapVolume(volume!));
+      } else {
+        return api
+          .createVolume({
+            token,
+            body: {
+              volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
+              name,
+              max_size: size,
+              region,
+            },
+          })
+          .then(({ volume }) => mapVolume(volume!));
+      }
+    },
+    async onSuccess(createVolume) {
+      await invalidate('listVolumes');
+      notify.success(t(volume !== undefined ? 'editSuccess' : 'createSuccess', { name: createVolume.name }));
+      onSubmitted(createVolume);
+    },
+    onError: useFormErrorHandler(form, (error) => ({
+      name: error.name,
+      region: error.region,
+      size: error.max_size,
+    })),
+  });
+
+  return (
+    <form
+      className="col gap-4"
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      onSubmit={(event) => {
+        event.stopPropagation();
+        return form.handleSubmit((values) => mutation.mutateAsync(values))(event);
+      }}
+    >
+      <ControlledInput
+        control={form.control}
+        name="name"
+        label={<T id="nameLabel" />}
+        placeholder={t('namePlaceholder')}
+      />
+
+      <ControlledSelect
+        control={form.control}
+        name="region"
+        disabled={volume !== undefined}
+        label={<T id="regionLabel" />}
+        placeholder={t('regionPlaceholder')}
+        items={regions}
+        getKey={(region) => region.identifier}
+        itemToString={(region) => region.displayName}
+        itemToValue={(region) => region.identifier}
+        renderItem={(region) => region.displayName}
+      />
+
+      <ControlledInput
+        control={form.control}
+        name="size"
+        type="number"
+        disabled={volume !== undefined}
+        label={<T id="sizeLabel" />}
+        placeholder={t('sizePlaceholder')}
+        end={
+          <InputEnd>
+            <T id="sizeUnit" />
+          </InputEnd>
+        }
+      />
+
+      {renderFooter(form.formState)}
+    </form>
+  );
+}
