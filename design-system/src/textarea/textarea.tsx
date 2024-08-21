@@ -39,7 +39,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
         aria-invalid={invalid}
         aria-errormessage={invalid ? helperTextId : undefined}
         className={clsx(
-          'focusable w-full rounded border bg-inherit px-4 py-2 -outline-offset-1',
+          'focusable w-full rounded border bg-inherit p-2 -outline-offset-1',
           'placeholder:text-placeholder',
           'disabled:opacity-50',
           invalid && 'border-red outline-red',

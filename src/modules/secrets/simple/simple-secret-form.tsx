@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { IconButton } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { Secret } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
@@ -79,14 +80,17 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
   });
 
   const [showValue, setShowValue] = useState(false);
-  const ShowValueIcon = showValue ? IconEyeOff : IconEye;
 
   const valueLabel = (
-    <div className="row justify-between gap-2">
+    <div className="row items-center justify-between gap-1">
       <T id="valueLabel" />
-      <button type="button" onClick={() => setShowValue(!showValue)}>
-        <ShowValueIcon className="size-4 text-dim" />
-      </button>
+      <IconButton
+        Icon={showValue ? IconEyeOff : IconEye}
+        variant="ghost"
+        color="gray"
+        size={1}
+        onClick={() => setShowValue(!showValue)}
+      />
     </div>
   );
 
