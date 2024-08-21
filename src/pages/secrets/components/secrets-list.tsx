@@ -42,8 +42,10 @@ export function SecretsList({ onCreate }: { onCreate: () => void }) {
   return (
     <Table
       items={secrets}
+      classes={{ td: () => 'align-top' }}
       columns={{
         name: {
+          className: 'md:w-64',
           header: <T id="name" />,
           render: (secret) => secret.name,
         },
@@ -108,7 +110,7 @@ function Value({ secret }: { secret: Secret }) {
           {(props) => (
             <button
               {...props}
-              className="max-w-md truncate whitespace-pre-wrap text-start font-mono"
+              className="whitespace-pre-line break-all text-start font-mono"
               onClick={copyValue}
             >
               {query.data}
