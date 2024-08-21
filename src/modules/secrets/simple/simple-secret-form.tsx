@@ -1,4 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
+import IconEyeOff from 'lucide-static/icons/eye-off.svg?react';
+import IconEye from 'lucide-static/icons/eye.svg?react';
+import { useState } from 'react';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -74,6 +78,18 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
     onError: useFormErrorHandler(form),
   });
 
+  const [showValue, setShowValue] = useState(false);
+  const ShowValueIcon = showValue ? IconEyeOff : IconEye;
+
+  const valueLabel = (
+    <div className="row justify-between gap-2">
+      <T id="valueLabel" />
+      <button type="button" onClick={() => setShowValue(!showValue)}>
+        <ShowValueIcon className="size-4 text-dim" />
+      </button>
+    </div>
+  );
+
   return (
     <form
       className="col gap-4"
@@ -96,11 +112,19 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
         <ControlledTextArea
           control={form.control}
           name="value"
-          label={<T id="valueLabel" />}
-          textAreaClassName="text-security-disc"
+          rows={3}
+          label={valueLabel}
+          spellCheck="false"
+          textAreaClassName={clsx('scrollbar-green scrollbar-thin', !showValue && 'text-security-disc')}
         />
       ) : (
-        <ControlledInput control={form.control} name="value" type="password" label={<T id="valueLabel" />} />
+        <ControlledInput
+          control={form.control}
+          name="value"
+          label={valueLabel}
+          type={showValue ? 'text' : 'password'}
+          autoComplete="one-time-code"
+        />
       )}
 
       <ControlledSwitch
