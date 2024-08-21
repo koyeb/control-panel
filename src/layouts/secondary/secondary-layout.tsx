@@ -17,7 +17,7 @@ function BackgroundTexture() {
   return (
     <div
       // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className="pointer-events-none fixed bottom-0 right-0 size-[92rem] translate-x-1/2 translate-y-1/2 bg-repeat opacity-40"
+      className="pointer-events-none fixed bottom-0 right-0 size-[92rem] translate-x-1/2 translate-y-1/2 bg-repeat opacity-10 md:opacity-40"
       style={{
         backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(grid)}"`,
         maskImage: 'radial-gradient(circle at center, black 0, transparent 65%)',

@@ -25,7 +25,7 @@ type AddressFieldOwnProps = {
 type AddressFieldProps = AddressFieldOwnProps &
   Pick<
     React.ComponentProps<typeof Autocomplete<AutofillSuggestion>>,
-    'required' | 'size' | 'label' | 'placeholder'
+    'required' | 'size' | 'label' | 'placeholder' | 'className'
   >;
 
 export const AddressField = ({ value, onChange, errors, ...props }: AddressFieldProps) => {

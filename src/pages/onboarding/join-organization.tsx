@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
+import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
 import IconCheck from 'lucide-static/icons/check.svg?react';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -19,6 +20,8 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate } from 'src/intl/translate';
 import { entries } from 'src/utils/object';
+
+import { OnboardingStepper } from './stepper';
 
 const T = Translate.prefix('onboarding.joinOrganization');
 
@@ -90,11 +93,18 @@ export function CreateOrganization() {
   });
 
   return (
-    <section className="col gap-4">
-      <h1 className="typo-heading">
-        <T id="title" />
-        <InfoTooltip content={<T id="tooltip" />} className="max-w-lg" iconClassName="inline-block ms-2" />
-      </h1>
+    <section className="col w-full max-w-xl gap-6">
+      <OnboardingStepper step={2} />
+
+      <div>
+        <h1 className="typo-heading mb-1">
+          <T id="title" />
+          <InfoTooltip content={<T id="tooltip" />} className="max-w-lg" iconClassName="inline-block ms-2" />
+        </h1>
+        <p className="text-dim">
+          <T id="canBeChanged" />
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
         <Tooltip
@@ -102,7 +112,7 @@ export function CreateOrganization() {
           allowHover
           arrow={false}
           placement="bottom-end"
-          offset={16}
+          offset={8}
           content={<OrganizationNameTooltip name={form.watch('organizationName')} />}
           className="!bg-muted"
         >
@@ -111,6 +121,7 @@ export function CreateOrganization() {
               <ControlledInput
                 control={form.control}
                 name="organizationName"
+                label={<T id="organizationNameLabel" />}
                 onFocus={() => setInputFocused(true)}
                 onBlur={() => setInputFocused(false)}
               />
@@ -122,9 +133,10 @@ export function CreateOrganization() {
           type="submit"
           disabled={!form.formState.isValid}
           loading={form.formState.isSubmitting}
-          className="self-start"
+          className="self-end"
         >
-          <T id="continue" />
+          <Translate id="common.next" />
+          <IconArrowRight />
         </Button>
       </form>
     </section>

@@ -62,13 +62,12 @@ const stylesDark = {
 };
 
 type PaymentFormProps = {
-  theme?: 'dark' | 'light';
   plan?: OrganizationPlan;
   onPlanChanged?: () => void;
   renderFooter: (formState: FormState<{ address: Address }>) => React.ReactNode;
 };
 
-export function PaymentForm({ theme: themeProp, plan, onPlanChanged, renderFooter }: PaymentFormProps) {
+export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormProps) {
   const t = T.useTranslate();
   const organization = useOrganization();
 
@@ -134,63 +133,63 @@ export function PaymentForm({ theme: themeProp, plan, onPlanChanged, renderFoote
   });
 
   const theme = useThemeModeOrPreferred();
-  const style = (themeProp ?? theme) === ThemeMode.light ? stylesLight : stylesDark;
+  const style = theme === ThemeMode.light ? stylesLight : stylesDark;
 
   return (
     <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-6">
-      <div className="col gap-3">
-        <Field>
+      <div className="grid grid-cols-2 gap-4">
+        <Field className="col-span-2">
           <FieldLabel>
             <T id="cardNumberLabel" />
           </FieldLabel>
           <CardNumberElement options={{ classes, style }} />
         </Field>
 
-        <div className="row gap-2">
-          <Field className="flex-1">
-            <FieldLabel>
-              <T id="cardNumberLabel" />
-            </FieldLabel>
-            <CardExpiryElement options={{ classes, style }} />
-          </Field>
+        <Field className="flex-1">
+          <FieldLabel>
+            <T id="expirationLabel" />
+          </FieldLabel>
+          <CardExpiryElement options={{ classes, style }} />
+        </Field>
 
-          <Field className="flex-1">
-            <FieldLabel>
-              <T id="cardNumberLabel" />
-            </FieldLabel>
-            <CardCvcElement options={{ classes, style }} />
-          </Field>
+        <Field className="flex-1">
+          <FieldLabel>
+            <T id="cvcLabel" />
+          </FieldLabel>
+          <CardCvcElement options={{ classes, style }} />
+        </Field>
+
+        <div className="col-span-2">
+          <Controller
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <AddressField
+                required
+                size={3}
+                label={<T id="addressLabel" />}
+                placeholder={t('addressPlaceholder')}
+                value={field.value}
+                onChange={field.onChange}
+                errors={{
+                  line1: form.formState.errors.address?.line1?.message,
+                  line2: form.formState.errors.address?.line2?.message,
+                  city: form.formState.errors.address?.city?.message,
+                  postalCode: form.formState.errors.address?.postalCode?.message,
+                  state: form.formState.errors.address?.state?.message,
+                  country: form.formState.errors.address?.country?.message,
+                }}
+              />
+            )}
+          />
         </div>
-
-        <Controller
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <AddressField
-              required
-              size={3}
-              label={<T id="addressLabel" />}
-              placeholder={t('addressPlaceholder')}
-              value={field.value}
-              onChange={field.onChange}
-              errors={{
-                line1: form.formState.errors.address?.line1?.message,
-                line2: form.formState.errors.address?.line2?.message,
-                city: form.formState.errors.address?.city?.message,
-                postalCode: form.formState.errors.address?.postalCode?.message,
-                state: form.formState.errors.address?.state?.message,
-                country: form.formState.errors.address?.country?.message,
-              }}
-            />
-          )}
-        />
-
-        <p className="text-xs text-dim">
-          <T id="temporaryHoldMessage" />
-        </p>
       </div>
 
       {renderFooter(form.formState)}
+
+      <p className="text-xs text-dim">
+        <T id="temporaryHoldMessage" />
+      </p>
     </form>
   );
 }

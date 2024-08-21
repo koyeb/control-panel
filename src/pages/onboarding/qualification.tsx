@@ -1,5 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
+import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
 import { FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { Button } from '@koyeb/design-system';
@@ -13,19 +14,24 @@ import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
+import { OnboardingStepper } from './stepper';
+
 const T = Translate.prefix('onboarding.qualification');
 
 export function Qualification() {
   const user = useUser();
 
   return (
-    <section className="col gap-4">
-      <h1 className="typo-heading">
-        <T id="title" />
-      </h1>
+    <section className="col w-full max-w-xl gap-6">
+      <OnboardingStepper step={3} />
 
-      <div className="text-xs text-dim">
-        <T id="line1" values={{ email: user.email }} />
+      <div>
+        <h1 className="typo-heading mb-1">
+          <T id="title" />
+        </h1>
+        <p className="text-dim">
+          <T id="line1" values={{ email: user.email }} />
+        </p>
       </div>
 
       <QualificationForm />
@@ -109,8 +115,14 @@ function QualificationForm() {
         <PrimaryUseCaseField />
         <PrimaryLanguageField />
         <ReferralSourceField />
-        <Button type="submit" className="mt-4 self-start">
-          <T id="continue" />
+        <Button
+          type="submit"
+          disabled={!form.formState.isValid}
+          loading={form.formState.isSubmitting}
+          className="self-end"
+        >
+          <Translate id="common.next" />
+          <IconArrowRight />
         </Button>
       </form>
     </FormProvider>
@@ -151,6 +163,10 @@ function UsageField() {
 
   return (
     <div className="col gap-2">
+      <div>
+        <T id="usage.label" />
+      </div>
+
       <div role="radiogroup" className="row gap-2">
         {Object.entries(options).map(([option, label]) => (
           <div

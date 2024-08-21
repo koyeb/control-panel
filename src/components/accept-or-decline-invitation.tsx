@@ -64,28 +64,42 @@ export function AcceptOrDeclineInvitation({ invitation }: AcceptOrDeclineInvitat
   }
 
   return (
-    <div className="col items-center gap-6">
+    <div className="col w-full max-w-xl items-center gap-6 text-center">
       <h1 className="typo-heading">
-        <T id="title" values={{ organizationName: invitation.organization.name }} />
+        <T
+          id="title"
+          values={{
+            organization: (children) => <div className="mt-1 text-4xl">{children}</div>,
+            organizationName: invitation.organization.name,
+          }}
+        />
       </h1>
 
-      <p className="text-dim">
-        <T id="description" values={{ name: invitation.inviter.name, email: invitation.inviter.email }} />
-      </p>
+      <div className="col gap-4">
+        <div className="font-medium text-dim">
+          <T
+            id="description"
+            values={{
+              name: invitation.inviter.name,
+              email: <span className="text-green">{invitation.inviter.email}</span>,
+            }}
+          />
+        </div>
 
-      <div className="row gap-4 ">
-        <Button onClick={() => acceptMutation.mutate()} loading={acceptMutation.isPending}>
-          <T id="accept" />
-        </Button>
+        <div className="row justify-center gap-4">
+          <Button
+            size={3}
+            color="gray"
+            onClick={() => declineMutation.mutate()}
+            loading={declineMutation.isPending}
+          >
+            <T id="decline" />
+          </Button>
 
-        <Button
-          variant="outline"
-          color="gray"
-          onClick={() => declineMutation.mutate()}
-          loading={declineMutation.isPending}
-        >
-          <T id="decline" />
-        </Button>
+          <Button size={3} onClick={() => acceptMutation.mutate()} loading={acceptMutation.isPending}>
+            <T id="accept" />
+          </Button>
+        </div>
       </div>
     </div>
   );

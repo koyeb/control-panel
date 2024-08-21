@@ -190,7 +190,7 @@
   "errorBoundary": {
     "accountLocked": {
       "title": "We cannot offer you access to Koyeb",
-      "line1": "Your account matches patterns often associated with violations of our <terms>terms of service</terms>",
+      "line1": "Your account matches patterns often associated with violations of our <terms>Terms of Service</terms>",
       "line2": "While we cannot provide details about the reason(s) triggering this behavior, we have determined that providing access to Koyeb is not possible",
       "line3": "If you believe this is a bug, you can <validate>validate your account</validate>"
     },
@@ -225,7 +225,7 @@
     "pricePerSecond": "{price}/second"
   },
   "invitation": {
-    "title": "You have been invited to join the {organizationName} organization on Koyeb",
+    "title": "You have been invited to join the <organization>{organizationName} organization</organization>",
     "description": "You were invited by {name} ({email})",
     "accept": "Join organization",
     "decline": "Decline",
@@ -264,7 +264,7 @@
     "cvcLabel": "CVC",
     "addressLabel": "Address",
     "addressPlaceholder": "Street address",
-    "temporaryHoldMessage": "A temporary hold of USD $1 will be placed on the card and then refunded immediately. One free service available, pay-per-use for the rest with per-second precision.",
+    "temporaryHoldMessage": "A temporary hold of USD $1 will be placed on the card and then refunded immediately",
     "paymentMethodTimeoutTitle": "We could not register your payment method",
     "paymentMethodTimeoutDescription": "Please try again later or {contactUs} if the problem persists"
   },
@@ -283,16 +283,17 @@
   "onboarding": {
     "emailValidation": {
       "title": "Confirm your email address",
-      "line1": "We sent an email to {email}",
+      "line1": "We sent an email to <green>{email}</green>",
       "line2": "Please confirm your email address by clicking the link we just sent to your inbox",
-      "resendValidationEmail": "Resend validation email",
-      "resendInvitationSuccessNotification": "An email validation was sent again to <strong>{email}</strong>",
+      "resendValidationEmail": "Resend verification email",
+      "resendEmailSuccessNotification": "A verification email was sent again to <strong>{email}</strong>",
       "emailAddressValidated": "Your email address was validated"
     },
     "joinOrganization": {
       "title": "What is your organization's name?",
+      "canBeChanged": "You can always change it later if you need to",
       "tooltip": "An organization is a space containing all your Koyeb resources that you can use for your own projects or to collaborate as a team. The organization name must be unique and is used to compose your apps public URL. You can change it at any time.",
-      "continue": "Continue",
+      "organizationNameLabel": "Organization's name",
       "organizationNameRules": {
         "maxLength": "Maximum 39 characters",
         "letters": "Letters are only lowercase",
@@ -303,7 +304,6 @@
     "qualification": {
       "title": "Tell us a bit about you",
       "line1": "Your answers will help us improve your experience",
-      "continue": "Continue",
       "fullName": {
         "label": "What is your full name?"
       },
@@ -382,7 +382,7 @@
     },
     "paymentMethod": {
       "title": "Get started for free",
-      "line1": "To prevent abuse, a credit card is required",
+      "line1": "To prevent abuse, we need additional credit card verification",
       "submit": "Get started"
     },
     "automaticReview": {

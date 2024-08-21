@@ -10,12 +10,12 @@ export function AccountLocked() {
   const { onOpen } = useTallyDialog('wQRgBY');
 
   return (
-    <SecondaryLayout className="col max-w-xl gap-4 text-center">
+    <SecondaryLayout className="col mx-auto max-w-xl gap-4 text-center">
       <div className="typo-heading">
         <T id="title" />
       </div>
 
-      <div className="text-xs text-dim">
+      <div className="text-xs font-medium text-dim">
         <T
           id="line1"
           values={{
@@ -28,11 +28,11 @@ export function AccountLocked() {
         />
       </div>
 
-      <div>
+      <div className="text-dim">
         <T id="line2" />
       </div>
 
-      <div>
+      <div className="text-dim">
         <T
           id="line3"
           values={{

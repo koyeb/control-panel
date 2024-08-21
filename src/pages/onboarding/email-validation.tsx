@@ -6,6 +6,8 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { Translate } from 'src/intl/translate';
 
+import { OnboardingStepper } from './stepper';
+
 const T = Translate.prefix('onboarding.emailValidation');
 
 export function EmailValidation() {
@@ -15,27 +17,34 @@ export function EmailValidation() {
   const mutation = useMutation({
     ...useApiMutationFn('resendValidationEmail', {}),
     onSuccess() {
-      notify.success(t('resendInvitationSuccessNotification', { email: user.email }));
+      notify.success(t('resendEmailSuccessNotification', { email: user.email }));
     },
   });
 
   return (
-    <section className="col gap-4 text-center">
+    <section className="col w-full max-w-xl items-start gap-6">
+      <OnboardingStepper step={1} />
+
       <h1 className="typo-heading">
         <T id="title" />
       </h1>
 
-      <div className="text-xs text-dim">
-        <T id="line1" values={{ email: user.email }} />
+      <div className="col max-w-sm gap-4 text-dim">
+        <p className="font-medium">
+          <T id="line1" values={{ email: user.email, green }} />
+        </p>
+        <p>
+          <T id="line2" />
+        </p>
       </div>
 
-      <div>
-        <T id="line2" />
-      </div>
-
-      <Button className="self-center" loading={mutation.isPending} onClick={() => mutation.mutate()}>
+      <Button loading={mutation.isPending} onClick={() => mutation.mutate()}>
         <T id="resendValidationEmail" />
       </Button>
     </section>
   );
 }
+
+const green = (children: React.ReactNode) => {
+  return <span className="text-green">{children}</span>;
+};
