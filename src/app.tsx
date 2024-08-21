@@ -47,7 +47,7 @@ export function App() {
   );
 }
 
-function isLocked(organization: Organization | null): boolean {
+function isLocked(organization?: Organization): boolean {
   if (organization?.status === 'locked') {
     return true;
   }
@@ -109,7 +109,7 @@ function AuthenticatedRoutes() {
     );
   }
 
-  if (isLocked(organizationQuery.data ?? null)) {
+  if (isLocked(organizationQuery.data)) {
     return <AccountLocked />;
   }
 

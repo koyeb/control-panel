@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
 import IconChevronUpDown from 'lucide-static/icons/chevrons-up-down.svg?react';
 import { useState } from 'react';
 
@@ -19,7 +20,7 @@ import { OrganizationSwitcherMenu } from '../organization-switcher-menu';
 
 const T = Translate.prefix('layouts.secondary');
 
-export function SecondaryLayoutHeader() {
+export function SecondaryLayoutHeader({ background }: { background?: boolean }) {
   const organization = useOrganizationUnsafe();
   const userQuery = useUserQuery();
   const { token, clearToken } = useAccessToken();
@@ -56,9 +57,14 @@ export function SecondaryLayoutHeader() {
   });
 
   return (
-    <header className="row absolute inset-x-0 top-0 flex-wrap items-center gap-6 bg-transparent px-6 py-4">
+    <header
+      className={clsx(
+        'row sticky top-0 flex-wrap items-center gap-6 px-6 py-4',
+        background && 'bg-gradient-to-b from-neutral from-75% to-transparent',
+      )}
+    >
       <Link href={routes.home()}>
-        <LogoKoyeb className="h-8 self-start text-white" />
+        <LogoKoyeb className={clsx('h-8 self-start', !background && 'text-white')} />
       </Link>
 
       {isAuthenticated && (
@@ -102,7 +108,7 @@ function OrganizationSwitcher() {
           ref={ref}
           type="button"
           data-testid="organization-switcher"
-          className="row dark items-center gap-2 rounded-lg text-start"
+          className="row items-center gap-2 rounded-lg text-start"
           onClick={() => setOpen(!open)}
           {...props}
         >
