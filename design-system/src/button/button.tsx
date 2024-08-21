@@ -61,7 +61,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
     }
 
     if (Icon !== undefined) {
-      return <Icon className="size-5 text-dim" />;
+      return <Icon className={clsx('size-5', variant !== 'solid' && 'text-dim')} />;
     }
   };
 
