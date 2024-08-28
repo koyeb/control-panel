@@ -68,7 +68,7 @@ function SectionTitle() {
 
       {latency && (
         <div className="font-normal text-dim">
-          (<RegionLatency isAvailable region={firstRegion} />)
+          (<RegionLatency region={firstRegion} />)
         </div>
       )}
 

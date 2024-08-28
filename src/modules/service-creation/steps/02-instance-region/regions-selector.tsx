@@ -108,7 +108,7 @@ function RegionItem({ selectedInstance, region, selected, onSelected }: RegionIt
       }
       description={
         <div className="whitespace-nowrap">
-          <RegionLatency isAvailable={isAvailable && isAvailableForInstance} region={region} />
+          <RegionLatency region={region} />
         </div>
       }
       checked={selected}

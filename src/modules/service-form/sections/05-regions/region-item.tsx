@@ -40,7 +40,7 @@ export function RegionItem({ region, classes }: RegionItemProps) {
           }
           description={
             <div className="whitespace-nowrap">
-              <RegionLatency isAvailable={isAvailable && isAvailableForInstance} region={region} />
+              <RegionLatency region={region} />
             </div>
           }
           checked={value.includes(region.identifier)}

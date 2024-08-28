@@ -65,7 +65,7 @@ function SectionTitle() {
 
       {latency && (
         <div className="font-normal text-dim">
-          (<RegionLatency isAvailable region={region} />)
+          (<RegionLatency region={region} />)
         </div>
       )}
     </div>
@@ -103,7 +103,7 @@ function RegionItem({ region, classes }: RegionItemProps) {
       }
       description={
         <div className="whitespace-nowrap">
-          <RegionLatency isAvailable={region.status === 'available'} region={region} />
+          <RegionLatency region={region} />
         </div>
       }
       classes={classes}
