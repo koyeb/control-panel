@@ -32,17 +32,9 @@ export function RegionItem({ region, classes }: RegionItemProps) {
           type="checkbox"
           value={region.identifier}
           disabled={!isAvailable || !isAvailableForInstance || hasVolumes}
-          title={
-            <div className="row items-center gap-1">
-              <RegionFlag identifier={region.identifier} className="size-5" />
-              {region.displayName}
-            </div>
-          }
-          description={
-            <div className="whitespace-nowrap">
-              <RegionLatency region={region} />
-            </div>
-          }
+          icon={<RegionFlag identifier={region.identifier} className="size-5" />}
+          title={region.displayName}
+          description={<RegionLatency region={region} />}
           checked={value.includes(region.identifier)}
           onChange={(event) => {
             if (selectedInstance === 'free') {

@@ -100,23 +100,15 @@ function RegionItem({ selectedInstance, region, selected, onSelected }: RegionIt
     <SelectBox
       type="checkbox"
       disabled={!isAvailable || !isAvailableForInstance}
-      title={
-        <div className="row items-center gap-1">
-          <RegionFlag identifier={region.identifier} className="size-5" />
-          {region.displayName}
-        </div>
-      }
-      description={
-        <div className="whitespace-nowrap">
-          <RegionLatency region={region} />
-        </div>
-      }
+      icon={<RegionFlag identifier={region.identifier} className="size-5" />}
+      title={region.displayName}
+      description={<RegionLatency region={region} />}
       checked={selected}
       onChange={() => onSelected(region.identifier)}
       classes={{
         content: 'col gap-1 p-2',
         title: '!p-0',
-        description: '!p-0',
+        description: 'whitespace-nowrap !p-0',
       }}
     />
   );

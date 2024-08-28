@@ -26,8 +26,8 @@ const regionStyles: Record<string, { position: React.CSSProperties; arrow: Arrow
     arrow: { placement: 'top', left: '40%' },
   },
   tyo: {
-    position: { left: '84%', bottom: '58%' },
-    arrow: { placement: 'bottom', left: '50%' },
+    position: { left: '82%', bottom: '58%' },
+    arrow: { placement: 'bottom', left: '65%' },
   },
   sin: {
     position: { left: '74%', top: '66%' },

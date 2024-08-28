@@ -35,6 +35,10 @@ export function useRegionLatency(region: CatalogRegion | undefined) {
     },
   });
 
+  if (datacenter === undefined) {
+    return null;
+  }
+
   return data;
 }
 
