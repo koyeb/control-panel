@@ -19,6 +19,7 @@ import {
 import { hasBuild } from 'src/application/service-functions';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
+import { useNow } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
 
 import { BuildLogs } from './build-logs';
@@ -168,7 +169,6 @@ type BuildSectionHeaderProps = {
 };
 
 function BuildSectionHeader({ expanded, setExpanded, deployment, lines }: BuildSectionHeaderProps) {
-  const build = deployment.build;
   const status = getBuildStatus(deployment);
   const [StatusIcon, statusColorClassName] = buildStatusMap[status];
 
@@ -181,16 +181,42 @@ function BuildSectionHeader({ expanded, setExpanded, deployment, lines }: BuildS
       StatusIcon={StatusIcon}
       statusColorClassName={statusColorClassName}
       lastLogLine={status === 'running' ? lines[lines.length - 1] : undefined}
-      end={
-        status === 'completed' &&
-        build !== undefined && (
-          <div>
-            <T id="build.completed" values={{ elapsed: elapsed(build) }} />
-          </div>
-        )
-      }
+      end={<BuildSectionHeaderEnd expanded={expanded} deployment={deployment} />}
     />
   );
+}
+
+type BuildSectionHeaderEndProps = {
+  expanded: boolean;
+  deployment: ComputeDeployment;
+};
+
+function BuildSectionHeaderEnd({ expanded, deployment }: BuildSectionHeaderEndProps) {
+  const build = deployment.build;
+  const status = getBuildStatus(deployment);
+  const now = useNow();
+
+  if (build === undefined) {
+    return;
+  }
+
+  if (status === 'running' && expanded) {
+    const duration = Math.floor((now.getTime() - new Date(build.startedAt).getTime()) / 1000);
+
+    return (
+      <div>
+        <T id="build.duration" values={{ duration }} />
+      </div>
+    );
+  }
+
+  if (status === 'completed') {
+    return (
+      <div>
+        <T id="build.completed" values={{ elapsed: elapsed(build) }} />
+      </div>
+    );
+  }
 }
 
 function getBuildStatus(deployment: ComputeDeployment): DeploymentBuildStatus | 'pending' {

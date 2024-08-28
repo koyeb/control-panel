@@ -152,6 +152,7 @@
     "build": {
       "title": "Build",
       "buildSkipped": "This deployment uses a previous build originally created during deployment <link>{deploymentId}</link>",
+      "duration": "<dim>Duration: {duration}s</dim>",
       "completed": "<dim>Completed in</dim> {elapsed}s",
       "waitingForLogs": {
         "title": "Getting ready to build your service",
