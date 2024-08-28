@@ -77,7 +77,7 @@ function ServiceForm_({ appId, serviceId, className, onSubmitted, onCostChanged 
     mutationFn: submitServiceForm,
     onError: useFormErrorHandler(form, mapError),
     async onSuccess(result) {
-      await invalidate('listApps', undefined, { refetchType: 'all' });
+      await invalidate('listApps');
       onSubmitted(result.appId, result.serviceId, result.deploymentId);
     },
   });

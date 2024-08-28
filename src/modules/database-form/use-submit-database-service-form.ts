@@ -49,7 +49,7 @@ export function useSubmitDatabaseServiceForm(
     },
     async onSuccess(databaseServiceId) {
       await Promise.all([
-        invalidate('listApps', undefined, { refetchType: 'all' }),
+        invalidate('listApps'),
         invalidate('getService', { path: { id: databaseServiceId } }),
       ]);
 
