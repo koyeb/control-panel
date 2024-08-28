@@ -79,6 +79,7 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
     return {
       status: lowerCase(stage.status!),
       sha: deployment.provisioning_info?.sha,
+      // the API actually returns null
       startedAt: stage.started_at!,
       finishedAt: stage.finished_at!,
     };

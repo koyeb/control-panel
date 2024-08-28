@@ -21,6 +21,7 @@ import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
+import { assert } from 'src/utils/assert';
 
 import { BuildLogs } from './build-logs';
 import { Replicas } from './replicas';
@@ -200,7 +201,7 @@ function BuildSectionHeaderEnd({ expanded, deployment }: BuildSectionHeaderEndPr
     return;
   }
 
-  if (status === 'running' && expanded) {
+  if (status === 'running' && expanded && build.startedAt !== null) {
     const duration = Math.floor((now.getTime() - new Date(build.startedAt).getTime()) / 1000);
 
     return (
@@ -242,6 +243,9 @@ function getBuildStatus(deployment: ComputeDeployment): DeploymentBuildStatus | 
 }
 
 function elapsed({ startedAt, finishedAt }: DeploymentBuild) {
+  assert(startedAt !== null);
+  assert(finishedAt !== null);
+
   return (new Date(finishedAt).getTime() - new Date(startedAt).getTime()) / 1000;
 }
 

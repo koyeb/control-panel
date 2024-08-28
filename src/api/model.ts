@@ -162,8 +162,8 @@ export type DeploymentStatus =
 export type DeploymentBuild = {
   status: DeploymentBuildStatus;
   sha?: string;
-  startedAt: string;
-  finishedAt: string;
+  startedAt: string | null;
+  finishedAt: string | null;
 };
 
 export type DeploymentBuildStatus = 'unknown' | 'running' | 'failed' | 'completed' | 'aborted';
