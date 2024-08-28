@@ -118,7 +118,7 @@ function canToggleBuild(deployment: ComputeDeployment) {
     return false;
   }
 
-  return deployment.build !== undefined;
+  return deployment.buildSkipped || deployment.build !== undefined;
 }
 
 function canToggleRuntime(deployment: ComputeDeployment) {
@@ -126,7 +126,7 @@ function canToggleRuntime(deployment: ComputeDeployment) {
     return false;
   }
 
-  return !hasBuild(deployment) || deployment.build?.status === 'completed';
+  return !hasBuild(deployment) || deployment.buildSkipped || deployment.build?.status === 'completed';
 }
 
 function connectToBuildLogs(deployment: ComputeDeployment, expanded: boolean) {
@@ -197,6 +197,10 @@ function getBuildStatus(deployment: ComputeDeployment): DeploymentBuildStatus | 
   const { build } = deployment;
 
   if (build === undefined) {
+    if (deployment.buildSkipped) {
+      return 'completed';
+    }
+
     if (deployment.status == 'pending') {
       return 'pending';
     }
@@ -223,7 +227,8 @@ type RuntimeSectionHeaderProps = {
 };
 
 function RuntimeSectionHeader({ expanded, setExpanded, deployment, lines }: RuntimeSectionHeaderProps) {
-  const notStarted = hasBuild(deployment) && deployment.build?.status !== 'completed';
+  const notStarted =
+    hasBuild(deployment) && !deployment.buildSkipped && deployment.build?.status !== 'completed';
 
   const [StatusIcon, statusColorClassName] = notStarted
     ? statuses.pending
