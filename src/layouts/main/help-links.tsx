@@ -8,13 +8,14 @@ import IconSignal from 'lucide-static/icons/signal.svg?react';
 import IconUsers from 'lucide-static/icons/users.svg?react';
 import { useEffect, useState } from 'react';
 
-import { Floating, Menu, MenuItem } from '@koyeb/design-system';
+import { Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { ExternalLink } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 
 const T = Translate.prefix('layouts.main.helpLinks');
 
 export function HelpLinks({ collapsed }: { collapsed: boolean }) {
+  const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);
   const onClose = () => setOpen(false);
 
@@ -26,7 +27,7 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
     <Floating
       open={open}
       setOpen={setOpen}
-      placement="left"
+      placement={isMobile ? 'bottom' : 'left'}
       renderReference={(ref, props) => (
         <button
           ref={ref}
@@ -49,7 +50,7 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
         </button>
       )}
       renderFloating={(ref, props) => (
-        <Menu ref={ref} className="min-w-52" {...props}>
+        <Menu ref={ref} className="z-30 min-w-52" {...props}>
           <LinkMenuItem href="https://koyeb.com/docs" onClick={onClose}>
             <IconBookMarked className="icon" />
             <T id="documentation" />

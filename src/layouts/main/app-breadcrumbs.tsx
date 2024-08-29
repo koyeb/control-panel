@@ -1,33 +1,34 @@
+import IconHouse from 'lucide-static/icons/house.svg?react';
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
-import { usePathname } from 'wouter/use-browser-location';
 
 import { useAppQuery, useServiceQuery } from 'src/api/hooks/service';
 import { routes } from 'src/application/routes';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
+import { usePathname } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
 const T = Translate.prefix('layouts.main.breadcrumbs');
 
-export function AppHeader() {
-  return (
-    <div className="row flex-wrap-reverse items-center justify-between gap-4">
-      <AppBreadcrumbs />
-    </div>
-  );
-}
-
-function AppBreadcrumbs() {
+export function AppBreadcrumbs() {
   const pathname = usePathname();
 
-  if (pathname === '/') {
-    return <div />;
-  }
-
   return (
-    <Breadcrumbs>
+    <Breadcrumbs className="h-12 overflow-x-auto">
+      {pathname !== routes.home() && (
+        <Crumb
+          isFirst
+          label={
+            <div>
+              <IconHouse className="icon" />
+            </div>
+          }
+          link={routes.home()}
+        />
+      )}
+
       <Switch>
         <CrumbRoute path="/services" label={<T id="services" />} link={routes.services()} />
         <CrumbRoute path="/volumes" label={<T id="volumes" />} link={routes.volumes()} />

@@ -1,20 +1,15 @@
+import clsx from 'clsx';
 import IconChevronRight from 'lucide-static/icons/chevron-right.svg?react';
-import IconHouse from 'lucide-static/icons/house.svg?react';
 
-import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 
 type BreadcrumbsProps = {
+  className?: string;
   children: React.ReactNode;
 };
 
-export function Breadcrumbs({ children }: BreadcrumbsProps) {
-  return (
-    <div className="row items-center gap-2">
-      <Crumb isFirst label={<IconHouse className="icon" />} link={routes.home()} />
-      {children}
-    </div>
-  );
+export function Breadcrumbs({ className, children }: BreadcrumbsProps) {
+  return <div className={clsx('row items-center gap-2 whitespace-nowrap', className)}>{children}</div>;
 }
 
 type CrumbProps = {
@@ -26,7 +21,11 @@ type CrumbProps = {
 export function Crumb({ isFirst, label, link }: CrumbProps) {
   return (
     <>
-      {!isFirst && <IconChevronRight className="text-icon size-em text-dim" />}
+      {!isFirst && (
+        <div>
+          <IconChevronRight className="text-icon size-em text-dim" />
+        </div>
+      )}
 
       <Link href={link} className="font-medium text-dim last-of-type:text-default">
         {label}

@@ -9,7 +9,7 @@ import IconSunDim from 'lucide-static/icons/sun-dim.svg?react';
 import IconUser from 'lucide-static/icons/user.svg?react';
 import { useEffect, useState } from 'react';
 
-import { Collapse, Floating, ButtonMenuItem, Menu, MenuItem } from '@koyeb/design-system';
+import { Collapse, Floating, ButtonMenuItem, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { useUserQuery } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
@@ -26,6 +26,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const { data: user } = useUserQuery();
   const navigate = useNavigate();
 
+  const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -44,7 +45,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
     <Floating
       open={open}
       setOpen={setOpen}
-      placement="left"
+      placement={isMobile ? 'bottom' : 'left'}
       renderReference={(ref, props) => (
         <button
           ref={ref}
@@ -58,7 +59,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
         </button>
       )}
       renderFloating={(ref, props) => (
-        <Menu ref={ref} className="min-w-40" {...props}>
+        <Menu ref={ref} className="z-30 min-w-40" {...props}>
           <MenuItem
             element={Link}
             href={routes.userSettings.index()}

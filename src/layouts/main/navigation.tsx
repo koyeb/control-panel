@@ -29,7 +29,7 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
 
   return (
     <nav className="flex-1">
-      <ol className="col gap-2">
+      <ol className="col gap-1 sm:gap-2">
         <NavigationItem
           collapsed={collapsed}
           disabled={disableComputeLinks}
