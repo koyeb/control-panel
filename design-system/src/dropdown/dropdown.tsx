@@ -40,7 +40,7 @@ export function Dropdown<Item>({
     <ul
       style={styles}
       className={clsx(
-        'z-10 max-h-40 overflow-y-auto border bg-neutral p-1 pe-0.5 shadow-md',
+        'z-30 max-h-40 overflow-y-auto border bg-neutral p-1 pe-0.5 shadow-md',
         !open && 'hidden',
         placement.startsWith('top') && 'rounded-t-lg border-b-0',
         placement.startsWith('bottom') && 'rounded-b-lg border-t-0',

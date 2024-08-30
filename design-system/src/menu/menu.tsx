@@ -9,7 +9,7 @@ export const Menu = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEleme
     <div
       ref={ref}
       className={clsx(
-        'col items-stretch rounded-md border bg-popover p-1 text-contrast-popover shadow-lg',
+        'col z-30 items-stretch rounded-md border bg-popover p-1 text-contrast-popover shadow-lg',
         className,
       )}
       {...props}

@@ -117,8 +117,11 @@
   animation: 240ms reverse both notification;
 }
 
+:root:root {
+  --toastify-z-index: 60;
+}
+
 .Toastify__toast-container {
-  z-index: 9999;
   position: fixed;
   width: 440px;
   top: max(16px, env(safe-area-inset-top));

@@ -56,7 +56,7 @@ export function Logs({ appName, serviceName, expired, hasFilters, header, lines,
     <section
       className={clsx(
         'col divide-y bg-neutral',
-        form.watch('fullScreen') ? 'fixed inset-0 z-10' : 'rounded-lg border',
+        form.watch('fullScreen') ? 'fixed inset-0 z-50' : 'rounded-lg border',
       )}
     >
       <LogsHeader expired={expired} header={header} form={form} />
