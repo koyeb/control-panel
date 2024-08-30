@@ -25,7 +25,7 @@ export function DatabaseLayout({ service, deployment, children }: DatabaseLayout
   const [starting, setStarting] = useState(isStarting);
 
   return (
-    <>
+    <div className="col gap-6">
       <div className="row min-w-0 max-w-full items-center gap-2">
         <ServiceTypeIcon type="database" size="big" />
 
@@ -53,7 +53,7 @@ export function DatabaseLayout({ service, deployment, children }: DatabaseLayout
           )}
         </>
       )}
-    </>
+    </div>
   );
 }
 

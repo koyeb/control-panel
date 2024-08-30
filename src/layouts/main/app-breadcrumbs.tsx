@@ -140,9 +140,16 @@ function ServiceCrumbs({ serviceId }: { serviceId: string }) {
     <>
       <Crumb
         label={
-          <span className="row items-center gap-2">
-            <ServiceStatusDot status={service.status} className="size-2" />
-            <Translate id="common.appServiceName" values={{ appName: app.name, serviceName: service.name }} />
+          <span className="row max-w-48 items-center gap-2">
+            <div>
+              <ServiceStatusDot status={service.status} className="size-2" />
+            </div>
+            <div className="direction-rtl truncate">
+              <Translate
+                id="common.appServiceName"
+                values={{ appName: app.name, serviceName: service.name }}
+              />
+            </div>
           </span>
         }
         link={routes.service.overview(serviceId)}

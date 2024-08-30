@@ -79,14 +79,14 @@ export function Dialog({
     <FloatingPortal>
       <FloatingOverlay
         lockScroll
-        className="flex items-center justify-center bg-gradient-to-b from-gray/0 to-gray/15 p-2 backdrop-blur"
+        className="z-40 flex items-center justify-center bg-gradient-to-b from-gray/0 to-gray/15 p-2 backdrop-blur"
         style={transitionStyles}
       >
         <FloatingFocusManager context={context}>
           <div
             ref={refs.setFloating}
             className={clsx(
-              'max-h-full w-full overflow-y-auto rounded-lg bg-popover text-contrast-popover shadow-lg',
+              'max-h-full w-full overflow-y-auto rounded-lg bg-popover text-contrast-popover shadow-lg dark:border',
               {
                 'max-w-sm': width === 'sm',
                 'max-w-md': width === 'md',

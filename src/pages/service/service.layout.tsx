@@ -88,7 +88,7 @@ function Header({ app, service, deployment }: HeaderProps) {
 
       <div className="col min-w-0 gap-1">
         <div className="row items-center gap-2">
-          <div className="typo-heading">{service.name}</div>
+          <div className="typo-heading truncate">{service.name}</div>
           <CopyIconButton text={`${app.name}/${service.name}`} className="size-4" />
         </div>
 

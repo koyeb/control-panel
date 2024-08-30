@@ -56,7 +56,7 @@ function Header({ showFilters, services, serviceType, setServiceType }: HeaderPr
   const databaseServices = services.filter(hasProperty('type', 'database'));
 
   return (
-    <header className="row items-center gap-4">
+    <header className="col sm:row gap-2 sm:items-center sm:gap-4">
       <span className="text-lg font-medium">
         <T id="services" />
       </span>
@@ -80,7 +80,7 @@ function Header({ showFilters, services, serviceType, setServiceType }: HeaderPr
           getKey={identity}
           itemToString={identity}
           renderItem={(type) => <T id={`serviceType.${type}`} />}
-          className="ml-auto w-full max-w-64"
+          className="w-full max-w-64 sm:ml-auto"
         />
       )}
     </header>

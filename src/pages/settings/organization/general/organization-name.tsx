@@ -45,7 +45,7 @@ export function OrganizationName() {
   });
 
   return (
-    <section className="row items-start gap-8">
+    <section className="col sm:row items-start gap-4 sm:gap-8">
       <SectionHeader title={<T id="title" />} description={<T id="description" />} />
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="row gap-4">

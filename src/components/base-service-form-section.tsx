@@ -66,13 +66,15 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
       )}
       onClick={expand}
     >
-      <IconChevronDown
-        tabIndex={0}
-        onKeyDown={(event) => event.key === ' ' && expand()}
-        className={clsx('focusable text-icon size-5 rounded', expanded && 'rotate-180')}
-      />
+      <div>
+        <IconChevronDown
+          tabIndex={0}
+          onKeyDown={(event) => event.key === ' ' && expand()}
+          className={clsx('focusable text-icon size-5 rounded', expanded && 'rotate-180')}
+        />
+      </div>
 
-      <div className="col gap-1">
+      <div className="col min-w-0 gap-1">
         <span className="text-xs text-dim">{description}</span>
         <span className="font-medium">{title}</span>
       </div>

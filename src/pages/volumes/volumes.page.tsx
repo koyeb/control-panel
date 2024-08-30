@@ -37,7 +37,7 @@ export function VolumesPage() {
   const volumes = volumesQuery.data;
 
   return (
-    <>
+    <div className="col gap-6">
       <DocumentTitle title={t('documentTitle')} />
 
       <Title
@@ -53,6 +53,6 @@ export function VolumesPage() {
 
       <VolumesList volumes={volumes} onCreate={() => setCreateDialogOpen(true)} />
       <CreateVolumeDialog open={createDialogOpen} onClose={() => setCreateDialogOpen(false)} />
-    </>
+    </div>
   );
 }

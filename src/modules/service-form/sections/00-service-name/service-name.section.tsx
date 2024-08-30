@@ -37,5 +37,5 @@ function SectionTitle() {
     return <T id="titleServiceNameMissing" />;
   }
 
-  return serviceName;
+  return <div className="max-w-full truncate">{serviceName}</div>;
 }

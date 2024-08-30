@@ -114,7 +114,7 @@ function Main({ children }: { children: React.ReactNode }) {
     <main
       // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
-        'overflow-hidden p-2 sm:p-4',
+        'overflow-x-auto px-2 py-4 sm:px-4',
         pageContext.enabled && {
           'pr-4': !pageContext.expanded,
           'pr-[32rem]': pageContext.expanded,

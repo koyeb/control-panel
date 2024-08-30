@@ -43,11 +43,7 @@ function ServiceOverview(props: ServiceOverview) {
     return (
       <>
         {listExpanded && <DeploymentsList {...props} />}
-        {!listExpanded && selectedDeployment && (
-          <div className="absolute inset-x-0 top-0 bg-neutral px-3 pt-4">
-            <SelectedDeployment {...props} />
-          </div>
-        )}
+        {!listExpanded && selectedDeployment && <SelectedDeployment {...props} />}
       </>
     );
   }
@@ -79,6 +75,7 @@ function SelectedDeployment({ className, ...props }: ServiceOverview & { classNa
         <DeploymentsListActions {...props} />
         <DeploymentHeader deployment={selectedDeployment} />
       </div>
+
       <DeploymentFailedInfo deployment={selectedDeployment} layout="row" />
       <DeploymentInfo app={app} service={service} deployment={selectedDeployment} />
 

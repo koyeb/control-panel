@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useState } from 'react';
 
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
@@ -68,6 +69,7 @@ export function LogicalDatabasesPage() {
               render: (database) => database.owner,
             },
             actions: {
+              className: clsx('w-12'),
               render: (database) => (
                 <DatabaseActions service={service} deployment={deployment} database={database} />
               ),

@@ -18,7 +18,7 @@ export function DatabaseInfo({ service, deployment }: { service: Service; deploy
         <T id="title" />
       </header>
 
-      <div className="col flex-wrap justify-between gap-8 self-start rounded-md border px-3 py-2 lg:flex-row lg:self-stretch">
+      <div className="row flex-wrap gap-x-8 gap-y-4 self-start rounded-md border px-3 py-2">
         <Metadata label={<T id="status" />} value={<ServiceStatusBadge status={service.status} />} />
 
         <Metadata

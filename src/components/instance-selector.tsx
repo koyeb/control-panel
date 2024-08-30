@@ -32,7 +32,7 @@ export function InstanceSelector({
 
   return (
     <div className={clsx('col gap-3', className)}>
-      <TabButtons className="col sm:row">
+      <TabButtons>
         {(['eco', 'standard', 'gpu'] as const).map((category) => (
           <TabButton
             key={category}

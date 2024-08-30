@@ -7,8 +7,10 @@ type TabButtonsProps = {
 
 export function TabButtons({ className, children }: TabButtonsProps) {
   return (
-    <div role="tablist" className={clsx('row gap-2 rounded-md bg-muted p-1', className)}>
-      {children}
+    <div className="max-w-full overflow-x-auto">
+      <div role="tablist" className={clsx('row w-fit gap-2 rounded-md bg-muted p-1', className)}>
+        {children}
+      </div>
     </div>
   );
 }
