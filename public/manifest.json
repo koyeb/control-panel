@@ -1,0 +1,19 @@
+{
+  "short_name": "Koyeb",
+  "name": "Koyeb Control Panel",
+  "start_url": ".",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any"
+    },
+    {
+      "src": "/logo-maskable.svg",
+      "sizes": "any",
+      "purpose": "maskable"
+    }
+  ],
+  "display": "standalone",
+  "theme_color": "#059669",
+  "background_color": "#000000"
+}
