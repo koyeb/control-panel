@@ -48,6 +48,7 @@ const schema = z.object({
   organizationName: z
     .string()
     .min(1)
+    .max(39)
     .refine(isSlug, { params: { refinement: 'isSlug' } }),
 });
 

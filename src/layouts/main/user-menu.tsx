@@ -55,11 +55,11 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
           {...props}
         >
           <UserAvatar user={user} />
-          {!collapsed && <span className="flex-1 font-medium">{user?.name}</span>}
+          {!collapsed && <span className="flex-1 truncate font-medium">{user?.name}</span>}
         </button>
       )}
       renderFloating={(ref, props) => (
-        <Menu ref={ref} className="z-30 min-w-40" {...props}>
+        <Menu ref={ref} {...props}>
           <MenuItem
             element={Link}
             href={routes.userSettings.index()}

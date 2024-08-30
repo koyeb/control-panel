@@ -1,10 +1,10 @@
 import {
   FloatingContext,
+  Middleware,
   Placement,
   ReferenceType,
   Strategy,
   UseDismissProps,
-  UseFloatingOptions,
   UseFocusProps,
   UseHoverProps,
   UseRoleProps,
@@ -19,7 +19,7 @@ import {
   useInteractions,
   useRole,
   useTransitionStyles,
-} from "@floating-ui/react";
+} from '@floating-ui/react';
 
 export type UseFloatingProps = {
   open?: boolean;
@@ -28,8 +28,8 @@ export type UseFloatingProps = {
   floatingElement?: HTMLElement | null;
   placement?: Placement;
   strategy?: Strategy;
+  middlewares?: Array<Middleware | false>;
   offset?: number;
-  middlewares?: UseFloatingOptions["middleware"];
   interactions?: {
     hover?: UseHoverProps;
     dismiss?: UseDismissProps;
@@ -53,10 +53,10 @@ export function useFloating({
   setOpen,
   referenceElement,
   floatingElement,
-  placement = "bottom",
+  placement = 'bottom',
   strategy,
-  offset: offsetValue,
   middlewares,
+  offset: offsetValue,
   interactions,
 }: UseFloatingProps): UseFloatingReturn {
   const { refs, floatingStyles, context } = useFloatingUi({
@@ -77,12 +77,7 @@ export function useFloating({
   const focus = useFocus(context, interactions?.focus);
   const role = useRole(context, interactions?.role);
 
-  const { getReferenceProps, getFloatingProps } = useInteractions([
-    hover,
-    dismiss,
-    focus,
-    role,
-  ]);
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, dismiss, focus, role]);
 
   const { isMounted, styles: transitionStyles } = useTransitionStyles(context, {
     duration: 120,

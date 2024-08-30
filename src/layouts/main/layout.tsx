@@ -20,42 +20,42 @@ type LayoutProps = {
   header: React.ReactNode;
   menu: (collapsed: boolean) => React.ReactNode;
   main: React.ReactNode;
+  containerClassName?: string;
 };
 
-export function Layout({ header, menu, main }: LayoutProps) {
-  const [sidebarState, setSidebarState] = useSidebarState();
-  console.log({ sidebarState });
+export function Layout({ header, menu, main, containerClassName }: LayoutProps) {
+  const [menuState, setMenuState] = useSideMenuState();
 
   return (
     <>
-      <SideMenu state={sidebarState} setState={setSidebarState}>
-        {menu(sidebarState === 'collapsed')}
+      <SideMenu state={menuState} setState={setMenuState}>
+        {menu(menuState === 'collapsed')}
       </SideMenu>
 
-      <div className="sm:pl-16 xl:pl-64">
+      <div className={clsx('sm:pl-16 xl:pl-64', containerClassName)}>
         <div className="mx-auto max-w-main">
-          <header
-            className={clsx(
-              'row z-20 items-center gap-1 px-2 sm:px-4',
-              'sticky top-0 border-b bg-neutral shadow-sm sm:static sm:border-none sm:shadow-none',
-            )}
-          >
-            <Button
-              size={1}
-              color="gray"
-              variant="ghost"
-              onClick={() => setSidebarState('opened')}
-              className="!px-1 sm:hidden"
-            >
-              <IconMenu className="size-5 text-dim" />
-            </Button>
-            <div className="flex-1 overflow-x-auto">{header}</div>
-          </header>
-
+          <Header onOpen={() => setMenuState('opened')}>{header}</Header>
           {main}
         </div>
       </div>
     </>
+  );
+}
+
+function Header({ onOpen, children }: { onOpen: () => void; children: React.ReactNode }) {
+  return (
+    <header
+      className={clsx(
+        'row z-10 items-center gap-1 px-2 sm:px-4',
+        'sticky top-0 border-b bg-neutral shadow-sm sm:static sm:border-none sm:shadow-none',
+      )}
+    >
+      <Button size={1} color="gray" variant="ghost" onClick={onOpen} className="!px-1 sm:hidden">
+        <IconMenu className="size-5 text-dim" />
+      </Button>
+
+      <div className="flex-1 overflow-x-auto">{children}</div>
+    </header>
   );
 }
 
@@ -105,7 +105,7 @@ function SideMenu({ state, setState, children }: SideMenuProps) {
     return (
       <FloatingOverlay
         lockScroll
-        className={clsx('z-30 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
+        className={clsx('z-20 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
       >
         {children}
       </FloatingOverlay>
@@ -121,10 +121,13 @@ function SideMenu({ state, setState, children }: SideMenuProps) {
           onMouseLeave={() => isTablet && setState('collapsed')}
           style={{ ...floatingStyles, ...(isMobile ? styles : {}) }}
           // eslint-disable-next-line tailwindcss/no-arbitrary-value
-          className={clsx('inset-y-0 max-h-screen overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', {
-            'w-16': state === 'collapsed',
-            'w-64': state === 'closed' || state === 'opened',
-          })}
+          className={clsx(
+            'inset-y-0 z-20 max-h-screen overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]',
+            {
+              'w-16': state === 'collapsed',
+              'w-64': state === 'closed' || state === 'opened',
+            },
+          )}
           {...getFloatingProps()}
         >
           {children}
@@ -134,7 +137,7 @@ function SideMenu({ state, setState, children }: SideMenuProps) {
   );
 }
 
-function useSidebarState() {
+function useSideMenuState() {
   const isDesktop = useBreakpoint('xl');
   const isTablet = useBreakpoint('sm');
 

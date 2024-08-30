@@ -1,4 +1,4 @@
-import { FloatingPortal, Placement, Strategy, UseRoleProps } from '@floating-ui/react';
+import { FloatingPortal, Middleware, Placement, Strategy, UseRoleProps } from '@floating-ui/react';
 
 import { useFloating } from './use-floating';
 
@@ -7,6 +7,7 @@ type FloatingProps = {
   setOpen: (open: boolean) => void;
   strategy?: Strategy;
   placement?: Placement;
+  middlewares?: Array<Middleware | false>;
   offset?: number;
   role?: UseRoleProps['role'];
   renderReference: (ref: React.RefCallback<Element>, props: Record<string, unknown>) => React.ReactNode;
@@ -18,6 +19,7 @@ export function Floating({
   setOpen,
   strategy,
   placement,
+  middlewares,
   offset,
   role,
   renderReference,
@@ -28,6 +30,7 @@ export function Floating({
     setOpen,
     strategy,
     placement,
+    middlewares,
     offset,
     interactions: {
       hover: { enabled: false },

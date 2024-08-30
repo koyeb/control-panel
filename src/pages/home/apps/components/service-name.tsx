@@ -17,7 +17,7 @@ export function ServiceName({ service }: { service: Service }) {
 
       <div className="col min-w-0 gap-2">
         <div className="row items-center gap-2">
-          <Tooltip content={service.name}>
+          <Tooltip className="max-w-none" content={service.name}>
             {(props) => (
               <Link
                 {...props}

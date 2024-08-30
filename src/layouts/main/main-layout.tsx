@@ -5,6 +5,7 @@ import IconPlus from 'lucide-static/icons/plus.svg?react';
 import IconX from 'lucide-static/icons/x.svg?react';
 import { Suspense } from 'react';
 
+import { useBreakpoint } from '@koyeb/design-system';
 import { useOrganizationQuery, useOrganizationUnsafe, useUserQuery } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
@@ -38,6 +39,8 @@ type LayoutProps = {
 };
 
 export function MainLayout({ children }: LayoutProps) {
+  const pageContext = usePageContext();
+
   return (
     <>
       <DocumentTitle />
@@ -46,9 +49,10 @@ export function MainLayout({ children }: LayoutProps) {
         header={<AppBreadcrumbs />}
         menu={(collapsed) => <Menu collapsed={collapsed} />}
         main={<Main>{children}</Main>}
+        containerClassName={clsx(pageContext.enabled && ['pr-4', { 'pr-[33rem]': pageContext.expanded }])}
       />
 
-      <PageContext />
+      <PageContext {...pageContext} />
     </>
   );
 }
@@ -104,23 +108,12 @@ function Main({ children }: { children: React.ReactNode }) {
   const organizationQuery = useOrganizationQuery();
   const isAuthenticated = userQuery.data !== undefined && organizationQuery.data !== undefined;
 
-  const pageContext = usePageContext();
-
   if (!isAuthenticated) {
     return null;
   }
 
   return (
-    <main
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className={clsx(
-        'overflow-x-auto px-2 py-4 sm:px-4',
-        pageContext.enabled && {
-          'pr-4': !pageContext.expanded,
-          'pr-[32rem]': pageContext.expanded,
-        },
-      )}
-    >
+    <main className="overflow-x-auto px-2 py-4 sm:px-4">
       <SessionTokenBanner />
       <Suspense>{children}</Suspense>
     </main>
@@ -145,7 +138,7 @@ function SessionTokenBanner() {
   }
 
   return (
-    <div className="sticky inset-x-0 top-0 z-10 bg-orange py-1 text-center font-medium">
+    <div className="sticky inset-x-0 top-0 bg-orange py-1 text-center font-medium">
       <T id="sessionTokenWarning" values={{ organizationName: organization.name }} />
       <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => mutation.mutate()}>
         <IconX className="size-5" />
@@ -154,9 +147,14 @@ function SessionTokenBanner() {
   );
 }
 
-function PageContext() {
+type PageContextProps = {
+  enabled: boolean;
+  expanded?: boolean;
+  setExpanded: (expanded: boolean) => void;
+};
+
+function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
-  const { enabled, expanded, setExpanded } = usePageContext();
 
   const pathname = usePathname();
   const search = useSearchParams();
@@ -191,12 +189,18 @@ function PageContext() {
   );
 }
 
-function usePageContext() {
+function usePageContext(): PageContextProps {
   const { data: user } = useUserQuery();
   const { pageContextBaseUrl } = getConfig();
   const pageContextFlag = useFeatureFlag('page-context');
+  const isDesktop = useBreakpoint('xl');
 
-  const enabled = pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN') && pageContextFlag;
+  const enabled = [
+    isDesktop,
+    pageContextBaseUrl !== undefined,
+    user?.flags.includes('ADMIN'),
+    pageContextFlag,
+  ].every(Boolean);
 
   const [expanded, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
 

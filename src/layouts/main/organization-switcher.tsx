@@ -1,3 +1,4 @@
+import { size } from '@floating-ui/react';
 import IconChevronUpDown from 'lucide-static/icons/chevrons-up-down.svg?react';
 import { useState } from 'react';
 
@@ -23,6 +24,13 @@ export function OrganizationSwitcher() {
       strategy="fixed"
       placement="bottom-start"
       offset={8}
+      middlewares={[
+        size({
+          apply({ rects, elements }) {
+            Object.assign(elements.floating.style, { minWidth: `${rects.reference.width}px` });
+          },
+        }),
+      ]}
       renderReference={(ref, props) => (
         <button
           ref={ref}
@@ -33,7 +41,7 @@ export function OrganizationSwitcher() {
           {...props}
         >
           <OrganizationAvatar className="size-6 rounded-full" />
-          <span className="flex-1 font-medium">{currentOrganization.name}</span>
+          <span className="flex-1 truncate font-medium">{currentOrganization.name}</span>
           <IconChevronUpDown className="size-4 text-dim" />
         </button>
       )}

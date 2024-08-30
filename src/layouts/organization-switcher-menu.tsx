@@ -42,7 +42,7 @@ export const OrganizationSwitcherMenu = forwardRef<HTMLDivElement, OrganizationS
     }
 
     return (
-      <Menu ref={ref} className="z-30 min-w-56" {...props}>
+      <Menu ref={ref} {...props}>
         {organizationMembers.filter(isNotDeleting).map(({ id, organization }) => (
           <ButtonMenuItem
             key={id}

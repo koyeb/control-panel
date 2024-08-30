@@ -16,7 +16,7 @@ export function AppBreadcrumbs() {
   const pathname = usePathname();
 
   return (
-    <Breadcrumbs className="h-12 overflow-x-auto">
+    <Breadcrumbs className="h-14 overflow-x-auto">
       {pathname !== routes.home() && (
         <Crumb
           isFirst
@@ -140,7 +140,7 @@ function ServiceCrumbs({ serviceId }: { serviceId: string }) {
     <>
       <Crumb
         label={
-          <span className="row max-w-48 items-center gap-2">
+          <span className="row max-w-48 items-center gap-2 sm:max-w-96 lg:max-w-none">
             <div>
               <ServiceStatusDot status={service.status} className="size-2" />
             </div>
