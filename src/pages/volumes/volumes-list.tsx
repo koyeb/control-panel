@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
+import { Button, ButtonMenuItem, Table, useBreakpoint } from '@koyeb/design-system';
 import { useService } from 'src/api/hooks/service';
 import { Volume } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
@@ -22,6 +22,8 @@ import { EditVolumeDialog } from './edit-volume-dialog';
 const T = Translate.prefix('pages.volumes.volumesList');
 
 export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate: () => void }) {
+  const isMobile = !useBreakpoint('sm');
+
   if (volumes.length === 0) {
     return (
       <NoResource
@@ -45,10 +47,12 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
           render: (volume) => volume.name,
         },
         created: {
+          hidden: isMobile,
           header: <T id="created" />,
           render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
         },
         region: {
+          hidden: isMobile,
           header: <T id="region" />,
           render: (volume) => (
             <div className="row items-center gap-2">
@@ -66,6 +70,7 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
           render: (volume) => <VolumeStatusBadge status={volume.status} />,
         },
         attachedTo: {
+          hidden: isMobile,
           header: <T id="attachedTo" />,
           render: (volume) => <AttachedService serviceId={volume.serviceId} />,
         },

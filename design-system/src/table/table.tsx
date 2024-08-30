@@ -3,6 +3,7 @@ import { Fragment } from 'react/jsx-runtime';
 
 type TableColumn<Item> = {
   render: (item: Item) => React.ReactNode;
+  hidden?: boolean;
   header?: React.ReactNode;
   className?: string;
   headerClassName?: string;
@@ -29,7 +30,7 @@ export function Table<Item, Column extends string>({
   renderExpanded,
   classes,
 }: TableProps<Item, Column>) {
-  const columnsArray = Object.entries<TableColumn<Item>>(columns);
+  const columnsArray = Object.entries<TableColumn<Item>>(columns).filter(([, value]) => !value.hidden);
 
   return (
     <table className={clsx('table', classes?.table)}>

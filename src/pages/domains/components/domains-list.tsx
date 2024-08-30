@@ -4,7 +4,7 @@ import IconCircleAlert from 'lucide-static/icons/circle-alert.svg?react';
 import IconCircleCheck from 'lucide-static/icons/circle-check.svg?react';
 import { SVGProps, useState } from 'react';
 
-import { Alert, ButtonMenuItem, Spinner, Table } from '@koyeb/design-system';
+import { Alert, ButtonMenuItem, Spinner, Table, useBreakpoint } from '@koyeb/design-system';
 import { useDomainsQuery } from 'src/api/hooks/domain';
 import { useApps } from 'src/api/hooks/service';
 import { Domain, type DomainStatus } from 'src/api/model';
@@ -30,6 +30,7 @@ type DomainsListProps = {
 };
 
 export function DomainsList({ expanded, toggleExpanded, onCreate }: DomainsListProps) {
+  const isMobile = !useBreakpoint('sm');
   const { data: domains, isPending, isError, error } = useDomainsQuery('custom');
 
   if (isPending) {
@@ -67,6 +68,7 @@ export function DomainsList({ expanded, toggleExpanded, onCreate }: DomainsListP
           render: (domain) => <AppName appId={domain.appId} />,
         },
         updated: {
+          hidden: isMobile,
           className: clsx('lg:w-48'),
           header: <T id="updated" />,
           render: (domain) => <FormattedDistanceToNow value={domain.updatedAt} />,

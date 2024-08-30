@@ -4,7 +4,7 @@ import IconEyeOff from 'lucide-static/icons/eye-off.svg?react';
 import IconEye from 'lucide-static/icons/eye.svg?react';
 import { useState } from 'react';
 
-import { Button, ButtonMenuItem, Spinner, Table, Tooltip } from '@koyeb/design-system';
+import { Button, ButtonMenuItem, Spinner, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
@@ -23,6 +23,7 @@ import { NoSecrets } from './no-secrets';
 const T = Translate.prefix('pages.secrets.secretsList');
 
 export function SecretsList({ onCreate }: { onCreate: () => void }) {
+  const isMobile = !useBreakpoint('sm');
   const secretsQuery = useSecretsQuery('simple');
 
   if (secretsQuery.isPending) {
@@ -54,6 +55,7 @@ export function SecretsList({ onCreate }: { onCreate: () => void }) {
           render: (secret) => <Value secret={secret} />,
         },
         updated: {
+          hidden: isMobile,
           className: clsx('lg:w-48'),
           header: <T id="updated" />,
           render: (secret) => <FormattedDistanceToNow value={secret.updatedAt} />,

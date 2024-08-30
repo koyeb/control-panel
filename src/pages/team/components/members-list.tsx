@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Badge, ButtonMenuItem, Select, Table } from '@koyeb/design-system';
+import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';
@@ -25,6 +25,8 @@ import { identity } from 'src/utils/generic';
 const T = Translate.prefix('pages.team.membersList');
 
 export function MembersList() {
+  const isMobile = !useBreakpoint('sm');
+
   const organization = useOrganization();
   const invitationsQuery = useInvitationsQuery({ status: 'pending' });
 
@@ -70,6 +72,7 @@ export function MembersList() {
                 ),
             },
             role: {
+              hidden: isMobile,
               header: <T id="role" />,
               render: () => (
                 <Select

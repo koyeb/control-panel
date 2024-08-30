@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { parse } from 'tldts';
 
-import { Button, Table } from '@koyeb/design-system';
+import { Button, Table, useBreakpoint } from '@koyeb/design-system';
 import { Domain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -105,6 +105,7 @@ function SubDomainConfiguration({ apex, subdomain, target }: SubDomainConfigurat
 }
 
 function DnsEntryTable({ domain }: { domain: Domain }) {
+  const isMobile = !useBreakpoint('sm');
   const { subdomain } = parse(domain.name);
 
   return (
@@ -124,6 +125,7 @@ function DnsEntryTable({ domain }: { domain: Domain }) {
           render: () => domain.intendedCname,
         },
         lastVerified: {
+          hidden: isMobile,
           header: <T id="lastVerified" />,
           render: () =>
             domain.verifiedAt ? <FormattedDistanceToNow value={domain.verifiedAt} /> : <T id="never" />,
