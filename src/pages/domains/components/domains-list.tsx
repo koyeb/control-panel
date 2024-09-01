@@ -135,7 +135,10 @@ function DomainActions({ domain }: { domain: Domain }) {
     <div onClick={stopPropagation}>
       <ActionsMenu>
         {(withClose) => (
-          <ButtonMenuItem onClick={withClose(() => setDeleteDialogOpen(true))}>
+          <ButtonMenuItem
+            disabled={domain.status === 'deleting'}
+            onClick={withClose(() => setDeleteDialogOpen(true))}
+          >
             <T id="actions.delete" />
           </ButtonMenuItem>
         )}
