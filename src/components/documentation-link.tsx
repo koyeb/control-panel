@@ -11,13 +11,9 @@ type DocumentationLinkProps = {
 
 export function DocumentationLink({ path, className, children }: DocumentationLinkProps) {
   return (
-    <ExternalLink
-      openInNewTab
-      href={`https://koyeb.com${path}`}
-      className={clsx('text-link inline-flex flex-row items-center gap-1', className)}
-    >
+    <ExternalLink openInNewTab href={`https://koyeb.com${path}`} className={clsx('text-link', className)}>
       {children}
-      <IconExternalLink className="h-4" />
+      <IconExternalLink className="inline-block h-4 align-middle" />
     </ExternalLink>
   );
 }
