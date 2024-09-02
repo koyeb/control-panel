@@ -97,7 +97,6 @@ export function EnvironmentVariablesMetadata({ definition }: { definition: Deplo
   );
 }
 
-// todo: keep the @ syntax?
 function formatEnvironmentVariable({ name, type, value }: EnvironmentVariable) {
   return `${name}=${type === 'secret' ? '@' : ''}${value}`;
 }

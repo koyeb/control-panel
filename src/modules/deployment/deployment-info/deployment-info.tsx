@@ -1,6 +1,8 @@
+import clsx from 'clsx';
+import IconChevronRight from 'lucide-static/icons/chevron-right.svg?react';
 import { useState } from 'react';
 
-import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
+import { Collapse } from '@koyeb/design-system';
 import { App, ComputeDeployment, Service } from 'src/api/model';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Translate } from 'src/intl/translate';
@@ -22,6 +24,7 @@ import {
   VolumesMetadata,
 } from '../metadata/runtime-metadata';
 
+import { DeploymentDefinitionDialog } from './deployment-definition-dialog';
 import { ExternalUrl } from './external-url';
 import { InternalUrl } from './internal-url';
 
@@ -38,20 +41,25 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
   const { type, source, builder, privileged } = definition;
 
   const [expanded, setExpanded] = useState(false);
+  const [definitionDialogOpen, setDefinitionDialogOpen] = useState(false);
 
   return (
-    <div className="rounded-md border">
-      <div className="col gap-3 p-3">
-        <div className="row items-center justify-between gap-4">
+    <section className="rounded-md border">
+      <header className={clsx('col gap-3 p-3', expanded && 'bg-gradient-to-b from-inverted/5 to-inverted/0')}>
+        <button onClick={() => setExpanded(!expanded)} className="row items-center gap-4">
+          <div>
+            <IconChevronRight className={clsx('size-4 transition-transform', expanded && 'rotate-90')} />
+          </div>
+
           <div className="text-base font-medium">
             <T id="overview" />
           </div>
 
-          <div className="row items-center gap-2 font-medium">
+          <div className="row ml-auto items-center gap-2 font-medium">
             <Translate id={`common.serviceType.${type}`} />
             <ServiceTypeIcon type={type} size="medium" />
           </div>
-        </div>
+        </button>
 
         {type !== 'worker' && (
           <div className="row flex-wrap gap-x-16 gap-y-4">
@@ -59,17 +67,10 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
             <InternalUrl app={app} service={service} deployment={deployment} />
           </div>
         )}
-      </div>
+      </header>
 
-      <AccordionSection
-        isExpanded={expanded}
-        header={
-          <AccordionHeader expanded={expanded} setExpanded={setExpanded} className="border-t font-medium">
-            <T id="deploymentDetails" />
-          </AccordionHeader>
-        }
-      >
-        <div className="m-3 mt-0 divide-y">
+      <Collapse isExpanded={expanded}>
+        <div className="m-3 divide-y rounded-md border">
           <div className="row flex-wrap gap-6 p-3">
             {source.type === 'git' && (
               <>
@@ -98,7 +99,19 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
             <VolumesMetadata definition={definition} />
           </div>
         </div>
-      </AccordionSection>
-    </div>
+
+        <div className="row mb-4 justify-center">
+          <button className="text-link" onClick={() => setDefinitionDialogOpen(true)}>
+            <T id="viewMore" />
+          </button>
+        </div>
+      </Collapse>
+
+      <DeploymentDefinitionDialog
+        open={definitionDialogOpen}
+        onClose={() => setDefinitionDialogOpen(false)}
+        deployment={deployment}
+      />
+    </section>
   );
 }

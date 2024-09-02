@@ -132,6 +132,7 @@ export type ComputeDeployment = {
   status: DeploymentStatus;
   messages: string[];
   definition: DeploymentDefinition;
+  definitionApi: object;
   build?: DeploymentBuild;
   buildSkipped?: boolean;
   trigger:
@@ -169,6 +170,7 @@ export type DeploymentBuild = {
 export type DeploymentBuildStatus = 'unknown' | 'running' | 'failed' | 'completed' | 'aborted';
 
 export type DeploymentDefinition = {
+  name: string;
   type: ComputeDeploymentType;
   source: ArchiveDeploymentSource | GitDeploymentSource | DockerDeploymentSource;
   builder?: BuildpackBuilder | DockerfileBuilder;
@@ -242,14 +244,24 @@ export type GitDeploymentSource = {
 export type DockerDeploymentSource = {
   type: 'docker';
   image: string;
+  entrypoint?: string[];
+  command?: string;
+  arguments?: string[];
 };
 
 export type BuildpackBuilder = {
   type: 'buildpack';
+  buildCommand?: string;
+  runCommand?: string;
 };
 
 export type DockerfileBuilder = {
   type: 'dockerfile';
+  dockerfile?: string;
+  entrypoint?: string[];
+  command?: string;
+  arguments?: string[];
+  target?: string;
 };
 
 export type InitialDeploymentTrigger = {

@@ -24,7 +24,7 @@ type DialogProps = {
   onClosed?: () => void;
   title?: React.ReactNode;
   description?: React.ReactNode;
-  width?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
+  width?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
   className?: string;
   children: React.ReactNode;
 };
@@ -93,6 +93,8 @@ export function Dialog({
                 'max-w-lg': width === 'lg',
                 'max-w-xl': width === 'xl',
                 'max-w-2xl': width === '2xl',
+                'max-w-3xl': width === '3xl',
+                'max-w-4xl': width === '4xl',
               },
             )}
             aria-labelledby={titleId}

@@ -122,7 +122,6 @@
   },
   "deploymentInfo": {
     "overview": "Overview",
-    "deploymentDetails": "Deployment details",
     "externalUrlLabel": "Public URL",
     "externalUrlValueForwardedPort": "(forwarded to port {portNumber})",
     "internalUrlLabel": "Private Address",
@@ -146,7 +145,62 @@
     "environmentVariablesValue": "{count} {count, plural, one {variable} other {variables}}",
     "volumesLabel": "Volumes",
     "volumesValue": "{count} {count, plural, one {volume} other {volumes}} attached",
-    "attachedVolume": "{volumeName} mounted at {mountPath}"
+    "attachedVolume": "{volumeName} mounted at {mountPath}",
+    "viewMore": "View more",
+    "definitionDialog": {
+      "title": "Deployment definition",
+      "json": "JSON",
+      "parsed": "Parsed",
+      "general": {
+        "title": "General",
+        "nameLabel": "Name:",
+        "typeLabel": "Type:"
+      },
+      "source": {
+        "title": "Deployment Source",
+        "git": {
+          "repositoryLabel": "Repository:",
+          "branchLabel": "Branch:",
+          "autodeployLabel": "Autodeploy:",
+          "privilegedLabel": "Privileged:",
+          "builderTypeLabel": "Builder type:",
+          "buildpack": "Buildpack",
+          "dockerfileLabel": "Dockerfile",
+          "buildCommandLabel": "Build command:",
+          "runCommandLabel": "Run command:",
+          "entrypointLabel": "Entrypoint:",
+          "commandLabel": "Command:",
+          "argumentsLabel": "Args:",
+          "targetLabel": "Target:"
+        },
+        "docker": {
+          "imageLabel": "Image:",
+          "entrypointLabel": "Entrypoint:",
+          "commandLabel": "Command:",
+          "argumentsLabel": "Args:",
+          "privilegedLabel": "Privileged:"
+        }
+      },
+      "instances": {
+        "title": "Instances",
+        "typeLabel": "Type:",
+        "scalingLabel": "Scaling:",
+        "regionsLabel": "Regions:",
+        "autoscaling": "Between {min} and {max}"
+      },
+      "ports": {
+        "title": "Ports",
+        "http": "HTTP",
+        "http2": "HTTP/2",
+        "tcp": "TCP",
+        "publicPort": "{portNumber}, mapped to {path} expecting {protocol} traffic",
+        "privatePort": "{portNumber}, exposed on the service mesh"
+      },
+      "environmentVariables": {
+        "title": "Environment variables",
+        "noVariables": "No variables configured"
+      }
+    }
   },
   "deploymentLogs": {
     "build": {

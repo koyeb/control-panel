@@ -178,10 +178,12 @@ const computeDeployment = createFactory<ComputeDeployment>(() => ({
   status: 'healthy',
   messages: [],
   definition: deploymentDefinition(),
+  definitionApi: {},
   trigger: null,
 }));
 
 const deploymentDefinition = createFactory<DeploymentDefinition>(() => ({
+  name: '',
   type: 'web',
   source: { type: 'git', repository: '', branch: '', autoDeploy: false },
   environmentVariables: [],

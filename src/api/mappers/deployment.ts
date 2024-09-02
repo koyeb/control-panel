@@ -109,6 +109,9 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
     return {
       type: 'docker',
       image: docker.image!,
+      entrypoint: getStringArray(docker.entrypoint),
+      command: getString(docker.command),
+      arguments: getStringArray(docker.args),
     };
   };
 
@@ -116,11 +119,22 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
     const source = definition.git ?? definition.archive;
 
     if (source?.buildpack !== undefined) {
-      return { type: 'buildpack' };
+      return {
+        type: 'buildpack',
+        buildCommand: getString(source.buildpack.build_command),
+        runCommand: getString(source.buildpack.run_command),
+      };
     }
 
     if (source?.docker !== undefined) {
-      return { type: 'dockerfile' };
+      return {
+        type: 'dockerfile',
+        dockerfile: getString(source.docker.dockerfile),
+        entrypoint: getStringArray(source.docker.entrypoint),
+        command: getString(source.docker.command),
+        arguments: getStringArray(source.docker.args),
+        target: getString(source.docker.target),
+      };
     }
   };
 
@@ -221,6 +235,7 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
     buildSkipped: deployment.skip_build,
     build: build(),
     definition: {
+      name: definition.name!,
       type: type(),
       source: source(),
       builder: builder(),
@@ -232,8 +247,17 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
       ports: ports(),
       scaling: scaling(),
     },
+    definitionApi: definition,
     trigger: trigger(),
   };
+}
+
+function getString(value?: string) {
+  return value === '' ? undefined : value;
+}
+
+function getStringArray(value?: string[]) {
+  return value?.length === 0 ? undefined : value;
 }
 
 function transformDatabaseDeployment(deployment: ApiDeployment): DatabaseDeployment {
