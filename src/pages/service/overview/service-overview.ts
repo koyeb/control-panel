@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { isAfter } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useBreakpoint } from '@koyeb/design-system';
@@ -203,14 +204,19 @@ function useDeployments(serviceId: string) {
 
 function useDeploymentGroups(service: Service, deployments: ComputeDeployment[]) {
   return useMemo(() => {
-    let active: ComputeDeployment | undefined = undefined;
+    const active = deployments.find(hasProperty('id', service.activeDeploymentId));
     const upcoming: ComputeDeployment[] = [];
     const past: ComputeDeployment[] = [];
 
     for (const deployment of deployments) {
-      if (deployment.id === service.activeDeploymentId) {
-        active = deployment;
-      } else if (isUpcomingDeployment(deployment)) {
+      if (deployment === active) {
+        continue;
+      }
+
+      if (isUpcomingDeployment(deployment)) {
+        upcoming.push(deployment);
+      } else if (deployment.status === 'healthy' && active && isAfter(deployment.date, active.date)) {
+        // consider healthy deployments that are more recent than the active one as upcoming
         upcoming.push(deployment);
       } else {
         past.push(deployment);
