@@ -47,6 +47,7 @@
     "react-hook-form": "7.52.2",
     "react-intl": "^6.6.8",
     "react-toastify": "^10.0.5",
+    "shiki": "^1.16.1",
     "tldts": "^6.1.39",
     "unique-names-generator": "^4.7.1",
     "uuid": "^10.0.0",
