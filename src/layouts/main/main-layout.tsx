@@ -46,13 +46,12 @@ export function MainLayout({ children }: LayoutProps) {
       <DocumentTitle />
 
       <Layout
+        banner={<SessionTokenBanner />}
         header={<AppBreadcrumbs />}
         menu={(collapsed) => <Menu collapsed={collapsed} />}
         main={<Main>{children}</Main>}
-        containerClassName={clsx(pageContext.enabled && ['pr-4', { 'pr-[33rem]': pageContext.expanded }])}
+        context={pageContext.enabled ? <PageContext {...pageContext} /> : undefined}
       />
-
-      <PageContext {...pageContext} />
     </>
   );
 }
@@ -114,7 +113,6 @@ function Main({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="overflow-x-auto px-2 py-4 sm:px-4">
-      <SessionTokenBanner />
       <Suspense>{children}</Suspense>
     </main>
   );
@@ -172,9 +170,8 @@ function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
   }
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
-    <div className={clsx('fixed inset-y-0 right-0 w-0', expanded && 'w-[32rem]')}>
-      <div className="col absolute inset-y-0 right-full justify-center">
+    <div className={clsx('relative h-screen', expanded ? 'w-full max-w-lg' : 'mr-px w-0')}>
+      <div className="col absolute inset-y-0 right-full justify-center pr-3">
         <button onClick={() => setExpanded(!expanded)}>
           <IconChevronLeft className={clsx('size-6 text-dim', expanded && 'rotate-180')} />
         </button>

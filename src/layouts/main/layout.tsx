@@ -17,28 +17,33 @@ import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
 
 type LayoutProps = {
+  banner?: React.ReactNode;
   header: React.ReactNode;
   menu: (collapsed: boolean) => React.ReactNode;
   main: React.ReactNode;
-  containerClassName?: string;
+  context?: React.ReactNode;
 };
 
-export function Layout({ header, menu, main, containerClassName }: LayoutProps) {
+export function Layout({ banner, header, menu, main, context }: LayoutProps) {
   const [menuState, setMenuState] = useSideMenuState();
 
   return (
-    <>
+    <div className="row">
       <SideMenu state={menuState} setState={setMenuState}>
         {menu(menuState === 'collapsed')}
       </SideMenu>
 
-      <div className={clsx('sm:pl-16 xl:pl-64', containerClassName)}>
-        <div className="mx-auto max-w-main">
+      <div className="h-screen flex-1 overflow-auto">
+        {banner}
+
+        <div className={clsx('mx-auto max-w-main', context && 'pr-4')}>
           <Header onOpen={() => setMenuState('opened')}>{header}</Header>
           {main}
         </div>
       </div>
-    </>
+
+      {context}
+    </div>
   );
 }
 
@@ -68,19 +73,59 @@ type SideMenuProps = {
   children: React.ReactNode;
 };
 
-function SideMenu({ state, setState, children }: SideMenuProps) {
+function SideMenu(props: SideMenuProps) {
   const isDesktop = useBreakpoint('xl');
   const isTablet = useBreakpoint('sm') && !isDesktop;
-  const isMobile = !isTablet && !isDesktop;
 
+  if (isDesktop) {
+    return <SideMenuDesktop {...props} />;
+  }
+
+  if (isTablet) {
+    return <SideMenuTablet {...props} />;
+  }
+
+  return <SideMenuMobile {...props} />;
+}
+
+function SideMenuDesktop({ children }: SideMenuProps) {
+  return (
+    <aside
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
+      className="z-20 h-screen w-64 overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]"
+    >
+      {children}
+    </aside>
+  );
+}
+
+function SideMenuTablet({ state, setState, children }: SideMenuProps) {
+  return (
+    <div
+      onMouseEnter={() => setState('opened')}
+      onMouseLeave={() => setState('collapsed')}
+      className={clsx('z-20 w-16 overflow-x-visible')}
+    >
+      <aside
+        // eslint-disable-next-line tailwindcss/no-arbitrary-value
+        className={clsx('h-screen overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', {
+          'w-full': state === 'collapsed',
+          'w-64': state === 'opened',
+        })}
+      >
+        {children}
+      </aside>
+    </div>
+  );
+}
+
+function SideMenuMobile({ state, setState, children }: SideMenuProps) {
   const { refs, floatingStyles, context } = useFloating({
     whileElementsMounted: autoUpdate,
     onOpenChange: (open) => {
-      if (!open && !isDesktop) {
-        setState(isTablet ? 'collapsed' : 'closed');
-      }
+      setState(open ? 'opened' : 'closed');
     },
-    open: isMobile ? state === 'opened' : true,
+    open: state === 'opened',
     strategy: 'fixed',
   });
 
@@ -93,47 +138,27 @@ function SideMenu({ state, setState, children }: SideMenuProps) {
   const dismiss = useDismiss(context, { outsidePressEvent: 'mousedown' });
   const { getFloatingProps } = useInteractions([dismiss]);
 
-  const wrap = (children: React.ReactNode) => {
-    if (isTablet || isDesktop) {
-      return children;
-    }
-
-    if (!isMounted) {
-      return null;
-    }
-
-    return (
-      <FloatingOverlay
-        lockScroll
-        className={clsx('z-20 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
-      >
-        {children}
-      </FloatingOverlay>
-    );
-  };
+  if (!isMounted) {
+    return null;
+  }
 
   return (
-    <FloatingPortal root={document.getElementById('root')}>
-      {wrap(
+    <FloatingOverlay
+      lockScroll
+      className={clsx('z-20 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
+    >
+      <FloatingPortal root={document.getElementById('root')}>
         <aside
           ref={refs.setFloating}
-          onMouseEnter={() => isTablet && setState('opened')}
-          onMouseLeave={() => isTablet && setState('collapsed')}
-          style={{ ...floatingStyles, ...(isMobile ? styles : {}) }}
+          style={{ ...floatingStyles, ...styles }}
           // eslint-disable-next-line tailwindcss/no-arbitrary-value
-          className={clsx(
-            'inset-y-0 z-20 max-h-screen overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]',
-            {
-              'w-16': state === 'collapsed',
-              'w-64': state === 'closed' || state === 'opened',
-            },
-          )}
+          className="inset-y-0 z-20 h-screen w-64 overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]"
           {...getFloatingProps()}
         >
           {children}
-        </aside>,
-      )}
-    </FloatingPortal>
+        </aside>
+      </FloatingPortal>
+    </FloatingOverlay>
   );
 }
 
