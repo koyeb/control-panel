@@ -20,6 +20,7 @@ import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
 import { inArray } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
+import { hasProperty } from 'src/utils/object';
 
 const T = Translate.prefix('deploymentLogs.replicas');
 
@@ -169,24 +170,24 @@ function useReplicas(instances: Instance[]) {
 }
 
 function Replica({ instances }: { instances: [Instance, ...Instance[]] }) {
-  const firstInstance = instances[0];
+  const instance = instances.find(hasProperty('status', 'healthy')) ?? instances[0];
 
   return (
     <div className="col min-w-0 gap-3 rounded-md border bg-neutral p-3">
       <div className="row items-center gap-2">
         <div className="font-medium">
-          <T id="replicaIndex" values={{ index: firstInstance.replicaIndex }} />
+          <T id="replicaIndex" values={{ index: instance.replicaIndex }} />
         </div>
 
-        <RegionFlag identifier={firstInstance.region} className="size-4 rounded-full shadow-badge" />
+        <RegionFlag identifier={instance.region} className="size-4 rounded-full shadow-badge" />
 
-        <InstanceStatusBadge status={firstInstance.status} className="ms-auto" />
+        <InstanceStatusBadge status={instance.status} className="ms-auto" />
       </div>
 
-      <Tooltip allowHover content={firstInstance.messages.join(' ')}>
+      <Tooltip allowHover content={instance.messages.join(' ')}>
         {(props) => (
           <div {...props} className="max-w-full self-start truncate text-dim">
-            {firstInstance.messages.join(' ')}
+            {instance.messages.join(' ')}
           </div>
         )}
       </Tooltip>
