@@ -1755,6 +1755,10 @@
       "layout": {
         "redeploy": "Redeploy",
         "redeploying": "Your service's latest deployment is being redeployed",
+        "redeployCli": {
+          "title": "Redeploy service using the Koyeb CLI",
+          "description": "Run the command above right from your terminal to redeploy this service"
+        },
         "redeployDialog": {
           "title": "Redeploy service",
           "descriptionWithoutBuild": "You are about to create a new deployment of your service",

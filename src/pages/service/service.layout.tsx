@@ -60,7 +60,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
 
       <div className="col sm:row items-start justify-between gap-4">
         <Header app={app} service={service} deployment={activeDeployment} />
-        <RedeployButton service={service} />
+        <RedeployButton app={app} service={service} />
       </div>
 
       <ServiceErrorAlert service={service} />

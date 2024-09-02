@@ -5,11 +5,12 @@ import { useForm } from 'react-hook-form';
 
 import { Button, Dialog } from '@koyeb/design-system';
 import { useDeployment } from 'src/api/hooks/service';
-import { Service } from 'src/api/model';
+import { App, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { hasBuild } from 'src/application/service-functions';
+import { CliInfoTooltip, CliInfoButton } from 'src/components/cli-info';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, usePathname } from 'src/hooks/router';
@@ -17,7 +18,7 @@ import { Translate } from 'src/intl/translate';
 
 const T = Translate.prefix('pages.service.layout');
 
-export function RedeployButton({ service }: { service: Service }) {
+export function RedeployButton({ app, service }: { app: App; service: Service }) {
   const latestDeployment = useDeployment(service.latestDeploymentId);
   const pathname = usePathname();
   const navigate = useNavigate();
@@ -56,13 +57,24 @@ export function RedeployButton({ service }: { service: Service }) {
 
   return (
     <>
-      <Button
-        loading={form.formState.isSubmitting}
-        onClick={() => setOpen(true)}
-        className="self-stretch sm:self-start"
-      >
-        <T id="redeploy" />
-      </Button>
+      <CliInfoButton
+        button={
+          <Button
+            loading={form.formState.isSubmitting}
+            onClick={() => setOpen(true)}
+            className="self-stretch sm:self-start"
+          >
+            <T id="redeploy" />
+          </Button>
+        }
+        tooltip={
+          <CliInfoTooltip
+            title={<T id="redeployCli.title" />}
+            description={<T id="redeployCli.description" />}
+            command={`koyeb service redeploy ${app.name}/${service.name}`}
+          />
+        }
+      />
 
       <Dialog
         isOpen={open}
