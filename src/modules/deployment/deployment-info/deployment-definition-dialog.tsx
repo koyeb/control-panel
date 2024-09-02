@@ -160,7 +160,7 @@ function Git({ source, builder, privileged }: GitProps) {
 function Docker({ source, privileged }: { source: DockerDeploymentSource; privileged?: boolean }) {
   return (
     <>
-      <IconDocker />
+      <IconDocker className="icon" />
 
       <Data name={<T id="source.docker.imageLabel" />}>{source.image}</Data>
 
