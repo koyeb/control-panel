@@ -21,7 +21,6 @@ import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
-import { assert } from 'src/utils/assert';
 
 import { BuildLogs } from './build-logs';
 import { Replicas } from './replicas';
@@ -243,8 +242,9 @@ function getBuildStatus(deployment: ComputeDeployment): DeploymentBuildStatus | 
 }
 
 function elapsed({ startedAt, finishedAt }: DeploymentBuild) {
-  assert(startedAt !== null);
-  assert(finishedAt !== null);
+  if (startedAt === null || finishedAt === null) {
+    return;
+  }
 
   return (new Date(finishedAt).getTime() - new Date(startedAt).getTime()) / 1000;
 }
