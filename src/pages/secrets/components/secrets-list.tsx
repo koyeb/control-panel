@@ -1,7 +1,5 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconEyeOff from 'lucide-static/icons/eye-off.svg?react';
-import IconEye from 'lucide-static/icons/eye.svg?react';
 import { useState } from 'react';
 
 import { Button, ButtonMenuItem, Spinner, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
@@ -10,6 +8,7 @@ import { Secret } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { IconEye, IconEyeOff } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useClipboard } from 'src/hooks/clipboard';

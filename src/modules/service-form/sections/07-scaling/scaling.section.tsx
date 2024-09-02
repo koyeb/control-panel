@@ -1,9 +1,8 @@
-import IconMoveHorizontal from 'lucide-static/icons/move-horizontal.svg?react';
-import IconScaling from 'lucide-static/icons/scaling.svg?react';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { ControlledSelectBox } from 'src/components/controlled';
+import { IconScaling, IconMoveHorizontal } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

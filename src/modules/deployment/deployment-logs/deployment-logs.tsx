@@ -1,8 +1,4 @@
 import clsx from 'clsx';
-import IconCircleAlert from 'lucide-static/icons/circle-alert.svg?react';
-import IconCircleCheck from 'lucide-static/icons/circle-check.svg?react';
-import IconCircleDashed from 'lucide-static/icons/circle-dashed.svg?react';
-import IconCircleX from 'lucide-static/icons/circle-x.svg?react';
 import React, { useState } from 'react';
 
 import { AccordionHeader, AccordionSection, Spinner } from '@koyeb/design-system';
@@ -17,6 +13,7 @@ import {
   Service,
 } from 'src/api/model';
 import { hasBuild } from 'src/application/service-functions';
+import { IconCircleAlert, IconCircleCheck, IconCircleDashed, IconCircleX } from 'src/components/icons';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';

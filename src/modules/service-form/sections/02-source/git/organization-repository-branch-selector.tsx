@@ -1,10 +1,10 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import IconBranch from 'lucide-static/icons/git-branch.svg?react';
 import { useEffect, useState } from 'react';
 
 import { mapRepositoryBranchesList } from 'src/api/mappers/git';
 import { useApiQueryFn } from 'src/api/use-api';
 import { ControlledAutocomplete } from 'src/components/controlled';
+import { IconBranch } from 'src/components/icons';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';

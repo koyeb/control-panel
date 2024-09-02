@@ -1,18 +1,20 @@
-import IconArrowDown from 'lucide-static/icons/arrow-down.svg?react';
-import IconArrowLeft from 'lucide-static/icons/arrow-left.svg?react';
-import IconArrowUp from 'lucide-static/icons/arrow-up.svg?react';
-import IconCodeSnippet from 'lucide-static/icons/code.svg?react';
-import IconCornerDownLeft from 'lucide-static/icons/corner-down-left.svg?react';
-import IconDatabase from 'lucide-static/icons/database.svg?react';
-import IconGlobe from 'lucide-static/icons/earth.svg?react';
-import IconGithub from 'lucide-static/icons/github.svg?react';
-import IconSearch from 'lucide-static/icons/search.svg?react';
-import IconSettings from 'lucide-static/icons/settings.svg?react';
 import { useCallback, useRef } from 'react';
 
 import { Dialog } from '@koyeb/design-system';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useExampleApps } from 'src/api/hooks/service';
+import {
+  IconArrowDown,
+  IconArrowLeft,
+  IconArrowUp,
+  IconCodeSnippet,
+  IconCornerDownLeft,
+  IconDatabase,
+  IconGlobe,
+  IconGithub,
+  IconSearch,
+  IconSettings,
+} from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
 import { useShortcut } from 'src/hooks/shortcut';
 import IconDocker from 'src/icons/docker.svg?react';

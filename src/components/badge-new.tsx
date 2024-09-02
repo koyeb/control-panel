@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import IconSparkles from 'lucide-static/icons/sparkles.svg?react';
 
 import { Badge } from '@koyeb/design-system';
+import { IconSparkles } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 export function BadgeNew({ className }: { className?: string }) {

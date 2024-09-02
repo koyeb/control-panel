@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconChevronUpDown from 'lucide-static/icons/chevrons-up-down.svg?react';
 import { useState } from 'react';
 
 import { Floating } from '@koyeb/design-system';
@@ -10,6 +9,7 @@ import { useOrganizationUnsafe, useUserQuery } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
+import { IconChevronUpDown } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';

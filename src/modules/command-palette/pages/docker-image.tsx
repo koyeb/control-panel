@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -10,6 +9,7 @@ import { routes } from 'src/application/routes';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
+import { IconArrowRight } from 'src/components/icons';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';

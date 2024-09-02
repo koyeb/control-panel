@@ -1,7 +1,4 @@
 import clsx from 'clsx';
-import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
-import IconCircleAlert from 'lucide-static/icons/circle-alert.svg?react';
-import IconCircleCheck from 'lucide-static/icons/circle-check.svg?react';
 import { SVGProps, useState } from 'react';
 
 import { Alert, ButtonMenuItem, Spinner, Table, useBreakpoint } from '@koyeb/design-system';
@@ -10,6 +7,7 @@ import { useApps } from 'src/api/hooks/service';
 import { Domain, type DomainStatus } from 'src/api/model';
 import { stopPropagation } from 'src/application/dom-events';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { IconCircleCheck, IconCircleAlert, IconChevronDown } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { FormattedDistanceToNow } from 'src/intl/formatted';

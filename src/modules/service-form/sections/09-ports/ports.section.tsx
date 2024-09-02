@@ -1,7 +1,7 @@
-import IconPlus from 'lucide-static/icons/plus.svg?react';
 import { useFieldArray } from 'react-hook-form';
 
 import { Button } from '@koyeb/design-system';
+import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

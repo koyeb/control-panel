@@ -1,11 +1,8 @@
 import clsx from 'clsx';
-import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
-import IconCircleCheck from 'lucide-static/icons/circle-check.svg?react';
-import IconCircleDashed from 'lucide-static/icons/circle-dashed.svg?react';
-import IconCircleX from 'lucide-static/icons/circle-x.svg?react';
 
 import { Collapse, Spinner } from '@koyeb/design-system';
 import { DeploymentBuildStatus, DeploymentStatus } from 'src/api/model';
+import { IconChevronDown, IconCircleCheck, IconCircleDashed, IconCircleX } from 'src/components/icons';
 
 type SectionProps = {
   title: React.ReactNode;

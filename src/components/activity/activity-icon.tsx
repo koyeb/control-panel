@@ -1,14 +1,16 @@
 import clsx from 'clsx';
-import IconBox from 'lucide-static/icons/box.svg?react';
-import IconBoxes from 'lucide-static/icons/boxes.svg?react';
-import IconBuilding from 'lucide-static/icons/building.svg?react';
-import IconCreditCard from 'lucide-static/icons/credit-card.svg?react';
-import IconFileKey2 from 'lucide-static/icons/file-key-2.svg?react';
-import IconGlobe from 'lucide-static/icons/globe.svg?react';
-import IconUserRound from 'lucide-static/icons/user-round.svg?react';
-import IconUsers from 'lucide-static/icons/users.svg?react';
 
 import { Activity } from 'src/api/model';
+import {
+  IconBox,
+  IconBoxes,
+  IconBuilding,
+  IconCreditCard,
+  IconFileKey2,
+  IconGlobe,
+  IconUserRound,
+  IconUsers,
+} from 'src/components/icons';
 import { inArray } from 'src/utils/arrays';
 
 export function ActivityIcon({ activity }: { activity: Activity }) {

@@ -1,7 +1,7 @@
-import IconFilePlus from 'lucide-static/icons/file-plus-2.svg?react';
 import { useCallback, useState } from 'react';
 
 import { preventDefault, withPreventDefault } from 'src/application/dom-events';
+import { IconFilePlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 type FileDropZoneProps = {

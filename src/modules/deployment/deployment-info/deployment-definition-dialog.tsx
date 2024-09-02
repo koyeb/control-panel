@@ -1,6 +1,4 @@
 import clsx from 'clsx';
-import IconGithub from 'lucide-static/icons/github.svg?react';
-import IconPackage from 'lucide-static/icons/package.svg?react';
 import { useMemo, useState } from 'react';
 
 import { Dialog, Json, TabButton, TabButtons } from '@koyeb/design-system';
@@ -16,6 +14,7 @@ import type {
   Scaling,
 } from 'src/api/model';
 import { CopyIconButton } from 'src/application/copy-icon-button';
+import { IconPackage, IconGithub } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';

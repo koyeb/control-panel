@@ -1,6 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import IconEyeOff from 'lucide-static/icons/eye-off.svg?react';
-import IconEye from 'lucide-static/icons/eye.svg?react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -11,6 +9,7 @@ import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
+import { IconEye, IconEyeOff } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';

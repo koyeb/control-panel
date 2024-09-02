@@ -1,11 +1,10 @@
 import clsx from 'clsx';
 import sortBy from 'lodash-es/sortBy';
-import IconCopy from 'lucide-static/icons/copy.svg?react';
-import IconLink from 'lucide-static/icons/link.svg?react';
 
 import { Badge, Tooltip } from '@koyeb/design-system';
 import { App, Deployment, Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
+import { IconLink, IconCopy } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { useClipboard } from 'src/hooks/clipboard';
 import { Translate } from 'src/intl/translate';

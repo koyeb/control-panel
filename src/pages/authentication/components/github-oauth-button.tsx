@@ -1,8 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import IconGithub from 'lucide-static/icons/github.svg?react';
 
 import { Spinner } from '@koyeb/design-system';
 import { useApiMutationFn } from 'src/api/use-api';
+import { IconGithub } from 'src/components/icons';
 import { assert, AssertionError } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 

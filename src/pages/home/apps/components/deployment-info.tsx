@@ -1,7 +1,6 @@
-import IconDatabase from 'lucide-static/icons/database.svg?react';
-
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { ComputeDeployment, DatabaseDeployment, Deployment } from 'src/api/model';
+import { IconDatabase } from 'src/components/icons';
 import { TextSkeleton } from 'src/components/skeleton';
 import { Translate } from 'src/intl/translate';
 

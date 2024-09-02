@@ -1,7 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconCheck from 'lucide-static/icons/check.svg?react';
-import IconCirclePlus from 'lucide-static/icons/circle-plus.svg?react';
 import { forwardRef } from 'react';
 
 import { ButtonMenuItem, Menu, MenuItem, Spinner } from '@koyeb/design-system';
@@ -11,6 +9,7 @@ import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
+import { IconCirclePlus, IconCheck } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';

@@ -1,6 +1,5 @@
-import IconPackage from 'lucide-static/icons/package.svg?react';
-
 import { ControlledSelectBox } from 'src/components/controlled';
+import { IconPackage } from 'src/components/icons';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate } from 'src/intl/translate';
 

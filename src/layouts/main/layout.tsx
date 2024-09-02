@@ -9,10 +9,10 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react';
 import clsx from 'clsx';
-import IconMenu from 'lucide-static/icons/menu.svg?react';
 import { useCallback, useEffect, useState } from 'react';
 
 import { Button, useBreakpoint } from '@koyeb/design-system';
+import { IconMenu } from 'src/components/icons';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
 

@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import IconEyeOff from 'lucide-static/icons/eye-off.svg?react';
-import IconEye from 'lucide-static/icons/eye.svg?react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -11,6 +9,7 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { CopyIconButton } from 'src/application/copy-icon-button';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { ControlledSelect } from 'src/components/controlled';
+import { IconEye, IconEyeOff } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { getName, hasProperty } from 'src/utils/object';
 

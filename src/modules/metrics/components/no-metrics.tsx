@@ -1,7 +1,6 @@
-import IconTriangleAlert from 'lucide-static/icons/triangle-alert.svg?react';
-
 import { Spinner } from '@koyeb/design-system';
 import { hasMessage } from 'src/api/api-errors';
+import { IconTriangleAlert } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { Translate } from 'src/intl/translate';
 

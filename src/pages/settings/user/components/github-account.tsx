@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import IconGithub from 'lucide-static/icons/github.svg?react';
 
 import { Button } from '@koyeb/design-system';
 import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { IconGithub } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import IconChevronRight from 'lucide-static/icons/chevron-right.svg?react';
 
+import { IconChevronRight } from 'src/components/icons';
 import { Link } from 'src/components/link';
 
 type BreadcrumbsProps = {

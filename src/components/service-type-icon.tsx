@@ -1,11 +1,7 @@
 import clsx from 'clsx';
-import IconCpu from 'lucide-static/icons/cpu.svg?react';
-import IconDatabase from 'lucide-static/icons/database.svg?react';
-import IconGlobeLock from 'lucide-static/icons/globe-lock.svg?react';
-import IconSquareCode from 'lucide-static/icons/square-code.svg?react';
-import IconWorkflow from 'lucide-static/icons/workflow.svg?react';
 
 import { ServiceType } from 'src/api/model';
+import { IconCpu, IconDatabase, IconGlobeLock, IconSquareCode, IconWorkflow } from 'src/components/icons';
 
 type ServiceTypeIconProps = {
   type: ServiceType | 'private' | 'batch';

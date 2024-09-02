@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import IconArrowUpRight from 'lucide-static/icons/arrow-up-right.svg?react';
 import { FormattedDate } from 'react-intl';
 
 import { BadgeNew } from 'src/components/badge-new';
+import { IconArrowUpRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
 import { useLocalStorage } from 'src/hooks/storage';

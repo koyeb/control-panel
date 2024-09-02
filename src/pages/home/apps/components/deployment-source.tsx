@@ -1,7 +1,5 @@
-import IconArchive from 'lucide-static/icons/archive.svg?react';
-import IconGithub from 'lucide-static/icons/github.svg?react';
-
 import { DeploymentDefinition } from 'src/api/model';
+import { IconArchive, IconGithub } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate } from 'src/intl/translate';

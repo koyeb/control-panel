@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import IconExternalLink from 'lucide-static/icons/external-link.svg?react';
+
+import { IconExternalLink } from 'src/components/icons';
 
 import { ExternalLink } from './link';
 

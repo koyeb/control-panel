@@ -1,10 +1,9 @@
 import clsx from 'clsx';
-import IconPlus from 'lucide-static/icons/plus.svg?react';
-import IconTrash from 'lucide-static/icons/trash-2.svg?react';
 import { useFieldArray } from 'react-hook-form';
 
 import { Button, IconButton, useBreakpoint } from '@koyeb/design-system';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { IconTrash, IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { upperCase } from 'src/utils/strings';

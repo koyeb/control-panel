@@ -1,7 +1,6 @@
-import IconCheck from 'lucide-static/icons/check.svg?react';
-import IconCopy from 'lucide-static/icons/copy.svg?react';
 import { useEffect, useState } from 'react';
 
+import { IconCheck, IconCopy } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 
 type CopyIconButtonProps = React.ComponentProps<'button'> & {

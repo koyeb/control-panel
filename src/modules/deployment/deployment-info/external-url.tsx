@@ -1,9 +1,8 @@
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-
 import { Badge, Tooltip } from '@koyeb/design-system';
 import { App, ComputeDeployment, Service } from 'src/api/model';
 import { CopyIconButton } from 'src/application/copy-icon-button';
 import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
+import { IconArrowRight } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
 import { Translate } from 'src/intl/translate';

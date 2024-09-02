@@ -1,7 +1,7 @@
-import IconEllipsisVertical from 'lucide-static/icons/ellipsis-vertical.svg?react';
 import { useState } from 'react';
 
 import { Floating, IconButton, Menu } from '@koyeb/design-system';
+import { IconEllipsisVertical } from 'src/components/icons';
 
 type OnClose = () => void;
 type WithClose = (cb: () => void) => OnClose;

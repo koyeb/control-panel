@@ -1,10 +1,10 @@
 import isEqual from 'lodash-es/isEqual';
-import IconRefresh from 'lucide-static/icons/rotate-ccw.svg?react';
 import { useFormContext } from 'react-hook-form';
 
 import { Button, Input, InputEnd } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { IconRefresh } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 

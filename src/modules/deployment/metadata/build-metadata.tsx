@@ -1,8 +1,5 @@
-import IconGitBranch from 'lucide-static/icons/git-branch.svg?react';
-import IconGitCommitHorizontal from 'lucide-static/icons/git-commit-horizontal.svg?react';
-import IconGithub from 'lucide-static/icons/github.svg?react';
-
 import { ComputeDeployment, DeploymentDefinition } from 'src/api/model';
+import { IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
 import { TextSkeleton } from 'src/components/skeleton';

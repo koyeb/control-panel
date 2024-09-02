@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconEyeOff from 'lucide-static/icons/eye-off.svg?react';
-import IconEye from 'lucide-static/icons/eye.svg?react';
 import { useState } from 'react';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -12,6 +10,7 @@ import { Secret } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useAccessToken } from 'src/application/token';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
+import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useZodResolver } from 'src/hooks/validation';

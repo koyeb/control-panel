@@ -1,11 +1,9 @@
 import clsx from 'clsx';
-import IconCircleAlert from 'lucide-static/icons/circle-alert.svg?react';
-import IconCircleCheck from 'lucide-static/icons/circle-check.svg?react';
-import IconCirclePause from 'lucide-static/icons/circle-pause.svg?react';
 
 import { Spinner, Tooltip } from '@koyeb/design-system';
 import { Service, ServiceStatus } from 'src/api/model';
 import { getServiceLink } from 'src/application/service-functions';
+import { IconCircleAlert, IconCircleCheck, IconCirclePause } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Translate } from 'src/intl/translate';

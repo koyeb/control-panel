@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import IconInfo from 'lucide-static/icons/info.svg?react';
 import React from 'react';
 
 import { ComputeDeployment } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
+import { IconInfo } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 

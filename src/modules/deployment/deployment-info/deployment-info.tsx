@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import IconChevronRight from 'lucide-static/icons/chevron-right.svg?react';
 import { useState } from 'react';
 
 import { Collapse } from '@koyeb/design-system';
 import { App, ComputeDeployment, Service } from 'src/api/model';
+import { IconChevronRight } from 'src/components/icons';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Translate } from 'src/intl/translate';
 

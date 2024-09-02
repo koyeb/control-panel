@@ -1,7 +1,5 @@
-import IconGitBranch from 'lucide-static/icons/git-branch.svg?react';
-import IconGitCommitHorizontal from 'lucide-static/icons/git-commit-horizontal.svg?react';
-
 import { ComputeDeployment, type GitDeploymentTrigger } from 'src/api/model';
+import { IconGitBranch, IconGitCommitHorizontal } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';

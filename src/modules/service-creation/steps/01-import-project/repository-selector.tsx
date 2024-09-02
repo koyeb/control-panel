@@ -1,7 +1,4 @@
 import { useIsMutating, useMutation } from '@tanstack/react-query';
-import IconGithub from 'lucide-static/icons/github.svg?react';
-import IconLock from 'lucide-static/icons/lock.svg?react';
-import IconRefreshCcw from 'lucide-static/icons/refresh-ccw.svg?react';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -13,6 +10,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
 import { ControlledInput } from 'src/components/controlled';
+import { IconRefreshCcw, IconLock, IconGithub } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';

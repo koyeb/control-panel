@@ -1,9 +1,7 @@
-import IconArchive from 'lucide-static/icons/archive.svg?react';
-import IconBranch from 'lucide-static/icons/git-branch.svg?react';
-import IconGithub from 'lucide-static/icons/github.svg?react';
 import { useState } from 'react';
 
 import { ControlledRadio } from 'src/components/controlled';
+import { IconArchive, IconBranch, IconGithub } from 'src/components/icons';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate } from 'src/intl/translate';
 

@@ -1,11 +1,7 @@
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-import IconDatabase from 'lucide-static/icons/database.svg?react';
-import IconGlobe from 'lucide-static/icons/earth.svg?react';
-import IconSettings from 'lucide-static/icons/settings.svg?react';
-
 import { Button } from '@koyeb/design-system';
 import { type ExampleApp } from 'src/api/model';
 import { routes } from 'src/application/routes';
+import { IconArrowRight, IconDatabase, IconGlobe, IconSettings } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
 import { useShortcut } from 'src/hooks/shortcut';
 import { Translate } from 'src/intl/translate';

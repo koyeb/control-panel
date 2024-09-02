@@ -1,6 +1,4 @@
-import IconEarth from 'lucide-static/icons/earth.svg?react';
-import IconScale3d from 'lucide-static/icons/scale-3d.svg?react';
-
+import { IconEarth, IconScale3d } from 'src/components/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';

@@ -1,8 +1,4 @@
 import clsx from 'clsx';
-import IconCopy from 'lucide-static/icons/copy.svg?react';
-import IconDownload from 'lucide-static/icons/download.svg?react';
-import IconEllipsis from 'lucide-static/icons/ellipsis.svg?react';
-import IconFullscreen from 'lucide-static/icons/fullscreen.svg?react';
 import { useEffect, useRef, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { UseFormReturn, useForm } from 'react-hook-form';
@@ -12,6 +8,7 @@ import { IconButton, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/desi
 import { LogLine } from 'src/api/model';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { notify } from 'src/application/notify';
+import { IconFullscreen, IconEllipsis, IconDownload, IconCopy } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useShortcut } from 'src/hooks/shortcut';
 import { Translate } from 'src/intl/translate';

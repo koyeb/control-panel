@@ -1,13 +1,15 @@
-import IconAlarmClockCheck from 'lucide-static/icons/alarm-clock-check.svg?react';
-import IconCpu from 'lucide-static/icons/cpu.svg?react';
-import IconListMinus from 'lucide-static/icons/list-minus.svg?react';
-import IconPanelsLeftBottom from 'lucide-static/icons/panels-left-bottom.svg?react';
-import IconTimer from 'lucide-static/icons/timer.svg?react';
 import { useFormContext, useFormState } from 'react-hook-form';
 
 import { InputEnd, Slider, Tooltip } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
+import {
+  IconAlarmClockCheck,
+  IconCpu,
+  IconListMinus,
+  IconPanelsLeftBottom,
+  IconTimer,
+} from 'src/components/icons';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';

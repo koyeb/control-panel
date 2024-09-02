@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
 
 import { AccordionSection } from '@koyeb/design-system';
+import { IconChevronDown } from 'src/components/icons';
 import { TextSkeleton } from 'src/components/skeleton';
 import { createArray } from 'src/utils/arrays';
 

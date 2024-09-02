@@ -1,7 +1,7 @@
-import IconBranch from 'lucide-static/icons/git-branch.svg?react';
 import { useState } from 'react';
 
 import { ControlledAutocomplete } from 'src/components/controlled';
+import { IconBranch } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';

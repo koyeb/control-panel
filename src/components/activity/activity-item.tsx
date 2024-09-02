@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import IconClock from 'lucide-static/icons/clock-4.svg?react';
 
 import { Activity } from 'src/api/model';
+import { IconClock } from 'src/components/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 
 import { ActivityActorImage } from './activity-actor';

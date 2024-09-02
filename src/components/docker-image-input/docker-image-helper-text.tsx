@@ -1,6 +1,5 @@
-import IconCheck from 'lucide-static/icons/check.svg?react';
-
 import { Spinner } from '@koyeb/design-system';
+import { IconCheck } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 const T = Translate.prefix('common.dockerImageVerification');

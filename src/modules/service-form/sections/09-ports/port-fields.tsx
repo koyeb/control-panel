@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import IconTrash from 'lucide-static/icons/trash-2.svg?react';
 import { useFormContext } from 'react-hook-form';
 
 import { IconButton, useBreakpoint } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
+import { IconTrash } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 

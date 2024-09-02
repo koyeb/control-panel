@@ -1,9 +1,8 @@
-import IconGlobe from 'lucide-static/icons/earth.svg?react';
-import IconSettings from 'lucide-static/icons/settings.svg?react';
 import { useWatch } from 'react-hook-form';
 
 import { ServiceType } from 'src/api/model';
 import { ControlledSelectBox } from 'src/components/controlled';
+import { IconSettings, IconGlobe } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

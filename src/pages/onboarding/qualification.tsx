@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
 import { FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { Button } from '@koyeb/design-system';
@@ -10,6 +9,7 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/analytics';
 import { useAccessToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { IconArrowRight } from 'src/components/icons';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';

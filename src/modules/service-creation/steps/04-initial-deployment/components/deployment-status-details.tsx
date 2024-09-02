@@ -1,8 +1,4 @@
 import clsx from 'clsx';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-import IconExternalLink from 'lucide-static/icons/external-link.svg?react';
-import IconInfo from 'lucide-static/icons/info.svg?react';
-import IconSendHorizontal from 'lucide-static/icons/send-horizontal.svg?react';
 import { useState } from 'react';
 
 import { App, ComputeDeployment, Service } from 'src/api/model';
@@ -11,6 +7,7 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
 import { ActionsList, ActionsListButton, ActionsListLink } from 'src/components/actions-list';
+import { IconSendHorizontal, IconInfo, IconExternalLink, IconArrowRight } from 'src/components/icons';
 import { TimeoutUi } from 'src/components/timeout-ui';
 import { Translate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';

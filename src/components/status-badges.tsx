@@ -1,15 +1,17 @@
 import clsx from 'clsx';
-import IconCircleAlert from 'lucide-static/icons/circle-alert.svg?react';
-import IconCircleCheck from 'lucide-static/icons/circle-check.svg?react';
-import IconCircleDashed from 'lucide-static/icons/circle-dashed.svg?react';
-import IconCircleDot from 'lucide-static/icons/circle-dot.svg?react';
-import IconCircleOff from 'lucide-static/icons/circle-off.svg?react';
-import IconCircleX from 'lucide-static/icons/circle-x.svg?react';
-import IconTrash from 'lucide-static/icons/trash.svg?react';
 import { forwardRef } from 'react';
 
 import { Badge, BadgeColor, Spinner } from '@koyeb/design-system';
 import { DeploymentStatus, InstanceStatus, ServiceStatus, VolumeStatus } from 'src/api/model';
+import {
+  IconCircleAlert,
+  IconCircleCheck,
+  IconCircleDashed,
+  IconCircleDot,
+  IconCircleOff,
+  IconCircleX,
+  IconTrash,
+} from 'src/components/icons';
 
 type ResourceStatusProps<Status> = {
   status: Status;

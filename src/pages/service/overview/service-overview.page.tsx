@@ -1,9 +1,8 @@
 import clsx from 'clsx';
-import IconChevronLeft from 'lucide-static/icons/chevron-left.svg?react';
-import IconChevronsLeft from 'lucide-static/icons/chevrons-left.svg?react';
 
 import { Alert, IconButton, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { routes } from 'src/application/routes';
+import { IconChevronLeft, IconChevronsLeft } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';

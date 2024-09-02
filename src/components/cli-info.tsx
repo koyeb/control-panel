@@ -1,7 +1,6 @@
-import IconInfo from 'lucide-static/icons/info.svg?react';
-
 import { Tooltip } from '@koyeb/design-system';
 import { CopyIconButton } from 'src/application/copy-icon-button';
+import { IconInfo } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { DocumentationLink } from './documentation-link';

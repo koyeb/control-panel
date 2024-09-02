@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -12,6 +11,7 @@ import { routes } from 'src/application/routes';
 import { hasBuild } from 'src/application/service-functions';
 import { CliInfoTooltip, CliInfoButton } from 'src/components/cli-info';
 import { ControlledCheckbox } from 'src/components/controlled';
+import { IconArrowRight } from 'src/components/icons';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, usePathname } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';

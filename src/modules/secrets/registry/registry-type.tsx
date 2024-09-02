@@ -1,6 +1,5 @@
-import IconGithub from 'lucide-static/icons/github.svg?react';
-
 import { type RegistryType } from 'src/api/model';
+import { IconGithub } from 'src/components/icons';
 import IconAzure from 'src/icons/azure.svg?react';
 import IconDigitalOcean from 'src/icons/digital-ocean.svg?react';
 import IconDockerHub from 'src/icons/docker-hub.svg?react';

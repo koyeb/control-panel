@@ -1,7 +1,6 @@
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-
 import { routes } from 'src/application/routes';
 import { DocumentationLink } from 'src/components/documentation-link';
+import { IconArrowRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { Title } from 'src/components/title';
 import { Translate } from 'src/intl/translate';

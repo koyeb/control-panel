@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import IconUnlink from 'lucide-static/icons/unlink.svg?react';
 import { useFormContext } from 'react-hook-form';
 
 import { IconButton, useBreakpoint } from '@koyeb/design-system';
@@ -8,6 +7,7 @@ import { useVolumes } from 'src/api/hooks/volume';
 import { Volume } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { IconUnlink } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
 

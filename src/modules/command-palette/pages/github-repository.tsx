@@ -1,8 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-import IconGithub from 'lucide-static/icons/github.svg?react';
-import IconLock from 'lucide-static/icons/lock.svg?react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -14,6 +11,7 @@ import { GitRepository } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
+import { IconLock, IconGithub, IconArrowRight } from 'src/components/icons';
 import { ListItem, ListSections } from 'src/components/list';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { handleSubmit } from 'src/hooks/form';

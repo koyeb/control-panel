@@ -1,10 +1,10 @@
-import IconHouse from 'lucide-static/icons/house.svg?react';
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
 
 import { useAppQuery, useServiceQuery } from 'src/api/hooks/service';
 import { routes } from 'src/application/routes';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
+import { IconHouse } from 'src/components/icons';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { usePathname } from 'src/hooks/router';

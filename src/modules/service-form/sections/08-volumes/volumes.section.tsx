@@ -1,10 +1,10 @@
-import IconPlus from 'lucide-static/icons/plus.svg?react';
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { Alert, Button } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
+import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

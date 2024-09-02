@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconChevronRight from 'lucide-static/icons/chevron-right.svg?react';
 
 import { Badge, Button, Collapse, Tooltip } from '@koyeb/design-system';
 import { ComputeDeployment, GitDeploymentTrigger, Service } from 'src/api/model';
@@ -8,6 +7,7 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { isUpcomingDeployment } from 'src/application/service-functions';
+import { IconChevronRight } from 'src/components/icons';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';

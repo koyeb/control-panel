@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-import IconCheck from 'lucide-static/icons/check.svg?react';
 import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -14,6 +12,7 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useAccessToken } from 'src/application/token';
 import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
 import { ControlledInput } from 'src/components/controlled';
+import { IconCheck, IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';

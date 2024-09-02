@@ -1,4 +1,3 @@
-import IconPlus from 'lucide-static/icons/plus.svg?react';
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -7,6 +6,7 @@ import { useSecrets } from 'src/api/hooks/secret';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { FileDropZone } from 'src/components/file-drop-zone';
+import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 

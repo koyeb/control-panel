@@ -1,9 +1,9 @@
 import { size } from '@floating-ui/react';
-import IconChevronUpDown from 'lucide-static/icons/chevrons-up-down.svg?react';
 import { useState } from 'react';
 
 import { Floating } from '@koyeb/design-system';
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
+import { IconChevronUpDown } from 'src/components/icons';
 import { GeneratedAvatar, OrganizationAvatar } from 'src/components/organization-avatar';
 import { TextSkeleton } from 'src/components/skeleton';
 

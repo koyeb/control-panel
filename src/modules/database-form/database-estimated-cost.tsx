@@ -1,7 +1,5 @@
-import IconInfo from 'lucide-static/icons/info.svg?react';
-import IconTicketPercent from 'lucide-static/icons/ticket-percent.svg?react';
-
 import { Tooltip } from '@koyeb/design-system';
+import { IconInfo, IconTicketPercent } from 'src/components/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 

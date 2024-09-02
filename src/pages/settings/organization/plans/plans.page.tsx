@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-import IconSlash from 'lucide-static/icons/slash.svg?react';
 import { useState } from 'react';
 
 import { Button, Table } from '@koyeb/design-system';
@@ -9,6 +7,7 @@ import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
+import { IconSlash, IconArrowRight } from 'src/components/icons';
 import { PaymentDialog } from 'src/components/payment-form';
 import { SectionHeader } from 'src/components/section-header';
 import { Translate } from 'src/intl/translate';

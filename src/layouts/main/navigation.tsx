@@ -1,16 +1,18 @@
 import clsx from 'clsx';
-import IconActivity from 'lucide-static/icons/activity.svg?react';
-import IconBoxes from 'lucide-static/icons/boxes.svg?react';
-import IconFileKey from 'lucide-static/icons/file-key.svg?react';
-import IconFolders from 'lucide-static/icons/folders.svg?react';
-import IconGlobe from 'lucide-static/icons/globe.svg?react';
-import IconLayoutDashboard from 'lucide-static/icons/layout-dashboard.svg?react';
-import IconSettings from 'lucide-static/icons/settings.svg?react';
-import IconUsers from 'lucide-static/icons/users.svg?react';
 
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { BadgeNew } from 'src/components/badge-new';
+import {
+  IconActivity,
+  IconBoxes,
+  IconFileKey,
+  IconFolders,
+  IconGlobe,
+  IconLayoutDashboard,
+  IconSettings,
+  IconUsers,
+} from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { usePathname } from 'src/hooks/router';

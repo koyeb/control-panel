@@ -1,8 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconChevronLeft from 'lucide-static/icons/chevron-left.svg?react';
-import IconPlus from 'lucide-static/icons/plus.svg?react';
-import IconX from 'lucide-static/icons/x.svg?react';
 import { Suspense } from 'react';
 
 import { useBreakpoint } from '@koyeb/design-system';
@@ -12,6 +9,7 @@ import { getConfig } from 'src/application/config';
 import { routes } from 'src/application/routes';
 import { getAccessToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
+import { IconX, IconPlus, IconChevronLeft } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';

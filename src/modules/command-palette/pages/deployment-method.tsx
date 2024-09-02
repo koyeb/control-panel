@@ -1,11 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import IconArrowRight from 'lucide-static/icons/arrow-right.svg?react';
-import IconGithub from 'lucide-static/icons/github.svg?react';
 
 import { Button } from '@koyeb/design-system';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
+import { IconGithub, IconArrowRight } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
 import { useShortcut } from 'src/hooks/shortcut';
 import IconDocker from 'src/icons/docker.svg?react';

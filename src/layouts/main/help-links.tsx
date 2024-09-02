@@ -1,14 +1,16 @@
-import IconBookMarked from 'lucide-static/icons/book-marked.svg?react';
-import IconBookOpen from 'lucide-static/icons/book-open.svg?react';
-import IconChevronRight from 'lucide-static/icons/chevron-right.svg?react';
-import IconLightbulb from 'lucide-static/icons/lightbulb.svg?react';
-import IconMessageMoreCircle from 'lucide-static/icons/message-circle-more.svg?react';
-import IconNewspaper from 'lucide-static/icons/newspaper.svg?react';
-import IconSignal from 'lucide-static/icons/signal.svg?react';
-import IconUsers from 'lucide-static/icons/users.svg?react';
 import { useEffect, useState } from 'react';
 
 import { Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
+import {
+  IconBookMarked,
+  IconBookOpen,
+  IconChevronRight,
+  IconLightbulb,
+  IconMessageMoreCircle,
+  IconNewspaper,
+  IconSignal,
+  IconUsers,
+} from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 

@@ -1,12 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import IconCheck from 'lucide-static/icons/check.svg?react';
-import IconChevronRight from 'lucide-static/icons/chevron-right.svg?react';
-import IconLaptop from 'lucide-static/icons/laptop.svg?react';
-import IconLogOut from 'lucide-static/icons/log-out.svg?react';
-import IconMoon from 'lucide-static/icons/moon.svg?react';
-import IconSunDim from 'lucide-static/icons/sun-dim.svg?react';
-import IconUser from 'lucide-static/icons/user.svg?react';
 import { useEffect, useState } from 'react';
 
 import { Collapse, Floating, ButtonMenuItem, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
@@ -14,6 +7,15 @@ import { useUserQuery } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
+import {
+  IconCheck,
+  IconChevronRight,
+  IconLaptop,
+  IconLogOut,
+  IconMoon,
+  IconSunDim,
+  IconUser,
+} from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { useNavigate } from 'src/hooks/router';
 import { ThemeMode, useThemeMode } from 'src/hooks/theme';

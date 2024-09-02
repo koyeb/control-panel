@@ -1,8 +1,8 @@
-import IconGithub from 'lucide-static/icons/github.svg?react';
 import { useEffect } from 'react';
 
 import { ServiceType } from 'src/api/model';
 import { routes } from 'src/application/routes';
+import { IconGithub } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';

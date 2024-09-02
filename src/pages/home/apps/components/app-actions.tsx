@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import IconEllipsis from 'lucide-static/icons/ellipsis.svg?react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -14,6 +13,7 @@ import { useAccessToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { ControlledInput } from 'src/components/controlled';
+import { IconEllipsis } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
