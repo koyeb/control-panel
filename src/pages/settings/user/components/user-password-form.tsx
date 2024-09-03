@@ -26,29 +26,25 @@ export function UserPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit(form, () => mutation.mutateAsync())} className="card">
-      <div className="col gap-4 p-4">
+      <div className="row items-center justify-between gap-4 p-3">
         <div>
-          <T id="label" />
+          <div className="mb-2 font-medium">
+            <T id="label" />
+          </div>
+          <p className="text-dim">
+            <T id="description" />
+          </p>
         </div>
 
-        <p>
-          <T id="description" />
-        </p>
+        <Button type="submit" loading={form.formState.isSubmitting} disabled={form.formState.isSubmitted}>
+          <T id="changePassword" />
+        </Button>
       </div>
 
       <footer>
         <p className="text-xs text-dim">
           <T id="footer" />
         </p>
-
-        <Button
-          type="submit"
-          className="self-start"
-          loading={form.formState.isSubmitting}
-          disabled={form.formState.isSubmitted}
-        >
-          <T id="changePassword" />
-        </Button>
       </footer>
     </form>
   );

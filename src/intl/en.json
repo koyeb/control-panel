@@ -2208,7 +2208,7 @@
           "noGithubAccountRegistered": "You didn't link a GitHub account to Koyeb yet",
           "registerAccount": "Link GitHub account",
           "accountRegistered": "Your GitHub account <strong>{githubUser}</strong> is linked to this Koyeb account",
-          "footer": "Connect your Koyeb account to GitHub to make logging in easier"
+          "footer": "Log in on Koyeb with your GitHub account"
         },
         "email": {
           "label": "Your email",
@@ -2217,7 +2217,7 @@
         },
         "password": {
           "label": "Your password",
-          "description": "Need to change your password? Click the button below.",
+          "description": "Need to change your password? Click the button on the right.",
           "footer": "We will send you a link to reset your password",
           "changePassword": "Change password",
           "successNotification": "We've sent you an email with a password reset link"

@@ -41,23 +41,26 @@ export function UserEmailForm() {
 
   return (
     <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="card">
-      <div className="p-4">
-        <ControlledInput control={form.control} name="email" type="email" label={<T id="label" />} />
-      </div>
-
-      <footer>
-        <p className="text-xs text-dim">
-          <T id="footer" />
-        </p>
+      <div className="row items-center justify-between gap-4 p-3">
+        <ControlledInput
+          control={form.control}
+          name="email"
+          type="email"
+          label={<T id="label" />}
+          className="w-full max-w-lg"
+        />
 
         <Button
           type="submit"
-          className="self-start"
           loading={form.formState.isSubmitting}
           disabled={!form.formState.isDirty || Object.keys(form.formState.errors).length > 0}
         >
           <Translate id="common.save" />
         </Button>
+      </div>
+
+      <footer className="text-xs text-dim">
+        <T id="footer" />
       </footer>
     </form>
   );

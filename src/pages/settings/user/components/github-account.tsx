@@ -31,28 +31,32 @@ export function GithubAccount() {
 
   return (
     <div className="card">
-      <div className="col gap-4 p-4">
+      <div className="row items-center justify-between gap-4 p-3">
         <div>
-          <T id="label" />
+          <div className="mb-2 font-medium">
+            <T id="label" />
+          </div>
+
+          {user.githubUser && (
+            <p className="text-dim">
+              <T id="accountRegistered" values={{ githubUser: user.githubUser }} />
+            </p>
+          )}
+
+          {!user.githubUser && (
+            <>
+              <p className="text-dim">
+                <T id="noGithubAccountRegistered" />
+              </p>
+            </>
+          )}
         </div>
 
-        {user.githubUser && (
-          <p>
-            <T id="accountRegistered" values={{ githubUser: user.githubUser }} />
-          </p>
-        )}
-
         {!user.githubUser && (
-          <>
-            <p className="text-dim">
-              <T id="noGithubAccountRegistered" />
-            </p>
-
-            <Button onClick={() => mutate()} loading={isPending} className="self-start">
-              <IconGithub className="size-5" />
-              <T id="registerAccount" />
-            </Button>
-          </>
+          <Button onClick={() => mutate()} loading={isPending}>
+            <IconGithub className="size-5" />
+            <T id="registerAccount" />
+          </Button>
         )}
       </div>
 
