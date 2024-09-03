@@ -36,7 +36,7 @@ export function ServiceFormSection({ section, ...props }: ServiceFormSectionProp
   );
 }
 
-function getShortcut(values: ServiceForm, section: ServiceFormSection, showVolumes: boolean) {
+function getShortcut(values: ServiceForm, section: ServiceFormSection, showVolumes?: boolean) {
   const value = getServiceFormSectionIndex(values, section, showVolumes) + 1;
 
   if (value <= 10) {

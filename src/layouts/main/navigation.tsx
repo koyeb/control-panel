@@ -14,7 +14,6 @@ import {
   IconUsers,
 } from 'src/components/icons';
 import { Link } from 'src/components/link';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { usePathname } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
@@ -26,8 +25,6 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
 
   const disableComputeLinks =
     organization === undefined || inArray(organization.status, ['deactivating', 'deactivated']);
-
-  const showVolumes = useFeatureFlag('volumes');
 
   return (
     <nav className="flex-1">
@@ -68,16 +65,14 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
           href={routes.secrets()}
         />
 
-        {showVolumes && (
-          <NavigationItem
-            collapsed={collapsed}
-            disabled={disableComputeLinks}
-            Icon={IconFolders}
-            label={<T id="volumes" />}
-            href={routes.volumes()}
-            newBadge
-          />
-        )}
+        <NavigationItem
+          collapsed={collapsed}
+          disabled={disableComputeLinks}
+          Icon={IconFolders}
+          label={<T id="volumes" />}
+          href={routes.volumes()}
+          newBadge
+        />
 
         <NavigationItem
           collapsed={collapsed}

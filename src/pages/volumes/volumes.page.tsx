@@ -7,6 +7,8 @@ import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { useTallyDialog } from 'src/hooks/tally';
 import { Translate } from 'src/intl/translate';
 
 import { CreateVolumeDialog } from './create-volume-dialog';
@@ -17,14 +19,38 @@ const T = Translate.prefix('pages.volumes');
 
 export function VolumesPage() {
   const organization = useOrganization();
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const t = T.useTranslate();
+  const volumesEnabled = useFeatureFlag('volumes');
 
-  const volumesQuery = useVolumesQuery();
+  if (volumesEnabled === undefined) {
+    return <Loading />;
+  }
+
+  if (!volumesEnabled) {
+    return <RequestAccess />;
+  }
 
   if (organization.plan === 'hobby') {
     return <VolumesLocked />;
   }
+
+  return <Volumes />;
+}
+
+function RequestAccess() {
+  const { onOpen } = useTallyDialog('');
+
+  return (
+    <>
+      blabla, <Button onClick={onOpen}>request access</Button>
+    </>
+  );
+}
+
+export function Volumes() {
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const t = T.useTranslate();
+
+  const volumesQuery = useVolumesQuery();
 
   if (volumesQuery.isPending) {
     return <Loading />;

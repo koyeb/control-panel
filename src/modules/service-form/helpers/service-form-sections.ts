@@ -2,7 +2,7 @@ import { FieldErrors } from 'react-hook-form';
 
 import { ServiceForm, ServiceFormSection } from '../service-form.types';
 
-export function getServiceFormSections(form: ServiceForm, showVolumes: boolean) {
+export function getServiceFormSections(form: ServiceForm, showVolumes?: boolean) {
   const sections: Array<ServiceFormSection | false> = [
     'serviceType',
     'source',
@@ -12,7 +12,7 @@ export function getServiceFormSections(form: ServiceForm, showVolumes: boolean) 
     'instance',
     'regions',
     'scaling',
-    showVolumes && 'volumes',
+    showVolumes ? 'volumes' : false,
     form.serviceType === 'web' && 'ports',
     form.serviceType === 'web' && 'healthChecks',
     'serviceName',
@@ -24,7 +24,7 @@ export function getServiceFormSections(form: ServiceForm, showVolumes: boolean) 
 export function getServiceFormSectionIndex(
   form: ServiceForm,
   section: ServiceFormSection,
-  showVolumes: boolean,
+  showVolumes?: boolean,
 ) {
   return getServiceFormSections(form, showVolumes).indexOf(section);
 }
