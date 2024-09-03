@@ -1284,6 +1284,16 @@
       }
     },
     "secondary": {
+      "header": {
+        "settings": "Settings",
+        "logOut": "Log out"
+      },
+      "settings": {
+        "back": "Back",
+        "title": "Settings",
+        "organizationSettings": "Organization settings",
+        "userSettings": "User settings"
+      },
       "startForFree": {
         "title": "Start for free, pay as you grow",
         "description": "Deploy a service for free and enjoy our simple, predictable, and flexible pricing for all your projects"
@@ -1299,9 +1309,7 @@
       "autoscaling": {
         "title": "Native autoscaling",
         "description": "Enjoy autoscaling with high-end performance thanks to high-frequency CPUs and secure Firecracker microVMs"
-      },
-      "deleteAccount": "Delete account",
-      "logout": "Log out"
+      }
     }
   },
   "pages": {

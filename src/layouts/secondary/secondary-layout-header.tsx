@@ -1,60 +1,24 @@
-import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { Floating } from '@koyeb/design-system';
-import { api } from 'src/api/api';
 import { isApiError } from 'src/api/api-errors';
 import { useOrganizationUnsafe, useUserQuery } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
 import { IconChevronUpDown } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
 
 import { OrganizationSwitcherMenu } from '../organization-switcher-menu';
 
-const T = Translate.prefix('layouts.secondary');
+import { UserMenu } from './user-menu';
 
 export function SecondaryLayoutHeader({ background }: { background?: boolean }) {
-  const organization = useOrganizationUnsafe();
   const userQuery = useUserQuery();
-  const { token, clearToken } = useAccessToken();
-  const navigate = useNavigate();
 
   const accountLocked = userQuery.isError && isApiError(userQuery.error) && userQuery.error.status === 403;
   const isAuthenticated = userQuery.isSuccess || accountLocked;
-
-  const { mutate: logout } = useMutation({
-    async mutationFn() {
-      // the API does not allow to log out from a locked account
-      if (!accountLocked) {
-        await api.logout({ token });
-      }
-    },
-    onSuccess() {
-      clearToken();
-      navigate(routes.signIn());
-
-      if (accountLocked) {
-        window.location.reload();
-      }
-    },
-  });
-
-  const { mutate: deleteAccount } = useMutation({
-    ...useApiMutationFn('deleteUser', {
-      path: { id: userQuery.data?.id as string },
-    }),
-    onSuccess() {
-      clearToken();
-      navigate(routes.signIn());
-    },
-  });
 
   return (
     <header
@@ -70,18 +34,7 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
       {isAuthenticated && (
         <>
           <OrganizationSwitcher />
-
-          <div className="row ml-auto gap-4">
-            {organization === undefined && (
-              <button type="button" onClick={() => deleteAccount()} className="text-link">
-                <T id="deleteAccount" />
-              </button>
-            )}
-
-            <button type="button" onClick={() => logout()} className="text-link ml-auto">
-              <T id="logout" />
-            </button>
-          </div>
+          <UserMenu />
         </>
       )}
     </header>

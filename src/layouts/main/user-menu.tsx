@@ -17,6 +17,7 @@ import {
   IconUser,
 } from 'src/components/icons';
 import { Link } from 'src/components/link';
+import { UserAvatar } from 'src/components/user-avatar';
 import { useNavigate } from 'src/hooks/router';
 import { ThemeMode, useThemeMode } from 'src/hooks/theme';
 import { Translate } from 'src/intl/translate';
@@ -87,17 +88,6 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       )}
     />
   );
-}
-
-type UserAvatarProps = {
-  user?: { avatarUrl: string };
-};
-
-function UserAvatar({ user }: UserAvatarProps) {
-  const { avatarUrl = 'https://gravatar.com/avatar' } = user ?? {};
-  const searchParams = new URLSearchParams({ default: 'retro', size: '48' });
-
-  return <img className="size-6 rounded-full" src={`${avatarUrl}?${searchParams.toString()}`} />;
 }
 
 function ThemeMenuItem() {
