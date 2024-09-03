@@ -10,7 +10,7 @@ import { SectionHeader } from 'src/components/section-header';
 import { useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.organizationSettings.general.deactivateOrganization');
+const T = Translate.prefix('account.deactivateOrganization');
 
 export function DeactivateOrganization() {
   const organization = useOrganization();

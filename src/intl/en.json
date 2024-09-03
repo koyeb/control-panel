@@ -49,6 +49,43 @@
       "slug": "{label} must only contain lowercase letters, numbers, dashes and dots"
     }
   },
+  "account": {
+    "deleteAccount": {
+      "label": "Delete account",
+      "description": "Once this operation is performed, your account will be permanently deleted",
+      "mustLeaveOrganizations": "You must leave or delete all your organizations before you can delete your account",
+      "cta": "Delete",
+      "confirmationDialog": {
+        "title": "Delete account",
+        "description": "Your user account will be deleted. Are you sure?",
+        "confirm": "Delete account"
+      }
+    },
+    "deactivateOrganization": {
+      "title": "Deactivate the organization",
+      "description": "When you deactivate an organization, all associated resources will be deleted: Apps, Services, Secrets, Domains, GitHub app and API credentials. You can reactivate an organization at any time.",
+      "deactivate": "Deactivate",
+      "deactivationRequestSuccessNotification": "We've sent you an email to confirm the deactivation of your organization",
+      "deactivationSuccessNotification": "Your organization is being deactivated",
+      "deactivating": "Your organization is being deactivated..."
+    },
+    "reactivateOrganization": {
+      "title": "Reactivate the organization",
+      "description": "Activate the organization to start using this Koyeb organization again.",
+      "reactivate": "Reactivate",
+      "successNotification": "Your organization was reactivated"
+    },
+    "deleteOrganization": {
+      "title": "Delete the organization",
+      "description": "Permanently delete the organization and the associated payment information",
+      "delete": "Delete",
+      "successNotification": "Your organization {organizationName} was deleted",
+      "unpaidInvoicesPending": "Checking for unpaid invoices...",
+      "deactivating": "Your organization is being deactivated...",
+      "hasUnpaidInvoices": "Your organization has unpaid invoices. Settle the outstanding payment to be able to delete the organization.",
+      "mustBeDeactivated": "The organization must first be deactivated before it can be deleted"
+    }
+  },
   "activity": {
     "tokenInfo": "Action performed on behalf of the {credentialType, select, user {user} organization {organization} other {credentialType}} using API token {credentialName}",
     "sentences": {
@@ -1966,30 +2003,6 @@
             "description": "You're on the Hobby plan which let you run one Web Service and Database for free. Upgrade to Starter to get the full Koyeb experience.",
             "cta": "Upgrade plan"
           }
-        },
-        "deactivateOrganization": {
-          "title": "Deactivate the organization",
-          "description": "When you deactivate an organization, all associated resources will be deleted: Apps, Services, Secrets, Domains, GitHub app and API credentials. You can reactivate an organization at any time.",
-          "deactivate": "Deactivate",
-          "deactivationRequestSuccessNotification": "We've sent you an email to confirm the deactivation of your organization",
-          "deactivationSuccessNotification": "Your organization is being deactivated",
-          "deactivating": "Your organization is being deactivated..."
-        },
-        "reactivateOrganization": {
-          "title": "Reactivate the organization",
-          "description": "Activate the organization to start using this Koyeb organization again.",
-          "reactivate": "Reactivate",
-          "successNotification": "Your organization was reactivated"
-        },
-        "deleteOrganization": {
-          "title": "Delete the organization",
-          "description": "Permanently delete the organization and the associated payment information",
-          "delete": "Delete",
-          "successNotification": "Your organization {organizationName} was deleted",
-          "unpaidInvoicesPending": "Checking for unpaid invoices...",
-          "deactivating": "Your organization is being deactivated...",
-          "hasUnpaidInvoices": "Your organization has unpaid invoices. Settle the outstanding payment to be able to delete the organization.",
-          "mustBeDeactivated": "The organization must first be deactivated before it can be deleted"
         }
       },
       "billing": {
@@ -2208,13 +2221,6 @@
           "footer": "We will send you a link to reset your password",
           "changePassword": "Change password",
           "successNotification": "We've sent you an email with a password reset link"
-        },
-        "deleteAccount": {
-          "label": "Delete account",
-          "description": "Once this operation is performed, your account will be permanently deleted",
-          "mustLeaveOrganizations": "You must leave or delete all your organizations before you can delete your account",
-          "deleteAccount": "Delete account",
-          "confirmationText": "Your user account will be deleted. Are you sure?"
         }
       },
       "organizations": {

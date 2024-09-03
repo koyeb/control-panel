@@ -7,7 +7,7 @@ import { notify } from 'src/application/notify';
 import { SectionHeader } from 'src/components/section-header';
 import { Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.organizationSettings.general.reactivateOrganization');
+const T = Translate.prefix('account.reactivateOrganization');
 
 export function ReactivateOrganization() {
   const organization = useOrganization();

@@ -10,7 +10,7 @@ import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.userSettings.general.deleteAccount');
+const T = Translate.prefix('account.deleteAccount');
 
 export function DeleteAccount() {
   const user = useUser();
@@ -33,31 +33,37 @@ export function DeleteAccount() {
   });
 
   return (
-    <div className="card border-red">
-      <div className="col gap-4 p-4">
+    <div className="card">
+      <div className="row items-center justify-between gap-4 p-3">
         <div>
-          <T id="label" />
+          <div className="mb-2 font-medium">
+            <T id="label" />
+          </div>
+          <div className="text-dim">
+            <T id="description" />
+          </div>
         </div>
-        <p>
-          <T id="description" />
-        </p>
+
+        <Button color="red" disabled={!canDelete} onClick={() => setDialogOpen(true)}>
+          <T id="cta" />
+        </Button>
       </div>
 
-      <footer>
-        <p className="text-xs text-dim">{!canDelete && <T id="mustLeaveOrganizations" />}</p>
-
-        <Button disabled={!canDelete} onClick={() => setDialogOpen(true)}>
-          <T id="deleteAccount" />
-        </Button>
-      </footer>
+      {!canDelete && (
+        <footer>
+          <p className="text-xs text-dim">
+            <T id="mustLeaveOrganizations" />
+          </p>
+        </footer>
+      )}
 
       <ConfirmationDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        title={<T id="deleteAccount" />}
-        description={<T id="confirmationText" />}
+        title={<T id="confirmationDialog.title" />}
+        description={<T id="confirmationDialog.description" />}
         confirmationText={user.name}
-        submitText={<T id="deleteAccount" />}
+        submitText={<T id="confirmationDialog.confirm" />}
         onConfirm={deleteAccount}
       />
     </div>

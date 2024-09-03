@@ -1,10 +1,10 @@
 import { useOrganization } from 'src/api/hooks/session';
+import { DeactivateOrganization } from 'src/modules/account/deactivate-organization';
+import { DeleteOrganization } from 'src/modules/account/delete-organization';
+import { ReactivateOrganization } from 'src/modules/account/reactivate-organization';
 
-import { DeactivateOrganization } from './deactivate-organization';
-import { DeleteOrganization } from './delete-organization';
 import { OrganizationName } from './organization-name';
 import { OrganizationQuotas } from './organization-quotas';
-import { ReactivateOrganization } from './reactivate-organization';
 
 export function GeneralSettingsPage() {
   return (

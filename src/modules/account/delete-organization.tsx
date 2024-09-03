@@ -12,7 +12,7 @@ import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.organizationSettings.general.deleteOrganization');
+const T = Translate.prefix('account.deleteOrganization');
 
 export function DeleteOrganization() {
   const { token, setToken, clearToken } = useAccessToken();
