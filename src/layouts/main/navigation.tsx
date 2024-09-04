@@ -121,7 +121,11 @@ function NavigationItem({ collapsed, disabled, Icon, label, href, isActive, newB
 
         {!collapsed && <span className="font-medium">{label}</span>}
 
-        {!collapsed && newBadge && <BadgeNew className="ml-auto" />}
+        {!collapsed && newBadge && (
+          <BadgeNew className="ml-auto">
+            <T id="preview" />
+          </BadgeNew>
+        )}
       </Link>
     </li>
   );

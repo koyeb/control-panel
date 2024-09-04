@@ -1213,6 +1213,7 @@
       "subscriptionHasPendingUpdate": "The provided payment details could not be processed. Please check your payment information in the <stripe>billing portal</stripe> to resolve the issue.",
       "createService": "Create service",
       "navigation": {
+        "preview": "Preview",
         "overview": "Overview",
         "services": "Services",
         "volumes": "Volumes",
@@ -1647,6 +1648,14 @@
         "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
         "confirm": "Delete volume",
         "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
+      },
+      "requestAccess": {
+        "preview": "Technical preview",
+        "title": "Volumes",
+        "subTitle": "Blazing-fast NVMe SSD for your data",
+        "description": "Volumes provide additional, persistent, storage capacity for your services and come in addition to your instances provided ephemeral disk",
+        "cta": "Request access",
+        "learnMore": "Learn more about volumes"
       },
       "volumesLocked": {
         "title": "Enable volumes",

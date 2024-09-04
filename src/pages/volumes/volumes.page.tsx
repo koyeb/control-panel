@@ -8,12 +8,12 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { useTallyDialog } from 'src/hooks/tally';
 import { Translate } from 'src/intl/translate';
 
 import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumesList } from './volumes-list';
 import { VolumesLocked } from './volumes-locked';
+import { VolumesRequestAccess } from './volumes-request-access';
 
 const T = Translate.prefix('pages.volumes');
 
@@ -26,7 +26,7 @@ export function VolumesPage() {
   }
 
   if (!volumesEnabled) {
-    return <RequestAccess />;
+    return <VolumesRequestAccess />;
   }
 
   if (organization.plan === 'hobby') {
@@ -34,16 +34,6 @@ export function VolumesPage() {
   }
 
   return <Volumes />;
-}
-
-function RequestAccess() {
-  const { onOpen } = useTallyDialog('');
-
-  return (
-    <>
-      blabla, <Button onClick={onOpen}>request access</Button>
-    </>
-  );
 }
 
 export function Volumes() {

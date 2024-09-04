@@ -13,6 +13,7 @@ type LinkButtonOwnProps = {
   color?: ButtonColor;
   loading?: boolean;
   component?: 'a' | typeof Link;
+  openInNewTab?: boolean;
   disabled?: boolean;
   state?: unknown;
 };
@@ -20,16 +21,25 @@ type LinkButtonOwnProps = {
 type LinkButtonProps = LinkButtonOwnProps & React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
 export const LinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(function LinkButton(
-  { component = Link, disabled, state, href = '', loading, className, children, ...rest },
+  { component = Link, disabled, openInNewTab, state, href = '', loading, className, children, ...rest },
   ref,
 ) {
   const props: React.ComponentProps<typeof Link> & { state?: unknown } = {
     ref,
     href,
+
     'aria-disabled': disabled,
     className: buttonClassName(rest, clsx(disabled && 'pointer-events-none opacity-50', className)),
     ...rest,
   };
+
+  if (openInNewTab) {
+    props.target = '_blank';
+
+    if (component === 'a') {
+      props.rel = 'noopener noreferrer';
+    }
+  }
 
   if (component === Link && state !== undefined) {
     props.state = state;
@@ -82,3 +92,9 @@ export const ExternalLink = forwardRef<HTMLAnchorElement, ExternalLinkProps>(fun
 ) {
   return <a ref={ref} target={openInNewTab ? '_blank' : undefined} rel="noopener noreferrer" {...props} />;
 });
+
+export const ExternalLinkButton = forwardRef<HTMLAnchorElement, LinkButtonProps>(
+  function ExternalLink(props, ref) {
+    return <LinkButton ref={ref} component="a" rel="noopener noreferrer" {...props} />;
+  },
+);
