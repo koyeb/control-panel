@@ -167,6 +167,7 @@ function handleAuthenticationError() {
       location += `?${new URLSearchParams({ next }).toString()}`;
     }
 
-    navigate(location, { replace: true });
+    // use full page reload to avoid refetching resources
+    window.location.assign(location);
   }
 }
