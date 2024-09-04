@@ -1653,20 +1653,14 @@
         "confirm": "Delete volume",
         "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
       },
-      "requestAccess": {
-        "preview": "Technical preview",
+      "unavailable": {
         "title": "Volumes",
         "subTitle": "Blazing-fast NVMe SSD for your data",
         "description": "Volumes provide additional, persistent, storage capacity for your services and come in addition to your instances provided ephemeral disk",
+        "descriptionHobby": "Volumes provide additional, persistent, storage capacity for your services and come in addition to your instances provided ephemeral disk. The starter plan is required to access the volumes technical preview.",
         "cta": "Request access",
+        "ctaHobby": "Upgrade to unlock",
         "learnMore": "Learn more about volumes"
-      },
-      "volumesLocked": {
-        "title": "Enable volumes",
-        "description": "Volumes provide additional, persistent, storage capacity for your services",
-        "line1": "Upgrade your plan and get started creating your first volume",
-        "docs": "Learn more about volumes",
-        "upgrade": "Upgrade to unlock"
       }
     },
     "domains": {

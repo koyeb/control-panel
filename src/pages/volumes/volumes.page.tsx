@@ -3,7 +3,12 @@ import { useState } from 'react';
 import { Button } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { useVolumesQuery } from 'src/api/hooks/volume';
+import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
+import { DocumentationLink } from 'src/components/documentation-link';
+import { FeatureUnavailable } from 'src/components/feature-unavailable';
+import { IconArrowRight } from 'src/components/icons';
+import { ExternalLinkButton, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
@@ -12,8 +17,6 @@ import { Translate } from 'src/intl/translate';
 
 import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumesList } from './volumes-list';
-import { VolumesLocked } from './volumes-locked';
-import { VolumesRequestAccess } from './volumes-request-access';
 
 const T = Translate.prefix('pages.volumes');
 
@@ -25,12 +28,43 @@ export function VolumesPage() {
     return <Loading />;
   }
 
+  const unavailableProps: React.ComponentProps<typeof FeatureUnavailable> = {
+    preview: 'technical',
+    title: <T id="unavailable.title" />,
+    subTitle: <T id="unavailable.subTitle" />,
+    description: <T id="unavailable.description" />,
+    cta: (
+      <ExternalLinkButton
+        openInNewTab
+        href="https://app.reclaim.ai/m/edouard/koyeb-volumes-technical-preview"
+      >
+        <T id="unavailable.cta" />
+      </ExternalLinkButton>
+    ),
+    documentationLink: (
+      <DocumentationLink path="/docs/reference/volumes">
+        <T id="unavailable.learnMore" />
+      </DocumentationLink>
+    ),
+  };
+
   if (!volumesEnabled) {
-    return <VolumesRequestAccess />;
+    return <FeatureUnavailable {...unavailableProps} />;
   }
 
   if (organization.plan === 'hobby') {
-    return <VolumesLocked />;
+    return (
+      <FeatureUnavailable
+        {...unavailableProps}
+        description={<T id="unavailable.descriptionHobby" />}
+        cta={
+          <LinkButton href={routes.organizationSettings.plans()}>
+            <T id="unavailable.ctaHobby" />
+            <IconArrowRight className="size-icon" />
+          </LinkButton>
+        }
+      />
+    );
   }
 
   return <Volumes />;
