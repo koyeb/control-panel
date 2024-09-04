@@ -2,7 +2,7 @@ import { useTallyDialog } from 'src/hooks/tally';
 import { Translate } from 'src/intl/translate';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 
-import { ExternalLink } from '../link';
+import { ExternalLink } from './link';
 
 const T = Translate.prefix('errorBoundary.accountLocked');
 

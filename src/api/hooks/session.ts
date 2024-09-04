@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
 
 import { isApiError } from '../api-errors';
@@ -15,7 +16,7 @@ export function useUserQuery() {
         return true;
       }
 
-      return error.code !== 'authentication_error';
+      return !inArray(error.code, ['authentication_error', 'authorization_error']);
     },
   });
 }
@@ -37,7 +38,7 @@ export function useOrganizationQuery() {
         return true;
       }
 
-      return error.code !== 'authentication_error' && error.code !== 'not_found';
+      return !inArray(error.code, ['authentication_error', 'authorization_error', 'not_found']);
     },
   });
 }

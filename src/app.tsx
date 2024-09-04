@@ -1,13 +1,15 @@
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch } from 'wouter';
+import { z } from 'zod';
 
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { OnboardingStep, Organization, User } from './api/model';
 import { useIdentifyUser } from './application/analytics';
+import { createValidationGuard } from './application/create-validation-guard';
 import { UnexpectedError } from './application/errors';
 import { reportError } from './application/report-error';
 import { routes } from './application/routes';
-import { AccountLocked } from './components/error-boundary/account-locked';
+import { AccountLocked } from './components/account-locked';
 import { LinkButton } from './components/link';
 import { Loading } from './components/loading';
 import { Translate } from './intl/translate';
@@ -36,10 +38,16 @@ import { OrganizationSettingsPages } from './pages/settings/organization/organiz
 import { UserSettingsPages } from './pages/settings/user/user-settings.pages';
 import { TeamPage } from './pages/team/team.page';
 import { VolumesPage } from './pages/volumes/volumes.page';
-import { inArray } from './utils/arrays';
 
 export function App() {
+  const userQuery = useUserQuery();
+  const organizationQuery = useOrganizationQuery();
+
   useIdentifyUser();
+
+  if (isAccountLockedError(userQuery.error) || isAccountLockedError(organizationQuery.error)) {
+    return <AccountLocked />;
+  }
 
   return (
     <Switch>
@@ -50,17 +58,12 @@ export function App() {
   );
 }
 
-function isLocked(organization?: Organization): boolean {
-  if (organization?.status === 'locked') {
-    return true;
-  }
-
-  if (inArray(organization?.statusMessage, ['locked', 'verification_failed'])) {
-    return true;
-  }
-
-  return false;
-}
+const isAccountLockedError = createValidationGuard(
+  z.object({
+    status: z.literal(403),
+    message: z.literal('Account is locked'),
+  }),
+);
 
 function getOnboardingStep(user: User, organization: Organization | null): OnboardingStep | null {
   if (!user.emailValidated) {
@@ -110,10 +113,6 @@ function AuthenticatedRoutes() {
         <MainLayout />
       </Loading>
     );
-  }
-
-  if (isLocked(organizationQuery.data)) {
-    return <AccountLocked />;
   }
 
   const onboardingStep = getOnboardingStep(userQuery.data, organizationQuery.data ?? null);
