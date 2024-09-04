@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'wouter';
 
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { OnboardingStep, Organization, User } from './api/model';
+import { useIdentifyUser } from './application/analytics';
 import { UnexpectedError } from './application/errors';
 import { reportError } from './application/report-error';
 import { routes } from './application/routes';
@@ -38,6 +39,8 @@ import { VolumesPage } from './pages/volumes/volumes.page';
 import { inArray } from './utils/arrays';
 
 export function App() {
+  useIdentifyUser();
+
   return (
     <Switch>
       <Route path="/auth/*?" component={AuthenticationPages} />

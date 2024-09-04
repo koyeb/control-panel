@@ -1,12 +1,18 @@
-import { AnalyticsBrowser, EventProperties, Options } from '@segment/analytics-next';
+import { AnalyticsBrowser, EventProperties, Integrations, Options } from '@segment/analytics-next';
 import posthog from 'posthog-js';
 import { createContext, useCallback, useContext, useEffect, useRef } from 'react';
 import { usePathname } from 'wouter/use-browser-location';
 
+import { api } from 'src/api/api';
+import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
+import { User } from 'src/api/model';
 import { AssertionError, defined } from 'src/utils/assert';
 
 import { getConfig } from './config';
-import { reportError } from './report-error';
+import { identifyUserInSentry, reportError } from './report-error';
+import { getAccessToken } from './token';
+
+/* eslint-disable react-refresh/only-export-components */
 
 declare global {
   // eslint-disable-next-line no-var
@@ -91,7 +97,47 @@ function useAnalytics() {
   return defined(useContext(analyticsContext), new AssertionError('Missing analytics provider'));
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
+export function useIdentifyUser() {
+  const { analytics, context } = useAnalytics();
+
+  const user = useUserUnsafe();
+  const organization = useOrganizationUnsafe();
+
+  useEffect(() => {
+    identifyUserInSentry(user);
+    identifyUser(analytics, context, user).catch(reportError);
+  }, [analytics, context, user]);
+
+  useEffect(() => {
+    if (organization) {
+      posthog.group('segment_group', organization.id);
+    }
+  }, [analytics, context, organization]);
+}
+
+async function identifyUser(analytics: Analytics, context: Record<string, string>, user: User | undefined) {
+  if (user === undefined) {
+    globalThis.Intercom?.('shutdown');
+    await analytics.reset();
+    return;
+  }
+
+  const traits = {};
+  const integrations: Integrations = {};
+
+  api
+    .getIntercomUserHash({
+      token: getAccessToken() ?? undefined,
+    })
+    .then(({ hash }) => {
+      if (hash !== undefined) {
+        integrations.Intercom = { user_hash: hash };
+      }
+    }, reportError);
+
+  await analytics.identify(user.id, traits, { context, integrations });
+}
+
 export function useTrackEvent() {
   const { analytics, context } = useAnalytics();
 

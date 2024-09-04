@@ -6,7 +6,7 @@ export function reportError(error: unknown, payload?: unknown) {
   Sentry.captureException(error, { contexts: { extra: { payload } } });
 }
 
-export async function identifyUserInSentry(user: User | null) {
+export function identifyUserInSentry(user: User | undefined) {
   if (user) {
     Sentry.setUser({ id: user.id, username: user.name, email: user.email });
   } else {
