@@ -299,6 +299,10 @@
       "button": "Back to home"
     }
   },
+  "featureUnavailable": {
+    "technicalPreview": "Technical preview",
+    "publicPreview": "Public preview"
+  },
   "instanceSelector": {
     "tabs": {
       "standard": "CPU Standard ✨",
@@ -1723,8 +1727,8 @@
       },
       "domainsLocked": {
         "title": "Enable domains",
-        "description": "Domains allow you to access your apps using your own domains",
-        "line1": "Domains make your apps accessible via your own domain names like www.mydomain.tld or api.example.io.<br></br>Upgrade your plan and get started adding your first domain.",
+        "subTitle": "Domains allow you to access your apps using your own domains",
+        "description": "Domains make your apps accessible via your own domain names like www.mydomain.tld or api.example.io.<br></br>Upgrade your plan and get started adding your first domain.",
         "docs": "Learn more about domains",
         "upgrade": "Upgrade to unlock"
       }
