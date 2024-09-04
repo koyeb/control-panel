@@ -3,13 +3,13 @@ import clsx from 'clsx';
 import { Suspense } from 'react';
 
 import { useBreakpoint } from '@koyeb/design-system';
-import { useOrganizationQuery, useOrganizationUnsafe, useUserQuery } from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUserQuery, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { routes } from 'src/application/routes';
 import { getAccessToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
-import { IconX, IconPlus, IconChevronLeft } from 'src/components/icons';
+import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
@@ -101,9 +101,9 @@ function Menu({ collapsed }: { collapsed: boolean }) {
 }
 
 function Main({ children }: { children: React.ReactNode }) {
-  const userQuery = useUserQuery();
-  const organizationQuery = useOrganizationQuery();
-  const isAuthenticated = userQuery.data !== undefined && organizationQuery.data !== undefined;
+  const user = useUserUnsafe();
+  const organization = useOrganizationUnsafe();
+  const isAuthenticated = user !== undefined && organization !== undefined;
 
   if (!isAuthenticated) {
     return null;

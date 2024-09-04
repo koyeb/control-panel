@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { Collapse, Floating, ButtonMenuItem, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
-import { useUserQuery } from 'src/api/hooks/session';
+import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
+import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
@@ -26,7 +26,7 @@ const T = Translate.prefix('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const { clearToken } = useAccessToken();
-  const { data: user } = useUserQuery();
+  const user = useUserUnsafe();
   const navigate = useNavigate();
 
   const isMobile = !useBreakpoint('sm');

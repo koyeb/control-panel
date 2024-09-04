@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { useUserQuery } from 'src/api/hooks/session';
+import { useUserUnsafe } from 'src/api/hooks/session';
 
 type OpenPopupOptions = {
   layout: 'modal';
@@ -22,7 +22,7 @@ export const useTallyDialog = (formId: string, onSubmitted?: () => void) => {
   const onOpen = useCallback(() => setOpen(true), []);
   const onClose = useCallback(() => setOpen(false), []);
 
-  const { data: user } = useUserQuery();
+  const user = useUserUnsafe();
 
   useEffect(() => {
     if (document.getElementById('tally-embed-script') !== null) {

@@ -3,13 +3,13 @@ import clsx from 'clsx';
 import { forwardRef } from 'react';
 
 import { ButtonMenuItem, Menu, MenuItem, Spinner } from '@koyeb/design-system';
-import { useOrganizationUnsafe, useUserQuery } from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { mapOrganizationMembers } from 'src/api/mappers/session';
 import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
-import { IconCirclePlus, IconCheck } from 'src/components/icons';
+import { IconCheck, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -91,7 +91,7 @@ function isNotDeleting({ organization }: OrganizationMember) {
 }
 
 function useOrganizationMembers() {
-  const { data: user } = useUserQuery();
+  const user = useUserUnsafe();
 
   return useQuery({
     ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),

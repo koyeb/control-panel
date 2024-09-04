@@ -20,8 +20,12 @@ export function useUserQuery() {
   });
 }
 
+export function useUserUnsafe() {
+  return useUserQuery().data;
+}
+
 export function useUser() {
-  return defined(useUserQuery().data, new AssertionError('User is not set'));
+  return defined(useUserUnsafe(), new AssertionError('User is not set'));
 }
 
 export function useOrganizationQuery() {
