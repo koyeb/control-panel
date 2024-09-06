@@ -1257,6 +1257,7 @@
         "free": "Free",
         "usage": "Usage",
         "estimatedCost": "Estimated cost",
+        "viewBilling": "View billing",
         "upsell": {
           "title": "Get the full experience",
           "description": "Upgrade to the Starter plan and get $20 of credit to try the full Koyeb experience over 30 days",

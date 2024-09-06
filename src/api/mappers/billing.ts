@@ -14,7 +14,7 @@ export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscrip
 }
 
 export type StripeInvoice = {
-  discount?: { coupon?: StripeInvoiceCoupon };
+  discount?: { coupon?: StripeInvoiceCoupon } | null;
   lines: { data: StripeInvoiceLine[] };
   subtotal_excluding_tax: number;
   total_excluding_tax: number;
@@ -25,12 +25,12 @@ export type StripeInvoiceLine = {
   period: { start: number; end: number };
   plan: { nickname: string };
   price: { unit_amount_decimal: string };
-  quantity: number; // seconds
+  quantity: number; // in seconds for usage
 };
 
 export type StripeInvoiceCoupon = {
-  amount_off: number | null;
   name: string;
+  amount_off: number | null;
   percent_off: number | null;
 };
 
@@ -86,12 +86,14 @@ function transformLine(line: StripeInvoiceLine): InvoiceLine | undefined {
 
   if (line.plan.nickname === 'Startup') {
     return {
+      type: 'plan',
       label: line.plan.nickname,
       total: line.amount_excluding_tax,
     };
   }
 
   return {
+    type: 'usage',
     label: line.plan.nickname,
     price: Number(line.price.unit_amount_decimal),
     usage: line.quantity,

@@ -59,6 +59,7 @@ export type InvoicePeriod = {
 };
 
 export type InvoiceUsageLine = {
+  type: 'usage';
   label: string;
   price: number;
   usage: number;
@@ -66,6 +67,7 @@ export type InvoiceUsageLine = {
 };
 
 export type InvoicePlanLine = {
+  type: 'plan';
   label: string;
   total: number;
 };

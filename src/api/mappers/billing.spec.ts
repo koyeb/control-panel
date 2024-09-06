@@ -49,7 +49,7 @@ describe('mapInvoice', () => {
         {
           start: createDate('2023-05-01'),
           end: createDate('2023-05-31'),
-          lines: [{ label: 'Small instance', price: 0.0004, usage: 1935000, total: 774 }],
+          lines: [{ type: 'usage', label: 'Small instance', price: 0.0004, usage: 1935000, total: 774 }],
         },
       ],
       total: 774,
@@ -88,7 +88,7 @@ describe('mapInvoice', () => {
     });
 
     expect(transform(stripeInvoice)).toHaveProperty<InvoicePlanLine[]>('periods.0.lines', [
-      { label: 'Startup', total: 7900 },
+      { type: 'plan', label: 'Startup', total: 7900 },
     ]);
   });
 
