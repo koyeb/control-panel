@@ -149,7 +149,9 @@ type ApiRequestParams<Params extends EndpointParams, Body> = Simplify<
 type GetParam<Params extends EndpointParams, Key extends keyof Params> = Params extends {
   [K in Key]: infer Value;
 }
-  ? Value
+  ? Value extends undefined
+    ? never
+    : Value
   : never;
 
 type ApiRequestOption<Key extends PropertyKey, Value> = IfNever<Value, EmptyObject, { [K in Key]: Value }>;

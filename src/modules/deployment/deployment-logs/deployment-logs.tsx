@@ -216,7 +216,7 @@ function BuildSectionHeaderEnd({ expanded, deployment }: BuildSectionHeaderEndPr
   }
 }
 
-function getBuildStatus(deployment: ComputeDeployment): DeploymentBuildStatus | 'pending' {
+function getBuildStatus(deployment: ComputeDeployment): DeploymentBuildStatus {
   const { build } = deployment;
 
   if (build === undefined) {
@@ -330,7 +330,7 @@ const statuses = {
 
 type ValuesOf<T> = T[keyof T];
 
-const buildStatusMap: Record<DeploymentBuildStatus | 'pending', ValuesOf<typeof statuses>> = {
+const buildStatusMap: Record<DeploymentBuildStatus, ValuesOf<typeof statuses>> = {
   unknown: statuses.canceled,
   pending: statuses.pending,
   running: statuses.inProgress,

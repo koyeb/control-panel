@@ -167,7 +167,7 @@ export type DeploymentBuild = {
   finishedAt: string | null;
 };
 
-export type DeploymentBuildStatus = 'unknown' | 'running' | 'failed' | 'completed' | 'aborted';
+export type DeploymentBuildStatus = 'unknown' | 'pending' | 'running' | 'failed' | 'completed' | 'aborted';
 
 export type DeploymentDefinition = {
   name: string;
