@@ -1037,7 +1037,7 @@
       "secretLabel": "Secret",
       "addVariable": "Add another",
       "deleteVariable": "Delete variable",
-      "bulkEdit": "Bulk import",
+      "bulkEdit": "Raw editor",
       "bulkEdition": {
         "title": "Edit multiple variables",
         "description": "Add, delete or edit environment variables",
