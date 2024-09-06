@@ -7,7 +7,6 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ExternalLink, LinkButton } from 'src/components/link';
-import { useTallyDialog } from 'src/hooks/tally';
 import { Translate } from 'src/intl/translate';
 
 const T = Translate.prefix('pages.database.layout.alerts');
@@ -26,7 +25,7 @@ export function DatabaseAlerts({ service, deployment }: DatabaseAlertsProps) {
     return <QuotaReachedAlert service={service} quota={deployment.reachedQuota} />;
   }
 
-  return <DatabasePreviewAlert />;
+  return null;
 }
 
 function DatabasePausedAlert({ service }: { service: Service }) {
@@ -97,22 +96,6 @@ function QuotaReachedAlert({ service, quota }: QuotaReachedAlertProps) {
           <T id="quotaReached.changeSettings" />
         </LinkButton>
       )}
-    </Alert>
-  );
-}
-
-function DatabasePreviewAlert() {
-  const t = T.useTranslate();
-
-  const { onOpen } = useTallyDialog('nrPZbo', () => {
-    notify.info(t('preview.successNotification'));
-  });
-
-  return (
-    <Alert variant="info" title={<T id="preview.title" />} description={<T id="preview.description" />}>
-      <Button color="blue" className="ml-auto self-center" onClick={onOpen}>
-        <T id="preview.cta" />
-      </Button>
     </Alert>
   );
 }

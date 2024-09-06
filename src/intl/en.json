@@ -1490,12 +1490,6 @@
               "active-time": "You have reached the active time limit for the free database Instance this month. Select a larger database Instance with unlimited active time.",
               "storage-size": "You have reached the storage size limit for the free database Instance. Select a larger database Instance with unlimited storage."
             }
-          },
-          "preview": {
-            "title": "Welcome to our databases preview!",
-            "description": "We've introduced larger PostgreSQL databases with up to 4GB of RAM. We're still welcoming feedback.",
-            "cta": "Leave feedback",
-            "successNotification": "Thank you for your valuable feedback!"
           }
         },
         "databaseStarting": {
