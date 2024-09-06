@@ -250,7 +250,7 @@ function Instances({ definition }: { definition: DeploymentDefinition }) {
         <div className="row flex-wrap gap-4">
           {definition.regions.map((identifier) => (
             <div key={identifier} className="row items-center gap-2">
-              <RegionFlag identifier={identifier} />
+              <RegionFlag identifier={identifier} className="size-4 rounded-full shadow-badge" />
               <RegionName identifier={identifier} />
             </div>
           ))}
