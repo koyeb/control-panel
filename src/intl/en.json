@@ -37,6 +37,13 @@
       "worker": "Worker",
       "database": "Database"
     },
+    "deploymentStrategy": {
+      "invalid": "Invalid",
+      "canary": "Canary",
+      "rolling": "Rolling",
+      "blue_green": "Blue green",
+      "immediate": "Immediate"
+    },
     "validation": {
       "fallbackLabel": "This field",
       "required": "{label} is required",
@@ -197,7 +204,8 @@
       "general": {
         "title": "General",
         "nameLabel": "Name:",
-        "typeLabel": "Type:"
+        "typeLabel": "Type:",
+        "strategyLabel": "Strategy:"
       },
       "source": {
         "title": "Deployment Source",

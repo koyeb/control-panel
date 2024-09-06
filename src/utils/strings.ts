@@ -21,6 +21,14 @@ export function capitalize<S extends string>(str: S): Capitalize<S> {
   return `${upperCase(firstLetter)}${rest}` as Capitalize<S>;
 }
 
+export function removePrefix<S extends string, Prefix extends string>(
+  prefix: Prefix,
+  str: S,
+): S extends `${Prefix}${infer Suffix}` ? Suffix : S {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
+  return str.replace(new RegExp(`^${prefix}`), '') as any;
+}
+
 export function createId(): string {
   return Math.random().toString(36).slice(-6);
 }

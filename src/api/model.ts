@@ -172,6 +172,7 @@ export type DeploymentBuildStatus = 'unknown' | 'pending' | 'running' | 'failed'
 export type DeploymentDefinition = {
   name: string;
   type: ComputeDeploymentType;
+  strategy: DeploymentStrategy;
   source: ArchiveDeploymentSource | GitDeploymentSource | DockerDeploymentSource;
   builder?: BuildpackBuilder | DockerfileBuilder;
   privileged?: boolean;
@@ -184,6 +185,8 @@ export type DeploymentDefinition = {
 };
 
 export type ComputeDeploymentType = 'web' | 'worker';
+
+export type DeploymentStrategy = 'invalid' | 'canary' | 'rolling' | 'blue_green' | 'immediate';
 
 export type EnvironmentVariable = {
   name: string;

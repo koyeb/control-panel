@@ -185,6 +185,7 @@ const computeDeployment = createFactory<ComputeDeployment>(() => ({
 const deploymentDefinition = createFactory<DeploymentDefinition>(() => ({
   name: '',
   type: 'web',
+  strategy: 'rolling',
   source: { type: 'git', repository: '', branch: '', autoDeploy: false },
   environmentVariables: [],
   volumes: [],

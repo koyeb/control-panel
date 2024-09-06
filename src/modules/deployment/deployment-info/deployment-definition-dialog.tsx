@@ -110,6 +110,10 @@ function General({ definition }: { definition: DeploymentDefinition }) {
         <ServiceTypeIcon type={definition.type} size="medium" />
         <Translate id={`common.serviceType.${definition.type}`} />
       </Data>
+
+      <Data name={<T id="general.strategyLabel" />}>
+        <Translate id={`common.deploymentStrategy.${definition.strategy}`} />
+      </Data>
     </Section>
   );
 }

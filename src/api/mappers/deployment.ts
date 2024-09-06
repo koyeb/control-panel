@@ -3,18 +3,18 @@ import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { round } from 'src/utils/math';
 import { hasProperty } from 'src/utils/object';
-import { lowerCase, shortId } from 'src/utils/strings';
+import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
 import { ApiDeployment, ApiDeploymentNeonPostgresDatabaseInfo, ApiNeonPostgresDatabase } from '../api-types';
 import {
   ComputeDeployment,
+  ComputeDeploymentType,
   DatabaseDeployment,
   Deployment,
   DeploymentDefinition,
   Instance,
   PortProtocol,
-  ComputeDeploymentType,
   PostgresVersion,
 } from '../model';
 
@@ -237,6 +237,7 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
     definition: {
       name: definition.name!,
       type: type(),
+      strategy: lowerCase(removePrefix('DEPLOYMENT_STRATEGY_TYPE_', definition.strategy!.type!)),
       source: source(),
       builder: builder(),
       privileged: privileged(),
