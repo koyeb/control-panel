@@ -297,7 +297,7 @@
       "title": "We cannot offer you access to Koyeb",
       "line1": "Your account matches patterns often associated with violations of our <terms>Terms of Service</terms>",
       "line2": "While we cannot provide details about the reason(s) triggering this behavior, we have determined that providing access to Koyeb is not possible",
-      "line3": "If you believe this is a bug, you can <validate>validate your account</validate>"
+      "line3": "If you believe this is a bug, you can <link>verify your identity</link>"
     },
     "unhandledError": {
       "title": "Whoops!",

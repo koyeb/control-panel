@@ -17,7 +17,7 @@ declare global {
   }
 }
 
-export const useTallyDialog = (formId: string, onSubmitted?: () => void) => {
+export function useTallyDialog(formId: string, onSubmitted?: () => void) {
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
   const onClose = useCallback(() => setOpen(false), []);
@@ -85,4 +85,4 @@ export const useTallyDialog = (formId: string, onSubmitted?: () => void) => {
     onOpen,
     onClose,
   };
-};
+}

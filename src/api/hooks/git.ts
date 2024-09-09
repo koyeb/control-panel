@@ -5,18 +5,19 @@ import { mapGithubApp, mapRepositoriesList } from '../mappers/git';
 import { GitRepository } from '../model';
 import { useApiQueryFn } from '../use-api';
 
-import { useOrganizationQuery } from './session';
+import { useOrganizationQuery, useUserQuery } from './session';
 
 const isNotGithubAppError = (error: Error) => {
   return isApiFailedPrecondition(error) && error.message === 'No GitHub Installation';
 };
 
 export function useGithubAppQuery(refetchInterval?: number) {
+  const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
   return useQuery({
     ...useApiQueryFn('getGithubApp'),
-    enabled: organizationQuery.isSuccess && organizationQuery.data !== null,
+    enabled: userQuery.isSuccess && organizationQuery.isSuccess && organizationQuery.data !== null,
     refetchInterval,
     select: mapGithubApp,
     refetchOnWindowFocus: () => false,

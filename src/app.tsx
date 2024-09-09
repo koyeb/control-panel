@@ -45,7 +45,11 @@ export function App() {
 
   useIdentifyUser();
 
-  if (isAccountLockedError(userQuery.error) || isAccountLockedError(organizationQuery.error)) {
+  if (
+    isAccountLockedError(userQuery.error) ||
+    isAccountLockedError(organizationQuery.error) ||
+    organizationQuery.data?.statusMessage === 'verification_failed'
+  ) {
     return <AccountLocked />;
   }
 
