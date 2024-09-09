@@ -49,6 +49,7 @@ export function MainLayout({ children }: LayoutProps) {
         menu={(collapsed) => <Menu collapsed={collapsed} />}
         main={<Main>{children}</Main>}
         context={pageContext.enabled ? <PageContext {...pageContext} /> : undefined}
+        contextExpanded={pageContext.expanded}
       />
     </>
   );
@@ -134,7 +135,7 @@ function SessionTokenBanner() {
   }
 
   return (
-    <div className="sticky inset-x-0 top-0 bg-orange py-1 text-center font-medium">
+    <div className="sticky inset-x-0 top-0 z-30 bg-orange py-1 text-center font-medium">
       <T id="sessionTokenWarning" values={{ organizationName: organization.name }} />
       <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => mutation.mutate()}>
         <IconX className="size-5" />
@@ -168,12 +169,13 @@ function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
   }
 
   return (
-    <div className={clsx('relative h-screen', expanded ? 'w-full max-w-lg' : 'mr-px w-0')}>
-      <div className="col absolute inset-y-0 right-full justify-center pr-3">
-        <button onClick={() => setExpanded(!expanded)}>
-          <IconChevronLeft className={clsx('size-6 text-dim', expanded && 'rotate-180')} />
-        </button>
-      </div>
+    <div className={clsx('fixed inset-y-0 right-0 w-0 bg-muted', expanded && 'w-full max-w-lg')}>
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="col absolute right-full h-full justify-center bg-muted/50 opacity-0 transition-opacity hover:opacity-100"
+      >
+        <IconChevronLeft className={clsx('size-6 text-dim', expanded && '-scale-x-100')} />
+      </button>
 
       <iframe
         src={`${pageContextBaseUrl}/context${pathname}?${search.toString()}`}

@@ -22,28 +22,30 @@ type LayoutProps = {
   menu: (collapsed: boolean) => React.ReactNode;
   main: React.ReactNode;
   context?: React.ReactNode;
+  contextExpanded?: boolean;
 };
 
-export function Layout({ banner, header, menu, main, context }: LayoutProps) {
+export function Layout({ banner, header, menu, main, context, contextExpanded }: LayoutProps) {
   const [menuState, setMenuState] = useSideMenuState();
 
   return (
-    <div className="row">
+    <>
       <SideMenu state={menuState} setState={setMenuState}>
         {menu(menuState === 'collapsed')}
       </SideMenu>
 
-      <div className="h-screen flex-1 overflow-auto">
+      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+      <div className={clsx('sm:pl-16 xl:pl-64', contextExpanded && 'pr-[32rem]')}>
         {banner}
 
-        <div className={clsx('mx-auto max-w-main', context && 'pr-4')}>
+        <div className="mx-auto max-w-main">
           <Header onOpen={() => setMenuState('opened')}>{header}</Header>
           {main}
         </div>
       </div>
 
       {context}
-    </div>
+    </>
   );
 }
 
@@ -92,7 +94,7 @@ function SideMenuDesktop({ children }: SideMenuProps) {
   return (
     <aside
       // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className="z-20 h-screen w-64 overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]"
+      className="fixed z-20 h-screen w-64 overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]"
     >
       {children}
     </aside>
@@ -104,7 +106,7 @@ function SideMenuTablet({ state, setState, children }: SideMenuProps) {
     <div
       onMouseEnter={() => setState('opened')}
       onMouseLeave={() => setState('collapsed')}
-      className={clsx('z-20 w-16 overflow-x-visible')}
+      className={clsx('fixed z-20 w-16 overflow-x-visible')}
     >
       <aside
         // eslint-disable-next-line tailwindcss/no-arbitrary-value
