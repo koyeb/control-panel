@@ -49,6 +49,7 @@ jobs:
             APP_VERSION=${{ github.event.pull_request.head.sha || github.sha }}
             API_URL=https://staging.koyeb.com
             PAGE_CONTEXT_BASE_URL=@control-panel-staging-page-context-base-url
+            IDENFY_SERVICE_BASE_URL=@control-panel-staging-idenfy-service-base-url
             RECAPTCHA_CLIENT_KEY=@control-panel-staging-recaptcha-client-key
             SEGMENT_WRITE_KEY=@control-panel-staging-segment-write-key
             POSTHOG_KEY=@control-panel-staging-posthog-key

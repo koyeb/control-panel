@@ -8,6 +8,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_VERSION: EnvVar;
   readonly VITE_API_URL: EnvVar;
   readonly VITE_PAGE_CONTEXT_BASE_URL: EnvVar;
+  readonly VITE_IDENFY_SERVICE_BASE_URL: EnvVar;
   readonly VITE_RECAPTCHA_CLIENT_KEY: EnvVar;
   readonly VITE_SEGMENT_WRITE_KEY: EnvVar;
   readonly VITE_POSTHOG_KEY: EnvVar;

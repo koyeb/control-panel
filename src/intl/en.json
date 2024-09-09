@@ -1219,7 +1219,7 @@
   "layouts": {
     "createOrganization": "Create organization",
     "main": {
-      "accountUnderReview": "We need more information to approve your account. Please answer <form>this validation form</form> to prevent account suspension.",
+      "accountUnderReview": "We need more information to approve your account. Please <link>verify your identity</link> to prevent account suspension.",
       "sessionTokenWarning": "You are currently seeing the organization {organizationName}",
       "paymentFailure": "We tried to charge your card, but the payment has failed. Please <stripe>update your payment method</stripe> and pay your past due invoices.",
       "subscriptionHasPendingUpdate": "The provided payment details could not be processed. Please check your payment information in the <stripe>billing portal</stripe> to resolve the issue.",

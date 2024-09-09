@@ -23,6 +23,7 @@ import { inArray } from 'src/utils/arrays';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
 import { EstimatedCosts } from './estimated-costs';
+import { GlobalAlert } from './global-alert';
 import { HelpLinks } from './help-links';
 import { Layout } from './layout';
 import { Navigation } from './navigation';
@@ -112,7 +113,10 @@ function Main({ children }: { children: React.ReactNode }) {
 
   return (
     <main className="overflow-x-auto px-2 py-4 sm:px-4">
-      <Suspense>{children}</Suspense>
+      <Suspense>
+        <GlobalAlert />
+        {children}
+      </Suspense>
     </main>
   );
 }
