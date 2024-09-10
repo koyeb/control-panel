@@ -58,11 +58,11 @@ function DeploymentJson({ definition }: { definition: object }) {
 function DeploymentParsed({ deployment: { definition } }: { deployment: ComputeDeployment }) {
   return (
     <div className="col md:row gap-6">
-      <div className="col flex-1 gap-6">
+      <div className="col min-w-0 flex-1 gap-6">
         <General definition={definition} />
         <Source definition={definition} />
       </div>
-      <div className="col flex-1 gap-6">
+      <div className="col min-w-0 flex-1 gap-6">
         <Instances definition={definition} />
         <Ports definition={definition} />
         <EnvironmentVariables definition={definition} />
@@ -102,7 +102,9 @@ function Data({ name, className, children }: DataProps) {
 function General({ definition }: { definition: DeploymentDefinition }) {
   return (
     <Section title={<T id="general.title" />}>
-      <Data name={<T id="general.nameLabel" />}>{definition.name}</Data>
+      <Data name={<T id="general.nameLabel" />}>
+        <div className="truncate">{definition.name}</div>
+      </Data>
 
       <hr />
 
