@@ -205,7 +205,7 @@
         "title": "General",
         "nameLabel": "Name:",
         "typeLabel": "Type:",
-        "strategyLabel": "Strategy:"
+        "strategyLabel": "Deployment strategy:"
       },
       "source": {
         "title": "Deployment Source",
