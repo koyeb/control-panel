@@ -44,6 +44,7 @@ function transformService(service: ApiService): Service {
     type: lowerCase(service.type!) as ServiceType,
     name: service.name!,
     status: lowerCase(service.status!),
+    upcomingDeploymentIds: service.state?.desired_deployment?.groups?.[0]?.deployment_ids,
     createdAt: service.created_at!,
   };
 }

@@ -1,5 +1,4 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { isAfter } from 'date-fns';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useBreakpoint } from '@koyeb/design-system';
@@ -7,7 +6,6 @@ import { api } from 'src/api/api';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
-import { isUpcomingDeployment } from 'src/application/service-functions';
 import { useAccessToken } from 'src/application/token';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParam } from 'src/hooks/router';
@@ -204,19 +202,14 @@ function useDeployments(serviceId: string) {
 
 function useDeploymentGroups(service: Service, deployments: ComputeDeployment[]) {
   return useMemo(() => {
-    const active = deployments.find(hasProperty('id', service.activeDeploymentId));
+    let active: ComputeDeployment | undefined = undefined;
     const upcoming: ComputeDeployment[] = [];
     const past: ComputeDeployment[] = [];
 
     for (const deployment of deployments) {
-      if (deployment === active) {
-        continue;
-      }
-
-      if (isUpcomingDeployment(deployment)) {
-        upcoming.push(deployment);
-      } else if (deployment.status === 'healthy' && active && isAfter(deployment.date, active.date)) {
-        // consider healthy deployments that are more recent than the active one as upcoming
+      if (deployment.id === service.activeDeploymentId) {
+        active = deployment;
+      } else if (service.upcomingDeploymentIds?.includes(deployment.id)) {
         upcoming.push(deployment);
       } else {
         past.push(deployment);

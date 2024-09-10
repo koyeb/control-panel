@@ -464,6 +464,7 @@ export type Service = {
   type: ServiceType;
   name: string;
   status: ServiceStatus;
+  upcomingDeploymentIds?: string[];
   createdAt: string;
 };
 
