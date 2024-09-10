@@ -33,7 +33,7 @@ export function EstimatedCosts() {
         <Upsell />
       ) : (
         <>
-          {nextInvoiceQuery.isPending && <Loading className="min-h-12" />}
+          {nextInvoiceQuery.isLoading && <Loading className="min-h-12" />}
           {nextInvoiceQuery.isSuccess && <CostsDetails costs={getCosts(nextInvoiceQuery.data)} />}
         </>
       )}
