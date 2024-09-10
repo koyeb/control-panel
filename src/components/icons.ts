@@ -16,7 +16,7 @@ export { default as IconBox } from 'lucide-static/icons/box.svg?react';
 export { default as IconBoxes } from 'lucide-static/icons/boxes.svg?react';
 export { default as IconBranch } from 'lucide-static/icons/git-branch.svg?react';
 export { default as IconBuilding } from 'lucide-static/icons/building.svg?react';
-export { default as IconCheck } from 'lucide-static/icons/circle-check.svg?react';
+export { default as IconCheck } from 'lucide-static/icons/check.svg?react';
 export { default as IconChevronDown } from 'lucide-static/icons/chevron-down.svg?react';
 export { default as IconChevronLeft } from 'lucide-static/icons/chevron-left.svg?react';
 export { default as IconChevronRight } from 'lucide-static/icons/chevron-right.svg?react';
