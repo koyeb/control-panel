@@ -6,6 +6,7 @@ import { api } from 'src/api/api';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
+import { isUpcomingDeployment } from 'src/application/service-functions';
 import { useAccessToken } from 'src/application/token';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParam } from 'src/hooks/router';
@@ -209,7 +210,7 @@ function useDeploymentGroups(service: Service, deployments: ComputeDeployment[])
     for (const deployment of deployments) {
       if (deployment.id === service.activeDeploymentId) {
         active = deployment;
-      } else if (service.upcomingDeploymentIds?.includes(deployment.id)) {
+      } else if (service.upcomingDeploymentIds?.includes(deployment.id) || isUpcomingDeployment(deployment)) {
         upcoming.push(deployment);
       } else {
         past.push(deployment);
