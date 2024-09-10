@@ -1,22 +1,7 @@
 import { useCallback } from 'react';
 import { IntlShape, useIntl } from 'react-intl';
-import { Paths } from 'type-fest';
 
-type PathsAsString<T> = Paths<T> extends string ? Paths<T> : never;
-
-type RemovePrefix<T extends string, P extends string> = T extends `${P}${infer R}` ? R : never;
-
-type LastPart<T extends string> = T extends `${string}.${infer Tail}` ? LastPart<Tail> : T;
-
-type RemoveLastPart<T extends string> = T extends `${infer Head}.${LastPart<T>}` ? Head : '';
-
-type NonLeavePaths<T extends string> = Exclude<RemoveLastPart<T>, ''>;
-
-type LeavesFromPaths<P extends string> = {
-  [K in P]: K extends NonLeavePaths<P> ? never : K;
-}[P];
-
-type Leaves<T> = LeavesFromPaths<PathsAsString<T>>;
+import { Trim } from 'src/utils/types';
 
 export type TranslationsObject = {
   [Key in string]: string | TranslationsObject;
@@ -24,14 +9,16 @@ export type TranslationsObject = {
 
 type Values = Parameters<IntlShape['formatMessage']>[1];
 
-export interface TranslateFunction<Keys> {
-  (id: Keys): string;
-  (id: Keys, values: Values): string | JSX.Element;
+type Prefixes<Key extends string> = (Key extends `${infer P}.${infer S}`
+  ? [P, `${P}.${Prefixes<S>}`]
+  : [Key])[number];
+
+export interface TranslateFunction<Key extends string> {
+  (id: Key): string;
+  (id: Key, values: Values): string | JSX.Element;
 }
 
-export type TranslationKeys<Keys> = Leaves<Keys>;
-
-export function createTranslationHelpers<Translations extends TranslationsObject>(commonValues?: Values) {
+export function createTranslationHelpers<Key extends string>(commonValues?: Values) {
   function useTranslate() {
     const intl = useIntl();
 
@@ -42,27 +29,27 @@ export function createTranslationHelpers<Translations extends TranslationsObject
       [intl],
     );
 
-    return translate as TranslateFunction<Leaves<Translations>>;
+    return translate as TranslateFunction<Key>;
   }
 
-  type TranslateProps<Keys extends string> = {
-    id: Keys;
+  type TranslateProps<Key extends string> = {
+    id: Key;
     values?: Values;
   };
 
-  function Translate(props: TranslateProps<Leaves<Translations>>) {
+  function Translate(props: TranslateProps<Key>) {
     const translate = useTranslate();
 
     return translate(props.id, props.values);
   }
 
-  Translate.prefix = <Prefix extends NonLeavePaths<PathsAsString<Translations>>>(prefix: Prefix) => {
-    const getId = (id: string) => {
-      return `${prefix}.${id}` as Leaves<Translations>;
-    };
+  Translate.prefix = <P extends Prefixes<Key>>(prefix: P) => {
+    type SubKey = Trim<Key, `${P}.`>;
+    type Props = TranslateProps<SubKey>;
 
-    type Keys = RemovePrefix<Leaves<Translations>, `${Prefix}.`>;
-    type Props = TranslateProps<Keys>;
+    const getId = (id: SubKey) => {
+      return `${prefix}.${id}` as Key;
+    };
 
     const T = (props: Props) => {
       return <Translate id={getId(props.id)} values={props.values} />;
@@ -72,13 +59,13 @@ export function createTranslationHelpers<Translations extends TranslationsObject
       const t = useTranslate();
 
       const translate = useCallback(
-        (id: Keys, values: Values) => {
+        (id: SubKey, values: Values) => {
           return t(getId(id), values);
         },
         [t],
       );
 
-      return translate as TranslateFunction<Keys>;
+      return translate as TranslateFunction<SubKey>;
     };
 
     return T;

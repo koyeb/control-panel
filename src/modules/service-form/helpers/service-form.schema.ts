@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { TranslateFunction, TranslationKeys } from 'src/intl/translate';
+import { TranslateFn, TranslationKeys } from 'src/intl/translate';
 import { isSlug } from 'src/utils/strings';
 
 type RemovePrefix<T extends string, P extends string> = T extends `${P}${infer R}` ? R : never;
@@ -8,7 +8,7 @@ type Keys = RemovePrefix<TranslationKeys, 'serviceForm.errors.'>;
 
 type TranslateErrorFunction = (key: Keys, values?: Record<string, string | number>) => string;
 
-export function serviceFormSchema(translate: TranslateFunction) {
+export function serviceFormSchema(translate: TranslateFn) {
   // @ts-expect-error this works
   const t: TranslateErrorFunction = (key, values) => {
     return translate(`serviceForm.errors.${key}`, values);
