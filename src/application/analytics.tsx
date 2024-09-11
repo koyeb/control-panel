@@ -125,7 +125,7 @@ async function identifyUser(analytics: Analytics, context: Record<string, string
   const traits = {};
   const integrations: Integrations = {};
 
-  api
+  await api
     .getIntercomUserHash({
       token: getAccessToken() ?? undefined,
     })
