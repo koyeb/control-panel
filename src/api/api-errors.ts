@@ -40,6 +40,7 @@ export const isAccountLockedError = createValidationGuard(
 
 const apiValidationErrorSchema = apiErrorSchema.extend({
   code: z.union([
+    z.literal('authorization_error'),
     z.literal('invalid_argument'),
     z.literal('invalid_parameter'),
     z.literal('failed_precondition'),
