@@ -1,5 +1,5 @@
 import { parseBytes } from 'src/application/memory';
-import { inArray } from 'src/utils/arrays';
+import { inArray, last } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { round } from 'src/utils/math';
 import { hasProperty } from 'src/utils/object';
@@ -12,6 +12,7 @@ import {
   ComputeDeploymentType,
   DatabaseDeployment,
   Deployment,
+  DeploymentBuildStepName,
   DeploymentDefinition,
   Instance,
   PortProtocol,
@@ -76,9 +77,26 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
       return undefined;
     }
 
+    const steps = () => {
+      const steps = last(stage.build_attempts ?? [])?.steps ?? [];
+
+      if (steps.length === 0) {
+        return;
+      }
+
+      return steps.map((step) => ({
+        name: step.name! as DeploymentBuildStepName,
+        status: lowerCase(step.status!),
+        messages: step.messages!,
+        startedAt: step.started_at!,
+        finishedAt: step.finished_at!,
+      }));
+    };
+
     return {
       status: lowerCase(stage.status!),
       sha: deployment.provisioning_info?.sha,
+      steps: steps(),
       // the API actually returns null
       startedAt: stage.started_at!,
       finishedAt: stage.finished_at!,

@@ -165,11 +165,22 @@ export type DeploymentStatus =
 export type DeploymentBuild = {
   status: DeploymentBuildStatus;
   sha?: string;
+  steps?: DeploymentBuildStep[];
   startedAt: string | null;
   finishedAt: string | null;
 };
 
 export type DeploymentBuildStatus = 'unknown' | 'pending' | 'running' | 'failed' | 'completed' | 'aborted';
+
+export type DeploymentBuildStep = {
+  name: DeploymentBuildStepName;
+  status: DeploymentBuildStatus;
+  messages: string[];
+  startedAt: string | null;
+  finishedAt: string | null;
+};
+
+export type DeploymentBuildStepName = 'git-clone' | 'analyze' | 'detect' | 'restore' | 'build' | 'export';
 
 export type DeploymentDefinition = {
   name: string;

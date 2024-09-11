@@ -17,3 +17,7 @@ export function unique<T>(array: T[], iteratee: (value: T) => unknown = identity
 export function inArray<T>(value: unknown, array: readonly T[]): value is T {
   return array.includes(value as T);
 }
+
+export function last<T>(array: T[]): T | undefined {
+  return array.at(array.length - 1);
+}

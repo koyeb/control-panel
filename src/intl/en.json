@@ -44,6 +44,14 @@
       "blue_green": "Blue green",
       "immediate": "Immediate"
     },
+    "deploymentBuildStep": {
+      "git-clone": "Clone repository",
+      "analyze": "Analyze",
+      "detect": "Detect runtime",
+      "restore": "Restore build cache",
+      "build": "Build",
+      "export": "Export docker image"
+    },
     "validation": {
       "fallbackLabel": "This field",
       "required": "{label} is required",
@@ -258,6 +266,7 @@
       "title": "Build",
       "buildSkipped": "This deployment uses a previous build originally created during deployment <link>{deploymentId}</link>",
       "duration": "<dim>Duration: {duration}s</dim>",
+      "elapsed": "<dim>{time}s</dim>",
       "completed": "{elapsed, select, undefined {} other {<dim>Completed in</dim> {elapsed}s}}",
       "waitingForLogs": {
         "title": "Getting ready to build your service",

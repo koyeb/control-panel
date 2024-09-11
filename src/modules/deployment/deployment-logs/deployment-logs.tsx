@@ -1,25 +1,26 @@
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
-import { AccordionHeader, AccordionSection, Spinner } from '@koyeb/design-system';
+import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import {
   App,
   ComputeDeployment,
   DeploymentBuild,
   DeploymentBuildStatus,
-  DeploymentStatus,
   Instance,
   LogLine,
   Service,
 } from 'src/api/model';
 import { hasBuild } from 'src/application/service-functions';
-import { IconCircleAlert, IconCircleCheck, IconCircleDashed, IconCircleX } from 'src/components/icons';
+import { IconCircleDashed } from 'src/components/icons';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
 
 import { BuildLogs } from './build-logs';
+import { BuildSteps } from './build-steps';
+import { buildStatusMap, runtimeStatusMap } from './deployment-status-icons';
 import { Replicas } from './replicas';
 import { RuntimeLogs } from './runtime-logs';
 
@@ -67,7 +68,8 @@ export function DeploymentLogs({ app, service, deployment, instances }: Deployme
             />
           }
         >
-          <div className="p-4">
+          <div className="col gap-4 p-4">
+            <BuildSteps deployment={deployment} />
             <BuildLogs app={app} service={service} deployment={deployment} {...buildLogs} />
           </div>
         </AccordionSection>
@@ -258,7 +260,7 @@ function RuntimeSectionHeader({ expanded, setExpanded, deployment, lines }: Runt
     hasBuild(deployment) && !deployment.buildSkipped && deployment.build?.status !== 'completed';
 
   const [StatusIcon, statusColorClassName] = notStarted
-    ? statuses.pending
+    ? [IconCircleDashed, clsx('text-dim')]
     : runtimeStatusMap[deployment.status];
 
   return (
@@ -318,41 +320,3 @@ function SectionHeader({
     </AccordionHeader>
   );
 }
-
-const statuses = {
-  pending: [IconCircleDashed, clsx('text-dim')],
-  inProgress: [Spinner, clsx('text-gray')],
-  warning: [IconCircleAlert, clsx('text-orange')],
-  error: [IconCircleX, clsx('text-red')],
-  success: [IconCircleCheck, clsx('text-green')],
-  canceled: [IconCircleX, clsx('text-gray')],
-} satisfies Record<string, [React.ComponentType<{ className?: string }>, string]>;
-
-type ValuesOf<T> = T[keyof T];
-
-const buildStatusMap: Record<DeploymentBuildStatus, ValuesOf<typeof statuses>> = {
-  unknown: statuses.canceled,
-  pending: statuses.pending,
-  running: statuses.inProgress,
-  failed: statuses.error,
-  completed: statuses.success,
-  aborted: statuses.canceled,
-};
-
-const runtimeStatusMap: Record<DeploymentStatus, ValuesOf<typeof statuses>> = {
-  pending: statuses.pending,
-  provisioning: statuses.pending,
-  scheduled: statuses.inProgress,
-  canceling: statuses.inProgress,
-  canceled: statuses.canceled,
-  allocating: statuses.inProgress,
-  starting: statuses.inProgress,
-  healthy: statuses.success,
-  degraded: statuses.warning,
-  unhealthy: statuses.error,
-  stopping: statuses.inProgress,
-  stopped: statuses.canceled,
-  erroring: statuses.inProgress,
-  error: statuses.error,
-  stashed: statuses.canceled,
-};
