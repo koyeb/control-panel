@@ -1,24 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { SectionHeader } from 'src/components/section-header';
-import { useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
 const T = Translate.prefix('account.deactivateOrganization');
 
 export function DeactivateOrganization() {
   const organization = useOrganization();
-  const invalidate = useInvalidateApiQuery();
   const t = T.useTranslate();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [confirmationId, setConfirmationId] = useSearchParam('deactivate-organization');
 
   const requestDeactivation = useMutation({
     ...useApiMutationFn('deactivateOrganization', {
@@ -29,23 +26,6 @@ export function DeactivateOrganization() {
       notify.info(t('deactivationRequestSuccessNotification'));
     },
   });
-
-  const confirmDeactivation = useMutation({
-    ...useApiMutationFn('organizationConfirmation', (confirmationId: string) => ({
-      path: { id: confirmationId },
-    })),
-    async onSuccess() {
-      await invalidate('getCurrentOrganization');
-      setConfirmationId(null);
-      notify.info(t('deactivationSuccessNotification'));
-    },
-  });
-
-  useEffect(() => {
-    if (confirmationId !== null && confirmDeactivation.isIdle) {
-      confirmDeactivation.mutate(confirmationId);
-    }
-  }, [confirmationId, confirmDeactivation]);
 
   return (
     <section className="card">

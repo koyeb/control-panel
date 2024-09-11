@@ -31,6 +31,13 @@ export const isApiFailedPrecondition = createValidationGuard(
   }),
 );
 
+export const isAccountLockedError = createValidationGuard(
+  z.object({
+    status: z.literal(403),
+    message: z.literal('Account is locked'),
+  }),
+);
+
 const apiValidationErrorSchema = apiErrorSchema.extend({
   code: z.union([
     z.literal('invalid_argument'),

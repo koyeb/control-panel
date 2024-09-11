@@ -1,19 +1,17 @@
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch } from 'wouter';
-import { z } from 'zod';
 
+import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
-import { OnboardingStep, Organization, User } from './api/model';
 import { useIdentifyUser } from './application/analytics';
-import { createValidationGuard } from './application/create-validation-guard';
-import { UnexpectedError } from './application/errors';
-import { reportError } from './application/report-error';
+import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { AccountLocked } from './components/account-locked';
 import { LinkButton } from './components/link';
 import { Loading } from './components/loading';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
+import { ConfirmDeactivateOrganization } from './modules/account/confirm-deactivate-organization';
 import { CommandPalette } from './modules/command-palette/command-palette';
 import { AccountPages } from './pages/account/account.pages';
 import { ActivityPage } from './pages/activity/activity.page';
@@ -62,54 +60,10 @@ export function App() {
   );
 }
 
-const isAccountLockedError = createValidationGuard(
-  z.object({
-    status: z.literal(403),
-    message: z.literal('Account is locked'),
-  }),
-);
-
-function getOnboardingStep(user: User, organization: Organization | null): OnboardingStep | null {
-  if (!user.emailValidated) {
-    return 'emailValidation';
-  }
-
-  if (organization === null) {
-    return 'joinOrganization';
-  }
-
-  if (!organization.hasSignupQualification) {
-    return 'qualification';
-  }
-
-  if (organization.statusMessage === 'plan_upgrade_required') {
-    return 'paymentMethod';
-  }
-
-  if (organization.statusMessage === 'pending_verification') {
-    return 'automaticReview';
-  }
-
-  if (organization.status === 'warning') {
-    // transient state after creating another organization
-    if (organization.statusMessage === 'reviewing_account') {
-      return 'automaticReview';
-    }
-
-    reportError(
-      new UnexpectedError('Unhandled organization status', {
-        status: organization.status,
-        statusMessage: organization.statusMessage,
-      }),
-    );
-  }
-
-  return null;
-}
-
 function AuthenticatedRoutes() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
+  const onboardingStep = useOnboardingStep();
 
   if (!userQuery.isSuccess || organizationQuery.isPending) {
     return (
@@ -119,10 +73,18 @@ function AuthenticatedRoutes() {
     );
   }
 
-  const onboardingStep = getOnboardingStep(userQuery.data, organizationQuery.data ?? null);
-
   if (onboardingStep !== null) {
-    return <OnboardingPage step={onboardingStep} />;
+    return (
+      <Switch>
+        <Route
+          path="/organization/deactivate/confirm/:confirmationId"
+          component={ConfirmDeactivateOrganization}
+        />
+        <Route>
+          <OnboardingPage step={onboardingStep} />
+        </Route>
+      </Switch>
+    );
   }
 
   return (
@@ -161,9 +123,10 @@ function AuthenticatedRoutes() {
         <Route path="/settings/*?" component={OrganizationSettingsPages} />
         <Route path="/user/settings/*?" component={UserSettingsPages} />
 
-        <Route path="/organization/deactivate/confirm/:confirmationId">
-          {({ confirmationId }) => <Redirect to={`/settings?deactivate-organization=${confirmationId}`} />}
-        </Route>
+        <Route
+          path="/organization/deactivate/confirm/:confirmationId"
+          component={ConfirmDeactivateOrganization}
+        />
 
         <Route path="/api/app/github/callback" component={GithubAppCallbackPage} />
         <Route path="__error" component={ErrorTestPage} />
