@@ -1,11 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-
 import { Alert } from '@koyeb/design-system';
 import { useManageBillingQuery, useSubscriptionQuery } from 'src/api/hooks/billing';
-import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
-import { getConfig } from 'src/application/config';
+import { useOrganizationUnsafe } from 'src/api/hooks/session';
+import { useIdenfyLink } from 'src/application/idenfy';
 import { ExternalLink } from 'src/components/link';
-import { QueryGuard } from 'src/components/query-error';
+import { useTallyDialog } from 'src/hooks/tally';
 import { Translate } from 'src/intl/translate';
 
 const T = Translate.prefix('layouts.main');
@@ -30,20 +28,8 @@ export function GlobalAlert() {
 }
 
 function AccountUnderReviewAlert() {
-  const user = useUser();
-  const { idenfyServiceBaseUrl } = getConfig();
-
-  const query = useQuery({
-    queryKey: ['idenfy', idenfyServiceBaseUrl, user.id],
-    async queryFn() {
-      const response = await fetch(`${idenfyServiceBaseUrl}/${user.id}`, { method: 'POST' });
-      return response.text();
-    },
-  });
-
-  if (!query.isSuccess) {
-    return <QueryGuard query={query} />;
-  }
+  const idenfyLink = useIdenfyLink();
+  const { onOpen } = useTallyDialog('wQRgBY');
 
   return (
     <Alert
@@ -53,15 +39,16 @@ function AccountUnderReviewAlert() {
         <T
           id="accountUnderReview"
           values={{
-            link: (children) => (
-              <ExternalLink
-                openInNewTab
-                className="underline"
-                href={`https://ivs.idenfy.com/api/v2/redirect?authToken=${query.data}`}
-              >
-                {children}
-              </ExternalLink>
-            ),
+            link: (children) =>
+              idenfyLink ? (
+                <ExternalLink openInNewTab className="underline" href={idenfyLink}>
+                  {children}
+                </ExternalLink>
+              ) : (
+                <button type="button" className="underline" onClick={onOpen}>
+                  {children}
+                </button>
+              ),
           }}
         />
       }
