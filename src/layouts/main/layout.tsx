@@ -35,7 +35,7 @@ export function Layout({ banner, header, menu, main, context, contextExpanded }:
       </SideMenu>
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className={clsx('sm:pl-16 xl:pl-64', contextExpanded && 'pr-[32rem]')}>
+      <div className={clsx('sm:pl-16 xl:pl-64', contextExpanded && '3xl:pr-[32rem]')}>
         {banner}
 
         <div className="mx-auto max-w-main">

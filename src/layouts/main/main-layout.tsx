@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Suspense } from 'react';
 
-import { useBreakpoint } from '@koyeb/design-system';
 import { useOrganizationUnsafe, useUserQuery, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
@@ -194,10 +193,9 @@ function usePageContext(): PageContextProps {
   const { data: user } = useUserQuery();
   const { pageContextBaseUrl } = getConfig();
   const pageContextFlag = useFeatureFlag('page-context');
-  const isDesktop = useBreakpoint('xl');
 
   const enabled = [
-    isDesktop,
+    //
     pageContextBaseUrl !== undefined,
     user?.flags.includes('ADMIN'),
     pageContextFlag,
