@@ -1,13 +1,23 @@
 import clsx from 'clsx';
 
+import { useSearchParams } from 'src/hooks/router';
+
 import { SecondaryLayoutHeader } from './secondary-layout-header';
+import { SecondarySettings } from './settings';
 
 export function SecondaryLayout({ className, children }: { className?: string; children: React.ReactNode }) {
+  const params = useSearchParams();
+
   return (
     <div className="col min-h-screen">
       <BackgroundTexture />
       <SecondaryLayoutHeader background />
-      <div className={clsx('col flex-1 items-center px-4 py-8 lg:py-32', className)}>{children}</div>
+
+      {params.has('settings') ? (
+        <SecondarySettings />
+      ) : (
+        <div className={clsx('col flex-1 items-center px-4 py-8 lg:py-32', className)}>{children}</div>
+      )}
     </div>
   );
 }

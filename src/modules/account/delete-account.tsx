@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
-import { useOrganizationQuery, useUser } from 'src/api/hooks/session';
+import { useOrganizationQuery, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
@@ -13,7 +13,7 @@ import { Translate } from 'src/intl/translate';
 const T = Translate.prefix('account.deleteAccount');
 
 export function DeleteAccount() {
-  const user = useUser();
+  const user = useUserUnsafe();
   const { data: organization } = useOrganizationQuery();
   const canDelete = organization === undefined;
 
@@ -24,7 +24,7 @@ export function DeleteAccount() {
 
   const { mutateAsync: deleteAccount } = useMutation({
     ...useApiMutationFn('deleteUser', {
-      path: { id: user.id },
+      path: { id: user?.id as string },
     }),
     onSuccess() {
       clearToken();
@@ -62,7 +62,7 @@ export function DeleteAccount() {
         onClose={() => setDialogOpen(false)}
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
-        confirmationText={user.name}
+        confirmationText={user?.name ?? ''}
         submitText={<T id="confirmationDialog.confirm" />}
         onConfirm={deleteAccount}
       />
