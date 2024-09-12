@@ -697,6 +697,13 @@
     "instanceRegions": {
       "title": "Create a new service",
       "description": "Pick the instance and regions to deploy",
+      "regionCategorySelector": {
+        "label": "Select your instance location",
+        "koyebLabel": "Koyeb",
+        "koyebDescription": "Koyeb regions",
+        "awsLabel": "AWS",
+        "awsDescription": "AWS regions"
+      },
       "alerts": {
         "requiresUpgrade": "The selected instance is available on the {plan} plan. You will be asked to upgrade at the end of the creation process.",
         "freeMessage": "The Free instance can be deployed in {fra} or {was} and doesn't support scaling. Select another instance to access more features and regions."

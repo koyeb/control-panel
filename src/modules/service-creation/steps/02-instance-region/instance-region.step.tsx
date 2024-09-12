@@ -1,4 +1,4 @@
-import { Button } from '@koyeb/design-system';
+import { Button, Field } from '@koyeb/design-system';
 import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
@@ -10,7 +10,10 @@ import { Translate } from 'src/intl/translate';
 
 import { InstanceRegionAlerts } from './instance-region-alerts';
 import { useInstanceRegionState } from './instance-region-state';
+import { RegionCategorySelector } from './region-category-selector';
 import { RegionsSelector } from './regions-selector';
+
+const T = Translate.prefix('serviceCreation.instanceRegions');
 
 type InstanceRegionStepProps = {
   onNext: () => void;
@@ -46,6 +49,10 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
     <>
       <InstanceRegionAlerts selectedInstance={state.instance} selectedRegions={state.regions} />
 
+      <Field label={<T id="regionCategorySelector.label" />} className="items-stretch">
+        <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
+      </Field>
+
       <div className="col 2xl:row gap-8">
         <InstanceSelector
           selectedCategory={state.instanceCategory}
@@ -59,6 +66,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         <RegionsSelector
           selectedInstance={state.instance}
           selectedRegions={state.regions}
+          selectedRegionCategory={state.regionCategory}
           onRegionSelected={actions.regionSelected}
         />
       </div>
@@ -72,6 +80,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
 
           onNext();
         }}
+        disabled={state.regions.length === 0}
         className="self-start"
       >
         <Translate id="common.next" />

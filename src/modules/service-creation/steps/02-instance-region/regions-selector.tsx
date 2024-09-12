@@ -1,36 +1,44 @@
 import clsx from 'clsx';
 import sortBy from 'lodash-es/sortBy';
-import { useMemo } from 'react';
 
 import { SelectBox } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
-import { CatalogRegion } from 'src/api/model';
+import { CatalogRegion, RegionCategory } from 'src/api/model';
 import {
+  useRegionAvailabilities,
   useRegionAvailability,
   useRegionAvailabilityForInstance,
 } from 'src/application/instance-region-availability';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
+import { hasProperty } from 'src/utils/object';
 
 type RegionsSelectorProps = {
   selectedInstance?: string;
   selectedRegions: string[];
+  selectedRegionCategory: RegionCategory;
   onRegionSelected: (region: string) => void;
 };
 
 export function RegionsSelector({
   selectedInstance,
   selectedRegions,
+  selectedRegionCategory,
   onRegionSelected,
 }: RegionsSelectorProps) {
-  const regions = useRegions();
+  const availabilities = useRegionAvailabilities();
+
+  const regions = sortBy(useRegions().filter(hasProperty('category', selectedRegionCategory)), (region) =>
+    availabilities[region.identifier]?.[0] ? -1 : 1,
+  );
 
   return (
     <div className="flex-1">
       <RegionsList
         className="md:hidden"
         selectedInstance={selectedInstance}
+        regions={regions}
         selectedRegions={selectedRegions}
         onRegionSelected={onRegionSelected}
       />
@@ -52,15 +60,20 @@ export function RegionsSelector({
 }
 
 type RegionsListProps = {
+  regions: CatalogRegion[];
   selectedInstance?: string;
   selectedRegions: string[];
   onRegionSelected: (region: string) => void;
   className?: string;
 };
 
-function RegionsList({ selectedInstance, selectedRegions, onRegionSelected, className }: RegionsListProps) {
-  const regions = useSortedRegions();
-
+function RegionsList({
+  regions,
+  selectedInstance,
+  selectedRegions,
+  onRegionSelected,
+  className,
+}: RegionsListProps) {
   return (
     <ul className={clsx('gaps grid grid-cols-1 sm:grid-cols-2', className)}>
       {regions.map((region) => (
@@ -75,14 +88,6 @@ function RegionsList({ selectedInstance, selectedRegions, onRegionSelected, clas
       ))}
     </ul>
   );
-}
-
-function useSortedRegions() {
-  const regions = useRegions();
-
-  return useMemo(() => {
-    return sortBy(regions, ({ status }) => (status === 'available' ? -1 : 1));
-  }, [regions]);
 }
 
 type RegionItemProps = {

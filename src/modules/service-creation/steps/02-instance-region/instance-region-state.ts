@@ -2,17 +2,19 @@ import { useMemo, useReducer } from 'react';
 
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
-import { InstanceCategory, ServiceType } from 'src/api/model';
+import { InstanceCategory, RegionCategory, ServiceType } from 'src/api/model';
 import {
   useInstanceAvailabilities,
   useRegionAvailabilities,
 } from 'src/application/instance-region-availability';
 import { useSearchParam } from 'src/hooks/router';
+import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 type InstanceRegionState = {
   instance: string;
   instanceCategory: InstanceCategory;
+  regionCategory: RegionCategory;
   regions: string[];
 };
 
@@ -32,6 +34,9 @@ export function useInstanceRegionState() {
         },
         regionSelected: (region: string) => {
           dispatch({ type: 'region-selected', region });
+        },
+        regionCategorySelected: (category: RegionCategory) => {
+          dispatch({ type: 'region-category-selected', category });
         },
       }),
       [dispatch],
@@ -54,7 +59,16 @@ type RegionSelected = {
   region: string;
 };
 
-type InstanceRegionAction = InstanceSelected | InstanceCategorySelected | RegionSelected;
+type RegionCategorySelected = {
+  type: 'region-category-selected';
+  category: RegionCategory;
+};
+
+type InstanceRegionAction =
+  | InstanceSelected
+  | InstanceCategorySelected
+  | RegionSelected
+  | RegionCategorySelected;
 
 function useStateReducer() {
   const organization = useOrganization();
@@ -82,11 +96,11 @@ function useStateReducer() {
   function reducer(state: InstanceRegionState, action: InstanceRegionAction): InstanceRegionState {
     const next = { ...state };
 
-    if (action?.type === 'instance-selected') {
+    if (action.type === 'instance-selected') {
       next.instance = action.instance;
     }
 
-    if (action?.type === 'instance-category-selected') {
+    if (action.type === 'instance-category-selected') {
       const instancesInCategory = instances.filter(hasProperty('category', action.category));
 
       const firstAvailableInstancesInCategory = instancesInCategory.find((instance) => {
@@ -100,7 +114,7 @@ function useStateReducer() {
       next.instanceCategory = action.category;
     }
 
-    if (action?.type === 'region-selected') {
+    if (action.type === 'region-selected') {
       if (next.instance === 'free') {
         next.regions = [action.region];
       } else {
@@ -117,13 +131,27 @@ function useStateReducer() {
       }
     }
 
+    if (action.type === 'region-category-selected') {
+      const firstAvailableRegion = regions.find((region) => {
+        return region.category === action.category && regionAvailabilities[region.identifier]?.[0];
+      });
+
+      next.regionCategory = action.category;
+      next.regions = firstAvailableRegion ? [firstAvailableRegion.identifier] : [];
+    }
+
     if (state.instance !== next.instance) {
       const selectedInstance = instances.find(hasProperty('identifier', next.instance));
 
       next.regions = next.regions.filter((region) => isRegionAvailable(region, next.instance));
 
       if (next.regions.length === 0) {
-        next.regions = [selectedInstance?.regions?.[0] ?? 'fra'];
+        const region = regions.find(hasProperty('identifier', selectedInstance?.regions?.[0] ?? 'fra'));
+
+        assert(region !== undefined);
+
+        next.regionCategory = region.category;
+        next.regions = [region.identifier];
       }
     }
 
@@ -134,6 +162,7 @@ function useStateReducer() {
     const state: InstanceRegionState = {
       instance: 'nano',
       instanceCategory: 'standard',
+      regionCategory: 'koyeb',
       regions: ['fra'],
     };
 

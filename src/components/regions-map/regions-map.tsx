@@ -1,10 +1,6 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 
-import { TabButton, TabButtons } from '@koyeb/design-system';
-import { CatalogRegion, RegionCategory } from 'src/api/model';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { hasProperty } from 'src/utils/object';
+import { CatalogRegion } from 'src/api/model';
 
 import map from './map.png';
 
@@ -46,29 +42,13 @@ type RegionsMapProps = {
 };
 
 export function RegionsMap({ regions, className, renderRegion }: RegionsMapProps) {
-  const [category, setCategory] = useState<RegionCategory>('koyeb');
-  const awsRegions = useFeatureFlag('aws-regions');
-
   return (
-    <>
-      {awsRegions && (
-        <TabButtons>
-          <TabButton selected={category === 'koyeb'} onClick={() => setCategory('koyeb')}>
-            Koyeb
-          </TabButton>
-          <TabButton selected={category === 'aws'} onClick={() => setCategory('aws')}>
-            AWS
-          </TabButton>
-        </TabButtons>
-      )}
-
-      <div className={clsx('relative mx-auto size-fit', className)}>
-        <img src={map} />
-        {regions.filter(hasProperty('category', category)).map((region) => (
-          <RegionItem key={region.identifier} region={region} renderRegion={renderRegion} />
-        ))}
-      </div>
-    </>
+    <div className={clsx('relative mx-auto size-fit', className)}>
+      <img src={map} />
+      {regions.map((region) => (
+        <RegionItem key={region.identifier} region={region} renderRegion={renderRegion} />
+      ))}
+    </div>
   );
 }
 
