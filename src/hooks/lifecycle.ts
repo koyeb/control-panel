@@ -63,11 +63,11 @@ export function useObserve<T>(value: T, cb: (value: T) => void) {
   }, [valueMemo]);
 }
 
-export const useDeepCompareMemo = <T>(value: T) => {
+export function useDeepCompareMemo<T>(value: T) {
   return useMemo(() => value, useDeepCompareMemoize([value]));
-};
+}
 
-const useDeepCompareMemoize = (value: React.DependencyList) => {
+function useDeepCompareMemoize(value: React.DependencyList) {
   const ref = useRef<React.DependencyList>([]);
 
   if (!deepEqual(value, ref.current)) {
@@ -75,4 +75,4 @@ const useDeepCompareMemoize = (value: React.DependencyList) => {
   }
 
   return ref.current;
-};
+}
