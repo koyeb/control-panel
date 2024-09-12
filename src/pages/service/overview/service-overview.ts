@@ -8,8 +8,8 @@ import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment'
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
 import { isUpcomingDeployment } from 'src/application/service-functions';
 import { useAccessToken } from 'src/application/token';
-import { useObserve, usePrevious } from 'src/hooks/lifecycle';
-import { useSearchParam } from 'src/hooks/router';
+import { useMount, useObserve, usePrevious } from 'src/hooks/lifecycle';
+import { HistoryState, useHistoryState, useSearchParam } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
 import { AssertionError, assert, defined } from 'src/utils/assert';
 import { isDefined } from 'src/utils/generic';
@@ -138,6 +138,15 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
     if (length > 0) {
       setListExpanded(true);
       setUpcomingExpanded(true);
+    }
+  });
+
+  const historyState: HistoryState = useHistoryState();
+
+  useMount(() => {
+    if (historyState.expandDeploymentsList) {
+      setListExpanded(true);
+      setPastExpanded(true);
     }
   });
 

@@ -25,7 +25,9 @@ export function ServiceSettingsPage() {
       <ServiceForm
         serviceId={serviceId}
         onSubmitted={(appId, serviceId, deploymentId) =>
-          navigate(routes.service.overview(serviceId, deploymentId))
+          navigate(routes.service.overview(serviceId, deploymentId), {
+            state: { expandDeploymentsList: true },
+          })
         }
         onCostChanged={setCost}
       />

@@ -20,9 +20,7 @@ export function useRouteParam(name: string) {
   return useParams()[name] as string;
 }
 
-type HistoryState = {
-  clearCache?: boolean;
-};
+export type HistoryState = Record<string, unknown> | undefined;
 
 type NavigateOptions = {
   replace?: boolean;
