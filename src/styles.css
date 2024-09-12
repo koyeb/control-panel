@@ -136,6 +136,10 @@
 .intercom-contact-us {
 }
 
+.intercom-lightweight-app {
+  z-index: 30;
+}
+
 /* hide reCAPTCHA badge */
 .grecaptcha-badge {
   visibility: hidden;
