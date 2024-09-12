@@ -6,6 +6,7 @@ import { api } from 'src/api/api';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
+import { useApiQueryFn } from 'src/api/use-api';
 import { isUpcomingDeployment } from 'src/application/service-functions';
 import { useAccessToken } from 'src/application/token';
 import { useMount, useObserve, usePrevious } from 'src/hooks/lifecycle';
@@ -26,6 +27,7 @@ type QueriesState = {
   hasMoreDeployments: boolean;
   isLoadingMoreDeployments: boolean;
   loadMoreDeployments: () => void;
+  refetchDeployments: () => void;
   instances: Instance[];
 };
 
@@ -58,6 +60,7 @@ export function useServiceOverview(serviceId: string): ServiceOverview {
     hasMoreDeployments,
     isLoadingMoreDeployments,
     loadMoreDeployments,
+    refetchDeployments,
   } = useDeployments(serviceId);
 
   assert(deployments.every(isComputeDeployment), new AssertionError('Unexpected deployment type'));
@@ -104,6 +107,7 @@ export function useServiceOverview(serviceId: string): ServiceOverview {
     hasMoreDeployments,
     isLoadingMoreDeployments,
     loadMoreDeployments,
+    refetchDeployments,
     ...state,
     ...actions,
   };
@@ -144,7 +148,7 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
   const historyState: HistoryState = useHistoryState();
 
   useMount(() => {
-    if (historyState.expandDeploymentsList) {
+    if (historyState?.expandDeploymentsList) {
       setListExpanded(true);
       setPastExpanded(true);
     }
@@ -174,8 +178,7 @@ function useDeployments(serviceId: string) {
   const { token } = useAccessToken();
 
   const deploymentsQuery = useInfiniteQuery({
-    queryKey: ['listDeployments', { token, serviceId }],
-    initialPageParam: 0,
+    ...useApiQueryFn('listDeployments', { query: { service_id: serviceId } }),
     async queryFn({ pageParam }) {
       const { count, deployments } = await api.listDeployments({
         token,
@@ -187,6 +190,7 @@ function useDeployments(serviceId: string) {
         deployments: mapDeployments({ deployments }),
       };
     },
+    initialPageParam: 0,
     getNextPageParam: (lastPage, pages, lastPageParam) => {
       const nextPage = lastPageParam + 1;
 
@@ -207,6 +211,7 @@ function useDeployments(serviceId: string) {
     hasMoreDeployments: deploymentsQuery.hasNextPage,
     isLoadingMoreDeployments: deploymentsQuery.isFetchNextPageError,
     loadMoreDeployments: () => void deploymentsQuery.fetchNextPage(),
+    refetchDeployments: () => void deploymentsQuery.refetch(),
   };
 }
 

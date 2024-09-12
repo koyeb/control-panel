@@ -16,6 +16,7 @@ export type ApiDeploymentNeonPostgresDatabaseInfo = Api.components['schemas']['D
 export type ApiDeploymentScaling = Api.components['schemas']['DeploymentScaling'];
 export type ApiDeploymentScalingTarget = Api.components['schemas']['DeploymentScalingTarget'];
 export type ApiDeploymentStage = Api.components['schemas']['DeploymentProvisioningInfo.Stage'];
+export type ApiDeploymentStatus = Api.components['schemas']['Deployment.Status'];
 export type ApiDockerBuilder = Api.components['schemas']['DockerBuilder'];
 export type ApiDockerSource = Api.components['schemas']['DockerSource'];
 export type ApiDomain = Api.components['schemas']['Domain'];

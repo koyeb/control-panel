@@ -17,6 +17,7 @@ import { usePathname, useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { Translate } from 'src/intl/translate';
 
+import { LatestDeploymentStashedAlert } from './latest-deployment-stashed-alert';
 import { RedeployButton } from './redeploy-button';
 import { ServiceErrorAlert } from './service-error-alert';
 
@@ -32,6 +33,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   const serviceQuery = useServiceQuery(serviceId);
   const appQuery = useAppQuery(serviceQuery.data?.appId);
   const activeDeploymentQuery = useDeploymentQuery(serviceQuery.data?.activeDeploymentId);
+  const latestDeploymentQuery = useDeploymentQuery(serviceQuery.data?.latestDeploymentId);
   const serviceName = useServiceName(serviceId);
 
   if (appQuery.isPending || serviceQuery.isPending) {
@@ -53,6 +55,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   const app = appQuery.data;
   const service = serviceQuery.data;
   const activeDeployment = activeDeploymentQuery.data;
+  const latestDeployment = latestDeploymentQuery.data;
 
   return (
     <div className="col gap-8">
@@ -65,6 +68,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
 
       <ServiceErrorAlert service={service} />
       <ServicePausedAlert service={service} />
+      <LatestDeploymentStashedAlert service={service} latestDeployment={latestDeployment} />
 
       <Navigation />
 
