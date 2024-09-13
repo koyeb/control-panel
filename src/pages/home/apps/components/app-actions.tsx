@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, ButtonMenuItem, Dialog, MenuItem } from '@koyeb/design-system';
+import { Alert, Button, ButtonMenuItem, Dialog, MenuItem } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { App, AppDomain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -161,6 +161,8 @@ function EditAppDialog({ app, open, onClose }: EditAppDialogProps) {
       width="lg"
     >
       <form className="col gap-4" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
+        <Alert variant="warning" description={<T id="appActions.editAppNameWarning" />} />
+
         <ControlledInput control={form.control} name="name" label={<T id="editAppDialog.appNameLabel" />} />
 
         <ControlledInput

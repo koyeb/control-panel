@@ -1150,6 +1150,7 @@
       "titleExpanded": "Edit service name",
       "titleServiceNameMissing": "The service name is missing",
       "description": "Service name",
+      "editServiceNameWarning": "If you change the service name, your service will be assigned a new private address on the service mesh. The public URL will remain identical.",
       "serviceNameLabel": "Name",
       "serviceNameTooltip": "Give a name to easily identify this service inside your app"
     },
@@ -1420,6 +1421,7 @@
         "addService": "Add service",
         "addDomain": "Add domain",
         "edit": "Edit app",
+        "editAppNameWarning": "If you change the app name, your app's services will be assigned a new private address on the service mesh. The public URL will not be changed.",
         "pauseServices": "Pause all services",
         "deleteApp": "Delete app"
       },
