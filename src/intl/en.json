@@ -1840,6 +1840,7 @@
           "skipBuild": {
             "title": "Use previous build",
             "description": "Reuse the previous build for faster deployment if unchanged build process",
+            "latestStashed": "Your latest deployment is stashed, which requires to trigger a build",
             "cta": "Skip build"
           },
           "triggerBuild": {

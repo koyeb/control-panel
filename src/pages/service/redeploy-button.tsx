@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button, Dialog, Tooltip } from '@koyeb/design-system';
 import { useDeployment } from 'src/api/hooks/service';
 import { App, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -20,8 +20,11 @@ const T = Translate.prefix('pages.service.layout');
 
 export function RedeployButton({ app, service }: { app: App; service: Service }) {
   const latestDeployment = useDeployment(service.latestDeploymentId);
+  const latestStashed = latestDeployment?.status === 'stashed';
+
   const pathname = usePathname();
   const navigate = useNavigate();
+
   const t = T.useTranslate();
 
   const [open, setOpen] = useState(false);
@@ -106,16 +109,26 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
                   </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  onClick={() => {
-                    form.setValue('useCache', false);
-                    form.setValue('skipBuild', true);
-                  }}
+                <Tooltip
+                  content={latestStashed && <T id="redeployDialog.skipBuild.latestStashed" />}
+                  className="z-40"
                 >
-                  <T id="redeployDialog.skipBuild.cta" />
-                  <IconArrowRight className="size-4" />
-                </Button>
+                  {(props) => (
+                    <div {...props}>
+                      <Button
+                        type="submit"
+                        disabled={latestStashed}
+                        onClick={() => {
+                          form.setValue('useCache', false);
+                          form.setValue('skipBuild', true);
+                        }}
+                      >
+                        <T id="redeployDialog.skipBuild.cta" />
+                        <IconArrowRight className="size-4" />
+                      </Button>
+                    </div>
+                  )}
+                </Tooltip>
               </div>
 
               <div className="col items-start gap-4 rounded-md border p-3">
