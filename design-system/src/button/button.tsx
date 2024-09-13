@@ -48,7 +48,7 @@ type IconButtonNodeProps = {
 type IconButtonProps = ButtonProps & (IconButtonComponentProps | IconButtonNodeProps);
 
 export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
-  { variant = 'outline', className, children, ...props },
+  { variant = 'outline', size = 2, className, children, ...props },
   ref,
 ) {
   // prettier-ignore
@@ -61,7 +61,16 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
     }
 
     if (Icon !== undefined) {
-      return <Icon className={clsx('size-5', variant !== 'solid' && 'text-dim')} />;
+      return (
+        <Icon
+          className={clsx({
+            'text-dim': variant !== 'solid',
+            'size-4': size === 1,
+            'size-5': size === 2,
+            'size-6': size === 3,
+          })}
+        />
+      );
     }
   };
 
@@ -71,7 +80,15 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
         <Button
           ref={mergeRefs(ref, tooltipRef)}
           variant={variant}
-          className={clsx('!px-2', className)}
+          size={size}
+          className={clsx(
+            {
+              '!px-1': size === 1,
+              '!px-2': size === 2,
+              '!px-3': size === 3,
+            },
+            className,
+          )}
           {...rest}
           {...tooltip}
         >
