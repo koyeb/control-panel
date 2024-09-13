@@ -107,7 +107,6 @@ const instance = createFactory<CatalogInstance>(() => ({
 
 const environmentVariable = createFactory<EnvironmentVariable>(() => ({
   name: '',
-  type: 'plaintext',
   value: '',
 }));
 

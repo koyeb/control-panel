@@ -205,7 +205,7 @@ function usePageContext(): PageContextProps {
 
   return {
     enabled,
-    expanded,
+    expanded: enabled && expanded,
     setExpanded,
   };
 }

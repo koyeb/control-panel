@@ -329,8 +329,8 @@ function EnvironmentVariables({ definition }: { definition: DeploymentDefinition
   );
 }
 
-function formatEnvironmentVariable({ name, type, value }: EnvironmentVariable) {
-  return `${name}=${type === 'secret' ? '@' : ''}${value}`;
+function formatEnvironmentVariable({ name, value }: EnvironmentVariable) {
+  return `${name}=${value}`;
 }
 
 function getEnvString(environmentVariables: EnvironmentVariable[]): string {

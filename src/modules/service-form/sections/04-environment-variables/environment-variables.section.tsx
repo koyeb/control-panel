@@ -77,11 +77,7 @@ export function EnvironmentVariablesSection() {
           </div>
 
           <div className="col sm:row items-start gap-4">
-            <Button
-              variant="ghost"
-              color="gray"
-              onClick={() => append({ name: '', type: 'plaintext', value: '' })}
-            >
+            <Button variant="ghost" color="gray" onClick={() => append({ name: '', value: '' })}>
               <IconPlus className="size-4" />
               <T id="addVariable" />
             </Button>
