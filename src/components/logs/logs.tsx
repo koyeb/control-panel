@@ -153,7 +153,7 @@ function LogsFooter({ appName, serviceName, expired, lines, form }: LogsFooterPr
           </div>
         )}
         renderFloating={(ref, props) => (
-          <Menu ref={ref} {...props}>
+          <Menu ref={ref} className={clsx(form.watch('fullScreen') && 'z-50')} {...props}>
             {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
               <MenuItem key={option}>
                 <ControlledCheckbox
