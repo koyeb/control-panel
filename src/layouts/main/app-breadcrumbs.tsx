@@ -32,7 +32,7 @@ export function AppBreadcrumbs() {
       <Switch>
         <CrumbRoute path="/services" label={<T id="services" />} link={routes.services()} />
         <CrumbRoute path="/volumes" label={<T id="volumes" />} link={routes.volumes()} />
-        <CrumbRoute path="/domains" label={<T id="domains" />} link={routes.deploy()} />
+        <CrumbRoute path="/domains" label={<T id="domains" />} link={routes.domains()} />
         <CrumbRoute path="/secrets" label={<T id="secrets" />} link={routes.secrets()} />
         <CrumbRoute path="/activity" label={<T id="activity" />} link={routes.activity()} />
         <CrumbRoute path="/team" label={<T id="team" />} link={routes.team()} />
