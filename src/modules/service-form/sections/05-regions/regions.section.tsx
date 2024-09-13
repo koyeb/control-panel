@@ -1,9 +1,12 @@
+import { useRef } from 'react';
+
 import { useRegion, useRegions } from 'src/api/hooks/catalog';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { Translate } from 'src/intl/translate';
+import { hasProperty } from 'src/utils/object';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { useWatchServiceForm } from '../../use-service-form';
@@ -15,7 +18,9 @@ import { RegionsList } from './regions-list';
 const T = Translate.prefix('serviceForm.regions');
 
 export function RegionsSection() {
-  const regions = useRegions();
+  const firstRegion = useRegion(useWatchServiceForm('regions')[0]);
+  const category = useRef(firstRegion?.category ?? 'koyeb');
+  const regions = useRegions().filter(hasProperty('category', category.current));
 
   return (
     <ServiceFormSection

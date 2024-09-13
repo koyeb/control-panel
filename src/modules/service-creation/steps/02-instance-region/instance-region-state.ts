@@ -133,7 +133,7 @@ function useStateReducer() {
 
     if (action.type === 'region-category-selected') {
       const firstAvailableRegion = regions.find((region) => {
-        return region.category === action.category && regionAvailabilities[region.identifier]?.[0];
+        return region.category === action.category && isRegionAvailable(region.identifier, state.instance);
       });
 
       next.regionCategory = action.category;
