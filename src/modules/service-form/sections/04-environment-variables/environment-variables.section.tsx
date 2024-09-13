@@ -102,9 +102,11 @@ export function EnvironmentVariablesSection() {
         open={createSecretIndex !== undefined}
         onClose={() => setCreateSecretIndex(undefined)}
         onCreated={(secretName) => {
-          setValue(`environmentVariables.${createSecretIndex as number}.value`, secretName, {
-            shouldValidate: true,
-          });
+          setValue(
+            `environmentVariables.${createSecretIndex as number}.value`,
+            `{{ secret.${secretName} }}`,
+            { shouldValidate: true },
+          );
 
           setCreateSecretIndex(undefined);
         }}

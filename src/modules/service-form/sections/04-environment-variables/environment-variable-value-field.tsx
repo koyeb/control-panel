@@ -36,7 +36,11 @@ type EnvironmentVariableValueFieldProps = {
   label?: React.ReactNode;
 };
 
-export function EnvironmentVariableValueField({ index, label }: EnvironmentVariableValueFieldProps) {
+export function EnvironmentVariableValueField({
+  index,
+  onCreateSecret,
+  label,
+}: EnvironmentVariableValueFieldProps) {
   const t = T.useTranslate();
 
   const id = useId();
@@ -80,13 +84,29 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
       },
       selectedItem: null,
       onSelectedItemChange({ selectedItem }) {
-        field.onChange(field.value.replace(regexp, '') + `{{ ${selectedItem} }}`);
+        if (selectedItem === '__new_secret__') {
+          onCreateSecret();
+        } else {
+          let value = field.value;
+
+          if (value.match(regexp)) {
+            value = value.replace(regexp, '');
+          } else {
+            value = '';
+          }
+
+          field.onChange(value + `{{ ${selectedItem} }}`);
+        }
       },
       stateReducer(state, { type, changes }) {
         const { InputClick, InputChange } = useCombobox.stateChangeTypes;
 
-        if (type === InputClick || type === InputChange) {
+        if (type === InputClick) {
           return { ...changes, isOpen: false };
+        }
+
+        if (type === InputChange) {
+          return { ...changes, isOpen: state.isOpen };
         }
 
         return changes;
@@ -129,7 +149,7 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}
         getKey={identity}
-        renderItem={identity}
+        renderItem={(item) => (item === '__new_secret__' ? <T id="createSecret" /> : item)}
         renderNoItems={() => <T id="noVariablesToInterpolate" />}
       />
     </Field>
@@ -137,27 +157,23 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
 }
 
 function mapServiceVariables({ secrets, system_env, user_env }: Record<string, string[]>) {
-  return [...sort([...system_env!, ...user_env!]), ...secrets!.map((name) => `secret.${name}`)].filter(
-    (value) => value !== '',
-  );
+  return [
+    '__new_secret__',
+    ...sort([...system_env!, ...user_env!]),
+    ...secrets!.map((name) => `secret.${name}`),
+  ].filter((value) => value !== '');
 }
 
 const regexp = /\{\{ *([-.a-zA-Z0-9]*)$/;
 
 function filterItems(items: string[], variableName: string, inputValue: string) {
-  const match = regexp.exec(inputValue);
+  const match = regexp.exec(inputValue)?.[1] ?? inputValue;
 
-  if (!match) {
-    return items;
-  }
-
-  const search = lowerCase(match[1] as string);
-
-  if (search === '') {
+  if (match === '') {
     return items;
   }
 
   return items.filter((item) => {
-    return item !== variableName && lowerCase(item).includes(search);
+    return item !== variableName && item !== '__new_secret__' && lowerCase(item).includes(lowerCase(match));
   });
 }
