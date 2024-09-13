@@ -769,6 +769,7 @@
     "gpuAlert": "Serverless GPUs are available in public preview. <cta>Get started now</cta>.",
     "submitButton": {
       "deploy": "Deploy",
+      "saveDeploy": "Save and deploy",
       "withBuild": {
         "label": "With build",
         "description": "Recommended if your changes alter the build process"

@@ -67,7 +67,7 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
 
   const deployWithoutBuildOptionsButton = (
     <Button type="submit" disabled={disabled} loading={loading && !saveOnly}>
-      <T id="deploy" />
+      <T id={isNewService ? 'deploy' : 'saveDeploy'} />
     </Button>
   );
 
@@ -85,7 +85,7 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
           loading={loading && !saveOnly}
           onClick={() => setMenuOpen(true)}
         >
-          <T id="deploy" />
+          <T id={isNewService ? 'deploy' : 'saveDeploy'} />
           <div>
             <IconChevronDown />
           </div>
