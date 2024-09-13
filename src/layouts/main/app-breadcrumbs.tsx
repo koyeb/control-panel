@@ -1,10 +1,14 @@
+import clsx from 'clsx';
+import { useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
 
-import { useAppQuery, useServiceQuery } from 'src/api/hooks/service';
+import { Floating, Menu, MenuItem } from '@koyeb/design-system';
+import { useAppQuery, useServiceQuery, useServices } from 'src/api/hooks/service';
 import { routes } from 'src/application/routes';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
-import { IconHouse } from 'src/components/icons';
+import { IconCheck, IconChevronDown, IconHouse } from 'src/components/icons';
+import { Link } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { usePathname } from 'src/hooks/router';
@@ -126,34 +130,9 @@ function UserSettingsCrumbs() {
 }
 
 function ServiceCrumbs({ serviceId }: { serviceId: string }) {
-  const serviceQuery = useServiceQuery(serviceId);
-  const appQuery = useAppQuery(serviceQuery.data?.appId);
-
-  if (!appQuery.isSuccess || !serviceQuery.isSuccess) {
-    return <Crumb label={<TextSkeleton width={8} />} link="#" />;
-  }
-
-  const app = appQuery.data;
-  const service = serviceQuery.data;
-
   return (
     <>
-      <Crumb
-        label={
-          <span className="row max-w-48 items-center gap-2 sm:max-w-96 lg:max-w-none">
-            <div>
-              <ServiceStatusDot status={service.status} className="size-2" />
-            </div>
-            <div className="direction-rtl truncate">
-              <Translate
-                id="common.appServiceName"
-                values={{ appName: app.name, serviceName: service.name }}
-              />
-            </div>
-          </span>
-        }
-        link={routes.service.overview(serviceId)}
-      />
+      <Crumb label={<AppService serviceId={serviceId} />} link={routes.service.overview(serviceId)} />
 
       <CrumbRoute
         path="/services/:serviceId/metrics"
@@ -177,24 +156,9 @@ function ServiceCrumbs({ serviceId }: { serviceId: string }) {
 }
 
 function DatabaseServiceCrumbs({ serviceId }: { serviceId: string }) {
-  const serviceQuery = useServiceQuery(serviceId);
-  const appQuery = useAppQuery(serviceQuery.data?.appId);
-
-  if (!appQuery.isSuccess || !serviceQuery.isSuccess) {
-    return <Crumb label={<TextSkeleton width={8} />} link="#" />;
-  }
-
-  const app = appQuery.data;
-  const service = serviceQuery.data;
-
   return (
     <>
-      <Crumb
-        label={
-          <Translate id="common.appServiceName" values={{ appName: app.name, serviceName: service.name }} />
-        }
-        link={routes.database.overview(serviceId)}
-      />
+      <Crumb label={<AppService serviceId={serviceId} />} link={routes.database.overview(serviceId)} />
 
       <CrumbRoute
         path="/database-services/:serviceId/databases"
@@ -222,5 +186,83 @@ function CrumbRoute({ path, ...props }: { path: string } & React.ComponentProps<
     <Route path={path}>
       <Crumb {...props} />
     </Route>
+  );
+}
+
+function AppService({ serviceId }: { serviceId: string }) {
+  const serviceQuery = useServiceQuery(serviceId);
+  const appQuery = useAppQuery(serviceQuery.data?.appId);
+
+  if (!appQuery.isSuccess || !serviceQuery.isSuccess) {
+    return <Crumb label={<TextSkeleton width={8} />} link="#" />;
+  }
+
+  const app = appQuery.data;
+  const service = serviceQuery.data;
+
+  return (
+    <span className="row max-w-48 items-center gap-2 sm:max-w-96 lg:max-w-none">
+      <div>
+        <ServiceStatusDot status={service.status} className="size-2" />
+      </div>
+
+      <div className="direction-rtl truncate">
+        <Translate id="common.appServiceName" values={{ appName: app.name, serviceName: service.name }} />
+      </div>
+
+      <ServiceSwitcherMenu appId={appQuery.data?.id} serviceId={serviceId} />
+    </span>
+  );
+}
+
+function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: string }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const appServices = useServices(appId);
+
+  return (
+    <Floating
+      open={menuOpen}
+      setOpen={setMenuOpen}
+      placement="bottom-start"
+      offset={8}
+      renderReference={(ref, props) => (
+        <button
+          ref={ref}
+          type="button"
+          onClick={(event) => {
+            event.preventDefault();
+            setMenuOpen(true);
+          }}
+          className={clsx({ hidden: !appServices || appServices.length <= 1 })}
+          {...props}
+        >
+          <IconChevronDown className="text-icon size-4" />
+        </button>
+      )}
+      renderFloating={(ref, props) => (
+        <Menu ref={ref} className="min-w-48" {...props}>
+          {appServices?.map((service) => (
+            <MenuItem
+              key={service.id}
+              element={Link}
+              href={
+                service.type === 'database'
+                  ? routes.database.overview(service.id)
+                  : routes.service.overview(service.id)
+              }
+              onClick={() => setMenuOpen(false)}
+            >
+              <div>
+                <ServiceStatusDot status={service.status} className="size-2" />
+              </div>
+
+              {service.name}
+
+              {service.id === serviceId && <IconCheck className="text-icon ml-auto size-4" />}
+            </MenuItem>
+          ))}
+        </Menu>
+      )}
+    />
   );
 }

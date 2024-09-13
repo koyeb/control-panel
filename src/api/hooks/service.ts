@@ -30,15 +30,15 @@ export function useApp(appId?: string) {
   return useAppQuery(appId).data;
 }
 
-export function useServicesQuery() {
+export function useServicesQuery(appId?: string) {
   return useQuery({
-    ...useApiQueryFn('listServices', { query: { limit: '100' } }),
+    ...useApiQueryFn('listServices', { query: { limit: '100', app_id: appId } }),
     select: mapServices,
   });
 }
 
-export function useServices() {
-  return useServicesQuery().data;
+export function useServices(appId?: string) {
+  return useServicesQuery(appId).data;
 }
 
 export function useServiceQuery(serviceId?: string) {
