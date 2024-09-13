@@ -8,14 +8,16 @@ import { useController } from 'react-hook-form';
 
 import {
   Dropdown,
-  useDropdown,
   Field,
   FieldHelperText,
   FieldLabel,
+  IconButton,
   InputBox,
+  useDropdown,
   useId,
 } from '@koyeb/design-system';
 import { useApiQueryFn } from 'src/api/use-api';
+import { IconBraces } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
@@ -35,6 +37,8 @@ type EnvironmentVariableValueFieldProps = {
 };
 
 export function EnvironmentVariableValueField({ index, label }: EnvironmentVariableValueFieldProps) {
+  const t = T.useTranslate();
+
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
@@ -57,31 +61,37 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
   const variableName = useWatchServiceForm(`environmentVariables.${index}.name`);
   const filteredItems = filterItems(variablesQuery.data ?? [], variableName, field.value);
 
-  const { highlightedIndex, getLabelProps, getInputProps, getMenuProps, getItemProps } = useCombobox({
-    isOpen,
-    id,
-    itemToString: String,
-    items: filteredItems,
-    inputValue: field.value,
-    onInputValueChange({ inputValue, type }) {
-      if (type === useCombobox.stateChangeTypes.InputChange) {
-        field.onChange(inputValue);
-        setIsOpen(regexp.test(inputValue));
-      }
-    },
-    selectedItem: null,
-    onSelectedItemChange({ selectedItem }) {
-      field.onChange(field.value.replace(regexp, '') + `{{ ${selectedItem} }}`);
-      setIsOpen(false);
-    },
-    stateReducer(state, { type, changes }) {
-      if (type === useCombobox.stateChangeTypes.InputBlur) {
-        setIsOpen(false);
-      }
+  const { highlightedIndex, getLabelProps, getInputProps, getMenuProps, getItemProps, toggleMenu } =
+    useCombobox({
+      isOpen,
+      onIsOpenChange: ({ isOpen }) => setIsOpen(isOpen),
+      id,
+      itemToString: String,
+      items: filteredItems,
+      inputValue: field.value,
+      onInputValueChange({ inputValue, type }) {
+        if (type === useCombobox.stateChangeTypes.InputChange) {
+          field.onChange(inputValue);
 
-      return changes;
-    },
-  });
+          if (regexp.test(inputValue)) {
+            setIsOpen(true);
+          }
+        }
+      },
+      selectedItem: null,
+      onSelectedItemChange({ selectedItem }) {
+        field.onChange(field.value.replace(regexp, '') + `{{ ${selectedItem} }}`);
+      },
+      stateReducer(state, { type, changes }) {
+        const { InputClick, InputChange } = useCombobox.stateChangeTypes;
+
+        if (type === InputClick || type === InputChange) {
+          return { ...changes, isOpen: false };
+        }
+
+        return changes;
+      },
+    });
 
   const dropdown = useDropdown(isOpen);
 
@@ -104,6 +114,8 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
         boxRef={dropdown.setReference}
         boxClassName={clsx(isOpen && '!rounded-b-none')}
         className="peer"
+        placeholder={t('valuePlaceholder')}
+        end={<IconButton variant="ghost" color="gray" size={1} Icon={IconBraces} onClick={toggleMenu} />}
         aria-invalid={fieldState.invalid}
         aria-errormessage={helperTextId}
         {...getInputProps(field)}
@@ -136,7 +148,7 @@ function filterItems(items: string[], variableName: string, inputValue: string) 
   const match = regexp.exec(inputValue);
 
   if (!match) {
-    return [];
+    return items;
   }
 
   const search = lowerCase(match[1] as string);

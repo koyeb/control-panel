@@ -1054,6 +1054,7 @@
       "plaintext": "Plaintext",
       "secret": "Secret",
       "valueLabel": "Value",
+      "valuePlaceholder": "Value or '{{' REF }}",
       "noVariablesToInterpolate": "No matching variables",
       "secretLabel": "Secret",
       "addVariable": "Add another",
