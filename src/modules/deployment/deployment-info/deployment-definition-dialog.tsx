@@ -52,7 +52,13 @@ export function DeploymentDefinitionDialog({ open, onClose, deployment }: Deploy
 }
 
 function DeploymentJson({ definition }: { definition: object }) {
-  return <Json value={definition} className="overflow-auto rounded-md bg-muted p-2 dark:bg-neutral" />;
+  return (
+    <Json
+      value={definition}
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
+      className="scrollbar-green max-h-[32rem] overflow-auto rounded-md bg-muted p-2 dark:bg-neutral"
+    />
+  );
 }
 
 function DeploymentParsed({ deployment: { definition } }: { deployment: ComputeDeployment }) {
