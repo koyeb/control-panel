@@ -1,7 +1,6 @@
 import { SelectBox } from '@koyeb/design-system';
 import { RegionCategory } from 'src/api/model';
 import Logo from 'src/components/logo.svg?react';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import aws from 'src/icons/aws.png';
 import { Translate } from 'src/intl/translate';
 
@@ -13,10 +12,6 @@ type RegionCategorySelectorProps = {
 };
 
 export function RegionCategorySelector({ value, onChange }: RegionCategorySelectorProps) {
-  if (!useFeatureFlag('aws-regions')) {
-    return null;
-  }
-
   return (
     <div className="col md:row gap-4">
       <SelectBox
