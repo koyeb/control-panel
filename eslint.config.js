@@ -42,6 +42,7 @@ export default [
       },
       tailwindcss: {
         classRegex: '^class(Name|Names|es)?$',
+        whitelist: ['intercom-contact-us'],
       },
     },
     rules: {

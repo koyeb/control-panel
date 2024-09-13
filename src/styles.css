@@ -133,11 +133,8 @@
   }
 }
 
-.intercom-contact-us {
-}
-
 .intercom-lightweight-app {
-  z-index: 30;
+  z-index: 30 !important;
 }
 
 /* hide reCAPTCHA badge */
