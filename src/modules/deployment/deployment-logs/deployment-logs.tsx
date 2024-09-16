@@ -114,18 +114,10 @@ function getInitialPhase(deployment: ComputeDeployment): DeploymentPhase | null 
 }
 
 function canToggleBuild(deployment: ComputeDeployment) {
-  if (deployment.status === 'canceled') {
-    return false;
-  }
-
   return deployment.buildSkipped || deployment.build !== undefined;
 }
 
 function canToggleRuntime(deployment: ComputeDeployment) {
-  if (deployment.status === 'canceled') {
-    return false;
-  }
-
   return !hasBuild(deployment) || deployment.buildSkipped || deployment.build?.status === 'completed';
 }
 
