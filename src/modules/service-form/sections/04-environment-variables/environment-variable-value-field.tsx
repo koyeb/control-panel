@@ -17,7 +17,7 @@ import {
   useId,
 } from '@koyeb/design-system';
 import { useApiQueryFn } from 'src/api/use-api';
-import { IconBraces } from 'src/components/icons';
+import { IconChevronDown } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
@@ -119,7 +119,7 @@ export function EnvironmentVariableValueField({
     <Field
       label={
         label && (
-          <FieldLabel htmlFor={id} {...getLabelProps()}>
+          <FieldLabel htmlFor={id} helpTooltip={<T id="valueTooltip" />} {...getLabelProps()}>
             {label}
           </FieldLabel>
         )
@@ -135,7 +135,16 @@ export function EnvironmentVariableValueField({
         boxClassName={clsx(isOpen && '!rounded-b-none')}
         className="peer"
         placeholder={t('valuePlaceholder')}
-        end={<IconButton variant="ghost" color="gray" size={1} Icon={IconBraces} onClick={toggleMenu} />}
+        end={
+          <IconButton
+            variant="ghost"
+            color="gray"
+            size={1}
+            Icon={IconChevronDown}
+            onClick={toggleMenu}
+            className={clsx(isOpen && 'rotate-180')}
+          />
+        }
         aria-invalid={fieldState.invalid}
         aria-errormessage={helperTextId}
         {...getInputProps(field)}

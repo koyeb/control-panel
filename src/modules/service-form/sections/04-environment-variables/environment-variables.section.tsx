@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { Button, HelpTooltip } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
@@ -60,9 +60,6 @@ export function EnvironmentVariablesSection() {
         <div className="col gaps">
           <p>
             <T id="info" />
-            <HelpTooltip className="ml-2">
-              <T id="infoTooltip" />
-            </HelpTooltip>
           </p>
 
           <div className="col gap-4">
