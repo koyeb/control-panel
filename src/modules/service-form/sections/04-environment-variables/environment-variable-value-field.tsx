@@ -17,6 +17,7 @@ import {
   useId,
 } from '@koyeb/design-system';
 import { useApiQueryFn } from 'src/api/use-api';
+import { DocumentationLink } from 'src/components/documentation-link';
 import { IconChevronDown } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
 import { useDebouncedValue } from 'src/hooks/timers';
@@ -115,11 +116,25 @@ export function EnvironmentVariableValueField({
 
   const dropdown = useDropdown(isOpen);
 
+  const tooltip = (
+    <T
+      id="valueTooltip"
+      values={{
+        documentationLink: (children) => (
+          <DocumentationLink path="/docs/build-and-deploy/environment-variables#environment-variable-interpolation">
+            {children}
+          </DocumentationLink>
+        ),
+        code: (children) => <code>{children}</code>,
+      }}
+    />
+  );
+
   return (
     <Field
       label={
         label && (
-          <FieldLabel htmlFor={id} helpTooltip={<T id="valueTooltip" />} {...getLabelProps()}>
+          <FieldLabel htmlFor={id} helpTooltip={tooltip} {...getLabelProps()}>
             {label}
           </FieldLabel>
         )
