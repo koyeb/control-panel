@@ -222,6 +222,172 @@ describe('parseDeployParams', () => {
     });
   });
 
+  describe('scaling', () => {
+    it('min scaling only', () => {
+      test.params.set('instances_min', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling', { type: 'fixed', fixed: 1 });
+    });
+
+    it('max scaling only', () => {
+      test.params.set('instances_max', '2');
+
+      expect(test.getValues()).toHaveProperty('scaling', { type: 'fixed', fixed: 2 });
+    });
+
+    it('both with min < max', () => {
+      test.params.set('instances_min', '1');
+      test.params.set('instances_max', '2');
+
+      expect(test.getValues()).toHaveProperty('scaling', {
+        type: 'autoscaling',
+        autoscaling: { min: 1, max: 2 },
+      });
+    });
+
+    it('both with min = max', () => {
+      test.params.set('instances_min', '2');
+      test.params.set('instances_max', '2');
+
+      expect(test.getValues()).toHaveProperty('scaling', { type: 'fixed', fixed: 2 });
+    });
+
+    it('both with min > max', () => {
+      test.params.set('instances_min', '2');
+      test.params.set('instances_max', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling', {
+        type: 'autoscaling',
+        autoscaling: { min: 1, max: 2 },
+      });
+    });
+
+    it('invalid scaling', () => {
+      test.params.set('instances_min', 'nope');
+
+      expect(test.getValues()).not.toHaveProperty('scaling');
+    });
+
+    it('min < 0', () => {
+      test.params.set('instances_min', '-1');
+
+      expect(test.getValues()).not.toHaveProperty('scaling');
+    });
+
+    it('max <= 0', () => {
+      test.params.set('instances_max', '0');
+
+      expect(test.getValues()).not.toHaveProperty('scaling');
+    });
+
+    it('min >= 10', () => {
+      test.params.set('instances_min', '10');
+
+      expect(test.getValues()).not.toHaveProperty('scaling');
+    });
+
+    it('max >= 10', () => {
+      test.params.set('instances_max', '11');
+
+      expect(test.getValues()).not.toHaveProperty('scaling');
+    });
+  });
+
+  describe('autoscaling', () => {
+    it('autoscaling_average_cpu', () => {
+      test.params.set('autoscaling_average_cpu', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.cpu', {
+        enabled: true,
+        value: 1,
+      });
+    });
+
+    it('autoscaling_average_mem', () => {
+      test.params.set('autoscaling_average_mem', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.memory', {
+        enabled: true,
+        value: 1,
+      });
+    });
+
+    it('autoscaling_requests_per_second', () => {
+      test.params.set('autoscaling_requests_per_second', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.requests', {
+        enabled: true,
+        value: 1,
+      });
+    });
+
+    it('autoscaling_concurrent_requests', () => {
+      test.params.set('autoscaling_concurrent_requests', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.concurrentRequests', {
+        enabled: true,
+        value: 1,
+      });
+    });
+
+    it('autoscaling_requests_response_time', () => {
+      test.params.set('autoscaling_requests_response_time', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.responseTime', {
+        enabled: true,
+        value: 1,
+      });
+    });
+  });
+
+  describe('health checks', () => {
+    it('health check common options', () => {
+      test.params.set('hc_grace_period[1]', '1');
+      test.params.set('hc_interval[1]', '2');
+      test.params.set('hc_restart_limit[1]', '3');
+      test.params.set('hc_timeout[1]', '4');
+
+      expect(test.getValues()).toHaveProperty('ports.0.healthCheck', {
+        gracePeriod: 1,
+        interval: 2,
+        restartLimit: 3,
+        timeout: 4,
+      });
+    });
+
+    it('tcp health check options', () => {
+      test.params.set('hc_protocol[1]', 'tcp');
+
+      expect(test.getValues()).toHaveProperty('ports.0.healthCheck', {
+        protocol: 'tcp',
+      });
+    });
+
+    it('http health check options', () => {
+      test.params.set('hc_protocol[1]', 'http');
+      test.params.set('hc_path[1]', '/health');
+      test.params.set('hc_method[1]', 'POST');
+
+      expect(test.getValues()).toHaveProperty('ports.0.healthCheck', {
+        protocol: 'http',
+        path: '/health',
+        method: 'post',
+      });
+    });
+
+    it('invalid health check protocol', () => {
+      test.params.set('hc_protocol[1]', 'websocket');
+
+      expect(test.getValues()).not.toHaveProperty('ports');
+    });
+
+    it('invalid health check method', () => {
+      test.params.set('hc_method[1]', 'FETCH');
+
+      expect(test.getValues()).not.toHaveProperty('ports');
+    });
+  });
+
   describe('git options', () => {
     beforeEach(() => {
       test.params.set('type', 'git');
