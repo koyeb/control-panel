@@ -1,6 +1,6 @@
 {
   "name": "@koyeb/design-system",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "repository": "git@github.com:koyeb/console.koyeb.com.git",
   "packageManager": "pnpm@9.4.0",
