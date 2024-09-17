@@ -17,19 +17,22 @@ export function TabButtons({ className, children }: TabButtonsProps) {
 
 type TabButtonProps = {
   selected: boolean;
+  disabled?: boolean;
   panelId?: string;
   onClick?: () => void;
   className?: string;
   children?: React.ReactNode;
 };
 
-export function TabButton({ selected, panelId, onClick, className, children }: TabButtonProps) {
+export function TabButton({ selected, disabled, panelId, onClick, className, children }: TabButtonProps) {
   return (
     <button
       type="button"
       role="tab"
+      disabled={disabled}
       className={clsx(
         'col focusable flex-1 items-center whitespace-nowrap rounded px-3 py-2 font-medium transition-all',
+        'disabled:pointer-events-none disabled:opacity-50',
         !selected && 'text-dim hover:bg-neutral/50 hover:text-default',
         selected && 'bg-neutral',
         className,
