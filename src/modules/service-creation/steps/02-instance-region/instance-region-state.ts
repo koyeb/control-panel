@@ -1,21 +1,24 @@
+import sortBy from 'lodash-es/sortBy';
 import { useMemo, useReducer } from 'react';
 
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
-import { InstanceCategory, RegionCategory, ServiceType } from 'src/api/model';
+import { CatalogInstance, CatalogRegion, InstanceCategory, RegionCategory, ServiceType } from 'src/api/model';
 import {
   useInstanceAvailabilities,
   useRegionAvailabilities,
 } from 'src/application/instance-region-availability';
 import { useSearchParam } from 'src/hooks/router';
-import { assert } from 'src/utils/assert';
+import { defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 type InstanceRegionState = {
-  instance: string;
+  instances: CatalogInstance[];
+  regions: CatalogRegion[];
+  selectedInstance: CatalogInstance | null;
   instanceCategory: InstanceCategory;
   regionCategory: RegionCategory;
-  regions: string[];
+  selectedRegions: CatalogRegion[];
 };
 
 export function useInstanceRegionState() {
@@ -26,13 +29,13 @@ export function useInstanceRegionState() {
     state,
     useMemo(
       () => ({
-        instanceSelected: (instance: string) => {
+        instanceSelected: (instance: CatalogInstance) => {
           dispatch({ type: 'instance-selected', instance });
         },
         instanceCategorySelected: (category: InstanceCategory) => {
           dispatch({ type: 'instance-category-selected', category });
         },
-        regionSelected: (region: string) => {
+        regionSelected: (region: CatalogRegion) => {
           dispatch({ type: 'region-selected', region });
         },
         regionCategorySelected: (category: RegionCategory) => {
@@ -46,7 +49,7 @@ export function useInstanceRegionState() {
 
 type InstanceSelected = {
   type: 'instance-selected';
-  instance: string;
+  instance: CatalogInstance;
 };
 
 type InstanceCategorySelected = {
@@ -56,7 +59,7 @@ type InstanceCategorySelected = {
 
 type RegionSelected = {
   type: 'region-selected';
-  region: string;
+  region: CatalogRegion;
 };
 
 type RegionCategorySelected = {
@@ -79,14 +82,20 @@ function useStateReducer() {
   const instanceAvailabilities = useInstanceAvailabilities({ serviceType });
   const regionAvailabilities = useRegionAvailabilities();
 
-  function isRegionAvailable(regionIdentifier: string, instanceIdentifier: string) {
-    const region = regions.find(hasProperty('identifier', regionIdentifier));
+  function isInstanceAvailable(instance: CatalogInstance) {
+    return Boolean(instanceAvailabilities[instance.identifier]?.[0]);
+  }
 
-    if (!regionAvailabilities[regionIdentifier]?.[0]) {
+  function isRegionAvailable(region: CatalogRegion, instance: CatalogInstance | null) {
+    if (!regionAvailabilities[region.identifier]?.[0]) {
       return false;
     }
 
-    if (region?.instances !== undefined && !region.instances.includes(instanceIdentifier)) {
+    if (
+      instance !== null &&
+      region?.instances !== undefined &&
+      !region.instances.includes(instance.identifier)
+    ) {
       return false;
     }
 
@@ -96,29 +105,27 @@ function useStateReducer() {
   function reducer(state: InstanceRegionState, action: InstanceRegionAction): InstanceRegionState {
     const next = { ...state };
 
+    if (action.type === 'region-category-selected') {
+      next.regionCategory = action.category;
+
+      if (action.category === 'aws') {
+        next.instanceCategory = 'standard';
+      }
+    }
+
     if (action.type === 'instance-selected') {
-      next.instance = action.instance;
+      next.selectedInstance = action.instance;
     }
 
     if (action.type === 'instance-category-selected') {
-      const instancesInCategory = instances.filter(hasProperty('category', action.category));
-
-      const firstAvailableInstancesInCategory = instancesInCategory.find((instance) => {
-        return instanceAvailabilities[instance.identifier]?.[0];
-      });
-
-      const instance =
-        firstAvailableInstancesInCategory?.identifier ?? instancesInCategory[0]?.identifier ?? next.instance;
-
-      next.instance = instance;
       next.instanceCategory = action.category;
     }
 
     if (action.type === 'region-selected') {
-      if (next.instance === 'free') {
-        next.regions = [action.region];
+      if (next.selectedInstance?.identifier === 'free') {
+        next.selectedRegions = [action.region];
       } else {
-        const regions = [...next.regions];
+        const regions = [...next.selectedRegions];
         const index = regions.indexOf(action.region);
 
         if (index < 0) {
@@ -127,47 +134,74 @@ function useStateReducer() {
           regions.splice(index, 1);
         }
 
-        next.regions = regions;
+        next.selectedRegions = regions;
       }
     }
 
-    if (action.type === 'region-category-selected') {
-      const firstAvailableRegion = regions.find((region) => {
-        return region.category === action.category && isRegionAvailable(region.identifier, state.instance);
-      });
+    next.instances = instances.filter((instance) => {
+      return instance.regionCategory === next.regionCategory && instance.category === next.instanceCategory;
+    });
 
-      next.regionCategory = action.category;
-      next.regions = firstAvailableRegion ? [firstAvailableRegion.identifier] : [];
-    }
-
-    if (state.instance !== next.instance) {
-      const selectedInstance = instances.find(hasProperty('identifier', next.instance));
-
-      next.regions = next.regions.filter((region) => isRegionAvailable(region, next.instance));
-
-      if (next.regions.length === 0) {
-        const region = regions.find(hasProperty('identifier', selectedInstance?.regions?.[0] ?? 'fra'));
-
-        assert(region !== undefined);
-
-        next.regionCategory = region.category;
-        next.regions = [region.identifier];
+    if (next.selectedInstance) {
+      if (!next.instances.includes(next.selectedInstance) || !isInstanceAvailable(next.selectedInstance)) {
+        next.selectedInstance = null;
       }
     }
+
+    if (next.selectedInstance === null) {
+      const firstAvailableInstance = next.instances.find(isInstanceAvailable);
+
+      if (firstAvailableInstance) {
+        next.selectedInstance = firstAvailableInstance;
+      }
+    }
+
+    next.regions = regions.filter((region) => {
+      return region.category === next.regionCategory;
+    });
+
+    next.selectedRegions = next.selectedRegions.filter((region) => {
+      return next.regions.includes(region) && isRegionAvailable(region, next.selectedInstance);
+    });
+
+    if (next.selectedRegions.length === 0 && action.type !== 'region-selected') {
+      const firstAvailableRegion = next.regions.find((region) =>
+        isRegionAvailable(region, next.selectedInstance),
+      );
+
+      if (firstAvailableRegion !== undefined) {
+        next.selectedRegions = [firstAvailableRegion];
+      }
+    }
+
+    if (next.selectedInstance?.identifier === 'free' && next.selectedRegions.length >= 2) {
+      next.selectedRegions = [defined(next.selectedRegions[0])];
+    }
+
+    next.regions = sortBy(next.regions, (region) =>
+      isRegionAvailable(region, next.selectedInstance) ? -1 : 1,
+    );
 
     return next;
   }
 
   function getInitialState() {
+    const free = defined(instances.find(hasProperty('identifier', 'free')));
+    const nano = defined(instances.find(hasProperty('identifier', 'nano')));
+    const fra = defined(regions.find(hasProperty('identifier', 'fra')));
+
     const state: InstanceRegionState = {
-      instance: 'nano',
+      instances: instances.filter(hasProperty('category', 'standard')),
+      regions: regions.filter(hasProperty('category', 'koyeb')),
+      selectedInstance: nano,
       instanceCategory: 'standard',
       regionCategory: 'koyeb',
-      regions: ['fra'],
+      selectedRegions: [fra],
     };
 
-    if (organization.plan === 'hobby' && instanceAvailabilities['free']?.[0]) {
-      state.instance = 'free';
+    if (organization.plan === 'hobby' && isInstanceAvailable(free)) {
+      state.instances = instances.filter(hasProperty('category', 'eco'));
+      state.selectedInstance = free;
       state.instanceCategory = 'eco';
     }
 

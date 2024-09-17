@@ -97,6 +97,7 @@ const instance = createFactory<CatalogInstance>(() => ({
   displayName: '',
   status: 'available',
   category: 'standard',
+  regionCategory: 'koyeb',
   cpu: 0,
   ram: '',
   disk: '',

@@ -47,7 +47,10 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
 
   return (
     <>
-      <InstanceRegionAlerts selectedInstance={state.instance} selectedRegions={state.regions} />
+      <InstanceRegionAlerts
+        selectedInstance={state.selectedInstance}
+        selectedRegions={state.selectedRegions}
+      />
 
       <Field label={<T id="regionCategorySelector.label" />} className="items-stretch">
         <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
@@ -55,8 +58,9 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
 
       <div className="col 2xl:row gap-8">
         <InstanceSelector
+          instances={state.instances}
           selectedCategory={state.instanceCategory}
-          selectedInstance={state.instance}
+          selectedInstance={state.selectedInstance}
           checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
           onCategorySelected={actions.instanceCategorySelected}
           onInstanceSelected={actions.instanceSelected}
@@ -64,9 +68,9 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         />
 
         <RegionsSelector
-          selectedInstance={state.instance}
-          selectedRegions={state.regions}
-          selectedRegionCategory={state.regionCategory}
+          regions={state.regions}
+          selectedInstance={state.selectedInstance}
+          selectedRegions={state.selectedRegions}
           onRegionSelected={actions.regionSelected}
         />
       </div>
@@ -74,13 +78,13 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
       <Button
         onClick={() => {
           navigate((url) => {
-            url.searchParams.set('instance_type', state.instance);
-            state.regions.forEach((region) => url.searchParams.append('regions', region));
+            url.searchParams.set('instance_type', state.selectedInstance?.identifier ?? 'nano');
+            state.selectedRegions.forEach((region) => url.searchParams.append('regions', region.identifier));
           });
 
           onNext();
         }}
-        disabled={state.regions.length === 0}
+        disabled={state.selectedRegions.length === 0}
         className="self-start"
       >
         <Translate id="common.next" />

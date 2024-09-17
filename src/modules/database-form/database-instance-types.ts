@@ -24,6 +24,7 @@ function createDatabaseInstanceType(
     identifier,
     status: 'available',
     category: 'standard',
+    regionCategory: 'koyeb',
     displayName,
     cpu,
     ram: ram + ' GB',

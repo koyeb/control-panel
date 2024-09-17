@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { Badge } from '@koyeb/design-system';
-import { useInstance, useInstances } from 'src/api/hooks/catalog';
+import { useInstance, useInstances, useRegion } from 'src/api/hooks/catalog';
 import {
   InstanceAvailability,
   useInstanceAvailabilities,
@@ -29,6 +29,9 @@ export function InstanceSection() {
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '').length > 0;
   const allowFreeInstanceIfAlreadyUsed = useWatchServiceForm('meta.allowFreeInstanceIfAlreadyUsed');
 
+  const regions = useWatchServiceForm('regions');
+  const firstRegion = useRegion(regions[0]);
+
   const availabilities = useInstanceAvailabilities({
     serviceType,
     hasVolumes,
@@ -52,6 +55,9 @@ export function InstanceSection() {
         name="instance"
         render={({ field }) => (
           <InstanceSelector
+            instances={instances
+              .filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))
+              .filter(hasProperty('category', field.value.category))}
             selectedCategory={field.value.category}
             checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
             onCategorySelected={(category) => {
@@ -64,8 +70,8 @@ export function InstanceSection() {
                 identifier: availableInstancesInCategory[0]?.identifier ?? null,
               } satisfies ServiceForm['instance']);
             }}
-            selectedInstance={field.value.identifier}
-            onInstanceSelected={(identifier) => {
+            selectedInstance={instances.find(hasProperty('identifier', field.value.identifier)) ?? null}
+            onInstanceSelected={({ identifier }) => {
               const instance = instances.find(hasProperty('identifier', identifier));
 
               if (!instance) {

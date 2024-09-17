@@ -41,6 +41,7 @@ export function mapCatalogInstancesList({
     plans: instance.require_plan!.length > 0 ? instance.require_plan! : undefined,
     regions: instance.regions!.length > 0 ? instance.regions! : undefined,
     category: instance.type! as InstanceCategory,
+    regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
     cpu: instance.vcpu_shares!,
     ram: instance.memory!,
     disk: instance.disk!,

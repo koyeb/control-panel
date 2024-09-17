@@ -90,6 +90,7 @@ export type CatalogInstance = {
   status: CatalogInstanceStatus;
   plans?: string[];
   regions?: string[];
+  regionCategory: RegionCategory;
   category: InstanceCategory;
   cpu: number;
   ram: string;

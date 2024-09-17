@@ -2,25 +2,25 @@ import clsx from 'clsx';
 import { useEffect, useRef } from 'react';
 
 import { Badge, Radio, TabButton, TabButtons } from '@koyeb/design-system';
-import { useInstances } from 'src/api/hooks/catalog';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
-import { hasProperty } from 'src/utils/object';
 
 const T = Translate.prefix('instanceSelector');
 
 type InstanceSelectorProps = {
+  instances: CatalogInstance[];
   selectedCategory: InstanceCategory;
   onCategorySelected: (category: InstanceCategory) => void;
-  selectedInstance: string | null;
-  onInstanceSelected: (instance: string) => void;
+  selectedInstance: CatalogInstance | null;
+  onInstanceSelected: (instance: CatalogInstance) => void;
   checkAvailability: (instance: string) => InstanceAvailability;
   className?: string;
 };
 
 export function InstanceSelector({
+  instances,
   selectedCategory,
   onCategorySelected,
   selectedInstance,
@@ -28,22 +28,22 @@ export function InstanceSelector({
   checkAvailability,
   className,
 }: InstanceSelectorProps) {
-  const instances = useInstances().filter(hasProperty('category', selectedCategory));
-
   return (
     <div className={clsx('col gap-3', className)}>
-      <TabButtons>
-        {(['eco', 'standard', 'gpu'] as const).map((category) => (
-          <TabButton
-            key={category}
-            selected={category === selectedCategory}
-            onClick={() => onCategorySelected(category)}
-            className="w-full"
-          >
-            <T id={`tabs.${category}`} />
-          </TabButton>
-        ))}
-      </TabButtons>
+      {instances[0]?.regionCategory === 'koyeb' && (
+        <TabButtons>
+          {(['eco', 'standard', 'gpu'] as const).map((category) => (
+            <TabButton
+              key={category}
+              selected={category === selectedCategory}
+              onClick={() => onCategorySelected(category)}
+              className="w-full"
+            >
+              <T id={`tabs.${category}`} />
+            </TabButton>
+          ))}
+        </TabButtons>
+      )}
 
       <div className="my-4">
         <T id={`descriptions.${selectedCategory}`} />
@@ -63,8 +63,8 @@ export function InstanceSelector({
 type InstanceSelectorListProps = {
   instances: readonly CatalogInstance[];
   selectedCategory?: InstanceCategory;
-  selectedInstance: string | null;
-  onInstanceSelected: (instance: string) => void;
+  selectedInstance: CatalogInstance | null;
+  onInstanceSelected: (instance: CatalogInstance) => void;
   checkAvailability: (instance: string) => InstanceAvailability;
 };
 
@@ -94,8 +94,8 @@ export function InstanceSelectorList({
           key={instance.identifier}
           instance={instance}
           availability={checkAvailability(instance.identifier)}
-          selected={selectedInstance === instance.identifier}
-          onSelected={() => onInstanceSelected(instance.identifier)}
+          selected={selectedInstance === instance}
+          onSelected={() => onInstanceSelected(instance)}
         />
       ))}
     </ul>

@@ -1,38 +1,28 @@
 import clsx from 'clsx';
-import sortBy from 'lodash-es/sortBy';
 
 import { SelectBox } from '@koyeb/design-system';
-import { useRegions } from 'src/api/hooks/catalog';
-import { CatalogRegion, RegionCategory } from 'src/api/model';
+import { CatalogInstance, CatalogRegion } from 'src/api/model';
 import {
-  useRegionAvailabilities,
   useRegionAvailability,
   useRegionAvailabilityForInstance,
 } from 'src/application/instance-region-availability';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
-import { hasProperty } from 'src/utils/object';
 
 type RegionsSelectorProps = {
-  selectedInstance?: string;
-  selectedRegions: string[];
-  selectedRegionCategory: RegionCategory;
-  onRegionSelected: (region: string) => void;
+  regions: CatalogRegion[];
+  selectedInstance: CatalogInstance | null;
+  selectedRegions: CatalogRegion[];
+  onRegionSelected: (region: CatalogRegion) => void;
 };
 
 export function RegionsSelector({
+  regions,
   selectedInstance,
   selectedRegions,
-  selectedRegionCategory,
   onRegionSelected,
 }: RegionsSelectorProps) {
-  const availabilities = useRegionAvailabilities();
-
-  const regions = sortBy(useRegions().filter(hasProperty('category', selectedRegionCategory)), (region) =>
-    availabilities[region.identifier]?.[0] ? -1 : 1,
-  );
-
   return (
     <div className="flex-1">
       <RegionsList
@@ -50,7 +40,7 @@ export function RegionsSelector({
           <RegionItem
             selectedInstance={selectedInstance}
             region={region}
-            selected={selectedRegions.includes(region.identifier)}
+            selected={selectedRegions.includes(region)}
             onSelected={onRegionSelected}
           />
         )}
@@ -61,9 +51,9 @@ export function RegionsSelector({
 
 type RegionsListProps = {
   regions: CatalogRegion[];
-  selectedInstance?: string;
-  selectedRegions: string[];
-  onRegionSelected: (region: string) => void;
+  selectedInstance: CatalogInstance | null;
+  selectedRegions: CatalogRegion[];
+  onRegionSelected: (region: CatalogRegion) => void;
   className?: string;
 };
 
@@ -81,8 +71,8 @@ function RegionsList({
           <RegionItem
             selectedInstance={selectedInstance}
             region={region}
-            selected={selectedRegions.includes(region.identifier)}
-            onSelected={() => onRegionSelected(region.identifier)}
+            selected={selectedRegions.includes(region)}
+            onSelected={() => onRegionSelected(region)}
           />
         </li>
       ))}
@@ -91,15 +81,18 @@ function RegionsList({
 }
 
 type RegionItemProps = {
-  selectedInstance?: string;
+  selectedInstance: CatalogInstance | null;
   region: CatalogRegion;
   selected: boolean;
-  onSelected: (region: string) => void;
+  onSelected: (region: CatalogRegion) => void;
 };
 
 function RegionItem({ selectedInstance, region, selected, onSelected }: RegionItemProps) {
   const [isAvailable] = useRegionAvailability(region.identifier);
-  const isAvailableForInstance = useRegionAvailabilityForInstance(region.identifier, selectedInstance);
+  const isAvailableForInstance = useRegionAvailabilityForInstance(
+    region.identifier,
+    selectedInstance?.identifier,
+  );
 
   return (
     <SelectBox
@@ -109,7 +102,7 @@ function RegionItem({ selectedInstance, region, selected, onSelected }: RegionIt
       title={region.displayName}
       description={<RegionLatency region={region} />}
       checked={selected}
-      onChange={() => onSelected(region.identifier)}
+      onChange={() => onSelected(region)}
       classes={{
         content: 'col gap-1 p-2',
         title: '!p-0',

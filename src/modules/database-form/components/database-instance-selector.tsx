@@ -1,3 +1,4 @@
+import { useInstance } from 'src/api/hooks/catalog';
 import { useOrganizationSummary } from 'src/api/hooks/session';
 import { InstanceSelectorList } from 'src/components/instance-selector';
 
@@ -14,6 +15,7 @@ export function DatabaseInstanceSelector({
   onChange,
   allowFreeInstanceIfAlreadyUsed,
 }: DatabaseInstanceSelectorProps) {
+  const instance = useInstance(value);
   const summary = useOrganizationSummary();
 
   return (
@@ -26,8 +28,8 @@ export function DatabaseInstanceSelector({
 
         return [true];
       }}
-      selectedInstance={value}
-      onInstanceSelected={onChange}
+      selectedInstance={instance ?? null}
+      onInstanceSelected={(instance) => onChange(instance.category)}
     />
   );
 }
