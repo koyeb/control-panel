@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { useService } from 'src/api/hooks/service';
 import { routes } from 'src/application/routes';
+import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
@@ -18,6 +19,7 @@ export function ServiceSettingsPage() {
   const service = defined(useService(serviceId));
 
   const [cost, setCost] = useState<ServiceCost>();
+  const [deployUrl, setDeployUrl] = useState<string>();
 
   return (
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
@@ -28,10 +30,12 @@ export function ServiceSettingsPage() {
           navigate(routes.service.overview(serviceId, deploymentId))
         }
         onCostChanged={setCost}
+        onDeployUrlChanged={setDeployUrl}
       />
 
-      <div className="max-w-sm xl:w-full">
+      <div className="col max-w-sm gap-8 xl:w-full">
         <ServiceEstimatedCost cost={cost} />
+        <DeployToKoyebButton deployUrl={deployUrl} />
       </div>
 
       <PauseServiceCard service={service} />

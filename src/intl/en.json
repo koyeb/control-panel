@@ -145,6 +145,10 @@
     "install": "Don't have Koyeb CLI installed yet? <link>Check out the installation instruction</link>",
     "reference": "Read the Koyeb CLI <link>reference</link>"
   },
+  "deployToKoyebButton": {
+    "title": "Deploy to Koyeb button",
+    "tooltip": "The \"Deploy to Koyeb\" button allows you to deploy applications from a GitHub repository or Docker image with a single click. It offers a fast deployment option to share your services with your team and users."
+  },
   "documentTitle": "{prefix, select, undefined {Koyeb} other {{prefix} - Koyeb}}",
   "deploymentFailedInfo": {
     "labels": {

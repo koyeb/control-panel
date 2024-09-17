@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { routes } from 'src/application/routes';
+import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
@@ -30,6 +31,7 @@ export function DeployServiceForm() {
   const [serviceId] = useSearchParam('serviceId');
 
   const [cost, setCost] = useState<ServiceCost>();
+  const [deployUrl, setDeployUrl] = useState<string>();
 
   return (
     <div className="col gap-6">
@@ -46,10 +48,12 @@ export function DeployServiceForm() {
           className="grow"
           onSubmitted={(appId, serviceId) => navigate(routes.initialDeployment(serviceId))}
           onCostChanged={setCost}
+          onDeployUrlChanged={setDeployUrl}
         />
 
-        <div className="shrink-0 xl:basis-80">
+        <div className="col shrink-0 gap-8 xl:basis-80">
           <ServiceEstimatedCost cost={cost} />
+          <DeployToKoyebButton deployUrl={deployUrl} />
         </div>
       </div>
     </div>

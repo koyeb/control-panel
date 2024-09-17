@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
 import { useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
@@ -52,6 +52,7 @@ type ServiceFormProps = {
   className?: string;
   onSubmitted: (appId: string, serviceId: string, deploymentId: string) => void;
   onCostChanged?: (cost: ServiceCost | undefined) => void;
+  onDeployUrlChanged?: (url: string) => void;
 };
 
 export function ServiceForm(props: ServiceFormProps) {
@@ -62,7 +63,14 @@ export function ServiceForm(props: ServiceFormProps) {
   );
 }
 
-function ServiceForm_({ appId, serviceId, className, onSubmitted, onCostChanged }: ServiceFormProps) {
+function ServiceForm_({
+  appId,
+  serviceId,
+  className,
+  onSubmitted,
+  onCostChanged,
+  onDeployUrlChanged,
+}: ServiceFormProps) {
   const organization = useOrganization();
   const instances = useInstances();
 
@@ -84,12 +92,17 @@ function ServiceForm_({ appId, serviceId, className, onSubmitted, onCostChanged 
 
   const showVolumes = useFeatureFlag('volumes');
   const cost = useEstimatedCost(useFormValues(form));
+  const deployUrl = useDeployUrl(form);
 
   useEffect(() => {
     onCostChanged?.(cost);
   }, [onCostChanged, cost]);
 
-  useGetDeployUrl(form);
+  useEffect(() => {
+    if (deployUrl !== undefined) {
+      onDeployUrlChanged?.(deployUrl);
+    }
+  }, [onDeployUrlChanged, deployUrl]);
 
   if (form.formState.isLoading) {
     return <ServiceFormSkeleton className={className} />;
@@ -212,18 +225,12 @@ function FetchServiceFormResources({ className, children }: FetchServiceFormReso
   return children;
 }
 
-declare global {
-  interface Window {
-    getDeployUrl?(): string;
-  }
-}
+function useDeployUrl({ formState, getValues }: UseFormReturn<ServiceForm>) {
+  return useMemo(() => {
+    if (formState.isLoading) {
+      return;
+    }
 
-function useGetDeployUrl({ getValues }: UseFormReturn<ServiceForm>) {
-  useEffect(() => {
-    window.getDeployUrl = () => {
-      const params = getDeployParams(getValues());
-      const url = `${window.location.origin}/deploy?${String(params)}`;
-      return url;
-    };
-  }, [getValues]);
+    return `${window.location.origin}/deploy?${getDeployParams(getValues()).toString()}`;
+  }, [formState, getValues]);
 }
