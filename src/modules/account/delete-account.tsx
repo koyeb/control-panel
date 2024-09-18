@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@koyeb/design-system';
 import { useOrganizationQuery, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -13,6 +14,8 @@ import { Translate } from 'src/intl/translate';
 const T = Translate.prefix('account.deleteAccount');
 
 export function DeleteAccount() {
+  const t = T.useTranslate();
+
   const user = useUserUnsafe();
   const { data: organization } = useOrganizationQuery();
   const canDelete = organization === undefined;
@@ -29,6 +32,7 @@ export function DeleteAccount() {
     onSuccess() {
       clearToken();
       navigate(routes.signIn());
+      notify.success(t('successNotification'));
     },
   });
 

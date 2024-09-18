@@ -70,6 +70,7 @@
       "description": "Once this operation is performed, your account will be permanently deleted",
       "mustLeaveOrganizations": "You must leave or delete all your organizations before you can delete your account",
       "cta": "Delete",
+      "successNotification": "Your Koyeb account was deleted",
       "confirmationDialog": {
         "title": "Delete account",
         "description": "Your user account will be deleted. Are you sure?",
