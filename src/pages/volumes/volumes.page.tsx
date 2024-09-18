@@ -8,11 +8,10 @@ import { DocumentTitle } from 'src/components/document-title';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
 import { IconArrowRight } from 'src/components/icons';
-import { ExternalLinkButton, LinkButton } from 'src/components/link';
+import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 
 import { CreateVolumeDialog } from './create-volume-dialog';
@@ -22,46 +21,24 @@ const T = Translate.prefix('pages.volumes');
 
 export function VolumesPage() {
   const organization = useOrganization();
-  const volumesEnabled = useFeatureFlag('volumes');
-
-  if (volumesEnabled === undefined) {
-    return <Loading />;
-  }
-
-  const unavailableProps: React.ComponentProps<typeof FeatureUnavailable> = {
-    preview: 'technical',
-    title: <T id="unavailable.title" />,
-    subTitle: <T id="unavailable.subTitle" />,
-    description: <T id="unavailable.description" />,
-    cta: (
-      <ExternalLinkButton
-        openInNewTab
-        href="https://app.reclaim.ai/m/edouard/koyeb-volumes-technical-preview"
-      >
-        <T id="unavailable.cta" />
-      </ExternalLinkButton>
-    ),
-    documentationLink: (
-      <DocumentationLink path="/docs/reference/volumes">
-        <T id="unavailable.learnMore" />
-      </DocumentationLink>
-    ),
-  };
-
-  if (!volumesEnabled) {
-    return <FeatureUnavailable {...unavailableProps} />;
-  }
 
   if (organization.plan === 'hobby') {
     return (
       <FeatureUnavailable
-        {...unavailableProps}
-        description={<T id="unavailable.descriptionHobby" />}
+        preview="public"
+        title={<T id="unavailable.title" />}
+        subTitle={<T id="unavailable.subTitle" />}
+        description={<T id="unavailable.description" />}
         cta={
           <LinkButton href={routes.organizationSettings.plans()}>
-            <T id="unavailable.ctaHobby" />
+            <T id="unavailable.cta" />
             <IconArrowRight className="size-icon" />
           </LinkButton>
+        }
+        documentationLink={
+          <DocumentationLink path="/docs/reference/volumes">
+            <T id="unavailable.learnMore" />
+          </DocumentationLink>
         }
       />
     );

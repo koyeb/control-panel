@@ -24,7 +24,9 @@ export function FeatureUnavailable({
   return (
     <>
       {preview !== undefined && (
-        <BadgeNew className="mb-2">{preview === 'technical' && <T id={`${preview}Preview`} />}</BadgeNew>
+        <BadgeNew className="mb-2">
+          <T id={`${preview}Preview`} />
+        </BadgeNew>
       )}
 
       <Title title={title} />

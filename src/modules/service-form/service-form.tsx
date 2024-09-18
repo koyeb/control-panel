@@ -15,7 +15,6 @@ import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { PaymentDialog } from 'src/components/payment-form';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -90,7 +89,6 @@ function ServiceForm_({
     },
   });
 
-  const showVolumes = useFeatureFlag('volumes');
   const cost = useEstimatedCost(useFormValues(form));
   const deployUrl = useDeployUrl(form);
 
@@ -137,7 +135,7 @@ function ServiceForm_({
           />
 
           <div className="rounded-lg border">
-            {getServiceFormSections(form.watch(), showVolumes).map((section) => {
+            {getServiceFormSections(form.watch()).map((section) => {
               const Component = sectionComponents[section];
               return <Component key={section} />;
             })}

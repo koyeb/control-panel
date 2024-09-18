@@ -8,7 +8,6 @@ import { formatBytes } from 'src/application/memory';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
@@ -23,7 +22,6 @@ type QuotaItem = {
 
 export function OrganizationQuotas() {
   const organization = useOrganization();
-  const hasVolumes = useFeatureFlag('volumes');
 
   const generalQuota = useGeneralQuotaItems();
   const instanceTypeQuota = useInstanceTypeQuotaItems();
@@ -49,13 +47,11 @@ export function OrganizationQuotas() {
           quotas={instanceTypeQuota}
         />
 
-        {hasVolumes && (
-          <QuotasSection
-            resourceLabel={<T id="volumes" />}
-            quotaLabel={<T id="quota" />}
-            quotas={volumesQuota}
-          />
-        )}
+        <QuotasSection
+          resourceLabel={<T id="volumes" />}
+          quotaLabel={<T id="quota" />}
+          quotas={volumesQuota}
+        />
       </div>
 
       {organization.plan !== 'hobby' && (

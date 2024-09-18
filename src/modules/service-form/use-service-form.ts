@@ -6,7 +6,6 @@ import { FieldPath, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { useTranslate } from 'src/intl/translate';
 
@@ -42,8 +41,7 @@ export function useServiceForm(appId?: string, serviceId?: string) {
     resolver: zodResolver(serviceFormSchema(translate)),
   });
 
-  const showVolumes = useFeatureFlag('volumes');
-  const sections = !form.formState.isLoading ? getServiceFormSections(form.watch(), showVolumes) : [];
+  const sections = !form.formState.isLoading ? getServiceFormSections(form.watch()) : [];
 
   useTriggerInstanceValidationOnLoad(form);
   useExpandFirstSectionInError(form, sections);

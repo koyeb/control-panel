@@ -1,7 +1,6 @@
 import { useFormContext, useFormState } from 'react-hook-form';
 
 import { BaseServiceFormSection } from 'src/components/base-service-form-section';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 
 import { getServiceFormSectionIndex, sectionHasError } from '../helpers/service-form-sections';
 import { ServiceForm, type ServiceFormSection } from '../service-form.types';
@@ -23,21 +22,19 @@ export function ServiceFormSection({ section, ...props }: ServiceFormSectionProp
   const { setValue, watch } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
 
-  const showVolumes = useFeatureFlag('volumes');
-
   return (
     <BaseServiceFormSection
       expanded={expanded}
       expand={() => setValue('meta.expandedSection', expanded ? null : section)}
-      shortcut={getShortcut(watch(), section, showVolumes)}
+      shortcut={getShortcut(watch(), section)}
       hasError={sectionHasError(section, errors)}
       {...props}
     />
   );
 }
 
-function getShortcut(values: ServiceForm, section: ServiceFormSection, showVolumes?: boolean) {
-  const value = getServiceFormSectionIndex(values, section, showVolumes) + 1;
+function getShortcut(values: ServiceForm, section: ServiceFormSection) {
+  const value = getServiceFormSectionIndex(values, section) + 1;
 
   if (value <= 10) {
     return value % 10;
