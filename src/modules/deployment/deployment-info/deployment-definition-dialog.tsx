@@ -53,11 +53,15 @@ export function DeploymentDefinitionDialog({ open, onClose, deployment }: Deploy
 
 function DeploymentJson({ definition }: { definition: object }) {
   return (
-    <Json
-      value={definition}
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className="scrollbar-green max-h-[32rem] overflow-auto rounded-md bg-muted p-2 dark:bg-neutral"
-    />
+    <div className="relative">
+      <Json
+        value={definition}
+        // eslint-disable-next-line tailwindcss/no-arbitrary-value
+        className="scrollbar-green max-h-[32rem] overflow-auto rounded-md bg-muted p-2 dark:bg-neutral"
+      />
+
+      <CopyIconButton text={JSON.stringify(definition)} className="text-icon absolute end-6 top-4 size-4" />
+    </div>
   );
 }
 
