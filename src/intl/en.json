@@ -45,6 +45,7 @@
       "immediate": "Immediate"
     },
     "deploymentBuildStep": {
+      "archive-clone": "Retrieve archive",
       "git-clone": "Clone repository",
       "analyze": "Analyze",
       "detect": "Detect runtime",

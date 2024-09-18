@@ -66,9 +66,5 @@ export function Elapsed({ start, finish }: { start: string; finish?: string | nu
 
   const elapsed = (end.getTime() - new Date(start).getTime()) / 1000;
 
-  if (finish) {
-    return elapsed;
-  }
-
-  return Math.floor(elapsed);
+  return Math.ceil(elapsed);
 }
