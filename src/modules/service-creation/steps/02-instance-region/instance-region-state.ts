@@ -191,7 +191,9 @@ function useStateReducer() {
     const fra = defined(regions.find(hasProperty('identifier', 'fra')));
 
     const state: InstanceRegionState = {
-      instances: instances.filter(hasProperty('category', 'standard')),
+      instances: instances
+        .filter(hasProperty('regionCategory', 'koyeb'))
+        .filter(hasProperty('category', 'standard')),
       regions: regions.filter(hasProperty('category', 'koyeb')),
       selectedInstance: nano,
       instanceCategory: 'standard',
