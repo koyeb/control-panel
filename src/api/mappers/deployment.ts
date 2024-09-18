@@ -169,7 +169,8 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
   const environmentVariables = (): DeploymentDefinition['environmentVariables'] => {
     return definition.env!.map(({ key, value, secret }) => ({
       name: key!,
-      value: value ?? `@${secret}`,
+      value: secret ?? value!,
+      type: secret ? 'secret' : 'plaintext',
     }));
   };
 

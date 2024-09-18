@@ -17,11 +17,13 @@ describe('parseEnvironmentVariables', () => {
     port = create.environmentVariable({
       name: 'PORT',
       value: '8000',
+      type: 'plaintext',
     });
 
     host = create.environmentVariable({
       name: 'HOST',
       value: 'localhost',
+      type: 'plaintext',
     });
   });
 
@@ -53,6 +55,7 @@ describe('parseEnvironmentVariables', () => {
     expect(parseEnvironmentVariables(input, [])).toEqual([
       create.environmentVariable({
         name: 'TEST',
+        type: 'plaintext',
         value: 'abc=123',
       }),
     ]);
@@ -75,7 +78,8 @@ describe('parseEnvironmentVariables', () => {
 
     const token = create.environmentVariable({
       name: 'TOKEN',
-      value: '{{ secrets.api-token }}',
+      value: 'api-token',
+      type: 'secret',
     });
 
     const tokenSecret = create.simpleSecret({ name: 'api-token' });
@@ -97,6 +101,7 @@ describe('parseEnvironmentVariables', () => {
       {
         name: 'KEY',
         value: 'I\'m not a "cat"',
+        type: 'plaintext',
       },
     ]);
   });
@@ -109,6 +114,7 @@ describe('parseEnvironmentVariables', () => {
       {
         name: 'CERT',
         value,
+        type: 'plaintext',
       },
     ]);
   });
@@ -123,11 +129,13 @@ describe('stringifyEnvironmentVariables', () => {
     const port = create.environmentVariable({
       name: 'PORT',
       value: '8000',
+      type: 'plaintext',
     });
 
     const host = create.environmentVariable({
       name: 'HOST',
       value: 'localhost',
+      type: 'plaintext',
     });
 
     expect(stringifyEnvironmentVariables([host, port])).toEqual('HOST=localhost\nPORT=8000\n');
@@ -137,6 +145,7 @@ describe('stringifyEnvironmentVariables', () => {
     const variable = create.environmentVariable({
       name: '',
       value: '',
+      type: 'plaintext',
     });
 
     expect(stringifyEnvironmentVariables([variable])).toEqual('');
@@ -145,16 +154,18 @@ describe('stringifyEnvironmentVariables', () => {
   test('secrets', () => {
     const token = create.environmentVariable({
       name: 'TOKEN',
-      value: '{{ secrets.api-token }}',
+      value: 'api-token',
+      type: 'secret',
     });
 
-    expect(stringifyEnvironmentVariables([token])).toEqual('TOKEN={{ secrets.api-token }}\n');
+    expect(stringifyEnvironmentVariables([token])).toEqual('TOKEN=@api-token\n');
   });
 
   test('multiline value', () => {
     const token = create.environmentVariable({
       name: 'TOKEN',
       value: 'hello\nworld',
+      type: 'plaintext',
     });
 
     expect(stringifyEnvironmentVariables([token])).toEqual('TOKEN="hello\nworld"\n');
@@ -164,6 +175,7 @@ describe('stringifyEnvironmentVariables', () => {
     const token = create.environmentVariable({
       name: 'TOKEN',
       value: 'hello\n"world"',
+      type: 'plaintext',
     });
 
     expect(stringifyEnvironmentVariables([token])).toEqual('TOKEN=\'hello\n"world"\'\n');
@@ -173,6 +185,7 @@ describe('stringifyEnvironmentVariables', () => {
     const token = create.environmentVariable({
       name: 'TOKEN',
       value: 'hello\n"\'world\'"',
+      type: 'plaintext',
     });
 
     expect(stringifyEnvironmentVariables([token])).toEqual('TOKEN=`hello\n"\'world\'"`\n');

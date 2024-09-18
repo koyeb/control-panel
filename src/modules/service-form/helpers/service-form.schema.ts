@@ -40,7 +40,7 @@ export function serviceFormSchema(translate: TranslateFn) {
     builder: builder(),
     dockerDeployment: dockerDeployment(),
     environmentVariables: z
-      .array(environmentVariable())
+      .array(environmentVariable(t))
       .transform((variables) => variables.filter((variable) => variable.name !== '')),
     regions: regions(),
     instance: instance(),
@@ -125,11 +125,19 @@ function dockerDeployment() {
   });
 }
 
-function environmentVariable() {
-  return z.object({
-    name: z.string(),
-    value: z.string(),
-  });
+function environmentVariable(t: TranslateErrorFunction) {
+  return z.discriminatedUnion('type', [
+    z.object({
+      type: z.literal('plaintext'),
+      name: z.string(),
+      value: z.string(),
+    }),
+    z.object({
+      type: z.literal('secret'),
+      name: z.string(),
+      value: z.string().min(1, t('environmentVariable.secretValue')),
+    }),
+  ]);
 }
 
 function regions() {

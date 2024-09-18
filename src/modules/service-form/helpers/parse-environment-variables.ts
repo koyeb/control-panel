@@ -65,12 +65,14 @@ function getEnvironmentVariable(
 
     return {
       name,
-      value: `{{ secrets.${value} }}`,
+      value,
+      type: 'secret',
     };
   } else {
     return {
       name,
       value,
+      type: 'plaintext',
     };
   }
 }
@@ -88,8 +90,8 @@ export function stringifyEnvironmentVariables(variables: EnvironmentVariable[]):
   return result;
 }
 
-function stringifyVariable({ name, value }: EnvironmentVariable): string {
-  return `${name}=${stringifyValue(value)}`;
+function stringifyVariable({ name, value, type }: EnvironmentVariable): string {
+  return `${name}=${type === 'secret' ? '@' : ''}${stringifyValue(value)}`;
 }
 
 function stringifyValue(value: string): string {

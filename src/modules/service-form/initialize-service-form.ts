@@ -237,6 +237,7 @@ export function defaultServiceForm(): ServiceForm {
     environmentVariables: [
       {
         name: '',
+        type: 'plaintext',
         value: '',
       },
     ],
