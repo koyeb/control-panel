@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ApiDeploymentDefinition } from 'src/api/api-types';
+import { ApiDeploymentDefinition, ApiPersistentVolume } from 'src/api/api-types';
 
 import { HealthCheck } from '../service-form.types';
 
@@ -18,7 +18,7 @@ describe('deploymentDefinitionToServiceForm', () => {
       ],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined)).toHaveProperty(
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
       'scaling.autoscaling.targets',
       {
         cpu: { enabled: false, value: undefined },
@@ -35,7 +35,7 @@ describe('deploymentDefinitionToServiceForm', () => {
       scalings: [{ min: 0, max: 1 }],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined)).toHaveProperty(
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
       'scaling.autoscaling.targets',
       {
         cpu: { enabled: false },
@@ -45,6 +45,23 @@ describe('deploymentDefinitionToServiceForm', () => {
         responseTime: { enabled: false },
       },
     );
+  });
+
+  it('volumes mapping', () => {
+    const definition: ApiDeploymentDefinition = {
+      volumes: [{ id: 'volumeId', path: '/path' }],
+    };
+
+    const volumes: ApiPersistentVolume[] = [{ id: 'volumeId', name: 'volume-name', cur_size: 10 }];
+
+    expect(deploymentDefinitionToServiceForm(definition, undefined, volumes)).toHaveProperty('volumes', [
+      {
+        volumeId: 'volumeId',
+        name: 'volume-name',
+        size: 10,
+        mountPath: '/path',
+      },
+    ]);
   });
 
   it('port health check', () => {
@@ -59,7 +76,7 @@ describe('deploymentDefinitionToServiceForm', () => {
       ],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined)).toHaveProperty(
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
       'ports.0.healthCheck',
       expect.objectContaining<Partial<HealthCheck>>({
         protocol: 'http',
@@ -79,7 +96,7 @@ describe('deploymentDefinitionToServiceForm', () => {
       health_checks: [],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined)).toHaveProperty(
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
       'ports.0.healthCheck',
       expect.objectContaining<Partial<HealthCheck>>({
         protocol: 'tcp',

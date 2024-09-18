@@ -25,6 +25,8 @@ export async function submitServiceForm(form: ServiceForm): Promise<SubmitServic
     appId = await findOrCreateApp(form.appName);
   }
 
+  await createVolumes(form);
+
   if (serviceId === null) {
     return createService(appId, form);
   } else {
@@ -52,6 +54,26 @@ async function findOrCreateApp(appName: string): Promise<string> {
   return newApp!.id!;
 }
 
+async function createVolumes(form: ServiceForm): Promise<void> {
+  for (const volume of form.volumes) {
+    if (volume.volumeId !== undefined) {
+      continue;
+    }
+
+    const response = await api.createVolume({
+      token: getAccessToken() ?? undefined,
+      body: {
+        name: volume.name,
+        max_size: volume.size,
+        region: form.regions[0],
+        volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
+      },
+    });
+
+    volume.volumeId = response.volume?.id;
+  }
+}
+
 async function createService(appId: string, form: ServiceForm, dryRun: true): Promise<void>;
 
 async function createService(
@@ -65,12 +87,18 @@ async function createService(
   form: ServiceForm,
   dryRun = false,
 ): Promise<SubmitServiceFormResult | void> {
+  const definition = serviceFormToDeploymentDefinition(form);
+
+  if (dryRun) {
+    delete definition.volumes;
+  }
+
   const result = await api.createService({
     token: getAccessToken() ?? undefined,
     query: { dry_run: dryRun },
     body: {
       app_id: appId,
-      definition: serviceFormToDeploymentDefinition(form),
+      definition,
     },
   });
 

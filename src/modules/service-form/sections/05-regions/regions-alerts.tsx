@@ -19,7 +19,7 @@ export function RegionsAlerts() {
   const instanceType = useWatchServiceForm('instance.identifier');
   const instance = useInstance(instanceType);
 
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '').length > 0;
+  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
 
   const fra = useRegion('fra')?.displayName;
   const sin = useRegion('sin')?.displayName;

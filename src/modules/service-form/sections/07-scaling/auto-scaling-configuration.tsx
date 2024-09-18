@@ -31,7 +31,7 @@ const targets: Array<keyof AutoScaling['targets']> = [
 export function AutoScalingConfiguration() {
   const { setValue, trigger, resetField } = useFormContext<ServiceForm>();
 
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '').length > 0;
+  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useWatchServiceForm('instance.identifier');
   const autoScaling = useWatchServiceForm('scaling.autoscaling');
 

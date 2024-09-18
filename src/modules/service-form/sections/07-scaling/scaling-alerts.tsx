@@ -19,7 +19,7 @@ export function ScalingAlerts() {
   const instanceType = useWatchServiceForm('instance.identifier');
   const instance = useInstance(instanceType);
 
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '').length > 0;
+  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
 
   if (error?.message === 'noTargetSelected') {
     return (

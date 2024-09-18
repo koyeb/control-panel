@@ -221,7 +221,7 @@ function healthChecks(ports: Array<Port>): Array<ApiDeploymentHealthCheck> {
 
 function volumes(volumes: ServiceVolume[]) {
   return volumes
-    .filter((volume) => volume.volumeId !== '')
+    .filter((volume) => volume.name !== '')
     .map((volume) => ({
       id: volume.volumeId,
       path: volume.mountPath,

@@ -14,7 +14,7 @@ export function InstanceAlerts() {
   const { plan } = useOrganization();
 
   const { category } = useWatchServiceForm('instance');
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '').length > 0;
+  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
 
   if (category === 'eco' && hasVolumes) {
     return (

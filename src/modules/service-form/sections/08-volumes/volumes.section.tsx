@@ -17,7 +17,7 @@ import { VolumeFields } from './volume-fields';
 const T = Translate.prefix('serviceForm.volumes');
 
 export function VolumesSection() {
-  const volumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '');
+  const volumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '');
 
   return (
     <ServiceFormSection
@@ -71,7 +71,7 @@ function SectionContent() {
       )}
 
       <div className="col sm:row items-start gap-4">
-        <Button variant="ghost" color="gray" onClick={() => append({ volumeId: '', mountPath: '' })}>
+        <Button variant="ghost" color="gray" onClick={() => append({ name: '', size: NaN, mountPath: '' })}>
           <IconPlus className="size-4" />
           <T id="addVolume" />
         </Button>
@@ -85,7 +85,7 @@ function SectionContent() {
         open={createDialogOpen}
         onClose={() => setCreateDialogOpen(false)}
         onCreated={(volume, mountPath) => {
-          append({ volumeId: volume.id, mountPath });
+          append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath });
           setCreateDialogOpen(false);
         }}
       />

@@ -1,8 +1,14 @@
 import merge from 'lodash-es/merge';
 
-import { ApiDeploymentDefinition, ApiDeploymentScalingTarget, ApiPort } from 'src/api/api-types';
+import {
+  ApiDeploymentDefinition,
+  ApiDeploymentScalingTarget,
+  ApiPersistentVolume,
+  ApiPort,
+} from 'src/api/api-types';
 import { EnvironmentVariable, ServiceType } from 'src/api/model';
-import { keys } from 'src/utils/object';
+import { assert, AssertionError } from 'src/utils/assert';
+import { hasProperty, keys } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import { defaultHealthCheck } from '../initialize-service-form';
@@ -24,6 +30,7 @@ import {
 export function deploymentDefinitionToServiceForm(
   definition: ApiDeploymentDefinition,
   githubOrganization: string | undefined,
+  apiVolumes: ApiPersistentVolume[],
 ): DeepPartial<ServiceForm> {
   const serviceType = (): ServiceType | undefined => {
     if (definition.type === 'WEB') return 'web';
@@ -41,7 +48,7 @@ export function deploymentDefinitionToServiceForm(
     scaling: scaling(definition),
     environmentVariables: environmentVariables(definition),
     ports: ports(definition),
-    volumes: volumes(definition),
+    volumes: volumes(definition, apiVolumes),
   };
 }
 
@@ -257,11 +264,22 @@ function healthCheck(definition: ApiDeploymentDefinition, port: ApiPort): Health
   });
 }
 
-function volumes(definition: ApiDeploymentDefinition): Array<DeepPartial<ServiceVolume>> | undefined {
-  return definition.volumes?.map((volume) => ({
-    volumeId: volume.id,
-    mountPath: volume.path,
-  }));
+function volumes(
+  definition: ApiDeploymentDefinition,
+  apiVolumes: ApiPersistentVolume[],
+): Array<DeepPartial<ServiceVolume>> | undefined {
+  return definition.volumes?.map(({ id, path }) => {
+    const volume = apiVolumes.find(hasProperty('id', id));
+
+    assert(volume !== undefined, new AssertionError(`Cannot find volume ${id}`));
+
+    return {
+      volumeId: volume.id,
+      name: volume.name,
+      size: volume.cur_size,
+      mountPath: path,
+    };
+  });
 }
 
 // gRPC considers empty strings and arrays as unset

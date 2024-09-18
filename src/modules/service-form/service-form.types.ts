@@ -163,6 +163,8 @@ export type HealthCheckHeader = {
 };
 
 export type ServiceVolume = {
-  volumeId: string;
+  volumeId?: string;
+  name: string;
+  size: number;
   mountPath: string;
 };

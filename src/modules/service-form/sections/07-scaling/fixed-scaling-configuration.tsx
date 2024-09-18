@@ -9,7 +9,7 @@ const T = Translate.prefix('serviceForm.scaling');
 
 export function FixedScalingConfiguration() {
   const instance = useWatchServiceForm('instance.identifier');
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '').length > 0;
+  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
 
   const canChangeScaling = !hasVolumes && instance !== 'free';
 

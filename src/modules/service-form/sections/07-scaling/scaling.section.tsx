@@ -18,7 +18,7 @@ const T = Translate.prefix('serviceForm.scaling');
 export function ScalingSection() {
   const instance = useWatchServiceForm('instance');
   const scaling = useWatchServiceForm('scaling');
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.volumeId !== '').length > 0;
+  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
 
   const canSelectFixedScaling = !hasVolumes && instance.identifier !== 'free';
   const canSelectAutoscaling = !hasVolumes && instance.category !== 'eco';

@@ -46,7 +46,12 @@ export async function initializeServiceForm(
 
     const definition = deployment.deployment!.definition!;
 
-    values = merge(values, deploymentDefinitionToServiceForm(definition, githubApp?.organizationName));
+    const { volumes } = await api.listVolumes({ token, query: {} });
+
+    values = merge(
+      values,
+      deploymentDefinitionToServiceForm(definition, githubApp?.organizationName, volumes!),
+    );
 
     if (values.environmentVariables.length === 0) {
       values.environmentVariables = defaultServiceForm().environmentVariables;

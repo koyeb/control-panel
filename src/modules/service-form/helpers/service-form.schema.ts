@@ -258,7 +258,9 @@ function healthCheckSchema(t: TranslateErrorFunction) {
 
 function volumes(t: TranslateErrorFunction) {
   return z.object({
-    volumeId: z.string(),
+    volumeId: z.string().optional(),
+    name: z.string(),
+    size: z.number(),
     mountPath: z.string().startsWith('/', t('volumes.mountPath.startWithSlash')),
   });
 }
