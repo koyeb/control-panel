@@ -15,7 +15,7 @@ import { Translate } from 'src/intl/translate';
 const T = Translate.prefix('account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const { token, setToken, clearToken } = useAccessToken();
+  const { token, setToken } = useAccessToken();
   const user = useUser();
   const organization = useOrganization();
 
@@ -49,6 +49,13 @@ export function DeleteOrganization() {
         });
 
         result = newToken!.id!;
+      } else {
+        const { token: newToken } = await api.unscopeOrganizationToken({
+          token,
+          header: {},
+        });
+
+        result = newToken!.id!;
       }
 
       await api.deleteOrganization({
@@ -60,13 +67,7 @@ export function DeleteOrganization() {
     },
     onSuccess(token) {
       notify.info(t('successNotification', { organizationName: organization.name }));
-
-      if (token !== undefined) {
-        setToken(token);
-      } else {
-        clearToken();
-      }
-
+      setToken(token);
       navigate(routes.home());
     },
   });
