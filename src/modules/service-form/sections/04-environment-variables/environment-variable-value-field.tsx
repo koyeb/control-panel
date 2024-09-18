@@ -8,14 +8,16 @@ import { useController } from 'react-hook-form';
 
 import {
   Dropdown,
-  useDropdown,
   Field,
   FieldHelperText,
   FieldLabel,
+  IconButton,
   InputBox,
+  useDropdown,
   useId,
 } from '@koyeb/design-system';
 import { useApiQueryFn } from 'src/api/use-api';
+import { IconChevronDown } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
@@ -34,7 +36,13 @@ type EnvironmentVariableValueFieldProps = {
   label?: React.ReactNode;
 };
 
-export function EnvironmentVariableValueField({ index, label }: EnvironmentVariableValueFieldProps) {
+export function EnvironmentVariableValueField({
+  index,
+  onCreateSecret,
+  label,
+}: EnvironmentVariableValueFieldProps) {
+  const t = T.useTranslate();
+
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
@@ -57,31 +65,53 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
   const variableName = useWatchServiceForm(`environmentVariables.${index}.name`);
   const filteredItems = filterItems(variablesQuery.data ?? [], variableName, field.value);
 
-  const { highlightedIndex, getLabelProps, getInputProps, getMenuProps, getItemProps } = useCombobox({
-    isOpen,
-    id,
-    itemToString: String,
-    items: filteredItems,
-    inputValue: field.value,
-    onInputValueChange({ inputValue, type }) {
-      if (type === useCombobox.stateChangeTypes.InputChange) {
-        field.onChange(inputValue);
-        setIsOpen(regexp.test(inputValue));
-      }
-    },
-    selectedItem: null,
-    onSelectedItemChange({ selectedItem }) {
-      field.onChange(field.value.replace(regexp, '') + `{{ ${selectedItem} }}`);
-      setIsOpen(false);
-    },
-    stateReducer(state, { type, changes }) {
-      if (type === useCombobox.stateChangeTypes.InputBlur) {
-        setIsOpen(false);
-      }
+  const { highlightedIndex, getLabelProps, getInputProps, getMenuProps, getItemProps, toggleMenu } =
+    useCombobox({
+      isOpen,
+      onIsOpenChange: ({ isOpen }) => setIsOpen(isOpen),
+      id,
+      itemToString: String,
+      items: filteredItems,
+      inputValue: field.value,
+      onInputValueChange({ inputValue, type }) {
+        if (type === useCombobox.stateChangeTypes.InputChange) {
+          field.onChange(inputValue);
 
-      return changes;
-    },
-  });
+          if (regexp.test(inputValue)) {
+            setIsOpen(true);
+          }
+        }
+      },
+      selectedItem: null,
+      onSelectedItemChange({ selectedItem }) {
+        if (selectedItem === '__new_secret__') {
+          onCreateSecret();
+        } else {
+          let value = field.value;
+
+          if (value.match(regexp)) {
+            value = value.replace(regexp, '');
+          } else {
+            value = '';
+          }
+
+          field.onChange(value + `{{ ${selectedItem} }}`);
+        }
+      },
+      stateReducer(state, { type, changes }) {
+        const { InputClick, InputChange } = useCombobox.stateChangeTypes;
+
+        if (type === InputClick) {
+          return { ...changes, isOpen: false };
+        }
+
+        if (type === InputChange) {
+          return { ...changes, isOpen: state.isOpen };
+        }
+
+        return changes;
+      },
+    });
 
   const dropdown = useDropdown(isOpen);
 
@@ -89,7 +119,7 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
     <Field
       label={
         label && (
-          <FieldLabel htmlFor={id} {...getLabelProps()}>
+          <FieldLabel htmlFor={id} helpTooltip={<T id="valueTooltip" />} {...getLabelProps()}>
             {label}
           </FieldLabel>
         )
@@ -104,6 +134,17 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
         boxRef={dropdown.setReference}
         boxClassName={clsx(isOpen && '!rounded-b-none')}
         className="peer"
+        placeholder={t('valuePlaceholder')}
+        end={
+          <IconButton
+            variant="ghost"
+            color="gray"
+            size={1}
+            Icon={IconChevronDown}
+            onClick={toggleMenu}
+            className={clsx(isOpen && 'rotate-180')}
+          />
+        }
         aria-invalid={fieldState.invalid}
         aria-errormessage={helperTextId}
         {...getInputProps(field)}
@@ -117,7 +158,7 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}
         getKey={identity}
-        renderItem={identity}
+        renderItem={(item) => (item === '__new_secret__' ? <T id="createSecret" /> : item)}
         renderNoItems={() => <T id="noVariablesToInterpolate" />}
       />
     </Field>
@@ -125,27 +166,23 @@ export function EnvironmentVariableValueField({ index, label }: EnvironmentVaria
 }
 
 function mapServiceVariables({ secrets, system_env, user_env }: Record<string, string[]>) {
-  return [...sort([...system_env!, ...user_env!]), ...secrets!.map((name) => `secret.${name}`)].filter(
-    (value) => value !== '',
-  );
+  return [
+    '__new_secret__',
+    ...sort([...system_env!, ...user_env!]),
+    ...secrets!.map((name) => `secret.${name}`),
+  ].filter((value) => value !== '');
 }
 
 const regexp = /\{\{ *([-.a-zA-Z0-9]*)$/;
 
 function filterItems(items: string[], variableName: string, inputValue: string) {
-  const match = regexp.exec(inputValue);
+  const match = regexp.exec(inputValue)?.[1] ?? inputValue;
 
-  if (!match) {
-    return [];
-  }
-
-  const search = lowerCase(match[1] as string);
-
-  if (search === '') {
+  if (match === '') {
     return items;
   }
 
   return items.filter((item) => {
-    return item !== variableName && lowerCase(item).includes(search);
+    return item !== variableName && item !== '__new_secret__' && lowerCase(item).includes(lowerCase(match));
   });
 }

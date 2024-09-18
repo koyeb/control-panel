@@ -204,11 +204,8 @@ export type DeploymentStrategy = 'invalid' | 'canary' | 'rolling' | 'blue_green'
 
 export type EnvironmentVariable = {
   name: string;
-  type?: EnvironmentVariableType;
   value: string;
 };
-
-export type EnvironmentVariableType = 'plaintext' | 'secret';
 
 export type AttachedVolume = {
   volumeId: string;
