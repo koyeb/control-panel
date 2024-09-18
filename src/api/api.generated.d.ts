@@ -773,6 +773,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/unscope_organization_token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** UnscopeOrganizationToken removes the organization scope from a token. This
+         *     endpoint is useful when a user wants to remove an organization: by
+         *     unscoping the token first, the user can then delete the organization
+         *     without invalidating his token. */
+        post: operations["UnscopeOrganizationToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/account/login": {
         parameters: {
             query?: never;
@@ -1316,6 +1336,23 @@ export interface paths {
         /** Experimental: Get regional deployment
          *     Use at your own risk */
         get: operations["GetRegionalDeployment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/volume_events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Persistent Volume events */
+        get: operations["ListPersistentVolumeEvents"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2551,6 +2588,7 @@ export interface components {
             /** Format: date-time */
             expires_at?: string;
         };
+        UnscopeOrganizationTokenRequest: Record<string, never>;
         UpdateOrganizationPlanReply: {
             organization?: components["schemas"]["Organization"];
         };
@@ -3794,7 +3832,7 @@ export interface components {
             /** the path where the volume is mounted to */
             path?: string;
             /**
-             * optionally, explicitly choose the replica index to mount the volume to
+             * the replica index to mount the volume to
              * Format: int64
              */
             replica_index?: number;
@@ -3833,6 +3871,24 @@ export interface components {
         };
         GetPersistentVolumeReply: {
             volume?: components["schemas"]["PersistentVolume"];
+        };
+        ListPersistentVolumeEventsReply: {
+            /** The collection of events */
+            events?: components["schemas"]["PersistentVolumeEvent"][];
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The order in the request */
+            order?: string;
+            /** If there is more items after in the collection */
+            has_next?: boolean;
         };
         ListPersistentVolumesReply: {
             /** The collection of persistent volumes */
@@ -3899,6 +3955,16 @@ export interface components {
          * @enum {string}
          */
         PersistentVolumeBackingStore: "PERSISTENT_VOLUME_BACKING_STORE_INVALID" | "PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK";
+        PersistentVolumeEvent: {
+            id?: string;
+            /** Format: date-time */
+            when?: string;
+            organization_id?: string;
+            persistent_volume_id?: string;
+            type?: string;
+            message?: string;
+            metadata?: Record<string, never>;
+        };
         /**
          * - PERSISTENT_VOLUME_STATUS_INVALID: zero value, invalid
          *      - PERSISTENT_VOLUME_STATUS_ATTACHED: the volume is attached to an instance
@@ -9377,6 +9443,96 @@ export interface operations {
             };
         };
     };
+    UnscopeOrganizationToken: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Seon Fingerprint */
+                "seon-fp"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UnscopeOrganizationTokenRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LoginReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     Login: {
         parameters: {
             query?: never;
@@ -12830,6 +12986,100 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetRegionalDeploymentReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListPersistentVolumeEvents: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on persistent volume id */
+                persistent_volume_id?: string;
+                /** @description (Optional) Filter on persistent volume event types */
+                types?: string[];
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListPersistentVolumeEventsReply"];
                 };
             };
             /** @description Validation error */
