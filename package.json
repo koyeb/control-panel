@@ -1,6 +1,10 @@
 {
   "name": "@koyeb/control-panel",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koyeb/control-panel.git"
+  },
   "packageManager": "pnpm@9.4.0",
   "type": "module",
   "scripts": {
