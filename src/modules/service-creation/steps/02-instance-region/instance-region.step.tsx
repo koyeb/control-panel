@@ -1,5 +1,9 @@
 import { Button } from '@koyeb/design-system';
-import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
+import {
+  useOrganization,
+  useOrganizationQuotasQuery,
+  useOrganizationSummaryQuery,
+} from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { InstanceSelector } from 'src/components/instance-selector';
@@ -37,6 +41,8 @@ export function InstanceRegionStep(props: InstanceRegionStepProps) {
 }
 
 function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
+  const organization = useOrganization();
+
   const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
   const [state, actions] = useInstanceRegionState();
   const navigate = useNavigate();
@@ -50,7 +56,9 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         selectedRegions={state.selectedRegions}
       />
 
-      <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
+      {organization.plan !== 'hobby' && (
+        <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
+      )}
 
       <div className="col 2xl:row gap-8">
         <InstanceSelector
