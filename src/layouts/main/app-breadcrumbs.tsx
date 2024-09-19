@@ -132,7 +132,7 @@ function UserSettingsCrumbs() {
 function ServiceCrumbs({ serviceId }: { serviceId: string }) {
   return (
     <>
-      <Crumb label={<AppService serviceId={serviceId} />} link={routes.service.overview(serviceId)} />
+      <AppServiceCrumb serviceId={serviceId} />
 
       <CrumbRoute
         path="/services/:serviceId/metrics"
@@ -158,7 +158,7 @@ function ServiceCrumbs({ serviceId }: { serviceId: string }) {
 function DatabaseServiceCrumbs({ serviceId }: { serviceId: string }) {
   return (
     <>
-      <Crumb label={<AppService serviceId={serviceId} />} link={routes.database.overview(serviceId)} />
+      <AppServiceCrumb serviceId={serviceId} />
 
       <CrumbRoute
         path="/database-services/:serviceId/databases"
@@ -189,29 +189,43 @@ function CrumbRoute({ path, ...props }: { path: string } & React.ComponentProps<
   );
 }
 
-function AppService({ serviceId }: { serviceId: string }) {
+function AppServiceCrumb({ serviceId }: { serviceId: string }) {
   const serviceQuery = useServiceQuery(serviceId);
   const appQuery = useAppQuery(serviceQuery.data?.appId);
 
   if (!appQuery.isSuccess || !serviceQuery.isSuccess) {
-    return <Crumb label={<TextSkeleton width={8} />} link="#" />;
+    return <Crumb label={<TextSkeleton width={8} />} />;
   }
 
   const app = appQuery.data;
   const service = serviceQuery.data;
 
   return (
-    <span className="row max-w-48 items-center gap-2 sm:max-w-96 lg:max-w-none">
-      <div>
-        <ServiceStatusDot status={service.status} className="size-2" />
-      </div>
+    <div className="row items-center gap-2">
+      <Crumb
+        link={
+          service.type === 'database'
+            ? routes.database.overview(service.id)
+            : routes.service.overview(service.id)
+        }
+        label={
+          <div className="row max-w-48 items-center gap-2 sm:max-w-96 lg:max-w-none">
+            <div>
+              <ServiceStatusDot status={service.status} className="size-2" />
+            </div>
 
-      <div className="direction-rtl truncate">
-        <Translate id="common.appServiceName" values={{ appName: app.name, serviceName: service.name }} />
-      </div>
+            <div className="direction-rtl truncate">
+              <Translate
+                id="common.appServiceName"
+                values={{ appName: app.name, serviceName: service.name }}
+              />
+            </div>
+          </div>
+        }
+      />
 
       <ServiceSwitcherMenu appId={appQuery.data?.id} serviceId={serviceId} />
-    </span>
+    </div>
   );
 }
 
@@ -229,10 +243,7 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
         <button
           ref={ref}
           type="button"
-          onClick={(event) => {
-            event.preventDefault();
-            setMenuOpen(true);
-          }}
+          onClick={() => setMenuOpen(true)}
           className={clsx({ hidden: !appServices || appServices.length <= 1 })}
           {...props}
         >

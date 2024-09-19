@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { createElement } from 'react';
 
 import { IconChevronRight } from 'src/components/icons';
 import { Link } from 'src/components/link';
@@ -15,10 +16,12 @@ export function Breadcrumbs({ className, children }: BreadcrumbsProps) {
 type CrumbProps = {
   isFirst?: boolean;
   label: React.ReactNode;
-  link: string;
+  link?: string;
 };
 
 export function Crumb({ isFirst, label, link }: CrumbProps) {
+  const [element, props]: [React.ElementType, object] = link ? [Link, { href: link }] : ['span', {}];
+
   return (
     <>
       {!isFirst && (
@@ -27,9 +30,11 @@ export function Crumb({ isFirst, label, link }: CrumbProps) {
         </div>
       )}
 
-      <Link href={link} className="font-medium text-dim last-of-type:text-default">
-        {label}
-      </Link>
+      {createElement(
+        element,
+        { ...props, className: 'font-medium text-dim last-of-type:text-default' },
+        label,
+      )}
     </>
   );
 }
