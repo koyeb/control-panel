@@ -1,23 +1,36 @@
+import { Integrations } from '@segment/analytics-next';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { Mutation, MutationCache, Query, QueryCache, QueryClient, QueryKey } from '@tanstack/react-query';
+import {
+  Mutation,
+  MutationCache,
+  Query,
+  QueryCache,
+  QueryCacheNotifyEvent,
+  QueryClient,
+  QueryKey,
+} from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
+import posthog from 'posthog-js';
 import { navigate } from 'wouter/use-browser-location';
 
+import { api } from 'src/api/api';
+import { Organization, User } from 'src/api/model';
 import { useLocalStorage } from 'src/hooks/storage';
 import { inArray } from 'src/utils/arrays';
 
 import { isApiError, isApiNotFoundError } from '../api/api-errors';
 
+import { Analytics } from './analytics';
 import { getConfig } from './config';
 import { notify } from './notify';
-import { reportError } from './report-error';
+import { identifyUserInSentry, reportError } from './report-error';
 import { routes } from './routes';
-import { getSessionToken } from './token';
+import { getAccessToken, getSessionToken } from './token';
 
 type UnknownQuery = Query<unknown, unknown, unknown, QueryKey>;
 type UnknownMutation = Mutation<unknown, unknown, unknown, unknown>;
 
-export function createQueryClient() {
+export function createQueryClient(analytics: Analytics) {
   const { version } = getConfig();
 
   const queryCache = new QueryCache({
@@ -43,6 +56,8 @@ export function createQueryClient() {
     queryCache,
     mutationCache,
   });
+
+  queryCache.subscribe(onQueryCacheChanged(analytics));
 
   void persistQueryClient({
     queryClient,
@@ -86,6 +101,59 @@ function throwOnError(error: Error) {
   return isApiError(error) && error.status >= 500;
 }
 
+function onQueryCacheChanged(analytics: Analytics) {
+  let prevUser: User | undefined;
+  let prevOrganization: Organization | undefined;
+
+  async function listener(event: QueryCacheNotifyEvent) {
+    const { type, query } = event;
+
+    if (type !== 'updated') {
+      return;
+    }
+
+    const action = event.action;
+    const queryKey = query.queryKey as [string];
+
+    if (queryKey[0] === 'getCurrentUser') {
+      if (action.type === 'success' && prevUser === undefined) {
+        const { user } = action.data as { user: User };
+
+        await identifyUserInSentry(user);
+        await identifyUser(analytics, user);
+
+        prevUser = user;
+      }
+
+      if (action.type === 'error' && prevUser !== undefined) {
+        await identifyUserInSentry(null);
+        await analytics.reset();
+
+        globalThis.Intercom?.('shutdown');
+
+        prevUser = undefined;
+      }
+    }
+
+    if (queryKey[0] === 'getCurrentOrganization') {
+      if (action.type === 'success' && prevOrganization === undefined && action.data !== null) {
+        const { organization } = action.data as { organization: Organization };
+
+        posthog.group('segment_group', organization.id);
+        prevOrganization = organization;
+      }
+
+      if (action.type === 'error' && prevOrganization !== undefined) {
+        prevOrganization = undefined;
+      }
+    }
+  }
+
+  return function (event: QueryCacheNotifyEvent) {
+    listener(event).catch(reportError);
+  };
+}
+
 function onQuerySuccess() {
   return function (data: unknown, query: UnknownQuery) {
     const { pathname, search } = window.location;
@@ -95,6 +163,21 @@ function onQuerySuccess() {
       navigate(searchParams.get('next') ?? routes.home());
     }
   };
+}
+
+async function identifyUser(analytics: Analytics, user: User) {
+  const { hash } = await api.getIntercomUserHash({
+    token: getAccessToken() ?? undefined,
+  });
+
+  const traits = {};
+  const integrations: Integrations = {};
+
+  if (hash !== undefined) {
+    integrations.Intercom = { user_hash: hash };
+  }
+
+  await analytics.identify(user.id, traits, { integrations });
 }
 
 function onQueryError(error: Error, query: UnknownQuery) {
