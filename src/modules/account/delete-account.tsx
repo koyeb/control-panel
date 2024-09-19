@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@koyeb/design-system';
 import { useOrganizationQuery, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useResetIdentifyUser } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
@@ -21,6 +22,7 @@ export function DeleteAccount() {
   const canDelete = organization === undefined;
 
   const { clearToken } = useAccessToken();
+  const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -31,6 +33,7 @@ export function DeleteAccount() {
     }),
     onSuccess() {
       clearToken();
+      resetIdentify();
       navigate(routes.signIn());
       notify.success(t('successNotification'));
     },

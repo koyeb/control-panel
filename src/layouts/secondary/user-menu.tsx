@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
 import { useUserQuery } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useResetIdentifyUser } from 'src/application/analytics';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
 import { IconLogOut, IconSettings } from 'src/components/icons';
@@ -19,12 +20,14 @@ export function UserMenu() {
   const { data: user } = useUserQuery();
 
   const [open, setOpen] = useState(false);
+  const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 
   const { mutate: logout } = useMutation({
     ...useApiMutationFn('logout', {}),
     onSuccess() {
       clearToken();
+      resetIdentify();
       navigate(routes.signIn());
     },
   });

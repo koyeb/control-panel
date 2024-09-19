@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useResetIdentifyUser } from 'src/application/analytics';
 import { routes } from 'src/application/routes';
 import { useAccessToken } from 'src/application/token';
 import {
@@ -27,6 +28,7 @@ const T = Translate.prefix('layouts.main.userMenu');
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const { clearToken } = useAccessToken();
   const user = useUserUnsafe();
+  const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 
   const isMobile = !useBreakpoint('sm');
@@ -40,6 +42,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
     ...useApiMutationFn('logout', {}),
     onSuccess() {
       clearToken();
+      resetIdentify();
       navigate(routes.signIn());
     },
   });

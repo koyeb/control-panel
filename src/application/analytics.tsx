@@ -105,7 +105,10 @@ export function useIdentifyUser() {
 
   useEffect(() => {
     identifyUserInSentry(user);
-    identifyUser(analytics, context, user).catch(reportError);
+
+    if (user !== undefined) {
+      identifyUser(analytics, user, context).catch(reportError);
+    }
   }, [analytics, context, user]);
 
   useEffect(() => {
@@ -115,13 +118,7 @@ export function useIdentifyUser() {
   }, [analytics, context, organization]);
 }
 
-async function identifyUser(analytics: Analytics, context: Record<string, string>, user: User | undefined) {
-  if (user === undefined) {
-    globalThis.Intercom?.('shutdown');
-    await analytics.reset();
-    return;
-  }
-
+async function identifyUser(analytics: Analytics, user: User, context: Record<string, string>) {
   const traits = {};
   const integrations: Integrations = {};
 
@@ -136,6 +133,15 @@ async function identifyUser(analytics: Analytics, context: Record<string, string
     }, reportError);
 
   await analytics.identify(user.id, traits, { context, integrations });
+}
+
+export function useResetIdentifyUser() {
+  const { analytics } = useAnalytics();
+
+  return useCallback(() => {
+    globalThis.Intercom?.('shutdown');
+    analytics.reset().catch(reportError);
+  }, [analytics]);
 }
 
 export function useTrackEvent() {
