@@ -5,7 +5,6 @@ import { useInstanceAvailabilities } from 'src/application/instance-region-avail
 import { InstanceSelector } from 'src/components/instance-selector';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
@@ -38,7 +37,6 @@ export function InstanceRegionStep(props: InstanceRegionStepProps) {
 }
 
 function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
-  const awsRegionsFlag = useFeatureFlag('aws-regions');
   const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
   const [state, actions] = useInstanceRegionState();
   const navigate = useNavigate();
@@ -52,9 +50,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         selectedRegions={state.selectedRegions}
       />
 
-      {awsRegionsFlag && (
-        <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
-      )}
+      <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
 
       <div className="col 2xl:row gap-8">
         <InstanceSelector
