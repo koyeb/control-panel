@@ -10,8 +10,8 @@ type SelectBoxType = 'checkbox' | 'radio';
 type SelectBoxOwnProps = {
   type: SelectBoxType;
   icon?: React.ReactNode;
-  title: React.ReactNode;
-  description: React.ReactNode;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
   footer?: React.ReactNode;
   disabled?: boolean;
   id?: string;

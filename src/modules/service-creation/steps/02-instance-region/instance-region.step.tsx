@@ -1,4 +1,4 @@
-import { Button, Field } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
@@ -13,8 +13,6 @@ import { InstanceRegionAlerts } from './instance-region-alerts';
 import { useInstanceRegionState } from './instance-region-state';
 import { RegionCategorySelector } from './region-category-selector';
 import { RegionsSelector } from './regions-selector';
-
-const T = Translate.prefix('serviceCreation.instanceRegions');
 
 type InstanceRegionStepProps = {
   onNext: () => void;
@@ -55,9 +53,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
       />
 
       {awsRegionsFlag && (
-        <Field label={<T id="regionCategorySelector.label" />} className="items-stretch">
-          <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
-        </Field>
+        <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
       )}
 
       <div className="col 2xl:row gap-8">

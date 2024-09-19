@@ -713,11 +713,11 @@
       "title": "Create a new service",
       "description": "Pick the instance and regions to deploy",
       "regionCategorySelector": {
-        "label": "Select your instance location",
+        "label": "Select cloud provider",
         "koyebLabel": "Koyeb",
-        "koyebDescription": "Koyeb regions",
+        "koyebTooltip": "Deploy to production on high-performance, globally available infrastructure managed by Koyeb, with access to GPUs, accelerators, and CPUs",
         "awsLabel": "AWS",
-        "awsDescription": "AWS regions"
+        "awsTooltip": "Deploy on AWS Cloud, benefit from Koyeb's flexibility and simplicity, leverage the AWS ecosystem, and reduce data transfer costs between AWS regions"
       },
       "alerts": {
         "requiresUpgrade": "The selected instance is available on the {plan} plan. You will be asked to upgrade at the end of the creation process.",
