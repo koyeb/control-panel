@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
+import { useIdentifyUser } from './application/analytics';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { AccountLocked } from './components/account-locked';
@@ -39,6 +40,8 @@ import { VolumesPage } from './pages/volumes/volumes.page';
 export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
+
+  useIdentifyUser();
 
   if (
     isAccountLockedError(userQuery.error) ||

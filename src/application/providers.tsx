@@ -39,8 +39,8 @@ export function Providers({ children }: ProvidersProps) {
   }, []);
 
   const queryClient = useMemo(() => {
-    return createQueryClient(analytics);
-  }, [analytics]);
+    return createQueryClient();
+  }, []);
 
   const stripePromise = useMemo(() => {
     if (stripePublicKey !== undefined) {
