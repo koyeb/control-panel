@@ -28,9 +28,11 @@ export function InstanceSelector({
   checkAvailability,
   className,
 }: InstanceSelectorProps) {
+  const koyebRegions = instances[0]?.regionCategory === 'koyeb';
+
   return (
     <div className={clsx('col gap-3', className)}>
-      {instances[0]?.regionCategory === 'koyeb' && (
+      {koyebRegions && (
         <TabButtons>
           {(['eco', 'standard', 'gpu'] as const).map((category) => (
             <TabButton
@@ -45,7 +47,7 @@ export function InstanceSelector({
         </TabButtons>
       )}
 
-      <div className="my-4">
+      <div className={clsx('my-4', !koyebRegions && 'font-medium')}>
         <T id={`descriptions.${selectedCategory}`} />
       </div>
 
