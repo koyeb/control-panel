@@ -111,6 +111,7 @@
       "appDeleted": "Deleted all services within {name}",
       "serviceScaled": "Scaled {direction, select, up {up} down {down} other {}} from {previousCount} to {count, plural, =1 {{count} instance} other {{count} instances}}",
       "deploymentFailed": "Deployment {name} failed",
+      "volume": "volume",
       "loggedIn": "Logged in",
       "loggedOut": "Logged out",
       "subscriptionCreated": "A new subscription was created",

@@ -84,6 +84,22 @@ export const isDeploymentActivity = createValidationGuard(
   }),
 );
 
+export const isVolumeActivity = createValidationGuard(
+  z.object({
+    metadata: z
+      .object({
+        app_name: z.string(),
+        service_id: z.string(),
+        service_name: z.string(),
+      })
+      .partial(),
+    object: z.object({
+      type: z.literal('persistent_volume'),
+      name: z.string(),
+    }),
+  }),
+);
+
 export const isSessionActivity = createValidationGuard(
   z.object({
     object: z.object({

@@ -8,6 +8,8 @@ import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Translate } from 'src/intl/translate';
 
+import { IconFolders } from '../icons';
+
 import {
   isAutoscalingActivity,
   isDeploymentObject,
@@ -15,7 +17,10 @@ import {
   isInvitationObject,
   isSecretObject,
   isServiceObject,
+  isVolumeActivity,
 } from './activity-guards';
+
+const T = Translate.prefix('activity.sentences');
 
 export function ActivityResources({ activity }: { activity: Activity }) {
   const object = activity.object;
@@ -71,6 +76,26 @@ export function ActivityResources({ activity }: { activity: Activity }) {
         link={routes.service.overview(serviceId, deploymentId)}
         deleted={deleted}
       />
+    );
+  }
+
+  if (isVolumeActivity(activity)) {
+    const { app_name: appName, service_id: serviceId, service_name: serviceName } = activity.metadata;
+    const { deleted } = object;
+
+    return (
+      <div className="row max-w-full flex-wrap gap-x-4 gap-y-2">
+        <VolumeResource name={activity.object.name} deleted={activity.object.deleted} />
+        {appName && serviceName && serviceId && (
+          <ServiceResource
+            appName={appName}
+            serviceName={serviceName}
+            serviceId={serviceId}
+            link={routes.service.overview(serviceId)}
+            deleted={deleted}
+          />
+        )}
+      </div>
     );
   }
 
@@ -136,6 +161,26 @@ function RegionResource({ identifier }: { identifier: string }) {
     <ActivityResource className="min-w-max">
       <RegionFlag identifier={identifier} className="size-4 rounded-full shadow-badge" />
       <span className="uppercase">{identifier}</span>
+    </ActivityResource>
+  );
+}
+
+function VolumeResource({ name, deleted }: { name: string; deleted: boolean }) {
+  const [component, props] = deleted
+    ? [undefined, {}]
+    : [Link, { href: routes.volumes(), className: 'hover:bg-muted/50' }];
+
+  return (
+    <ActivityResource component={component} {...props}>
+      <span className="rounded bg-green p-0.5">
+        <IconFolders className="size-3 text-white" />
+      </span>
+
+      {name}
+
+      <div className="font-normal capitalize text-dim">
+        <T id="volume" />
+      </div>
     </ActivityResource>
   );
 }

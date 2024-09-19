@@ -15,6 +15,7 @@ import {
   isOrganizationMemberActivity,
   isSessionActivity,
   isSubscriptionActivity,
+  isVolumeActivity,
 } from './activity-guards';
 
 const T = Translate.prefix('activity.sentences');
@@ -116,11 +117,23 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
   }
 
   const name = () => {
-    if (inArray(activity.object.type, ['domain', 'secret', 'service'])) {
+    if (inArray(activity.object.type, ['domain', 'secret', 'service', 'persistent_volume'])) {
       return null;
     }
 
     return <span className="font-medium">{activity.object.name}</span>;
+  };
+
+  const object = () => {
+    if (isVolumeActivity(activity)) {
+      return (
+        <span>
+          <T id="volume" />
+        </span>
+      );
+    }
+
+    return <span>{activity.object.type}</span>;
   };
 
   return (
@@ -128,7 +141,7 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
       id="fallback"
       values={{
         verb: <span className="capitalize">{activity.verb}</span>,
-        object: <span>{activity.object.type}</span>,
+        object: object(),
         name: name(),
       }}
     />

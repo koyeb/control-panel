@@ -7,11 +7,13 @@ import {
   IconBuilding,
   IconCreditCard,
   IconFileKey2,
+  IconFolders,
   IconGlobe,
   IconUserRound,
   IconUsers,
 } from 'src/components/icons';
 import { inArray } from 'src/utils/arrays';
+import { entries } from 'src/utils/object';
 
 export function ActivityIcon({ activity }: { activity: Activity }) {
   const Icon = icons[activity.object.type] ?? (() => null);
@@ -45,13 +47,16 @@ const icons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> 
   app: IconBoxes,
   service: IconBox,
   deployment: IconBox,
+  persistent_volume: IconFolders,
   subscription: IconCreditCard,
   organization: IconBuilding,
   organization_invitation: IconUsers,
   organization_member: IconUsers,
 };
 
-function getActivityColor(activity: Activity): 'green' | 'blue' | 'red' | 'orange' | 'gray' {
+type Color = 'green' | 'blue' | 'red' | 'orange' | 'gray';
+
+function getActivityColor(activity: Activity): Color {
   const verb = activity.verb;
   const object = activity.object.type;
 
@@ -63,21 +68,19 @@ function getActivityColor(activity: Activity): 'green' | 'blue' | 'red' | 'orang
     return 'green';
   }
 
-  if (inArray(verb, ['joined', 'accepted'])) {
-    return 'green';
-  }
-
-  if (inArray(verb, ['deleted', 'failed', 'payment_failed', 'left', 'revoked', 'declined'])) {
-    return 'red';
-  }
-
-  if (inArray(verb, ['updated', 'resumed', 'autoscaled', 'payment_succeeded', 'resent'])) {
-    return 'blue';
-  }
-
-  if (inArray(verb, ['paused'])) {
-    return 'orange';
+  for (const [key, value] of entries(verbMapping)) {
+    if (inArray(verb, value)) {
+      return key;
+    }
   }
 
   return 'gray';
 }
+
+const verbMapping: Record<Color, string[]> = {
+  green: ['joined', 'accepted'],
+  red: ['deleted', 'failed', 'payment_failed', 'left', 'revoked', 'declined'],
+  blue: ['updated', 'resumed', 'autoscaled', 'payment_succeeded', 'resent', 'attached', 'detached'],
+  orange: ['paused'],
+  gray: [],
+};
