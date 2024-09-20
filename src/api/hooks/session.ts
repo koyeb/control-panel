@@ -4,7 +4,13 @@ import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
 
 import { isApiError } from '../api-errors';
-import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
+import {
+  mapOrganization,
+  mapOrganizationMembers,
+  mapOrganizationQuotas,
+  mapOrganizationSummary,
+  mapUser,
+} from '../mappers/session';
 import { useApiQueryFn } from '../use-api';
 
 export function useUserQuery() {
@@ -79,4 +85,14 @@ export function useOrganizationQuotasQuery() {
 
 export function useOrganizationQuotas() {
   return useOrganizationQuotasQuery().data;
+}
+
+export function useUserOrganizationMemberships() {
+  const user = useUserUnsafe();
+
+  return useQuery({
+    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
+    enabled: user !== undefined,
+    select: mapOrganizationMembers,
+  });
 }

@@ -6,6 +6,7 @@ import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
+import { useHistoryState } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
 import { CreateVolumeDialog } from '../create-volume-dialog';
@@ -15,7 +16,8 @@ import { VolumesList } from './volumes-list';
 const T = Translate.prefix('pages.volumes');
 
 export function VolumesListPage() {
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const historyState = useHistoryState<{ create: boolean }>();
+  const [createDialogOpen, setCreateDialogOpen] = useState(Boolean(historyState.create));
   const t = T.useTranslate();
 
   const volumesQuery = useVolumesQuery();

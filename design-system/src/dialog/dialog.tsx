@@ -25,6 +25,7 @@ type DialogProps = {
   title?: React.ReactNode;
   description?: React.ReactNode;
   width?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
+  overlayClassName?: string;
   className?: string;
   children: React.ReactNode;
 };
@@ -36,6 +37,7 @@ export function Dialog({
   title,
   description,
   width,
+  overlayClassName,
   className,
   children,
 }: DialogProps) {
@@ -79,7 +81,10 @@ export function Dialog({
     <FloatingPortal>
       <FloatingOverlay
         lockScroll
-        className="z-40 flex items-center justify-center bg-gradient-to-b from-gray/0 to-gray/15 p-2 backdrop-blur"
+        className={clsx(
+          'z-40 flex items-center justify-center bg-gradient-to-b from-gray/0 to-gray/15 p-2 backdrop-blur',
+          overlayClassName,
+        )}
         style={transitionStyles}
       >
         <FloatingFocusManager context={context}>

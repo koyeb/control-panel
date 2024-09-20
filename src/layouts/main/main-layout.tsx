@@ -19,6 +19,7 @@ import { useLocation } from 'src/hooks/router';
 import { useLocalStorage, useSessionStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate } from 'src/intl/translate';
+import { CommandPalette } from 'src/modules/command-palette/command-palette';
 import { inArray } from 'src/utils/arrays';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
@@ -41,7 +42,7 @@ export function MainLayout({ children }: LayoutProps) {
   const pageContext = usePageContext();
 
   return (
-    <>
+    <CommandPalette>
       <DocumentTitle />
 
       <Layout
@@ -52,7 +53,7 @@ export function MainLayout({ children }: LayoutProps) {
         context={pageContext.enabled ? <PageContext {...pageContext} /> : undefined}
         contextExpanded={pageContext.expanded}
       />
-    </>
+    </CommandPalette>
   );
 }
 

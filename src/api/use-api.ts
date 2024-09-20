@@ -1,4 +1,5 @@
 import { InvalidateQueryFilters, QueryKey, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
 import { useAccessToken } from 'src/application/token';
 
@@ -76,11 +77,14 @@ export function useInvalidateApiQuery() {
   const queryClient = useQueryClient();
   const { token } = useAccessToken();
 
-  return <E extends Endpoint>(
-    endpoint: E,
-    params: ApiEndpointParams<E> = {},
-    filters: InvalidateQueryFilters = {},
-  ) => {
-    return queryClient.invalidateQueries({ queryKey: [endpoint, params, token], ...filters });
-  };
+  return useCallback(
+    <E extends Endpoint>(
+      endpoint: E,
+      params: ApiEndpointParams<E> = {},
+      filters: InvalidateQueryFilters = {},
+    ) => {
+      return queryClient.invalidateQueries({ queryKey: [endpoint, params, token], ...filters });
+    },
+    [queryClient, token],
+  );
 }
