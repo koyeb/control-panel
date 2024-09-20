@@ -2,27 +2,27 @@ import { useReducer, useEffect, createContext, createElement, useContext, useCal
 
 import { useNavigate } from 'src/hooks/router';
 
-export type CommandPalettePage = {
+export type CreateServiceDialogPage = {
   label: string;
   icon?: React.ReactNode;
   shortcut?: string;
   render: () => React.ReactNode;
 };
 
-export type CommandPaletteSection = {
+export type CreateServiceDialogSection = {
   title: string;
-  items: Array<CommandPalettePage>;
+  items: Array<CreateServiceDialogPage>;
 };
 
-type CommandPaletteState = {
+type CreateServiceDialogState = {
   isOpen: boolean;
   serviceType: ServiceType | undefined;
   deploymentMethod: DeploymentMethod | undefined;
-  sections: CommandPaletteSection[];
-  filteredSections: CommandPaletteSection[];
+  sections: CreateServiceDialogSection[];
+  filteredSections: CreateServiceDialogSection[];
   search: string;
-  page?: CommandPalettePage;
-  navigationRefs: Map<CommandPalettePage, HTMLElement | null>;
+  page?: CreateServiceDialogPage;
+  navigationRefs: Map<CreateServiceDialogPage, HTMLElement | null>;
 };
 
 export type ServiceType = 'web' | 'worker';
@@ -31,30 +31,30 @@ export type DeploymentMethod = 'github' | 'docker';
 type GetSections = (
   serviceType: ServiceType | undefined,
   deploymentMethod: DeploymentMethod | undefined,
-) => CommandPaletteSection[];
+) => CreateServiceDialogSection[];
 
-type CommandPaletteContext = ReturnType<typeof useCreateCommandPalette>;
+type CreateServiceDialogContext = ReturnType<typeof useCreateCreateServiceDialog>;
 
-const commandPaletteContext = createContext<CommandPaletteContext>(null as never);
+const createServiceDialogContext = createContext<CreateServiceDialogContext>(null as never);
 
-export function useCommandPalette() {
-  return useContext(commandPaletteContext);
+export function useCreateServiceDialog() {
+  return useContext(createServiceDialogContext);
 }
 
-type CommandPaletteProviderProps = {
+type CreateServiceDialogProviderProps = {
   getSections: GetSections;
   children: React.ReactNode;
 };
 
-export const CommandPaletteProvider = ({ getSections, children }: CommandPaletteProviderProps) => {
+export const CreateServiceDialogProvider = ({ getSections, children }: CreateServiceDialogProviderProps) => {
   return createElement(
-    commandPaletteContext.Provider,
-    { value: useCreateCommandPalette(getSections) },
+    createServiceDialogContext.Provider,
+    { value: useCreateCreateServiceDialog(getSections) },
     children,
   );
 };
 
-function useCreateCommandPalette(getSections: GetSections) {
+function useCreateCreateServiceDialog(getSections: GetSections) {
   const navigate = useNavigate();
 
   const [state, dispatch] = useReducer(reducer, {
@@ -125,7 +125,7 @@ function useCreateCommandPalette(getSections: GetSections) {
       dispatch({ type: 'search-changed', value });
     }, []),
 
-    pageChanged: useCallback((page: CommandPalettePage) => {
+    pageChanged: useCallback((page: CreateServiceDialogPage) => {
       dispatch({ type: 'page-changed', page });
     }, []),
 
@@ -160,7 +160,7 @@ type DeploymentMethodChanged = {
 
 type SectionsChanged = {
   type: 'sections-changed';
-  sections: CommandPaletteSection[];
+  sections: CreateServiceDialogSection[];
 };
 
 type SearchChanged = {
@@ -170,7 +170,7 @@ type SearchChanged = {
 
 type SetPage = {
   type: 'page-changed';
-  page: CommandPalettePage;
+  page: CreateServiceDialogPage;
 };
 
 type ArrowKeyPressed = {
@@ -182,7 +182,7 @@ type BackspaceKeyPressed = {
   type: 'backspace-key-pressed';
 };
 
-type CommandPaletteAction =
+type CreateServiceDialogAction =
   | DialogStateChanged
   | Reset
   | ServiceTypeChanged
@@ -193,7 +193,10 @@ type CommandPaletteAction =
   | ArrowKeyPressed
   | BackspaceKeyPressed;
 
-function reducer(state: CommandPaletteState, action: CommandPaletteAction): CommandPaletteState {
+function reducer(
+  state: CreateServiceDialogState,
+  action: CreateServiceDialogAction,
+): CreateServiceDialogState {
   if (state.deploymentMethod === 'github') {
     if (action.type === 'search-changed') {
       return {
@@ -214,7 +217,7 @@ function reducer(state: CommandPaletteState, action: CommandPaletteAction): Comm
   if (action.type === 'reset') {
     const firstPage = state.sections[0]?.items[0];
 
-    state.navigationRefs.get(firstPage as CommandPalettePage)?.scrollIntoView({ block: 'center' });
+    state.navigationRefs.get(firstPage as CreateServiceDialogPage)?.scrollIntoView({ block: 'center' });
 
     return {
       ...state,
@@ -304,12 +307,12 @@ function reducer(state: CommandPaletteState, action: CommandPaletteAction): Comm
   return state;
 }
 
-function filterSections(sections: CommandPaletteSection[], search: string) {
+function filterSections(sections: CreateServiceDialogSection[], search: string) {
   if (search === '') {
     return sections;
   }
 
-  const filterPage = (page: CommandPalettePage) => {
+  const filterPage = (page: CreateServiceDialogPage) => {
     return page.label.toLowerCase().includes(search.toLowerCase());
   };
 

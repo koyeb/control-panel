@@ -29,9 +29,13 @@ import {
   PublicRepository,
 } from './pages/github-repository';
 import { Database, ExampleApp, WebService, Worker } from './pages/root';
-import { CommandPaletteProvider, CommandPaletteSection, useCommandPalette } from './use-command-palette';
+import {
+  CreateServiceDialogProvider,
+  CreateServiceDialogSection,
+  useCreateServiceDialog,
+} from './use-create-service-dialog';
 
-const T = Translate.prefix('commandPalette');
+const T = Translate.prefix('createServiceDialog');
 
 function useGetSections() {
   const t = T.useTranslate();
@@ -42,7 +46,7 @@ function useGetSections() {
     (
       serviceType: 'web' | 'worker' | undefined,
       deploymentMethod: 'github' | 'docker' | undefined,
-    ): CommandPaletteSection[] => {
+    ): CreateServiceDialogSection[] => {
       if (serviceType === undefined && deploymentMethod === undefined) {
         return [
           {
@@ -145,18 +149,18 @@ function useGetSections() {
   );
 }
 
-export function CommandPalette() {
+export function CreateServiceDialog() {
   const getSections = useGetSections();
 
   return (
-    <CommandPaletteProvider getSections={getSections}>
-      <CommandPaletteDialog />
-    </CommandPaletteProvider>
+    <CreateServiceDialogProvider getSections={getSections}>
+      <CreateServiceDialogDialog />
+    </CreateServiceDialogProvider>
   );
 }
 
-export function CommandPaletteDialog() {
-  const { isOpen, dialogOpened, dialogClosed, reset } = useCommandPalette();
+export function CreateServiceDialogDialog() {
+  const { isOpen, dialogOpened, dialogClosed, reset } = useCreateServiceDialog();
 
   useShortcut(['meta', 'k'], dialogOpened);
 
@@ -168,7 +172,7 @@ export function CommandPaletteDialog() {
       onClosed={reset}
       className="col h-96 overflow-hidden rounded-lg border !p-0"
     >
-      <CommandPaletteShortcuts />
+      <CreateServiceDialogShortcuts />
       <SearchInput />
       <Content />
       <Footer />
@@ -176,11 +180,11 @@ export function CommandPaletteDialog() {
   );
 }
 
-function CommandPaletteShortcuts() {
+function CreateServiceDialogShortcuts() {
   const ref = useRef<HTMLDivElement>(null);
   const parent = ref.current?.parentElement ?? undefined;
 
-  const { arrowKeyPressed, backspacePressed } = useCommandPalette();
+  const { arrowKeyPressed, backspacePressed } = useCreateServiceDialog();
 
   useShortcut(['ArrowUp'], () => arrowKeyPressed('up'), parent);
   useShortcut(['ArrowDown'], () => arrowKeyPressed('down'), parent);
@@ -202,7 +206,8 @@ function CommandPaletteShortcuts() {
 
 function SearchInput() {
   const t = T.useTranslate();
-  const { search, searchChanged, searchInputRef, focusSearchInput, backspacePressed } = useCommandPalette();
+  const { search, searchChanged, searchInputRef, focusSearchInput, backspacePressed } =
+    useCreateServiceDialog();
 
   return (
     <div className="row items-center gap-2 border-b px-4">
@@ -227,7 +232,7 @@ function SearchInput() {
 }
 
 function Content() {
-  const { page } = useCommandPalette();
+  const { page } = useCreateServiceDialog();
 
   return (
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
