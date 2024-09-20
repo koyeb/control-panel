@@ -70,6 +70,7 @@ export function CreateVolumeDialog({ open, onClose, onCreated }: CreateVolumeDia
     <Dialog
       isOpen={open}
       onClose={onClose}
+      onClosed={() => form.reset()}
       title={<T id="title" />}
       description={<T id="description" />}
       width="lg"
