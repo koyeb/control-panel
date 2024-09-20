@@ -6,6 +6,7 @@ import { useDomainsQuery } from 'src/api/hooks/domain';
 import { useOrganization } from 'src/api/hooks/session';
 import { DocumentTitle } from 'src/components/document-title';
 import { Title } from 'src/components/title';
+import { useHistoryState } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
 import { CreateDomainDialog } from './components/create-domain-dialog';
@@ -17,7 +18,8 @@ const T = Translate.prefix('pages.domains');
 export function DomainsPage() {
   const t = T.useTranslate();
 
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const historyState = useHistoryState<{ create: boolean }>();
+  const [createDialogOpen, setCreateDialogOpen] = useState(Boolean(historyState.create));
   const [expanded, setExpanded] = useState<string>();
   const organization = useOrganization();
   const { data: domains } = useDomainsQuery('custom');

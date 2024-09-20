@@ -27,8 +27,8 @@ export function LogicalDatabasesPage() {
 
   const databases = deployment.databases ?? [];
 
-  const state = useHistoryState<{ create?: true } | undefined>();
-  const [createDatabase, setCreateDatabase] = useState(state?.create === true);
+  const historyState = useHistoryState<{ create: boolean }>();
+  const [createDatabase, setCreateDatabase] = useState(Boolean(historyState.create));
 
   return (
     <>

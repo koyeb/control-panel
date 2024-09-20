@@ -19,6 +19,8 @@ import { useLocation, useNavigate } from 'src/hooks/router';
 import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate } from 'src/intl/translate';
+import { CommandPalette } from 'src/modules/command-palette/command-palette';
+import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
 import { inArray } from 'src/utils/arrays';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
@@ -41,8 +43,9 @@ export function MainLayout({ children }: LayoutProps) {
   const pageContext = usePageContext();
 
   return (
-    <>
+    <CommandPalette>
       <DocumentTitle />
+      <CreateServiceDialog />
 
       <Layout
         banner={<SessionTokenBanner />}
@@ -52,7 +55,7 @@ export function MainLayout({ children }: LayoutProps) {
         context={pageContext.enabled ? <PageContext {...pageContext} /> : undefined}
         contextExpanded={pageContext.expanded}
       />
-    </>
+    </CommandPalette>
   );
 }
 

@@ -1,21 +1,25 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { Alert, Button, TabButtons } from '@koyeb/design-system';
+import { api } from 'src/api/api';
 import { useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { App, Deployment, Service } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
+import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { CopyIconButton } from 'src/application/copy-icon-button';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
+import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { usePathname, useRouteParam } from 'src/hooks/router';
+import { useNavigate, usePathname, useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { Translate } from 'src/intl/translate';
+import { useRegisterCommand } from 'src/modules/command-palette/command-palette-context';
+import { inArray } from 'src/utils/arrays';
 
 import { RedeployButton } from './redeploy-button';
 import { ServiceErrorAlert } from './service-error-alert';
@@ -57,6 +61,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   return (
     <div className="col gap-8">
       <DocumentTitle title={serviceName ?? undefined} />
+      <ServiceCommands service={service} />
 
       <div className="col sm:row items-start justify-between gap-4">
         <Header app={app} service={service} deployment={activeDeployment} />
@@ -71,6 +76,88 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
       {children}
     </div>
   );
+}
+
+function ServiceCommands({ service }: { service: Service }) {
+  const invalidate = useInvalidateApiQuery();
+  const { token } = useToken();
+  const { id: serviceId, name } = service;
+  const navigate = useNavigate();
+
+  useRegisterCommand(
+    (register) => {
+      const invalidateService = async () => {
+        await invalidate('listServices');
+        await invalidate('getService', { path: { id: service.id } });
+      };
+
+      register({
+        label: `Go to dashboard`,
+        description: `Navigate to the ${name} service's dashboard page`,
+        keywords: ['overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
+        execute: () => navigate(routes.service.overview(service.id)),
+      });
+
+      register({
+        label: `Go to metrics`,
+        description: `Navigate to the ${name} service's metrics page`,
+        keywords: ['metrics', 'monitoring', 'graphs', 'charts'],
+        execute: () => navigate(routes.service.metrics(service.id)),
+      });
+
+      register({
+        label: `Go to console`,
+        description: `Navigate to the ${name} service's console page`,
+        keywords: ['console', 'shell', 'terminal', 'command', 'execute', 'run', 'ssh'],
+        execute: () => navigate(routes.service.console(service.id)),
+      });
+
+      register({
+        label: `Go to settings`,
+        description: `Navigate to the ${name} service's settings page`,
+        keywords: ['settings', 'update'],
+        execute: () => navigate(routes.service.settings(service.id)),
+      });
+
+      register({
+        label: `Redeploy service`,
+        description: `Redeploy ${name}'s latest deployment`,
+        keywords: ['redeploy', 'restart'],
+        async execute() {
+          await api.redeployService({ token, path: { id: service.id }, body: {} });
+          await invalidateService();
+          notify.success(`Service ${name} is being redeployed`);
+        },
+      });
+
+      if (service.status === 'paused') {
+        register({
+          label: `Resume service ${name}`,
+          description: `Resume ${name}`,
+          keywords: ['resume', 'start'],
+          execute: async () => {
+            await api.resumeService({ token, path: { id: service.id } });
+            await invalidateService();
+            notify.success(`Service ${name} is being resumed`);
+          },
+        });
+      } else if (inArray(service.status, ['healthy', 'degraded'])) {
+        register({
+          label: `Pause service ${name}`,
+          description: `Pause ${name}`,
+          keywords: ['pause', 'stop'],
+          execute: async () => {
+            await api.pauseService({ token, path: { id: service.id } });
+            await invalidateService();
+            notify.success(`Service ${name} is being paused`);
+          },
+        });
+      }
+    },
+    [serviceId, name],
+  );
+
+  return null;
 }
 
 type HeaderProps = {

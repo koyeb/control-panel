@@ -16,6 +16,7 @@ import {
   IconSettings,
 } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useShortcut } from 'src/hooks/shortcut';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate } from 'src/intl/translate';
@@ -162,7 +163,7 @@ export function CreateServiceDialog() {
 export function CreateServiceDialogDialog() {
   const { isOpen, dialogOpened, dialogClosed, reset } = useCreateServiceDialog();
 
-  useShortcut(['meta', 'k'], dialogOpened);
+  useShortcut(['meta', 'k'], useFeatureFlag('new-command-palette') ? undefined : dialogOpened);
 
   return (
     <Dialog

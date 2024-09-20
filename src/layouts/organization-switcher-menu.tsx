@@ -1,12 +1,11 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
 
 import { ButtonMenuItem, Menu, MenuItem, Spinner } from '@koyeb/design-system';
-import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
-import { mapOrganizationMembers } from 'src/api/mappers/session';
+import { useUserOrganizationMemberships, useOrganizationUnsafe } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
-import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
+import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { IconCheck, IconCirclePlus } from 'src/components/icons';
@@ -28,7 +27,7 @@ type OrganizationSwitcherMenuProps = OrganizationSwitcherMenuOwnProps & React.HT
 export const OrganizationSwitcherMenu = forwardRef<HTMLDivElement, OrganizationSwitcherMenuProps>(
   function OrganizationSwitcherMenu({ onClose, showCreateOrganization, ...props }, ref) {
     const currentOrganization = useOrganizationUnsafe();
-    const { data: organizationMembers = [] } = useOrganizationMembers();
+    const { data: organizationMembers = [] } = useUserOrganizationMemberships();
 
     const {
       mutate: switchOrganization,
@@ -88,16 +87,6 @@ export const OrganizationSwitcherMenu = forwardRef<HTMLDivElement, OrganizationS
 
 function isNotDeleting({ organization }: OrganizationMember) {
   return !inArray(organization.status, ['deleting', 'deleted']);
-}
-
-function useOrganizationMembers() {
-  const user = useUserUnsafe();
-
-  return useQuery({
-    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
-    enabled: user !== undefined,
-    select: mapOrganizationMembers,
-  });
 }
 
 function useSwitchOrganization(onSuccess: () => void) {
