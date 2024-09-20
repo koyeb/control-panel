@@ -19,9 +19,9 @@ import { useShortcut } from 'src/hooks/shortcut';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 
-import { useCommandPalette } from '../use-command-palette';
+import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = Translate.prefix('commandPalette');
+const T = Translate.prefix('createServiceDialog');
 
 export function GithubOrganizationImage() {
   const githubApp = useGithubApp();
@@ -36,7 +36,7 @@ export function GithubOrganizationImage() {
 }
 
 export function OrganizationRepositoriesList() {
-  const { serviceType, search, navigate } = useCommandPalette();
+  const { serviceType, search, navigate } = useCreateServiceDialog();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const repositories = useRepositories(search);
@@ -143,7 +143,7 @@ function GithubAppLinks() {
 
 export function PublicRepository() {
   const t = T.useTranslate();
-  const { serviceType, navigate } = useCommandPalette();
+  const { serviceType, navigate } = useCreateServiceDialog();
 
   const schema = z.object({
     url: z.string().refine((url) => url.match(/.+\/.+/), t('invalidGithubRepositoryUrl')),

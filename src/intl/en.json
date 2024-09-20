@@ -515,7 +515,7 @@
       "pending": "Your account is being validated"
     }
   },
-  "commandPalette": {
+  "createServiceDialog": {
     "searchPlaceholder": "Search",
     "shortcuts": {
       "navigate": "to navigate",

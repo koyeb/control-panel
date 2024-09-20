@@ -1,10 +1,10 @@
 import { ListItem, ListSections } from 'src/components/list';
 import { Shortcut } from 'src/components/shortcut';
 
-import { useCommandPalette } from './use-command-palette';
+import { useCreateServiceDialog } from './use-create-service-dialog';
 
 export function Navigation() {
-  const { sections, page: activePage, onNavigationItemRef, pageChanged } = useCommandPalette();
+  const { sections, page: activePage, onNavigationItemRef, pageChanged } = useCreateServiceDialog();
 
   return (
     <aside className="scrollbar-green scrollbar-thin max-h-full overflow-y-auto border-r p-2">

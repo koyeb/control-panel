@@ -14,9 +14,9 @@ import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
 
-import { useCommandPalette } from '../use-command-palette';
+import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = Translate.prefix('commandPalette');
+const T = Translate.prefix('createServiceDialog');
 
 const schema = z.object({
   image: z.string().min(1),
@@ -25,7 +25,7 @@ const schema = z.object({
 });
 
 export function DockerImageSelection() {
-  const { serviceType, navigate } = useCommandPalette();
+  const { serviceType, navigate } = useCreateServiceDialog();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {

@@ -3,7 +3,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { ApiError } from 'src/api/api-errors';
 import { ApiMock } from 'src/api/mock/mock-api';
 
-import { CommandPalette } from './command-palette';
+import { CreateServiceDialog } from './create-service-dialog';
 
 type Args = {
   hasGithubApp: boolean;
@@ -11,7 +11,7 @@ type Args = {
 };
 
 export default {
-  title: 'Modules/CommandPalette',
+  title: 'Modules/CreateServiceDialog',
   parameters: {
     layout: 'centered',
     mockApi,
@@ -30,8 +30,8 @@ export default {
   ],
 } satisfies Meta<Args>;
 
-export const commandPalette: StoryFn = (_) => {
-  return <CommandPalette />;
+export const createServiceDialog: StoryFn = (_) => {
+  return <CreateServiceDialog />;
 };
 
 function mockApi(args: Args) {
