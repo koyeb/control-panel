@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash-es';
 import { useCallback } from 'react';
 import {
   FieldErrors,
@@ -81,10 +82,11 @@ export const useFormValues = <Values extends FieldValues>(form?: UseFormReturn<V
     form = formContext;
   }
 
-  const values = {
+  // return new references to trigger memoization effects on change
+  const values = cloneDeep({
     ...useWatch({ control: form.control }),
     ...form.getValues(),
-  };
+  });
 
   return useDeepCompareMemo(values);
 };
