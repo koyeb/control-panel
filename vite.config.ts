@@ -74,7 +74,7 @@ export default defineConfig({
         manualChunks: {
           xterm: ['@xterm/xterm'],
           nivo: ['@nivo/line', '@nivo/bar'],
-          analytics: ['@sentry/react', '@segment/analytics-next', 'posthog-js'],
+          analytics: ['@sentry/react', 'posthog-js'],
           vendors: [
             '@floating-ui/react',
             'ansi_up',
