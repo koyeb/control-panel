@@ -15,6 +15,7 @@ import {
   Port,
   PortProtocol,
   ServiceForm,
+  ServiceVolume,
 } from '../service-form.types';
 
 export function parseDeployParams(
@@ -40,6 +41,7 @@ export function parseDeployParams(
   builder.autoscaling_requests_per_second = params.get('autoscaling_requests_per_second');
   builder.autoscaling_concurrent_requests = params.get('autoscaling_concurrent_requests');
   builder.autoscaling_requests_response_time = params.get('autoscaling_requests_response_time');
+  builder.volumes = params.entries();
   builder.healthChecks = params.entries();
 
   if (builder.type === 'git') {
@@ -302,6 +304,49 @@ class ServiceFormBuilder {
         autoscaling: { targets: { [target]: { enabled: true, value: Number(value) } } },
       });
     }
+  }
+
+  set volumes(entries: IterableIterator<[key: string, value: string]>) {
+    const volumes: Record<string, Partial<ServiceVolume>> = {};
+
+    for (const [key, value] of entries) {
+      const { field, name } = this.parseVolumeKey(key);
+
+      if (!name) {
+        continue;
+      }
+
+      if (field === 'size') {
+        const size = Number(value);
+
+        if (Number.isInteger(size) && size > 0) {
+          volumes[name] ??= { name };
+          volumes[name].size = size;
+        }
+      }
+
+      if (field === 'path') {
+        volumes[name] ??= { name };
+        volumes[name].mountPath = value;
+      }
+    }
+
+    if (Object.values(volumes).length > 0) {
+      this.set('volumes', Object.values(volumes));
+    }
+  }
+
+  private parseVolumeKey(key: string) {
+    const match = key.match(/^volume_(size|path)\[([-_a-zA-Z0-9]+)\]$/);
+
+    if (!match) {
+      return {};
+    }
+
+    return {
+      field: match[1],
+      name: match[2],
+    };
   }
 
   set healthChecks(entries: IterableIterator<[key: string, value: string]>) {
@@ -660,5 +705,6 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
     if (hc.method !== defaultHc.method) set(`hc_method[${portNumber}]`, hc.method);
   }
 
+  // do not expose volume params
   return params;
 }

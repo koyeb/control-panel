@@ -340,6 +340,53 @@ describe('parseDeployParams', () => {
     });
   });
 
+  describe('volumes', () => {
+    it('valid volumes', () => {
+      test.params.append('volume_size[volume-1]', '1');
+      test.params.append('volume_path[volume-1]', '/data1');
+
+      test.params.append('volume_size[volume-2]', '2');
+      test.params.append('volume_path[volume-2]', '/data2');
+
+      expect(test.getValues()).toHaveProperty('volumes', [
+        {
+          name: 'volume-1',
+          size: 1,
+          mountPath: '/data1',
+        },
+        {
+          name: 'volume-2',
+          size: 2,
+          mountPath: '/data2',
+        },
+      ]);
+    });
+
+    it('missing value', () => {
+      test.params.append('volume_size[vol1]', '1');
+      test.params.append('volume_path[vol2]', '/data');
+
+      expect(test.getValues()).toHaveProperty('volumes', [
+        { name: 'vol1', size: 1 },
+        { name: 'vol2', mountPath: '/data' },
+      ]);
+    });
+
+    it('invalid size', () => {
+      test.params.append('volume_size[vol1]', '0');
+      test.params.append('volume_size[vol2]', '-1');
+      test.params.append('volume_size[vol3]', 'nope');
+
+      expect(test.getValues()).not.toHaveProperty('volumes');
+    });
+
+    it('invalid name', () => {
+      test.params.append('volume_size[+vol]', '1');
+
+      expect(test.getValues()).not.toHaveProperty('volumes');
+    });
+  });
+
   describe('health checks', () => {
     it('health check common options', () => {
       test.params.set('hc_grace_period[1]', '1');
