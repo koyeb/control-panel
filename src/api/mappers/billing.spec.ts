@@ -3,46 +3,48 @@ import { describe, expect, it } from 'vitest';
 import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 
-import { ApiNextInvoiceLine } from '../api-types';
 import { Invoice, InvoicePlanLine, InvoiceUsageLine, InvoiceDiscount } from '../model';
 
-import { mapInvoice, StripeInvoice } from './billing';
+import { StripeInvoice, StripeInvoiceLine, mapInvoice } from './billing';
 
 const createStripeInvoice = createFactory<StripeInvoice>(() => ({
-  lines: [],
+  lines: {
+    data: [],
+  },
   subtotal_excluding_tax: 0,
   total_excluding_tax: 0,
 }));
 
-const createStripeInvoiceLine = createFactory<ApiNextInvoiceLine>(() => ({
+const createStripeInvoiceLine = createFactory<StripeInvoiceLine>(() => ({
   amount_excluding_tax: 0,
-  period: { end: createDate(), start: createDate() },
-  plan_nickname: '',
-  price: { unit_amount_decimal: 0 },
+  period: { end: 0, start: 0 },
+  plan: { nickname: '' },
+  price: { unit_amount_decimal: '' },
   quantity: 0,
 }));
 
 describe('mapInvoice', () => {
-  const transform = (invoice: StripeInvoice, lines: ApiNextInvoiceLine[]) => {
-    return mapInvoice({ stripe_invoice: invoice as never, lines });
+  const transform = (invoice: StripeInvoice) => {
+    return mapInvoice({ stripe_invoice: invoice as never });
   };
 
   it('transforms an invoice from stripe', () => {
     const stripeInvoice = createStripeInvoice({
+      lines: {
+        data: [
+          createStripeInvoiceLine({
+            period: { end: 1685577600, start: 1682899200 },
+            amount_excluding_tax: 774,
+            plan: { nickname: 'Small instance' },
+            price: { unit_amount_decimal: '0.0004' },
+            quantity: 1935000,
+          }),
+        ],
+      },
       total_excluding_tax: 774,
     });
 
-    const lines = [
-      createStripeInvoiceLine({
-        period: { end: '2023-06-01T00:00:00.000Z', start: '2023-05-01T00:00:00.000Z' },
-        amount_excluding_tax: 774,
-        plan_nickname: 'Small instance',
-        price: { unit_amount_decimal: 0.0004 },
-        quantity: 1935000,
-      }),
-    ];
-
-    expect(transform(stripeInvoice, lines)).toEqual<Invoice>({
+    expect(transform(stripeInvoice)).toEqual<Invoice>({
       periods: [
         {
           start: createDate('2023-05-01'),
@@ -55,43 +57,52 @@ describe('mapInvoice', () => {
   });
 
   it('filters out the starter plan invoice line', () => {
-    const invoice = createStripeInvoice();
+    const stripeInvoice = createStripeInvoice({
+      lines: {
+        data: [
+          createStripeInvoiceLine({
+            amount_excluding_tax: 0,
+            plan: { nickname: 'Starter' },
+            price: { unit_amount_decimal: '0' },
+            quantity: 1,
+          }),
+        ],
+      },
+    });
 
-    const lines = [
-      createStripeInvoiceLine({
-        amount_excluding_tax: 0,
-        plan_nickname: 'Starter',
-        price: { unit_amount_decimal: 0 },
-        quantity: 1,
-      }),
-    ];
-
-    expect(transform(invoice, lines)).toHaveProperty('periods', []);
+    expect(transform(stripeInvoice)).toHaveProperty('periods', []);
   });
 
   it('transforms the startup plan invoice line', () => {
-    const invoice = createStripeInvoice();
+    const stripeInvoice = createStripeInvoice({
+      lines: {
+        data: [
+          createStripeInvoiceLine({
+            amount_excluding_tax: 7900,
+            plan: { nickname: 'Startup' },
+            price: { unit_amount_decimal: '7900' },
+            quantity: 1,
+          }),
+        ],
+      },
+    });
 
-    const lines = [
-      createStripeInvoiceLine({
-        amount_excluding_tax: 7900,
-        plan_nickname: 'Startup',
-        price: { unit_amount_decimal: 7900 },
-        quantity: 1,
-      }),
-    ];
-
-    expect(transform(invoice, lines)).toHaveProperty<InvoicePlanLine[]>('periods.0.lines', [
+    expect(transform(stripeInvoice)).toHaveProperty<InvoicePlanLine[]>('periods.0.lines', [
       { type: 'plan', label: 'Startup', total: 7900 },
     ]);
   });
 
   it('returns the invoice lines sorted by price', () => {
-    const invoice = transform(createStripeInvoice(), [
-      createStripeInvoiceLine({ price: { unit_amount_decimal: 2 } }),
-      createStripeInvoiceLine({ price: { unit_amount_decimal: 1 } }),
-    ]);
+    const stripeInvoice = createStripeInvoice({
+      lines: {
+        data: [
+          createStripeInvoiceLine({ price: { unit_amount_decimal: '2' } }),
+          createStripeInvoiceLine({ price: { unit_amount_decimal: '1' } }),
+        ],
+      },
+    });
 
+    const invoice = transform(stripeInvoice);
     const lines = invoice.periods[0]?.lines as InvoiceUsageLine[];
 
     expect(lines.map((line) => line.price)).toEqual([1, 2]);
@@ -109,9 +120,9 @@ describe('mapInvoice', () => {
       subtotal_excluding_tax: 123,
     });
 
-    expect(transform(stripeInvoice, [])).toHaveProperty('totalWithoutDiscount', 123);
+    expect(transform(stripeInvoice)).toHaveProperty('totalWithoutDiscount', 123);
 
-    expect(transform(stripeInvoice, [])).toHaveProperty<InvoiceDiscount>('discount', {
+    expect(transform(stripeInvoice)).toHaveProperty<InvoiceDiscount>('discount', {
       type: 'amountOff',
       label: 'Koyeb free tier',
       value: 550,
@@ -130,9 +141,9 @@ describe('mapInvoice', () => {
       subtotal_excluding_tax: 123,
     });
 
-    expect(transform(stripeInvoice, [])).toHaveProperty('totalWithoutDiscount', 123);
+    expect(transform(stripeInvoice)).toHaveProperty('totalWithoutDiscount', 123);
 
-    expect(transform(stripeInvoice, [])).toHaveProperty<InvoiceDiscount>('discount', {
+    expect(transform(stripeInvoice)).toHaveProperty<InvoiceDiscount>('discount', {
       type: 'percentOff',
       label: 'Preview for instance usage',
       value: 100,

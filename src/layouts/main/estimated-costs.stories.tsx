@@ -2,7 +2,6 @@ import { Meta, StoryFn } from '@storybook/react';
 import clsx from 'clsx';
 
 import { ApiError } from 'src/api/api-errors';
-import { ApiNextInvoiceLine } from 'src/api/api-types';
 import { StripeInvoice, StripeInvoiceCoupon } from 'src/api/mappers/billing';
 import { ApiMock } from 'src/api/mock/mock-api';
 import { OrganizationPlan } from 'src/api/model';
@@ -42,29 +41,30 @@ function mockApi(args: Args) {
 
   const invoice: StripeInvoice = {
     discount: null,
+    lines: {
+      data: [],
+    },
     subtotal_excluding_tax: 0,
     total_excluding_tax: 0,
   };
-
-  let lines: ApiNextInvoiceLine[] = [];
 
   if (args.plan !== 'hobby') {
     const nanoUsage = 1800;
     const mediumUsage = 1800;
 
-    lines = [
+    invoice.lines.data = [
       {
         amount_excluding_tax: nanoUsage * 60 * 60 * 0.0001,
-        period: { end: '2024-10-01T00:00:00.000Z', start: '2024-09-01T00:00:00.000Z' },
-        plan_nickname: 'Nano instance',
-        price: { unit_amount_decimal: 0.0001 },
+        period: { end: 1727740800, start: 1725148800 },
+        plan: { nickname: 'Nano instance' },
+        price: { unit_amount_decimal: '0.0001' },
         quantity: nanoUsage * 60 * 60,
       },
       {
         amount_excluding_tax: mediumUsage * 60 * 60 * 0.0008,
-        period: { end: '2024-10-01T00:00:00.000Z', start: '2024-09-01T00:00:00.000Z' },
-        plan_nickname: 'Medium instance',
-        price: { unit_amount_decimal: 0.0008 },
+        period: { end: 1727740800, start: 1725148800 },
+        plan: { nickname: 'Medium instance' },
+        price: { unit_amount_decimal: '0.0008' },
         quantity: mediumUsage * 60 * 60,
       },
     ];
@@ -73,11 +73,11 @@ function mockApi(args: Args) {
   }
 
   if (args.plan === 'startup') {
-    lines.push({
+    invoice.lines.data.push({
       amount_excluding_tax: 7900,
-      period: { end: '2024-11-01T00:00:00.000Z', start: '2024-10-01T00:00:00.000Z' },
-      plan_nickname: capitalize(args.plan),
-      price: { unit_amount_decimal: 7900 },
+      period: { end: 1730419200, start: 1727740800 },
+      plan: { nickname: capitalize(args.plan) },
+      price: { unit_amount_decimal: '7900' },
       quantity: 1,
     });
 
@@ -110,7 +110,6 @@ function mockApi(args: Args) {
     });
   } else {
     api.mockEndpoint('getNextInvoice', {
-      lines,
       stripe_invoice: invoice as never,
     });
   }
