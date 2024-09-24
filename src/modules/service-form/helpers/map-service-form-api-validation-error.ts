@@ -87,5 +87,7 @@ const regexpMapping = Object.entries({
   'health_checks.(\\d+).http.method': 'healthChecks.$1.method',
   'health_checks.(\\d+).http.headers.(\\d+).key': 'healthChecks.$1.header.$2.name',
   'health_checks.(\\d+).http.headers.(\\d+).value': 'healthChecks.$1.header.$2.value',
+  'volumes.(\\d+).name': 'volumes.$1.name',
+  'volumes.(\\d+).size': 'volumes.$1.size',
   'volumes.(\\d+).path': 'volumes.$1.mountPath',
 }).map(([key, value]) => [new RegExp(`^${key}$`), value] as const);

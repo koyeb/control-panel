@@ -1,4 +1,5 @@
 import { api } from 'src/api/api';
+import { isApiValidationError } from 'src/api/api-errors';
 import { getAccessToken } from 'src/application/token';
 import { hasProperty } from 'src/utils/object';
 
@@ -55,22 +56,53 @@ async function findOrCreateApp(appName: string): Promise<string> {
 }
 
 async function createVolumes(form: ServiceForm): Promise<void> {
+  const { volumes: existingVolumes } = await api.listVolumes({
+    token: getAccessToken() ?? undefined,
+    query: {},
+  });
+
   for (const volume of form.volumes) {
     if (volume.volumeId !== undefined) {
       continue;
     }
 
+    const existingVolume = existingVolumes?.find(hasProperty('name', volume.name));
+
+    if (existingVolume !== undefined) {
+      volume.volumeId = existingVolume.id;
+      continue;
+    }
+
+    volume.volumeId = await createVolume(
+      form.volumes.indexOf(volume),
+      volume.name,
+      volume.size,
+      form.regions[0]!,
+    );
+  }
+}
+
+async function createVolume(index: number, name: string, size: number, region: string): Promise<string> {
+  try {
     const response = await api.createVolume({
       token: getAccessToken() ?? undefined,
       body: {
-        name: volume.name,
-        max_size: volume.size,
-        region: form.regions[0],
+        name,
+        max_size: size,
+        region,
         volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
       },
     });
 
-    volume.volumeId = response.volume?.id;
+    return response.volume!.id!;
+  } catch (error) {
+    if (isApiValidationError(error)) {
+      for (const field of error.fields) {
+        field.field = `volumes.${index}.${field.field}`;
+      }
+    }
+
+    throw error;
   }
 }
 

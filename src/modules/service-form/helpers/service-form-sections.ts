@@ -54,6 +54,9 @@ export function sectionHasError(section: ServiceFormSection, errors: FieldErrors
     case 'scaling':
       return errors.scaling !== undefined;
 
+    case 'volumes':
+      return errors.volumes !== undefined;
+
     case 'ports':
       return errors.ports?.some?.((port) => {
         return !(Object.keys(port ?? {}).length === 1 && port?.healthCheck);
