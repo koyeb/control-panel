@@ -39,7 +39,6 @@ jobs:
             --build-arg PAGE_CONTEXT_BASE_URL \
             --build-arg IDENFY_SERVICE_BASE_URL \
             --build-arg RECAPTCHA_CLIENT_KEY \
-            --build-arg SEGMENT_WRITE_KEY \
             --build-arg POSTHOG_KEY \
             --build-arg STRIPE_PUBLIC_KEY \
             --build-arg MAPBOX_TOKEN \
@@ -52,7 +51,6 @@ jobs:
           PAGE_CONTEXT_BASE_URL: ${{ secrets.PAGE_CONTEXT_BASE_URL }}
           IDENFY_SERVICE_BASE_URL: ${{ secrets.IDENFY_SERVICE_BASE_URL }}
           RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}
-          SEGMENT_WRITE_KEY: ${{ secrets.SEGMENT_WRITE_KEY }}
           POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
           STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
           MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}

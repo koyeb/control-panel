@@ -51,7 +51,6 @@ jobs:
             PAGE_CONTEXT_BASE_URL=@control-panel-staging-page-context-base-url
             IDENFY_SERVICE_BASE_URL=@control-panel-staging-idenfy-service-base-url
             RECAPTCHA_CLIENT_KEY=@control-panel-staging-recaptcha-client-key
-            SEGMENT_WRITE_KEY=@control-panel-staging-segment-write-key
             POSTHOG_KEY=@control-panel-staging-posthog-key
             STRIPE_PUBLIC_KEY=@control-panel-staging-stripe-public-key
             MAPBOX_TOKEN=@control-panel-staging-mapbox-token
