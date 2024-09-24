@@ -223,8 +223,10 @@ function buildUrl(path: string, params: EndpointParams) {
     path = path.replaceAll(`{${key}}`, value);
   }
 
-  const { apiBaseUrl } = getConfig();
-  const url = new URL(path, apiBaseUrl ?? window.location.origin);
+  const { apiBaseUrl = '' } = getConfig();
+  const url = new URL(apiBaseUrl, window.location.origin);
+
+  url.pathname += path.replace(/^\//, '');
 
   for (const [key, value] of Object.entries(params.query ?? {})) {
     if (value === undefined) {
