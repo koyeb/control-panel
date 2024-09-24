@@ -3,6 +3,7 @@ import { sub } from 'date-fns';
 import { isDefined } from 'src/utils/generic';
 
 import { ApiEndpointResult } from '../api';
+import { ApiNextInvoiceLine } from '../api-types';
 import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from '../model';
 
 export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscription'>): Subscription {
@@ -15,17 +16,8 @@ export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscrip
 
 export type StripeInvoice = {
   discount?: { coupon?: StripeInvoiceCoupon } | null;
-  lines: { data: StripeInvoiceLine[] };
   subtotal_excluding_tax: number;
   total_excluding_tax: number;
-};
-
-export type StripeInvoiceLine = {
-  amount_excluding_tax: number;
-  period: { start: number; end: number };
-  plan: { nickname: string };
-  price: { unit_amount_decimal: string };
-  quantity: number; // in seconds for usage
 };
 
 export type StripeInvoiceCoupon = {
@@ -34,14 +26,14 @@ export type StripeInvoiceCoupon = {
   percent_off: number | null;
 };
 
-export function mapInvoice({ stripe_invoice }: ApiEndpointResult<'getNextInvoice'>): Invoice {
+export function mapInvoice({ lines, stripe_invoice }: ApiEndpointResult<'getNextInvoice'>): Invoice {
   const stripeInvoice = stripe_invoice as unknown as StripeInvoice;
 
   const invoice: Invoice = {
-    periods: groupLinesByPeriod(stripeInvoice.lines.data)
+    periods: groupLinesByPeriod(lines!)
       .map(({ start, end, lines }) => ({
-        start: transformPeriodStart(start),
-        end: transformPeriodEnd(end),
+        start,
+        end: sub(end, { days: 1 }).toISOString(),
         lines: getLines(lines),
       }))
       .filter(({ lines }) => lines.length > 0),
@@ -58,15 +50,7 @@ export function mapInvoice({ stripe_invoice }: ApiEndpointResult<'getNextInvoice
   return invoice;
 }
 
-function transformPeriodStart(start: number): string {
-  return new Date(1000 * start).toISOString();
-}
-
-function transformPeriodEnd(end: number): string {
-  return sub(1000 * end, { days: 1 }).toISOString();
-}
-
-function getLines(lines: StripeInvoiceLine[]): InvoiceLine[] {
+function getLines(lines: ApiNextInvoiceLine[]): InvoiceLine[] {
   return lines
     .map(transformLine)
     .filter(isDefined)
@@ -79,35 +63,35 @@ function getLines(lines: StripeInvoiceLine[]): InvoiceLine[] {
     });
 }
 
-function transformLine(line: StripeInvoiceLine): InvoiceLine | undefined {
-  if (line.plan.nickname === 'Starter') {
+function transformLine(line: ApiNextInvoiceLine): InvoiceLine | undefined {
+  if (line.plan_nickname === 'Starter') {
     return;
   }
 
-  if (line.plan.nickname === 'Startup') {
+  if (line.plan_nickname === 'Startup') {
     return {
       type: 'plan',
-      label: line.plan.nickname,
-      total: line.amount_excluding_tax,
+      label: line.plan_nickname,
+      total: line.amount_excluding_tax!,
     };
   }
 
   return {
     type: 'usage',
-    label: line.plan.nickname,
-    price: Number(line.price.unit_amount_decimal),
-    usage: line.quantity,
-    total: line.amount_excluding_tax,
+    label: line.plan_nickname!,
+    price: line.price!.unit_amount_decimal!,
+    usage: line.quantity!,
+    total: line.amount_excluding_tax!,
   };
 }
 
 function groupLinesByPeriod(
-  lines: StripeInvoiceLine[],
-): Array<{ start: number; end: number; lines: StripeInvoiceLine[] }> {
-  const periods = new Map<string, { start: number; end: number; lines: StripeInvoiceLine[] }>();
+  lines: ApiNextInvoiceLine[],
+): Array<{ start: string; end: string; lines: ApiNextInvoiceLine[] }> {
+  const periods = new Map<string, { start: string; end: string; lines: ApiNextInvoiceLine[] }>();
 
   for (const line of lines) {
-    const { start, end } = line.period;
+    const { start, end } = line.period as { start: string; end: string };
     const key = `${start}-${end}`;
 
     if (!periods.has(key)) {
@@ -117,7 +101,7 @@ function groupLinesByPeriod(
     periods.get(key)?.lines.push(line);
   }
 
-  return Array.from(periods.values()).sort(({ start: a }, { start: b }) => a - b);
+  return Array.from(periods.values()).sort(({ start: a }, { start: b }) => a.localeCompare(b));
 }
 
 function getDiscount(invoice: StripeInvoice): InvoiceDiscount | undefined {
