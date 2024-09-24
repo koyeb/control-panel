@@ -1,8 +1,8 @@
-import { AnalyticsBrowser } from '@segment/analytics-next';
 import { Elements as StripeElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { QueryClientProvider as TanstackQueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import posthog from 'posthog-js';
 import { Component, Suspense, useMemo } from 'react';
 
 import { useMount } from 'src/hooks/lifecycle';
@@ -18,7 +18,7 @@ import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
 import { TokenProvider, useToken } from './token';
 
-const { segmentWriteKey, stripePublicKey } = getConfig();
+const { posthogKey, stripePublicKey } = getConfig();
 
 export type ProvidersProps = {
   children: React.ReactNode;
@@ -26,15 +26,15 @@ export type ProvidersProps = {
 
 export function Providers({ children }: ProvidersProps) {
   const analytics = useMemo(() => {
-    if (segmentWriteKey === '') {
+    if (posthogKey === '') {
       return new NoopAnalytics();
     }
 
-    if (segmentWriteKey === 'log') {
+    if (posthogKey === 'log') {
       return new LogAnalytics();
     }
 
-    return new AnalyticsBrowser();
+    return posthog;
   }, []);
 
   const stripePromise = useMemo(() => {

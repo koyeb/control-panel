@@ -7,7 +7,6 @@ type AppConfig = Partial<{
   pageContextBaseUrl: string;
   idenfyServiceBaseUrl: string;
   recaptchaClientKey: string;
-  segmentWriteKey: string;
   posthogKey: string;
   stripePublicKey: string;
   mapboxToken: string;
@@ -26,7 +25,6 @@ export function getConfig(): AppConfig {
     pageContextBaseUrl: import.meta.env.VITE_PAGE_CONTEXT_BASE_URL,
     idenfyServiceBaseUrl: import.meta.env.VITE_IDENFY_SERVICE_BASE_URL,
     recaptchaClientKey: import.meta.env.VITE_RECAPTCHA_CLIENT_KEY,
-    segmentWriteKey: import.meta.env.VITE_SEGMENT_WRITE_KEY,
     posthogKey: import.meta.env.VITE_POSTHOG_KEY,
     stripePublicKey: import.meta.env.VITE_STRIPE_PUBLIC_KEY,
     mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN,
@@ -49,7 +47,6 @@ export function getConfig(): AppConfig {
     apiBaseUrl: getValue('apiBaseUrl'),
     pageContextBaseUrl: getValue('pageContextBaseUrl'),
     recaptchaClientKey: getValue('recaptchaClientKey'),
-    segmentWriteKey: getValue('segmentWriteKey'),
     posthogKey: getValue('posthogKey'),
     stripePublicKey: getValue('stripePublicKey'),
     mapboxToken: getValue('mapboxToken'),
