@@ -43,6 +43,8 @@ export function VolumeFields({ index, onRemove }: { index: number; onRemove: () 
   const isMobile = !useBreakpoint('md');
   const showLabel = isMobile || index === 0;
 
+  const { setValue } = useFormContext<ServiceForm>();
+
   return (
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_auto] md:border-none md:p-0">
@@ -56,6 +58,7 @@ export function VolumeFields({ index, onRemove }: { index: number; onRemove: () 
         itemToValue={getName}
         renderItem={getName}
         renderNoItems={() => <T id="noVolumes" values={{ region: region?.displayName }} />}
+        onChangeEffect={(volume) => 'id' in volume && setValue(`volumes.${index}.volumeId`, volume.id)}
       />
 
       <ControlledInput<ServiceForm, `volumes.${number}.mountPath`>
