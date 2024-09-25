@@ -122,7 +122,7 @@ async function createService(
   const definition = serviceFormToDeploymentDefinition(form);
 
   if (dryRun) {
-    delete definition.volumes;
+    definition.volumes = definition.volumes?.filter((volume) => volume.id !== undefined);
   }
 
   const result = await api.createService({
