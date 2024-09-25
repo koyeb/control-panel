@@ -71,7 +71,7 @@ function SectionContent() {
       )}
 
       <div className="col sm:row items-start gap-4">
-        <Button variant="ghost" color="gray" onClick={() => append({ name: '', size: NaN, mountPath: '' })}>
+        <Button variant="ghost" color="gray" onClick={() => append({ name: '', size: 0, mountPath: '' })}>
           <IconPlus className="size-4" />
           <T id="addVolume" />
         </Button>
