@@ -58,12 +58,18 @@ function useProgress({ isStarting, onCompleted }: DatabaseStartingProps, interpo
   }, [isStarting, interpolate, total]);
 
   useEffect(() => {
-    if (!isStarting && progress === 1) {
-      const timeout = window.setTimeout(onCompleted, 1000);
+    if (!isStarting) {
+      const elapsed = now() - start.current;
 
-      return () => {
-        window.clearTimeout(timeout);
-      };
+      if (elapsed < 1000) {
+        onCompleted();
+      } else if (progress === 1) {
+        const timeout = window.setTimeout(onCompleted, 1000);
+
+        return () => {
+          window.clearTimeout(timeout);
+        };
+      }
     }
   }, [isStarting, onCompleted, progress]);
 
