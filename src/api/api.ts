@@ -167,6 +167,12 @@ type InferParams<E> = E extends { parameters: infer Params extends EndpointParam
 type InferBody<E> = E extends { requestBody: { content: { '*/*': infer Body } } } ? Body : never;
 type InferResult<E> = E extends { responses: { 200: { content: { '*/*': infer Result } } } } ? Result : never;
 
+interface ApiCall<Params extends EndpointParams, Body, Result> {
+  (params: ApiRequestParams<Params, Body>): Promise<Result>;
+  before?: (params: ApiRequestParams<Params, Body>) => void | Promise<void>;
+  after?: (params: ApiRequestParams<Params, Body>, result: Result) => void | Promise<void>;
+}
+
 function endpoint<Method extends keyof Api.paths[Path], Path extends keyof Api.paths>(
   method: Method,
   path: Path,
@@ -176,7 +182,9 @@ function endpoint<Method extends keyof Api.paths[Path], Path extends keyof Api.p
   type Body = InferBody<Endpoint>;
   type Result = InferResult<Endpoint>;
 
-  return async (params: ApiRequestParams<Params, Body>): Promise<Result> => {
+  const call: ApiCall<Params, Body, Result> = async function (params) {
+    await call.before?.(params);
+
     const url = buildUrl(path, params as EndpointParams);
     const headers = new Headers();
 
@@ -214,8 +222,12 @@ function endpoint<Method extends keyof Api.paths[Path], Path extends keyof Api.p
       throw buildError(responseBody);
     }
 
-    return responseBody as InferResult<Endpoint>;
+    await call.after?.(params, responseBody as Result);
+
+    return responseBody as Result;
   };
+
+  return call;
 }
 
 function buildUrl(path: string, params: EndpointParams) {

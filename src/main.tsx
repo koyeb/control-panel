@@ -13,6 +13,8 @@ import { App } from './app';
 import { notify } from './application/notify';
 import { Providers } from './application/providers';
 
+import './api/api.intercept';
+
 // https://vitejs.dev/guide/build#load-error-handling
 window.addEventListener('vite:preloadError', (event) => {
   event.preventDefault();
