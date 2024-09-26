@@ -19,7 +19,7 @@ export function ConfirmDeactivateOrganization() {
   const confirmationId = useRouteParam('confirmationId');
   const onboardingStep = useOnboardingStep();
 
-  const confirmDeactivation = useMutation({
+  const { isIdle, mutate } = useMutation({
     ...useApiMutationFn('organizationConfirmation', (confirmationId: string) => ({
       path: { id: confirmationId },
     })),
@@ -33,10 +33,10 @@ export function ConfirmDeactivateOrganization() {
   });
 
   useEffect(() => {
-    if (confirmDeactivation.isIdle) {
-      confirmDeactivation.mutate(confirmationId);
+    if (isIdle) {
+      mutate(confirmationId);
     }
-  }, [confirmationId, confirmDeactivation]);
+  }, [confirmationId, isIdle, mutate]);
 
   return <LogoLoading />;
 }

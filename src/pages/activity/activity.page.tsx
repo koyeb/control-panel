@@ -85,6 +85,7 @@ export function ActivityPage() {
 }
 
 function useInfiniteScroll(query: UseInfiniteQueryResult) {
+  const { error, hasNextPage, isFetchingNextPage, fetchNextPage } = query;
   const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
   useIntersectionObserver(
@@ -96,11 +97,11 @@ function useInfiniteScroll(query: UseInfiniteQueryResult) {
           return;
         }
 
-        if (!query.error && query.hasNextPage && !query.isFetchingNextPage) {
-          void query.fetchNextPage();
+        if (!error && hasNextPage && !isFetchingNextPage) {
+          void fetchNextPage();
         }
       },
-      [query],
+      [error, hasNextPage, isFetchingNextPage, fetchNextPage],
     ),
   );
 

@@ -95,7 +95,7 @@ export function PlatformStatus({ collapsed }: { collapsed: boolean }) {
     if (query.isError) {
       reportError(query.error);
     }
-  }, [query]);
+  }, [query.isError, query.error]);
 
   if (!query.isSuccess) {
     return null;
