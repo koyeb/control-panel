@@ -47,6 +47,6 @@ export function mapCatalogInstancesList({
     disk: instance.disk!,
     hasVolumes: instance.volumes_enabled!,
     pricePerMonth: Number(instance.price_monthly!),
-    pricePerSecond: Number(instance.price_hourly!) / (60 * 60),
+    pricePerSecond: Number(instance.price_per_second!),
   }));
 }

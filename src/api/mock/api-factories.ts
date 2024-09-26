@@ -70,6 +70,7 @@ export const createApiCatalogInstance = createFactory<ApiCatalogInstance>(() => 
   disk: '',
   price_monthly: '',
   price_hourly: '',
+  price_per_second: '',
 }));
 
 export const createApiApp = createFactory<ApiApp>(() => ({

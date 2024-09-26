@@ -3730,6 +3730,8 @@ export interface components {
             memory?: string;
             /** The size of the disk in bytes in a format like 5MB */
             disk?: string;
+            /** The price to pay per second */
+            price_per_second?: string;
             /** The price to pay per hour */
             price_hourly?: string;
             /** The price to pay per month */
@@ -3771,6 +3773,8 @@ export interface components {
             memory?: string;
             /** The size of the disk in bytes in a format like 5MB */
             disk?: string;
+            /** The price to pay per second */
+            price_per_second?: string;
             /** The price to pay per hour */
             price_hourly?: string;
             /** The price to pay per month */
