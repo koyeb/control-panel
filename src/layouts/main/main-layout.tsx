@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { z } from 'zod';
 
 import { useOrganizationUnsafe, useUserQuery, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
+import { createValidationGuard } from 'src/application/create-validation-guard';
 import { routes } from 'src/application/routes';
 import { getAccessToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
@@ -14,7 +16,7 @@ import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { usePathname, useSearchParams } from 'src/hooks/router';
+import { useLocation } from 'src/hooks/router';
 import { useLocalStorage, useSessionStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate } from 'src/intl/translate';
@@ -156,19 +158,32 @@ type PageContextProps = {
 function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
-  const pathname = usePathname();
-  const search = useSearchParams();
+  const location = useLocation();
   const token = getAccessToken();
   const theme = useThemeModeOrPreferred();
 
+  const iFrameRef = useRef<HTMLIFrameElement>(null);
+  const [ready, setReady] = useState(0);
+
+  useEffect(() => {
+    function listener(event: MessageEvent<unknown>) {
+      if (event.origin === pageContextBaseUrl && isReadyEvent(event.data)) {
+        setReady((ready) => ready + 1);
+      }
+    }
+
+    window.addEventListener('message', listener);
+    return () => window.removeEventListener('message', listener);
+  }, [pageContextBaseUrl, iFrameRef]);
+
+  useEffect(() => {
+    if (pageContextBaseUrl !== undefined && ready) {
+      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+    }
+  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
+
   if (!enabled) {
     return null;
-  }
-
-  search.set('theme', theme);
-
-  if (token) {
-    search.set('token', token);
   }
 
   return (
@@ -181,13 +196,16 @@ function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
       </button>
 
       <iframe
-        src={`${pageContextBaseUrl}/context${pathname}?${search.toString()}`}
+        ref={iFrameRef}
+        src={`${pageContextBaseUrl}/context?theme=${theme}`}
         allow="clipboard-write"
         className="size-full border-l"
       />
     </div>
   );
 }
+
+const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }));
 
 function usePageContext(): PageContextProps {
   const { data: user } = useUserQuery();
