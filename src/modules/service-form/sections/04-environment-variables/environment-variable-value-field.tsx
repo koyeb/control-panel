@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import sort from 'lodash-es/sortBy';
 import uniq from 'lodash-es/uniq';
-import { useState } from 'react';
-import { useController } from 'react-hook-form';
+import { useRef, useState } from 'react';
+import { useController, useFormContext } from 'react-hook-form';
 
 import {
   Dropdown,
@@ -19,8 +19,6 @@ import {
 import { useApiQueryFn } from 'src/api/use-api';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconChevronDown } from 'src/components/icons';
-import { useFormValues } from 'src/hooks/form';
-import { useDebouncedValue } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
@@ -47,11 +45,13 @@ export function EnvironmentVariableValueField({
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
-  const definition = useDebouncedValue(serviceFormToDeploymentDefinition(useFormValues()), 500);
+  const values = useFormContext<ServiceForm>().getValues();
 
   const variablesQuery = useQuery({
-    ...useApiQueryFn('getServiceVariables', { body: { definition } as never }),
-    queryKey: ['getServiceVariables', definition],
+    ...useApiQueryFn('getServiceVariables', {
+      body: { definition: serviceFormToDeploymentDefinition(values) },
+      delay: 500,
+    }),
     placeholderData: keepPreviousData as never,
     refetchInterval: false,
     select: (result) => uniq(mapServiceVariables(result)),
@@ -64,7 +64,13 @@ export function EnvironmentVariableValueField({
   });
 
   const variableName = useWatchServiceForm(`environmentVariables.${index}.name`);
-  const filteredItems = filterItems(variablesQuery.data ?? [], variableName, field.value);
+
+  const filteredItems = [
+    '__new_secret__',
+    ...filterItems(variablesQuery.data ?? [], variableName, field.value),
+  ];
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const { highlightedIndex, getLabelProps, getInputProps, getMenuProps, getItemProps, toggleMenu } =
     useCombobox({
@@ -74,39 +80,32 @@ export function EnvironmentVariableValueField({
       itemToString: String,
       items: filteredItems,
       inputValue: field.value,
-      onInputValueChange({ inputValue, type }) {
-        if (type === useCombobox.stateChangeTypes.InputChange) {
-          field.onChange(inputValue);
-
-          if (regexp.test(inputValue)) {
-            setIsOpen(true);
-          }
-        }
-      },
       selectedItem: null,
       onSelectedItemChange({ selectedItem }) {
         if (selectedItem === '__new_secret__') {
           onCreateSecret();
         } else {
-          let value = field.value;
+          const value = field.value;
+          const input = inputRef.current;
+          const pos = input?.selectionStart;
 
           if (value.match(regexp)) {
-            value = value.replace(regexp, '');
+            field.onChange(value.replace(regexp, '') + `{{ ${selectedItem} }}`);
+          } else if (pos !== null) {
+            field.onChange(`${value.slice(0, pos)}{{ ${selectedItem} }}${value.slice(pos)}`);
           } else {
-            value = '';
+            field.onChange(`{{ ${selectedItem} }}`);
           }
-
-          field.onChange(value + `{{ ${selectedItem} }}`);
         }
       },
-      stateReducer(state, { type, changes }) {
+      stateReducer(state, { type, changes, inputValue }) {
         const { InputClick, InputChange } = useCombobox.stateChangeTypes;
 
-        if (type === InputClick) {
-          return { ...changes, isOpen: false };
+        if (type === InputChange) {
+          return { ...changes, isOpen: regexp.test(inputValue ?? '') };
         }
 
-        if (type === InputChange) {
+        if (type === InputClick) {
           return { ...changes, isOpen: state.isOpen };
         }
 
@@ -162,7 +161,7 @@ export function EnvironmentVariableValueField({
         }
         aria-invalid={fieldState.invalid}
         aria-errormessage={helperTextId}
-        {...getInputProps(field)}
+        {...getInputProps({ ...field, ref: inputRef })}
       />
 
       <Dropdown
@@ -182,22 +181,22 @@ export function EnvironmentVariableValueField({
 
 function mapServiceVariables({ secrets, system_env, user_env }: Record<string, string[]>) {
   return [
-    '__new_secret__',
+    //
     ...sort([...system_env!, ...user_env!]),
     ...secrets!.map((name) => `secret.${name}`),
   ].filter((value) => value !== '');
 }
 
-const regexp = /\{\{ *([-.a-zA-Z0-9]*)$/;
+const regexp = /{{(((?!}}).)*)$/i;
 
 function filterItems(items: string[], variableName: string, inputValue: string) {
-  const match = regexp.exec(inputValue)?.[1] ?? inputValue;
+  const match = regexp.exec(inputValue)?.[1];
 
-  if (match === '') {
+  if (match === undefined) {
     return items;
   }
 
   return items.filter((item) => {
-    return item !== variableName && item !== '__new_secret__' && lowerCase(item).includes(lowerCase(match));
+    return item !== variableName && lowerCase(item).includes(lowerCase(match));
   });
 }
