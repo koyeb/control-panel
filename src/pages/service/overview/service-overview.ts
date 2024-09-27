@@ -11,6 +11,7 @@ import { useAccessToken } from 'src/application/token';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParam } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
+import { unique } from 'src/utils/arrays';
 import { AssertionError, assert, defined } from 'src/utils/assert';
 import { isDefined } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
@@ -58,7 +59,7 @@ export function useServiceOverview(serviceId: string): ServiceOverview {
     hasMoreDeployments,
     isLoadingMoreDeployments,
     loadMoreDeployments,
-  } = useDeployments(serviceId);
+  } = useDeployments(service);
 
   assert(deployments.every(isComputeDeployment), new AssertionError('Unexpected deployment type'));
 
@@ -161,16 +162,16 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
   ];
 }
 
-function useDeployments(serviceId: string) {
+function useDeployments(service: Service) {
   const { token } = useAccessToken();
 
   const deploymentsQuery = useInfiniteQuery({
-    queryKey: ['listDeployments', { token, serviceId }],
+    queryKey: ['listDeployments', { token, serviceId: service.id }],
     initialPageParam: 0,
     async queryFn({ pageParam }) {
       const { count, deployments } = await api.listDeployments({
         token,
-        query: { service_id: serviceId, limit: String(10), offset: String(10 * pageParam) },
+        query: { service_id: service.id, limit: String(10), offset: String(10 * pageParam) },
       });
 
       return {
@@ -191,9 +192,18 @@ function useDeployments(serviceId: string) {
 
   const pages = deploymentsQuery.data?.pages ?? [];
 
+  const deployments = unique(
+    [
+      useDeployment(service.latestDeploymentId),
+      useDeployment(service.activeDeploymentId),
+      ...pages.flatMap((page) => page.deployments),
+    ].filter(isDefined),
+    getId,
+  );
+
   return {
     deploymentsQuery,
-    deployments: pages.flatMap((page) => page.deployments),
+    deployments,
     totalDeployments: pages[pages.length - 1]?.count ?? 0,
     hasMoreDeployments: deploymentsQuery.hasNextPage,
     isLoadingMoreDeployments: deploymentsQuery.isFetchNextPageError,
