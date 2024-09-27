@@ -3,7 +3,7 @@ import { createContext, createElement, useCallback, useContext, useEffect, useMe
 import { useMap } from 'src/hooks/collection';
 import { createId } from 'src/utils/strings';
 
-export type Command = {
+export type CommandWithoutOptions = {
   label: React.ReactNode;
   description: React.ReactNode;
   keywords: string[];
@@ -11,7 +11,17 @@ export type Command = {
   execute: () => void | Promise<void>;
 };
 
-type CommandPaletteContext = ReturnType<typeof useMap<string, Command>>;
+export type CommandWithOptions<T = unknown> = Omit<CommandWithoutOptions, 'execute'> & {
+  options: T[];
+  renderOption: (option: T) => React.ReactNode;
+  matchOption: (option: T, search: string) => boolean;
+  execute: (selected: T) => void | Promise<void>;
+};
+
+export type Command<T = unknown> = CommandWithoutOptions | CommandWithOptions<T>;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CommandPaletteContext = ReturnType<typeof useMap<string, Command<any>>>;
 
 const commandPaletteContext = createContext<CommandPaletteContext>(null as never);
 
@@ -43,8 +53,8 @@ export function useCommands(search: string) {
   }, [commandsMap, filter]);
 }
 
-export function useRegisterCommand(
-  param: Omit<Command, 'id'> | ((register: (command: Omit<Command, 'id'>) => void) => void),
+export function useRegisterCommand<T>(
+  param: Command<T> | ((register: (command: Command<T>) => void) => void),
   deps: React.DependencyList = [],
 ) {
   const [, { add: register, remove: unregister }] = useContext(commandPaletteContext);

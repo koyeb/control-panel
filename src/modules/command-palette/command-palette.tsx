@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Dialog, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
@@ -30,23 +30,23 @@ export function CommandPalette({ children }: { children: React.ReactNode }) {
   );
 }
 
+type Item = {
+  key: React.Key;
+  execute: () => void;
+  children: React.ReactNode;
+};
+
 function CommandPaletteDialog() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const refs = useRef<Map<Command, HTMLElement | null>>(new Map());
 
   const commands = useCommands(search);
+  const [command, setCommand] = useState<Command>();
 
-  useShortcut(['meta', 'k'], () => setOpen(true));
-
-  useEffect(() => {
-    setHighlightedIndex(0);
-  }, [commands]);
-
-  const execute = (command: Command) => {
-    const result = command.execute();
+  const execute = useCallback((fn: () => void | Promise<void>) => {
+    const result = fn();
 
     if (result === undefined) {
       setOpen(false);
@@ -62,7 +62,45 @@ function CommandPaletteDialog() {
         .then(() => setOpen(false), handleError)
         .finally(() => setLoading(false));
     }
-  };
+  }, []);
+
+  const options = useMemo((): Array<Item> => {
+    if (command && 'options' in command) {
+      return command.options
+        .filter((option) => search === '' || command.matchOption(option, search))
+        .map((option, index) => ({
+          key: index,
+          execute: () => execute(() => command.execute(option)),
+          children: command.renderOption(option),
+        }));
+    }
+
+    return commands.map((command) => ({
+      key: command.id,
+      execute() {
+        if ('options' in command) {
+          setSearch('');
+          setCommand(command);
+        } else {
+          execute(command.execute);
+        }
+      },
+      children: (
+        <>
+          <div>{command.label}</div>
+          <div className="text-xs text-dim">{command.description}</div>
+        </>
+      ),
+    }));
+  }, [command, commands, search, execute]);
+
+  useShortcut(['meta', 'k'], () => setOpen(true));
+
+  useEffect(() => {
+    setHighlightedIndex(0);
+  }, [options]);
+
+  const optionsContainer = useRef<HTMLDivElement>(null);
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const key = event.key;
@@ -71,10 +109,10 @@ function CommandPaletteDialog() {
       event.preventDefault();
       event.stopPropagation();
 
-      const command = commands[highlightedIndex];
+      const option = options[highlightedIndex];
 
-      if (command) {
-        execute(command);
+      if (option) {
+        option.execute();
       }
     }
 
@@ -91,16 +129,20 @@ function CommandPaletteDialog() {
           index++;
         }
 
-        index += commands.length;
-        index %= commands.length;
+        index += options.length;
+        index %= options.length;
 
-        const command = commands[index];
-        const element = refs.current.get(command as Command);
-
-        element?.scrollIntoView({ block: 'center', behavior: 'auto' });
+        optionsContainer.current?.children[index]?.scrollIntoView({ block: 'center', behavior: 'auto' });
 
         return index;
       });
+    }
+
+    if (command !== undefined && (key === 'Escape' || (key === 'Backspace' && search === ''))) {
+      event.preventDefault();
+      event.stopPropagation();
+      setSearch('');
+      setCommand(undefined);
     }
   };
 
@@ -109,6 +151,7 @@ function CommandPaletteDialog() {
       isOpen={open}
       onClose={() => setOpen(false)}
       onClosed={() => {
+        setCommand(undefined);
         setHighlightedIndex(0);
         setSearch('');
       }}
@@ -136,30 +179,48 @@ function CommandPaletteDialog() {
         )}
       </div>
 
-      <div className="max-h-96 overflow-y-auto p-1">
-        {commands.map((command, index) => (
-          <button
-            key={command.id}
-            ref={(ref) => refs.current.set(command, ref)}
-            onMouseMove={() => setHighlightedIndex(index)}
-            onClick={() => execute(command)}
-            className={clsx(
-              'col w-full gap-0.5 rounded-md px-2 py-1 text-start',
-              index === highlightedIndex && 'bg-muted/50',
-            )}
+      <div ref={optionsContainer} className="max-h-96 overflow-y-auto p-1">
+        {options.map(({ key, execute, children }, index) => (
+          <Option
+            key={key}
+            setHighlighted={() => setHighlightedIndex(index)}
+            isHighlighted={index === highlightedIndex}
+            onClick={execute}
           >
-            <div>{command.label}</div>
-            <div className="text-xs text-dim">{command.description}</div>
-          </button>
+            {children}
+          </Option>
         ))}
-
-        {commands.length === 0 && (
-          <div className="col min-h-16 items-center justify-center text-dim">No results</div>
-        )}
       </div>
+
+      {options.length === 0 && (
+        <div className="col min-h-16 items-center justify-center text-dim">No results</div>
+      )}
     </Dialog>
   );
 }
+
+type OptionProps = {
+  onClick: () => void;
+  setHighlighted: () => void;
+  isHighlighted: boolean;
+  children: React.ReactNode;
+};
+
+const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
+  { onClick, isHighlighted, setHighlighted, children },
+  ref,
+) {
+  return (
+    <button
+      ref={ref}
+      onMouseMove={setHighlighted}
+      onClick={onClick}
+      className={clsx('col w-full gap-0.5 rounded-md px-2 py-1 text-start', isHighlighted && 'bg-muted/50')}
+    >
+      {children}
+    </button>
+  );
+});
 
 function RegisterCommonCommands() {
   useRegisterInternalNavigationCommands();
@@ -498,24 +559,23 @@ function useRegisterAccountCommands() {
   const { data: organizationMemberships = [] } = useUserOrganizationMemberships();
 
   useRegisterCommand(
-    (register) => {
-      for (const { organization } of organizationMemberships) {
-        register({
-          label: `Switch to organization ${organization.name}`,
-          description: `Access resources within the ${organization.name} organization`,
-          keywords: [organization.name, 'switch', 'organization', 'context'],
-          async execute() {
-            const { token: newToken } = await api.switchOrganization({
-              token,
-              path: { id: organization.id },
-              header: {},
-            });
-
-            setToken(newToken!.id!);
-            navigate(routes.home());
-          },
+    {
+      label: 'Switch organization',
+      description: `Access resources within the another organization`,
+      keywords: ['switch', 'organization', 'context'],
+      options: organizationMemberships,
+      renderOption: ({ organization }) => organization.name,
+      matchOption: ({ organization }, search) => organization.name.includes(search),
+      async execute({ organization }) {
+        const { token: newToken } = await api.switchOrganization({
+          token,
+          path: { id: organization.id },
+          header: {},
         });
-      }
+
+        setToken(newToken!.id!);
+        navigate(routes.home());
+      },
     },
     [organizationMemberships],
   );
