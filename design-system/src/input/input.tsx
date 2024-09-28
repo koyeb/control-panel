@@ -100,7 +100,7 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(function Inp
         ref={ref}
         id={id}
         className={clsx(
-          'w-full min-w-0 flex-1 text-ellipsis rounded bg-inherit px-2 outline-none',
+          'w-full min-w-0 flex-1 rounded bg-inherit px-2 outline-none',
           'placeholder:text-placeholder',
           start && 'rounded-s-none',
           end && 'rounded-e-none',
