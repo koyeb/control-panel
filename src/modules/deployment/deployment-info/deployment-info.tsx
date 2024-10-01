@@ -1,9 +1,6 @@
-import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Collapse } from '@koyeb/design-system';
 import { App, ComputeDeployment, Service } from 'src/api/model';
-import { IconChevronRight } from 'src/components/icons';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Translate } from 'src/intl/translate';
 
@@ -40,17 +37,12 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
   const { definition } = deployment;
   const { type, source, builder, privileged } = definition;
 
-  const [expanded, setExpanded] = useState(false);
   const [definitionDialogOpen, setDefinitionDialogOpen] = useState(false);
 
   return (
     <section className="rounded-md border">
-      <header className={clsx('col gap-3 p-3', expanded && 'bg-gradient-to-b from-inverted/5 to-inverted/0')}>
-        <button onClick={() => setExpanded(!expanded)} className="row items-center gap-4">
-          <div>
-            <IconChevronRight className={clsx('size-4 transition-transform', expanded && 'rotate-90')} />
-          </div>
-
+      <header className="col gap-3 p-3">
+        <div className="row items-center gap-4">
           <div className="text-base font-medium">
             <T id="overview" />
           </div>
@@ -59,7 +51,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
             <Translate id={`common.serviceType.${type}`} />
             <ServiceTypeIcon type={type} size="medium" />
           </div>
-        </button>
+        </div>
 
         {type !== 'worker' && (
           <div className="row flex-wrap gap-x-16 gap-y-4">
@@ -69,43 +61,41 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
         )}
       </header>
 
-      <Collapse isExpanded={expanded}>
-        <div className="m-3 divide-y rounded-md border">
-          <div className="row flex-wrap gap-6 p-3">
-            {source.type === 'git' && (
-              <>
-                <RepositoryMetadata repository={source.repository} />
-                <BranchMetadata repository={source.repository} branch={source.branch} />
-                <CommitMetadata deployment={deployment} />
-              </>
-            )}
+      <div className="m-3 divide-y rounded-md border">
+        <div className="row flex-wrap gap-6 p-3">
+          {source.type === 'git' && (
+            <>
+              <RepositoryMetadata repository={source.repository} />
+              <BranchMetadata repository={source.repository} branch={source.branch} />
+              <CommitMetadata deployment={deployment} />
+            </>
+          )}
 
-            {(source.type === 'git' || source.type === 'archive') && (
-              <>
-                <BuilderMetadata builder={builder} />
-                {source.type === 'git' && <AutoDeployMetadata autoDeploy={source.autoDeploy} />}
-                <PrivilegedMetadata privileged={privileged} />
-              </>
-            )}
+          {(source.type === 'git' || source.type === 'archive') && (
+            <>
+              <BuilderMetadata builder={builder} />
+              {source.type === 'git' && <AutoDeployMetadata autoDeploy={source.autoDeploy} />}
+              <PrivilegedMetadata privileged={privileged} />
+            </>
+          )}
 
-            {source.type === 'docker' && <DockerImageMetadata image={source.image} />}
-          </div>
-
-          <div className="row flex-wrap gap-6 p-3">
-            <InstanceTypeMetadata instanceType={definition.instanceType} />
-            <ScalingMetadata scaling={definition.scaling} />
-            <RegionsMetadata regions={definition.regions} />
-            <EnvironmentVariablesMetadata definition={definition} />
-            <VolumesMetadata definition={definition} />
-          </div>
+          {source.type === 'docker' && <DockerImageMetadata image={source.image} />}
         </div>
 
-        <div className="row mb-4 justify-center">
-          <button className="text-link" onClick={() => setDefinitionDialogOpen(true)}>
-            <T id="viewMore" />
-          </button>
+        <div className="row flex-wrap gap-6 p-3">
+          <InstanceTypeMetadata instanceType={definition.instanceType} />
+          <ScalingMetadata scaling={definition.scaling} />
+          <RegionsMetadata regions={definition.regions} />
+          <EnvironmentVariablesMetadata definition={definition} />
+          <VolumesMetadata definition={definition} />
         </div>
-      </Collapse>
+      </div>
+
+      <div className="row mb-4 justify-center">
+        <button className="text-link" onClick={() => setDefinitionDialogOpen(true)}>
+          <T id="viewMore" />
+        </button>
+      </div>
 
       <DeploymentDefinitionDialog
         open={definitionDialogOpen}
