@@ -39,13 +39,8 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
   const submitButtonRef = useRef<HTMLButtonElement>(null);
 
   const deploy = (options: { skipBuild?: boolean; saveOnly?: boolean } = {}) => {
-    if (options.skipBuild !== undefined) {
-      setValue('meta.skipBuild', options.skipBuild);
-    }
-
-    if (options.saveOnly !== undefined) {
-      setValue('meta.saveOnly', options.saveOnly);
-    }
+    setValue('meta.skipBuild', Boolean(options.skipBuild));
+    setValue('meta.saveOnly', Boolean(options.saveOnly));
 
     setMenuOpen(false);
     submitButtonRef.current?.form?.requestSubmit();
