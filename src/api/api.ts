@@ -219,7 +219,7 @@ function endpoint<Method extends keyof Api.paths[Path], Path extends keyof Api.p
       : await response.text();
 
     if (!response.ok) {
-      throw buildError(responseBody);
+      throw buildError(response, responseBody);
     }
 
     await call.after?.(params, responseBody as Result);
@@ -255,7 +255,11 @@ function buildUrl(path: string, params: EndpointParams) {
   return url;
 }
 
-function buildError(body: unknown) {
+function buildError(response: Response, body: unknown) {
+  if (response.status === 429) {
+    return new ApiError({ code: '', message: 'Too many requests', status: 429 });
+  }
+
   if (isApiValidationError(body)) {
     return new ApiValidationError(body);
   }
