@@ -97,8 +97,8 @@ export function EnvironmentVariablesMetadata({ definition }: { definition: Deplo
   );
 }
 
-function formatEnvironmentVariable({ name, value }: EnvironmentVariable) {
-  return `${name}=${value}`;
+function formatEnvironmentVariable({ name, type, value }: EnvironmentVariable) {
+  return `${name}=${type === 'secret' ? '@' : ''}${value}`;
 }
 
 export function VolumesMetadata({ definition }: { definition: DeploymentDefinition }) {

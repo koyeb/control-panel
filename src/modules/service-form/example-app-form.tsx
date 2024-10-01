@@ -36,7 +36,9 @@ import { submitServiceForm } from './submit-service-form';
 const T = Translate.prefix('serviceForm.exampleApp');
 
 const schema = z.object({
-  environmentVariables: z.array(z.object({ name: z.string(), value: z.string() })),
+  environmentVariables: z.array(
+    z.object({ name: z.string(), value: z.string(), type: z.literal('plaintext') }),
+  ),
 });
 
 export function ExampleAppForm(props: { app: ExampleApp }) {
@@ -67,7 +69,7 @@ function ExampleAppForm_({ app }: React.ComponentProps<typeof ExampleAppForm>) {
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       environmentVariables: serviceForm.environmentVariables
-        .map(({ name, value }) => ({ name, value }))
+        .map(({ name, value }) => ({ name, value, type: 'plaintext' as const }))
         .filter(({ name }) => name !== ''),
     },
     resolver: useZodResolver(schema),

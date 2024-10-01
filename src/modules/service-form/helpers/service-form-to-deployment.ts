@@ -148,10 +148,21 @@ function scalings(scaling: Scaling): Array<ApiDeploymentScaling> {
 }
 
 function env(variables: Array<EnvironmentVariable>): Array<ApiDeploymentEnv> {
-  return variables.map((variable) => ({
-    key: variable.name,
-    value: variable.value,
-  }));
+  return variables.map((variable) => {
+    const env: ApiDeploymentEnv = {
+      key: variable.name,
+    };
+
+    if (variable.type === 'plaintext') {
+      env.value = variable.value;
+    }
+
+    if (variable.type === 'secret') {
+      env.secret = variable.value;
+    }
+
+    return env;
+  });
 }
 
 function ports(ports: Array<Port>): Array<ApiPort> {
