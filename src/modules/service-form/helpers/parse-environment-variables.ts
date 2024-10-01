@@ -65,7 +65,7 @@ function getEnvironmentVariable(
 
     return {
       name,
-      value: `{{ secrets.${value} }}`,
+      value: `{{ secret.${value} }}`,
     };
   } else {
     return {

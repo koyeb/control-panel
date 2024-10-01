@@ -75,7 +75,7 @@ describe('parseEnvironmentVariables', () => {
 
     const token = create.environmentVariable({
       name: 'TOKEN',
-      value: '{{ secrets.api-token }}',
+      value: '{{ secret.api-token }}',
     });
 
     const tokenSecret = create.simpleSecret({ name: 'api-token' });
@@ -145,10 +145,10 @@ describe('stringifyEnvironmentVariables', () => {
   test('secrets', () => {
     const token = create.environmentVariable({
       name: 'TOKEN',
-      value: '{{ secrets.api-token }}',
+      value: '{{ secret.api-token }}',
     });
 
-    expect(stringifyEnvironmentVariables([token])).toEqual('TOKEN={{ secrets.api-token }}\n');
+    expect(stringifyEnvironmentVariables([token])).toEqual('TOKEN={{ secret.api-token }}\n');
   });
 
   test('multiline value', () => {
