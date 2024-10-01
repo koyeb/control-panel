@@ -71,14 +71,16 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
         </div>
       )}
 
-      <div className="row items-center justify-between text-dim">
-        <div>
-          <T id="usage" />
+      {costs.usage !== costs.total && (
+        <div className="row items-center justify-between text-dim">
+          <div>
+            <T id="usage" />
+          </div>
+          <div>
+            <FormattedPrice value={costs.usage / 100} />
+          </div>
         </div>
-        <div>
-          <FormattedPrice value={costs.usage / 100} />
-        </div>
-      </div>
+      )}
 
       {costs.discount && (
         <div className="row items-center justify-between text-green">
@@ -92,7 +94,7 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
         </div>
       )}
 
-      <hr />
+      {(costs.usage !== costs.total || costs.discount) && <hr />}
 
       <div className="row items-center justify-between font-medium">
         <div>
