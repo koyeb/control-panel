@@ -120,7 +120,7 @@ export function EnvironmentVariableValueField({
       id="valueTooltip"
       values={{
         documentationLink: (children) => (
-          <DocumentationLink path="/docs/build-and-deploy/environment-variables#environment-variable-interpolation">
+          <DocumentationLink path="/docs/build-and-deploy/environment-variables#environment-variable-and-secret-interpolation">
             {children}
           </DocumentationLink>
         ),

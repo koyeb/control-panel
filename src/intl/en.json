@@ -1053,7 +1053,7 @@
       "info": "Configure manually or drag and drop file with multiple variables",
       "nameLabel": "Name",
       "valueLabel": "Value",
-      "valueTooltip": "To <documentationLink>reference secret or environment variable</documentationLink> (including Koyeb variables), use the following syntax: <code>'{{' secrets.'<'SECRET_NAME'>' '}}'</code> or <code>'{{' '<'ENV_NAME'>' '}}'</code>",
+      "valueTooltip": "You can reference secrets or environment variables (including Koyeb variables) using <documentationLink>interpolation</documentationLink>",
       "valuePlaceholder": "https://'{{ 'KOYEB_PUBLIC_DOMAIN '}}'/",
       "noVariablesToInterpolate": "No matching variables",
       "secretLabel": "Secret",
