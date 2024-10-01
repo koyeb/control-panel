@@ -127,7 +127,7 @@ function dockerDeployment() {
 
 function environmentVariable() {
   return z.object({
-    name: z.string(),
+    name: z.string().trim(),
     value: z.string(),
   });
 }

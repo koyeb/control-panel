@@ -80,7 +80,7 @@ describe('serviceFormSchema', () => {
     const form = createServiceForm();
 
     form.environmentVariables.push({
-      name: 'name',
+      name: ' name ',
       value: 'value',
     });
 
