@@ -50,9 +50,8 @@ export function DeleteOrganization() {
 
         result = newToken!.id!;
       } else {
-        const { token: newToken } = await api.unscopeOrganizationToken({
+        const { token: newToken } = await api.newSession({
           token,
-          header: {},
         });
 
         result = newToken!.id!;

@@ -31,7 +31,7 @@ export const api = {
   organizationSummary: endpoint('get', '/v1/organizations/{organization_id}/summary'),
   organizationQuotas: endpoint('get', '/v1/organizations/{organization_id}/quotas'),
   switchOrganization: endpoint('post', '/v1/organizations/{id}/switch'),
-  unscopeOrganizationToken: endpoint('post', '/v1/unscope_organization_token'),
+  newSession: endpoint('post', '/v1/account/session'),
   createOrganization: endpoint('post', '/v1/organizations'),
   updateOrganization: endpoint('patch', '/v1/organizations/{id}'),
   updateSignupQualification: endpoint('post', '/v1/organizations/{id}/signup_qualification'),
