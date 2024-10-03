@@ -168,7 +168,7 @@ function RegionResource({ identifier }: { identifier: string }) {
 function VolumeResource({ name, deleted }: { name: string; deleted: boolean }) {
   const [component, props] = deleted
     ? [undefined, {}]
-    : [Link, { href: routes.volumes(), className: 'hover:bg-muted/50' }];
+    : [Link, { href: routes.volumes.index(), className: 'hover:bg-muted/50' }];
 
   return (
     <ActivityResource component={component} {...props}>

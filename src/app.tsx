@@ -36,7 +36,9 @@ import { ServiceSettingsPage } from './pages/service/settings/service-settings.p
 import { OrganizationSettingsPages } from './pages/settings/organization/organization-settings.pages';
 import { UserSettingsPages } from './pages/settings/user/user-settings.pages';
 import { TeamPage } from './pages/team/team.page';
-import { VolumesPage } from './pages/volumes/volumes.page';
+import { VolumeSnapshotsPage } from './pages/volumes/volume-snapshots/volume-snapshots.page';
+import { VolumesLayout } from './pages/volumes/volumes-layout';
+import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page';
 
 export function App() {
   const userQuery = useUserQuery();
@@ -97,7 +99,14 @@ function AuthenticatedRoutes() {
         <Route path="/" component={HomePage} />
 
         <Route path="/services" component={ServicesPage} />
-        <Route path="/volumes" component={VolumesPage} />
+
+        <Route nest path="/volumes">
+          <VolumesLayout>
+            <Route path="/" component={VolumesListPage} />
+            <Route path="/snapshots" component={VolumeSnapshotsPage} />
+          </VolumesLayout>
+        </Route>
+
         <Route path="/domains" component={DomainsPage} />
         <Route path="/secrets" component={SecretsPage} />
         <Route path="/activity" component={ActivityPage} />

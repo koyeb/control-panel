@@ -1,6 +1,9 @@
 export const routes = {
   home: () => '/',
-  volumes: () => '/volumes',
+  volumes: {
+    index: () => '/volumes',
+    snapshots: () => '/volumes/snapshots',
+  },
   domains: () => '/domains',
   secrets: () => '/secrets',
   activity: () => '/activity',

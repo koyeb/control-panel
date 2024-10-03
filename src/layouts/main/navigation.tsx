@@ -70,7 +70,7 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
           disabled={disableComputeLinks}
           Icon={IconFolders}
           label={<T id="volumes" />}
-          href={routes.volumes()}
+          href={routes.volumes.index()}
           newBadge
         />
 

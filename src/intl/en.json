@@ -1289,6 +1289,7 @@
       "breadcrumbs": {
         "services": "Services",
         "volumes": "Volumes",
+        "volumeSnapshots": "Snapshots",
         "domains": "Domains",
         "secrets": "Secrets",
         "activity": "Activity",
