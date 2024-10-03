@@ -2,12 +2,12 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import sort from 'lodash-es/sortBy';
-import uniq from 'lodash-es/uniq';
 import { useRef, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import {
   Dropdown,
+  DropdownGroup,
   Field,
   FieldHelperText,
   FieldLabel,
@@ -54,7 +54,7 @@ export function EnvironmentVariableValueField({
     }),
     placeholderData: keepPreviousData as never,
     refetchInterval: false,
-    select: (result) => uniq(mapServiceVariables(result)),
+    select: mapServiceVariables,
   });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -65,10 +65,30 @@ export function EnvironmentVariableValueField({
 
   const variableName = useWatchServiceForm(`environmentVariables.${index}.name`);
 
-  const filteredItems = [
-    '__new_secret__',
-    ...filterItems(variablesQuery.data ?? [], variableName, field.value),
+  const groups: Array<DropdownGroup<string>> = [
+    {
+      key: 'secrets',
+      label: 'Secrets',
+      items: filterItems(variablesQuery.data?.secrets ?? [], variableName, field.value),
+    },
+    {
+      key: 'userEnv',
+      label: 'Service variables',
+      items: filterItems(variablesQuery.data?.userEnv ?? [], variableName, field.value),
+    },
+    {
+      key: 'systemEnv',
+      label: 'Koyeb variables',
+      items: filterItems(variablesQuery.data?.systemEnv ?? [], variableName, field.value),
+    },
+    {
+      key: 'create',
+      label: 'Create new',
+      items: ['__new_secret__'],
+    },
   ];
+
+  const items = groups.flatMap((group) => group.items);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -78,7 +98,7 @@ export function EnvironmentVariableValueField({
       onIsOpenChange: ({ isOpen }) => setIsOpen(isOpen),
       id,
       itemToString: String,
-      items: filteredItems,
+      items,
       inputValue: field.value,
       selectedItem: null,
       onSelectedItemChange({ selectedItem }) {
@@ -166,25 +186,24 @@ export function EnvironmentVariableValueField({
 
       <Dropdown
         dropdown={dropdown}
-        items={filteredItems}
+        groups={groups.filter((group) => group.items.length > 0)}
         selectedItem={undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}
         getKey={identity}
         renderItem={(item) => (item === '__new_secret__' ? <T id="createSecret" /> : item)}
-        renderNoItems={() => <T id="noVariablesToInterpolate" />}
       />
     </Field>
   );
 }
 
 function mapServiceVariables({ secrets, system_env, user_env }: Record<string, string[]>) {
-  return [
-    //
-    ...sort([...system_env!, ...user_env!]),
-    ...secrets!.map((name) => `secret.${name}`),
-  ].filter((value) => value !== '');
+  return {
+    secrets: secrets!.map((name) => `secret.${name}`),
+    userEnv: sort(user_env).filter((value) => value !== ''),
+    systemEnv: sort(system_env),
+  };
 }
 
 const regexp = /{{(((?!}}).)*)$/i;

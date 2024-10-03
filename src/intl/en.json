@@ -1055,7 +1055,6 @@
       "valueLabel": "Value",
       "valueTooltip": "You can reference secrets or environment variables (including Koyeb variables) using <documentationLink>interpolation</documentationLink>",
       "valuePlaceholder": "https://'{{ 'KOYEB_PUBLIC_DOMAIN '}}'/",
-      "noVariablesToInterpolate": "No matching variables",
       "secretLabel": "Secret",
       "addVariable": "Add another",
       "deleteVariable": "Delete variable",
