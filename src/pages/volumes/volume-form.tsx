@@ -24,13 +24,23 @@ const schema = z.object({
   size: z.number(),
 });
 
+function toGigaBytes(bytes: number | undefined) {
+  if (bytes === undefined) {
+    return undefined;
+  }
+
+  return bytes / Math.pow(1000, 3);
+}
+
 type VolumeFormProps = {
+  snapshotId?: string;
+  size?: number;
   volume?: Volume;
   onSubmitted: (volume: Volume) => void;
   renderFooter: (formState: FormState<FieldValues>) => React.ReactNode;
 };
 
-export function VolumeForm({ volume, onSubmitted, renderFooter }: VolumeFormProps) {
+export function VolumeForm({ snapshotId, size, volume, onSubmitted, renderFooter }: VolumeFormProps) {
   const { token } = useAccessToken();
   const invalidate = useInvalidateApiQuery();
   const regions = useRegions().filter(hasProperty('hasVolumes', true));
@@ -40,7 +50,7 @@ export function VolumeForm({ volume, onSubmitted, renderFooter }: VolumeFormProp
     defaultValues: {
       name: volume?.name ?? '',
       region: volume?.region ?? '',
-      size: volume?.size ? volume.size / Math.pow(10, 9) : NaN,
+      size: toGigaBytes(size ?? volume?.size),
     },
     resolver: useZodResolver(schema, {
       name: t('nameLabel'),
@@ -65,6 +75,7 @@ export function VolumeForm({ volume, onSubmitted, renderFooter }: VolumeFormProp
             token,
             body: {
               volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
+              snapshot_id: snapshotId,
               name,
               max_size: size,
               region,
@@ -118,7 +129,7 @@ export function VolumeForm({ volume, onSubmitted, renderFooter }: VolumeFormProp
         control={form.control}
         name="size"
         type="number"
-        disabled={volume !== undefined}
+        disabled={snapshotId !== undefined || volume !== undefined}
         label={<T id="sizeLabel" />}
         placeholder={t('sizePlaceholder')}
         end={

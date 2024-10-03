@@ -7,7 +7,8 @@ import { parseBytes } from 'src/application/memory';
 import { createDate } from 'src/utils/date';
 import { create } from 'src/utils/factories';
 
-import { CreateVolumeDialog } from './create-volume-dialog';
+import { CreateVolumeDialog } from '../create-volume-dialog';
+
 import { VolumesList } from './volumes-list';
 
 export default {

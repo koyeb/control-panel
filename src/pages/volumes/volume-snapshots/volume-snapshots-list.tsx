@@ -13,7 +13,8 @@ import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-import { CreateVolumeFromSnapshotDialog } from './create-volume-from-snapshot-dialog';
+import { CreateVolumeDialog } from '../create-volume-dialog';
+
 import { DeleteSnapshotDialog } from './delete-snapshot-dialog';
 
 const T = Translate.prefix('pages.volumeSnapshots.list');
@@ -90,9 +91,10 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
         )}
       </ActionsMenu>
 
-      <CreateVolumeFromSnapshotDialog
+      <CreateVolumeDialog
         open={openDialog === 'create'}
         onClose={() => setOpenDialog(undefined)}
+        snapshot={snapshot}
       />
 
       <DeleteSnapshotDialog

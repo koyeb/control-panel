@@ -8,7 +8,8 @@ import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { Translate } from 'src/intl/translate';
 
-import { CreateVolumeDialog } from './create-volume-dialog';
+import { CreateVolumeDialog } from '../create-volume-dialog';
+
 import { VolumesList } from './volumes-list';
 
 const T = Translate.prefix('pages.volumes');
