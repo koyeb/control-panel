@@ -34,9 +34,9 @@ const meta = {
     placeholder: 'Placeholder',
     helperText: 'Helper text',
     items: games,
-    getKey: (game) => String(games.indexOf(game)),
+    getKey: (game) => game.name,
     itemToString: (game) => game.name,
-    renderItem: (game) => (
+    renderItem: (game: Game) => (
       <>
         {game.name} <span className="text-dim">{game.released}</span>
       </>
@@ -64,5 +64,18 @@ export const Invalid: Story = {
   },
   argTypes: {
     helperText: controls.hidden(),
+  },
+};
+
+const groups = [
+  { key: '7', label: '1970s', items: games.filter((game) => game.released.startsWith('197')) },
+  { key: '8', label: '1980s', items: games.filter((game) => game.released.startsWith('198')) },
+  { key: '9', label: '1990s', items: games.filter((game) => game.released.startsWith('199')) },
+];
+
+export const Groups: Story = {
+  args: {
+    items: groups.flatMap((group) => group.items),
+    groups,
   },
 };

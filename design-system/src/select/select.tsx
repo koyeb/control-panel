@@ -3,7 +3,7 @@ import { useSelect } from 'downshift';
 import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
 import { forwardRef, useMemo } from 'react';
 
-import { Dropdown } from '../dropdown/dropdown';
+import { Dropdown, DropdownGroup } from '../dropdown/dropdown';
 import { useDropdown } from '../dropdown/use-dropdown';
 import { Field, FieldHelperText, FieldLabel } from '../field/field';
 import { useId } from '../utils/use-id';
@@ -20,7 +20,8 @@ type SelectProps<Item> = {
   placeholder?: React.ReactNode;
   className?: string;
   id?: string;
-  items: Item[];
+  items: Array<Item>;
+  groups?: Array<DropdownGroup<Item>>;
   selectedItem?: Item | null;
   onSelectedItemChange?: (value: Item) => void;
   onItemClick?: (item: Item) => void;
@@ -46,6 +47,7 @@ export const Select = forwardRef(function Select<Item>(
     className,
     id: idProp,
     items,
+    groups,
     selectedItem: selectedItemProp,
     onSelectedItemChange,
     onItemClick,
@@ -146,7 +148,6 @@ export const Select = forwardRef(function Select<Item>(
 
       <Dropdown
         dropdown={dropdown}
-        items={items}
         selectedItem={selectedItem ?? undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
@@ -155,6 +156,7 @@ export const Select = forwardRef(function Select<Item>(
         renderItem={renderItem}
         renderNoItems={renderNoItems}
         onItemClick={onItemClick}
+        {...(groups ? { groups } : { items })}
       />
     </Field>
   );
