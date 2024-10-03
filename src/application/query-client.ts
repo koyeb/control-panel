@@ -120,6 +120,10 @@ function onQueryError(error: Error, query: UnknownQuery) {
       navigate(routes.home());
     }
 
+    if (error.status === 429) {
+      notify.error(error.message);
+    }
+
     if (error.status >= 500) {
       reportError(error);
     }
