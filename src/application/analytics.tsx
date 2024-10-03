@@ -49,7 +49,6 @@ function Initialize() {
       api_host: 'https://eu.posthog.com',
       capture_pageview: false,
       autocapture: false,
-      persistence: 'localStorage',
     });
   });
 
