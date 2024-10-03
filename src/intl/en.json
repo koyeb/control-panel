@@ -1664,6 +1664,7 @@
         "attachedTo": "Attached to",
         "actions": {
           "edit": "Edit",
+          "createSnapshot": "Create snapshot",
           "delete": "Delete"
         },
         "noVolumes": {
@@ -1671,6 +1672,13 @@
           "description": "Volumes provide additional, persistent, storage capacity for your services",
           "cta": "Create volume"
         }
+      },
+      "createSnapshotDialog": {
+        "title": "Create snapshot",
+        "description": "Choose a name for your snapshot",
+        "nameLabel": "Name",
+        "namePlaceholder": "my-snapshot",
+        "successNotification": "Snapshot <strong>{name}</strong> created"
       },
       "deleteVolume": {
         "title": "Delete volume",
@@ -1716,10 +1724,10 @@
       },
       "deleteSnapshot": {
         "title": "Delete snapshot",
-        "description": "Are you sure you want to delete the {name} volume?",
+        "description": "Are you sure you want to delete the {name} snapshot?",
         "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
-        "confirm": "Delete volume",
-        "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
+        "confirm": "Delete snapshot",
+        "deleteSuccess": "Snapshot <strong>{name}</strong> is being deleted"
       }
     },
     "domains": {

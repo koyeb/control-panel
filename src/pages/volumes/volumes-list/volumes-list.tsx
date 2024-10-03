@@ -16,6 +16,7 @@ import { VolumeStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 
+import { CreateSnapshotDialog } from './create-snapshot-dialog';
 import { DeleteVolumeDialog } from './delete-volume-dialog';
 import { EditVolumeDialog } from './edit-volume-dialog';
 
@@ -104,7 +105,7 @@ function AttachedService({ serviceId }: { serviceId?: string }) {
 }
 
 function Actions({ volume }: { volume: Volume }) {
-  const [openDialog, setOpenDialog] = useState<'edit' | 'delete'>();
+  const [openDialog, setOpenDialog] = useState<'edit' | 'createSnapshot' | 'delete'>();
 
   return (
     <>
@@ -113,6 +114,10 @@ function Actions({ volume }: { volume: Volume }) {
           <>
             <ButtonMenuItem onClick={withClose(() => setOpenDialog('edit'))}>
               <T id="actions.edit" />
+            </ButtonMenuItem>
+
+            <ButtonMenuItem onClick={withClose(() => setOpenDialog('createSnapshot'))}>
+              <T id="actions.createSnapshot" />
             </ButtonMenuItem>
 
             <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
@@ -124,6 +129,12 @@ function Actions({ volume }: { volume: Volume }) {
 
       <EditVolumeDialog
         open={openDialog === 'edit'}
+        onClose={() => setOpenDialog(undefined)}
+        volume={volume}
+      />
+
+      <CreateSnapshotDialog
+        open={openDialog === 'createSnapshot'}
         onClose={() => setOpenDialog(undefined)}
         volume={volume}
       />
