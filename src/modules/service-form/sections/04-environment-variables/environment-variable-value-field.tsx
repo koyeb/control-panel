@@ -190,7 +190,7 @@ function mapServiceVariables({ secrets, system_env, user_env }: Record<string, s
 const regexp = /{{(((?!}}).)*)$/i;
 
 function filterItems(items: string[], variableName: string, inputValue: string) {
-  const match = regexp.exec(inputValue)?.[1];
+  const match = regexp.exec(inputValue)?.[1]?.trim();
 
   if (match === undefined) {
     return items;
