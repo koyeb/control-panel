@@ -7,6 +7,7 @@ import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
 import { IconArrowRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate, usePathname } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
@@ -17,6 +18,7 @@ export function VolumesLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
 
   const organization = useOrganization();
+  const snapshots = useFeatureFlag('snapshots');
 
   if (organization.plan === 'hobby') {
     return (
@@ -42,20 +44,22 @@ export function VolumesLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <TabButtons className="mb-6">
-        <TabButton
-          selected={pathname === routes.volumes.index()}
-          onClick={() => navigate(routes.volumes.index())}
-        >
-          Volumes
-        </TabButton>
-        <TabButton
-          selected={pathname === routes.volumes.snapshots()}
-          onClick={() => navigate(routes.volumes.snapshots())}
-        >
-          Snapshots
-        </TabButton>
-      </TabButtons>
+      {snapshots && (
+        <TabButtons className="mb-6">
+          <TabButton
+            selected={pathname === routes.volumes.index()}
+            onClick={() => navigate(routes.volumes.index())}
+          >
+            Volumes
+          </TabButton>
+          <TabButton
+            selected={pathname === routes.volumes.snapshots()}
+            onClick={() => navigate(routes.volumes.snapshots())}
+          >
+            Snapshots
+          </TabButton>
+        </TabButtons>
+      )}
 
       {children}
     </>
