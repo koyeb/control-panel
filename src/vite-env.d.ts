@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly VITE_POSTHOG_KEY: EnvVar;
   readonly VITE_STRIPE_PUBLIC_KEY: EnvVar;
   readonly VITE_MAPBOX_TOKEN: EnvVar;
+  readonly VITE_INTERCOM_APP_ID: EnvVar;
   readonly VITE_DISABLE_POLLING: EnvVar;
 }
 

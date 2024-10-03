@@ -42,6 +42,7 @@ jobs:
             --build-arg POSTHOG_KEY \
             --build-arg STRIPE_PUBLIC_KEY \
             --build-arg MAPBOX_TOKEN \
+            --build-arg INTERCOM_APP_ID \
             --build-arg SENTRY_AUTH_TOKEN \
             -t "$DOCKER_IMAGE:$GITHUB_SHA" .
         env:
@@ -54,6 +55,7 @@ jobs:
           POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
           STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
           MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
+          INTERCOM_APP_ID: ${{ secrets.INTERCOM_APP_ID }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Push docker image

@@ -10,6 +10,7 @@ type AppConfig = Partial<{
   posthogKey: string;
   stripePublicKey: string;
   mapboxToken: string;
+  intercomAppId: string;
   disablePolling: boolean;
 }>;
 
@@ -28,6 +29,7 @@ export function getConfig(): AppConfig {
     posthogKey: import.meta.env.VITE_POSTHOG_KEY,
     stripePublicKey: import.meta.env.VITE_STRIPE_PUBLIC_KEY,
     mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN,
+    intercomAppId: import.meta.env.VITE_INTERCOM_APP_ID,
     disablePolling: import.meta.env.VITE_DISABLE_POLLING,
   };
 
@@ -51,6 +53,7 @@ export function getConfig(): AppConfig {
     stripePublicKey: getValue('stripePublicKey'),
     mapboxToken: getValue('mapboxToken'),
     idenfyServiceBaseUrl: getValue('idenfyServiceBaseUrl'),
+    intercomAppId: getValue('intercomAppId'),
     disablePolling: getValue('disablePolling') === 'true',
   };
 }

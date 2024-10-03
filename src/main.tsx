@@ -1,5 +1,6 @@
 import './polyfills';
 import './sentry';
+import './intercom';
 
 import ReactDOM from 'react-dom/client';
 
