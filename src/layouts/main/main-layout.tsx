@@ -15,7 +15,6 @@ import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useLocation } from 'src/hooks/router';
 import { useLocalStorage, useSessionStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
@@ -210,14 +209,8 @@ const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }))
 function usePageContext(): PageContextProps {
   const { data: user } = useUserQuery();
   const { pageContextBaseUrl } = getConfig();
-  const pageContextFlag = useFeatureFlag('page-context');
 
-  const enabled = [
-    //
-    pageContextBaseUrl !== undefined,
-    user?.flags.includes('ADMIN'),
-    pageContextFlag,
-  ].every(Boolean);
+  const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
 
   const [expanded, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
 

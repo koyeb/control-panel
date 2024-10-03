@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 
 import { ComputeDeployment, DeploymentBuildStep } from 'src/api/model';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNow } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
 
@@ -14,10 +13,9 @@ type BuildStepsProps = {
 };
 
 export function BuildSteps({ deployment }: BuildStepsProps) {
-  const buildStepsFlag = useFeatureFlag('build-steps');
   const steps = deployment.build?.steps;
 
-  if (!buildStepsFlag || steps === undefined) {
+  if (steps === undefined) {
     return null;
   }
 
