@@ -8,8 +8,6 @@ import { useDropdown } from '../dropdown/use-dropdown';
 import { Field, FieldHelperText, FieldLabel } from '../field/field';
 import { useId } from '../utils/use-id';
 
-const createSymbol = Symbol();
-
 type SelectProps<Item> = {
   open?: boolean;
   size?: 1 | 2 | 3;
@@ -32,8 +30,6 @@ type SelectProps<Item> = {
   renderItem: (item: Item, index?: number) => React.ReactNode;
   renderSelectedItem?: (item: Item) => React.ReactNode;
   renderNoItems?: () => React.ReactNode;
-  renderCreateItem?: () => React.ReactNode;
-  onCreateItem?: () => void;
 };
 
 export const Select = forwardRef(function Select<Item>(
@@ -49,7 +45,7 @@ export const Select = forwardRef(function Select<Item>(
     placeholder,
     className,
     id: idProp,
-    items: itemsProp,
+    items,
     selectedItem: selectedItemProp,
     onSelectedItemChange,
     onItemClick,
@@ -59,21 +55,11 @@ export const Select = forwardRef(function Select<Item>(
     renderItem,
     renderNoItems,
     renderSelectedItem = renderItem,
-    renderCreateItem,
-    onCreateItem,
   }: SelectProps<Item>,
   forwardedRef: React.ForwardedRef<HTMLElement>,
 ) {
   const id = useId(idProp);
   const helperTextId = `${id}-helper-text`;
-
-  const items = useMemo<Array<Item | typeof createSymbol>>(() => {
-    if (onCreateItem !== undefined) {
-      return [...itemsProp, createSymbol];
-    } else {
-      return itemsProp;
-    }
-  }, [itemsProp, onCreateItem]);
 
   const {
     isOpen,
@@ -90,17 +76,9 @@ export const Select = forwardRef(function Select<Item>(
     isOpen: open,
     selectedItem: selectedItemProp,
     onSelectedItemChange({ selectedItem }) {
-      if (selectedItem === createSymbol) {
-        onCreateItem?.();
-      } else if (selectedItem) {
-        onSelectedItemChange?.(selectedItem);
-      }
+      onSelectedItemChange?.(selectedItem);
     },
     itemToString(item) {
-      if (item === createSymbol) {
-        return 'create';
-      }
-
       return item ? itemToString(item) : '';
     },
   });
@@ -169,14 +147,14 @@ export const Select = forwardRef(function Select<Item>(
       <Dropdown
         dropdown={dropdown}
         items={items}
-        selectedItem={(selectedItem as Item) ?? undefined}
+        selectedItem={selectedItem ?? undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}
-        getKey={(item) => (item === createSymbol ? 'create' : getKey(item))}
-        renderItem={(item) => (item === createSymbol ? renderCreateItem?.() : renderItem(item))}
+        getKey={getKey}
+        renderItem={renderItem}
         renderNoItems={renderNoItems}
-        onItemClick={(item) => item !== createSymbol && onItemClick?.(item)}
+        onItemClick={onItemClick}
       />
     </Field>
   );
