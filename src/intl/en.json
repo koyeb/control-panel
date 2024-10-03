@@ -1656,7 +1656,6 @@
         "createVolume": "Create volume"
       },
       "volumesList": {
-        "id": "Id",
         "name": "Name",
         "created": "Created",
         "region": "Region",
@@ -1686,6 +1685,41 @@
         "description": "Volumes provide additional, persistent, storage capacity for your services and come in addition to your instances provided ephemeral disk. The Starter plan is required to access the volumes public preview.",
         "cta": "Upgrade to unlock",
         "learnMore": "Learn more about volumes"
+      }
+    },
+    "volumeSnapshots": {
+      "documentTitle": "Volume snapshots",
+      "title": "Volume snapshots",
+      "list": {
+        "name": "Name",
+        "volumeName": "Parent volume",
+        "created": "Created",
+        "region": "Region",
+        "size": "Size",
+        "status": "Status",
+        "type": "Type",
+        "snapshotType": {
+          "invalid": "Invalid",
+          "local": "Local",
+          "remote": "Remote"
+        },
+        "actions": {
+          "createVolume": "Create volume",
+          "delete": "Delete"
+        },
+        "noSnapshots": {
+          "title": "You don't have any volume snapshots yet"
+        }
+      },
+      "createVolume": {
+        "title": "Create volume from snapshot"
+      },
+      "deleteSnapshot": {
+        "title": "Delete snapshot",
+        "description": "Are you sure you want to delete the {name} volume?",
+        "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
+        "confirm": "Delete volume",
+        "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
       }
     },
     "domains": {

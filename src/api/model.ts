@@ -631,3 +631,23 @@ export type Volume = {
 };
 
 export type VolumeStatus = 'invalid' | 'attached' | 'detached' | 'deleting' | 'deleted';
+
+export type VolumeSnapshot = {
+  id: string;
+  volumeId: string;
+  name: string;
+  region: string;
+  status: VolumeSnapshotStatus;
+  type: VolumeSnapshotType;
+  createdAt: string;
+};
+
+export type VolumeSnapshotStatus =
+  | 'invalid'
+  | 'creating'
+  | 'available'
+  | 'migrating'
+  | 'deleting'
+  | 'deleted';
+
+export type VolumeSnapshotType = 'invalid' | 'local' | 'remote';

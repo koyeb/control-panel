@@ -41,6 +41,7 @@ export type ApiRoute = Api.components['schemas']['Route'];
 export type ApiSecret = Api.components['schemas']['Secret'];
 export type ApiService = Api.components['schemas']['Service'];
 export type ApiServiceVariables = Api.components['schemas']['AutocompleteReply'];
+export type ApiSnapshot = Api.components['schemas']['Snapshot'];
 export type ApiTcpHealthCheck = Api.components['schemas']['TCPHealthCheck'];
 export type ApiToken = Api.components['schemas']['Token'];
 export type ApiUser = Api.components['schemas']['User'];

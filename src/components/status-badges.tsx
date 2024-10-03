@@ -2,7 +2,13 @@ import clsx from 'clsx';
 import { forwardRef } from 'react';
 
 import { Badge, BadgeColor, Spinner } from '@koyeb/design-system';
-import { DeploymentStatus, InstanceStatus, ServiceStatus, VolumeStatus } from 'src/api/model';
+import {
+  DeploymentStatus,
+  InstanceStatus,
+  ServiceStatus,
+  VolumeSnapshotStatus,
+  VolumeStatus,
+} from 'src/api/model';
 import {
   IconCircleAlert,
   IconCircleCheck,
@@ -90,6 +96,15 @@ export const VolumeStatusBadge = createResourceStatus<VolumeStatus>({
   invalid: [IconCircleX, 'red'],
   attached: [IconCircleCheck, 'green'],
   detached: [IconCircleCheck, 'blue'],
+  deleting: [Spinner, 'orange'],
+  deleted: [IconTrash, 'red'],
+});
+
+export const VolumeSnapshotStatusBadge = createResourceStatus<VolumeSnapshotStatus>({
+  invalid: [IconCircleX, 'red'],
+  creating: [Spinner, 'gray'],
+  available: [IconCircleCheck, 'green'],
+  migrating: [Spinner, 'blue'],
   deleting: [Spinner, 'orange'],
   deleted: [IconTrash, 'red'],
 });
