@@ -30,10 +30,10 @@ function createUseStorage(storage: Storage) {
 
   function useStorage<T>(key: string, { parse, stringify }: UseStorageProps<T> = JSON) {
     const [data, setData] = useState<T | undefined>(() => {
-      const json = storage.getItem(key);
+      const value = storage.getItem(key);
 
-      if (json !== null) {
-        return parse(json);
+      if (value !== null) {
+        return parse(value);
       }
     });
 

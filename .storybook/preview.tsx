@@ -6,9 +6,9 @@ import { useEffect } from 'react';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 
 import { AnalyticsProvider, NoopAnalytics } from '../src/application/analytics';
-import { AccessTokenProvider } from '../src/application/token';
-import { ThemeMode, useThemeMode } from '../src/hooks/theme';
 import { IntlProvider } from '../src/intl/translation-provider';
+import { ThemeMode, useThemeMode } from '../src/hooks/theme';
+import { TokenProvider } from '../src/application/token';
 
 import '@fontsource-variable/inter';
 
@@ -58,9 +58,9 @@ export default {
       </QueryClientProvider>
     ),
     (Story) => (
-      <AccessTokenProvider>
+      <TokenProvider>
         <Story />
-      </AccessTokenProvider>
+      </TokenProvider>
     ),
     (Story) => (
       <IntlProvider>

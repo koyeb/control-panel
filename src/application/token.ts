@@ -1,59 +1,112 @@
 import { useMutation } from '@tanstack/react-query';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
-import { createContext, createElement, useContext, useEffect, useMemo } from 'react';
+import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'wouter/use-browser-location';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { useLocalStorage, useSessionStorage } from 'src/hooks/storage';
 
-type AccessTokenContext = {
+interface TokenApi {
+  read(this: void): string | undefined;
+  write(this: void, value: string | undefined): void;
+  listen(this: void, onChange: (value: string | undefined) => void): () => void;
+}
+
+function createTokenApi(storage: Storage, key: string): TokenApi {
+  return {
+    read() {
+      return storage.getItem(key) ?? undefined;
+    },
+
+    write(token: string | undefined) {
+      if (token === undefined) {
+        storage.removeItem(key);
+      } else {
+        storage.setItem(key, token);
+      }
+    },
+
+    listen(onChange: (value: string | undefined) => void) {
+      const listener = (event: StorageEvent) => {
+        if (event.key === key) {
+          onChange(event.newValue ?? undefined);
+        }
+      };
+
+      window.addEventListener('storage', listener);
+
+      return () => {
+        window.removeEventListener('storage', listener);
+      };
+    },
+  };
+}
+
+const accessTokenApi = createTokenApi(localStorage, 'access-token');
+const sessionTokenApi = createTokenApi(sessionStorage, 'session-token');
+
+export const getToken = () => sessionTokenApi.read() ?? accessTokenApi.read();
+
+type TokenContext = {
   token: string | undefined;
+  session?: true;
   setToken: (token: string) => void;
   clearToken: () => void;
 };
 
-const accessTokenContext = createContext<AccessTokenContext>(null as never);
+const tokenContext = createContext<TokenContext>(null as never);
 
-type AccessTokenProviderProps = {
+type TokenProviderProps = {
   children: React.ReactNode;
 };
 
-export function AccessTokenProvider({ children }: AccessTokenProviderProps) {
-  const [accessToken, setToken, clearToken] = useLocalStorage('access-token', {
-    parse: String,
-    stringify: String,
-  });
+export function TokenProvider({ children }: TokenProviderProps) {
+  const accessToken = useTokenContext(accessTokenApi);
+  const sessionToken = useTokenContext(sessionTokenApi, true);
 
-  const [sessionToken] = useSessionStorage('session-token', {
-    parse: String,
-    stringify: String,
-  });
+  const value = useMemo(() => {
+    if (sessionToken.token !== undefined) {
+      return sessionToken;
+    }
 
-  const token = sessionToken ?? accessToken;
+    return accessToken;
+  }, [accessToken, sessionToken]);
 
-  const value = useMemo(
+  return createElement(tokenContext.Provider, { value }, children);
+}
+
+function useTokenContext({ read, write, listen }: TokenApi, session?: true) {
+  const [token, setTokenState] = useState(read);
+
+  const setToken = useCallback(
+    (token: string | undefined) => {
+      setTokenState(token);
+      write(token);
+    },
+    [write],
+  );
+
+  const clearToken = useCallback(() => {
+    setToken(undefined);
+  }, [setToken]);
+
+  useEffect(() => {
+    return listen(setTokenState);
+  }, [listen]);
+
+  return useMemo<TokenContext>(
     () => ({
       token,
+      session,
       setToken,
       clearToken,
     }),
-    [token, setToken, clearToken],
+    [token, session, setToken, clearToken],
   );
-
-  return createElement(accessTokenContext.Provider, { value }, children);
 }
 
 export function useToken() {
-  return useContext(accessTokenContext);
-}
-
-export function getToken(): string | undefined {
-  return getSessionToken() ?? localStorage.getItem('access-token') ?? undefined;
-}
-
-export function getSessionToken() {
-  return sessionStorage.getItem('session-token');
+  return useContext(tokenContext);
 }
 
 export function useRefreshToken() {

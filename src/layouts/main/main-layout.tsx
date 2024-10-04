@@ -8,15 +8,15 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { routes } from 'src/application/routes';
-import { getToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useLocation } from 'src/hooks/router';
-import { useLocalStorage, useSessionStorage } from 'src/hooks/storage';
+import { useLocation, useNavigate } from 'src/hooks/router';
+import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
@@ -123,18 +123,16 @@ function Main({ children }: { children: React.ReactNode }) {
 
 function SessionTokenBanner() {
   const organization = useOrganizationUnsafe();
-
-  const [sessionToken, , clearSessionToken] = useSessionStorage('session-token', {
-    parse: String,
-    stringify: String,
-  });
+  const { session, clearToken } = useToken();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     ...useApiMutationFn('logout', {}),
-    onSuccess: clearSessionToken,
+    onMutate: clearToken,
+    onSuccess: () => navigate(routes.home()),
   });
 
-  if (!sessionToken || !organization) {
+  if (!session || !organization) {
     return null;
   }
 
@@ -157,8 +155,8 @@ type PageContextProps = {
 function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
+  const { token } = useToken();
   const location = useLocation();
-  const token = getToken();
   const theme = useThemeModeOrPreferred();
 
   const iFrameRef = useRef<HTMLIFrameElement>(null);

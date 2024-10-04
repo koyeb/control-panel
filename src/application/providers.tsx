@@ -1,13 +1,12 @@
 import { AnalyticsBrowser } from '@segment/analytics-next';
 import { Elements as StripeElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider as TanstackQueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Component, Suspense, useMemo } from 'react';
 
 import { useMount } from 'src/hooks/lifecycle';
 import { useSearchParam } from 'src/hooks/router';
-import { useSessionStorage } from 'src/hooks/storage';
 
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
@@ -17,7 +16,7 @@ import { AnalyticsProvider, LogAnalytics, NoopAnalytics } from './analytics';
 import { getConfig } from './config';
 import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
-import { AccessTokenProvider } from './token';
+import { TokenProvider, useToken } from './token';
 
 const { segmentWriteKey, stripePublicKey } = getConfig();
 
@@ -38,10 +37,6 @@ export function Providers({ children }: ProvidersProps) {
     return new AnalyticsBrowser();
   }, []);
 
-  const queryClient = useMemo(() => {
-    return createQueryClient();
-  }, []);
-
   const stripePromise = useMemo(() => {
     if (stripePublicKey !== undefined) {
       return loadStripe(stripePublicKey);
@@ -50,9 +45,7 @@ export function Providers({ children }: ProvidersProps) {
     return new Promise<never>(() => {});
   }, []);
 
-  const hasSessionToken = useSessionToken();
-
-  if (hasSessionToken) {
+  if (useStoreSessionToken()) {
     return null;
   }
 
@@ -60,8 +53,8 @@ export function Providers({ children }: ProvidersProps) {
     <RootErrorBoundary>
       <IntlProvider>
         <Suspense>
-          <AccessTokenProvider>
-            <QueryClientProvider client={queryClient}>
+          <TokenProvider>
+            <QueryClientProvider>
               <AnalyticsProvider analytics={analytics}>
                 <StripeElements stripe={stripePromise}>
                   <ReactQueryDevtools />
@@ -70,7 +63,7 @@ export function Providers({ children }: ProvidersProps) {
                 </StripeElements>
               </AnalyticsProvider>
             </QueryClientProvider>
-          </AccessTokenProvider>
+          </TokenProvider>
         </Suspense>
       </IntlProvider>
     </RootErrorBoundary>
@@ -96,13 +89,22 @@ export class RootErrorBoundary extends Component<{ children: React.ReactNode }> 
   }
 }
 
-function useSessionToken() {
+function QueryClientProvider({ children }: { children: React.ReactNode }) {
+  const { session } = useToken();
+
+  const queryClient = useMemo(() => {
+    return createQueryClient(session ? sessionStorage : localStorage);
+  }, [session]);
+
+  return <TanstackQueryClientProvider client={queryClient}>{children}</TanstackQueryClientProvider>;
+}
+
+function useStoreSessionToken() {
   const [token, setToken] = useSearchParam('session-token');
-  const [, storeToken] = useSessionStorage('session-token', { parse: String, stringify: String });
 
   useMount(() => {
     if (token !== null) {
-      storeToken(token);
+      sessionStorage.setItem('session-token', token);
       setToken(null);
     }
   });

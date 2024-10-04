@@ -3,7 +3,6 @@ import { Mutation, MutationCache, Query, QueryCache, QueryClient, QueryKey } fro
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { navigate } from 'wouter/use-browser-location';
 
-import { useLocalStorage } from 'src/hooks/storage';
 import { inArray } from 'src/utils/arrays';
 
 import { isApiError, isApiNotFoundError } from '../api/api-errors';
@@ -12,12 +11,11 @@ import { getConfig } from './config';
 import { notify } from './notify';
 import { reportError } from './report-error';
 import { routes } from './routes';
-import { getSessionToken } from './token';
 
 type UnknownQuery = Query<unknown, unknown, unknown, QueryKey>;
 type UnknownMutation = Mutation<unknown, unknown, unknown, unknown>;
 
-export function createQueryClient() {
+export function createQueryClient(storage: Storage) {
   const { version } = getConfig();
 
   const queryCache = new QueryCache({
@@ -49,7 +47,7 @@ export function createQueryClient() {
     buster: version,
     persister: createSyncStoragePersister({
       key: 'query-cache',
-      storage: getSessionToken() ? window.sessionStorage : window.localStorage,
+      storage,
     }),
   });
 
@@ -161,7 +159,7 @@ function isAuthenticatedRoute(pathname: string) {
 
 function handleAuthenticationError() {
   localStorage.removeItem('access-token');
-  useLocalStorage.onItemChanged('access-token', undefined);
+  sessionStorage.removeItem('session-token');
 
   if (!isUnauthenticatedRoute(window.location.pathname)) {
     const next = window.location.href.slice(window.location.origin.length);
