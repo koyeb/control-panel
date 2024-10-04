@@ -6,6 +6,7 @@ import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useIdentifyUser } from './application/analytics';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
+import { useRefreshToken } from './application/token';
 import { AccountLocked } from './components/account-locked';
 import { LinkButton } from './components/link';
 import { Loading } from './components/loading';
@@ -42,6 +43,7 @@ export function App() {
   const organizationQuery = useOrganizationQuery();
 
   useIdentifyUser();
+  useRefreshToken();
 
   if (
     isAccountLockedError(userQuery.error) ||

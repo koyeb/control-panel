@@ -1,12 +1,19 @@
-import { createContext, createElement, useContext, useMemo } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { isAfter, sub } from 'date-fns';
+import { jwtDecode } from 'jwt-decode';
+import { createContext, createElement, useContext, useEffect, useMemo } from 'react';
+import { usePathname } from 'wouter/use-browser-location';
 
+import { useApiMutationFn } from 'src/api/use-api';
 import { useLocalStorage, useSessionStorage } from 'src/hooks/storage';
 
-const accessTokenContext = createContext<{
+type AccessTokenContext = {
   token: string | undefined;
   setToken: (token: string) => void;
   clearToken: () => void;
-}>(null as never);
+};
+
+const accessTokenContext = createContext<AccessTokenContext>(null as never);
 
 type AccessTokenProviderProps = {
   children: React.ReactNode;
@@ -47,4 +54,38 @@ export function getAccessToken(): string | null {
 
 export function getSessionToken() {
   return sessionStorage.getItem('session-token');
+}
+
+export function useRefreshToken() {
+  const { token, setToken } = useAccessToken();
+  const pathname = usePathname();
+
+  const { mutate } = useMutation({
+    ...useApiMutationFn('refreshToken', {}),
+    onSuccess({ token }) {
+      setToken(token!.id!);
+    },
+  });
+
+  useEffect(() => {
+    const expires = token ? jwtExpires(token) : undefined;
+
+    if (expires === undefined) {
+      return;
+    }
+
+    if (isAfter(new Date(), sub(expires, { hours: 12 }))) {
+      mutate();
+    }
+  }, [pathname, token, mutate]);
+}
+
+function jwtExpires(jwt: string) {
+  const { exp } = jwtDecode(jwt);
+
+  if (exp === undefined) {
+    return;
+  }
+
+  return new Date(exp * 1000);
 }

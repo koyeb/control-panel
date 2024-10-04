@@ -13,6 +13,7 @@ export const api = {
   githubOAuthCallback: endpoint('post', '/v1/account/oauth'),
   signIn: endpoint('post', '/v1/account/login'),
   signUp: endpoint('post', '/v1/account/signup'),
+  refreshToken: endpoint('put', '/v1/account/refresh'),
   setUpOAuth: endpoint('get', '/v1/account/oauth'),
   cannySso: endpoint('post', '/v1/sso/canny'),
   discourseSso: endpoint('post', '/v1/sso/discourse'),
