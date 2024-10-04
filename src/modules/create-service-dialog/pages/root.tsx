@@ -6,12 +6,12 @@ import { Intro } from 'src/components/intro';
 import { useShortcut } from 'src/hooks/shortcut';
 import { Translate } from 'src/intl/translate';
 
-import { useCommandPalette } from '../use-command-palette';
+import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = Translate.prefix('commandPalette');
+const T = Translate.prefix('createServiceDialog');
 
 export function WebService() {
-  const { serviceTypeChanged } = useCommandPalette();
+  const { serviceTypeChanged } = useCreateServiceDialog();
 
   const onCreate = () => {
     serviceTypeChanged('web');
@@ -36,7 +36,7 @@ export function WebService() {
 }
 
 export function Worker() {
-  const { serviceTypeChanged } = useCommandPalette();
+  const { serviceTypeChanged } = useCreateServiceDialog();
 
   const onCreate = () => {
     serviceTypeChanged('worker');
@@ -61,7 +61,7 @@ export function Worker() {
 }
 
 export function Database() {
-  const { navigate } = useCommandPalette();
+  const { navigate } = useCreateServiceDialog();
 
   const onCreate = () => {
     navigate(routes.createDatabaseService());
@@ -90,7 +90,7 @@ type ExampleAppProps = {
 };
 
 export function ExampleApp({ app }: ExampleAppProps) {
-  const { navigate } = useCommandPalette();
+  const { navigate } = useCreateServiceDialog();
 
   const deploy = () => {
     if (app) {

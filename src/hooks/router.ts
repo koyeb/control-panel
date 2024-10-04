@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useParams, useSearch } from 'wouter';
-import { navigate, usePathname } from 'wouter/use-browser-location';
+import { navigate, usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
 
-export { usePathname, useHistoryState } from 'wouter/use-browser-location';
+export { usePathname } from 'wouter/use-browser-location';
 
 export function useLocation() {
   const pathname = usePathname();
@@ -20,9 +20,11 @@ export function useRouteParam(name: string) {
   return useParams()[name] as string;
 }
 
-type HistoryState = {
-  clearCache?: boolean;
-};
+type HistoryState = Record<string, unknown>;
+
+export function useHistoryState<T extends HistoryState>(): Partial<T> {
+  return useWouterHistoryState() ?? {};
+}
 
 type NavigateOptions = {
   replace?: boolean;

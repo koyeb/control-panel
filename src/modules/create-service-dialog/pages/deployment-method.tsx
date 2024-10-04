@@ -10,14 +10,14 @@ import { useShortcut } from 'src/hooks/shortcut';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate } from 'src/intl/translate';
 
-import { useCommandPalette } from '../use-command-palette';
+import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = Translate.prefix('commandPalette');
+const T = Translate.prefix('createServiceDialog');
 
 export function Github() {
   const githubApp = useGithubApp();
   const installGithubApp = useInstallGithubApp();
-  const { deploymentMethodChanged } = useCommandPalette();
+  const { deploymentMethodChanged } = useCreateServiceDialog();
 
   const onClick = () => {
     if (githubApp) {
@@ -47,7 +47,7 @@ export function Github() {
 }
 
 function useInstallGithubApp() {
-  const { serviceType } = useCommandPalette();
+  const { serviceType } = useCreateServiceDialog();
 
   const { mutate: installGithubApp } = useMutation({
     ...useApiMutationFn('installGithubApp', (metadata: string) => ({
@@ -70,7 +70,7 @@ function useInstallGithubApp() {
 }
 
 export function Docker() {
-  const { deploymentMethodChanged } = useCommandPalette();
+  const { deploymentMethodChanged } = useCreateServiceDialog();
 
   const onClick = () => {
     deploymentMethodChanged('docker');

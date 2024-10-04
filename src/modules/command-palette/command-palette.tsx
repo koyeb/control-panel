@@ -1,269 +1,632 @@
-import { useCallback, useRef } from 'react';
+import clsx from 'clsx';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Dialog } from '@koyeb/design-system';
-import { useGithubApp } from 'src/api/hooks/git';
-import { useExampleApps } from 'src/api/hooks/service';
-import {
-  IconArrowDown,
-  IconArrowLeft,
-  IconArrowUp,
-  IconCodeSnippet,
-  IconCornerDownLeft,
-  IconDatabase,
-  IconGlobe,
-  IconGithub,
-  IconSearch,
-  IconSettings,
-} from 'src/components/icons';
-import { Shortcut } from 'src/components/shortcut';
+import { Dialog, Spinner } from '@koyeb/design-system';
+import { api } from 'src/api/api';
+import { hasMessage } from 'src/api/api-errors';
+import { useApps, useExampleApps, useServices } from 'src/api/hooks/service';
+import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
+import { ServiceType } from 'src/api/model';
+import { useResetIdentifyUser } from 'src/application/analytics';
+import { notify } from 'src/application/notify';
+import { routes } from 'src/application/routes';
+import { useAccessToken } from 'src/application/token';
+import { IconChevronRight } from 'src/components/icons';
+import { useNavigate } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
-import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { ThemeMode, useThemeMode } from 'src/hooks/theme';
+import { assert } from 'src/utils/assert';
+import { hasProperty } from 'src/utils/object';
 
-import { Navigation } from './navigation';
-import { Docker, Github } from './pages/deployment-method';
-import { DockerImageSelection } from './pages/docker-image';
-import {
-  GithubOrganizationImage,
-  OrganizationRepositoriesList,
-  PublicRepository,
-} from './pages/github-repository';
-import { Database, ExampleApp, WebService, Worker } from './pages/root';
-import { CommandPaletteProvider, CommandPaletteSection, useCommandPalette } from './use-command-palette';
+import { Command, CommandPaletteProvider, useCommands, useRegisterCommand } from './command-palette-context';
 
-const T = Translate.prefix('commandPalette');
-
-function useGetSections() {
-  const t = T.useTranslate();
-  const exampleApps = useExampleApps();
-  const githubApp = useGithubApp();
-
-  return useCallback(
-    (
-      serviceType: 'web' | 'worker' | undefined,
-      deploymentMethod: 'github' | 'docker' | undefined,
-    ): CommandPaletteSection[] => {
-      if (serviceType === undefined && deploymentMethod === undefined) {
-        return [
-          {
-            title: t('navigation.create'),
-            items: [
-              {
-                label: t('navigation.webService'),
-                icon: <IconGlobe className="icon" />,
-                shortcut: '1',
-                render: () => <WebService />,
-              },
-              {
-                label: t('navigation.worker'),
-                icon: <IconSettings className="icon" />,
-                shortcut: '2',
-                render: () => <Worker />,
-              },
-              {
-                label: t('navigation.database'),
-                icon: <IconDatabase className="icon" />,
-                shortcut: '3',
-                render: () => <Database />,
-              },
-            ],
-          },
-          {
-            title: t('navigation.exampleApps'),
-            items: exampleApps?.map((app) => ({
-              label: app.name,
-              icon: <img src={app.logo} className="icon rounded-full bg-black/50 grayscale" />,
-              render: () => <ExampleApp app={app} />,
-            })),
-          },
-        ];
-      }
-
-      if (deploymentMethod === undefined) {
-        return [
-          {
-            title: t('navigation.source'),
-            items: [
-              {
-                label: t('navigation.github'),
-                icon: <IconGithub className="icon" />,
-                shortcut: '1',
-                render: () => <Github />,
-              },
-              {
-                label: t('navigation.docker'),
-                icon: <IconDocker className="icon" />,
-                shortcut: '2',
-                render: () => <Docker />,
-              },
-            ],
-          },
-        ];
-      }
-
-      if (deploymentMethod === 'github') {
-        return [
-          {
-            title: t('navigation.source'),
-            items: [
-              {
-                label: githubApp?.organizationName ?? t('navigation.yourRepository'),
-                icon: <GithubOrganizationImage />,
-                shortcut: '1',
-                render: () => <OrganizationRepositoriesList />,
-              },
-              {
-                label: t('navigation.publicRepository'),
-                icon: <IconCodeSnippet className="icon" />,
-                shortcut: '2',
-                render: () => <PublicRepository />,
-              },
-            ],
-          },
-        ];
-      }
-
-      if (deploymentMethod === 'docker') {
-        return [
-          {
-            title: t('navigation.source'),
-            items: [
-              {
-                label: t('navigation.dockerImage'),
-                icon: <IconDocker className="icon" />,
-                shortcut: '1',
-                render: () => <DockerImageSelection />,
-              },
-            ],
-          },
-        ];
-      }
-
-      return [];
-    },
-    [t, exampleApps, githubApp],
-  );
-}
-
-export function CommandPalette() {
-  const getSections = useGetSections();
-
+export function CommandPalette({ children }: { children: React.ReactNode }) {
   return (
-    <CommandPaletteProvider getSections={getSections}>
+    <CommandPaletteProvider>
+      <RegisterCommonCommands />
       <CommandPaletteDialog />
+      {children}
     </CommandPaletteProvider>
   );
 }
 
-export function CommandPaletteDialog() {
-  const { isOpen, dialogOpened, dialogClosed, reset } = useCommandPalette();
+type Item = {
+  key: React.Key;
+  execute: () => void;
+  children: React.ReactNode;
+};
 
-  useShortcut(['meta', 'k'], dialogOpened);
+function CommandPaletteDialog() {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState('');
+  const [highlightedIndex, setHighlightedIndex] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const commands = useCommands(search);
+  const [command, setCommand] = useState<Command>();
+
+  const execute = useCallback((fn: () => void | Promise<void>) => {
+    const result = fn();
+
+    if (result === undefined) {
+      setOpen(false);
+    } else {
+      const handleError = (error: unknown) => {
+        notify.error(hasMessage(error) ? error.message : 'Unknown error');
+        reportError(error);
+      };
+
+      Promise.resolve()
+        .then(() => setLoading(true))
+        .then(() => result)
+        .then(() => setOpen(false), handleError)
+        .finally(() => setLoading(false));
+    }
+  }, []);
+
+  const options = useMemo((): Array<Item> => {
+    if (command && 'options' in command) {
+      return command.options
+        .filter((option) => search === '' || command.matchOption(option, search))
+        .map((option, index) => ({
+          key: index,
+          execute: () => execute(() => command.execute(option)),
+          children: command.renderOption(option),
+        }));
+    }
+
+    return commands.map((command) => ({
+      key: command.id,
+      execute() {
+        if ('options' in command) {
+          setSearch('');
+          setCommand(command);
+        } else {
+          execute(command.execute);
+        }
+      },
+      children: (
+        <>
+          <div>{command.label}</div>
+          <div className="text-xs text-dim">{command.description}</div>
+        </>
+      ),
+    }));
+  }, [command, commands, search, execute]);
+
+  useShortcut(['meta', 'k'], () => setOpen(true));
+
+  useEffect(() => {
+    setHighlightedIndex(0);
+  }, [options]);
+
+  const optionsContainer = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    const key = event.key;
+
+    if (key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const option = options[highlightedIndex];
+
+      if (option) {
+        option.execute();
+      }
+    }
+
+    if (key === 'ArrowUp' || key === 'ArrowDown') {
+      event.preventDefault();
+      event.stopPropagation();
+
+      setHighlightedIndex((index) => {
+        if (key === 'ArrowUp') {
+          index--;
+        }
+
+        if (key === 'ArrowDown') {
+          index++;
+        }
+
+        index += options.length;
+        index %= options.length;
+
+        optionsContainer.current?.children[index]?.scrollIntoView({ block: 'center', behavior: 'auto' });
+
+        return index;
+      });
+    }
+
+    if (command !== undefined && (key === 'Escape' || (key === 'Backspace' && search === ''))) {
+      event.preventDefault();
+      event.stopPropagation();
+      setSearch('');
+      setCommand(undefined);
+    }
+  };
 
   return (
     <Dialog
-      width="2xl"
-      isOpen={isOpen}
-      onClose={dialogClosed}
-      onClosed={reset}
-      className="col h-96 overflow-hidden rounded-lg border !p-0"
+      isOpen={open}
+      onClose={() => setOpen(false)}
+      onClosed={() => {
+        setCommand(undefined);
+        setHighlightedIndex(0);
+        setSearch('');
+      }}
+      width="3xl"
+      overlayClassName="!items-start pt-8 md:pt-[20vh]"
+      className="!p-0"
     >
-      <CommandPaletteShortcuts />
-      <SearchInput />
-      <Content />
-      <Footer />
+      <div className="row items-center gap-2 border-b px-2">
+        <div>
+          <IconChevronRight className="text-icon my-auto size-4" />
+        </div>
+
+        <input
+          type="search"
+          value={search}
+          onKeyDown={handleKeyDown}
+          onChange={(event) => setSearch(event.target.value)}
+          className="w-full bg-transparent py-2 outline-none"
+        />
+
+        {loading && (
+          <div>
+            <Spinner className="text-icon my-auto size-4" />
+          </div>
+        )}
+      </div>
+
+      <div ref={optionsContainer} className="max-h-96 overflow-y-auto p-1">
+        {options.map(({ key, execute, children }, index) => (
+          <Option
+            key={key}
+            setHighlighted={() => setHighlightedIndex(index)}
+            isHighlighted={index === highlightedIndex}
+            onClick={execute}
+          >
+            {children}
+          </Option>
+        ))}
+      </div>
+
+      {options.length === 0 && (
+        <div className="col min-h-16 items-center justify-center text-dim">No results</div>
+      )}
     </Dialog>
   );
 }
 
-function CommandPaletteShortcuts() {
-  const ref = useRef<HTMLDivElement>(null);
-  const parent = ref.current?.parentElement ?? undefined;
+type OptionProps = {
+  onClick: () => void;
+  setHighlighted: () => void;
+  isHighlighted: boolean;
+  children: React.ReactNode;
+};
 
-  const { arrowKeyPressed, backspacePressed } = useCommandPalette();
+const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
+  { onClick, isHighlighted, setHighlighted, children },
+  ref,
+) {
+  return (
+    <button
+      ref={ref}
+      onMouseMove={setHighlighted}
+      onClick={onClick}
+      className={clsx('col w-full gap-0.5 rounded-md px-2 py-1 text-start', isHighlighted && 'bg-muted/50')}
+    >
+      {children}
+    </button>
+  );
+});
 
-  useShortcut(['ArrowUp'], () => arrowKeyPressed('up'), parent);
-  useShortcut(['ArrowDown'], () => arrowKeyPressed('down'), parent);
+function RegisterCommonCommands() {
+  useRegisterInternalNavigationCommands();
+  useRegisterExternalNavigationCommands();
+  useRegisterExampleApplicationCommands();
+  useRegisterAccountCommands();
+  useRegisterMiscCommands();
 
-  useShortcut(
-    ['Backspace'],
-    (event) => {
-      if (event.target instanceof HTMLInputElement) {
-        return false;
-      }
+  return null;
+}
 
-      backspacePressed();
+function useRegisterExternalNavigationCommands() {
+  const { token } = useAccessToken();
+
+  useRegisterCommand({
+    label: 'Manage billing',
+    description: 'View and manage your payment methods and invoices ',
+    keywords: ['billing', 'invoice', 'payment', 'card'],
+    async execute() {
+      const url = await api.manageBilling({ token }).then(({ url }) => url);
+
+      assert(url !== undefined);
+      window.open(url);
     },
-    parent,
-  );
+  });
 
-  return <div ref={ref} />;
+  useRegisterCommand({
+    label: 'Go to Koyeb website',
+    description: 'Open www.koyeb.com',
+    keywords: ['website', 'koyeb'],
+    execute: () => void window.open('http://www.koyeb.com'),
+  });
+
+  useRegisterCommand({
+    label: "View Koyeb's pricing",
+    description: 'Open koyeb.com/pricing',
+    keywords: ['pricing', 'cost', 'money'],
+    execute: () => void window.open('http://koyeb.com/pricing'),
+  });
+
+  useRegisterCommand({
+    label: 'View all one-click applications',
+    description: 'Open koyeb.com/deploy',
+    keywords: ['deploy', 'example', 'one-click'],
+    execute: () => void window.open('http://koyeb.com/deploy'),
+  });
+
+  useRegisterCommand({
+    label: 'View Koyeb tutorials',
+    description: 'Open koyeb.com/tutorials',
+    keywords: ['tutorials', 'help'],
+    execute: () => void window.open('http://koyeb.com/tutorials'),
+  });
+
+  useRegisterCommand({
+    label: "View Koyeb's changelog",
+    description: 'Open koyeb.com/changelog',
+    keywords: ['changelog'],
+    execute: () => void window.open('http://koyeb.com/changelog'),
+  });
+
+  useRegisterCommand({
+    label: "View Koyeb's blog",
+    description: 'Open koyeb.com/blog',
+    keywords: ['blog'],
+    execute: () => void window.open('http://koyeb.com/blog'),
+  });
+
+  useRegisterCommand({
+    label: 'Go to Koyeb documentation',
+    description: 'Open koyeb.com/docs',
+    keywords: ['documentation', 'docs', 'help'],
+    execute: () => void window.open('http://koyeb.com/docs'),
+  });
+
+  useRegisterCommand({
+    label: 'Go to Koyeb API documentation',
+    description: 'Open developer.koyeb.com',
+    keywords: ['documentation', 'docs', 'help', 'api'],
+    execute: () => void window.open('http://developer.koyeb.com'),
+  });
+
+  useRegisterCommand({
+    label: 'Go to the Koyeb community platform',
+    description: 'Open community.koyeb.com',
+    keywords: ['community', 'discourse', 'help'],
+    execute: () => void window.open('http://community.koyeb.com'),
+  });
+
+  useRegisterCommand({
+    label: 'Open a feature request or give feedback',
+    description: 'Open feedback.koyeb.com',
+    keywords: ['feedback', 'canny', 'feature', 'idea', 'improvement'],
+    execute: () => void window.open('http://feedback.koyeb.com'),
+  });
+
+  useRegisterCommand({
+    label: "Open the platform's status page",
+    description: 'Open status.koyeb.com',
+    keywords: ['status', 'instatus', 'platform', 'outage', 'uptime'],
+    execute: () => void window.open('http://status.koyeb.com'),
+  });
 }
 
-function SearchInput() {
-  const t = T.useTranslate();
-  const { search, searchChanged, searchInputRef, focusSearchInput, backspacePressed } = useCommandPalette();
+function useRegisterInternalNavigationCommands() {
+  const navigate = useNavigate();
 
-  return (
-    <div className="row items-center gap-2 border-b px-4">
-      <IconSearch className="icon" />
+  useRegisterCommand({
+    label: 'Go to domains',
+    description: 'Manage your custom domains',
+    keywords: ['domains', 'http', 'url', 'public'],
+    execute: () => navigate(routes.domains()),
+  });
 
-      <input
-        ref={searchInputRef}
-        value={search}
-        onChange={(event) => searchChanged(event.target.value)}
-        placeholder={t('searchPlaceholder')}
-        className="flex-1 bg-transparent py-4 outline-none"
-        onKeyDown={(event) => {
-          if (event.key === 'Backspace' && search === '') {
-            backspacePressed();
-          }
-        }}
-      />
+  useRegisterCommand({
+    label: 'Go to secrets',
+    description: "Manage your organization's secrets",
+    keywords: ['secrets', 'secure', 'private', 'protected', 'vault', 'token'],
+    execute: () => navigate(routes.secrets()),
+  });
 
-      <Shortcut keystrokes={['meta', 'K']} onTrigger={focusSearchInput} />
-    </div>
+  useRegisterCommand({
+    label: 'Go to volumes',
+    description: 'Manage your persistent volumes',
+    keywords: ['volumes', 'storage', 'persistence', 'disk', 'data'],
+    execute: () => navigate(routes.volumes()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to activity',
+    description: "View your organization's recent activity",
+    keywords: ['activity', 'activities', 'events'],
+    execute: () => navigate(routes.activity()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to team members',
+    description: "View and manage your organization's members",
+    keywords: ['team', 'members', 'organization', 'invite', 'invitations'],
+    execute: () => navigate(routes.team()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to organization settings',
+    description: "Manage your organization's settings and view your quotas",
+    keywords: ['organization', 'settings', 'quotas'],
+    execute: () => navigate(routes.organizationSettings.index()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to organization usage and billing',
+    description: "View and manage your organization's billing information",
+    keywords: ['organization', 'usage', 'billing', 'payment', 'invoice', 'cost'],
+    execute: () => navigate(routes.organizationSettings.billing()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to organization plan',
+    description: "Change your organization's plan",
+    keywords: [
+      'organization',
+      'plans',
+      'pricing',
+      'upgrade',
+      'downgrade',
+      'quotas',
+      'hobby',
+      'starter',
+      'startup',
+    ],
+    execute: () => navigate(routes.organizationSettings.plans()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to organization API credentials',
+    description: 'View and manage the API credentials bounded to your organization',
+    keywords: ['organization', 'api', 'credentials', 'token'],
+    execute: () => navigate(routes.organizationSettings.api()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to organization registry configuration',
+    description: "View and manage your organization's registry configurations",
+    keywords: ['organization', 'registry', 'docker', 'secrets'],
+    execute: () => navigate(routes.organizationSettings.registrySecrets()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to personal account settings',
+    description: "View and manage your account's settings",
+    keywords: ['account', 'settings', 'personal', 'user', 'email', 'password'],
+    execute: () => navigate(routes.userSettings.index()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to organizations list',
+    description: "View the organizations you're a member of",
+    keywords: ['account', 'organizations'],
+    execute: () => navigate(routes.userSettings.organizations()),
+  });
+
+  useRegisterCommand({
+    label: 'Go to personal access tokens',
+    description: 'View and manage the access tokens bounded to your user account',
+    keywords: ['account', 'token', 'personal', 'api'],
+    execute: () => navigate(routes.userSettings.api()),
+  });
+
+  useRegisterCommand({
+    label: 'Create service',
+    description: 'Create a new service',
+    keywords: ['create', 'deploy', 'service'],
+    execute: () => navigate(routes.createService()),
+  });
+
+  useRegisterCommand({
+    label: 'Create new domain',
+    description: 'Create a new custom domain',
+    keywords: ['create', 'domain'],
+    execute: () => navigate(routes.domains(), { state: { create: true } }),
+  });
+
+  useRegisterCommand({
+    label: 'Create new secret',
+    description: 'Create a new organization secret',
+    keywords: ['create', 'secret'],
+    execute: () => navigate(routes.secrets(), { state: { create: true } }),
+  });
+
+  useRegisterCommand({
+    label: 'Create new volume',
+    description: 'Create a new persistent volume',
+    keywords: ['create', 'volume'],
+    execute: () => navigate(routes.volumes(), { state: { create: true } }),
+  });
+
+  const createServiceRoute = (type: ServiceType | 'private') => {
+    return `${routes.createService()}?${new URLSearchParams({ service_type: type }).toString()}`;
+  };
+
+  useRegisterCommand({
+    label: 'Create web service',
+    description: 'Create a new web service (accessible publicly)',
+    keywords: ['create', 'deploy', 'service', 'web'],
+    execute: () => navigate(createServiceRoute('web')),
+  });
+
+  useRegisterCommand({
+    label: 'Create private service',
+    description: 'Create a new private service (only accessible within the service mesh)',
+    keywords: ['create', 'deploy', 'service', 'private'],
+    execute: () => navigate(createServiceRoute('private')),
+  });
+
+  useRegisterCommand({
+    label: 'Create worker',
+    description: 'Create a new worker service',
+    keywords: ['create', 'deploy', 'service', 'worker'],
+    execute: () => navigate(createServiceRoute('worker')),
+  });
+
+  useRegisterCommand({
+    label: 'Create database',
+    description: 'Create a new PostgreSQL database service',
+    keywords: ['create', 'deploy', 'service', 'database', 'db', 'postgresql', 'neon'],
+    execute: () => navigate(routes.createDatabaseService()),
+  });
+
+  const apps = useApps();
+  const services = useServices();
+
+  useRegisterCommand(
+    (register) => {
+      for (const service of services ?? []) {
+        const app = apps?.find(hasProperty('id', service.appId));
+
+        if (!app) {
+          continue;
+        }
+
+        const name = `${app.name}/${service.name}`;
+        const keywords = [name, service.id, 'service'];
+
+        register({
+          label: `Go to service ${name}`,
+          description: `Navigate to the ${name} service's dashboard`,
+          keywords: [...keywords, 'overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
+          execute: () => navigate(routes.service.overview(service.id)),
+        });
+      }
+    },
+    [apps, services],
   );
 }
 
-function Content() {
-  const { page } = useCommandPalette();
+function useRegisterExampleApplicationCommands() {
+  const exampleApps = useExampleApps();
+  const navigate = useNavigate();
 
-  return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
-    <div className="grid flex-1 grid-cols-[18rem,1fr] overflow-hidden">
-      <Navigation />
-      {page?.render()}
-    </div>
+  useRegisterCommand((register) => {
+    for (const app of exampleApps) {
+      register({
+        label: `Deploy ${app.name} example application`,
+        description: app.description,
+        keywords: [...app.slug.split('-'), 'deploy', 'example', 'one-click'],
+        execute: () => navigate(app.deployUrl),
+      });
+    }
+  });
+}
+
+function useRegisterAccountCommands() {
+  const { token, setToken, clearToken } = useAccessToken();
+  const resetIdentify = useResetIdentifyUser();
+  const navigate = useNavigate();
+
+  useRegisterCommand({
+    label: 'Create organization',
+    description: 'Create a new Koyeb organization',
+    keywords: ['create', 'organization'],
+    execute: () => navigate(routes.userSettings.organizations(), { state: { create: true } }),
+  });
+
+  useRegisterCommand({
+    label: 'Log out',
+    description: 'Sign out from the Koyeb control panel',
+    keywords: ['logout', 'exit', 'quit', 'bye'],
+    async execute() {
+      await api.logout({ token });
+      clearToken();
+      resetIdentify();
+      navigate(routes.signIn());
+    },
+  });
+
+  const { data: organizationMemberships = [] } = useUserOrganizationMemberships();
+
+  useRegisterCommand(
+    {
+      label: 'Switch organization',
+      description: `Access resources within the another organization`,
+      keywords: ['switch', 'organization', 'context'],
+      options: organizationMemberships,
+      renderOption: ({ organization }) => organization.name,
+      matchOption: ({ organization }, search) => organization.name.includes(search),
+      async execute({ organization }) {
+        const { token: newToken } = await api.switchOrganization({
+          token,
+          path: { id: organization.id },
+          header: {},
+        });
+
+        setToken(newToken!.id!);
+        navigate(routes.home());
+      },
+    },
+    [organizationMemberships],
   );
 }
 
-function Footer() {
-  return (
-    <div className="row gap-6 border-t px-4 py-3">
-      <div className="row items-center gap-2 text-dim">
-        <Shortcut keystrokes={['ArrowUp']} icon={<IconArrowUp className="icon" />} />
-        <Shortcut keystrokes={['ArrowDown']} icon={<IconArrowDown className="icon" />} />
-        <T id="shortcuts.navigate" />
-      </div>
+function useRegisterMiscCommands() {
+  const organization = useOrganizationUnsafe();
+  const [themeMode, setThemeMode] = useThemeMode();
 
-      <div className="row items-center gap-2 text-dim">
-        <Shortcut keystrokes={['Enter']} icon={<IconCornerDownLeft className="icon" />} />
-        <T id="shortcuts.select" />
-      </div>
+  useRegisterCommand((register) => {
+    if (organization?.plan !== 'hobby') {
+      register({
+        label: 'Contact Koyeb support',
+        description: 'Ask us anything through our chat',
+        keywords: ['support', 'contact', 'chat', 'intercom', 'help'],
+        execute: () => window.Intercom?.('showNewMessage'),
+      });
+    }
 
-      <div className="row items-center gap-2 text-dim">
-        <Shortcut
-          keystrokes={['Escape']}
-          icon={<span className="icon p-1 font-medium leading-5">esc</span>}
-        />
-        <T id="shortcuts.close" />
-      </div>
+    if (themeMode !== ThemeMode.light) {
+      register({
+        label: 'Switch to light mode',
+        description: 'Change the theme mode to light',
+        keywords: ['theme', 'light'],
+        execute: () => setThemeMode(ThemeMode.light),
+      });
+    }
 
-      <div className="row items-center gap-2 text-dim">
-        <Shortcut keystrokes={['ArrowLeft']} icon={<IconArrowLeft className="icon" />} />
-        <T id="shortcuts.return" />
-      </div>
-    </div>
-  );
+    if (themeMode !== ThemeMode.dark) {
+      register({
+        label: 'Switch to dark mode',
+        description: 'Change the theme mode to dark',
+        keywords: ['theme', 'dark'],
+        execute: () => setThemeMode(ThemeMode.dark),
+      });
+    }
+
+    if (themeMode !== ThemeMode.system) {
+      register({
+        label: 'Switch to system theme mode',
+        description: "Change the theme mode to match the system's theme",
+        keywords: ['theme', 'system'],
+        execute: () => setThemeMode(ThemeMode.system),
+      });
+    }
+
+    register({
+      label: "View this website's code",
+      description: 'View the source code of the Koyeb control panel on GitHub',
+      keywords: ['code', 'koyeb'],
+      execute: () => void window.open('https://github.com/koyeb/control-panel'),
+    });
+  });
 }

@@ -13,7 +13,6 @@ import { Loading } from './components/loading';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
 import { ConfirmDeactivateOrganization } from './modules/account/confirm-deactivate-organization';
-import { CommandPalette } from './modules/command-palette/command-palette';
 import { AccountPages } from './pages/account/account.pages';
 import { ActivityPage } from './pages/activity/activity.page';
 import { AuthenticationPages } from './pages/authentication/authentication.pages';
@@ -93,8 +92,6 @@ function AuthenticatedRoutes() {
 
   return (
     <MainLayout>
-      <CommandPalette />
-
       <Switch>
         <Route path="/" component={HomePage} />
 

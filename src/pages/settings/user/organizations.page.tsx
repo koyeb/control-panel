@@ -25,8 +25,8 @@ import { isSlug } from 'src/utils/strings';
 const T = Translate.prefix('pages.userSettings.organizations');
 
 export function OrganizationsPage() {
-  const state = useHistoryState<{ create?: boolean } | undefined>();
-  const [createDialogOpen, setCreateDialogOpen] = useState(state?.create === true);
+  const historyState = useHistoryState<{ create: boolean }>();
+  const [createDialogOpen, setCreateDialogOpen] = useState(Boolean(historyState.create));
 
   return (
     <>
