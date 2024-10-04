@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { FormattedTime } from 'react-intl';
 
-import { IconButton, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
+import { Floating, IconButton, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { LogLine } from 'src/api/model';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { notify } from 'src/application/notify';
-import { IconFullscreen, IconEllipsis, IconDownload, IconCopy } from 'src/components/icons';
+import { IconCopy, IconDownload, IconEllipsis, IconFullscreen } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useShortcut } from 'src/hooks/shortcut';
 import { Translate } from 'src/intl/translate';
@@ -16,16 +16,11 @@ import { shortId } from 'src/utils/strings';
 
 import { ControlledCheckbox } from '../controlled';
 
-const T = Translate.prefix('logs');
+import { getInitialLogOptions, LogOptions, storeLogOptions } from './log-options';
 
-export type LogOptions = {
-  fullScreen: boolean;
-  tail: boolean;
-  stream: boolean;
-  date: boolean;
-  instance: boolean;
-  wordWrap: boolean;
-};
+export { type LogOptions };
+
+const T = Translate.prefix('logs');
 
 type LogsProps = {
   appName: string;
@@ -49,15 +44,12 @@ export function Logs({
   renderLine,
 }: LogsProps) {
   const form = useForm<LogOptions>({
-    defaultValues: {
-      fullScreen: false,
-      tail: true,
-      stream: false,
-      date: false,
-      instance: false,
-      wordWrap: false,
-    },
+    defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
+
+  useEffect(() => {
+    return form.watch(storeLogOptions).unsubscribe;
+  }, [form]);
 
   return (
     <section
