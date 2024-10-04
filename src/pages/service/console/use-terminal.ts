@@ -5,7 +5,7 @@ import { ApiStream, apiStreams } from 'src/api/api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/report-error';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useMount } from 'src/hooks/lifecycle';
 import { Translate } from 'src/intl/translate';
@@ -19,7 +19,7 @@ const T = Translate.prefix('pages.service.console');
 const { brightBlack, brightRed } = terminalColors;
 
 export function useTerminal(instanceId: string) {
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const t = T.useTranslate();
 
   const [terminal, setTerminal] = useState<TerminalRef | null>(null);

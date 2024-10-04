@@ -7,7 +7,7 @@ import { api } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/analytics';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconArrowRight } from 'src/components/icons';
 import { handleSubmit } from 'src/hooks/form';
@@ -53,7 +53,7 @@ type QualificationFormType = {
 
 function QualificationForm() {
   const organization = useOrganization();
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const track = useTrackEvent();
 

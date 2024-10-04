@@ -1,6 +1,6 @@
 import { api } from 'src/api/api';
 import { isApiValidationError } from 'src/api/api-errors';
-import { getAccessToken } from 'src/application/token';
+import { getToken } from 'src/application/token';
 import { hasProperty } from 'src/utils/object';
 
 import { serviceFormToDeploymentDefinition } from './helpers/service-form-to-deployment';
@@ -37,7 +37,7 @@ export async function submitServiceForm(form: ServiceForm): Promise<SubmitServic
 
 async function findOrCreateApp(appName: string): Promise<string> {
   const { apps } = await api.listApps({
-    token: getAccessToken() ?? undefined,
+    token: getToken(),
     query: { name: appName, limit: '100' },
   });
 
@@ -48,7 +48,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
   }
 
   const { app: newApp } = await api.createApp({
-    token: getAccessToken() ?? undefined,
+    token: getToken(),
     body: { name: appName },
   });
 
@@ -57,7 +57,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
 
 async function createVolumes(form: ServiceForm): Promise<void> {
   const { volumes: existingVolumes } = await api.listVolumes({
-    token: getAccessToken() ?? undefined,
+    token: getToken(),
     query: {},
   });
 
@@ -85,7 +85,7 @@ async function createVolumes(form: ServiceForm): Promise<void> {
 async function createVolume(index: number, name: string, size: number, region: string): Promise<string> {
   try {
     const response = await api.createVolume({
-      token: getAccessToken() ?? undefined,
+      token: getToken(),
       body: {
         name,
         max_size: size,
@@ -126,7 +126,7 @@ async function createService(
   }
 
   const result = await api.createService({
-    token: getAccessToken() ?? undefined,
+    token: getToken(),
     query: { dry_run: dryRun },
     body: {
       app_id: appId,
@@ -147,7 +147,7 @@ async function createService(
 
 async function updateService(serviceId: string, form: ServiceForm): Promise<SubmitServiceFormResult> {
   const result = await api.updateService({
-    token: getAccessToken() ?? undefined,
+    token: getToken(),
     path: { id: serviceId },
     query: { dry_run: false },
     body: {

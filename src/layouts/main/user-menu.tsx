@@ -7,7 +7,7 @@ import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useResetIdentifyUser } from 'src/application/analytics';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import {
   IconCheck,
   IconChevronRight,
@@ -26,7 +26,7 @@ import { Translate } from 'src/intl/translate';
 const T = Translate.prefix('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
-  const { clearToken } = useAccessToken();
+  const { clearToken } = useToken();
   const user = useUserUnsafe();
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();

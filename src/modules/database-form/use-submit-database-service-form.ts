@@ -7,7 +7,7 @@ import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { updateDatabaseService } from 'src/application/service-functions';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { hasProperty } from 'src/utils/object';
@@ -22,7 +22,7 @@ export function useSubmitDatabaseServiceForm(
 ) {
   const [appId] = useSearchParam('appId');
   const organization = useOrganization();
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 

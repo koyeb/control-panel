@@ -5,7 +5,7 @@ import { api } from 'src/api/api';
 import { mapRepositoriesList } from 'src/api/mappers/git';
 import { CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
 import { notify } from 'src/application/notify';
-import { getAccessToken } from 'src/application/token';
+import { getToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { hasProperty } from 'src/utils/object';
 
@@ -25,7 +25,7 @@ export async function initializeServiceForm(
   serviceId: string | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {
-  const token = getAccessToken() ?? undefined;
+  const token = getToken();
   let values = defaultServiceForm();
 
   if (serviceId) {

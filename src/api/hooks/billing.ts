@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { inArray } from 'src/utils/arrays';
 
 import { api } from '../api';
@@ -11,7 +11,7 @@ import { useApiQueryFn } from '../use-api';
 import { useOrganizationQuery } from './session';
 
 export function useManageBillingQuery() {
-  const { token } = useAccessToken();
+  const { token } = useToken();
 
   return useQuery({
     queryKey: ['manageBilling', { token }],

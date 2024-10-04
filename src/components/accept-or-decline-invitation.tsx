@@ -6,7 +6,7 @@ import { OrganizationInvitation } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
@@ -17,7 +17,7 @@ type AcceptOrDeclineInvitationProps = {
 };
 
 export function AcceptOrDeclineInvitation({ invitation }: AcceptOrDeclineInvitationProps) {
-  const { token, setToken } = useAccessToken();
+  const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();

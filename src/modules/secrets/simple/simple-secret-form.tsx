@@ -8,7 +8,7 @@ import { IconButton } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { Secret } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
 import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useFormErrorHandler } from 'src/hooks/form';
@@ -32,7 +32,7 @@ type SecretFormProps = {
 
 export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProps) {
   const t = T.useTranslate();
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({

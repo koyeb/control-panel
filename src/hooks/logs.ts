@@ -5,14 +5,14 @@ import { z } from 'zod';
 import { ApiStream, apiStreams } from 'src/api/api';
 import { LogLine } from 'src/api/model';
 import { createValidationGuard } from 'src/application/create-validation-guard';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { assert } from 'src/utils/assert';
 
 const connectTimeout = 5 * 1000;
 const reconnectTimeouts = [1_000, 2_000, 5_000, 60_000];
 
 export function useLogs(deploymentId: string, type: 'build' | 'runtime', connect = true) {
-  const { token } = useAccessToken();
+  const { token } = useToken();
 
   const [reconnection, setReconnection] = useState(0);
   const [connected, setConnected] = useState(false);

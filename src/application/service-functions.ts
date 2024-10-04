@@ -5,7 +5,7 @@ import { App, Deployment, DeploymentStatus, Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { inArray } from 'src/utils/arrays';
 
-import { getAccessToken } from './token';
+import { getToken } from './token';
 
 export function getServiceLink(service: Service) {
   if (service.type === 'database') {
@@ -66,7 +66,7 @@ export async function updateDatabaseService(
   serviceId: string,
   updater: (deployment: ApiDeploymentDefinition) => void,
 ) {
-  const token = getAccessToken() ?? undefined;
+  const token = getToken();
 
   const { service } = await api.getService({ token, path: { id: serviceId } });
   const { deployment } = await api.getDeployment({ token, path: { id: service!.latest_deployment_id! } });

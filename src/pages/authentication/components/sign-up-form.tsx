@@ -8,7 +8,7 @@ import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { IconEye, IconEyeOff } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -30,7 +30,7 @@ const schema = z.object({
 
 export function SignUpForm() {
   const t = T.useTranslate();
-  const { setToken } = useAccessToken();
+  const { setToken } = useToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 

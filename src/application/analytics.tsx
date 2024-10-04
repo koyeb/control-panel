@@ -10,7 +10,7 @@ import { AssertionError, defined } from 'src/utils/assert';
 
 import { getConfig } from './config';
 import { identifyUserInSentry, reportError } from './report-error';
-import { getAccessToken } from './token';
+import { getToken } from './token';
 
 /* eslint-disable react-refresh/only-export-components */
 
@@ -124,7 +124,7 @@ async function identifyUser(analytics: Analytics, user: User, context: Record<st
 
   await api
     .getIntercomUserHash({
-      token: getAccessToken() ?? undefined,
+      token: getToken(),
     })
     .then(({ hash }) => {
       if (hash !== undefined) {

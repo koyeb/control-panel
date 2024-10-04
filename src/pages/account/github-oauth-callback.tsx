@@ -8,7 +8,7 @@ import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { Link } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
@@ -27,7 +27,7 @@ const schema = z.object({
 export function GithubOauthCallbackPage() {
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
-  const { setToken } = useAccessToken();
+  const { setToken } = useToken();
   const navigate = useNavigate();
 
   const mutation = useMutation({

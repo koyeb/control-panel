@@ -44,12 +44,12 @@ export function AccessTokenProvider({ children }: AccessTokenProviderProps) {
   return createElement(accessTokenContext.Provider, { value }, children);
 }
 
-export function useAccessToken() {
+export function useToken() {
   return useContext(accessTokenContext);
 }
 
-export function getAccessToken(): string | null {
-  return getSessionToken() ?? localStorage.getItem('access-token');
+export function getToken(): string | undefined {
+  return getSessionToken() ?? localStorage.getItem('access-token') ?? undefined;
 }
 
 export function getSessionToken() {
@@ -57,7 +57,7 @@ export function getSessionToken() {
 }
 
 export function useRefreshToken() {
-  const { token, setToken } = useAccessToken();
+  const { token, setToken } = useToken();
   const pathname = usePathname();
 
   const { mutate } = useMutation({

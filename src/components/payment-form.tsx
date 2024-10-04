@@ -17,7 +17,7 @@ import { Address, OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
-import { getAccessToken, useAccessToken } from 'src/application/token';
+import { getToken, useToken } from 'src/application/token';
 import { AddressField } from 'src/components/address-field/address-field';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
@@ -82,7 +82,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
     },
   });
 
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
   const stripe = useStripe();
@@ -245,7 +245,7 @@ function PaymentMethodTimeout() {
 }
 
 async function updateBillingInformation(address: Address) {
-  const token = getAccessToken() ?? undefined;
+  const token = getToken();
   const { user } = await api.getCurrentUser({ token });
   const { organization } = await api.getCurrentOrganization({ token });
 
@@ -275,7 +275,7 @@ async function updateBillingInformation(address: Address) {
 }
 
 async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
-  const token = getAccessToken() ?? undefined;
+  const token = getToken();
   const { payment_method } = await api.createPaymentAuthorization({ token });
 
   try {
@@ -299,7 +299,7 @@ async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
 }
 
 async function waitForPaymentMethod() {
-  const token = getAccessToken() ?? undefined;
+  const token = getToken();
   let hasPaymentMethod = false;
 
   const start = new Date().getTime();

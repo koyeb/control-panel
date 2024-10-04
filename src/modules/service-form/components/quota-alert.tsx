@@ -4,7 +4,7 @@ import { Alert } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { isApiValidationError } from 'src/api/api-errors';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { LinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 
@@ -22,7 +22,7 @@ type QuotaAlertProps = {
 export function QuotaAlert(props: QuotaAlertProps) {
   const serviceId = props.serviceId;
   const values = getValues(props);
-  const { token } = useAccessToken();
+  const { token } = useToken();
 
   const { data: message } = useQuery({
     placeholderData: keepPreviousData,

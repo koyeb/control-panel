@@ -7,7 +7,7 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { AssertionError, assert } from 'src/utils/assert';
@@ -17,7 +17,7 @@ const schema = z.object({
 });
 
 export function GithubAppCallbackPage() {
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const searchParams = useSearchParams();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();

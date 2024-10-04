@@ -9,7 +9,7 @@ import { App, AppDomain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { ControlledInput } from 'src/components/controlled';
@@ -99,7 +99,7 @@ type EditAppDialogProps = {
 
 function EditAppDialog({ app, open, onClose }: EditAppDialogProps) {
   const t = T.useTranslate();
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
   const koyebDomain = app.domains.find(hasProperty('type', 'autoassigned'));

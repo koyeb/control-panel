@@ -3,7 +3,7 @@ import { Duration, sub } from 'date-fns';
 
 import { api, ApiEndpointResult } from 'src/api/api';
 import { ApiMetricName } from 'src/api/api-types';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
 
@@ -38,7 +38,7 @@ type UseMetricsOptions = {
 };
 
 export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }: UseMetricsOptions) {
-  const { token } = useAccessToken();
+  const { token } = useToken();
 
   return useQueries({
     queries: metrics.map((name) => ({

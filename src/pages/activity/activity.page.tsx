@@ -6,7 +6,7 @@ import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { mapActivities } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ActivityIcon } from 'src/components/activity/activity-icon';
 import { ActivityItem } from 'src/components/activity/activity-item';
 import { DocumentTitle } from 'src/components/document-title';
@@ -24,7 +24,7 @@ const T = Translate.prefix('pages.activity');
 const pageSize = 20;
 
 export function ActivityPage() {
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const queryClient = useQueryClient();
   const t = T.useTranslate();
 

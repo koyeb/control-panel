@@ -6,7 +6,7 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
@@ -15,7 +15,7 @@ import { Translate } from 'src/intl/translate';
 const T = Translate.prefix('account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const { token, setToken } = useAccessToken();
+  const { token, setToken } = useToken();
   const user = useUser();
   const organization = useOrganization();
 

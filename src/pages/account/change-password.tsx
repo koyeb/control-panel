@@ -6,7 +6,7 @@ import { Button } from '@koyeb/design-system';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -40,7 +40,7 @@ const schema = z.object({
 export function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
-  const { clearToken } = useAccessToken();
+  const { clearToken } = useToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 

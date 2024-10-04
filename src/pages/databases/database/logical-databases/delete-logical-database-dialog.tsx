@@ -4,7 +4,7 @@ import { api } from 'src/api/api';
 import { DatabaseDeployment, LogicalDatabase, Service } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Translate } from 'src/intl/translate';
 
@@ -26,7 +26,7 @@ export function DeleteLogicalDatabaseDialog({
   database,
 }: DeleteLogicalDatabaseDialogProps) {
   const t = T.useTranslate();
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({

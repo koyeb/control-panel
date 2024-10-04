@@ -9,7 +9,7 @@ import { mapVolume } from 'src/api/mappers/volume';
 import { Volume } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FormValues, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
@@ -41,7 +41,7 @@ type VolumeFormProps = {
 };
 
 export function VolumeForm({ snapshotId, size, volume, onSubmitted, renderFooter }: VolumeFormProps) {
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const regions = useRegions().filter(hasProperty('hasVolumes', true));
   const t = T.useTranslate();

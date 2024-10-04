@@ -9,7 +9,7 @@ import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
 import { ControlledInput } from 'src/components/controlled';
 import { IconCheck, IconArrowRight } from 'src/components/icons';
@@ -54,7 +54,7 @@ export function JoinOrganization() {
 }
 
 export function CreateOrganization() {
-  const { token, setToken } = useAccessToken();
+  const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const [inputFocused, setInputFocused] = useState(false);
 

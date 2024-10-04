@@ -11,7 +11,7 @@ import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Loading } from 'src/components/loading';
@@ -270,7 +270,7 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const { token, setToken, clearToken } = useAccessToken();
+  const { token, setToken, clearToken } = useToken();
   const user = useUser();
   const navigate = useNavigate();
   const t = T.useTranslate();

@@ -11,7 +11,7 @@ import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ControlledInput } from 'src/components/controlled';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { QueryError } from 'src/components/query-error';
@@ -55,7 +55,7 @@ const schema = z.object({
 function CreateOrganizationDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const t = T.useTranslate();
   const navigate = useNavigate();
-  const { token, setToken } = useAccessToken();
+  const { token, setToken } = useToken();
 
   const form = useForm<z.infer<typeof schema>>({
     mode: 'onChange',
@@ -162,7 +162,7 @@ function OrganizationList() {
 
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
   const currentOrganization = useOrganizationUnsafe();
-  const { setToken } = useAccessToken();
+  const { setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 

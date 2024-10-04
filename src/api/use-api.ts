@@ -1,6 +1,6 @@
 import { InvalidateQueryFilters, QueryKey, useQueryClient } from '@tanstack/react-query';
 
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 
 import { api, ApiEndpointParams, ApiEndpointResult } from './api';
 
@@ -18,7 +18,7 @@ export function useApiQueryFn<E extends Endpoint>(
   endpoint: E,
   params: ApiEndpointParams<E> = {},
 ): UseApiQueryResult<E> {
-  const { token } = useAccessToken();
+  const { token } = useToken();
 
   return {
     queryKey: [endpoint, params, token],
@@ -57,7 +57,7 @@ export function useApiMutationFn<E extends Endpoint, Variables>(
   endpoint: E,
   options: ApiEndpointParams<E> | ApiEndpointParamsFn<E, Variables>,
 ): UseApiMutationResult<E, Variables> {
-  const { token } = useAccessToken();
+  const { token } = useToken();
 
   return {
     async mutationFn(param) {
@@ -74,7 +74,7 @@ export function useApiMutationFn<E extends Endpoint, Variables>(
 
 export function useInvalidateApiQuery() {
   const queryClient = useQueryClient();
-  const { token } = useAccessToken();
+  const { token } = useToken();
 
   return <E extends Endpoint>(
     endpoint: E,

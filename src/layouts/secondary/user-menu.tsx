@@ -6,7 +6,7 @@ import { useUserQuery } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useResetIdentifyUser } from 'src/application/analytics';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { IconLogOut, IconSettings } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
@@ -16,7 +16,7 @@ import { Translate } from 'src/intl/translate';
 const T = Translate.prefix('layouts.secondary.header');
 
 export function UserMenu() {
-  const { clearToken } = useAccessToken();
+  const { clearToken } = useToken();
   const { data: user } = useUserQuery();
 
   const [open, setOpen] = useState(false);

@@ -7,7 +7,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { useResetIdentifyUser } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
@@ -21,7 +21,7 @@ export function DeleteAccount() {
   const { data: organization } = useOrganizationQuery();
   const canDelete = organization === undefined;
 
-  const { clearToken } = useAccessToken();
+  const { clearToken } = useToken();
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 

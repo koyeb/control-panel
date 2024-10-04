@@ -8,7 +8,7 @@ import { mapOrganizationMembers } from 'src/api/mappers/session';
 import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { IconCheck, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { useNavigate } from 'src/hooks/router';
@@ -101,7 +101,7 @@ function useOrganizationMembers() {
 }
 
 function useSwitchOrganization(onSuccess: () => void) {
-  const { setToken } = useAccessToken();
+  const { setToken } = useToken();
   const getSeonFingerprint = useSeon();
   const navigate = useNavigate();
 

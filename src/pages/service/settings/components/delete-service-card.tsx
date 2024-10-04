@@ -6,7 +6,7 @@ import { api } from 'src/api/api';
 import { Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
@@ -19,7 +19,7 @@ type DeleteServiceCardProps = {
 
 export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   const t = T.useTranslate();
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const navigate = useNavigate();
   const [dialogOpen, setDialogOpen] = useState(false);
 

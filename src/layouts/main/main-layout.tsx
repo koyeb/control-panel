@@ -8,7 +8,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { routes } from 'src/application/routes';
-import { getAccessToken } from 'src/application/token';
+import { getToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
@@ -158,7 +158,7 @@ function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
   const location = useLocation();
-  const token = getAccessToken();
+  const token = getToken();
   const theme = useThemeModeOrPreferred();
 
   const iFrameRef = useRef<HTMLIFrameElement>(null);

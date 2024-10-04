@@ -9,7 +9,7 @@ import { Service } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useAccessToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -45,7 +45,7 @@ export function DatabaseSettingsPage() {
 
 function DeleteDatabaseService({ service }: { service: Service }) {
   const invalidate = useInvalidateApiQuery();
-  const { token } = useAccessToken();
+  const { token } = useToken();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
