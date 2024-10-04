@@ -225,7 +225,8 @@ function environmentVariables(
 ): Array<DeepPartial<EnvironmentVariable>> | undefined {
   return definition.env?.map((variable) => ({
     name: variable.key,
-    value: variable.value ?? `{{ secret.${variable.secret} }}`,
+    type: 'value' in variable ? 'plaintext' : 'secret',
+    value: variable.value ?? variable.secret,
   }));
 }
 

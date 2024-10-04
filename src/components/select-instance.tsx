@@ -13,7 +13,7 @@ type SelectInstanceOwnProps = {
 
 type SelectInstanceProps = SelectInstanceOwnProps &
   Omit<
-    React.ComponentProps<typeof Select<Instance>>,
+    React.ComponentProps<typeof Select>,
     'items' | 'selectedItem' | 'onSelectedItemChange' | 'getKey' | 'itemToString' | 'renderItem'
   >;
 

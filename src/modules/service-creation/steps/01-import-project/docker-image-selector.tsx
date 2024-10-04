@@ -5,7 +5,6 @@ import { z } from 'zod';
 
 import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
-import { Secret } from 'src/api/model';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
@@ -120,26 +119,13 @@ function RegistrySecretField({ form }: RegistrySecretFieldProps) {
         control={form.control}
         name="registrySecret"
         placeholder={<T id="registryFieldPlaceholder" />}
-        items={['none', ...(registrySecrets ?? []), 'create'] as const}
-        getKey={(item) => (typeof item === 'string' ? item : item.id)}
-        itemToValue={(item) => (typeof item === 'string' ? null : item.name)}
-        itemToString={(item) => (typeof item === 'string' ? item : item.name)}
-        renderItem={(item: 'none' | 'create' | Secret) => {
-          if (item === 'none') {
-            return <T id="noRegistrySecret" />;
-          }
-
-          if (item === 'create') {
-            return <T id="createRegistrySecret" />;
-          }
-
-          return item.name;
-        }}
-        onChangeEffect={(item) => {
-          if (item === 'create') {
-            return setCreateSecretDialogOpen(true);
-          }
-        }}
+        items={['none', ...(registrySecrets ?? [])] as const}
+        getKey={(item) => (item === 'none' ? 'none' : item.id)}
+        itemToValue={(item) => (item === 'none' ? null : item.name)}
+        itemToString={(item) => (item === 'none' ? '' : item.name)}
+        renderItem={(item) => (item === 'none' ? <T id="noRegistrySecret" /> : item.name)}
+        onCreateItem={() => setCreateSecretDialogOpen(true)}
+        renderCreateItem={() => <T id="createRegistrySecret" />}
         className="w-full max-w-xs"
       />
 

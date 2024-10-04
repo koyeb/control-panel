@@ -3,10 +3,12 @@ import { useSelect } from 'downshift';
 import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
 import { forwardRef, useMemo } from 'react';
 
-import { Dropdown, DropdownGroup } from '../dropdown/dropdown';
+import { Dropdown } from '../dropdown/dropdown';
 import { useDropdown } from '../dropdown/use-dropdown';
 import { Field, FieldHelperText, FieldLabel } from '../field/field';
 import { useId } from '../utils/use-id';
+
+const createSymbol = Symbol();
 
 type SelectProps<Item> = {
   open?: boolean;
@@ -20,8 +22,7 @@ type SelectProps<Item> = {
   placeholder?: React.ReactNode;
   className?: string;
   id?: string;
-  items: Array<Item>;
-  groups?: Array<DropdownGroup<Item>>;
+  items: Item[];
   selectedItem?: Item | null;
   onSelectedItemChange?: (value: Item) => void;
   onItemClick?: (item: Item) => void;
@@ -31,6 +32,8 @@ type SelectProps<Item> = {
   renderItem: (item: Item, index?: number) => React.ReactNode;
   renderSelectedItem?: (item: Item) => React.ReactNode;
   renderNoItems?: () => React.ReactNode;
+  renderCreateItem?: () => React.ReactNode;
+  onCreateItem?: () => void;
 };
 
 export const Select = forwardRef(function Select<Item>(
@@ -46,8 +49,7 @@ export const Select = forwardRef(function Select<Item>(
     placeholder,
     className,
     id: idProp,
-    items,
-    groups,
+    items: itemsProp,
     selectedItem: selectedItemProp,
     onSelectedItemChange,
     onItemClick,
@@ -57,11 +59,21 @@ export const Select = forwardRef(function Select<Item>(
     renderItem,
     renderNoItems,
     renderSelectedItem = renderItem,
+    renderCreateItem,
+    onCreateItem,
   }: SelectProps<Item>,
   forwardedRef: React.ForwardedRef<HTMLElement>,
 ) {
   const id = useId(idProp);
   const helperTextId = `${id}-helper-text`;
+
+  const items = useMemo<Array<Item | typeof createSymbol>>(() => {
+    if (onCreateItem !== undefined) {
+      return [...itemsProp, createSymbol];
+    } else {
+      return itemsProp;
+    }
+  }, [itemsProp, onCreateItem]);
 
   const {
     isOpen,
@@ -78,9 +90,17 @@ export const Select = forwardRef(function Select<Item>(
     isOpen: open,
     selectedItem: selectedItemProp,
     onSelectedItemChange({ selectedItem }) {
-      onSelectedItemChange?.(selectedItem);
+      if (selectedItem === createSymbol) {
+        onCreateItem?.();
+      } else if (selectedItem) {
+        onSelectedItemChange?.(selectedItem);
+      }
     },
     itemToString(item) {
+      if (item === createSymbol) {
+        return 'create';
+      }
+
       return item ? itemToString(item) : '';
     },
   });
@@ -148,15 +168,15 @@ export const Select = forwardRef(function Select<Item>(
 
       <Dropdown
         dropdown={dropdown}
-        selectedItem={selectedItem ?? undefined}
+        items={items}
+        selectedItem={(selectedItem as Item) ?? undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}
-        getKey={getKey}
-        renderItem={renderItem}
+        getKey={(item) => (item === createSymbol ? 'create' : getKey(item))}
+        renderItem={(item) => (item === createSymbol ? renderCreateItem?.() : renderItem(item))}
         renderNoItems={renderNoItems}
-        onItemClick={onItemClick}
-        {...(groups ? { groups } : { items })}
+        onItemClick={(item) => item !== createSymbol && onItemClick?.(item)}
       />
     </Field>
   );

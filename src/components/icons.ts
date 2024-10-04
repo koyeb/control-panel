@@ -1,4 +1,4 @@
-export { default as IconBraces } from 'lucide-static/icons/braces.svg?react';
+export { default as EllipsisVertical } from 'lucide-static/icons/ellipsis-vertical.svg?react';
 export { default as IconActivity } from 'lucide-static/icons/activity.svg?react';
 export { default as IconAlarmClockCheck } from 'lucide-static/icons/alarm-clock-check.svg?react';
 export { default as IconAlert } from 'lucide-static/icons/circle-alert.svg?react';

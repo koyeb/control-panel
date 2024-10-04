@@ -2,23 +2,22 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import sort from 'lodash-es/sortBy';
-import { useRef, useState } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import uniq from 'lodash-es/uniq';
+import { useState } from 'react';
+import { useController } from 'react-hook-form';
 
 import {
   Dropdown,
-  DropdownGroup,
+  useDropdown,
   Field,
   FieldHelperText,
   FieldLabel,
-  IconButton,
   InputBox,
-  useDropdown,
   useId,
 } from '@koyeb/design-system';
 import { useApiQueryFn } from 'src/api/use-api';
-import { DocumentationLink } from 'src/components/documentation-link';
-import { IconChevronDown } from 'src/components/icons';
+import { useFormValues } from 'src/hooks/form';
+import { useDebouncedValue } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
@@ -35,26 +34,18 @@ type EnvironmentVariableValueFieldProps = {
   label?: React.ReactNode;
 };
 
-export function EnvironmentVariableValueField({
-  index,
-  onCreateSecret,
-  label,
-}: EnvironmentVariableValueFieldProps) {
-  const t = T.useTranslate();
-
+export function EnvironmentVariableValueField({ index, label }: EnvironmentVariableValueFieldProps) {
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
-  const values = useFormContext<ServiceForm>().getValues();
+  const definition = useDebouncedValue(serviceFormToDeploymentDefinition(useFormValues()), 500);
 
   const variablesQuery = useQuery({
-    ...useApiQueryFn('getServiceVariables', {
-      body: { definition: serviceFormToDeploymentDefinition(values) },
-      delay: 500,
-    }),
+    ...useApiQueryFn('getServiceVariables', { body: { definition } as never }),
+    queryKey: ['getServiceVariables', definition],
     placeholderData: keepPreviousData as never,
     refetchInterval: false,
-    select: mapServiceVariables,
+    select: (result) => uniq(mapServiceVariables(result)),
   });
 
   const [isOpen, setIsOpen] = useState(false);
@@ -64,96 +55,41 @@ export function EnvironmentVariableValueField({
   });
 
   const variableName = useWatchServiceForm(`environmentVariables.${index}.name`);
+  const filteredItems = filterItems(variablesQuery.data ?? [], variableName, field.value);
 
-  const groups: Array<DropdownGroup<string>> = [
-    {
-      key: 'secrets',
-      label: 'Secrets',
-      items: filterItems(variablesQuery.data?.secrets ?? [], variableName, field.value),
+  const { highlightedIndex, getLabelProps, getInputProps, getMenuProps, getItemProps } = useCombobox({
+    isOpen,
+    id,
+    itemToString: String,
+    items: filteredItems,
+    inputValue: field.value,
+    onInputValueChange({ inputValue, type }) {
+      if (type === useCombobox.stateChangeTypes.InputChange) {
+        field.onChange(inputValue);
+        setIsOpen(regexp.test(inputValue));
+      }
     },
-    {
-      key: 'userEnv',
-      label: 'Service variables',
-      items: filterItems(variablesQuery.data?.userEnv ?? [], variableName, field.value),
+    selectedItem: null,
+    onSelectedItemChange({ selectedItem }) {
+      field.onChange(field.value.replace(regexp, '') + `{{ ${selectedItem} }}`);
+      setIsOpen(false);
     },
-    {
-      key: 'systemEnv',
-      label: 'Koyeb variables',
-      items: filterItems(variablesQuery.data?.systemEnv ?? [], variableName, field.value),
+    stateReducer(state, { type, changes }) {
+      if (type === useCombobox.stateChangeTypes.InputBlur) {
+        setIsOpen(false);
+      }
+
+      return changes;
     },
-    {
-      key: 'create',
-      label: 'Create new',
-      items: ['__new_secret__'],
-    },
-  ];
-
-  const items = groups.flatMap((group) => group.items);
-
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  const { highlightedIndex, getLabelProps, getInputProps, getMenuProps, getItemProps, toggleMenu } =
-    useCombobox({
-      isOpen,
-      onIsOpenChange: ({ isOpen }) => setIsOpen(isOpen),
-      id,
-      itemToString: String,
-      items,
-      inputValue: field.value,
-      selectedItem: null,
-      onSelectedItemChange({ selectedItem }) {
-        if (selectedItem === '__new_secret__') {
-          onCreateSecret();
-        } else {
-          const value = field.value;
-          const input = inputRef.current;
-          const pos = input?.selectionStart;
-
-          if (value.match(regexp)) {
-            field.onChange(value.replace(regexp, '') + `{{ ${selectedItem} }}`);
-          } else if (pos !== null) {
-            field.onChange(`${value.slice(0, pos)}{{ ${selectedItem} }}${value.slice(pos)}`);
-          } else {
-            field.onChange(`{{ ${selectedItem} }}`);
-          }
-        }
-      },
-      stateReducer(state, { type, changes, inputValue }) {
-        const { InputClick, InputChange } = useCombobox.stateChangeTypes;
-
-        if (type === InputChange) {
-          return { ...changes, isOpen: regexp.test(inputValue ?? '') };
-        }
-
-        if (type === InputClick) {
-          return { ...changes, isOpen: state.isOpen };
-        }
-
-        return changes;
-      },
-    });
+  });
 
   const dropdown = useDropdown(isOpen);
-
-  const tooltip = (
-    <T
-      id="valueTooltip"
-      values={{
-        documentationLink: (children) => (
-          <DocumentationLink path="/docs/build-and-deploy/environment-variables#environment-variable-and-secret-interpolation">
-            {children}
-          </DocumentationLink>
-        ),
-        code: (children) => <code>{children}</code>,
-      }}
-    />
-  );
 
   return (
     <Field
       label={
         label && (
-          <FieldLabel htmlFor={id} helpTooltip={tooltip} {...getLabelProps()}>
+          <FieldLabel htmlFor={id} {...getLabelProps()}>
             {label}
           </FieldLabel>
         )
@@ -168,54 +104,48 @@ export function EnvironmentVariableValueField({
         boxRef={dropdown.setReference}
         boxClassName={clsx(isOpen && '!rounded-b-none')}
         className="peer"
-        placeholder={t('valuePlaceholder')}
-        end={
-          <IconButton
-            variant="ghost"
-            color="gray"
-            size={1}
-            Icon={IconChevronDown}
-            onClick={toggleMenu}
-            className={clsx(isOpen && 'rotate-180')}
-          />
-        }
         aria-invalid={fieldState.invalid}
         aria-errormessage={helperTextId}
-        {...getInputProps({ ...field, ref: inputRef })}
+        {...getInputProps(field)}
       />
 
       <Dropdown
         dropdown={dropdown}
-        groups={groups.filter((group) => group.items.length > 0)}
+        items={filteredItems}
         selectedItem={undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}
         getKey={identity}
-        renderItem={(item) => (item === '__new_secret__' ? <T id="createSecret" /> : item)}
+        renderItem={identity}
+        renderNoItems={() => <T id="noVariablesToInterpolate" />}
       />
     </Field>
   );
 }
 
 function mapServiceVariables({ secrets, system_env, user_env }: Record<string, string[]>) {
-  return {
-    secrets: secrets!.map((name) => `secret.${name}`),
-    userEnv: sort(user_env).filter((value) => value !== ''),
-    systemEnv: sort(system_env),
-  };
+  return [...sort([...system_env!, ...user_env!]), ...secrets!.map((name) => `secret.${name}`)].filter(
+    (value) => value !== '',
+  );
 }
 
-const regexp = /{{(((?!}}).)*)$/i;
+const regexp = /\{\{ *([-.a-zA-Z0-9]*)$/;
 
 function filterItems(items: string[], variableName: string, inputValue: string) {
-  const match = regexp.exec(inputValue)?.[1]?.trim();
+  const match = regexp.exec(inputValue);
 
-  if (match === undefined) {
+  if (!match) {
+    return [];
+  }
+
+  const search = lowerCase(match[1] as string);
+
+  if (search === '') {
     return items;
   }
 
   return items.filter((item) => {
-    return item !== variableName && lowerCase(item).includes(lowerCase(match));
+    return item !== variableName && lowerCase(item).includes(search);
   });
 }

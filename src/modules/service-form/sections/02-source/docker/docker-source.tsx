@@ -24,31 +24,18 @@ export function DockerSource() {
     <>
       <DockerImageField />
 
-      <ControlledSelect<ServiceForm, 'source.docker.registrySecret', Secret | 'none' | 'create'>
+      <ControlledSelect<ServiceForm, 'source.docker.registrySecret', Secret | 'none'>
         name="source.docker.registrySecret"
         label={<T id="registrySecretLabel" />}
         helpTooltip={<T id="registrySecretTooltip" />}
         placeholder={<T id="registrySecretPlaceholder" />}
-        items={['none', ...(secrets ?? []), 'create'] as const}
-        getKey={(item) => (typeof item === 'string' ? item : item.id)}
-        itemToValue={(item) => (typeof item === 'string' ? null : item.name)}
-        itemToString={(item) => (typeof item === 'string' ? item : item.name)}
-        renderItem={(item: 'none' | 'create' | Secret) => {
-          if (item === 'none') {
-            return <T id="noRegistrySecret" />;
-          }
-
-          if (item === 'create') {
-            return <T id="createRegistrySecret" />;
-          }
-
-          return item.name;
-        }}
-        onChangeEffect={(item) => {
-          if (item === 'create') {
-            return setRegistryDialogOpen(true);
-          }
-        }}
+        items={['none', ...(secrets ?? [])] as const}
+        getKey={(item) => (item === 'none' ? 'none' : item.id)}
+        itemToValue={(item) => (item === 'none' ? null : item.name)}
+        itemToString={(item) => (item === 'none' ? '' : item.name)}
+        renderItem={(item) => (item === 'none' ? <T id="noRegistrySecret" /> : item.name)}
+        onCreateItem={() => setRegistryDialogOpen(true)}
+        renderCreateItem={() => <T id="createRegistrySecret" />}
         className="max-w-md"
       />
 
