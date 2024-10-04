@@ -23,6 +23,7 @@ export type LogOptions = {
   tail: boolean;
   stream: boolean;
   date: boolean;
+  instance: boolean;
   wordWrap: boolean;
 };
 
@@ -31,12 +32,22 @@ type LogsProps = {
   serviceName: string;
   expired?: boolean;
   hasFilters?: boolean;
+  hasInstanceOption?: boolean;
   header?: React.ReactNode;
   lines: LogLine[];
   renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
 };
 
-export function Logs({ appName, serviceName, expired, hasFilters, header, lines, renderLine }: LogsProps) {
+export function Logs({
+  appName,
+  serviceName,
+  expired,
+  hasFilters,
+  hasInstanceOption,
+  header,
+  lines,
+  renderLine,
+}: LogsProps) {
   const isMobile = !useBreakpoint('md');
 
   const form = useForm<LogOptions>({
@@ -45,6 +56,7 @@ export function Logs({ appName, serviceName, expired, hasFilters, header, lines,
       tail: true,
       stream: !isMobile,
       date: !isMobile,
+      instance: true,
       wordWrap: false,
     },
   });
@@ -69,7 +81,14 @@ export function Logs({ appName, serviceName, expired, hasFilters, header, lines,
         />
       </div>
 
-      <LogsFooter appName={appName} serviceName={serviceName} expired={expired} lines={lines} form={form} />
+      <LogsFooter
+        appName={appName}
+        serviceName={serviceName}
+        expired={expired}
+        hasInstanceOption={hasInstanceOption}
+        lines={lines}
+        form={form}
+      />
     </section>
   );
 }
@@ -111,11 +130,12 @@ type LogsFooterProps = {
   appName: string;
   serviceName: string;
   expired?: boolean;
+  hasInstanceOption?: boolean;
   lines: LogLine[];
   form: UseFormReturn<LogOptions>;
 };
 
-function LogsFooter({ appName, serviceName, expired, lines, form }: LogsFooterProps) {
+function LogsFooter({ appName, serviceName, expired, hasInstanceOption, lines, form }: LogsFooterProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const downloadLogs = useDownloadLogs(appName, serviceName, lines);
@@ -124,6 +144,10 @@ function LogsFooter({ appName, serviceName, expired, lines, form }: LogsFooterPr
   if (expired) {
     return null;
   }
+
+  const options: Array<keyof LogOptions> = hasInstanceOption
+    ? ['tail', 'stream', 'date', 'instance', 'wordWrap']
+    : ['tail', 'stream', 'date', 'wordWrap'];
 
   return (
     <footer className="row flex-wrap items-center justify-end gap-4 px-4 py-2">
@@ -147,14 +171,14 @@ function LogsFooter({ appName, serviceName, expired, lines, form }: LogsFooterPr
               variant="ghost"
               color="gray"
               Icon={IconEllipsis}
-              onClick={() => setMenuOpen(true)}
+              onClick={() => setMenuOpen(!menuOpen)}
               {...props}
             />
           </div>
         )}
         renderFloating={(ref, props) => (
           <Menu ref={ref} className={clsx(form.watch('fullScreen') && 'z-50')} {...props}>
-            {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
+            {options.map((option) => (
               <MenuItem key={option}>
                 <ControlledCheckbox
                   control={form.control}

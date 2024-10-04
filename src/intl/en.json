@@ -365,6 +365,7 @@
     "fullScreen": "Toggle full screen",
     "tail": "Tail logs",
     "stream": "Show stream",
+    "instance": "Instance",
     "date": "Show timestamp",
     "wordWrap": "Word wrap",
     "download": "Download",

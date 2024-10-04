@@ -95,6 +95,7 @@ export function RuntimeLogs({ app, service, deployment, instances, error, lines 
       header={<LogsFilters form={form} regions={regions} instances={filteredInstances} />}
       expired={expired}
       hasFilters={hasFilters}
+      hasInstanceOption
       lines={filteredLines}
       renderLine={renderLine}
     />
@@ -221,7 +222,7 @@ function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) 
 
       {options.stream && <LogLineStream line={line} />}
 
-      <LogLineInstanceId line={line} />
+      {options.instance && <LogLineInstanceId line={line} />}
 
       <LogLineContent line={line} options={options} />
     </div>
