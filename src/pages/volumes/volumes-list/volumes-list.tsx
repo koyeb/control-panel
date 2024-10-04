@@ -13,6 +13,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 
@@ -106,6 +107,7 @@ function AttachedService({ serviceId }: { serviceId?: string }) {
 
 function Actions({ volume }: { volume: Volume }) {
   const [openDialog, setOpenDialog] = useState<'edit' | 'createSnapshot' | 'delete'>();
+  const snapshots = useFeatureFlag('snapshots');
 
   return (
     <>
@@ -133,11 +135,13 @@ function Actions({ volume }: { volume: Volume }) {
         volume={volume}
       />
 
-      <CreateSnapshotDialog
-        open={openDialog === 'createSnapshot'}
-        onClose={() => setOpenDialog(undefined)}
-        volume={volume}
-      />
+      {snapshots && (
+        <CreateSnapshotDialog
+          open={openDialog === 'createSnapshot'}
+          onClose={() => setOpenDialog(undefined)}
+          volume={volume}
+        />
+      )}
 
       <DeleteVolumeDialog
         open={openDialog === 'delete'}
