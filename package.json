@@ -5,6 +5,7 @@
     "type": "git",
     "url": "https://github.com/koyeb/control-panel.git"
   },
+  "license": "Apache-2.0",
   "packageManager": "pnpm@9.4.0",
   "type": "module",
   "scripts": {
