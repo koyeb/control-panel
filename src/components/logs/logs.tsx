@@ -48,15 +48,13 @@ export function Logs({
   lines,
   renderLine,
 }: LogsProps) {
-  const isMobile = !useBreakpoint('md');
-
   const form = useForm<LogOptions>({
     defaultValues: {
       fullScreen: false,
       tail: true,
-      stream: !isMobile,
-      date: !isMobile,
-      instance: true,
+      stream: false,
+      date: false,
+      instance: false,
       wordWrap: false,
     },
   });
