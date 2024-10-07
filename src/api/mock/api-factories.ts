@@ -37,6 +37,7 @@ export const createApiGithubApp = createFactory<ApiGithubInstallation>(() => ({
 
 export const createApiVolume = createFactory<ApiPersistentVolume>(() => ({
   id: createId(),
+  status: 'PERSISTENT_VOLUME_STATUS_DETACHED',
   name: '',
 }));
 
@@ -84,7 +85,6 @@ export const createApiService = createFactory<ApiService>(() => ({
   app_id: createId(),
   status: 'HEALTHY',
   latest_deployment_id: createId(),
-  active_deployment_id: createId(),
   type: 'WEB',
   name: '',
 }));
@@ -100,6 +100,7 @@ export const createApiDeployment = createFactory<ApiDeployment>(() => ({
 
 export const createApiDeploymentDefinition = createFactory<ApiDeploymentDefinition>(() => ({
   type: 'WEB',
+  strategy: { type: 'DEPLOYMENT_STRATEGY_TYPE_BLUE_GREEN' },
   instance_types: [{ type: '' }],
   scalings: [{ min: 0, max: 0 }],
   regions: [],
@@ -107,6 +108,7 @@ export const createApiDeploymentDefinition = createFactory<ApiDeploymentDefiniti
   ports: [],
   routes: [],
   health_checks: [],
+  volumes: [],
 }));
 
 export const createApiInstance = createFactory<ApiInstance>(() => ({

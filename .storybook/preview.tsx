@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
 
 import { AnalyticsProvider, NoopAnalytics } from '../src/application/analytics';
+import { ApiMock } from '../src/api/mock/mock-api';
 import { IntlProvider } from '../src/intl/translation-provider';
 import { ThemeMode, useThemeMode } from '../src/hooks/theme';
 import { TokenProvider } from '../src/application/token';
@@ -73,6 +74,7 @@ export default {
       </SetThemeMode>
     ),
     (Story, { args, parameters }) => {
+      new ApiMock();
       parameters.mockApi?.(args);
       return <Story />;
     },

@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react';
 
+import { ApiMock } from 'src/api/mock/mock-api';
 import { Activity, ActivityActor } from 'src/api/model';
 import { create } from 'src/utils/factories';
 
@@ -11,12 +12,18 @@ type Args = {
 
 const meta = {
   title: 'Modules/Activity',
-  parameters: { className: 'max-w-main' },
+  parameters: { className: 'max-w-main', mockApi },
   render: ({ activity }) => <ActivityItem activity={activity} className="rounded-lg border p-3" />,
 } satisfies Meta<Args>;
 
 export default meta;
 type Story = StoryObj<Args>;
+
+function mockApi() {
+  const api = new ApiMock();
+
+  api.mockEndpoint('listApiCredentials', () => ({ credentials: [] }));
+}
 
 const user: ActivityActor = {
   type: 'user',

@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { Meta, StoryFn } from '@storybook/react';
 import { useState } from 'react';
 
+import { ApiMock } from 'src/api/mock/mock-api';
 import { createDate } from 'src/utils/date';
 import { create } from 'src/utils/factories';
 
@@ -9,7 +10,14 @@ import { DeploymentsList } from './deployments-list';
 
 export default {
   title: 'Modules/ServiceOverview/DeploymentsList',
+  parameters: { mockApi },
 } satisfies Meta;
+
+function mockApi() {
+  const api = new ApiMock();
+
+  api.mockEndpoint('cancelDeployment', () => ({}));
+}
 
 const service = create.service({
   activeDeploymentId: 'activeDeploymentId',

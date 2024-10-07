@@ -52,6 +52,7 @@ export class ApiData {
   };
 
   public organization: ApiOrganization = {
+    id: 'organizationId',
     name: 'my-organization',
     status: 'ACTIVE',
     status_message: 'VALID',
@@ -62,10 +63,17 @@ export class ApiData {
     instances: {
       by_type: { free: '0' },
     },
+    neon_postgres: {
+      by_instance_type: { free: '0' },
+    },
   };
 
   public organizationQuotas: ApiQuotas = {
     regions: ['fra'],
+    max_instances_by_type: { free: '1' },
+    persistent_volumes_by_region: {
+      fra: { max_volume_size: 10, max_per_instance_size: 10, max_total_size: 100 },
+    },
   };
 
   public githubApp: ApiGithubInstallation = {
@@ -180,6 +188,9 @@ export class ApiData {
           repository: 'github.com/org/repo',
           branch: 'master',
           sha: 'cafe4242',
+          buildpack: {
+            privileged: false,
+          },
         },
         env: [{}, {}],
         instance_types: [{ type: 'free' }],

@@ -1,4 +1,5 @@
 import { Button } from '@koyeb/design-system';
+import { useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
 import {
   useOrganization,
   useOrganizationQuotasQuery,
@@ -22,10 +23,17 @@ type InstanceRegionStepProps = {
 };
 
 export function InstanceRegionStep(props: InstanceRegionStepProps) {
+  const instancesQuery = useInstancesQuery();
+  const regionsQuery = useRegionsQuery();
   const organizationSummaryQuery = useOrganizationSummaryQuery();
   const organizationQuotasQuery = useOrganizationQuotasQuery();
 
-  if (organizationSummaryQuery.isPending || organizationQuotasQuery.isPending) {
+  if (
+    instancesQuery.isPending ||
+    regionsQuery.isPending ||
+    organizationSummaryQuery.isPending ||
+    organizationQuotasQuery.isPending
+  ) {
     return <Loading />;
   }
 

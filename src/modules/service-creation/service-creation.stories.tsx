@@ -115,6 +115,9 @@ function mockApi(args: Args) {
       repository: 'github.com/org/repo',
       branch: 'master',
       sha: 'cafe4242',
+      buildpack: {
+        privileged: false,
+      },
     },
     env: [{}, {}],
     instance_types: [{ type: 'medium' }],
