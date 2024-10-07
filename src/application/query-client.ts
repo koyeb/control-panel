@@ -109,6 +109,15 @@ function onQueryError(error: Error, query: UnknownQuery) {
       }
     }
 
+    // user removed from organization
+    if (error.status === 403) {
+      handleAuthenticationError();
+    }
+
+    if (error.status === 429) {
+      notify.error(error.message);
+    }
+
     if (
       isApiNotFoundError(error) &&
       inArray(query.queryKey[0], ['getApp', 'getService', 'getDeployment']) &&
@@ -118,11 +127,8 @@ function onQueryError(error: Error, query: UnknownQuery) {
       navigate(routes.home());
     }
 
-    if (error.status === 429) {
-      notify.error(error.message);
-    }
-
     if (error.status >= 500) {
+      notify.error(error.message);
       reportError(error);
     }
   } else {
