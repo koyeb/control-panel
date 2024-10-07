@@ -1,4 +1,4 @@
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, keys } from 'src/utils/object';
 
 import { ApiEndpointParams, ApiEndpointResult, ApiStream, api, apiStreams } from '../api';
 import { ApiError } from '../api-errors';
@@ -82,101 +82,57 @@ export class ApiMock {
       throw new EntityNotFoundError(key, id);
     };
 
-    this.mockEndpoint('getOAuthProviders', {});
-    this.mockEndpoint('signIn', {});
-    this.mockEndpoint('signUp', {});
-    this.mockEndpoint('setUpOAuth', {});
-    this.mockEndpoint('resetPassword', {});
-    this.mockEndpoint('updatePassword', {});
-    this.mockEndpoint('logout', {});
+    for (const endpoint of keys(api)) {
+      this.mockEndpoint(endpoint, () => {
+        throw new Error(`Missing mock for ${endpoint}`);
+      });
+    }
 
+    // account
     this.mockEndpoint('getCurrentUser', { user: this.data.user });
     this.mockEndpoint('getIntercomUserHash', this.data.intercomUserHash);
-    this.mockEndpoint('updateUser', {});
-    this.mockEndpoint('deleteUser', {});
 
+    // organization
     this.mockEndpoint('getCurrentOrganization', { organization: this.data.organization });
-    this.mockEndpoint('listOrganizationMembers', {});
     this.mockEndpoint('organizationSummary', { summary: this.data.organizationSummary });
     this.mockEndpoint('organizationQuotas', { quotas: this.data.organizationQuotas });
-    this.mockEndpoint('switchOrganization', {});
-    this.mockEndpoint('createOrganization', {});
-    this.mockEndpoint('updateOrganization', {});
-    this.mockEndpoint('deleteOrganization', {});
-    this.mockEndpoint('deactivateOrganization', {});
-    this.mockEndpoint('reactivateOrganization', {});
-    this.mockEndpoint('organizationConfirmation', {});
 
-    this.mockEndpoint('changePlan', {});
-    this.mockEndpoint('manageBilling', {});
-    this.mockEndpoint('createPaymentAuthorization', {});
-    this.mockEndpoint('confirmPaymentAuthorization', {});
-    this.mockEndpoint('getNextInvoice', {});
-    this.mockEndpoint('hasUnpaidInvoices', {});
-
-    this.mockEndpoint('listInvitations', {});
-    this.mockEndpoint('getInvitation', {});
-    this.mockEndpoint('sendInvitation', {});
-    this.mockEndpoint('resendInvitation', {});
-    this.mockEndpoint('acceptInvitation', {});
-    this.mockEndpoint('declineInvitation', {});
-    this.mockEndpoint('deleteInvitation', {});
-
+    // catalog
     this.mockEndpoint('listCatalogRegions', { regions: this.data.catalogRegions });
     this.mockEndpoint('listCatalogDatacenters', { datacenters: this.data.catalogDatacenters });
     this.mockEndpoint('listCatalogInstances', { instances: this.data.catalogInstances });
 
+    // docker image verification
     this.mockEndpoint('verifyDockerImage', this.data.verifyDockerImage);
 
+    // volumes
     this.mockEndpoint('listVolumes', { volumes: this.data.volumes });
 
+    // secrets
     this.mockEndpoint('listSecrets', this.listSecrets);
-    this.mockEndpoint('revealSecret', {});
-    this.mockEndpoint('createSecret', {});
-    this.mockEndpoint('updateSecret', {});
-    this.mockEndpoint('deleteSecret', {});
 
-    this.mockEndpoint('listDomains', {});
-    this.mockEndpoint('createDomain', {});
-    this.mockEndpoint('editDomain', {});
-    this.mockEndpoint('refreshDomain', {});
-    this.mockEndpoint('deleteDomain', {});
-
+    // github app
     this.mockEndpoint('getGithubApp', this.data.githubApp);
-    this.mockEndpoint('installGithubApp', {});
-    this.mockEndpoint('resyncRepositories', {});
     this.mockEndpoint('listRepositories', { repositories: this.data.repositories });
     this.mockEndpoint('listRepositoryBranches', this.listRepositoryBranches);
 
+    // apps
     this.mockEndpoint('listApps', { apps: this.data.apps });
     this.mockEndpoint('getApp', ({ path }) => ({ app: find('apps', path.id) }));
     this.mockEndpoint('createApp', this.createApp);
-    this.mockEndpoint('renameApp', {});
-    this.mockEndpoint('pauseApp', {});
-    this.mockEndpoint('resumeApp', {});
-    this.mockEndpoint('deleteApp', {});
 
-    this.mockEndpoint('listServices', {});
+    // services
     this.mockEndpoint('getService', ({ path }) => ({ service: find('services', path.id) }));
-    this.mockEndpoint('getServiceMetrics', {});
     this.mockEndpoint('getServiceVariables', this.data.serviceVariables);
     this.mockEndpoint('createService', this.createService);
-    this.mockEndpoint('updateService', {});
-    this.mockEndpoint('redeployService', {});
-    this.mockEndpoint('pauseService', {});
-    this.mockEndpoint('resumeService', {});
-    this.mockEndpoint('deleteService', {});
 
-    this.mockEndpoint('listDeployments', {});
+    // deployments
     this.mockEndpoint('getDeployment', ({ path }) => ({ deployment: find('deployments', path.id) }));
 
+    // instances
     this.mockEndpoint('listInstances', this.listInstances);
 
-    this.mockEndpoint('listActivities', {});
-
-    this.mockEndpoint('listApiCredentials', {});
-    this.mockEndpoint('createApiCredential', {});
-
+    // streams
     this.mockStream('logs', () => this.data.stream);
   }
 

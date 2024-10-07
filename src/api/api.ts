@@ -9,38 +9,45 @@ import { ApiError, ApiValidationError, isApiError, isApiValidationError } from '
 import Api from './api.generated';
 
 export const api = {
+  // authentication
   getOAuthProviders: endpoint('get', '/v1/account/oauth'),
   githubOAuthCallback: endpoint('post', '/v1/account/oauth'),
   signIn: endpoint('post', '/v1/account/login'),
   signUp: endpoint('post', '/v1/account/signup'),
   refreshToken: endpoint('put', '/v1/account/refresh'),
+  logout: endpoint('delete', '/v1/account/logout'),
   setUpOAuth: endpoint('get', '/v1/account/oauth'),
   cannySso: endpoint('post', '/v1/sso/canny'),
   discourseSso: endpoint('post', '/v1/sso/discourse'),
-  resetPassword: endpoint('post', '/v1/account/reset_password'),
-  updatePassword: endpoint('post', '/v1/account/update_password'),
-  resendValidationEmail: endpoint('post', '/v1/account/resend_validation'),
-  validateAccount: endpoint('post', '/v1/account/validate/{id}'),
-  logout: endpoint('delete', '/v1/account/logout'),
+
+  // account
   getCurrentUser: endpoint('get', '/v1/account/profile'),
   getIntercomUserHash: endpoint('get', '/v1/intercom/profile'),
+  resendValidationEmail: endpoint('post', '/v1/account/resend_validation'),
+  validateAccount: endpoint('post', '/v1/account/validate/{id}'),
+  resetPassword: endpoint('post', '/v1/account/reset_password'),
+  updatePassword: endpoint('post', '/v1/account/update_password'),
   updateUser: endpoint('patch', '/v1/account/profile'),
   deleteUser: endpoint('delete', '/v1/users/{id}'),
+
+  // organization
   getCurrentOrganization: endpoint('get', '/v1/account/organization'),
+  switchOrganization: endpoint('post', '/v1/organizations/{id}/switch'),
   listOrganizationMembers: endpoint('get', '/v1/organization_members'),
   deleteOrganizationMember: endpoint('delete', '/v1/organization_members/{id}'),
   organizationSummary: endpoint('get', '/v1/organizations/{organization_id}/summary'),
   organizationQuotas: endpoint('get', '/v1/organizations/{organization_id}/quotas'),
-  switchOrganization: endpoint('post', '/v1/organizations/{id}/switch'),
-  newSession: endpoint('post', '/v1/account/session'),
   createOrganization: endpoint('post', '/v1/organizations'),
   updateOrganization: endpoint('patch', '/v1/organizations/{id}'),
   updateSignupQualification: endpoint('post', '/v1/organizations/{id}/signup_qualification'),
-  deleteOrganization: endpoint('delete', '/v1/organizations/{id}'),
+  changePlan: endpoint('post', '/v1/organizations/{id}/plan'),
+  organizationConfirmation: endpoint('post', '/v1/organization_confirmations/{id}'),
   deactivateOrganization: endpoint('post', '/v1/organizations/{id}/deactivate'),
   reactivateOrganization: endpoint('post', '/v1/organizations/{id}/reactivate'),
-  organizationConfirmation: endpoint('post', '/v1/organization_confirmations/{id}'),
-  changePlan: endpoint('post', '/v1/organizations/{id}/plan'),
+  deleteOrganization: endpoint('delete', '/v1/organizations/{id}'),
+  newSession: endpoint('post', '/v1/account/session'),
+
+  // subscription
   getSubscription: endpoint('get', '/v1/subscriptions/{id}'),
   manageBilling: endpoint('get', '/v1/billing/manage'),
   createPaymentAuthorization: endpoint('post', '/v1/payment_methods'),
@@ -48,6 +55,8 @@ export const api = {
   getNextInvoice: endpoint('get', '/v1/billing/next_invoice'),
   hasUnpaidInvoices: endpoint('get', '/v1/billing/has_unpaid_invoices'),
   getUsageCsv: endpoint('get', '/v1/usages/details'),
+
+  // invitations
   listInvitations: endpoint('get', '/v1/organization_invitations'),
   getInvitation: endpoint('get', '/v1/organization_invitations/{id}'),
   sendInvitation: endpoint('post', '/v1/organization_invitations'),
@@ -55,10 +64,16 @@ export const api = {
   acceptInvitation: endpoint('post', '/v1/account/organization_invitations/{id}/accept'),
   declineInvitation: endpoint('post', '/v1/account/organization_invitations/{id}/decline'),
   deleteInvitation: endpoint('delete', '/v1/organization_invitations/{id}'),
+
+  // catalog
   listCatalogRegions: endpoint('get', '/v1/catalog/regions'),
   listCatalogDatacenters: endpoint('get', '/v1/catalog/datacenters'),
   listCatalogInstances: endpoint('get', '/v1/catalog/instances'),
+
+  // docker image verification
   verifyDockerImage: endpoint('get', '/v1/docker-helper/verify'),
+
+  // volumes
   listVolumes: endpoint('get', '/v1/volumes'),
   createVolume: endpoint('post', '/v1/volumes'),
   updateVolume: endpoint('post', '/v1/volumes/{id}'),
@@ -66,22 +81,30 @@ export const api = {
   listSnapshots: endpoint('get', '/v1/snapshots'),
   createSnapshot: endpoint('post', '/v1/snapshots'),
   deleteSnapshot: endpoint('delete', '/v1/snapshots/{id}'),
+
+  // secrets
   listSecrets: endpoint('get', '/v1/secrets'),
   revealSecret: endpoint('post', '/v1/secrets/{id}/reveal'),
   createSecret: endpoint('post', '/v1/secrets'),
   updateSecret: endpoint('put', '/v1/secrets/{id}'),
   deleteSecret: endpoint('delete', '/v1/secrets/{id}'),
+
+  // domains
   listDomains: endpoint('get', '/v1/domains'),
   createDomain: endpoint('post', '/v1/domains'),
   editDomain: endpoint('patch', '/v1/domains/{id}'),
   refreshDomain: endpoint('post', '/v1/domains/{id}/refresh'),
   deleteDomain: endpoint('delete', '/v1/domains/{id}'),
+
+  // github app
   getGithubApp: endpoint('get', '/v1/github/installation'),
   installGithubApp: endpoint('post', '/v1/github/installation'),
   installGithubAppCallback: endpoint('post', '/v1/github/installation/callback'),
   resyncRepositories: endpoint('post', '/v1/git/sync/organization/{organization_id}'),
   listRepositories: endpoint('get', '/v1/git/repositories'),
   listRepositoryBranches: endpoint('get', '/v1/git/branches'),
+
+  // apps
   listApps: endpoint('get', '/v1/apps'),
   getApp: endpoint('get', '/v1/apps/{id}'),
   createApp: endpoint('post', '/v1/apps'),
@@ -89,6 +112,8 @@ export const api = {
   pauseApp: endpoint('post', '/v1/apps/{id}/pause'),
   resumeApp: endpoint('post', '/v1/apps/{id}/resume'),
   deleteApp: endpoint('delete', '/v1/apps/{id}'),
+
+  // services
   listServices: endpoint('get', '/v1/services'),
   getService: endpoint('get', '/v1/services/{id}'),
   getServiceMetrics: endpoint('get', '/v1/streams/metrics'),
@@ -99,11 +124,19 @@ export const api = {
   pauseService: endpoint('post', '/v1/services/{id}/pause'),
   resumeService: endpoint('post', '/v1/services/{id}/resume'),
   deleteService: endpoint('delete', '/v1/services/{id}'),
+
+  // deployments
   listDeployments: endpoint('get', '/v1/deployments'),
   getDeployment: endpoint('get', '/v1/deployments/{id}'),
   cancelDeployment: endpoint('post', '/v1/deployments/{id}/cancel'),
+
+  // instances
   listInstances: endpoint('get', '/v1/instances'),
+
+  // activities
   listActivities: endpoint('get', '/v1/activities'),
+
+  // api credentials
   listApiCredentials: endpoint('get', '/v1/credentials'),
   createApiCredential: endpoint('post', '/v1/credentials'),
   deleteApiCredential: endpoint('delete', '/v1/credentials/{id}'),
