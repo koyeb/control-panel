@@ -46,7 +46,7 @@ function Initialize() {
     }
 
     analytics.init(posthogKey, {
-      api_host: 'https://eu.posthog.com',
+      api_host: 'https://ph.koyeb.com',
       capture_pageview: false,
       capture_pageleave: true,
       autocapture: false,
