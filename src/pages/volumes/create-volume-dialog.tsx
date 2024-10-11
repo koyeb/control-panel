@@ -26,7 +26,7 @@ export function CreateVolumeDialog({ open, onClose, snapshot }: CreateVolumeDial
       width="lg"
     >
       <VolumeForm
-        snapshotId={snapshot?.id}
+        snapshot={snapshot}
         size={volume?.size}
         onSubmitted={() => onClose()}
         renderFooter={(formState) => (
