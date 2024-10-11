@@ -77,7 +77,7 @@ export function VolumeForm({ snapshotId, size, volume, onSubmitted, renderFooter
               volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
               snapshot_id: snapshotId,
               name,
-              max_size: size,
+              max_size: snapshotId ? undefined : size,
               region,
             },
           })
