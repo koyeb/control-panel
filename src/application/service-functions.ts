@@ -1,7 +1,7 @@
 import { api } from 'src/api/api';
 import { ApiDeploymentDefinition } from 'src/api/api-types';
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
-import { App, Deployment, DeploymentStatus, Service } from 'src/api/model';
+import { App, AppDomain, Deployment, DeploymentStatus, Port, Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { inArray } from 'src/utils/arrays';
 
@@ -17,7 +17,7 @@ export function getServiceLink(service: Service) {
 
 export type ServiceUrl = {
   portNumber: number;
-  internalUrl: string;
+  internalUrl?: string;
   externalUrl?: string;
 };
 
@@ -25,6 +25,7 @@ export function getServiceUrls(app: App, service: Service, deployment?: Deployme
   if (isComputeDeployment(deployment)) {
     const firstDomain = app.domains[0];
     const ports = deployment.definition.ports;
+    const instanceType = deployment.definition.instanceType;
 
     if (firstDomain === undefined) {
       return [];
@@ -33,8 +34,8 @@ export function getServiceUrls(app: App, service: Service, deployment?: Deployme
     return ports.map((port): ServiceUrl => {
       return {
         portNumber: port.portNumber,
-        internalUrl: [service.name, app.name, 'internal'].join('.') + ':' + port.portNumber,
-        externalUrl: port.public ? firstDomain.name + port.path : undefined,
+        internalUrl: internalUrl(service, app, instanceType, port),
+        externalUrl: externalUrl(firstDomain, port),
       };
     });
   }
@@ -44,6 +45,22 @@ export function getServiceUrls(app: App, service: Service, deployment?: Deployme
   }
 
   return [];
+}
+
+function internalUrl(service: Service, app: App, instanceType: string, port: Port) {
+  if (instanceType === 'free') {
+    return;
+  }
+
+  return [service.name, app.name, 'internal'].join('.') + `:${port.portNumber}`;
+}
+
+function externalUrl(domain: AppDomain, port: Port) {
+  if (!port.public) {
+    return;
+  }
+
+  return domain.name + port.path;
 }
 
 const upcomingDeploymentStatuses: DeploymentStatus[] = [

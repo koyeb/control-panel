@@ -5,7 +5,7 @@ import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { Metadata } from 'src/components/metadata';
 import { useClipboard } from 'src/hooks/clipboard';
 import { Translate } from 'src/intl/translate';
-import { assert } from 'src/utils/assert';
+import { assert, defined } from 'src/utils/assert';
 
 const T = Translate.prefix('deploymentInfo');
 
@@ -18,7 +18,7 @@ type InternalUrlProps = {
 export function InternalUrl({ app, service, deployment }: InternalUrlProps) {
   const urls = getServiceUrls(app, service, deployment);
 
-  if (urls.length === 0) {
+  if (urls.find((url) => url.internalUrl !== undefined) === undefined) {
     return null;
   }
 
@@ -59,7 +59,7 @@ function UrlsList({ urls }: { urls: ServiceUrl[] }) {
     <ul>
       {urls.map((url) => (
         <li key={url.portNumber}>
-          <button type="button" onClick={() => copy(url.internalUrl)}>
+          <button type="button" onClick={() => copy(defined(url.internalUrl))}>
             {url.internalUrl}
           </button>
         </li>

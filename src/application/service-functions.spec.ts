@@ -25,6 +25,21 @@ describe('getServiceUrls', () => {
     ]);
   });
 
+  it('free instance has no private address', () => {
+    const urls = getServiceUrls(
+      create.app({ name: 'app', domains: [{ id: '', name: 'test.com', type: 'custom' }] }),
+      create.service({ name: 'svc', type: 'web' }),
+      create.computeDeployment({
+        definition: create.deploymentDefinition({
+          instanceType: 'free',
+          ports: [{ portNumber: 8000, protocol: 'http', public: true, path: '/' }],
+        }),
+      }),
+    );
+
+    expect(urls).toEqual<ServiceUrl[]>([{ portNumber: 8000, externalUrl: 'test.com/' }]);
+  });
+
   it('private port', () => {
     const urls = getServiceUrls(
       create.app({ name: 'app', domains: [{ id: '', name: 'app.koyeb.app', type: 'autoassigned' }] }),
