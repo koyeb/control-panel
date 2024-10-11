@@ -1,3 +1,4 @@
+import { sort } from 'src/utils/arrays';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
@@ -34,19 +35,24 @@ export function mapCatalogDatacentersList({
 export function mapCatalogInstancesList({
   instances,
 }: ApiEndpointResult<'listCatalogInstances'>): CatalogInstance[] {
-  return instances!.map((instance) => ({
-    identifier: instance.id!,
-    displayName: instance.display_name!,
-    status: lowerCase(instance.status!) as CatalogInstanceStatus,
-    plans: instance.require_plan!.length > 0 ? instance.require_plan! : undefined,
-    regions: instance.regions!.length > 0 ? instance.regions! : undefined,
-    category: instance.type! as InstanceCategory,
-    regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
-    cpu: instance.vcpu_shares!,
-    ram: instance.memory!,
-    disk: instance.disk!,
-    hasVolumes: instance.volumes_enabled!,
-    pricePerMonth: Number(instance.price_monthly!),
-    pricePerSecond: Number(instance.price_per_second!),
-  }));
+  return sort(
+    instances!.map((instance) => ({
+      identifier: instance.id!,
+      displayName: instance.display_name!,
+      status: lowerCase(instance.status!) as CatalogInstanceStatus,
+      plans: instance.require_plan!.length > 0 ? instance.require_plan! : undefined,
+      regions: instance.regions!.length > 0 ? instance.regions! : undefined,
+      category: instance.type! as InstanceCategory,
+      regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
+      cpu: instance.vcpu_shares!,
+      ram: instance.memory!,
+      disk: instance.disk!,
+      hasVolumes: instance.volumes_enabled!,
+      pricePerMonth: Number(instance.price_monthly!),
+      pricePerSecond: Number(instance.price_per_second!),
+    })),
+    ({ status }) => {
+      return status === 'coming_soon' ? 1 : 0;
+    },
+  );
 }

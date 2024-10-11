@@ -21,3 +21,11 @@ export function inArray<T>(value: unknown, array: readonly T[]): value is T {
 export function last<T>(array: T[]): T | undefined {
   return array.at(array.length - 1);
 }
+
+export function sort<T>(array: T[], compare: (a: T, b: T) => number): T[] {
+  const copy = array.slice();
+
+  copy.sort(compare);
+
+  return copy;
+}
