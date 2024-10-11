@@ -737,7 +737,7 @@
     },
     "initialDeployment": {
       "title": "You're almost done",
-      "description": "Follow the steps to track the creation process",
+      "description": "Follow the steps to track the creation process or <link>manage your service</link>",
       "deploymentStatusDetails": {
         "deploymentQueued": {
           "title": "Deployment queued",

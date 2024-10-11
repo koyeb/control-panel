@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import { Stepper, Step as StepperStep } from '@koyeb/design-system';
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useRepositories } from 'src/api/hooks/git';
+import { routes } from 'src/application/routes';
+import { Link } from 'src/components/link';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
@@ -60,6 +62,16 @@ export function ServiceCreation() {
     }
   };
 
+  const serviceLink = (children: React.ReactNode) => {
+    if (serviceId) {
+      return (
+        <Link className="text-link" href={routes.service.overview(serviceId)}>
+          {children}
+        </Link>
+      );
+    }
+  };
+
   return (
     <div className="col gap-8">
       <PrefetchResources />
@@ -71,7 +83,7 @@ export function ServiceCreation() {
 
         {currentStep !== Step.serviceType && (
           <p className="text-dim">
-            <T id={`${currentStep}.description`} />
+            <T id={`${currentStep}.description`} values={{ link: serviceLink }} />
           </p>
         )}
       </div>
