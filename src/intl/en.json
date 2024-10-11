@@ -1710,7 +1710,7 @@
         "region": "Region",
         "size": "Size",
         "status": "Status",
-        "type": "Type",
+        "type": "Storage type",
         "snapshotType": {
           "invalid": "Invalid",
           "local": "Local",

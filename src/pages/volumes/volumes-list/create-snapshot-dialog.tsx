@@ -6,8 +6,10 @@ import { Button, Dialog } from '@koyeb/design-system';
 import { Volume } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
+import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate } from 'src/intl/translate';
 
@@ -24,6 +26,7 @@ type CreateSnapshotDialogProps = {
 };
 
 export function CreateSnapshotDialog({ open, onClose, volume }: CreateSnapshotDialogProps) {
+  const navigate = useNavigate();
   const invalidate = useInvalidateApiQuery();
   const t = T.useTranslate();
 
@@ -46,6 +49,7 @@ export function CreateSnapshotDialog({ open, onClose, volume }: CreateSnapshotDi
     async onSuccess({ snapshot }) {
       await invalidate('listVolumes');
       notify.success(t('successNotification', { name: snapshot!.name! }));
+      navigate(routes.volumes.snapshots());
       onClose();
     },
     onError: useFormErrorHandler(form),

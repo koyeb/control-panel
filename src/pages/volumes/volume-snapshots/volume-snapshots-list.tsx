@@ -35,19 +35,9 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
           header: <T id="name" />,
           render: (snapshots) => snapshots.name,
         },
-        volumeName: {
-          header: <T id="volumeName" />,
-          render: (snapshot) => volumes?.find(hasProperty('id', snapshot.volumeId))?.name,
-        },
         status: {
           header: <T id="status" />,
           render: (snapshot) => <VolumeSnapshotStatusBadge status={snapshot.status} />,
-        },
-        created: {
-          className: 'w-48',
-          hidden: isMobile,
-          header: <T id="created" />,
-          render: (snapshot) => <FormattedDistanceToNow value={snapshot.createdAt} />,
         },
         region: {
           hidden: isMobile,
@@ -62,6 +52,16 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
         type: {
           header: <T id="type" />,
           render: (snapshot) => <T id={`snapshotType.${snapshot.type}`} />,
+        },
+        volumeName: {
+          header: <T id="volumeName" />,
+          render: (snapshot) => volumes?.find(hasProperty('id', snapshot.volumeId))?.name,
+        },
+        created: {
+          className: 'w-48',
+          hidden: isMobile,
+          header: <T id="created" />,
+          render: (snapshot) => <FormattedDistanceToNow value={snapshot.createdAt} />,
         },
         actions: {
           className: clsx('w-12'),

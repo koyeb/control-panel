@@ -48,10 +48,9 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
           header: <T id="name" />,
           render: (volume) => volume.name,
         },
-        created: {
-          hidden: isMobile,
-          header: <T id="created" />,
-          render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
+        status: {
+          header: <T id="status" />,
+          render: (volume) => <VolumeStatusBadge status={volume.status} />,
         },
         region: {
           hidden: isMobile,
@@ -67,14 +66,16 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
           header: <T id="size" />,
           render: (volume) => formatBytes(volume.size, { decimal: true }),
         },
-        status: {
-          header: <T id="status" />,
-          render: (volume) => <VolumeStatusBadge status={volume.status} />,
-        },
         attachedTo: {
           hidden: isMobile,
           header: <T id="attachedTo" />,
           render: (volume) => <AttachedService serviceId={volume.serviceId} />,
+        },
+        created: {
+          className: 'w-48',
+          hidden: isMobile,
+          header: <T id="created" />,
+          render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
         },
         actions: {
           className: clsx('w-12'),
@@ -98,7 +99,7 @@ function AttachedService({ serviceId }: { serviceId?: string }) {
   }
 
   return (
-    <LinkButton href={routes.service.overview(service.id)} variant="outline" color="gray" size={1}>
+    <LinkButton href={`~${routes.service.overview(service.id)}`} variant="outline" color="gray" size={1}>
       <ServiceTypeIcon type={service.type} size="small" />
       {service.name}
     </LinkButton>

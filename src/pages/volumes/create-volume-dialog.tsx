@@ -1,6 +1,8 @@
 import { Button, Dialog } from '@koyeb/design-system';
 import { useVolumes } from 'src/api/hooks/volume';
 import { VolumeSnapshot } from 'src/api/model';
+import { routes } from 'src/application/routes';
+import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
@@ -16,6 +18,7 @@ type CreateVolumeDialogProps = {
 
 export function CreateVolumeDialog({ open, onClose, snapshot }: CreateVolumeDialogProps) {
   const volume = useVolumes()?.find(hasProperty('id', snapshot?.volumeId));
+  const navigate = useNavigate();
 
   return (
     <Dialog
@@ -28,7 +31,10 @@ export function CreateVolumeDialog({ open, onClose, snapshot }: CreateVolumeDial
       <VolumeForm
         snapshot={snapshot}
         size={volume?.size}
-        onSubmitted={() => onClose()}
+        onSubmitted={() => {
+          onClose();
+          navigate(routes.volumes.index());
+        }}
         renderFooter={(formState) => (
           <footer className="row mt-2 justify-end gap-2">
             <Button variant="ghost" color="gray" onClick={onClose}>
