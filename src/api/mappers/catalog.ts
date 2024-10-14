@@ -1,4 +1,3 @@
-import { sort } from 'src/utils/arrays';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
