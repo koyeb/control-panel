@@ -45,6 +45,7 @@
       "immediate": "Immediate"
     },
     "deploymentBuildStep": {
+      "start-docker": "Start Docker",
       "archive-clone": "Retrieve archive",
       "git-clone": "Clone repository",
       "analyze": "Analyze",
