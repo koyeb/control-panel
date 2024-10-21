@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { Button, HelpTooltip } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
@@ -60,9 +60,6 @@ export function EnvironmentVariablesSection() {
         <div className="col gaps">
           <p>
             <T id="info" />
-            <HelpTooltip className="ml-2">
-              <T id="infoTooltip" />
-            </HelpTooltip>
           </p>
 
           <div className="col gap-4">
@@ -77,11 +74,7 @@ export function EnvironmentVariablesSection() {
           </div>
 
           <div className="col sm:row items-start gap-4">
-            <Button
-              variant="ghost"
-              color="gray"
-              onClick={() => append({ name: '', type: 'plaintext', value: '' })}
-            >
+            <Button variant="ghost" color="gray" onClick={() => append({ name: '', value: '' })}>
               <IconPlus className="size-4" />
               <T id="addVariable" />
             </Button>
@@ -102,9 +95,11 @@ export function EnvironmentVariablesSection() {
         open={createSecretIndex !== undefined}
         onClose={() => setCreateSecretIndex(undefined)}
         onCreated={(secretName) => {
-          setValue(`environmentVariables.${createSecretIndex as number}.value`, secretName, {
-            shouldValidate: true,
-          });
+          setValue(
+            `environmentVariables.${createSecretIndex as number}.value`,
+            `{{ secret.${secretName} }}`,
+            { shouldValidate: true },
+          );
 
           setCreateSecretIndex(undefined);
         }}

@@ -14,7 +14,7 @@ export function HelpTooltip({ icon = 'help', className, children }: HelpProps) {
   const Icon = icon === 'help' ? IconHelp : IconInfo;
 
   return (
-    <Tooltip content={children}>
+    <Tooltip allowHover content={children}>
       {(props) => <Icon {...props} className={clsx('icon inline-block !size-4', className)} />}
     </Tooltip>
   );
