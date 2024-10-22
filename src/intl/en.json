@@ -694,7 +694,8 @@
         },
         "installGithubApp": {
           "title": "Connect to GitHub",
-          "description": "Install the GitHub app to allow Koyeb access and deploy your GitHub repositories.",
+          "description": "Install the GitHub app to allow Koyeb access and deploy your GitHub repositories",
+          "requested": "An admin of your GitHub organization must approve the request to complete the installation",
           "button": "Install GitHub app"
         }
       },
@@ -894,6 +895,7 @@
         "installGithubApp": {
           "title": "GitHub app not installed",
           "description": "You haven't connected any GitHub account to Koyeb. To continue deployment using the repository, install the application.",
+          "requested": "An admin of your GitHub organization must approve the request to complete the installation",
           "button": "Install GitHub app"
         }
       },
@@ -1421,6 +1423,10 @@
         "accountAlreadyExists": {
           "title": "A Koyeb account is already linked to this GitHub profile",
           "link": "Do you want to <link>sign in</link>?"
+        },
+        "githubAppInstalled": {
+          "title": "GitHub app installation successful",
+          "description": "You've approved the Koyeb GitHub app installation request. You can now close this tab."
         }
       },
       "invitation": {

@@ -1,9 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 import { jwtDecode } from 'jwt-decode';
+import { useState } from 'react';
 import { z } from 'zod';
 
 import { api } from 'src/api/api';
 import { ApiValidationError } from 'src/api/api-errors';
+import { useInvalidateApiQuery } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
@@ -15,7 +17,7 @@ import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { Translate } from 'src/intl/translate';
-import { AssertionError, assert } from 'src/utils/assert';
+import { toObject } from 'src/utils/object';
 
 const T = Translate.prefix('pages.account.githubOAuthCallback');
 
@@ -28,7 +30,10 @@ export function GithubOauthCallbackPage() {
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
   const { setToken } = useToken();
+  const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
+
+  const [githubAppInstallRequested, setGithubAppInstallApproved] = useState(false);
 
   const mutation = useMutation({
     async mutationFn() {
@@ -38,24 +43,40 @@ export function GithubOauthCallbackPage() {
         throw new Error(githubError);
       }
 
-      const code = searchParams.get('code');
-      const state = searchParams.get('state');
-
-      assert(code !== null, new AssertionError('The "code" query parameter is missing'));
-      assert(state !== null, new AssertionError('The "state" query parameter is missing'));
+      const body = toObject(
+        Array.from(searchParams.entries()),
+        ([key]) => key,
+        ([, value]) => value,
+      );
 
       return api.githubOAuthCallback({
-        token: undefined,
         header: { 'seon-fp': await getSeonFingerprint() },
-        body: { code, state },
+        body,
       });
     },
-    onSuccess(result) {
-      const state = searchParams.get('state')!;
-      const { metadata = routes.home() } = schema.parse(jwtDecode(state));
+    async onSuccess(result) {
+      const action = searchParams.get('setup_action');
 
-      setToken(result.token!.id!);
-      navigate(metadata);
+      // authentication
+      if (result.token?.id !== undefined) {
+        setToken(result.token.id);
+      }
+
+      // github app installation done
+      if (action === 'install') {
+        if (searchParams.has('state')) {
+          await invalidate('getGithubApp');
+        } else {
+          // approved by github admin
+          setGithubAppInstallApproved(true);
+          return;
+        }
+      }
+
+      const state = searchParams.get('state');
+      const { metadata = routes.home() } = state ? schema.parse(jwtDecode(state)) : {};
+
+      navigate(metadata, { state: { githubAppInstallationRequested: action === 'request' } });
     },
     onError(error) {
       const state = searchParams.get('state');
@@ -86,6 +107,19 @@ export function GithubOauthCallbackPage() {
   useMount(() => {
     mutation.mutate();
   });
+
+  if (githubAppInstallRequested) {
+    return (
+      <div className="col gap-4 text-center">
+        <div className="text-2xl font-medium">
+          <T id="githubAppInstalled.title" />
+        </div>
+        <div>
+          <T id="githubAppInstalled.description" />
+        </div>
+      </div>
+    );
+  }
 
   return <LogoLoading />;
 }

@@ -19,7 +19,7 @@ export function createQueryClient(storage: Storage) {
   const { version } = getConfig();
 
   const queryCache = new QueryCache({
-    onSuccess: onQuerySuccess(),
+    onSuccess: onQuerySuccess,
     onError: onQueryError,
   });
 
@@ -84,15 +84,13 @@ function throwOnError(error: Error) {
   return isApiError(error) && error.status >= 500;
 }
 
-function onQuerySuccess() {
-  return function (data: unknown, query: UnknownQuery) {
-    const { pathname, search } = window.location;
-    const searchParams = new URLSearchParams(search);
+function onQuerySuccess(data: unknown, query: UnknownQuery) {
+  const { pathname, search } = window.location;
+  const searchParams = new URLSearchParams(search);
 
-    if (query.queryKey[0] === 'getCurrentUser' && !isAuthenticatedRoute(pathname)) {
-      navigate(searchParams.get('next') ?? routes.home());
-    }
-  };
+  if (query.queryKey[0] === 'getCurrentUser' && !isAuthenticatedRoute(pathname)) {
+    navigate(searchParams.get('next') ?? routes.home());
+  }
 }
 
 function onQueryError(error: Error, query: UnknownQuery) {
@@ -157,6 +155,10 @@ function isUnauthenticatedRoute(pathname: string) {
 
 function isAuthenticatedRoute(pathname: string) {
   if (pathname.startsWith('/account/reset-password')) {
+    return true;
+  }
+
+  if (pathname === '/account/oauth/github/callback') {
     return true;
   }
 
