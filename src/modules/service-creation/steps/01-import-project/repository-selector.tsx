@@ -16,7 +16,7 @@ import { Loading } from 'src/components/loading';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { BoxSkeleton, CircleSkeleton, TextSkeleton } from 'src/components/skeleton';
 import { handleSubmit, useFormValues } from 'src/hooks/form';
-import { useLocation } from 'src/hooks/router';
+import { useHistoryState, useLocation } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
@@ -64,6 +64,7 @@ function RepositoriesIndexing() {
 }
 
 function InstallGithubApp() {
+  const { githubAppInstallationRequested } = useHistoryState<{ githubAppInstallationRequested: boolean }>();
   const location = useLocation();
 
   const { mutate: installGithubApp } = useMutation({
@@ -83,12 +84,12 @@ function InstallGithubApp() {
         </div>
 
         <div className="max-w-md">
-          <T id="installGithubApp.description" />
+          <T id={`installGithubApp.${githubAppInstallationRequested ? 'requested' : 'description'}`} />
         </div>
       </div>
 
-      <Button onClick={() => installGithubApp()}>
-        <IconGithub className="size-icon text-contrast-green" />
+      <Button onClick={() => installGithubApp()} disabled={githubAppInstallationRequested}>
+        <IconGithub className="size-icon text-inherit" />
         <T id="installGithubApp.button" />
       </Button>
     </div>

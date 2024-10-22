@@ -5,7 +5,8 @@ import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useDeepCompareMemo } from 'src/hooks/lifecycle';
+import { useHistoryState, useNavigate, useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { enumIndex, isEnumValue } from 'src/utils/enums';
@@ -152,6 +153,7 @@ function useInitialStep(): Step {
 }
 
 function useRemoveNextStepsParams(currentStep: Step) {
+  const state = useDeepCompareMemo(useHistoryState());
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -175,8 +177,8 @@ function useRemoveNextStepsParams(currentStep: Step) {
         (url) => {
           paramsToRemove.forEach((param) => url.searchParams.delete(param));
         },
-        { replace: true },
+        { state, replace: true },
       );
     }
-  }, [currentStep, navigate]);
+  }, [currentStep, state, navigate]);
 }
