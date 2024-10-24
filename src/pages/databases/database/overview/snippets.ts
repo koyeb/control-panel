@@ -1,3 +1,5 @@
+import { CodeLang } from '@koyeb/design-system';
+
 export enum DatabaseClient {
   psql = 'psql',
   dotenv = 'dotenv',
@@ -23,6 +25,7 @@ export type DatabaseSnippetFn = (details: DatabaseConnectionDetails) => string;
 
 type DatabaseClientSnippets = Array<{
   filename: string;
+  lang: CodeLang;
   snippet: DatabaseSnippetFn;
 }>;
 
@@ -39,6 +42,7 @@ DATABASE_NAME=${encodeURIComponent(database)}
 databaseClientSnippets.set(DatabaseClient.psql, [
   {
     filename: 'postgres',
+    lang: 'text',
     snippet: ({ role, password, host, database }) =>
       `
 postgres://${encodeURIComponent(role)}:${password}@${host}/${encodeURIComponent(database)}
@@ -49,6 +53,7 @@ postgres://${encodeURIComponent(role)}:${password}@${host}/${encodeURIComponent(
 databaseClientSnippets.set(DatabaseClient.dotenv, [
   {
     filename: '.env',
+    lang: 'dotenv',
     snippet: dotenv,
   },
 ]);
@@ -56,10 +61,12 @@ databaseClientSnippets.set(DatabaseClient.dotenv, [
 databaseClientSnippets.set(DatabaseClient.nextJs, [
   {
     filename: '.env',
+    lang: 'dotenv',
     snippet: dotenv,
   },
   {
     filename: 'app/page.tsx',
+    lang: 'javascript',
     snippet: () =>
       `
 import postgres from 'postgres'
@@ -82,6 +89,7 @@ export function Page() {
 databaseClientSnippets.set(DatabaseClient.prisma, [
   {
     filename: '.env',
+    lang: 'dotenv',
     snippet: ({ role, password, host, database }) =>
       `
 DATABASE_URL=postgres://${encodeURIComponent(role)}:${password}@${host}/${encodeURIComponent(database)}?sslmode=require&pgbouncer=true&connect_timeout=10
@@ -90,6 +98,7 @@ DIRECT_URL=postgres://${encodeURIComponent(role)}:${password}@${host}/${encodeUR
   },
   {
     filename: 'schema.prisma',
+    lang: 'prisma',
     snippet: () =>
       `
 datasource db {
@@ -104,10 +113,12 @@ datasource db {
 databaseClientSnippets.set(DatabaseClient.node, [
   {
     filename: '.env',
+    lang: 'text',
     snippet: dotenv,
   },
   {
     filename: 'index.ts',
+    lang: 'javascript',
     snippet: () =>
       `
 import postgres from 'postgres'
@@ -126,6 +137,7 @@ const sql = postgres({
 databaseClientSnippets.set(DatabaseClient.django, [
   {
     filename: 'settings.py',
+    lang: 'python',
     snippet: ({ role, password, host, database }) =>
       `
 DATABASES = {
@@ -145,6 +157,7 @@ DATABASES = {
 databaseClientSnippets.set(DatabaseClient.sqlAlchemy, [
   {
     filename: 'db.py',
+    lang: 'python',
     snippet: ({ role, password, host, database }) =>
       `
 from sqlalchemy import URL, create_engine
@@ -165,6 +178,7 @@ engine = create_engine(connection_string)
 databaseClientSnippets.set(DatabaseClient.java, [
   {
     filename: '.env',
+    lang: 'dotenv',
     snippet: ({ role, password, host, database }) =>
       `
 JDBC_URI=jdbc:postgresql://${host}/${encodeURIComponent(database)}?user=${encodeURIComponent(role)}&password=${password}
@@ -175,6 +189,7 @@ JDBC_URI=jdbc:postgresql://${host}/${encodeURIComponent(database)}?user=${encode
 databaseClientSnippets.set(DatabaseClient.symfony, [
   {
     filename: '.env',
+    lang: 'dotenv',
     snippet: ({ role, password, host, database }) =>
       `
 DATABASE_URL="postgresql://${encodeURIComponent(role)}:${password}@${host}/${encodeURIComponent(database)}?charset=utf8"
@@ -185,6 +200,7 @@ DATABASE_URL="postgresql://${encodeURIComponent(role)}:${password}@${host}/${enc
 databaseClientSnippets.set(DatabaseClient.pq, [
   {
     filename: 'main.go',
+    lang: 'go',
     snippet: ({ role, password, host, database }) =>
       `
 import (
@@ -204,6 +220,7 @@ func main() {
 databaseClientSnippets.set(DatabaseClient.rubyOnRails, [
   {
     filename: '.env',
+    lang: 'dotenv',
     snippet: ({ role, password, host, database }) =>
       `
 DATABASE_URL='postgres://${encodeURIComponent(role)}:${password}@${host}/${encodeURIComponent(database)}'
@@ -211,6 +228,7 @@ DATABASE_URL='postgres://${encodeURIComponent(role)}:${password}@${host}/${encod
   },
   {
     filename: 'config/database.yml',
+    lang: 'yaml',
     snippet: () =>
       `
 production:

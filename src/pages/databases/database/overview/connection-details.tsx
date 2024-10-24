@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Tab, Tabs } from '@koyeb/design-system';
+import { Code, CodeLang, Tab, Tabs } from '@koyeb/design-system';
 import { DatabaseDeployment, DatabaseRole, LogicalDatabase } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { CopyIconButton } from 'src/application/copy-icon-button';
@@ -91,13 +91,14 @@ export function ConnectionDetails({ deployment }: ConnectionDetailsProps) {
           ))}
         </Tabs>
 
-        {client.map(({ filename, snippet }) => (
+        {client.map(({ filename, lang, snippet }) => (
           <SnippetFile
             key={filename}
             deployment={deployment}
             role={role}
             database={database}
             filename={filename}
+            lang={lang}
             snippet={snippet}
           />
         ))}
@@ -111,10 +112,11 @@ type SnippetFileProps = {
   role?: DatabaseRole;
   database?: LogicalDatabase;
   filename: string;
+  lang: CodeLang;
   snippet: DatabaseSnippetFn;
 };
 
-function SnippetFile({ deployment, role, database, filename, snippet }: SnippetFileProps) {
+function SnippetFile({ deployment, role, database, filename, lang, snippet }: SnippetFileProps) {
   const password = useRolePassword(role);
 
   const details = (passwordVisible: boolean): DatabaseConnectionDetails => ({
@@ -141,9 +143,12 @@ function SnippetFile({ deployment, role, database, filename, snippet }: SnippetF
         </div>
       </div>
 
-      <pre className="whitespace-pre-wrap rounded-b-md bg-black p-3 text-white dark:bg-muted">
-        <code>{snippet(details(passwordVisible))}</code>
-      </pre>
+      <Code
+        lang={lang}
+        theme="dark"
+        value={snippet(details(passwordVisible))}
+        className="scrollbar-green overflow-x-auto whitespace-pre-wrap rounded-b-md bg-black p-3 md:bg-muted"
+      />
     </div>
   );
 }

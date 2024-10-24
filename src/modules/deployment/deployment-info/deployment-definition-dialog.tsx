@@ -19,6 +19,7 @@ import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
+import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
@@ -52,9 +53,12 @@ export function DeploymentDefinitionDialog({ open, onClose, deployment }: Deploy
 }
 
 function DeploymentJson({ definition }: { definition: object }) {
+  const theme = useThemeModeOrPreferred();
+
   return (
     <div className="relative">
       <Json
+        theme={theme}
         value={definition}
         // eslint-disable-next-line tailwindcss/no-arbitrary-value
         className="scrollbar-green max-h-[32rem] overflow-auto rounded-md bg-muted p-2 dark:bg-neutral"
