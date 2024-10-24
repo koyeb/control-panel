@@ -8,11 +8,13 @@ import { useGithubAppQuery } from 'src/api/hooks/git';
 import {
   useOrganization,
   useOrganizationQuery,
+  useOrganizationQuotas,
   useOrganizationSummaryQuery,
   useUserQuery,
 } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
 import { PaymentDialog } from 'src/components/payment-form';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
@@ -102,12 +104,23 @@ function ServiceForm_({
     }
   }, [onDeployUrlChanged, deployUrl]);
 
+  const quotas = useOrganizationQuotas();
+  const trackEvent = useTrackEvent();
+
   if (form.formState.isLoading) {
     return <ServiceFormSkeleton className={className} />;
   }
 
   const onSubmit = async (values: ServiceForm) => {
     const instance = instances.find(hasProperty('identifier', values.instance.identifier));
+
+    if (
+      instance?.category === 'gpu' &&
+      quotas?.maxInstancesByType[instance.identifier] === 0 &&
+      instance.status === 'restricted'
+    ) {
+      trackEvent('gpu_deployed', { gpu_id: instance.identifier });
+    }
 
     if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
       setRequiredPlan(instance.plans[0] as OrganizationPlan);
