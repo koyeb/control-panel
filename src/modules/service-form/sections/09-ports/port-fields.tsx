@@ -31,6 +31,7 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
     <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_4rem_auto] md:border-none md:p-0">
       <ControlledInput<ServiceForm, `ports.${number}.portNumber`>
         name={`ports.${index}.portNumber`}
+        type="number"
         label={showLabel && <T id="portLabel" />}
         onKeyDown={onKeyDownPositiveInteger}
         min={1}
