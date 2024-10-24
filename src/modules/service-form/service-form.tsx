@@ -3,7 +3,8 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
-import { useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
+import { Button, Dialog } from '@koyeb/design-system';
+import { useInstance, useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import {
   useOrganization,
@@ -16,6 +17,7 @@ import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
+import { ExternalLinkButton } from 'src/components/link';
 import { PaymentDialog } from 'src/components/payment-form';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
@@ -73,14 +75,17 @@ function ServiceForm_({
   onDeployUrlChanged,
 }: ServiceFormProps) {
   const organization = useOrganization();
+  const quotas = useOrganizationQuotas();
   const instances = useInstances();
+
+  const invalidate = useInvalidateApiQuery();
+  const trackEvent = useTrackEvent();
 
   const form = useServiceForm(appId, serviceId);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
-
-  const invalidate = useInvalidateApiQuery();
+  const [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen] = useState(false);
 
   const { mutateAsync } = useMutation({
     mutationFn: submitServiceForm,
@@ -104,9 +109,6 @@ function ServiceForm_({
     }
   }, [onDeployUrlChanged, deployUrl]);
 
-  const quotas = useOrganizationQuotas();
-  const trackEvent = useTrackEvent();
-
   if (form.formState.isLoading) {
     return <ServiceFormSkeleton className={className} />;
   }
@@ -114,16 +116,16 @@ function ServiceForm_({
   const onSubmit = async (values: ServiceForm) => {
     const instance = instances.find(hasProperty('identifier', values.instance.identifier));
 
-    if (
+    const isRestrictedGpu =
       instance?.category === 'gpu' &&
       quotas?.maxInstancesByType[instance.identifier] === 0 &&
-      instance.status === 'restricted'
-    ) {
-      trackEvent('gpu_deployed', { gpu_id: instance.identifier });
-    }
+      instance.status === 'restricted';
 
     if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
       setRequiredPlan(instance.plans[0] as OrganizationPlan);
+    } else if (isRestrictedGpu) {
+      trackEvent('gpu_deployed', { gpu_id: instance.identifier });
+      setRestrictedGpuDialogOpen(true);
     } else {
       await mutateAsync(values);
     }
@@ -157,6 +159,12 @@ function ServiceForm_({
           <SubmitButton loading={form.formState.isSubmitting} />
         </form>
       </FormProvider>
+
+      <RestrictedGpuDialogOpen
+        open={restrictedGpuDialogOpen}
+        onClose={() => setRestrictedGpuDialogOpen(false)}
+        instanceIdentifier={form.watch('instance.identifier')}
+      />
 
       <PaymentDialog
         open={requiredPlan !== undefined}
@@ -244,4 +252,41 @@ function useDeployUrl({ formState, getValues }: UseFormReturn<ServiceForm>) {
 
     return `${window.location.origin}/deploy?${getDeployParams(getValues()).toString()}`;
   }, [formState, getValues]);
+}
+
+type RestrictedGpuDialogProps = {
+  open: boolean;
+  onClose: () => void;
+  instanceIdentifier: string | null;
+};
+
+function RestrictedGpuDialogOpen({ open, onClose, instanceIdentifier }: RestrictedGpuDialogProps) {
+  const instance = useInstance(instanceIdentifier);
+
+  return (
+    <Dialog
+      isOpen={open}
+      onClose={onClose}
+      width="lg"
+      title={<T id="gpuRestrictedDialog.title" />}
+      className="col gap-4"
+    >
+      <p>
+        <T id="gpuRestrictedDialog.line1" values={{ instance: instance?.displayName }} />
+      </p>
+
+      <p>
+        <T id="gpuRestrictedDialog.line2" />
+      </p>
+
+      <div className="row mt-2 items-center justify-end gap-4">
+        <Button variant="ghost" color="gray" onClick={onClose}>
+          <Translate id="common.cancel" />
+        </Button>
+        <ExternalLinkButton href="https://app.reclaim.ai/m/koyeb-intro/short-call" openInNewTab>
+          <T id="gpuRestrictedDialog.cta" />
+        </ExternalLinkButton>
+      </div>
+    </Dialog>
+  );
 }
