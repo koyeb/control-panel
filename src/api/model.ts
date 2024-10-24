@@ -101,7 +101,7 @@ export type CatalogInstance = {
   pricePerSecond: number;
 };
 
-export type CatalogInstanceStatus = 'available' | 'coming_soon';
+export type CatalogInstanceStatus = 'available' | 'coming_soon' | 'restricted';
 
 export type InstanceCategory = 'eco' | 'standard' | 'gpu';
 

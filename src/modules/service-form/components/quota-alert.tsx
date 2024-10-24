@@ -3,6 +3,8 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Alert } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { isApiValidationError } from 'src/api/api-errors';
+import { useInstance } from 'src/api/hooks/catalog';
+import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { LinkButton } from 'src/components/link';
@@ -54,7 +56,15 @@ export function QuotaAlert(props: QuotaAlertProps) {
     },
   });
 
-  if (typeof message !== 'string') {
+  const instance = useInstance(values.instance.identifier);
+  const quotas = useOrganizationQuotas();
+
+  const isRestrictedGpu =
+    instance?.category === 'gpu' &&
+    quotas?.maxInstancesByType[instance.identifier] === 0 &&
+    instance.status === 'restricted';
+
+  if (typeof message !== 'string' || isRestrictedGpu) {
     return null;
   }
 
