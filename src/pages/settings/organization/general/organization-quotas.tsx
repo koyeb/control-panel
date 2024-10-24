@@ -4,6 +4,7 @@ import { FormattedList } from 'react-intl';
 import { Alert, Button } from '@koyeb/design-system';
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
+import { CatalogInstance } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
@@ -42,9 +43,21 @@ export function OrganizationQuotas() {
         />
 
         <QuotasSection
-          resourceLabel={<T id="instanceType" />}
+          resourceLabel={<T id="koyebInstanceType" />}
           quotaLabel={<T id="quota" />}
-          quotas={instanceTypeQuota}
+          quotas={instanceTypeQuota.koyeb}
+        />
+
+        <QuotasSection
+          resourceLabel={<T id="awsInstanceType" />}
+          quotaLabel={<T id="quota" />}
+          quotas={instanceTypeQuota.aws}
+        />
+
+        <QuotasSection
+          resourceLabel={<T id="gpuInstanceType" />}
+          quotaLabel={<T id="quota" />}
+          quotas={instanceTypeQuota.gpu}
         />
 
         <QuotasSection
@@ -164,18 +177,26 @@ function useAllowedRegions() {
     .filter(isDefined);
 }
 
-function useInstanceTypeQuotaItems(): QuotaItem[] {
+function useInstanceTypeQuotaItems(): Record<'koyeb' | 'aws' | 'gpu', QuotaItem[]> {
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
   const instances = useInstances();
 
   const unset = organization.plan === 'hobby' ? <T id="zero" /> : <T id="infinity" />;
 
-  return instances.map((instance) => ({
+  const getQuota = (instance: CatalogInstance): QuotaItem => ({
     key: instance.identifier,
     label: instance.displayName,
     value: quotas?.maxInstancesByType[instance.identifier] ?? unset,
-  }));
+  });
+
+  return {
+    koyeb: instances
+      .filter((instance) => instance.regionCategory === 'koyeb' && instance.category !== 'gpu')
+      .map(getQuota),
+    aws: instances.filter((instance) => instance.regionCategory === 'aws').map(getQuota),
+    gpu: instances.filter((instance) => instance.category === 'gpu').map(getQuota),
+  };
 }
 
 function useVolumesQuotaItems(): QuotaItem[] {
