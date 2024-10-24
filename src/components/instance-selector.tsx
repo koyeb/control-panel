@@ -263,18 +263,18 @@ function InstanceBadge({ instance, availability }: InstanceBadgeProps) {
     );
   }
 
-  if (instance.status === 'coming_soon') {
-    return (
-      <Badge size={1} color="blue">
-        <T id="comingSoon" />
-      </Badge>
-    );
-  }
-
   if (instance.category === 'gpu') {
     return (
       <Badge size={1} color="blue">
         <T id="new" />
+      </Badge>
+    );
+  }
+
+  if (instance.status === 'coming_soon') {
+    return (
+      <Badge size={1} color="blue">
+        <T id="comingSoon" />
       </Badge>
     );
   }
