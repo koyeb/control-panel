@@ -113,7 +113,7 @@ datasource db {
 databaseClientSnippets.set(DatabaseClient.node, [
   {
     filename: '.env',
-    lang: 'text',
+    lang: 'dotenv',
     snippet: dotenv,
   },
   {

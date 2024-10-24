@@ -147,7 +147,7 @@ function SnippetFile({ deployment, role, database, filename, lang, snippet }: Sn
         lang={lang}
         theme="dark"
         value={snippet(details(passwordVisible))}
-        className="scrollbar-green overflow-x-auto whitespace-pre-wrap rounded-b-md bg-black p-3 md:bg-muted"
+        className="scrollbar-green overflow-x-auto whitespace-pre-wrap rounded-b-md bg-black p-3 dark:bg-muted"
       />
     </div>
   );
