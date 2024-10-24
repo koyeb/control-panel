@@ -83,6 +83,10 @@ function checkInstanceAvailability(
   summary: OrganizationSummary | undefined,
   options: CheckInstanceAvailabilityOptions = {},
 ): InstanceAvailability {
+  if (instance.category === 'gpu') {
+    return [true];
+  }
+
   if (instance.status !== 'available') {
     return [false, 'unavailableInCatalog'];
   }
