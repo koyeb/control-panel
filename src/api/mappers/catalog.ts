@@ -46,6 +46,7 @@ export function mapCatalogInstancesList({
         regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
         cpu: instance.vcpu_shares!,
         ram: instance.memory!,
+        vram: instance.gpu?.memory,
         disk: instance.disk!,
         hasVolumes: instance.volumes_enabled!,
         pricePerMonth: Number(instance.price_monthly!),

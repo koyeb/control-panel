@@ -147,12 +147,23 @@ type InstanceDescriptionProps = {
 function InstanceDescription({ instance, disabled, badge }: InstanceDescriptionProps) {
   return (
     <div className="col gap-1 whitespace-nowrap">
-      <div className="row items-center gap-2">
-        <span className="font-medium">{instance.displayName}</span>
-
-        <span className={clsx('text-dim', disabled && 'opacity-50')}>{bullet}</span>
+      <div className="col gap-1">
+        <span className="row items-center gap-2 font-medium">
+          {instance.displayName}
+          {badge}
+        </span>
 
         <div className={clsx('row items-center gap-1 text-dim', disabled && 'opacity-50')}>
+          {instance.vram && (
+            <>
+              <span>
+                <T id="vram" values={{ value: instance.vram }} />
+              </span>
+
+              <Divider className="h-4" />
+            </>
+          )}
+
           <span>
             <T id="cpu" values={{ value: instance.cpu }} />
           </span>
@@ -169,8 +180,6 @@ function InstanceDescription({ instance, disabled, badge }: InstanceDescriptionP
             <T id="disk" values={{ value: instance.disk }} />
           </span>
         </div>
-
-        {badge}
       </div>
 
       <div className={clsx('row items-center gap-1', disabled && 'opacity-50')}>

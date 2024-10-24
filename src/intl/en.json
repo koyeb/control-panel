@@ -341,6 +341,7 @@
     },
     "cpu": "{value} vCPU",
     "ram": "{value} RAM",
+    "vram": "{value} VRAM",
     "disk": "{value} Disk",
     "free": "Free",
     "freeInstanceDescription": "Run 1x web service for free",

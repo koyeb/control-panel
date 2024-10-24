@@ -94,6 +94,7 @@ export type CatalogInstance = {
   category: InstanceCategory;
   cpu: number;
   ram: string;
+  vram?: string;
   disk: string;
   hasVolumes: boolean;
   pricePerMonth: number;
