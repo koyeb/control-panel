@@ -801,6 +801,12 @@
       "save": "Save",
       "noPreviousBuild": "Your service doesn't have any successful build yet"
     },
+    "gpuRestrictedDialog": {
+      "title": "Quota Increase Request",
+      "line1": "It looks like you're ready to deploy on {instance}, but we'll need to increase your account quota first.",
+      "line2": "Let's chat to learn more about your needs and get started.",
+      "cta": "BOOK a call"
+    },
     "paymentDialog": {
       "title": "Start for free with $20 of credit over 30 days",
       "description": "The current selected instance is available on the {plan} plan at ${price}/mo. Add a payment method to upgrade and deploy.",
