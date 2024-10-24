@@ -802,10 +802,10 @@
       "noPreviousBuild": "Your service doesn't have any successful build yet"
     },
     "gpuRestrictedDialog": {
-      "title": "Quota Increase Request",
-      "line1": "It looks like you're ready to deploy on {instance}, but we'll need to increase your account quota first.",
+      "title": "Quota increase request",
+      "line1": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
       "line2": "Let's chat to learn more about your needs and get started.",
-      "cta": "BOOK a call"
+      "cta": "Book a call"
     },
     "paymentDialog": {
       "title": "Start for free with $20 of credit over 30 days",
