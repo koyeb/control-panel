@@ -1724,6 +1724,7 @@
         "actions": {
           "createVolume": "Create volume",
           "cannotCreateVolume": "Wait while we create the snapshot",
+          "update": "Edit",
           "delete": "Delete"
         },
         "noSnapshots": {
@@ -1732,6 +1733,12 @@
       },
       "createVolume": {
         "title": "Create volume from snapshot"
+      },
+      "updateSnapshot": {
+        "title": "Edit snapshot",
+        "nameLabel": "Name",
+        "namePlaceholder": "my-snapshot",
+        "successNotification": "Snapshot <strong>{name}</strong> edited"
       },
       "deleteSnapshot": {
         "title": "Delete snapshot",

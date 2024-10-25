@@ -80,6 +80,7 @@ export const api = {
   deleteVolume: endpoint('delete', '/v1/volumes/{id}'),
   listSnapshots: endpoint('get', '/v1/snapshots'),
   createSnapshot: endpoint('post', '/v1/snapshots'),
+  updateSnapshot: endpoint('post', '/v1/snapshots/{id}'),
   deleteSnapshot: endpoint('delete', '/v1/snapshots/{id}'),
 
   // secrets

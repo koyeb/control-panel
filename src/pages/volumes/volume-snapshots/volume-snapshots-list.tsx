@@ -16,6 +16,7 @@ import { hasProperty } from 'src/utils/object';
 import { CreateVolumeDialog } from '../create-volume-dialog';
 
 import { DeleteSnapshotDialog } from './delete-snapshot-dialog';
+import { UpdateSnapshotDialog } from './update-snapshot-dialog';
 
 const T = Translate.prefix('pages.volumeSnapshots.list');
 
@@ -73,7 +74,7 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
 }
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
-  const [openDialog, setOpenDialog] = useState<'create' | 'delete'>();
+  const [openDialog, setOpenDialog] = useState<'create' | 'update' | 'delete'>();
   const canCreate = snapshot.status === 'available' && snapshot.type === 'remote';
 
   return (
@@ -93,6 +94,10 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
               )}
             </Tooltip>
 
+            <ButtonMenuItem onClick={withClose(() => setOpenDialog('update'))}>
+              <T id="actions.update" />
+            </ButtonMenuItem>
+
             <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
@@ -102,6 +107,12 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
 
       <CreateVolumeDialog
         open={openDialog === 'create'}
+        onClose={() => setOpenDialog(undefined)}
+        snapshot={snapshot}
+      />
+
+      <UpdateSnapshotDialog
+        open={openDialog === 'update'}
         onClose={() => setOpenDialog(undefined)}
         snapshot={snapshot}
       />
