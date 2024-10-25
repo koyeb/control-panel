@@ -804,7 +804,7 @@
     "gpuRestrictedDialog": {
       "title": "Quota increase request",
       "line1": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
-      "line2": "Let's chat to learn more about your needs and get started.",
+      "line2": "Let's <link>chat</link> to learn more about your needs and get started.",
       "cta": "Book a call"
     },
     "paymentDialog": {

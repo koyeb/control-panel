@@ -284,7 +284,7 @@ function RestrictedGpuDialogOpen({ open, onClose, instanceIdentifier }: Restrict
           id="gpuRestrictedDialog.line2"
           values={{
             link: (children) => (
-              <ExternalLink openInNewTab href={link}>
+              <ExternalLink openInNewTab href={link} className="underline">
                 {children}
               </ExternalLink>
             ),
