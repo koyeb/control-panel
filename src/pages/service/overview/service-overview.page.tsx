@@ -88,12 +88,14 @@ function SelectedDeployment({ className, ...props }: ServiceOverview & { classNa
 
 function DeploymentsListActions({
   service,
+  deployments,
   listExpanded,
   setListExpanded,
   upcomingDeployments,
   selectedDeployment,
 }: ServiceOverview) {
-  const { activeDeploymentId, latestDeploymentId } = service;
+  const { activeDeploymentId } = service;
+  const latestNonStashedDeployment = deployments[0];
   const hasUpcoming = upcomingDeployments.length > 0;
 
   const isActive = () => {
@@ -101,7 +103,7 @@ function DeploymentsListActions({
   };
 
   const isLatest = () => {
-    return selectedDeployment?.id === latestDeploymentId;
+    return selectedDeployment?.id === latestNonStashedDeployment?.id;
   };
 
   return (
@@ -149,7 +151,7 @@ function DeploymentsListActions({
           color="gray"
           size={1}
           disabled={isLatest()}
-          href={routes.service.overview(service.id, latestDeploymentId)}
+          href={routes.service.overview(service.id, latestNonStashedDeployment?.id)}
         >
           <T id="deployments.actions.latestDeployment" />
         </LinkButton>

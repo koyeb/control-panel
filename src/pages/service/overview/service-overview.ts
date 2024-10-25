@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useBreakpoint } from '@koyeb/design-system';
 import { api } from 'src/api/api';
-import { ApiDeployment } from 'src/api/api-types';
+import { ApiDeploymentStatus } from 'src/api/api-types';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
@@ -12,7 +12,6 @@ import { useToken } from 'src/application/token';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParam } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
-import { unique } from 'src/utils/arrays';
 import { AssertionError, assert, defined } from 'src/utils/assert';
 import { isDefined } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
@@ -163,7 +162,7 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
   ];
 }
 
-const allDeploymentStatuses: Array<NonNullable<ApiDeployment['status']>> = [
+const allDeploymentStatuses: Array<ApiDeploymentStatus> = [
   'PENDING',
   'PROVISIONING',
   'SCHEDULED',
@@ -215,15 +214,13 @@ function useDeployments(service: Service) {
   });
 
   const pages = deploymentsQuery.data?.pages ?? [];
+  const deployments = pages.flatMap((page) => page.deployments);
 
-  const deployments = unique(
-    [
-      //
-      useDeployment(service.activeDeploymentId),
-      ...pages.flatMap((page) => page.deployments),
-    ].filter(isDefined),
-    getId,
-  );
+  const activeDeployment = useDeployment(service.activeDeploymentId);
+
+  if (activeDeployment && !deployments.find(hasProperty('id', service.activeDeploymentId))) {
+    deployments.push(activeDeployment);
+  }
 
   return {
     deploymentsQuery,

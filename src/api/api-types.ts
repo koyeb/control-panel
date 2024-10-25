@@ -8,6 +8,7 @@ export type ApiCatalogDatacenters = Api.components['schemas']['DatacenterListIte
 export type ApiCatalogInstance = Api.components['schemas']['CatalogInstance'];
 export type ApiCatalogRegion = Api.components['schemas']['Region'];
 export type ApiDeployment = Api.components['schemas']['Deployment'];
+export type ApiDeploymentStatus = Api.components['schemas']['Deployment.Status'];
 export type ApiDeploymentDefinition = Api.components['schemas']['DeploymentDefinition'];
 export type ApiDeploymentEnv = Api.components['schemas']['DeploymentEnv'];
 export type ApiDeploymentHealthCheck = Api.components['schemas']['DeploymentHealthCheck'];
