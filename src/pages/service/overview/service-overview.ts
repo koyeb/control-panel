@@ -3,6 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useBreakpoint } from '@koyeb/design-system';
 import { api } from 'src/api/api';
+import { ApiDeployment } from 'src/api/api-types';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
@@ -162,6 +163,24 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
   ];
 }
 
+const allDeploymentStatuses: Array<NonNullable<ApiDeployment['status']>> = [
+  'PENDING',
+  'PROVISIONING',
+  'SCHEDULED',
+  'CANCELING',
+  'CANCELED',
+  'ALLOCATING',
+  'STARTING',
+  'HEALTHY',
+  'DEGRADED',
+  'UNHEALTHY',
+  'STOPPING',
+  'STOPPED',
+  'ERRORING',
+  'ERROR',
+  'STASHED',
+];
+
 function useDeployments(service: Service) {
   const { token } = useToken();
 
@@ -171,7 +190,12 @@ function useDeployments(service: Service) {
     async queryFn({ pageParam }) {
       const { count, deployments } = await api.listDeployments({
         token,
-        query: { service_id: service.id, limit: String(10), offset: String(10 * pageParam) },
+        query: {
+          service_id: service.id,
+          limit: String(10),
+          offset: String(10 * pageParam),
+          statuses: allDeploymentStatuses.filter((status) => status !== 'STASHED'),
+        },
       });
 
       return {
@@ -194,7 +218,7 @@ function useDeployments(service: Service) {
 
   const deployments = unique(
     [
-      useDeployment(service.latestDeploymentId),
+      //
       useDeployment(service.activeDeploymentId),
       ...pages.flatMap((page) => page.deployments),
     ].filter(isDefined),
