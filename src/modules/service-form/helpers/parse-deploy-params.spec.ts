@@ -115,11 +115,6 @@ describe('parseDeployParams', () => {
       test.params.set('instance_type', 'huge');
       expect(test.getValues()).not.toHaveProperty('instance');
     });
-
-    it('unavailable instance type', () => {
-      test.params.set('instance_type', 'large');
-      expect(test.getValues()).not.toHaveProperty('instance');
-    });
   });
 
   describe('regions', () => {

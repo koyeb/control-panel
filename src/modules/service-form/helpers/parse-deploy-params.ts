@@ -4,6 +4,7 @@ import { ValueOf } from 'type-fest';
 
 import { CatalogInstance, CatalogRegion, EnvironmentVariable } from 'src/api/model';
 import { inArray } from 'src/utils/arrays';
+import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import { defaultHealthCheck } from '../initialize-service-form';
@@ -139,9 +140,7 @@ class ServiceFormBuilder {
   }
 
   private isValidInstance(instanceType: string): boolean {
-    return this.instancesCatalog.some(
-      (instance) => instance.identifier === instanceType && instance.status === 'available',
-    );
+    return this.instancesCatalog.some(hasProperty('identifier', instanceType));
   }
 
   set instanceType(instanceType: string | null) {
