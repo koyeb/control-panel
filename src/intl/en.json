@@ -1723,6 +1723,7 @@
         },
         "actions": {
           "createVolume": "Create volume",
+          "cannotCreateVolume": "Wait while we create the snapshot",
           "delete": "Delete"
         },
         "noSnapshots": {

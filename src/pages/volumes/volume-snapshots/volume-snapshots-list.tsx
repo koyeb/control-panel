@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { ButtonMenuItem, Table, useBreakpoint } from '@koyeb/design-system';
+import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { useVolumes } from 'src/api/hooks/volume';
 import { VolumeSnapshot } from 'src/api/model';
 import { ActionsMenu } from 'src/components/actions-menu';
@@ -74,15 +74,24 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
   const [openDialog, setOpenDialog] = useState<'create' | 'delete'>();
+  const canCreate = snapshot.status === 'available' && snapshot.type === 'remote';
 
   return (
     <>
       <ActionsMenu>
         {(withClose) => (
           <>
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('create'))}>
-              <T id="actions.createVolume" />
-            </ButtonMenuItem>
+            <Tooltip content={canCreate ? undefined : <T id="actions.cannotCreateVolume" />}>
+              {(props) => (
+                <ButtonMenuItem
+                  {...props}
+                  disabled={!canCreate}
+                  onClick={withClose(() => setOpenDialog('create'))}
+                >
+                  <T id="actions.createVolume" />
+                </ButtonMenuItem>
+              )}
+            </Tooltip>
 
             <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
               <T id="actions.delete" />
