@@ -1920,6 +1920,11 @@
           "resume": "Resume",
           "resuming": "Your service is being resumed"
         },
+        "latestDeploymentStashed": {
+          "title": "Pending changes",
+          "description": "Your service has pending changes that will be applied with your next deployment",
+          "deploy": "Deploy now"
+        },
         "navigation": {
           "overview": "Overview",
           "metrics": "Metrics",

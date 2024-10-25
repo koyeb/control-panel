@@ -21,6 +21,7 @@ import { Translate } from 'src/intl/translate';
 import { useRegisterCommand } from 'src/modules/command-palette/command-palette-context';
 import { inArray } from 'src/utils/arrays';
 
+import { LatestDeploymentStashedAlert } from './latest-deployment-stashed-alert';
 import { RedeployButton } from './redeploy-button';
 import { ServiceErrorAlert } from './service-error-alert';
 
@@ -70,6 +71,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
 
       <ServiceErrorAlert service={service} />
       <ServicePausedAlert service={service} />
+      <LatestDeploymentStashedAlert service={service} />
 
       <Navigation />
 
