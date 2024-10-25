@@ -25,22 +25,19 @@ const schema = z.object({
 });
 
 function toGigaBytes(bytes: number | undefined) {
-  if (bytes === undefined) {
-    return undefined;
+  if (bytes !== undefined) {
+    return bytes / Math.pow(1000, 3);
   }
-
-  return bytes / Math.pow(1000, 3);
 }
 
 type VolumeFormProps = {
   snapshot?: VolumeSnapshot;
-  size?: number;
   volume?: Volume;
   onSubmitted: (volume: Volume) => void;
   renderFooter: (formState: FormState<FieldValues>) => React.ReactNode;
 };
 
-export function VolumeForm({ snapshot, size, volume, onSubmitted, renderFooter }: VolumeFormProps) {
+export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: VolumeFormProps) {
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const regions = useRegions().filter(hasProperty('hasVolumes', true));
@@ -51,7 +48,7 @@ export function VolumeForm({ snapshot, size, volume, onSubmitted, renderFooter }
     defaultValues: {
       name: volume?.name ?? '',
       region: snapshot?.region ?? volume?.region ?? '',
-      size: toGigaBytes(size ?? volume?.size),
+      size: toGigaBytes(snapshot?.size ?? volume?.size) ?? NaN,
     },
     resolver: useZodResolver(schema, {
       name: t('nameLabel'),

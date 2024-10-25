@@ -637,6 +637,7 @@ export type VolumeSnapshot = {
   id: string;
   volumeId: string;
   name: string;
+  size: number;
   region: string;
   status: VolumeSnapshotStatus;
   type: VolumeSnapshotType;

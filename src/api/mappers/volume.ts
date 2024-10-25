@@ -30,6 +30,7 @@ export function mapSnapshot(snapshot: ApiSnapshot): VolumeSnapshot {
     id: snapshot.id!,
     volumeId: snapshot.parent_volume_id!,
     name: snapshot.name!,
+    size: parseBytes(`${snapshot.size}GB`),
     region: snapshot.region!,
     status: lowerCase(snapshot.status!.replace('SNAPSHOT_STATUS_', '')) as VolumeSnapshotStatus,
     type: lowerCase(snapshot.type!.replace('SNAPSHOT_TYPE_', '')) as VolumeSnapshotType,
