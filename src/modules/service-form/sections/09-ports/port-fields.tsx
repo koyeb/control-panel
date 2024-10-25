@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 
 import { IconButton, useBreakpoint } from '@koyeb/design-system';
+import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
 import { IconTrash } from 'src/components/icons';
@@ -30,6 +31,7 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_4rem_auto] md:border-none md:p-0">
       <ControlledInput<ServiceForm, `ports.${number}.portNumber`>
+        ref={(ref) => ref?.addEventListener('wheel', preventDefault, { passive: false })}
         name={`ports.${index}.portNumber`}
         type="number"
         label={showLabel && <T id="portLabel" />}
