@@ -99,7 +99,7 @@ function AttachedService({ serviceId }: { serviceId?: string }) {
   }
 
   return (
-    <LinkButton href={`~${routes.service.overview(service.id)}`} variant="outline" color="gray" size={1}>
+    <LinkButton href={routes.service.overview(service.id)} variant="outline" color="gray" size={1}>
       <ServiceTypeIcon type={service.type} size="small" />
       {service.name}
     </LinkButton>

@@ -97,10 +97,10 @@ function AuthenticatedRoutes() {
 
         <Route path="/services" component={ServicesPage} />
 
-        <Route nest path="/volumes">
+        <Route path="/volumes/*?">
           <VolumesLayout>
-            <Route path="/" component={VolumesListPage} />
-            <Route path="/snapshots" component={VolumeSnapshotsPage} />
+            <Route path="/volumes" component={VolumesListPage} />
+            <Route path="/volumes/snapshots" component={VolumeSnapshotsPage} />
           </VolumesLayout>
         </Route>
 
