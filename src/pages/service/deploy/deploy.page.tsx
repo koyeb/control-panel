@@ -46,7 +46,7 @@ export function DeployServiceForm() {
           appId={appId ?? undefined}
           serviceId={serviceId ?? undefined}
           className="grow"
-          onSubmitted={(appId, serviceId) => navigate(routes.initialDeployment(serviceId))}
+          onDeployed={(appId, serviceId) => navigate(routes.initialDeployment(serviceId))}
           onCostChanged={setCost}
           onDeployUrlChanged={setDeployUrl}
         />

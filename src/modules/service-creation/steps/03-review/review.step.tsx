@@ -18,7 +18,7 @@ export function ReviewStep({ onNext }: { onNext: (serviceId: string) => void }) 
       <ServiceForm
         appId={appId ?? undefined}
         className="grow"
-        onSubmitted={(appId, serviceId) => onNext(serviceId)}
+        onDeployed={(appId, serviceId) => onNext(serviceId)}
         onCostChanged={setCost}
         onDeployUrlChanged={setDeployUrl}
       />

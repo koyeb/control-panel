@@ -31,7 +31,7 @@ export default {
   },
 } satisfies Meta<Args>;
 
-export const serviceForm: StoryFn = (_) => <ServiceForm onSubmitted={action('onSubmitted')} />;
+export const serviceForm: StoryFn = (_) => <ServiceForm onDeployed={action('onSubmitted')} />;
 
 function mockApi(args: Args) {
   const api = new ApiMock();

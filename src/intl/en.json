@@ -2036,6 +2036,7 @@
         "documentTitle": "{serviceName} service settings",
         "title": "Service settings",
         "description": "Updating your service settings will create a new deployment.",
+        "saved": "Service settings saved",
         "pauseServiceCard": {
           "title": "Pause service",
           "description": "Once this operation is performed, your service will be paused and all active deployments stopped. You can wake-up your service by clicking the \"Resume\" button below.",

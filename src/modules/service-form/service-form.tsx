@@ -53,7 +53,8 @@ type ServiceFormProps = {
   appId?: string;
   serviceId?: string;
   className?: string;
-  onSubmitted: (appId: string, serviceId: string, deploymentId: string) => void;
+  onDeployed: (appId: string, serviceId: string, deploymentId: string) => void;
+  onSaved?: () => void;
   onCostChanged?: (cost: ServiceCost | undefined) => void;
   onDeployUrlChanged?: (url: string) => void;
 };
@@ -70,7 +71,8 @@ function ServiceForm_({
   appId,
   serviceId,
   className,
-  onSubmitted,
+  onDeployed,
+  onSaved,
   onCostChanged,
   onDeployUrlChanged,
 }: ServiceFormProps) {
@@ -90,9 +92,18 @@ function ServiceForm_({
   const { mutateAsync } = useMutation({
     mutationFn: submitServiceForm,
     onError: useFormErrorHandler(form, mapError),
-    async onSuccess(result) {
-      await invalidate('listApps');
-      onSubmitted(result.appId, result.serviceId, result.deploymentId);
+    async onSuccess(result, { meta }) {
+      await Promise.all([
+        invalidate('listApps'),
+        invalidate('getService', { path: { id: result.serviceId } }),
+        invalidate('listDeployments', { query: { service_id: result.serviceId } }),
+      ]);
+
+      if (meta.saveOnly) {
+        onSaved?.();
+      } else {
+        onDeployed(result.appId, result.serviceId, result.deploymentId);
+      }
     },
   });
 
