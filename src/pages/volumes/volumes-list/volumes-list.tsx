@@ -119,9 +119,11 @@ function Actions({ volume }: { volume: Volume }) {
               <T id="actions.edit" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('createSnapshot'))}>
-              <T id="actions.createSnapshot" />
-            </ButtonMenuItem>
+            {snapshots && (
+              <ButtonMenuItem onClick={withClose(() => setOpenDialog('createSnapshot'))}>
+                <T id="actions.createSnapshot" />
+              </ButtonMenuItem>
+            )}
 
             <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
               <T id="actions.delete" />
@@ -136,13 +138,11 @@ function Actions({ volume }: { volume: Volume }) {
         volume={volume}
       />
 
-      {snapshots && (
-        <CreateSnapshotDialog
-          open={openDialog === 'createSnapshot'}
-          onClose={() => setOpenDialog(undefined)}
-          volume={volume}
-        />
-      )}
+      <CreateSnapshotDialog
+        open={openDialog === 'createSnapshot'}
+        onClose={() => setOpenDialog(undefined)}
+        volume={volume}
+      />
 
       <DeleteVolumeDialog
         open={openDialog === 'delete'}
