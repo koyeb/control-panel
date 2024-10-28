@@ -36,7 +36,7 @@ export function AppBreadcrumbs() {
       <Switch>
         <CrumbRoute path="/services" label={<T id="services" />} link={routes.services()} />
 
-        <Route nest path="/volumes">
+        <Route path="/volumes">
           <Crumb label={<T id="volumes" />} link={routes.volumes.index()} />
           <CrumbRoute
             path="/snapshots"
