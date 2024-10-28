@@ -61,7 +61,7 @@ export function CommitMetadata({ deployment }: { deployment: ComputeDeployment }
           </span>
 
           {!sha && <TextSkeleton width={4} />}
-          {sha && <ExternalLink href={`https://${source.repository}/commits/${sha}`}>{sha}</ExternalLink>}
+          {sha && <ExternalLink href={`https://${source.repository}/commit/${sha}`}>{sha}</ExternalLink>}
         </div>
       }
     />
