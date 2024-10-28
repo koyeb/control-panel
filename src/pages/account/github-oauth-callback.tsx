@@ -10,7 +10,7 @@ import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
+import { getToken, useToken } from 'src/application/token';
 import { Link } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
@@ -24,6 +24,7 @@ const T = Translate.prefix('pages.account.githubOAuthCallback');
 const schema = z.object({
   action: z.string().optional(),
   metadata: z.string().optional(),
+  organization_id: z.string().optional(),
 });
 
 export function GithubOauthCallbackPage() {
@@ -33,7 +34,7 @@ export function GithubOauthCallbackPage() {
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
-  const [githubAppInstallRequested, setGithubAppInstallApproved] = useState(false);
+  const [githubAppInstalled, setGithubAppInstalled] = useState(false);
 
   const mutation = useMutation({
     async mutationFn() {
@@ -55,28 +56,37 @@ export function GithubOauthCallbackPage() {
       });
     },
     async onSuccess(result) {
-      const action = searchParams.get('setup_action');
+      const currentOrganization = await getCurrentOrganization();
+
+      const setupAction = searchParams.get('setup_action');
+      const state = searchParams.get('state');
+
+      const statePayload = state ? schema.parse(jwtDecode(state)) : {};
+      const { metadata = routes.home(), organization_id = undefined } = statePayload;
 
       // authentication
-      if (result.token?.id !== undefined) {
+      if (setupAction === null && result.token?.id !== undefined) {
         setToken(result.token.id);
+        navigate(metadata);
+        return;
       }
 
       // github app installation done
-      if (action === 'install') {
+      if (setupAction === 'install') {
         if (searchParams.has('state')) {
           await invalidate('getGithubApp');
         } else {
           // approved by github admin
-          setGithubAppInstallApproved(true);
+          setGithubAppInstalled(true);
           return;
         }
       }
 
-      const state = searchParams.get('state');
-      const { metadata = routes.home() } = state ? schema.parse(jwtDecode(state)) : {};
-
-      navigate(metadata, { state: { githubAppInstallationRequested: action === 'request' } });
+      if (currentOrganization?.id === organization_id) {
+        navigate(metadata, { state: { githubAppInstallationRequested: setupAction === 'request' } });
+      } else {
+        setGithubAppInstalled(true);
+      }
     },
     onError(error) {
       const state = searchParams.get('state');
@@ -108,7 +118,7 @@ export function GithubOauthCallbackPage() {
     mutation.mutate();
   });
 
-  if (githubAppInstallRequested) {
+  if (githubAppInstalled) {
     return (
       <div className="col gap-4 text-center">
         <div className="text-2xl font-medium">
@@ -122,6 +132,19 @@ export function GithubOauthCallbackPage() {
   }
 
   return <LogoLoading />;
+}
+
+async function getCurrentOrganization() {
+  const token = getToken();
+
+  if (token === undefined) {
+    return;
+  }
+
+  return api.getCurrentOrganization({ token }).then(
+    ({ organization }) => organization,
+    () => undefined,
+  );
 }
 
 const isAccountNotFoundError = createValidationGuard(
