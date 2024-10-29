@@ -249,17 +249,10 @@ function ServicePausedAlert({ service }: { service: Service }) {
   return (
     <Alert
       variant="info"
-      style="outline"
       title={<T id="servicePaused.title" />}
       description={<T id="servicePaused.description" />}
     >
-      <Button
-        variant="outline"
-        color="blue"
-        loading={isPending}
-        onClick={() => resume()}
-        className="ml-auto self-center"
-      >
+      <Button color="blue" loading={isPending} onClick={() => resume()} className="ml-auto self-center">
         <T id="servicePaused.resume" />
       </Button>
     </Alert>

@@ -1929,7 +1929,12 @@
         "pendingChanges": {
           "title": "Pending changes",
           "description": "Your service has pending changes that will be applied with your next deployment",
-          "deploy": "Deploy now"
+          "viewChanges": "View changes",
+          "deploy": "Deploy now",
+          "diffDialog": {
+            "title": "Pending changes",
+            "description": "These changes will be applied with your next deployment"
+          }
         },
         "navigation": {
           "overview": "Overview",
