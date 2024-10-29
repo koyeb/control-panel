@@ -12,7 +12,7 @@ import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
-const T = Translate.prefix('pages.service.layout.latestDeploymentStashed');
+const T = Translate.prefix('pages.service.layout.pendingChanges');
 
 const allDeploymentStatuses: Array<ApiDeploymentStatus> = [
   'PENDING',
@@ -32,11 +32,11 @@ const allDeploymentStatuses: Array<ApiDeploymentStatus> = [
   'STASHED',
 ];
 
-type LatestDeploymentStashedAlertProps = {
+type PendingChangesAlertProps = {
   service: Service;
 };
 
-export function LatestDeploymentStashedAlert({ service }: LatestDeploymentStashedAlertProps) {
+export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
   const latestDeployment = useDeployment(service.latestDeploymentId);
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
