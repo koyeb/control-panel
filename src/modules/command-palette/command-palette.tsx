@@ -5,7 +5,11 @@ import { Dialog, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useApps, useExampleApps, useServices } from 'src/api/hooks/service';
-import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
+import {
+  useOrganization,
+  useOrganizationUnsafe,
+  useUserOrganizationMemberships,
+} from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useResetIdentifyUser } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
@@ -18,6 +22,7 @@ import { useShortcut } from 'src/hooks/shortcut';
 import { ThemeMode, useThemeMode } from 'src/hooks/theme';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
+import { capitalize } from 'src/utils/strings';
 
 import { Command, CommandPaletteProvider, useCommands, useRegisterCommand } from './command-palette-context';
 
@@ -235,17 +240,24 @@ function RegisterCommonCommands() {
 
 function useRegisterExternalNavigationCommands() {
   const { token } = useToken();
+  const organization = useOrganization();
 
-  useRegisterCommand({
-    label: 'Manage billing',
-    description: 'View and manage your payment methods and invoices ',
-    keywords: ['billing', 'invoice', 'payment', 'card'],
-    async execute() {
-      const url = await api.manageBilling({ token }).then(({ url }) => url);
+  useRegisterCommand((register) => {
+    if (organization.latestSubscriptionId === undefined) {
+      return;
+    }
 
-      assert(url !== undefined);
-      window.open(url);
-    },
+    register({
+      label: 'Manage billing',
+      description: 'View and manage your payment methods and invoices',
+      keywords: ['billing', 'invoice', 'payment', 'card'],
+      async execute() {
+        const url = await api.manageBilling({ token }).then(({ url }) => url);
+
+        assert(url !== undefined);
+        window.open(url);
+      },
+    });
   });
 
   useRegisterCommand({
@@ -593,6 +605,25 @@ function useRegisterMiscCommands() {
   const organization = useOrganizationUnsafe();
   const [themeMode, setThemeMode] = useThemeMode();
 
+  useRegisterCommand(
+    {
+      label: 'Change theme mode',
+      description: 'Change the theme mode of the interface',
+      keywords: ['theme', 'light', 'dark'],
+      options: Object.values(ThemeMode),
+      matchOption: (theme, search) => theme.includes(search),
+      renderOption: (theme) => {
+        if (theme === ThemeMode.system) {
+          return "Use the system's theme";
+        }
+
+        return `${capitalize(theme)} mode`;
+      },
+      execute: setThemeMode,
+    },
+    [themeMode],
+  );
+
   useRegisterCommand((register) => {
     if (organization?.plan !== 'hobby') {
       register({
@@ -600,33 +631,6 @@ function useRegisterMiscCommands() {
         description: 'Ask us anything through our chat',
         keywords: ['support', 'contact', 'chat', 'intercom', 'help'],
         execute: () => window.Intercom?.('showNewMessage'),
-      });
-    }
-
-    if (themeMode !== ThemeMode.light) {
-      register({
-        label: 'Switch to light mode',
-        description: 'Change the theme mode to light',
-        keywords: ['theme', 'light'],
-        execute: () => setThemeMode(ThemeMode.light),
-      });
-    }
-
-    if (themeMode !== ThemeMode.dark) {
-      register({
-        label: 'Switch to dark mode',
-        description: 'Change the theme mode to dark',
-        keywords: ['theme', 'dark'],
-        execute: () => setThemeMode(ThemeMode.dark),
-      });
-    }
-
-    if (themeMode !== ThemeMode.system) {
-      register({
-        label: 'Switch to system theme mode',
-        description: "Change the theme mode to match the system's theme",
-        keywords: ['theme', 'system'],
-        execute: () => setThemeMode(ThemeMode.system),
       });
     }
 

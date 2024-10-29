@@ -1,6 +1,5 @@
-import { createContext, createElement, useCallback, useContext, useEffect, useMemo } from 'react';
+import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 
-import { useMap } from 'src/hooks/collection';
 import { createId } from 'src/utils/strings';
 
 export type CommandWithoutOptions = {
@@ -21,16 +20,18 @@ export type CommandWithOptions<T = unknown> = Omit<CommandWithoutOptions, 'execu
 export type Command<T = unknown> = CommandWithoutOptions | CommandWithOptions<T>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type CommandPaletteContext = ReturnType<typeof useMap<string, Command<any>>>;
+type CommandPaletteContext = Map<string, Command<any>>;
 
 const commandPaletteContext = createContext<CommandPaletteContext>(null as never);
 
 export function CommandPaletteProvider({ children }: { children: React.ReactNode }) {
-  return createElement(commandPaletteContext.Provider, { value: useMap<string, Command>() }, children);
+  const ref = useRef<CommandPaletteContext>(new Map());
+
+  return createElement(commandPaletteContext.Provider, { value: ref.current }, children);
 }
 
 export function useCommands(search: string) {
-  const [commandsMap] = useContext(commandPaletteContext);
+  const commandsMap = useContext(commandPaletteContext);
 
   const filter = useCallback(
     (command: Command) => {
@@ -57,7 +58,7 @@ export function useRegisterCommand<T>(
   param: Command<T> | ((register: (command: Command<T>) => void) => void),
   deps: React.DependencyList = [],
 ) {
-  const [, { add: register, remove: unregister }] = useContext(commandPaletteContext);
+  const commandsMap = useContext(commandPaletteContext);
 
   useEffect(() => {
     if (typeof param !== 'object') {
@@ -66,13 +67,13 @@ export function useRegisterCommand<T>(
 
     const id = createId();
 
-    register(id, param);
+    commandsMap.set(id, param);
 
     return () => {
-      unregister(id);
+      commandsMap.delete(id);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [register, unregister, ...deps]);
+  }, [commandsMap, ...deps]);
 
   useEffect(() => {
     if (typeof param !== 'function') {
@@ -86,12 +87,12 @@ export function useRegisterCommand<T>(
 
       ids.push();
 
-      register(id, command);
+      commandsMap.set(id, command);
     });
 
     return () => {
-      ids.map(unregister);
+      ids.map((id) => commandsMap.delete(id));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [register, unregister, ...deps]);
+  }, [commandsMap, ...deps]);
 }
