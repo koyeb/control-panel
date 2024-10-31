@@ -1,24 +1,25 @@
-import { assert } from './assert';
-
-export function lowerCase<S extends string>(str: S): Lowercase<S> {
-  return str.toLowerCase() as Lowercase<S>;
+export function lowerCase(str: undefined): undefined;
+export function lowerCase<S extends string>(str: S): Lowercase<S>;
+export function lowerCase(str?: string): string | undefined {
+  return str?.toLowerCase();
 }
 
-export function upperCase<S extends string>(str: S): Uppercase<S> {
-  return str.toUpperCase() as Uppercase<S>;
+export function upperCase(str: undefined): undefined;
+export function upperCase<S extends string>(str: S): Uppercase<S>;
+export function upperCase(str?: string): string | undefined {
+  return str?.toUpperCase();
 }
 
-export function capitalize<S extends string>(str: S): Capitalize<S> {
-  if (str === '') {
-    return '' as Capitalize<S>;
-  }
+export function capitalize(str: undefined): undefined;
+export function capitalize<S extends string>(str: S): Capitalize<S>;
+export function capitalize(str?: string): string | undefined {
+  if (str === undefined) return undefined;
+  if (str === '') return '';
 
-  const firstLetter = str[0];
+  const firstLetter = str[0] as string;
   const rest = str.slice(1);
 
-  assert(firstLetter !== undefined);
-
-  return `${upperCase(firstLetter)}${rest}` as Capitalize<S>;
+  return `${upperCase(firstLetter)}${rest}`;
 }
 
 export function removePrefix<S extends string, Prefix extends string>(
