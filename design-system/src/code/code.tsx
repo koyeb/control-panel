@@ -20,10 +20,7 @@ export function Code({ lang, theme, value, className }: CodeProps) {
     const html = highlighter?.codeToHtml(value, {
       lang,
       theme: `github-${theme}`,
-      colorReplacements: {
-        '#fff': 'transparent',
-        '#24292e': 'transparent',
-      },
+      colorReplacements: theme === 'light' ? { '#fff': 'transparent' } : { '#24292e': 'transparent' },
     });
 
     setHtml(html);
