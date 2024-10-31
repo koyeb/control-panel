@@ -20,7 +20,6 @@ import { CreateDatabasePage } from './pages/databases/create-database.page';
 import { DatabaseServicePages } from './pages/databases/database/database.pages';
 import { DomainsPage } from './pages/domains/domains.page';
 import { ErrorTestPage } from './pages/error-test.page';
-import { GithubAppCallbackPage } from './pages/github-app-callback';
 import { HomePage } from './pages/home/home.page';
 import { ServicesPage } from './pages/home/services.page';
 import { OnboardingPage } from './pages/onboarding/onboarding.page';
@@ -136,7 +135,6 @@ function AuthenticatedRoutes() {
           component={ConfirmDeactivateOrganization}
         />
 
-        <Route path="/api/app/github/callback" component={GithubAppCallbackPage} />
         <Route path="__error" component={ErrorTestPage} />
 
         <Route>

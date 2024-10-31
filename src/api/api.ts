@@ -100,7 +100,6 @@ export const api = {
   // github app
   getGithubApp: endpoint('get', '/v1/github/installation'),
   installGithubApp: endpoint('post', '/v1/github/installation'),
-  installGithubAppCallback: endpoint('post', '/v1/github/installation/callback'),
   resyncRepositories: endpoint('post', '/v1/git/sync/organization/{organization_id}'),
   listRepositories: endpoint('get', '/v1/git/repositories'),
   listRepositoryBranches: endpoint('get', '/v1/git/branches'),
