@@ -5,11 +5,7 @@ import { Dialog, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useApps, useExampleApps, useServices } from 'src/api/hooks/service';
-import {
-  useOrganization,
-  useOrganizationUnsafe,
-  useUserOrganizationMemberships,
-} from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useResetIdentifyUser } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
@@ -240,10 +236,10 @@ function RegisterCommonCommands() {
 
 function useRegisterExternalNavigationCommands() {
   const { token } = useToken();
-  const organization = useOrganization();
+  const organization = useOrganizationUnsafe();
 
   useRegisterCommand((register) => {
-    if (organization.latestSubscriptionId === undefined) {
+    if (organization?.latestSubscriptionId === undefined) {
       return;
     }
 
