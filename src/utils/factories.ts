@@ -102,6 +102,7 @@ const instance = createFactory<CatalogInstance>(() => ({
   ram: '',
   disk: '',
   pricePerMonth: 0,
+  pricePerHour: 0,
   pricePerSecond: 0,
   hasVolumes: false,
 }));

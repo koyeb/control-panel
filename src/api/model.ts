@@ -98,6 +98,7 @@ export type CatalogInstance = {
   disk: string;
   hasVolumes: boolean;
   pricePerMonth: number;
+  pricePerHour: number;
   pricePerSecond: number;
 };
 

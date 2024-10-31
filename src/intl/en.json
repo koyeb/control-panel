@@ -335,9 +335,9 @@
       "gpu": "GPU 🚀"
     },
     "descriptions": {
-      "standard": "High-performance CPU instances ideal for production workloads",
-      "eco": "Designed for development and non-production environments",
-      "gpu": "High-performance GPU instances for LLMs, Computer Vision, and AI inference"
+      "standard": "High-performance CPU instances ideal for production workloads billed by the second",
+      "eco": "Designed for development and non-production environments billed by the second",
+      "gpu": "High-performance GPU instances for LLMs, Computer Vision, and AI inference billed by the second"
     },
     "cpu": "{value} vCPU",
     "ram": "{value} RAM",
@@ -349,7 +349,7 @@
     "comingSoon": "Coming soon",
     "new": "New",
     "pricePerMonth": "{price}/month",
-    "pricePerSecond": "{price}/second"
+    "pricePerHour": "{price}/hour"
   },
   "invitation": {
     "title": "You have been invited to join the <organization>{organizationName} organization</organization>",

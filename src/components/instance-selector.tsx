@@ -204,10 +204,7 @@ function InstancePrice({ instance }: InstancePriceProps) {
         <span className="text-dim">{bullet}</span>
 
         <span className="text-xs text-dim">
-          <T
-            id="freeInstanceDescription"
-            values={{ price: <FormattedPrice value={instance.pricePerSecond} digits={8} /> }}
-          />
+          <T id="freeInstanceDescription" />
         </span>
       </>
     );
@@ -217,18 +214,15 @@ function InstancePrice({ instance }: InstancePriceProps) {
     <>
       <span className="text-green">
         <T
-          id="pricePerMonth"
-          values={{ price: <FormattedPrice value={instance.pricePerMonth} digits={2} /> }}
+          id="pricePerHour"
+          values={{ price: <FormattedPrice value={instance.pricePerHour} digits={4} /> }}
         />
       </span>
 
       <span className="text-dim">{bullet}</span>
 
       <span className="text-xs text-dim">
-        <T
-          id="pricePerSecond"
-          values={{ price: <FormattedPrice value={instance.pricePerSecond} digits={8} /> }}
-        />
+        <T id="pricePerMonth" values={{ price: <FormattedPrice value={instance.pricePerMonth} /> }} />
       </span>
     </>
   );
