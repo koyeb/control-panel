@@ -108,4 +108,5 @@ const statusMap = {
   erroring: error,
   error: error,
   stashed: pending,
+  sleeping: success,
 };

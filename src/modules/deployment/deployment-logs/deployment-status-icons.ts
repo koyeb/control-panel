@@ -39,4 +39,5 @@ export const runtimeStatusMap: Record<DeploymentStatus, ValueOf<typeof statuses>
   erroring: statuses.inProgress,
   error: statuses.error,
   stashed: statuses.canceled,
+  sleeping: statuses.success,
 };

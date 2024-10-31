@@ -79,6 +79,7 @@ export const DeploymentStatusBadge = createResourceStatus<DeploymentStatus>({
   erroring: [Spinner, 'red'],
   error: [IconCircleAlert, 'red'],
   stashed: [IconCircleOff, 'gray'],
+  sleeping: [IconCircleDashed, 'gray'],
 });
 
 export const InstanceStatusBadge = createResourceStatus<InstanceStatus>({

@@ -163,7 +163,8 @@ export type DeploymentStatus =
   | 'stopped'
   | 'erroring'
   | 'error'
-  | 'stashed';
+  | 'stashed'
+  | 'sleeping';
 
 export type DeploymentBuild = {
   status: DeploymentBuildStatus;

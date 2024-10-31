@@ -565,23 +565,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/github/installation/callback": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Github callback for app installation */
-        post: operations["GithubInstallationCallback"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/v1/organizations": {
         parameters: {
             query?: never;
@@ -2313,16 +2296,6 @@ export interface components {
         GetUserOrganizationInvitationReply: {
             invitation?: components["schemas"]["OrganizationInvitation"];
         };
-        GithubInstallationCallbackReply: Record<string, never>;
-        GithubInstallationCallbackRequest: {
-            installation_id?: string;
-            setup_action?: string;
-            state?: string;
-            /** @description When the installation callback is called, the ?code parameter is given by
-             *     GitHub because the setting "Request user authorization (OAuth) during
-             *     installation" is enabled. */
-            code?: string;
-        };
         GithubInstallationReply: {
             /** The github app name */
             app_name?: string;
@@ -3144,7 +3117,7 @@ export interface components {
          * @default PENDING
          * @enum {string}
          */
-        "Deployment.Status": "PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "STASHED";
+        "Deployment.Status": "PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "STASHED" | "SLEEPING";
         DeploymentDatabaseInfo: {
             neon_postgres?: components["schemas"]["DeploymentNeonPostgresDatabaseInfo"];
         };
@@ -4158,7 +4131,7 @@ export interface components {
          * @default PENDING
          * @enum {string}
          */
-        "RegionalDeployment.Status": "PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR";
+        "RegionalDeployment.Status": "PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "SLEEPING";
         RegionalDeploymentDefinition: {
             name?: string;
             type?: components["schemas"]["RegionalDeploymentDefinition.Type"];
@@ -8489,93 +8462,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GithubInstallationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GithubInstallationCallback: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["GithubInstallationCallbackRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GithubInstallationCallbackReply"];
                 };
             };
             /** @description Validation error */
@@ -15180,7 +15066,7 @@ export interface operations {
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
                 /** @description (Optional) Filter on statuses */
-                statuses?: ("PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "STASHED")[];
+                statuses?: ("PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "STASHED" | "SLEEPING")[];
             };
             header?: never;
             path?: never;
