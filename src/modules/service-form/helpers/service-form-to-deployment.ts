@@ -125,6 +125,7 @@ function scalings(scaling: Scaling): Array<ApiDeploymentScaling> {
     requests: 'requests_per_second',
     concurrentRequests: 'concurrent_requests',
     responseTime: 'requests_response_time',
+    sleepIdleDelay: 'sleep_idle_delay',
   };
 
   entries(scaling.autoscaling.targets)

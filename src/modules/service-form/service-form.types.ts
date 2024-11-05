@@ -126,7 +126,10 @@ export type FixedScaling = number;
 export type AutoScaling = {
   min: number;
   max: number;
-  targets: Record<'cpu' | 'memory' | 'requests' | 'concurrentRequests' | 'responseTime', AutoScalingTarget>;
+  targets: Record<
+    'cpu' | 'memory' | 'requests' | 'concurrentRequests' | 'responseTime' | 'sleepIdleDelay',
+    AutoScalingTarget
+  >;
 };
 
 export type AutoScalingTarget = {

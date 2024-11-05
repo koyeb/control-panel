@@ -331,6 +331,15 @@ describe('parseDeployParams', () => {
         value: 1,
       });
     });
+
+    it('autoscaling_sleep_idle_delay', () => {
+      test.params.set('autoscaling_sleep_idle_delay', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.sleepIdleDelay', {
+        enabled: true,
+        value: 1,
+      });
+    });
   });
 
   describe('volumes', () => {

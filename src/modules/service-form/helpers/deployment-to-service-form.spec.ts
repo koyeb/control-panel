@@ -26,13 +26,14 @@ describe('deploymentDefinitionToServiceForm', () => {
         requests: { enabled: false, value: undefined },
         concurrentRequests: { enabled: false, value: undefined },
         responseTime: { enabled: false, value: undefined },
+        sleepIdleDelay: { enabled: false, value: undefined },
       },
     );
   });
 
   it('autoscaling min = 0 and max = 1', () => {
     const definition: ApiDeploymentDefinition = {
-      scalings: [{ min: 0, max: 1 }],
+      scalings: [{ min: 0, max: 1, targets: [{ sleep_idle_delay: { value: 1 } }] }],
     };
 
     expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
@@ -43,6 +44,7 @@ describe('deploymentDefinitionToServiceForm', () => {
         requests: { enabled: false },
         concurrentRequests: { enabled: false },
         responseTime: { enabled: false },
+        sleepIdleDelay: { enabled: true, value: 1 },
       },
     );
   });

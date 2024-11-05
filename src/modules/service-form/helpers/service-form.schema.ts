@@ -169,6 +169,7 @@ function autoScaling(t: TranslateErrorFunction) {
         requests: autoScalingTarget(t, 1, 1e9),
         concurrentRequests: autoScalingTarget(t, 1, 1e9),
         responseTime: autoScalingTarget(t, 1, 1e9),
+        sleepIdleDelay: autoScalingTarget(t, 1, 1e9),
       }),
     })
     .refine(({ max, targets }) => {

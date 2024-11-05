@@ -1095,6 +1095,9 @@
         "responseTimeLabel": "Target P95 response time",
         "responseTimeDescription": "Autoscale to target a P95 response time of {value}ms or less, per instance",
         "responseTimeUnit": "ms",
+        "sleepIdleDelayLabel": "Scale to zero idle time",
+        "sleepIdleDelayDescription": "Number of seconds to wait before sleeping the instance if it receives no traffic",
+        "sleepIdleDelayUnit": "s",
         "criteriaNotAvailableWhenMax1": "Scaling criteria are not available when the maximum scaling is set to 1",
         "criterionNotAvailableWorker": "This criterion is not available for workers"
       },
@@ -1167,7 +1170,7 @@
         "portNumberLabel": "Port",
         "protocolLabel": "Protocol",
         "gracePeriodLabel": "Grace period",
-        "gracePeriodTooltip": "The initial period to wait for the instance to become healthy",
+        "gracePeriodTooltip": "Number of seconds to wait before sleeping the instance if it receives no traffic",
         "gracePeriodUnit": "s",
         "intervalLabel": "Interval",
         "intervalTooltip": "The period between two checks",

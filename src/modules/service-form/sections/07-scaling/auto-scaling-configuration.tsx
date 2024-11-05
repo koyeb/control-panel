@@ -5,6 +5,7 @@ import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
 import {
   IconAlarmClockCheck,
+  IconClock,
   IconCpu,
   IconListMinus,
   IconPanelsLeftBottom,
@@ -38,6 +39,7 @@ export function AutoScalingConfiguration() {
   const canChangeScaling = instance !== 'free' && !hasVolumes;
 
   const scaleToZero = useFeatureFlag('scale-to-zero');
+  const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
 
   return (
     <>
@@ -72,6 +74,10 @@ export function AutoScalingConfiguration() {
       <div className="col gap-4 sm:hidden">
         <RangeInputMobile />
       </div>
+
+      {scaleToZeroIdleDelay && autoScaling.min === 0 && (
+        <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={1} max={1e9} />
+      )}
 
       <ScalingTarget target="requests" Icon={IconTimer} min={1} max={1e9} />
       <ScalingTarget target="cpu" Icon={IconCpu} min={1} max={100} />
@@ -195,6 +201,10 @@ function useTargetDisabledReason(target: keyof AutoScaling['targets']): React.Re
   const serviceType = useWatchServiceForm('serviceType');
   const min = useWatchServiceForm('scaling.autoscaling.min');
   const max = useWatchServiceForm('scaling.autoscaling.max');
+
+  if (target === 'sleepIdleDelay' && min === 0) {
+    return undefined;
+  }
 
   if (min === 0 && max === 1) {
     return <T id="criteriaNotAvailableWhenMax1" />;
