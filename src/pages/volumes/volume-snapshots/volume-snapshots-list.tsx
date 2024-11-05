@@ -25,7 +25,13 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
   const volumes = useVolumes();
 
   if (snapshots.length === 0) {
-    return <NoResource title={<T id="noSnapshots.title" />} description={null} cta={null} />;
+    return (
+      <NoResource
+        title={<T id="noSnapshots.title" />}
+        description={<T id="noSnapshots.description" />}
+        cta={null}
+      />
+    );
   }
 
   return (

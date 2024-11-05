@@ -1712,8 +1712,8 @@
       }
     },
     "volumeSnapshots": {
-      "documentTitle": "Volume snapshots",
-      "title": "Volume snapshots",
+      "documentTitle": "Snapshots",
+      "title": "Snapshots",
       "list": {
         "name": "Name",
         "volumeName": "Parent volume",
@@ -1734,7 +1734,8 @@
           "delete": "Delete"
         },
         "noSnapshots": {
-          "title": "You don't have any volume snapshots yet"
+          "title": "You don't have any volume snapshots yet",
+          "description": "Snapshots are point-in-time copies of your volumes, allowing you to restore or create new volumes from previous states"
         }
       },
       "createVolume": {

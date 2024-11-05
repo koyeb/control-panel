@@ -1,13 +1,22 @@
 import { Meta } from '@storybook/react';
 
+import { ApiMock } from 'src/api/mock/mock-api';
 import { create } from 'src/utils/factories';
 
 import { Replicas } from './replicas';
 
 export default {
   title: 'Modules/ServiceOverview/Replicas',
-  parameters: { className: 'max-w-main' },
+  parameters: { mockApi, className: 'max-w-main' },
 } satisfies Meta;
+
+function mockApi() {
+  const api = new ApiMock();
+
+  api.mockEndpoint('getServiceMetrics', () => ({
+    metrics: [],
+  }));
+}
 
 const instances = [
   create.deploymentInstance({
