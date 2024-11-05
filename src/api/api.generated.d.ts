@@ -3280,6 +3280,7 @@ export interface components {
             requests_per_second?: components["schemas"]["DeploymentScalingTargetRequestsPerSecond"];
             concurrent_requests?: components["schemas"]["DeploymentScalingTargetConcurrentRequests"];
             requests_response_time?: components["schemas"]["DeploymentScalingTargetRequestsResponseTime"];
+            sleep_idle_delay?: components["schemas"]["DeploymentScalingTargetSleepIdleDelay"];
         };
         DeploymentScalingTargetAverageCPU: {
             /** Format: int64 */
@@ -3306,6 +3307,10 @@ export interface components {
              *     percentile (p95) for autoscaling.  Valid values are between 0 and 100.
              */
             quantile?: number;
+        };
+        DeploymentScalingTargetSleepIdleDelay: {
+            /** Format: int64 */
+            value?: number;
         };
         DeploymentStrategy: {
             type?: components["schemas"]["DeploymentStrategyType"];

@@ -179,6 +179,7 @@ function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
   const { requests_per_second } = getTarget('requests_per_second');
   const { concurrent_requests } = getTarget('concurrent_requests');
   const { requests_response_time } = getTarget('requests_response_time');
+  const { sleep_idle_delay } = getTarget('sleep_idle_delay');
 
   const autoscaling = {
     min: scaling?.min,
@@ -204,12 +205,18 @@ function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
         enabled: requests_response_time !== undefined,
         value: requests_response_time?.value,
       },
+      sleepIdleDelay: {
+        enabled: sleep_idle_delay !== undefined,
+        value: sleep_idle_delay?.value,
+      },
     },
   } satisfies DeepPartial<AutoScaling>;
 
   if (autoscaling.min === 0 && autoscaling.max === 1) {
     for (const target of keys(autoscaling.targets)) {
-      autoscaling.targets[target].enabled = false;
+      if (target !== 'sleepIdleDelay') {
+        autoscaling.targets[target].enabled = false;
+      }
     }
   }
 

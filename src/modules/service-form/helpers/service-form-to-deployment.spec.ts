@@ -70,6 +70,7 @@ describe('serviceFormToDeploymentDefinition', () => {
         memory: { enabled: true, value: 1 },
         concurrentRequests: { enabled: true, value: 1 },
         responseTime: { enabled: true, value: 1 },
+        sleepIdleDelay: { enabled: true, value: 1 },
       },
     };
 
@@ -83,6 +84,7 @@ describe('serviceFormToDeploymentDefinition', () => {
           { average_mem: { value: 1 } },
           { concurrent_requests: { value: 1 } },
           { requests_response_time: { value: 1, quantile: 95 } },
+          { sleep_idle_delay: { value: 1 } },
         ],
       },
     ]);

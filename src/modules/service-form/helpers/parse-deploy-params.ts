@@ -42,6 +42,7 @@ export function parseDeployParams(
   builder.autoscaling_requests_per_second = params.get('autoscaling_requests_per_second');
   builder.autoscaling_concurrent_requests = params.get('autoscaling_concurrent_requests');
   builder.autoscaling_requests_response_time = params.get('autoscaling_requests_response_time');
+  builder.autoscaling_sleep_idle_delay = params.get('autoscaling_sleep_idle_delay');
   builder.volumes = params.entries();
   builder.healthChecks = params.entries();
 
@@ -294,6 +295,10 @@ class ServiceFormBuilder {
 
   set autoscaling_requests_response_time(value: string | null) {
     this.setAutoscalingTarget('responseTime', value);
+  }
+
+  set autoscaling_sleep_idle_delay(value: string | null) {
+    this.setAutoscalingTarget('sleepIdleDelay', value);
   }
 
   private setAutoscalingTarget(target: keyof AutoScaling['targets'], value: string | null) {
@@ -677,6 +682,7 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
         requests: 'requests_per_second',
         concurrentRequests: 'concurrent_requests',
         responseTime: 'requests_response_time',
+        sleepIdleDelay: 'sleep_idle_delay',
       };
 
       if (enabled) {
