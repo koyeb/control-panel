@@ -100,7 +100,7 @@ export function useResetIdentifyUser() {
 
   return useCallback(() => {
     globalThis.Intercom?.('shutdown');
-    analytics.reset();
+    analytics.reset(true);
   }, [analytics]);
 }
 
