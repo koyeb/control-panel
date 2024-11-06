@@ -92,7 +92,7 @@
     "eslint-plugin-react-refresh": "^0.4.14",
     "eslint-plugin-tailwindcss": "^3.17.5",
     "globals": "^15.11.0",
-    "happy-dom": "^15.8.3",
+    "happy-dom": "^15.10.1",
     "openapi-typescript": "^7.4.2",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",

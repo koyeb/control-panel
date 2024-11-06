@@ -220,8 +220,8 @@ importers:
         specifier: ^15.11.0
         version: 15.11.0
       happy-dom:
-        specifier: ^15.8.3
-        version: 15.8.3
+        specifier: ^15.10.1
+        version: 15.10.1
       openapi-typescript:
         specifier: ^7.4.2
         version: 7.4.2(typescript@5.6.3)
@@ -269,7 +269,7 @@ importers:
         version: 5.0.1(typescript@5.6.3)(vite@5.4.10(@types/node@22.8.7))
       vitest:
         specifier: ^2.1.4
-        version: 2.1.4(@types/node@22.8.7)(happy-dom@15.8.3)(jsdom@25.0.1)
+        version: 2.1.4(@types/node@22.8.7)(happy-dom@15.10.1)(jsdom@25.0.1)
 
 packages:
 
@@ -2701,8 +2701,8 @@ packages:
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
 
-  happy-dom@15.8.3:
-    resolution: {integrity: sha512-YR9nUWN/T2bH7pPLEYMhTp4DQExPH+mC4KulJDgimCb+FY3Er0Vp6SOOcBXrNfMTri3lAk9uSZqUTG2hgZOYwg==}
+  happy-dom@15.10.1:
+    resolution: {integrity: sha512-FuGnj/qIB4QnBL6fWmD7Wnh6STxevLgOVWB6+nopDGgWG1+t9CXkNB2ldZ+iqwD2UKxD2D0SU8el8A6AX6Q1+g==}
     engines: {node: '>=18.0.0'}
 
   has-bigints@1.0.2:
@@ -6900,7 +6900,7 @@ snapshots:
 
   graphemer@1.4.0: {}
 
-  happy-dom@15.8.3:
+  happy-dom@15.10.1:
     dependencies:
       entities: 4.5.0
       webidl-conversions: 7.0.0
@@ -8401,7 +8401,7 @@ snapshots:
       '@types/node': 22.8.7
       fsevents: 2.3.3
 
-  vitest@2.1.4(@types/node@22.8.7)(happy-dom@15.8.3)(jsdom@25.0.1):
+  vitest@2.1.4(@types/node@22.8.7)(happy-dom@15.10.1)(jsdom@25.0.1):
     dependencies:
       '@vitest/expect': 2.1.4
       '@vitest/mocker': 2.1.4(vite@5.4.10(@types/node@22.8.7))
@@ -8425,7 +8425,7 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 22.8.7
-      happy-dom: 15.8.3
+      happy-dom: 15.10.1
       jsdom: 25.0.1
     transitivePeerDependencies:
       - less
