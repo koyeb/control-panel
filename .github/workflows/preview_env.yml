@@ -48,6 +48,7 @@ jobs:
             ENVIRONMENT=preview
             APP_VERSION=${{ github.event.pull_request.head.sha || github.sha }}
             API_URL=https://staging.koyeb.com
+            AI_ASSISTANT_API_URL=@control-panel-staging-ai-assistant-api-url
             PAGE_CONTEXT_BASE_URL=@control-panel-staging-page-context-base-url
             IDENFY_SERVICE_BASE_URL=@control-panel-staging-idenfy-service-base-url
             RECAPTCHA_CLIENT_KEY=@control-panel-staging-recaptcha-client-key

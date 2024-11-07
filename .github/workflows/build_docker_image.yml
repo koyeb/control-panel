@@ -36,6 +36,7 @@ jobs:
             --build-arg ENVIRONMENT \
             --build-arg APP_VERSION \
             --build-arg API_URL \
+            --build-arg AI_ASSISTANT_API_URL \
             --build-arg PAGE_CONTEXT_BASE_URL \
             --build-arg IDENFY_SERVICE_BASE_URL \
             --build-arg RECAPTCHA_CLIENT_KEY \
@@ -49,6 +50,7 @@ jobs:
           ENVIRONMENT: ${{ github.ref_name }}
           APP_VERSION: ${{ github.sha }}
           API_URL:
+          AI_ASSISTANT_API_URL: ${{ secrets.AI_ASSISTANT_API_URL }}
           PAGE_CONTEXT_BASE_URL: ${{ secrets.PAGE_CONTEXT_BASE_URL }}
           IDENFY_SERVICE_BASE_URL: ${{ secrets.IDENFY_SERVICE_BASE_URL }}
           RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}

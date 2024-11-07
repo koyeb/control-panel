@@ -24,6 +24,7 @@ export function getConfig(): AppConfig {
     environment: import.meta.env.VITE_ENVIRONMENT,
     version: import.meta.env.VITE_APP_VERSION,
     apiBaseUrl: import.meta.env.VITE_API_URL,
+    aiAssistantApiUrl: import.meta.env.VITE_AI_ASSISTANT_API_URL,
     pageContextBaseUrl: import.meta.env.VITE_PAGE_CONTEXT_BASE_URL,
     idenfyServiceBaseUrl: import.meta.env.VITE_IDENFY_SERVICE_BASE_URL,
     recaptchaClientKey: import.meta.env.VITE_RECAPTCHA_CLIENT_KEY,
@@ -32,7 +33,6 @@ export function getConfig(): AppConfig {
     mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN,
     intercomAppId: import.meta.env.VITE_INTERCOM_APP_ID,
     disablePolling: import.meta.env.VITE_DISABLE_POLLING,
-    aiAssistantApiUrl: import.meta.env.VITE_AI_ASSISTANT_API_URL,
   };
 
   const getValue = (name: keyof AppConfig) => {
