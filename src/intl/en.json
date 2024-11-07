@@ -5,6 +5,8 @@
     "close": "Close",
     "save": "Save",
     "next": "Next",
+    "send": "Send",
+    "sent": "Sent",
     "override": "Override",
     "noValue": "--",
     "notApplicable": "N/A",
@@ -2165,6 +2167,12 @@
           "description": "Access your invoices and manage your payment methods",
           "noBillingInformation": "You need to provide your billing information using the form bellow before you can access your invoices and manage your payment methods",
           "cta": "Manage billing"
+        },
+        "coupon": {
+          "title": "Discount",
+          "description": "Enter a discount code",
+          "couponLabel": "Coupon",
+          "couponSent": "Your coupon code has been sent, we'll get back to you when it's applied to your organization"
         },
         "billingInformation": {
           "title": "Billing information",
