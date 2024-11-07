@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { Alert, Spinner } from '@koyeb/design-system';
 import { getConfig } from 'src/application/config';
@@ -19,14 +19,15 @@ type DataType = {
 
 export function InstanceAssistant() {
   const [showExamples, setShowExamples] = useState(false);
-  const form = useForm({
-    defaultValues: {
-      q: '',
-    },
-  });
   const translate = T.useTranslate();
 
-  const search = form.watch('q');
+  const form = useForm({
+    defaultValues: {
+      query: '',
+    },
+  });
+
+  const search = form.watch('query');
 
   const query = useQuery({
     enabled: search.length > 0,
@@ -38,6 +39,7 @@ export function InstanceAssistant() {
       if (!(await wait(500, signal))) {
         return null;
       }
+
       return queryAIAssistant(search);
     },
   });
@@ -53,9 +55,11 @@ export function InstanceAssistant() {
       </span>
 
       <div>
-        <button className="flex items-center" onClick={() => setShowExamples((prev) => !prev)}>
-          {showExamples ? <IconChevronDown /> : <IconChevronRight />}
-          <span className="text-dim">
+        <button className="flex items-center text-dim" onClick={() => setShowExamples(!showExamples)}>
+          <span>
+            {showExamples ? <IconChevronDown className="size-4" /> : <IconChevronRight className="size-4" />}
+          </span>
+          <span>
             <T id="loadExamples" />
           </span>
         </button>
@@ -64,10 +68,10 @@ export function InstanceAssistant() {
       </div>
 
       <ControlledInput
-        autoComplete="off"
         control={form.control}
-        name="q"
+        name="query"
         placeholder={translate('queryPlaceholder')}
+        autoComplete="off"
       />
 
       <InstanceAssistantResponse query={query} />
@@ -76,22 +80,21 @@ export function InstanceAssistant() {
 }
 
 type ExamplesListProps = {
-  form: ReturnType<typeof useForm<{ q: string }>>;
+  form: UseFormReturn<{ query: string }>;
 };
 
 function ExamplesList({ form }: ExamplesListProps) {
   const translate = T.useTranslate();
-  const examples = ['examples.small', 'examples.high', 'examples.ml'] as const;
 
   return (
     <ul className="pl-3 text-dim">
-      {examples.map((example) => (
+      {(['small', 'high', 'ml'] as const).map((example) => (
         <li key={example}>
           <button
             className="cursor-pointer hover:font-bold"
-            onClick={() => form.setValue('q', translate(example))}
+            onClick={() => form.setValue('query', translate(`examples.${example}`))}
           >
-            ➔ <T id={example} />
+            ➔ <T id={`examples.${example}`} />
           </button>
         </li>
       ))}
@@ -104,7 +107,7 @@ type InstanceAssistantResponseProps = {
 };
 
 function InstanceAssistantResponse({ query }: InstanceAssistantResponseProps) {
-  const { data, isLoading, isSuccess, error: queryError } = query;
+  const { data, isLoading, isSuccess, error } = query;
 
   if (isLoading) {
     return (
@@ -115,8 +118,8 @@ function InstanceAssistantResponse({ query }: InstanceAssistantResponseProps) {
     );
   }
 
-  if (queryError) {
-    return <Alert variant="error" description={queryError?.message} />;
+  if (error) {
+    return <Alert variant="error" description={error.message} />;
   }
 
   if (isSuccess && data) {
@@ -137,7 +140,7 @@ function InstanceAssistantResponse({ query }: InstanceAssistantResponseProps) {
 async function queryAIAssistant(search: string) {
   const config = getConfig();
 
-  const resp = await fetch(`${config.aiAssistantApiUrl}/v1/recommender/instance-type`, {
+  const response = await fetch(`${config.aiAssistantApiUrl}/v1/recommender/instance-type`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -147,7 +150,7 @@ async function queryAIAssistant(search: string) {
     }),
   });
 
-  const data = (await resp.json()) as DataType;
+  const data = (await response.json()) as DataType;
 
   return data;
 }
