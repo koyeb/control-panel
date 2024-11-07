@@ -55,7 +55,11 @@ export function InstanceAssistant() {
       </span>
 
       <div>
-        <button className="flex items-center text-dim" onClick={() => setShowExamples(!showExamples)}>
+        <button
+          type="button"
+          className="flex items-center text-dim"
+          onClick={() => setShowExamples(!showExamples)}
+        >
           <span>
             {showExamples ? <IconChevronDown className="size-4" /> : <IconChevronRight className="size-4" />}
           </span>
@@ -91,6 +95,7 @@ function ExamplesList({ form }: ExamplesListProps) {
       {(['small', 'high', 'ml'] as const).map((example) => (
         <li key={example}>
           <button
+            type="button"
             className="cursor-pointer hover:font-bold"
             onClick={() => form.setValue('query', translate(`examples.${example}`))}
           >
