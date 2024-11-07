@@ -4,8 +4,11 @@ import { useEffect, useRef } from 'react';
 import { Badge, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
+
+import { InstanceAssistant } from './instance-assistant';
 
 const T = Translate.prefix('instanceSelector');
 
@@ -29,6 +32,7 @@ export function InstanceSelector({
   className,
 }: InstanceSelectorProps) {
   const koyebRegions = instances[0]?.regionCategory === 'koyeb';
+  const hasKoyebAI = useFeatureFlag('koyeb-ai');
 
   return (
     <div className={clsx('col gap-3', className)}>
@@ -58,6 +62,8 @@ export function InstanceSelector({
         onInstanceSelected={onInstanceSelected}
         checkAvailability={checkAvailability}
       />
+
+      {hasKoyebAI && <InstanceAssistant />}
     </div>
   );
 }

@@ -15,6 +15,7 @@ interface ImportMetaEnv {
   readonly VITE_MAPBOX_TOKEN: EnvVar;
   readonly VITE_INTERCOM_APP_ID: EnvVar;
   readonly VITE_DISABLE_POLLING: EnvVar;
+  readonly VITE_AI_ASSISTANT_API_URL: EnvVar;
 }
 
 interface ImportMeta {

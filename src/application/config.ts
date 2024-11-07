@@ -12,6 +12,7 @@ type AppConfig = Partial<{
   mapboxToken: string;
   intercomAppId: string;
   disablePolling: boolean;
+  aiAssistantApiUrl: string;
 }>;
 
 const { data: localStorageConfig = {} } = z
@@ -31,6 +32,7 @@ export function getConfig(): AppConfig {
     mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN,
     intercomAppId: import.meta.env.VITE_INTERCOM_APP_ID,
     disablePolling: import.meta.env.VITE_DISABLE_POLLING,
+    aiAssistantApiUrl: import.meta.env.VITE_AI_ASSISTANT_API_URL,
   };
 
   const getValue = (name: keyof AppConfig) => {
@@ -55,6 +57,7 @@ export function getConfig(): AppConfig {
     idenfyServiceBaseUrl: getValue('idenfyServiceBaseUrl'),
     intercomAppId: getValue('intercomAppId'),
     disablePolling: getValue('disablePolling') === 'true',
+    aiAssistantApiUrl: getValue('aiAssistantApiUrl'),
   };
 }
 
