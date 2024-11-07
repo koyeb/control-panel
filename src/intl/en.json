@@ -7,6 +7,7 @@
     "back": "Back",
     "next": "Next",
     "import": "Import",
+    "send": "Send",
     "override": "Override",
     "noValue": "--",
     "notApplicable": "N/A",
@@ -2388,6 +2389,14 @@
           "description": "Access your invoices and manage your payment methods",
           "upgradeRequired": "You have no invoices or payment methods",
           "cta": "Manage billing"
+        },
+        "coupon": {
+          "title": "Coupon code",
+          "description": "Redeem a coupon code",
+          "placeholder": "COUPON_CODE",
+          "submit": "Redeem",
+          "couponSent": "The coupon code has been applied to your organization",
+          "hobbyPlanUpgrade": "Do you have a coupon? <upgrade>Upgrade to the Starter plan</upgrade> to apply it."
         },
         "billingInformation": {
           "title": "Billing information",

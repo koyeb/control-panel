@@ -55,6 +55,7 @@ export const api = {
   getNextInvoice: endpoint('get', '/v1/billing/next_invoice'),
   hasUnpaidInvoices: endpoint('get', '/v1/billing/has_unpaid_invoices'),
   getUsageCsv: endpoint('get', '/v1/usages/details'),
+  redeemCoupon: endpoint('post', '/v1/coupons'),
 
   // invitations
   listInvitations: endpoint('get', '/v1/organization_invitations'),
