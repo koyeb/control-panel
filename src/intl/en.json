@@ -2172,7 +2172,8 @@
           "title": "Discount",
           "description": "Enter a discount code",
           "couponLabel": "Coupon",
-          "couponSent": "Your coupon code has been sent, we'll get back to you when it's applied to your organization"
+          "couponSent": "Your coupon code has been sent, we'll get back to you when it's applied to your organization",
+          "hobbyPlanUpgrade": "Have a coupon? <upgrade>Upgrade to the starter plan</upgrade> to apply it."
         },
         "billingInformation": {
           "title": "Billing information",
