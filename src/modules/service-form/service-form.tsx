@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
-import { Dialog } from '@koyeb/design-system';
-import { useInstance, useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
+import { useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import {
   useOrganization,
@@ -17,7 +16,6 @@ import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
-import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { PaymentDialog } from 'src/components/payment-form';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
@@ -25,6 +23,7 @@ import { hasProperty } from 'src/utils/object';
 
 import { GpuAlert } from './components/gpu-alert';
 import { QuotaAlert } from './components/quota-alert';
+import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
 import { SubmitButton } from './components/submit-button';
 import { ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
@@ -266,48 +265,4 @@ function useDeployUrl({ formState, getValues }: UseFormReturn<ServiceForm>) {
 
     return `${window.location.origin}/deploy?${getDeployParams(getValues()).toString()}`;
   }, [formState, getValues]);
-}
-
-type RestrictedGpuDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  instanceIdentifier: string | null;
-};
-
-function RestrictedGpuDialogOpen({ open, onClose, instanceIdentifier }: RestrictedGpuDialogProps) {
-  const instance = useInstance(instanceIdentifier);
-  const link = 'https://app.reclaim.ai/m/koyeb-intro/short-call';
-
-  return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      width="lg"
-      title={<T id="gpuRestrictedDialog.title" />}
-      className="col gap-4"
-    >
-      <p>
-        <T id="gpuRestrictedDialog.line1" values={{ instance: instance?.displayName }} />
-      </p>
-
-      <p>
-        <T
-          id="gpuRestrictedDialog.line2"
-          values={{
-            link: (children) => (
-              <ExternalLink openInNewTab href={link} className="underline">
-                {children}
-              </ExternalLink>
-            ),
-          }}
-        />
-      </p>
-
-      <div className="row mt-2 items-center justify-end gap-4">
-        <ExternalLinkButton openInNewTab href={link}>
-          <T id="gpuRestrictedDialog.cta" />
-        </ExternalLinkButton>
-      </div>
-    </Dialog>
-  );
 }
