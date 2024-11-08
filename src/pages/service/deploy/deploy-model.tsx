@@ -1,12 +1,15 @@
-import { aiModels } from 'src/application/models';
+import { AiModel, aiModels } from 'src/application/ai-models-catalog';
 import { IconPackage } from 'src/components/icons';
 import { useSearchParam } from 'src/hooks/router';
 import { ModelForm } from 'src/modules/service-form/model-form';
 import { assert } from 'src/utils/assert';
+import { hasProperty } from 'src/utils/object';
 
 export function DeployModel() {
-  const [model] = useSearchParam('model');
-  assert(model !== null);
+  const [modelSlug] = useSearchParam('model');
+  assert(modelSlug !== null);
+
+  const model = aiModels.find(hasProperty('slug', modelSlug));
 
   return (
     <>
@@ -16,7 +19,7 @@ export function DeployModel() {
   );
 }
 
-function Header({ model }: { model: string }) {
+function Header({ model }: { model?: AiModel }) {
   return (
     <header className="col my-6 items-center gap-4 sm:my-12">
       <div className="rounded-md bg-black/60 p-1.5">
@@ -26,7 +29,7 @@ function Header({ model }: { model: string }) {
       <div className="col max-w-md gap-2 text-center">
         <div className="text-2xl">Deploy AI model</div>
         <div className="text-lg text-dim">
-          Deploy {aiModels[model] ?? 'your AI model'} on a high performance GPU hosted on Koyeb
+          Deploy {model?.name ?? 'your AI model'} on a high performance GPU hosted on Koyeb
         </div>
       </div>
     </header>

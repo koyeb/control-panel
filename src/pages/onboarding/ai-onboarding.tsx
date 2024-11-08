@@ -4,11 +4,10 @@ import { useState } from 'react';
 import { useInstances } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { aiModels } from 'src/application/models';
+import { AiModel, aiModels } from 'src/application/ai-models-catalog';
 import { routes } from 'src/application/routes';
 import { useNavigate } from 'src/hooks/router';
 import { hasProperty } from 'src/utils/object';
-import { slugify } from 'src/utils/strings';
 
 export function AiOnboarding() {
   const organization = useOrganization();
@@ -17,7 +16,7 @@ export function AiOnboarding() {
 
   const [gpu, setGpu] = useState<string>();
   const [deploymentSource, setDeploymentSource] = useState<string>();
-  const [model, setModelTag] = useState<string>();
+  const [model, setModel] = useState<AiModel | 'custom'>();
 
   const mutation = useMutation({
     ...useApiMutationFn('updateSignupQualification', (gpu: string) => ({
@@ -49,10 +48,10 @@ export function AiOnboarding() {
 
       {gpu !== undefined && deploymentSource === undefined && (
         <DeploymentSourceStep
-          onSelected={(value) => {
-            setDeploymentSource(value);
+          onSelected={(source) => {
+            setDeploymentSource(source);
 
-            if (value !== 'model') {
+            if (source !== 'model') {
               mutation.mutate(gpu);
             }
           }}
@@ -61,8 +60,8 @@ export function AiOnboarding() {
 
       {gpu !== undefined && deploymentSource === 'model' && (
         <ModelStep
-          onSelected={(value) => {
-            setModelTag(value);
+          onSelected={(model) => {
+            setModel(model);
             mutation.mutate(gpu);
           }}
         />
@@ -75,7 +74,7 @@ function handleNavigate(
   navigate: (path: string) => void,
   gpu: string,
   deploymentSource: string | undefined,
-  model: string | undefined,
+  model: AiModel | 'custom' | undefined,
 ) {
   const params = new URLSearchParams();
 
@@ -94,13 +93,12 @@ function handleNavigate(
 
     navigate(`${routes.createService()}?${params.toString()}`);
   } else {
-    params.set('model', model);
-
     if (model !== 'custom') {
-      params.set('name', slugify(aiModels[model] as string));
+      params.set('model', model.slug);
       params.set('type', 'docker');
-      params.set('image', model);
+      params.set('image', model.image);
     } else {
+      params.set('model', model);
       params.set('type', 'git');
       params.set('builder', 'dockerfile');
       params.set('repository', 'github.com/koyeb/example-vllm');
@@ -143,7 +141,7 @@ function GpuStep({ onSelected }: { onSelected: (gpu: string) => void }) {
   );
 }
 
-function DeploymentSourceStep({ onSelected }: { onSelected: (value: string) => void }) {
+function DeploymentSourceStep({ onSelected }: { onSelected: (source: string) => void }) {
   return (
     <section className="col gap-4">
       <p className="text-lg font-medium">What do ou want to deploy?</p>
@@ -180,19 +178,19 @@ function DeploymentSourceStep({ onSelected }: { onSelected: (value: string) => v
   );
 }
 
-function ModelStep({ onSelected }: { onSelected: (value: string) => void }) {
+function ModelStep({ onSelected }: { onSelected: (model: AiModel | 'custom') => void }) {
   return (
     <section className="col gap-4">
       <p className="text-lg font-medium">Which model do you want to deploy?</p>
 
       <ul className="col gap-2">
-        {Object.entries(aiModels).map(([tag, name]) => (
-          <li key={tag}>
+        {aiModels.map((model) => (
+          <li key={model.slug}>
             <button
-              onClick={() => onSelected(tag)}
+              onClick={() => onSelected(model)}
               className="w-full rounded border px-4 py-2 text-start font-medium"
             >
-              {name}
+              {model.name}
             </button>
           </li>
         ))}

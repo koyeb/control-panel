@@ -16,8 +16,8 @@ import {
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { EnvironmentVariable, OrganizationPlan } from 'src/api/model';
+import { AiModel } from 'src/application/ai-models-catalog';
 import { useTrackEvent } from 'src/application/analytics';
-import { aiModels } from 'src/application/models';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
@@ -43,7 +43,7 @@ const schema = z.object({
   huggingFaceToken: z.string(),
 });
 
-export function ModelForm({ model }: { model?: string }) {
+export function ModelForm({ model }: { model?: AiModel }) {
   const instances = useInstancesQuery();
   const regions = useRegionsQuery();
   const githubApp = useGithubAppQuery();
@@ -55,7 +55,7 @@ export function ModelForm({ model }: { model?: string }) {
   return <ModelForm_ model={model} />;
 }
 
-function ModelForm_({ model }: { model?: string }) {
+function ModelForm_({ model }: { model?: AiModel }) {
   const searchParams = useSearchParams();
   const instances = useInstances();
   const regions = useRegions();
@@ -76,7 +76,7 @@ function ModelForm_({ model }: { model?: string }) {
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      modelName: aiModels[model ?? ''] ?? '',
+      modelName: model?.name ?? '',
       huggingFaceToken: '',
     },
     resolver: useZodResolver(schema),
@@ -154,7 +154,7 @@ function ModelForm_({ model }: { model?: string }) {
         <Section title="Model">
           <ControlledInput control={form.control} label="Model name" name="modelName" className="max-w-lg" />
 
-          {model === 'custom' && (
+          {model === undefined && (
             <ControlledInput
               control={form.control}
               label="Hugging Face token"
