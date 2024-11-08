@@ -1,5 +1,4 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { Alert, Spinner } from '@koyeb/design-system';
@@ -8,7 +7,7 @@ import { Translate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';
 
 import { ControlledInput } from './controlled';
-import { IconBookMarked, IconChevronDown, IconChevronRight } from './icons';
+import { IconBookMarked } from './icons';
 
 const T = Translate.prefix('instanceSelector.instanceAssistant');
 
@@ -18,7 +17,6 @@ type DataType = {
 };
 
 export function InstanceAssistant() {
-  const [showExamples, setShowExamples] = useState(false);
   const translate = T.useTranslate();
 
   const form = useForm({
@@ -50,26 +48,7 @@ export function InstanceAssistant() {
         <T id="title" />
       </span>
 
-      <span className="text-dim">
-        <T id="content" />
-      </span>
-
-      <div>
-        <button
-          type="button"
-          className="flex items-center text-dim"
-          onClick={() => setShowExamples(!showExamples)}
-        >
-          <span>
-            {showExamples ? <IconChevronDown className="size-4" /> : <IconChevronRight className="size-4" />}
-          </span>
-          <span>
-            <T id="loadExamples" />
-          </span>
-        </button>
-
-        {showExamples && <ExamplesList form={form} />}
-      </div>
+      <ExamplesList form={form} />
 
       <ControlledInput
         control={form.control}
