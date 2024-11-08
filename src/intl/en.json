@@ -351,14 +351,12 @@
     "pricePerMonth": "{price}/month",
     "pricePerHour": "{price}/hour",
     "instanceAssistant": {
-      "title": "Not sure which instance to pick?",
-      "content": "If you are not sure which instance type to choose, you can ask the Koyeb AI assistant for help. Specify the requirements of your service and we will recommend the best instance type for you.",
-      "loadExamples": "View examples",
+      "title": "Need help to decide? Tell us what you want to deploy:",
       "queryPlaceholder": "Click an example or explain your usage",
       "examples": {
         "small": "Small personal website with low traffic",
         "high": "Intensive data processing with high CPU requirements",
-        "ml": "Machine learning model training"
+        "ml": "Fine-tune a model with 8B parameters"
       },
       "aiLoadingText": "Loading…",
       "aiReplyHeader": "Koyeb AI recommends an instance of type {recommendedInstanceType}"
