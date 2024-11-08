@@ -36,6 +36,7 @@ export function mapOrganization({ organization }: ApiEndpointResult<'getCurrentO
     statusMessage: lowerCase(organization!.status_message!),
     plan: organization!.plan! === 'hobby23' ? 'hobby' : organization!.plan!,
     hasSignupQualification: organization?.signup_qualification !== null,
+    signupQualification: organization?.signup_qualification,
     currentSubscriptionId: organization?.current_subscription_id || undefined,
     latestSubscriptionId: organization?.latest_subscription_id || undefined,
     hasPaymentMethod: organization!.has_payment_method!,

@@ -13,6 +13,7 @@ export function OnboardingPage({ step }: { step: OnboardingStep }) {
       {step === 'emailValidation' && <EmailValidation />}
       {step === 'joinOrganization' && <JoinOrganization />}
       {step === 'qualification' && <Qualification />}
+      {step === 'ai' && <>AI</>}
       {step === 'paymentMethod' && <PaymentMethod />}
       {step === 'automaticReview' && <AutomaticReview />}
     </SecondaryLayout>

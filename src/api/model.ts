@@ -499,6 +499,7 @@ export type OnboardingStep =
   | 'emailValidation'
   | 'joinOrganization'
   | 'qualification'
+  | 'ai'
   | 'paymentMethod'
   | 'automaticReview';
 
@@ -519,6 +520,7 @@ export type Organization = {
   statusMessage: OrganizationStatusMessage;
   plan: OrganizationPlan;
   hasSignupQualification: boolean;
+  signupQualification?: Record<string, unknown>;
   currentSubscriptionId?: string;
   latestSubscriptionId?: string;
   hasPaymentMethod: boolean;

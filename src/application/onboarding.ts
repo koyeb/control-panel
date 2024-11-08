@@ -31,6 +31,10 @@ function getOnboardingStep(user: User | null, organization: Organization | null)
     return 'automaticReview';
   }
 
+  if (showAiStep(organization)) {
+    return 'ai';
+  }
+
   if (organization.status === 'warning') {
     // transient state after creating another organization
     if (organization.statusMessage === 'reviewing_account') {
@@ -46,4 +50,14 @@ function getOnboardingStep(user: User | null, organization: Organization | null)
   }
 
   return null;
+}
+
+function showAiStep(organization: Organization) {
+  const { primaryUseCase, gpu } = organization.signupQualification ?? {};
+
+  const isAiUseCase = ['Inference workloads', 'Training and fine-tuning', 'AI agents'].includes(
+    primaryUseCase as string,
+  );
+
+  return isAiUseCase && gpu === undefined;
 }
