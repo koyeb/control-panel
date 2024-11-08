@@ -1,16 +1,22 @@
 import { useUserQuery, useOrganizationQuery } from 'src/api/hooks/session';
 import { Organization, OnboardingStep, User } from 'src/api/model';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 
 import { UnexpectedError } from './errors';
 
 export function useOnboardingStep() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
+  const hasAiOnboarding = useFeatureFlag('ai-onboarding');
 
-  return getOnboardingStep(userQuery.data ?? null, organizationQuery.data ?? null);
+  return getOnboardingStep(userQuery.data ?? null, organizationQuery.data ?? null, hasAiOnboarding);
 }
 
-function getOnboardingStep(user: User | null, organization: Organization | null): OnboardingStep | null {
+function getOnboardingStep(
+  user: User | null,
+  organization: Organization | null,
+  hasAiOnboarding?: boolean,
+): OnboardingStep | null {
   if (user && !user.emailValidated) {
     return 'emailValidation';
   }
@@ -31,7 +37,7 @@ function getOnboardingStep(user: User | null, organization: Organization | null)
     return 'automaticReview';
   }
 
-  if (showAiStep(organization)) {
+  if (hasAiOnboarding && showAiStep(organization)) {
     return 'ai';
   }
 
