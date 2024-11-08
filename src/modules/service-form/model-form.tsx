@@ -13,12 +13,14 @@ import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
+import { InstanceAssistant } from 'src/components/instance-assistant';
 import { InstanceSelectorList } from 'src/components/instance-selector';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PaymentDialog } from 'src/components/payment-form';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
@@ -65,6 +67,7 @@ export function ModelForm({ model }: { model?: HuggingFaceModel }) {
 function ModelForm_({ model }: { model?: HuggingFaceModel }) {
   const instances = useInstances();
   const firstGpu = defined(instances.find(hasProperty('category', 'gpu')));
+  const hasKoyebAI = useFeatureFlag('koyeb-ai');
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -182,6 +185,8 @@ function ModelForm_({ model }: { model?: HuggingFaceModel }) {
             }}
             checkAvailability={() => [true]}
           />
+
+          {hasKoyebAI && <InstanceAssistant />}
         </Section>
 
         <Section title={<T id="region.title" />}>
