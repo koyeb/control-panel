@@ -5,11 +5,11 @@ import sg from 'src/icons/flags/SG.png';
 import us from 'src/icons/flags/US.png';
 
 type RegionFlagProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
-  identifier: string;
+  identifier?: string;
 };
 
 export function RegionFlag({ identifier, ...props }: RegionFlagProps) {
-  const flag = map[identifier];
+  const flag = identifier ? map[identifier] : undefined;
 
   if (!flag) {
     return null;

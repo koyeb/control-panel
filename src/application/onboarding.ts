@@ -53,11 +53,11 @@ function getOnboardingStep(user: User | null, organization: Organization | null)
 }
 
 function showAiStep(organization: Organization) {
-  const { primaryUseCase, gpu } = organization.signupQualification ?? {};
+  const { primaryUseCase, aiDeploymentSource } = organization.signupQualification ?? {};
 
   const isAiUseCase = ['Inference workloads', 'Training and fine-tuning', 'AI agents'].includes(
     primaryUseCase as string,
   );
 
-  return isAiUseCase && gpu === undefined;
+  return isAiUseCase && aiDeploymentSource === undefined;
 }

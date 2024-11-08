@@ -1,7 +1,7 @@
 import { useRegion } from 'src/api/hooks/catalog';
 
 type RegionNameProps = React.HTMLAttributes<HTMLDivElement> & {
-  identifier: string;
+  identifier?: string;
 };
 
 export function RegionName({ identifier, ...props }: RegionNameProps) {

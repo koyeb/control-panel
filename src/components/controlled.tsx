@@ -246,7 +246,7 @@ export function ControlledAutocomplete<
   const {
     field: { value, onChange, ...field },
     fieldState: { invalid, error },
-  } = useController({ name });
+  } = useController({ control, name });
 
   const itemToValuePure = usePureFunction(itemToValue);
 

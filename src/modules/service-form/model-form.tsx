@@ -1,49 +1,56 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { merge } from 'lodash-es';
-import { useMemo, useRef, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useRef, useState } from 'react';
+import { useController, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@koyeb/design-system';
-import {
-  useInstance,
-  useInstances,
-  useInstancesQuery,
-  useRegion,
-  useRegions,
-  useRegionsQuery,
-} from 'src/api/hooks/catalog';
-import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
+import { Alert, Autocomplete, Button } from '@koyeb/design-system';
+import { useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
+import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { EnvironmentVariable, OrganizationPlan } from 'src/api/model';
-import { AiModel } from 'src/application/ai-models-catalog';
+import { HuggingFaceModel, OrganizationPlan } from 'src/api/model';
 import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
+import { InstanceSelectorList } from 'src/components/instance-selector';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PaymentDialog } from 'src/components/payment-form';
+import { RegionFlag } from 'src/components/region-flag';
+import { RegionName } from 'src/components/region-name';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate } from 'src/intl/translate';
+import { defined } from 'src/utils/assert';
+import { getId, hasProperty } from 'src/utils/object';
+import { wait } from 'src/utils/promises';
 import { slugify } from 'src/utils/strings';
 
 import { EstimatedCost } from './components/estimated-cost';
 import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
-import { parseDeployParams } from './helpers/parse-deploy-params';
 import { defaultServiceForm } from './initialize-service-form';
 import { submitServiceForm } from './submit-service-form';
 
-const T = Translate.prefix('serviceForm');
+const T = Translate.prefix('modelForm');
 
 const schema = z.object({
   modelName: z.string().min(1),
   huggingFaceToken: z.string(),
+  instance: z.string().nullable(),
+  region: z.string(),
 });
 
-export function ModelForm({ model }: { model?: AiModel }) {
+const preBuiltModels: Record<string, string> = {
+  'meta-llama/Llama-3.1-8B': 'koyeb/meta-llama-3.1-8b:latest',
+  'NousResearch/Hermes-3-Llama-3.1-8B': 'koyeb/nousresearch-hermes-3-llama-3.1-8b:latest',
+  'mistralai/Mistral-7B-Instruct-v0.3': 'koyeb/mistralai-mistral-7b-instruct-v0.3:latest',
+  'google/gemma-2-9b-it': 'koyeb/google-gemma-2-9b-it:latest',
+  'Qwen/Qwen2.5-7B-Instruct': 'koyeb/qwen-qwen2.5-7b-instruct:latest',
+};
+
+export function ModelForm({ model }: { model?: HuggingFaceModel }) {
   const instances = useInstancesQuery();
   const regions = useRegionsQuery();
   const githubApp = useGithubAppQuery();
@@ -55,29 +62,16 @@ export function ModelForm({ model }: { model?: AiModel }) {
   return <ModelForm_ model={model} />;
 }
 
-function ModelForm_({ model }: { model?: AiModel }) {
-  const searchParams = useSearchParams();
+function ModelForm_({ model }: { model?: HuggingFaceModel }) {
   const instances = useInstances();
-  const regions = useRegions();
-  const githubApp = useGithubApp();
-
-  const serviceForm = useMemo(() => {
-    const values = merge(
-      defaultServiceForm(),
-      parseDeployParams(searchParams, instances, regions, githubApp?.organizationName),
-    );
-
-    if (values.source.type === 'git') {
-      values.source.git.publicRepository.url = `https://github.com/${values.source.git.publicRepository.repositoryName}`;
-    }
-
-    return values;
-  }, [githubApp, instances, regions, searchParams]);
+  const firstGpu = defined(instances.find(hasProperty('category', 'gpu')));
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      modelName: model?.name ?? '',
+      modelName: model?.id ?? '',
       huggingFaceToken: '',
+      instance: firstGpu.identifier,
+      region: firstGpu.regions?.[0] ?? 'fra',
     },
     resolver: useZodResolver(schema),
   });
@@ -85,27 +79,41 @@ function ModelForm_({ model }: { model?: AiModel }) {
   const navigate = useNavigate();
 
   const mutation = useMutation({
-    async mutationFn({ modelName, huggingFaceToken }: FormValues<typeof form>) {
-      const environmentVariables: EnvironmentVariable[] = [];
+    async mutationFn({
+      modelName,
+      huggingFaceToken,
+      instance: instanceIdentifier,
+      region: regionIdentifier,
+    }: FormValues<typeof form>) {
+      const serviceForm = defaultServiceForm();
 
-      environmentVariables.push({
-        name: 'MODEL_NAME',
-        value: modelName,
-      });
+      serviceForm.appName = slugify(modelName);
+      serviceForm.serviceName = slugify(modelName);
+      serviceForm.environmentVariables = [];
 
-      if (huggingFaceToken !== '') {
-        environmentVariables.push({
-          name: 'HF_TOKEN',
-          value: huggingFaceToken,
-        });
+      const instance = defined(instances.find(hasProperty('identifier', instanceIdentifier)));
+      serviceForm.instance.category = instance.category;
+      serviceForm.instance.identifier = instance.identifier;
+      serviceForm.regions = [regionIdentifier];
+
+      if (modelName in preBuiltModels) {
+        serviceForm.source.type = 'docker';
+        serviceForm.source.docker.image = defined(preBuiltModels[modelName]);
+      } else {
+        serviceForm.source.type = 'git';
+        serviceForm.source.git.repositoryType = 'public';
+        serviceForm.source.git.publicRepository.repositoryName = 'koyeb/vllm';
+        serviceForm.source.git.publicRepository.branch = 'main';
+        serviceForm.builder.type = 'dockerfile';
+
+        serviceForm.environmentVariables.push({ name: 'MODEL_NAME', value: modelName });
+
+        if (huggingFaceToken !== '') {
+          serviceForm.environmentVariables.push({ name: 'HF_TOKEN', value: huggingFaceToken });
+        }
       }
 
-      return submitServiceForm({
-        ...serviceForm,
-        appName: slugify(modelName),
-        serviceName: slugify(modelName),
-        environmentVariables,
-      });
+      return submitServiceForm(serviceForm);
     },
     onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {
@@ -122,10 +130,9 @@ function ModelForm_({ model }: { model?: AiModel }) {
   const quotas = useOrganizationQuotas();
   const trackEvent = useTrackEvent();
 
-  const instance = useInstance(serviceForm.instance.identifier);
-  const region = useRegion(instance?.regions?.[0]);
-
   const onSubmit = async (values: FormValues<typeof form>) => {
+    const instance = instances.find(hasProperty('identifier', values.instance));
+
     const isRestrictedGpu =
       instance?.category === 'gpu' &&
       quotas?.maxInstancesByType[instance.identifier] === 0 &&
@@ -151,27 +158,46 @@ function ModelForm_({ model }: { model?: AiModel }) {
         className="mx-auto max-w-3xl divide-y rounded-xl border"
         onSubmit={handleSubmit(form, onSubmit)}
       >
-        <Section title="Model">
-          <ControlledInput control={form.control} label="Model name" name="modelName" className="max-w-lg" />
+        <Section title={<T id="model.title" />}>
+          <ModelNameField form={form} />
 
-          {model === undefined && (
-            <ControlledInput
-              control={form.control}
-              label="Hugging Face token"
-              name="huggingFaceToken"
-              className="max-w-lg"
-            />
-          )}
+          <ControlledInput
+            control={form.control}
+            label={<T id="model.huggingFaceTokenLabel" />}
+            name="huggingFaceToken"
+            className="max-w-lg"
+          />
         </Section>
 
-        <Section title="Instance">
-          <div>Instance: {instance?.displayName}</div>
-          <div>Region: {region?.displayName}</div>
-          <div>Scaling: {serviceForm.scaling.fixed}</div>
+        <Section title={<T id="instance.title" />}>
+          <InstanceSelectorList
+            instances={instances
+              .filter(hasProperty('regionCategory', 'koyeb'))
+              .filter(hasProperty('category', 'gpu'))}
+            selectedCategory="gpu"
+            selectedInstance={instances.find(hasProperty('identifier', form.watch('instance'))) ?? null}
+            onInstanceSelected={(instance) => {
+              form.setValue('instance', instance.identifier);
+              form.setValue('region', instance.regions?.[0] ?? 'fra');
+            }}
+            checkAvailability={() => [true]}
+          />
         </Section>
 
-        <Section title="Estimated cost">
-          <EstimatedCost form={serviceForm} />
+        <Section title={<T id="region.title" />}>
+          <div className="row items-center gap-2">
+            <RegionFlag identifier={form.watch('region')} className="size-6 rounded-full shadow-badge" />
+            <RegionName identifier={form.watch('region')} />
+          </div>
+        </Section>
+
+        <Section title={<T id="estimatedCost.title" />}>
+          <EstimatedCost
+            form={merge(defaultServiceForm(), {
+              instance: { category: 'gpu', identifier: form.watch('instance') },
+              regions: [form.watch('region')],
+            })}
+          />
         </Section>
 
         <div className="row justify-end gap-2 p-4">
@@ -180,7 +206,7 @@ function ModelForm_({ model }: { model?: AiModel }) {
           </LinkButton>
 
           <Button type="submit" loading={form.formState.isSubmitting}>
-            Deploy
+            <T id="submitButton" />
           </Button>
         </div>
       </form>
@@ -188,7 +214,7 @@ function ModelForm_({ model }: { model?: AiModel }) {
       <RestrictedGpuDialogOpen
         open={restrictedGpuDialogOpen}
         onClose={() => setRestrictedGpuDialogOpen(false)}
-        instanceIdentifier={instance!.identifier}
+        instanceIdentifier={firstGpu.identifier}
       />
 
       <PaymentDialog
@@ -220,8 +246,74 @@ function ModelForm_({ model }: { model?: AiModel }) {
 function Section({ title, children }: { title: React.ReactNode; children: React.ReactNode }) {
   return (
     <section className="col gap-3 p-4">
-      <div className="font-medium">{title}</div>
+      <div className="text-lg font-medium">{title}</div>
       {children}
     </section>
+  );
+}
+
+function ModelNameField({ form }: { form: UseFormReturn<z.infer<typeof schema>> }) {
+  const [search, setSearch] = useState(form.watch('modelName'));
+
+  const query = useQuery({
+    queryKey: ['listHuggingFaceModels', search],
+    refetchInterval: false,
+    async queryFn({ signal }) {
+      if (!(await wait(500, signal))) {
+        return null;
+      }
+
+      const url = new URL('https://huggingface.co/api/models');
+
+      url.searchParams.set('search', search);
+      url.searchParams.set('limit', '10');
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch models from hugging face');
+      }
+
+      const body = (await response.json()) as HuggingFaceModel[];
+
+      return body;
+    },
+  });
+
+  const { field } = useController({ control: form.control, name: 'modelName' });
+
+  if (query.error) {
+    return <Alert variant="error" title={query.error.message} description={null} />;
+  }
+
+  return (
+    <Autocomplete
+      ref={field.ref}
+      items={query.data ?? []}
+      getKey={getId}
+      itemToString={getId}
+      label={<T id="model.modelNameLabel" />}
+      helpTooltip={<T id="model.modelNameTooltip" />}
+      placeholder="e.g. meta-llama/Llama-3.1-8B"
+      renderItem={(model) => (
+        <div className="col gap-1 py-1">
+          <div className="font-medium">{model.id}</div>
+          <div className="text-sm text-dim">
+            <T id="model.modelNameMeta" values={{ likes: model.likes, downloads: model.downloads }} />
+          </div>
+        </div>
+      )}
+      renderNoItems={() => <T id="model.noResults" />}
+      resetOnBlur={false}
+      inputValue={search}
+      onInputValueChange={(value) => {
+        setSearch(value);
+        field.onChange(value);
+      }}
+      onSelectedItemChange={(model) => field.onChange(model.id)}
+      name={field.name}
+      onBlur={field.onBlur}
+      className="max-w-lg"
+    />
   );
 }

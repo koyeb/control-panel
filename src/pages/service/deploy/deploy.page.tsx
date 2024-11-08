@@ -16,13 +16,13 @@ const T = Translate.prefix('pages.deploy');
 
 export function DeployPage() {
   const [exampleApp] = useSearchParam('example_app');
-  const [model] = useSearchParam('model');
+  const [type] = useSearchParam('type');
 
   if (exampleApp) {
     return <DeployExampleApp />;
   }
 
-  if (model) {
+  if (type === 'model') {
     return <DeployModel />;
   }
 

@@ -397,6 +397,31 @@
       "description": "There are no logs to show, the latest logs may be older than 72 hours."
     }
   },
+  "modelForm": {
+    "model": {
+      "title": "Select model",
+      "modelNameLabel": "Model name",
+      "modelNameTooltip": "Import a model from the Hugging Face hub",
+      "modelNameMeta": "{likes} likes, {downloads} downloads",
+      "noResults": "No models found",
+      "huggingFaceTokenLabel": "Hugging Face token <dim>(optional)</dim>"
+    },
+    "instance": {
+      "title": "Instance type"
+    },
+    "region": {
+      "title": "Region"
+    },
+    "estimatedCost": {
+      "title": "Estimated cost"
+    },
+    "submitButton": "Deploy",
+    "paymentDialog": {
+      "title": "Start for free with $20 of credit over 30 days",
+      "description": "The current selected instance is available on the {plan} plan at ${price}/mo. Add a payment method to upgrade and deploy.",
+      "submitButton": "Upgrade and deploy"
+    }
+  },
   "paymentDialog": {
     "cardNumberLabel": "Card number",
     "expirationLabel": "Expiration",
@@ -517,6 +542,21 @@
         "podcast": "Podcast",
         "meetup": "Conferences and meetups",
         "other": "Other"
+      }
+    },
+    "ai": {
+      "title": "What do you want to deploy?",
+      "github": {
+        "title": "GitHub",
+        "description": "Connect, build and deploy your code from a GitHub repository"
+      },
+      "docker": {
+        "title": "Docker",
+        "description": "Deploy docker images from any public or private registries"
+      },
+      "model": {
+        "title": "Model",
+        "description": "Run inference model on high performance GPU"
       }
     },
     "paymentMethod": {
@@ -1674,6 +1714,11 @@
       "title": "Deploy on Koyeb",
       "exampleApp": {
         "title": "Deploy {appName}"
+      },
+      "model": {
+        "title": "Deploy model",
+        "titleModel": "Deploy {model}",
+        "description": "Run inference on a high performance GPU"
       }
     },
     "volumes": {

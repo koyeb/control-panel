@@ -1,209 +1,102 @@
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 
-import { useInstances } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { AiModel, aiModels } from 'src/application/ai-models-catalog';
 import { routes } from 'src/application/routes';
+import { IconGithub, IconPackage } from 'src/components/icons';
 import { useNavigate } from 'src/hooks/router';
-import { hasProperty } from 'src/utils/object';
+import IconDocker from 'src/icons/docker.svg?react';
+import { Translate } from 'src/intl/translate';
+
+const T = Translate.prefix('onboarding.ai');
 
 export function AiOnboarding() {
   const organization = useOrganization();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
-  const [gpu, setGpu] = useState<string>();
-  const [deploymentSource, setDeploymentSource] = useState<string>();
-  const [model, setModel] = useState<AiModel | 'custom'>();
-
   const mutation = useMutation({
-    ...useApiMutationFn('updateSignupQualification', (gpu: string) => ({
+    ...useApiMutationFn('updateSignupQualification', (aiDeploymentSource: string) => ({
       path: { id: organization.id },
-      body: { signup_qualification: { ...organization.signupQualification, gpu } as never },
+      body: { signup_qualification: { ...organization.signupQualification, aiDeploymentSource } as never },
     })),
-    async onSuccess() {
+    async onSuccess(_, source) {
       await invalidate('getCurrentOrganization');
 
-      if (gpu !== undefined) {
-        handleNavigate(navigate, gpu, deploymentSource, model);
+      const url = new URL('', window.location.origin);
+
+      if (source === 'git') {
+        url.searchParams.set('step', 'importProject');
+        url.searchParams.set('type', 'git');
+        url.pathname = routes.createService();
       }
+
+      if (source === 'docker') {
+        url.searchParams.set('step', 'importProject');
+        url.searchParams.set('type', 'docker');
+        url.pathname = routes.createService();
+      }
+
+      if (source === 'model') {
+        url.searchParams.set('type', 'model');
+        url.pathname = routes.deploy();
+      }
+
+      navigate(url);
     },
   });
 
   return (
-    <div className="col w-full max-w-lg gap-8">
-      {gpu === undefined && (
-        <GpuStep
-          onSelected={(gpu) => {
-            if (gpu === 'none') {
-              mutation.mutate(gpu);
-            } else {
-              setGpu(gpu);
-            }
-          }}
-        />
-      )}
+    <section className="col w-full max-w-lg gap-4">
+      <p className="text-lg font-medium">
+        <T id="title" />
+      </p>
 
-      {gpu !== undefined && deploymentSource === undefined && (
-        <DeploymentSourceStep
-          onSelected={(source) => {
-            setDeploymentSource(source);
+      <DeploymentSourceOption
+        Icon={IconGithub}
+        title={<T id="github.title" />}
+        description={<T id="github.description" />}
+        onClick={() => mutation.mutate('git')}
+      />
 
-            if (source !== 'model') {
-              mutation.mutate(gpu);
-            }
-          }}
-        />
-      )}
+      <DeploymentSourceOption
+        Icon={IconDocker}
+        title={<T id="docker.title" />}
+        description={<T id="docker.description" />}
+        onClick={() => mutation.mutate('docker')}
+      />
 
-      {gpu !== undefined && deploymentSource === 'model' && (
-        <ModelStep
-          onSelected={(model) => {
-            setModel(model);
-            mutation.mutate(gpu);
-          }}
-        />
-      )}
-    </div>
-  );
-}
-
-function handleNavigate(
-  navigate: (path: string) => void,
-  gpu: string,
-  deploymentSource: string | undefined,
-  model: AiModel | 'custom' | undefined,
-) {
-  const params = new URLSearchParams();
-
-  params.set('instance_type', gpu);
-
-  if (!model) {
-    params.set('step', 'importProject');
-
-    if (deploymentSource === 'docker') {
-      params.set('type', 'docker');
-    }
-
-    if (deploymentSource === 'github') {
-      params.set('type', 'git');
-    }
-
-    navigate(`${routes.createService()}?${params.toString()}`);
-  } else {
-    if (model !== 'custom') {
-      params.set('model', model.slug);
-      params.set('type', 'docker');
-      params.set('image', model.image);
-    } else {
-      params.set('model', model);
-      params.set('type', 'git');
-      params.set('builder', 'dockerfile');
-      params.set('repository', 'github.com/koyeb/example-vllm');
-      params.set('branch', 'main');
-    }
-
-    navigate(`${routes.deploy()}?${params.toString()}`);
-  }
-}
-
-function GpuStep({ onSelected }: { onSelected: (gpu: string) => void }) {
-  const instances = useInstances();
-
-  return (
-    <section className="col gap-4">
-      <p className="text-lg font-medium">Which GPU do you want to use?</p>
-
-      <ul className="col gap-2">
-        {instances.filter(hasProperty('category', 'gpu')).map((instance) => (
-          <li key={instance.identifier}>
-            <button
-              onClick={() => onSelected(instance.identifier)}
-              className="w-full rounded border px-4 py-2 text-start font-medium"
-            >
-              {instance.displayName}
-            </button>
-          </li>
-        ))}
-
-        <li>
-          <button
-            onClick={() => onSelected('none')}
-            className="w-full rounded border px-4 py-2 text-start font-medium"
-          >
-            {"I don't need a GPU"}
-          </button>
-        </li>
-      </ul>
+      <DeploymentSourceOption
+        Icon={IconPackage}
+        title={<T id="model.title" />}
+        description={<T id="model.description" />}
+        onClick={() => mutation.mutate('model')}
+      />
     </section>
   );
 }
 
-function DeploymentSourceStep({ onSelected }: { onSelected: (source: string) => void }) {
+type DeploymentSourceOptionProps = {
+  Icon: React.ComponentType<{ className?: string }>;
+  title: React.ReactNode;
+  description: React.ReactNode;
+  onClick: () => void;
+};
+
+function DeploymentSourceOption({ Icon, title, description, onClick }: DeploymentSourceOptionProps) {
   return (
-    <section className="col gap-4">
-      <p className="text-lg font-medium">What do ou want to deploy?</p>
-
-      <ul className="col gap-2">
-        <li>
-          <button
-            onClick={() => onSelected('model')}
-            className="w-full rounded border px-4 py-2 text-start font-medium"
-          >
-            Model
-          </button>
-        </li>
-
-        <li>
-          <button
-            onClick={() => onSelected('docker')}
-            className="w-full rounded border px-4 py-2 text-start font-medium"
-          >
-            Docker image
-          </button>
-        </li>
-
-        <li>
-          <button
-            onClick={() => onSelected('github')}
-            className="w-full rounded border px-4 py-2 text-start font-medium"
-          >
-            Github repository
-          </button>
-        </li>
-      </ul>
-    </section>
-  );
-}
-
-function ModelStep({ onSelected }: { onSelected: (model: AiModel | 'custom') => void }) {
-  return (
-    <section className="col gap-4">
-      <p className="text-lg font-medium">Which model do you want to deploy?</p>
-
-      <ul className="col gap-2">
-        {aiModels.map((model) => (
-          <li key={model.slug}>
-            <button
-              onClick={() => onSelected(model)}
-              className="w-full rounded border px-4 py-2 text-start font-medium"
-            >
-              {model.name}
-            </button>
-          </li>
-        ))}
-
-        <li>
-          <button
-            onClick={() => onSelected('custom')}
-            className="w-full rounded border px-4 py-2 text-start font-medium"
-          >
-            {'Deploy my own model'}
-          </button>
-        </li>
-      </ul>
-    </section>
+    <button
+      type="button"
+      className="row items-center gap-3 rounded-xl border p-3 text-start"
+      onClick={onClick}
+    >
+      <div className="rounded-lg bg-muted p-3">
+        <Icon className="size-10" />
+      </div>
+      <div>
+        <div className="mb-1 font-medium">{title}</div>
+        <div className="text-dim">{description}</div>
+      </div>
+    </button>
   );
 }
