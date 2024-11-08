@@ -7,12 +7,12 @@ import { z } from 'zod';
 import { Button } from '@koyeb/design-system';
 import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
-import { ExampleApp } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
+import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
-import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate } from 'src/intl/translate';
@@ -25,7 +25,6 @@ import {
 } from 'src/modules/deployment/metadata/runtime-metadata';
 
 import { EstimatedCost } from './components/estimated-cost';
-import { mapServiceFormApiValidationError } from './helpers/map-service-form-api-validation-error';
 import { parseDeployParams } from './helpers/parse-deploy-params';
 import { defaultServiceForm } from './initialize-service-form';
 import { ServiceForm } from './service-form.types';
@@ -37,7 +36,7 @@ const schema = z.object({
   environmentVariables: z.array(z.object({ name: z.string(), value: z.string() })),
 });
 
-export function ExampleAppForm(props: { app: ExampleApp }) {
+export function ExampleAppForm() {
   const instances = useInstancesQuery();
   const regions = useRegionsQuery();
   const githubApp = useGithubAppQuery();
@@ -46,10 +45,10 @@ export function ExampleAppForm(props: { app: ExampleApp }) {
     return <Loading />;
   }
 
-  return <ExampleAppForm_ {...props} />;
+  return <ExampleAppForm_ />;
 }
 
-function ExampleAppForm_({ app }: React.ComponentProps<typeof ExampleAppForm>) {
+function ExampleAppForm_() {
   const searchParams = useSearchParams();
   const instances = useInstances();
   const regions = useRegions();
@@ -77,7 +76,7 @@ function ExampleAppForm_({ app }: React.ComponentProps<typeof ExampleAppForm>) {
     async mutationFn({ environmentVariables }: FormValues<typeof form>) {
       return submitServiceForm({ ...serviceForm, appName: serviceForm.serviceName, environmentVariables });
     },
-    onError: useFormErrorHandler(form, mapError),
+    onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {
       navigate(routes.initialDeployment(serviceId));
     },
@@ -85,8 +84,6 @@ function ExampleAppForm_({ app }: React.ComponentProps<typeof ExampleAppForm>) {
 
   return (
     <form className="divide-y rounded-xl border" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
-      <Header app={app} />
-
       <div className="col gap-6 p-4">
         <Section title={<T id="overview" />}>
           <DeploymentDefinitionMetadata form={serviceForm} />
@@ -104,40 +101,15 @@ function ExampleAppForm_({ app }: React.ComponentProps<typeof ExampleAppForm>) {
       </div>
 
       <div className="row justify-end gap-2 p-4">
-        <Button color="gray">
+        <LinkButton color="gray" href={routes.home()}>
           <Translate id="common.cancel" />
-        </Button>
+        </LinkButton>
 
         <Button type="submit" loading={form.formState.isSubmitting}>
           <T id="submitButton" />
         </Button>
       </div>
     </form>
-  );
-}
-
-function mapError(fields: Record<string, string>): Record<string, string> {
-  const [mapped, unhandled] = mapServiceFormApiValidationError(fields);
-
-  if (unhandled.length > 0) {
-    notify.error(unhandled[0]?.message);
-  }
-
-  return mapped as Record<string, string>;
-}
-
-function Header({ app }: { app: ExampleApp }) {
-  return (
-    <header className="row items-start gap-4 p-4">
-      <div className="rounded-md bg-black/60 p-1.5">
-        <img src={app.logo} className="size-12 rounded-md grayscale" />
-      </div>
-
-      <div className="flex-1">
-        <div className="text-xl">{app.name}</div>
-        <div className="text-lg text-dim">{app.description}</div>
-      </div>
-    </header>
   );
 }
 

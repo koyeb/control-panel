@@ -31,7 +31,7 @@ export function DeployExampleApp() {
     <div className="mx-auto w-full max-w-3xl">
       <DocumentTitle title={t('documentTitle')} />
       <Header app={app} />
-      <ExampleAppForm app={app} />
+      <ExampleAppForm />
     </div>
   );
 }
