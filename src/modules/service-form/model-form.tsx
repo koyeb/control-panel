@@ -90,7 +90,7 @@ function ModelForm_({ model }: { model?: HuggingFaceModel }) {
     }: FormValues<typeof form>) {
       const serviceForm = defaultServiceForm();
 
-      serviceForm.appName = slugify(modelName);
+      serviceForm.appName = slugify(modelName).slice(0, 23);
       serviceForm.serviceName = slugify(modelName);
       serviceForm.environmentVariables = [];
 
