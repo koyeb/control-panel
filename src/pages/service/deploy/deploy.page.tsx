@@ -10,14 +10,20 @@ import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ServiceForm } from 'src/modules/service-form/service-form';
 
 import { DeployExampleApp } from './deploy-example-app';
+import { DeployModel } from './deploy-model';
 
 const T = Translate.prefix('pages.deploy');
 
 export function DeployPage() {
   const [exampleApp] = useSearchParam('example_app');
+  const [model] = useSearchParam('model');
 
   if (exampleApp) {
     return <DeployExampleApp />;
+  }
+
+  if (model) {
+    return <DeployModel />;
   }
 
   return <DeployServiceForm />;
