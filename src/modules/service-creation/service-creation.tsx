@@ -5,8 +5,7 @@ import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
-import { useDeepCompareMemo } from 'src/hooks/lifecycle';
-import { useHistoryState, useNavigate, useSearchParam } from 'src/hooks/router';
+import { useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { enumIndex, isEnumValue } from 'src/utils/enums';
@@ -47,8 +46,6 @@ export function ServiceCreation() {
       setCurrentStep(initialStep);
     }
   }, [currentStepParam, initialStep, setCurrentStep]);
-
-  useRemoveNextStepsParams(currentStep);
 
   const onNext = (serviceId?: string) => {
     if (serviceId) {
@@ -150,35 +147,4 @@ function useInitialStep(): Step {
   }
 
   return Step.review;
-}
-
-function useRemoveNextStepsParams(currentStep: Step) {
-  const state = useDeepCompareMemo(useHistoryState());
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const index = stepIndex(currentStep);
-    const paramsToRemove: string[] = [];
-
-    if (index <= stepIndex(Step.importProject)) {
-      paramsToRemove.push('repository');
-      paramsToRemove.push('image');
-      // eslint-disable-next-line
-      delete (window as any).__KOYEB_REGISTRY_SECRET_HACK;
-    }
-
-    if (index <= stepIndex(Step.instanceRegions)) {
-      paramsToRemove.push('instance_type');
-      paramsToRemove.push('regions');
-    }
-
-    if (paramsToRemove.length > 0) {
-      navigate(
-        (url) => {
-          paramsToRemove.forEach((param) => url.searchParams.delete(param));
-        },
-        { state, replace: true },
-      );
-    }
-  }, [currentStep, state, navigate]);
 }

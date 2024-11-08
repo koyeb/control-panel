@@ -8,7 +8,7 @@ import {
   useInstanceAvailabilities,
   useRegionAvailabilities,
 } from 'src/application/instance-region-availability';
-import { useSearchParam } from 'src/hooks/router';
+import { useSearchParam, useSearchParams } from 'src/hooks/router';
 import { defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
@@ -78,6 +78,7 @@ function useStateReducer() {
   const instances = useInstances();
   const regions = useRegions();
 
+  const searchParams = useSearchParams();
   const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
   const instanceAvailabilities = useInstanceAvailabilities({ serviceType });
   const regionAvailabilities = useRegionAvailabilities();
@@ -100,6 +101,54 @@ function useStateReducer() {
     }
 
     return true;
+  }
+
+  function ensureBusinessRules(state: InstanceRegionState, action?: InstanceRegionAction) {
+    state.instances = instances.filter((instance) => {
+      return instance.regionCategory === state.regionCategory && instance.category === state.instanceCategory;
+    });
+
+    if (state.selectedInstance) {
+      if (!state.instances.includes(state.selectedInstance) || !isInstanceAvailable(state.selectedInstance)) {
+        state.selectedInstance = null;
+      }
+    }
+
+    if (state.selectedInstance === null) {
+      const firstAvailableInstance = state.instances.find(isInstanceAvailable);
+
+      if (firstAvailableInstance) {
+        state.selectedInstance = firstAvailableInstance;
+      }
+    }
+
+    state.regions = regions.filter((region) => {
+      return region.category === state.regionCategory;
+    });
+
+    state.selectedRegions = state.selectedRegions.filter((region) => {
+      return state.regions.includes(region) && isRegionAvailable(region, state.selectedInstance);
+    });
+
+    if (state.selectedRegions.length === 0 && action?.type !== 'region-selected') {
+      const firstAvailableRegion = state.regions.find((region) =>
+        isRegionAvailable(region, state.selectedInstance),
+      );
+
+      if (firstAvailableRegion !== undefined) {
+        state.selectedRegions = [firstAvailableRegion];
+      }
+    }
+
+    if (state.selectedInstance?.identifier === 'free' && state.selectedRegions.length >= 2) {
+      state.selectedRegions = [defined(state.selectedRegions[0])];
+    }
+
+    state.regions = sortBy(state.regions, (region) =>
+      isRegionAvailable(region, state.selectedInstance) ? -1 : 1,
+    );
+
+    return state;
   }
 
   function reducer(state: InstanceRegionState, action: InstanceRegionAction): InstanceRegionState {
@@ -138,51 +187,7 @@ function useStateReducer() {
       }
     }
 
-    next.instances = instances.filter((instance) => {
-      return instance.regionCategory === next.regionCategory && instance.category === next.instanceCategory;
-    });
-
-    if (next.selectedInstance) {
-      if (!next.instances.includes(next.selectedInstance) || !isInstanceAvailable(next.selectedInstance)) {
-        next.selectedInstance = null;
-      }
-    }
-
-    if (next.selectedInstance === null) {
-      const firstAvailableInstance = next.instances.find(isInstanceAvailable);
-
-      if (firstAvailableInstance) {
-        next.selectedInstance = firstAvailableInstance;
-      }
-    }
-
-    next.regions = regions.filter((region) => {
-      return region.category === next.regionCategory;
-    });
-
-    next.selectedRegions = next.selectedRegions.filter((region) => {
-      return next.regions.includes(region) && isRegionAvailable(region, next.selectedInstance);
-    });
-
-    if (next.selectedRegions.length === 0 && action.type !== 'region-selected') {
-      const firstAvailableRegion = next.regions.find((region) =>
-        isRegionAvailable(region, next.selectedInstance),
-      );
-
-      if (firstAvailableRegion !== undefined) {
-        next.selectedRegions = [firstAvailableRegion];
-      }
-    }
-
-    if (next.selectedInstance?.identifier === 'free' && next.selectedRegions.length >= 2) {
-      next.selectedRegions = [defined(next.selectedRegions[0])];
-    }
-
-    next.regions = sortBy(next.regions, (region) =>
-      isRegionAvailable(region, next.selectedInstance) ? -1 : 1,
-    );
-
-    return next;
+    return ensureBusinessRules(next, action);
   }
 
   function getInitialState() {
@@ -207,7 +212,15 @@ function useStateReducer() {
       state.instanceCategory = 'eco';
     }
 
-    return state;
+    const instanceParam = instances.find(hasProperty('identifier', searchParams.get('instance_type')));
+
+    if (instanceParam) {
+      state.instances = instances.filter(hasProperty('category', instanceParam.category));
+      state.instanceCategory = instanceParam.category;
+      state.selectedInstance = instanceParam;
+    }
+
+    return ensureBusinessRules(state);
   }
 
   return [reducer, getInitialState] as const;
