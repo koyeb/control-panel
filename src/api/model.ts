@@ -667,3 +667,11 @@ export type VolumeSnapshotStatus =
   | 'deleted';
 
 export type VolumeSnapshotType = 'invalid' | 'local' | 'remote';
+
+// summary
+
+export type ServicesSummary = {
+  total: number;
+  byStatus?: Record<ServiceStatus, number>;
+  byType?: Record<ServiceType, number>;
+};

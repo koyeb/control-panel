@@ -141,6 +141,9 @@ export const api = {
   listApiCredentials: endpoint('get', '/v1/credentials'),
   createApiCredential: endpoint('post', '/v1/credentials'),
   deleteApiCredential: endpoint('delete', '/v1/credentials/{id}'),
+
+  // summary
+  getServicesSummary: endpoint('get', '/v1/summary/services'),
 };
 
 export const apiStreams = {
