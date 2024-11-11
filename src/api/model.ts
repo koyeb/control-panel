@@ -460,10 +460,12 @@ export type AppStatus =
   | 'paused'
   | 'resuming';
 
+export type DomainType = 'autoassigned' | 'custom';
+
 export type AppDomain = {
   id: string;
   name: string;
-  type: 'autoassigned' | 'custom';
+  type: DomainType;
 };
 
 export type ExampleApp = {
@@ -500,6 +502,16 @@ export type ServiceStatus =
   | 'pausing'
   | 'paused'
   | 'resuming';
+
+// apps details
+
+export type ServiceDetails = Service & {
+  latestDeployment?: Deployment;
+};
+
+export type AppDetails = App & {
+  services?: ServiceDetails[];
+};
 
 // session
 
@@ -665,3 +677,11 @@ export type VolumeSnapshotStatus =
   | 'deleted';
 
 export type VolumeSnapshotType = 'invalid' | 'local' | 'remote';
+
+// summary
+
+export type ServicesSummary = {
+  total: number;
+  byStatus?: Record<ServiceStatus, number>;
+  byType?: Record<ServiceType, number>;
+};

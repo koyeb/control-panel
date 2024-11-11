@@ -112,6 +112,7 @@ export const api = {
   pauseApp: endpoint('post', '/v1/apps/{id}/pause'),
   resumeApp: endpoint('post', '/v1/apps/{id}/resume'),
   deleteApp: endpoint('delete', '/v1/apps/{id}'),
+  listAppsDetails: endpoint('get', '/v1/apps-details'),
 
   // services
   listServices: endpoint('get', '/v1/services'),
@@ -140,6 +141,9 @@ export const api = {
   listApiCredentials: endpoint('get', '/v1/credentials'),
   createApiCredential: endpoint('post', '/v1/credentials'),
   deleteApiCredential: endpoint('delete', '/v1/credentials/{id}'),
+
+  // summary
+  getServicesSummary: endpoint('get', '/v1/summary/services'),
 };
 
 export const apiStreams = {
