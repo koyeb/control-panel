@@ -48,7 +48,7 @@ export function mapInstances({ instances }: ApiEndpointResult<'listInstances'>):
   }));
 }
 
-function transformDeployment(deployment: ApiDeployment): Deployment {
+export function transformDeployment(deployment: ApiDeployment): Deployment {
   if (deployment.definition!.type! === 'DATABASE') {
     return transformDatabaseDeployment(deployment);
   }
