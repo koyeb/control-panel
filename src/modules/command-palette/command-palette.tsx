@@ -44,7 +44,7 @@ function CommandPaletteDialog() {
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const commands = useCommands(search);
+  const commands = useCommands(open, search);
   const [command, setCommand] = useState<Command>();
 
   const execute = useCallback((fn: () => void | Promise<void>) => {

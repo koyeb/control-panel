@@ -30,7 +30,7 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
   return createElement(commandPaletteContext.Provider, { value: ref.current }, children);
 }
 
-export function useCommands(search: string) {
+export function useCommands(open: boolean, search: string) {
   const commandsMap = useContext(commandPaletteContext);
 
   const filter = useCallback(
@@ -48,10 +48,13 @@ export function useCommands(search: string) {
   );
 
   return useMemo(() => {
+    // recompute commands list when open changes
+    void open;
+
     return Array.from(commandsMap.entries())
       .filter(([, command]) => filter(command))
       .map(([id, command]) => ({ id, ...command }));
-  }, [commandsMap, filter]);
+  }, [open, commandsMap, filter]);
 }
 
 export function useRegisterCommand<T>(
