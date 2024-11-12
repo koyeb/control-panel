@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { FormattedDate } from 'react-intl';
 
+import { getConfig } from 'src/application/config';
 import { BadgeNew } from 'src/components/badge-new';
 import { IconArrowUpRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
@@ -25,7 +26,15 @@ export function News() {
   const query = useQuery({
     queryKey: ['news'],
     async queryFn(): Promise<News[]> {
-      return [];
+      const { websiteUrl } = getConfig();
+      const url = new URL('/api/news.json', websiteUrl);
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      return response.json() as Promise<News[]>;
     },
     select: (news) => news.filter((news) => !dismissedIds?.includes(news.id)),
   });

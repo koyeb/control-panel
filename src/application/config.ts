@@ -4,6 +4,8 @@ type AppConfig = Partial<{
   environment: string;
   version: string;
   apiBaseUrl: string;
+  aiAssistantApiUrl: string;
+  websiteUrl: string;
   pageContextBaseUrl: string;
   idenfyServiceBaseUrl: string;
   recaptchaClientKey: string;
@@ -12,7 +14,6 @@ type AppConfig = Partial<{
   mapboxToken: string;
   intercomAppId: string;
   disablePolling: boolean;
-  aiAssistantApiUrl: string;
 }>;
 
 const { data: localStorageConfig = {} } = z
@@ -25,6 +26,7 @@ export function getConfig(): AppConfig {
     version: import.meta.env.VITE_APP_VERSION,
     apiBaseUrl: import.meta.env.VITE_API_URL,
     aiAssistantApiUrl: import.meta.env.VITE_AI_ASSISTANT_API_URL,
+    websiteUrl: import.meta.env.VITE_WEBSITE_URL,
     pageContextBaseUrl: import.meta.env.VITE_PAGE_CONTEXT_BASE_URL,
     idenfyServiceBaseUrl: import.meta.env.VITE_IDENFY_SERVICE_BASE_URL,
     recaptchaClientKey: import.meta.env.VITE_RECAPTCHA_CLIENT_KEY,
@@ -49,6 +51,8 @@ export function getConfig(): AppConfig {
     environment: getValue('environment'),
     version: getValue('version'),
     apiBaseUrl: getValue('apiBaseUrl'),
+    aiAssistantApiUrl: getValue('aiAssistantApiUrl'),
+    websiteUrl: getValue('websiteUrl'),
     pageContextBaseUrl: getValue('pageContextBaseUrl'),
     recaptchaClientKey: getValue('recaptchaClientKey'),
     posthogKey: getValue('posthogKey'),
@@ -57,7 +61,6 @@ export function getConfig(): AppConfig {
     idenfyServiceBaseUrl: getValue('idenfyServiceBaseUrl'),
     intercomAppId: getValue('intercomAppId'),
     disablePolling: getValue('disablePolling') === 'true',
-    aiAssistantApiUrl: getValue('aiAssistantApiUrl'),
   };
 }
 
