@@ -1,17 +1,23 @@
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { HuggingFaceModel } from 'src/api/model';
+import { DocumentTitle } from 'src/components/document-title';
 import { IconPackage } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
+import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
+import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ModelForm } from 'src/modules/service-form/model-form';
 
 const T = Translate.prefix('pages.deploy.model');
 
 export function DeployModel() {
   const [model] = useSearchParam('model');
+  const [cost, setCost] = useState<ServiceCost>();
+  const t = T.useTranslate();
 
   const query = useQuery({
     queryKey: ['getHuggingFaceModel', model],
@@ -39,25 +45,35 @@ export function DeployModel() {
   }
 
   return (
-    <>
-      <Header model={query.data} />
-      <ModelForm model={query.data} />
-    </>
+    <div className="col gap-6">
+      <DocumentTitle title={t('documentTitle')} />
+
+      <div className="col xl:row gap-8">
+        <div className="flex-1">
+          <Header model={query.data} />
+          <ModelForm model={query.data} onCostChanged={setCost} />
+        </div>
+
+        <div className="col shrink-0 gap-8 xl:basis-80">
+          <ServiceEstimatedCost cost={cost} />
+        </div>
+      </div>
+    </div>
   );
 }
 
 function Header({ model }: { model?: HuggingFaceModel }) {
   return (
-    <header className="col my-6 items-center gap-4 sm:my-12">
-      <div className="rounded-md bg-black/10 p-1.5 dark:bg-black/60">
-        <IconPackage className="size-24 rounded-md grayscale" />
+    <header className="row mb-10 items-center gap-4">
+      <div>
+        <IconPackage className="size-14 rounded-md" />
       </div>
 
-      <div className="col max-w-md gap-2 text-center">
+      <div className="col gap-1">
         <div className="text-2xl">
           {model ? <T id="titleModel" values={{ model: model.id }} /> : <T id="title" />}
         </div>
-        <div className="text-lg text-dim">
+        <div className="text-dim">
           <T id="description" />
         </div>
       </div>

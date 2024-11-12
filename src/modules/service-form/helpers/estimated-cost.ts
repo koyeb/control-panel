@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useInstance } from 'src/api/hooks/catalog';
 import { CatalogInstance } from 'src/api/model';
 
-import { ServiceForm } from '../service-form.types';
+import { Scaling, ServiceForm } from '../service-form.types';
 
 export function useEstimatedCost(
   values: Partial<Pick<ServiceForm, 'instance' | 'regions' | 'scaling'>>,
@@ -12,19 +12,27 @@ export function useEstimatedCost(
   const instance = useInstance(values.instance?.identifier ?? null);
 
   return useMemo(() => {
-    if (!instance || !scaling || !regions) {
-      return;
-    }
-
-    if (scaling.type === 'fixed') {
-      return calculateCost(scaling.fixed, regions.length, instance);
-    } else {
-      return [
-        calculateCost(scaling.autoscaling.min, regions.length, instance),
-        calculateCost(scaling.autoscaling.max, regions.length, instance),
-      ];
-    }
+    return computeEstimatedCost(instance, regions, scaling);
   }, [instance, regions, scaling]);
+}
+
+export function computeEstimatedCost(
+  instance?: CatalogInstance,
+  regions?: string[],
+  scaling?: Scaling,
+): ServiceCost | undefined {
+  if (!instance || !scaling || !regions) {
+    return;
+  }
+
+  if (scaling.type === 'fixed') {
+    return calculateCost(scaling.fixed, regions.length, instance);
+  } else {
+    return [
+      calculateCost(scaling.autoscaling.min, regions.length, instance),
+      calculateCost(scaling.autoscaling.max, regions.length, instance),
+    ];
+  }
 }
 
 type FixedCost = ReturnType<typeof calculateCost>;

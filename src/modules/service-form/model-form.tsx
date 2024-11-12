@@ -1,11 +1,18 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { merge } from 'lodash-es';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useController, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Alert, Autocomplete, Button } from '@koyeb/design-system';
-import { useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
+import {
+  useInstance,
+  useInstances,
+  useInstancesQuery,
+  useRegion,
+  useRegionsQuery,
+} from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { HuggingFaceModel, OrganizationPlan } from 'src/api/model';
@@ -13,14 +20,12 @@ import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
-import { InstanceAssistant } from 'src/components/instance-assistant';
 import { InstanceSelectorList } from 'src/components/instance-selector';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PaymentDialog } from 'src/components/payment-form';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
@@ -30,8 +35,8 @@ import { getId, hasProperty } from 'src/utils/object';
 import { wait } from 'src/utils/promises';
 import { slugify } from 'src/utils/strings';
 
-import { EstimatedCost } from './components/estimated-cost';
 import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
+import { computeEstimatedCost, ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './initialize-service-form';
 import { submitServiceForm } from './submit-service-form';
 
@@ -52,7 +57,12 @@ const preBuiltModels: Record<string, string> = {
   'Qwen/Qwen2.5-7B-Instruct': 'koyeb/qwen-qwen2.5-7b-instruct:latest',
 };
 
-export function ModelForm({ model }: { model?: HuggingFaceModel }) {
+type ModelFormProps = {
+  model?: HuggingFaceModel;
+  onCostChanged: (cost?: ServiceCost) => void;
+};
+
+export function ModelForm(props: ModelFormProps) {
   const instances = useInstancesQuery();
   const regions = useRegionsQuery();
   const githubApp = useGithubAppQuery();
@@ -61,13 +71,12 @@ export function ModelForm({ model }: { model?: HuggingFaceModel }) {
     return <Loading />;
   }
 
-  return <ModelForm_ model={model} />;
+  return <ModelForm_ {...props} />;
 }
 
-function ModelForm_({ model }: { model?: HuggingFaceModel }) {
+function ModelForm_({ model, onCostChanged }: ModelFormProps) {
   const instances = useInstances();
   const firstGpu = defined(instances.find(hasProperty('category', 'gpu')));
-  const hasKoyebAI = useFeatureFlag('koyeb-ai');
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -154,13 +163,22 @@ function ModelForm_({ model }: { model?: HuggingFaceModel }) {
     }
   };
 
+  const instance = useInstance(form.watch('instance'));
+  const region = useRegion(form.watch('region'));
+
+  useEffect(() => {
+    const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
+      type: 'fixed',
+      fixed: 1,
+      autoscaling: defaultServiceForm().scaling.autoscaling,
+    });
+
+    onCostChanged(cost);
+  }, [instance, region, onCostChanged]);
+
   return (
     <>
-      <form
-        ref={formRef}
-        className="mx-auto max-w-3xl divide-y rounded-xl border"
-        onSubmit={handleSubmit(form, onSubmit)}
-      >
+      <form ref={formRef} onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
         <Section title={<T id="model.title" />}>
           <ModelNameField form={form} />
 
@@ -173,6 +191,15 @@ function ModelForm_({ model }: { model?: HuggingFaceModel }) {
         </Section>
 
         <Section title={<T id="instance.title" />}>
+          <div>
+            <p>
+              <T id="instance.line1" />
+            </p>
+            <p>
+              <T id="instance.line2" />
+            </p>
+          </div>
+
           <InstanceSelectorList
             instances={instances
               .filter(hasProperty('regionCategory', 'koyeb'))
@@ -185,8 +212,6 @@ function ModelForm_({ model }: { model?: HuggingFaceModel }) {
             }}
             checkAvailability={() => [true]}
           />
-
-          {hasKoyebAI && <InstanceAssistant />}
         </Section>
 
         <Section title={<T id="region.title" />}>
@@ -194,15 +219,6 @@ function ModelForm_({ model }: { model?: HuggingFaceModel }) {
             <RegionFlag identifier={form.watch('region')} className="size-6 rounded-full shadow-badge" />
             <RegionName identifier={form.watch('region')} />
           </div>
-        </Section>
-
-        <Section title={<T id="estimatedCost.title" />}>
-          <EstimatedCost
-            form={merge(defaultServiceForm(), {
-              instance: { category: 'gpu', identifier: form.watch('instance') },
-              regions: [form.watch('region')],
-            })}
-          />
         </Section>
 
         <div className="row justify-end gap-2 p-4">
@@ -248,11 +264,17 @@ function ModelForm_({ model }: { model?: HuggingFaceModel }) {
   );
 }
 
-function Section({ title, children }: { title: React.ReactNode; children: React.ReactNode }) {
+type SectionProps = {
+  title: React.ReactNode;
+  className?: string;
+  children: React.ReactNode;
+};
+
+function Section({ title, className, children }: SectionProps) {
   return (
-    <section className="col gap-3 p-4">
-      <div className="text-lg font-medium">{title}</div>
-      {children}
+    <section>
+      <div className="mb-2 text-sm font-medium">{title}</div>
+      <div className={clsx('col gap-4 rounded border p-3', className)}>{children}</div>
     </section>
   );
 }

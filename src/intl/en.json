@@ -407,13 +407,12 @@
       "huggingFaceTokenLabel": "Hugging Face token <dim>(optional)</dim>"
     },
     "instance": {
-      "title": "Instance type"
+      "title": "Instance type",
+      "line1": "Choose instance",
+      "line2": "High-performance CPU instances ideal for production workloads"
     },
     "region": {
       "title": "Region"
-    },
-    "estimatedCost": {
-      "title": "Estimated cost"
     },
     "submitButton": "Deploy",
     "paymentDialog": {
@@ -1719,6 +1718,7 @@
         "title": "Deploy {appName}"
       },
       "model": {
+        "documentTitle": "Deploy model",
         "title": "Deploy model",
         "titleModel": "Deploy {model}",
         "description": "Run inference on a high performance GPU"
