@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { merge } from 'lodash-es';
 import { useEffect, useRef, useState } from 'react';
 import { useController, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
@@ -36,7 +35,7 @@ import { wait } from 'src/utils/promises';
 import { slugify } from 'src/utils/strings';
 
 import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
-import { computeEstimatedCost, ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
+import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './initialize-service-form';
 import { submitServiceForm } from './submit-service-form';
 

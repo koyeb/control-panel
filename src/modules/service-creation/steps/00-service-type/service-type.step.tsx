@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 
-import { ServiceType } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { IconGithub } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
@@ -11,12 +10,12 @@ import { SourceType } from 'src/modules/service-form/service-form.types';
 import { inArray } from 'src/utils/arrays';
 
 import { ExampleAppList } from './example-apps-list';
-import { ServiceTypeList } from './service-type-list';
+import { ExtendedServiceType, ServiceTypeList } from './service-type-list';
 
 const T = Translate.prefix('serviceCreation.serviceType');
 
-function isServiceType(value: unknown): value is ServiceType {
-  return inArray(value, ['web', 'private', 'worker', 'database']);
+function isServiceType(value: unknown): value is ExtendedServiceType {
+  return inArray(value, ['web', 'private', 'worker', 'database', 'model']);
 }
 
 type ServiceTypeStepProps = {
@@ -56,7 +55,7 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
       </nav>
 
       <div className="p-3 md:p-6 md:pl-12">
-        {isServiceType(serviceType) && serviceType !== 'database' && (
+        {isServiceType(serviceType) && serviceType !== 'database' && serviceType !== 'model' && (
           <div className="col gap-4">
             <div className="col gap-2">
               <div className="text-base font-medium">
@@ -71,19 +70,19 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
           </div>
         )}
 
-        {serviceType === 'database' && (
+        {(serviceType === 'database' || serviceType === 'model') && (
           <div className="col gap-6">
             <div className="col gap-2">
               <div className="text-base font-medium">
-                <T id="database.title" />
+                <T id={`${serviceType}.title`} />
               </div>
               <div className="text-dim">
-                <T id="database.description" />
+                <T id={`${serviceType}.description`} />
               </div>
             </div>
 
-            <LinkButton className="self-start" href={createDatabaseServiceUrl(appId)}>
-              <T id="database.button" />
+            <LinkButton className="self-start" href={getCreateServiceUrl(serviceType, appId)}>
+              <T id={`${serviceType}.button`} />
             </LinkButton>
           </div>
         )}
@@ -92,11 +91,20 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
   );
 }
 
-function createDatabaseServiceUrl(appId: string | null) {
-  let url = routes.createDatabaseService();
+function getCreateServiceUrl(serviceType: ExtendedServiceType, appId: string | null) {
+  let url = '';
 
-  if (appId !== null) {
-    url += `?${String(new URLSearchParams({ appId }))}`;
+  if (serviceType === 'database') {
+    url = routes.createDatabaseService();
+
+    if (appId !== null) {
+      url += `?${String(new URLSearchParams({ appId }))}`;
+    }
+  }
+
+  if (serviceType === 'model') {
+    url = routes.deploy();
+    url += `?${new URLSearchParams({ type: 'model' }).toString()}`;
   }
 
   return url;

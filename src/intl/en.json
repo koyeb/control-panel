@@ -35,7 +35,8 @@
       "web": "Web service",
       "private": "Private service",
       "worker": "Worker",
-      "database": "Database"
+      "database": "Database",
+      "model": "Model"
     },
     "deploymentStrategy": {
       "invalid": "Invalid",
@@ -710,6 +711,11 @@
         "title": "Create database service",
         "description": "A fully managed, serverless Postgres database",
         "button": "Create database service"
+      },
+      "model": {
+        "title": "Create inference model service",
+        "description": "To do",
+        "button": "Create service"
       },
       "deploymentSource": {
         "github": {
@@ -1497,7 +1503,8 @@
         "all": "All services",
         "web": "Web services",
         "worker": "Workers",
-        "database": "Database services"
+        "database": "Database services",
+        "model": "Models"
       },
       "appTooltip": "Apps allow you to group your services together and provide a gateway to expose web services under the same domain",
       "appActions": {

@@ -1,10 +1,17 @@
 import clsx from 'clsx';
 
 import { ServiceType } from 'src/api/model';
-import { IconCpu, IconDatabase, IconGlobeLock, IconSquareCode, IconWorkflow } from 'src/components/icons';
+import {
+  IconCpu,
+  IconDatabase,
+  IconGlobeLock,
+  IconPackage,
+  IconSquareCode,
+  IconWorkflow,
+} from 'src/components/icons';
 
 type ServiceTypeIconProps = {
-  type: ServiceType | 'private' | 'batch';
+  type: ServiceType | 'private' | 'batch' | 'model';
   size?: 'small' | 'medium' | 'big';
 };
 
@@ -15,6 +22,7 @@ export function ServiceTypeIcon({ type, size = 'big' }: ServiceTypeIconProps) {
     worker: { Icon: IconCpu, className: clsx('bg-orange text-contrast-orange') },
     database: { Icon: IconDatabase, className: clsx('bg-blue text-contrast-blue') },
     batch: { Icon: IconWorkflow, className: clsx('bg-inverted text-inverted') },
+    model: { Icon: IconPackage, className: clsx('bg-inverted text-inverted') },
   }[type];
 
   return (
