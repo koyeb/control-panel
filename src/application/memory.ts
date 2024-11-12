@@ -1,5 +1,5 @@
 export function parseBytes(input: string | undefined) {
-  const result = /^([0-9.]+)([KMG]?i?B)$/.exec(input ?? '');
+  const result = /^([0-9.]+) ?([KMG]?i?B)$/.exec(input ?? '');
 
   if (!result) {
     return NaN;

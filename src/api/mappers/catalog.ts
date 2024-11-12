@@ -1,6 +1,8 @@
+import { parseBytes } from 'src/application/memory';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
+import { ApiCatalogInstance } from '../api-types';
 import {
   CatalogDatacenter,
   CatalogInstance,
@@ -35,26 +37,26 @@ export function mapCatalogInstancesList({
   instances,
 }: ApiEndpointResult<'listCatalogInstances'>): CatalogInstance[] {
   return instances!
-    .map(
-      (instance): CatalogInstance => ({
-        identifier: instance.id!,
-        displayName: instance.display_name!,
-        status: lowerCase(instance.status!) as CatalogInstanceStatus,
-        plans: instance.require_plan!.length > 0 ? instance.require_plan! : undefined,
-        regions: instance.regions!.length > 0 ? instance.regions! : undefined,
-        category: instance.type! as InstanceCategory,
-        regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
-        cpu: instance.vcpu_shares!,
-        ram: instance.memory!,
-        vram: instance.gpu?.memory,
-        disk: instance.disk!,
-        hasVolumes: instance.volumes_enabled!,
-        pricePerMonth: Number(instance.price_monthly!),
-        pricePerHour: Number(instance.price_hourly!),
-        pricePerSecond: Number(instance.price_per_second!),
-      }),
-    )
-    .sort((a, b) => {
-      return a.status !== 'coming_soon' && b.status === 'coming_soon' ? -1 : 0;
-    });
+    .map(mapCatalogInstance)
+    .sort((a, b) => (parseBytes(a.vram) || 0) - (parseBytes(b.vram) || 0));
+}
+
+export function mapCatalogInstance(instance: ApiCatalogInstance): CatalogInstance {
+  return {
+    identifier: instance.id!,
+    displayName: instance.display_name!,
+    status: lowerCase(instance.status!) as CatalogInstanceStatus,
+    plans: instance.require_plan!.length > 0 ? instance.require_plan! : undefined,
+    regions: instance.regions!.length > 0 ? instance.regions! : undefined,
+    category: instance.type! as InstanceCategory,
+    regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
+    cpu: instance.vcpu_shares!,
+    ram: instance.memory!,
+    vram: instance.gpu?.memory,
+    disk: instance.disk!,
+    hasVolumes: instance.volumes_enabled!,
+    pricePerMonth: Number(instance.price_monthly!),
+    pricePerHour: Number(instance.price_hourly!),
+    pricePerSecond: Number(instance.price_per_second!),
+  };
 }

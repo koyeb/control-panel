@@ -410,7 +410,11 @@
     "instance": {
       "title": "Instance type",
       "line1": "Choose instance",
-      "line2": "High-performance CPU instances ideal for production workloads"
+      "line2": "High-performance CPU instances ideal for production workloads",
+      "notEnoughVRam": {
+        "title": "Model too large for selected GPU",
+        "description": "Your model might require more VRAM than the selected GPU can offer. We recommend choosing another GPU."
+      }
     },
     "region": {
       "title": "Region"

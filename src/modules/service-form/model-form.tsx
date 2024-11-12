@@ -16,6 +16,7 @@ import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { HuggingFaceModel, OrganizationPlan } from 'src/api/model';
 import { useTrackEvent } from 'src/application/analytics';
+import { formatBytes, parseBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
@@ -175,6 +176,8 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
     onCostChanged(cost);
   }, [instance, region, onCostChanged]);
 
+  const minimumVRam = useMinimumVRam(form.watch('modelName'), form.watch('huggingFaceToken'));
+
   return (
     <>
       <form ref={formRef} onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
@@ -211,6 +214,19 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
             }}
             checkAvailability={() => [true]}
           />
+
+          {instance && minimumVRam && minimumVRam > parseBytes(instance.vram) && (
+            <Alert
+              variant="warning"
+              title={<T id="instance.notEnoughVRam.title" />}
+              description={
+                <T
+                  id="instance.notEnoughVRam.description"
+                  values={{ min: formatBytes(minimumVRam, { round: true }) }}
+                />
+              }
+            />
+          )}
         </Section>
 
         <Section title={<T id="region.title" />}>
@@ -343,3 +359,43 @@ function ModelNameField({ form }: { form: UseFormReturn<z.infer<typeof schema>> 
     />
   );
 }
+
+function useMinimumVRam(model: string, token?: string) {
+  const query = useQuery({
+    enabled: model !== '',
+    queryKey: ['estimateModelVRam', model, token],
+    meta: { showError: false },
+    async queryFn({ signal }) {
+      if (!(await wait(500, signal))) {
+        return null;
+      }
+
+      const url = new URL('estimate-vram', 'https://estimator-david-organization-00c60334.koyeb.app');
+
+      url.searchParams.set('model_name', model);
+      url.searchParams.set('dtype', 'float32');
+
+      if (token !== undefined) {
+        url.searchParams.set('access_token', token);
+      }
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error('Error while computing model size');
+      }
+
+      const { minimum_vram } = responseSchema.parse(await response.json());
+
+      return minimum_vram;
+    },
+  });
+
+  if (query.isSuccess) {
+    return query.data;
+  }
+}
+
+const responseSchema = z.object({
+  minimum_vram: z.number(),
+});

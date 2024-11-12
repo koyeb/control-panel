@@ -41,6 +41,10 @@ describe('parseBytes', () => {
   test('gibibyte value', () => {
     expect(parseBytes('12GiB')).toBe(12884901888);
   });
+
+  test('space between value and unit', () => {
+    expect(parseBytes('12 B')).toBe(12);
+  });
 });
 
 describe('formatBytes', () => {
