@@ -37,6 +37,7 @@ jobs:
             --build-arg APP_VERSION \
             --build-arg API_URL \
             --build-arg AI_ASSISTANT_API_URL \
+            --build-arg WEBSITE_URL \
             --build-arg PAGE_CONTEXT_BASE_URL \
             --build-arg IDENFY_SERVICE_BASE_URL \
             --build-arg RECAPTCHA_CLIENT_KEY \
