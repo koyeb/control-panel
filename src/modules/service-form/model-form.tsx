@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useController, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -177,6 +177,12 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
 
   const minimumVRam = useMinimumVRam(form.watch('modelName'), form.watch('huggingFaceToken'));
 
+  const bestFit = useMemo(() => {
+    if (minimumVRam != null) {
+      return instances.find((instance) => instance.vram !== undefined && instance.vram >= minimumVRam);
+    }
+  }, [minimumVRam, instances]);
+
   return (
     <>
       <form ref={formRef} onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
@@ -212,10 +218,11 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
               form.setValue('region', instance.regions?.[0] ?? 'fra');
             }}
             checkAvailability={() => [true]}
+            bestFit={bestFit}
             minimumVRam={minimumVRam ?? undefined}
           />
 
-          {instance?.vram && minimumVRam && minimumVRam > instance.vram && (
+          {instance?.vram && minimumVRam && minimumVRam > instance.vram && bestFit !== undefined && (
             <Alert
               variant="warning"
               title={<T id="instance.notEnoughVRam.title" />}
@@ -225,6 +232,14 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
                   values={{ min: formatBytes(minimumVRam, { round: true }) }}
                 />
               }
+            />
+          )}
+
+          {minimumVRam !== undefined && bestFit === undefined && (
+            <Alert
+              variant="warning"
+              title={<T id="instance.noBestFit.title" />}
+              description={<T id="instance.noBestFit.description" />}
             />
           )}
         </Section>

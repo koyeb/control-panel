@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Badge, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
@@ -73,6 +73,7 @@ type InstanceSelectorListProps = {
   instances: readonly CatalogInstance[];
   selectedCategory?: InstanceCategory;
   selectedInstance: CatalogInstance | null;
+  bestFit?: CatalogInstance;
   minimumVRam?: number;
   onInstanceSelected: (instance: CatalogInstance) => void;
   checkAvailability: (instance: string) => InstanceAvailability;
@@ -82,6 +83,7 @@ export function InstanceSelectorList({
   instances,
   selectedCategory,
   selectedInstance,
+  bestFit,
   minimumVRam,
   onInstanceSelected,
   checkAvailability,
@@ -93,12 +95,6 @@ export function InstanceSelectorList({
       listRef.current.scrollTop = 0;
     }
   }, [selectedCategory]);
-
-  const bestFit = useMemo(() => {
-    if (minimumVRam !== undefined) {
-      return instances.find((instance) => instance.vram !== undefined && instance.vram >= minimumVRam);
-    }
-  }, [minimumVRam, instances]);
 
   return (
     <ul
