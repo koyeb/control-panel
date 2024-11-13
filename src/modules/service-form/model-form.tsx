@@ -213,6 +213,7 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
               form.setValue('region', instance.regions?.[0] ?? 'fra');
             }}
             checkAvailability={() => [true]}
+            minimumVRam={minimumVRam ?? undefined}
           />
 
           {instance && minimumVRam && minimumVRam > parseBytes(instance.vram) && (

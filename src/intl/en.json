@@ -347,6 +347,7 @@
     "free": "Free",
     "freeInstanceDescription": "Run 1x web service for free",
     "inUse": "In use",
+    "insufficientVRam": "Insufficient VRAM",
     "comingSoon": "Coming soon",
     "new": "New",
     "pricePerMonth": "{price}/month",
@@ -413,7 +414,7 @@
       "line2": "High-performance CPU instances ideal for production workloads",
       "notEnoughVRam": {
         "title": "Model too large for selected GPU",
-        "description": "Your model might require more VRAM than the selected GPU can offer. We recommend choosing another GPU."
+        "description": "The selected GPU might not provide enough VRAM to run the model. We recommend choosing another GPU with at least <strong>{min}</strong> of VRAM."
       }
     },
     "region": {

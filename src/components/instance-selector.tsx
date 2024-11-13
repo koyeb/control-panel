@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { Badge, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { parseBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
@@ -72,6 +73,7 @@ type InstanceSelectorListProps = {
   instances: readonly CatalogInstance[];
   selectedCategory?: InstanceCategory;
   selectedInstance: CatalogInstance | null;
+  minimumVRam?: number;
   onInstanceSelected: (instance: CatalogInstance) => void;
   checkAvailability: (instance: string) => InstanceAvailability;
 };
@@ -80,6 +82,7 @@ export function InstanceSelectorList({
   instances,
   selectedCategory,
   selectedInstance,
+  minimumVRam,
   onInstanceSelected,
   checkAvailability,
 }: InstanceSelectorListProps) {
@@ -104,6 +107,7 @@ export function InstanceSelectorList({
           availability={checkAvailability(instance.identifier)}
           selected={selectedInstance === instance}
           onSelected={() => onInstanceSelected(instance)}
+          minimumVRam={minimumVRam}
         />
       ))}
     </ul>
@@ -113,11 +117,12 @@ export function InstanceSelectorList({
 type InstanceItemProps = {
   instance: CatalogInstance;
   selected: boolean;
+  minimumVRam?: number;
   availability: InstanceAvailability;
   onSelected: () => void;
 };
 
-function InstanceItem({ instance, selected, availability, onSelected }: InstanceItemProps) {
+function InstanceItem({ instance, selected, minimumVRam, availability, onSelected }: InstanceItemProps) {
   const [isAvailable] = availability;
   const disabled = !isAvailable;
 
@@ -130,7 +135,9 @@ function InstanceItem({ instance, selected, availability, onSelected }: Instance
           <InstanceDescription
             instance={instance}
             disabled={disabled}
-            badge={<InstanceBadge instance={instance} availability={availability} />}
+            badge={
+              <InstanceBadge instance={instance} availability={availability} minimumVRam={minimumVRam} />
+            }
           />
         }
         disabled={disabled}
@@ -249,9 +256,10 @@ function Divider({ className }: DividerProps) {
 type InstanceBadgeProps = {
   instance: CatalogInstance;
   availability: InstanceAvailability;
+  minimumVRam?: number;
 };
 
-function InstanceBadge({ instance, availability }: InstanceBadgeProps) {
+function InstanceBadge({ instance, availability, minimumVRam }: InstanceBadgeProps) {
   const [isAvailable, reason] = availability;
   const inUse = !isAvailable && reason === 'freeAlreadyUsed';
 
@@ -264,10 +272,20 @@ function InstanceBadge({ instance, availability }: InstanceBadgeProps) {
   }
 
   if (instance.category === 'gpu') {
+    const vram = instance.vram ? parseBytes(instance.vram) : undefined;
+
     return (
-      <Badge size={1} color="blue">
-        <T id="new" />
-      </Badge>
+      <>
+        <Badge size={1} color="blue">
+          <T id="new" />
+        </Badge>
+
+        {minimumVRam !== undefined && vram !== undefined && minimumVRam > vram && (
+          <Badge size={1} color="orange">
+            <T id="insufficientVRam" />
+          </Badge>
+        )}
+      </>
     );
   }
 
