@@ -348,6 +348,7 @@
     "freeInstanceDescription": "Run 1x web service for free",
     "inUse": "In use",
     "insufficientVRam": "Insufficient VRAM",
+    "bestFit": "Best fit",
     "comingSoon": "Coming soon",
     "new": "New",
     "pricePerMonth": "{price}/month",

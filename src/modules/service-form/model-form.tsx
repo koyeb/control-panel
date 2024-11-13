@@ -16,7 +16,7 @@ import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { HuggingFaceModel, OrganizationPlan } from 'src/api/model';
 import { useTrackEvent } from 'src/application/analytics';
-import { formatBytes, parseBytes } from 'src/application/memory';
+import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
@@ -216,7 +216,7 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
             minimumVRam={minimumVRam ?? undefined}
           />
 
-          {instance && minimumVRam && minimumVRam > parseBytes(instance.vram) && (
+          {instance?.vram && minimumVRam && minimumVRam > instance.vram && (
             <Alert
               variant="warning"
               title={<T id="instance.notEnoughVRam.title" />}

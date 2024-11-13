@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { Badge, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
-import { parseBytes } from 'src/application/memory';
+import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
@@ -94,6 +94,12 @@ export function InstanceSelectorList({
     }
   }, [selectedCategory]);
 
+  const bestFit = useMemo(() => {
+    if (minimumVRam !== undefined) {
+      return instances.find((instance) => instance.vram !== undefined && instance.vram >= minimumVRam);
+    }
+  }, [minimumVRam, instances]);
+
   return (
     <ul
       ref={listRef}
@@ -107,7 +113,10 @@ export function InstanceSelectorList({
           availability={checkAvailability(instance.identifier)}
           selected={selectedInstance === instance}
           onSelected={() => onInstanceSelected(instance)}
-          minimumVRam={minimumVRam}
+          bestFit={bestFit === instance}
+          insufficientVRam={
+            instance.vram !== undefined && minimumVRam !== undefined && instance.vram < minimumVRam
+          }
         />
       ))}
     </ul>
@@ -117,12 +126,20 @@ export function InstanceSelectorList({
 type InstanceItemProps = {
   instance: CatalogInstance;
   selected: boolean;
-  minimumVRam?: number;
+  bestFit?: boolean;
+  insufficientVRam?: boolean;
   availability: InstanceAvailability;
   onSelected: () => void;
 };
 
-function InstanceItem({ instance, selected, minimumVRam, availability, onSelected }: InstanceItemProps) {
+function InstanceItem({
+  instance,
+  selected,
+  bestFit,
+  insufficientVRam,
+  availability,
+  onSelected,
+}: InstanceItemProps) {
   const [isAvailable] = availability;
   const disabled = !isAvailable;
 
@@ -136,7 +153,12 @@ function InstanceItem({ instance, selected, minimumVRam, availability, onSelecte
             instance={instance}
             disabled={disabled}
             badge={
-              <InstanceBadge instance={instance} availability={availability} minimumVRam={minimumVRam} />
+              <InstanceBadge
+                instance={instance}
+                availability={availability}
+                bestFit={bestFit}
+                insufficientVRam={insufficientVRam}
+              />
             }
           />
         }
@@ -170,7 +192,7 @@ function InstanceDescription({ instance, disabled, badge }: InstanceDescriptionP
           {instance.vram && (
             <>
               <span>
-                <T id="vram" values={{ value: instance.vram }} />
+                <T id="vram" values={{ value: formatBytes(instance.vram, { decimal: true, round: true }) }} />
               </span>
 
               <Divider className="h-4" />
@@ -256,10 +278,11 @@ function Divider({ className }: DividerProps) {
 type InstanceBadgeProps = {
   instance: CatalogInstance;
   availability: InstanceAvailability;
-  minimumVRam?: number;
+  bestFit?: boolean;
+  insufficientVRam?: boolean;
 };
 
-function InstanceBadge({ instance, availability, minimumVRam }: InstanceBadgeProps) {
+function InstanceBadge({ instance, availability, insufficientVRam, bestFit }: InstanceBadgeProps) {
   const [isAvailable, reason] = availability;
   const inUse = !isAvailable && reason === 'freeAlreadyUsed';
 
@@ -272,17 +295,21 @@ function InstanceBadge({ instance, availability, minimumVRam }: InstanceBadgePro
   }
 
   if (instance.category === 'gpu') {
-    const vram = instance.vram ? parseBytes(instance.vram) : undefined;
-
     return (
       <>
         <Badge size={1} color="blue">
           <T id="new" />
         </Badge>
 
-        {minimumVRam !== undefined && vram !== undefined && minimumVRam > vram && (
+        {insufficientVRam && (
           <Badge size={1} color="orange">
             <T id="insufficientVRam" />
+          </Badge>
+        )}
+
+        {bestFit && (
+          <Badge size={1} color="green">
+            <T id="bestFit" />
           </Badge>
         )}
       </>

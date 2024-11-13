@@ -36,9 +36,7 @@ export function mapCatalogDatacentersList({
 export function mapCatalogInstancesList({
   instances,
 }: ApiEndpointResult<'listCatalogInstances'>): CatalogInstance[] {
-  return instances!
-    .map(mapCatalogInstance)
-    .sort((a, b) => (parseBytes(a.vram) || 0) - (parseBytes(b.vram) || 0));
+  return instances!.map(mapCatalogInstance).sort((a, b) => (a.vram ?? 0) - (b.vram ?? 0));
 }
 
 export function mapCatalogInstance(instance: ApiCatalogInstance): CatalogInstance {
@@ -52,7 +50,7 @@ export function mapCatalogInstance(instance: ApiCatalogInstance): CatalogInstanc
     regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
     cpu: instance.vcpu_shares!,
     ram: instance.memory!,
-    vram: instance.gpu?.memory,
+    vram: instance.gpu?.memory ? parseBytes(instance.gpu?.memory) : undefined,
     disk: instance.disk!,
     hasVolumes: instance.volumes_enabled!,
     pricePerMonth: Number(instance.price_monthly!),
