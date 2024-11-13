@@ -24,14 +24,6 @@ export type ActivityObject = {
   metadata: Record<string, unknown>;
 };
 
-// ai
-
-export type HuggingFaceModel = {
-  id: string;
-  likes: number;
-  downloads: number;
-};
-
 // api credential
 
 export type ApiCredential = {

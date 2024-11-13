@@ -1731,10 +1731,9 @@
         "title": "Deploy {appName}"
       },
       "model": {
-        "documentTitle": "Deploy model",
-        "title": "Deploy model",
-        "titleModel": "Deploy {model}",
-        "description": "Run inference on a high performance GPU"
+        "documentTitle": "1-click models",
+        "title": "1-click models",
+        "description": "Deploy any model"
       }
     },
     "volumes": {

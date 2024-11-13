@@ -14,7 +14,7 @@ import {
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { HuggingFaceModel, OrganizationPlan } from 'src/api/model';
+import { OrganizationPlan } from 'src/api/model';
 import { useTrackEvent } from 'src/application/analytics';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
@@ -58,7 +58,6 @@ const preBuiltModels: Record<string, string> = {
 };
 
 type ModelFormProps = {
-  model?: HuggingFaceModel;
   onCostChanged: (cost?: ServiceCost) => void;
 };
 
@@ -74,13 +73,13 @@ export function ModelForm(props: ModelFormProps) {
   return <ModelForm_ {...props} />;
 }
 
-function ModelForm_({ model, onCostChanged }: ModelFormProps) {
+function ModelForm_({ onCostChanged }: ModelFormProps) {
   const instances = useInstances();
   const firstGpu = defined(instances.find(hasProperty('category', 'gpu')));
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      modelName: model?.id ?? '',
+      modelName: '',
       huggingFaceToken: '',
       instance: firstGpu.identifier,
       region: firstGpu.regions?.[0] ?? 'fra',
@@ -317,7 +316,11 @@ function ModelNameField({ form }: { form: UseFormReturn<z.infer<typeof schema>> 
         throw new Error('Failed to fetch models from hugging face');
       }
 
-      const body = (await response.json()) as HuggingFaceModel[];
+      const body = (await response.json()) as Array<{
+        id: string;
+        likes: number;
+        downloads: number;
+      }>;
 
       return body;
     },
