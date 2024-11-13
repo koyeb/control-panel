@@ -38,9 +38,9 @@ export function slugify(str: string): string {
   return str
     .replace(/[^a-zA-Z0-9]/g, '-')
     .replace(/--+/g, '-')
-    .replace(/(^-|-$)/g, '')
     .toLowerCase()
-    .slice(0, 63);
+    .slice(0, 63)
+    .replace(/(^-|-$)/g, '');
 }
 
 export function isSlug(value: string): boolean {

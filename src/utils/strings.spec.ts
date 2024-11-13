@@ -41,6 +41,12 @@ describe('slugify', () => {
 
     expect(slugify(`${string}12345`)).toEqual(`${string}123`);
   });
+
+  test('string of more than 63 characters and leading dash', () => {
+    const string = createArray(6, '1234567890').join('');
+
+    expect(slugify(`${string}12-4`)).toEqual(`${string}12`);
+  });
 });
 
 describe('capitalize', () => {
