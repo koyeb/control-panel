@@ -1,34 +1,25 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
-import { useInstances, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
+import { useInstance, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
-import {
-  useOrganization,
-  useOrganizationQuery,
-  useOrganizationQuotas,
-  useOrganizationSummaryQuery,
-  useUserQuery,
-} from 'src/api/hooks/session';
-import { OrganizationPlan } from 'src/api/model';
+import { useOrganizationQuery, useOrganizationSummaryQuery, useUserQuery } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
-import { PaymentDialog } from 'src/components/payment-form';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
-import { hasProperty } from 'src/utils/object';
 
 import { GpuAlert } from './components/gpu-alert';
 import { QuotaAlert } from './components/quota-alert';
-import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
+import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
+import { ServiceFormPaymentDialog } from './components/service-form-payment-dialog';
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
 import { SubmitButton } from './components/submit-button';
 import { ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
 import { mapServiceFormApiValidationError } from './helpers/map-service-form-api-validation-error';
 import { getDeployParams } from './helpers/parse-deploy-params';
+import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { getServiceFormSections } from './helpers/service-form-sections';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceNameSection } from './sections/00-service-name/service-name.section';
@@ -45,8 +36,6 @@ import { PortsSection } from './sections/09-ports/ports.section';
 import { HealthChecksSection } from './sections/10-health-checks/health-checks.section';
 import { ServiceFormSection, type ServiceForm } from './service-form.types';
 import { useServiceForm } from './use-service-form';
-
-const T = Translate.prefix('serviceForm');
 
 type ServiceFormProps = {
   appId?: string;
@@ -75,20 +64,12 @@ function ServiceForm_({
   onCostChanged,
   onDeployUrlChanged,
 }: ServiceFormProps) {
-  const organization = useOrganization();
-  const quotas = useOrganizationQuotas();
-  const instances = useInstances();
-
   const invalidate = useInvalidateApiQuery();
-  const trackEvent = useTrackEvent();
 
   const form = useServiceForm(appId, serviceId);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
-  const [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen] = useState(false);
-
-  const { mutateAsync } = useMutation({
+  const mutation = useMutation({
     mutationFn: submitServiceForm,
     onError: useFormErrorHandler(form, mapError),
     async onSuccess(result, { meta }) {
@@ -106,6 +87,10 @@ function ServiceForm_({
     },
   });
 
+  const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
+    usePreSubmitServiceForm();
+
+  const instance = useInstance(form.watch('instance.identifier'));
   const cost = useEstimatedCost(useFormValues(form));
   const deployUrl = useDeployUrl(form);
 
@@ -123,27 +108,6 @@ function ServiceForm_({
     return <ServiceFormSkeleton className={className} />;
   }
 
-  const onSubmit = async (values: ServiceForm) => {
-    const instance = instances.find(hasProperty('identifier', values.instance.identifier));
-
-    const isRestrictedGpu =
-      instance?.category === 'gpu' &&
-      quotas?.maxInstancesByType[instance.identifier] === 0 &&
-      instance.status === 'restricted';
-
-    if (instance?.category === 'gpu') {
-      trackEvent('gpu_deployed', { gpu_id: instance.identifier });
-    }
-
-    if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
-      setRequiredPlan(instance.plans[0] as OrganizationPlan);
-    } else if (isRestrictedGpu) {
-      setRestrictedGpuDialogOpen(true);
-    } else {
-      await mutateAsync(values);
-    }
-  };
-
   return (
     <>
       <FormProvider {...form}>
@@ -151,7 +115,11 @@ function ServiceForm_({
           ref={formRef}
           id="service-form"
           className={clsx('col gap-4', className)}
-          onSubmit={handleSubmit(form, onSubmit)}
+          onSubmit={handleSubmit(form, (values) => {
+            if (instance && preSubmit(instance)) {
+              return mutation.mutateAsync(values);
+            }
+          })}
         >
           <GpuAlert />
 
@@ -173,33 +141,16 @@ function ServiceForm_({
         </form>
       </FormProvider>
 
-      <RestrictedGpuDialogOpen
+      <RestrictedGpuDialog
         open={restrictedGpuDialogOpen}
         onClose={() => setRestrictedGpuDialogOpen(false)}
         instanceIdentifier={form.watch('instance.identifier')}
       />
 
-      <PaymentDialog
-        open={requiredPlan !== undefined}
+      <ServiceFormPaymentDialog
+        requiredPlan={requiredPlan}
         onClose={() => setRequiredPlan(undefined)}
-        plan={requiredPlan}
-        onPlanChanged={() => {
-          setRequiredPlan(undefined);
-
-          // re-render with new organization plan before submitting
-          setTimeout(() => formRef.current?.requestSubmit(), 0);
-        }}
-        title={<T id="paymentDialog.title" />}
-        description={
-          <T
-            id="paymentDialog.description"
-            values={{
-              plan: <span className="capitalize text-green">{requiredPlan}</span>,
-              price: requiredPlan === 'starter' ? 0 : 79,
-            }}
-          />
-        }
-        submit={<T id="paymentDialog.submitButton" />}
+        submitForm={() => formRef.current?.requestSubmit()}
       />
     </>
   );

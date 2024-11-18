@@ -427,12 +427,7 @@
     "region": {
       "title": "Select region"
     },
-    "submitButton": "Deploy",
-    "paymentDialog": {
-      "title": "Start for free with $20 of credit over 30 days",
-      "description": "The current selected instance is available on the {plan} plan at ${price}/mo. Add a payment method to upgrade and deploy.",
-      "submitButton": "Upgrade and deploy"
-    }
+    "submitButton": "Deploy"
   },
   "paymentDialog": {
     "cardNumberLabel": "Card number",

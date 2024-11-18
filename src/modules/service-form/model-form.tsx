@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -15,9 +15,7 @@ import {
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { AiModel, CatalogInstance, OrganizationPlan } from 'src/api/model';
-import { useTrackEvent } from 'src/application/analytics';
+import { AiModel, CatalogInstance } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
@@ -26,7 +24,6 @@ import { InstanceSelectorList } from 'src/components/instance-selector';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
-import { PaymentDialog } from 'src/components/payment-form';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -37,9 +34,11 @@ import { defined } from 'src/utils/assert';
 import { getName, hasProperty } from 'src/utils/object';
 import { slugify } from 'src/utils/strings';
 
-import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
+import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
+import { ServiceFormPaymentDialog } from './components/service-form-payment-dialog';
 import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
+import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
 
 const T = Translate.prefix('modelForm');
@@ -107,33 +106,8 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
-  const [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen] = useState(false);
-
-  const organization = useOrganization();
-  const quotas = useOrganizationQuotas();
-  const trackEvent = useTrackEvent();
-
-  const onSubmit = async (values: FormValues<typeof form>) => {
-    const instance = instances.find(hasProperty('identifier', values.instance));
-
-    const isRestrictedGpu =
-      instance?.category === 'gpu' &&
-      quotas?.maxInstancesByType[instance.identifier] === 0 &&
-      instance.status === 'restricted';
-
-    if (instance?.category === 'gpu') {
-      trackEvent('gpu_deployed', { gpu_id: instance.identifier });
-    }
-
-    if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
-      setRequiredPlan(instance.plans[0] as OrganizationPlan);
-    } else if (isRestrictedGpu) {
-      setRestrictedGpuDialogOpen(true);
-    } else {
-      await mutation.mutateAsync(values);
-    }
-  };
+  const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
+    usePreSubmitServiceForm();
 
   useEffect(() => {
     const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
@@ -150,7 +124,15 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
 
   return (
     <>
-      <form ref={formRef} onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit(form, (values) => {
+          if (instance && preSubmit(instance)) {
+            return mutation.mutateAsync(values);
+          }
+        })}
+        className="col gap-6"
+      >
         <Section title={<T id="overview.title" />}>
           <Overview model={model} form={form} />
         </Section>
@@ -224,33 +206,16 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
         </div>
       </form>
 
-      <RestrictedGpuDialogOpen
+      <RestrictedGpuDialog
         open={restrictedGpuDialogOpen}
         onClose={() => setRestrictedGpuDialogOpen(false)}
         instanceIdentifier={instance?.identifier ?? ''}
       />
 
-      <PaymentDialog
-        open={requiredPlan !== undefined}
+      <ServiceFormPaymentDialog
+        requiredPlan={requiredPlan}
         onClose={() => setRequiredPlan(undefined)}
-        plan={requiredPlan}
-        onPlanChanged={() => {
-          setRequiredPlan(undefined);
-
-          // re-render with new organization plan before submitting
-          setTimeout(() => formRef.current?.requestSubmit(), 0);
-        }}
-        title={<T id="paymentDialog.title" />}
-        description={
-          <T
-            id="paymentDialog.description"
-            values={{
-              plan: <span className="capitalize text-green">{requiredPlan}</span>,
-              price: requiredPlan === 'starter' ? 0 : 79,
-            }}
-          />
-        }
-        submit={<T id="paymentDialog.submitButton" />}
+        submitForm={() => formRef.current?.requestSubmit()}
       />
     </>
   );

@@ -11,7 +11,7 @@ type RestrictedGpuDialogProps = {
   instanceIdentifier: string | null;
 };
 
-export function RestrictedGpuDialogOpen({ open, onClose, instanceIdentifier }: RestrictedGpuDialogProps) {
+export function RestrictedGpuDialog({ open, onClose, instanceIdentifier }: RestrictedGpuDialogProps) {
   const instance = useInstance(instanceIdentifier);
   const link = 'https://app.reclaim.ai/m/koyeb-intro/short-call';
 
