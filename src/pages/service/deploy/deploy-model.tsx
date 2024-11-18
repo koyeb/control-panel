@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useModels } from 'src/api/hooks/catalog';
+import { useModel } from 'src/api/hooks/catalog';
 import { AiModel } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconPackage } from 'src/components/icons';
@@ -17,16 +17,13 @@ export function DeployModel() {
   const [cost, setCost] = useState<ServiceCost>();
   const t = T.useTranslate();
 
-  const { data: models } = useModels();
-  const model = models?.find((model) => model.name === modelParam);
-
-  if (!model) {
-    return null;
-  }
+  const model = useModel(modelParam ?? undefined);
 
   return (
     <div className="col gap-6">
-      <DocumentTitle title={t('documentTitle', { modelName: model.name }) as string} />
+      <DocumentTitle
+        title={model ? (t('documentTitleModel', { modelName: model?.name }) as string) : t('documentTitle')}
+      />
 
       <Header model={model} />
 
@@ -48,7 +45,7 @@ export function DeployModel() {
   );
 }
 
-function Header({ model }: { model: AiModel }) {
+function Header({ model }: { model?: AiModel }) {
   return (
     <header className="col mb-10 items-center gap-4 text-center">
       <div>
@@ -57,9 +54,9 @@ function Header({ model }: { model: AiModel }) {
 
       <div className="col gap-1">
         <div className="text-2xl">
-          <T id="title" values={{ modelName: model.name }} />
+          {model ? <T id="titleModel" values={{ modelName: model?.name }} /> : <T id="title" />}
         </div>
-        <div className="max-w-xl text-dim">{model.description}</div>
+        <div className="max-w-xl text-dim">{model?.description ?? <T id="anyModelDescription" />}</div>
       </div>
     </header>
   );

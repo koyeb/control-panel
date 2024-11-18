@@ -410,6 +410,9 @@
       "scalingLabel": "Scaling",
       "regionLabel": "Region"
     },
+    "model": {
+      "title": "Choose a model"
+    },
     "instance": {
       "title": "Choose instance",
       "notEnoughVRam": {
@@ -1734,8 +1737,11 @@
         "title": "Deploy {appName}"
       },
       "model": {
-        "documentTitle": "Deploy {modelName}",
-        "title": "Deploy {modelName}",
+        "documentTitle": "One-Click models",
+        "documentTitleModel": "Deploy {modelName}",
+        "titleModel": "Deploy {modelName}",
+        "title": "One-Click models",
+        "anyModelDescription": "Deploy models faster than ever ...",
         "pricing": "Pricing"
       }
     },

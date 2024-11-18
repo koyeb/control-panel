@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import sortBy from 'lodash-es/sortBy';
 
 import { hasProperty } from 'src/utils/object';
 
@@ -54,13 +55,23 @@ export function useRegion(identifier?: string) {
   return useRegions().find(hasProperty('identifier', identifier));
 }
 
-export function useModels() {
+export function useModelsQuery() {
   return useQuery({
     queryKey: ['getModels'],
     queryFn() {
       return models;
     },
   });
+}
+
+export function useModels() {
+  const { data } = useModelsQuery();
+
+  return sortBy(data, 'name');
+}
+
+export function useModel(name?: string) {
+  return useModels().find(hasProperty('name', name));
 }
 
 const models: AiModel[] = [

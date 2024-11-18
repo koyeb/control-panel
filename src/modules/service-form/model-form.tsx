@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -8,13 +8,15 @@ import {
   useInstance,
   useInstances,
   useInstancesQuery,
+  useModel,
+  useModels,
   useRegion,
   useRegions,
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { AiModel, OrganizationPlan } from 'src/api/model';
+import { AiModel, CatalogInstance, OrganizationPlan } from 'src/api/model';
 import { useTrackEvent } from 'src/application/analytics';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
@@ -32,7 +34,7 @@ import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
-import { hasProperty } from 'src/utils/object';
+import { getName, hasProperty } from 'src/utils/object';
 import { slugify } from 'src/utils/strings';
 
 import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
@@ -43,12 +45,13 @@ import { submitServiceForm } from './submit-service-form';
 const T = Translate.prefix('modelForm');
 
 const schema = z.object({
+  modelName: z.string(),
   instance: z.string(),
   region: z.string(),
 });
 
 type ModelFormProps = {
-  model: AiModel;
+  model?: AiModel;
   onCostChanged: (cost?: ServiceCost) => void;
 };
 
@@ -64,22 +67,20 @@ export function ModelForm(props: ModelFormProps) {
   return <ModelForm_ {...props} />;
 }
 
-function ModelForm_({ model, onCostChanged }: ModelFormProps) {
+function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   const availableRegions = useRegions().filter(hasProperty('status', 'available'));
   const instances = useInstances();
-  const firstGpu = defined(instances.find(hasProperty('category', 'gpu')));
+  const models = useModels();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
-    defaultValues: {
-      instance: firstGpu.identifier,
-      region: firstGpu.regions?.[0] ?? 'fra',
-    },
+    defaultValues: getInitialValues(instances, initialModel),
     resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({
-    async mutationFn({ instance, region }: FormValues<typeof form>) {
+    async mutationFn({ modelName, instance, region }: FormValues<typeof form>) {
+      const model = defined(models.find(hasProperty('name', modelName)));
       const serviceForm = defaultServiceForm();
 
       serviceForm.appName = slugify(model.name).slice(0, 23);
@@ -100,6 +101,7 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
     },
   });
 
+  const model = useModel(form.watch('modelName'));
   const instance = useInstance(form.watch('instance'));
   const region = useRegion(form.watch('region'));
 
@@ -143,11 +145,8 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
     onCostChanged(cost);
   }, [instance, region, onCostChanged]);
 
-  const minimumVRam = model.min_vram;
-
-  const bestFit = useMemo(() => {
-    return instances.find((instance) => instance.vram !== undefined && instance.vram >= minimumVRam);
-  }, [minimumVRam, instances]);
+  const minimumVRam = model?.min_vram ?? 0;
+  const bestFit = useInstanceBestFit();
 
   return (
     <>
@@ -155,6 +154,26 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
         <Section title={<T id="overview.title" />}>
           <Overview model={model} form={form} />
         </Section>
+
+        {initialModel === undefined && (
+          <Section title={<T id="model.title" />}>
+            <ControlledSelect
+              control={form.control}
+              name="modelName"
+              items={models}
+              getKey={getName}
+              itemToString={getName}
+              itemToValue={getName}
+              renderItem={(model) => (
+                <div className="row items-center gap-2">
+                  <div>{model.name}</div>
+                  <div className="text-xs text-dim">•</div>
+                  <div className="text-xs text-dim"> parameters: {model.parameters}</div>
+                </div>
+              )}
+            />
+          </Section>
+        )}
 
         <Section title={<T id="instance.title" />}>
           <InstanceSelectorList
@@ -172,28 +191,7 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
             minimumVRam={minimumVRam}
           />
 
-          {instance?.vram && minimumVRam > instance.vram && bestFit !== undefined && (
-            <Alert
-              variant="warning"
-              title={<T id="instance.notEnoughVRam.title" />}
-              description={
-                <T
-                  id="instance.notEnoughVRam.description"
-                  values={{ min: formatBytes(minimumVRam, { round: true }) }}
-                />
-              }
-              className="mt-4"
-            />
-          )}
-
-          {minimumVRam !== undefined && bestFit === undefined && (
-            <Alert
-              variant="warning"
-              title={<T id="instance.noBestFit.title" />}
-              description={<T id="instance.noBestFit.description" />}
-              className="mt-4"
-            />
-          )}
+          <MinimumVRamAlerts model={model} instance={instance} bestFit={bestFit} />
         </Section>
 
         <Section title={<T id="region.title" />}>
@@ -215,7 +213,7 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
           />
         </Section>
 
-        <div className="row justify-end gap-2 p-4">
+        <div className="row justify-end gap-2">
           <LinkButton color="gray" href={routes.home()}>
             <Translate id="common.cancel" />
           </LinkButton>
@@ -229,7 +227,7 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
       <RestrictedGpuDialogOpen
         open={restrictedGpuDialogOpen}
         onClose={() => setRestrictedGpuDialogOpen(false)}
-        instanceIdentifier={firstGpu.identifier}
+        instanceIdentifier={instance?.identifier ?? ''}
       />
 
       <PaymentDialog
@@ -258,6 +256,26 @@ function ModelForm_({ model, onCostChanged }: ModelFormProps) {
   );
 }
 
+function getInitialValues(instances: CatalogInstance[], model?: AiModel): Partial<z.infer<typeof schema>> {
+  const instance = instances.find((instance) => {
+    if (instance.category !== 'gpu') {
+      return false;
+    }
+
+    if (!model || !instance.vram) {
+      return true;
+    }
+
+    return instance.vram >= model.min_vram;
+  });
+
+  return {
+    modelName: model?.name,
+    instance: instance?.identifier,
+    region: instance?.regions?.[0] ?? 'fra',
+  };
+}
+
 type SectionProps = {
   title: React.ReactNode;
   children: React.ReactNode;
@@ -272,16 +290,16 @@ function Section({ title, children }: SectionProps) {
   );
 }
 
-function Overview({ model, form }: { model: AiModel; form: UseFormReturn<z.infer<typeof schema>> }) {
+function Overview({ model, form }: { model?: AiModel; form: UseFormReturn<z.infer<typeof schema>> }) {
   const instance = useInstance(form.watch('instance'));
   const region = useRegion(form.watch('region'));
 
   return (
     <div className="divide-y rounded border">
       <div className="row gap-12 p-3">
-        <Metadata label={<T id="overview.modelNameLabel" />} value={model.name} />
-        <Metadata label={<T id="overview.parametersLabel" />} value={model.parameters} />
-        <Metadata label={<T id="overview.inferenceEngineLabel" />} value={model.engine} />
+        <Metadata label={<T id="overview.modelNameLabel" />} value={model?.name ?? '-'} />
+        <Metadata label={<T id="overview.parametersLabel" />} value={model?.parameters ?? '-'} />
+        <Metadata label={<T id="overview.inferenceEngineLabel" />} value={model?.engine ?? '-'} />
       </div>
 
       <div className="row gap-12 p-3">
@@ -291,4 +309,51 @@ function Overview({ model, form }: { model: AiModel; form: UseFormReturn<z.infer
       </div>
     </div>
   );
+}
+
+function useInstanceBestFit(model?: AiModel) {
+  const instances = useInstances().filter(hasProperty('category', 'gpu'));
+
+  if (!model?.min_vram) {
+    return instances[0];
+  }
+
+  return instances.find((instance) => instance.vram !== undefined && instance.vram >= model.min_vram);
+}
+
+type MinimumVRamAlertsProps = {
+  model?: AiModel;
+  instance?: CatalogInstance;
+  bestFit?: CatalogInstance;
+};
+
+function MinimumVRamAlerts({ model, instance, bestFit }: MinimumVRamAlertsProps) {
+  if (instance?.vram && model && model.min_vram > instance.vram && bestFit !== undefined) {
+    return (
+      <Alert
+        variant="warning"
+        title={<T id="instance.notEnoughVRam.title" />}
+        description={
+          <T
+            id="instance.notEnoughVRam.description"
+            values={{ min: formatBytes(model.min_vram, { round: true }) }}
+          />
+        }
+        className="mt-4"
+      />
+    );
+  }
+
+  if (model && bestFit === undefined) {
+    return (
+      <Alert
+        variant="warning"
+        title={<T id="instance.noBestFit.title" />}
+        description={<T id="instance.noBestFit.description" />}
+        className="mt-4"
+      />
+    );
+  }
+
+  return null;
 }
