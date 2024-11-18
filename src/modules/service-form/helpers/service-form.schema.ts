@@ -149,7 +149,7 @@ function scaling(t: TranslateErrorFunction) {
   return z.discriminatedUnion('type', [
     z.object({
       type: z.literal('fixed'),
-      fixed: number(t, t('scaling.fixedLabel'), 0, 10),
+      fixed: number(t, t('scaling.fixedLabel'), 0, 20),
     }),
     z.object({
       type: z.literal('autoscaling'),
@@ -161,8 +161,8 @@ function scaling(t: TranslateErrorFunction) {
 function autoScaling(t: TranslateErrorFunction) {
   return z
     .object({
-      min: number(t, t('scaling.autoScalingMinLabel'), 0, 10),
-      max: number(t, t('scaling.autoScalingMaxLabel'), 0, 10),
+      min: number(t, t('scaling.autoScalingMinLabel'), 0, 20),
+      max: number(t, t('scaling.autoScalingMaxLabel'), 0, 20),
       targets: z.object({
         cpu: autoScalingTarget(t, 1, 100),
         memory: autoScalingTarget(t, 1, 100),

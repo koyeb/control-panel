@@ -21,7 +21,7 @@ export function FixedScalingConfiguration() {
           label={<T id="scalingLabel" />}
           disabled={!canChangeScaling}
           min={1}
-          max={10}
+          max={20}
           step={1}
           marks
         />
@@ -29,7 +29,7 @@ export function FixedScalingConfiguration() {
 
       <div className="col gap-4 sm:hidden">
         <span className="col-span-2 font-semibold">
-          <Translate id="serviceForm.scaling.scalingLabel" />
+          <T id="scalingLabel" />
         </span>
 
         <div className="row gap-4">
@@ -40,7 +40,7 @@ export function FixedScalingConfiguration() {
             disabled={!canChangeScaling}
             onKeyDown={onKeyDownPositiveInteger}
             min={1}
-            max={10}
+            max={20}
             step={1}
           />
         </div>

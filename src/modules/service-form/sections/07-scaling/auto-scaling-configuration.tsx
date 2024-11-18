@@ -48,7 +48,7 @@ export function AutoScalingConfiguration() {
           disabled={!canChangeScaling}
           label={<Translate id="serviceForm.scaling.scalingLabel" />}
           min={scaleToZero ? 0 : 1}
-          max={10}
+          max={20}
           step={1}
           value={[autoScaling.min, autoScaling.max]}
           onChange={([min, max]) => {
@@ -109,7 +109,7 @@ function RangeInputMobile() {
           disabled={!canChangeScaling}
           onKeyDown={onKeyDownPositiveInteger}
           min={scaleToZero ? 0 : 1}
-          max={10}
+          max={20}
           step={1}
         />
 
@@ -121,7 +121,7 @@ function RangeInputMobile() {
           disabled={!canChangeScaling}
           onKeyDown={onKeyDownPositiveInteger}
           min={scaleToZero ? 0 : 1}
-          max={10}
+          max={20}
           step={1}
         />
       </div>
