@@ -39,7 +39,7 @@ export function News() {
     select: (news) => news.filter((news) => !dismissedIds?.includes(news.id)),
   });
 
-  if (query.isSuccess && query.data.length === 0) {
+  if (query.error || (query.isSuccess && query.data.length === 0)) {
     return null;
   }
 
