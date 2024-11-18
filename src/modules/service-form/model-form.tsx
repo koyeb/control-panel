@@ -1,28 +1,29 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
-import clsx from 'clsx';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useController, useForm, UseFormReturn } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Alert, Autocomplete, Button } from '@koyeb/design-system';
+import { Alert, Button } from '@koyeb/design-system';
 import {
   useInstance,
   useInstances,
   useInstancesQuery,
   useRegion,
+  useRegions,
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { OrganizationPlan } from 'src/api/model';
+import { AiModel, OrganizationPlan } from 'src/api/model';
 import { useTrackEvent } from 'src/application/analytics';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledSelect } from 'src/components/controlled';
 import { InstanceSelectorList } from 'src/components/instance-selector';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
+import { Metadata } from 'src/components/metadata';
 import { PaymentDialog } from 'src/components/payment-form';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
@@ -31,8 +32,7 @@ import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
-import { getId, hasProperty } from 'src/utils/object';
-import { wait } from 'src/utils/promises';
+import { hasProperty } from 'src/utils/object';
 import { slugify } from 'src/utils/strings';
 
 import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
@@ -43,21 +43,12 @@ import { submitServiceForm } from './submit-service-form';
 const T = Translate.prefix('modelForm');
 
 const schema = z.object({
-  modelName: z.string().min(1),
-  huggingFaceToken: z.string(),
-  instance: z.string().nullable(),
+  instance: z.string(),
   region: z.string(),
 });
 
-const preBuiltModels: Record<string, string> = {
-  'meta-llama/Llama-3.1-8B': 'koyeb/meta-llama-3.1-8b:latest',
-  'NousResearch/Hermes-3-Llama-3.1-8B': 'koyeb/nousresearch-hermes-3-llama-3.1-8b:latest',
-  'mistralai/Mistral-7B-Instruct-v0.3': 'koyeb/mistralai-mistral-7b-instruct-v0.3:latest',
-  'google/gemma-2-9b-it': 'koyeb/google-gemma-2-9b-it:latest',
-  'Qwen/Qwen2.5-7B-Instruct': 'koyeb/qwen-qwen2.5-7b-instruct:latest',
-};
-
 type ModelFormProps = {
+  model: AiModel;
   onCostChanged: (cost?: ServiceCost) => void;
 };
 
@@ -73,56 +64,33 @@ export function ModelForm(props: ModelFormProps) {
   return <ModelForm_ {...props} />;
 }
 
-function ModelForm_({ onCostChanged }: ModelFormProps) {
+function ModelForm_({ model, onCostChanged }: ModelFormProps) {
+  const availableRegions = useRegions().filter(hasProperty('status', 'available'));
   const instances = useInstances();
   const firstGpu = defined(instances.find(hasProperty('category', 'gpu')));
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      modelName: '',
-      huggingFaceToken: '',
       instance: firstGpu.identifier,
       region: firstGpu.regions?.[0] ?? 'fra',
     },
     resolver: useZodResolver(schema),
   });
 
-  const navigate = useNavigate();
-
   const mutation = useMutation({
-    async mutationFn({
-      modelName,
-      huggingFaceToken,
-      instance: instanceIdentifier,
-      region: regionIdentifier,
-    }: FormValues<typeof form>) {
+    async mutationFn({ instance, region }: FormValues<typeof form>) {
       const serviceForm = defaultServiceForm();
 
-      serviceForm.appName = slugify(modelName).slice(0, 23);
-      serviceForm.serviceName = slugify(modelName);
+      serviceForm.appName = slugify(model.name).slice(0, 23);
+      serviceForm.serviceName = slugify(model.name);
       serviceForm.environmentVariables = [];
 
-      const instance = defined(instances.find(hasProperty('identifier', instanceIdentifier)));
-      serviceForm.instance.category = instance.category;
-      serviceForm.instance.identifier = instance.identifier;
-      serviceForm.regions = [regionIdentifier];
+      serviceForm.instance.identifier = instance;
+      serviceForm.regions = [region];
 
-      if (modelName in preBuiltModels) {
-        serviceForm.source.type = 'docker';
-        serviceForm.source.docker.image = defined(preBuiltModels[modelName]);
-      } else {
-        serviceForm.source.type = 'git';
-        serviceForm.source.git.repositoryType = 'public';
-        serviceForm.source.git.publicRepository.repositoryName = 'koyeb/vllm';
-        serviceForm.source.git.publicRepository.branch = 'main';
-        serviceForm.builder.type = 'dockerfile';
-
-        serviceForm.environmentVariables.push({ name: 'MODEL_NAME', value: modelName });
-
-        if (huggingFaceToken !== '') {
-          serviceForm.environmentVariables.push({ name: 'HF_TOKEN', value: huggingFaceToken });
-        }
-      }
+      serviceForm.source.type = 'docker';
+      serviceForm.source.docker.image = model.dockerImage;
 
       return submitServiceForm(serviceForm);
     },
@@ -131,6 +99,9 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
       navigate(routes.initialDeployment(serviceId));
     },
   });
+
+  const instance = useInstance(form.watch('instance'));
+  const region = useRegion(form.watch('region'));
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -162,51 +133,30 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
     }
   };
 
-  const instance = useInstance(form.watch('instance'));
-  const region = useRegion(form.watch('region'));
-
   useEffect(() => {
     const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
       type: 'fixed',
       fixed: 1,
-      autoscaling: defaultServiceForm().scaling.autoscaling,
+      autoscaling: null as never,
     });
 
     onCostChanged(cost);
   }, [instance, region, onCostChanged]);
 
-  const minimumVRam = useMinimumVRam(form.watch('modelName'), form.watch('huggingFaceToken'));
+  const minimumVRam = model.min_vram;
 
   const bestFit = useMemo(() => {
-    if (minimumVRam != null) {
-      return instances.find((instance) => instance.vram !== undefined && instance.vram >= minimumVRam);
-    }
+    return instances.find((instance) => instance.vram !== undefined && instance.vram >= minimumVRam);
   }, [minimumVRam, instances]);
 
   return (
     <>
       <form ref={formRef} onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
-        <Section title={<T id="model.title" />}>
-          <ModelNameField form={form} />
-
-          <ControlledInput
-            control={form.control}
-            label={<T id="model.huggingFaceTokenLabel" />}
-            name="huggingFaceToken"
-            className="max-w-lg"
-          />
+        <Section title={<T id="overview.title" />}>
+          <Overview model={model} form={form} />
         </Section>
 
         <Section title={<T id="instance.title" />}>
-          <div>
-            <p>
-              <T id="instance.line1" />
-            </p>
-            <p>
-              <T id="instance.line2" />
-            </p>
-          </div>
-
           <InstanceSelectorList
             instances={instances
               .filter(hasProperty('regionCategory', 'koyeb'))
@@ -219,10 +169,10 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
             }}
             checkAvailability={() => [true]}
             bestFit={bestFit}
-            minimumVRam={minimumVRam ?? undefined}
+            minimumVRam={minimumVRam}
           />
 
-          {instance?.vram && minimumVRam && minimumVRam > instance.vram && bestFit !== undefined && (
+          {instance?.vram && minimumVRam > instance.vram && bestFit !== undefined && (
             <Alert
               variant="warning"
               title={<T id="instance.notEnoughVRam.title" />}
@@ -232,6 +182,7 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
                   values={{ min: formatBytes(minimumVRam, { round: true }) }}
                 />
               }
+              className="mt-4"
             />
           )}
 
@@ -240,15 +191,28 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
               variant="warning"
               title={<T id="instance.noBestFit.title" />}
               description={<T id="instance.noBestFit.description" />}
+              className="mt-4"
             />
           )}
         </Section>
 
         <Section title={<T id="region.title" />}>
-          <div className="row items-center gap-2">
-            <RegionFlag identifier={form.watch('region')} className="size-6 rounded-full shadow-badge" />
-            <RegionName identifier={form.watch('region')} />
-          </div>
+          <ControlledSelect
+            control={form.control}
+            name="region"
+            items={availableRegions.filter((region) =>
+              instance?.regions ? instance.regions?.includes(region.identifier) : true,
+            )}
+            getKey={(region) => region.identifier}
+            itemToString={(region) => region.displayName}
+            itemToValue={(region) => region.identifier}
+            renderItem={(region) => (
+              <div className="row items-center gap-2">
+                <RegionFlag identifier={region.identifier} className="size-6 rounded-full shadow-badge" />
+                <RegionName identifier={region.identifier} />
+              </div>
+            )}
+          />
         </Section>
 
         <div className="row justify-end gap-2 p-4">
@@ -296,125 +260,35 @@ function ModelForm_({ onCostChanged }: ModelFormProps) {
 
 type SectionProps = {
   title: React.ReactNode;
-  className?: string;
   children: React.ReactNode;
 };
 
-function Section({ title, className, children }: SectionProps) {
+function Section({ title, children }: SectionProps) {
   return (
     <section>
       <div className="mb-2 text-sm font-medium">{title}</div>
-      <div className={clsx('col gap-4 rounded border p-3', className)}>{children}</div>
+      {children}
     </section>
   );
 }
 
-function ModelNameField({ form }: { form: UseFormReturn<z.infer<typeof schema>> }) {
-  const [search, setSearch] = useState(form.watch('modelName'));
-
-  const query = useQuery({
-    queryKey: ['listHuggingFaceModels', search],
-    refetchInterval: false,
-    async queryFn({ signal }) {
-      if (!(await wait(500, signal))) {
-        return null;
-      }
-
-      const url = new URL('https://huggingface.co/api/models');
-
-      url.searchParams.set('search', search);
-      url.searchParams.set('limit', '10');
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch models from hugging face');
-      }
-
-      const body = (await response.json()) as Array<{
-        id: string;
-        likes: number;
-        downloads: number;
-      }>;
-
-      return body;
-    },
-  });
-
-  const { field } = useController({ control: form.control, name: 'modelName' });
-
-  if (query.error) {
-    return <Alert variant="error" title={query.error.message} description={null} />;
-  }
+function Overview({ model, form }: { model: AiModel; form: UseFormReturn<z.infer<typeof schema>> }) {
+  const instance = useInstance(form.watch('instance'));
+  const region = useRegion(form.watch('region'));
 
   return (
-    <Autocomplete
-      ref={field.ref}
-      items={query.data ?? []}
-      getKey={getId}
-      itemToString={getId}
-      label={<T id="model.modelNameLabel" />}
-      helpTooltip={<T id="model.modelNameTooltip" />}
-      placeholder="e.g. meta-llama/Llama-3.1-8B"
-      renderItem={(model) => (
-        <div className="col gap-1 py-1">
-          <div className="font-medium">{model.id}</div>
-          <div className="text-sm text-dim">
-            <T id="model.modelNameMeta" values={{ likes: model.likes, downloads: model.downloads }} />
-          </div>
-        </div>
-      )}
-      renderNoItems={() => <T id="model.noResults" />}
-      resetOnBlur={false}
-      inputValue={search}
-      onInputValueChange={(value) => {
-        setSearch(value);
-        field.onChange(value);
-      }}
-      onSelectedItemChange={(model) => field.onChange(model.id)}
-      name={field.name}
-      onBlur={field.onBlur}
-      className="max-w-lg"
-    />
+    <div className="divide-y rounded border">
+      <div className="row gap-12 p-3">
+        <Metadata label={<T id="overview.modelNameLabel" />} value={model.name} />
+        <Metadata label={<T id="overview.parametersLabel" />} value={model.parameters} />
+        <Metadata label={<T id="overview.inferenceEngineLabel" />} value={model.engine} />
+      </div>
+
+      <div className="row gap-12 p-3">
+        <Metadata label={<T id="overview.instanceTypeLabel" />} value={instance?.displayName} />
+        <Metadata label={<T id="overview.scalingLabel" />} value={1} />
+        <Metadata label={<T id="overview.regionLabel" />} value={region?.displayName} />
+      </div>
+    </div>
   );
 }
-
-function useMinimumVRam(model: string, token?: string) {
-  const query = useQuery({
-    enabled: model !== '',
-    queryKey: ['estimateModelVRam', model, token],
-    meta: { showError: false },
-    async queryFn({ signal }) {
-      if (!(await wait(500, signal))) {
-        return null;
-      }
-
-      const url = new URL('estimate-vram', 'https://estimator-david-organization-00c60334.koyeb.app');
-
-      url.searchParams.set('model_name', model);
-      url.searchParams.set('dtype', 'float32');
-
-      if (token !== undefined) {
-        url.searchParams.set('access_token', token);
-      }
-
-      const response = await fetch(url);
-
-      if (!response.ok) {
-        throw new Error('Error while computing model size');
-      }
-
-      const { minimum_vram } = responseSchema.parse(await response.json());
-
-      return minimum_vram;
-    },
-  });
-
-  if (query.isSuccess) {
-    return query.data;
-  }
-}
-
-const responseSchema = z.object({
-  minimum_vram: z.number(),
-});

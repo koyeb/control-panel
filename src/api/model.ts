@@ -24,6 +24,17 @@ export type ActivityObject = {
   metadata: Record<string, unknown>;
 };
 
+// ai
+
+export type AiModel = {
+  name: string;
+  description: string;
+  dockerImage: string;
+  parameters: string;
+  engine: string;
+  min_vram: number;
+};
+
 // api credential
 
 export type ApiCredential = {

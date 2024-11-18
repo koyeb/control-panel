@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { hasProperty } from 'src/utils/object';
 
 import { mapCatalogInstancesList, mapCatalogRegionsList } from '../mappers/catalog';
+import { AiModel } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -52,3 +53,57 @@ export function useRegions(identifiers?: string[]) {
 export function useRegion(identifier?: string) {
   return useRegions().find(hasProperty('identifier', identifier));
 }
+
+export function useModels() {
+  return useQuery({
+    queryKey: ['getModels'],
+    queryFn() {
+      return models;
+    },
+  });
+}
+
+const models: AiModel[] = [
+  {
+    name: 'meta-llama/Llama-3.1-8B',
+    description:
+      'The Meta Llama 3.1 collection of multilingual large language models (LLMs) is a collection of pretrained and instruction tuned generative models in 8B, 70B and 405B sizes (text in/text out).',
+    dockerImage: 'koyeb/meta-llama-3.1-8b:latest',
+    engine: 'vLLM',
+    parameters: '8.03B',
+    min_vram: 30019707136,
+  },
+  {
+    name: 'NousResearch/Hermes-3-Llama-3.1-8B',
+    description: 'Hermes 3 is the latest version of our flagship Hermes series of LLMs by Nous Research.',
+    dockerImage: 'koyeb/nousresearch-hermes-3-llama-3.1-8b:latest',
+    engine: 'vLLM',
+    parameters: '8.03B',
+    min_vram: 30019707136,
+  },
+  {
+    name: 'mistralai/Mistral-7B-Instruct-v0.3',
+    description:
+      'The Mistral-7B-Instruct-v0.3 Large Language Model (LLM) is an instruct fine-tuned version of the Mistral-7B-v0.3.',
+    dockerImage: 'koyeb/mistralai-mistral-7b-instruct-v0.3:latest',
+    engine: 'vLLM',
+    parameters: '7.25B',
+    min_vram: 30019707136,
+  },
+  {
+    name: 'google/gemma-2-9b-it',
+    description: 'Summary description and brief definition of inputs and outputs.',
+    dockerImage: 'koyeb/google-gemma-2-9b-it:latest',
+    engine: 'vLLM',
+    parameters: '9.24B',
+    min_vram: 30019707136,
+  },
+  {
+    name: 'Qwen/Qwen2.5-7B-Instruct',
+    description: 'Qwen2.5 is the latest series of Qwen large language models.',
+    dockerImage: 'koyeb/qwen-qwen2.5-7b-instruct:latest',
+    engine: 'vLLM',
+    parameters: '7.62B',
+    min_vram: 30019707136,
+  },
+];
