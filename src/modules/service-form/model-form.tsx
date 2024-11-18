@@ -49,6 +49,9 @@ const schema = z.object({
   region: z.string(),
 });
 
+type ModelFormType = z.infer<typeof schema>;
+type ModelForm = UseFormReturn<ModelFormType>;
+
 type ModelFormProps = {
   model?: AiModel;
   onCostChanged: (cost?: ServiceCost) => void;
@@ -67,12 +70,11 @@ export function ModelForm(props: ModelFormProps) {
 }
 
 function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
-  const availableRegions = useRegions().filter(hasProperty('status', 'available'));
   const instances = useInstances();
   const models = useModels();
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm<ModelFormType>({
     defaultValues: getInitialValues(instances, initialModel),
     resolver: useZodResolver(schema),
   });
@@ -101,99 +103,31 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   });
 
   const model = useModel(form.watch('modelName'));
-  const instance = useInstance(form.watch('instance'));
-  const region = useRegion(form.watch('region'));
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
     usePreSubmitServiceForm();
 
-  useEffect(() => {
-    const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
-      type: 'fixed',
-      fixed: 1,
-      autoscaling: null as never,
-    });
-
-    onCostChanged(cost);
-  }, [instance, region, onCostChanged]);
-
-  const minimumVRam = model?.min_vram ?? 0;
-  const bestFit = useInstanceBestFit();
+  useOnCostEstimationChanged(form, onCostChanged);
 
   return (
     <>
       <form
         ref={formRef}
         onSubmit={handleSubmit(form, (values) => {
+          const instance = instances.find(hasProperty('identifier', values.instance));
+
           if (instance && preSubmit(instance)) {
             return mutation.mutateAsync(values);
           }
         })}
         className="col gap-6"
       >
-        <Section title={<T id="overview.title" />}>
-          <Overview model={model} form={form} />
-        </Section>
-
-        {initialModel === undefined && (
-          <Section title={<T id="model.title" />}>
-            <ControlledSelect
-              control={form.control}
-              name="modelName"
-              items={models}
-              getKey={getName}
-              itemToString={getName}
-              itemToValue={getName}
-              renderItem={(model) => (
-                <div className="row items-center gap-2">
-                  <div>{model.name}</div>
-                  <div className="text-xs text-dim">•</div>
-                  <div className="text-xs text-dim"> parameters: {model.parameters}</div>
-                </div>
-              )}
-            />
-          </Section>
-        )}
-
-        <Section title={<T id="instance.title" />}>
-          <InstanceSelectorList
-            instances={instances
-              .filter(hasProperty('regionCategory', 'koyeb'))
-              .filter(hasProperty('category', 'gpu'))}
-            selectedCategory="gpu"
-            selectedInstance={instances.find(hasProperty('identifier', form.watch('instance'))) ?? null}
-            onInstanceSelected={(instance) => {
-              form.setValue('instance', instance.identifier);
-              form.setValue('region', instance.regions?.[0] ?? 'fra');
-            }}
-            checkAvailability={() => [true]}
-            bestFit={bestFit}
-            minimumVRam={minimumVRam}
-          />
-
-          <MinimumVRamAlerts model={model} instance={instance} bestFit={bestFit} />
-        </Section>
-
-        <Section title={<T id="region.title" />}>
-          <ControlledSelect
-            control={form.control}
-            name="region"
-            items={availableRegions.filter((region) =>
-              instance?.regions ? instance.regions?.includes(region.identifier) : true,
-            )}
-            getKey={(region) => region.identifier}
-            itemToString={(region) => region.displayName}
-            itemToValue={(region) => region.identifier}
-            renderItem={(region) => (
-              <div className="row items-center gap-2">
-                <RegionFlag identifier={region.identifier} className="size-6 rounded-full shadow-badge" />
-                <RegionName identifier={region.identifier} />
-              </div>
-            )}
-          />
-        </Section>
+        <OverviewSection model={model} form={form} />
+        {initialModel === undefined && <ModelSection form={form} />}
+        <InstanceSection form={form} />
+        <RegionSection form={form} />
 
         <div className="row justify-end gap-2">
           <LinkButton color="gray" href={routes.home()}>
@@ -209,7 +143,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
       <RestrictedGpuDialog
         open={restrictedGpuDialogOpen}
         onClose={() => setRestrictedGpuDialogOpen(false)}
-        instanceIdentifier={instance?.identifier ?? ''}
+        instanceIdentifier={form.watch('instance')}
       />
 
       <ServiceFormPaymentDialog
@@ -221,8 +155,23 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   );
 }
 
-function getInitialValues(instances: CatalogInstance[], model?: AiModel): Partial<z.infer<typeof schema>> {
-  const instance = instances.find((instance) => {
+function useOnCostEstimationChanged(form: ModelForm, onChanged: (cost?: ServiceCost) => void) {
+  const instance = useInstance(form.watch('instance'));
+  const region = useRegion(form.watch('region'));
+
+  useEffect(() => {
+    const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
+      type: 'fixed',
+      fixed: 1,
+      autoscaling: null as never,
+    });
+
+    onChanged(cost);
+  }, [instance, region, onChanged]);
+}
+
+function instanceBestFit(model?: AiModel) {
+  return (instance: CatalogInstance): boolean => {
     if (instance.category !== 'gpu') {
       return false;
     }
@@ -232,7 +181,11 @@ function getInitialValues(instances: CatalogInstance[], model?: AiModel): Partia
     }
 
     return instance.vram >= model.min_vram;
-  });
+  };
+}
+
+function getInitialValues(instances: CatalogInstance[], model?: AiModel): Partial<ModelFormType> {
+  const instance = instances.find(instanceBestFit(model));
 
   return {
     modelName: model?.name,
@@ -255,35 +208,88 @@ function Section({ title, children }: SectionProps) {
   );
 }
 
-function Overview({ model, form }: { model?: AiModel; form: UseFormReturn<z.infer<typeof schema>> }) {
+function OverviewSection({ model, form }: { model?: AiModel; form: ModelForm }) {
   const instance = useInstance(form.watch('instance'));
   const region = useRegion(form.watch('region'));
 
   return (
-    <div className="divide-y rounded border">
-      <div className="row gap-12 p-3">
-        <Metadata label={<T id="overview.modelNameLabel" />} value={model?.name ?? '-'} />
-        <Metadata label={<T id="overview.parametersLabel" />} value={model?.parameters ?? '-'} />
-        <Metadata label={<T id="overview.inferenceEngineLabel" />} value={model?.engine ?? '-'} />
-      </div>
+    <Section title={<T id="overview.title" />}>
+      <div className="divide-y rounded border">
+        <div className="row gap-12 p-3">
+          <Metadata label={<T id="overview.modelNameLabel" />} value={model?.name ?? '-'} />
+          <Metadata label={<T id="overview.parametersLabel" />} value={model?.parameters ?? '-'} />
+          <Metadata label={<T id="overview.inferenceEngineLabel" />} value={model?.engine ?? '-'} />
+        </div>
 
-      <div className="row gap-12 p-3">
-        <Metadata label={<T id="overview.instanceTypeLabel" />} value={instance?.displayName} />
-        <Metadata label={<T id="overview.scalingLabel" />} value={1} />
-        <Metadata label={<T id="overview.regionLabel" />} value={region?.displayName} />
+        <div className="row gap-12 p-3">
+          <Metadata label={<T id="overview.instanceTypeLabel" />} value={instance?.displayName} />
+          <Metadata label={<T id="overview.scalingLabel" />} value={1} />
+          <Metadata label={<T id="overview.regionLabel" />} value={region?.displayName} />
+        </div>
       </div>
-    </div>
+    </Section>
   );
 }
 
-function useInstanceBestFit(model?: AiModel) {
-  const instances = useInstances().filter(hasProperty('category', 'gpu'));
+function ModelSection({ form }: { form: ModelForm }) {
+  const models = useModels();
+  const instances = useInstances();
 
-  if (!model?.min_vram) {
-    return instances[0];
-  }
+  return (
+    <Section title={<T id="model.title" />}>
+      <ControlledSelect
+        control={form.control}
+        name="modelName"
+        items={models}
+        getKey={getName}
+        itemToString={getName}
+        itemToValue={getName}
+        renderItem={(model) => (
+          <div className="row items-center gap-2">
+            <div>{model.name}</div>
+            <div className="text-xs text-dim">•</div>
+            <div className="text-xs text-dim"> parameters: {model.parameters}</div>
+          </div>
+        )}
+        onChangeEffect={(model) => {
+          const instance = instances.find(instanceBestFit(model));
 
-  return instances.find((instance) => instance.vram !== undefined && instance.vram >= model.min_vram);
+          if (instance) {
+            form.setValue('instance', instance.identifier);
+            form.setValue('region', instance.regions?.[0] ?? 'fra');
+          }
+        }}
+      />
+    </Section>
+  );
+}
+
+function InstanceSection({ form }: { form: ModelForm }) {
+  const model = useModel(form.watch('modelName'));
+  const instance = useInstance(form.watch('instance'));
+  const instances = useInstances();
+  const bestFit = instances.find(instanceBestFit(model));
+
+  return (
+    <Section title={<T id="instance.title" />}>
+      <InstanceSelectorList
+        instances={instances
+          .filter(hasProperty('regionCategory', 'koyeb'))
+          .filter(hasProperty('category', 'gpu'))}
+        selectedCategory="gpu"
+        selectedInstance={instances.find(hasProperty('identifier', form.watch('instance'))) ?? null}
+        onInstanceSelected={(instance) => {
+          form.setValue('instance', instance.identifier);
+          form.setValue('region', instance.regions?.[0] ?? 'fra');
+        }}
+        checkAvailability={() => [true]}
+        bestFit={bestFit}
+        minimumVRam={model?.min_vram}
+      />
+
+      <MinimumVRamAlerts model={model} instance={instance} bestFit={bestFit} />
+    </Section>
+  );
 }
 
 type MinimumVRamAlertsProps = {
@@ -321,4 +327,30 @@ function MinimumVRamAlerts({ model, instance, bestFit }: MinimumVRamAlertsProps)
   }
 
   return null;
+}
+
+function RegionSection({ form }: { form: ModelForm }) {
+  const availableRegions = useRegions().filter(hasProperty('status', 'available'));
+  const instance = useInstance(form.watch('instance'));
+
+  return (
+    <Section title={<T id="region.title" />}>
+      <ControlledSelect
+        control={form.control}
+        name="region"
+        items={availableRegions.filter((region) =>
+          instance?.regions ? instance.regions?.includes(region.identifier) : true,
+        )}
+        getKey={(region) => region.identifier}
+        itemToString={(region) => region.displayName}
+        itemToValue={(region) => region.identifier}
+        renderItem={(region) => (
+          <div className="row items-center gap-2">
+            <RegionFlag identifier={region.identifier} className="size-6 rounded-full shadow-badge" />
+            <RegionName identifier={region.identifier} />
+          </div>
+        )}
+      />
+    </Section>
+  );
 }

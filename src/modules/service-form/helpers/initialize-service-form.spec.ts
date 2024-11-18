@@ -29,7 +29,7 @@ vi.mock('src/api/api', async (importOriginal) => {
   };
 });
 
-vi.mock('./helpers/generate-app-name.ts', () => ({
+vi.mock('./generate-app-name.ts', () => ({
   generateAppName: () => 'generated',
 }));
 
