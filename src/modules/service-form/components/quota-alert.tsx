@@ -10,8 +10,8 @@ import { useToken } from 'src/application/token';
 import { LinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 
+import { defaultServiceForm } from '../helpers/initialize-service-form';
 import { serviceFormToDeploymentDefinition } from '../helpers/service-form-to-deployment';
-import { defaultServiceForm } from '../initialize-service-form';
 import { Scaling } from '../service-form.types';
 
 type QuotaAlertProps = {

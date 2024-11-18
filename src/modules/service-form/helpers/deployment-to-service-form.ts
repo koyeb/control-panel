@@ -11,7 +11,6 @@ import { assert, AssertionError } from 'src/utils/assert';
 import { hasProperty, keys } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
-import { defaultHealthCheck } from '../initialize-service-form';
 import {
   AutoScaling,
   Builder,
@@ -26,6 +25,8 @@ import {
   ServiceForm,
   ServiceVolume,
 } from '../service-form.types';
+
+import { defaultHealthCheck } from './initialize-service-form';
 
 export function deploymentDefinitionToServiceForm(
   definition: ApiDeploymentDefinition,

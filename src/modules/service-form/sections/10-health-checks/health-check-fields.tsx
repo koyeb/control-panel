@@ -8,7 +8,7 @@ import { IconRefresh } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
-import { defaultHealthCheck } from '../../initialize-service-form';
+import { defaultHealthCheck } from '../../helpers/initialize-service-form';
 import { HealthCheck, Port, ServiceForm } from '../../service-form.types';
 
 import { HealthCheckProtocol } from './health-check-protocol';

@@ -2,7 +2,7 @@ import type { Meta, StoryFn } from '@storybook/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { defaultServiceForm } from '../initialize-service-form';
+import { defaultServiceForm } from '../helpers/initialize-service-form';
 
 import { SubmitButton } from './submit-button';
 

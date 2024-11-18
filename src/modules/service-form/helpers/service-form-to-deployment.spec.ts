@@ -2,8 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { ApiDeploymentDefinition } from 'src/api/api-types';
 
-import { defaultHealthCheck, defaultServiceForm } from '../initialize-service-form';
-
+import { defaultHealthCheck, defaultServiceForm } from './initialize-service-form';
 import { serviceFormToDeploymentDefinition } from './service-form-to-deployment';
 
 describe('serviceFormToDeploymentDefinition', () => {

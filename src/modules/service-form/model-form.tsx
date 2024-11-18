@@ -39,8 +39,8 @@ import { slugify } from 'src/utils/strings';
 
 import { RestrictedGpuDialogOpen } from './components/restricted-gpu-dialog';
 import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
-import { defaultServiceForm } from './initialize-service-form';
-import { submitServiceForm } from './submit-service-form';
+import { defaultServiceForm } from './helpers/initialize-service-form';
+import { submitServiceForm } from './helpers/submit-service-form';
 
 const T = Translate.prefix('modelForm');
 

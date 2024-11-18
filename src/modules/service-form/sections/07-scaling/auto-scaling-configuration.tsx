@@ -15,7 +15,7 @@ import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
-import { defaultServiceForm } from '../../initialize-service-form';
+import { defaultServiceForm } from '../../helpers/initialize-service-form';
 import { AutoScaling, ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 

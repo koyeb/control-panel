@@ -6,7 +6,7 @@ import { ControlledInput } from 'src/components/controlled';
 import { IconTrash } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
-import { defaultServiceForm } from '../../initialize-service-form';
+import { defaultServiceForm } from '../../helpers/initialize-service-form';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 

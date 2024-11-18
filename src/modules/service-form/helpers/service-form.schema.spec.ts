@@ -2,9 +2,9 @@ import { describe, expect, it } from 'vitest';
 
 import { identity } from 'src/utils/generic';
 
-import { defaultHealthCheck, defaultServiceForm } from '../initialize-service-form';
 import { ServiceForm } from '../service-form.types';
 
+import { defaultHealthCheck, defaultServiceForm } from './initialize-service-form';
 import { serviceFormSchema } from './service-form.schema';
 
 describe('serviceFormSchema', () => {

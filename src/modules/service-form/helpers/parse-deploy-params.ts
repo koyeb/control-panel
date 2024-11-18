@@ -7,7 +7,6 @@ import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
-import { defaultHealthCheck } from '../initialize-service-form';
 import {
   AutoScaling,
   GitSource,
@@ -18,6 +17,8 @@ import {
   ServiceForm,
   ServiceVolume,
 } from '../service-form.types';
+
+import { defaultHealthCheck } from './initialize-service-form';
 
 export function parseDeployParams(
   params: URLSearchParams,

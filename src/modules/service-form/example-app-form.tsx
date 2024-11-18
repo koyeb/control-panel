@@ -25,10 +25,10 @@ import {
 } from 'src/modules/deployment/metadata/runtime-metadata';
 
 import { EstimatedCost } from './components/estimated-cost';
+import { defaultServiceForm } from './helpers/initialize-service-form';
 import { parseDeployParams } from './helpers/parse-deploy-params';
-import { defaultServiceForm } from './initialize-service-form';
+import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
-import { submitServiceForm } from './submit-service-form';
 
 const T = Translate.prefix('serviceForm.exampleApp');
 

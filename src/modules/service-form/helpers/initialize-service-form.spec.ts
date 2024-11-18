@@ -6,8 +6,9 @@ import { CatalogRegion, CatalogInstance, Organization, OrganizationSummary, Gith
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { create } from 'src/utils/factories';
 
+import { ServiceForm } from '../service-form.types';
+
 import { defaultServiceForm, initializeServiceForm } from './initialize-service-form';
-import { ServiceForm } from './service-form.types';
 
 const mockFetchGithubRepository = fetchGithubRepository as MockedFunction<typeof fetchGithubRepository>;
 const mockApi = api as MockedObject<typeof api>;

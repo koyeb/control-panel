@@ -5,7 +5,7 @@ import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
-import { defaultHealthCheck } from '../../initialize-service-form';
+import { defaultHealthCheck } from '../../helpers/initialize-service-form';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { PortFields } from './port-fields';

@@ -3,8 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { CatalogInstance, CatalogRegion } from 'src/api/model';
 import { create } from 'src/utils/factories';
 
-import { defaultHealthCheck } from '../initialize-service-form';
-
+import { defaultHealthCheck } from './initialize-service-form';
 import { parseDeployParams } from './parse-deploy-params';
 
 class Test {

@@ -30,6 +30,7 @@ import { ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
 import { mapServiceFormApiValidationError } from './helpers/map-service-form-api-validation-error';
 import { getDeployParams } from './helpers/parse-deploy-params';
 import { getServiceFormSections } from './helpers/service-form-sections';
+import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceNameSection } from './sections/00-service-name/service-name.section';
 import { ServiceTypeSection } from './sections/01-service-type/service-type.section';
 import { SourceSection } from './sections/02-source/source.section';
@@ -43,7 +44,6 @@ import { VolumesSection } from './sections/08-volumes/volumes.section';
 import { PortsSection } from './sections/09-ports/ports.section';
 import { HealthChecksSection } from './sections/10-health-checks/health-checks.section';
 import { ServiceFormSection, type ServiceForm } from './service-form.types';
-import { submitServiceForm } from './submit-service-form';
 import { useServiceForm } from './use-service-form';
 
 const T = Translate.prefix('serviceForm');

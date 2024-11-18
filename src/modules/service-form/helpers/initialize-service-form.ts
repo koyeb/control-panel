@@ -9,11 +9,12 @@ import { getToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { hasProperty } from 'src/utils/object';
 
-import { deploymentDefinitionToServiceForm } from './helpers/deployment-to-service-form';
-import { generateAppName } from './helpers/generate-app-name';
-import { parseDeployParams } from './helpers/parse-deploy-params';
-import { generateServiceName } from './sections/00-service-name/use-generate-service-name';
-import { HealthCheck, ServiceForm } from './service-form.types';
+import { generateServiceName } from '../sections/00-service-name/use-generate-service-name';
+import { HealthCheck, ServiceForm } from '../service-form.types';
+
+import { deploymentDefinitionToServiceForm } from './deployment-to-service-form';
+import { generateAppName } from './generate-app-name';
+import { parseDeployParams } from './parse-deploy-params';
 
 export async function initializeServiceForm(
   params: URLSearchParams,

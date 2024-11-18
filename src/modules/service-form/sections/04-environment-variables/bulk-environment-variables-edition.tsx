@@ -5,12 +5,12 @@ import { Button, Dialog, TextArea } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { Translate } from 'src/intl/translate';
 
+import { defaultServiceForm } from '../../helpers/initialize-service-form';
 import {
   SecretNotFoundError,
   parseEnvironmentVariables,
   stringifyEnvironmentVariables,
 } from '../../helpers/parse-environment-variables';
-import { defaultServiceForm } from '../../initialize-service-form';
 import { useWatchServiceForm } from '../../use-service-form';
 
 const T = Translate.prefix('serviceForm.environmentVariables.bulkEdition');

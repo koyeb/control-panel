@@ -3,8 +3,9 @@ import { isApiValidationError } from 'src/api/api-errors';
 import { getToken } from 'src/application/token';
 import { hasProperty } from 'src/utils/object';
 
-import { serviceFormToDeploymentDefinition } from './helpers/service-form-to-deployment';
-import { ServiceForm } from './service-form.types';
+import { ServiceForm } from '../service-form.types';
+
+import { serviceFormToDeploymentDefinition } from './service-form-to-deployment';
 
 const uuid = '15c6a049-6594-4df0-99c3-a5c262e69624';
 

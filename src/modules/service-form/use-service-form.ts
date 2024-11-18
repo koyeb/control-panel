@@ -9,9 +9,9 @@ import { useOrganization } from 'src/api/hooks/session';
 import { useSearchParams } from 'src/hooks/router';
 import { useTranslate } from 'src/intl/translate';
 
+import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
 import { serviceFormSchema } from './helpers/service-form.schema';
-import { initializeServiceForm } from './initialize-service-form';
 import { ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(appId?: string, serviceId?: string) {
