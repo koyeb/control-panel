@@ -20,7 +20,7 @@ export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
-  const [appId] = useSearchParam('appId');
+  const [appId] = useSearchParam('app_id');
   const organization = useOrganization();
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();

@@ -38,7 +38,6 @@ import { ServiceFormSection, type ServiceForm } from './service-form.types';
 import { useServiceForm } from './use-service-form';
 
 type ServiceFormProps = {
-  appId?: string;
   serviceId?: string;
   className?: string;
   onDeployed: (appId: string, serviceId: string, deploymentId: string) => void;
@@ -56,7 +55,6 @@ export function ServiceForm(props: ServiceFormProps) {
 }
 
 function ServiceForm_({
-  appId,
   serviceId,
   className,
   onDeployed,
@@ -66,7 +64,7 @@ function ServiceForm_({
 }: ServiceFormProps) {
   const invalidate = useInvalidateApiQuery();
 
-  const form = useServiceForm(appId, serviceId);
+  const form = useServiceForm(serviceId);
   const formRef = useRef<HTMLFormElement>(null);
 
   const mutation = useMutation({

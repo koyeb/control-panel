@@ -14,7 +14,7 @@ import { getServiceFormSections, sectionHasError } from './helpers/service-form-
 import { serviceFormSchema } from './helpers/service-form.schema';
 import { ServiceForm, ServiceFormSection } from './service-form.types';
 
-export function useServiceForm(appId?: string, serviceId?: string) {
+export function useServiceForm(serviceId?: string) {
   const translate = useTranslate();
 
   const params = useSearchParams();
@@ -33,7 +33,6 @@ export function useServiceForm(appId?: string, serviceId?: string) {
         instances,
         organization,
         githubApp,
-        appId,
         serviceId,
         queryClient,
       );

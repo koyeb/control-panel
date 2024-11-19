@@ -22,7 +22,6 @@ export async function initializeServiceForm(
   instances: CatalogInstance[],
   organization: Organization,
   githubApp: GithubApp | undefined,
-  appId: string | undefined,
   serviceId: string | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {
@@ -30,19 +29,17 @@ export async function initializeServiceForm(
   let values = defaultServiceForm();
 
   if (serviceId) {
-    const service = await api.getService({
-      token,
-      path: { id: serviceId },
-    });
+    const { service } = await api.getService({ token, path: { id: serviceId } });
+    const { app } = await api.getApp({ token, path: { id: service!.app_id! } });
 
-    appId = service.service!.app_id!;
+    values.meta.appId = app!.id!;
+    values.appName = app!.name!;
 
-    values.meta.appId = appId;
-    values.meta.serviceId = serviceId;
+    values.meta.serviceId = service!.id!;
 
     const deployment = await api.getDeployment({
       token,
-      path: { id: service.service!.latest_deployment_id! },
+      path: { id: service!.latest_deployment_id! },
     });
 
     const definition = deployment.deployment!.definition!;
@@ -62,7 +59,7 @@ export async function initializeServiceForm(
       values.meta.allowFreeInstanceIfAlreadyUsed = true;
     }
 
-    values.meta.hasPreviousBuild = service.service?.last_provisioned_deployment_id !== '';
+    values.meta.hasPreviousBuild = service?.last_provisioned_deployment_id !== '';
   }
 
   if (!serviceId) {
@@ -84,16 +81,6 @@ export async function initializeServiceForm(
     if (registrySecret) {
       values.source.docker.registrySecret = registrySecret;
     }
-  }
-
-  if (appId) {
-    const app = await api.getApp({
-      token,
-      path: { id: appId },
-    });
-
-    values.meta.appId = appId;
-    values.appName = app.app!.name!;
   }
 
   if (values.source.type === 'git') {

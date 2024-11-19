@@ -39,6 +39,13 @@ describe('parseDeployParams', () => {
     expect(test.getValues()).toEqual({});
   });
 
+  describe('app', () => {
+    it('app_id', () => {
+      test.params.set('app_id', 'app_id');
+      expect(test.getValues()).toHaveProperty('meta.appId', 'app_id');
+    });
+  });
+
   describe('name', () => {
     it('service name', () => {
       test.params.set('name', 'name');

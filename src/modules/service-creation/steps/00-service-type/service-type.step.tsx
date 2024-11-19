@@ -23,7 +23,7 @@ type ServiceTypeStepProps = {
 };
 
 export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
-  const [appId] = useSearchParam('appId');
+  const [appId] = useSearchParam('app_id');
   const [serviceType, setServiceType] = useSearchParam('service_type');
   const navigate = useNavigate();
 
@@ -96,15 +96,15 @@ function getCreateServiceUrl(serviceType: ExtendedServiceType, appId: string | n
 
   if (serviceType === 'database') {
     url = routes.createDatabaseService();
-
-    if (appId !== null) {
-      url += `?${String(new URLSearchParams({ appId }))}`;
-    }
   }
 
   if (serviceType === 'model') {
     url = routes.deploy();
     url += `?${new URLSearchParams({ type: 'model' }).toString()}`;
+  }
+
+  if (appId !== null) {
+    url += `?${String(new URLSearchParams({ app_id: appId }))}`;
   }
 
   return url;

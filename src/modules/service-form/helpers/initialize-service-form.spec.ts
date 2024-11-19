@@ -42,7 +42,6 @@ describe('initializeServiceForm', () => {
       organization: Organization;
       summary: OrganizationSummary;
       githubApp: GithubApp;
-      appId: string;
       serviceId: string;
     }> = {},
   ) {
@@ -52,7 +51,6 @@ describe('initializeServiceForm', () => {
       options.instances ?? [],
       options.organization ?? create.organization(),
       options.githubApp,
-      options.appId,
       options.serviceId,
       new QueryClient(),
     );

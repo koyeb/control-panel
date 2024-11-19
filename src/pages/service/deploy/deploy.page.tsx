@@ -33,7 +33,6 @@ export function DeployServiceForm() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
-  const [appId] = useSearchParam('appId');
   const [serviceId] = useSearchParam('serviceId');
 
   const [cost, setCost] = useState<ServiceCost>();
@@ -49,7 +48,6 @@ export function DeployServiceForm() {
 
       <div className="col xl:row gap-8">
         <ServiceForm
-          appId={appId ?? undefined}
           serviceId={serviceId ?? undefined}
           className="grow"
           onDeployed={(appId, serviceId) => navigate(routes.initialDeployment(serviceId))}

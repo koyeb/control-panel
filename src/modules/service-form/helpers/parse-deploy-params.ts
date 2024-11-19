@@ -28,6 +28,7 @@ export function parseDeployParams(
 ): DeepPartial<ServiceForm> {
   const builder = new ServiceFormBuilder(instancesCatalog, regionsCatalog, githubOrganization);
 
+  builder.appId = params.get('app_id');
   builder.name = params.get('name');
   builder.serviceType = params.get('service_type');
   builder.type = params.get('type');
@@ -92,6 +93,12 @@ class ServiceFormBuilder {
 
   private set<Key extends keyof ServiceForm>(key: Key, value: DeepPartial<ServiceForm[Key]>) {
     merge(this.values, { [key]: value });
+  }
+
+  set appId(appId: string | null) {
+    if (appId !== null) {
+      this.set('meta', { appId });
+    }
   }
 
   set name(name: string | null) {

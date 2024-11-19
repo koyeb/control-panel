@@ -36,7 +36,7 @@ export function AppActions({ app }: { app: App }) {
               <T id="appActions.label" />
             </MenuItem>
 
-            <MenuItem element={Link} href={`${routes.createService()}?appId=${app.id}`} onClick={onClose}>
+            <MenuItem element={Link} href={`${routes.createService()}?app_id=${app.id}`} onClick={onClose}>
               <T id="appActions.addService" />
             </MenuItem>
 

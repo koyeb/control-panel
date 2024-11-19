@@ -16,7 +16,7 @@ type SubmitServiceFormResult = {
 };
 
 export async function submitServiceForm(form: ServiceForm): Promise<SubmitServiceFormResult> {
-  let appId: string | null | undefined = form.meta.appId;
+  let appId = form.meta.appId ?? undefined;
   const serviceId = form.meta.serviceId;
 
   if (serviceId === null) {
