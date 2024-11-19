@@ -98,6 +98,10 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
   }
 
   for (const { name, value } of form.environmentVariables) {
+    if (name === '') {
+      continue;
+    }
+
     set(`env[${name}]`, value);
   }
 
