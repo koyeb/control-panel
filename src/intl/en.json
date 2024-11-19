@@ -1182,7 +1182,7 @@
         "portNumberLabel": "Port",
         "protocolLabel": "Protocol",
         "gracePeriodLabel": "Grace period",
-        "gracePeriodTooltip": "Number of seconds to wait before sleeping the instance if it receives no traffic",
+        "gracePeriodTooltip": "The initial period to wait for the instance to become healthy",
         "gracePeriodUnit": "s",
         "intervalLabel": "Interval",
         "intervalTooltip": "The period between two checks",
