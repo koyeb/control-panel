@@ -17,8 +17,8 @@ import { ServiceFormPaymentDialog } from './components/service-form-payment-dial
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
 import { SubmitButton } from './components/submit-button';
 import { ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
+import { getDeployParams } from './helpers/get-deploy-params';
 import { mapServiceFormApiValidationError } from './helpers/map-service-form-api-validation-error';
-import { getDeployParams } from './helpers/parse-deploy-params';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { getServiceFormSections } from './helpers/service-form-sections';
 import { submitServiceForm } from './helpers/submit-service-form';
