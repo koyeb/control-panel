@@ -29,6 +29,7 @@ export function parseDeployParams(
   const builder = new ServiceFormBuilder(instancesCatalog, regionsCatalog, githubOrganization);
 
   builder.appId = params.get('app_id');
+  builder.appName = params.get('app_name');
   builder.name = params.get('name');
   builder.serviceType = params.get('service_type');
   builder.type = params.get('type');
@@ -98,6 +99,12 @@ class ServiceFormBuilder {
   set appId(appId: string | null) {
     if (appId !== null) {
       this.set('meta', { appId });
+    }
+  }
+
+  set appName(appName: string | null) {
+    if (appName !== null) {
+      this.set('appName', appName);
     }
   }
 
