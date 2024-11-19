@@ -29,7 +29,7 @@ export function createTranslationHelpers<Key extends string>(commonValues?: Valu
       [intl],
     );
 
-    return translate as TranslateFunction<Key>;
+    return translate as unknown as TranslateFunction<Key>;
   }
 
   type TranslateProps<Key extends string> = {
