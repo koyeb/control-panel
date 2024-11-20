@@ -55,6 +55,8 @@ export async function initializeServiceForm(
       values.environmentVariables = defaultServiceForm().environmentVariables;
     }
 
+    values.meta.previousInstance = values.instance.identifier;
+
     if (values.instance.identifier === 'free') {
       values.meta.allowFreeInstanceIfAlreadyUsed = true;
     }
@@ -172,6 +174,7 @@ export function defaultServiceForm(): ServiceForm {
       expandedSection: null,
       appId: null,
       serviceId: null,
+      previousInstance: null,
       allowFreeInstanceIfAlreadyUsed: false,
       hasPreviousBuild: false,
       skipBuild: false,

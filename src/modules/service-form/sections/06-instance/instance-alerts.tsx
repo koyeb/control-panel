@@ -3,6 +3,7 @@ import { useFormState } from 'react-hook-form';
 import { Alert } from '@koyeb/design-system';
 import { useInstance, useRegion } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationSummary } from 'src/api/hooks/session';
+import { DocumentationLink } from 'src/components/documentation-link';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -15,16 +16,49 @@ export function InstanceAlerts() {
 
   const { category } = useWatchServiceForm('instance');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
+  const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
 
-  if (category === 'eco' && hasVolumes) {
-    return (
-      <Alert
-        variant="error"
-        style="outline"
-        title={<T id="ecoHasVolumesTitle" />}
-        description={<T id="ecoHasVolumesDescription" />}
-      />
-    );
+  if (hasVolumes) {
+    if (previousInstance) {
+      const documentationLink = (children: React.ReactNode) => (
+        <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
+          {children}
+        </DocumentationLink>
+      );
+
+      if (previousInstance.category === 'gpu') {
+        return (
+          <Alert
+            variant={category === 'gpu' ? 'info' : 'error'}
+            style="outline"
+            title={<T id="gpuVolumesTitle" />}
+            description={<T id="gpuVolumesDescription" values={{ documentationLink }} />}
+          />
+        );
+      }
+
+      if (category === 'gpu') {
+        return (
+          <Alert
+            variant="error"
+            style="outline"
+            title={<T id="gpuToCpuWithVolumesTitle" />}
+            description={<T id="gpuToCpuWithVolumesDescription" values={{ documentationLink }} />}
+          />
+        );
+      }
+    }
+
+    if (category === 'eco') {
+      return (
+        <Alert
+          variant="error"
+          style="outline"
+          title={<T id="ecoHasVolumesTitle" />}
+          description={<T id="ecoHasVolumesDescription" />}
+        />
+      );
+    }
   }
 
   if (plan === 'hobby') {

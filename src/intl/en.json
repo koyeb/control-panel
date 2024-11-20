@@ -1065,6 +1065,10 @@
       "alerts": {
         "ecoHasVolumesTitle": "Volumes are not supported on Eco instances",
         "ecoHasVolumesDescription": "Select a Standard or GPU instance to keep the volumes attached to your service",
+        "gpuVolumesTitle": "GPU Instance can't be changed when volumes are attached",
+        "gpuVolumesDescription": "Create a volume from a snapshot and mount it to another service. <documentationLink>Learn more</documentationLink>",
+        "gpuToCpuWithVolumesTitle": "CPU Instance can't be changed to a GPU instance when volumes are attached",
+        "gpuToCpuWithVolumesDescription": "Create a volume from a snapshot and mount it to another service. <documentationLink>Learn more</documentationLink>",
         "freeInstanceAlreadyUsedTitle": "You have already used the {instanceName} Instance",
         "freeInstanceAlreadyUsedDescription": "Please <upgrade>upgrade your plan</upgrade> to get access to additional instance types",
         "freeInstanceTitle": "The {instanceName} instance is only available in {fra} and {was}",

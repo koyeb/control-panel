@@ -28,6 +28,7 @@ export function InstanceSection() {
   const serviceType = useWatchServiceForm('serviceType');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const allowFreeInstanceIfAlreadyUsed = useWatchServiceForm('meta.allowFreeInstanceIfAlreadyUsed');
+  const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
 
   const regions = useWatchServiceForm('regions');
   const firstRegion = useRegion(regions[0]);
@@ -36,6 +37,7 @@ export function InstanceSection() {
     serviceType,
     hasVolumes,
     allowFreeInstanceIfAlreadyUsed,
+    previousInstance,
   });
 
   useUnsetInstanceWhenNotAvailable(availabilities);
@@ -129,7 +131,7 @@ function useUpdateRegionsWhenInstanceChanges() {
   }, [instance, regionAvailabilities, getValues, setValue]);
 }
 
-const SectionTitle = () => {
+function SectionTitle() {
   const instanceType = useWatchServiceForm('instance.identifier');
   const instance = useInstance(instanceType);
 
@@ -156,4 +158,4 @@ const SectionTitle = () => {
       </span>
     </>
   );
-};
+}

@@ -55,6 +55,8 @@ export type InstanceUnavailableReason =
   | 'instanceNotFound'
   | 'unavailableInCatalog'
   | 'volumesNotEnabled'
+  | 'changeCpuToGpuWithVolume'
+  | 'changeGpuWithVolume'
   | 'freeWorker'
   | 'freeAlreadyUsed';
 
@@ -76,6 +78,7 @@ type CheckInstanceAvailabilityOptions = {
   serviceType?: ServiceType;
   hasVolumes?: boolean;
   allowFreeInstanceIfAlreadyUsed?: boolean;
+  previousInstance?: CatalogInstance;
 };
 
 function checkInstanceAvailability(
@@ -83,24 +86,36 @@ function checkInstanceAvailability(
   summary: OrganizationSummary | undefined,
   options: CheckInstanceAvailabilityOptions = {},
 ): InstanceAvailability {
-  if (instance.category === 'gpu') {
-    return [true];
+  const { serviceType, hasVolumes, allowFreeInstanceIfAlreadyUsed, previousInstance } = options;
+
+  if (hasVolumes && previousInstance) {
+    if (previousInstance.category !== 'gpu' && instance.category === 'gpu') {
+      return [false, 'changeCpuToGpuWithVolume'];
+    }
+
+    if (previousInstance.category === 'gpu' && previousInstance.identifier !== instance.identifier) {
+      return [false, 'changeGpuWithVolume'];
+    }
   }
 
   if (instance.status !== 'available') {
+    if (instance.category === 'gpu') {
+      return [true];
+    }
+
     return [false, 'unavailableInCatalog'];
   }
 
-  if (options.hasVolumes && !instance.hasVolumes) {
+  if (hasVolumes && !instance.hasVolumes) {
     return [false, 'volumesNotEnabled'];
   }
 
   if (instance.identifier === 'free') {
-    if (summary?.freeInstanceUsed && !options.allowFreeInstanceIfAlreadyUsed) {
+    if (summary?.freeInstanceUsed && !allowFreeInstanceIfAlreadyUsed) {
       return [false, 'freeAlreadyUsed'];
     }
 
-    if (options.serviceType === 'worker') {
+    if (serviceType === 'worker') {
       return [false, 'freeWorker'];
     }
   }
