@@ -14,6 +14,7 @@ import {
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
+import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledSelect } from 'src/components/controlled';
@@ -133,7 +134,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         className="col gap-6"
       >
         <OverviewSection serviceForm={serviceForm} form={form} />
-        <InstanceSection form={form} />
+        <InstanceSection serviceForm={serviceForm} form={form} />
         <RegionSection form={form} />
 
         <div className="row justify-end gap-2">
@@ -236,9 +237,14 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
   );
 }
 
-function InstanceSection({ form }: { form: OneClickAppForm }) {
+function InstanceSection({ serviceForm, form }: { serviceForm: ServiceForm; form: OneClickAppForm }) {
   const instances = useInstances();
   const instance = useInstance(form.watch('instance'));
+
+  const availabilities = useInstanceAvailabilities({
+    serviceType: serviceForm.serviceType,
+    hasVolumes: serviceForm.volumes.length > 0,
+  });
 
   return (
     <Section title={<T id="instance" />}>
@@ -249,7 +255,7 @@ function InstanceSection({ form }: { form: OneClickAppForm }) {
           form.setValue('instance', instance?.identifier ?? null);
           form.setValue('region', instance?.regions?.[0] ?? 'fra');
         }}
-        checkAvailability={() => [true]}
+        checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
       />
     </Section>
   );

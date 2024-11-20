@@ -16,6 +16,7 @@ import {
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { AiModel, CatalogInstance } from 'src/api/model';
+import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
@@ -270,6 +271,8 @@ function InstanceSection({ form }: { form: ModelForm }) {
   const instances = useInstances();
   const bestFit = instances.find(instanceBestFit(model));
 
+  const availabilities = useInstanceAvailabilities();
+
   return (
     <Section title={<T id="instance.title" />}>
       <InstanceSelectorList
@@ -282,7 +285,7 @@ function InstanceSection({ form }: { form: ModelForm }) {
           form.setValue('instance', instance.identifier);
           form.setValue('region', instance.regions?.[0] ?? 'fra');
         }}
-        checkAvailability={() => [true]}
+        checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
         bestFit={bestFit}
         minimumVRam={model?.min_vram}
       />
