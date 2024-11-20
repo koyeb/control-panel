@@ -1,8 +1,9 @@
-import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useController, useFormContext } from 'react-hook-form';
 
 import { Badge } from '@koyeb/design-system';
 import { useInstance, useInstances, useRegion } from 'src/api/hooks/catalog';
+import { InstanceCategory } from 'src/api/model';
 import {
   InstanceAvailability,
   useInstanceAvailabilities,
@@ -41,6 +42,11 @@ export function InstanceSection() {
   useUnsetInstanceWhenNotAvailable(availabilities);
   useUpdateRegionsWhenInstanceChanges();
 
+  const { field } = useController<ServiceForm, 'instance'>({ name: 'instance' });
+  const instance = useInstance(field.value);
+
+  const [category, setCategory] = useState<InstanceCategory>(instance?.category ?? 'standard');
+
   return (
     <ServiceFormSection
       section="instance"
@@ -49,19 +55,15 @@ export function InstanceSection() {
       expandedTitle={<T id="expandedTitle" />}
       className="col gap-6"
     >
-      <InstanceAlerts />
+      <InstanceAlerts selectedCategory={category} />
 
-      <Controller<ServiceForm, 'instance'>
-        name="instance"
-        render={({ field }) => (
-          <InstanceSelector
-            instances={instances.filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))}
-            checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
-            selectedInstance={instances.find(hasProperty('identifier', field.value)) ?? null}
-            onInstanceSelected={(instance) => field.onChange(instance?.identifier ?? null)}
-            className="w-full"
-          />
-        )}
+      <InstanceSelector
+        instances={instances.filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))}
+        checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
+        selectedInstance={instances.find(hasProperty('identifier', field.value)) ?? null}
+        onInstanceSelected={(instance) => field.onChange(instance?.identifier ?? null)}
+        onCategoryChanged={setCategory}
+        className="w-full"
       />
     </ServiceFormSection>
   );

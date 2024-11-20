@@ -3,7 +3,7 @@ import { useFormState } from 'react-hook-form';
 import { Alert } from '@koyeb/design-system';
 import { useInstance, useRegion } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationSummary } from 'src/api/hooks/session';
-import { CatalogInstance } from 'src/api/model';
+import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { Translate } from 'src/intl/translate';
 
@@ -12,51 +12,49 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 const T = Translate.prefix('serviceForm.instance.alerts');
 
-export function InstanceAlerts() {
+export function InstanceAlerts({ selectedCategory }: { selectedCategory: InstanceCategory }) {
   const { plan } = useOrganization();
 
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useInstance(useWatchServiceForm('instance'));
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
 
-  if (hasVolumes) {
-    if (previousInstance) {
-      const documentationLink = (children: React.ReactNode) => (
-        <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
-          {children}
-        </DocumentationLink>
+  if (hasVolumes && selectedCategory === 'eco') {
+    return (
+      <Alert
+        variant="error"
+        style="outline"
+        title={<T id="ecoHasVolumesTitle" />}
+        description={<T id="ecoHasVolumesDescription" />}
+      />
+    );
+  }
+
+  if (hasVolumes && previousInstance) {
+    const documentationLink = (children: React.ReactNode) => (
+      <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
+        {children}
+      </DocumentationLink>
+    );
+
+    if (previousInstance.category === 'gpu') {
+      return (
+        <Alert
+          variant={selectedCategory === 'gpu' ? 'info' : 'error'}
+          style="outline"
+          title={<T id="gpuVolumesTitle" />}
+          description={<T id="gpuVolumesDescription" values={{ documentationLink }} />}
+        />
       );
-
-      if (previousInstance.category === 'gpu') {
-        return (
-          <Alert
-            variant={instance?.category === 'gpu' ? 'info' : 'error'}
-            style="outline"
-            title={<T id="gpuVolumesTitle" />}
-            description={<T id="gpuVolumesDescription" values={{ documentationLink }} />}
-          />
-        );
-      }
-
-      if (!instance || instance?.category === 'gpu') {
-        return (
-          <Alert
-            variant="error"
-            style="outline"
-            title={<T id="gpuToCpuWithVolumesTitle" />}
-            description={<T id="gpuToCpuWithVolumesDescription" values={{ documentationLink }} />}
-          />
-        );
-      }
     }
 
-    if (instance?.category === 'eco') {
+    if (selectedCategory === 'gpu') {
       return (
         <Alert
           variant="error"
           style="outline"
-          title={<T id="ecoHasVolumesTitle" />}
-          description={<T id="ecoHasVolumesDescription" />}
+          title={<T id="gpuToCpuWithVolumesTitle" />}
+          description={<T id="gpuToCpuWithVolumesDescription" values={{ documentationLink }} />}
         />
       );
     }

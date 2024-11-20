@@ -18,6 +18,7 @@ type InstanceSelectorProps = {
   instances: CatalogInstance[];
   selectedInstance: CatalogInstance | null;
   onInstanceSelected: (instance: CatalogInstance | null) => void;
+  onCategoryChanged?: (category: InstanceCategory) => void;
   checkAvailability: (instance: string) => InstanceAvailability;
   className?: string;
 };
@@ -26,6 +27,7 @@ export function InstanceSelector({
   instances,
   selectedInstance,
   onInstanceSelected,
+  onCategoryChanged,
   checkAvailability,
   className,
 }: InstanceSelectorProps) {
@@ -43,6 +45,7 @@ export function InstanceSelector({
       .filter(hasProperty('category', category))
       .filter((instance) => checkAvailability(instance.identifier)[0]);
 
+    onCategoryChanged?.(category);
     onInstanceSelected(availableInstancesInCategory[0] ?? null);
   }
 
