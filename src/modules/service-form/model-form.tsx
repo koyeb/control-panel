@@ -216,13 +216,13 @@ function OverviewSection({ model, form }: { model?: AiModel; form: ModelForm }) 
   return (
     <Section title={<T id="overview.title" />}>
       <div className="divide-y rounded border">
-        <div className="row gap-12 p-3">
+        <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           <Metadata label={<T id="overview.modelNameLabel" />} value={model?.name ?? '-'} />
           <Metadata label={<T id="overview.parametersLabel" />} value={model?.parameters ?? '-'} />
           <Metadata label={<T id="overview.inferenceEngineLabel" />} value={model?.engine ?? '-'} />
         </div>
 
-        <div className="row gap-12 p-3">
+        <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           <Metadata label={<T id="overview.instanceTypeLabel" />} value={instance?.displayName} />
           <Metadata label={<T id="overview.scalingLabel" />} value={1} />
           <Metadata label={<T id="overview.regionLabel" />} value={region?.displayName} />

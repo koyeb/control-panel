@@ -437,6 +437,7 @@
     "overview": "Overview",
     "instance": "Choose instance",
     "region": "Select region",
+    "environmentVariables": "Environment variables",
     "submitButton": "Deploy"
   },
   "paymentDialog": {

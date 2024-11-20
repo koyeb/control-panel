@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
-import { useEffect, useMemo, useRef } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { Fragment, useEffect, useMemo, useRef } from 'react';
+import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@koyeb/design-system';
@@ -17,7 +17,7 @@ import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { ControlledSelect } from 'src/components/controlled';
+import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { InstanceSelector } from 'src/components/instance-selector';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -91,9 +91,9 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
 
   const form = useForm<OneClickAppFormType>({
     defaultValues: {
-      instance: 'nano',
-      region: 'fra',
-      environmentVariables: [],
+      instance: serviceForm.instance,
+      region: serviceForm.regions[0],
+      environmentVariables: serviceForm.environmentVariables,
     },
     resolver: useZodResolver(schema),
   });
@@ -136,6 +136,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         <OverviewSection serviceForm={serviceForm} form={form} />
         <InstanceSection serviceForm={serviceForm} form={form} />
         <RegionSection form={form} />
+        <EnvironmentVariablesSection form={form} />
 
         <div className="row justify-end gap-2">
           <LinkButton color="gray" href={routes.home()}>
@@ -212,7 +213,7 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
   return (
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded border">
-        <div className="row gap-12 p-3">
+        <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           {serviceForm.source.type === 'git' && (
             <>
               <RepositoryMetadata {...repository} />
@@ -227,7 +228,7 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
           )}
         </div>
 
-        <div className="row gap-12 p-3">
+        <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           <InstanceTypeMetadata instanceType={form.watch('instance')} />
           <ScalingMetadata scaling={scaling} />
           <RegionsMetadata regions={[form.watch('region')]} />
@@ -283,6 +284,36 @@ function RegionSection({ form }: { form: OneClickAppForm }) {
           </div>
         )}
       />
+    </Section>
+  );
+}
+
+function EnvironmentVariablesSection({ form }: { form: OneClickAppForm }) {
+  const { fields } = useFieldArray({ control: form.control, name: 'environmentVariables' });
+
+  if (fields.length === 0) {
+    return null;
+  }
+
+  return (
+    <Section title={<T id="environmentVariables" />}>
+      <div className="grid grid-cols-2 gap-4">
+        {fields.map((field, index) => (
+          <Fragment key={field.id}>
+            <ControlledInput
+              control={form.control}
+              name={`environmentVariables.${index}.name`}
+              label={index === 0 && 'Key'}
+            />
+
+            <ControlledInput
+              control={form.control}
+              name={`environmentVariables.${index}.value`}
+              label={index === 0 && 'Value'}
+            />
+          </Fragment>
+        ))}
+      </div>
     </Section>
   );
 }
