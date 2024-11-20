@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useOneClickAppsQuery } from 'src/api/hooks/service';
 import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
-import { useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { OneClickAppForm } from 'src/modules/service-form/one-click-app-form';
 import { hasProperty } from 'src/utils/object';
@@ -12,16 +12,26 @@ const T = Translate.prefix('pages.deploy');
 
 export function DeployOneClickApp() {
   const t = T.useTranslate();
+  const navigate = useNavigate();
 
-  const [oneClickAppSlug, setOneClickAppSlug] = useSearchParam('one_click_app');
+  const [oneClickAppParam, setOneClickAppParam] = useSearchParam('one_click_app');
   const oneClickAppsQuery = useOneClickAppsQuery();
-  const app = oneClickAppsQuery.data?.find(hasProperty('slug', oneClickAppSlug));
+  const app = oneClickAppsQuery.data?.find(hasProperty('slug', oneClickAppParam));
 
   useEffect(() => {
-    if (oneClickAppsQuery.isSuccess && app === undefined) {
-      setOneClickAppSlug(null, { replace: true });
+    if (oneClickAppsQuery.isSuccess) {
+      if (app === undefined) {
+        setOneClickAppParam(null, { replace: true });
+      } else {
+        const { search } = new URL(app.deployUrl);
+
+        navigate((url) => {
+          url.search = search;
+          url.searchParams.set('one_click_app', app.slug);
+        });
+      }
     }
-  }, [oneClickAppsQuery, app, setOneClickAppSlug]);
+  }, [oneClickAppsQuery, app, setOneClickAppParam, navigate]);
 
   if (app === undefined) {
     return null;
