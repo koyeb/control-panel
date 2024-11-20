@@ -592,7 +592,7 @@
       "webService": "Web service",
       "worker": "Worker",
       "database": "Database",
-      "exampleApps": "one-click apps",
+      "oneClickApps": "one-click apps",
       "source": "Source",
       "github": "GitHub",
       "docker": "Docker",
@@ -614,7 +614,7 @@
     "installGithubApp": "Install GitHub app",
     "docker": "Docker",
     "dockerDescription": "Deploy docker images from any public or private registries",
-    "deployExampleApp": "Deploy {name}",
+    "deployOneClickApp": "Deploy {name}",
     "deployWith": "Deploy with {type}",
     "publicRepositoryLabel": "Public repository URL",
     "publicRepositoryPlaceholder": "e.g. https://github.com/koyeb/example-golang",
@@ -1254,7 +1254,7 @@
       "serviceNameLabel": "Name",
       "serviceNameTooltip": "Give a name to easily identify this service inside your app"
     },
-    "exampleApp": {
+    "oneClickApp": {
       "overview": "Overview",
       "environmentVariables": "Environment variables",
       "nameLabel": "Name",
@@ -1736,7 +1736,7 @@
     "deploy": {
       "documentTitle": "Deploy",
       "title": "Deploy on Koyeb",
-      "exampleApp": {
+      "oneClickApp": {
         "title": "Deploy {appName}"
       },
       "model": {

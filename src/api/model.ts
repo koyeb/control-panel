@@ -469,7 +469,7 @@ export type AppDomain = {
   type: 'autoassigned' | 'custom';
 };
 
-export type ExampleApp = {
+export type OneClickApp = {
   name: string;
   slug: string;
   description: string;

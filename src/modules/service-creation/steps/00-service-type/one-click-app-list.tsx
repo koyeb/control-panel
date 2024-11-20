@@ -1,4 +1,4 @@
-import { useExampleApps } from 'src/api/hooks/service';
+import { useOneClickApps } from 'src/api/hooks/service';
 import { IconArrowRight } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
@@ -9,13 +9,13 @@ import { ServiceTypeItem } from './components/service-type-item';
 
 const T = Translate.prefix('serviceCreation.serviceType');
 
-export function ExampleAppList() {
-  const exampleApps = useExampleApps();
+export function OneClickAppList() {
+  const oneClickApps = useOneClickApps();
 
   const apps = [
-    exampleApps.find(hasProperty('slug', 'bun')),
-    exampleApps.find(hasProperty('slug', 'calcom')),
-    exampleApps.find(hasProperty('slug', 'ollama')),
+    oneClickApps.find(hasProperty('slug', 'bun')),
+    oneClickApps.find(hasProperty('slug', 'calcom')),
+    oneClickApps.find(hasProperty('slug', 'ollama')),
   ].filter(isDefined);
 
   return (

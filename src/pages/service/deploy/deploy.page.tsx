@@ -9,17 +9,17 @@ import { Translate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ServiceForm } from 'src/modules/service-form/service-form';
 
-import { DeployExampleApp } from './deploy-example-app';
 import { DeployModel } from './deploy-model';
+import { DeployOneClickApp } from './deploy-one-click-app';
 
 const T = Translate.prefix('pages.deploy');
 
 export function DeployPage() {
-  const [exampleApp] = useSearchParam('example_app');
+  const [oneClickApp] = useSearchParam('one_click_app');
   const [type] = useSearchParam('type');
 
-  if (exampleApp) {
-    return <DeployExampleApp />;
+  if (oneClickApp) {
+    return <DeployOneClickApp />;
   }
 
   if (type === 'model') {

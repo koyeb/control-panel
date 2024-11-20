@@ -9,7 +9,7 @@ import { Translate } from 'src/intl/translate';
 import { SourceType } from 'src/modules/service-form/service-form.types';
 import { inArray } from 'src/utils/arrays';
 
-import { ExampleAppList } from './example-apps-list';
+import { OneClickAppList } from './one-click-app-list';
 import { ExtendedServiceType, ServiceTypeList } from './service-type-list';
 
 const T = Translate.prefix('serviceCreation.serviceType');
@@ -51,7 +51,7 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
       <nav className="col gap-3 p-3 md:min-w-72 md:p-6">
         <ServiceTypeList serviceType={serviceType} setServiceType={setServiceType} />
         <hr />
-        <ExampleAppList />
+        <OneClickAppList />
       </nav>
 
       <div className="p-3 md:p-6 md:pl-12">

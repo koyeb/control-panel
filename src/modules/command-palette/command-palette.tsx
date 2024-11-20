@@ -4,7 +4,7 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'r
 import { Dialog, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
-import { useApps, useExampleApps, useServices } from 'src/api/hooks/service';
+import { useApps, useOneClickApps, useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useResetIdentifyUser } from 'src/application/analytics';
@@ -227,7 +227,7 @@ const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
 function RegisterCommonCommands() {
   useRegisterInternalNavigationCommands();
   useRegisterExternalNavigationCommands();
-  useRegisterExampleApplicationCommands();
+  useRegisterOneClickAppsCommands();
   useRegisterAccountCommands();
   useRegisterMiscCommands();
 
@@ -532,14 +532,14 @@ function useRegisterInternalNavigationCommands() {
   );
 }
 
-function useRegisterExampleApplicationCommands() {
-  const exampleApps = useExampleApps();
+function useRegisterOneClickAppsCommands() {
+  const oneClickApps = useOneClickApps();
   const navigate = useNavigate();
 
   useRegisterCommand((register) => {
-    for (const app of exampleApps) {
+    for (const app of oneClickApps) {
       register({
-        label: `Deploy ${app.name} example application`,
+        label: `Deploy ${app.name} one-click application`,
         description: app.description,
         keywords: [...app.slug.split('-'), 'deploy', 'example', 'one-click'],
         execute: () => navigate(app.deployUrl),

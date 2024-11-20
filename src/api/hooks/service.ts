@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { getConfig } from 'src/application/config';
 import { upperCase } from 'src/utils/strings';
 
 import { mapDeployment, mapInstances } from '../mappers/deployment';
 import { mapApp, mapApps, mapService, mapServices } from '../mappers/service';
-import { ExampleApp, InstanceStatus } from '../model';
+import { OneClickApp, InstanceStatus } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useAppsQuery() {
@@ -87,7 +88,7 @@ export function useInstancesQuery({ deploymentId, serviceId, status }: Instances
   });
 }
 
-type ExampleAppApiResponse = {
+type OneClickAppApiResponse = {
   name: string;
   logos: [string, ...string[]];
   description: string;
@@ -96,17 +97,18 @@ type ExampleAppApiResponse = {
   slug: string;
 };
 
-export function useExampleAppsQuery() {
+export function useOneClickAppsQuery() {
   return useQuery({
-    queryKey: ['listExampleApps'],
+    queryKey: ['listOneClickApps'],
     async queryFn() {
-      const response = await fetch('https://www.koyeb.com/api/get-one-click-apps', { mode: 'cors' });
+      const { websiteUrl } = getConfig();
+      const response = await fetch(`${websiteUrl}/api/get-one-click-apps`, { mode: 'cors' });
 
       if (!response.ok) {
         throw new Error(await response.text());
       }
 
-      return (await response.json()) as ExampleAppApiResponse[];
+      return (await response.json()) as OneClickAppApiResponse[];
     },
     select: (apps) => {
       return apps.map((app) => ({
@@ -115,23 +117,23 @@ export function useExampleAppsQuery() {
         description: app.description,
         logo: app.logos[0],
         repository: app.repository,
-        deployUrl: getExampleAppUrl(app.slug, app.deploy_button_url),
+        deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
       }));
     },
   });
 }
 
-export function useExampleApps(): ExampleApp[] {
-  return useExampleAppsQuery().data ?? [];
+export function useOneClickApps(): OneClickApp[] {
+  return useOneClickAppsQuery().data ?? [];
 }
 
-function getExampleAppUrl(appSlug: string, appUrl: string): string {
+function getOneClickAppUrl(appSlug: string, appUrl: string): string {
   const url = new URL(appUrl);
 
   url.protocol = window.location.protocol;
   url.host = window.location.host;
 
-  // url.searchParams.set('example_app', appSlug);
+  // url.searchParams.set('one_click_app', appSlug);
 
   return url.toString();
 }

@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react';
 
 import { Dialog } from '@koyeb/design-system';
 import { useGithubApp } from 'src/api/hooks/git';
-import { useExampleApps } from 'src/api/hooks/service';
+import { useOneClickApps } from 'src/api/hooks/service';
 import {
   IconArrowDown,
   IconArrowLeft,
@@ -29,7 +29,7 @@ import {
   OrganizationRepositoriesList,
   PublicRepository,
 } from './pages/github-repository';
-import { Database, ExampleApp, WebService, Worker } from './pages/root';
+import { Database, OneClickApp, WebService, Worker } from './pages/root';
 import {
   CreateServiceDialogProvider,
   CreateServiceDialogSection,
@@ -40,7 +40,7 @@ const T = Translate.prefix('createServiceDialog');
 
 function useGetSections() {
   const t = T.useTranslate();
-  const exampleApps = useExampleApps();
+  const oneClickApps = useOneClickApps();
   const githubApp = useGithubApp();
 
   return useCallback(
@@ -74,11 +74,11 @@ function useGetSections() {
             ],
           },
           {
-            title: t('navigation.exampleApps'),
-            items: exampleApps?.map((app) => ({
+            title: t('navigation.oneClickApps'),
+            items: oneClickApps?.map((app) => ({
               label: app.name,
               icon: <img src={app.logo} className="icon rounded-full bg-black/50 grayscale" />,
-              render: () => <ExampleApp app={app} />,
+              render: () => <OneClickApp app={app} />,
             })),
           },
         ];
@@ -146,7 +146,7 @@ function useGetSections() {
 
       return [];
     },
-    [t, exampleApps, githubApp],
+    [t, oneClickApps, githubApp],
   );
 }
 

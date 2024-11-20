@@ -1,5 +1,5 @@
 import { Button } from '@koyeb/design-system';
-import { type ExampleApp } from 'src/api/model';
+import { type OneClickApp } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { IconArrowRight, IconDatabase, IconGlobe, IconSettings } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
@@ -85,11 +85,11 @@ export function Database() {
   );
 }
 
-type ExampleAppProps = {
-  app: ExampleApp;
+type OneClickAppProps = {
+  app: OneClickApp;
 };
 
-export function ExampleApp({ app }: ExampleAppProps) {
+export function OneClickApp({ app }: OneClickAppProps) {
   const { navigate } = useCreateServiceDialog();
 
   const deploy = () => {
@@ -111,7 +111,7 @@ export function ExampleApp({ app }: ExampleAppProps) {
       description={app.description}
       cta={
         <Button onClick={deploy}>
-          <T id="deployExampleApp" values={{ name: app.name }} />
+          <T id="deployOneClickApp" values={{ name: app.name }} />
           <IconArrowRight />
         </Button>
       }

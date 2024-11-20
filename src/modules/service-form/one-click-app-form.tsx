@@ -30,13 +30,13 @@ import { parseDeployParams } from './helpers/parse-deploy-params';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
 
-const T = Translate.prefix('serviceForm.exampleApp');
+const T = Translate.prefix('serviceForm.oneClickApp');
 
 const schema = z.object({
   environmentVariables: z.array(z.object({ name: z.string(), value: z.string() })),
 });
 
-export function ExampleAppForm() {
+export function OneClickAppForm() {
   const instances = useInstancesQuery();
   const regions = useRegionsQuery();
   const githubApp = useGithubAppQuery();
@@ -45,10 +45,10 @@ export function ExampleAppForm() {
     return <Loading />;
   }
 
-  return <ExampleAppForm_ />;
+  return <OneClickAppForm_ />;
 }
 
-function ExampleAppForm_() {
+function OneClickAppForm_() {
   const searchParams = useSearchParams();
   const instances = useInstances();
   const regions = useRegions();
