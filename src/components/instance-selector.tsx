@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Badge, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
@@ -8,6 +8,7 @@ import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
+import { hasProperty } from 'src/utils/object';
 
 import { InstanceAssistant } from './instance-assistant';
 
@@ -15,18 +16,14 @@ const T = Translate.prefix('instanceSelector');
 
 type InstanceSelectorProps = {
   instances: CatalogInstance[];
-  selectedCategory: InstanceCategory;
-  onCategorySelected: (category: InstanceCategory) => void;
   selectedInstance: CatalogInstance | null;
-  onInstanceSelected: (instance: CatalogInstance) => void;
+  onInstanceSelected: (instance: CatalogInstance | null) => void;
   checkAvailability: (instance: string) => InstanceAvailability;
   className?: string;
 };
 
 export function InstanceSelector({
   instances,
-  selectedCategory,
-  onCategorySelected,
   selectedInstance,
   onInstanceSelected,
   checkAvailability,
@@ -34,6 +31,20 @@ export function InstanceSelector({
 }: InstanceSelectorProps) {
   const koyebRegions = instances[0]?.regionCategory === 'koyeb';
   const hasKoyebAI = useFeatureFlag('koyeb-ai');
+
+  const [selectedCategory, setSelectedCategory] = useState<InstanceCategory>(
+    selectedInstance?.category ?? 'standard',
+  );
+
+  function onCategorySelected(category: InstanceCategory) {
+    setSelectedCategory(category);
+
+    const availableInstancesInCategory = instances
+      .filter(hasProperty('category', category))
+      .filter((instance) => checkAvailability(instance.identifier)[0]);
+
+    onInstanceSelected(availableInstancesInCategory[0] ?? null);
+  }
 
   return (
     <div className={clsx('col gap-3', className)}>
@@ -57,7 +68,7 @@ export function InstanceSelector({
       </div>
 
       <InstanceSelectorList
-        instances={instances}
+        instances={instances.filter(hasProperty('category', selectedCategory))}
         selectedCategory={selectedCategory}
         selectedInstance={selectedInstance}
         onInstanceSelected={onInstanceSelected}

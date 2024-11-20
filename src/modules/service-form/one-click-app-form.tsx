@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -14,7 +14,6 @@ import {
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
-import { InstanceCategory } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ControlledSelect } from 'src/components/controlled';
@@ -50,7 +49,7 @@ import { ServiceForm } from './service-form.types';
 const T = Translate.prefix('oneClickAppForm');
 
 const schema = z.object({
-  instance: z.string(),
+  instance: z.string().nullable(),
   region: z.string(),
   environmentVariables: z.array(z.object({ name: z.string(), value: z.string() })),
 });
@@ -101,7 +100,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   const mutation = useMutation({
     async mutationFn({ instance, region, environmentVariables }: FormValues<typeof form>) {
       serviceForm.appName = generateAppName();
-      serviceForm.instance.identifier = instance;
+      serviceForm.instance = instance;
       serviceForm.regions = [region];
       serviceForm.environmentVariables = environmentVariables;
 
@@ -240,20 +239,15 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
 function InstanceSection({ form }: { form: OneClickAppForm }) {
   const instances = useInstances();
   const instance = useInstance(form.watch('instance'));
-  const [category, setCategory] = useState<InstanceCategory>('standard');
 
   return (
     <Section title={<T id="instance" />}>
       <InstanceSelector
-        instances={instances
-          .filter(hasProperty('regionCategory', 'koyeb'))
-          .filter(hasProperty('category', category))}
-        selectedCategory={category}
-        onCategorySelected={setCategory}
+        instances={instances.filter(hasProperty('regionCategory', 'koyeb'))}
         selectedInstance={instance ?? null}
         onInstanceSelected={(instance) => {
-          form.setValue('instance', instance.identifier);
-          form.setValue('region', instance.regions?.[0] ?? 'fra');
+          form.setValue('instance', instance?.identifier ?? null);
+          form.setValue('region', instance?.regions?.[0] ?? 'fra');
         }}
         checkAvailability={() => [true]}
       />

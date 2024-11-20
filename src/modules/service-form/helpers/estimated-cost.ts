@@ -9,7 +9,7 @@ export function useEstimatedCost(
   values: Partial<Pick<ServiceForm, 'instance' | 'regions' | 'scaling'>>,
 ): ServiceCost | undefined {
   const { scaling, regions } = values;
-  const instance = useInstance(values.instance?.identifier ?? null);
+  const instance = useInstance(values.instance ?? null);
 
   return useMemo(() => {
     return computeEstimatedCost(instance, regions, scaling);

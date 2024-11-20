@@ -10,7 +10,7 @@ import { hasProperty } from 'src/utils/object';
 
 const T = Translate.prefix('deploymentInfo');
 
-export function InstanceTypeMetadata({ instanceType }: { instanceType: string }) {
+export function InstanceTypeMetadata({ instanceType }: { instanceType: string | null }) {
   const instance = useInstance(instanceType);
 
   return <Metadata label={<T id="instanceTypeLabel" />} value={instance?.displayName} />;

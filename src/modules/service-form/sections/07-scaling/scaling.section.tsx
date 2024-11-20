@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { useInstance } from 'src/api/hooks/catalog';
 import { ControlledSelectBox } from 'src/components/controlled';
 import { IconScaling, IconMoveHorizontal } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
@@ -16,12 +17,12 @@ import { ScalingAlerts } from './scaling-alerts';
 const T = Translate.prefix('serviceForm.scaling');
 
 export function ScalingSection() {
-  const instance = useWatchServiceForm('instance');
+  const instance = useInstance(useWatchServiceForm('instance'));
   const scaling = useWatchServiceForm('scaling');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
 
-  const canSelectFixedScaling = !hasVolumes && instance.identifier !== 'free';
-  const canSelectAutoscaling = !hasVolumes && instance.category !== 'eco';
+  const canSelectFixedScaling = !hasVolumes && instance?.identifier !== 'free';
+  const canSelectAutoscaling = !hasVolumes && instance?.category !== 'eco';
 
   useDisableRequestsWhenWorkerSelected();
   useUpdateScalingWhenInstanceSelected();
@@ -78,18 +79,17 @@ function useDisableRequestsWhenWorkerSelected() {
 
 function useUpdateScalingWhenInstanceSelected() {
   const { setValue } = useFormContext<ServiceForm>();
-  const instanceCategory = useWatchServiceForm('instance.category');
-  const instanceIdentifier = useWatchServiceForm('instance.identifier');
+  const instance = useInstance(useWatchServiceForm('instance'));
 
   useEffect(() => {
-    if (instanceCategory === 'eco') {
+    if (instance?.category === 'eco') {
       setValue('scaling.type', 'fixed');
     }
 
-    if (instanceIdentifier === 'free') {
+    if (instance?.identifier === 'free') {
       setValue('scaling.fixed', 1);
     }
-  }, [instanceCategory, instanceIdentifier, setValue]);
+  }, [instance, setValue]);
 }
 
 const SectionTitle = () => {

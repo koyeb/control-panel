@@ -39,7 +39,7 @@ export function serviceFormToDeploymentDefinition(form: ServiceForm): ApiDeploym
     git: form.source.type === 'git' ? git(form.source.git, form.builder) : undefined,
     docker: form.source.type === 'docker' ? docker(form.source.docker, form.dockerDeployment) : undefined,
     regions: form.regions,
-    instance_types: [{ type: form.instance.identifier ?? '' }],
+    instance_types: [{ type: form.instance ?? '' }],
     scalings: scalings(form.scaling),
     env: env(form.environmentVariables),
     volumes: volumes(form.volumes),

@@ -33,7 +33,7 @@ export function AutoScalingConfiguration() {
   const { setValue, trigger, resetField } = useFormContext<ServiceForm>();
 
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
-  const instance = useWatchServiceForm('instance.identifier');
+  const instance = useWatchServiceForm('instance');
   const autoScaling = useWatchServiceForm('scaling.autoscaling');
 
   const canChangeScaling = instance !== 'free' && !hasVolumes;
@@ -89,7 +89,7 @@ export function AutoScalingConfiguration() {
 }
 
 function RangeInputMobile() {
-  const instance = useWatchServiceForm('instance.identifier');
+  const instance = useWatchServiceForm('instance');
   const canChangeScaling = instance !== 'free';
 
   const scaleToZero = useFeatureFlag('scale-to-zero');

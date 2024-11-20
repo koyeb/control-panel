@@ -71,10 +71,8 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
       <div className="col 2xl:row gap-8">
         <InstanceSelector
           instances={state.instances}
-          selectedCategory={state.instanceCategory}
           selectedInstance={state.selectedInstance}
           checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
-          onCategorySelected={actions.instanceCategorySelected}
           onInstanceSelected={actions.instanceSelected}
           className="max-w-lg lg:w-full"
         />

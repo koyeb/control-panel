@@ -16,9 +16,7 @@ export function ScalingAlerts() {
   const { errors } = useFormState<ServiceForm>();
   const error = errors.scaling?.autoscaling;
 
-  const instanceType = useWatchServiceForm('instance.identifier');
-  const instance = useInstance(instanceType);
-
+  const instance = useInstance(useWatchServiceForm('instance'));
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
 
   if (error?.message === 'noTargetSelected') {

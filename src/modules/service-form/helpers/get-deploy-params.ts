@@ -70,7 +70,7 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
   }
 
   if (form.serviceType !== 'web') set('service_type', form.serviceType);
-  if (form.instance.identifier !== 'free') set('instance_type', form.instance.identifier);
+  if (form.instance !== 'free') set('instance_type', form.instance);
   if (form.regions.length !== 1 || form.regions[0] !== 'fra') set('regions', form.regions);
 
   if (form.scaling.type === 'fixed') {

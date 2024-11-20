@@ -161,7 +161,7 @@ class ServiceFormBuilder {
 
   set instanceType(instanceType: string | null) {
     if (instanceType && this.isValidInstance(instanceType)) {
-      this.set('instance', { identifier: instanceType });
+      this.set('instance', instanceType);
     }
   }
 

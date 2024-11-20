@@ -56,7 +56,7 @@ export function QuotaAlert(props: QuotaAlertProps) {
     },
   });
 
-  const instance = useInstance(values.instance.identifier);
+  const instance = useInstance(values.instance);
   const quotas = useOrganizationQuotas();
 
   const isRestrictedGpu =
@@ -96,7 +96,7 @@ function getValues({ serviceId, instance, regions, scaling }: QuotaAlertProps) {
   }
 
   if (instance !== undefined) {
-    values.instance.identifier = instance;
+    values.instance = instance;
   }
 
   if (regions !== undefined) {

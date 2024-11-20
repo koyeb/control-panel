@@ -7,8 +7,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 const T = Translate.prefix('serviceForm.serviceType.alerts');
 
 export function ServiceTypeAlerts() {
-  const instanceIdentifier = useWatchServiceForm('instance.identifier');
-  const instance = useInstance(instanceIdentifier);
+  const instance = useInstance(useWatchServiceForm('instance'));
 
   if (instance?.identifier === 'free') {
     return (

@@ -3,6 +3,7 @@ import { useFormState } from 'react-hook-form';
 import { Alert } from '@koyeb/design-system';
 import { useInstance, useRegion } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationSummary } from 'src/api/hooks/session';
+import { CatalogInstance } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { Translate } from 'src/intl/translate';
 
@@ -14,8 +15,8 @@ const T = Translate.prefix('serviceForm.instance.alerts');
 export function InstanceAlerts() {
   const { plan } = useOrganization();
 
-  const { category } = useWatchServiceForm('instance');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
+  const instance = useInstance(useWatchServiceForm('instance'));
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
 
   if (hasVolumes) {
@@ -29,7 +30,7 @@ export function InstanceAlerts() {
       if (previousInstance.category === 'gpu') {
         return (
           <Alert
-            variant={category === 'gpu' ? 'info' : 'error'}
+            variant={instance?.category === 'gpu' ? 'info' : 'error'}
             style="outline"
             title={<T id="gpuVolumesTitle" />}
             description={<T id="gpuVolumesDescription" values={{ documentationLink }} />}
@@ -37,7 +38,7 @@ export function InstanceAlerts() {
         );
       }
 
-      if (category === 'gpu') {
+      if (!instance || instance?.category === 'gpu') {
         return (
           <Alert
             variant="error"
@@ -49,7 +50,7 @@ export function InstanceAlerts() {
       }
     }
 
-    if (category === 'eco') {
+    if (instance?.category === 'eco') {
       return (
         <Alert
           variant="error"
@@ -62,25 +63,22 @@ export function InstanceAlerts() {
   }
 
   if (plan === 'hobby') {
-    return <HobbyPlanAlerts />;
+    return <HobbyPlanAlerts instance={instance} />;
   }
 
-  return <PaidPlanAlerts />;
+  return <PaidPlanAlerts instance={instance} />;
 }
 
-function HobbyPlanAlerts() {
-  const { category, identifier } = useWatchServiceForm('instance');
-
+function HobbyPlanAlerts({ instance }: { instance?: CatalogInstance }) {
   const free = useInstance('free')?.displayName;
 
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
   const summary = useOrganizationSummary();
 
   const { errors } = useFormState<ServiceForm>();
-  const error = errors.instance?.identifier?.message;
+  const error = errors.instance?.message;
 
   const organization = useOrganization();
-  const instance = useInstance(identifier);
   const requireUpgrade = instance?.plans !== undefined && !instance.plans.includes(organization.plan);
 
   if (requireUpgrade) {
@@ -110,7 +108,7 @@ function HobbyPlanAlerts() {
     );
   }
 
-  if (category === 'eco') {
+  if (instance?.category === 'eco') {
     return (
       <Alert
         variant="info"
@@ -133,7 +131,7 @@ function HobbyPlanAlerts() {
   }
 }
 
-function PaidPlanAlerts() {
+function PaidPlanAlerts({ instance }: { instance?: CatalogInstance }) {
   const fra = useRegion('fra')?.displayName;
   const sin = useRegion('sin')?.displayName;
   const was = useRegion('was')?.displayName;
@@ -145,14 +143,13 @@ function PaidPlanAlerts() {
   const standardInstanceRegionSelected = !onlyEcoRegionSelected;
 
   const sinSelected = selectedRegions.includes('sin');
-  const category = useWatchServiceForm('instance.category');
   const summary = useOrganizationSummary();
 
   const { errors } = useFormState<ServiceForm>();
-  const error = errors.instance?.identifier?.message;
+  const error = errors.instance?.message;
 
   if (standardInstanceRegionSelected) {
-    if (category === 'eco') {
+    if (instance?.category === 'eco') {
       return (
         <Alert
           variant="error"
@@ -166,7 +163,7 @@ function PaidPlanAlerts() {
     }
   }
 
-  if (sinSelected && !summary?.freeInstanceUsed && category === 'eco') {
+  if (sinSelected && !summary?.freeInstanceUsed && instance?.category === 'eco') {
     return (
       <Alert
         variant="info"

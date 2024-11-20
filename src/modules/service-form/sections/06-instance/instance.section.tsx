@@ -55,34 +55,10 @@ export function InstanceSection() {
         name="instance"
         render={({ field }) => (
           <InstanceSelector
-            instances={instances
-              .filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))
-              .filter(hasProperty('category', field.value.category))}
-            selectedCategory={field.value.category}
+            instances={instances.filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))}
             checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
-            onCategorySelected={(category) => {
-              const availableInstancesInCategory = instances
-                .filter(hasProperty('category', category))
-                .filter((instance) => availabilities[instance.identifier]?.[0]);
-
-              field.onChange({
-                category,
-                identifier: availableInstancesInCategory[0]?.identifier ?? null,
-              } satisfies ServiceForm['instance']);
-            }}
-            selectedInstance={instances.find(hasProperty('identifier', field.value.identifier)) ?? null}
-            onInstanceSelected={({ identifier }) => {
-              const instance = instances.find(hasProperty('identifier', identifier));
-
-              if (!instance) {
-                return;
-              }
-
-              field.onChange({
-                category: instance.category,
-                identifier: instance.identifier,
-              } satisfies ServiceForm['instance']);
-            }}
+            selectedInstance={instances.find(hasProperty('identifier', field.value)) ?? null}
+            onInstanceSelected={(instance) => field.onChange(instance?.identifier ?? null)}
             className="w-full"
           />
         )}
@@ -93,7 +69,7 @@ export function InstanceSection() {
 
 function useUnsetInstanceWhenNotAvailable(availabilities: Record<string, InstanceAvailability>) {
   const { setValue } = useFormContext<ServiceForm>();
-  const instanceIdentifier = useFormValues<ServiceForm>().instance.identifier;
+  const instanceIdentifier = useFormValues<ServiceForm>().instance;
 
   useEffect(() => {
     if (!instanceIdentifier) {
@@ -103,7 +79,7 @@ function useUnsetInstanceWhenNotAvailable(availabilities: Record<string, Instanc
     const [isAvailable] = availabilities[instanceIdentifier] ?? [];
 
     if (!isAvailable) {
-      setValue('instance.identifier', null);
+      setValue('instance', null);
     }
   }, [instanceIdentifier, availabilities, setValue]);
 }
@@ -111,9 +87,7 @@ function useUnsetInstanceWhenNotAvailable(availabilities: Record<string, Instanc
 function useUpdateRegionsWhenInstanceChanges() {
   const { getValues, setValue } = useFormContext<ServiceForm>();
 
-  const instanceIdentifier = useWatchServiceForm('instance.identifier');
-  const instance = useInstance(instanceIdentifier);
-
+  const instance = useInstance(useWatchServiceForm('instance'));
   const regionAvailabilities = useRegionAvailabilities();
 
   useUpdateEffect(() => {
@@ -130,8 +104,7 @@ function useUpdateRegionsWhenInstanceChanges() {
 }
 
 function SectionTitle() {
-  const instanceType = useWatchServiceForm('instance.identifier');
-  const instance = useInstance(instanceType);
+  const instance = useInstance(useWatchServiceForm('instance'));
 
   if (!instance) {
     return <T id="noInstanceSelected" />;

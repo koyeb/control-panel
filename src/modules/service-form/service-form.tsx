@@ -88,7 +88,7 @@ function ServiceForm_({
   const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
     usePreSubmitServiceForm();
 
-  const instance = useInstance(form.watch('instance.identifier'));
+  const instance = useInstance(form.watch('instance'));
   const cost = useEstimatedCost(useFormValues(form));
   const deployUrl = useDeployUrl(form);
 
@@ -123,7 +123,7 @@ function ServiceForm_({
 
           <QuotaAlert
             serviceId={form.watch('meta.serviceId') ?? undefined}
-            instance={form.watch('instance.identifier') ?? undefined}
+            instance={form.watch('instance') ?? undefined}
             regions={form.watch('regions')}
             scaling={form.watch('scaling')}
           />
@@ -142,7 +142,7 @@ function ServiceForm_({
       <RestrictedGpuDialog
         open={restrictedGpuDialogOpen}
         onClose={() => setRestrictedGpuDialogOpen(false)}
-        instanceIdentifier={form.watch('instance.identifier')}
+        instanceIdentifier={form.watch('instance')}
       />
 
       <ServiceFormPaymentDialog

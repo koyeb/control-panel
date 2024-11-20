@@ -1,4 +1,4 @@
-import { EnvironmentVariable, InstanceCategory, ServiceType } from 'src/api/model';
+import { EnvironmentVariable, ServiceType } from 'src/api/model';
 
 export type ServiceFormSection =
   | 'serviceType'
@@ -23,8 +23,8 @@ export type ServiceForm = {
   builder: Builder;
   dockerDeployment: DockerDeploymentOptions;
   environmentVariables: EnvironmentVariable[];
-  regions: Regions;
-  instance: Instance;
+  regions: string[];
+  instance: string | null;
   scaling: Scaling;
   ports: Port[];
   volumes: ServiceVolume[];
@@ -104,13 +104,6 @@ export type DockerDeploymentOptions = {
   command: string | null;
   args: string[] | null;
   privileged: boolean;
-};
-
-export type Regions = Array<string>;
-
-export type Instance = {
-  category: InstanceCategory;
-  identifier: string | null;
 };
 
 export type Scaling = {

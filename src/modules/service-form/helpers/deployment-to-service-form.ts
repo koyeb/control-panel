@@ -18,7 +18,6 @@ import {
   DockerSource,
   GitSource,
   HealthCheck,
-  Instance,
   Port,
   PortProtocol,
   Scaling,
@@ -45,7 +44,7 @@ export function deploymentDefinitionToServiceForm(
     builder: builder(definition),
     dockerDeployment: dockerDeployment(definition),
     regions: definition.regions,
-    instance: instance(definition),
+    instance: definition.instance_types?.[0]?.type,
     scaling: scaling(definition),
     environmentVariables: environmentVariables(definition),
     ports: ports(definition),
@@ -158,12 +157,6 @@ function dockerDeployment(definition: ApiDeploymentDefinition): Partial<DockerDe
     command: getString(docker.command),
     args: getStringArray(docker.args),
     privileged: docker.privileged,
-  };
-}
-
-function instance(definition: ApiDeploymentDefinition): DeepPartial<Instance> {
-  return {
-    identifier: definition.instance_types?.[0]?.type,
   };
 }
 

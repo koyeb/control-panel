@@ -88,7 +88,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
       serviceForm.serviceName = slugify(model.name);
       serviceForm.environmentVariables = [];
 
-      serviceForm.instance.identifier = instance;
+      serviceForm.instance = instance;
       serviceForm.regions = [region];
 
       serviceForm.source.type = 'docker';

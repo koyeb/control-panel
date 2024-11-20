@@ -7,7 +7,6 @@ import { CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api
 import { notify } from 'src/application/notify';
 import { getToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
-import { hasProperty } from 'src/utils/object';
 
 import { generateServiceName } from '../sections/00-service-name/use-generate-service-name';
 import { HealthCheck, ServiceForm } from '../service-form.types';
@@ -55,7 +54,7 @@ export async function initializeServiceForm(
       values.environmentVariables = defaultServiceForm().environmentVariables;
     }
 
-    values.meta.previousInstance = values.instance.identifier;
+    values.meta.previousInstance = values.instance;
     values.meta.hasPreviousBuild = service?.last_provisioned_deployment_id !== '';
   }
 
@@ -67,8 +66,7 @@ export async function initializeServiceForm(
     }
 
     if (organization.plan === 'hobby' && !params.has('instance_type')) {
-      values.instance.category = 'eco';
-      values.instance.identifier = 'free';
+      values.instance = 'free';
     }
 
     // todo: remove
@@ -131,12 +129,6 @@ export async function initializeServiceForm(
 
   if (params.get('github_error')) {
     notify.error(params.get('github_error'));
-  }
-
-  const instance = instances.find(hasProperty('identifier', values.instance.identifier));
-
-  if (instance) {
-    values.instance.category = instance.category;
   }
 
   if (!values.serviceName) {
@@ -246,10 +238,7 @@ export function defaultServiceForm(): ServiceForm {
         },
       },
     },
-    instance: {
-      category: 'standard',
-      identifier: 'nano',
-    },
+    instance: 'nano',
     regions: ['fra'],
     ports: [
       {

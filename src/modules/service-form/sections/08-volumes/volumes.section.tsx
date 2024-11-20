@@ -96,7 +96,7 @@ function SectionContent() {
 function useVolumesUnavailableAlert(): { title: React.ReactNode; description: React.ReactNode } | undefined {
   const { setValue } = useFormContext<ServiceForm>();
 
-  const instance = useInstance(useWatchServiceForm('instance.identifier'));
+  const instance = useInstance(useWatchServiceForm('instance'));
   const hasMultipleInstances = getHasMultipleInstances(useWatchServiceForm('scaling'));
 
   const regions = useRegions(useWatchServiceForm('regions'));

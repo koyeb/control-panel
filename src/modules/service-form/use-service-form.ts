@@ -99,10 +99,6 @@ function useTriggerValidationOnChange({ watch, trigger, formState }: UseFormRetu
         void trigger('source.git');
       }
 
-      if (name === 'instance.category' && submitCount >= 1) {
-        void trigger('instance.identifier');
-      }
-
       if (name === 'scaling.type') {
         void trigger('scaling.autoscaling');
         void trigger('scaling.autoscaling.targets');

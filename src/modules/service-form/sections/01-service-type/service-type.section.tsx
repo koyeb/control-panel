@@ -67,7 +67,7 @@ type ServiceTypeOptionProps = {
 };
 
 function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOptionProps) {
-  const instanceIdentifier = useWatchServiceForm('instance.identifier');
+  const instanceIdentifier = useWatchServiceForm('instance');
 
   const canSelect = () => {
     if (instanceIdentifier === 'free') {

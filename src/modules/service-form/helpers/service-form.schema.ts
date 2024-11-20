@@ -137,12 +137,10 @@ function regions() {
 }
 
 function instance() {
-  return z.object({
-    identifier: z
-      .string()
-      .nullable()
-      .refine((identifier) => identifier !== null, 'noInstanceSelected'),
-  });
+  return z
+    .string()
+    .nullable()
+    .refine((identifier) => identifier !== null, 'noInstanceSelected');
 }
 
 function scaling(t: TranslateErrorFunction) {

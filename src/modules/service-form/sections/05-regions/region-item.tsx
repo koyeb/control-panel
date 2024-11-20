@@ -18,7 +18,7 @@ type RegionItemProps = {
 };
 
 export function RegionItem({ region, classes }: RegionItemProps) {
-  const selectedInstance = useWatchServiceForm('instance.identifier');
+  const selectedInstance = useWatchServiceForm('instance');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const [isAvailable] = useRegionAvailability(region.identifier);
   const isAvailableForInstance = useRegionAvailabilityForInstance(region.identifier, selectedInstance);

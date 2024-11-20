@@ -3,7 +3,7 @@ import { useMemo, useReducer } from 'react';
 
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
-import { CatalogInstance, CatalogRegion, InstanceCategory, RegionCategory, ServiceType } from 'src/api/model';
+import { CatalogInstance, CatalogRegion, RegionCategory, ServiceType } from 'src/api/model';
 import {
   useInstanceAvailabilities,
   useRegionAvailabilities,
@@ -16,7 +16,6 @@ type InstanceRegionState = {
   instances: CatalogInstance[];
   regions: CatalogRegion[];
   selectedInstance: CatalogInstance | null;
-  instanceCategory: InstanceCategory;
   regionCategory: RegionCategory;
   selectedRegions: CatalogRegion[];
 };
@@ -29,11 +28,8 @@ export function useInstanceRegionState() {
     state,
     useMemo(
       () => ({
-        instanceSelected: (instance: CatalogInstance) => {
+        instanceSelected: (instance: CatalogInstance | null) => {
           dispatch({ type: 'instance-selected', instance });
-        },
-        instanceCategorySelected: (category: InstanceCategory) => {
-          dispatch({ type: 'instance-category-selected', category });
         },
         regionSelected: (region: CatalogRegion) => {
           dispatch({ type: 'region-selected', region });
@@ -49,12 +45,7 @@ export function useInstanceRegionState() {
 
 type InstanceSelected = {
   type: 'instance-selected';
-  instance: CatalogInstance;
-};
-
-type InstanceCategorySelected = {
-  type: 'instance-category-selected';
-  category: InstanceCategory;
+  instance: CatalogInstance | null;
 };
 
 type RegionSelected = {
@@ -67,11 +58,7 @@ type RegionCategorySelected = {
   category: RegionCategory;
 };
 
-type InstanceRegionAction =
-  | InstanceSelected
-  | InstanceCategorySelected
-  | RegionSelected
-  | RegionCategorySelected;
+type InstanceRegionAction = InstanceSelected | RegionSelected | RegionCategorySelected;
 
 function useStateReducer() {
   const organization = useOrganization();
@@ -105,7 +92,7 @@ function useStateReducer() {
 
   function ensureBusinessRules(state: InstanceRegionState, action?: InstanceRegionAction) {
     state.instances = instances.filter((instance) => {
-      return instance.regionCategory === state.regionCategory && instance.category === state.instanceCategory;
+      return instance.regionCategory === state.regionCategory;
     });
 
     if (state.selectedInstance) {
@@ -158,16 +145,14 @@ function useStateReducer() {
       next.regionCategory = action.category;
 
       if (action.category === 'aws') {
-        next.instanceCategory = 'standard';
+        next.selectedInstance = instances.find(hasProperty('identifier', 'aws-nano')) ?? null;
+      } else {
+        next.selectedInstance = instances.find(hasProperty('identifier', 'nano')) ?? null;
       }
     }
 
     if (action.type === 'instance-selected') {
       next.selectedInstance = action.instance;
-    }
-
-    if (action.type === 'instance-category-selected') {
-      next.instanceCategory = action.category;
     }
 
     if (action.type === 'region-selected') {
@@ -201,7 +186,6 @@ function useStateReducer() {
         .filter(hasProperty('category', 'standard')),
       regions: regions.filter(hasProperty('category', 'koyeb')),
       selectedInstance: nano,
-      instanceCategory: 'standard',
       regionCategory: 'koyeb',
       selectedRegions: [fra],
     };
@@ -209,14 +193,12 @@ function useStateReducer() {
     if (organization.plan === 'hobby' && isInstanceAvailable(free)) {
       state.instances = instances.filter(hasProperty('category', 'eco'));
       state.selectedInstance = free;
-      state.instanceCategory = 'eco';
     }
 
     const instanceParam = instances.find(hasProperty('identifier', searchParams.get('instance_type')));
 
     if (instanceParam) {
       state.instances = instances.filter(hasProperty('category', instanceParam.category));
-      state.instanceCategory = instanceParam.category;
       state.selectedInstance = instanceParam;
     }
 

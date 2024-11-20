@@ -119,7 +119,7 @@ describe('parseDeployParams', () => {
 
     it('valid instance type', () => {
       test.params.set('instance_type', 'medium');
-      expect(test.getValues()).toHaveProperty('instance.identifier', 'medium');
+      expect(test.getValues()).toHaveProperty('instance', 'medium');
     });
 
     it('invalid instance type', () => {
