@@ -1,9 +1,6 @@
-import { useRegions } from 'src/api/hooks/catalog';
 import { Activity } from 'src/api/model';
-import { RegionFlag } from 'src/components/region-flag';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
-import { hasProperty } from 'src/utils/object';
 import { capitalize, shortId } from 'src/utils/strings';
 
 import {
@@ -21,22 +18,19 @@ import {
 const T = Translate.prefix('activity.sentences');
 
 export function ActivitySentence({ activity }: { activity: Activity }) {
-  const regions = useRegions();
-
   if (isAutoscalingActivity(activity)) {
-    const { name: serviceName } = activity.object;
-    const { count, previous_count: previousCount, region: regionIdentifier } = activity.metadata;
+    const { count, previous_count: previousCount } = activity.metadata;
     const direction = previousCount < count ? 'up' : 'down';
-    const catalogRegion = regions.find(hasProperty('identifier', regionIdentifier));
 
-    const region = (
-      <>
-        <RegionFlag identifier={regionIdentifier} className="me-1 inline size-em rounded-full shadow-badge" />
-        {catalogRegion?.displayName}
-      </>
-    );
+    if (count === 0) {
+      return <T id="serviceScaledToZero" />;
+    }
 
-    return <T id="serviceScaled" values={{ direction, serviceName, previousCount, count, region }} />;
+    if (previousCount === 0) {
+      return <T id="serviceScaledFromZero" />;
+    }
+
+    return <T id="serviceScaled" values={{ direction, previousCount, count }} />;
   }
 
   if (isAppActivity(activity)) {

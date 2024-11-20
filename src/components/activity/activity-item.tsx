@@ -3,12 +3,15 @@ import clsx from 'clsx';
 import { Activity } from 'src/api/model';
 import { IconClock } from 'src/components/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
+import { Translate } from 'src/intl/translate';
 
 import { ActivityActorImage } from './activity-actor';
 import { ActivityApiCredentialIcon } from './activity-api-credential-icon';
-import { isDeploymentActivity } from './activity-guards';
+import { isAutoscalingActivity, isDeploymentActivity } from './activity-guards';
 import { ActivityResources } from './activity-resources';
 import { ActivitySentence } from './activity-sentence';
+
+const T = Translate.prefix('activity.sentences');
 
 export function ActivityItem({ activity, className }: { activity: Activity; className?: string }) {
   const isSystemUser = activity.actor.type === 'system_user';
@@ -51,5 +54,13 @@ function getDetailsLine(activity: Activity) {
 
   if (isDeploymentActivity(activity) && activity.verb === 'failed') {
     return activity.metadata.messages.join(' ');
+  }
+
+  if (isAutoscalingActivity(activity) && activity.metadata.count === 0) {
+    return <T id="serviceScaledToZeroDetails" />;
+  }
+
+  if (isAutoscalingActivity(activity) && activity.metadata.previous_count === 0) {
+    return <T id="serviceScaledFromZeroDetails" />;
   }
 }
