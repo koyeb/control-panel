@@ -433,6 +433,12 @@
     },
     "submitButton": "Deploy"
   },
+  "oneClickAppForm": {
+    "overview": "Overview",
+    "instance": "Choose instance",
+    "region": "Select region",
+    "submitButton": "Deploy"
+  },
   "paymentDialog": {
     "cardNumberLabel": "Card number",
     "expirationLabel": "Expiration",
@@ -1253,14 +1259,6 @@
       "editServiceNameWarning": "If you change the service name, your service will be assigned a new private address on the service mesh. The public URL will remain identical.",
       "serviceNameLabel": "Name",
       "serviceNameTooltip": "Give a name to easily identify this service inside your app"
-    },
-    "oneClickApp": {
-      "overview": "Overview",
-      "environmentVariables": "Environment variables",
-      "nameLabel": "Name",
-      "valueLabel": "Value",
-      "estimatedCost": "Estimated cost",
-      "submitButton": "Deploy"
     }
   },
   "serviceEstimatedCost": {
@@ -1737,7 +1735,9 @@
       "documentTitle": "Deploy",
       "title": "Deploy on Koyeb",
       "oneClickApp": {
-        "title": "Deploy {appName}"
+        "documentTitle": "Deploy {appName}",
+        "title": "Deploy {appName}",
+        "pricing": "Pricing"
       },
       "model": {
         "documentTitle": "One-Click models",

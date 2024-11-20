@@ -9,7 +9,7 @@ import { shortId } from 'src/utils/strings';
 
 const T = Translate.prefix('deploymentInfo');
 
-export function RepositoryMetadata({ repository }: { repository: string }) {
+export function RepositoryMetadata({ repository }: { repository: string | null }) {
   return (
     <Metadata
       label={<T id="repositoryLabel" />}
@@ -19,16 +19,20 @@ export function RepositoryMetadata({ repository }: { repository: string }) {
             <IconGithub className="size-em" />
           </span>
 
-          <ExternalLink href={`https://${repository}`}>
-            {repository.replace(/^github.com\//, '')}
-          </ExternalLink>
+          {repository === null && '-'}
+
+          {repository !== null && (
+            <ExternalLink openInNewTab href={`https://${repository}`}>
+              {repository.replace(/^github.com\//, '')}
+            </ExternalLink>
+          )}
         </div>
       }
     />
   );
 }
 
-export function BranchMetadata({ repository, branch }: { repository: string; branch: string }) {
+export function BranchMetadata({ repository, branch }: { repository: string | null; branch: string | null }) {
   return (
     <Metadata
       label={<T id="branchLabel" />}
@@ -38,7 +42,13 @@ export function BranchMetadata({ repository, branch }: { repository: string; bra
             <IconGitBranch className="size-em" />
           </span>
 
-          <ExternalLink href={`https://${repository}/tree/${branch}`}>{branch}</ExternalLink>
+          {repository !== null || (branch !== null && '-')}
+
+          {repository !== null && branch !== null && (
+            <ExternalLink openInNewTab href={`https://${repository}/tree/${branch}`}>
+              {branch}
+            </ExternalLink>
+          )}
         </div>
       }
     />

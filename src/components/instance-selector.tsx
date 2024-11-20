@@ -107,7 +107,7 @@ export function InstanceSelectorList({
           key={instance.identifier}
           instance={instance}
           availability={checkAvailability(instance.identifier)}
-          selected={selectedInstance === instance}
+          selected={selectedInstance?.identifier === instance.identifier}
           onSelected={() => onInstanceSelected(instance)}
           bestFit={bestFit === instance}
           insufficientVRam={
