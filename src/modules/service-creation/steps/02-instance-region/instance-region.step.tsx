@@ -76,7 +76,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
           checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
           onCategorySelected={actions.instanceCategorySelected}
           onInstanceSelected={actions.instanceSelected}
-          className="max-w-md lg:w-full"
+          className="max-w-lg lg:w-full"
         />
 
         <RegionsSelector
