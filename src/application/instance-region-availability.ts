@@ -77,7 +77,6 @@ export function useInstanceAvailabilities(options: CheckInstanceAvailabilityOpti
 type CheckInstanceAvailabilityOptions = {
   serviceType?: ServiceType;
   hasVolumes?: boolean;
-  allowFreeInstanceIfAlreadyUsed?: boolean;
   previousInstance?: CatalogInstance;
 };
 
@@ -86,7 +85,7 @@ function checkInstanceAvailability(
   summary: OrganizationSummary | undefined,
   options: CheckInstanceAvailabilityOptions = {},
 ): InstanceAvailability {
-  const { serviceType, hasVolumes, allowFreeInstanceIfAlreadyUsed, previousInstance } = options;
+  const { serviceType, hasVolumes, previousInstance } = options;
 
   if (hasVolumes && previousInstance) {
     if (previousInstance.category !== 'gpu' && instance.category === 'gpu') {
@@ -111,7 +110,7 @@ function checkInstanceAvailability(
   }
 
   if (instance.identifier === 'free') {
-    if (summary?.freeInstanceUsed && !allowFreeInstanceIfAlreadyUsed) {
+    if (summary?.freeInstanceUsed && (!previousInstance || previousInstance.identifier !== 'free')) {
       return [false, 'freeAlreadyUsed'];
     }
 

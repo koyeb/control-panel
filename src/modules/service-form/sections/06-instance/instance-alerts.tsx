@@ -73,7 +73,7 @@ function HobbyPlanAlerts() {
 
   const free = useInstance('free')?.displayName;
 
-  const allowFreeInstanceIfAlreadyUsed = useWatchServiceForm('meta.allowFreeInstanceIfAlreadyUsed');
+  const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
   const summary = useOrganizationSummary();
 
   const { errors } = useFormState<ServiceForm>();
@@ -99,7 +99,7 @@ function HobbyPlanAlerts() {
     );
   }
 
-  if (summary?.freeInstanceUsed && !allowFreeInstanceIfAlreadyUsed) {
+  if (summary?.freeInstanceUsed && previousInstance && previousInstance.identifier !== 'free') {
     return (
       <Alert
         variant="error"

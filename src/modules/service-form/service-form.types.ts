@@ -34,7 +34,6 @@ type ServiceFormMeta = {
   expandedSection: ServiceFormSection | null;
   appId: string | null;
   serviceId: string | null;
-  allowFreeInstanceIfAlreadyUsed: boolean;
   previousInstance: string | null;
   hasPreviousBuild: boolean;
   skipBuild: boolean;

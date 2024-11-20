@@ -56,11 +56,6 @@ export async function initializeServiceForm(
     }
 
     values.meta.previousInstance = values.instance.identifier;
-
-    if (values.instance.identifier === 'free') {
-      values.meta.allowFreeInstanceIfAlreadyUsed = true;
-    }
-
     values.meta.hasPreviousBuild = service?.last_provisioned_deployment_id !== '';
   }
 
@@ -175,7 +170,6 @@ export function defaultServiceForm(): ServiceForm {
       appId: null,
       serviceId: null,
       previousInstance: null,
-      allowFreeInstanceIfAlreadyUsed: false,
       hasPreviousBuild: false,
       skipBuild: false,
       saveOnly: false,

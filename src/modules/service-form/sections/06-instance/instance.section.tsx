@@ -27,7 +27,6 @@ export function InstanceSection() {
 
   const serviceType = useWatchServiceForm('serviceType');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
-  const allowFreeInstanceIfAlreadyUsed = useWatchServiceForm('meta.allowFreeInstanceIfAlreadyUsed');
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
 
   const regions = useWatchServiceForm('regions');
@@ -36,7 +35,6 @@ export function InstanceSection() {
   const availabilities = useInstanceAvailabilities({
     serviceType,
     hasVolumes,
-    allowFreeInstanceIfAlreadyUsed,
     previousInstance,
   });
 
