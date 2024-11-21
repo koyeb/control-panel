@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useModel } from 'src/api/hooks/catalog';
 import { AiModel } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
-import { IconPackage } from 'src/components/icons';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
@@ -49,7 +48,7 @@ function Header({ model }: { model?: AiModel }) {
   return (
     <header className="col mb-10 items-center gap-4 text-center">
       <div>
-        <IconPackage className="size-14 rounded-md" />
+        <img src={model?.logo} className="size-14" />
       </div>
 
       <div className="col gap-1">

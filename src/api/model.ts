@@ -24,18 +24,6 @@ export type ActivityObject = {
   metadata: Record<string, unknown>;
 };
 
-// ai
-
-export type AiModel = {
-  name: string;
-  slug: string;
-  description: string;
-  dockerImage: string;
-  parameters: string;
-  engine: string;
-  minVRam: number;
-};
-
 // api credential
 
 export type ApiCredential = {
@@ -135,6 +123,25 @@ export type CatalogRegion = {
 };
 
 export type RegionCategory = 'koyeb' | 'aws';
+
+export type OneClickApp = {
+  name: string;
+  slug: string;
+  description: string;
+  logo: string;
+  deployUrl: string;
+};
+
+export type AiModel = {
+  name: string;
+  slug: string;
+  description: string;
+  logo: string;
+  dockerImage: string;
+  parameters: string;
+  engine: string;
+  minVRam: number;
+};
 
 // deployment
 
@@ -468,15 +475,6 @@ export type AppDomain = {
   id: string;
   name: string;
   type: 'autoassigned' | 'custom';
-};
-
-export type OneClickApp = {
-  name: string;
-  slug: string;
-  description: string;
-  logo: string;
-  repository: string;
-  deployUrl: string;
 };
 
 export type Service = {

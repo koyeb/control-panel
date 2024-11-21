@@ -98,7 +98,6 @@ function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
     slug: app.slug,
     description: app.description,
     logo: app.logos[0],
-    repository: app.repository,
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
   };
 }
@@ -132,6 +131,7 @@ function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
     name: app.model_name!,
     slug: app.slug,
     description: app.description,
+    logo: app.logos[0],
     dockerImage: app.model_docker_image!,
     parameters: app.model_size!,
     engine: app.model_inference_engine!,
