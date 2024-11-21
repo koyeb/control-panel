@@ -4,7 +4,8 @@ import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'r
 import { Dialog, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
-import { useApps, useOneClickApps, useServices } from 'src/api/hooks/service';
+import { useOneClickApps } from 'src/api/hooks/catalog';
+import { useApps, useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useResetIdentifyUser } from 'src/application/analytics';

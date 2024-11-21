@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react';
 
 import { Dialog } from '@koyeb/design-system';
+import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
-import { useOneClickApps } from 'src/api/hooks/service';
 import {
   IconArrowDown,
   IconArrowLeft,

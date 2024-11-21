@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import sortBy from 'lodash-es/sortBy';
 
+import { getConfig } from 'src/application/config';
 import { hasProperty } from 'src/utils/object';
 
 import { mapCatalogInstancesList, mapCatalogRegionsList } from '../mappers/catalog';
-import { AiModel } from '../model';
+import { AiModel, OneClickApp } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -53,6 +54,56 @@ export function useRegions(identifiers?: string[]) {
 
 export function useRegion(identifier?: string) {
   return useRegions().find(hasProperty('identifier', identifier));
+}
+
+type OneClickAppApiResponse = {
+  name: string;
+  logos: [string, ...string[]];
+  description: string;
+  repository: string;
+  deploy_button_url: string;
+  slug: string;
+};
+
+export function useOneClickAppsQuery() {
+  return useQuery({
+    queryKey: ['listOneClickApps'],
+    async queryFn() {
+      const { websiteUrl } = getConfig();
+      const response = await fetch(`${websiteUrl}/api/get-one-click-apps`, { mode: 'cors' });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      return (await response.json()) as OneClickAppApiResponse[];
+    },
+    select: (apps) => {
+      return apps.map((app) => ({
+        name: app.name,
+        slug: app.slug,
+        description: app.description,
+        logo: app.logos[0],
+        repository: app.repository,
+        deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
+      }));
+    },
+  });
+}
+
+export function useOneClickApps(): OneClickApp[] {
+  return useOneClickAppsQuery().data ?? [];
+}
+
+function getOneClickAppUrl(appSlug: string, appUrl: string): string {
+  const url = new URL(appUrl);
+
+  url.protocol = window.location.protocol;
+  url.host = window.location.host;
+
+  // url.searchParams.set('one_click_app', appSlug);
+
+  return url.toString();
 }
 
 export function useModelsQuery() {

@@ -1,4 +1,4 @@
-import { useOneClickApps } from 'src/api/hooks/service';
+import { useOneClickApps } from 'src/api/hooks/catalog';
 import { IconArrowRight } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
 import { Translate } from 'src/intl/translate';

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useOneClickAppsQuery } from 'src/api/hooks/service';
+import { useOneClickAppsQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
