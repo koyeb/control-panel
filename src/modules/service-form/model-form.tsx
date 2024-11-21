@@ -45,7 +45,7 @@ import { submitServiceForm } from './helpers/submit-service-form';
 const T = Translate.prefix('modelForm');
 
 const schema = z.object({
-  modelName: z.string(),
+  modelSlug: z.string(),
   instance: z.string(),
   region: z.string(),
 });
@@ -72,22 +72,20 @@ export function ModelForm(props: ModelFormProps) {
 
 function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   const instances = useInstances();
+  const models = useModels();
   const navigate = useNavigate();
   const t = T.useTranslate();
-
-  const models = useModels();
-  const model = useModel(initialModel?.slug);
 
   const form = useForm<ModelFormType>({
     defaultValues: getInitialValues(instances, initialModel),
     resolver: useZodResolver(schema, {
-      modelName: t('model.label'),
+      modelSlug: t('model.label'),
     }),
   });
 
   const mutation = useMutation({
-    async mutationFn({ modelName, instance, region }: FormValues<typeof form>) {
-      const model = defined(models.find(hasProperty('name', modelName)));
+    async mutationFn({ modelSlug, instance, region }: FormValues<typeof form>) {
+      const model = defined(models.find(hasProperty('slug', modelSlug)));
       const serviceForm = defaultServiceForm();
 
       serviceForm.appName = slugify(model.name).slice(0, 23);
@@ -108,6 +106,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
     },
   });
 
+  const model = useModel(form.watch('modelSlug'));
   const formRef = useRef<HTMLFormElement>(null);
 
   const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
@@ -184,7 +183,7 @@ function instanceBestFit(model?: AiModel) {
       return true;
     }
 
-    return instance.vram >= model.min_vram;
+    return instance.vram >= model.minVRam;
   };
 }
 
@@ -192,7 +191,7 @@ function getInitialValues(instances: CatalogInstance[], model?: AiModel): Partia
   const instance = instances.find(instanceBestFit(model));
 
   return {
-    modelName: model?.name,
+    modelSlug: model?.slug,
     instance: instance?.identifier,
     region: instance?.regions?.[0] ?? 'fra',
   };
@@ -243,11 +242,11 @@ function ModelSection({ form }: { form: ModelForm }) {
     <Section title={<T id="model.title" />}>
       <ControlledSelect
         control={form.control}
-        name="modelName"
+        name="modelSlug"
         items={models}
-        getKey={getName}
+        getKey={(model) => model.slug}
         itemToString={getName}
-        itemToValue={getName}
+        itemToValue={(model) => model.slug}
         renderItem={(model) => (
           <div className="row items-center gap-2">
             <div>{model.name}</div>
@@ -289,7 +288,7 @@ function InstanceSection({ model, form }: { model?: AiModel; form: ModelForm }) 
         }}
         checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
         bestFit={bestFit}
-        minimumVRam={model?.min_vram}
+        minimumVRam={model?.minVRam}
       />
 
       <MinimumVRamAlerts model={model} instance={instance} bestFit={bestFit} />
@@ -304,7 +303,7 @@ type MinimumVRamAlertsProps = {
 };
 
 function MinimumVRamAlerts({ model, instance, bestFit }: MinimumVRamAlertsProps) {
-  if (instance?.vram && model && model.min_vram > instance.vram && bestFit !== undefined) {
+  if (instance?.vram && model && model.minVRam > instance.vram && bestFit !== undefined) {
     return (
       <Alert
         variant="warning"
@@ -312,7 +311,7 @@ function MinimumVRamAlerts({ model, instance, bestFit }: MinimumVRamAlertsProps)
         description={
           <T
             id="instance.notEnoughVRam.description"
-            values={{ min: formatBytes(model.min_vram, { round: true }) }}
+            values={{ min: formatBytes(model.minVRam, { round: true }) }}
           />
         }
         className="mt-4"

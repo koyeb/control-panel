@@ -135,7 +135,7 @@ function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
     dockerImage: app.model_docker_image!,
     parameters: app.model_size!,
     engine: app.model_inference_engine!,
-    min_vram: parseBytes(app.model_min_vram_gb + 'GB'),
+    minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
   };
 }
 

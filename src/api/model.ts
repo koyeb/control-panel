@@ -33,7 +33,7 @@ export type AiModel = {
   dockerImage: string;
   parameters: string;
   engine: string;
-  min_vram: number;
+  minVRam: number;
 };
 
 // api credential
