@@ -5,7 +5,6 @@ import { useOrganizationSummary } from 'src/api/hooks/session';
 import { CatalogInstance, CatalogRegion, OrganizationSummary, ServiceType } from 'src/api/model';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { inArray } from 'src/utils/arrays';
-import { defined } from 'src/utils/assert';
 import { toObject } from 'src/utils/object';
 
 export type RegionAvailability = [available: true] | [available: false, reason: RegionUnavailableReason];
@@ -62,7 +61,7 @@ export type InstanceUnavailableReason =
 
 export function useInstanceAvailabilities(options: CheckInstanceAvailabilityOptions = {}) {
   const instances = useInstances();
-  const organizationSummary = defined(useOrganizationSummary());
+  const organizationSummary = useOrganizationSummary();
   const optionsMemo = useDeepCompareMemo(options);
 
   return useMemo(() => {
