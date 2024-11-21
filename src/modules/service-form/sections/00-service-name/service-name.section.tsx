@@ -3,6 +3,7 @@ import { useFormState } from 'react-hook-form';
 import { Alert } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { Translate } from 'src/intl/translate';
+import { capitalize } from 'src/utils/strings';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';
@@ -12,6 +13,7 @@ const T = Translate.prefix('serviceForm.serviceName');
 
 export function ServiceNameSection() {
   const serviceId = useWatchServiceForm('meta.serviceId');
+  const type = useWatchServiceForm('serviceType') as 'web' | 'worker';
   const { errors } = useFormState<ServiceForm>();
 
   return (
@@ -22,7 +24,9 @@ export function ServiceNameSection() {
       expandedTitle={<T id="titleExpanded" />}
       className="col gaps"
     >
-      {serviceId !== null && <Alert variant="warning" description={<T id="editServiceNameWarning" />} />}
+      {serviceId !== null && (
+        <Alert variant="warning" description={<T id={`editServiceNameWarning${capitalize(type)}`} />} />
+      )}
 
       <ControlledInput
         name="serviceName"
