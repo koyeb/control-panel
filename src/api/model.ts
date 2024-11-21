@@ -28,6 +28,7 @@ export type ActivityObject = {
 
 export type AiModel = {
   name: string;
+  slug: string;
   description: string;
   dockerImage: string;
   parameters: string;

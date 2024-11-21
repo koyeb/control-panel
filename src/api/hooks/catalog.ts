@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import sortBy from 'lodash-es/sortBy';
 
 import { getConfig } from 'src/application/config';
+import { parseBytes } from 'src/application/memory';
 import { hasProperty } from 'src/utils/object';
 
 import { mapCatalogInstancesList, mapCatalogRegionsList } from '../mappers/catalog';
@@ -57,38 +58,49 @@ export function useRegion(identifier?: string) {
 }
 
 type OneClickAppApiResponse = {
+  category: string;
   name: string;
   logos: [string, ...string[]];
   description: string;
   repository: string;
   deploy_button_url: string;
   slug: string;
+  model_name?: string;
+  model_size?: string;
+  model_inference_engine?: string;
+  model_docker_image?: string;
+  model_min_vram_gb?: number;
 };
+
+async function fetchOneClickApps() {
+  const { websiteUrl } = getConfig();
+  const response = await fetch(`${websiteUrl}/api/get-one-click-apps`, { mode: 'cors' });
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  return (await response.json()) as OneClickAppApiResponse[];
+}
 
 export function useOneClickAppsQuery() {
   return useQuery({
+    refetchInterval: false,
     queryKey: ['listOneClickApps'],
-    async queryFn() {
-      const { websiteUrl } = getConfig();
-      const response = await fetch(`${websiteUrl}/api/get-one-click-apps`, { mode: 'cors' });
-
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-
-      return (await response.json()) as OneClickAppApiResponse[];
-    },
-    select: (apps) => {
-      return apps.map((app) => ({
-        name: app.name,
-        slug: app.slug,
-        description: app.description,
-        logo: app.logos[0],
-        repository: app.repository,
-        deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
-      }));
-    },
+    queryFn: fetchOneClickApps,
+    select: (apps) => apps.map(mapOneClickApp),
   });
+}
+
+function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
+  return {
+    name: app.name,
+    slug: app.slug,
+    description: app.description,
+    logo: app.logos[0],
+    repository: app.repository,
+    deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
+  };
 }
 
 export function useOneClickApps(): OneClickApp[] {
@@ -108,11 +120,23 @@ function getOneClickAppUrl(appSlug: string, appUrl: string): string {
 
 export function useModelsQuery() {
   return useQuery({
-    queryKey: ['getModels'],
-    queryFn() {
-      return models;
-    },
+    refetchInterval: false,
+    queryKey: ['listOneClickApps'],
+    queryFn: fetchOneClickApps,
+    select: (apps) => apps.filter((app) => app.category === 'Model').map(mapOneClickModel),
   });
+}
+
+function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
+  return {
+    name: app.model_name!,
+    slug: app.slug,
+    description: app.description,
+    dockerImage: app.model_docker_image!,
+    parameters: app.model_size!,
+    engine: app.model_inference_engine!,
+    min_vram: parseBytes(app.model_min_vram_gb + 'GB'),
+  };
 }
 
 export function useModels() {
@@ -121,51 +145,6 @@ export function useModels() {
   return sortBy(data, 'name');
 }
 
-export function useModel(name?: string) {
-  return useModels().find(hasProperty('name', name));
+export function useModel(slug?: string) {
+  return useModels().find(hasProperty('slug', slug));
 }
-
-const models: AiModel[] = [
-  {
-    name: 'meta-llama/Llama-3.1-8B',
-    description:
-      'The Meta Llama 3.1 collection of multilingual large language models (LLMs) is a collection of pretrained and instruction tuned generative models in 8B, 70B and 405B sizes (text in/text out).',
-    dockerImage: 'koyeb/meta-llama-3.1-8b:latest',
-    engine: 'vLLM',
-    parameters: '8.03B',
-    min_vram: 30019707136,
-  },
-  {
-    name: 'NousResearch/Hermes-3-Llama-3.1-8B',
-    description: 'Hermes 3 is the latest version of our flagship Hermes series of LLMs by Nous Research.',
-    dockerImage: 'koyeb/nousresearch-hermes-3-llama-3.1-8b:latest',
-    engine: 'vLLM',
-    parameters: '8.03B',
-    min_vram: 30019707136,
-  },
-  {
-    name: 'mistralai/Mistral-7B-Instruct-v0.3',
-    description:
-      'The Mistral-7B-Instruct-v0.3 Large Language Model (LLM) is an instruct fine-tuned version of the Mistral-7B-v0.3.',
-    dockerImage: 'koyeb/mistralai-mistral-7b-instruct-v0.3:latest',
-    engine: 'vLLM',
-    parameters: '7.25B',
-    min_vram: 30019707136,
-  },
-  {
-    name: 'google/gemma-2-9b-it',
-    description: 'Summary description and brief definition of inputs and outputs.',
-    dockerImage: 'koyeb/google-gemma-2-9b-it:latest',
-    engine: 'vLLM',
-    parameters: '9.24B',
-    min_vram: 30019707136,
-  },
-  {
-    name: 'Qwen/Qwen2.5-7B-Instruct',
-    description: 'Qwen2.5 is the latest series of Qwen large language models.',
-    dockerImage: 'koyeb/qwen-qwen2.5-7b-instruct:latest',
-    engine: 'vLLM',
-    parameters: '7.62B',
-    min_vram: 30019707136,
-  },
-];

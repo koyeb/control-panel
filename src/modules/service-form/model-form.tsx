@@ -72,9 +72,11 @@ export function ModelForm(props: ModelFormProps) {
 
 function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   const instances = useInstances();
-  const models = useModels();
   const navigate = useNavigate();
   const t = T.useTranslate();
+
+  const models = useModels();
+  const model = useModel(initialModel?.slug);
 
   const form = useForm<ModelFormType>({
     defaultValues: getInitialValues(instances, initialModel),
@@ -106,8 +108,6 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
     },
   });
 
-  const model = useModel(form.watch('modelName'));
-
   const formRef = useRef<HTMLFormElement>(null);
 
   const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
@@ -130,7 +130,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
       >
         <OverviewSection model={model} form={form} />
         {initialModel === undefined && <ModelSection form={form} />}
-        <InstanceSection form={form} />
+        <InstanceSection model={model} form={form} />
         <RegionSection form={form} />
 
         <div className="row justify-end gap-2">
@@ -176,7 +176,7 @@ function useOnCostEstimationChanged(form: ModelForm, onChanged: (cost?: ServiceC
 
 function instanceBestFit(model?: AiModel) {
   return (instance: CatalogInstance): boolean => {
-    if (instance.category !== 'gpu') {
+    if (instance.status !== 'available' || instance.category !== 'gpu') {
       return false;
     }
 
@@ -268,8 +268,7 @@ function ModelSection({ form }: { form: ModelForm }) {
   );
 }
 
-function InstanceSection({ form }: { form: ModelForm }) {
-  const model = useModel(form.watch('modelName'));
+function InstanceSection({ model, form }: { model?: AiModel; form: ModelForm }) {
   const instance = useInstance(form.watch('instance'));
   const instances = useInstances();
   const bestFit = instances.find(instanceBestFit(model));
