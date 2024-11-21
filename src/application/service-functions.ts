@@ -1,5 +1,5 @@
 import { api } from 'src/api/api';
-import { ApiDeploymentDefinition } from 'src/api/api-types';
+import { ApiDeploymentDefinition, ApiDeploymentStatus } from 'src/api/api-types';
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { App, AppDomain, Deployment, DeploymentStatus, Port, Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
@@ -98,3 +98,22 @@ export async function updateDatabaseService(
     body: { definition },
   });
 }
+
+export const allApiDeploymentStatuses: Array<ApiDeploymentStatus> = [
+  'PENDING',
+  'PROVISIONING',
+  'SCHEDULED',
+  'CANCELING',
+  'CANCELED',
+  'ALLOCATING',
+  'STARTING',
+  'HEALTHY',
+  'DEGRADED',
+  'UNHEALTHY',
+  'STOPPING',
+  'STOPPED',
+  'ERRORING',
+  'ERROR',
+  'STASHED',
+  'SLEEPING',
+];

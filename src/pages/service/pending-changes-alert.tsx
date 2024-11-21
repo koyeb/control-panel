@@ -5,35 +5,17 @@ import { diffJson } from 'diff';
 import { useMemo, useState } from 'react';
 
 import { Alert, Button, Dialog } from '@koyeb/design-system';
-import { ApiDeploymentStatus } from 'src/api/api-types';
 import { useDeployment } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { ComputeDeployment, Service } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
+import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 const T = Translate.prefix('pages.service.layout.pendingChanges');
-
-const allDeploymentStatuses: Array<ApiDeploymentStatus> = [
-  'PENDING',
-  'PROVISIONING',
-  'SCHEDULED',
-  'CANCELING',
-  'CANCELED',
-  'ALLOCATING',
-  'STARTING',
-  'HEALTHY',
-  'DEGRADED',
-  'UNHEALTHY',
-  'STOPPING',
-  'STOPPED',
-  'ERRORING',
-  'ERROR',
-  'STASHED',
-];
 
 type PendingChangesAlertProps = {
   service: Service;
@@ -48,7 +30,7 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
     ...useApiQueryFn('listDeployments', {
       query: {
         service_id: service.id,
-        statuses: allDeploymentStatuses.filter((status) => status !== 'STASHED'),
+        statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
       },
     }),
     select: (result) => mapDeployments(result)[0],
