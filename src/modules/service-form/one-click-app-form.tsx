@@ -304,6 +304,7 @@ function EnvironmentVariablesSection({ form }: { form: OneClickAppForm }) {
               control={form.control}
               name={`environmentVariables.${index}.name`}
               label={index === 0 && 'Key'}
+              readOnly
             />
 
             <ControlledInput

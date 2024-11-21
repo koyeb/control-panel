@@ -74,10 +74,13 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   const instances = useInstances();
   const models = useModels();
   const navigate = useNavigate();
+  const t = T.useTranslate();
 
   const form = useForm<ModelFormType>({
     defaultValues: getInitialValues(instances, initialModel),
-    resolver: useZodResolver(schema),
+    resolver: useZodResolver(schema, {
+      modelName: t('model.label'),
+    }),
   });
 
   const mutation = useMutation({

@@ -35,7 +35,7 @@ function useZodErrorMap(
     function getMessage(error: z.ZodIssueOptionalMessage): string | void {
       switch (error.code) {
         case z.ZodIssueCode.invalid_type:
-          if (error.expected === 'number') {
+          if (error.received === 'undefined') {
             return t('required', { label });
           }
           break;

@@ -415,7 +415,8 @@
       "regionLabel": "Region"
     },
     "model": {
-      "title": "Choose a model"
+      "title": "Choose a model",
+      "label": "Model name"
     },
     "instance": {
       "title": "Choose instance",
