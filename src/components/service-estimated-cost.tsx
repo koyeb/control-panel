@@ -173,13 +173,13 @@ function Price({ perMonth, perHour, className }: PriceProps) {
   return (
     <div className={className}>
       <div className="text-xs font-medium">
-        <T id="pricePerMonth" values={{ price: <FormattedPrice value={perMonth} /> }} />
-      </div>
-      <div className="text-xs text-dim">
         <T
           id="pricePerHour"
           values={{ price: <FormattedPrice value={perHour} digits={perHour < 1 ? 4 : undefined} /> }}
         />
+      </div>
+      <div className="text-xs text-dim">
+        <T id="pricePerMonth" values={{ price: <FormattedPrice value={perMonth} /> }} />
       </div>
     </div>
   );
