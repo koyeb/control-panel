@@ -6,6 +6,7 @@ import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { useObserve } from 'src/hooks/lifecycle';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -37,6 +38,12 @@ export function InstanceSelector({
   const [selectedCategory, setSelectedCategory] = useState<InstanceCategory>(
     selectedInstance?.category ?? 'standard',
   );
+
+  useObserve(selectedInstance, () => {
+    if (selectedInstance) {
+      setSelectedCategory(selectedInstance.category);
+    }
+  });
 
   function onCategorySelected(category: InstanceCategory) {
     setSelectedCategory(category);
