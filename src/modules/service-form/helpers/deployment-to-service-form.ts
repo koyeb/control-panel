@@ -12,7 +12,7 @@ import { hasProperty, keys } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import {
-  AutoScaling,
+  Scaling,
   Builder,
   DockerDeploymentOptions,
   DockerSource,
@@ -20,7 +20,6 @@ import {
   HealthCheck,
   Port,
   PortProtocol,
-  Scaling,
   ServiceForm,
   ServiceVolume,
 } from '../service-form.types';
@@ -161,11 +160,10 @@ function dockerDeployment(definition: ApiDeploymentDefinition): Partial<DockerDe
 }
 
 function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
-  const scaling = definition.scalings?.[0];
-  const type = scaling?.min === scaling?.max ? 'fixed' : 'autoscaling';
+  const { min, max, targets } = definition.scalings?.[0] ?? {};
 
   const getTarget = (name: keyof ApiDeploymentScalingTarget) => {
-    return scaling?.targets?.find((target) => name in target) ?? {};
+    return targets?.find((target) => name in target) ?? {};
   };
 
   const { average_cpu } = getTarget('average_cpu');
@@ -175,9 +173,9 @@ function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
   const { requests_response_time } = getTarget('requests_response_time');
   const { sleep_idle_delay } = getTarget('sleep_idle_delay');
 
-  const autoscaling = {
-    min: scaling?.min,
-    max: scaling?.max,
+  const scaling = {
+    min,
+    max,
     targets: {
       cpu: {
         enabled: average_cpu !== undefined,
@@ -188,7 +186,7 @@ function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
         value: average_mem?.value,
       },
       requests: {
-        enabled: requests_per_second !== undefined,
+        enabled: min === max ? true : requests_per_second !== undefined,
         value: requests_per_second?.value,
       },
       concurrentRequests: {
@@ -204,21 +202,17 @@ function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
         value: sleep_idle_delay?.value,
       },
     },
-  } satisfies DeepPartial<AutoScaling>;
+  } satisfies DeepPartial<Scaling>;
 
-  if (autoscaling.min === 0 && autoscaling.max === 1) {
-    for (const target of keys(autoscaling.targets)) {
+  if (scaling.min === 0 && scaling.max === 1) {
+    for (const target of keys(scaling.targets)) {
       if (target !== 'sleepIdleDelay') {
-        autoscaling.targets[target].enabled = false;
+        scaling.targets[target].enabled = false;
       }
     }
   }
 
-  return {
-    type,
-    fixed: type === 'fixed' ? scaling?.min : undefined,
-    autoscaling: type === 'autoscaling' ? autoscaling : undefined,
-  };
+  return scaling;
 }
 
 function environmentVariables(

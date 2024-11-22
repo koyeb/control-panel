@@ -277,8 +277,8 @@ function Instances({ definition }: { definition: DeploymentDefinition }) {
 }
 
 function Scaling({ scaling }: { scaling: Scaling }) {
-  if (scaling.type === 'fixed') {
-    return <>{scaling.instances}</>;
+  if (scaling.min === scaling.max) {
+    return <>{scaling.min}</>;
   }
 
   return <T id="instances.autoscaling" values={{ min: scaling.min, max: scaling.max }} />;

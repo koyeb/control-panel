@@ -71,8 +71,8 @@ describe('parseDeployParams', () => {
 
     it('worker autoscaling criteria', () => {
       test.params.set('service_type', 'worker');
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.requests.enabled', false);
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.cpu.enabled', true);
+      expect(test.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
+      expect(test.getValues()).toHaveProperty('scaling.targets.cpu.enabled', true);
     });
   });
 
@@ -230,40 +230,34 @@ describe('parseDeployParams', () => {
     it('min scaling only', () => {
       test.params.set('instances_min', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling', { type: 'fixed', fixed: 1 });
+      expect(test.getValues()).toHaveProperty('scaling', { min: 1 });
     });
 
     it('max scaling only', () => {
       test.params.set('instances_max', '2');
 
-      expect(test.getValues()).toHaveProperty('scaling', { type: 'fixed', fixed: 2 });
+      expect(test.getValues()).toHaveProperty('scaling', { max: 2 });
     });
 
     it('both with min < max', () => {
       test.params.set('instances_min', '1');
       test.params.set('instances_max', '2');
 
-      expect(test.getValues()).toHaveProperty('scaling', {
-        type: 'autoscaling',
-        autoscaling: { min: 1, max: 2 },
-      });
+      expect(test.getValues()).toHaveProperty('scaling', { min: 1, max: 2 });
     });
 
     it('both with min = max', () => {
       test.params.set('instances_min', '2');
       test.params.set('instances_max', '2');
 
-      expect(test.getValues()).toHaveProperty('scaling', { type: 'fixed', fixed: 2 });
+      expect(test.getValues()).toHaveProperty('scaling', { min: 2, max: 2 });
     });
 
     it('both with min > max', () => {
       test.params.set('instances_min', '2');
       test.params.set('instances_max', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling', {
-        type: 'autoscaling',
-        autoscaling: { min: 1, max: 2 },
-      });
+      expect(test.getValues()).toHaveProperty('scaling', { min: 1, max: 2 });
     });
 
     it('invalid scaling', () => {
@@ -301,7 +295,7 @@ describe('parseDeployParams', () => {
     it('autoscaling_average_cpu', () => {
       test.params.set('autoscaling_average_cpu', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.cpu', {
+      expect(test.getValues()).toHaveProperty('scaling.targets.cpu', {
         enabled: true,
         value: 1,
       });
@@ -310,7 +304,7 @@ describe('parseDeployParams', () => {
     it('autoscaling_average_mem', () => {
       test.params.set('autoscaling_average_mem', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.memory', {
+      expect(test.getValues()).toHaveProperty('scaling.targets.memory', {
         enabled: true,
         value: 1,
       });
@@ -319,7 +313,7 @@ describe('parseDeployParams', () => {
     it('autoscaling_requests_per_second', () => {
       test.params.set('autoscaling_requests_per_second', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.requests', {
+      expect(test.getValues()).toHaveProperty('scaling.targets.requests', {
         enabled: true,
         value: 1,
       });
@@ -328,7 +322,7 @@ describe('parseDeployParams', () => {
     it('autoscaling_concurrent_requests', () => {
       test.params.set('autoscaling_concurrent_requests', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.concurrentRequests', {
+      expect(test.getValues()).toHaveProperty('scaling.targets.concurrentRequests', {
         enabled: true,
         value: 1,
       });
@@ -337,7 +331,7 @@ describe('parseDeployParams', () => {
     it('autoscaling_requests_response_time', () => {
       test.params.set('autoscaling_requests_response_time', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.responseTime', {
+      expect(test.getValues()).toHaveProperty('scaling.targets.responseTime', {
         enabled: true,
         value: 1,
       });
@@ -346,7 +340,7 @@ describe('parseDeployParams', () => {
     it('autoscaling_sleep_idle_delay', () => {
       test.params.set('autoscaling_sleep_idle_delay', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling.autoscaling.targets.sleepIdleDelay', {
+      expect(test.getValues()).toHaveProperty('scaling.targets.sleepIdleDelay', {
         enabled: true,
         value: 1,
       });

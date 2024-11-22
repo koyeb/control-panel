@@ -25,12 +25,12 @@ export function computeEstimatedCost(
     return;
   }
 
-  if (scaling.type === 'fixed') {
-    return calculateCost(scaling.fixed, regions.length, instance);
+  if (scaling.min === scaling.max) {
+    return calculateCost(scaling.min, regions.length, instance);
   } else {
     return [
-      calculateCost(scaling.autoscaling.min, regions.length, instance),
-      calculateCost(scaling.autoscaling.max, regions.length, instance),
+      calculateCost(scaling.min, regions.length, instance),
+      calculateCost(scaling.max, regions.length, instance),
     ];
   }
 }

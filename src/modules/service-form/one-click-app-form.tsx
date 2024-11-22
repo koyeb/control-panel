@@ -170,9 +170,9 @@ function useOnCostEstimationChanged(form: OneClickAppForm, onChanged: (cost?: Se
 
   useEffect(() => {
     const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
-      type: 'fixed',
-      fixed: 1,
-      autoscaling: null as never,
+      min: 1,
+      max: 1,
+      targets: null as never,
     });
 
     onChanged(cost);
@@ -203,13 +203,6 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
     branch,
   };
 
-  const scaling = {
-    type: serviceForm.scaling.type,
-    instances: serviceForm.scaling.fixed,
-    min: serviceForm.scaling.autoscaling.min,
-    max: serviceForm.scaling.autoscaling.max,
-  };
-
   return (
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded border">
@@ -230,7 +223,7 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
 
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           <InstanceTypeMetadata instanceType={form.watch('instance')} />
-          <ScalingMetadata scaling={scaling} />
+          <ScalingMetadata scaling={serviceForm.scaling} />
           <RegionsMetadata regions={[form.watch('region')]} />
         </div>
       </div>

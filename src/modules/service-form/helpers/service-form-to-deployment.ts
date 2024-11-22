@@ -20,7 +20,6 @@ import { entries } from 'src/utils/object';
 
 import {
   ArchiveSource,
-  AutoScaling,
   Builder,
   DockerDeploymentOptions,
   DockerSource,
@@ -113,13 +112,13 @@ function docker(docker: DockerSource, options: DockerDeploymentOptions): ApiDock
 }
 
 function scalings(scaling: Scaling): Array<ApiDeploymentScaling> {
-  if (scaling.type === 'fixed') {
-    return [{ min: scaling.fixed, max: scaling.fixed }];
+  if (scaling.min === scaling.max) {
+    return [{ min: scaling.min, max: scaling.max }];
   }
 
   const targets = new Array<ApiDeploymentScalingTarget>();
 
-  const keyMap: Record<keyof AutoScaling['targets'], keyof ApiDeploymentScalingTarget> = {
+  const keyMap: Record<keyof Scaling['targets'], keyof ApiDeploymentScalingTarget> = {
     cpu: 'average_cpu',
     memory: 'average_mem',
     requests: 'requests_per_second',
@@ -128,11 +127,11 @@ function scalings(scaling: Scaling): Array<ApiDeploymentScaling> {
     sleepIdleDelay: 'sleep_idle_delay',
   };
 
-  entries(scaling.autoscaling.targets)
+  entries(scaling.targets)
     .filter(([, { enabled }]) => enabled)
     .forEach(([target, { value }]) => targets.push({ [keyMap[target]]: { value } }));
 
-  if (scaling.autoscaling.targets.responseTime.enabled) {
+  if (scaling.targets.responseTime.enabled) {
     const target = targets.find((target) => 'requests_response_time' in target);
 
     assert(target?.requests_response_time !== undefined);
@@ -141,8 +140,8 @@ function scalings(scaling: Scaling): Array<ApiDeploymentScaling> {
 
   return [
     {
-      min: scaling.autoscaling.min,
-      max: scaling.autoscaling.max,
+      min: scaling.min,
+      max: scaling.max,
       targets,
     },
   ];

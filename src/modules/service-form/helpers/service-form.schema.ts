@@ -144,19 +144,6 @@ function instance() {
 }
 
 function scaling(t: TranslateErrorFunction) {
-  return z.discriminatedUnion('type', [
-    z.object({
-      type: z.literal('fixed'),
-      fixed: number(t, t('scaling.fixedLabel'), 0, 20),
-    }),
-    z.object({
-      type: z.literal('autoscaling'),
-      autoscaling: autoScaling(t),
-    }),
-  ]);
-}
-
-function autoScaling(t: TranslateErrorFunction) {
   return z
     .object({
       min: number(t, t('scaling.autoScalingMinLabel'), 0, 20),
@@ -170,8 +157,8 @@ function autoScaling(t: TranslateErrorFunction) {
         sleepIdleDelay: autoScalingTarget(t, 1, 1e9),
       }),
     })
-    .refine(({ max, targets }) => {
-      if (max === 1) {
+    .refine(({ min, max, targets }) => {
+      if (min === max || max === 1) {
         return true;
       }
 

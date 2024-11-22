@@ -16,12 +16,12 @@ import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
 import { defaultServiceForm } from '../../helpers/initialize-service-form';
-import { AutoScaling, ServiceForm } from '../../service-form.types';
+import { Scaling, ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 const T = Translate.prefix('serviceForm.scaling.autoscalingSettings');
 
-const targets: Array<keyof AutoScaling['targets']> = [
+const targets: Array<keyof Scaling['targets']> = [
   'cpu',
   'memory',
   'requests',
@@ -34,7 +34,7 @@ export function AutoScalingConfiguration() {
 
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useWatchServiceForm('instance');
-  const autoScaling = useWatchServiceForm('scaling.autoscaling');
+  const scaling = useWatchServiceForm('scaling');
 
   const canChangeScaling = instance !== 'free' && !hasVolumes;
 
@@ -50,20 +50,20 @@ export function AutoScalingConfiguration() {
           min={scaleToZero ? 0 : 1}
           max={20}
           step={1}
-          value={[autoScaling.min, autoScaling.max]}
+          value={[scaling.min, scaling.max]}
           onChange={([min, max]) => {
-            setValue('scaling.autoscaling.min', min);
-            setValue('scaling.autoscaling.max', max);
+            setValue('scaling.min', min);
+            setValue('scaling.max', max);
 
             if (min === 0 && max === 1) {
               for (const target of targets) {
-                setValue(`scaling.autoscaling.targets.${target}.enabled`, false);
+                setValue(`scaling.targets.${target}.enabled`, false);
               }
 
-              void trigger('scaling.autoscaling');
-            } else if (autoScaling.max === 1 && max > 1) {
-              resetField('scaling.autoscaling.targets', {
-                defaultValue: defaultServiceForm().scaling.autoscaling.targets,
+              void trigger('scaling');
+            } else if (scaling.max === 1 && max > 1) {
+              resetField('scaling.targets', {
+                defaultValue: defaultServiceForm().scaling.targets,
               });
             }
           }}
@@ -75,7 +75,7 @@ export function AutoScalingConfiguration() {
         <RangeInputMobile />
       </div>
 
-      {scaleToZeroIdleDelay && autoScaling.min === 0 && (
+      {scaleToZeroIdleDelay && scaling.min === 0 && (
         <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={1} max={1e9} />
       )}
 
@@ -101,8 +101,8 @@ function RangeInputMobile() {
       </span>
 
       <div className="row gap-4">
-        <ControlledInput<ServiceForm, 'scaling.autoscaling.min'>
-          name="scaling.autoscaling.min"
+        <ControlledInput<ServiceForm, 'scaling.min'>
+          name="scaling.min"
           type="number"
           className="max-w-20"
           label={<T id="min" />}
@@ -113,8 +113,8 @@ function RangeInputMobile() {
           step={1}
         />
 
-        <ControlledInput<ServiceForm, 'scaling.autoscaling.max'>
-          name="scaling.autoscaling.max"
+        <ControlledInput<ServiceForm, 'scaling.max'>
+          name="scaling.max"
           type="number"
           className="max-w-20"
           label={<T id="max" />}
@@ -130,7 +130,7 @@ function RangeInputMobile() {
 }
 
 type ScalingTargetProps = {
-  target: keyof AutoScaling['targets'];
+  target: keyof Scaling['targets'];
   Icon: React.ComponentType<{ className?: string }>;
   min?: number;
   max?: number;
@@ -138,26 +138,23 @@ type ScalingTargetProps = {
 
 function ScalingTarget({ target: targetName, Icon, min, max }: ScalingTargetProps) {
   const { resetField, trigger } = useFormContext<ServiceForm>();
-  const target = useWatchServiceForm(`scaling.autoscaling.targets.${targetName}`);
+  const target = useWatchServiceForm(`scaling.targets.${targetName}`);
   const disabledReason = useTargetDisabledReason(targetName);
 
   return (
     <Tooltip content={disabledReason}>
       {(props) => (
         <div {...props}>
-          <ControlledSelectBox<
-            ServiceForm,
-            `scaling.autoscaling.targets.${keyof AutoScaling['targets']}.enabled`
-          >
-            name={`scaling.autoscaling.targets.${targetName}.enabled`}
+          <ControlledSelectBox<ServiceForm, `scaling.targets.${keyof Scaling['targets']}.enabled`>
+            name={`scaling.targets.${targetName}.enabled`}
             type="checkbox"
             title={null}
             description={null}
             disabled={disabledReason !== undefined}
             onChangeEffect={(event) => {
               if (!event.target.checked) {
-                resetField(`scaling.autoscaling.targets.${targetName}.value`);
-                void trigger(`scaling.autoscaling.targets.${targetName}.value`);
+                resetField(`scaling.targets.${targetName}.value`);
+                void trigger(`scaling.targets.${targetName}.value`);
               }
             }}
           >
@@ -174,7 +171,7 @@ function ScalingTarget({ target: targetName, Icon, min, max }: ScalingTargetProp
               </div>
 
               <ControlledInput
-                name={`scaling.autoscaling.targets.${targetName}.value`}
+                name={`scaling.targets.${targetName}.value`}
                 error={false}
                 type="number"
                 disabled={!target.enabled}
@@ -197,10 +194,10 @@ function ScalingTarget({ target: targetName, Icon, min, max }: ScalingTargetProp
   );
 }
 
-function useTargetDisabledReason(target: keyof AutoScaling['targets']): React.ReactNode | undefined {
+function useTargetDisabledReason(target: keyof Scaling['targets']): React.ReactNode | undefined {
   const serviceType = useWatchServiceForm('serviceType');
-  const min = useWatchServiceForm('scaling.autoscaling.min');
-  const max = useWatchServiceForm('scaling.autoscaling.max');
+  const min = useWatchServiceForm('scaling.min');
+  const max = useWatchServiceForm('scaling.max');
 
   if (target === 'sleepIdleDelay' && min === 0) {
     return undefined;
@@ -215,18 +212,18 @@ function useTargetDisabledReason(target: keyof AutoScaling['targets']): React.Re
   }
 }
 
-function isWebTarget(target: keyof AutoScaling['targets']) {
+function isWebTarget(target: keyof Scaling['targets']) {
   return inArray(target, ['requests', 'concurrentRequests', 'responseTime']);
 }
 
 type TargetDescriptionProps = {
-  target: keyof AutoScaling['targets'];
+  target: keyof Scaling['targets'];
 };
 
 function TargetDescription({ target }: TargetDescriptionProps) {
   const { errors } = useFormState<ServiceForm>();
-  const error = errors.scaling?.autoscaling?.targets?.[target]?.value?.message;
-  let value = useWatchServiceForm(`scaling.autoscaling.targets.${target}.value`);
+  const error = errors.scaling?.targets?.[target]?.value?.message;
+  let value = useWatchServiceForm(`scaling.targets.${target}.value`);
 
   if (target === 'cpu' || target === 'memory') {
     value /= 100;

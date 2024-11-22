@@ -8,7 +8,7 @@ import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
-import { Scaling, ServiceForm, ServiceFormSection as ServiceFormSectionType } from '../../service-form.types';
+import { ServiceForm, ServiceFormSection as ServiceFormSectionType } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { CreateVolumeDialog } from './create-volume-dialog';
@@ -97,7 +97,7 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
   const { setValue } = useFormContext<ServiceForm>();
 
   const instance = useInstance(useWatchServiceForm('instance'));
-  const hasMultipleInstances = getHasMultipleInstances(useWatchServiceForm('scaling'));
+  const hasMultipleInstances = useWatchServiceForm('scaling.max') > 1;
 
   const regions = useRegions(useWatchServiceForm('regions'));
   const hasMultipleRegions = useWatchServiceForm('regions').length > 1;
@@ -153,12 +153,4 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
       description: <T id="volumesUnavailable.unavailableForRegionDescription" values={values} />,
     };
   }
-}
-
-function getHasMultipleInstances(scaling: Scaling) {
-  if (scaling.type === 'fixed') {
-    return scaling.fixed > 1;
-  }
-
-  return scaling.autoscaling.max > 1;
 }

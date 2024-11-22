@@ -123,13 +123,12 @@ describe('mapServiceFormApiValidationError', () => {
         'scalings.0.targets.scalings.targets',
       ],
       expected: {
-        'scaling.autoscaling.targets.cpu.value': 'scalings.0.targets.0.average_cpu.value',
-        'scaling.autoscaling.targets.memory.value': 'scalings.0.targets.0.average_mem.value',
-        'scaling.autoscaling.targets.requests.value': 'scalings.0.targets.0.requests_per_second.value',
-        'scaling.autoscaling.targets.concurrentRequests.value':
-          'scalings.0.targets.0.concurrent_requests.value',
-        'scaling.autoscaling.targets.responseTime.value': 'scalings.0.targets.0.requests_response_time.value',
-        'scaling.autoscaling.targets': 'scalings.0.targets.scalings.targets',
+        'scaling.targets.cpu.value': 'scalings.0.targets.0.average_cpu.value',
+        'scaling.targets.memory.value': 'scalings.0.targets.0.average_mem.value',
+        'scaling.targets.requests.value': 'scalings.0.targets.0.requests_per_second.value',
+        'scaling.targets.concurrentRequests.value': 'scalings.0.targets.0.concurrent_requests.value',
+        'scaling.targets.responseTime.value': 'scalings.0.targets.0.requests_response_time.value',
+        'scaling.targets': 'scalings.0.targets.scalings.targets',
       },
     });
   });

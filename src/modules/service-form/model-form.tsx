@@ -164,9 +164,9 @@ function useOnCostEstimationChanged(form: ModelForm, onChanged: (cost?: ServiceC
 
   useEffect(() => {
     const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
-      type: 'fixed',
-      fixed: 1,
-      autoscaling: null as never,
+      min: 1,
+      max: 1,
+      targets: null as never,
     });
 
     onChanged(cost);

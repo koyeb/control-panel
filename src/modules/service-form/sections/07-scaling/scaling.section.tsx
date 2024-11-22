@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
+import { SelectBox } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
-import { ControlledSelectBox } from 'src/components/controlled';
-import { IconScaling, IconMoveHorizontal } from 'src/components/icons';
+import { IconMoveHorizontal, IconScaling } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
@@ -38,29 +38,38 @@ export function ScalingSection() {
       <ScalingAlerts />
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <ControlledSelectBox<ServiceForm>
-          name="scaling.type"
-          value="fixed"
-          type="radio"
-          icon={<IconMoveHorizontal className="icon" />}
-          title={<T id="fixed" />}
-          description={<T id="fixedDescription" />}
-          disabled={!canSelectFixedScaling}
-        />
+        <Controller<ServiceForm, 'scaling'>
+          name="scaling"
+          render={({ field }) => (
+            <>
+              <SelectBox
+                name={field.name}
+                type="radio"
+                icon={<IconMoveHorizontal className="icon" />}
+                title={<T id="fixed" />}
+                description={<T id="fixedDescription" />}
+                disabled={!canSelectFixedScaling}
+                checked={field.value.min === field.value.max}
+                onChange={() => field.onChange({ ...field.value, max: field.value.min })}
+              />
 
-        <ControlledSelectBox<ServiceForm>
-          name="scaling.type"
-          value="autoscaling"
-          type="radio"
-          icon={<IconScaling className="icon" />}
-          title={<T id="autoscaling" />}
-          description={<T id="autoscalingDescription" />}
-          disabled={!canSelectAutoscaling}
+              <SelectBox
+                name={field.name}
+                value="autoscaling"
+                type="radio"
+                icon={<IconScaling className="icon" />}
+                title={<T id="autoscaling" />}
+                description={<T id="autoscalingDescription" />}
+                disabled={!canSelectAutoscaling}
+                checked={field.value.min !== field.value.max}
+                onChange={() => field.onChange({ ...field.value, min: 1, max: 3 })}
+              />
+            </>
+          )}
         />
       </div>
 
-      {scaling.type === 'fixed' && <FixedScalingConfiguration />}
-      {scaling.type === 'autoscaling' && <AutoScalingConfiguration />}
+      {scaling.min === scaling.max ? <FixedScalingConfiguration /> : <AutoScalingConfiguration />}
     </ServiceFormSection>
   );
 }
@@ -71,46 +80,41 @@ function useDisableRequestsWhenWorkerSelected() {
 
   useEffect(() => {
     if (serviceType === 'worker') {
-      setValue('scaling.autoscaling.targets.requests.enabled', false, { shouldValidate: true });
-      void trigger('scaling.autoscaling.targets');
+      setValue('scaling.targets.requests.enabled', false, { shouldValidate: true });
+      void trigger('scaling.targets');
     }
   }, [serviceType, setValue, trigger]);
 }
 
 function useUpdateScalingWhenInstanceSelected() {
-  const { setValue } = useFormContext<ServiceForm>();
+  const { setValue, getValues } = useFormContext<ServiceForm>();
   const instance = useInstance(useWatchServiceForm('instance'));
 
   useEffect(() => {
     if (instance?.category === 'eco') {
-      setValue('scaling.type', 'fixed');
+      setValue('scaling.max', getValues('scaling.min'));
     }
 
     if (instance?.identifier === 'free') {
-      setValue('scaling.fixed', 1);
+      setValue('scaling.min', 1);
+      setValue('scaling.max', 1);
     }
-  }, [instance, setValue]);
+  }, [instance, setValue, getValues]);
 }
 
 const SectionTitle = () => {
   const scaling = useWatchServiceForm('scaling');
-
-  if (scaling.type === 'fixed') {
-    return (
-      <div className="row gap-1">
-        <T id="fixed" />
-        <span className="font-normal text-dim">
-          <T id="instancePerRegion" values={{ value: scaling.fixed }} />
-        </span>
-      </div>
-    );
-  }
+  const fixedScaling = scaling.min === scaling.max;
 
   return (
     <div className="row gap-1">
-      {scaling.type === 'autoscaling' && <T id="autoscaling" />}
+      <T id={fixedScaling ? 'fixed' : 'autoscaling'} />
       <span className="font-normal text-dim">
-        <T id="instancesPerRegion" values={{ min: scaling.autoscaling.min, max: scaling.autoscaling.max }} />
+        {fixedScaling ? (
+          <T id="instancePerRegion" values={{ value: scaling.min }} />
+        ) : (
+          <T id="instancesPerRegion" values={{ min: scaling.min, max: scaling.max }} />
+        )}
       </span>
     </div>
   );

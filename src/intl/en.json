@@ -1268,7 +1268,7 @@
     "title": "Estimated Cost",
     "descriptionFreeInstance": "Below is the estimated cost based on your current service configuration",
     "descriptionFixedScaling": "Below is the estimated cost based on your current service configuration. Resources are billed by the second.",
-    "descriptionAutoScaling": "Below are the minimum and maximum estimated costs based on your current service configuration. Resources are billed by the second.",
+    "descriptionScaling": "Below are the minimum and maximum estimated costs based on your current service configuration. Resources are billed by the second.",
     "free": "Free",
     "fixedInstanceCount": "{count} {instance} {count, plural, =1 {instance} other {instances}}",
     "autoScalingInstanceCount": "{min} to {max} {instance} instances",
@@ -1277,7 +1277,7 @@
     "max": "max.",
     "regionCount": "{count} {count, plural, =1 {region} other {regions}}",
     "regionDescriptionFixedScaling": "You will have {instanceCount} {instanceName} {instanceCount, plural, =1 {instance} other {instances}} running per region",
-    "regionDescriptionAutoScaling": "You will have between {minInstanceCount} and {maxInstanceCount} {instanceName} {maxInstanceCount, plural, =1 {instance} other {instances}} running per region",
+    "regionDescriptionScaling": "You will have between {minInstanceCount} and {maxInstanceCount} {instanceName} {maxInstanceCount, plural, =1 {instance} other {instances}} running per region",
     "total": "Total cost",
     "pricePerMonth": "{price}/mo",
     "pricePerHour": "{price}/hr"

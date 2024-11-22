@@ -18,8 +18,8 @@ export function InstanceTypeMetadata({ instanceType }: { instanceType: string | 
 
 export function ScalingMetadata({ scaling }: { scaling: Scaling }) {
   const value = () => {
-    if (scaling.type === 'fixed') {
-      return <T id="fixedScalingValue" values={{ instances: scaling.instances }} />;
+    if (scaling.min === scaling.max) {
+      return <T id="fixedScalingValue" values={{ instances: scaling.min }} />;
     }
 
     return <T id="autoScalingValue" values={{ min: scaling.min, max: scaling.max }} />;

@@ -99,18 +99,8 @@ function useTriggerValidationOnChange({ watch, trigger, formState }: UseFormRetu
         void trigger('source.git');
       }
 
-      if (name === 'scaling.type') {
-        void trigger('scaling.autoscaling');
-        void trigger('scaling.autoscaling.targets');
-        void trigger('scaling.autoscaling.targets.requests.value');
-        void trigger('scaling.autoscaling.targets.cpu.value');
-        void trigger('scaling.autoscaling.targets.memory.value');
-        void trigger('scaling.autoscaling.targets.concurrentRequests.value');
-        void trigger('scaling.autoscaling.targets.responseTime.value');
-      }
-
-      if (name.match(/scaling.autoscaling.targets.[a-z]+.enabled/i)) {
-        void trigger('scaling.autoscaling');
+      if (name.match(/scaling.targets.[a-z]+.enabled/i)) {
+        void trigger('scaling');
       }
     });
 

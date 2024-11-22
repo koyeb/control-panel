@@ -193,7 +193,7 @@ const deploymentDefinition = createFactory<DeploymentDefinition>(() => ({
   instanceType: '',
   regions: [],
   ports: [],
-  scaling: { type: 'fixed', instances: 0 },
+  scaling: { min: 1, max: 1 },
 }));
 
 const deploymentInstance = createFactory<Instance>(() => ({

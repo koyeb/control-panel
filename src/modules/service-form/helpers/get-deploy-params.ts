@@ -1,4 +1,4 @@
-import { AutoScaling, ServiceForm } from '../service-form.types';
+import { Scaling, ServiceForm } from '../service-form.types';
 
 import { defaultHealthCheck } from './initialize-service-form';
 
@@ -73,16 +73,16 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
   if (form.instance !== 'free') set('instance_type', form.instance);
   if (form.regions.length !== 1 || form.regions[0] !== 'fra') set('regions', form.regions);
 
-  if (form.scaling.type === 'fixed') {
-    if (form.scaling.fixed !== 1) {
-      set('instances_min', String(form.scaling.fixed));
+  if (form.scaling.min === form.scaling.max) {
+    if (form.scaling.min !== 1) {
+      set('instances_min', String(form.scaling.min));
     }
   } else {
-    set('instances_min', String(form.scaling.autoscaling.min));
-    set('instances_max', String(form.scaling.autoscaling.max));
+    set('instances_min', String(form.scaling.min));
+    set('instances_max', String(form.scaling.max));
 
-    for (const [target, { enabled, value }] of Object.entries(form.scaling.autoscaling.targets)) {
-      const targetMap: Record<keyof AutoScaling['targets'], string> = {
+    for (const [target, { enabled, value }] of Object.entries(form.scaling.targets)) {
+      const targetMap: Record<keyof Scaling['targets'], string> = {
         cpu: 'average_cpu',
         memory: 'average_mem',
         requests: 'requests_per_second',
@@ -92,7 +92,7 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
       };
 
       if (enabled) {
-        set(`autoscaling_${targetMap[target as keyof AutoScaling['targets']]}`, String(value));
+        set(`autoscaling_${targetMap[target as keyof Scaling['targets']]}`, String(value));
       }
     }
   }

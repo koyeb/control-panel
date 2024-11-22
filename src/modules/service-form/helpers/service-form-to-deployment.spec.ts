@@ -58,9 +58,7 @@ describe('serviceFormToDeploymentDefinition', () => {
   it('autoscaling', () => {
     const form = defaultServiceForm();
 
-    form.scaling.type = 'autoscaling';
-
-    form.scaling.autoscaling = {
+    form.scaling = {
       min: 1,
       max: 2,
       targets: {

@@ -192,15 +192,7 @@ function transformComputeDeployment(deployment: ApiDeployment): ComputeDeploymen
   const scaling = (): DeploymentDefinition['scaling'] => {
     const scaling = definition.scalings![0]!;
 
-    if (scaling.min === scaling.max) {
-      return {
-        type: 'fixed',
-        instances: scaling.min!,
-      };
-    }
-
     return {
-      type: 'autoscaling',
       min: scaling.min!,
       max: scaling.max!,
     };

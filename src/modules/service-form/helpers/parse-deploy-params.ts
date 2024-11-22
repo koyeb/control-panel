@@ -8,7 +8,7 @@ import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import {
-  AutoScaling,
+  Scaling,
   GitSource,
   HealthCheck,
   HealthCheckProtocol,
@@ -121,8 +121,8 @@ class ServiceFormBuilder {
 
     if (type === 'worker') {
       this.set('serviceType', 'worker');
-      this.set('scaling', { autoscaling: { targets: { requests: { enabled: false } } } });
-      this.set('scaling', { autoscaling: { targets: { cpu: { enabled: true } } } });
+      this.set('scaling', { targets: { requests: { enabled: false } } });
+      this.set('scaling', { targets: { cpu: { enabled: true } } });
     }
   }
 
@@ -249,13 +249,13 @@ class ServiceFormBuilder {
 
   set instances_min(value: string | null) {
     if (value !== null) {
-      this.setScaling(Number(value), this.values.scaling?.fixed);
+      this.setScaling(Number(value), this.values.scaling?.max);
     }
   }
 
   set instances_max(value: string | null) {
     if (value !== null) {
-      this.setScaling(this.values.scaling?.fixed, Number(value));
+      this.setScaling(this.values.scaling?.min, Number(value));
     }
   }
 
@@ -275,20 +275,17 @@ class ServiceFormBuilder {
     if (min !== undefined && max !== undefined) {
       if (min > max) {
         this.setScaling(max, min);
-      } else if (min === max) {
-        this.set('scaling', { type: 'fixed', fixed: min });
       } else {
-        this.values.scaling = {};
-        this.set('scaling', { type: 'autoscaling', autoscaling: { min, max } });
+        this.set('scaling', { min, max });
       }
     }
 
     if (max === undefined) {
-      this.set('scaling', { type: 'fixed', fixed: min });
+      this.set('scaling', { min });
     }
 
     if (min === undefined) {
-      this.set('scaling', { type: 'fixed', fixed: max });
+      this.set('scaling', { max });
     }
   }
 
@@ -316,10 +313,10 @@ class ServiceFormBuilder {
     this.setAutoscalingTarget('sleepIdleDelay', value);
   }
 
-  private setAutoscalingTarget(target: keyof AutoScaling['targets'], value: string | null) {
+  private setAutoscalingTarget(target: keyof Scaling['targets'], value: string | null) {
     if (value !== null) {
       this.set('scaling', {
-        autoscaling: { targets: { [target]: { enabled: true, value: Number(value) } } },
+        targets: { [target]: { enabled: true, value: Number(value) } },
       });
     }
   }

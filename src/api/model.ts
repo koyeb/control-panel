@@ -250,20 +250,10 @@ export type HealthCheckHeader = {
   value: string;
 };
 
-export type Scaling = FixedScaling | AutoScaling;
-
-export type FixedScaling = {
-  type: 'fixed';
-  instances: number;
-};
-
-export type AutoScaling = {
-  type: 'autoscaling';
+export type Scaling = {
   min: number;
   max: number;
 };
-
-export type ScalingType = Scaling['type'];
 
 export type ArchiveDeploymentSource = {
   type: 'archive';

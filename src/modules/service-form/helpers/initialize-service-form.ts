@@ -223,19 +223,15 @@ export function defaultServiceForm(): ServiceForm {
       },
     ],
     scaling: {
-      type: 'fixed',
-      fixed: 1,
-      autoscaling: {
-        min: 1,
-        max: 3,
-        targets: {
-          requests: { enabled: true, value: 50 },
-          cpu: { enabled: false, value: 80 },
-          memory: { enabled: false, value: 80 },
-          concurrentRequests: { enabled: false, value: 20 },
-          responseTime: { enabled: false, value: 300 },
-          sleepIdleDelay: { enabled: false, value: 60 },
-        },
+      min: 1,
+      max: 1,
+      targets: {
+        requests: { enabled: true, value: 50 },
+        cpu: { enabled: false, value: 80 },
+        memory: { enabled: false, value: 80 },
+        concurrentRequests: { enabled: false, value: 20 },
+        responseTime: { enabled: false, value: 300 },
+        sleepIdleDelay: { enabled: false, value: 60 },
       },
     },
     instance: 'nano',

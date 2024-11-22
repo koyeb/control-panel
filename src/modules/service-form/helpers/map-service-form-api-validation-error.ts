@@ -60,16 +60,15 @@ const staticMapping: Record<string, ServiceFormPath> = {
   'docker.entrypoint': 'dockerDeployment.entrypoint',
   'docker.command': 'dockerDeployment.command',
   'docker.args': 'dockerDeployment.args',
-  'scalings.0.targets.scalings.targets': 'scaling.autoscaling.targets',
+  'scalings.0.targets.scalings.targets': 'scaling.targets',
 };
 
 const regexpMapping = Object.entries({
-  'scalings.0.targets.(\\d+).average_cpu.value': 'scaling.autoscaling.targets.cpu.value',
-  'scalings.0.targets.(\\d+).average_mem.value': 'scaling.autoscaling.targets.memory.value',
-  'scalings.0.targets.(\\d+).requests_per_second.value': 'scaling.autoscaling.targets.requests.value',
-  'scalings.0.targets.(\\d+).concurrent_requests.value':
-    'scaling.autoscaling.targets.concurrentRequests.value',
-  'scalings.0.targets.(\\d+).requests_response_time.value': 'scaling.autoscaling.targets.responseTime.value',
+  'scalings.0.targets.(\\d+).average_cpu.value': 'scaling.targets.cpu.value',
+  'scalings.0.targets.(\\d+).average_mem.value': 'scaling.targets.memory.value',
+  'scalings.0.targets.(\\d+).requests_per_second.value': 'scaling.targets.requests.value',
+  'scalings.0.targets.(\\d+).concurrent_requests.value': 'scaling.targets.concurrentRequests.value',
+  'scalings.0.targets.(\\d+).requests_response_time.value': 'scaling.targets.responseTime.value',
   'env.(\\d+).scopes': 'environmentVariables.$1.name',
   'env.(\\d+).key': 'environmentVariables.$1.name',
   'env.(\\d+).value': 'environmentVariables.$1.value',

@@ -107,25 +107,15 @@ export type DockerDeploymentOptions = {
 };
 
 export type Scaling = {
-  type: ScalingType;
-  fixed: FixedScaling;
-  autoscaling: AutoScaling;
-};
-
-export type ScalingType = 'fixed' | 'autoscaling';
-
-export type FixedScaling = number;
-
-export type AutoScaling = {
   min: number;
   max: number;
   targets: Record<
     'cpu' | 'memory' | 'requests' | 'concurrentRequests' | 'responseTime' | 'sleepIdleDelay',
-    AutoScalingTarget
+    ScalingTarget
   >;
 };
 
-export type AutoScalingTarget = {
+export type ScalingTarget = {
   enabled: boolean;
   value: number;
 };

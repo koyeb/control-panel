@@ -22,7 +22,7 @@ export function ServiceEstimatedCost({ cost }: ServiceEstimatedCostProps) {
 
   const description = () => {
     if (hasAutoscaling(cost)) {
-      return <T id="descriptionAutoScaling" />;
+      return <T id="descriptionScaling" />;
     }
 
     if (cost.instance.identifier === 'free') {
@@ -122,7 +122,7 @@ function Region({ cost }: RegionLineProps) {
           />
         ) : (
           <T
-            id="regionDescriptionAutoScaling"
+            id="regionDescriptionScaling"
             values={{
               minInstanceCount: cost[0].instanceCount,
               maxInstanceCount: cost[1].instanceCount,

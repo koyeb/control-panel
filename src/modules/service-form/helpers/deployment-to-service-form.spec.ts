@@ -7,6 +7,17 @@ import { HealthCheck } from '../service-form.types';
 import { deploymentDefinitionToServiceForm } from './deployment-to-service-form';
 
 describe('deploymentDefinitionToServiceForm', () => {
+  it('fixed scaling', () => {
+    const definition: ApiDeploymentDefinition = {
+      scalings: [{ min: 1, max: 1 }],
+    };
+
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
+      'scaling.targets.requests.enabled',
+      true,
+    );
+  });
+
   it('autoscaling', () => {
     const definition: ApiDeploymentDefinition = {
       scalings: [
@@ -18,17 +29,14 @@ describe('deploymentDefinitionToServiceForm', () => {
       ],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-      'scaling.autoscaling.targets',
-      {
-        cpu: { enabled: false, value: undefined },
-        memory: { enabled: true, value: 1000 },
-        requests: { enabled: false, value: undefined },
-        concurrentRequests: { enabled: false, value: undefined },
-        responseTime: { enabled: false, value: undefined },
-        sleepIdleDelay: { enabled: false, value: undefined },
-      },
-    );
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.targets', {
+      cpu: { enabled: false, value: undefined },
+      memory: { enabled: true, value: 1000 },
+      requests: { enabled: false, value: undefined },
+      concurrentRequests: { enabled: false, value: undefined },
+      responseTime: { enabled: false, value: undefined },
+      sleepIdleDelay: { enabled: false, value: undefined },
+    });
   });
 
   it('autoscaling min = 0 and max = 1', () => {
@@ -36,17 +44,14 @@ describe('deploymentDefinitionToServiceForm', () => {
       scalings: [{ min: 0, max: 1, targets: [{ sleep_idle_delay: { value: 1 } }] }],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-      'scaling.autoscaling.targets',
-      {
-        cpu: { enabled: false },
-        memory: { enabled: false },
-        requests: { enabled: false },
-        concurrentRequests: { enabled: false },
-        responseTime: { enabled: false },
-        sleepIdleDelay: { enabled: true, value: 1 },
-      },
-    );
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.targets', {
+      cpu: { enabled: false },
+      memory: { enabled: false },
+      requests: { enabled: false },
+      concurrentRequests: { enabled: false },
+      responseTime: { enabled: false },
+      sleepIdleDelay: { enabled: true, value: 1 },
+    });
   });
 
   it('volumes mapping', () => {

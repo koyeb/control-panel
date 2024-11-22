@@ -14,7 +14,7 @@ export function ScalingAlerts() {
   const { setValue } = useFormContext<ServiceForm>();
 
   const { errors } = useFormState<ServiceForm>();
-  const error = errors.scaling?.autoscaling;
+  const error = errors.scaling;
 
   const instance = useInstance(useWatchServiceForm('instance'));
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;

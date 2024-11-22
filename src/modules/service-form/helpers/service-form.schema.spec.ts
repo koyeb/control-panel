@@ -70,8 +70,9 @@ describe('serviceFormSchema', () => {
   it('scaling', () => {
     const form = createServiceForm();
 
-    form.scaling.type = 'autoscaling';
-    form.scaling.autoscaling.targets.cpu.enabled = true;
+    form.scaling.min = 1;
+    form.scaling.max = 2;
+    form.scaling.targets.cpu.enabled = true;
 
     parse(form);
   });

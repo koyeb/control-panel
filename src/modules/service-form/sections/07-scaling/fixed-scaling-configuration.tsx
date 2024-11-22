@@ -1,5 +1,8 @@
+import { Controller } from 'react-hook-form';
+
+import { Slider } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
-import { ControlledInput, ControlledSlider } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/controlled';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -16,14 +19,20 @@ export function FixedScalingConfiguration() {
   return (
     <>
       <div className="hidden sm:block">
-        <ControlledSlider<ServiceForm, 'scaling.fixed'>
-          name="scaling.fixed"
-          label={<T id="scalingLabel" />}
-          disabled={!canChangeScaling}
-          min={1}
-          max={20}
-          step={1}
-          marks
+        <Controller<ServiceForm, 'scaling'>
+          name="scaling"
+          render={({ field }) => (
+            <Slider
+              label={<T id="scalingLabel" />}
+              disabled={!canChangeScaling}
+              min={1}
+              max={20}
+              step={1}
+              marks
+              value={field.value.min}
+              onChange={(value) => field.onChange({ ...field.value, min: value, max: value })}
+            />
+          )}
         />
       </div>
 
@@ -33,15 +42,22 @@ export function FixedScalingConfiguration() {
         </span>
 
         <div className="row gap-4">
-          <ControlledInput<ServiceForm, 'scaling.fixed'>
-            name="scaling.fixed"
-            type="number"
-            className="max-w-20"
-            disabled={!canChangeScaling}
-            onKeyDown={onKeyDownPositiveInteger}
-            min={1}
-            max={20}
-            step={1}
+          <Controller<ServiceForm, 'scaling'>
+            name="scaling"
+            render={({ field }) => (
+              <ControlledInput<ServiceForm, 'scaling.min'>
+                name="scaling.min"
+                type="number"
+                className="max-w-20"
+                disabled={!canChangeScaling}
+                onKeyDown={onKeyDownPositiveInteger}
+                min={1}
+                max={20}
+                step={1}
+                value={field.value.min}
+                onChange={(value) => field.onChange({ ...field.value, min: value, max: value })}
+              />
+            )}
           />
         </div>
       </div>
