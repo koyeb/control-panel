@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Button, Table } from '@koyeb/design-system';
+import { Button, Table, Tooltip } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -104,12 +104,12 @@ function PlanHeader({ plan }: { plan: Plan }) {
   };
 
   function changePlanText() {
-    if (plan === 'enterprise') {
-      return <T id="upgradeEnterprise" />;
-    }
-
     if (organization.plan === plan) {
       return <T id="currentPlan" />;
+    }
+
+    if (plan === 'enterprise') {
+      return <T id="upgradeEnterprise" />;
     }
 
     if (isUpgrade(organization.plan, plan)) {
@@ -139,10 +139,20 @@ function PlanHeader({ plan }: { plan: Plan }) {
         </div>
       </div>
 
-      <Button disabled={plan === organization.plan} loading={isPending} onClick={onChangePlan}>
-        {changePlanText()}
-        <IconArrowRight />
-      </Button>
+      <Tooltip content={organization.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
+        {(props) => (
+          <div {...props}>
+            <Button
+              disabled={plan === organization.plan || organization.plan === 'enterprise'}
+              loading={isPending}
+              onClick={onChangePlan}
+            >
+              {changePlanText()}
+              <IconArrowRight />
+            </Button>
+          </div>
+        )}
+      </Tooltip>
 
       <PaymentDialog
         plan={plan}
