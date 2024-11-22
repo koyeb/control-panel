@@ -1,4 +1,4 @@
-import { useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ServiceType } from 'src/api/model';
 import { ControlledSelectBox } from 'src/components/controlled';
@@ -68,6 +68,7 @@ type ServiceTypeOptionProps = {
 
 function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOptionProps) {
   const instanceIdentifier = useWatchServiceForm('instance');
+  const { setValue, trigger } = useFormContext<ServiceForm>();
 
   const canSelect = () => {
     if (instanceIdentifier === 'free') {
@@ -86,6 +87,14 @@ function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOption
       icon={<Icon className="icon" />}
       title={title}
       description={description}
+      onChangeEffect={() => {
+        if (type === 'worker') {
+          setValue('scaling.targets.requests.enabled', false);
+          setValue('scaling.targets.concurrentRequests.enabled', false);
+          setValue('scaling.targets.responseTime.enabled', false);
+          void trigger('scaling');
+        }
+      }}
       className="flex-1"
     />
   );

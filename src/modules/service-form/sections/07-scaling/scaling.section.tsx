@@ -24,7 +24,6 @@ export function ScalingSection() {
   const canSelectFixedScaling = !hasVolumes && instance?.identifier !== 'free';
   const canSelectAutoscaling = !hasVolumes && instance?.category !== 'eco';
 
-  useDisableRequestsWhenWorkerSelected();
   useUpdateScalingWhenInstanceSelected();
 
   return (
@@ -72,18 +71,6 @@ export function ScalingSection() {
       {scaling.min === scaling.max ? <FixedScalingConfiguration /> : <AutoScalingConfiguration />}
     </ServiceFormSection>
   );
-}
-
-function useDisableRequestsWhenWorkerSelected() {
-  const { setValue, trigger } = useFormContext<ServiceForm>();
-  const serviceType = useWatchServiceForm('serviceType');
-
-  useEffect(() => {
-    if (serviceType === 'worker') {
-      setValue('scaling.targets.requests.enabled', false, { shouldValidate: true });
-      void trigger('scaling.targets');
-    }
-  }, [serviceType, setValue, trigger]);
 }
 
 function useUpdateScalingWhenInstanceSelected() {
