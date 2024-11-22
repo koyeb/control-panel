@@ -3,7 +3,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { Badge } from '@koyeb/design-system';
 import { useInstance, useInstances, useRegion } from 'src/api/hooks/catalog';
-import { InstanceCategory } from 'src/api/model';
+import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import {
   InstanceAvailability,
   useInstanceAvailabilities,
@@ -47,6 +47,21 @@ export function InstanceSection() {
 
   const [category, setCategory] = useState<InstanceCategory>(instance?.category ?? 'standard');
 
+  const { getValues, setValue } = useFormContext<ServiceForm>();
+
+  const handleInstanceSelected = (instance: CatalogInstance | null) => {
+    field.onChange(instance?.identifier ?? null);
+
+    if (instance?.category === 'eco') {
+      setValue('scaling.max', getValues('scaling.min'));
+    }
+
+    if (instance?.identifier === 'free') {
+      setValue('scaling.min', 1);
+      setValue('scaling.max', 1);
+    }
+  };
+
   return (
     <ServiceFormSection
       section="instance"
@@ -61,7 +76,7 @@ export function InstanceSection() {
         instances={instances.filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))}
         checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
         selectedInstance={instances.find(hasProperty('identifier', field.value)) ?? null}
-        onInstanceSelected={(instance) => field.onChange(instance?.identifier ?? null)}
+        onInstanceSelected={handleInstanceSelected}
         onCategoryChanged={setCategory}
         className="w-full"
       />

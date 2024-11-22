@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 
 import { SelectBox } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
@@ -23,8 +22,6 @@ export function ScalingSection() {
 
   const canSelectFixedScaling = !hasVolumes && instance?.identifier !== 'free';
   const canSelectAutoscaling = !hasVolumes && instance?.category !== 'eco';
-
-  useUpdateScalingWhenInstanceSelected();
 
   return (
     <ServiceFormSection
@@ -71,22 +68,6 @@ export function ScalingSection() {
       {scaling.min === scaling.max ? <FixedScalingConfiguration /> : <AutoScalingConfiguration />}
     </ServiceFormSection>
   );
-}
-
-function useUpdateScalingWhenInstanceSelected() {
-  const { setValue, getValues } = useFormContext<ServiceForm>();
-  const instance = useInstance(useWatchServiceForm('instance'));
-
-  useEffect(() => {
-    if (instance?.category === 'eco') {
-      setValue('scaling.max', getValues('scaling.min'));
-    }
-
-    if (instance?.identifier === 'free') {
-      setValue('scaling.min', 1);
-      setValue('scaling.max', 1);
-    }
-  }, [instance, setValue, getValues]);
 }
 
 const SectionTitle = () => {
