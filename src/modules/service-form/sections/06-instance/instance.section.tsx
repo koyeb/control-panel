@@ -1,17 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { Badge } from '@koyeb/design-system';
 import { useInstance, useInstances, useRegion } from 'src/api/hooks/catalog';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import {
-  InstanceAvailability,
   useInstanceAvailabilities,
   useRegionAvailabilities,
 } from 'src/application/instance-region-availability';
 import { InstanceSelector } from 'src/components/instance-selector';
-import { useFormValues } from 'src/hooks/form';
-import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
@@ -33,33 +30,44 @@ export function InstanceSection() {
   const regions = useWatchServiceForm('regions');
   const firstRegion = useRegion(regions[0]);
 
-  const availabilities = useInstanceAvailabilities({
-    serviceType,
-    hasVolumes,
-    previousInstance,
-  });
+  const instanceAvailabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
+  const regionAvailabilities = useRegionAvailabilities();
 
-  useUnsetInstanceWhenNotAvailable(availabilities);
-  useUpdateRegionsWhenInstanceChanges();
+  const { getValues, setValue } = useFormContext<ServiceForm>();
 
   const { field } = useController<ServiceForm, 'instance'>({ name: 'instance' });
   const instance = useInstance(field.value);
 
   const [category, setCategory] = useState<InstanceCategory>(instance?.category ?? 'standard');
 
-  const { getValues, setValue } = useFormContext<ServiceForm>();
-
   const handleInstanceSelected = (instance: CatalogInstance | null) => {
-    field.onChange(instance?.identifier ?? null);
+    const [isAvailable] = instance ? (instanceAvailabilities[instance.identifier] ?? [false]) : [false];
 
-    if (instance?.category === 'eco') {
+    if (!instance || !isAvailable) {
+      field.onChange(null);
+      return;
+    }
+
+    field.onChange(instance.identifier);
+
+    if (instance.category === 'eco') {
       setValue('scaling.max', getValues('scaling.min'));
     }
 
-    if (instance?.identifier === 'free') {
+    if (instance.identifier === 'free') {
       setValue('scaling.min', 1);
       setValue('scaling.max', 1);
     }
+
+    let availableRegions = getValues('regions')
+      .filter((region) => regionAvailabilities[region]?.[0])
+      .filter((region) => instance.regions?.includes(region));
+
+    if (availableRegions.length === 0) {
+      availableRegions = [instance?.regions?.[0] ?? 'fra'];
+    }
+
+    setValue('regions', availableRegions, { shouldValidate: true });
   };
 
   return (
@@ -74,7 +82,7 @@ export function InstanceSection() {
 
       <InstanceSelector
         instances={instances.filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))}
-        checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
+        checkAvailability={(instance) => instanceAvailabilities[instance] ?? [false, 'instanceNotFound']}
         selectedInstance={instances.find(hasProperty('identifier', field.value)) ?? null}
         onInstanceSelected={handleInstanceSelected}
         onCategoryChanged={setCategory}
@@ -82,42 +90,6 @@ export function InstanceSection() {
       />
     </ServiceFormSection>
   );
-}
-
-function useUnsetInstanceWhenNotAvailable(availabilities: Record<string, InstanceAvailability>) {
-  const { setValue } = useFormContext<ServiceForm>();
-  const instanceIdentifier = useFormValues<ServiceForm>().instance;
-
-  useEffect(() => {
-    if (!instanceIdentifier) {
-      return;
-    }
-
-    const [isAvailable] = availabilities[instanceIdentifier] ?? [];
-
-    if (!isAvailable) {
-      setValue('instance', null);
-    }
-  }, [instanceIdentifier, availabilities, setValue]);
-}
-
-function useUpdateRegionsWhenInstanceChanges() {
-  const { getValues, setValue } = useFormContext<ServiceForm>();
-
-  const instance = useInstance(useWatchServiceForm('instance'));
-  const regionAvailabilities = useRegionAvailabilities();
-
-  useUpdateEffect(() => {
-    let availableRegions = getValues('regions')
-      .filter((region) => regionAvailabilities[region]?.[0])
-      .filter((region) => instance?.regions?.includes(region));
-
-    if (availableRegions.length === 0) {
-      availableRegions = [instance?.regions?.[0] ?? 'fra'];
-    }
-
-    setValue('regions', availableRegions, { shouldValidate: true });
-  }, [instance, regionAvailabilities, getValues, setValue]);
 }
 
 function SectionTitle() {
