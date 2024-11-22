@@ -33,7 +33,7 @@ export function InstanceSection() {
   const instanceAvailabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
   const regionAvailabilities = useRegionAvailabilities();
 
-  const { getValues, setValue } = useFormContext<ServiceForm>();
+  const { getValues, setValue, trigger } = useFormContext<ServiceForm>();
 
   const { field } = useController<ServiceForm, 'instance'>({ name: 'instance' });
   const instance = useInstance(field.value);
@@ -52,11 +52,13 @@ export function InstanceSection() {
 
     if (instance.category === 'eco') {
       setValue('scaling.max', getValues('scaling.min'));
+      trigger('scaling');
     }
 
     if (instance.identifier === 'free') {
       setValue('scaling.min', 1);
       setValue('scaling.max', 1);
+      trigger('scaling');
     }
 
     let availableRegions = getValues('regions')
