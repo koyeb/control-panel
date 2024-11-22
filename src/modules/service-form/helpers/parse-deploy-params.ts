@@ -264,11 +264,11 @@ class ServiceFormBuilder {
       return;
     }
 
-    if (min !== undefined && (min < 0 || min >= 10)) {
+    if (min !== undefined && (min < 0 || min >= 20)) {
       return;
     }
 
-    if (max !== undefined && (max <= 0 || max >= 10)) {
+    if (max !== undefined && (max <= 0 || max >= 20)) {
       return;
     }
 

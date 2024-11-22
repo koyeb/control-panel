@@ -278,14 +278,14 @@ describe('parseDeployParams', () => {
       expect(test.getValues()).not.toHaveProperty('scaling');
     });
 
-    it('min >= 10', () => {
-      test.params.set('instances_min', '10');
+    it('min >= 20', () => {
+      test.params.set('instances_min', '20');
 
       expect(test.getValues()).not.toHaveProperty('scaling');
     });
 
-    it('max >= 10', () => {
-      test.params.set('instances_max', '11');
+    it('max >= 20', () => {
+      test.params.set('instances_max', '21');
 
       expect(test.getValues()).not.toHaveProperty('scaling');
     });
