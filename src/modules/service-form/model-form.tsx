@@ -1,9 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { useEffect, useRef } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Alert, Button } from '@koyeb/design-system';
+import { Alert, Badge, Button } from '@koyeb/design-system';
 import {
   useInstance,
   useInstances,
@@ -15,7 +16,7 @@ import {
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
-import { AiModel, CatalogInstance } from 'src/api/model';
+import { AiModel, CatalogInstance, CatalogRegion } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
@@ -337,24 +338,45 @@ function RegionSection({ form }: { form: ModelForm }) {
   const availableRegions = useRegions().filter(hasProperty('status', 'available'));
   const instance = useInstance(form.watch('instance'));
 
+  const canSelect = (region: CatalogRegion) => {
+    if (instance?.regions == undefined) {
+      return true;
+    }
+
+    return instance.regions.includes(region.identifier);
+  };
+
   return (
     <Section title={<T id="region.title" />}>
       <ControlledSelect
         control={form.control}
         name="region"
-        items={availableRegions.filter((region) =>
-          instance?.regions ? instance.regions?.includes(region.identifier) : true,
-        )}
+        items={availableRegions}
         getKey={(region) => region.identifier}
         itemToString={(region) => region.displayName}
         itemToValue={(region) => region.identifier}
-        renderItem={(region) => (
-          <div className="row items-center gap-2">
-            <RegionFlag identifier={region.identifier} className="size-6 rounded-full shadow-badge" />
-            <RegionName identifier={region.identifier} />
-          </div>
-        )}
+        canSelectItem={canSelect}
+        renderItem={(region) => <SelectRegionItem region={region} disabled={!canSelect(region)} />}
       />
     </Section>
+  );
+}
+
+function SelectRegionItem({ region, disabled }: { region: CatalogRegion; disabled: boolean }) {
+  return (
+    <div className="row items-center gap-2">
+      <RegionFlag
+        identifier={region.identifier}
+        className={clsx('size-6 rounded-full shadow-badge', { 'opacity-50': disabled })}
+      />
+
+      <RegionName identifier={region.identifier} className={clsx({ 'opacity-50': disabled })} />
+
+      {disabled && (
+        <Badge size={1} color="orange">
+          <T id="region.notAvailable" />
+        </Badge>
+      )}
+    </div>
   );
 }
