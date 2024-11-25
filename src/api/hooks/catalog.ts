@@ -128,7 +128,7 @@ export function useModelsQuery() {
 
 function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
   return {
-    name: app.name!,
+    name: app.name,
     slug: app.slug,
     description: app.description,
     logo: app.logos[0],

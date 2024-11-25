@@ -52,13 +52,13 @@ export function InstanceSection() {
 
     if (instance.category === 'eco') {
       setValue('scaling.max', getValues('scaling.min'));
-      trigger('scaling');
+      void trigger('scaling');
     }
 
     if (instance.identifier === 'free') {
       setValue('scaling.min', 1);
       setValue('scaling.max', 1);
-      trigger('scaling');
+      void trigger('scaling');
     }
 
     let availableRegions = getValues('regions')
