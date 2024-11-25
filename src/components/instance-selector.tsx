@@ -6,7 +6,7 @@ import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { useObserve } from 'src/hooks/lifecycle';
+import { useMount, useObserve } from 'src/hooks/lifecycle';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -116,6 +116,10 @@ export function InstanceSelectorList({
       listRef.current.scrollTop = 0;
     }
   }, [selectedCategory]);
+
+  useMount(() => {
+    listRef.current?.querySelector('li:has(:checked)')?.scrollIntoView({ block: 'center' });
+  });
 
   return (
     <ul
