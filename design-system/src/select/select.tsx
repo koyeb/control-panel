@@ -31,6 +31,7 @@ type SelectProps<Item> = {
   renderItem: (item: Item, index?: number) => React.ReactNode;
   renderSelectedItem?: (item: Item) => React.ReactNode;
   renderNoItems?: () => React.ReactNode;
+  canSelectItem?: (item: Item) => boolean;
 };
 
 export const Select = forwardRef(function Select<Item>(
@@ -57,6 +58,7 @@ export const Select = forwardRef(function Select<Item>(
     renderItem,
     renderNoItems,
     renderSelectedItem = renderItem,
+    canSelectItem,
   }: SelectProps<Item>,
   forwardedRef: React.ForwardedRef<HTMLElement>,
 ) {
@@ -82,6 +84,9 @@ export const Select = forwardRef(function Select<Item>(
     },
     itemToString(item) {
       return item ? itemToString(item) : '';
+    },
+    isItemDisabled(item) {
+      return Boolean(canSelectItem && !canSelectItem(item));
     },
   });
 

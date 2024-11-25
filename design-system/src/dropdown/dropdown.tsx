@@ -74,7 +74,10 @@ export function Item<Item>({
   className,
 }: ItemProps<Item>) {
   return (
-    <li className={clsx('row cursor-pointer items-center', className)} {...getItemProps({ item, index })}>
+    <li
+      className={clsx('row cursor-pointer items-center aria-disabled:cursor-default', className)}
+      {...getItemProps({ item, index })}
+    >
       <div
         className={clsx('flex-1 break-all rounded p-1', index === highlightedIndex && 'bg-muted')}
         onClick={() => onItemClick?.(item)}
