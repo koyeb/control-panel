@@ -74,7 +74,7 @@ type OneClickAppApiResponse = {
 
 async function fetchOneClickApps() {
   const { websiteUrl } = getConfig();
-  const response = await fetch(`${websiteUrl}/api/get-one-click-apps`, { mode: 'cors' });
+  const response = await fetch(`${websiteUrl}/api/one-click-apps.json`, { mode: 'cors' });
 
   if (!response.ok) {
     throw new Error(await response.text());
