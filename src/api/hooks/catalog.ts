@@ -128,10 +128,11 @@ export function useModelsQuery() {
 
 function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
   return {
-    name: app.model_name!,
+    name: app.name!,
     slug: app.slug,
     description: app.description,
     logo: app.logos[0],
+    modelName: app.model_name!,
     dockerImage: app.model_docker_image!,
     parameters: app.model_size!,
     engine: app.model_inference_engine!,
