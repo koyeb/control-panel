@@ -1,4 +1,3 @@
-export { default as IconBraces } from 'lucide-static/icons/braces.svg?react';
 export { default as IconActivity } from 'lucide-static/icons/activity.svg?react';
 export { default as IconAlarmClockCheck } from 'lucide-static/icons/alarm-clock-check.svg?react';
 export { default as IconAlert } from 'lucide-static/icons/circle-alert.svg?react';
@@ -14,6 +13,7 @@ export { default as IconBookMarked } from 'lucide-static/icons/book-marked.svg?r
 export { default as IconBookOpen } from 'lucide-static/icons/book-open.svg?react';
 export { default as IconBox } from 'lucide-static/icons/box.svg?react';
 export { default as IconBoxes } from 'lucide-static/icons/boxes.svg?react';
+export { default as IconBraces } from 'lucide-static/icons/braces.svg?react';
 export { default as IconBranch } from 'lucide-static/icons/git-branch.svg?react';
 export { default as IconBuilding } from 'lucide-static/icons/building.svg?react';
 export { default as IconCheck } from 'lucide-static/icons/check.svg?react';
@@ -64,6 +64,7 @@ export { default as IconLayoutDashboard } from 'lucide-static/icons/layout-dashb
 export { default as IconLightbulb } from 'lucide-static/icons/lightbulb.svg?react';
 export { default as IconLink } from 'lucide-static/icons/link.svg?react';
 export { default as IconListMinus } from 'lucide-static/icons/list-minus.svg?react';
+export { default as IconListPlus } from 'lucide-static/icons/list-plus.svg?react';
 export { default as IconLock } from 'lucide-static/icons/lock.svg?react';
 export { default as IconLogOut } from 'lucide-static/icons/log-out.svg?react';
 export { default as IconMenu } from 'lucide-static/icons/menu.svg?react';

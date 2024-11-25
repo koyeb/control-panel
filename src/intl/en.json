@@ -5,6 +5,7 @@
     "close": "Close",
     "save": "Save",
     "next": "Next",
+    "import": "Import",
     "override": "Override",
     "noValue": "--",
     "notApplicable": "N/A",
@@ -1909,6 +1910,7 @@
     "secrets": {
       "title": "Secrets",
       "createSecret": "Create secret",
+      "importSecrets": "Import secrets",
       "noSecrets": {
         "title": "You don't have any secrets yet",
         "description": "Secrets enable you to secure your code by removing hardcoded credentials and let you pass environment variables securely to your applications",
@@ -1923,6 +1925,13 @@
           "edit": "Edit",
           "delete": "Remove"
         }
+      },
+      "bulkCreateSecretsDialog": {
+        "title": "Import secrets",
+        "description": "Enter up to 30 secrets using the format <code>key=value</code>. Creating multi-line secrets is possible by wrapping the value between quotes.",
+        "tooManySecrets": "Too many secrets",
+        "successNotification": "{created} {created, plural, =1 {secret} other {secrets}} created",
+        "errorNotification": "Failed to create {names}"
       },
       "editSecretDialog": {
         "title": "Edit secret",
