@@ -15,7 +15,12 @@ async function loadIntercom() {
   }
 
   const token = getToken();
+  const user = token ? await api.getCurrentUser({ token }) : undefined;
   const userHash = token ? await api.getIntercomUserHash({ token }) : undefined;
 
-  Intercom({ app_id: intercomAppId, user_hash: userHash?.hash });
+  Intercom({
+    app_id: intercomAppId,
+    user_id: user?.user?.id,
+    user_hash: userHash?.hash,
+  });
 }
