@@ -2344,7 +2344,7 @@
         }
       },
       "apiCredential": {
-        "title": "API access Tokens",
+        "title": "API access tokens",
         "createApiCredential": "Create API token",
         "list": {
           "name": "Name",
