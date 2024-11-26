@@ -144,17 +144,33 @@ function instance() {
 }
 
 function scaling(t: TranslateErrorFunction) {
+  function target(min: number, max: number) {
+    return z.discriminatedUnion('enabled', [
+      z.object({
+        enabled: z.literal(true),
+        value: z
+          .number({ invalid_type_error: t('scaling.targetEmpty') })
+          .min(min, t('scaling.targetTooSmall', { min: min - 1 }))
+          .max(max, t('scaling.targetTooBig', { max })),
+      }),
+      z.object({
+        enabled: z.literal(false),
+        value: z.number(),
+      }),
+    ]);
+  }
+
   return z
     .object({
       min: number(t, t('scaling.autoScalingMinLabel'), 0, 20),
       max: number(t, t('scaling.autoScalingMaxLabel'), 0, 20),
       targets: z.object({
-        cpu: autoScalingTarget(t, 1, 100),
-        memory: autoScalingTarget(t, 1, 100),
-        requests: autoScalingTarget(t, 1, 1e9),
-        concurrentRequests: autoScalingTarget(t, 1, 1e9),
-        responseTime: autoScalingTarget(t, 1, 1e9),
-        sleepIdleDelay: autoScalingTarget(t, 1, 1e9),
+        cpu: target(1, 100),
+        memory: target(1, 100),
+        requests: target(1, 1e9),
+        concurrentRequests: target(1, 1e9),
+        responseTime: target(1, 1e9),
+        sleepIdleDelay: target(1, 1e9),
       }),
     })
     .refine(({ min, max, targets }) => {
@@ -165,22 +181,6 @@ function scaling(t: TranslateErrorFunction) {
       const enabledTargets = Object.values(targets).filter((target) => target.enabled);
       return enabledTargets.length > 0;
     }, 'noTargetSelected');
-}
-
-function autoScalingTarget(t: TranslateErrorFunction, min: number, max: number) {
-  return z.discriminatedUnion('enabled', [
-    z.object({
-      enabled: z.literal(true),
-      value: z
-        .number({ invalid_type_error: t('scaling.targetEmpty') })
-        .min(min, t('scaling.targetTooSmall', { min: min - 1 }))
-        .max(max, t('scaling.targetTooBig', { max })),
-    }),
-    z.object({
-      enabled: z.literal(false),
-      value: z.number(),
-    }),
-  ]);
 }
 
 function ports(t: TranslateErrorFunction) {

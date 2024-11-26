@@ -12,7 +12,7 @@ import { useTranslate } from 'src/intl/translate';
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
 import { serviceFormSchema } from './helpers/service-form.schema';
-import { ServiceForm, ServiceFormSection } from './service-form.types';
+import { Scaling, ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
   const translate = useTranslate();
@@ -26,7 +26,7 @@ export function useServiceForm(serviceId?: string) {
 
   const form = useForm<ServiceForm>({
     mode: 'onChange',
-    defaultValues: () => {
+    defaultValues() {
       return initializeServiceForm(
         params,
         regions,
@@ -45,6 +45,7 @@ export function useServiceForm(serviceId?: string) {
   useTriggerInstanceValidationOnLoad(form);
   useExpandFirstSectionInError(form, sections);
   useTriggerValidationOnChange(form);
+  useEnsureBusinessRules(form);
 
   return form;
 }
@@ -108,4 +109,46 @@ function useTriggerValidationOnChange({ watch, trigger, formState }: UseFormRetu
       subscription.unsubscribe();
     };
   }, [watch, trigger, submitCount]);
+}
+
+const targets: Array<keyof Scaling['targets']> = [
+  'cpu',
+  'memory',
+  'requests',
+  'concurrentRequests',
+  'responseTime',
+];
+
+function useEnsureBusinessRules({ watch, setValue }: UseFormReturn<ServiceForm>) {
+  useEffect(() => {
+    const subscription = watch((values, { type, name }) => {
+      if (type !== 'change' || name === undefined) {
+        return;
+      }
+
+      const { serviceType, scaling } = values as ServiceForm;
+      const { min, max } = scaling;
+
+      if (serviceType === 'worker' && min === 0) {
+        setValue('scaling.min', 1);
+      }
+
+      if (min === 0 || min === max) {
+        for (const target of targets) {
+          setValue(`scaling.targets.${target}.enabled`, false, { shouldValidate: true });
+        }
+      } else {
+        const hasEnabledTarget = targets.some((target) => scaling.targets[target].enabled);
+        const target: keyof Scaling['targets'] = serviceType === 'worker' ? 'cpu' : 'requests';
+
+        if (!hasEnabledTarget) {
+          setValue(`scaling.targets.${target}.enabled`, true, { shouldValidate: true });
+        }
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [watch, setValue]);
 }

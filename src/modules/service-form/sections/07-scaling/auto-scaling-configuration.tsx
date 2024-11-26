@@ -1,6 +1,6 @@
 import { useFormContext, useFormState } from 'react-hook-form';
 
-import { InputEnd, Slider, Tooltip } from '@koyeb/design-system';
+import { InputEnd, Tooltip } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
 import {
@@ -15,23 +15,17 @@ import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
-import { defaultServiceForm } from '../../helpers/initialize-service-form';
 import { Scaling, ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
+import { handleScalingValueBlurred } from './handle-scaling-value-blurred';
+
 const T = Translate.prefix('serviceForm.scaling.autoscalingSettings');
 
-const targets: Array<keyof Scaling['targets']> = [
-  'cpu',
-  'memory',
-  'requests',
-  'concurrentRequests',
-  'responseTime',
-];
-
 export function AutoScalingConfiguration() {
-  const { setValue, trigger, resetField } = useFormContext<ServiceForm>();
+  const { setValue } = useFormContext<ServiceForm>();
 
+  const serviceType = useWatchServiceForm('serviceType');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useWatchServiceForm('instance');
   const scaling = useWatchServiceForm('scaling');
@@ -41,38 +35,48 @@ export function AutoScalingConfiguration() {
   const scaleToZero = useFeatureFlag('scale-to-zero');
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
 
+  const onChangeEffect = (min: number, max: number) => {
+    if (min === 0 && max !== 1) {
+      setValue('scaling.max', 1, { shouldValidate: true });
+    }
+  };
+
+  const setScalingValue = (field: 'min' | 'max') => {
+    return (value: number) => setValue(`scaling.${field}`, value, { shouldValidate: true });
+  };
+
   return (
     <>
-      <div className="hidden sm:block">
-        <Slider
+      <div className="row gap-4">
+        <ControlledInput<ServiceForm, 'scaling.min'>
+          name="scaling.min"
+          type="number"
+          label={<T id="min" />}
           disabled={!canChangeScaling}
-          label={<Translate id="serviceForm.scaling.scalingLabel" />}
-          min={scaleToZero ? 0 : 1}
+          onKeyDown={onKeyDownPositiveInteger}
+          min={scaleToZero && serviceType === 'web' ? 0 : 1}
+          max={scaling.max}
+          step={1}
+          onChangeEffect={(event) => onChangeEffect(event.target.valueAsNumber, scaling.max)}
+          onBlur={(event) => handleScalingValueBlurred(event, setScalingValue('min'))}
+          className="w-24"
+        />
+
+        <ControlledInput<ServiceForm, 'scaling.max'>
+          name="scaling.max"
+          type="number"
+          label={<T id="max" />}
+          disabled={!canChangeScaling}
+          readOnly={scaling.min === 0}
+          helperText={scaling.min === 0 && <T id="maxIsOneWhenMinIsZero" />}
+          onKeyDown={onKeyDownPositiveInteger}
+          min={scaling.min}
           max={20}
           step={1}
-          value={[scaling.min, scaling.max]}
-          onChange={([min, max]) => {
-            setValue('scaling.min', min);
-            setValue('scaling.max', max);
-
-            if (min === 0 && max === 1) {
-              for (const target of targets) {
-                setValue(`scaling.targets.${target}.enabled`, false);
-              }
-
-              void trigger('scaling');
-            } else if (scaling.max === 1 && max > 1) {
-              resetField('scaling.targets', {
-                defaultValue: defaultServiceForm().scaling.targets,
-              });
-            }
-          }}
-          marks
+          onChangeEffect={(event) => onChangeEffect(scaling.min, event.target.valueAsNumber)}
+          onBlur={(event) => handleScalingValueBlurred(event, setScalingValue('max'))}
+          className="w-24"
         />
-      </div>
-
-      <div className="col gap-4 sm:hidden">
-        <RangeInputMobile />
       </div>
 
       {scaleToZeroIdleDelay && scaling.min === 0 && (
@@ -84,47 +88,6 @@ export function AutoScalingConfiguration() {
       <ScalingTarget target="memory" Icon={IconPanelsLeftBottom} min={1} max={100} />
       <ScalingTarget target="concurrentRequests" Icon={IconListMinus} min={1} max={1e9} />
       <ScalingTarget target="responseTime" Icon={IconAlarmClockCheck} min={1} max={1e9} />
-    </>
-  );
-}
-
-function RangeInputMobile() {
-  const instance = useWatchServiceForm('instance');
-  const canChangeScaling = instance !== 'free';
-
-  const scaleToZero = useFeatureFlag('scale-to-zero');
-
-  return (
-    <>
-      <span className="col-span-2 font-semibold">
-        <Translate id="serviceForm.scaling.scalingLabel" />
-      </span>
-
-      <div className="row gap-4">
-        <ControlledInput<ServiceForm, 'scaling.min'>
-          name="scaling.min"
-          type="number"
-          className="max-w-20"
-          label={<T id="min" />}
-          disabled={!canChangeScaling}
-          onKeyDown={onKeyDownPositiveInteger}
-          min={scaleToZero ? 0 : 1}
-          max={20}
-          step={1}
-        />
-
-        <ControlledInput<ServiceForm, 'scaling.max'>
-          name="scaling.max"
-          type="number"
-          className="max-w-20"
-          label={<T id="max" />}
-          disabled={!canChangeScaling}
-          onKeyDown={onKeyDownPositiveInteger}
-          min={scaleToZero ? 0 : 1}
-          max={20}
-          step={1}
-        />
-      </div>
     </>
   );
 }
@@ -205,6 +168,10 @@ function useTargetDisabledReason(target: keyof Scaling['targets']): React.ReactN
 
   if (min === 0 && max === 1) {
     return <T id="criteriaNotAvailableWhenMax1" />;
+  }
+
+  if (min === max) {
+    return <T id="criteriaNotAvailableWithFixedScaling" />;
   }
 
   if (isWebTarget(target) && serviceType === 'worker') {

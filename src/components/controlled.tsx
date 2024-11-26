@@ -116,7 +116,7 @@ function ControlledInput_<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
 >(
-  { control, name, onChangeEffect, ...props }: ControlledProps<typeof Input, Form, Name>,
+  { control, name, helperText, onChangeEffect, ...props }: ControlledProps<typeof Input, Form, Name>,
   ref: React.ForwardedRef<HTMLInputElement>,
 ) {
   const { field, fieldState } = useController({ control, name });
@@ -126,7 +126,7 @@ function ControlledInput_<
       {...field}
       ref={mergeRefs(ref, field.ref)}
       invalid={fieldState.invalid}
-      helperText={fieldState.error?.message}
+      helperText={fieldState.error?.message ?? helperText}
       value={Number.isNaN(field.value) ? '' : field.value}
       onChange={(event) => {
         field.onChange(props.type === 'number' ? event.target.valueAsNumber : event.target.value);

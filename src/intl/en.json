@@ -1110,6 +1110,7 @@
       "autoscalingSettings": {
         "min": "Min",
         "max": "Max",
+        "maxIsOneWhenMinIsZero": "Max must be 1 when min is 0",
         "cpuLabel": "Target CPU usage",
         "cpuDescription": "Autoscale to target {value, number, :: percent} CPU usage on average, per instance",
         "cpuUnit": "%",
@@ -1128,6 +1129,7 @@
         "sleepIdleDelayLabel": "Scale to zero idle time",
         "sleepIdleDelayDescription": "Number of seconds to wait before sleeping the instance if it receives no traffic",
         "sleepIdleDelayUnit": "s",
+        "criteriaNotAvailableWithFixedScaling": "Scaling criteria are not available with fixed scaling",
         "criteriaNotAvailableWhenMax1": "Scaling criteria are not available when the maximum scaling is set to 1",
         "criterionNotAvailableWorker": "This criterion is not available for workers"
       },
