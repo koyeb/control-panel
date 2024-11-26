@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { Button, Dialog } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { ControlledTextArea } from 'src/components/controlled';
@@ -23,6 +24,7 @@ type BulkCreateSecretsDialogProps = {
 
 export function BulkCreateSecretsDialog({ open, onClose }: BulkCreateSecretsDialogProps) {
   const t = T.useTranslate();
+  const track = useTrackEvent();
 
   const form = useForm<{ value: string }>({
     defaultValues: {
@@ -69,6 +71,7 @@ export function BulkCreateSecretsDialog({ open, onClose }: BulkCreateSecretsDial
       }
 
       onClose();
+      track('BulkSecretsCreated', { count: created });
     },
   });
 

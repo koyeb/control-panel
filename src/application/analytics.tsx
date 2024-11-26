@@ -108,7 +108,7 @@ export function useTrackEvent() {
   const analytics = useAnalytics();
 
   return useCallback(
-    (event: string, properties: Record<string, unknown>) => {
+    (event: string, properties: Record<string, unknown> = {}) => {
       analytics.capture(event, properties);
     },
     [analytics],
