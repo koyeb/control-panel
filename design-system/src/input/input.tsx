@@ -13,6 +13,7 @@ type InputOwnProps = {
   invalid?: boolean;
   start?: React.ReactNode;
   end?: React.ReactNode;
+  inputBoxClassName?: string;
   inputClassName?: string;
 };
 
@@ -27,6 +28,7 @@ export const Input = forwardRef(function Input(
     error,
     invalid = Boolean(error),
     className,
+    inputBoxClassName,
     inputClassName,
     ...props
   }: InputProps,
@@ -53,6 +55,7 @@ export const Input = forwardRef(function Input(
         ref={ref}
         id={id}
         size={size}
+        boxClassName={inputBoxClassName}
         className={inputClassName}
         aria-invalid={invalid}
         aria-errormessage={helperTextId}
