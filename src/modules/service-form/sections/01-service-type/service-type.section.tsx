@@ -53,7 +53,7 @@ function SectionTitle() {
 
   return (
     <div className="row items-center gap-2">
-      <Icon className="icon" />
+      <Icon className="text-icon size-5" />
       {title}
     </div>
   );
