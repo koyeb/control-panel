@@ -119,7 +119,7 @@ const targets: Array<keyof Scaling['targets']> = [
   'responseTime',
 ];
 
-function useEnsureBusinessRules({ watch, setValue }: UseFormReturn<ServiceForm>) {
+function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
   useEffect(() => {
     const subscription = watch((values, { type, name }) => {
       if (type !== 'change' || name === undefined) {
@@ -137,12 +137,13 @@ function useEnsureBusinessRules({ watch, setValue }: UseFormReturn<ServiceForm>)
         for (const target of targets) {
           setValue(`scaling.targets.${target}.enabled`, false, { shouldValidate: true });
         }
-      } else {
+      } else if (!name.startsWith('scaling.targets')) {
         const hasEnabledTarget = targets.some((target) => scaling.targets[target].enabled);
         const target: keyof Scaling['targets'] = serviceType === 'worker' ? 'cpu' : 'requests';
 
         if (!hasEnabledTarget) {
           setValue(`scaling.targets.${target}.enabled`, true, { shouldValidate: true });
+          void trigger('scaling');
         }
       }
     });
@@ -150,5 +151,5 @@ function useEnsureBusinessRules({ watch, setValue }: UseFormReturn<ServiceForm>)
     return () => {
       subscription.unsubscribe();
     };
-  }, [watch, setValue]);
+  }, [watch, setValue, trigger]);
 }

@@ -186,7 +186,7 @@ function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
         value: average_mem?.value,
       },
       requests: {
-        enabled: min === max ? true : requests_per_second !== undefined,
+        enabled: requests_per_second !== undefined,
         value: requests_per_second?.value,
       },
       concurrentRequests: {

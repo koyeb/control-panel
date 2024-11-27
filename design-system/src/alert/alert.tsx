@@ -28,6 +28,7 @@ export function Alert({
 }: AlertProps) {
   return (
     <div
+      role="alert"
       className={clsx(
         'col sm:row items-start gap-3 rounded-lg border px-4 py-3 sm:items-stretch',
         {

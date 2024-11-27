@@ -12,10 +12,8 @@ describe('deploymentDefinitionToServiceForm', () => {
       scalings: [{ min: 1, max: 1 }],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-      'scaling.targets.requests.enabled',
-      true,
-    );
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.min', 1);
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.max', 1);
   });
 
   it('autoscaling', () => {
