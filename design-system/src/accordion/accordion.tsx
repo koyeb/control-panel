@@ -5,7 +5,7 @@ import { Collapse } from '../collapse/collapse';
 
 type AccordionSectionProps = {
   isExpanded: boolean;
-  forceMount?: true;
+  keepMounted?: boolean;
   hasError?: boolean;
   header?: React.ReactNode;
   className?: string;
@@ -14,7 +14,7 @@ type AccordionSectionProps = {
 
 export function AccordionSection({
   isExpanded,
-  forceMount,
+  keepMounted,
   hasError,
   header,
   className,
@@ -33,7 +33,7 @@ export function AccordionSection({
     >
       {header}
 
-      <Collapse isExpanded={isExpanded} forceMount={forceMount}>
+      <Collapse open={isExpanded} keepMounted={keepMounted}>
         {children}
       </Collapse>
     </section>

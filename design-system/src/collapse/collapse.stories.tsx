@@ -11,7 +11,7 @@ const meta = {
     controls: controls.exclude(['children']),
   },
   args: {
-    isExpanded: true,
+    open: true,
     children: <ComponentPlaceholder />,
   },
   decorators: [

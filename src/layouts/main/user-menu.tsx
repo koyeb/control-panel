@@ -105,7 +105,7 @@ function ThemeMenuItem() {
         <IconChevronRight className={clsx('icon ms-auto', open && 'rotate-90')} />
       </ButtonMenuItem>
 
-      <Collapse isExpanded={open}>
+      <Collapse open={open}>
         <div className="col items-stretch border-y">
           <ButtonMenuItem className="pl-4" onClick={() => setThemeMode(ThemeMode.light)}>
             <IconSunDim className="icon" />

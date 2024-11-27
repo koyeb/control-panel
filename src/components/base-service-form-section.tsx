@@ -7,6 +7,7 @@ import { Shortcut } from 'src/components/shortcut';
 type BaseServiceFormSectionProps = {
   expanded: boolean;
   expand: () => void;
+  keepMounted?: boolean;
   title: React.ReactNode;
   expandedTitle: React.ReactNode;
   description: React.ReactNode;
@@ -19,6 +20,7 @@ type BaseServiceFormSectionProps = {
 export function BaseServiceFormSection({
   expanded,
   expand,
+  keepMounted,
   title,
   expandedTitle,
   description,
@@ -29,6 +31,7 @@ export function BaseServiceFormSection({
 }: BaseServiceFormSectionProps) {
   return (
     <AccordionSection
+      keepMounted={keepMounted}
       header={
         <Header
           expanded={expanded}

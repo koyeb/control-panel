@@ -174,7 +174,7 @@ function DeploymentsSection({
         {description && <div className="text-xs text-dim">{description}</div>}
       </div>
 
-      <Collapse isExpanded={expanded ?? true}>
+      <Collapse open={expanded ?? true}>
         <div className="mt-3">{children}</div>
       </Collapse>
     </div>

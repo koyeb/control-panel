@@ -26,6 +26,7 @@ export function ServiceFormSection({ section, ...props }: ServiceFormSectionProp
     <BaseServiceFormSection
       expanded={expanded}
       expand={() => setValue('meta.expandedSection', expanded ? null : section)}
+      keepMounted={section === 'regions'}
       shortcut={getShortcut(watch(), section)}
       hasError={sectionHasError(section, errors)}
       {...props}

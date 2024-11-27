@@ -73,7 +73,7 @@ export function SubSection({
         <div className="col-span-2 min-w-0 md:col-span-1">{header}</div>
       </div>
 
-      <Collapse isExpanded={expanded}>
+      <Collapse open={expanded}>
         <div className={clsx('mx-4 mb-6', className)}>{children}</div>
       </Collapse>
     </>
