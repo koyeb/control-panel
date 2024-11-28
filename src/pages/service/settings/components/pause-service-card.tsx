@@ -10,7 +10,7 @@ import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.settings');
+const T = Translate.prefix('pages.service.settings.pauseService');
 
 type PauseServiceCardProps = {
   service: Service;
@@ -28,7 +28,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
     onSuccess: () => {
       setDialogOpen(false);
       navigate(routes.service.overview(service.id));
-      notify.info(t('pauseServiceCard.pausing'));
+      notify.info(t('pausing'));
     },
   });
 
@@ -39,19 +39,19 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
     onSuccess: () => {
       setDialogOpen(false);
       navigate(routes.service.overview(service.id));
-      notify.info(t('pauseServiceCard.resuming'));
+      notify.info(t('resuming'));
     },
   });
 
   return (
-    <div className="card row items-center gap-4 p-3">
+    <div className="card row col-start-1 items-center gap-4 p-3">
       <div className="col flex-1 gap-2">
         <strong>
-          <T id="pauseServiceCard.title" />
+          <T id="title" />
         </strong>
 
         <p className="text-dim">
-          <T id="pauseServiceCard.description" />
+          <T id="description" />
         </p>
       </div>
 
@@ -62,7 +62,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
           disabled={service.status !== 'paused'}
           loading={isResuming}
         >
-          <T id="pauseServiceCard.resume" />
+          <T id="resume" />
         </Button>
 
         <Button
@@ -70,17 +70,17 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
           onClick={() => setDialogOpen(true)}
           disabled={service.status === 'pausing' || service.status === 'paused'}
         >
-          <T id="pauseServiceCard.pause" />
+          <T id="pause" />
         </Button>
       </div>
 
       <ConfirmationDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        title={<T id="pauseServiceCard.confirmationDialog.title" />}
-        description={<T id="pauseServiceCard.confirmationDialog.description" />}
+        title={<T id="confirmationDialog.title" />}
+        description={<T id="confirmationDialog.description" />}
         confirmationText={service.name}
-        submitText={<T id="pauseServiceCard.confirmationDialog.confirm" />}
+        submitText={<T id="confirmationDialog.confirm" />}
         onConfirm={pause}
       />
     </div>

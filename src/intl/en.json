@@ -2152,7 +2152,12 @@
         "title": "Service settings",
         "description": "Updating your service settings will create a new deployment.",
         "saved": "Service settings saved",
-        "pauseServiceCard": {
+        "duplicateService": {
+          "title": "Duplicate service",
+          "description": "Create a new service from this configuration.",
+          "duplicate": "Duplicate"
+        },
+        "pauseService": {
           "title": "Pause service",
           "description": "Once this operation is performed, your service will be paused and all active deployments stopped. You can wake-up your service by clicking the \"Resume\" button below.",
           "pause": "Pause",
@@ -2165,7 +2170,7 @@
             "confirm": "Pause service"
           }
         },
-        "deleteServiceCard": {
+        "deleteService": {
           "title": "Delete service",
           "description": "Once this operation is performed, your service will be permanently deleted.",
           "delete": "Delete",

@@ -11,7 +11,7 @@ import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.settings');
+const T = Translate.prefix('pages.service.settings.deleteService');
 
 type DeleteServiceCardProps = {
   service: Service;
@@ -45,19 +45,19 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
     onSuccess: () => {
       setDialogOpen(false);
       navigate(routes.home());
-      notify.info(t('deleteServiceCard.deleting'));
+      notify.info(t('deleting'));
     },
   });
 
   return (
-    <div className="card row items-center gap-4 p-3">
+    <div className="card row col-start-1 items-center gap-4 p-3">
       <div className="col flex-1 gap-2">
         <strong>
-          <T id="deleteServiceCard.title" />
+          <T id="title" />
         </strong>
 
         <p className="text-dim">
-          <T id="deleteServiceCard.description" />
+          <T id="description" />
         </p>
       </div>
 
@@ -67,18 +67,18 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
           onClick={() => setDialogOpen(true)}
           disabled={service.status === 'pausing' || service.status === 'deleted'}
         >
-          <T id="deleteServiceCard.delete" />
+          <T id="delete" />
         </Button>
       </div>
 
       <ConfirmationDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
-        title={<T id="deleteServiceCard.confirmationDialog.title" />}
-        description={<T id="deleteServiceCard.confirmationDialog.description" />}
+        title={<T id="confirmationDialog.title" />}
+        description={<T id="confirmationDialog.description" />}
         destructiveAction
         confirmationText={service.name}
-        submitText={<T id="deleteServiceCard.confirmationDialog.confirm" />}
+        submitText={<T id="confirmationDialog.confirm" />}
         onConfirm={deleteService}
       />
     </div>

@@ -5,6 +5,7 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
@@ -12,6 +13,7 @@ import { ServiceForm } from 'src/modules/service-form/service-form';
 import { defined } from 'src/utils/assert';
 
 import { DeleteServiceCard } from './components/delete-service-card';
+import { DuplicateServiceCard } from './components/duplicate-service-card';
 import { PauseServiceCard } from './components/pause-service-card';
 
 const T = Translate.prefix('pages.service.settings');
@@ -26,9 +28,11 @@ export function ServiceSettingsPage() {
   const [cost, setCost] = useState<ServiceCost>();
   const [deployUrl, setDeployUrl] = useState<string>();
 
+  const hasDuplicateService = useFeatureFlag('duplicate-service');
+
   return (
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
-    <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_20rem]">
+    <div className="grid auto-rows-min grid-cols-1 items-start gap-8 xl:grid-cols-[1fr_20rem]">
       <ServiceForm
         serviceId={serviceId}
         onDeployed={(appId, serviceId, deploymentId) =>
@@ -39,16 +43,14 @@ export function ServiceSettingsPage() {
         onDeployUrlChanged={setDeployUrl}
       />
 
-      <div className="col max-w-sm gap-8 xl:w-full">
+      <div className="col max-w-sm gap-8">
         <ServiceEstimatedCost cost={cost} />
         <DeployToKoyebButton deployUrl={deployUrl} />
       </div>
 
+      {hasDuplicateService && <DuplicateServiceCard service={service} />}
       <PauseServiceCard service={service} />
-      <div className="hidden xl:block" />
-
       <DeleteServiceCard service={service} />
-      <div className="hidden xl:block" />
     </div>
   );
 }
