@@ -23,6 +23,7 @@ const T = Translate.prefix('serviceForm.environmentVariables');
 export function EnvironmentVariablesSection() {
   const t = T.useTranslate();
   const { setValue } = useFormContext<ServiceForm>();
+
   const variables = useWatchServiceForm('environmentVariables');
   const { fields, append, remove } = useFieldArray<ServiceForm, 'environmentVariables'>({
     name: 'environmentVariables',
@@ -67,7 +68,13 @@ export function EnvironmentVariablesSection() {
               <EnvironmentVariableFields
                 key={variable.id}
                 index={index}
-                onRemove={() => remove(index)}
+                onRemove={() => {
+                  if (fields.length === 1) {
+                    setValue('environmentVariables.0', { name: '', value: '' });
+                  } else {
+                    remove(index);
+                  }
+                }}
                 onCreateSecret={() => setCreateSecretIndex(index)}
               />
             ))}

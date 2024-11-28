@@ -1,14 +1,11 @@
 import clsx from 'clsx';
-import { useFormContext } from 'react-hook-form';
 
 import { IconButton, useBreakpoint } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconTrash } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
-import { defaultServiceForm } from '../../helpers/initialize-service-form';
 import { ServiceForm } from '../../service-form.types';
-import { useWatchServiceForm } from '../../use-service-form';
 
 import { EnvironmentVariableValueField } from './environment-variable-value-field';
 
@@ -25,19 +22,8 @@ export function EnvironmentVariableFields({
   onRemove,
   onCreateSecret,
 }: EnvironmentVariableFieldsProps) {
-  const variables = useWatchServiceForm(`environmentVariables`);
-  const { setValue } = useFormContext<ServiceForm>();
-
   const isMobile = !useBreakpoint('md');
   const showLabel = isMobile || index === 0;
-
-  const handleRemove = () => {
-    if (variables.length === 1) {
-      setValue(`environmentVariables.${index}`, defaultServiceForm().environmentVariables[0]!);
-    } else {
-      onRemove();
-    }
-  };
 
   return (
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
@@ -57,7 +43,7 @@ export function EnvironmentVariableFields({
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
-        <IconButton color="gray" Icon={IconTrash} onClick={handleRemove}>
+        <IconButton color="gray" Icon={IconTrash} onClick={onRemove}>
           <T id="deleteVariable" />
         </IconButton>
       </div>

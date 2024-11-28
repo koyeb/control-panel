@@ -5,7 +5,6 @@ import { Button, Dialog, TextArea } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { Translate } from 'src/intl/translate';
 
-import { defaultServiceForm } from '../../helpers/initialize-service-form';
 import {
   SecretNotFoundError,
   parseEnvironmentVariables,
@@ -42,13 +41,14 @@ export function BulkEnvironmentVariablesEditionDialog({
       const value = data.get('environment-variables') as string;
 
       try {
-        let variables = parseEnvironmentVariables(value, secrets);
+        const variables = parseEnvironmentVariables(value, secrets);
 
-        if (variables.length === 0) {
-          variables = defaultServiceForm().environmentVariables;
+        if (variables.length > 0) {
+          setValue('environmentVariables', variables);
+        } else {
+          setValue('environmentVariables', [{ name: '', value: '' }]);
         }
 
-        setValue('environmentVariables', variables);
         void trigger('environmentVariables');
         onClose();
       } catch (error) {

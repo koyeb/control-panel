@@ -55,10 +55,6 @@ export async function initializeServiceForm(
       deploymentDefinitionToServiceForm(definition, githubApp?.organizationName, volumes!),
     );
 
-    if (values.environmentVariables.length === 0) {
-      values.environmentVariables = defaultServiceForm().environmentVariables;
-    }
-
     values.meta.previousInstance = values.instance;
     values.meta.hasPreviousBuild = service?.last_provisioned_deployment_id !== '';
   }
@@ -73,10 +69,6 @@ export async function initializeServiceForm(
     definition.volumes = [];
 
     values = merge(values, deploymentDefinitionToServiceForm(definition, githubApp?.organizationName, []));
-
-    if (values.environmentVariables.length === 0) {
-      values.environmentVariables = defaultServiceForm().environmentVariables;
-    }
   }
 
   if (!serviceId) {
