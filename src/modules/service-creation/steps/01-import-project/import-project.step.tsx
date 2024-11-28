@@ -1,4 +1,5 @@
-import { useSearchParam } from 'src/hooks/router';
+import { useMount } from 'src/hooks/lifecycle';
+import { useNavigate, useSearchParam } from 'src/hooks/router';
 
 import { DockerImageSelector } from './docker-image-selector';
 import { RepositorySelector } from './repository-selector';
@@ -11,6 +12,14 @@ export function ImportProjectStep({ onNext }: ImportProjectStepProps) {
   const [type] = useSearchParam('type');
   const [, setRepository] = useSearchParam('repository');
   const [, setImage] = useSearchParam('image');
+  const navigate = useNavigate();
+
+  useMount(() => {
+    navigate((url) => {
+      url.searchParams.delete('repository');
+      url.searchParams.delete('image');
+    });
+  });
 
   return (
     <>

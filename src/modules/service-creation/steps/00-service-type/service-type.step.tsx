@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { routes } from 'src/application/routes';
 import { IconGithub } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
+import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate } from 'src/intl/translate';
@@ -26,6 +27,14 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
   const [appId] = useSearchParam('app_id');
   const [serviceType, setServiceType] = useSearchParam('service_type');
   const navigate = useNavigate();
+
+  useMount(() => {
+    navigate((url) => {
+      url.searchParams.delete('type');
+      url.searchParams.delete('service_type');
+      url.searchParams.delete('ports');
+    });
+  });
 
   useEffect(() => {
     if (!isServiceType(serviceType)) {

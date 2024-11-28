@@ -10,6 +10,7 @@ import { useInstanceAvailabilities } from 'src/application/instance-region-avail
 import { InstanceSelector } from 'src/components/instance-selector';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
+import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 
@@ -56,6 +57,13 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
   const navigate = useNavigate();
 
   const availabilities = useInstanceAvailabilities({ serviceType });
+
+  useMount(() => {
+    navigate((url) => {
+      url.searchParams.delete('instance_type');
+      url.searchParams.delete('regions');
+    });
+  });
 
   return (
     <>
