@@ -89,7 +89,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
       const model = defined(models.find(hasProperty('slug', modelSlug)));
       const serviceForm = defaultServiceForm();
 
-      serviceForm.appName = slugify(model.name).slice(0, 23);
+      serviceForm.appName = slugify(model.name.slice(0, 23));
       serviceForm.serviceName = slugify(model.name);
       serviceForm.environmentVariables = [];
 
