@@ -1,8 +1,10 @@
+import { dequal } from 'dequal';
+
 import { Scaling, ServiceForm } from '../service-form.types';
 
-import { defaultHealthCheck } from './initialize-service-form';
+import { defaultServiceForm } from './initialize-service-form';
 
-export function getDeployParams(form: ServiceForm): URLSearchParams {
+export function getDeployParams(form: ServiceForm, removeDefaultValues = true): URLSearchParams {
   const params = new URLSearchParams({
     name: form.serviceName,
   });
@@ -69,58 +71,64 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
     set('privileged', dockerDeployment.privileged);
   }
 
-  if (form.serviceType !== 'web') set('service_type', form.serviceType);
-  if (form.instance !== 'free') set('instance_type', form.instance);
-  if (form.regions.length !== 1 || form.regions[0] !== 'fra') set('regions', form.regions);
+  set('service_type', form.serviceType);
+  set('instance_type', form.instance);
+  set('regions', form.regions);
 
-  if (form.scaling.min === form.scaling.max) {
-    if (form.scaling.min !== 1) {
-      set('instances_min', String(form.scaling.min));
-    }
-  } else {
-    set('instances_min', String(form.scaling.min));
-    set('instances_max', String(form.scaling.max));
+  set('instances_min', String(form.scaling.min));
+  set('instances_max', String(form.scaling.max));
 
-    for (const [target, { enabled, value }] of Object.entries(form.scaling.targets)) {
-      const targetMap: Record<keyof Scaling['targets'], string> = {
-        cpu: 'average_cpu',
-        memory: 'average_mem',
-        requests: 'requests_per_second',
-        concurrentRequests: 'concurrent_requests',
-        responseTime: 'requests_response_time',
-        sleepIdleDelay: 'sleep_idle_delay',
-      };
-
-      if (enabled) {
-        set(`autoscaling_${targetMap[target as keyof Scaling['targets']]}`, String(value));
-      }
+  for (const [target, { enabled, value }] of Object.entries(form.scaling.targets)) {
+    if (enabled) {
+      set(`autoscaling_${scalingTargetMap[target as keyof Scaling['targets']]}`, String(value));
     }
   }
 
   for (const { name, value } of form.environmentVariables) {
-    if (name === '') {
-      continue;
+    if (name !== '') {
+      set(`env[${name}]`, value);
     }
-
-    set(`env[${name}]`, value);
   }
 
   if (form.serviceType === 'web') {
-    for (const { portNumber, path, public: isPublic, protocol, healthCheck: hc } of form.ports) {
+    for (const { portNumber, path, public: isPublic, protocol, healthCheck } of form.ports) {
       params.append('ports', [portNumber, protocol, isPublic ? path : undefined].filter(Boolean).join(';'));
 
-      const defaultHc = defaultHealthCheck();
-
-      if (hc.protocol !== defaultHc.protocol) set(`hc_protocol[${portNumber}]`, hc.protocol);
-      if (hc.gracePeriod !== defaultHc.gracePeriod) set(`hc_grace_period[${portNumber}]`, hc.gracePeriod);
-      if (hc.interval !== defaultHc.interval) set(`hc_interval[${portNumber}]`, hc.interval);
-      if (hc.restartLimit !== defaultHc.restartLimit) set(`hc_restart_limit[${portNumber}]`, hc.restartLimit);
-      if (hc.timeout !== defaultHc.timeout) set(`hc_timeout[${portNumber}]`, hc.timeout);
-      if (hc.path !== defaultHc.path) set(`hc_path[${portNumber}]`, hc.path);
-      if (hc.method !== defaultHc.method) set(`hc_method[${portNumber}]`, hc.method);
+      set(`hc_protocol[${portNumber}]`, healthCheck.protocol);
+      set(`hc_grace_period[${portNumber}]`, healthCheck.gracePeriod);
+      set(`hc_interval[${portNumber}]`, healthCheck.interval);
+      set(`hc_restart_limit[${portNumber}]`, healthCheck.restartLimit);
+      set(`hc_timeout[${portNumber}]`, healthCheck.timeout);
+      set(`hc_path[${portNumber}]`, healthCheck.path);
+      set(`hc_method[${portNumber}]`, healthCheck.method);
     }
+  }
+
+  if (removeDefaultValues) {
+    const defaultParams = getDeployParams(defaultServiceForm(), false);
+    const keysToDelete = new Set<string>();
+
+    for (const key of params.keys()) {
+      const value = params.getAll(key);
+      const defaultValue = defaultParams.getAll(key);
+
+      if (dequal(value, defaultValue)) {
+        keysToDelete.add(key);
+      }
+    }
+
+    keysToDelete.forEach((key) => params.delete(key));
   }
 
   // do not expose volume params
   return params;
 }
+
+const scalingTargetMap: Record<keyof Scaling['targets'], string> = {
+  cpu: 'average_cpu',
+  memory: 'average_mem',
+  requests: 'requests_per_second',
+  concurrentRequests: 'concurrent_requests',
+  responseTime: 'requests_response_time',
+  sleepIdleDelay: 'sleep_idle_delay',
+};
