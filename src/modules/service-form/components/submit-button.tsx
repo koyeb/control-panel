@@ -61,7 +61,7 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
   );
 
   const deployWithoutBuildOptionsButton = (
-    <Button type="submit" disabled={disabled} loading={loading && !saveOnly}>
+    <Button disabled={disabled} loading={loading && !saveOnly} onClick={() => deploy()}>
       <T id={isNewService ? 'deploy' : 'saveDeploy'} />
     </Button>
   );
