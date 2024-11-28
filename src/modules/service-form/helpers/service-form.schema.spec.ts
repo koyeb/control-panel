@@ -145,6 +145,14 @@ describe('serviceFormSchema', () => {
     });
   });
 
+  it('removes empty volumes', () => {
+    const form = createServiceForm();
+
+    form.volumes = [{ name: '', mountPath: '', size: 0 }];
+
+    expect(parse(form)).toHaveProperty('volumes', []);
+  });
+
   it('trims whitespace on app and service names', () => {
     const form = createServiceForm();
 

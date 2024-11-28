@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
+import { createValidationGuard } from 'src/application/create-validation-guard';
 import { TranslateFn, TranslationKeys } from 'src/intl/translate';
+import { assert } from 'src/utils/assert';
 import { isSlug } from 'src/utils/strings';
 
 type RemovePrefix<T extends string, P extends string> = T extends `${P}${infer R}` ? R : never;
@@ -46,7 +48,7 @@ export function serviceFormSchema(translate: TranslateFn) {
     instance: instance(),
     scaling: scaling(t),
     ports: z.array(ports(t)),
-    volumes: z.array(volumes(t)),
+    volumes: z.preprocess(preprocessVolumes, z.array(volumes(t))),
   });
 }
 
@@ -241,4 +243,12 @@ function volumes(t: TranslateErrorFunction) {
     size: z.number(),
     mountPath: z.string().startsWith('/', t('volumes.mountPath.startWithSlash')),
   });
+}
+
+const isVolumeArray = createValidationGuard(z.array(z.object({ name: z.string() })));
+
+function preprocessVolumes(value: unknown) {
+  assert(isVolumeArray(value));
+
+  return value.filter((value) => value.name !== '');
 }
