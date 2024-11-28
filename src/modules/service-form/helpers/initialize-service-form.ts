@@ -27,23 +27,28 @@ export async function initializeServiceForm(
   const token = getToken();
   let values = defaultServiceForm();
 
+  const getApp = async (appId: string) => {
+    return api.getApp({ token, path: { id: appId } });
+  };
+
+  const getService = async (serviceId: string) => {
+    return api.getService({ token, path: { id: serviceId } });
+  };
+
+  const getDeployment = async (deploymentId: string) => {
+    return api.getDeployment({ token, path: { id: deploymentId } });
+  };
+
   if (serviceId) {
-    const { service } = await api.getService({ token, path: { id: serviceId } });
-    const { app } = await api.getApp({ token, path: { id: service!.app_id! } });
-
-    values.meta.appId = app!.id!;
-    values.appName = app!.name!;
-
-    values.meta.serviceId = service!.id!;
-
-    const deployment = await api.getDeployment({
-      token,
-      path: { id: service!.latest_deployment_id! },
-    });
-
+    const { service } = await getService(serviceId);
+    const { app } = await getApp(service!.app_id!);
+    const { volumes } = await api.listVolumes({ token, query: {} });
+    const deployment = await getDeployment(service!.latest_deployment_id!);
     const definition = deployment.deployment!.definition!;
 
-    const { volumes } = await api.listVolumes({ token, query: {} });
+    values.meta.serviceId = service!.id!;
+    values.meta.appId = app!.id!;
+    values.appName = app!.name!;
 
     values = merge(
       values,
@@ -56,6 +61,22 @@ export async function initializeServiceForm(
 
     values.meta.previousInstance = values.instance;
     values.meta.hasPreviousBuild = service?.last_provisioned_deployment_id !== '';
+  }
+
+  const duplicateServiceId = params.get('duplicate-service-id');
+
+  if (duplicateServiceId !== null) {
+    const { service } = await getService(duplicateServiceId);
+    const deployment = await getDeployment(service!.latest_deployment_id!);
+    const definition = deployment.deployment!.definition!;
+
+    definition.volumes = [];
+
+    values = merge(values, deploymentDefinitionToServiceForm(definition, githubApp?.organizationName, []));
+
+    if (values.environmentVariables.length === 0) {
+      values.environmentVariables = defaultServiceForm().environmentVariables;
+    }
   }
 
   if (!serviceId) {
