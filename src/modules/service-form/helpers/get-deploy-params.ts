@@ -105,18 +105,20 @@ export function getDeployParams(form: ServiceForm): URLSearchParams {
     set(`env[${name}]`, value);
   }
 
-  for (const { portNumber, path, public: isPublic, protocol, healthCheck: hc } of form.ports) {
-    params.append('ports', [portNumber, protocol, isPublic ? path : undefined].filter(Boolean).join(';'));
+  if (form.serviceType === 'web') {
+    for (const { portNumber, path, public: isPublic, protocol, healthCheck: hc } of form.ports) {
+      params.append('ports', [portNumber, protocol, isPublic ? path : undefined].filter(Boolean).join(';'));
 
-    const defaultHc = defaultHealthCheck();
+      const defaultHc = defaultHealthCheck();
 
-    if (hc.protocol !== defaultHc.protocol) set(`hc_protocol[${portNumber}]`, hc.protocol);
-    if (hc.gracePeriod !== defaultHc.gracePeriod) set(`hc_grace_period[${portNumber}]`, hc.gracePeriod);
-    if (hc.interval !== defaultHc.interval) set(`hc_interval[${portNumber}]`, hc.interval);
-    if (hc.restartLimit !== defaultHc.restartLimit) set(`hc_restart_limit[${portNumber}]`, hc.restartLimit);
-    if (hc.timeout !== defaultHc.timeout) set(`hc_timeout[${portNumber}]`, hc.timeout);
-    if (hc.path !== defaultHc.path) set(`hc_path[${portNumber}]`, hc.path);
-    if (hc.method !== defaultHc.method) set(`hc_method[${portNumber}]`, hc.method);
+      if (hc.protocol !== defaultHc.protocol) set(`hc_protocol[${portNumber}]`, hc.protocol);
+      if (hc.gracePeriod !== defaultHc.gracePeriod) set(`hc_grace_period[${portNumber}]`, hc.gracePeriod);
+      if (hc.interval !== defaultHc.interval) set(`hc_interval[${portNumber}]`, hc.interval);
+      if (hc.restartLimit !== defaultHc.restartLimit) set(`hc_restart_limit[${portNumber}]`, hc.restartLimit);
+      if (hc.timeout !== defaultHc.timeout) set(`hc_timeout[${portNumber}]`, hc.timeout);
+      if (hc.path !== defaultHc.path) set(`hc_path[${portNumber}]`, hc.path);
+      if (hc.method !== defaultHc.method) set(`hc_method[${portNumber}]`, hc.method);
+    }
   }
 
   // do not expose volume params
