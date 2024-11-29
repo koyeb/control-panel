@@ -34,11 +34,9 @@ export function useApiQueryFn<E extends Endpoint>(
   };
 }
 
-type ApiMutationParams<E extends Endpoint> = Omit<ApiEndpointParams<E>, 'token'>;
-
 type ApiEndpointParamsFn<E extends Endpoint, Variables> = (
   variables: Variables,
-) => ApiMutationParams<E> | Promise<ApiMutationParams<E>>;
+) => ApiEndpointParams<E> | Promise<ApiEndpointParams<E>>;
 
 type UseApiMutationResult<E extends Endpoint, Variables> = {
   mutationFn: (param: Variables) => Promise<ApiEndpointResult<E>>;
@@ -46,7 +44,7 @@ type UseApiMutationResult<E extends Endpoint, Variables> = {
 
 export function useApiMutationFn<E extends Endpoint>(
   endpoint: E,
-  params: ApiMutationParams<E>,
+  params: ApiEndpointParams<E>,
 ): UseApiMutationResult<E, void>;
 
 export function useApiMutationFn<E extends Endpoint, Variables>(

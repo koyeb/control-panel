@@ -50,6 +50,7 @@ export function SignInForm() {
   const { mutateAsync: signIn } = useMutation({
     ...useApiMutationFn('signIn', async (credential: FormValues<typeof form>) => ({
       header: { 'seon-fp': await getSeonFingerprint() },
+      token: undefined,
       body: credential,
     })),
     async onSuccess(result) {
