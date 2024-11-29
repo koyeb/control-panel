@@ -28,7 +28,10 @@ function createDatabaseInstanceType(
     pricePerMonth,
     pricePerHour,
     pricePerSecond,
-    plans: identifier !== 'free' ? ['starter', 'startup', 'enterprise', 'internal'] : undefined,
+    plans:
+      identifier !== 'free'
+        ? ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise', 'internal']
+        : undefined,
     hasVolumes: false,
   };
 }

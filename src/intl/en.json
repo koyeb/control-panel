@@ -2265,7 +2265,7 @@
         }
       },
       "plans": {
-        "title": "Change your organisation plan",
+        "title": "Change your organization plan",
         "description": "Need more? Upgrade your plan! No commitment, downgrade when you need. Reach out for quota upgrades.",
         "currentPlan": "Current plan",
         "downgrade": "Downgrade",

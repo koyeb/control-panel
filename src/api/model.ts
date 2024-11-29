@@ -559,6 +559,8 @@ export type OrganizationPlan =
   | 'hobby'
   | 'starter'
   | 'startup'
+  | 'pro'
+  | 'scale'
   | 'business'
   | 'enterprise'
   | 'internal'

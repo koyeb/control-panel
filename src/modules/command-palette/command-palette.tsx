@@ -406,6 +406,8 @@ function useRegisterInternalNavigationCommands() {
       'quotas',
       'hobby',
       'starter',
+      'pro',
+      'scale',
       'startup',
     ],
     execute: () => navigate(routes.organizationSettings.plans()),

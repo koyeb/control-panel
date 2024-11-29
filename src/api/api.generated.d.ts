@@ -1912,7 +1912,7 @@ export interface components {
          * @default hobby
          * @enum {string}
          */
-        Plan: "hobby" | "starter" | "startup" | "business" | "enterprise" | "internal" | "hobby23" | "no_plan";
+        Plan: "hobby" | "starter" | "startup" | "business" | "enterprise" | "internal" | "hobby23" | "no_plan" | "pro" | "scale";
         PublicOrganization: {
             id?: string;
             name?: string;
