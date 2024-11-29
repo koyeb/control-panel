@@ -153,4 +153,5 @@ export type ServiceVolume = {
   name: string;
   size: number;
   mountPath: string;
+  mounted: boolean;
 };

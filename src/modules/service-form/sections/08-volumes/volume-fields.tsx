@@ -41,9 +41,9 @@ export function VolumeFields({ index, onRemove }: { index: number; onRemove: () 
           color="gray"
           Icon={IconUnlink}
           onClick={
-            form.watch('meta.serviceId') && form.watch(`volumes.${index}.name`)
-              ? () => notify.warning(t('detachVolumeNotSupported'))
-              : onRemove
+            !form.watch(`volumes.${index}`).mounted
+              ? onRemove
+              : () => notify.warning(t('detachVolumeNotSupported'))
           }
         >
           <T id="detachVolume" />
@@ -55,7 +55,7 @@ export function VolumeFields({ index, onRemove }: { index: number; onRemove: () 
 
 function VolumeField({ index, label }: { index: number; label?: React.ReactNode }) {
   const t = T.useTranslate();
-  const { setValue } = useFormContext<ServiceForm>();
+  const form = useFormContext<ServiceForm>();
 
   const [regionIdentifier] = useWatchServiceForm('regions');
   const region = useRegion(regionIdentifier);
@@ -68,12 +68,14 @@ function VolumeField({ index, label }: { index: number; label?: React.ReactNode 
       label={label}
       placeholder={t('volumeNamePlaceholder')}
       items={items}
+      readOnly={form.watch(`volumes.${index}`).mounted}
+      helperText={form.watch(`volumes.${index}`).mounted && <T id="mountedReadOnly" />}
       getKey={getName}
       itemToString={getName}
       itemToValue={getName}
       renderItem={getName}
       renderNoItems={() => <T id="noVolumes" values={{ region: region?.displayName }} />}
-      onChangeEffect={(volume) => 'id' in volume && setValue(`volumes.${index}.volumeId`, volume.id)}
+      onChangeEffect={(volume) => 'id' in volume && form.setValue(`volumes.${index}.volumeId`, volume.id)}
     />
   );
 }

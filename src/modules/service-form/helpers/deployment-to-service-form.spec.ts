@@ -65,6 +65,7 @@ describe('deploymentDefinitionToServiceForm', () => {
         name: 'volume-name',
         size: 10,
         mountPath: '/path',
+        mounted: true,
       },
     ]);
   });

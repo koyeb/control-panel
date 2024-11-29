@@ -269,6 +269,7 @@ function volumes(
       name: volume.name,
       size: volume.cur_size,
       mountPath: path,
+      mounted: true,
     };
   });
 }

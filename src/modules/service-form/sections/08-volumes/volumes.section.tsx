@@ -71,7 +71,11 @@ function SectionContent() {
       )}
 
       <div className="col sm:row items-start gap-4">
-        <Button variant="ghost" color="gray" onClick={() => append({ name: '', size: 0, mountPath: '' })}>
+        <Button
+          variant="ghost"
+          color="gray"
+          onClick={() => append({ name: '', size: 0, mountPath: '', mounted: false })}
+        >
           <IconPlus className="size-4" />
           <T id="addVolume" />
         </Button>
@@ -85,7 +89,7 @@ function SectionContent() {
         open={createDialogOpen}
         onClose={() => setCreateDialogOpen(false)}
         onCreated={(volume, mountPath) => {
-          append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath });
+          append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath, mounted: false });
           setCreateDialogOpen(false);
         }}
       />

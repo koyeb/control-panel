@@ -17,6 +17,7 @@ type SelectProps<Item> = {
   error?: React.ReactNode;
   invalid?: boolean;
   disabled?: boolean;
+  readOnly?: boolean;
   placeholder?: React.ReactNode;
   className?: string;
   id?: string;
@@ -44,6 +45,7 @@ export const Select = forwardRef(function Select<Item>(
     error,
     invalid = Boolean(error),
     disabled,
+    readOnly,
     placeholder,
     className,
     id: idProp,
@@ -104,9 +106,10 @@ export const Select = forwardRef(function Select<Item>(
         }
       },
       disabled,
+      readOnly,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dropdown.setReference, disabled]);
+  }, [dropdown.setReference, disabled, readOnly]);
 
   return (
     <Field
@@ -128,7 +131,8 @@ export const Select = forwardRef(function Select<Item>(
         className={clsx(
           'row focusable w-full cursor-pointer items-center rounded border bg-inherit -outline-offset-1',
           {
-            'opacity-50 !cursor-default bg-muted dark:bg-muted/40': disabled,
+            '!cursor-default pointer-events-none': disabled || readOnly,
+            'opacity-50 bg-muted dark:bg-muted/40': disabled,
             'rounded-b-none outline-none': isOpen,
             'border-red outline-red': invalid,
             'min-h-6': size === 1,

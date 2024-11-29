@@ -1239,6 +1239,7 @@
       "volumeNamePlaceholder": "Select a volume",
       "noVolumes": "No volumes found in {region}",
       "mountPathLabel": "Mount path",
+      "mountedReadOnly": "Can't be changed once mounted",
       "createDialog": {
         "title": "Create volume",
         "description": "Set the name, size and mount path of your volume",

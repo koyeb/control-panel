@@ -148,7 +148,7 @@ describe('serviceFormSchema', () => {
   it('removes empty volumes', () => {
     const form = createServiceForm();
 
-    form.volumes = [{ name: '', mountPath: '', size: 0 }];
+    form.volumes = [{ name: '', mountPath: '', size: 0, mounted: false }];
 
     expect(parse(form)).toHaveProperty('volumes', []);
   });
