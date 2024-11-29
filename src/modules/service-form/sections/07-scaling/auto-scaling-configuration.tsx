@@ -34,9 +34,10 @@ export function AutoScalingConfiguration() {
 
   const scaleToZero = useFeatureFlag('scale-to-zero');
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
+  const scaleToZeroWithAutoscaling = useFeatureFlag('allow-scale-to-zero-with-autoscaling');
 
   const onChangeEffect = (min: number, max: number) => {
-    if (min === 0 && max !== 1) {
+    if (min === 0 && max !== 1 && !scaleToZeroWithAutoscaling) {
       setValue('scaling.max', 1, { shouldValidate: true });
     }
   };
@@ -67,10 +68,10 @@ export function AutoScalingConfiguration() {
           type="number"
           label={<T id="max" />}
           disabled={!canChangeScaling}
-          readOnly={scaling.min === 0}
-          helperText={scaling.min === 0 && <T id="maxIsOneWhenMinIsZero" />}
+          readOnly={scaling.min === 0 && !scaleToZeroWithAutoscaling}
+          helperText={scaling.min === 0 && !scaleToZeroWithAutoscaling && <T id="maxIsOneWhenMinIsZero" />}
           onKeyDown={onKeyDownPositiveInteger}
-          min={scaling.min}
+          min={Math.max(scaling.min, 1)}
           max={20}
           step={1}
           onChangeEffect={(event) => onChangeEffect(scaling.min, event.target.valueAsNumber)}

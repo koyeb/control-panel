@@ -133,7 +133,7 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
         setValue('scaling.min', 1);
       }
 
-      if (min === 0 || min === max) {
+      if (min === max || max === 1) {
         for (const target of targets) {
           setValue(`scaling.targets.${target}.enabled`, false, { shouldValidate: true });
         }
