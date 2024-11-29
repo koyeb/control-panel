@@ -6,7 +6,7 @@ import { toObject } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
-import { ApiOrganization, ApiOrganizationInvitation } from '../api-types';
+import type { Api } from '../api-types';
 import {
   Organization,
   OrganizationInvitation,
@@ -55,7 +55,7 @@ export const addressSchema = z.object({
 
 const isAddress = createValidationGuard(addressSchema);
 
-function mapOrganizationBilling(organization: ApiOrganization): Organization['billing'] {
+function mapOrganizationBilling(organization: Api.Organization): Organization['billing'] {
   const address = {
     line1: organization.address1 || undefined,
     line2: organization.address2 || undefined,
@@ -84,7 +84,7 @@ export function mapInvitations({
   return invitations!.map(transformInvitation);
 }
 
-function transformInvitation(invitation: ApiOrganizationInvitation): OrganizationInvitation {
+function transformInvitation(invitation: Api.OrganizationInvitation): OrganizationInvitation {
   return {
     id: invitation.id!,
     status: lowerCase(invitation.status!),

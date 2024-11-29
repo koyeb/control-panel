@@ -2,7 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import { Duration, sub } from 'date-fns';
 
 import { api, ApiEndpointResult } from 'src/api/api';
-import { ApiMetricName } from 'src/api/api-types';
+import type { Api } from 'src/api/api-types';
 import { useToken } from 'src/application/token';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
@@ -33,7 +33,7 @@ const timeFrameToStep: Record<MetricsTimeFrame, string> = {
 type UseMetricsOptions = {
   serviceId?: string;
   instanceId?: string;
-  metrics: ApiMetricName[];
+  metrics: Api.MetricName[];
   timeFrame: MetricsTimeFrame;
 };
 

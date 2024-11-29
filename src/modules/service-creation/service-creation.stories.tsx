@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { navigate } from 'wouter/use-browser-location';
 
 import { ApiError } from 'src/api/api-errors';
-import { ApiDeploymentDefinition, ApiDeploymentStage, ApiService } from 'src/api/api-types';
+import type { Api } from 'src/api/api-types';
 import {
   createApiDeployment,
   createApiDeploymentDefinition,
@@ -146,11 +146,11 @@ function mockApi(args: Args) {
 
   const deployment = createServiceDeployment(definition);
 
-  const service: ApiService = createApiService({
+  const service: Api.Service = createApiService({
     id: 'serviceId',
     app_id: 'appId',
     latest_deployment_id: deployment.id,
-    type: definition?.type as ApiService['type'],
+    type: definition?.type as Api.Service['type'],
     name: definition?.name,
     status: 'STARTING',
   });
@@ -164,7 +164,7 @@ function mockApi(args: Args) {
 
   const now = () => new Date().toISOString();
 
-  function createServiceDeployment(definition: ApiDeploymentDefinition) {
+  function createServiceDeployment(definition: Api.DeploymentDefinition) {
     const deployment = createApiDeployment({
       id: createId(),
       app_id: 'appId',
@@ -175,7 +175,7 @@ function mockApi(args: Args) {
 
     data.deployments.push(deployment);
 
-    const buildStage: ApiDeploymentStage = {
+    const buildStage: Api.DeploymentStage = {
       name: 'build',
       status: 'RUNNING',
     };

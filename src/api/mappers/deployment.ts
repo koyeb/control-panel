@@ -6,7 +6,7 @@ import { hasProperty } from 'src/utils/object';
 import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
-import { ApiDeployment, ApiDeploymentNeonPostgresDatabaseInfo, ApiNeonPostgresDatabase } from '../api-types';
+import type { Api } from '../api-types';
 import {
   ComputeDeployment,
   ComputeDeploymentType,
@@ -48,7 +48,7 @@ export function mapInstances({ instances }: ApiEndpointResult<'listInstances'>):
   }));
 }
 
-function transformDeployment(deployment: ApiDeployment): Deployment {
+function transformDeployment(deployment: Api.Deployment): Deployment {
   if (deployment.definition!.type! === 'DATABASE') {
     return transformDatabaseDeployment(deployment);
   }
@@ -56,7 +56,7 @@ function transformDeployment(deployment: ApiDeployment): Deployment {
   return transformComputeDeployment(deployment);
 }
 
-function transformComputeDeployment(deployment: ApiDeployment): ComputeDeployment {
+function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
   const definition = deployment.definition!;
 
   const type = (): ComputeDeploymentType => {
@@ -270,7 +270,7 @@ function getStringArray(value?: string[]) {
   return value?.length === 0 ? undefined : value;
 }
 
-function transformDatabaseDeployment(deployment: ApiDeployment): DatabaseDeployment {
+function transformDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
   const definition = deployment.definition!.database!.neon_postgres!;
   const info = deployment.database_info?.neon_postgres;
 
@@ -303,8 +303,8 @@ function transformDatabaseDeployment(deployment: ApiDeployment): DatabaseDeploym
 }
 
 function quotaReached(
-  info: ApiDeploymentNeonPostgresDatabaseInfo,
-  neon: ApiNeonPostgresDatabase,
+  info: Api.DeploymentNeonPostgresDatabaseInfo,
+  neon: Api.NeonPostgresDatabase,
 ): DatabaseDeployment['reachedQuota'] {
   if (neon.instance_type !== 'free') {
     return undefined;

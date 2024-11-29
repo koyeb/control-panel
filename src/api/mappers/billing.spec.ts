@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 
-import { ApiNextInvoiceLine } from '../api-types';
+import type { Api } from '../api-types';
 import { Invoice, InvoicePlanLine, InvoiceUsageLine, InvoiceDiscount } from '../model';
 
 import { mapInvoice, StripeInvoice } from './billing';
@@ -14,7 +14,7 @@ const createStripeInvoice = createFactory<StripeInvoice>(() => ({
   total_excluding_tax: 0,
 }));
 
-const createStripeInvoiceLine = createFactory<ApiNextInvoiceLine>(() => ({
+const createStripeInvoiceLine = createFactory<Api.NextInvoiceLine>(() => ({
   amount_excluding_tax: 0,
   period: { end: createDate(), start: createDate() },
   plan_nickname: '',
@@ -23,7 +23,7 @@ const createStripeInvoiceLine = createFactory<ApiNextInvoiceLine>(() => ({
 }));
 
 describe('mapInvoice', () => {
-  const transform = (invoice: StripeInvoice, lines: ApiNextInvoiceLine[]) => {
+  const transform = (invoice: StripeInvoice, lines: Api.NextInvoiceLine[]) => {
     return mapInvoice({ stripe_invoice: invoice as never, lines });
   };
 

@@ -2,22 +2,9 @@ import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 import { createId } from 'src/utils/strings';
 
-import {
-  ApiApp,
-  ApiCatalogDatacenters,
-  ApiCatalogInstance,
-  ApiCatalogRegion,
-  ApiDeployment,
-  ApiDeploymentDefinition,
-  ApiGithubInstallation,
-  ApiInstance,
-  ApiPersistentVolume,
-  ApiRepository,
-  ApiSecret,
-  ApiService,
-} from '../api-types';
+import { Api } from '../api-types';
 
-export const createApiRepository = createFactory<ApiRepository>(() => ({
+export const createApiRepository = createFactory<Api.Repository>(() => ({
   id: createId(),
   name: '',
   url: '',
@@ -26,7 +13,7 @@ export const createApiRepository = createFactory<ApiRepository>(() => ({
   last_push_date: createDate(),
 }));
 
-export const createApiGithubApp = createFactory<ApiGithubInstallation>(() => ({
+export const createApiGithubApp = createFactory<Api.GithubInstallation>(() => ({
   installation_id: createId(),
   installation_url: '',
   name: '',
@@ -35,31 +22,31 @@ export const createApiGithubApp = createFactory<ApiGithubInstallation>(() => ({
   total_repositories: 0,
 }));
 
-export const createApiVolume = createFactory<ApiPersistentVolume>(() => ({
+export const createApiVolume = createFactory<Api.PersistentVolume>(() => ({
   id: createId(),
   status: 'PERSISTENT_VOLUME_STATUS_DETACHED',
   name: '',
 }));
 
-export const createApiSecret = createFactory<ApiSecret>(() => ({
+export const createApiSecret = createFactory<Api.Secret>(() => ({
   id: createId(),
   name: '',
   type: 'SIMPLE',
 }));
 
-export const createApiRegion = createFactory<ApiCatalogRegion>(() => ({
+export const createApiRegion = createFactory<Api.CatalogRegion>(() => ({
   id: createId(),
   name: '',
   status: 'AVAILABLE',
 }));
 
-export const createApiDatacenter = createFactory<ApiCatalogDatacenters>(() => ({
+export const createApiDatacenter = createFactory<Api.CatalogDatacenters>(() => ({
   id: createId(),
   name: '',
   domain: '',
 }));
 
-export const createApiCatalogInstance = createFactory<ApiCatalogInstance>(() => ({
+export const createApiCatalogInstance = createFactory<Api.CatalogInstance>(() => ({
   id: createId(),
   display_name: '',
   status: 'AVAILABLE',
@@ -74,13 +61,13 @@ export const createApiCatalogInstance = createFactory<ApiCatalogInstance>(() => 
   price_per_second: '',
 }));
 
-export const createApiApp = createFactory<ApiApp>(() => ({
+export const createApiApp = createFactory<Api.App>(() => ({
   id: createId(),
   status: 'HEALTHY',
   domains: [{ id: createId(), type: 'AUTOASSIGNED', name: '' }],
 }));
 
-export const createApiService = createFactory<ApiService>(() => ({
+export const createApiService = createFactory<Api.Service>(() => ({
   id: createId(),
   app_id: createId(),
   status: 'HEALTHY',
@@ -89,7 +76,7 @@ export const createApiService = createFactory<ApiService>(() => ({
   name: '',
 }));
 
-export const createApiDeployment = createFactory<ApiDeployment>(() => ({
+export const createApiDeployment = createFactory<Api.Deployment>(() => ({
   id: createId(),
   app_id: createId(),
   service_id: createId(),
@@ -98,7 +85,7 @@ export const createApiDeployment = createFactory<ApiDeployment>(() => ({
   created_at: createDate(),
 }));
 
-export const createApiDeploymentDefinition = createFactory<ApiDeploymentDefinition>(() => ({
+export const createApiDeploymentDefinition = createFactory<Api.DeploymentDefinition>(() => ({
   type: 'WEB',
   strategy: { type: 'DEPLOYMENT_STRATEGY_TYPE_BLUE_GREEN' },
   instance_types: [{ type: '' }],
@@ -111,7 +98,7 @@ export const createApiDeploymentDefinition = createFactory<ApiDeploymentDefiniti
   volumes: [],
 }));
 
-export const createApiInstance = createFactory<ApiInstance>(() => ({
+export const createApiInstance = createFactory<Api.Instance>(() => ({
   id: createId(),
   status: 'HEALTHY',
   messages: [],

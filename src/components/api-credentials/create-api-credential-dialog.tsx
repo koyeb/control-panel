@@ -15,13 +15,13 @@ import { useZodResolver } from 'src/hooks/validation';
 import { Translate } from 'src/intl/translate';
 import { upperCase } from 'src/utils/strings';
 
-type CreateApiCredentialProps = {
+type CreateApiCredentialDialogProps = {
   type: ApiCredential['type'];
   open: boolean;
   onClose: () => void;
 };
 
-export function CreateApiCredentialDialog({ type, open, onClose }: CreateApiCredentialProps) {
+export function CreateApiCredentialDialog({ type, open, onClose }: CreateApiCredentialDialogProps) {
   const T = Translate.prefix(`pages.${type}Settings.apiCredential`);
   const user = useUser();
   const organization = useOrganization();

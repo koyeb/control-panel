@@ -3,22 +3,7 @@ import clone from 'lodash-es/cloneDeep';
 import { createDate } from 'src/utils/date';
 import { createId } from 'src/utils/strings';
 
-import {
-  ApiDeployment,
-  ApiGithubInstallation,
-  ApiInstance,
-  ApiIntercomUserHash,
-  ApiOrganization,
-  ApiOrganizationSummary,
-  ApiPersistentVolume,
-  ApiQuotas,
-  ApiRepository,
-  ApiRepositoryBranch,
-  ApiSecret,
-  ApiServiceVariables,
-  ApiUser,
-  ApiVerifyDockerImageReply,
-} from '../api-types';
+import { Api } from '../api-types';
 
 import {
   createApiApp,
@@ -40,18 +25,18 @@ export class ApiData {
   public catalogInstances = clone(catalogInstanceFixtures);
   public catalogDatacenters = clone(catalogDatacenterFixtures);
 
-  public user: ApiUser = {
+  public user: Api.User = {
     id: createId(),
     name: 'me',
     email: 'me@koyeb.com',
     avatar_url: 'https://gravatar.com/avatar',
   };
 
-  public intercomUserHash: ApiIntercomUserHash = {
+  public intercomUserHash: Api.IntercomUserHash = {
     hash: '',
   };
 
-  public organization: ApiOrganization = {
+  public organization: Api.Organization = {
     id: 'organizationId',
     name: 'my-organization',
     status: 'ACTIVE',
@@ -59,7 +44,7 @@ export class ApiData {
     plan: 'starter',
   };
 
-  public organizationSummary: ApiOrganizationSummary = {
+  public organizationSummary: Api.OrganizationSummary = {
     instances: {
       by_type: { free: '0' },
     },
@@ -68,7 +53,7 @@ export class ApiData {
     },
   };
 
-  public organizationQuotas: ApiQuotas = {
+  public organizationQuotas: Api.Quotas = {
     regions: ['fra'],
     max_instances_by_type: { free: '1' },
     persistent_volumes_by_region: {
@@ -76,11 +61,11 @@ export class ApiData {
     },
   };
 
-  public githubApp: ApiGithubInstallation = {
+  public githubApp: Api.GithubInstallation = {
     name: 'github-org',
   };
 
-  public repositories: ApiRepository[] = [
+  public repositories: Api.Repository[] = [
     createApiRepository({
       id: 'repository1Id',
       name: 'org/repo-1',
@@ -97,31 +82,31 @@ export class ApiData {
     }),
   ];
 
-  public branches: ApiRepositoryBranch[] = [
+  public branches: Api.RepositoryBranch[] = [
     { repository_id: 'repository1Id', name: 'master' },
     { repository_id: 'repository2Id', name: 'main' },
     { repository_id: 'repository2Id', name: 'develop' },
     { repository_id: 'repository2Id', name: 'feature-01' },
   ];
 
-  public secrets: ApiSecret[] = [
+  public secrets: Api.Secret[] = [
     createApiSecret({ name: 'my-secret-1', type: 'SIMPLE' }),
     createApiSecret({ name: 'my-secret-2', type: 'SIMPLE' }),
     createApiSecret({ name: 'my-registry-secret-1', type: 'REGISTRY' }),
     createApiSecret({ name: 'my-registry-secret-2', type: 'REGISTRY' }),
   ];
 
-  public verifyDockerImage: ApiVerifyDockerImageReply = {
+  public verifyDockerImage: Api.VerifyDockerImageReply = {
     success: true,
   };
 
-  public volumes: ApiPersistentVolume[] = [
+  public volumes: Api.PersistentVolume[] = [
     createApiVolume({
       created_at: createDate('2024-01-01'),
     }),
   ];
 
-  public serviceVariables: ApiServiceVariables = {
+  public serviceVariables: Api.ServiceVariables = {
     secrets: this.secrets.map((secret) => secret.name!),
     system_env: [
       'KOYEB_REGION',
@@ -166,7 +151,7 @@ export class ApiData {
     }),
   ];
 
-  public deployments: ApiDeployment[] = [
+  public deployments: Api.Deployment[] = [
     createApiDeployment({
       id: 'deploymentId',
       app_id: 'appId',
@@ -209,7 +194,7 @@ export class ApiData {
     }),
   ];
 
-  public instances: ApiInstance[] = [
+  public instances: Api.Instance[] = [
     createApiInstance({
       app_id: 'appId',
       service_id: 'serviceId',

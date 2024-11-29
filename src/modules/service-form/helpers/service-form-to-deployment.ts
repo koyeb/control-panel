@@ -1,19 +1,4 @@
-import {
-  ApiArchiveSource,
-  ApiBuildpackBuilder,
-  ApiDeploymentDefinition,
-  ApiDeploymentEnv,
-  ApiDeploymentHealthCheck,
-  ApiDeploymentScaling,
-  ApiDeploymentScalingTarget,
-  ApiDockerBuilder,
-  ApiDockerSource,
-  ApiGitSource,
-  ApiHttpHealthCheck,
-  ApiPort,
-  ApiRoute,
-  ApiTcpHealthCheck,
-} from 'src/api/api-types';
+import { Api } from 'src/api/api-types';
 import { EnvironmentVariable } from 'src/api/model';
 import { assert } from 'src/utils/assert';
 import { entries } from 'src/utils/object';
@@ -30,7 +15,7 @@ import {
   ServiceVolume,
 } from '../service-form.types';
 
-export function serviceFormToDeploymentDefinition(form: ServiceForm): ApiDeploymentDefinition {
+export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.DeploymentDefinition {
   return {
     name: form.serviceName,
     type: form.serviceType === 'web' ? 'WEB' : 'WORKER',
@@ -50,7 +35,7 @@ export function serviceFormToDeploymentDefinition(form: ServiceForm): ApiDeploym
   };
 }
 
-function archive(archive: ArchiveSource, builder: Builder): ApiArchiveSource {
+function archive(archive: ArchiveSource, builder: Builder): Api.ArchiveSource {
   return {
     id: archive.archiveId,
     buildpack: builder.type === 'buildpack' ? buildpack(builder) : undefined,
@@ -58,8 +43,8 @@ function archive(archive: ArchiveSource, builder: Builder): ApiArchiveSource {
   };
 }
 
-function git(git: GitSource, builder: Builder): ApiGitSource {
-  const common: ApiGitSource = {
+function git(git: GitSource, builder: Builder): Api.GitSource {
+  const common: Api.GitSource = {
     workdir: git.workDirectory ?? undefined,
     buildpack: builder.type === 'buildpack' ? buildpack(builder) : undefined,
     docker: builder.type === 'dockerfile' ? dockerfile(builder) : undefined,
@@ -81,7 +66,7 @@ function git(git: GitSource, builder: Builder): ApiGitSource {
   };
 }
 
-function buildpack({ buildpackOptions }: Builder): ApiBuildpackBuilder {
+function buildpack({ buildpackOptions }: Builder): Api.BuildpackBuilder {
   return {
     build_command: buildpackOptions.buildCommand ?? undefined,
     run_command: buildpackOptions.runCommand ?? undefined,
@@ -89,7 +74,7 @@ function buildpack({ buildpackOptions }: Builder): ApiBuildpackBuilder {
   };
 }
 
-function dockerfile({ dockerfileOptions }: Builder): ApiDockerBuilder {
+function dockerfile({ dockerfileOptions }: Builder): Api.DockerBuilder {
   return {
     dockerfile: dockerfileOptions.dockerfile ?? undefined,
     entrypoint: dockerfileOptions.entrypoint ?? undefined,
@@ -100,7 +85,7 @@ function dockerfile({ dockerfileOptions }: Builder): ApiDockerBuilder {
   };
 }
 
-function docker(docker: DockerSource, options: DockerDeploymentOptions): ApiDockerSource {
+function docker(docker: DockerSource, options: DockerDeploymentOptions): Api.DockerSource {
   return {
     image: docker.image,
     command: options.command ?? undefined,
@@ -111,14 +96,14 @@ function docker(docker: DockerSource, options: DockerDeploymentOptions): ApiDock
   };
 }
 
-function scalings(scaling: Scaling): Array<ApiDeploymentScaling> {
+function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
   if (scaling.min === scaling.max) {
     return [{ min: scaling.min, max: scaling.max }];
   }
 
-  const targets = new Array<ApiDeploymentScalingTarget>();
+  const targets = new Array<Api.DeploymentScalingTarget>();
 
-  const keyMap: Record<keyof Scaling['targets'], keyof ApiDeploymentScalingTarget> = {
+  const keyMap: Record<keyof Scaling['targets'], keyof Api.DeploymentScalingTarget> = {
     cpu: 'average_cpu',
     memory: 'average_mem',
     requests: 'requests_per_second',
@@ -147,14 +132,14 @@ function scalings(scaling: Scaling): Array<ApiDeploymentScaling> {
   ];
 }
 
-function env(variables: Array<EnvironmentVariable>): Array<ApiDeploymentEnv> {
+function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
   return variables.map((variable) => ({
     key: variable.name,
     value: variable.value,
   }));
 }
 
-function ports(ports: Array<Port>): Array<ApiPort> {
+function ports(ports: Array<Port>): Array<Api.Port> {
   return ports.map(({ portNumber, protocol, public: isPublic }: Port) => {
     return {
       port: Number(portNumber),
@@ -163,9 +148,9 @@ function ports(ports: Array<Port>): Array<ApiPort> {
   });
 }
 
-function routes(ports: Array<Port>): Array<ApiRoute> {
+function routes(ports: Array<Port>): Array<Api.Route> {
   return ports
-    .map((port): ApiRoute | undefined => {
+    .map((port): Api.Route | undefined => {
       if (!port.public) {
         return;
       }
@@ -175,19 +160,19 @@ function routes(ports: Array<Port>): Array<ApiRoute> {
         path: port.path,
       };
     })
-    .filter((value): value is ApiRoute => value !== undefined);
+    .filter((value): value is Api.Route => value !== undefined);
 }
 
-function healthChecks(ports: Array<Port>): Array<ApiDeploymentHealthCheck> {
-  return ports.map((port): ApiDeploymentHealthCheck => {
+function healthChecks(ports: Array<Port>): Array<Api.DeploymentHealthCheck> {
+  return ports.map((port): Api.DeploymentHealthCheck => {
     const portNumber = Number(port.portNumber);
     const healthCheck = port.healthCheck;
 
-    const tcp = (): ApiTcpHealthCheck => ({
+    const tcp = (): Api.TcpHealthCheck => ({
       port: portNumber,
     });
 
-    const http = (): ApiHttpHealthCheck => ({
+    const http = (): Api.HttpHealthCheck => ({
       port: portNumber,
       path: healthCheck.path,
       method: healthCheck.method.toUpperCase(),

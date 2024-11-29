@@ -1,5 +1,5 @@
 import { api } from 'src/api/api';
-import { ApiDeploymentDefinition, ApiDeploymentStatus } from 'src/api/api-types';
+import type { Api } from 'src/api/api-types';
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { App, AppDomain, Deployment, DeploymentStatus, Port, Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
@@ -81,7 +81,7 @@ export function hasBuild(deployment?: Deployment) {
 
 export async function updateDatabaseService(
   serviceId: string,
-  updater: (deployment: ApiDeploymentDefinition) => void,
+  updater: (deployment: Api.DeploymentDefinition) => void,
 ) {
   const token = getToken();
 
@@ -99,7 +99,7 @@ export async function updateDatabaseService(
   });
 }
 
-export const allApiDeploymentStatuses: Array<ApiDeploymentStatus> = [
+export const allApiDeploymentStatuses: Array<Api.DeploymentStatus> = [
   'PENDING',
   'PROVISIONING',
   'SCHEDULED',

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ApiDeploymentDefinition, ApiPersistentVolume } from 'src/api/api-types';
+import type { Api } from 'src/api/api-types';
 
 import { HealthCheck } from '../service-form.types';
 
@@ -8,7 +8,7 @@ import { deploymentDefinitionToServiceForm } from './deployment-to-service-form'
 
 describe('deploymentDefinitionToServiceForm', () => {
   it('fixed scaling', () => {
-    const definition: ApiDeploymentDefinition = {
+    const definition: Api.DeploymentDefinition = {
       scalings: [{ min: 1, max: 1 }],
     };
 
@@ -17,7 +17,7 @@ describe('deploymentDefinitionToServiceForm', () => {
   });
 
   it('autoscaling', () => {
-    const definition: ApiDeploymentDefinition = {
+    const definition: Api.DeploymentDefinition = {
       scalings: [
         {
           min: 1,
@@ -38,7 +38,7 @@ describe('deploymentDefinitionToServiceForm', () => {
   });
 
   it('autoscaling min = 0 and max = 1', () => {
-    const definition: ApiDeploymentDefinition = {
+    const definition: Api.DeploymentDefinition = {
       scalings: [{ min: 0, max: 1, targets: [{ sleep_idle_delay: { value: 1 } }] }],
     };
 
@@ -53,11 +53,11 @@ describe('deploymentDefinitionToServiceForm', () => {
   });
 
   it('volumes mapping', () => {
-    const definition: ApiDeploymentDefinition = {
+    const definition: Api.DeploymentDefinition = {
       volumes: [{ id: 'volumeId', path: '/path' }],
     };
 
-    const volumes: ApiPersistentVolume[] = [{ id: 'volumeId', name: 'volume-name', cur_size: 10 }];
+    const volumes: Api.PersistentVolume[] = [{ id: 'volumeId', name: 'volume-name', cur_size: 10 }];
 
     expect(deploymentDefinitionToServiceForm(definition, undefined, volumes)).toHaveProperty('volumes', [
       {
@@ -70,7 +70,7 @@ describe('deploymentDefinitionToServiceForm', () => {
   });
 
   it('port health check', () => {
-    const definition: ApiDeploymentDefinition = {
+    const definition: Api.DeploymentDefinition = {
       type: 'WEB',
       ports: [{ port: 1 }],
       health_checks: [
@@ -95,7 +95,7 @@ describe('deploymentDefinitionToServiceForm', () => {
   });
 
   it('default health checks', () => {
-    const definition: ApiDeploymentDefinition = {
+    const definition: Api.DeploymentDefinition = {
       type: 'WEB',
       ports: [{ port: 1 }],
       health_checks: [],

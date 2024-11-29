@@ -1,7 +1,7 @@
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
-import { ApiSecret } from '../api-types';
+import type { Api } from '../api-types';
 import { RegistryType, Secret } from '../model';
 
 export function mapSecretsList({ secrets }: ApiEndpointResult<'listSecrets'>): Secret[] {
@@ -15,7 +15,7 @@ export function mapSecretsList({ secrets }: ApiEndpointResult<'listSecrets'>): S
   }));
 }
 
-function getRegistryType(secret: ApiSecret): RegistryType | undefined {
+function getRegistryType(secret: Api.Secret): RegistryType | undefined {
   if ('docker_hub_registry' in secret) return 'docker-hub';
   if ('digital_ocean_registry' in secret) return 'digital-ocean';
   if ('github_registry' in secret) return 'github';

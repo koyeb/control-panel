@@ -1,7 +1,7 @@
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
-import { ApiApp, ApiService } from '../api-types';
+import type { Api } from '../api-types';
 import { App, Service, ServiceType } from '../model';
 
 export function mapApps({ apps }: ApiEndpointResult<'listApps'>): App[] {
@@ -20,7 +20,7 @@ export function mapService({ service }: ApiEndpointResult<'getService'>): Servic
   return transformService(service!);
 }
 
-function transformApp(app: ApiApp) {
+function transformApp(app: Api.App) {
   return {
     id: app.id!,
     name: app.name!,
@@ -33,7 +33,7 @@ function transformApp(app: ApiApp) {
   };
 }
 
-function transformService(service: ApiService): Service {
+function transformService(service: Api.Service): Service {
   return {
     id: service.id!,
     appId: service.app_id!,

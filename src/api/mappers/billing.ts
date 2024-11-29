@@ -3,7 +3,7 @@ import { sub } from 'date-fns';
 import { isDefined } from 'src/utils/generic';
 
 import { ApiEndpointResult } from '../api';
-import { ApiNextInvoiceLine } from '../api-types';
+import type { Api } from '../api-types';
 import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from '../model';
 
 export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscription'>): Subscription {
@@ -50,7 +50,7 @@ export function mapInvoice({ lines, stripe_invoice }: ApiEndpointResult<'getNext
   return invoice;
 }
 
-function getLines(lines: ApiNextInvoiceLine[]): InvoiceLine[] {
+function getLines(lines: Api.NextInvoiceLine[]): InvoiceLine[] {
   return lines
     .map(transformLine)
     .filter(isDefined)
@@ -63,7 +63,7 @@ function getLines(lines: ApiNextInvoiceLine[]): InvoiceLine[] {
     });
 }
 
-function transformLine(line: ApiNextInvoiceLine): InvoiceLine | undefined {
+function transformLine(line: Api.NextInvoiceLine): InvoiceLine | undefined {
   if (line.plan_nickname === 'Starter') {
     return;
   }
@@ -86,9 +86,9 @@ function transformLine(line: ApiNextInvoiceLine): InvoiceLine | undefined {
 }
 
 function groupLinesByPeriod(
-  lines: ApiNextInvoiceLine[],
-): Array<{ start: string; end: string; lines: ApiNextInvoiceLine[] }> {
-  const periods = new Map<string, { start: string; end: string; lines: ApiNextInvoiceLine[] }>();
+  lines: Api.NextInvoiceLine[],
+): Array<{ start: string; end: string; lines: Api.NextInvoiceLine[] }> {
+  const periods = new Map<string, { start: string; end: string; lines: Api.NextInvoiceLine[] }>();
 
   for (const line of lines) {
     const { start, end } = line.period as { start: string; end: string };

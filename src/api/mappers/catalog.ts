@@ -2,7 +2,7 @@ import { parseBytes } from 'src/application/memory';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
-import { ApiCatalogInstance } from '../api-types';
+import type { Api } from '../api-types';
 import {
   CatalogDatacenter,
   CatalogInstance,
@@ -39,7 +39,7 @@ export function mapCatalogInstancesList({
   return instances!.map(mapCatalogInstance).sort((a, b) => (a.vram ?? 0) - (b.vram ?? 0));
 }
 
-export function mapCatalogInstance(instance: ApiCatalogInstance): CatalogInstance {
+export function mapCatalogInstance(instance: Api.CatalogInstance): CatalogInstance {
   return {
     identifier: instance.id!,
     displayName: instance.display_name!,

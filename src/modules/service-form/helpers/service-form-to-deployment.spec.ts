@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ApiDeploymentDefinition } from 'src/api/api-types';
+import type { Api } from 'src/api/api-types';
 
 import { defaultHealthCheck, defaultServiceForm } from './initialize-service-form';
 import { serviceFormToDeploymentDefinition } from './service-form-to-deployment';
@@ -15,7 +15,7 @@ describe('serviceFormToDeploymentDefinition', () => {
     form.source.git.organizationRepository.branch = 'branch';
     form.environmentVariables = [];
 
-    expect(serviceFormToDeploymentDefinition(form)).toEqual<ApiDeploymentDefinition>({
+    expect(serviceFormToDeploymentDefinition(form)).toEqual<Api.DeploymentDefinition>({
       name: 'name',
       type: 'WEB',
       git: {

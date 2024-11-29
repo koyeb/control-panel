@@ -2,14 +2,14 @@ import { parseBytes } from 'src/application/memory';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
-import { ApiPersistentVolume, ApiSnapshot } from '../api-types';
+import type { Api } from '../api-types';
 import { Volume, VolumeSnapshot, VolumeSnapshotStatus, VolumeSnapshotType, VolumeStatus } from '../model';
 
 export function mapVolumesList({ volumes }: ApiEndpointResult<'listVolumes'>): Volume[] {
   return volumes!.map(mapVolume);
 }
 
-export function mapVolume(volume: ApiPersistentVolume): Volume {
+export function mapVolume(volume: Api.PersistentVolume): Volume {
   return {
     id: volume.id!,
     name: volume.name!,
@@ -21,11 +21,11 @@ export function mapVolume(volume: ApiPersistentVolume): Volume {
   };
 }
 
-export function mapSnapshotList(snapshots: ApiSnapshot[]): VolumeSnapshot[] {
+export function mapSnapshotList(snapshots: Api.Snapshot[]): VolumeSnapshot[] {
   return snapshots.map(mapSnapshot);
 }
 
-export function mapSnapshot(snapshot: ApiSnapshot): VolumeSnapshot {
+export function mapSnapshot(snapshot: Api.Snapshot): VolumeSnapshot {
   return {
     id: snapshot.id!,
     volumeId: snapshot.parent_volume_id!,

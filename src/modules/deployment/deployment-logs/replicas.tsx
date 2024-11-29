@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
-import { ApiMetricName } from 'src/api/api-types';
+import type { Api } from 'src/api/api-types';
 import { useInstance } from 'src/api/hooks/catalog';
 import { Instance, InstanceStatus } from 'src/api/model';
 import { CopyIconButton } from 'src/application/copy-icon-button';
@@ -231,7 +231,7 @@ const instanceStatusClasses: Record<InstanceStatus, string> = {
   sleeping: neutral,
 };
 
-const metrics: ApiMetricName[] = ['CPU_TOTAL_PERCENT', 'MEM_RSS'] as const;
+const metrics: Api.MetricName[] = ['CPU_TOTAL_PERCENT', 'MEM_RSS'] as const;
 
 function InstanceDetails({ instance }: { instance: Instance }) {
   const [graph, setGraph] = useState<'cpu' | 'memory'>('cpu');

@@ -2,7 +2,7 @@ import { Meta, StoryFn } from '@storybook/react';
 import clsx from 'clsx';
 
 import { ApiError } from 'src/api/api-errors';
-import { ApiNextInvoiceLine } from 'src/api/api-types';
+import type { Api } from 'src/api/api-types';
 import { StripeInvoice, StripeInvoiceCoupon } from 'src/api/mappers/billing';
 import { ApiMock } from 'src/api/mock/mock-api';
 import { OrganizationPlan } from 'src/api/model';
@@ -46,7 +46,7 @@ function mockApi(args: Args) {
     total_excluding_tax: 0,
   };
 
-  let lines: ApiNextInvoiceLine[] = [];
+  let lines: Api.NextInvoiceLine[] = [];
 
   if (args.plan !== 'hobby') {
     const nanoUsage = 1800;

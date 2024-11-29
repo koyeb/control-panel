@@ -1,11 +1,6 @@
 import merge from 'lodash-es/merge';
 
-import {
-  ApiDeploymentDefinition,
-  ApiDeploymentScalingTarget,
-  ApiPersistentVolume,
-  ApiPort,
-} from 'src/api/api-types';
+import { Api } from 'src/api/api-types';
 import { EnvironmentVariable, ServiceType } from 'src/api/model';
 import { assert, AssertionError } from 'src/utils/assert';
 import { hasProperty, keys } from 'src/utils/object';
@@ -27,9 +22,9 @@ import {
 import { defaultHealthCheck } from './initialize-service-form';
 
 export function deploymentDefinitionToServiceForm(
-  definition: ApiDeploymentDefinition,
+  definition: Api.DeploymentDefinition,
   githubOrganization: string | undefined,
-  apiVolumes: ApiPersistentVolume[],
+  apiVolumes: Api.PersistentVolume[],
 ): DeepPartial<ServiceForm> {
   const serviceType = (): ServiceType | undefined => {
     if (definition.type === 'WEB') return 'web';
@@ -52,7 +47,7 @@ export function deploymentDefinitionToServiceForm(
 }
 
 function source(
-  definition: ApiDeploymentDefinition,
+  definition: Api.DeploymentDefinition,
   githubOrganization: string | undefined,
 ): DeepPartial<ServiceForm['source']> | undefined {
   if (definition.archive) {
@@ -105,7 +100,7 @@ function source(
   }
 }
 
-function builder(definition: ApiDeploymentDefinition): DeepPartial<Builder> | undefined {
+function builder(definition: Api.DeploymentDefinition): DeepPartial<Builder> | undefined {
   const git = definition.git;
   const archive = definition.archive;
   const source = git ?? archive;
@@ -144,7 +139,9 @@ function builder(definition: ApiDeploymentDefinition): DeepPartial<Builder> | un
   }
 }
 
-function dockerDeployment(definition: ApiDeploymentDefinition): Partial<DockerDeploymentOptions> | undefined {
+function dockerDeployment(
+  definition: Api.DeploymentDefinition,
+): Partial<DockerDeploymentOptions> | undefined {
   const docker = definition.docker;
 
   if (!docker) {
@@ -159,10 +156,10 @@ function dockerDeployment(definition: ApiDeploymentDefinition): Partial<DockerDe
   };
 }
 
-function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
+function scaling(definition: Api.DeploymentDefinition): DeepPartial<Scaling> {
   const { min, max, targets } = definition.scalings?.[0] ?? {};
 
-  const getTarget = (name: keyof ApiDeploymentScalingTarget) => {
+  const getTarget = (name: keyof Api.DeploymentScalingTarget) => {
     return targets?.find((target) => name in target) ?? {};
   };
 
@@ -216,7 +213,7 @@ function scaling(definition: ApiDeploymentDefinition): DeepPartial<Scaling> {
 }
 
 function environmentVariables(
-  definition: ApiDeploymentDefinition,
+  definition: Api.DeploymentDefinition,
 ): Array<DeepPartial<EnvironmentVariable>> | undefined {
   return definition.env?.map((variable) => ({
     name: variable.key,
@@ -224,7 +221,7 @@ function environmentVariables(
   }));
 }
 
-function ports(definition: ApiDeploymentDefinition): Array<DeepPartial<Port>> | undefined {
+function ports(definition: Api.DeploymentDefinition): Array<DeepPartial<Port>> | undefined {
   return definition.ports?.map((port) => ({
     portNumber: port.port,
     protocol: port.protocol as PortProtocol,
@@ -234,7 +231,7 @@ function ports(definition: ApiDeploymentDefinition): Array<DeepPartial<Port>> | 
   }));
 }
 
-function healthCheck(definition: ApiDeploymentDefinition, port: ApiPort): HealthCheck {
+function healthCheck(definition: Api.DeploymentDefinition, port: Api.Port): HealthCheck {
   const healthCheck = definition.health_checks?.find(
     ({ tcp, http }) => tcp?.port === port.port || http?.port === port.port,
   );
@@ -259,8 +256,8 @@ function healthCheck(definition: ApiDeploymentDefinition, port: ApiPort): Health
 }
 
 function volumes(
-  definition: ApiDeploymentDefinition,
-  apiVolumes: ApiPersistentVolume[],
+  definition: Api.DeploymentDefinition,
+  apiVolumes: Api.PersistentVolume[],
 ): Array<DeepPartial<ServiceVolume>> | undefined {
   return definition.volumes?.map(({ id, path }) => {
     const volume = apiVolumes.find(hasProperty('id', id));
