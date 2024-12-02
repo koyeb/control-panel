@@ -182,38 +182,6 @@
     @apply row items-center justify-between bg-muted px-4 py-2 rounded-b-lg;
   }
 
-  .slider {
-    & input::-webkit-slider-thumb {
-      @apply appearance-none;
-      @apply size-4 rounded-full;
-      @apply border-none bg-inverted;
-      @apply cursor-pointer;
-    }
-
-    & input:not(:disabled)::-webkit-slider-thumb {
-      pointer-events: all;
-    }
-
-    & input:disabled::-webkit-slider-thumb {
-      @apply bg-inverted;
-    }
-
-    & input::-moz-range-thumb {
-      @apply appearance-none;
-      @apply size-4 rounded-full;
-      @apply border-none bg-inverted;
-      @apply cursor-pointer;
-    }
-
-    & input:not(:disabled)::-moz-range-thumb {
-      pointer-events: all;
-    }
-
-    & input:disabled::-moz-range-thumb {
-      @apply bg-inverted;
-    }
-  }
-
   table.table {
     @apply border-separate border-spacing-0;
 

@@ -145,7 +145,7 @@ export const selectBox: Story = () => {
 selectBox.decorators = [form({ field: true })];
 
 export const slider: Story = () => {
-  return <ControlledSlider name="field" min={1} max={10} step={1} marks className="max-w-sm" />;
+  return <ControlledSlider name="field" min={1} max={10} step={1} className="max-w-sm" />;
 };
 
 slider.decorators = [form({ field: 4 })];

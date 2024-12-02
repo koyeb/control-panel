@@ -14,7 +14,7 @@ const meta = {
   args: {
     className: 'max-w-sm',
     disabled: false,
-    marks: true,
+    ticks: true,
     min: 0,
     max: 8,
     step: 1,
@@ -22,18 +22,18 @@ const meta = {
   argTypes: {
     value: controls.number(),
   },
-} satisfies Meta<typeof Slider<number>>;
+} satisfies Meta<typeof Slider>;
 
 export default meta;
 
 export const Default: StoryFn = (args) => {
   const [value, setValue] = useState(2);
 
-  return <Slider {...args} value={value} onChange={setValue} />;
+  return <Slider {...args} value={[value]} onChange={([value]) => setValue(value)} />;
 };
 
 export const Range: StoryFn = (args) => {
   const [value, setValue] = useState<[number, number]>([2, 5]);
 
-  return <Slider {...args} value={value} onChange={setValue} />;
+  return <Slider {...args} value={value} onChange={([min, max]) => setValue([min, max])} />;
 };

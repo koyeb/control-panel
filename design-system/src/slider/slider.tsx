@@ -1,225 +1,151 @@
+import { useRanger } from '@tanstack/react-ranger';
 import clsx from 'clsx';
-import { forwardRef, useCallback, useRef } from 'react';
+import { forwardRef, useMemo, useRef } from 'react';
 
+import { Field, FieldHelperText, FieldLabel } from '../field/field';
+import { mergeRefs } from '../utils/merge-refs';
 import { useId } from '../utils/use-id';
 
-type SliderProps<Value extends number | [number, number]> = {
-  value?: Value;
-  onChange?: (value: Value) => void;
+type SliderProps = {
+  value?: number[];
+  onChange?: (values: number[]) => void;
   disabled?: boolean;
   label?: React.ReactNode;
-  marks?: boolean;
+  helpTooltip?: React.ReactNode;
+  helperText?: React.ReactNode;
+  invalid?: boolean;
+  error?: React.ReactNode;
   min?: number;
   max?: number;
   step?: 1;
+  tickSize?: number;
+  renderTick?: (value: number) => React.ReactNode;
   id?: string;
   className?: string;
 };
 
-export const Slider = forwardRef(function Slider<Value extends number | [number, number]>(
-  {
+export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
+  const {
     value,
     onChange,
     disabled,
     label,
-    marks,
+    helpTooltip,
+    helperText,
+    invalid,
+    error,
     min = 0,
     max = 100,
     step = 1,
+    tickSize = step,
+    renderTick,
+    id: idProp,
     className,
-    ...props
-  }: SliderProps<Value>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
-  const id = useId(props.id);
-  const isRange = Array.isArray(value);
+  } = props;
 
-  const fromRef = useRef<HTMLInputElement>(null);
-  const toRef = useRef<HTMLInputElement>(null);
+  const id = useId(idProp);
+  const helperTextId = `${id}-helper-text`;
 
-  const handleChange = useCallback(
-    (value: Value) => {
-      if (disabled) {
-        return;
-      }
+  const rangerRef = useRef<HTMLDivElement>(null);
 
-      if (typeof value === 'number' && (value < min || value > max)) {
-        return;
-      }
-
-      if (Array.isArray(value) && (value[0] < min || value[1] > max || value[0] >= value[1])) {
-        return;
-      }
-
-      onChange?.(value);
-    },
-    [disabled, onChange, min, max],
-  );
-
-  const onInput = useCallback<React.FormEventHandler<HTMLInputElement>>(
-    (event) => {
-      if (!fromRef.current || !toRef.current) {
-        return;
-      }
-
-      let fromValue = fromRef.current.valueAsNumber;
-      let toValue = toRef.current.valueAsNumber;
-
-      if (event.target === fromRef.current) {
-        fromValue = event.currentTarget.valueAsNumber;
-      }
-
-      if (event.target === toRef.current) {
-        toValue = event.currentTarget.valueAsNumber;
-      }
-
-      handleChange([fromValue, toValue] as Value);
-    },
-    [handleChange],
-  );
-
-  const onMouse = useCallback<React.MouseEventHandler>(
-    (event) => {
-      if (event.buttons === 0) {
-        return;
-      }
-
-      const rect = event.currentTarget.getBoundingClientRect();
-      const percent = (event.clientX - rect.x) / rect.width;
-      const val = Math.floor(percent * (max - min) + min + 0.5);
-
-      if (typeof value === 'number' && val !== value) {
-        handleChange(val as Value);
-      }
-
-      if (Array.isArray(value)) {
-        const fromDist = Math.abs(value[0] - val);
-        const toDist = Math.abs(value[1] - val);
-
-        if (fromDist < toDist && val !== value[0]) {
-          handleChange([val, value[1]] as Value);
-        }
-
-        if (fromDist > toDist && val !== value[1]) {
-          handleChange([value[0], val] as Value);
-        }
-      }
-    },
-    [min, max, value, handleChange],
-  );
+  const ranger = useRanger({
+    getRangerElement: () => rangerRef.current,
+    values: value ?? [],
+    min,
+    max,
+    stepSize: step,
+    tickSize,
+    onDrag: ({ sortedValues }) => onChange?.([...sortedValues]),
+  });
 
   return (
-    <div className={clsx('slider focusable-within rounded outline-offset-4', className)}>
-      {label && (
-        <label htmlFor={id} className="mb-2 inline-block">
+    <Field
+      label={
+        <FieldLabel htmlFor={id} helpTooltip={helpTooltip}>
           {label}
-        </label>
-      )}
+        </FieldLabel>
+      }
+      helperText={
+        <FieldHelperText id={helperTextId} invalid={invalid}>
+          {error ?? helperText}
+        </FieldHelperText>
+      }
+      className={className}
+    >
+      <div
+        ref={mergeRefs(ref, rangerRef)}
+        id={id}
+        className={clsx('relative h-2 w-full rounded-full bg-inverted/10', {
+          'cursor-pointer': !disabled,
+          'opacity-50 pointer-events-none': disabled,
+        })}
+      >
+        <Connector steps={ranger.getSteps()} />
 
-      {!isRange && (
-        <div
-          className={clsx(
-            'relative box-content h-2 py-2',
-            !disabled && 'cursor-pointer',
-            disabled && 'opacity-50',
-          )}
-          onMouseDown={onMouse}
-          onMouseMove={onMouse}
-        >
-          {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-          <div className="absolute h-[inherit] w-full rounded-full bg-inverted/10" />
-
-          <input
-            ref={ref}
-            id={id}
-            type="range"
-            disabled={disabled}
-            min={min}
-            max={max}
-            step={step}
-            value={Number.isNaN(value) ? min : value}
-            onChange={(event) => onChange?.(event.target.valueAsNumber as Value)}
-            className="group pointer-events-none absolute m-0 h-2 w-full appearance-none bg-transparent outline-none"
+        {ranger.handles().map((handle, i) => (
+          <button
+            key={i}
+            type="button"
+            role="slider"
+            tabIndex={-1}
+            onClick={(event) => event.stopPropagation()}
+            onKeyDown={handle.onKeyDownHandler}
+            onMouseDown={handle.onMouseDownHandler}
+            onTouchStart={handle.onTouchStart}
+            aria-valuemin={ranger.options.min}
+            aria-valuemax={ranger.options.max}
+            aria-valuenow={handle.value}
+            className="absolute top-1/2 size-4 -translate-x-1/2 -translate-y-1/2 rounded-full bg-inverted"
+            style={{ left: `${ranger.getPercentageForValue(handle.value)}%` }}
           />
-        </div>
-      )}
+        ))}
+      </div>
 
-      {isRange && (
-        <div
-          id={id}
-          className={clsx(
-            'relative box-content h-2 py-2',
-            !disabled && 'cursor-pointer',
-            disabled && 'opacity-50',
-          )}
-          onMouseDown={onMouse}
-          onMouseMove={onMouse}
-        >
-          {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-          <div className="absolute h-[inherit] w-full rounded-full bg-inverted/10">
-            <div className="relative h-full bg-inverted/50" style={connector(min, max, value)} />
-          </div>
-
-          <input
-            ref={fromRef}
-            type="range"
-            disabled={disabled}
-            min={min}
-            max={max}
-            step={step}
-            value={Number.isNaN(value[0]) ? min : value[0]}
-            onInput={onInput}
-            // eslint-disable-next-line tailwindcss/no-arbitrary-value
-            className="pointer-events-none absolute top-3 z-[1] m-0 h-0 w-full appearance-none bg-transparent outline-none"
-          />
-
-          <input
-            ref={toRef}
-            type="range"
-            disabled={disabled}
-            min={min}
-            max={max}
-            step={step}
-            value={Number.isNaN(value[1]) ? max : value[1]}
-            onInput={onInput}
-            className="pointer-events-none absolute m-0 h-2 w-full appearance-none bg-transparent outline-none"
-          />
-        </div>
-      )}
-
-      {marks && <Marks disabled={disabled} min={min} max={max} step={step} />}
-    </div>
+      {renderTick && <Ticks ticks={ranger.getTicks()} renderTick={renderTick} />}
+    </Field>
   );
 });
 
-function connector(min: number, max: number, [from, to]: [number, number]) {
-  const left = 100 * ((from - min) / (max - min));
-  const right = 100 * ((to - min) / (max - min));
+type ConnectorProps = {
+  steps: Array<{ left: number; width: number }>;
+};
 
-  return {
-    left: `${left}%`,
-    width: `${right - left}%`,
-  };
+function Connector({ steps }: ConnectorProps) {
+  const step = useMemo(() => {
+    if (steps.length === 2) {
+      return steps[0];
+    }
+
+    if (steps.length === 3) {
+      return steps[1];
+    }
+  }, [steps]);
+
+  if (step === undefined) {
+    return;
+  }
+
+  return (
+    <div
+      className="absolute top-1/2 h-full -translate-y-1/2 rounded-full bg-inverted/50"
+      style={{ left: `${step.left}%`, width: `${step.width}%` }}
+    />
+  );
 }
 
 type MarksProps = {
-  disabled?: boolean;
-  min: number;
-  max: number;
-  step: number;
+  ticks: Array<{ key: number; value: number; percentage: number }>;
+  renderTick: (value: number) => React.ReactNode;
 };
 
-function Marks({ disabled, min, max, step }: MarksProps) {
+function Ticks({ ticks, renderTick }: MarksProps) {
   return (
-    <div className={clsx('row justify-between text-xs font-semibold', disabled && 'text-dim')}>
-      {Array(Math.floor((max - min + 1) / step))
-        .fill(null)
-        .map((_, index) => index + min)
-        .map((index) => (
-          <span key={index} className="w-4 text-center">
-            {index}
-          </span>
-        ))}
+    <div className="relative mt-0.5 h-4 w-full">
+      {ticks.map(({ key, value, percentage }) => (
+        <span key={key} className="absolute -translate-x-1/2" style={{ left: `${percentage}%` }}>
+          {renderTick(value)}
+        </span>
+      ))}
     </div>
   );
 }
