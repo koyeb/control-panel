@@ -25,6 +25,7 @@ export default defineConfig({
         '@tanstack/react-ranger',
         'clsx',
         'downshift',
+        'framer-motion',
         'react',
         'react/jsx-runtime',
         'react-dom',
