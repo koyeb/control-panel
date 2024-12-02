@@ -78,7 +78,7 @@ type InputBoxProps = InputBoxOwnProps &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof InputBoxOwnProps>;
 
 export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(function InputBox(
-  { boxRef, boxClassName, size = 2, placeholder, value, start, end, id, className, ...props },
+  { boxRef, boxClassName, size = 2, placeholder, value, min, max, step, start, end, id, className, ...props },
   ref,
 ) {
   return (
@@ -110,6 +110,9 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(function Inp
           className,
         )}
         value={Number.isNaN(value) ? '' : value}
+        min={Number.isNaN(min) ? undefined : min}
+        max={Number.isNaN(max) ? undefined : max}
+        step={Number.isNaN(step) ? undefined : step}
         placeholder={placeholder}
         {...props}
       />
