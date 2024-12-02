@@ -1108,6 +1108,8 @@
       "autoscalingDescription": "Automatically adjusted number of instances in the region depending on the load",
       "scalingLabel": "Number of instances per region",
       "autoscalingSettings": {
+        "description": "Keep one or more instances running to prevent your service from going idle. To maintain a fixed number of instances in a region, set both the minimum and maximum instances per region to the same value.",
+        "enableAutoscaling": "To enable autoscaling and set scaling criteria, the maximum instances per region must be greater than one",
         "min": "Min",
         "max": "Max",
         "maxIsOneWhenMinIsZero": "Max must be 1 when min is 0",

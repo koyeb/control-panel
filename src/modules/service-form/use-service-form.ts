@@ -151,6 +151,16 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
         scaling.max = 1;
       }
 
+      if (scaling.min > scaling.max) {
+        if (name === 'scaling.min') {
+          scaling.max = scaling.min;
+        }
+
+        if (name === 'scaling.max') {
+          scaling.min = scaling.max;
+        }
+      }
+
       if (!scaleToZeroIdleDelay) {
         if (scaling.min === 0 && !scaling.targets.sleepIdleDelay.enabled) {
           scaling.targets.sleepIdleDelay = { enabled: true, value: 300 };
