@@ -6,8 +6,10 @@ import { FieldPath, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { useTranslate } from 'src/intl/translate';
+import { trackChanges } from 'src/utils/object';
 
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
@@ -111,7 +113,7 @@ function useTriggerValidationOnChange({ watch, trigger, formState }: UseFormRetu
   }, [watch, trigger, submitCount]);
 }
 
-const targets: Array<keyof Scaling['targets']> = [
+const scaleAboveZeroTargets: Array<keyof Scaling['targets']> = [
   'cpu',
   'memory',
   'requests',
@@ -120,29 +122,60 @@ const targets: Array<keyof Scaling['targets']> = [
 ];
 
 function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
+  const scaleToZero = useFeatureFlag('scale-to-zero');
+  const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
+  const scaleToZeroWithAutoscaling = useFeatureFlag('allow-scale-to-zero-with-autoscaling');
+
   useEffect(() => {
-    const subscription = watch((values, { type, name }) => {
+    const subscription = watch((formValues, { type, name }) => {
       if (type !== 'change' || name === undefined) {
         return;
       }
 
-      const { serviceType, scaling } = values as ServiceForm;
-      const { min, max } = scaling;
+      const values = trackChanges(formValues as ServiceForm, (key, value) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setValue(key as any, value as any, { shouldValidate: true });
+      });
 
-      if (serviceType === 'worker' && min === 0) {
-        setValue('scaling.min', 1);
+      const { serviceType, scaling } = values;
+
+      if (scaling.min === 0 && !scaleToZero) {
+        scaling.min = 1;
       }
 
-      if (min === max || max === 1) {
-        for (const target of targets) {
-          setValue(`scaling.targets.${target}.enabled`, false, { shouldValidate: true });
+      if (scaling.min === 0 && serviceType !== 'web') {
+        scaling.min = 1;
+      }
+
+      if (scaling.min === 0 && scaling.max !== 1 && !scaleToZeroWithAutoscaling) {
+        scaling.max = 1;
+      }
+
+      if (!scaleToZeroIdleDelay) {
+        if (scaling.min === 0 && !scaling.targets.sleepIdleDelay.enabled) {
+          scaling.targets.sleepIdleDelay = { enabled: true, value: 300 };
         }
+
+        if (scaling.min > 0 && scaling.targets.sleepIdleDelay.enabled) {
+          scaling.targets.sleepIdleDelay.enabled = false;
+        }
+
+        void trigger('scaling');
+      }
+
+      if (scaling.min === scaling.max || scaling.max === 1) {
+        scaleAboveZeroTargets.forEach((target) => {
+          scaling.targets[target].enabled = false;
+        });
+
+        void trigger('scaling');
       } else if (!name.startsWith('scaling.targets')) {
-        const hasEnabledTarget = targets.some((target) => scaling.targets[target].enabled);
-        const target: keyof Scaling['targets'] = serviceType === 'worker' ? 'cpu' : 'requests';
+        const hasEnabledTarget = scaleAboveZeroTargets.some((target) => scaling.targets[target].enabled);
 
         if (!hasEnabledTarget) {
-          setValue(`scaling.targets.${target}.enabled`, true, { shouldValidate: true });
+          const target: keyof Scaling['targets'] = serviceType === 'worker' ? 'cpu' : 'requests';
+
+          scaling.targets[target].enabled = true;
           void trigger('scaling');
         }
       }
@@ -151,5 +184,5 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
     return () => {
       subscription.unsubscribe();
     };
-  }, [watch, setValue, trigger]);
+  }, [scaleToZero, scaleToZeroIdleDelay, scaleToZeroWithAutoscaling, watch, setValue, trigger]);
 }

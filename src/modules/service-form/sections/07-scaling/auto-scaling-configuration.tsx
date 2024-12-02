@@ -36,12 +36,6 @@ export function AutoScalingConfiguration() {
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
   const scaleToZeroWithAutoscaling = useFeatureFlag('allow-scale-to-zero-with-autoscaling');
 
-  const onChangeEffect = (min: number, max: number) => {
-    if (min === 0 && max !== 1 && !scaleToZeroWithAutoscaling) {
-      setValue('scaling.max', 1, { shouldValidate: true });
-    }
-  };
-
   const setScalingValue = (field: 'min' | 'max') => {
     return (value: number) => setValue(`scaling.${field}`, value, { shouldValidate: true });
   };
@@ -58,7 +52,6 @@ export function AutoScalingConfiguration() {
           min={scaleToZero && serviceType === 'web' ? 0 : 1}
           max={scaling.max}
           step={1}
-          onChangeEffect={(event) => onChangeEffect(event.target.valueAsNumber, scaling.max)}
           onBlur={(event) => handleScalingValueBlurred(event, setScalingValue('min'))}
           className="w-24"
         />
@@ -74,14 +67,13 @@ export function AutoScalingConfiguration() {
           min={Math.max(scaling.min, 1)}
           max={20}
           step={1}
-          onChangeEffect={(event) => onChangeEffect(scaling.min, event.target.valueAsNumber)}
           onBlur={(event) => handleScalingValueBlurred(event, setScalingValue('max'))}
           className="w-24"
         />
       </div>
 
       {scaleToZeroIdleDelay && scaling.min === 0 && (
-        <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={1} max={1e9} />
+        <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={60} max={60 * 60} />
       )}
 
       <ScalingTarget target="requests" Icon={IconTimer} min={1} max={1e9} />
