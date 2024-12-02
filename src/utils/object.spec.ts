@@ -1,7 +1,7 @@
-import { describe, expect, expectTypeOf, it } from 'vitest';
+import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 
 import { identity } from './generic';
-import { entries, keys, toObject } from './object';
+import { entries, keys, toObject, trackChanges } from './object';
 
 describe('object', () => {
   describe('keys', () => {
@@ -55,6 +55,34 @@ describe('object', () => {
       expectTypeOf(toObject(['foo', 'bar'] as const, identity, () => 1 as const)).toEqualTypeOf<
         Record<'foo' | 'bar', 1>
       >();
+    });
+  });
+
+  describe('trackChanges', () => {
+    it('track changes on an object', () => {
+      const onChange = vi.fn();
+      const proxy = trackChanges<{ foo: number; bar: number; baz?: number }>({ foo: 1, bar: 2 }, onChange);
+
+      proxy.foo = 3;
+      proxy.baz = 4;
+
+      expect(proxy).toEqual({ foo: 3, bar: 2, baz: 4 });
+
+      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenCalledWith('foo', 3);
+      expect(onChange).toHaveBeenCalledWith('baz', 4);
+    });
+
+    it('track changes on sub properties', () => {
+      const onChange = vi.fn();
+      const proxy = trackChanges<{ foo: { bar: number } }>({ foo: { bar: 1 } }, onChange);
+
+      proxy.foo.bar = 2;
+
+      expect(proxy).toEqual({ foo: { bar: 2 } });
+
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith('foo.bar', 2);
     });
   });
 });

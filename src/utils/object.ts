@@ -30,3 +30,22 @@ export function toObject<T, K extends PropertyKey, V>(
     {} as Record<K, V>,
   );
 }
+
+export function trackChanges<T extends object>(object: T, onChange: (path: string, value: unknown) => void) {
+  return new Proxy(object, {
+    get(target, property) {
+      const value = target[property as keyof T];
+
+      if (typeof value === 'object' && value !== null) {
+        return trackChanges(value, (key, value) => onChange(`${String(property)}.${key}`, value));
+      } else {
+        return value;
+      }
+    },
+    set(target, property, value, receiver) {
+      onChange(String(property), value);
+
+      return Reflect.set(target, property, value, receiver);
+    },
+  });
+}
