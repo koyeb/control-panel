@@ -9,6 +9,7 @@ import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { LinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
+import { wait } from 'src/utils/promises';
 
 import { defaultServiceForm } from '../helpers/initialize-service-form';
 import { serviceFormToDeploymentDefinition } from '../helpers/service-form-to-deployment';
@@ -30,7 +31,11 @@ export function QuotaAlert(props: QuotaAlertProps) {
     placeholderData: keepPreviousData,
     queryKey: [serviceId ? 'updateService' : 'createService', { serviceId, dryRun: true }, values],
     refetchInterval: false,
-    async queryFn() {
+    async queryFn({ signal }) {
+      if (!(await wait(500, signal))) {
+        return null;
+      }
+
       const definition = serviceFormToDeploymentDefinition(values);
 
       try {
