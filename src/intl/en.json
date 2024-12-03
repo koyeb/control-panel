@@ -1150,6 +1150,10 @@
       "title": "{count, plural, =0 {No variables} =1 {{count} variable} other {{count} variables}} configured",
       "description": "Environment variables",
       "expandedTitle": "Edit environment variables",
+      "tabs": {
+        "environmentVariables": "Environment variables",
+        "files": "Files"
+      },
       "info": "Configure manually or drag and drop file with multiple variables",
       "nameLabel": "Name",
       "valueLabel": "Value",
