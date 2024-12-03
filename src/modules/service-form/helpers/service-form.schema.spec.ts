@@ -98,6 +98,14 @@ describe('serviceFormSchema', () => {
     ]);
   });
 
+  it('removes empty file mounts', () => {
+    const form = createServiceForm();
+
+    form.fileMounts = [{ mountPath: '', content: '', permissions: '' }];
+
+    expect(parse(form)).toHaveProperty('fileMounts', []);
+  });
+
   it('ports', () => {
     const form = createServiceForm();
 

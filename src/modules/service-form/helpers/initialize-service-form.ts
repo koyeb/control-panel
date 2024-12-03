@@ -235,6 +235,13 @@ export function defaultServiceForm(): ServiceForm {
         value: '',
       },
     ],
+    fileMounts: [
+      {
+        mountPath: '',
+        permissions: '',
+        content: '',
+      },
+    ],
     scaling: {
       min: 1,
       max: 1,

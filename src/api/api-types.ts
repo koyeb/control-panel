@@ -12,14 +12,15 @@ export namespace Api {
   export type CatalogInstance = schemas['CatalogInstance'];
   export type CatalogRegion = schemas['Region'];
   export type Deployment = schemas['Deployment'];
-  export type DeploymentStatus = schemas['Deployment.Status'];
   export type DeploymentDefinition = schemas['DeploymentDefinition'];
   export type DeploymentEnv = schemas['DeploymentEnv'];
+  export type DeploymentFileMount = schemas['DeploymentFileMount'];
   export type DeploymentHealthCheck = schemas['DeploymentHealthCheck'];
   export type DeploymentNeonPostgresDatabaseInfo = schemas['DeploymentNeonPostgresDatabaseInfo'];
   export type DeploymentScaling = schemas['DeploymentScaling'];
   export type DeploymentScalingTarget = schemas['DeploymentScalingTarget'];
   export type DeploymentStage = schemas['DeploymentProvisioningInfo.Stage'];
+  export type DeploymentStatus = schemas['Deployment.Status'];
   export type DockerBuilder = schemas['DockerBuilder'];
   export type DockerSource = schemas['DockerSource'];
   export type Domain = schemas['Domain'];

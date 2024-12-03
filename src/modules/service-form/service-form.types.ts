@@ -23,6 +23,7 @@ export type ServiceForm = {
   builder: Builder;
   dockerDeployment: DockerDeploymentOptions;
   environmentVariables: EnvironmentVariable[];
+  fileMounts: FileMount[];
   regions: string[];
   instance: string | null;
   scaling: Scaling;
@@ -104,6 +105,12 @@ export type DockerDeploymentOptions = {
   command: string | null;
   args: string[] | null;
   privileged: boolean;
+};
+
+export type FileMount = {
+  mountPath: string;
+  permissions: string;
+  content: string;
 };
 
 export type Scaling = {
