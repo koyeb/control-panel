@@ -3133,6 +3133,7 @@ export interface components {
             instance_types?: components["schemas"]["DeploymentInstanceType"][];
             health_checks?: components["schemas"]["DeploymentHealthCheck"][];
             volumes?: components["schemas"]["DeploymentVolume"][];
+            file_mounts?: components["schemas"]["DeploymentFileMount"][];
             skip_cache?: boolean;
             docker?: components["schemas"]["DockerSource"];
             git?: components["schemas"]["GitSource"];
@@ -3149,6 +3150,16 @@ export interface components {
             key?: string;
             value?: string;
             secret?: string;
+        };
+        DeploymentFileMount: {
+            /** the path where the file is mounted to */
+            path?: string;
+            /** the content of the file */
+            permissions?: string;
+            /** interpolation_enabled is a flag to enable/disable interpolation in the file content */
+            interpolation_enabled?: boolean;
+            secret?: components["schemas"]["SecretSource"];
+            raw?: components["schemas"]["RawSource"];
         };
         DeploymentHealthCheck: {
             /**
@@ -3309,7 +3320,12 @@ export interface components {
             quantile?: number;
         };
         DeploymentScalingTargetSleepIdleDelay: {
-            /** Format: int64 */
+            /**
+             * Format: int64
+             * @description Delay in seconds after which a service which received 0 request is scaled to 0.
+             *     This is not configurable and must be set to 300 (5 minutes). Get in touch to
+             *     tune it.
+             */
             value?: number;
         };
         DeploymentStrategy: {
@@ -3469,6 +3485,10 @@ export interface components {
             reset_role_passwords?: string[];
         };
         PauseServiceReply: Record<string, never>;
+        RawSource: {
+            /** the content of the file */
+            content?: string;
+        };
         RedeployReply: {
             deployment?: components["schemas"]["Deployment"];
         };
@@ -3481,6 +3501,10 @@ export interface components {
             skip_build?: boolean;
         };
         ResumeServiceReply: Record<string, never>;
+        SecretSource: {
+            /** the id of the secret */
+            name?: string;
+        };
         Service: {
             id?: string;
             /** Format: date-time */
@@ -4150,6 +4174,7 @@ export interface components {
             deployment_group?: string;
             health_checks?: components["schemas"]["DeploymentHealthCheck"][];
             volumes?: components["schemas"]["RegionalDeploymentVolume"][];
+            file_mounts?: components["schemas"]["RegionalDeploymentFileMount"][];
             skip_cache?: boolean;
             docker?: components["schemas"]["DockerSource"];
             git?: components["schemas"]["GitSource"];
@@ -4170,6 +4195,15 @@ export interface components {
             message?: string;
             metadata?: Record<string, never>;
         };
+        RegionalDeploymentFileMount: {
+            /** the path where the file is mounted to */
+            path?: string;
+            /** the content of the file */
+            permissions?: string;
+            interpolation_enabled?: boolean;
+            secret?: components["schemas"]["RegionalDeploymentSecretSource"];
+            raw?: components["schemas"]["RegionalDeploymentRawSource"];
+        };
         RegionalDeploymentListItem: {
             id?: string;
             /** Format: date-time */
@@ -4182,6 +4216,14 @@ export interface components {
             definition?: components["schemas"]["RegionalDeploymentDefinition"];
         };
         RegionalDeploymentMetadata: Record<string, never>;
+        RegionalDeploymentRawSource: {
+            /** the content of the file */
+            content?: string;
+        };
+        RegionalDeploymentSecretSource: {
+            /** the id of the secret */
+            name?: string;
+        };
         RegionalDeploymentVolume: {
             /** the id of the volume */
             id?: string;
