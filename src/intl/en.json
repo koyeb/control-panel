@@ -1185,7 +1185,8 @@
         "remove": "Remove",
         "editContentDialog": {
           "title": "Edit file content",
-          "description": "File mounted at <strong>{mountPath}</strong>"
+          "description": "File mounted at <strong>{mountPath}</strong>",
+          "fileTooLarge": "File too large"
         }
       }
     },

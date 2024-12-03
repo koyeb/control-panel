@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Dialog, TextArea, Button } from '@koyeb/design-system';
+import { notify } from 'src/application/notify';
+import { readFile } from 'src/application/read-file';
+import { FileDropZone } from 'src/components/file-drop-zone';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -14,6 +17,7 @@ type EditFileContentDialogProps = {
 };
 
 export function EditFileContentDialog({ index, onClose }: EditFileContentDialogProps) {
+  const t = T.useTranslate();
   const form = useFormContext<ServiceForm>();
   const [text, setText] = useState('');
 
@@ -22,6 +26,15 @@ export function EditFileContentDialog({ index, onClose }: EditFileContentDialogP
       setText(form.getValues().fileMounts[index]?.content ?? '');
     }
   }, [index, form]);
+
+  const onFileDropped = async (file: File) => {
+    if (file.size > 4096) {
+      notify.error(t('fileTooLarge'));
+      return;
+    }
+
+    readFile(file).then(({ content }) => setText(content), notify.error);
+  };
 
   return (
     <Dialog
@@ -33,12 +46,14 @@ export function EditFileContentDialog({ index, onClose }: EditFileContentDialogP
       }
       width="3xl"
     >
-      <TextArea
-        name={`fileMounts.${index as number}.content`}
-        rows={12}
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-      />
+      <FileDropZone onDrop={([file]) => file && onFileDropped(file)}>
+        <TextArea
+          name={`fileMounts.${index as number}.content`}
+          rows={12}
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+        />
+      </FileDropZone>
 
       <footer className="row mt-2 justify-end gap-2">
         <Button variant="ghost" color="gray" onClick={onClose}>
