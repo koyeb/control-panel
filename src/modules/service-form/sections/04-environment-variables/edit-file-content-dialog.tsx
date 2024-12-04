@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Dialog, TextArea, Button } from '@koyeb/design-system';
+import { hasMessage } from 'src/api/api-errors';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { FileDropZone } from 'src/components/file-drop-zone';
@@ -27,13 +28,16 @@ export function EditFileContentDialog({ index, onClose }: EditFileContentDialogP
     }
   }, [index, form]);
 
-  const onFileDropped = async (file: File) => {
+  const onFileDropped = (file: File) => {
     if (file.size > 4096) {
       notify.error(t('fileTooLarge'));
       return;
     }
 
-    readFile(file).then(({ content }) => setText(content), notify.error);
+    readFile(file).then(
+      ({ content }) => setText(content),
+      (error: unknown) => hasMessage(error) && notify.error(error.message),
+    );
   };
 
   return (

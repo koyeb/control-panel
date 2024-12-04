@@ -14,6 +14,7 @@ describe('serviceFormToDeploymentDefinition', () => {
     form.source.git.organizationRepository.repositoryName = 'org/repo';
     form.source.git.organizationRepository.branch = 'branch';
     form.environmentVariables = [];
+    form.fileMounts = [];
 
     expect(serviceFormToDeploymentDefinition(form)).toEqual<Api.DeploymentDefinition>({
       name: 'name',
@@ -30,6 +31,7 @@ describe('serviceFormToDeploymentDefinition', () => {
       instance_types: [{ type: 'nano' }],
       scalings: [{ min: 1, max: 1 }],
       env: [],
+      file_mounts: [],
       ports: [
         {
           port: 8000,
