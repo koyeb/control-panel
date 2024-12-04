@@ -132,9 +132,15 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
         return;
       }
 
+      let triggerScalingValidation = false;
+
       const values = trackChanges(formValues as ServiceForm, (key, value) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setValue(key as any, value as any, { shouldValidate: true });
+
+        if (key.startsWith('scaling')) {
+          triggerScalingValidation = true;
+        }
       });
 
       const { serviceType, scaling } = values;
@@ -161,24 +167,14 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
         }
       }
 
-      if (!scaleToZeroIdleDelay) {
-        if (scaling.min === 0 && !scaling.targets.sleepIdleDelay.enabled) {
-          scaling.targets.sleepIdleDelay = { enabled: true, value: 300 };
-        }
-
-        if (scaling.min > 0 && scaling.targets.sleepIdleDelay.enabled) {
-          scaling.targets.sleepIdleDelay.enabled = false;
-        }
-
-        void trigger('scaling');
+      if (scaling.min > 0 && scaling.targets.sleepIdleDelay.enabled) {
+        scaling.targets.sleepIdleDelay.enabled = false;
       }
 
       if (scaling.min === scaling.max || scaling.max === 1) {
         scaleAboveZeroTargets.forEach((target) => {
           scaling.targets[target].enabled = false;
         });
-
-        void trigger('scaling');
       } else if (!name.startsWith('scaling.targets')) {
         const hasEnabledTarget = scaleAboveZeroTargets.some((target) => scaling.targets[target].enabled);
 
@@ -186,8 +182,11 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
           const target: keyof Scaling['targets'] = serviceType === 'worker' ? 'cpu' : 'requests';
 
           scaling.targets[target].enabled = true;
-          void trigger('scaling');
         }
+      }
+
+      if (triggerScalingValidation) {
+        void trigger('scaling');
       }
     });
 
