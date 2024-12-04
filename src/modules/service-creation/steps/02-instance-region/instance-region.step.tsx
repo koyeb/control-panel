@@ -76,13 +76,14 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
       )}
 
-      <div className="col 2xl:row gap-8">
+      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+      <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-[30rem_1fr]">
         <InstanceSelector
           instances={state.instances}
           selectedInstance={state.selectedInstance}
           checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
           onInstanceSelected={actions.instanceSelected}
-          className="max-w-lg lg:w-full"
+          className="max-w-xl"
         />
 
         <RegionsSelector

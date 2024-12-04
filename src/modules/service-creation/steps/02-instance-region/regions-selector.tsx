@@ -24,9 +24,9 @@ export function RegionsSelector({
   onRegionSelected,
 }: RegionsSelectorProps) {
   return (
-    <div className="flex-1">
+    <>
       <RegionsList
-        className="md:hidden"
+        className="2xl:hidden"
         selectedInstance={selectedInstance}
         regions={regions}
         selectedRegions={selectedRegions}
@@ -34,7 +34,7 @@ export function RegionsSelector({
       />
 
       <RegionsMap
-        className="mt-10 hidden md:block"
+        className="hidden 2xl:block"
         regions={regions}
         renderRegion={(region) => (
           <RegionItem
@@ -45,7 +45,7 @@ export function RegionsSelector({
           />
         )}
       />
-    </div>
+    </>
   );
 }
 
