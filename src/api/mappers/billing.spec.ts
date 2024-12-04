@@ -14,9 +14,11 @@ const createStripeInvoice = createFactory<StripeInvoice>(() => ({
   total_excluding_tax: 0,
 }));
 
+const date = createDate();
+
 const createStripeInvoiceLine = createFactory<Api.NextInvoiceLine>(() => ({
   amount_excluding_tax: 0,
-  period: { end: createDate(), start: createDate() },
+  period: { end: date, start: date },
   plan_nickname: '',
   price: { unit_amount_decimal: 0 },
   quantity: 0,
