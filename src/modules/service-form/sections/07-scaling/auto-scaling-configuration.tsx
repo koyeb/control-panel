@@ -42,7 +42,7 @@ export function AutoScalingConfiguration() {
       </div>
 
       {scaleToZeroIdleDelay && min === 0 && (
-        <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={60} max={60 * 60} />
+        <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={3 * 60} max={60 * 60} />
       )}
 
       <ScalingTarget target="requests" Icon={IconTimer} min={1} max={1e9} />

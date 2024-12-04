@@ -187,7 +187,7 @@ function scaling(t: TranslateErrorFunction) {
         requests: target(1, 1e9),
         concurrentRequests: target(1, 1e9),
         responseTime: target(1, 1e9),
-        sleepIdleDelay: target(1, 1e9),
+        sleepIdleDelay: target(3 * 60, 60 * 60),
       }),
     })
     .refine(({ min, max, targets }) => {
