@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
 import { useDomainsQuery } from 'src/api/hooks/domain';
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { DocumentTitle } from 'src/components/document-title';
 import { Title } from 'src/components/title';
 import { useHistoryState } from 'src/hooks/router';
@@ -21,10 +21,11 @@ export function DomainsPage() {
   const historyState = useHistoryState<{ create: boolean }>();
   const [createDialogOpen, setCreateDialogOpen] = useState(Boolean(historyState.create));
   const [expanded, setExpanded] = useState<string>();
-  const organization = useOrganization();
+  const quotas = useOrganizationQuotas();
   const { data: domains } = useDomainsQuery('custom');
+  const hasDomains = domains !== undefined && domains.length > 0;
 
-  if (organization.plan == 'hobby') {
+  if (quotas?.maxDomains === 0 && !hasDomains) {
     return <DomainsLocked />;
   }
 
@@ -35,10 +36,7 @@ export function DomainsPage() {
       <Title
         title={<T id="title" />}
         end={
-          <Button
-            className={clsx(domains && domains.length === 0 && 'hidden')}
-            onClick={() => setCreateDialogOpen(true)}
-          >
+          <Button className={clsx(!hasDomains && 'hidden')} onClick={() => setCreateDialogOpen(true)}>
             <T id="createDomain" />
           </Button>
         }
