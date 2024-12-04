@@ -8,12 +8,12 @@ import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import {
-  Scaling,
   GitSource,
   HealthCheck,
   HealthCheckProtocol,
   Port,
   PortProtocol,
+  Scaling,
   ServiceForm,
   ServiceVolume,
 } from '../service-form.types';
@@ -89,6 +89,14 @@ class ServiceFormBuilder {
   ) {}
 
   get() {
+    const max = this.values.scaling?.max;
+
+    if (max !== undefined && max > 1) {
+      const target = this.values.serviceType === 'worker' ? 'cpu' : 'requests';
+      this.set('scaling', { targets: { [target]: { enabled: true } } });
+      console.log(this.values.serviceType, target, this.values);
+    }
+
     return this.values;
   }
 
@@ -121,8 +129,6 @@ class ServiceFormBuilder {
 
     if (type === 'worker') {
       this.set('serviceType', 'worker');
-      this.set('scaling', { targets: { requests: { enabled: false } } });
-      this.set('scaling', { targets: { cpu: { enabled: true } } });
     }
   }
 

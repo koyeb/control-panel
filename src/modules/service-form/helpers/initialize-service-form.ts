@@ -246,7 +246,7 @@ export function defaultServiceForm(): ServiceForm {
       min: 1,
       max: 1,
       targets: {
-        requests: { enabled: true, value: 50 },
+        requests: { enabled: false, value: 50 },
         cpu: { enabled: false, value: 80 },
         memory: { enabled: false, value: 80 },
         concurrentRequests: { enabled: false, value: 20 },
