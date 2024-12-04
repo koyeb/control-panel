@@ -735,7 +735,7 @@
       },
       "model": {
         "title": "Create inference model service",
-        "description": "To do",
+        "description": "A dedicated endpoint on GPU ready to handle inference requests instantly, with zero configuration",
         "button": "Create service"
       },
       "deploymentSource": {

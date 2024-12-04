@@ -11,6 +11,7 @@ import {
   useInstancesQuery,
   useModel,
   useModels,
+  useModelsQuery,
   useRegion,
   useRegions,
   useRegionsQuery,
@@ -63,8 +64,9 @@ export function ModelForm(props: ModelFormProps) {
   const instances = useInstancesQuery();
   const regions = useRegionsQuery();
   const githubApp = useGithubAppQuery();
+  const models = useModelsQuery();
 
-  if (instances.isPending || regions.isPending || githubApp.isPending) {
+  if (instances.isPending || regions.isPending || githubApp.isPending || models.isPending) {
     return <Loading />;
   }
 
@@ -78,7 +80,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   const t = T.useTranslate();
 
   const form = useForm<ModelFormType>({
-    defaultValues: getInitialValues(instances, initialModel),
+    defaultValues: getInitialValues(instances, initialModel ?? defined(models[0])),
     resolver: useZodResolver(schema, {
       modelSlug: t('model.label'),
     }),
@@ -188,7 +190,7 @@ function instanceBestFit(model?: AiModel) {
   };
 }
 
-function getInitialValues(instances: CatalogInstance[], model?: AiModel): Partial<ModelFormType> {
+function getInitialValues(instances: CatalogInstance[], model: AiModel): Partial<ModelFormType> {
   const instance = instances.find(instanceBestFit(model));
 
   return {
