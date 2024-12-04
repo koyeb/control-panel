@@ -94,7 +94,6 @@ class ServiceFormBuilder {
     if (max !== undefined && max > 1) {
       const target = this.values.serviceType === 'worker' ? 'cpu' : 'requests';
       this.set('scaling', { targets: { [target]: { enabled: true } } });
-      console.log(this.values.serviceType, target, this.values);
     }
 
     return this.values;
