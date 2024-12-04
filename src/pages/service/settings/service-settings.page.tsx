@@ -5,7 +5,6 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
@@ -28,8 +27,6 @@ export function ServiceSettingsPage() {
   const [cost, setCost] = useState<ServiceCost>();
   const [deployUrl, setDeployUrl] = useState<string>();
 
-  const hasDuplicateService = useFeatureFlag('duplicate-service');
-
   return (
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid auto-rows-min grid-cols-1 items-start gap-8 xl:grid-cols-[1fr_20rem]">
@@ -48,8 +45,8 @@ export function ServiceSettingsPage() {
         <DeployToKoyebButton deployUrl={deployUrl} />
       </div>
 
-      {hasDuplicateService && <DuplicateServiceCard service={service} />}
       <PauseServiceCard service={service} />
+      <DuplicateServiceCard service={service} />
       <DeleteServiceCard service={service} />
     </div>
   );
