@@ -158,7 +158,7 @@ function useGeneralQuotaItems(): QuotaItem[] {
       {
         key: 'maximumMemory',
         label: <T id="maximumMemory" />,
-        value: formatBytes(quotas.maxMemory * Math.pow(1024, 2), { round: true }),
+        value: formatBytes(quotas.maxMemory),
       },
     ];
   }, [organization, quotas, allowedRegions]);

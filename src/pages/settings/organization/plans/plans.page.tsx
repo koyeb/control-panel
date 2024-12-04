@@ -12,7 +12,7 @@ import { PaymentDialog } from 'src/components/payment-form';
 import { SectionHeader } from 'src/components/section-header';
 import { Translate } from 'src/intl/translate';
 
-type Plan = 'starter' | 'startup' | 'enterprise';
+type Plan = 'starter' | 'pro' | 'scale' | 'business';
 
 const T = Translate.prefix('pages.organizationSettings.plans');
 
@@ -29,8 +29,9 @@ type PlansTableRow = {
   id: React.Key;
   label: React.ReactNode;
   starter: React.ReactNode;
-  startup: React.ReactNode;
-  enterprise: React.ReactNode;
+  pro: React.ReactNode;
+  scale: React.ReactNode;
+  business: React.ReactNode;
 };
 
 function PlansTable() {
@@ -62,15 +63,21 @@ function PlansTable() {
           header: <PlanHeader plan="starter" />,
           render: ({ starter }) => starter,
         },
-        startup: {
-          header: <PlanHeader plan="startup" />,
-          render: ({ startup }) => startup,
+        pro: {
+          header: <PlanHeader plan="pro" />,
+          render: ({ pro }) => pro,
         },
-        enterprise: {
-          header: <PlanHeader plan="enterprise" />,
-          render: ({ enterprise }) => enterprise,
+        scale: {
+          header: <PlanHeader plan="scale" />,
+          render: ({ scale }) => scale,
+        },
+        business: {
+          header: <PlanHeader plan="business" />,
+          render: ({ business }) => business,
         },
       }}
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
+      classes={{ table: 'min-w-[64rem]' }}
     />
   );
 }
@@ -94,7 +101,7 @@ function PlanHeader({ plan }: { plan: Plan }) {
   });
 
   const onChangePlan = () => {
-    if (plan === 'enterprise') {
+    if (plan === 'business') {
       window.open('https://app.reclaim.ai/m/koyeb-intro/short-call');
     } else if (organization.hasPaymentMethod) {
       changePlan(plan);
@@ -108,8 +115,13 @@ function PlanHeader({ plan }: { plan: Plan }) {
       return <T id="currentPlan" />;
     }
 
-    if (plan === 'enterprise') {
-      return <T id="upgradeEnterprise" />;
+    if (plan === 'business') {
+      return <T id="upgradeBusiness" />;
+    }
+
+    // todo: remove
+    if (organization.plan === 'startup') {
+      return <T id="select" />;
     }
 
     if (isUpgrade(organization.plan, plan)) {
@@ -120,9 +132,9 @@ function PlanHeader({ plan }: { plan: Plan }) {
   }
 
   return (
-    <div className="col items-start gap-4">
+    <div className="col h-32 items-start justify-between gap-4">
       <div className="col gap-1 font-medium">
-        <div className="row items-center">
+        <div className="row items-center whitespace-nowrap">
           <div className="text-default">
             <T id={`${plan}.displayName`} />
           </div>
@@ -139,11 +151,11 @@ function PlanHeader({ plan }: { plan: Plan }) {
         </div>
       </div>
 
-      <Tooltip content={organization.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
+      <Tooltip content={organization.plan === 'business' && plan !== 'business' && <T id="contactUs" />}>
         {(props) => (
           <div {...props}>
             <Button
-              disabled={plan === organization.plan || organization.plan === 'enterprise'}
+              disabled={plan === organization.plan || organization.plan === 'business'}
               loading={isPending}
               onClick={onChangePlan}
             >
@@ -191,7 +203,7 @@ function usePlanChangedNotification(plan: Plan) {
 }
 
 function isUpgrade(prevPlan: OrganizationPlan, nextPlan: OrganizationPlan) {
-  const plans: OrganizationPlan[] = ['hobby', 'starter', 'startup', 'enterprise'];
+  const plans: OrganizationPlan[] = ['hobby', 'starter', 'startup', 'pro', 'scale', 'enterprise', 'business'];
   const prevPlanIndex = plans.indexOf(prevPlan);
   const nextPlanIndex = plans.indexOf(nextPlan);
 
@@ -232,7 +244,8 @@ function createRow(row: PlanRow) {
     id: row,
     label,
     starter: <T id={`starter.${row}`} />,
-    startup: <T id={`startup.${row}`} />,
-    enterprise: <T id={`enterprise.${row}`} />,
+    pro: <T id={`pro.${row}`} />,
+    scale: <T id={`scale.${row}`} />,
+    business: <T id={`business.${row}`} />,
   };
 }
