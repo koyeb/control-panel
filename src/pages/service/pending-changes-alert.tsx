@@ -23,33 +23,12 @@ type PendingChangesAlertProps = {
 
 export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
   const latestDeployment = useDeployment(service.latestDeploymentId);
-  const invalidate = useInvalidateApiQuery();
-  const navigate = useNavigate();
-
-  const { data: latestNonStashedDeployment } = useQuery({
-    ...useApiQueryFn('listDeployments', {
-      query: {
-        service_id: service.id,
-        statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
-      },
-    }),
-    select: (result) => mapDeployments(result)[0],
-  });
-
-  const redeploy = useMutation({
-    ...useApiMutationFn('redeployService', { path: { id: service.id }, body: {} }),
-    async onSuccess({ deployment }) {
-      await Promise.all([
-        invalidate('getService', { path: { id: service.id } }),
-        invalidate('listDeployments', { query: { service_id: service.id } }),
-      ]);
-
-      setChangesDialogOpen(false);
-      navigate(routes.service.overview(service.id, deployment?.id));
-    },
-  });
+  const latestNonStashedDeployment = useLatestNonStashedDeployment(service);
 
   const [changesDialogOpen, setChangesDialogOpen] = useState(false);
+
+  const discard = useDiscardChanges(service);
+  const apply = useApplyChanges(service, () => setChangesDialogOpen(false));
 
   if (latestDeployment === undefined || latestNonStashedDeployment === undefined) {
     return null;
@@ -74,7 +53,7 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
       <Button
         variant="ghost"
         color="blue"
-        loading={redeploy.isPending}
+        loading={apply.isPending}
         onClick={() => setChangesDialogOpen(true)}
         className="self-center"
       >
@@ -82,24 +61,87 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
       </Button>
 
       <Button
+        variant="outline"
         color="blue"
-        loading={redeploy.isPending}
-        onClick={() => redeploy.mutate()}
+        loading={discard.isPending}
+        onClick={() => discard.mutate()}
         className="self-center"
       >
+        <T id="discard" />
+      </Button>
+
+      <Button color="blue" loading={apply.isPending} onClick={() => apply.mutate()} className="self-center">
         <T id="deploy" />
       </Button>
 
       <DeploymentsDiffDialog
         isOpen={changesDialogOpen}
         onClose={() => setChangesDialogOpen(false)}
-        onDeploy={() => redeploy.mutate()}
-        deploying={redeploy.isPending}
+        onDeploy={() => apply.mutate()}
+        deploying={apply.isPending}
         deployment1={latestNonStashedDeployment}
         deployment2={latestDeployment}
       />
     </Alert>
   );
+}
+
+function useLatestNonStashedDeployment(service: Service) {
+  const { data: latestNonStashedDeployment } = useQuery({
+    ...useApiQueryFn('listDeployments', {
+      query: {
+        service_id: service.id,
+        statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+      },
+    }),
+    select: (result) => mapDeployments(result)[0],
+  });
+
+  return latestNonStashedDeployment;
+}
+
+function useDiscardChanges(service: Service) {
+  const latestNonStashedDeployment = useLatestNonStashedDeployment(service);
+  const invalidate = useInvalidateApiQuery();
+
+  return useMutation({
+    ...useApiMutationFn('updateService', (_: void) => {
+      assert(isComputeDeployment(latestNonStashedDeployment));
+
+      return {
+        path: { id: service.id },
+        query: { dry_run: false },
+        body: {
+          definition: latestNonStashedDeployment.definitionApi,
+          save_only: true,
+        },
+      };
+    }),
+    async onSuccess() {
+      await Promise.all([
+        invalidate('getService', { path: { id: service.id } }),
+        invalidate('listDeployments', { query: { service_id: service.id } }),
+      ]);
+    },
+  });
+}
+
+function useApplyChanges(service: Service, onSuccess: () => void) {
+  const invalidate = useInvalidateApiQuery();
+  const navigate = useNavigate();
+
+  return useMutation({
+    ...useApiMutationFn('redeployService', { path: { id: service.id }, body: {} }),
+    async onSuccess({ deployment }) {
+      await Promise.all([
+        invalidate('getService', { path: { id: service.id } }),
+        invalidate('listDeployments', { query: { service_id: service.id } }),
+      ]);
+
+      onSuccess();
+      navigate(routes.service.overview(service.id, deployment?.id));
+    },
+  });
 }
 
 type DeploymentsDiffDialog = {
