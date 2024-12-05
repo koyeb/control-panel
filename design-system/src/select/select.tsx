@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useSelect } from 'downshift';
+import { useSelect, UseSelectProps, UseSelectState, UseSelectStateChangeOptions } from 'downshift';
 import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
 import { forwardRef } from 'react';
 
@@ -33,6 +33,7 @@ type SelectProps<Item> = {
   renderSelectedItem?: (item: Item | null) => React.ReactNode;
   renderNoItems?: () => React.ReactNode;
   canSelectItem?: (item: Item) => boolean;
+  stateReducer?: UseSelectProps<Item>['stateReducer'];
 };
 
 export const Select = forwardRef(function Select<Item>(
@@ -61,6 +62,7 @@ export const Select = forwardRef(function Select<Item>(
     renderNoItems,
     renderSelectedItem,
     canSelectItem,
+    stateReducer,
   }: SelectProps<Item>,
   forwardedRef: React.ForwardedRef<HTMLElement>,
 ) {
@@ -89,6 +91,7 @@ export const Select = forwardRef(function Select<Item>(
     isItemDisabled(item) {
       return Boolean(canSelectItem && !canSelectItem(item));
     },
+    stateReducer,
   });
 
   const dropdown = useDropdown(isOpen);
@@ -163,3 +166,58 @@ export const Select = forwardRef(function Select<Item>(
     </Field>
   );
 });
+
+type MultiSelectProps<Item> = Omit<
+  SelectProps<Item>,
+  'selectedItem' | 'onSelectedItemChange' | 'renderItem' | 'renderSelectedItem'
+> & {
+  selectedItems?: Item[];
+  onItemsSelected?: (item: Item) => void;
+  onItemsUnselected?: (item: Item) => void;
+  renderItem: (item: Item, selected: boolean, index?: number) => React.ReactNode;
+  renderSelectedItems: (items: Item[]) => React.ReactNode;
+};
+
+export const MultiSelect = forwardRef(function MultiSelect<Item>(
+  {
+    selectedItems = [],
+    onItemsSelected,
+    onItemsUnselected,
+    renderItem,
+    renderSelectedItems,
+    ...props
+  }: MultiSelectProps<Item>,
+  ref: React.ForwardedRef<HTMLElement>,
+) {
+  return (
+    <Select
+      ref={ref}
+      selectedItem={null}
+      onItemClick={(item) => {
+        if (selectedItems.includes(item)) {
+          onItemsUnselected?.(item);
+        } else {
+          onItemsSelected?.(item);
+        }
+      }}
+      renderItem={(item, index) => renderItem(item, selectedItems.includes(item), index)}
+      renderSelectedItem={() => renderSelectedItems(selectedItems)}
+      stateReducer={multiSelectStateReducer}
+      {...props}
+    />
+  );
+});
+
+function multiSelectStateReducer<Item>(
+  state: UseSelectState<Item>,
+  { changes, type }: UseSelectStateChangeOptions<Item>,
+) {
+  switch (type) {
+    case useSelect.stateChangeTypes.ToggleButtonKeyDownEnter:
+    case useSelect.stateChangeTypes.ToggleButtonKeyDownSpaceButton:
+    case useSelect.stateChangeTypes.ItemClick:
+      return { ...changes, isOpen: true, highlightedIndex: state.highlightedIndex };
+  }
+
+  return changes;
+}

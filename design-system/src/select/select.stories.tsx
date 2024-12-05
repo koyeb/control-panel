@@ -1,8 +1,10 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryFn, StoryObj } from '@storybook/react';
+import { useState } from 'react';
 
+import { Checkbox } from '../checkbox/checkbox';
 import { controls } from '../utils/storybook';
 
-import { Select } from './select';
+import { MultiSelect, Select } from './select';
 
 type Game = {
   name: string;
@@ -78,4 +80,24 @@ export const Groups: Story = {
     items: groups.flatMap((group) => group.items),
     groups,
   },
+};
+
+export const multiSelect: StoryFn<typeof MultiSelect<Game>> = (args) => {
+  const [selected, setSelected] = useState<Game[]>([]);
+
+  return (
+    <MultiSelect
+      {...args}
+      selectedItems={selected}
+      onItemsSelected={(game) => setSelected([...selected, game])}
+      onItemsUnselected={(game) => setSelected(selected.filter((selected) => selected !== game))}
+      renderItem={(game, selected) => (
+        <div className="row items-center gap-2">
+          <Checkbox checked={selected} onChange={() => {}} />
+          {game.name} <span className="text-dim">- {game.released}</span>
+        </div>
+      )}
+      renderSelectedItems={(games) => <>{games.map((game) => game.name).join(', ')}</>}
+    />
+  );
 };
