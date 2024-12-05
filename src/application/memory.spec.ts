@@ -42,6 +42,14 @@ describe('parseBytes', () => {
     expect(parseBytes('12GiB')).toBe(12884901888);
   });
 
+  test('terabyte value', () => {
+    expect(parseBytes('12TB')).toBe(12000000000000);
+  });
+
+  test('tebibyte value', () => {
+    expect(parseBytes('12TiB')).toBe(13194139533312);
+  });
+
   test('space between value and unit', () => {
     expect(parseBytes('12 B')).toBe(12);
   });

@@ -1,5 +1,5 @@
 export function parseBytes(input: string | undefined) {
-  const result = /^([0-9.]+) ?([KMG]?i?B)$/.exec(input ?? '');
+  const result = /^([0-9.]+) ?([KMGT]?i?B)$/.exec(input ?? '');
 
   if (!result) {
     return NaN;
@@ -32,6 +32,14 @@ export function parseBytes(input: string | undefined) {
     factor = Math.pow(2, 30);
   }
 
+  if (unit === 'TB') {
+    factor = Math.pow(10, 12);
+  }
+
+  if (unit === 'TiB') {
+    factor = Math.pow(2, 40);
+  }
+
   return Number(value) * factor;
 }
 
@@ -55,7 +63,7 @@ function formatBytesToUnit(bytes: number, units: string[], factor: number, round
 export function formatBytes(bytes: number, opts: FormatBytesOptions = {}) {
   return formatBytesToUnit(
     bytes,
-    opts.decimal ? ['B', 'KB', 'MB', 'GB'] : ['B', 'KiB', 'MiB', 'GiB'],
+    opts.decimal ? ['B', 'KB', 'MB', 'GB', 'TB'] : ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
     opts.decimal ? 1000 : 1024,
     opts.round,
   ).join(' ');
