@@ -91,7 +91,9 @@ export const Select = forwardRef(function Select<Item>(
     isItemDisabled(item) {
       return Boolean(canSelectItem && !canSelectItem(item));
     },
-    stateReducer,
+    stateReducer(state, options) {
+      return stateReducer?.(state, options) ?? options.changes;
+    },
   });
 
   const dropdown = useDropdown(isOpen);
