@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useSelect, UseSelectProps, UseSelectState, UseSelectStateChangeOptions } from 'downshift';
 import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
-import { forwardRef } from 'react';
+import { forwardRef, useCallback, useMemo } from 'react';
 
 import { Dropdown, DropdownGroup } from '../dropdown/dropdown';
 import { useDropdown } from '../dropdown/use-dropdown';
@@ -95,6 +95,25 @@ export const Select = forwardRef(function Select<Item>(
   });
 
   const dropdown = useDropdown(isOpen);
+  const dropdownRef = dropdown.setReference;
+
+  const ref = useCallback(
+    (ref: HTMLDivElement) => {
+      dropdownRef(ref);
+
+      if (typeof forwardedRef === 'function') {
+        forwardedRef(ref);
+      } else if (forwardedRef) {
+        forwardedRef.current = ref;
+      }
+    },
+    [dropdownRef, forwardedRef],
+  );
+
+  const toggleButtonProps = useMemo(
+    () => getToggleButtonProps({ ref, disabled, readOnly, onBlur }),
+    [getToggleButtonProps, ref, disabled, readOnly, onBlur],
+  );
 
   return (
     <Field
@@ -111,20 +130,7 @@ export const Select = forwardRef(function Select<Item>(
       className={className}
     >
       <div
-        {...getToggleButtonProps({
-          ref: (ref: HTMLDivElement) => {
-            dropdown.setReference(ref);
-
-            if (typeof forwardedRef === 'function') {
-              forwardedRef(ref);
-            } else if (forwardedRef) {
-              forwardedRef.current = ref;
-            }
-          },
-          disabled,
-          readOnly,
-          onBlur,
-        })}
+        {...toggleButtonProps}
         className={clsx('row w-full items-center rounded border bg-inherit -outline-offset-1', {
           'cursor-pointer focusable': !disabled && !readOnly,
           'pointer-events-none': disabled || readOnly,
