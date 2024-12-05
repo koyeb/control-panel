@@ -9,6 +9,7 @@ import { useDeployment } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { ComputeDeployment, Service } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useTrackEvent } from 'src/application/analytics';
 import { routes } from 'src/application/routes';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { useNavigate } from 'src/hooks/router';
@@ -103,6 +104,7 @@ function useLatestNonStashedDeployment(service: Service) {
 function useDiscardChanges(service: Service) {
   const latestNonStashedDeployment = useLatestNonStashedDeployment(service);
   const invalidate = useInvalidateApiQuery();
+  const track = useTrackEvent();
 
   return useMutation({
     ...useApiMutationFn('updateService', (_: void) => {
@@ -118,6 +120,8 @@ function useDiscardChanges(service: Service) {
       };
     }),
     async onSuccess() {
+      track('service_change_discarded');
+
       await Promise.all([
         invalidate('getService', { path: { id: service.id } }),
         invalidate('listDeployments', { query: { service_id: service.id } }),
