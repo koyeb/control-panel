@@ -230,7 +230,7 @@ function fileMounts(definition: Api.DeploymentDefinition): Array<Partial<FileMou
   return definition.file_mounts?.map((file) => ({
     mountPath: file.path,
     permissions: file.permissions,
-    content: file.raw?.content,
+    content: file.content,
   }));
 }
 

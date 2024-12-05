@@ -144,12 +144,13 @@ function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
 }
 
 function fileMounts(files: Array<FileMount>): Array<Api.DeploymentFileMount> {
-  return files.map((file) => ({
-    path: file.mountPath,
-    raw: { content: file.content },
-    permissions: file.permissions,
-    interpolation_enabled: true,
-  }));
+  return files.map(
+    (file): Api.DeploymentFileMount => ({
+      path: file.mountPath,
+      content: file.content,
+      permissions: file.permissions,
+    }),
+  );
 }
 
 function ports(ports: Array<Port>): Array<Api.Port> {
