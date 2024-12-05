@@ -10,15 +10,15 @@ type Game = {
 };
 
 const games: Game[] = [
-  { name: 'Pac-man', released: '1980-05-22' },
-  { name: 'Sonic', released: '1991-06-23' },
-  { name: 'Tetris', released: '1984-06-06' },
-  { name: 'Street Fighter', released: '1987-08-30' },
-  { name: 'Zelda', released: '1886-02-21' },
-  { name: 'Mario Bros', released: '1983-06-14' },
-  { name: 'Space Invaders', released: '1998-07-01' },
-  { name: 'Pong', released: '1972-11-29' },
-  { name: 'Donkey Kong', released: '1981-07-01' },
+  { name: 'Pac-man', released: 'May 1980' },
+  { name: 'Sonic', released: 'June 1991' },
+  { name: 'Tetris', released: 'June 1984' },
+  { name: 'Street Fighter', released: 'August 1987' },
+  { name: 'Zelda', released: 'February 1886' },
+  { name: 'Mario Bros', released: 'June 1983' },
+  { name: 'Space Invaders', released: 'July 1998' },
+  { name: 'Pong', released: 'November 1972' },
+  { name: 'Donkey Kong', released: 'July 1981' },
 ];
 
 const meta = {
@@ -38,7 +38,7 @@ const meta = {
     itemToString: (game) => game.name,
     renderItem: (game: Game) => (
       <>
-        {game.name} <span className="text-dim">{game.released}</span>
+        {game.name} <span className="text-dim">- {game.released}</span>
       </>
     ),
   },

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useSelect } from 'downshift';
 import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
-import { forwardRef, useMemo } from 'react';
+import { forwardRef } from 'react';
 
 import { Dropdown, DropdownGroup } from '../dropdown/dropdown';
 import { useDropdown } from '../dropdown/use-dropdown';
@@ -30,7 +30,7 @@ type SelectProps<Item> = {
   getKey: (item: Item) => React.Key;
   itemToString: (item: Item) => string;
   renderItem: (item: Item, index?: number) => React.ReactNode;
-  renderSelectedItem?: (item: Item) => React.ReactNode;
+  renderSelectedItem?: (item: Item | null) => React.ReactNode;
   renderNoItems?: () => React.ReactNode;
   canSelectItem?: (item: Item) => boolean;
 };
@@ -59,7 +59,7 @@ export const Select = forwardRef(function Select<Item>(
     itemToString,
     renderItem,
     renderNoItems,
-    renderSelectedItem = renderItem,
+    renderSelectedItem,
     canSelectItem,
   }: SelectProps<Item>,
   forwardedRef: React.ForwardedRef<HTMLElement>,
@@ -71,7 +71,6 @@ export const Select = forwardRef(function Select<Item>(
     isOpen,
     selectedItem,
     highlightedIndex,
-    closeMenu,
     getLabelProps,
     getToggleButtonProps,
     getMenuProps,
@@ -94,23 +93,6 @@ export const Select = forwardRef(function Select<Item>(
 
   const dropdown = useDropdown(isOpen);
 
-  const toggleButtonProps = useMemo(() => {
-    return getToggleButtonProps({
-      ref: (ref) => {
-        dropdown.setReference(ref);
-
-        if (typeof forwardedRef === 'function') {
-          forwardedRef(ref);
-        } else if (forwardedRef) {
-          forwardedRef.current = ref;
-        }
-      },
-      disabled,
-      readOnly,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dropdown.setReference, disabled, readOnly]);
-
   return (
     <Field
       label={
@@ -126,30 +108,42 @@ export const Select = forwardRef(function Select<Item>(
       className={className}
     >
       <div
-        {...toggleButtonProps}
-        tabIndex={!disabled ? 0 : undefined}
-        className={clsx(
-          'row focusable w-full cursor-pointer items-center rounded border bg-inherit -outline-offset-1',
-          {
-            '!cursor-default pointer-events-none': disabled || readOnly,
-            'opacity-50 bg-muted dark:bg-muted/40': disabled,
-            'rounded-b-none outline-none': isOpen,
-            'border-red outline-red': invalid,
-            'min-h-6': size === 1,
-            'min-h-8': size === 2,
-            'min-h-10': size === 3,
+        {...getToggleButtonProps({
+          ref: (ref: HTMLDivElement) => {
+            dropdown.setReference(ref);
+
+            if (typeof forwardedRef === 'function') {
+              forwardedRef(ref);
+            } else if (forwardedRef) {
+              forwardedRef.current = ref;
+            }
           },
-        )}
-        onBlur={(event) => {
-          onBlur?.(event);
-          closeMenu();
-        }}
+          disabled,
+          readOnly,
+          onBlur,
+        })}
+        className={clsx('row w-full items-center rounded border bg-inherit -outline-offset-1', {
+          'cursor-pointer focusable': !disabled && !readOnly,
+          'pointer-events-none': disabled || readOnly,
+          'opacity-50 bg-muted dark:bg-muted/40': disabled,
+          'rounded-b-none outline-none': isOpen,
+          'border-red outline-red': invalid,
+          'min-h-6': size === 1,
+          'min-h-8': size === 2,
+          'min-h-10': size === 3,
+        })}
         aria-invalid={invalid}
         aria-errormessage={helperTextId}
       >
         <div className={clsx('flex-1 px-2')}>
-          {selectedItem && renderSelectedItem(selectedItem as Item)}
-          {!selectedItem && <span className="select-none text-placeholder">{placeholder ?? <wbr />}</span>}
+          {renderSelectedItem?.(selectedItem) ?? (
+            <>
+              {selectedItem && renderItem(selectedItem)}
+              {!selectedItem && (
+                <span className="select-none text-placeholder">{placeholder ?? <wbr />}</span>
+              )}
+            </>
+          )}
         </div>
 
         <IconChevronDown className={clsx('icon mx-1 size-6', isOpen && 'rotate-180')} />
