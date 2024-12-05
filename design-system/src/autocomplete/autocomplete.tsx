@@ -152,7 +152,6 @@ export const Autocomplete = forwardRef(function Autocomplete<Item>(
       <Dropdown
         dropdown={dropdown}
         items={items}
-        selectedItem={selectedItem ?? undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}

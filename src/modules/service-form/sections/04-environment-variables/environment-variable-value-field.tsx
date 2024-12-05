@@ -187,7 +187,6 @@ export function EnvironmentVariableValueField({
       <Dropdown
         dropdown={dropdown}
         groups={groups.filter((group) => group.items.length > 0)}
-        selectedItem={undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}

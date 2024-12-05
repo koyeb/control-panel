@@ -151,7 +151,6 @@ export const Select = forwardRef(function Select<Item>(
 
       <Dropdown
         dropdown={dropdown}
-        selectedItem={selectedItem ?? undefined}
         highlightedIndex={highlightedIndex}
         getMenuProps={getMenuProps}
         getItemProps={getItemProps}

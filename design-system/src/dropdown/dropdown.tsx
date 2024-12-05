@@ -1,12 +1,10 @@
 import clsx from 'clsx';
-import IconCheck from 'lucide-static/icons/circle-check.svg?react';
 import { Fragment, useMemo } from 'react';
 
 import { useDropdown } from './use-dropdown';
 
 type DropdownCommonProps<Item> = {
   dropdown: ReturnType<typeof useDropdown>;
-  selectedItem: Item | undefined;
   highlightedIndex: number | undefined;
   getMenuProps: (props: React.HTMLProps<HTMLUListElement>) => React.HTMLProps<HTMLUListElement>;
   getItemProps: (props: { item: Item; index: number }) => React.HTMLProps<HTMLLIElement>;
@@ -56,7 +54,7 @@ export function Dropdown<Item>(props: DropdownProps<Item>) {
 
 type ItemProps<Item> = Pick<
   DropdownCommonProps<Item>,
-  'getItemProps' | 'highlightedIndex' | 'onItemClick' | 'renderItem' | 'selectedItem'
+  'getItemProps' | 'highlightedIndex' | 'onItemClick' | 'renderItem'
 > & {
   item: Item;
   index: number;
@@ -70,7 +68,6 @@ export function Item<Item>({
   highlightedIndex,
   onItemClick,
   renderItem,
-  selectedItem,
   className,
 }: ItemProps<Item>) {
   return (
@@ -83,11 +80,6 @@ export function Item<Item>({
         onClick={() => onItemClick?.(item)}
       >
         {renderItem(item, index)}
-      </div>
-
-      <div className="px-1">
-        {item === selectedItem && <IconCheck className="icon" />}
-        {item !== selectedItem && <span className="icon inline-block" />}
       </div>
     </li>
   );
