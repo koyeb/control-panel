@@ -8,6 +8,7 @@ import { Translate } from 'src/intl/translate';
 import { ServiceForm } from '../../service-form.types';
 
 import { EnvironmentVariableValueField } from './environment-variable-value-field';
+import { RegionsScope } from './regions-scope';
 
 const T = Translate.prefix('serviceForm.environmentVariables');
 
@@ -27,7 +28,9 @@ export function EnvironmentVariableFields({
 
   return (
     // eslint-disable-next-line tailwindcss/no-arbitrary-value
-    <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_auto] md:border-none md:p-0">
+    <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_auto] md:border-none md:p-0">
+      <RegionsScope index={index} label={showLabel && 'Regions'} className="w-full" />
+
       <ControlledInput<ServiceForm>
         name={`environmentVariables.${index}.name`}
         type="text"

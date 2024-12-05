@@ -83,11 +83,13 @@ describe('serviceFormSchema', () => {
     form.environmentVariables.push({
       name: ' name ',
       value: 'value',
+      regions: [],
     });
 
     form.environmentVariables.push({
       name: '',
       value: '',
+      regions: [],
     });
 
     expect(parse(form)).toHaveProperty('environmentVariables', [

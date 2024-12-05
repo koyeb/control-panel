@@ -1,4 +1,4 @@
-import { EnvironmentVariable, ServiceType } from 'src/api/model';
+import { ServiceType } from 'src/api/model';
 
 export type ServiceFormSection =
   | 'serviceType'
@@ -105,6 +105,12 @@ export type DockerDeploymentOptions = {
   command: string | null;
   args: string[] | null;
   privileged: boolean;
+};
+
+export type EnvironmentVariable = {
+  name: string;
+  value: string;
+  regions: string[];
 };
 
 export type FileMount = {

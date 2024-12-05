@@ -43,7 +43,10 @@ export function EnvironmentVariables() {
     if (variables.length === 0) {
       notify.error(t('fileUpload.noEnvVars'));
     } else {
-      setValue('environmentVariables', variables);
+      setValue(
+        'environmentVariables',
+        variables.map((variable) => ({ ...variable, regions: [] })),
+      );
     }
   };
 
@@ -62,7 +65,7 @@ export function EnvironmentVariables() {
                 index={index}
                 onRemove={() => {
                   if (fields.length === 1) {
-                    setValue('environmentVariables.0', { name: '', value: '' });
+                    setValue('environmentVariables.0', { name: '', value: '', regions: [] });
                   } else {
                     remove(index);
                   }
@@ -73,7 +76,7 @@ export function EnvironmentVariables() {
           </div>
 
           <div className="col sm:row items-start gap-4">
-            <Button variant="ghost" color="gray" onClick={() => append({ name: '', value: '' })}>
+            <Button variant="ghost" color="gray" onClick={() => append({ name: '', value: '', regions: [] })}>
               <IconPlus className="size-4" />
               <T id="addVariable" />
             </Button>

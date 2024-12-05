@@ -233,6 +233,7 @@ export function defaultServiceForm(): ServiceForm {
       {
         name: '',
         value: '',
+        regions: [],
       },
     ],
     fileMounts: [

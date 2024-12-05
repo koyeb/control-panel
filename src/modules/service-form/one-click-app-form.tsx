@@ -103,7 +103,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
       serviceForm.appName = generateAppName();
       serviceForm.instance = instance;
       serviceForm.regions = [region];
-      serviceForm.environmentVariables = environmentVariables;
+      serviceForm.environmentVariables = environmentVariables.map((env) => ({ ...env, regions: [] }));
 
       return submitServiceForm(serviceForm);
     },
