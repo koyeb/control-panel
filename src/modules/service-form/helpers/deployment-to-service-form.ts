@@ -220,6 +220,9 @@ function environmentVariables(
   return definition.env?.map((variable) => ({
     name: variable.key,
     value: variable.value ?? `{{ secret.${variable.secret} }}`,
+    regions: variable.scopes
+      ?.filter((scope) => scope.startsWith('region:'))
+      .map((scope) => scope.replace(/^region:/, '')),
   }));
 }
 

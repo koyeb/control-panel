@@ -7,6 +7,25 @@ import { HealthCheck } from '../service-form.types';
 import { deploymentDefinitionToServiceForm } from './deployment-to-service-form';
 
 describe('deploymentDefinitionToServiceForm', () => {
+  it('environment variable scopes', () => {
+    const definition: Api.DeploymentDefinition = {
+      env: [
+        { key: 'VAR1', value: '', scopes: [] },
+        { key: 'VAR2', value: '', scopes: ['region:fra'] },
+        { key: 'VAR3', value: '', scopes: ['instance:nano'] },
+      ],
+    };
+
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
+      'environmentVariables',
+      [
+        { name: 'VAR1', value: '', regions: [] },
+        { name: 'VAR2', value: '', regions: ['fra'] },
+        { name: 'VAR3', value: '', regions: [] },
+      ],
+    );
+  });
+
   it('fixed scaling', () => {
     const definition: Api.DeploymentDefinition = {
       scalings: [{ min: 1, max: 1 }],

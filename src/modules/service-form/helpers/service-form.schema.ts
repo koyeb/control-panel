@@ -134,6 +134,7 @@ function environmentVariable() {
   return z.object({
     name: z.string().trim(),
     value: z.string(),
+    regions: z.array(z.string()),
   });
 }
 

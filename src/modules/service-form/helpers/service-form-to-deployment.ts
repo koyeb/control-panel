@@ -1,5 +1,4 @@
 import { Api } from 'src/api/api-types';
-import { EnvironmentVariable } from 'src/api/model';
 import { assert } from 'src/utils/assert';
 import { entries } from 'src/utils/object';
 
@@ -8,6 +7,7 @@ import {
   Builder,
   DockerDeploymentOptions,
   DockerSource,
+  EnvironmentVariable,
   FileMount,
   GitSource,
   Port,
@@ -138,6 +138,8 @@ function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
   return variables.map((variable) => ({
     key: variable.name,
     value: variable.value,
+    scopes:
+      variable.regions.length > 0 ? variable.regions.map((identifier) => `region:${identifier}`) : undefined,
   }));
 }
 

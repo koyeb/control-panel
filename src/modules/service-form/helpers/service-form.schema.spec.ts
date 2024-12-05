@@ -96,6 +96,7 @@ describe('serviceFormSchema', () => {
       {
         name: 'name',
         value: 'value',
+        regions: [],
       },
     ]);
   });
