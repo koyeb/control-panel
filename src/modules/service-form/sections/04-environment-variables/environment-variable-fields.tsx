@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { IconButton, useBreakpoint } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconTrash } from 'src/components/icons';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -26,10 +27,17 @@ export function EnvironmentVariableFields({
   const isMobile = !useBreakpoint('md');
   const showLabel = isMobile || index === 0;
 
+  const showScopes = useFeatureFlag('environment-variable-scopes');
+
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
-    <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_auto] md:border-none md:p-0">
-      <RegionsScope index={index} label={showLabel && 'Regions'} className="w-full" />
+    <div
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
+      className={clsx(
+        'grid grid-cols-1 gap-4 rounded border px-6 py-5 md:border-none md:p-0',
+        showScopes ? 'md:grid-cols-[1fr_1fr_1fr_auto]' : 'md:grid-cols-[1fr_1fr_auto]',
+      )}
+    >
+      {showScopes && <RegionsScope index={index} label={showLabel && 'Regions'} className="w-full" />}
 
       <ControlledInput<ServiceForm>
         name={`environmentVariables.${index}.name`}

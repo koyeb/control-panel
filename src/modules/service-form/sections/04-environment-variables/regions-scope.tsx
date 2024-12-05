@@ -1,6 +1,6 @@
 import { useController } from 'react-hook-form';
 
-import { MultiSelect, Checkbox } from '@koyeb/design-system';
+import { Checkbox, MultiSelect } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
 import { CatalogRegion } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
