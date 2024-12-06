@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, UseMutationResult, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { dequal } from 'dequal';
 import { diffJson } from 'diff';
@@ -29,7 +29,7 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
   const [changesDialogOpen, setChangesDialogOpen] = useState(false);
 
   const discard = useDiscardChanges(service);
-  const apply = useApplyChanges(service, () => setChangesDialogOpen(false));
+  const deploy = useApplyChanges(service, () => setChangesDialogOpen(false));
 
   if (latestDeployment === undefined || latestNonStashedDeployment === undefined) {
     return null;
@@ -54,32 +54,22 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
       <Button
         variant="ghost"
         color="blue"
-        loading={apply.isPending}
+        loading={deploy.isPending}
         onClick={() => setChangesDialogOpen(true)}
         className="self-center"
       >
         <T id="viewChanges" />
       </Button>
 
-      <Button
-        variant="outline"
-        color="blue"
-        loading={discard.isPending}
-        onClick={() => discard.mutate()}
-        className="self-center"
-      >
-        <T id="discard" />
-      </Button>
-
-      <Button color="blue" loading={apply.isPending} onClick={() => apply.mutate()} className="self-center">
+      <Button color="blue" loading={deploy.isPending} onClick={() => deploy.mutate()} className="self-center">
         <T id="deploy" />
       </Button>
 
       <DeploymentsDiffDialog
         isOpen={changesDialogOpen}
         onClose={() => setChangesDialogOpen(false)}
-        onDeploy={() => apply.mutate()}
-        deploying={apply.isPending}
+        deploy={deploy}
+        discard={discard}
         deployment1={latestNonStashedDeployment}
         deployment2={latestDeployment}
       />
@@ -151,8 +141,8 @@ function useApplyChanges(service: Service, onSuccess: () => void) {
 type DeploymentsDiffDialog = {
   isOpen: boolean;
   onClose: () => void;
-  onDeploy: () => void;
-  deploying: boolean;
+  deploy: UseMutationResult<unknown, unknown, void>;
+  discard: UseMutationResult<unknown, unknown, void>;
   deployment1: ComputeDeployment;
   deployment2: ComputeDeployment;
 };
@@ -160,8 +150,8 @@ type DeploymentsDiffDialog = {
 function DeploymentsDiffDialog({
   isOpen,
   onClose,
-  onDeploy,
-  deploying,
+  deploy,
+  discard,
   deployment1,
   deployment2,
 }: DeploymentsDiffDialog) {
@@ -188,7 +178,17 @@ function DeploymentsDiffDialog({
       </pre>
 
       <footer className="row mt-4 justify-end gap-4">
-        <Button loading={deploying} onClick={onDeploy}>
+        <Button
+          variant="ghost"
+          color="gray"
+          loading={discard.isPending}
+          onClick={() => discard.mutate()}
+          className="self-center"
+        >
+          <T id="discard" />
+        </Button>
+
+        <Button loading={deploy.isPending} onClick={() => deploy.mutate()}>
           <T id="deploy" />
         </Button>
       </footer>

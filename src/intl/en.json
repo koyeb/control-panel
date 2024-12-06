@@ -2048,7 +2048,7 @@
           "title": "Pending changes",
           "description": "Your service has pending changes that will be applied with your next deployment",
           "viewChanges": "View changes",
-          "discard": "Discard",
+          "discard": "Discard all",
           "deploy": "Deploy now",
           "diffDialog": {
             "title": "Pending changes",
