@@ -38,7 +38,7 @@ export function RegionsScope({ index, label, className }: RegionsScopeProps) {
       itemToString={(region) => region.displayName}
       renderItem={(region, selected) => (
         <div className="row items-center gap-2">
-          <Checkbox checked={selected} onChange={() => {}} />
+          <Checkbox checked={selected} readOnly className="pointer-events-none" />
           <RegionItem region={region} />
         </div>
       )}
