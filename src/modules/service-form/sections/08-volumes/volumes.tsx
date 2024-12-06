@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray, UseFieldArrayReturn, useFormContext } from 'react-hook-form';
 
-import { Alert, Button } from '@koyeb/design-system';
+import { Alert, Button, InfoTooltip } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
@@ -23,8 +23,9 @@ export function Volumes() {
   return (
     <div className="col gap-2">
       <div className="row items-center justify-between">
-        <div>
+        <div className="row items-center gap-1">
           <T id="title" />
+          <InfoTooltip content="?" />
         </div>
 
         <Button
@@ -39,12 +40,7 @@ export function Volumes() {
       </div>
 
       {alert && <Alert variant="info" style="outline" title={alert.title} description={alert.description} />}
-
-      {!alert && (
-        <div className="col gap-4 rounded border p-4">
-          <VolumesList fields={fields} append={append} remove={remove} />
-        </div>
-      )}
+      {!alert && <VolumesList fields={fields} append={append} remove={remove} />}
     </div>
   );
 }
@@ -55,22 +51,28 @@ function VolumesList({ fields, append, remove }: VolumesListProps) {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const documentationLink = (children: React.ReactNode) => (
-    <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
+    <DocumentationLink path="/docs/reference/volumes" className="whitespace-nowrap !text-default underline">
       {children}
     </DocumentationLink>
   );
 
   return (
     <>
-      <Alert
-        variant="info"
-        style="outline"
-        description={<T id="noDowntimeAlert" values={{ documentationLink }} />}
-      />
-
       {fields.length === 0 && (
-        <div className="py-4">
-          <T id="noVolumesAttached" />
+        <div className="row items-center justify-between gap-4 rounded-md border p-3">
+          <p>
+            <T id="noDowntimeAlert" values={{ documentationLink }} />
+          </p>
+
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => append({ name: '', size: 0, mountPath: '', mounted: false })}
+            className="self-center"
+          >
+            <IconPlus className="size-4" />
+            <T id="addVolume" />
+          </Button>
         </div>
       )}
 

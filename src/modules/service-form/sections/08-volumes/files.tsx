@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 
-import { Button } from '@koyeb/design-system';
+import { Button, InfoTooltip } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
@@ -14,24 +14,17 @@ import { FileContentEditor } from './file-content-editor';
 const T = Translate.prefix('serviceForm.mounts.files');
 
 export function Files() {
-  const { fields, append, remove, update } = useFieldArray<ServiceForm, 'fileMounts'>({ name: 'fileMounts' });
+  const { fields, append, remove } = useFieldArray<ServiceForm, 'fileMounts'>({ name: 'fileMounts' });
 
   const [expandedIndex, setExpandedIndex] = useState<number>();
   const isExpanded = (index: number) => index === expandedIndex;
 
-  const handleRemove = (index: number) => {
-    if (fields.length > 1) {
-      remove(index);
-    } else {
-      update(index, { mountPath: '', permissions: '', content: '' });
-    }
-  };
-
   return (
     <div className="col gap-2">
       <div className="row items-center justify-between">
-        <div>
+        <div className="row items-center gap-1">
           <T id="title" />
+          <InfoTooltip content="?" />
         </div>
 
         <Button
@@ -44,6 +37,22 @@ export function Files() {
           <T id="add" />
         </Button>
       </div>
+
+      {fields.length === 0 && (
+        <div className="row items-center justify-between gap-4 rounded-md border p-3">
+          <p>Seamlessly mount runtime files with dynamic interpolation and secure permissions</p>
+
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => append({ mountPath: '', content: '', permissions: '' })}
+            className="self-center"
+          >
+            <IconPlus className="size-4" />
+            <T id="add" />
+          </Button>
+        </div>
+      )}
 
       {fields.map((file, index) =>
         isExpanded(index) ? (
@@ -64,7 +73,7 @@ export function Files() {
               />
             </div>
 
-            <Button variant="outline" color="gray" onClick={() => handleRemove(index)} className="self-start">
+            <Button variant="outline" color="gray" onClick={() => remove(index)} className="self-start">
               <T id="unmount" />
             </Button>
           </div>

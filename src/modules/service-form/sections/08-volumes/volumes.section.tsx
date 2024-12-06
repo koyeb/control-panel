@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -29,7 +30,7 @@ export function VolumesSection() {
       title={<T id="title" values={{ count: volumes.length }} />}
       description={<T id="description" />}
       expandedTitle={<T id="titleExpanded" />}
-      className="col gaps"
+      className={clsx('col', hasMountFiles ? 'gap-8' : 'gaps')}
     >
       {!hasMountFiles && <SectionContent />}
       {hasMountFiles && (
