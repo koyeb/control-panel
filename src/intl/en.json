@@ -1226,40 +1226,60 @@
         "defaultValues": "Restore defaults"
       }
     },
-    "volumes": {
+    "mounts": {
       "title": "{count, plural, =0 {No volumes} =1 {{count} volume} other {{count} volumes}} configured",
       "titleExpanded": "Edit volumes",
-      "noDowntimeAlert": "Attaching volumes to your service will prevent zero-downtime deployments. <documentationLink>Learn more</documentationLink>",
-      "noVolumesAttached": "Attach and mount a volume to your service to persist data",
       "description": "Volumes",
-      "addVolume": "Add volume",
-      "createVolume": "Create volume",
-      "detachVolume": "Detach volume",
-      "detachVolumeNotSupported": "Detaching volumes is not supported yet",
-      "volumeNameLabel": "Volume",
-      "volumeNamePlaceholder": "Select a volume",
-      "noVolumes": "No volumes found in {region}",
-      "mountPathLabel": "Mount path",
-      "mountedReadOnly": "Can't be changed once mounted",
-      "createDialog": {
-        "title": "Create volume",
-        "description": "Set the name, size and mount path of your volume",
-        "nameLabel": "Name",
-        "namePlaceholder": "my-volume",
-        "sizeLabel": "Size",
-        "sizePlaceholder": "Select a size",
-        "sizeUnit": "GB",
-        "mountPathLabel": "Mount path"
+      "volumes": {
+        "title": "Volumes",
+        "noDowntimeAlert": "Attaching volumes to your service will prevent zero-downtime deployments. <documentationLink>Learn more</documentationLink>",
+        "noVolumesAttached": "Attach and mount a volume to your service to persist data",
+        "addVolume": "Add volume",
+        "detachVolume": "Detach volume",
+        "detachVolumeNotSupported": "Detaching volumes is not supported yet",
+        "volumeSelector": {
+          "label": "Volume",
+          "placeholder": "Select or create a volume",
+          "volumesSection": "Volumes",
+          "createSection": "Create volume",
+          "createVolume": "Create new volume",
+          "noVolumes": "No volumes found in {region}",
+          "readOnly": "Can't be changed once mounted"
+        },
+        "mountPathLabel": "Mount path",
+        "mountedReadOnly": "Can't be changed once mounted",
+        "createDialog": {
+          "title": "Create volume",
+          "description": "Set the name, size and mount path of your volume",
+          "nameLabel": "Name",
+          "namePlaceholder": "my-volume",
+          "sizeLabel": "Size",
+          "sizePlaceholder": "Select a size",
+          "sizeUnit": "GB",
+          "mountPathLabel": "Mount path"
+        },
+        "volumesUnavailable": {
+          "unavailableForInstanceTitle": "Volumes are not supported on the {instanceName} instance type",
+          "unavailableForInstanceDescription": "Select another <instancesLink>instance</instancesLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
+          "multipleInstancesTitle": "Volumes are not supported for services deployed with more than one instance or with autoscaling enabled",
+          "multipleInstancesDescription": "Select fixed <scalingLink>scaling</scalingLink> and one instance in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>",
+          "unavailableForRegionTitle": "Volumes are not supported in {regionName}",
+          "unavailableForRegionDescription": "Select another <regionsLink>region</regionsLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
+          "multipleRegionsTitle": "Volumes are not supported for services deployed across multiple regions",
+          "multipleRegionsDescription": "Select a single <regionsLink>region</regionsLink> in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>"
+        }
       },
-      "volumesUnavailable": {
-        "unavailableForInstanceTitle": "Volumes are not supported on the {instanceName} instance type",
-        "unavailableForInstanceDescription": "Select another <instancesLink>instance</instancesLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
-        "multipleInstancesTitle": "Volumes are not supported for services deployed with more than one instance or with autoscaling enabled",
-        "multipleInstancesDescription": "Select fixed <scalingLink>scaling</scalingLink> and one instance in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>",
-        "unavailableForRegionTitle": "Volumes are not supported in {regionName}",
-        "unavailableForRegionDescription": "Select another <regionsLink>region</regionsLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
-        "multipleRegionsTitle": "Volumes are not supported for services deployed across multiple regions",
-        "multipleRegionsDescription": "Select a single <regionsLink>region</regionsLink> in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>"
+      "files": {
+        "title": "Files",
+        "mountPathLabel": "Mount path",
+        "permissionsLabel": "Permissions (optional)",
+        "showDetailsLabel": "Show details",
+        "add": "Add file",
+        "unmount": "Unmount",
+        "contentEditor": {
+          "label": "File content",
+          "fileTooLarge": "File too large"
+        }
       }
     },
     "serviceName": {
