@@ -3,6 +3,7 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Translate } from 'src/intl/translate';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
+import { Wrapped } from 'src/modules/wrapped/wrapped';
 
 import { Activities } from './activities/activities';
 import { Apps } from './apps/apps';
@@ -27,11 +28,18 @@ export function HomePage() {
   }
 
   if (appsQuery.data.length === 0) {
-    return <ServiceCreation />;
+    return (
+      <>
+        <Wrapped />
+        <ServiceCreation />
+      </>
+    );
   }
 
   return (
     <>
+      <Wrapped />
+
       <h1 className="typo-heading">
         <T id="title" />
       </h1>
