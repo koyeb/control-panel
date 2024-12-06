@@ -1173,19 +1173,7 @@
         "notPlainText": "You must provide a text file",
         "noEnvVars": "No environment variables were identified in the provided file"
       },
-      "createSecret": "Create new secret",
-      "files": {
-        "mountPathLabel": "Mount path",
-        "permissionsLabel": "Permissions",
-        "editContentLabel": "Edit content",
-        "add": "Add file",
-        "remove": "Remove",
-        "editContentDialog": {
-          "title": "Edit file content",
-          "description": "File mounted at <strong>{mountPath}</strong>",
-          "fileTooLarge": "File too large"
-        }
-      }
+      "createSecret": "Create new secret"
     },
     "ports": {
       "titleSinglePort": "Port {portNumber} exposed {public, select, true {on {path}} other {to the service mesh}}",
