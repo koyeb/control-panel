@@ -39,12 +39,7 @@ export function Volumes() {
       </div>
 
       {alert && <Alert variant="info" style="outline" title={alert.title} description={alert.description} />}
-
-      {!alert && (
-        <div className="col gap-4 rounded border p-4">
-          <VolumesList fields={fields} append={append} remove={remove} />
-        </div>
-      )}
+      {!alert && <VolumesList fields={fields} append={append} remove={remove} />}
     </div>
   );
 }
@@ -66,13 +61,18 @@ function VolumesList({ fields, append, remove }: VolumesListProps) {
         variant="info"
         style="outline"
         description={<T id="noDowntimeAlert" values={{ documentationLink }} />}
-      />
-
-      {fields.length === 0 && (
-        <div className="py-4">
-          <T id="noVolumesAttached" />
-        </div>
-      )}
+        className={clsx({ '!hidden': fields.length > 0 })}
+      >
+        <Button
+          variant="ghost"
+          color="gray"
+          onClick={() => append({ name: '', size: 0, mountPath: '', mounted: false })}
+          className="self-center"
+        >
+          <IconPlus className="size-4" />
+          <T id="addVolume" />
+        </Button>
+      </Alert>
 
       {fields.map((variable, index) => (
         <VolumeFields
