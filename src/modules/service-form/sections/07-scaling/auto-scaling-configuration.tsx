@@ -12,6 +12,7 @@ import {
   IconPanelsLeftBottom,
   IconTimer,
 } from 'src/components/icons';
+import { ExternalLink } from 'src/components/link';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
@@ -35,6 +36,7 @@ export function AutoScalingConfiguration() {
         </p>
 
         <ScalingValues />
+        <ScaleToZeroPreview />
 
         <p>
           <T id="enableAutoscaling" />
@@ -132,6 +134,38 @@ function ScalingValues() {
         className="w-24"
       />
     </div>
+  );
+}
+
+function ScaleToZeroPreview() {
+  const min = useWatchServiceForm('scaling.min');
+
+  if (min > 0) {
+    return null;
+  }
+
+  return (
+    <p className="rounded-md border p-4">
+      <T
+        id="scaleToZeroPreview"
+        values={{
+          announcement: (children) => (
+            <ExternalLink
+              openInNewTab
+              href="https://koyeb.com/blog/scale-to-zero-optimize-gpu-and-cpu-workloads"
+              className="underline"
+            >
+              {children}
+            </ExternalLink>
+          ),
+          feedback: (children) => (
+            <ExternalLink openInNewTab href="https://community.koyeb.com" className="underline">
+              {children}
+            </ExternalLink>
+          ),
+        }}
+      />
+    </p>
   );
 }
 
