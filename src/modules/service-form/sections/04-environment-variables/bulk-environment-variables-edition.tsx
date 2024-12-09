@@ -46,7 +46,7 @@ export function BulkEnvironmentVariablesEditionDialog({
         if (variables.length > 0) {
           setValue('environmentVariables', variables);
         } else {
-          setValue('environmentVariables', [{ name: '', value: '' }]);
+          setValue('environmentVariables', [{ name: '', value: '', regions: [] }]);
         }
 
         void trigger('environmentVariables');

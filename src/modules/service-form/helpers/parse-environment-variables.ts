@@ -36,11 +36,13 @@ function getEnvironmentVariable(
     return {
       name,
       value: `{{ secret.${value} }}`,
+      regions: [],
     };
   } else {
     return {
       name,
       value,
+      regions: [],
     };
   }
 }

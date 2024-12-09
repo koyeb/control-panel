@@ -228,6 +228,7 @@ export type DeploymentStrategy = 'invalid' | 'canary' | 'rolling' | 'blue_green'
 export type EnvironmentVariable = {
   name: string;
   value: string;
+  regions: string[];
 };
 
 export type AttachedVolume = {

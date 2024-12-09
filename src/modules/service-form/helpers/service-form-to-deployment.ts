@@ -1,6 +1,7 @@
 import posthog from 'posthog-js';
 
 import { Api } from 'src/api/api-types';
+import { EnvironmentVariable } from 'src/api/model';
 import { assert } from 'src/utils/assert';
 import { entries } from 'src/utils/object';
 
@@ -9,7 +10,6 @@ import {
   Builder,
   DockerDeploymentOptions,
   DockerSource,
-  EnvironmentVariable,
   FileMount,
   GitSource,
   Port,

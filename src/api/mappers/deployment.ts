@@ -167,9 +167,16 @@ function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployme
   };
 
   const environmentVariables = (): DeploymentDefinition['environmentVariables'] => {
-    return definition.env!.map(({ key, value, secret }) => ({
+    const scopesToRegions = (scopes: string[] = []) => {
+      return scopes
+        .filter((scope) => scope.startsWith('region:'))
+        .map((scope) => scope.replace(/^region:/, ''));
+    };
+
+    return definition.env!.map(({ key, value, secret, scopes }) => ({
       name: key!,
       value: value ?? `@${secret}`,
+      regions: scopesToRegions(scopes),
     }));
   };
 

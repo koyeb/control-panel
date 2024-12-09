@@ -202,6 +202,7 @@ class ServiceFormBuilder {
       variables.push({
         name: match[1] as string,
         value,
+        regions: [],
       });
     }
 

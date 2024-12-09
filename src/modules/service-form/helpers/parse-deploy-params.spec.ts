@@ -166,8 +166,8 @@ describe('parseDeployParams', () => {
       test.params.set('env[VAR_2]', 'value2');
 
       expect(test.getValues()).toHaveProperty('environmentVariables', [
-        { name: 'VAR1', value: 'value1' },
-        { name: 'VAR_2', value: 'value2' },
+        { name: 'VAR1', value: 'value1', regions: [] },
+        { name: 'VAR_2', value: 'value2', regions: [] },
       ]);
     });
 
@@ -183,7 +183,9 @@ describe('parseDeployParams', () => {
       test.params.append('env[VAR]', 'value1');
       test.params.append('env[VAR]', 'value2');
 
-      expect(test.getValues()).toHaveProperty('environmentVariables', [{ name: 'VAR', value: 'value1' }]);
+      expect(test.getValues()).toHaveProperty('environmentVariables', [
+        { name: 'VAR', value: 'value1', regions: [] },
+      ]);
     });
   });
 

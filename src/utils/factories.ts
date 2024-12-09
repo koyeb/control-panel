@@ -110,6 +110,7 @@ const instance = createFactory<CatalogInstance>(() => ({
 const environmentVariable = createFactory<EnvironmentVariable>(() => ({
   name: '',
   value: '',
+  regions: [],
 }));
 
 const volume = createFactory<Volume>(() => ({
