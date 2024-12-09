@@ -11,8 +11,8 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
-import { AnalyticsProvider } from './analytics';
 import { getConfig } from './config';
+import { PostHogProvider } from './posthog';
 import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
 import { TokenProvider, useToken } from './token';
@@ -42,13 +42,13 @@ export function Providers({ children }: ProvidersProps) {
         <Suspense>
           <TokenProvider>
             <QueryClientProvider>
-              <AnalyticsProvider>
+              <PostHogProvider>
                 <StripeElements stripe={stripePromise}>
                   <ReactQueryDevtools />
                   <NotificationContainer />
                   <ErrorBoundary>{children}</ErrorBoundary>
                 </StripeElements>
-              </AnalyticsProvider>
+              </PostHogProvider>
             </QueryClientProvider>
           </TokenProvider>
         </Suspense>

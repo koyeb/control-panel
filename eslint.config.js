@@ -52,7 +52,7 @@ export default [
       ...importX.configs.react.rules,
       ...reactQuery.configs.recommended.rules,
       'no-console': ci ? 'error' : 'off',
-      'no-restricted-imports': ['warn', { paths: ['wouter'] }],
+      'no-restricted-imports': ['warn', { paths: ['wouter', 'posthog-js', 'posthog-js/react'] }],
       'import-x/no-duplicates': 'error',
       'import-x/first': 'error',
       'import-x/newline-after-import': 'error',

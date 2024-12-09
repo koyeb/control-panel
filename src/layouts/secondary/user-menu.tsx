@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
 import { useUserQuery } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
-import { useResetIdentifyUser } from 'src/application/analytics';
+import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { IconLogOut, IconSettings } from 'src/components/icons';

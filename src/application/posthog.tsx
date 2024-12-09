@@ -1,5 +1,6 @@
 import * as intercom from '@intercom/messenger-js-sdk';
-import { PostHogProvider, usePostHog } from 'posthog-js/react';
+// eslint-disable-next-line no-restricted-imports
+import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'wouter';
@@ -9,11 +10,11 @@ import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { getConfig } from './config';
 import { identifyUserInSentry } from './report-error';
 
-type AnalyticsProviderProps = {
+type PostHogProviderProps = {
   children: React.ReactNode;
 };
 
-export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+export function PostHogProvider({ children }: PostHogProviderProps) {
   const { posthogKey } = getConfig();
 
   if (posthogKey === undefined) {
@@ -21,7 +22,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   }
 
   return (
-    <PostHogProvider
+    <PostHogJsProvider
       apiKey={posthogKey}
       options={{
         api_host: 'https://ph.koyeb.com',
@@ -34,8 +35,12 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
       <TrackPageViews />
       <IdentifyUser />
       {children}
-    </PostHogProvider>
+    </PostHogJsProvider>
   );
+}
+
+function usePostHog(): PostHog | undefined {
+  return usePostHogJs();
 }
 
 function TrackPageViews() {
