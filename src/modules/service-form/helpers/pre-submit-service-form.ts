@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { CatalogInstance, OrganizationPlan } from 'src/api/model';
-import { useTrackEvent } from 'src/application/analytics';
+import { useTrackEvent } from 'src/application/posthog';
 
 export function usePreSubmitServiceForm() {
   const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();

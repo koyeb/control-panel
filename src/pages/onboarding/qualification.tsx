@@ -6,7 +6,7 @@ import { Button } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useTrackEvent } from 'src/application/analytics';
+import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconArrowRight } from 'src/components/icons';

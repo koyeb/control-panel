@@ -2,8 +2,8 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { App, ComputeDeployment, Service } from 'src/api/model';
-import { useTrackEvent } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
+import { useTrackEvent } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
 import { ActionsList, ActionsListButton, ActionsListLink } from 'src/components/actions-list';

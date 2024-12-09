@@ -2,7 +2,6 @@ import { Elements as StripeElements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { QueryClientProvider as TanstackQueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import posthog from 'posthog-js';
 import { Component, Suspense, useMemo } from 'react';
 
 import { useMount } from 'src/hooks/lifecycle';
@@ -12,31 +11,19 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
-import { AnalyticsProvider, LogAnalytics, NoopAnalytics } from './analytics';
 import { getConfig } from './config';
+import { PostHogProvider } from './posthog';
 import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
 import { TokenProvider, useToken } from './token';
 
-const { posthogKey, stripePublicKey } = getConfig();
+const { stripePublicKey } = getConfig();
 
 export type ProvidersProps = {
   children: React.ReactNode;
 };
 
 export function Providers({ children }: ProvidersProps) {
-  const analytics = useMemo(() => {
-    if (posthogKey === '') {
-      return new NoopAnalytics();
-    }
-
-    if (posthogKey === 'log') {
-      return new LogAnalytics();
-    }
-
-    return posthog;
-  }, []);
-
   const stripePromise = useMemo(() => {
     if (stripePublicKey !== undefined) {
       return loadStripe(stripePublicKey);
@@ -55,13 +42,13 @@ export function Providers({ children }: ProvidersProps) {
         <Suspense>
           <TokenProvider>
             <QueryClientProvider>
-              <AnalyticsProvider analytics={analytics}>
+              <PostHogProvider>
                 <StripeElements stripe={stripePromise}>
                   <ReactQueryDevtools />
                   <NotificationContainer />
                   <ErrorBoundary>{children}</ErrorBoundary>
                 </StripeElements>
-              </AnalyticsProvider>
+              </PostHogProvider>
             </QueryClientProvider>
           </TokenProvider>
         </Suspense>
