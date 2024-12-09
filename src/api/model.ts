@@ -137,11 +137,9 @@ export type AiModel = {
   slug: string;
   description: string;
   logo: string;
-  modelName: string;
   dockerImage: string;
-  parameters: string;
-  engine: string;
   minVRam: number;
+  metadata: Array<{ name: string; value: string }>;
 };
 
 // deployment

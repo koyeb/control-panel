@@ -221,11 +221,13 @@ function OverviewSection({ model, form }: { model?: AiModel; form: ModelForm }) 
   return (
     <Section title={<T id="overview.title" />}>
       <div className="divide-y rounded border">
-        <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
-          <Metadata label={<T id="overview.modelNameLabel" />} value={model?.modelName ?? '-'} />
-          <Metadata label={<T id="overview.parametersLabel" />} value={model?.parameters ?? '-'} />
-          <Metadata label={<T id="overview.inferenceEngineLabel" />} value={model?.engine ?? '-'} />
-        </div>
+        {model && model.metadata.length > 0 && (
+          <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
+            {model.metadata.map(({ name, value }, index) => (
+              <Metadata key={index} label={name} value={value} />
+            ))}
+          </div>
+        )}
 
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           <Metadata label={<T id="overview.instanceTypeLabel" />} value={instance?.displayName} />
@@ -250,13 +252,7 @@ function ModelSection({ form }: { form: ModelForm }) {
         getKey={(model) => model.slug}
         itemToString={getName}
         itemToValue={(model) => model.slug}
-        renderItem={(model) => (
-          <div className="row items-center gap-2">
-            <div>{model.name}</div>
-            <div className="text-xs text-dim">•</div>
-            <div className="text-xs text-dim"> parameters: {model.parameters}</div>
-          </div>
-        )}
+        renderItem={(model) => model.name}
         onChangeEffect={(model) => {
           const instance = instances.find(instanceBestFit(model));
 

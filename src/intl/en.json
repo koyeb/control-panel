@@ -408,9 +408,6 @@
   "modelForm": {
     "overview": {
       "title": "Overview",
-      "modelNameLabel": "Model",
-      "parametersLabel": "Parameters",
-      "inferenceEngineLabel": "Inference engine",
       "instanceTypeLabel": "Instance type",
       "scalingLabel": "Scaling",
       "regionLabel": "Region"

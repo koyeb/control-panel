@@ -70,6 +70,7 @@ type OneClickAppApiResponse = {
   model_inference_engine?: string;
   model_docker_image?: string;
   model_min_vram_gb?: number;
+  metadata?: Array<{ name: string; value: string }>;
 };
 
 async function fetchOneClickApps() {
@@ -132,11 +133,9 @@ function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
     slug: app.slug,
     description: app.description,
     logo: app.logos[0],
-    modelName: app.model_name!,
     dockerImage: app.model_docker_image!,
-    parameters: app.model_size!,
-    engine: app.model_inference_engine!,
     minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
+    metadata: app.metadata ?? [],
   };
 }
 
