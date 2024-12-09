@@ -9,6 +9,7 @@ type AppConfig = Partial<{
   pageContextBaseUrl: string;
   idenfyServiceBaseUrl: string;
   recaptchaClientKey: string;
+  posthogApiHost: string;
   posthogKey: string;
   stripePublicKey: string;
   mapboxToken: string;
@@ -30,6 +31,7 @@ export function getConfig(): AppConfig {
     pageContextBaseUrl: import.meta.env.VITE_PAGE_CONTEXT_BASE_URL,
     idenfyServiceBaseUrl: import.meta.env.VITE_IDENFY_SERVICE_BASE_URL,
     recaptchaClientKey: import.meta.env.VITE_RECAPTCHA_CLIENT_KEY,
+    posthogApiHost: import.meta.env.VITE_POSTHOG_API_HOST,
     posthogKey: import.meta.env.VITE_POSTHOG_KEY,
     stripePublicKey: import.meta.env.VITE_STRIPE_PUBLIC_KEY,
     mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN,
@@ -37,7 +39,7 @@ export function getConfig(): AppConfig {
     disablePolling: import.meta.env.VITE_DISABLE_POLLING,
   };
 
-  const getValue = (name: keyof AppConfig) => {
+  const getValue = (name: keyof AppConfig): string | undefined => {
     const value = localStorageConfig[name] ?? envConfig[name];
 
     if (value === '') {
@@ -55,6 +57,7 @@ export function getConfig(): AppConfig {
     websiteUrl: getValue('websiteUrl'),
     pageContextBaseUrl: getValue('pageContextBaseUrl'),
     recaptchaClientKey: getValue('recaptchaClientKey'),
+    posthogApiHost: getValue('posthogApiHost'),
     posthogKey: getValue('posthogKey'),
     stripePublicKey: getValue('stripePublicKey'),
     mapboxToken: getValue('mapboxToken'),

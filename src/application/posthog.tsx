@@ -15,9 +15,9 @@ type PostHogProviderProps = {
 };
 
 export function PostHogProvider({ children }: PostHogProviderProps) {
-  const { posthogKey } = getConfig();
+  const { posthogApiHost, posthogKey } = getConfig();
 
-  if (posthogKey === undefined) {
+  if (posthogApiHost === undefined || posthogKey === undefined) {
     return children;
   }
 
@@ -25,7 +25,7 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
     <PostHogJsProvider
       apiKey={posthogKey}
       options={{
-        api_host: 'https://ph.koyeb.com',
+        api_host: posthogApiHost,
         ui_host: 'https://eu.posthog.com',
         capture_pageview: false,
         capture_pageleave: true,
