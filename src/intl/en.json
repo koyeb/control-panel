@@ -1112,7 +1112,6 @@
         "enableAutoscaling": "To enable autoscaling and set scaling criteria, the maximum instances per region must be greater than one",
         "min": "Min",
         "max": "Max",
-        "maxIsOneWhenMinIsZero": "Max must be 1 when min is 0",
         "cpuLabel": "Target CPU usage",
         "cpuDescription": "Autoscale to target {value, number, :: percent} CPU usage on average, per instance",
         "cpuUnit": "%",

@@ -60,12 +60,10 @@ function ScalingValues() {
   const serviceType = useWatchServiceForm('serviceType');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useWatchServiceForm('instance');
-  const scaling = useWatchServiceForm('scaling');
 
   const canChangeScaling = instance !== 'free' && !hasVolumes;
 
   const scaleToZero = useFeatureFlag('scale-to-zero');
-  const scaleToZeroWithAutoscaling = useFeatureFlag('allow-scale-to-zero-with-autoscaling');
 
   const setScalingValue = (field: 'min' | 'max') => {
     return (value: number) => setValue(`scaling.${field}`, value, { shouldValidate: true });
@@ -126,8 +124,6 @@ function ScalingValues() {
         type="number"
         label={<T id="max" />}
         disabled={!canChangeScaling}
-        readOnly={scaling.min === 0 && !scaleToZeroWithAutoscaling}
-        helperText={scaling.min === 0 && !scaleToZeroWithAutoscaling && <T id="maxIsOneWhenMinIsZero" />}
         onKeyDown={onKeyDownPositiveInteger}
         min={Math.max(min, 1)}
         max={max}

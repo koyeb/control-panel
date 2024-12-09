@@ -124,7 +124,6 @@ const scaleAboveZeroTargets: Array<keyof Scaling['targets']> = [
 function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
   const scaleToZero = useFeatureFlag('scale-to-zero');
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
-  const scaleToZeroWithAutoscaling = useFeatureFlag('allow-scale-to-zero-with-autoscaling');
 
   useEffect(() => {
     const subscription = watch((formValues, { type, name }) => {
@@ -151,10 +150,6 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
 
       if (scaling.min === 0 && serviceType !== 'web') {
         scaling.min = 1;
-      }
-
-      if (scaling.min === 0 && scaling.max !== 1 && !scaleToZeroWithAutoscaling) {
-        scaling.max = 1;
       }
 
       if (scaling.min > scaling.max) {
@@ -193,5 +188,5 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
     return () => {
       subscription.unsubscribe();
     };
-  }, [scaleToZero, scaleToZeroIdleDelay, scaleToZeroWithAutoscaling, watch, setValue, trigger]);
+  }, [scaleToZero, scaleToZeroIdleDelay, watch, setValue, trigger]);
 }
