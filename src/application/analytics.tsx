@@ -1,81 +1,58 @@
-import posthog from 'posthog-js';
-import { createContext, useCallback, useContext, useEffect } from 'react';
+import * as intercom from '@intercom/messenger-js-sdk';
+import { PostHogProvider, usePostHog } from 'posthog-js/react';
+import { useCallback, useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'wouter';
 
 import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
-import { AssertionError, defined } from 'src/utils/assert';
 
 import { getConfig } from './config';
 import { identifyUserInSentry } from './report-error';
 
-/* eslint-disable react-refresh/only-export-components */
-
-declare global {
-  // eslint-disable-next-line no-var
-  var Intercom: ((action: string, param?: unknown) => void) | undefined;
-}
-
-export type Analytics = Pick<typeof posthog, 'init' | 'identify' | 'group' | 'capture' | 'reset'>;
-
-const analyticsContext = createContext<Analytics>(null as never);
-
 type AnalyticsProviderProps = {
-  analytics: Analytics;
   children: React.ReactNode;
 };
 
-export function AnalyticsProvider({ analytics, children }: AnalyticsProviderProps) {
+export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
+  const { posthogKey } = getConfig();
+
+  if (posthogKey === undefined) {
+    return children;
+  }
+
   return (
-    <analyticsContext.Provider value={analytics}>
-      <Initialize />
+    <PostHogProvider
+      apiKey={posthogKey}
+      options={{
+        api_host: 'https://ph.koyeb.com',
+        ui_host: 'https://eu.posthog.com',
+        capture_pageview: false,
+        capture_pageleave: true,
+        autocapture: false,
+      }}
+    >
       <TrackPageViews />
+      <IdentifyUser />
       {children}
-    </analyticsContext.Provider>
+    </PostHogProvider>
   );
-}
-
-function Initialize() {
-  const analytics = useAnalytics();
-
-  useEffect(() => {
-    const { posthogKey } = getConfig();
-
-    if (posthogKey === undefined) {
-      return;
-    }
-
-    analytics.init(posthogKey, {
-      api_host: 'https://ph.koyeb.com',
-      ui_host: 'https://eu.posthog.com',
-      capture_pageview: false,
-      capture_pageleave: true,
-      autocapture: false,
-    });
-  });
-
-  return null;
 }
 
 function TrackPageViews() {
   const [location] = useLocation();
-  const analytics = useAnalytics();
+  const posthog = usePostHog();
 
   useEffect(() => {
-    analytics.capture('$pageview', {
+    posthog?.capture('$pageview', {
       $current_url: window.location.href,
     });
-  }, [location, analytics]);
+  }, [location, posthog]);
 
   return null;
 }
 
-function useAnalytics() {
-  return defined(useContext(analyticsContext), new AssertionError('Missing analytics provider'));
-}
-
-export function useIdentifyUser() {
-  const analytics = useAnalytics();
+function IdentifyUser() {
+  const posthog = usePostHog();
 
   const user = useUserUnsafe();
   const organization = useOrganizationUnsafe();
@@ -84,68 +61,37 @@ export function useIdentifyUser() {
     identifyUserInSentry(user);
 
     if (user !== undefined) {
-      analytics.identify(user.id);
+      posthog?.identify(user.id);
     }
-  }, [analytics, user]);
+  }, [posthog, user]);
 
   useEffect(() => {
     if (organization !== undefined) {
-      analytics.group('segment_group', organization.id);
+      posthog?.group('segment_group', organization.id);
     }
-  }, [analytics, organization]);
+  }, [posthog, organization]);
+
+  return null;
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useResetIdentifyUser() {
-  const analytics = useAnalytics();
+  const posthog = usePostHog();
 
   return useCallback(() => {
-    globalThis.Intercom?.('shutdown');
-    analytics.reset(true);
-  }, [analytics]);
+    intercom.shutdown();
+    posthog?.reset(true);
+  }, [posthog]);
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useTrackEvent() {
-  const analytics = useAnalytics();
+  const posthog = usePostHog();
 
   return useCallback(
     (event: string, properties: Record<string, unknown> = {}) => {
-      analytics.capture(event, properties);
+      posthog?.capture(event, properties);
     },
-    [analytics],
+    [posthog],
   );
-}
-
-abstract class StubAnalytics implements Analytics {
-  init(token: string, config?: Record<string, unknown>): undefined {
-    this.method('init', { token, config });
-  }
-
-  identify(userId: string): void {
-    this.method('identify', { userId });
-  }
-
-  group(group: string, value: string): void {
-    this.method('group', { group, value });
-  }
-
-  capture(eventName: string, properties: Record<string, unknown>): undefined {
-    this.method('track', { eventName, properties });
-  }
-
-  reset(): void {
-    this.method('reset');
-  }
-
-  protected abstract method(name: string, args?: Record<string, unknown>): void;
-}
-
-export class NoopAnalytics extends StubAnalytics {
-  protected method(): void {}
-}
-
-export class LogAnalytics extends StubAnalytics {
-  protected method(name: string, args?: Record<string, unknown>): void {
-    // eslint-disable-next-line no-console
-    console.log(`StubAnalytics.${name}`, args);
-  }
 }
