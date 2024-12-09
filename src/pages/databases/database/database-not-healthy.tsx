@@ -1,3 +1,4 @@
+import * as intercom from '@intercom/messenger-js-sdk';
 import { useMutation } from '@tanstack/react-query';
 
 import { Button } from '@koyeb/design-system';
@@ -37,7 +38,7 @@ export function DatabaseNotHealth({ service }: { service: Service }) {
       </p>
 
       <div className="row mt-4 gap-4">
-        <Button onClick={() => window.Intercom?.('showNewMessage', prefillMessage(service.id))}>
+        <Button onClick={() => intercom.showNewMessage(prefillMessage(service.id))}>
           <T id="contactUs" />
         </Button>
 

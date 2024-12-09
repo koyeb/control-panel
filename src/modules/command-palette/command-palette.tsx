@@ -1,3 +1,4 @@
+import * as intercom from '@intercom/messenger-js-sdk';
 import clsx from 'clsx';
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -629,7 +630,7 @@ function useRegisterMiscCommands() {
         label: 'Contact Koyeb support',
         description: 'Ask us anything through our chat',
         keywords: ['support', 'contact', 'chat', 'intercom', 'help'],
-        execute: () => window.Intercom?.('showNewMessage'),
+        execute: () => intercom.showNewMessage(''),
       });
     }
 
