@@ -1,3 +1,4 @@
+import * as intercom from '@intercom/messenger-js-sdk';
 import clsx from 'clsx';
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -8,8 +9,8 @@ import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useApps, useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
-import { useResetIdentifyUser } from 'src/application/analytics';
 import { notify } from 'src/application/notify';
+import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { IconChevronRight } from 'src/components/icons';
@@ -629,7 +630,7 @@ function useRegisterMiscCommands() {
         label: 'Contact Koyeb support',
         description: 'Ask us anything through our chat',
         keywords: ['support', 'contact', 'chat', 'intercom', 'help'],
-        execute: () => window.Intercom?.('showNewMessage'),
+        execute: () => intercom.showNewMessage(''),
       });
     }
 

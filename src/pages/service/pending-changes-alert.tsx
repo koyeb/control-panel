@@ -9,7 +9,7 @@ import { useDeployment } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { ComputeDeployment, Service } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { useTrackEvent } from 'src/application/analytics';
+import { useTrackEvent } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { useNavigate } from 'src/hooks/router';

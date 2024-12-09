@@ -1,20 +1,15 @@
-import posthog from 'posthog-js';
-import { useEffect, useMemo, useState } from 'react';
+// eslint-disable-next-line no-restricted-imports
+import { useFeatureFlagEnabled } from 'posthog-js/react';
+import { useMemo } from 'react';
 import { z } from 'zod';
 
-export function useFeatureFlag(feature: string) {
-  const [enabled, setEnabled] = useState<boolean>();
+export function useFeatureFlag(flag: string) {
+  const enabled = useFeatureFlagEnabled(flag);
   const localStorageFlags = useLocalStorageFlags();
 
-  useEffect(() => {
-    if (feature in localStorageFlags) {
-      setEnabled(localStorageFlags[feature]);
-    } else {
-      posthog.onFeatureFlags(() => {
-        setEnabled(posthog.isFeatureEnabled(feature) === true);
-      });
-    }
-  }, [localStorageFlags, feature]);
+  if (flag in localStorageFlags) {
+    return localStorageFlags[flag];
+  }
 
   return enabled;
 }

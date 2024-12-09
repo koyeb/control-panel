@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
-import { useResetIdentifyUser } from 'src/application/analytics';
+import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import {
