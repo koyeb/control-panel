@@ -16,6 +16,7 @@ export function mapVolume(volume: Api.PersistentVolume): Volume {
     region: volume.region!,
     size: parseBytes(`${volume.max_size}GB`),
     status: lowerCase(volume.status!.replace('PERSISTENT_VOLUME_STATUS_', '')) as VolumeStatus,
+    snapshotId: volume.snapshot_id,
     serviceId: volume.service_id,
     createdAt: volume.created_at!,
   };

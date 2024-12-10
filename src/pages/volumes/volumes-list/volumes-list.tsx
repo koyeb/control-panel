@@ -1,9 +1,12 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Button, ButtonMenuItem, Table, useBreakpoint } from '@koyeb/design-system';
+import { Button, ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
 import { useService } from 'src/api/hooks/service';
+import { mapSnapshot } from 'src/api/mappers/volume';
 import { Volume } from 'src/api/model';
+import { useApiQueryFn } from 'src/api/use-api';
 import { formatBytes } from 'src/application/memory';
 import { routes } from 'src/application/routes';
 import { ActionsMenu } from 'src/components/actions-menu';
@@ -46,7 +49,7 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
       columns={{
         name: {
           header: <T id="name" />,
-          render: (volume) => volume.name,
+          render: (volume) => <VolumeName volume={volume} />,
         },
         status: {
           header: <T id="status" />,
@@ -83,6 +86,23 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
         },
       }}
     />
+  );
+}
+
+function VolumeName({ volume }: { volume: Volume }) {
+  const snapshot = useQuery({
+    ...useApiQueryFn('getSnapshot', { path: { id: volume.snapshotId! } }),
+    enabled: volume.snapshotId !== undefined,
+    select: ({ snapshot }) => mapSnapshot(snapshot!),
+  });
+
+  return (
+    <div className="row items-center gap-2">
+      {volume.name}
+      {snapshot.isSuccess && (
+        <InfoTooltip content={<T id="parentSnapshot" values={{ name: snapshot.data.name }} />} />
+      )}
+    </div>
   );
 }
 

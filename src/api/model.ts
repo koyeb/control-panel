@@ -633,6 +633,7 @@ export type Volume = {
   name: string;
   region: string;
   size: number;
+  snapshotId?: string;
   serviceId?: string;
   createdAt: string;
 };

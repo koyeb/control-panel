@@ -1778,6 +1778,7 @@
       },
       "volumesList": {
         "name": "Name",
+        "parentSnapshot": "Created from snapshot {name}",
         "created": "Created",
         "region": "Region",
         "size": "Size",

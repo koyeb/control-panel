@@ -79,6 +79,7 @@ export const api = {
   updateVolume: endpoint('post', '/v1/volumes/{id}'),
   deleteVolume: endpoint('delete', '/v1/volumes/{id}'),
   listSnapshots: endpoint('get', '/v1/snapshots'),
+  getSnapshot: endpoint('get', '/v1/snapshots/{id}'),
   createSnapshot: endpoint('post', '/v1/snapshots'),
   updateSnapshot: endpoint('post', '/v1/snapshots/{id}'),
   deleteSnapshot: endpoint('delete', '/v1/snapshots/{id}'),
