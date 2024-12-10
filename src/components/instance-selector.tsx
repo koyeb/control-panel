@@ -118,7 +118,7 @@ export function InstanceSelectorList({
   }, [selectedCategory]);
 
   useMount(() => {
-    listRef.current?.querySelector('li:has(:checked)')?.scrollIntoView({ block: 'center' });
+    listRef.current?.querySelector('li:has(:checked)')?.scrollIntoView({ block: 'nearest' });
   });
 
   return (
