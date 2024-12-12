@@ -1144,9 +1144,12 @@
       }
     },
     "environmentVariables": {
-      "title": "{count, plural, =0 {No variables} =1 {{count} variable} other {{count} variables}} configured",
+      "title": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}",
       "description": "Environment variables",
-      "expandedTitle": "Edit environment variables",
+      "expandedTitle": "Edit variables",
+      "title.new": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}, {files, plural, =0 {no files} =1 {{files} file} other {{files} files}}",
+      "description.new": "Environment variables and files",
+      "expandedTitle.new": "Edit variables and files",
       "tabs": {
         "environmentVariables": "Environment variables",
         "files": "Files"
@@ -1177,15 +1180,18 @@
     },
     "files": {
       "title": "Files",
-      "mountPathLabel": "Mount path",
-      "permissionsLabel": "Permissions (optional)",
-      "showDetailsLabel": "Show details",
-      "add": "Add file",
-      "unmount": "Unmount",
-      "contentEditor": {
+      "description": "Seamlessly mount runtime files with dynamic interpolation and secure permissions",
+      "mountPath": {
+        "label": "Mount path",
+        "placeholder": "e.g. /folder/folder"
+      },
+      "content": {
         "label": "File content",
+        "placeholder": "Add content, like secrets and variables",
         "fileTooLarge": "File too large"
-      }
+      },
+      "add": "Add file",
+      "remove": "Remove"
     },
     "ports": {
       "titleSinglePort": "Port {portNumber} exposed {public, select, true {on {path}} other {to the service mesh}}",

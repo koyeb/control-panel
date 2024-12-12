@@ -7,6 +7,7 @@ import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { IconPlus } from 'src/components/icons';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
@@ -21,25 +22,33 @@ import { Files } from './files';
 const T = Translate.prefix('serviceForm.environmentVariables');
 
 export function EnvironmentVariablesSection() {
-  const variables = useFormContext<ServiceForm>().watch('environmentVariables');
+  const variables = useFormContext<ServiceForm>()
+    .watch('environmentVariables')
+    .filter((field) => field.name !== '');
+  const files = useFormContext<ServiceForm>().watch('fileMounts');
   const [tab, setTab] = useState<'environmentVariables' | 'files'>('environmentVariables');
+
+  const hasMountFiles = useFeatureFlag('mount-files');
+  const id = <T extends string>(id: T): `${T}.new` | T => (hasMountFiles ? `${id}.new` : id);
 
   return (
     <ServiceFormSection
       section="environmentVariables"
-      title={<T id="title" values={{ count: variables.filter((field) => field.name !== '').length }} />}
-      description={<T id="description" />}
-      expandedTitle={<T id="expandedTitle" />}
+      title={<T id={id('title')} values={{ variables: variables.length, files: files.length }} />}
+      description={<T id={id('description')} />}
+      expandedTitle={<T id={id('expandedTitle')} />}
       className="col gaps"
     >
-      <TabButtons>
-        <TabButton selected={tab === 'environmentVariables'} onClick={() => setTab('environmentVariables')}>
-          <T id="description" />
-        </TabButton>
-        <TabButton selected={tab === 'files'} onClick={() => setTab('files')}>
-          <Translate id="serviceForm.files.title" />
-        </TabButton>
-      </TabButtons>
+      {hasMountFiles && (
+        <TabButtons>
+          <TabButton selected={tab === 'environmentVariables'} onClick={() => setTab('environmentVariables')}>
+            <T id="tabs.environmentVariables" />
+          </TabButton>
+          <TabButton selected={tab === 'files'} onClick={() => setTab('files')}>
+            <T id="tabs.files" />
+          </TabButton>
+        </TabButtons>
+      )}
 
       {tab === 'environmentVariables' && <EnvironmentVariables />}
       {tab === 'files' && <Files />}

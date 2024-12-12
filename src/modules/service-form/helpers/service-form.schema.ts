@@ -146,7 +146,6 @@ function fileMount() {
   return z.object({
     mountPath: z.string(),
     content: z.string(),
-    permissions: z.string(),
   });
 }
 

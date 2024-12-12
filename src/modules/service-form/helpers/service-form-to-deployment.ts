@@ -156,7 +156,7 @@ function fileMounts(files: Array<FileMount>): Array<Api.DeploymentFileMount> {
     (file): Api.DeploymentFileMount => ({
       path: file.mountPath,
       content: file.content,
-      permissions: file.permissions,
+      permissions: '0777',
     }),
   );
 }
