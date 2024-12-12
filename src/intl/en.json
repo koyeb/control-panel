@@ -1177,15 +1177,18 @@
     },
     "files": {
       "title": "Files",
-      "mountPathLabel": "Mount path",
-      "permissionsLabel": "Permissions (optional)",
-      "showDetailsLabel": "Show details",
-      "add": "Add file",
-      "unmount": "Unmount",
-      "contentEditor": {
+      "description": "Seamlessly mount runtime files with dynamic interpolation and secure permissions",
+      "mountPath": {
+        "label": "Mount path",
+        "placeholder": "e.g. /folder/folder"
+      },
+      "content": {
         "label": "File content",
+        "placeholder": "Add content, like secrets and variables",
         "fileTooLarge": "File too large"
-      }
+      },
+      "add": "Add file",
+      "remove": "Remove"
     },
     "ports": {
       "titleSinglePort": "Port {portNumber} exposed {public, select, true {on {path}} other {to the service mesh}}",

@@ -104,7 +104,7 @@ describe('serviceFormSchema', () => {
   it('removes empty file mounts', () => {
     const form = createServiceForm();
 
-    form.fileMounts = [{ mountPath: '', content: '', permissions: '' }];
+    form.fileMounts = [{ mountPath: '', content: '' }];
 
     expect(parse(form)).toHaveProperty('fileMounts', []);
   });

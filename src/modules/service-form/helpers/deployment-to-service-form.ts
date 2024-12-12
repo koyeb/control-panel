@@ -229,7 +229,6 @@ function environmentVariables(
 function fileMounts(definition: Api.DeploymentDefinition): Array<Partial<FileMount>> | undefined {
   return definition.file_mounts?.map((file) => ({
     mountPath: file.path,
-    permissions: file.permissions,
     content: file.content,
   }));
 }

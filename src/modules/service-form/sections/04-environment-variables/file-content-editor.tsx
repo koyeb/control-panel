@@ -9,7 +9,7 @@ import { Translate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
-const T = Translate.prefix('serviceForm.files.contentEditor');
+const T = Translate.prefix('serviceForm.files.content');
 
 type FileContentEditorProps = {
   index: number;
@@ -34,8 +34,10 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
   return (
     <FileDropZone onDrop={([file]) => file && onFileDropped(file)}>
       <ControlledTextArea<ServiceForm, `fileMounts.${number}.content`>
+        autoFocus
         name={`fileMounts.${index}.content`}
         label={<T id="label" />}
+        placeholder={t('placeholder')}
         rows={12}
       />
     </FileDropZone>
