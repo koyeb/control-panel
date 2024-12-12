@@ -9,7 +9,7 @@ import { Translate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
-const T = Translate.prefix('serviceForm.mounts.files.contentEditor');
+const T = Translate.prefix('serviceForm.files.contentEditor');
 
 type FileContentEditorProps = {
   index: number;

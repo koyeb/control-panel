@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -6,7 +5,6 @@ import { Alert, Button } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
@@ -14,15 +12,12 @@ import { ServiceForm, ServiceFormSection as ServiceFormSectionType } from '../..
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { CreateVolumeDialog } from './create-volume-dialog';
-import { Files } from './files';
 import { VolumeFields } from './volume-fields';
-import { Volumes } from './volumes';
 
-const T = Translate.prefix('serviceForm.mounts');
+const T = Translate.prefix('serviceForm.volumes');
 
 export function VolumesSection() {
   const volumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '');
-  const hasMountFiles = useFeatureFlag('mount-files');
 
   return (
     <ServiceFormSection
@@ -30,15 +25,9 @@ export function VolumesSection() {
       title={<T id="title" values={{ count: volumes.length }} />}
       description={<T id="description" />}
       expandedTitle={<T id="titleExpanded" />}
-      className={clsx('col', hasMountFiles ? 'gap-8' : 'gaps')}
+      className="col gaps"
     >
-      {!hasMountFiles && <SectionContent />}
-      {hasMountFiles && (
-        <>
-          <Volumes />
-          {hasMountFiles && <Files />}
-        </>
-      )}
+      <SectionContent />
     </ServiceFormSection>
   );
 }
@@ -64,12 +53,12 @@ function SectionContent() {
       <Alert
         variant="info"
         style="outline"
-        description={<T id="volumes.noDowntimeAlert" values={{ documentationLink }} />}
+        description={<T id="noDowntimeAlert" values={{ documentationLink }} />}
       />
 
       {fields.length === 0 && (
         <div className="py-4">
-          <T id="volumes.noVolumesAttached" />
+          <T id="noVolumesAttached" />
         </div>
       )}
 
@@ -93,7 +82,7 @@ function SectionContent() {
           onClick={() => append({ name: '', size: 0, mountPath: '', mounted: false })}
         >
           <IconPlus className="size-4" />
-          <T id="volumes.addVolume" />
+          <T id="addVolume" />
         </Button>
       </div>
 
@@ -144,29 +133,29 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
 
   if (instance && !instance.hasVolumes) {
     return {
-      title: <T id="volumes.volumesUnavailable.unavailableForInstanceTitle" values={values} />,
-      description: <T id="volumes.volumesUnavailable.unavailableForInstanceDescription" values={values} />,
+      title: <T id="volumesUnavailable.unavailableForInstanceTitle" values={values} />,
+      description: <T id="volumesUnavailable.unavailableForInstanceDescription" values={values} />,
     };
   }
 
   if (hasMultipleInstances) {
     return {
-      title: <T id="volumes.volumesUnavailable.multipleInstancesTitle" />,
-      description: <T id="volumes.volumesUnavailable.multipleInstancesDescription" values={values} />,
+      title: <T id="volumesUnavailable.multipleInstancesTitle" />,
+      description: <T id="volumesUnavailable.multipleInstancesDescription" values={values} />,
     };
   }
 
   if (hasMultipleRegions) {
     return {
-      title: <T id="volumes.volumesUnavailable.multipleRegionsTitle" />,
-      description: <T id="volumes.volumesUnavailable.multipleRegionsDescription" values={values} />,
+      title: <T id="volumesUnavailable.multipleRegionsTitle" />,
+      description: <T id="volumesUnavailable.multipleRegionsDescription" values={values} />,
     };
   }
 
   if (firstUnavailableRegion !== undefined) {
     return {
-      title: <T id="volumes.volumesUnavailable.unavailableForRegionTitle" values={values} />,
-      description: <T id="volumes.volumesUnavailable.unavailableForRegionDescription" values={values} />,
+      title: <T id="volumesUnavailable.unavailableForRegionTitle" values={values} />,
+      description: <T id="volumesUnavailable.unavailableForRegionDescription" values={values} />,
     };
   }
 }
