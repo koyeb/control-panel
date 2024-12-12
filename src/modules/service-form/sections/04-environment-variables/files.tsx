@@ -2,76 +2,98 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 
-import { Button, IconButton, useBreakpoint } from '@koyeb/design-system';
+import { Button, IconButton } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconPlus, IconTrash } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
-import { EditFileContentDialog } from './edit-file-content-dialog';
+import { FileContentEditor } from './file-content-editor';
 
-const T = Translate.prefix('serviceForm.environmentVariables.files');
+const T = Translate.prefix('serviceForm.files');
 
 export function Files() {
-  const { fields, append, remove, update } = useFieldArray<ServiceForm, 'fileMounts'>({ name: 'fileMounts' });
+  const t = T.useTranslate();
+  const { fields, append, remove } = useFieldArray<ServiceForm, 'fileMounts'>({ name: 'fileMounts' });
 
-  const showLabel = (index: number) => index === 0;
-  const isMobile = !useBreakpoint('md');
-
-  const [editContentIndex, setEditContentIndex] = useState<number>();
-
-  const handleRemove = (index: number) => {
-    if (fields.length > 1) {
-      remove(index);
-    } else {
-      update(index, { mountPath: '', permissions: '', content: '' });
-    }
-  };
+  const [expandedIndex, setExpandedIndex] = useState<number>();
+  const isExpanded = (index: number) => index === expandedIndex;
 
   return (
-    <>
-      {fields.map((file, index) => (
-        <div
-          key={file.id}
-          className="col lg:row items-start gap-4 rounded border p-4 lg:items-end lg:border-none lg:p-0"
-        >
-          <ControlledInput<ServiceForm, `fileMounts.${number}.mountPath`>
-            name={`fileMounts.${index}.mountPath`}
-            label={showLabel(index) && <T id="mountPathLabel" />}
-          />
+    <div className="col gap-2">
+      {fields.length === 0 && (
+        <div className="row items-center justify-between gap-4 rounded-md border p-3">
+          <p>
+            <T id="description" />
+          </p>
 
-          <ControlledInput<ServiceForm, `fileMounts.${number}.permissions`>
-            name={`fileMounts.${index}.permissions`}
-            label={showLabel(index) && <T id="permissionsLabel" />}
-            className="max-w-32"
-          />
-
-          <Button variant="outline" color="gray" onClick={() => setEditContentIndex(index)}>
-            <T id="editContentLabel" />
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => append({ mountPath: '', content: '' })}
+            className="self-center"
+          >
+            <IconPlus className="size-4" />
+            <T id="add" />
           </Button>
+        </div>
+      )}
 
-          {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-          <div className={clsx(!isMobile && showLabel(index) && 'mt-[1.625rem]')}>
-            <IconButton color="gray" Icon={IconTrash} onClick={() => handleRemove(index)}>
+      {fields.map((file, index) =>
+        isExpanded(index) ? (
+          <div key={file.id} className="col gap-4 rounded-md border p-4">
+            <FileContentEditor index={index} />
+
+            <div className="row items-end gap-4">
+              <ControlledInput<ServiceForm, `fileMounts.${number}.mountPath`>
+                name={`fileMounts.${index}.mountPath`}
+                label={<T id="mountPath.label" />}
+                placeholder={t('mountPath.placeholder')}
+                className="w-full"
+              />
+            </div>
+
+            <Button variant="outline" color="gray" onClick={() => remove(index)} className="self-start">
+              <T id="remove" />
+            </Button>
+          </div>
+        ) : (
+          <div key={file.id} className="row items-end gap-4 rounded-md border p-4">
+            <ControlledInput<ServiceForm, `fileMounts.${number}.content`>
+              name={`fileMounts.${index}.content`}
+              label={<T id="content.label" />}
+              placeholder={t('content.placeholder')}
+              onFocus={() => setExpandedIndex(index)}
+              className="flex-1"
+              inputClassName="truncate"
+            />
+
+            <ControlledInput<ServiceForm, `fileMounts.${number}.mountPath`>
+              name={`fileMounts.${index}.mountPath`}
+              label={<T id="mountPath.label" />}
+              placeholder={t('mountPath.placeholder')}
+              className="flex-1"
+            />
+
+            <IconButton color="gray" Icon={IconTrash} onClick={() => remove(index)}>
               <T id="remove" />
             </IconButton>
           </div>
-        </div>
-      ))}
+        ),
+      )}
 
-      <div>
+      <div className="row items-center justify-between">
         <Button
           variant="ghost"
           color="gray"
-          onClick={() => append({ mountPath: '', content: '', permissions: '' })}
+          onClick={() => append({ mountPath: '', content: '' })}
+          className={clsx({ hidden: fields.length === 0 })}
         >
           <IconPlus className="size-4" />
           <T id="add" />
         </Button>
       </div>
-
-      <EditFileContentDialog index={editContentIndex} onClose={() => setEditContentIndex(undefined)} />
-    </>
+    </div>
   );
 }

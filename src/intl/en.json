@@ -1173,19 +1173,22 @@
         "notPlainText": "You must provide a text file",
         "noEnvVars": "No environment variables were identified in the provided file"
       },
-      "createSecret": "Create new secret",
-      "files": {
-        "mountPathLabel": "Mount path",
-        "permissionsLabel": "Permissions",
-        "editContentLabel": "Edit content",
-        "add": "Add file",
-        "remove": "Remove",
-        "editContentDialog": {
-          "title": "Edit file content",
-          "description": "File mounted at <strong>{mountPath}</strong>",
-          "fileTooLarge": "File too large"
-        }
-      }
+      "createSecret": "Create new secret"
+    },
+    "files": {
+      "title": "Files",
+      "description": "Seamlessly mount runtime files with dynamic interpolation and secure permissions",
+      "mountPath": {
+        "label": "Mount path",
+        "placeholder": "e.g. /folder/folder"
+      },
+      "content": {
+        "label": "File content",
+        "placeholder": "Add content, like secrets and variables",
+        "fileTooLarge": "File too large"
+      },
+      "add": "Add file",
+      "remove": "Remove"
     },
     "ports": {
       "titleSinglePort": "Port {portNumber} exposed {public, select, true {on {path}} other {to the service mesh}}",
@@ -1241,16 +1244,21 @@
     "volumes": {
       "title": "{count, plural, =0 {No volumes} =1 {{count} volume} other {{count} volumes}} configured",
       "titleExpanded": "Edit volumes",
+      "description": "Volumes",
       "noDowntimeAlert": "Attaching volumes to your service will prevent zero-downtime deployments. <documentationLink>Learn more</documentationLink>",
       "noVolumesAttached": "Attach and mount a volume to your service to persist data",
-      "description": "Volumes",
       "addVolume": "Add volume",
-      "createVolume": "Create volume",
       "detachVolume": "Detach volume",
       "detachVolumeNotSupported": "Detaching volumes is not supported yet",
-      "volumeNameLabel": "Volume",
-      "volumeNamePlaceholder": "Select a volume",
-      "noVolumes": "No volumes found in {region}",
+      "volumeSelector": {
+        "label": "Volume",
+        "placeholder": "Select or create a volume",
+        "volumesSection": "Volumes",
+        "createSection": "Create volume",
+        "createVolume": "Create new volume",
+        "noVolumes": "No volumes found in {region}",
+        "readOnly": "Can't be changed once mounted"
+      },
       "mountPathLabel": "Mount path",
       "mountedReadOnly": "Can't be changed once mounted",
       "createDialog": {

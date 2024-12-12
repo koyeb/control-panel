@@ -1,90 +1,91 @@
+import clsx from 'clsx';
 import { useState } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, UseFieldArrayReturn, useFormContext } from 'react-hook-form';
 
-import { Alert, Button } from '@koyeb/design-system';
+import { Alert, Button, InfoTooltip } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 
-import { ServiceFormSection } from '../../components/service-form-section';
-import { ServiceForm, ServiceFormSection as ServiceFormSectionType } from '../../service-form.types';
+import { ServiceForm, ServiceFormSection } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { CreateVolumeDialog } from './create-volume-dialog';
-import { VolumeFields } from './volume-fields';
+import { VolumeFields } from './volume-fields.new';
 
 const T = Translate.prefix('serviceForm.volumes');
 
-export function VolumesSection() {
-  const volumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '');
-
-  return (
-    <ServiceFormSection
-      section="volumes"
-      title={<T id="title" values={{ count: volumes.length }} />}
-      description={<T id="description" />}
-      expandedTitle={<T id="titleExpanded" />}
-      className="col gaps"
-    >
-      <SectionContent />
-    </ServiceFormSection>
-  );
-}
-
-function SectionContent() {
+// this was implemented when working on file mounts
+// todo: integrate it into the form
+export function Volumes() {
   const { fields, append, remove } = useFieldArray<ServiceForm, 'volumes'>({ name: 'volumes' });
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-
-  const documentationLink = (children: React.ReactNode) => (
-    <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
-      {children}
-    </DocumentationLink>
-  );
-
   const alert = useVolumesUnavailableAlert();
 
-  if (alert) {
-    return <Alert variant="info" style="outline" title={alert.title} description={alert.description} />;
-  }
-
   return (
-    <>
-      <Alert
-        variant="info"
-        style="outline"
-        description={<T id="noDowntimeAlert" values={{ documentationLink }} />}
-      />
-
-      {fields.length === 0 && (
-        <div className="py-4">
-          <T id="noVolumesAttached" />
+    <div className="col gap-2">
+      <div className="row items-center justify-between">
+        <div className="row items-center gap-1">
+          <T id="title" />
+          <InfoTooltip content="?" />
         </div>
-      )}
 
-      {fields.length > 0 && (
-        <div className="col gap-4">
-          {fields.map((variable, index) => (
-            <VolumeFields
-              key={variable.id}
-              index={index}
-              onCreate={() => setCreateDialogOpen(true)}
-              onRemove={() => remove(index)}
-            />
-          ))}
-        </div>
-      )}
-
-      <div className="col sm:row items-start gap-4">
         <Button
           variant="ghost"
           color="gray"
           onClick={() => append({ name: '', size: 0, mountPath: '', mounted: false })}
+          className={clsx({ hidden: fields.length === 0 })}
         >
           <IconPlus className="size-4" />
           <T id="addVolume" />
         </Button>
       </div>
+
+      {alert && <Alert variant="info" style="outline" title={alert.title} description={alert.description} />}
+      {!alert && <VolumesList fields={fields} append={append} remove={remove} />}
+    </div>
+  );
+}
+
+type VolumesListProps = Pick<UseFieldArrayReturn<ServiceForm, 'volumes'>, 'fields' | 'append' | 'remove'>;
+
+function VolumesList({ fields, append, remove }: VolumesListProps) {
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+
+  const documentationLink = (children: React.ReactNode) => (
+    <DocumentationLink path="/docs/reference/volumes" className="whitespace-nowrap !text-default underline">
+      {children}
+    </DocumentationLink>
+  );
+
+  return (
+    <>
+      {fields.length === 0 && (
+        <div className="row items-center justify-between gap-4 rounded-md border p-3">
+          <p>
+            <T id="noDowntimeAlert" values={{ documentationLink }} />
+          </p>
+
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => append({ name: '', size: 0, mountPath: '', mounted: false })}
+            className="self-center"
+          >
+            <IconPlus className="size-4" />
+            <T id="addVolume" />
+          </Button>
+        </div>
+      )}
+
+      {fields.map((variable, index) => (
+        <VolumeFields
+          key={variable.id}
+          index={index}
+          onCreate={() => setCreateDialogOpen(true)}
+          onRemove={() => remove(index)}
+        />
+      ))}
 
       <CreateVolumeDialog
         open={createDialogOpen}
@@ -107,7 +108,7 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
   const regions = useRegions(useWatchServiceForm('regions'));
   const hasMultipleRegions = useWatchServiceForm('regions').length > 1;
 
-  const sectionLink = (section: ServiceFormSectionType) => {
+  const sectionLink = (section: ServiceFormSection) => {
     // eslint-disable-next-line react/display-name
     return (children: React.ReactNode) => (
       <button type="button" className="underline" onClick={() => setValue('meta.expandedSection', section)}>
