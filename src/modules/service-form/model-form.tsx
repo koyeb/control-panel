@@ -279,7 +279,6 @@ function InstanceSection({ model, form }: { model?: AiModel; form: ModelForm }) 
         instances={instances
           .filter(hasProperty('regionCategory', 'koyeb'))
           .filter(hasProperty('category', 'gpu'))}
-        selectedCategory="gpu"
         selectedInstance={instances.find(hasProperty('identifier', form.watch('instance'))) ?? null}
         onInstanceSelected={(instance) => {
           form.setValue('instance', instance.identifier);
