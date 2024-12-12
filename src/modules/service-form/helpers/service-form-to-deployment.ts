@@ -139,11 +139,15 @@ function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
 }
 
 function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
+  const hasEnvScopes = posthog.featureFlags.isFeatureEnabled('environment-variable-scopes');
+
   return variables.map((variable) => ({
     key: variable.name,
     value: variable.value,
     scopes:
-      variable.regions.length > 0 ? variable.regions.map((identifier) => `region:${identifier}`) : undefined,
+      hasEnvScopes && variable.regions.length > 0
+        ? variable.regions.map((identifier) => `region:${identifier}`)
+        : undefined,
   }));
 }
 
