@@ -42,7 +42,7 @@ export async function initializeServiceForm(
   if (serviceId) {
     const { service } = await getService(serviceId);
     const { app } = await getApp(service!.app_id!);
-    const { volumes } = await api.listVolumes({ token, query: {} });
+    const { volumes } = await api.listVolumes({ token, query: { limit: '100' } });
     const deployment = await getDeployment(service!.latest_deployment_id!);
     const definition = deployment.deployment!.definition!;
 
