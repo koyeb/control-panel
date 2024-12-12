@@ -4,9 +4,11 @@ import { AccordionSection } from '@koyeb/design-system';
 import { IconChevronDown } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
 
+type ExpandSource = 'click' | 'keydown' | 'shortcut';
+
 type BaseServiceFormSectionProps = {
   expanded: boolean;
-  expand: () => void;
+  expand: (source: ExpandSource) => void;
   keepMounted?: boolean;
   title: React.ReactNode;
   expandedTitle: React.ReactNode;
@@ -56,7 +58,7 @@ type HeaderProps = {
   title: React.ReactNode;
   description: React.ReactNode;
   shortcut?: string;
-  expand: () => void;
+  expand: (source: ExpandSource) => void;
 };
 
 function Header({ expanded, hasError, title, description, shortcut, expand }: HeaderProps) {
@@ -67,12 +69,12 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
         expanded && 'bg-gradient-to-b from-inverted/5 to-inverted/0',
         hasError && 'bg-gradient-to-b from-red/10 to-red/0',
       )}
-      onClick={expand}
+      onClick={() => expand('click')}
     >
       <div>
         <IconChevronDown
           tabIndex={0}
-          onKeyDown={(event) => event.key === ' ' && expand()}
+          onKeyDown={(event) => event.key === ' ' && expand('keydown')}
           className={clsx('focusable text-icon size-5 rounded', expanded && 'rotate-180')}
         />
       </div>
@@ -84,7 +86,7 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
 
       {shortcut !== undefined && (
         <div className="ms-auto">
-          <Shortcut keystrokes={['meta', shortcut]} onTrigger={expand} />
+          <Shortcut keystrokes={['meta', shortcut]} onTrigger={() => expand('shortcut')} />
         </div>
       )}
     </header>

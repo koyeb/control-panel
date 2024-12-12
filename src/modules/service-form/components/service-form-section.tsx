@@ -1,5 +1,6 @@
 import { useFormContext, useFormState } from 'react-hook-form';
 
+import { useTrackEvent } from 'src/application/posthog';
 import { BaseServiceFormSection } from 'src/components/base-service-form-section';
 
 import { getServiceFormSectionIndex, sectionHasError } from '../helpers/service-form-sections';
@@ -22,10 +23,19 @@ export function ServiceFormSection({ section, ...props }: ServiceFormSectionProp
   const { setValue, watch } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
 
+  const track = useTrackEvent();
+
   return (
     <BaseServiceFormSection
       expanded={expanded}
-      expand={() => setValue('meta.expandedSection', expanded ? null : section)}
+      expand={(source) => {
+        if (expanded) {
+          setValue('meta.expandedSection', null);
+        } else {
+          setValue('meta.expandedSection', section);
+          track('ServiceFormSectionExpanded', { section, source });
+        }
+      }}
       keepMounted={section === 'regions'}
       shortcut={getShortcut(watch(), section)}
       hasError={sectionHasError(section, errors)}
