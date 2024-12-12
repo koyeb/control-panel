@@ -6,7 +6,7 @@ import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { useMount, useObserve } from 'src/hooks/lifecycle';
+import { useObserve } from 'src/hooks/lifecycle';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -79,7 +79,6 @@ export function InstanceSelector({
 
       <InstanceSelectorList
         instances={instances.filter(hasProperty('category', selectedCategory))}
-        selectedCategory={selectedCategory}
         selectedInstance={selectedInstance}
         onInstanceSelected={onInstanceSelected}
         checkAvailability={checkAvailability}
@@ -92,7 +91,6 @@ export function InstanceSelector({
 
 type InstanceSelectorListProps = {
   instances: readonly CatalogInstance[];
-  selectedCategory?: InstanceCategory;
   selectedInstance: CatalogInstance | null;
   bestFit?: CatalogInstance;
   minimumVRam?: number;
@@ -102,31 +100,14 @@ type InstanceSelectorListProps = {
 
 export function InstanceSelectorList({
   instances,
-  selectedCategory,
   selectedInstance,
   bestFit,
   minimumVRam,
   onInstanceSelected,
   checkAvailability,
 }: InstanceSelectorListProps) {
-  const listRef = useRef<HTMLUListElement>(null);
-
-  useEffect(() => {
-    if (listRef.current) {
-      listRef.current.scrollTop = 0;
-    }
-  }, [selectedCategory]);
-
-  useMount(() => {
-    listRef.current?.querySelector('li:has(:checked)')?.scrollIntoView({ block: 'nearest' });
-  });
-
   return (
-    <ul
-      ref={listRef}
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className="scrollbar-green scrollbar-thin max-h-[21rem] divide-y overflow-auto rounded-md border"
-    >
+    <ul className="scrollbar-green scrollbar-thin max-h-80 divide-y overflow-auto rounded-md border">
       {instances.map((instance) => (
         <InstanceItem
           key={instance.identifier}
@@ -161,11 +142,18 @@ function InstanceItem({
   availability,
   onSelected,
 }: InstanceItemProps) {
+  const ref = useRef<HTMLLIElement>(null);
   const [isAvailable] = availability;
   const disabled = !isAvailable;
 
+  useEffect(() => {
+    if (selected) {
+      ref.current?.scrollIntoView({ block: 'nearest' });
+    }
+  }, [selected]);
+
   return (
-    <li>
+    <li ref={ref}>
       <Radio
         name="instance"
         value={instance.identifier}
