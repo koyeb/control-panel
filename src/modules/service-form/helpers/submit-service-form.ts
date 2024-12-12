@@ -59,7 +59,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
 async function createVolumes(form: ServiceForm): Promise<void> {
   const { volumes: existingVolumes } = await api.listVolumes({
     token: getToken(),
-    query: {},
+    query: { limit: '100' },
   });
 
   for (const volume of form.volumes) {
