@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 
-import { Button, InfoTooltip } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconPlus } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
@@ -11,7 +10,7 @@ import { ServiceForm } from '../../service-form.types';
 
 import { FileContentEditor } from './file-content-editor';
 
-const T = Translate.prefix('serviceForm.mounts.files');
+const T = Translate.prefix('serviceForm.files');
 
 export function Files() {
   const { fields, append, remove } = useFieldArray<ServiceForm, 'fileMounts'>({ name: 'fileMounts' });

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { Button } from '@koyeb/design-system';
+import { Button, TabButton, TabButtons } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
@@ -16,11 +16,13 @@ import { ServiceForm } from '../../service-form.types';
 
 import { BulkEnvironmentVariablesEditionDialog } from './bulk-environment-variables-edition';
 import { EnvironmentVariableFields } from './environment-variable-fields';
+import { Files } from './files';
 
 const T = Translate.prefix('serviceForm.environmentVariables');
 
 export function EnvironmentVariablesSection() {
   const variables = useFormContext<ServiceForm>().watch('environmentVariables');
+  const [tab, setTab] = useState<'environmentVariables' | 'files'>('environmentVariables');
 
   return (
     <ServiceFormSection
@@ -30,7 +32,17 @@ export function EnvironmentVariablesSection() {
       expandedTitle={<T id="expandedTitle" />}
       className="col gaps"
     >
-      <EnvironmentVariables />
+      <TabButtons>
+        <TabButton selected={tab === 'environmentVariables'} onClick={() => setTab('environmentVariables')}>
+          <T id="description" />
+        </TabButton>
+        <TabButton selected={tab === 'files'} onClick={() => setTab('files')}>
+          <Translate id="serviceForm.files.title" />
+        </TabButton>
+      </TabButtons>
+
+      {tab === 'environmentVariables' && <EnvironmentVariables />}
+      {tab === 'files' && <Files />}
     </ServiceFormSection>
   );
 }

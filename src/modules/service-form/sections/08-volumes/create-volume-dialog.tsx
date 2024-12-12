@@ -14,7 +14,7 @@ import { Translate } from 'src/intl/translate';
 
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.mounts.volumes.createDialog');
+const T = Translate.prefix('serviceForm.volumes.createDialog');
 
 const schema = z.object({
   name: z.string().min(2).max(63),

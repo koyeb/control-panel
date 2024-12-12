@@ -14,8 +14,10 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumeFields } from './volume-fields.new';
 
-const T = Translate.prefix('serviceForm.mounts.volumes');
+const T = Translate.prefix('serviceForm.volumes');
 
+// this was implemented when working on file mounts
+// todo: integrate it into the form
 export function Volumes() {
   const { fields, append, remove } = useFieldArray<ServiceForm, 'volumes'>({ name: 'volumes' });
   const alert = useVolumesUnavailableAlert();
