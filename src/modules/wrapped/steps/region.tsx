@@ -64,8 +64,8 @@ export function Region({ data, next }: { data: WrappedData; next: () => void }) 
 const regionSentences: Record<string, string> = {
   fra: "Let's celebrate with beers and pretzels! 🥨🍺",
   par: "Let's have a croque monsieur tonight! 🥪",
-  sin: "Let's find a sentence for sin!",
-  was: "Let's find a sentence for was!",
-  sfo: "Let's find a sentence for sfo!",
-  tyo: "Let's find a sentence for tyo!",
+  sin: 'Time to celebrate with some chili crab by Marina Bay! 🦀',
+  was: "Let's celebrate with a stroll through Georgetown and enjoy the holiday lights! ️❄️",
+  sfo: "Let's go celebrate with a latte and watch the fog roll in! 🌁",
+  tyo: "Let's celebrate this with some sushi and sake! 🍣",
 };
