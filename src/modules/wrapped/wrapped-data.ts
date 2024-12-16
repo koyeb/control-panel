@@ -71,14 +71,19 @@ export async function fetchWrappedData(
   token: string | undefined,
   organizationId: string,
 ): Promise<ApiResult> {
-  const { apiBaseUrl } = getConfig();
-  const response = await fetch(`${apiBaseUrl}/v1/wrapped`, {
+  const { apiBaseUrl = '' } = getConfig();
+
+  const url = new URL(apiBaseUrl, window.location.origin);
+
+  url.pathname = '/v1/wrapped';
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: new Headers({
       authorization: `Bearer ${token}`,
       'content-type': 'application/json',
     }),
-    body: JSON.stringify({ organizationId }),
+    body: JSON.stringify({ organizationId, forceRegen: true, generateSynchronously: true }),
   });
 
   if (!response.ok) {
