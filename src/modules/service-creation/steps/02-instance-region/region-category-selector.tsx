@@ -35,6 +35,7 @@ export function RegionCategorySelector({ value, onChange }: RegionCategorySelect
         </SelectBox>
 
         <SelectBox
+          disabled
           type="radio"
           checked={value === 'aws'}
           onChange={() => onChange('aws')}
