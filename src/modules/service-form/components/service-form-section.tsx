@@ -7,6 +7,8 @@ import { getServiceFormSectionIndex, sectionHasError } from '../helpers/service-
 import { ServiceForm, type ServiceFormSection } from '../service-form.types';
 import { useWatchServiceForm } from '../use-service-form';
 
+const trackSectionExpanded = false;
+
 type ServiceFormSectionProps = {
   section: ServiceFormSection;
   title: React.ReactNode;
@@ -33,7 +35,10 @@ export function ServiceFormSection({ section, ...props }: ServiceFormSectionProp
           setValue('meta.expandedSection', null);
         } else {
           setValue('meta.expandedSection', section);
-          track('ServiceFormSectionExpanded', { section, source });
+
+          if (trackSectionExpanded) {
+            track('ServiceFormSectionExpanded', { section, source });
+          }
         }
       }}
       keepMounted={section === 'regions'}
