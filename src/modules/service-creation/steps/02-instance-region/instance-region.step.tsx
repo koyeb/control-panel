@@ -1,10 +1,6 @@
 import { Button } from '@koyeb/design-system';
 import { useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
-import {
-  useOrganization,
-  useOrganizationQuotasQuery,
-  useOrganizationSummaryQuery,
-} from 'src/api/hooks/session';
+import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { InstanceSelector } from 'src/components/instance-selector';
@@ -16,7 +12,6 @@ import { Translate } from 'src/intl/translate';
 
 import { InstanceRegionAlerts } from './instance-region-alerts';
 import { useInstanceRegionState } from './instance-region-state';
-import { RegionCategorySelector } from './region-category-selector';
 import { RegionsSelector } from './regions-selector';
 
 type InstanceRegionStepProps = {
@@ -50,8 +45,6 @@ export function InstanceRegionStep(props: InstanceRegionStepProps) {
 }
 
 function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
-  const organization = useOrganization();
-
   const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
   const [state, actions] = useInstanceRegionState();
   const navigate = useNavigate();
@@ -72,18 +65,14 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         selectedRegions={state.selectedRegions}
       />
 
-      {organization.plan !== 'hobby' && (
-        <RegionCategorySelector value={state.regionCategory} onChange={actions.regionCategorySelected} />
-      )}
-
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-[30rem_1fr]">
+      <div className="col lg:row items-center gap-8 lg:gap-4">
         <InstanceSelector
           instances={state.instances}
           selectedInstance={state.selectedInstance}
           checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
           onInstanceSelected={actions.instanceSelected}
-          className="max-w-xl"
+          // eslint-disable-next-line tailwindcss/no-arbitrary-value
+          className="w-full max-w-[30rem]"
         />
 
         <RegionsSelector

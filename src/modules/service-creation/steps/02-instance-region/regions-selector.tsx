@@ -6,9 +6,13 @@ import {
   useRegionAvailability,
   useRegionAvailabilityForInstance,
 } from 'src/application/instance-region-availability';
+import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
+import { Translate } from 'src/intl/translate';
+
+const T = Translate.prefix('serviceCreation.instanceRegions');
 
 type RegionsSelectorProps = {
   regions: CatalogRegion[];
@@ -24,7 +28,7 @@ export function RegionsSelector({
   onRegionSelected,
 }: RegionsSelectorProps) {
   return (
-    <>
+    <div>
       <RegionsList
         className="2xl:hidden"
         selectedInstance={selectedInstance}
@@ -45,7 +49,24 @@ export function RegionsSelector({
           />
         )}
       />
-    </>
+
+      <div className="mt-6 rounded-md border px-4 py-3">
+        <T
+          id="awsRegions"
+          values={{
+            link: (children) => (
+              <ExternalLink
+                openInNewTab
+                href="https://app.reclaim.ai/m/koyeb-intro/short-call"
+                className="underline"
+              >
+                {children}
+              </ExternalLink>
+            ),
+          }}
+        />
+      </div>
+    </div>
   );
 }
 
