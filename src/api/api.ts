@@ -286,6 +286,7 @@ function buildUrl(path: string, params: EndpointParams) {
     if (Array.isArray(value)) {
       value.forEach((value) => url.searchParams.append(key, String(value)));
     } else {
+      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       url.searchParams.set(key, String(value));
     }
   }

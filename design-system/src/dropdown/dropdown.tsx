@@ -6,7 +6,7 @@ import { useDropdown } from './use-dropdown';
 type DropdownCommonProps<Item> = {
   dropdown: ReturnType<typeof useDropdown>;
   highlightedIndex: number | undefined;
-  getMenuProps: (props: React.HTMLProps<HTMLUListElement>) => React.HTMLProps<HTMLUListElement>;
+  getMenuProps: (props: Record<string, unknown>) => React.HTMLProps<HTMLUListElement>;
   getItemProps: (props: { item: Item; index: number }) => React.HTMLProps<HTMLLIElement>;
   getKey: (item: Item) => React.Key;
   renderItem: (item: Item, index: number) => React.ReactNode;
