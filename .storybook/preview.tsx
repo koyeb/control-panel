@@ -2,7 +2,7 @@ import type { Preview } from '@storybook/react';
 import { Elements as StripeElements } from '@stripe/react-stripe-js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-import { AnalyticsProvider, NoopAnalytics } from '../src/application/analytics';
+import { PostHogProvider } from '../src/application/posthog';
 import { ApiMock } from '../src/api/mock/mock-api';
 import { IntlProvider } from '../src/intl/translation-provider';
 import { TokenProvider } from '../src/application/token';
@@ -45,9 +45,9 @@ export default {
       </StripeElements>
     ),
     (Story) => (
-      <AnalyticsProvider analytics={new NoopAnalytics()}>
+      <PostHogProvider>
         <Story />
-      </AnalyticsProvider>
+      </PostHogProvider>
     ),
     (Story) => (
       <QueryClientProvider client={queryClient}>
