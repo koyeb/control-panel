@@ -8,7 +8,7 @@ import {
 } from '@floating-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useOrganization } from 'src/api/hooks/session';
 import { useToken } from 'src/application/token';
@@ -45,9 +45,13 @@ export function Wrapped() {
     refetchInterval: false,
     enabled: wrapped !== null,
     queryKey: ['wrapped', { organizationId: organization.id }, token],
-    queryFn: () => fetchWrappedData(token, organization.id),
+    queryFn: () => fetchWrappedData(token, organization.id, true),
     select: (result) => mapWrappedData(result),
   });
+
+  useEffect(() => {
+    fetchWrappedData(token, organization.id, false).catch(() => {});
+  }, [token, organization]);
 
   const next = () => (step === 'recap' ? close() : setIndex((index ?? 0) + 1));
   const close = () => setWrapped(null);

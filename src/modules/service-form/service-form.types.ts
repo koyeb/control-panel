@@ -109,7 +109,6 @@ export type DockerDeploymentOptions = {
 
 export type FileMount = {
   mountPath: string;
-  permissions: string;
   content: string;
 };
 

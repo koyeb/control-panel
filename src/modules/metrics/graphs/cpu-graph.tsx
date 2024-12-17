@@ -1,6 +1,7 @@
 import { Serie } from '@nivo/line';
 import { useIntl } from 'react-intl';
 
+import { isDefined } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
 
 import { LineGraph } from '../components/line-graph';
@@ -15,9 +16,10 @@ type CpuGraphProps = {
 
 export function CpuGraph({ loading, data, error }: CpuGraphProps) {
   const intl = useIntl();
-
-  const tickValuesY = cpuTickValues();
   const series = getSeries(data);
+
+  const values = data?.flatMap((data) => data.samples.map(({ value }) => value)).filter(isDefined);
+  const max = Math.max(...(values ?? [0]));
 
   return (
     <LineGraph
@@ -26,19 +28,13 @@ export function CpuGraph({ loading, data, error }: CpuGraphProps) {
       noData={series.length === 0}
       data={series}
       colors={{ scheme: 'set2' }}
-      gridYValues={tickValuesY}
-      yScale={{ min: 0, max: 100, type: 'linear' }}
+      yScale={{ min: 0, max: Math.max(max, 100), type: 'linear' }}
       yFormat={(value) => intl.formatNumber((value as number) / 100, { style: 'percent' })}
       axisLeft={{
         format: (value: number) => intl.formatNumber(value / 100, { style: 'percent' }),
-        tickValues: tickValuesY,
       }}
     />
   );
-}
-
-function cpuTickValues() {
-  return [0, 25, 50, 75, 100];
 }
 
 function getSeries(data?: Array<Metric>): Serie[] {

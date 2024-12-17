@@ -22,7 +22,7 @@ export function usePreSubmitServiceForm() {
         instance.status === 'restricted';
 
       if (instance?.category === 'gpu') {
-        trackEvent('gpu_deployed', { gpu_id: instance.identifier });
+        trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.identifier });
       }
 
       if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {

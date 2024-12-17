@@ -70,15 +70,21 @@ type ApiResult = {
 export async function fetchWrappedData(
   token: string | undefined,
   organizationId: string,
+  sync: boolean,
 ): Promise<ApiResult> {
-  const { apiBaseUrl } = getConfig();
-  const response = await fetch(`${apiBaseUrl}/v1/wrapped`, {
+  const { apiBaseUrl = '' } = getConfig();
+
+  const url = new URL(apiBaseUrl, window.location.origin);
+
+  url.pathname = '/v1/wrapped';
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: new Headers({
       authorization: `Bearer ${token}`,
       'content-type': 'application/json',
     }),
-    body: JSON.stringify({ organizationId }),
+    body: JSON.stringify({ organizationId, forceRegen: false, generateSynchronously: sync }),
   });
 
   if (!response.ok) {
@@ -93,7 +99,7 @@ export function mapWrappedData(result: ApiResult): WrappedData {
 
   return {
     deployments: Card_1.NumberOfDeployments,
-    regions: Card_2.RegionsDeployedIn.map(({ Region }) => regionIdentifier[Region]!),
+    regions: Card_2.RegionsDeployedIn.map(({ Region }) => Region),
     createdServices: Card_2.CountServices,
     mostActiveServices: Card_2.Top3Services.map(({ AppName, ServiceName }) => ({
       appName: AppName,
@@ -106,12 +112,3 @@ export function mapWrappedData(result: ApiResult): WrappedData {
     team: Card_5.Team.map(({ Name }) => Name),
   };
 }
-
-const regionIdentifier: Record<string, string> = {
-  Frankfurt: 'fra',
-  Paris: 'par',
-  'San Francisco': 'sfo',
-  Singapore: 'sin',
-  Tokyo: 'tyo',
-  'Washington, D.C': 'was',
-};

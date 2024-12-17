@@ -792,13 +792,7 @@
     "instanceRegions": {
       "title": "Create a new service",
       "description": "Pick the instance and regions to deploy",
-      "regionCategorySelector": {
-        "label": "Select cloud provider",
-        "koyebLabel": "Koyeb",
-        "koyebTooltip": "Deploy to production on high-performance, globally available infrastructure managed by Koyeb, with access to GPUs, accelerators, and CPUs",
-        "awsLabel": "AWS",
-        "awsTooltip": "Deploy on AWS Cloud, benefit from Koyeb's flexibility and simplicity, leverage the AWS ecosystem, and reduce data transfer costs between AWS regions"
-      },
+      "awsRegions": "<link>Request AWS region access</link> if you need to leverage AWS ecosystem and reduce data transfer costs",
       "alerts": {
         "requiresUpgrade": "The selected instance is available on the {plan} plan. You will be asked to upgrade at the end of the creation process.",
         "freeMessage": "The Free instance can be deployed in {fra} or {was} and doesn't support scaling. Select another instance to access more features and regions."
@@ -1144,9 +1138,12 @@
       }
     },
     "environmentVariables": {
-      "title": "{count, plural, =0 {No variables} =1 {{count} variable} other {{count} variables}} configured",
+      "title": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}",
       "description": "Environment variables",
-      "expandedTitle": "Edit environment variables",
+      "expandedTitle": "Edit variables",
+      "title.new": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}, {files, plural, =0 {no files} =1 {{files} file} other {{files} files}}",
+      "description.new": "Environment variables and files",
+      "expandedTitle.new": "Edit variables and files",
       "tabs": {
         "environmentVariables": "Environment variables",
         "files": "Files"
@@ -1173,19 +1170,22 @@
         "notPlainText": "You must provide a text file",
         "noEnvVars": "No environment variables were identified in the provided file"
       },
-      "createSecret": "Create new secret",
-      "files": {
-        "mountPathLabel": "Mount path",
-        "permissionsLabel": "Permissions",
-        "editContentLabel": "Edit content",
-        "add": "Add file",
-        "remove": "Remove",
-        "editContentDialog": {
-          "title": "Edit file content",
-          "description": "File mounted at <strong>{mountPath}</strong>",
-          "fileTooLarge": "File too large"
-        }
-      }
+      "createSecret": "Create new secret"
+    },
+    "files": {
+      "title": "Files",
+      "description": "Seamlessly mount runtime files with dynamic interpolation and secure permissions",
+      "mountPath": {
+        "label": "Mount path",
+        "placeholder": "e.g. /folder/folder"
+      },
+      "content": {
+        "label": "File content",
+        "placeholder": "Add content, like secrets and variables",
+        "fileTooLarge": "File too large"
+      },
+      "add": "Add file",
+      "remove": "Remove"
     },
     "ports": {
       "titleSinglePort": "Port {portNumber} exposed {public, select, true {on {path}} other {to the service mesh}}",
@@ -1241,16 +1241,21 @@
     "volumes": {
       "title": "{count, plural, =0 {No volumes} =1 {{count} volume} other {{count} volumes}} configured",
       "titleExpanded": "Edit volumes",
+      "description": "Volumes",
       "noDowntimeAlert": "Attaching volumes to your service will prevent zero-downtime deployments. <documentationLink>Learn more</documentationLink>",
       "noVolumesAttached": "Attach and mount a volume to your service to persist data",
-      "description": "Volumes",
       "addVolume": "Add volume",
-      "createVolume": "Create volume",
       "detachVolume": "Detach volume",
       "detachVolumeNotSupported": "Detaching volumes is not supported yet",
-      "volumeNameLabel": "Volume",
-      "volumeNamePlaceholder": "Select a volume",
-      "noVolumes": "No volumes found in {region}",
+      "volumeSelector": {
+        "label": "Volume",
+        "placeholder": "Select or create a volume",
+        "volumesSection": "Volumes",
+        "createSection": "Create volume",
+        "createVolume": "Create new volume",
+        "noVolumes": "No volumes found in {region}",
+        "readOnly": "Can't be changed once mounted"
+      },
       "mountPathLabel": "Mount path",
       "mountedReadOnly": "Can't be changed once mounted",
       "createDialog": {
