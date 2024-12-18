@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { SelectBox } from '@koyeb/design-system';
+import { SelectBox, Tooltip } from '@koyeb/design-system';
 import { CatalogInstance, CatalogRegion } from 'src/api/model';
 import {
   useRegionAvailability,
@@ -50,22 +50,18 @@ export function RegionsSelector({
         )}
       />
 
-      <div className="mt-6 rounded-md border px-4 py-3">
-        <T
-          id="awsRegions"
-          values={{
-            link: (children) => (
-              <ExternalLink
-                openInNewTab
-                href="https://app.reclaim.ai/m/koyeb-intro/short-call"
-                className="underline"
-              >
-                {children}
-              </ExternalLink>
-            ),
-          }}
-        />
-      </div>
+      <Tooltip content={<T id="awsRegions.tooltip" />}>
+        {(props) => (
+          <ExternalLink
+            {...props}
+            openInNewTab
+            href="https://app.reclaim.ai/m/koyeb-intro/short-call"
+            className="mt-8 inline-block underline"
+          >
+            <T id="awsRegions.title" />
+          </ExternalLink>
+        )}
+      </Tooltip>
     </div>
   );
 }

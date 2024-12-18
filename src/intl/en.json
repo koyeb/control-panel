@@ -792,7 +792,10 @@
     "instanceRegions": {
       "title": "Create a new service",
       "description": "Pick the instance and regions to deploy",
-      "awsRegions": "<link>Request AWS region access</link> if you need to leverage AWS ecosystem and reduce data transfer costs",
+      "awsRegions": {
+        "title": "Request AWS regions access",
+        "tooltip": "If you need to leverage AWS ecosystem and reduce data transfer costs"
+      },
       "alerts": {
         "requiresUpgrade": "The selected instance is available on the {plan} plan. You will be asked to upgrade at the end of the creation process.",
         "freeMessage": "The Free instance can be deployed in {fra} or {was} and doesn't support scaling. Select another instance to access more features and regions."
