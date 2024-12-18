@@ -40,6 +40,10 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
       return <T id="currentPlan" />;
     }
 
+    if (organization.plan === 'startup') {
+      return <T id="select" />;
+    }
+
     if (isUpgrade(organization.plan, plan)) {
       return <T id="upgrade" />;
     }

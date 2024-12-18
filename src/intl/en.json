@@ -2290,6 +2290,7 @@
       "plans": {
         "title": "Change your organization plan",
         "description": "Need more? Upgrade your plan! No commitment, downgrade when you need. Reach out for quota upgrades. For more details about each plan, check out our <pricing>pricing page</pricing>.",
+        "select": "Select",
         "currentPlan": "Current plan",
         "downgrade": "Downgrade",
         "upgrade": "Upgrade now",
