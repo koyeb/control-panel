@@ -6,6 +6,7 @@ import { useSecretsQuery } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconListPlus, IconPlus } from 'src/components/icons';
+import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
 import { useHistoryState } from 'src/hooks/router';
@@ -26,9 +27,10 @@ export function SecretsPage() {
 
   const closeDialog = () => setOpenDialog(undefined);
 
-  const { data: secrets } = useSecretsQuery('simple');
+  const query = useSecretsQuery('simple');
+  const secrets = query.data;
 
-  const [selected, { toggle, clear }] = useSet<Secret>();
+  const [selected, { toggle, set, clear }] = useSet<Secret>();
 
   return (
     <div className="col gap-8">
@@ -60,7 +62,18 @@ export function SecretsPage() {
         }
       />
 
-      <SecretsList onCreate={() => setOpenDialog('create')} selected={selected} toggleSelected={toggle} />
+      <QueryGuard query={query}>
+        {(secrets) => (
+          <SecretsList
+            secrets={secrets}
+            onCreate={() => setOpenDialog('create')}
+            selected={selected}
+            toggleSelected={toggle}
+            selectAll={() => set(secrets ?? [])}
+            clearSelection={clear}
+          />
+        )}
+      </QueryGuard>
 
       <BulkDeleteSecretsDialog
         open={openDialog === 'bulkDelete'}

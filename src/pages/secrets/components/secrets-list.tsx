@@ -11,14 +11,11 @@ import {
   Tooltip,
   useBreakpoint,
 } from '@koyeb/design-system';
-import { useSecretsQuery } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { IconEye, IconEyeOff } from 'src/components/icons';
-import { Loading } from 'src/components/loading';
-import { QueryError } from 'src/components/query-error';
 import { useClipboard } from 'src/hooks/clipboard';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate } from 'src/intl/translate';
@@ -30,24 +27,23 @@ import { NoSecrets } from './no-secrets';
 const T = Translate.prefix('pages.secrets.secretsList');
 
 type SecretListProps = {
+  secrets: Secret[];
   onCreate: () => void;
   selected: Set<Secret>;
   toggleSelected: (secret: Secret) => void;
+  selectAll: () => void;
+  clearSelection: () => void;
 };
 
-export function SecretsList({ onCreate, selected, toggleSelected }: SecretListProps) {
+export function SecretsList({
+  secrets,
+  onCreate,
+  selected,
+  toggleSelected,
+  selectAll,
+  clearSelection,
+}: SecretListProps) {
   const isMobile = !useBreakpoint('sm');
-  const secretsQuery = useSecretsQuery('simple');
-
-  if (secretsQuery.isPending) {
-    return <Loading />;
-  }
-
-  if (secretsQuery.isError) {
-    return <QueryError error={secretsQuery.error} />;
-  }
-
-  const secrets = secretsQuery.data;
 
   if (secrets.length === 0) {
     return <NoSecrets onCreate={onCreate} />;
@@ -59,8 +55,21 @@ export function SecretsList({ onCreate, selected, toggleSelected }: SecretListPr
       columns={{
         select: {
           className: 'w-4',
-          header: <Checkbox checked={selected.size > 0} readOnly />,
-          render: (secret) => <Checkbox className="mt-1" onChange={() => toggleSelected(secret)} />,
+          header: (
+            <SelectionHeader
+              secrets={secrets}
+              selected={selected}
+              selectAll={selectAll}
+              clearSelection={clearSelection}
+            />
+          ),
+          render: (secret) => (
+            <Checkbox
+              className="mt-1"
+              checked={selected.has(secret)}
+              onChange={() => toggleSelected(secret)}
+            />
+          ),
         },
         name: {
           className: 'md:w-64',
@@ -82,6 +91,25 @@ export function SecretsList({ onCreate, selected, toggleSelected }: SecretListPr
           render: (secret) => <SecretActions secret={secret} />,
         },
       }}
+    />
+  );
+}
+
+type SelectionHeaderProps = {
+  secrets: Array<Secret>;
+  selected: Set<Secret>;
+  selectAll: () => void;
+  clearSelection: () => void;
+};
+
+function SelectionHeader({ secrets, selected, selectAll, clearSelection }: SelectionHeaderProps) {
+  const indeterminate = selected.size < secrets.length;
+
+  return (
+    <Checkbox
+      checked={selected.size > 0}
+      indeterminate={indeterminate}
+      onChange={() => (indeterminate ? selectAll() : clearSelection())}
     />
   );
 }
