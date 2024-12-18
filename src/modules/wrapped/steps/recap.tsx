@@ -1,21 +1,21 @@
 import { useUser } from 'src/api/hooks/session';
 
-import imgCongrats from '../images/congrats.png';
+import imgCongrats1 from '../images/congrats-1.png';
+import imgCongrats2 from '../images/congrats-2.png';
 
-export function Recap() {
+export function Recap({ next }: { next: () => void }) {
   const user = useUser();
 
   return (
-    <>
-      <div className="col flex-1 justify-center gap-4">
-        <p className="text-center text-3xl font-medium">That was something!</p>
+    <div onClick={next} className="col h-full justify-between gap-4 text-center text-3xl font-semibold">
+      <img src={imgCongrats1} className="max-w-64" />
 
-        <p className="text-center text-2xl font-medium">2024 will be remembered, right {user.name}?</p>
+      <div className="col gap-4">
+        <p>That was something!</p>
+        <p className="text-2xl">2024 will be remembered, right {user.name}?</p>
       </div>
 
-      <div>
-        <img src={imgCongrats} />
-      </div>
-    </>
+      <img src={imgCongrats2} />
+    </div>
   );
 }

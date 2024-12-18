@@ -21,7 +21,7 @@ import { Recap } from './steps/recap';
 import { Region } from './steps/region';
 import { Services } from './steps/services';
 import { Team } from './steps/team';
-import { fetchWrappedData, mapWrappedData, WrappedData } from './wrapped-data';
+import { fetchWrappedData, mapWrappedData } from './wrapped-data';
 
 const steps = [
   'introduction',
@@ -90,7 +90,7 @@ export function Wrapped() {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -100, opacity: 0 }}
             // eslint-disable-next-line tailwindcss/no-arbitrary-value
-            className="col absolute size-full max-h-[48rem] max-w-sm overflow-y-auto rounded-2xl bg-[#fffcf4] p-8 pt-12 text-black"
+            className="absolute size-full max-h-[48rem] max-w-sm cursor-pointer overflow-auto rounded-2xl bg-[#fffcf4] p-8 text-black"
             {...getFloatingProps()}
           >
             {step &&
@@ -101,7 +101,7 @@ export function Wrapped() {
                 deploymentMethod: <DeploymentMethod data={data} next={next} />,
                 metrics: <Metrics data={data} next={next} />,
                 team: <Team data={data} next={next} />,
-                recap: <Recap />,
+                recap: <Recap next={close} />,
               }[step]}
           </motion.div>
         </AnimatePresence>
@@ -109,32 +109,3 @@ export function Wrapped() {
     </FloatingPortal>
   );
 }
-
-const fakeData: WrappedData = {
-  deployments: 666,
-  regions: ['fra'],
-  // regions: ['fra', 'sin', 'was'],
-  createdServices: 42,
-  mostActiveServices: [
-    {
-      appName: 'my-funky-project',
-      serviceName: 'api',
-    },
-    {
-      appName: 'my-funky-project',
-      serviceName: 'frontend',
-    },
-    {
-      appName: 'some-random',
-      serviceName: 'project',
-    },
-  ],
-  deploymentMethod: 'git',
-  // deploymentMethod: 'docker',
-  pushes: 123,
-  buildTime: 421,
-  requests: 76600,
-  team: ['Tom', 'Jeanne'],
-};
-
-void fakeData;

@@ -1,9 +1,9 @@
+import clsx from 'clsx';
 import { useRef, useState } from 'react';
 
 import { Input } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 
-import { Footer } from '../components/footer';
 import imgCroissants3 from '../images/croissants-3.png';
 import { WrappedData } from '../wrapped-data';
 
@@ -27,39 +27,56 @@ export function Metrics({ data, next }: { data: WrappedData; next: () => void })
   const result = Math.abs(Math.log10(data.requests) - Math.log10(lastAnswer ?? 0));
 
   const formRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <>
-      <p className="my-4 text-2xl">Can you guess how many requests your service handled this year?</p>
+    <div
+      onClick={() => {
+        if (tries === 0) {
+          next();
+        } else {
+          inputRef.current?.focus();
+          formRef.current?.requestSubmit?.();
+        }
+      }}
+      className="col h-full justify-between gap-4 text-center text-3xl font-semibold"
+    >
+      <p>Can you guess how many requests your service handled this year?</p>
 
-      <div className="my-4">
-        <img src={imgCroissants3} className="w-full" />
-      </div>
+      <img src={imgCroissants3} className="w-full" />
 
-      <div className="col flex-1 justify-evenly text-lg">
+      <div className="col h-72 justify-evenly">
         <div>
-          <p className="text-center text-xl">Give us your best guess</p>
-          {tries < 3 && <p className="text-center">{tries} tries remaining!</p>}
+          <p className="text-2xl">Give us your best guess</p>
+          <p className={clsx('text-lg', lastAnswer === undefined && 'invisible')}>
+            {tries >= 2 && <>{tries} tries remaining!</>}
+            {tries === 1 && <>Last try!!!</>}
+            {tries === 0 && <>You&apos;re done</>}
+          </p>
         </div>
 
         <form ref={formRef} onSubmit={handleSubmit}>
           <Input
+            ref={inputRef}
             name="guess"
             onKeyDown={onKeyDownPositiveInteger}
-            className="mx-auto max-w-32"
-            inputBoxClassName="border-strong"
+            className="mx-auto max-w-32 text-xl"
+            inputBoxClassName="border-strong py-2"
+            inputClassName="text-center"
           />
         </form>
 
-        {lastAnswer !== undefined && tries > 0 && (
-          <p className="text-center text-6xl">{lastAnswer < data.requests ? 'Higher!' : 'Lower!'}</p>
+        {tries > 0 && (
+          <p className={clsx('text-5xl', lastAnswer === undefined && 'invisible')}>
+            {(lastAnswer ?? 0) < data.requests ? 'Higher!' : 'Lower!'}
+          </p>
         )}
 
         {tries === 0 && (
           <>
-            <p className="text-center text-2xl">{data.requests} requests!</p>
+            <p>{data.requests} requests!</p>
 
-            <p className="text-center text-lg">
+            <p className="font-normal">
               {lastAnswer === data.requests && "That's it!!!"}
               {result > 0 && result <= 2 && 'So close!!'}
               {result > 2 && result <= 3 && 'Not far!'}
@@ -69,8 +86,6 @@ export function Metrics({ data, next }: { data: WrappedData; next: () => void })
           </>
         )}
       </div>
-
-      <Footer next={() => (tries === 0 ? next() : formRef.current?.requestSubmit?.())} />
-    </>
+    </div>
   );
 }

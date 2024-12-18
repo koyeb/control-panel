@@ -9,6 +9,7 @@ type FooterProps = {
 };
 
 export function Footer({ next, className, children = 'Next' }: FooterProps) {
+  return null;
   return (
     <footer className="col mt-auto justify-end">
       <button

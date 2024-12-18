@@ -1,4 +1,3 @@
-import { Footer } from '../components/footer';
 import imgComputer from '../images/computer.png';
 import { WrappedData } from '../wrapped-data';
 
@@ -7,37 +6,29 @@ export function Services({ data, next }: { data: WrappedData; next: () => void }
   const otherActiveServices = data.mostActiveServices.slice(1);
 
   return (
-    <>
-      <p className="text-2xl font-semibold">
-        You created <strong>{data.createdServices}</strong> services this year.
-      </p>
+    <div onClick={next} className="col h-full justify-between gap-4 text-left text-3xl font-semibold">
+      <p>You created {data.createdServices} services this year.</p>
 
-      <p className="my-8 text-2xl">
+      <p>
         There is one that stands out. You&apos;ve been most active on{' '}
-        <strong>
-          {mostActiveService?.appName}/{mostActiveService?.serviceName}
-        </strong>
+        {`${mostActiveService?.appName}/${mostActiveService?.serviceName}`}
       </p>
 
       {otherActiveServices.length > 1 && (
-        <>
-          <p className="mt-2 text-lg">Here are your top {otherActiveServices.length} services:</p>
+        <div className="col gap-4 font-normal">
+          <p className="text-2xl">Here are your top services:</p>
 
-          <ol className="list-inside list-decimal pl-4 pt-4 ">
+          <ol className="list-inside list-decimal text-xl">
             {otherActiveServices.map((service, index) => (
-              <li key={index} className="text-lg">
+              <li key={index}>
                 {service.appName}/{service.serviceName}
               </li>
             ))}
           </ol>
-        </>
+        </div>
       )}
 
-      <div className="col flex-1 items-center justify-center">
-        <img src={imgComputer} />
-      </div>
-
-      <Footer next={next} />
-    </>
+      <img src={imgComputer} className="mx-auto h-32" />
+    </div>
   );
 }
