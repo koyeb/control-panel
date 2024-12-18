@@ -2,7 +2,15 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Button, ButtonMenuItem, Spinner, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
+import {
+  Button,
+  ButtonMenuItem,
+  Checkbox,
+  Spinner,
+  Table,
+  Tooltip,
+  useBreakpoint,
+} from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
@@ -21,7 +29,13 @@ import { NoSecrets } from './no-secrets';
 
 const T = Translate.prefix('pages.secrets.secretsList');
 
-export function SecretsList({ onCreate }: { onCreate: () => void }) {
+type SecretListProps = {
+  onCreate: () => void;
+  selected: Set<Secret>;
+  toggleSelected: (secret: Secret) => void;
+};
+
+export function SecretsList({ onCreate, selected, toggleSelected }: SecretListProps) {
   const isMobile = !useBreakpoint('sm');
   const secretsQuery = useSecretsQuery('simple');
 
@@ -42,8 +56,12 @@ export function SecretsList({ onCreate }: { onCreate: () => void }) {
   return (
     <Table
       items={secrets}
-      classes={{ td: () => 'align-top' }}
       columns={{
+        select: {
+          className: 'w-4',
+          header: <Checkbox checked={selected.size > 0} readOnly />,
+          render: (secret) => <Checkbox className="mt-1" onChange={() => toggleSelected(secret)} />,
+        },
         name: {
           className: 'md:w-64',
           header: <T id="name" />,

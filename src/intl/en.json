@@ -1937,6 +1937,8 @@
     "secrets": {
       "title": "Secrets",
       "createSecret": "Create secret",
+      "deleteSecrets": "Delete selected ({count})",
+      "bulkDeleted": "{count} {count, plural, =1 {secret} other {secrets}} deleted",
       "importSecrets": "Import secrets",
       "noSecrets": {
         "title": "You don't have any secrets yet",

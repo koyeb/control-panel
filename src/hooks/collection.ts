@@ -21,6 +21,7 @@ export function useSet<T>(initial?: Iterable<T>) {
         add: (value: T) => update((set) => set.add(value)),
         remove: (value: T) => update((set) => set.delete(value)),
         toggle: (value: T) => update((set) => (set.has(value) ? set.delete(value) : set.add(value))),
+        clear: () => update((set) => set.clear()),
       };
     }, [update]),
   ] as const;
