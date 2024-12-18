@@ -16,7 +16,7 @@ export function PlanCard({ name, description, price, features, cta }: PlanCardPr
   return (
     <div className="col gap-4 rounded-md border p-4 shadow-md">
       <div>
-        <div className="mb-1 text-center text-2xl font-semibold">{name}</div>
+        <div className="mb-1 text-2xl font-semibold">{name}</div>
 
         <div>
           <T
