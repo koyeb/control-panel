@@ -3,10 +3,10 @@ import { SectionHeader } from 'src/components/section-header';
 import { Translate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-import { ChangePlanBusinessButton, ChangePlanButton } from './change-plan-button';
+import { ChangePlanEnterpriseButton, ChangePlanButton } from './change-plan-button';
 import { PlanCard } from './plan-card';
 
-type Plan = 'starter' | 'pro' | 'scale' | 'business';
+type Plan = 'starter' | 'pro' | 'scale' | 'enterprise';
 
 const T = Translate.prefix('pages.organizationSettings.plans');
 
@@ -25,11 +25,11 @@ export function PlansPage() {
   );
 }
 
-const plans: Array<{ plan: Plan; price: number }> = [
-  { plan: 'starter', price: 0 },
-  { plan: 'pro', price: 29 },
-  { plan: 'scale', price: 299 },
-  { plan: 'business', price: 700 },
+const plans: Array<{ plan: Plan; featuresCount: number }> = [
+  { plan: 'starter', featuresCount: 6 },
+  { plan: 'pro', featuresCount: 6 },
+  { plan: 'scale', featuresCount: 6 },
+  { plan: 'enterprise', featuresCount: 7 },
 ];
 
 function PlansCards() {
@@ -37,16 +37,20 @@ function PlansCards() {
     return createArray(count, (index) => <T id={`plans.${plan}.features.feature${(index + 1) as 1}`} />);
   };
 
+  const price = (children: React.ReactNode) => {
+    return <span className="text-lg">{children}</span>;
+  };
+
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {plans.map(({ plan, price }) => (
+      {plans.map(({ plan, featuresCount }) => (
         <PlanCard
           key={plan}
           name={<T id={`plans.${plan}.name`} />}
           description={<T id={`plans.${plan}.description`} />}
-          price={price}
-          features={features(plan, 7)}
-          cta={plan === 'business' ? <ChangePlanBusinessButton /> : <ChangePlanButton plan={plan} />}
+          price={<T id={`plans.${plan}.price`} values={{ price }} />}
+          features={features(plan, featuresCount)}
+          cta={plan === 'enterprise' ? <ChangePlanEnterpriseButton /> : <ChangePlanButton plan={plan} />}
         />
       ))}
     </div>

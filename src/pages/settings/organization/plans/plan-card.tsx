@@ -1,13 +1,9 @@
 import { IconCheck } from 'src/components/icons';
-import { FormattedPrice } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
-
-const T = Translate.prefix('pages.organizationSettings.plans');
 
 type PlanCardProps = {
   name: React.ReactNode;
   description: React.ReactNode;
-  price: number;
+  price: React.ReactNode;
   features: React.ReactNode[];
   cta: React.ReactNode;
 };
@@ -17,19 +13,7 @@ export function PlanCard({ name, description, price, features, cta }: PlanCardPr
     <div className="col gap-4 rounded-md border p-4 shadow-md">
       <div>
         <div className="mb-1 text-2xl font-semibold">{name}</div>
-
-        <div>
-          <T
-            id="price"
-            values={{
-              price: (
-                <span className="text-lg">
-                  <FormattedPrice value={price} digits={0} />
-                </span>
-              ),
-            }}
-          />
-        </div>
+        <div>{price}</div>
       </div>
 
       <div>{description}</div>

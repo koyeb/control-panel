@@ -10,7 +10,7 @@ import { ExternalLinkButton } from 'src/components/link';
 import { PaymentDialog } from 'src/components/payment-form';
 import { Translate } from 'src/intl/translate';
 
-type Plan = Extract<OrganizationPlan, 'starter' | 'pro' | 'scale' | 'business'>;
+type Plan = Extract<OrganizationPlan, 'starter' | 'pro' | 'scale' | 'enterprise'>;
 
 const T = Translate.prefix('pages.organizationSettings.plans');
 
@@ -53,11 +53,11 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
 
   return (
     <>
-      <Tooltip content={organization.plan === 'business' && plan !== 'business' && <T id="contactUs" />}>
+      <Tooltip content={organization.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
         {(props) => (
           <div {...props}>
             <Button
-              disabled={organization.plan === plan || organization.plan === 'business'}
+              disabled={organization.plan === plan || organization.plan === 'enterprise'}
               className="w-full"
               loading={mutation.isPending}
               onClick={onChangePlan}
@@ -81,17 +81,17 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   );
 }
 
-export function ChangePlanBusinessButton() {
+export function ChangePlanEnterpriseButton() {
   const organization = useOrganization();
 
   return (
     <ExternalLinkButton
       openInNewTab
       href="https://app.reclaim.ai/m/koyeb-intro/short-call"
-      disabled={organization.plan === 'business'}
+      disabled={organization.plan === 'enterprise'}
       className="w-full"
     >
-      {organization.plan === 'business' ? <T id="currentPlan" /> : <T id="upgradeBusiness" />}
+      {organization.plan === 'enterprise' ? <T id="currentPlan" /> : <T id="upgradeEnterprise" />}
     </ExternalLinkButton>
   );
 }

@@ -2294,57 +2294,58 @@
         "currentPlan": "Current plan",
         "downgrade": "Downgrade",
         "upgrade": "Upgrade now",
-        "upgradeBusiness": "Get in touch",
+        "upgradeEnterprise": "Get in touch",
         "contactUs": "Contact us",
         "price": "{price} <dim>/mo + compute</dim>",
         "plans": {
           "starter": {
             "name": "Starter",
-            "description": "Single-member plan, pay as you go, ideal to prototypes and kickstart your project",
+            "price": "<price>$0</price> <dim>/mo + compute</dim>",
+            "description": "For individuals. Pay-per-use by the second after the free tier, perfect for small apps.",
             "features": {
-              "feature1": "Pro one-week trial",
-              "feature2": "1× free Web service",
-              "feature3": "1× free Postgres database (50h)",
-              "feature4": "CPU with up to 32GB RAM / 24 vCPU",
-              "feature5": "Run web apps, APIs, and workers",
-              "feature6": "Git push to deploy",
-              "feature7": "SSL and 5 free custom domains"
+              "feature1": "Generous Free Tier",
+              "feature2": "1x Web Service, 1x Postgres, 5x custom domains",
+              "feature3": "Scale-to-Zero and Autoscaling",
+              "feature4": "CPU and GPU access",
+              "feature5": "US, EU, and Asia regions",
+              "feature6": "Run Inference, APIs, Web Apps, Workers, and Databases"
             }
           },
           "pro": {
             "name": "Pro",
+            "price": "<price>$29</price> <dim>/mo + compute</dim>",
             "description": "Everything in Starter, plus team and support features for production apps",
             "features": {
-              "feature1": "US, EU, and Asia regions",
-              "feature2": "Autoscaling GPUs",
-              "feature3": "Up to 1000 CPU services",
-              "feature4": "10 users included",
-              "feature5": "E-mail support and chat",
-              "feature6": "Slack cross-connect",
-              "feature7": "99.9% uptime SLA"
+              "feature1": "$10 included compute",
+              "feature2": "10 users",
+              "feature3": "100 services",
+              "feature4": "NVMe Volumes and Snapshots",
+              "feature5": "5 concurrent builds",
+              "feature6": "E-mail support and chat"
             }
           },
           "scale": {
             "name": "Scale",
-            "description": "Everything in Pro, plus team and support features for production apps",
+            "price": "<price>$299</price> <dim>/mo + compute</dim>",
+            "description": "Scale your infrastructure, team and support",
             "features": {
-              "feature1": "US, EU, and Asia regions",
-              "feature2": "Autoscaling GPUs",
-              "feature3": "Up to 1000 CPU services",
-              "feature4": "50 users included",
-              "feature5": "E-mail support and chat",
-              "feature6": "Slack cross-connect",
-              "feature7": "99.9% uptime SLA"
+              "feature1": "$100 included compute",
+              "feature2": "50 users",
+              "feature3": "1000 services",
+              "feature4": "AWS Regions",
+              "feature5": "Slack cross-connect",
+              "feature6": "99.9% uptime SLA"
             }
           },
-          "business": {
-            "name": "Business",
-            "description": "Supercharged security and support features, starting at $700/mo with committed usage",
+          "enterprise": {
+            "name": "Enterprise",
+            "price": "<price>Custom</price>",
+            "description": "Supercharged security and support features, starting at $1000/mo",
             "features": {
-              "feature1": "Custom RAM, CPU, and GPU",
-              "feature2": "Private dedicated locations",
-              "feature3": "Unlimited users",
-              "feature4": "SSO, RBAC, and Audit trail",
+              "feature1": "Private dedicated locations",
+              "feature2": "Unlimited users",
+              "feature3": "SSO, RBAC, and Audit trail",
+              "feature4": "Custom RAM, CPU, and GPU",
               "feature5": "ISO27001 and SOC2 Certifications",
               "feature6": "99.99% uptime SLA",
               "feature7": "24×7×365 premium support"
