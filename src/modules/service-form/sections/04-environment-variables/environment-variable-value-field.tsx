@@ -1,9 +1,7 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
-import sort from 'lodash-es/sortBy';
 import { useRef, useState } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 import {
   Dropdown,
@@ -16,16 +14,16 @@ import {
   useDropdown,
   useId,
 } from '@koyeb/design-system';
-import { useApiQueryFn } from 'src/api/use-api';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconChevronDown } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
 
-import { serviceFormToDeploymentDefinition } from '../../helpers/service-form-to-deployment';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
+
+import { useServiceVariables } from './service-variables';
 
 const T = Translate.prefix('serviceForm.environmentVariables');
 
@@ -45,17 +43,7 @@ export function EnvironmentVariableValueField({
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
-  const values = useFormContext<ServiceForm>().getValues();
-
-  const variablesQuery = useQuery({
-    ...useApiQueryFn('getServiceVariables', {
-      body: { definition: serviceFormToDeploymentDefinition(values) },
-      delay: 500,
-    }),
-    placeholderData: keepPreviousData as never,
-    refetchInterval: false,
-    select: mapServiceVariables,
-  });
+  const variables = useServiceVariables();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -69,17 +57,17 @@ export function EnvironmentVariableValueField({
     {
       key: 'secrets',
       label: 'Secrets',
-      items: filterItems(variablesQuery.data?.secrets ?? [], variableName, field.value),
+      items: filterItems(variables?.secrets ?? [], variableName, field.value),
     },
     {
       key: 'userEnv',
       label: 'Service variables',
-      items: filterItems(variablesQuery.data?.userEnv ?? [], variableName, field.value),
+      items: filterItems(variables?.userEnv ?? [], variableName, field.value),
     },
     {
       key: 'systemEnv',
       label: 'Koyeb variables',
-      items: filterItems(variablesQuery.data?.systemEnv ?? [], variableName, field.value),
+      items: filterItems(variables?.systemEnv ?? [], variableName, field.value),
     },
     {
       key: 'create',
@@ -195,14 +183,6 @@ export function EnvironmentVariableValueField({
       />
     </Field>
   );
-}
-
-function mapServiceVariables({ secrets, system_env, user_env }: Record<string, string[]>) {
-  return {
-    secrets: secrets!.map((name) => `secret.${name}`),
-    userEnv: sort(user_env).filter((value) => value !== ''),
-    systemEnv: sort(system_env),
-  };
 }
 
 const regexp = /{{(((?!}}).)*)$/i;

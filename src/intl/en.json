@@ -1173,7 +1173,11 @@
         "notPlainText": "You must provide a text file",
         "noEnvVars": "No environment variables were identified in the provided file"
       },
-      "createSecret": "Create new secret"
+      "createSecret": "Create new secret",
+      "missingInterpolations": {
+        "title": "Unknown variable interpolation",
+        "description": "The environment variable <code>{name}</code> references an unknown interpolation value <code>{value}</code>"
+      }
     },
     "files": {
       "title": "Files",
