@@ -1,6 +1,7 @@
 import { useAppsQuery, useServicesQuery } from 'src/api/hooks/service';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
 import { Wrapped } from 'src/modules/wrapped/wrapped';
@@ -14,6 +15,7 @@ const T = Translate.prefix('pages.home');
 export function HomePage() {
   const appsQuery = useAppsQuery();
   const servicesQuery = useServicesQuery();
+  const hasWrapped = useFeatureFlag('wrapped');
 
   if (appsQuery.isPending || servicesQuery.isPending) {
     return <Loading />;
@@ -28,17 +30,12 @@ export function HomePage() {
   }
 
   if (appsQuery.data.length === 0) {
-    return (
-      <>
-        <Wrapped />
-        <ServiceCreation />
-      </>
-    );
+    return <ServiceCreation />;
   }
 
   return (
     <>
-      <Wrapped />
+      {hasWrapped && <Wrapped />}
 
       <h1 className="typo-heading">
         <T id="title" />

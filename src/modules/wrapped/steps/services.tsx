@@ -6,7 +6,7 @@ export function Services({ data, next }: { data: WrappedData; next: () => void }
   const otherActiveServices = data.mostActiveServices.slice(1);
 
   return (
-    <div onClick={next} className="col h-full justify-between gap-4 text-left text-3xl font-semibold">
+    <div onClick={next} className="col h-full justify-evenly gap-4 text-left text-3xl font-semibold">
       <p>You created {data.createdServices} services this year.</p>
 
       <p>

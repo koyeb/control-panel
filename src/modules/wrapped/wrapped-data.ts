@@ -1,4 +1,5 @@
 import { getConfig } from 'src/application/config';
+import { reportError } from 'src/application/report-error';
 
 export type WrappedData = {
   deployments: number;
@@ -94,21 +95,30 @@ export async function fetchWrappedData(
   return response.json() as Promise<ApiResult>;
 }
 
-export function mapWrappedData(result: ApiResult): WrappedData {
+export function mapWrappedData(organizationId: string, result: ApiResult): WrappedData | null {
   const { Card_1, Card_2, Card_3, Card_4, Card_5 } = result.Summary;
 
-  return {
-    deployments: Card_1.NumberOfDeployments,
-    regions: Card_2.RegionsDeployedIn.map(({ Region }) => Region),
-    createdServices: Card_2.CountServices,
-    mostActiveServices: Card_2.Top3Services.map(({ AppName, ServiceName }) => ({
-      appName: AppName,
-      serviceName: ServiceName,
-    })),
-    deploymentMethod: Card_3.Persona,
-    pushes: Card_3.GitSourceStats.NumberOfBuiltPushes,
-    buildTime: Math.round(Card_3.GitSourceStats.BuildStats.TotalDuration / (1000 * 1000 * 1000 * 60)),
-    requests: Card_4.RequestsSummary.TotalCount,
-    team: Card_5.Team.map(({ Name }) => Name),
-  };
+  if (Card_1 === null) {
+    return null;
+  }
+
+  try {
+    return {
+      deployments: Card_1.NumberOfDeployments,
+      regions: Card_2.RegionsDeployedIn.map(({ Region }) => Region),
+      createdServices: Card_2.CountServices,
+      mostActiveServices: Card_2.Top3Services.map(({ AppName, ServiceName }) => ({
+        appName: AppName,
+        serviceName: ServiceName,
+      })),
+      deploymentMethod: Card_3.Persona,
+      pushes: Card_3.GitSourceStats.NumberOfBuiltPushes,
+      buildTime: Math.round(Card_3.GitSourceStats.BuildStats.TotalDuration / (1000 * 1000 * 1000 * 60)),
+      requests: Card_4.RequestsSummary.TotalCount,
+      team: Card_5.Team.map(({ Name }) => Name),
+    };
+  } catch (error) {
+    reportError(new Error('Failed to parse wrapped data'), { organizationId, result, error });
+    return null;
+  }
 }
