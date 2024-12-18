@@ -18,7 +18,7 @@ import { ServiceForm } from '../../service-form.types';
 import { BulkEnvironmentVariablesEditionDialog } from './bulk-environment-variables-edition';
 import { EnvironmentVariableFields } from './environment-variable-fields';
 import { Files } from './files';
-import { MissingInterpolationAlert } from './missing-interpolations-alert';
+import { UnknownInterpolationAlert } from './unknown-interpolation-alert';
 
 const T = Translate.prefix('serviceForm.environmentVariables');
 
@@ -50,6 +50,8 @@ export function EnvironmentVariablesSection() {
           </TabButton>
         </TabButtons>
       )}
+
+      <UnknownInterpolationAlert />
 
       {tab === 'environmentVariables' && <EnvironmentVariables />}
       {tab === 'files' && <Files />}
@@ -91,8 +93,6 @@ function EnvironmentVariables() {
 
   return (
     <>
-      <MissingInterpolationAlert />
-
       <FileDropZone onDrop={([file]) => file && void environmentFileDropped(file)}>
         <div className="col gaps">
           <p>
