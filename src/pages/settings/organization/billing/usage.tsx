@@ -46,13 +46,13 @@ export function Usage() {
 
 type UsageDetailsProps = {
   periods: InvoicePeriod[];
-  discount?: InvoiceDiscount;
+  discounts: InvoiceDiscount[];
   totalWithoutDiscount?: number;
   total: number;
 };
 
-function UsageDetails({ periods, discount, totalWithoutDiscount, total }: UsageDetailsProps) {
-  if (periods.length === 0 && discount === undefined) {
+function UsageDetails({ periods, discounts, totalWithoutDiscount, total }: UsageDetailsProps) {
+  if (periods.length === 0 && discounts.length === 0) {
     return (
       <p>
         <T id="noUsage" />
@@ -84,11 +84,11 @@ function UsageDetails({ periods, discount, totalWithoutDiscount, total }: UsageD
           </UsageTotalRow>
         )}
 
-        {discount && (
-          <UsageTotalRow label={discount.label} className="text-green">
+        {discounts.map((discount) => (
+          <UsageTotalRow key={discount.label} label={discount.label} className="text-green">
             <DiscountValue discount={discount} />
           </UsageTotalRow>
-        )}
+        ))}
 
         <UsageTotalRow label={<T id="total" />}>
           <Price value={total / 100} />
@@ -228,7 +228,11 @@ function DiscountValue({ discount }: DiscountValueProps) {
   }
 
   if (discount.type === 'percentOff') {
-    return <FormattedNumber style="percent" value={-discount.value / 100} />;
+    return (
+      <span className="font-medium">
+        <FormattedNumber style="percent" value={-discount.value / 100} />
+      </span>
+    );
   }
 
   return null;
