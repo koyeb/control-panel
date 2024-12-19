@@ -117,6 +117,7 @@
       "serviceScaledToZeroDetails": "Service was inactive",
       "serviceScaledFromZero": "Woke up",
       "serviceScaledFromZeroDetails": "Service received traffic",
+      "deploymentSucceeded": "Deployment {name} succeeded",
       "deploymentFailed": "Deployment {name} failed",
       "volume": "volume",
       "loggedIn": "Logged in",
