@@ -50,9 +50,12 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
   }
 
   if (isDeploymentActivity(activity)) {
+    if (activity.verb === 'succeeded') {
+      return <T id="deploymentSucceeded" values={{ name: shortId(activity.object.name) }} />;
+    }
+
     if (activity.verb === 'failed') {
-      const name = <span className="text-default">{shortId(activity.object.name)}</span>;
-      return <T id="deploymentFailed" values={{ name }} />;
+      return <T id="deploymentFailed" values={{ name: shortId(activity.object.name) }} />;
     }
   }
 
