@@ -3,6 +3,16 @@ import { useFeatureFlagEnabled } from 'posthog-js/react';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
+export function FeatureFlag({ feature, children }: { feature: string; children: React.ReactNode }) {
+  const enabled = useFeatureFlag(feature);
+
+  if (!enabled) {
+    return null;
+  }
+
+  return children;
+}
+
 export function useFeatureFlag(flag: string) {
   const enabled = useFeatureFlagEnabled(flag);
   const localStorageFlags = useLocalStorageFlags();

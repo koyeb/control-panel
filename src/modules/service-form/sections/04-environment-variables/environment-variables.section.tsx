@@ -7,7 +7,7 @@ import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { IconPlus } from 'src/components/icons';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { Translate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
@@ -51,7 +51,9 @@ export function EnvironmentVariablesSection() {
         </TabButtons>
       )}
 
-      <UnknownInterpolationAlert />
+      <FeatureFlag feature="missing-interpolation-warning">
+        <UnknownInterpolationAlert />
+      </FeatureFlag>
 
       {tab === 'environmentVariables' && <EnvironmentVariables />}
       {tab === 'files' && <Files />}
