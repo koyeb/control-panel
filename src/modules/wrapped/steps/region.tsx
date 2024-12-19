@@ -23,7 +23,7 @@ export function Region({ data, next }: { data: WrappedData; next: () => void }) 
       <motion.p
         initial={{ opacity: 0, transform: 'scale(0%)' }}
         animate={{ opacity: 1, transform: 'scale(100%)' }}
-        transition={{ delay: 1, ease: 'easeOut', bounce: 0, duration: 1 }}
+        transition={{ delay: 0.5, ease: 'easeOut', bounce: 0, duration: 1 }}
         onAnimationComplete={() => setStep(1)}
         className="row items-center justify-center gap-6 font-bold"
       >

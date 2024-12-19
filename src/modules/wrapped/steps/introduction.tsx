@@ -23,7 +23,7 @@ export function Introduction({ data, next }: { data: WrappedData; next: () => vo
       {data.deployments > 0 && (
         <div>
           <button onClick={next} className="rounded-full border-2 px-5 py-3">
-            Let&apos;go!
+            Let&apos;s go!
           </button>
         </div>
       )}
