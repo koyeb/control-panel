@@ -60,6 +60,8 @@ export function Wrapped() {
 
   return (
     <>
+      <p className="mb-1 text-dim">🡳 This is behind a feature flag 🡳</p>
+
       <Alert
         icon={<Croissant className="w-16" />}
         variant="info"
@@ -130,7 +132,7 @@ function WrappedDialog({ open, onClose, data }: { open: boolean; onClose: () => 
                     deploymentMethod: <DeploymentMethod data={data} next={next} />,
                     metrics: <Metrics data={data} next={next} />,
                     team: <Team data={data} next={next} />,
-                    recap: <Recap next={onClose} />,
+                    recap: <Recap data={data} next={onClose} />,
                   }[step]}
               </motion.div>
             </AnimatePresence>

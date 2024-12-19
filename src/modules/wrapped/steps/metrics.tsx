@@ -41,7 +41,7 @@ export function Metrics({ data, next }: { data: WrappedData; next: () => void })
       }}
       className="col h-full justify-between gap-4 text-center text-3xl font-semibold"
     >
-      <p>Can you guess how many requests your service handled this year?</p>
+      <p>Can you guess how many requests your services handled this year?</p>
 
       <img src={imgCroissants3} className="w-full" />
 
