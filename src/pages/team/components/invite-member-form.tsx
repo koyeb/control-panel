@@ -41,7 +41,7 @@ export function InviteMemberForm() {
     onError: useFormErrorHandler(form),
   });
 
-  const disabled = organization.plan === 'hobby';
+  const disabled = organization.plan === 'hobby' || organization.plan === 'starter';
 
   return (
     <div className="col gap-4">

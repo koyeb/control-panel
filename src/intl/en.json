@@ -2015,7 +2015,7 @@
         "emailPlaceholder": "team@example.com",
         "submitButton": "Invite",
         "successNotification": "Invitation sent to {email}",
-        "hobbyPlanUpgrade": "This feature is available on the Starter and Startup plans. <upgrade>View all plans and upgrade →</upgrade>"
+        "hobbyPlanUpgrade": "This feature is available on the Plo and Scale plans. <upgrade>View all plans and upgrade →</upgrade>"
       }
     },
     "service": {
