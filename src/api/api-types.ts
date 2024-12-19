@@ -32,6 +32,8 @@ export namespace Api {
   export type Metric = schemas['GetMetricsReply.Metric'];
   export type MetricName = schemas['MetricName'];
   export type NeonPostgresDatabase = schemas['NeonPostgresDatabase'];
+  export type NextInvoice = schemas['NextInvoiceReply'];
+  export type NextInvoiceDiscount = schemas['NextInvoiceReply.Discount'];
   export type NextInvoiceLine = schemas['NextInvoiceReply.Line'];
   export type Organization = schemas['Organization'];
   export type OrganizationInvitation = schemas['OrganizationInvitation'];

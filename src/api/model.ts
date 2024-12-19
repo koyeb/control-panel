@@ -47,8 +47,8 @@ export type Subscription = {
 
 export type Invoice = {
   periods: InvoicePeriod[];
-  discount?: InvoiceDiscount;
-  totalWithoutDiscount?: number;
+  discounts: InvoiceDiscount[];
+  totalWithoutDiscount: number;
   total: number;
 };
 

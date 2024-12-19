@@ -10,6 +10,7 @@ import { mapInvoice, StripeInvoice } from './billing';
 
 const createStripeInvoice = createFactory<StripeInvoice>(() => ({
   lines: [],
+  discounts: [],
   subtotal_excluding_tax: 0,
   total_excluding_tax: 0,
 }));
@@ -25,13 +26,18 @@ const createStripeInvoiceLine = createFactory<Api.NextInvoiceLine>(() => ({
 }));
 
 describe('mapInvoice', () => {
-  const transform = (invoice: StripeInvoice, lines: Api.NextInvoiceLine[]) => {
-    return mapInvoice({ stripe_invoice: invoice as never, lines });
+  const transform = (
+    invoice: StripeInvoice,
+    lines: Api.NextInvoiceLine[],
+    discounts: Api.NextInvoiceDiscount[] = [],
+  ) => {
+    return mapInvoice({ stripe_invoice: invoice as never, lines, discounts });
   };
 
   it('transforms an invoice from stripe', () => {
     const stripeInvoice = createStripeInvoice({
       total_excluding_tax: 774,
+      subtotal_excluding_tax: 774,
     });
 
     const lines = [
@@ -53,6 +59,8 @@ describe('mapInvoice', () => {
         },
       ],
       total: 774,
+      totalWithoutDiscount: 774,
+      discounts: [],
     });
   });
 
@@ -101,43 +109,46 @@ describe('mapInvoice', () => {
 
   it('transforms an amount off discount', () => {
     const stripeInvoice = createStripeInvoice({
-      discount: {
-        coupon: {
-          amount_off: 550,
-          name: 'Koyeb free tier',
-          percent_off: null,
-        },
-      },
+      total_excluding_tax: 123 + 550,
       subtotal_excluding_tax: 123,
     });
 
-    expect(transform(stripeInvoice, [])).toHaveProperty('totalWithoutDiscount', 123);
+    const discount: Api.NextInvoiceDiscount = {
+      type: 'AMOUNT_OFF',
+      name: 'Koyeb free tier',
+      amount: 550,
+    };
 
-    expect(transform(stripeInvoice, [])).toHaveProperty<InvoiceDiscount>('discount', {
-      type: 'amountOff',
-      label: 'Koyeb free tier',
-      value: 550,
-    });
+    expect(transform(stripeInvoice, [], [discount])).toHaveProperty('totalWithoutDiscount', 123);
+
+    expect(transform(stripeInvoice, [], [discount])).toHaveProperty<InvoiceDiscount[]>('discounts', [
+      {
+        type: 'amountOff',
+        label: 'Koyeb free tier',
+        value: 550,
+      },
+    ]);
   });
 
   it('transforms a percent off discount', () => {
     const stripeInvoice = createStripeInvoice({
-      discount: {
-        coupon: {
-          amount_off: null,
-          name: 'Preview for instance usage',
-          percent_off: 100,
-        },
-      },
       subtotal_excluding_tax: 123,
     });
 
-    expect(transform(stripeInvoice, [])).toHaveProperty('totalWithoutDiscount', 123);
+    const discount: Api.NextInvoiceDiscount = {
+      type: 'PERCENT_OFF',
+      name: 'Preview for instance usage',
+      amount: 5432,
+    };
 
-    expect(transform(stripeInvoice, [])).toHaveProperty<InvoiceDiscount>('discount', {
-      type: 'percentOff',
-      label: 'Preview for instance usage',
-      value: 100,
-    });
+    expect(transform(stripeInvoice, [], [discount])).toHaveProperty('totalWithoutDiscount', 123);
+
+    expect(transform(stripeInvoice, [], [discount])).toHaveProperty<InvoiceDiscount[]>('discounts', [
+      {
+        type: 'percentOff',
+        label: 'Preview for instance usage',
+        value: 54.32,
+      },
+    ]);
   });
 });

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import { ApiError } from 'src/api/api-errors';
 import type { Api } from 'src/api/api-types';
-import { StripeInvoice, StripeInvoiceCoupon } from 'src/api/mappers/billing';
+import { StripeInvoice } from 'src/api/mappers/billing';
 import { ApiMock } from 'src/api/mock/mock-api';
 import { OrganizationPlan } from 'src/api/model';
 import { controls } from 'src/storybook';
@@ -41,12 +41,12 @@ function mockApi(args: Args) {
   data.organization.plan = args.plan;
 
   const invoice: StripeInvoice = {
-    discount: null,
     subtotal_excluding_tax: 0,
     total_excluding_tax: 0,
   };
 
   let lines: Api.NextInvoiceLine[] = [];
+  const discounts: Api.NextInvoiceDiscount[] = [];
 
   if (args.plan !== 'hobby') {
     const nanoUsage = 1800;
@@ -85,23 +85,25 @@ function mockApi(args: Args) {
   }
 
   if (args.discount !== 'none') {
-    const coupon: StripeInvoiceCoupon = {
+    const discount: Api.NextInvoiceDiscount = {
+      type: 'AMOUNT_OFF',
       name: 'Discount name',
-      percent_off: null,
-      amount_off: null,
+      amount: 0,
     };
 
     if (args.discount === 'amount_off') {
-      coupon.amount_off = 1000;
+      discount.type = 'AMOUNT_OFF';
+      discount.amount = 1000;
       invoice.total_excluding_tax -= 1000;
     }
 
     if (args.discount === 'percent_off') {
-      coupon.percent_off = 50;
+      discount.type = 'PERCENT_OFF';
+      discount.amount = 50;
       invoice.total_excluding_tax /= 2;
     }
 
-    invoice.discount = { coupon };
+    discounts.push(discount);
   }
 
   if (args.plan === 'hobby') {

@@ -82,19 +82,19 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
         </div>
       )}
 
-      {costs.discount && (
-        <div className="row items-center justify-between text-green">
-          <div>{costs.discount.label}</div>
+      {costs.discounts.map((discount, index) => (
+        <div key={index} className="row items-center justify-between text-green">
+          <div>{discount.label}</div>
           <div>
-            {costs.discount.type === 'amountOff' && <FormattedPrice value={-costs.discount.value / 100} />}
-            {costs.discount.type === 'percentOff' && (
-              <FormattedNumber value={-costs.discount.value / 100} style="percent" />
+            {discount.type === 'amountOff' && <FormattedPrice value={-discount.value / 100} />}
+            {discount.type === 'percentOff' && (
+              <FormattedNumber value={-discount.value / 100} style="percent" />
             )}
           </div>
         </div>
-      )}
+      ))}
 
-      {(costs.usage !== costs.total || costs.discount) && <hr />}
+      {(costs.usage !== costs.total || costs.discounts.length > 0) && <hr />}
 
       <div className="row items-center justify-between font-medium">
         <div>
@@ -121,7 +121,7 @@ function getCosts(invoice: Invoice) {
       .flatMap((period) => period.lines.filter(isUsageLine))
       .reduce((total, line) => total + line.total, 0),
     plan: invoice.periods.find((period) => period.lines.find(isPlanLine))?.lines[0],
-    discount: invoice.discount,
+    discounts: invoice.discounts,
     total: invoice.total,
   };
 }

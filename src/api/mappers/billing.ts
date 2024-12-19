@@ -15,21 +15,18 @@ export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscrip
 }
 
 export type StripeInvoice = {
-  discount?: { coupon?: StripeInvoiceCoupon } | null;
   subtotal_excluding_tax: number;
   total_excluding_tax: number;
 };
 
-export type StripeInvoiceCoupon = {
-  name: string;
-  amount_off: number | null;
-  percent_off: number | null;
-};
-
-export function mapInvoice({ lines, stripe_invoice }: ApiEndpointResult<'getNextInvoice'>): Invoice {
+export function mapInvoice({
+  lines,
+  stripe_invoice,
+  discounts,
+}: ApiEndpointResult<'getNextInvoice'>): Invoice {
   const stripeInvoice = stripe_invoice as unknown as StripeInvoice;
 
-  const invoice: Invoice = {
+  return {
     periods: groupLinesByPeriod(lines!)
       .map(({ start, end, lines }) => ({
         start,
@@ -38,16 +35,9 @@ export function mapInvoice({ lines, stripe_invoice }: ApiEndpointResult<'getNext
       }))
       .filter(({ lines }) => lines.length > 0),
     total: stripeInvoice.total_excluding_tax,
+    totalWithoutDiscount: stripeInvoice.subtotal_excluding_tax,
+    discounts: discounts!.map(mapDiscount),
   };
-
-  const discount = getDiscount(stripeInvoice);
-
-  if (discount) {
-    invoice.discount = discount;
-    invoice.totalWithoutDiscount = stripeInvoice.subtotal_excluding_tax;
-  }
-
-  return invoice;
 }
 
 function getLines(lines: Api.NextInvoiceLine[]): InvoiceLine[] {
@@ -104,32 +94,17 @@ function groupLinesByPeriod(
   return Array.from(periods.values()).sort(({ start: a }, { start: b }) => a.localeCompare(b));
 }
 
-function getDiscount(invoice: StripeInvoice): InvoiceDiscount | undefined {
-  const coupon = invoice.discount?.coupon;
-
-  if (!coupon) {
-    return;
-  }
-
-  if (coupon.amount_off !== null) {
-    return {
-      type: 'amountOff',
-      label: coupon.name,
-      value: coupon.amount_off,
-    };
-  }
-
-  if (coupon.percent_off !== null) {
-    return {
-      type: 'percentOff',
-      label: coupon.name,
-      value: coupon.percent_off,
-    };
-  }
+function mapDiscount(discount: Api.NextInvoiceDiscount): InvoiceDiscount {
+  const type = discountTypeMap[discount.type!]!;
 
   return {
-    type: 'unknown',
-    label: coupon.name,
-    value: 0,
+    label: discount.name!,
+    type,
+    value: type === 'amountOff' ? discount.amount! : discount.amount! / 100,
   };
 }
+
+const discountTypeMap: Record<string, InvoiceDiscount['type']> = {
+  AMOUNT_OFF: 'amountOff',
+  PERCENT_OFF: 'percentOff',
+};

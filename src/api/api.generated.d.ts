@@ -2349,7 +2349,13 @@ export interface components {
         NextInvoiceReply: {
             stripe_invoice?: Record<string, never>;
             lines?: components["schemas"]["NextInvoiceReply.Line"][];
+            discounts?: components["schemas"]["NextInvoiceReply.Discount"][]
         };
+        "NextInvoiceReply.Discount": {
+            type?: 'AMOUNT_OFF' | 'PERCENT_OFF';
+            name?: string;
+            amount?: number;
+        },
         "NextInvoiceReply.Line": {
             /** Format: int32 */
             amount_excluding_tax?: number;
@@ -2421,6 +2427,11 @@ export interface components {
             qualifies_for_hobby23?: boolean;
             /** Format: date-time */
             reprocess_after?: string;
+            trialing?: boolean;
+            /** Format: date-time */
+            trial_starts_at?: string;
+            /** Format: date-time */
+            trial_ends_at?: string;
         };
         /**
          * @default INVALID
