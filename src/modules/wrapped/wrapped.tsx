@@ -60,8 +60,6 @@ export function Wrapped() {
 
   return (
     <>
-      <p className="mb-1 text-dim">🡳 This is behind a feature flag 🡳</p>
-
       <Alert
         icon={<Croissant className="w-16" />}
         variant="info"
