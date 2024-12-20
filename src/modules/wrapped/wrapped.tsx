@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 
 import { Alert } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
+import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
 import { Link } from 'src/components/link';
 import { useSearchParam } from 'src/hooks/router';
@@ -37,6 +38,7 @@ const steps = [
 ] as const;
 
 export function Wrapped() {
+  const track = useTrackEvent();
   const [wrapped, setWrapped] = useSearchParam('wrapped');
 
   const organization = useOrganization();
@@ -48,12 +50,12 @@ export function Wrapped() {
     select: (result) => mapWrappedData(organization.id, result),
   });
 
-  if (!query.isSuccess || query.data === null) {
+  if (!query.isSuccess || query.data === null || query.data.deployments === 0) {
     return null;
   }
 
   const link = (children: string) => (
-    <Link className="text-green" href={`/?wrapped`}>
+    <Link className="text-green" href={`/?wrapped`} onClick={() => track('WrappedClicked', { year: 2024 })}>
       {children}
     </Link>
   );
