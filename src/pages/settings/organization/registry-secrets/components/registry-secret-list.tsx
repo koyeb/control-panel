@@ -8,14 +8,14 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { NoResource } from 'src/components/no-resource';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { RegistryType } from 'src/modules/secrets/registry/registry-type';
 import { createArray } from 'src/utils/arrays';
 
 import { DeleteRegistrySecretDialog } from './delete-registry-secret-dialog';
 import { EditRegistrySecretDialog } from './edit-registry-secret-dialog';
 
-const T = Translate.prefix('pages.organizationSettings.registrySecrets.list');
+const T = createTranslate('pages.organizationSettings.registrySecrets.list');
 
 export function RegistrySecretList({ onCreate }: { onCreate: () => void }) {
   const secretsQuery = useSecretsQuery('registry');

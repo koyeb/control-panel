@@ -6,12 +6,12 @@ import { DockerImageHelperText } from 'src/components/docker-image-input/docker-
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
 import { useFormValues } from 'src/hooks/form';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../../service-form.types';
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
 
-const T = Translate.prefix('serviceForm.source.docker');
+const T = createTranslate('serviceForm.source.docker');
 
 export function DockerImageField() {
   const t = T.useTranslate();

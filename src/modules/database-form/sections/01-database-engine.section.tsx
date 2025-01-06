@@ -1,13 +1,13 @@
 import { useWatch } from 'react-hook-form';
 
 import { ControlledSelect } from 'src/components/controlled';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { DatabaseServiceFormSection } from '../components/database-service-form-section';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = Translate.prefix('databaseForm.engine');
+const T = createTranslate('databaseForm.engine');
 
 export function DatabaseEngineSection() {
   const version = useWatch<DatabaseServiceForm, 'engine.version'>({ name: 'engine.version' });

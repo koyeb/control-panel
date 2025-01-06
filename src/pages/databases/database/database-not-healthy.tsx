@@ -7,9 +7,9 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.database.layout.databaseNotHealthy');
+const T = createTranslate('pages.database.layout.databaseNotHealthy');
 
 export function DatabaseNotHealth({ service }: { service: Service }) {
   const invalidate = useInvalidateApiQuery();

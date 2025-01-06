@@ -1,11 +1,11 @@
 import { ComputeDeployment, type GitDeploymentTrigger } from 'src/api/model';
 import { IconGitBranch, IconGitCommitHorizontal } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { shortId } from 'src/utils/strings';
 
-const T = Translate.prefix('pages.home.deploymentTrigger');
+const T = createTranslate('pages.home.deploymentTrigger');
 
 type DeploymentTriggerProps = {
   trigger: ComputeDeployment['trigger'];

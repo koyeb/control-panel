@@ -17,12 +17,12 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { entries } from 'src/utils/object';
 
 import { OnboardingStepper } from './stepper';
 
-const T = Translate.prefix('onboarding.joinOrganization');
+const T = createTranslate('onboarding.joinOrganization');
 
 const schema = z.object({
   organizationName: z

@@ -6,7 +6,7 @@ import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { useSearchParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { enumIndex, isEnumValue } from 'src/utils/enums';
 
@@ -16,7 +16,7 @@ import { InstanceRegionStep } from './steps/02-instance-region/instance-region.s
 import { ReviewStep } from './steps/03-review/review.step';
 import { InitialDeploymentStep } from './steps/04-initial-deployment/initial-deployment.step';
 
-const T = Translate.prefix('serviceCreation');
+const T = createTranslate('serviceCreation');
 
 enum Step {
   serviceType = 'serviceType',

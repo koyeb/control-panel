@@ -4,12 +4,12 @@ import { useState } from 'react';
 import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { Title } from 'src/components/title';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
 
 import { RegistrySecretList } from './components/registry-secret-list';
 
-const T = Translate.prefix('pages.organizationSettings.registrySecrets');
+const T = createTranslate('pages.organizationSettings.registrySecrets');
 
 export function RegistrySecretsPage() {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);

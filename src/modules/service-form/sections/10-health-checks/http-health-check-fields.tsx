@@ -4,14 +4,14 @@ import { useFieldArray } from 'react-hook-form';
 import { Button, IconButton, useBreakpoint } from '@koyeb/design-system';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconTrash, IconPlus } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { upperCase } from 'src/utils/strings';
 
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.healthChecks.healthCheck');
+const T = createTranslate('serviceForm.healthChecks.healthCheck');
 
 type HttpHealthCheckFieldsProps = {
   index: number;

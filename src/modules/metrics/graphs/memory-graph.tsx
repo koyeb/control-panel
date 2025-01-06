@@ -1,7 +1,7 @@
 import { Serie } from '@nivo/line';
 
 import { formatBytes, parseBytes } from 'src/application/memory';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
 import { isDefined } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
@@ -10,7 +10,7 @@ import { LineGraph } from '../components/line-graph';
 import { toGraph } from '../metrics-helpers';
 import { Metric } from '../metrics-types';
 
-const T = Translate.prefix('pages.service.metrics.memory');
+const T = createTranslate('pages.service.metrics.memory');
 
 type MemoryGraphProps = {
   loading: boolean;

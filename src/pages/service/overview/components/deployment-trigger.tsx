@@ -1,7 +1,7 @@
 import { ComputeDeployment } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.overview.deploymentTrigger');
+const T = createTranslate('pages.service.overview.deploymentTrigger');
 
 export function DeploymentTrigger({ deployment }: { deployment: ComputeDeployment }) {
   const { trigger } = deployment;

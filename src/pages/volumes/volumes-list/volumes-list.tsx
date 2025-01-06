@@ -18,13 +18,13 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { CreateSnapshotDialog } from './create-snapshot-dialog';
 import { DeleteVolumeDialog } from './delete-volume-dialog';
 import { EditVolumeDialog } from './edit-volume-dialog';
 
-const T = Translate.prefix('pages.volumes.volumesList');
+const T = createTranslate('pages.volumes.volumesList');
 
 export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate: () => void }) {
   const isMobile = !useBreakpoint('sm');

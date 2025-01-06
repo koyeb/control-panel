@@ -1,10 +1,10 @@
 import { IconEarth, IconScale3d } from 'src/components/icons';
 import { FormattedPrice } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { entries } from 'src/utils/object';
 
-const T = Translate.prefix('serviceEstimatedCost');
+const T = createTranslate('serviceEstimatedCost');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function hasAutoscaling(cost: ServiceCost): cost is [any, any] {

@@ -3,14 +3,14 @@ import { useState } from 'react';
 import { Select } from '@koyeb/design-system';
 import { useApps, useServices } from 'src/api/hooks/service';
 import { Service, ServiceType } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 import { AppItem } from './app-item';
 
-const T = Translate.prefix('pages.home');
+const T = createTranslate('pages.home');
 
 export function Apps({ showFilters = false }: { showFilters?: boolean }) {
   const [serviceType, setServiceType] = useState<ServiceType | 'all'>('all');

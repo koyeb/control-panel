@@ -7,10 +7,10 @@ import { IconArrowUpRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
 import { useLocalStorage } from 'src/hooks/storage';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
 
-const T = Translate.prefix('pages.home.news');
+const T = createTranslate('pages.home.news');
 
 type News = {
   id: string;

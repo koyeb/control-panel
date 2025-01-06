@@ -9,10 +9,10 @@ import { getServiceUrls } from 'src/application/service-functions';
 import { ActionsList, ActionsListButton, ActionsListLink } from 'src/components/actions-list';
 import { IconSendHorizontal, IconInfo, IconExternalLink, IconArrowRight } from 'src/components/icons';
 import { TimeoutUi } from 'src/components/timeout-ui';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 
-const T = Translate.prefix('serviceCreation.initialDeployment.deploymentStatusDetails');
+const T = createTranslate('serviceCreation.initialDeployment.deploymentStatusDetails');
 
 type DeploymentStatusDetailsProps = {
   app: App;

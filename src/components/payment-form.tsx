@@ -21,12 +21,12 @@ import { getToken, useToken } from 'src/application/token';
 import { AddressField } from 'src/components/address-field/address-field';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
 
-const T = Translate.prefix('paymentDialog');
+const T = createTranslate('paymentDialog');
 
 const waitForPaymentMethodTimeout = 12 * 1000;
 

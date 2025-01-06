@@ -4,9 +4,9 @@ import { Domain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.domains.deleteDialog');
+const T = createTranslate('pages.domains.deleteDialog');
 
 export type DeleteDomainDialogProps = {
   open: boolean;

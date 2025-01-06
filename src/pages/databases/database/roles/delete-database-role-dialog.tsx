@@ -5,10 +5,10 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('pages.database.roles.deleteDialog');
+const T = createTranslate('pages.database.roles.deleteDialog');
 
 type DeleteDatabaseRoleDialogProps = {
   open: boolean;

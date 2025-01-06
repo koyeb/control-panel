@@ -7,12 +7,12 @@ import { ControlledAutocomplete } from 'src/components/controlled';
 import { IconBranch } from 'src/components/icons';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../../service-form.types';
 
-const T = Translate.prefix('serviceForm.source.git');
+const T = createTranslate('serviceForm.source.git');
 
 export function OrganizationRepositoryBranchSelector() {
   const values = useFormValues<ServiceForm>();

@@ -21,10 +21,10 @@ import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
-const T = Translate.prefix('deploymentInfo.definitionDialog');
+const T = createTranslate('deploymentInfo.definitionDialog');
 
 type DeploymentDefinitionDialogProps = {
   open: boolean;

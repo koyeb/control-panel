@@ -8,7 +8,7 @@ import { readFile } from 'src/application/read-file';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { IconPlus } from 'src/components/icons';
 import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
 import { ServiceFormSection } from '../../components/service-form-section';
@@ -20,7 +20,7 @@ import { EnvironmentVariableFields } from './environment-variable-fields';
 import { Files } from './files';
 import { UnknownInterpolationAlert } from './unknown-interpolation-alert';
 
-const T = Translate.prefix('serviceForm.environmentVariables');
+const T = createTranslate('serviceForm.environmentVariables');
 
 export function EnvironmentVariablesSection() {
   const variables = useFormContext<ServiceForm>()

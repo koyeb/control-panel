@@ -10,9 +10,9 @@ import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('serviceCreation.instanceRegions');
+const T = createTranslate('serviceCreation.instanceRegions');
 
 type RegionsSelectorProps = {
   regions: CatalogRegion[];

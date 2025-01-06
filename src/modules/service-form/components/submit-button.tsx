@@ -6,13 +6,13 @@ import { Button, Floating, ButtonMenuItem, Menu, Tooltip } from '@koyeb/design-s
 import { IconChevronDown } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
 import { useShortcut } from 'src/hooks/shortcut';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
 import { ServiceForm } from '../service-form.types';
 import { useWatchServiceForm } from '../use-service-form';
 
-const T = Translate.prefix('serviceForm.submitButton');
+const T = createTranslate('serviceForm.submitButton');
 
 type SubmitButtonProps = {
   loading: boolean;

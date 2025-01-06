@@ -1,10 +1,10 @@
 import { InfoTooltip, Input, InputEnd } from '@koyeb/design-system';
 import { CopyIconButton } from 'src/application/copy-icon-button';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ExternalLink } from './link';
 
-const T = Translate.prefix('deployToKoyebButton');
+const T = createTranslate('deployToKoyebButton');
 
 export function DeployToKoyebButton({ deployUrl }: { deployUrl?: string }) {
   if (deployUrl === undefined) {

@@ -1,12 +1,12 @@
 import { useWatch } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/controlled';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { DatabaseServiceFormSection } from '../components/database-service-form-section';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = Translate.prefix('databaseForm.serviceName');
+const T = createTranslate('databaseForm.serviceName');
 
 export function ServiceNameSection() {
   const serviceId = useWatch<DatabaseServiceForm, 'meta.databaseServiceId'>({

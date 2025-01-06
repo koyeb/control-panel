@@ -32,7 +32,7 @@ import { RegionName } from 'src/components/region-name';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 import { getName, hasProperty } from 'src/utils/object';
 import { slugify } from 'src/utils/strings';
@@ -44,7 +44,7 @@ import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
 
-const T = Translate.prefix('modelForm');
+const T = createTranslate('modelForm');
 
 const schema = z.object({
   modelSlug: z.string(),

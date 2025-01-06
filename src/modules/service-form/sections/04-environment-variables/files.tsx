@@ -5,13 +5,13 @@ import { useFieldArray } from 'react-hook-form';
 import { Button, IconButton } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconPlus, IconTrash } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
 import { FileContentEditor } from './file-content-editor';
 
-const T = Translate.prefix('serviceForm.files');
+const T = createTranslate('serviceForm.files');
 
 export function Files() {
   const t = T.useTranslate();

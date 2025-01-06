@@ -18,13 +18,13 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { DeleteSecretDialog } from './delete-secret-dialog';
 import { EditSecretDialog } from './edit-secret-dialog';
 import { NoSecrets } from './no-secrets';
 
-const T = Translate.prefix('pages.secrets.secretsList');
+const T = createTranslate('pages.secrets.secretsList');
 
 type SecretListProps = {
   secrets: Secret[];

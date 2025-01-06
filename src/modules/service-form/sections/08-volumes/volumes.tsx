@@ -6,7 +6,7 @@ import { Alert, Button, InfoTooltip } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm, ServiceFormSection } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
@@ -14,7 +14,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumeFields } from './volume-fields.new';
 
-const T = Translate.prefix('serviceForm.volumes');
+const T = createTranslate('serviceForm.volumes');
 
 // this was implemented when working on file mounts
 // todo: integrate it into the form

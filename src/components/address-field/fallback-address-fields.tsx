@@ -1,10 +1,10 @@
 import { Input } from '@koyeb/design-system';
 import { Address } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { CountrySelector } from './country-selector';
 
-const T = Translate.prefix('addressAutocomplete');
+const T = createTranslate('addressAutocomplete');
 
 type FallbackAddressFieldsProps = {
   value?: Address;

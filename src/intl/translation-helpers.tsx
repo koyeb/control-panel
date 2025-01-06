@@ -1,78 +1,40 @@
-import { useCallback } from 'react';
 import { IntlShape, useIntl } from 'react-intl';
 
-import { Trim } from 'src/utils/types';
-
-export type TranslationsObject = {
-  [Key in string]: string | TranslationsObject;
-};
-
+type Prefixes<Key extends string> = Key extends `${infer P}.${infer S}` ? P | `${P}.${Prefixes<S>}` : never;
 type Values = Parameters<IntlShape['formatMessage']>[1];
-
-type Prefixes<Key extends string> = (Key extends `${infer P}.${infer S}`
-  ? [P, `${P}.${Prefixes<S>}`]
-  : [Key])[number];
 
 export interface TranslateFunction<Key extends string> {
   (id: Key): string;
   (id: Key, values: Values): string | JSX.Element;
 }
 
-export function createTranslationHelpers<Key extends string>(commonValues?: Values) {
-  function useTranslate() {
+export function createTranslationHelper<Key extends string>(commonValues: Values = {}) {
+  function useTranslate<Prefix extends Prefixes<Key>>(prefix: Prefix) {
+    type Suffix = Key extends `${Prefix}.${infer S}` ? S : never;
+
     const intl = useIntl();
 
-    const translate = useCallback(
-      (id: string, values?: Values) => {
-        return intl.formatMessage({ id }, { ...commonValues, ...values });
-      },
-      [intl],
-    );
+    function translate(suffix: Suffix): string;
+    function translate(suffix: Suffix, values: Values): string | React.ReactNode[];
 
-    return translate as unknown as TranslateFunction<Key>;
+    function translate(suffix: string, values?: Values): string | React.ReactNode[] {
+      const id = prefix === '' ? suffix : `${prefix}.${suffix}`;
+      return intl.formatMessage({ id }, { ...values, ...commonValues });
+    }
+
+    return translate;
   }
 
-  type TranslateProps<Key extends string> = {
-    id: Key;
-    values?: Values;
-  };
+  return function <Prefix extends Prefixes<Key>>(prefix: Prefix) {
+    type Id = Key extends `${Prefix}.${infer S}` ? S : never;
 
-  function Translate(props: TranslateProps<Key>) {
-    const translate = useTranslate();
+    function Translate(props: { id: Id; values?: Values }) {
+      const translate = useTranslate(prefix);
+      return <>{translate(props.id, props.values ?? {})}</>;
+    }
 
-    return translate(props.id, props.values);
-  }
+    Translate.useTranslate = () => useTranslate<Prefix>(prefix);
 
-  Translate.prefix = <P extends Prefixes<Key>>(prefix: P) => {
-    type SubKey = Trim<Key, `${P}.`>;
-    type Props = TranslateProps<SubKey>;
-
-    const getId = (id: SubKey) => {
-      return `${prefix}.${id}` as Key;
-    };
-
-    const T = (props: Props) => {
-      return <Translate id={getId(props.id)} values={props.values} />;
-    };
-
-    T.useTranslate = () => {
-      const t = useTranslate();
-
-      const translate = useCallback(
-        (id: SubKey, values: Values) => {
-          return t(getId(id), values);
-        },
-        [t],
-      );
-
-      return translate as TranslateFunction<SubKey>;
-    };
-
-    return T;
-  };
-
-  return {
-    useTranslate,
-    Translate,
+    return Translate;
   };
 }

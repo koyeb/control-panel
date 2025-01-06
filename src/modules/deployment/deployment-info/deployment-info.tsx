@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { App, ComputeDeployment, Service } from 'src/api/model';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import {
   AutoDeployMetadata,
@@ -25,7 +25,7 @@ import { DeploymentDefinitionDialog } from './deployment-definition-dialog';
 import { ExternalUrl } from './external-url';
 import { InternalUrl } from './internal-url';
 
-const T = Translate.prefix('deploymentInfo');
+const T = createTranslate('deploymentInfo');
 
 type DeploymentInfoProps = {
   app: App;

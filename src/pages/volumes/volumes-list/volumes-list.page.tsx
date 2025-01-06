@@ -7,13 +7,13 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useHistoryState } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { CreateVolumeDialog } from '../create-volume-dialog';
 
 import { VolumesList } from './volumes-list';
 
-const T = Translate.prefix('pages.volumes');
+const T = createTranslate('pages.volumes');
 
 export function VolumesListPage() {
   const historyState = useHistoryState<{ create: boolean }>();

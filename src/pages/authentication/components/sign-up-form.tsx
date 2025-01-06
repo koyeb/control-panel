@@ -15,12 +15,12 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { AuthenticateButton } from './authenticate-button';
 import { ControlledInput } from './controlled-input';
 
-const T = Translate.prefix('pages.authentication.signUp');
+const T = createTranslate('pages.authentication.signUp');
 
 const schema = z.object({
   name: z.string().min(2).max(128),

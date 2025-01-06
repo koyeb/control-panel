@@ -1,11 +1,11 @@
 import { routes } from 'src/application/routes';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ExternalLink, Link } from '../link';
 
-const T = Translate.prefix('errorBoundary.unhandledError');
+const T = createTranslate('errorBoundary.unhandledError');
 
 type ErrorViewProps = {
   httpStatus?: number;

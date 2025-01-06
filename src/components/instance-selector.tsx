@@ -8,12 +8,12 @@ import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { FormattedPrice } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { InstanceAssistant } from './instance-assistant';
 
-const T = Translate.prefix('instanceSelector');
+const T = createTranslate('instanceSelector');
 
 type InstanceSelectorProps = {
   instances: CatalogInstance[];

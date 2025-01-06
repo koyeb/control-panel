@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 
 import { Autocomplete } from '@koyeb/design-system';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
 
 import countriesJson from './countries.json';
 
-const T = Translate.prefix('addressAutocomplete');
+const T = createTranslate('addressAutocomplete');
 
 type CountrySelectorProps = {
   countries?: string[];

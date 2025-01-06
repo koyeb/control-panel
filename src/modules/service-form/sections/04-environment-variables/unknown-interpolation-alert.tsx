@@ -2,14 +2,14 @@ import { useFormContext } from 'react-hook-form';
 
 import { Alert } from '@koyeb/design-system';
 import { EnvironmentVariable } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 
 import { File, ServiceForm } from '../../service-form.types';
 
 import { ServiceVariables, useServiceVariables } from './service-variables';
 
-const T = Translate.prefix('serviceForm.environmentVariables.unknownInterpolation');
+const T = createTranslate('serviceForm.environmentVariables.unknownInterpolation');
 
 export function UnknownInterpolationAlert() {
   const result = useUnknownInterpolations();

@@ -1,10 +1,10 @@
 import { Button, Dialog } from '@koyeb/design-system';
 import { Secret } from 'src/api/model';
 import { notify } from 'src/application/notify';
-import { Translate, useTranslate } from 'src/intl/translate';
+import { Translate, createTranslate, useTranslate } from 'src/intl/translate';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 
-const T = Translate.prefix('pages.secrets.editSecretDialog');
+const T = createTranslate('pages.secrets.editSecretDialog');
 
 type EditSecretDialogProps = {
   open: boolean;

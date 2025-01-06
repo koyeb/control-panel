@@ -3,9 +3,9 @@ import { useManageBillingQuery } from 'src/api/hooks/billing';
 import { LinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.organizationSettings.billing.stripePortal');
+const T = createTranslate('pages.organizationSettings.billing.stripePortal');
 
 export function StripePortal() {
   const query = useManageBillingQuery();

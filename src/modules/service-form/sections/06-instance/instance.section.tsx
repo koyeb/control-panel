@@ -9,7 +9,7 @@ import {
   useRegionAvailabilities,
 } from 'src/application/instance-region-availability';
 import { InstanceSelector } from 'src/components/instance-selector';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceFormSection } from '../../components/service-form-section';
@@ -18,7 +18,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { InstanceAlerts } from './instance-alerts';
 
-const T = Translate.prefix('serviceForm.instance');
+const T = createTranslate('serviceForm.instance');
 
 export function InstanceSection() {
   const instances = useInstances();

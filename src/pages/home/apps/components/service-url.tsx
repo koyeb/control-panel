@@ -7,11 +7,11 @@ import { notify } from 'src/application/notify';
 import { IconLink, IconCopy } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { useClipboard } from 'src/hooks/clipboard';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { getServiceUrls } from '../../../../application/service-functions';
 
-const T = Translate.prefix('pages.home');
+const T = createTranslate('pages.home');
 
 type ServiceUrlProps = {
   app: App;

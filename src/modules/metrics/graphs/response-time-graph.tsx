@@ -1,11 +1,11 @@
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { entries } from 'src/utils/object';
 
 import { LineGraph } from '../components/line-graph';
 import { toGraph } from '../metrics-helpers';
 import { Metric } from '../metrics-types';
 
-const T = Translate.prefix('pages.service.metrics.responseTime');
+const T = createTranslate('pages.service.metrics.responseTime');
 
 type Data = Record<'50p' | '90p' | '99p' | 'max', Array<Metric> | undefined>;
 

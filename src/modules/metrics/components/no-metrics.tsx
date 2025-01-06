@@ -2,9 +2,9 @@ import { Spinner } from '@koyeb/design-system';
 import { hasMessage } from 'src/api/api-errors';
 import { IconTriangleAlert } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.metrics');
+const T = createTranslate('pages.service.metrics');
 
 type NoMetricsProps = {
   loading: boolean;

@@ -18,7 +18,7 @@ import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useLocation, useNavigate } from 'src/hooks/router';
 import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { CommandPalette } from 'src/modules/command-palette/command-palette';
 import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
 import { inArray } from 'src/utils/arrays';
@@ -33,7 +33,7 @@ import { OrganizationSwitcher } from './organization-switcher';
 import { PlatformStatus } from './platform-status';
 import { UserMenu } from './user-menu';
 
-const T = Translate.prefix('layouts.main');
+const T = createTranslate('layouts.main');
 
 type LayoutProps = {
   children?: React.ReactNode;

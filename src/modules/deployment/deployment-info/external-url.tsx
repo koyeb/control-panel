@@ -5,10 +5,10 @@ import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { IconArrowRight } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
-const T = Translate.prefix('deploymentInfo');
+const T = createTranslate('deploymentInfo');
 
 type ExternalUrlProps = {
   app: App;

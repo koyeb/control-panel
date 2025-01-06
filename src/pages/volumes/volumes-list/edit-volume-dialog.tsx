@@ -1,10 +1,10 @@
 import { Button, Dialog } from '@koyeb/design-system';
 import { Volume } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { VolumeForm } from '../volume-form';
 
-const T = Translate.prefix('volumes.editDialog');
+const T = createTranslate('volumes.editDialog');
 
 type EditVolumeDialogProps = {
   open: boolean;

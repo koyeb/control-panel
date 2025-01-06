@@ -2,12 +2,12 @@ import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deplo
 import { ComputeDeployment, DatabaseDeployment, Deployment } from 'src/api/model';
 import { IconDatabase } from 'src/components/icons';
 import { TextSkeleton } from 'src/components/skeleton';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { DeploymentRegions } from './deployment-regions';
 import { DeploymentSource } from './deployment-source';
 
-const T = Translate.prefix('pages.home');
+const T = createTranslate('pages.home');
 
 export function DeploymentInfo({ deployment }: { deployment?: Deployment }) {
   if (deployment === undefined) {

@@ -9,7 +9,7 @@ import { isComputeDeployment } from 'src/api/mappers/deployment';
 import { parseBytes } from 'src/application/memory';
 import { Title } from 'src/components/title';
 import { useRouteParam, useSearchParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { HttpThroughputGraph } from 'src/modules/metrics/graphs/http-throughput-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
@@ -19,7 +19,7 @@ import { MetricsTimeFrame, isMetricsTimeFrame, metricsTimeFrames } from 'src/mod
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
 import { assert, defined } from 'src/utils/assert';
 
-const T = Translate.prefix('pages.service.metrics');
+const T = createTranslate('pages.service.metrics');
 
 export function ServiceMetricsPage() {
   const serviceId = useRouteParam('serviceId');

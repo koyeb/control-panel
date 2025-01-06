@@ -21,9 +21,9 @@ import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useNavigate } from 'src/hooks/router';
 import { ThemeMode, useThemeMode } from 'src/hooks/theme';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('layouts.main.userMenu');
+const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const { clearToken } = useToken();

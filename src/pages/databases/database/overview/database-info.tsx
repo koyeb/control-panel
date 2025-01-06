@@ -5,9 +5,9 @@ import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.database.overview.info');
+const T = createTranslate('pages.database.overview.info');
 
 export function DatabaseInfo({ service, deployment }: { service: Service; deployment: DatabaseDeployment }) {
   const region = useRegion(deployment.region);

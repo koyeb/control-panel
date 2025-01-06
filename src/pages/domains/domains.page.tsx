@@ -7,13 +7,13 @@ import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { DocumentTitle } from 'src/components/document-title';
 import { Title } from 'src/components/title';
 import { useHistoryState } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { CreateDomainDialog } from './components/create-domain-dialog';
 import { DomainsList } from './components/domains-list';
 import { DomainsLocked } from './components/domains-locked';
 
-const T = Translate.prefix('pages.domains');
+const T = createTranslate('pages.domains');
 
 export function DomainsPage() {
   const t = T.useTranslate();

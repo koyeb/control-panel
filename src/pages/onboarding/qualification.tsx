@@ -11,12 +11,12 @@ import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconArrowRight } from 'src/components/icons';
 import { handleSubmit } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { OnboardingStepper } from './stepper';
 
-const T = Translate.prefix('onboarding.qualification');
+const T = createTranslate('onboarding.qualification');
 
 export function Qualification() {
   const user = useUser();

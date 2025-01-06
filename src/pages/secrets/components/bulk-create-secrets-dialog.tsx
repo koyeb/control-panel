@@ -11,11 +11,11 @@ import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
 import { ControlledTextArea } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { dotenvParse } from 'src/utils/dotenv';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('pages.secrets.bulkCreateSecretsDialog');
+const T = createTranslate('pages.secrets.bulkCreateSecretsDialog');
 
 type BulkCreateSecretsDialogProps = {
   open: boolean;

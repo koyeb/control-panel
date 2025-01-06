@@ -4,10 +4,10 @@ import { CopyIconButton } from 'src/application/copy-icon-button';
 import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { Metadata } from 'src/components/metadata';
 import { useClipboard } from 'src/hooks/clipboard';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { assert, defined } from 'src/utils/assert';
 
-const T = Translate.prefix('deploymentInfo');
+const T = createTranslate('deploymentInfo');
 
 type InternalUrlProps = {
   app: App;

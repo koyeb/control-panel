@@ -4,13 +4,13 @@ import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { NoResource } from 'src/components/no-resource';
 import { useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 import { ConnectionDetails } from './connection-details';
 import { DatabaseInfo } from './database-info';
 
-const T = Translate.prefix('pages.database.overview');
+const T = createTranslate('pages.database.overview');
 
 export function OverviewPage() {
   const service = useService(useRouteParam('databaseServiceId'));

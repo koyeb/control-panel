@@ -1,10 +1,10 @@
 import { Button, Dialog } from '@koyeb/design-system';
 import { RegistrySecret } from 'src/api/model';
 import { notify } from 'src/application/notify';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
-const T = Translate.prefix('pages.organizationSettings.registrySecrets.editDialog');
+const T = createTranslate('pages.organizationSettings.registrySecrets.editDialog');
 
 type EditRegistrySecretDialogProps = {
   open: boolean;

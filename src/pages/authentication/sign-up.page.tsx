@@ -1,12 +1,12 @@
 import { routes } from 'src/application/routes';
 import { ExternalLink, Link } from 'src/components/link';
 import { useSearchParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignUpForm } from './components/sign-up-form';
 
-const T = Translate.prefix('pages.authentication.signUp');
+const T = createTranslate('pages.authentication.signUp');
 
 export function SignUpPage() {
   const [method, setMethod] = useSearchParam('method');

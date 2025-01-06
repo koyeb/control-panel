@@ -2,9 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Spinner } from '@koyeb/design-system';
 import { useApiQueryFn } from 'src/api/use-api';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('onboarding.automaticReview');
+const T = createTranslate('onboarding.automaticReview');
 
 export function AutomaticReview() {
   useQuery({

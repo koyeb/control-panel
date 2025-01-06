@@ -3,11 +3,11 @@ import { IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/componen
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
 import { TextSkeleton } from 'src/components/skeleton';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
-const T = Translate.prefix('deploymentInfo');
+const T = createTranslate('deploymentInfo');
 
 export function RepositoryMetadata({ repository }: { repository: string | null }) {
   return (

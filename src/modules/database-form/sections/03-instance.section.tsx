@@ -1,6 +1,6 @@
 import { useController, useWatch } from 'react-hook-form';
 
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { DatabaseInstanceSelector } from '../components/database-instance-selector';
@@ -8,7 +8,7 @@ import { DatabaseServiceFormSection } from '../components/database-service-form-
 import { databaseInstances } from '../database-instance-types';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = Translate.prefix('databaseForm.instance');
+const T = createTranslate('databaseForm.instance');
 
 export function InstanceSection() {
   const serviceId = useWatch<DatabaseServiceForm, 'meta.databaseServiceId'>({

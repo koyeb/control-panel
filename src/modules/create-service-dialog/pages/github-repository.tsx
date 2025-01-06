@@ -17,11 +17,11 @@ import { PublicGithubRepositoryInput } from 'src/components/public-github-reposi
 import { handleSubmit } from 'src/hooks/form';
 import { useShortcut } from 'src/hooks/shortcut';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = Translate.prefix('createServiceDialog');
+const T = createTranslate('createServiceDialog');
 
 export function GithubOrganizationImage() {
   const githubApp = useGithubApp();

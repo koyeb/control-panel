@@ -7,12 +7,12 @@ import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { LogLineContent, LogLineDate, LogLineStream, LogOptions, Logs } from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
-const T = Translate.prefix('deploymentLogs.build');
+const T = createTranslate('deploymentLogs.build');
 
 type BuildLogsProps = {
   app: App;

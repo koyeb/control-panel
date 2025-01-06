@@ -1,9 +1,9 @@
 import { Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.settings.duplicateService');
+const T = createTranslate('pages.service.settings.duplicateService');
 
 type DuplicateServiceCardProps = {
   service: Service;

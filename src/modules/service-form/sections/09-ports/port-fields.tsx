@@ -6,13 +6,13 @@ import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
 import { IconTrash } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.ports');
+const T = createTranslate('serviceForm.ports');
 
 type PortFieldsProps = {
   index: number;

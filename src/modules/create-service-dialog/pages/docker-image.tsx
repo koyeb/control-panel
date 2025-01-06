@@ -11,12 +11,12 @@ import { DockerImageHelperText } from 'src/components/docker-image-input/docker-
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
 import { IconArrowRight } from 'src/components/icons';
 import { handleSubmit } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
 
 import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = Translate.prefix('createServiceDialog');
+const T = createTranslate('createServiceDialog');
 
 const schema = z.object({
   image: z.string().min(1),

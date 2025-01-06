@@ -6,9 +6,9 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.secrets.bulkDelete');
+const T = createTranslate('pages.secrets.bulkDelete');
 
 type BulkDeleteSecretsDialogProps = {
   open: boolean;

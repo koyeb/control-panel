@@ -11,7 +11,7 @@ import { notify } from 'src/application/notify';
 import { IconCopy, IconDownload, IconEllipsis, IconFullscreen } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useShortcut } from 'src/hooks/shortcut';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 
 import { ControlledCheckbox } from '../controlled';
@@ -20,7 +20,7 @@ import { getInitialLogOptions, LogOptions, storeLogOptions } from './log-options
 
 export { type LogOptions };
 
-const T = Translate.prefix('logs');
+const T = createTranslate('logs');
 
 type LogsProps = {
   appName: string;

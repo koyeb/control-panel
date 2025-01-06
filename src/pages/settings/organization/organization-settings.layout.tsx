@@ -5,9 +5,9 @@ import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { TabButtonLink } from 'src/components/link';
 import { Title } from 'src/components/title';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.organizationSettings.layout');
+const T = createTranslate('pages.organizationSettings.layout');
 
 export function OrganizationSettingsLayout({ children }: { children: React.ReactNode }) {
   const t = T.useTranslate();

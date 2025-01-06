@@ -13,12 +13,12 @@ import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { RegistryType as RegistryTypeComponent } from './registry-type';
 
-const T = Translate.prefix('secrets.registrySecretForm');
+const T = createTranslate('secrets.registrySecretForm');
 
 const schema = z.object({
   name: z.string().min(2),

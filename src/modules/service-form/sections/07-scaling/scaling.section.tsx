@@ -1,5 +1,5 @@
 import { useInstance } from 'src/api/hooks/catalog';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { useWatchServiceForm } from '../../use-service-form';
@@ -8,7 +8,7 @@ import { AutoScalingConfiguration } from './auto-scaling-configuration';
 import { FixedScalingConfiguration } from './fixed-scaling-configuration';
 import { ScalingAlerts } from './scaling-alerts';
 
-const T = Translate.prefix('serviceForm.scaling');
+const T = createTranslate('serviceForm.scaling');
 
 export function ScalingSection() {
   const instance = useInstance(useWatchServiceForm('instance'));

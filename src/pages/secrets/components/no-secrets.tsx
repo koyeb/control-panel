@@ -1,8 +1,8 @@
 import { Button } from '@koyeb/design-system';
 import { NoResource } from 'src/components/no-resource';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.secrets.noSecrets');
+const T = createTranslate('pages.secrets.noSecrets');
 
 export function NoSecrets({ onCreate }: { onCreate: () => void }) {
   return (

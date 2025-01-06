@@ -3,7 +3,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { ServiceType } from 'src/api/model';
 import { ControlledSelectBox } from 'src/components/controlled';
 import { IconSettings, IconGlobe } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';
@@ -11,7 +11,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { ServiceTypeAlerts } from './service-type-alerts';
 
-const T = Translate.prefix('serviceForm.serviceType');
+const T = createTranslate('serviceForm.serviceType');
 
 export function ServiceTypeSection() {
   return (

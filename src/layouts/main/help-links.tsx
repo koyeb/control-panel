@@ -12,9 +12,9 @@ import {
   IconUsers,
 } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('layouts.main.helpLinks');
+const T = createTranslate('layouts.main.helpLinks');
 
 export function HelpLinks({ collapsed }: { collapsed: boolean }) {
   const isMobile = !useBreakpoint('sm');

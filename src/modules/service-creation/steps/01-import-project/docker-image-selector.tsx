@@ -10,10 +10,10 @@ import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
 import { handleSubmit } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
 
-const T = Translate.prefix('serviceCreation.importProject.docker');
+const T = createTranslate('serviceCreation.importProject.docker');
 
 const schema = z.object({
   image: z.string().min(1),

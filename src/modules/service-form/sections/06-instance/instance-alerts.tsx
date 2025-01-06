@@ -5,12 +5,12 @@ import { useInstance, useRegion } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationSummary } from 'src/api/hooks/session';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.instance.alerts');
+const T = createTranslate('serviceForm.instance.alerts');
 
 export function InstanceAlerts({ selectedCategory }: { selectedCategory: InstanceCategory }) {
   const { plan } = useOrganization();

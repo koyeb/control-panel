@@ -5,10 +5,10 @@ import { routes } from 'src/application/routes';
 import { isUpcomingDeployment } from 'src/application/service-functions';
 import { Link, LinkButton } from 'src/components/link';
 import { useSearchParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 
-const T = Translate.prefix('pages.service.overview.serviceErrorAlert');
+const T = createTranslate('pages.service.overview.serviceErrorAlert');
 
 const deploymentLink = (serviceId: string, deploymentId: string) => {
   return routes.service.overview(serviceId, deploymentId);

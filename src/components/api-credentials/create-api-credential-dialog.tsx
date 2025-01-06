@@ -12,7 +12,7 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { upperCase } from 'src/utils/strings';
 
 type CreateApiCredentialDialogProps = {
@@ -22,7 +22,7 @@ type CreateApiCredentialDialogProps = {
 };
 
 export function CreateApiCredentialDialog({ type, open, onClose }: CreateApiCredentialDialogProps) {
-  const T = Translate.prefix(`pages.${type}Settings.apiCredential`);
+  const T = createTranslate(`pages.${type}Settings.apiCredential`);
   const user = useUser();
   const organization = useOrganization();
   const [created, setCreated] = useState<string>();
@@ -89,7 +89,7 @@ type CreateApiCredentialFormProps = {
 };
 
 function CreateApiCredentialForm({ type, onCancel, onCreated }: CreateApiCredentialFormProps) {
-  const T = Translate.prefix(`pages.${type}Settings.apiCredential`);
+  const T = createTranslate(`pages.${type}Settings.apiCredential`);
   const t = T.useTranslate();
 
   const organization = useOrganization();

@@ -3,11 +3,11 @@ import { useCallback, useEffect, useState } from 'react';
 import { ApiStream } from 'src/api/api';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useSessionStorage } from 'src/hooks/storage';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { terminalColors } from './terminal-colors';
 
-const T = Translate.prefix('pages.service.console');
+const T = createTranslate('pages.service.console');
 
 const { bold, rgb } = terminalColors;
 

@@ -8,11 +8,11 @@ import { ApiCredentialType } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { ApiCredentials } from 'src/components/api-credentials/api-credentials';
 import { Title } from 'src/components/title';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { upperCase } from 'src/utils/strings';
 
 export function BaseApiCredentialsPage({ type }: { type: ApiCredentialType }) {
-  const T = Translate.prefix(`pages.${type}Settings.apiCredential`);
+  const T = createTranslate(`pages.${type}Settings.apiCredential`);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const query = useQuery({

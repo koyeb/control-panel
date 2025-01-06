@@ -16,7 +16,7 @@ import {
 } from '@koyeb/design-system';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconChevronDown } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
 
@@ -25,7 +25,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { useServiceVariables } from './service-variables';
 
-const T = Translate.prefix('serviceForm.environmentVariables');
+const T = createTranslate('serviceForm.environmentVariables');
 
 type EnvironmentVariableValueFieldProps = {
   index: number;

@@ -5,11 +5,11 @@ import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { ControlledTextArea } from 'src/components/controlled';
 import { FileDropZone } from 'src/components/file-drop-zone';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
-const T = Translate.prefix('serviceForm.files.content');
+const T = createTranslate('serviceForm.files.content');
 
 type FileContentEditorProps = {
   index: number;

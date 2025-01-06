@@ -4,7 +4,7 @@ import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import { ApiCredential, ApiCredentialType } from 'src/api/model';
 import { NoResource } from 'src/components/no-resource';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ActionsMenu } from '../actions-menu';
 
@@ -17,7 +17,7 @@ type ApiCredentialListProps = {
 };
 
 export function ApiCredentialsList({ type, credentials, onCreate }: ApiCredentialListProps) {
-  const T = Translate.prefix(`pages.${type}Settings.apiCredential.list`);
+  const T = createTranslate(`pages.${type}Settings.apiCredential.list`);
 
   if (credentials.length === 0) {
     return (
@@ -60,7 +60,7 @@ export function ApiCredentialsList({ type, credentials, onCreate }: ApiCredentia
 }
 
 function CredentialActions({ type, credential }: { type: ApiCredentialType; credential: ApiCredential }) {
-  const T = Translate.prefix(`pages.${type}Settings.apiCredential.list`);
+  const T = createTranslate(`pages.${type}Settings.apiCredential.list`);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 

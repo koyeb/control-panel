@@ -5,7 +5,7 @@ import { Alert, Button } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm, ServiceFormSection as ServiceFormSectionType } from '../../service-form.types';
@@ -14,7 +14,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumeFields } from './volume-fields';
 
-const T = Translate.prefix('serviceForm.volumes');
+const T = createTranslate('serviceForm.volumes');
 
 export function VolumesSection() {
   const volumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '');

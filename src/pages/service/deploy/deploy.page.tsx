@@ -5,14 +5,14 @@ import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ServiceForm } from 'src/modules/service-form/service-form';
 
 import { DeployModel } from './deploy-model';
 import { DeployOneClickApp } from './deploy-one-click-app';
 
-const T = Translate.prefix('pages.deploy');
+const T = createTranslate('pages.deploy');
 
 export function DeployPage() {
   const [oneClickApp] = useSearchParam('one_click_app');

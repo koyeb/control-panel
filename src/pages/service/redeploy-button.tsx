@@ -14,9 +14,9 @@ import { ControlledCheckbox } from 'src/components/controlled';
 import { IconArrowRight } from 'src/components/icons';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, usePathname } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.layout');
+const T = createTranslate('pages.service.layout');
 
 export function RedeployButton({ app, service }: { app: App; service: Service }) {
   const latestDeployment = useDeployment(service.latestDeploymentId);

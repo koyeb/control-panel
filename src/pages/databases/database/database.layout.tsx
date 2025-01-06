@@ -6,13 +6,13 @@ import { routes } from 'src/application/routes';
 import { TabButtonLink } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { usePathname, useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { DatabaseAlerts } from './database-alerts';
 import { DatabaseNotHealth } from './database-not-healthy';
 import { DatabaseStarting } from './database-starting';
 
-const T = Translate.prefix('pages.database.layout');
+const T = createTranslate('pages.database.layout');
 
 type DatabaseLayoutProps = {
   service: Service;

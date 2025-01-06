@@ -1,9 +1,9 @@
 import { Button, Dialog } from '@koyeb/design-system';
 import { notify } from 'src/application/notify';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 
-const T = Translate.prefix('secrets.simpleSecretForm');
+const T = createTranslate('secrets.simpleSecretForm');
 
 type CreateSecretDialogProps = {
   open: boolean;

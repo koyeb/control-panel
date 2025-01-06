@@ -1,13 +1,13 @@
 import { useOneClickApps } from 'src/api/hooks/catalog';
 import { IconArrowRight } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceTypeItem } from './components/service-type-item';
 
-const T = Translate.prefix('serviceCreation.serviceType');
+const T = createTranslate('serviceCreation.serviceType');
 
 export function OneClickAppList() {
   const oneClickApps = useOneClickApps();

@@ -12,9 +12,9 @@ import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.organizationSettings.billing.billingInformation');
+const T = createTranslate('pages.organizationSettings.billing.billingInformation');
 
 export function BillingInformation() {
   return (

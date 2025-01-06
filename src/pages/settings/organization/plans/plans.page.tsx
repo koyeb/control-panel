@@ -1,6 +1,6 @@
 import { ExternalLink } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
 import { ChangePlanEnterpriseButton, ChangePlanButton } from './change-plan-button';
@@ -8,7 +8,7 @@ import { PlanCard } from './plan-card';
 
 type Plan = 'starter' | 'pro' | 'scale' | 'enterprise';
 
-const T = Translate.prefix('pages.organizationSettings.plans');
+const T = createTranslate('pages.organizationSettings.plans');
 
 export function PlansPage() {
   const pricing = (children: React.ReactNode) => (

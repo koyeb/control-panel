@@ -5,12 +5,12 @@ import { useInstances } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../service-form.types';
 
-const T = Translate.prefix('serviceForm');
+const T = createTranslate('serviceForm');
 
 export function GpuAlert() {
   const organization = useOrganization();

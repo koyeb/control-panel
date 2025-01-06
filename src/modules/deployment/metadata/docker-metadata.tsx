@@ -1,8 +1,8 @@
 import { Metadata } from 'src/components/metadata';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('deploymentInfo');
+const T = createTranslate('deploymentInfo');
 
 export function DockerImageMetadata({ image }: { image: string }) {
   return (

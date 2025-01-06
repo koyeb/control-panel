@@ -5,9 +5,9 @@ import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { SectionHeader } from 'src/components/section-header';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('account.reactivateOrganization');
+const T = createTranslate('account.reactivateOrganization');
 
 export function ReactivateOrganization() {
   const organization = useOrganization();

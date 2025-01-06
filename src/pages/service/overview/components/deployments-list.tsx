@@ -10,11 +10,11 @@ import { isUpcomingDeployment } from 'src/application/service-functions';
 import { IconChevronRight } from 'src/components/icons';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { DeploymentTrigger } from './deployment-trigger';
 
-const T = Translate.prefix('pages.service.overview.deployments');
+const T = createTranslate('pages.service.overview.deployments');
 
 type DeploymentsListProps = {
   service: Service;

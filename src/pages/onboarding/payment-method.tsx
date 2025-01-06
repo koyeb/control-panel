@@ -1,9 +1,9 @@
 import { Button } from '@koyeb/design-system';
 import { PaymentForm } from 'src/components/payment-form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { FeaturesList } from 'src/layouts/secondary/features-list';
 
-const T = Translate.prefix('onboarding.paymentMethod');
+const T = createTranslate('onboarding.paymentMethod');
 
 export function PaymentMethod() {
   return (

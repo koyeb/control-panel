@@ -2,10 +2,10 @@ import { Alert } from '@koyeb/design-system';
 import { useRegion } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance, CatalogRegion } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { QuotaAlert } from 'src/modules/service-form/components/quota-alert';
 
-const T = Translate.prefix('serviceCreation.instanceRegions.alerts');
+const T = createTranslate('serviceCreation.instanceRegions.alerts');
 
 type InstanceRegionAlertsProps = {
   selectedInstance: CatalogInstance | null;

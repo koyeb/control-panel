@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { ControlledAutocomplete } from 'src/components/controlled';
 import { IconBranch } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../../service-form.types';
 
-const T = Translate.prefix('serviceForm.source.git');
+const T = createTranslate('serviceForm.source.git');
 
 type PublicRepositoryBranchSelectorProps = {
   branches: string[];

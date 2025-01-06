@@ -1,9 +1,9 @@
 import { Dialog } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('serviceForm');
+const T = createTranslate('serviceForm');
 
 type RestrictedGpuDialogProps = {
   open: boolean;

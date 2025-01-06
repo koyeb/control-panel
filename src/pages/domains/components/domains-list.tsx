@@ -11,7 +11,7 @@ import { IconCircleCheck, IconCircleAlert, IconChevronDown } from 'src/component
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { ChangeAppForm } from './change-app-form';
@@ -19,7 +19,7 @@ import { DeleteDomainDialog } from './delete-domain-dialog';
 import { DnsConfiguration } from './dns-configuration';
 import { NoDomains } from './no-domains';
 
-const T = Translate.prefix('pages.domains.domainsList');
+const T = createTranslate('pages.domains.domainsList');
 
 type DomainsListProps = {
   expanded: string | undefined;

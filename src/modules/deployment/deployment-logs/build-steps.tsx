@@ -2,11 +2,11 @@ import clsx from 'clsx';
 
 import { ComputeDeployment, DeploymentBuildStep } from 'src/api/model';
 import { useNow } from 'src/hooks/timers';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { buildStatusMap } from './deployment-status-icons';
 
-const T = Translate.prefix('deploymentLogs.build');
+const T = createTranslate('deploymentLogs.build');
 
 type BuildStepsProps = {
   deployment: ComputeDeployment;

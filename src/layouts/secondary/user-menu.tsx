@@ -11,9 +11,9 @@ import { IconLogOut, IconSettings } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('layouts.secondary.header');
+const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
   const { clearToken } = useToken();

@@ -7,7 +7,7 @@ import { useOrganizationSummary } from 'src/api/hooks/session';
 import { DatabaseDeployment, OrganizationPlan } from 'src/api/model';
 import { PaymentDialog } from 'src/components/payment-form';
 import { handleSubmit } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { DatabaseEngineSection } from './sections/01-database-engine.section';
 import { RegionSection } from './sections/02-region.section';
@@ -17,7 +17,7 @@ import { ServiceNameSection } from './sections/05-service-name.section';
 import { useDatabaseServiceForm } from './use-database-service-form';
 import { useSubmitDatabaseServiceForm } from './use-submit-database-service-form';
 
-const T = Translate.prefix('databaseForm');
+const T = createTranslate('databaseForm');
 
 type DatabaseFormProps = {
   deployment?: DatabaseDeployment;

@@ -1,11 +1,11 @@
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import Autoscaling from './images/autoscaling.svg?react';
 import Deploy from './images/deploy.svg?react';
 import Global from './images/global.svg?react';
 import StartForFree from './images/start-for-free.svg?react';
 
-const T = Translate.prefix('layouts.secondary');
+const T = createTranslate('layouts.secondary');
 
 export function FeaturesList() {
   return (

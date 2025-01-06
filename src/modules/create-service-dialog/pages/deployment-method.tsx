@@ -8,11 +8,11 @@ import { IconGithub, IconArrowRight } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
 import { useShortcut } from 'src/hooks/shortcut';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = Translate.prefix('createServiceDialog');
+const T = createTranslate('createServiceDialog');
 
 export function Github() {
   const githubApp = useGithubApp();

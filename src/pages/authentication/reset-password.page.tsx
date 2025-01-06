@@ -9,12 +9,12 @@ import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { AuthenticateButton } from './components/authenticate-button';
 import { ControlledInput } from './components/controlled-input';
 
-const T = Translate.prefix('pages.authentication.resetPassword');
+const T = createTranslate('pages.authentication.resetPassword');
 
 export function ResetPasswordPage() {
   return (

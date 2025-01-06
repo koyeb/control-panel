@@ -25,11 +25,11 @@ import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { RegionFlag } from 'src/components/region-flag';
 import { SelectInstance } from 'src/components/select-instance';
 import { useFormValues } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('deploymentLogs.runtime');
+const T = createTranslate('deploymentLogs.runtime');
 
 type Filters = {
   region: string | null;

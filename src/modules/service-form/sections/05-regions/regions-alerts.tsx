@@ -3,12 +3,12 @@ import { useFormContext, useFormState } from 'react-hook-form';
 import { Alert } from '@koyeb/design-system';
 import { useInstance, useRegion } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.regions.alerts');
+const T = createTranslate('serviceForm.regions.alerts');
 
 export function RegionsAlerts() {
   const { setValue } = useFormContext<ServiceForm>();

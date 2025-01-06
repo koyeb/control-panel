@@ -16,10 +16,10 @@ import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
 import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { useMount } from 'src/hooks/lifecycle';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-const T = Translate.prefix('pages.activity');
+const T = createTranslate('pages.activity');
 
 const pageSize = 20;
 

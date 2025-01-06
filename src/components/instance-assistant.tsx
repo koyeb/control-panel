@@ -3,13 +3,13 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { Alert, Spinner } from '@koyeb/design-system';
 import { getConfig } from 'src/application/config';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';
 
 import { ControlledInput } from './controlled';
 import { IconBookMarked } from './icons';
 
-const T = Translate.prefix('instanceSelector.instanceAssistant');
+const T = createTranslate('instanceSelector.instanceAssistant');
 
 type DataType = {
   instance_type: string;

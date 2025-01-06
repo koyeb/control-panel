@@ -12,9 +12,9 @@ import { Link } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { usePathname } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('layouts.main.breadcrumbs');
+const T = createTranslate('layouts.main.breadcrumbs');
 
 export function AppBreadcrumbs() {
   const pathname = usePathname();

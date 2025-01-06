@@ -6,7 +6,7 @@ import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { IconFolders } from '../icons';
 
@@ -20,7 +20,7 @@ import {
   isVolumeActivity,
 } from './activity-guards';
 
-const T = Translate.prefix('activity.sentences');
+const T = createTranslate('activity.sentences');
 
 export function ActivityResources({ activity }: { activity: Activity }) {
   const object = activity.object;

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Activity } from 'src/api/model';
 import { IconClock } from 'src/components/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ActivityActorImage } from './activity-actor';
 import { ActivityApiCredentialIcon } from './activity-api-credential-icon';
@@ -11,7 +11,7 @@ import { isAutoscalingActivity, isDeploymentActivity } from './activity-guards';
 import { ActivityResources } from './activity-resources';
 import { ActivitySentence } from './activity-sentence';
 
-const T = Translate.prefix('activity.sentences');
+const T = createTranslate('activity.sentences');
 
 export function ActivityItem({ activity, className }: { activity: Activity; className?: string }) {
   const isSystemUser = activity.actor.type === 'system_user';

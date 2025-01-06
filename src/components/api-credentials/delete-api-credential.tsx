@@ -4,7 +4,7 @@ import { ApiCredential, ApiCredentialType } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 type DeleteCredentialDialogProps = {
   type: ApiCredentialType;
@@ -14,7 +14,7 @@ type DeleteCredentialDialogProps = {
 };
 
 export function DeleteCredentialDialog({ type, open, onClose, credential }: DeleteCredentialDialogProps) {
-  const T = Translate.prefix(`pages.${type}Settings.apiCredential.deleteDialog`);
+  const T = createTranslate(`pages.${type}Settings.apiCredential.deleteDialog`);
   const t = T.useTranslate();
 
   const invalidate = useInvalidateApiQuery();

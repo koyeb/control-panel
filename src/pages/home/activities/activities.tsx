@@ -6,11 +6,11 @@ import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ActivityItem } from './activity-item';
 
-const T = Translate.prefix('pages.home.activity');
+const T = createTranslate('pages.home.activity');
 
 export function Activities() {
   return (

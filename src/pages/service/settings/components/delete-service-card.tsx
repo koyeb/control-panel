@@ -9,9 +9,9 @@ import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.settings.deleteService');
+const T = createTranslate('pages.service.settings.deleteService');
 
 type DeleteServiceCardProps = {
   service: Service;

@@ -17,12 +17,12 @@ import { IconEllipsis } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { isSlug } from 'src/utils/strings';
 
-const T = Translate.prefix('pages.home');
+const T = createTranslate('pages.home');
 
 export function AppActions({ app }: { app: App }) {
   const [openDialog, setOpenDialog] = useState<'edit' | 'pause' | 'delete'>();

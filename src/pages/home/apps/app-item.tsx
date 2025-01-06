@@ -1,11 +1,11 @@
 import { HelpTooltip } from '@koyeb/design-system';
 import { App, Service } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { AppActions } from './components/app-actions';
 import { ServiceItem } from './service-item';
 
-const T = Translate.prefix('pages.home');
+const T = createTranslate('pages.home');
 
 type AppItemProps = {
   app: App;

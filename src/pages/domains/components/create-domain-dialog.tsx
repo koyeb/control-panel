@@ -9,10 +9,10 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
 
-const T = Translate.prefix('pages.domains.createDialog');
+const T = createTranslate('pages.domains.createDialog');
 
 type CreateDomainDialogProps = {
   open: boolean;

@@ -8,12 +8,12 @@ import { QueryError } from 'src/components/query-error';
 import { SelectInstance } from 'src/components/select-instance';
 import Terminal from 'src/components/terminal/terminal';
 import { useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { useTerminal } from './use-terminal';
 
-const T = Translate.prefix('pages.service.console');
+const T = createTranslate('pages.service.console');
 
 export function ServiceConsolePage() {
   const serviceId = useRouteParam('serviceId');

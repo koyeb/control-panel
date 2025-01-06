@@ -1,8 +1,8 @@
 import { Button, Dialog } from '@koyeb/design-system';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
-const T = Translate.prefix('secrets.registrySecretForm');
+const T = createTranslate('secrets.registrySecretForm');
 
 type CreateRegistrySecretDialogProps = {
   isOpen: boolean;

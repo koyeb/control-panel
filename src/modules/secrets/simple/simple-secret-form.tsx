@@ -14,9 +14,9 @@ import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('secrets.simpleSecretForm');
+const T = createTranslate('secrets.simpleSecretForm');
 
 const schema = z.object({
   name: z.string().min(2).max(64),

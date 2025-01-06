@@ -19,10 +19,10 @@ import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
 import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
-const T = Translate.prefix('pages.team.membersList');
+const T = createTranslate('pages.team.membersList');
 
 export function MembersList() {
   const isMobile = !useBreakpoint('sm');

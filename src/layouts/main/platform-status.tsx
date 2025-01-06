@@ -8,9 +8,9 @@ import { z } from 'zod';
 import { Tooltip } from '@koyeb/design-system';
 import { reportError } from 'src/application/report-error';
 import { ExternalLink } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('platformStatus');
+const T = createTranslate('platformStatus');
 
 const schema = z.object({
   page: z.object({

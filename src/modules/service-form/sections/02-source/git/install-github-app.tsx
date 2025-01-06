@@ -3,9 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { Alert, Button } from '@koyeb/design-system';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useHistoryState, useLocation } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('serviceForm.source.git');
+const T = createTranslate('serviceForm.source.git');
 
 export function InstallGithubApp() {
   const { githubAppInstallationRequested } = useHistoryState<{ githubAppInstallationRequested: boolean }>();

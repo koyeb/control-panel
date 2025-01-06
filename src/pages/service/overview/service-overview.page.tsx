@@ -7,7 +7,7 @@ import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';
 import { DeploymentLogs } from 'src/modules/deployment/deployment-logs/deployment-logs';
@@ -17,7 +17,7 @@ import { DeploymentHeader } from './components/deployment-header';
 import { DeploymentsList } from './components/deployments-list';
 import { useServiceOverview, type ServiceOverview } from './service-overview';
 
-const T = Translate.prefix('pages.service.overview');
+const T = createTranslate('pages.service.overview');
 
 export function ServiceOverviewPage() {
   const serviceId = useRouteParam('serviceId');

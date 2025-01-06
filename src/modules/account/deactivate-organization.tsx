@@ -7,9 +7,9 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { SectionHeader } from 'src/components/section-header';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('account.deactivateOrganization');
+const T = createTranslate('account.deactivateOrganization');
 
 export function DeactivateOrganization() {
   const organization = useOrganization();

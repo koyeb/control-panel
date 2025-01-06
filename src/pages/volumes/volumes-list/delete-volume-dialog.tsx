@@ -4,9 +4,9 @@ import { Volume } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.volumes.deleteVolume');
+const T = createTranslate('pages.volumes.deleteVolume');
 
 type DeleteVolumeDialogProps = {
   open: boolean;

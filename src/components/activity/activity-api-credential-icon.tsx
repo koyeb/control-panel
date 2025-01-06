@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 import { InfoTooltip } from '@koyeb/design-system';
 import { useApiCredentialsQuery } from 'src/api/hooks/api-credential';
 import { Activity, ApiCredential } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('activity');
+const T = createTranslate('activity');
 
 export function ActivityApiCredentialIcon({ activity }: { activity: Activity }) {
   const apiCredential = useApiCredential(activity);

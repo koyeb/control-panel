@@ -9,12 +9,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Autocomplete } from '@koyeb/design-system';
 import { Address } from 'src/api/model';
 import { getConfig } from 'src/application/config';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 
 import { FallbackAddressFields } from './fallback-address-fields';
 
-const T = Translate.prefix('addressAutocomplete');
+const T = createTranslate('addressAutocomplete');
 
 type AddressFieldOwnProps = {
   value?: Address;

@@ -7,9 +7,9 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.account.invitation');
+const T = createTranslate('pages.account.invitation');
 
 export function InvitationPage() {
   const invitationId = useRouteParam('invitationId');

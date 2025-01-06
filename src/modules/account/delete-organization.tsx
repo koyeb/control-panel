@@ -10,9 +10,9 @@ import { useToken } from 'src/application/token';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('account.deleteOrganization');
+const T = createTranslate('account.deleteOrganization');
 
 export function DeleteOrganization() {
   const { token, setToken } = useToken();

@@ -1,11 +1,11 @@
 import { routes } from 'src/application/routes';
 import { ExternalLink, Link } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignInForm } from './components/sign-in-form';
 
-const T = Translate.prefix('pages.authentication.signIn');
+const T = createTranslate('pages.authentication.signIn');
 
 export function SignInPage() {
   return (

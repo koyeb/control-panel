@@ -1,9 +1,9 @@
 import { Tooltip } from '@koyeb/design-system';
 import { IconInfo, IconTicketPercent } from 'src/components/icons';
 import { FormattedPrice } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('databaseForm.estimatedCost');
+const T = createTranslate('databaseForm.estimatedCost');
 
 export function DatabaseEstimatedCost({ cost }: { cost?: number }) {
   return (

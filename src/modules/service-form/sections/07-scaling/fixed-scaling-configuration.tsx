@@ -2,14 +2,14 @@ import { useController } from 'react-hook-form';
 
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput } from 'src/components/controlled';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { handleScalingValueBlurred } from './handle-scaling-value-blurred';
 
-const T = Translate.prefix('serviceForm.scaling');
+const T = createTranslate('serviceForm.scaling');
 
 export function FixedScalingConfiguration() {
   const instance = useWatchServiceForm('instance');

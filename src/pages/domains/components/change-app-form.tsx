@@ -10,10 +10,10 @@ import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { ControlledSelect } from 'src/components/controlled';
 import { handleSubmit } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('pages.domains.domainsList.changeApp');
+const T = createTranslate('pages.domains.domainsList.changeApp');
 
 export function ChangeAppForm({ domain }: { domain: Domain }) {
   const { token } = useToken();

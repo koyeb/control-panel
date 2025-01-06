@@ -1,7 +1,7 @@
 import { ControlledSelectBox } from 'src/components/controlled';
 import { IconPackage } from 'src/components/icons';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { BuilderType, ServiceForm } from '../../service-form.types';
@@ -10,7 +10,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { BuildpackOptions } from './buildpack-options';
 import { DockerfileOptions } from './dockerfile-options';
 
-const T = Translate.prefix('serviceForm.builder');
+const T = createTranslate('serviceForm.builder');
 
 export function BuilderSection() {
   const builderType = useWatchServiceForm('builder.type');

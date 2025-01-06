@@ -8,9 +8,9 @@ import { ActivityResources } from 'src/components/activity/activity-resources';
 import { ActivitySentence } from 'src/components/activity/activity-sentence';
 import { IconClock } from 'src/components/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.home.activity');
+const T = createTranslate('pages.home.activity');
 
 export function ActivityItem({ activity, isLast }: { activity: Activity; isLast: boolean }) {
   return (

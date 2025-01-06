@@ -1,7 +1,7 @@
 import { TextSkeleton } from 'src/components/skeleton';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('serviceCreation.review');
+const T = createTranslate('serviceCreation.review');
 
 export function Tips() {
   const isPending = false;

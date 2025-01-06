@@ -16,7 +16,7 @@ import { IconCircleDashed } from 'src/components/icons';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
@@ -26,7 +26,7 @@ import { RuntimeLogs } from './runtime-logs';
 
 type DeploymentPhase = 'build' | 'runtime';
 
-const T = Translate.prefix('deploymentLogs');
+const T = createTranslate('deploymentLogs');
 
 type DeploymentLogsProps = {
   app: App;

@@ -5,7 +5,7 @@ import { Button, Input, InputEnd } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconRefresh } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { defaultHealthCheck } from '../../helpers/initialize-service-form';
@@ -14,7 +14,7 @@ import { HealthCheck, Port, ServiceForm } from '../../service-form.types';
 import { HealthCheckProtocol } from './health-check-protocol';
 import { HttpHealthCheckFields } from './http-health-check-fields';
 
-const T = Translate.prefix('serviceForm.healthChecks.healthCheck');
+const T = createTranslate('serviceForm.healthChecks.healthCheck');
 
 type HealthCheckFieldsProps = {
   port: Port;

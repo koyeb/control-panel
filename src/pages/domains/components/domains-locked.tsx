@@ -3,9 +3,9 @@ import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
 import { IconArrowRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.domains.domainsLocked');
+const T = createTranslate('pages.domains.domainsLocked');
 
 export function DomainsLocked() {
   return (

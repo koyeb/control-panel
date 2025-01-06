@@ -10,9 +10,9 @@ import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.organizationSettings.general.organizationName');
+const T = createTranslate('pages.organizationSettings.general.organizationName');
 
 const schema = z.object({
   organizationName: z.string().min(1),

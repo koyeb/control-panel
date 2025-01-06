@@ -9,9 +9,9 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.userSettings.general.name');
+const T = createTranslate('pages.userSettings.general.name');
 
 const schema = z.object({
   name: z.string().min(2).max(128),

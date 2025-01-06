@@ -6,9 +6,9 @@ import { routes } from 'src/application/routes';
 import { IconGithub, IconPackage } from 'src/components/icons';
 import { useNavigate } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('onboarding.ai');
+const T = createTranslate('onboarding.ai');
 
 export function AiOnboarding() {
   const organization = useOrganization();

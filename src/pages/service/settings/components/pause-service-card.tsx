@@ -8,9 +8,9 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.service.settings.pauseService');
+const T = createTranslate('pages.service.settings.pauseService');
 
 type PauseServiceCardProps = {
   service: Service;

@@ -6,14 +6,14 @@ import { LinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { SourceType } from 'src/modules/service-form/service-form.types';
 import { inArray } from 'src/utils/arrays';
 
 import { OneClickAppList } from './one-click-app-list';
 import { ExtendedServiceType, ServiceTypeList } from './service-type-list';
 
-const T = Translate.prefix('serviceCreation.serviceType');
+const T = createTranslate('serviceCreation.serviceType');
 
 function isServiceType(value: unknown): value is ExtendedServiceType {
   return inArray(value, ['web', 'private', 'worker', 'database', 'model']);

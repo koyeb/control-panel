@@ -1,7 +1,7 @@
 import { DocumentationLink } from 'src/components/documentation-link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('serviceForm.source.archive');
+const T = createTranslate('serviceForm.source.archive');
 
 export function ArchiveSource() {
   return (

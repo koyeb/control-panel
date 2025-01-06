@@ -10,9 +10,9 @@ import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('account.deleteAccount');
+const T = createTranslate('account.deleteAccount');
 
 export function DeleteAccount() {
   const t = T.useTranslate();

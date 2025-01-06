@@ -3,12 +3,12 @@ import { useFormContext, useFormState } from 'react-hook-form';
 import { Alert } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.scaling.alerts');
+const T = createTranslate('serviceForm.scaling.alerts');
 
 export function ScalingAlerts() {
   const { setValue } = useFormContext<ServiceForm>();

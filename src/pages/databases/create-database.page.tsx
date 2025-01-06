@@ -1,11 +1,11 @@
 import { useState } from 'react';
 
 import { DocumentTitle } from 'src/components/document-title';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { DatabaseEstimatedCost } from 'src/modules/database-form/database-estimated-cost';
 import { DatabaseForm } from 'src/modules/database-form/database-form';
 
-const T = Translate.prefix('pages.createDatabaseService');
+const T = createTranslate('pages.createDatabaseService');
 
 export function CreateDatabasePage() {
   const t = T.useTranslate();

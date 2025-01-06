@@ -14,7 +14,7 @@ import {
 } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
 import { Scaling, ServiceForm } from '../../service-form.types';
@@ -22,7 +22,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { handleScalingValueBlurred } from './handle-scaling-value-blurred';
 
-const T = Translate.prefix('serviceForm.scaling.autoscalingSettings');
+const T = createTranslate('serviceForm.scaling.autoscalingSettings');
 
 export function AutoScalingConfiguration() {
   const min = useWatchServiceForm('scaling.min');

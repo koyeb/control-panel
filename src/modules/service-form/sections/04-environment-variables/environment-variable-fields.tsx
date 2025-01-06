@@ -4,14 +4,14 @@ import { IconButton, useBreakpoint } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconTrash } from 'src/components/icons';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
 import { EnvironmentVariableValueField } from './environment-variable-value-field';
 import { RegionsScope } from './regions-scope';
 
-const T = Translate.prefix('serviceForm.environmentVariables');
+const T = createTranslate('serviceForm.environmentVariables');
 
 type EnvironmentVariableFieldsProps = {
   index: number;

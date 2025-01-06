@@ -5,11 +5,11 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { DocumentTitle } from 'src/components/document-title';
 import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { VolumeSnapshotsList } from './volume-snapshots-list';
 
-const T = Translate.prefix('pages.volumeSnapshots');
+const T = createTranslate('pages.volumeSnapshots');
 
 export function VolumeSnapshotsPage() {
   const t = T.useTranslate();

@@ -19,7 +19,7 @@ import { Shortcut } from 'src/components/shortcut';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useShortcut } from 'src/hooks/shortcut';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { Navigation } from './navigation';
 import { Docker, Github } from './pages/deployment-method';
@@ -36,7 +36,7 @@ import {
   useCreateServiceDialog,
 } from './use-create-service-dialog';
 
-const T = Translate.prefix('createServiceDialog');
+const T = createTranslate('createServiceDialog');
 
 function useGetSections() {
   const t = T.useTranslate();

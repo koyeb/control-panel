@@ -6,9 +6,9 @@ import { routes } from 'src/application/routes';
 import { Loading } from 'src/components/loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('onboarding.emailValidation');
+const T = createTranslate('onboarding.emailValidation');
 
 export function ValidateAccountPage() {
   const navigate = useNavigate();

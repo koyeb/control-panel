@@ -17,7 +17,7 @@ import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useNavigate, usePathname, useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { useRegisterCommand } from 'src/modules/command-palette/command-palette-context';
 import { inArray } from 'src/utils/arrays';
 
@@ -25,7 +25,7 @@ import { PendingChangesAlert } from './pending-changes-alert';
 import { RedeployButton } from './redeploy-button';
 import { ServiceErrorAlert } from './service-error-alert';
 
-const T = Translate.prefix('pages.service.layout');
+const T = createTranslate('pages.service.layout');
 
 type ServiceLayoutProps = {
   children: React.ReactNode;

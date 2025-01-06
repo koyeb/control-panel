@@ -2,9 +2,9 @@ import { DeploymentDefinition } from 'src/api/model';
 import { IconArchive, IconGithub } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.home.deploymentSource');
+const T = createTranslate('pages.home.deploymentSource');
 
 type DeploymentSourceProps = {
   source: DeploymentDefinition['source'];

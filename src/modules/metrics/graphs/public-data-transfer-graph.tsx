@@ -1,12 +1,12 @@
 import { formatBytes } from 'src/application/memory';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { entries } from 'src/utils/object';
 
 import { LineGraph } from '../components/line-graph';
 import { toGraph } from '../metrics-helpers';
 import { Metric } from '../metrics-types';
 
-const T = Translate.prefix('pages.service.metrics.publicDataTransfer');
+const T = createTranslate('pages.service.metrics.publicDataTransfer');
 
 type Data = Record<'in' | 'out', Array<Metric> | undefined>;
 

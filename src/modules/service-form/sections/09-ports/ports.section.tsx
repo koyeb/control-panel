@@ -2,7 +2,7 @@ import { useFieldArray } from 'react-hook-form';
 
 import { Button } from '@koyeb/design-system';
 import { IconPlus } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { defaultHealthCheck } from '../../helpers/initialize-service-form';
@@ -10,7 +10,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { PortFields } from './port-fields';
 
-const T = Translate.prefix('serviceForm.ports');
+const T = createTranslate('serviceForm.ports');
 
 export function PortsSection() {
   const { fields, append, remove } = useFieldArray({ name: 'ports' });

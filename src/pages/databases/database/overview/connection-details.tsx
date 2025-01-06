@@ -10,7 +10,7 @@ import { CopyIconButton } from 'src/application/copy-icon-button';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { ControlledSelect } from 'src/components/controlled';
 import { IconEye, IconEyeOff } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { getName, hasProperty } from 'src/utils/object';
 
 import {
@@ -20,7 +20,7 @@ import {
   databaseClientSnippets,
 } from './snippets';
 
-const T = Translate.prefix('pages.database.overview.connectionDetails');
+const T = createTranslate('pages.database.overview.connectionDetails');
 const clients = Array.from(databaseClientSnippets.keys());
 
 type ConnectionDetailsProps = {

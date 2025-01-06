@@ -1,8 +1,8 @@
 import { Button } from '@koyeb/design-system';
 import { NoResource } from 'src/components/no-resource';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.domains.domainsList.noDomains');
+const T = createTranslate('pages.domains.domainsList.noDomains');
 
 export function NoDomains({ onCreate }: { onCreate: () => void }) {
   return (

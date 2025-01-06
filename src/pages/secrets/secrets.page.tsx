@@ -10,14 +10,14 @@ import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
 import { useHistoryState } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
 import { BulkCreateSecretsDialog } from './components/bulk-create-secrets-dialog';
 import { BulkDeleteSecretsDialog } from './components/bulk-delete-secret-dialog';
 import { SecretsList } from './components/secrets-list';
 
-const T = Translate.prefix('pages.secrets');
+const T = createTranslate('pages.secrets');
 
 export function SecretsPage() {
   const historyState = useHistoryState<{ create: boolean }>();

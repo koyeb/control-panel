@@ -9,11 +9,11 @@ import { formatBytes } from 'src/application/memory';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('pages.organizationSettings.general.organizationQuotas');
+const T = createTranslate('pages.organizationSettings.general.organizationQuotas');
 
 type QuotaItem = {
   key: React.Key;

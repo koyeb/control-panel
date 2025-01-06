@@ -5,10 +5,10 @@ import { DeploymentDefinition, EnvironmentVariable, type Scaling } from 'src/api
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('deploymentInfo');
+const T = createTranslate('deploymentInfo');
 
 export function InstanceTypeMetadata({ instanceType }: { instanceType: string | null }) {
   const instance = useInstance(instanceType);

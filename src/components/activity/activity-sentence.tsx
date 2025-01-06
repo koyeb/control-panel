@@ -1,5 +1,5 @@
 import { Activity } from 'src/api/model';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { capitalize, shortId } from 'src/utils/strings';
 
@@ -15,7 +15,7 @@ import {
   isVolumeActivity,
 } from './activity-guards';
 
-const T = Translate.prefix('activity.sentences');
+const T = createTranslate('activity.sentences');
 
 export function ActivitySentence({ activity }: { activity: Activity }) {
   if (isAutoscalingActivity(activity)) {

@@ -8,13 +8,13 @@ import { Volume } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconUnlink } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { getName, hasProperty } from 'src/utils/object';
 
 import { ServiceForm, ServiceVolume } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.volumes');
+const T = createTranslate('serviceForm.volumes');
 
 type VolumeFieldsProps = {
   index: number;

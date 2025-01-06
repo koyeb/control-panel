@@ -14,7 +14,7 @@ import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { InstanceStatusBadge } from 'src/components/status-badges';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
@@ -22,7 +22,7 @@ import { inArray } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('deploymentLogs.replicas');
+const T = createTranslate('deploymentLogs.replicas');
 
 type Filters = {
   region: string;

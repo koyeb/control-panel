@@ -4,7 +4,7 @@ import { Controller } from 'react-hook-form';
 import { TabButton, TabButtons } from '@koyeb/design-system';
 import { useGithubApp } from 'src/api/hooks/git';
 import { ControlledSelect } from 'src/components/controlled';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../../service-form.types';
@@ -13,7 +13,7 @@ import { useWatchServiceForm } from '../../../use-service-form';
 import { OrganizationRepository } from './organization-repository';
 import { PublicRepository } from './public-repository';
 
-const T = Translate.prefix('serviceForm.source.git');
+const T = createTranslate('serviceForm.source.git');
 
 export function GitSource() {
   const githubApp = useGithubApp();

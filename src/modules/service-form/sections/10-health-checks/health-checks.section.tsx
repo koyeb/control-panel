@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { Fragment } from 'react/jsx-runtime';
 
 import { useFormValues } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';
@@ -11,7 +11,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { HealthCheckFields } from './health-check-fields';
 import { HealthCheckProtocol } from './health-check-protocol';
 
-const T = Translate.prefix('serviceForm.healthChecks');
+const T = createTranslate('serviceForm.healthChecks');
 
 export function HealthChecksSection() {
   const ports = useFormValues<ServiceForm>().ports;

@@ -1,10 +1,10 @@
 import { Title } from 'src/components/title';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { InviteMemberForm } from './components/invite-member-form';
 import { MembersList } from './components/members-list';
 
-const T = Translate.prefix('pages.team');
+const T = createTranslate('pages.team');
 
 export function TeamPage() {
   return (

@@ -15,10 +15,10 @@ import {
 } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { usePathname } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
-const T = Translate.prefix('layouts.main.navigation');
+const T = createTranslate('layouts.main.navigation');
 
 export function Navigation({ collapsed }: { collapsed: boolean }) {
   const organization = useOrganizationUnsafe();

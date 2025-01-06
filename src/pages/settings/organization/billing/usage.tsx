@@ -16,10 +16,10 @@ import { ControlledSelect } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { FormattedPrice } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { removeTimezoneOffset } from 'src/utils/date';
 
-const T = Translate.prefix('pages.organizationSettings.billing.usage');
+const T = createTranslate('pages.organizationSettings.billing.usage');
 
 export function Usage() {
   const organization = useOrganization();

@@ -4,11 +4,11 @@ import { Button } from '@koyeb/design-system';
 import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { OnboardingStepper } from './stepper';
 
-const T = Translate.prefix('onboarding.emailValidation');
+const T = createTranslate('onboarding.emailValidation');
 
 export function EmailValidation() {
   const user = useUser();

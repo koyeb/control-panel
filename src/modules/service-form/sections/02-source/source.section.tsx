@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { ControlledRadio } from 'src/components/controlled';
 import { IconArchive, IconBranch, IconGithub } from 'src/components/icons';
 import IconDocker from 'src/icons/docker.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { useWatchServiceForm } from '../../use-service-form';
@@ -12,7 +12,7 @@ import { ArchiveSource } from './archive/archive-source';
 import { DockerSource } from './docker/docker-source';
 import { GitSource } from './git/git-source';
 
-const T = Translate.prefix('serviceForm.source');
+const T = createTranslate('serviceForm.source');
 
 export function SourceSection() {
   const sourceType = useWatchServiceForm('source.type');

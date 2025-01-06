@@ -1,12 +1,12 @@
 import { ControlledCheckbox } from 'src/components/controlled';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { OverridableInput, OverridableInputArray } from '../../components/overridable-input';
 import { ServiceFormSection } from '../../components/service-form-section';
 import { DockerDeploymentOptions, ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.deployment');
+const T = createTranslate('serviceForm.deployment');
 
 export function DeploymentSection() {
   const t = T.useTranslate();

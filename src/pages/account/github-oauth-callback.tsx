@@ -16,10 +16,10 @@ import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { toObject } from 'src/utils/object';
 
-const T = Translate.prefix('pages.account.githubOAuthCallback');
+const T = createTranslate('pages.account.githubOAuthCallback');
 
 const schema = z.object({
   action: z.string().optional(),

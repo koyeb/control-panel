@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { useElementSize } from '@koyeb/design-system';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { dateTickValues } from '../metrics-helpers';
 
@@ -11,7 +11,7 @@ import { GraphTooltip } from './graph-tooltip';
 import { nivoTheme } from './nivo-theme';
 import { NoMetrics } from './no-metrics';
 
-const T = Translate.prefix('pages.service.metrics');
+const T = createTranslate('pages.service.metrics');
 
 type BarGraphProps = React.ComponentProps<typeof NoMetrics> &
   React.ComponentProps<typeof ResponsiveBar> & {

@@ -13,12 +13,12 @@ import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { DatabaseEstimatedCost } from 'src/modules/database-form/database-estimated-cost';
 import { DatabaseForm } from 'src/modules/database-form/database-form';
 import { assert } from 'src/utils/assert';
 
-const T = Translate.prefix('pages.database.settings');
+const T = createTranslate('pages.database.settings');
 
 export function DatabaseSettingsPage() {
   const service = useService(useRouteParam('databaseServiceId'));

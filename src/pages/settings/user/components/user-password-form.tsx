@@ -6,9 +6,9 @@ import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { handleSubmit } from 'src/hooks/form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.userSettings.general.password');
+const T = createTranslate('pages.userSettings.general.password');
 
 export function UserPasswordForm() {
   const t = T.useTranslate();

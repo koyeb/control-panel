@@ -6,9 +6,9 @@ import IconDockerHub from 'src/icons/docker-hub.svg?react';
 import IconGcp from 'src/icons/gcp.svg?react';
 import IconGitlab from 'src/icons/gitlab.svg?react';
 import IconPrivateRegistry from 'src/icons/private-registry.svg?react';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('secrets');
+const T = createTranslate('secrets');
 
 type RegistryTypeProps = {
   registry: RegistryType;

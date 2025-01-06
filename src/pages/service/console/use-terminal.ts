@@ -8,13 +8,13 @@ import { reportError } from 'src/application/report-error';
 import { useToken } from 'src/application/token';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useMount } from 'src/hooks/lifecycle';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 import { terminalColors } from './terminal-colors';
 import { usePrompt } from './use-prompt';
 
-const T = Translate.prefix('pages.service.console');
+const T = createTranslate('pages.service.console');
 
 const { brightBlack, brightRed } = terminalColors;
 

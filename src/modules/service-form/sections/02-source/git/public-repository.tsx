@@ -4,14 +4,14 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import { GitRepository } from 'src/api/model';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../../service-form.types';
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
 
 import { PublicRepositoryBranchSelector } from './public-repository-branch-selector';
 
-const T = Translate.prefix('serviceForm.source.git');
+const T = createTranslate('serviceForm.source.git');
 
 export function PublicRepository() {
   const t = T.useTranslate();

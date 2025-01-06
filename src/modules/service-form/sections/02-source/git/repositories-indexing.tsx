@@ -1,8 +1,8 @@
 import { Spinner } from '@koyeb/design-system';
 import { useGithubApp } from 'src/api/hooks/git';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('serviceForm.source');
+const T = createTranslate('serviceForm.source');
 
 export function RepositoriesIndexing() {
   const githubApp = useGithubApp();

@@ -26,7 +26,7 @@ import { RegionName } from 'src/components/region-name';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { BranchMetadata, RepositoryMetadata } from '../deployment/metadata/build-metadata';
@@ -47,7 +47,7 @@ import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
 
-const T = Translate.prefix('oneClickAppForm');
+const T = createTranslate('oneClickAppForm');
 
 const schema = z.object({
   instance: z.string().nullable(),

@@ -8,9 +8,9 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { LinkButton } from 'src/components/link';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.domains.domainsList.dnsConfiguration');
+const T = createTranslate('pages.domains.domainsList.dnsConfiguration');
 
 export function DnsConfiguration({ domain }: { domain: Domain }) {
   const t = T.useTranslate();

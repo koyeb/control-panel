@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { ProgressBar } from '@koyeb/design-system';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.database.layout.databaseStarting');
+const T = createTranslate('pages.database.layout.databaseStarting');
 
 type DatabaseStartingProps = {
   isStarting: boolean;

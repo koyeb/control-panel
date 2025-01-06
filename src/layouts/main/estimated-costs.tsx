@@ -7,9 +7,9 @@ import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { FormattedPrice } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('layouts.main.estimatedCost');
+const T = createTranslate('layouts.main.estimatedCost');
 
 export function EstimatedCosts() {
   const organization = useOrganizationUnsafe();

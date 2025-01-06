@@ -2,7 +2,7 @@ import { useAppsQuery, useServicesQuery } from 'src/api/hooks/service';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
 import { Wrapped } from 'src/modules/wrapped/wrapped';
 
@@ -10,7 +10,7 @@ import { Activities } from './activities/activities';
 import { Apps } from './apps/apps';
 import { News } from './news/news';
 
-const T = Translate.prefix('pages.home');
+const T = createTranslate('pages.home');
 
 export function HomePage() {
   const appsQuery = useAppsQuery();

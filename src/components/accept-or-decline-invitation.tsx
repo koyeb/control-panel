@@ -8,9 +8,9 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('invitation');
+const T = createTranslate('invitation');
 
 type AcceptOrDeclineInvitationProps = {
   invitation: OrganizationInvitation;

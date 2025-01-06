@@ -10,10 +10,10 @@ import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { randomString } from 'src/utils/random';
 
-const T = Translate.prefix('pages.database.roles.createDialog');
+const T = createTranslate('pages.database.roles.createDialog');
 
 const schema = z.object({
   name: z.string().min(1).max(63),

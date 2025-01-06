@@ -1,6 +1,6 @@
 import { useGithubApp } from 'src/api/hooks/git';
 import { ControlledCheckbox } from 'src/components/controlled';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../../service-form.types';
 
@@ -10,7 +10,7 @@ import { OrganizationRepositoryBranchSelector } from './organization-repository-
 import { OrganizationRepositorySelector } from './organization-repository-selector';
 import { RepositoriesIndexing } from './repositories-indexing';
 
-const T = Translate.prefix('serviceForm.source.git');
+const T = createTranslate('serviceForm.source.git');
 
 export function OrganizationRepository() {
   const githubApp = useGithubApp();

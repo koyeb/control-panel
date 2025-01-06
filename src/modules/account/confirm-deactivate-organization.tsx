@@ -7,9 +7,9 @@ import { useOnboardingStep } from 'src/application/onboarding';
 import { routes } from 'src/application/routes';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('account.deactivateOrganization');
+const T = createTranslate('account.deactivateOrganization');
 
 export function ConfirmDeactivateOrganization() {
   const invalidate = useInvalidateApiQuery();

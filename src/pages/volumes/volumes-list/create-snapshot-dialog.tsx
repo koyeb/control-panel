@@ -11,9 +11,9 @@ import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.volumes.createSnapshotDialog');
+const T = createTranslate('pages.volumes.createSnapshotDialog');
 
 const schema = z.object({
   name: z.string().min(2).max(63),

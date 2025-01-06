@@ -10,11 +10,11 @@ import { withStopPropagation } from 'src/application/dom-events';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.volumes.createDialog');
+const T = createTranslate('serviceForm.volumes.createDialog');
 
 const schema = z.object({
   name: z.string().min(2).max(63),

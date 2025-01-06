@@ -1,8 +1,8 @@
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { type HealthCheckProtocol } from '../../service-form.types';
 
-const T = Translate.prefix('serviceForm.healthChecks');
+const T = createTranslate('serviceForm.healthChecks');
 
 type HealthCheckProtocolProps = {
   protocol: HealthCheckProtocol;

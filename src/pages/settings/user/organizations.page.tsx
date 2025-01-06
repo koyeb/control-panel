@@ -19,10 +19,10 @@ import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useHistoryState, useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { isSlug } from 'src/utils/strings';
 
-const T = Translate.prefix('pages.userSettings.organizations');
+const T = createTranslate('pages.userSettings.organizations');
 
 export function OrganizationsPage() {
   const historyState = useHistoryState<{ create: boolean }>();

@@ -1,8 +1,8 @@
 import { CatalogRegion } from 'src/api/model';
 import { useRegionLatency } from 'src/hooks/region-latency';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('regionLatency');
+const T = createTranslate('regionLatency');
 
 type RegionLatencyProps = {
   region: CatalogRegion;

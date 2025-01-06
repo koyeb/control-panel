@@ -3,7 +3,7 @@ import { ApiCredential, ApiCredentialType } from 'src/api/model';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { ApiCredentialsList } from './api-credentials-list';
 import { CreateApiCredentialDialog } from './create-api-credential-dialog';
@@ -51,7 +51,7 @@ export function ApiCredentials({
 }
 
 function Skeleton({ type }: { type: ApiCredentialType }) {
-  const T = Translate.prefix(`pages.${type}Settings.apiCredential.list`);
+  const T = createTranslate(`pages.${type}Settings.apiCredential.list`);
 
   return (
     <Table

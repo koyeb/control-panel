@@ -8,11 +8,11 @@ import { useInvalidateApiQuery, useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ExternalLinkButton } from 'src/components/link';
 import { PaymentDialog } from 'src/components/payment-form';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 type Plan = Extract<OrganizationPlan, 'starter' | 'pro' | 'scale' | 'enterprise'>;
 
-const T = Translate.prefix('pages.organizationSettings.plans');
+const T = createTranslate('pages.organizationSettings.plans');
 
 export function ChangePlanButton({ plan }: { plan: Plan }) {
   const organization = useOrganization();

@@ -1,11 +1,11 @@
 import { ServiceType } from 'src/api/model';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { ServiceTypeItem } from './components/service-type-item';
 
-const T = Translate.prefix('serviceCreation.serviceType');
+const T = createTranslate('serviceCreation.serviceType');
 
 export type ExtendedServiceType = ServiceType | 'private' | 'model';
 

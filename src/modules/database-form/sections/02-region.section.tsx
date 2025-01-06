@@ -7,13 +7,13 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
 import { useRegionLatency } from 'src/hooks/region-latency';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 import { DatabaseServiceFormSection } from '../components/database-service-form-section';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = Translate.prefix('databaseForm.region');
+const T = createTranslate('databaseForm.region');
 
 const neonRegions = ['fra', 'was', 'sin'];
 

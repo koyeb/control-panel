@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { Button, Dialog, TextArea } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import {
   SecretNotFoundError,
@@ -12,7 +12,7 @@ import {
 } from '../../helpers/parse-environment-variables';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = Translate.prefix('serviceForm.environmentVariables.bulkEdition');
+const T = createTranslate('serviceForm.environmentVariables.bulkEdition');
 
 type BulkEnvironmentVariablesEditionDialogProps = {
   isOpen: boolean;

@@ -2,9 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { createValidationGuard } from 'src/application/create-validation-guard';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('common.validation');
+const T = createTranslate('common.validation');
 
 export function useZodResolver<Schema extends z.Schema>(
   schema: Schema,

@@ -8,10 +8,10 @@ import { useToken } from 'src/application/token';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';
 
-const T = Translate.prefix('pages.authentication.sso');
+const T = createTranslate('pages.authentication.sso');
 
 export function CannySso() {
   const { token } = useToken();

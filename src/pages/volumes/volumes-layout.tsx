@@ -9,9 +9,9 @@ import { IconArrowRight } from 'src/components/icons';
 import { LinkButton, TabButtonLink } from 'src/components/link';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { usePathname } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('pages.volumes');
+const T = createTranslate('pages.volumes');
 
 export function VolumesLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();

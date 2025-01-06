@@ -1,11 +1,11 @@
 import { useIdenfyLink } from 'src/application/idenfy';
 import { useTallyDialog } from 'src/hooks/tally';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 
 import { ExternalLink } from './link';
 
-const T = Translate.prefix('errorBoundary.accountLocked');
+const T = createTranslate('errorBoundary.accountLocked');
 
 export function AccountLocked() {
   const idenfyLink = useIdenfyLink();

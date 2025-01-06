@@ -1,8 +1,8 @@
 import { Spinner } from '@koyeb/design-system';
 import { IconCheck } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('common.dockerImageVerification');
+const T = createTranslate('common.dockerImageVerification');
 
 type DockerImageHelperTextProps = {
   verifying: boolean;

@@ -1,10 +1,10 @@
 import { ControlledCheckbox } from 'src/components/controlled';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { OverridableInput } from '../../components/overridable-input';
 import { ServiceForm } from '../../service-form.types';
 
-const T = Translate.prefix('serviceForm.builder.buildpackConfiguration');
+const T = createTranslate('serviceForm.builder.buildpackConfiguration');
 
 export function BuildpackOptions() {
   const t = T.useTranslate();

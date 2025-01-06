@@ -2,11 +2,11 @@ import { Button, Dialog } from '@koyeb/design-system';
 import { VolumeSnapshot } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 
 import { VolumeForm } from './volume-form';
 
-const T = Translate.prefix('volumes.createDialog');
+const T = createTranslate('volumes.createDialog');
 
 type CreateVolumeDialogProps = {
   open: boolean;

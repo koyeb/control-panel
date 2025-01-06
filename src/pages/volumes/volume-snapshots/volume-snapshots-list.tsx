@@ -10,7 +10,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { VolumeSnapshotStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { CreateVolumeDialog } from '../create-volume-dialog';
@@ -18,7 +18,7 @@ import { CreateVolumeDialog } from '../create-volume-dialog';
 import { DeleteSnapshotDialog } from './delete-snapshot-dialog';
 import { UpdateSnapshotDialog } from './update-snapshot-dialog';
 
-const T = Translate.prefix('pages.volumeSnapshots.list');
+const T = createTranslate('pages.volumeSnapshots.list');
 
 export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
   const isMobile = !useBreakpoint('sm');

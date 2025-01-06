@@ -19,10 +19,10 @@ import { handleSubmit, useFormValues } from 'src/hooks/form';
 import { useHistoryState, useLocation } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-const T = Translate.prefix('serviceCreation.importProject.github');
+const T = createTranslate('serviceCreation.importProject.github');
 
 type RepositorySelectorProps = {
   onImport: (repositoryName: string) => void;

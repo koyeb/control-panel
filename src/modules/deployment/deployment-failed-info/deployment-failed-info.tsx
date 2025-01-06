@@ -4,10 +4,10 @@ import React from 'react';
 import { ComputeDeployment } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconInfo } from 'src/components/icons';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-const T = Translate.prefix('deploymentFailedInfo');
+const T = createTranslate('deploymentFailedInfo');
 
 type DeploymentFailedInfoProps = {
   deployment: ComputeDeployment;

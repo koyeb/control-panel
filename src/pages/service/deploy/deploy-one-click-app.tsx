@@ -5,12 +5,12 @@ import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { OneClickAppForm } from 'src/modules/service-form/one-click-app-form';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('pages.deploy.oneClickApp');
+const T = createTranslate('pages.deploy.oneClickApp');
 
 export function DeployOneClickApp() {
   const t = T.useTranslate();

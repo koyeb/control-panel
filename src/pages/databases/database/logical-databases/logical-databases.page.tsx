@@ -9,14 +9,14 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useHistoryState, useRouteParam } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
 
 import { CreateLogicalDatabaseDialog } from './create-logical-database-dialog';
 import { DeleteLogicalDatabaseDialog } from './delete-logical-database-dialog';
 
-const T = Translate.prefix('pages.database.logicalDatabases');
+const T = createTranslate('pages.database.logicalDatabases');
 
 export function LogicalDatabasesPage() {
   const service = useService(useRouteParam('databaseServiceId'));

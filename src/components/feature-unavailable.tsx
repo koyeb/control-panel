@@ -1,8 +1,8 @@
 import { BadgeNew } from 'src/components/badge-new';
 import { Title } from 'src/components/title';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('featureUnavailable');
+const T = createTranslate('featureUnavailable');
 
 type FeatureUnavailableProps = {
   preview?: 'technical' | 'public';

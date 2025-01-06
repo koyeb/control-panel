@@ -4,9 +4,9 @@ import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { useIdenfyLink } from 'src/application/idenfy';
 import { ExternalLink } from 'src/components/link';
 import { useTallyDialog } from 'src/hooks/tally';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
-const T = Translate.prefix('layouts.main');
+const T = createTranslate('layouts.main');
 
 export function GlobalAlert() {
   const organization = useOrganizationUnsafe();

@@ -13,10 +13,10 @@ import { useTrackEvent } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { useNavigate } from 'src/hooks/router';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
-const T = Translate.prefix('pages.service.layout.pendingChanges');
+const T = createTranslate('pages.service.layout.pendingChanges');
 
 type PendingChangesAlertProps = {
   service: Service;

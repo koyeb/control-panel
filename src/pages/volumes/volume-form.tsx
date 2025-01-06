@@ -13,10 +13,10 @@ import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FormValues, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = Translate.prefix('volumes.form');
+const T = createTranslate('volumes.form');
 
 const schema = z.object({
   name: z.string().min(2).max(63),

@@ -13,12 +13,12 @@ import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 import { AuthenticateButton } from './authenticate-button';
 import { ControlledInput } from './controlled-input';
 
-const T = Translate.prefix('pages.authentication.signIn');
+const T = createTranslate('pages.authentication.signIn');
 
 const schema = z.object({
   email: z.string().email(),
