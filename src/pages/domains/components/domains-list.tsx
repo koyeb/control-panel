@@ -1,13 +1,14 @@
 import clsx from 'clsx';
-import { SVGProps, useState } from 'react';
+import { useState } from 'react';
 
 import { Alert, ButtonMenuItem, Spinner, Table, useBreakpoint } from '@koyeb/design-system';
 import { useDomainsQuery } from 'src/api/hooks/domain';
 import { useApps } from 'src/api/hooks/service';
 import { Domain, type DomainStatus } from 'src/api/model';
 import { stopPropagation } from 'src/application/dom-events';
+import { SvgComponent } from 'src/application/types';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { IconCircleCheck, IconCircleAlert, IconChevronDown } from 'src/components/icons';
+import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
@@ -105,10 +106,7 @@ function DomainStatus({ status }: { status: DomainStatus }) {
   );
 }
 
-const domainStatusIconMap: Record<
-  DomainStatus,
-  { Icon: React.ComponentType<SVGProps<SVGSVGElement>>; className?: string }
-> = {
+const domainStatusIconMap: Record<DomainStatus, { Icon: SvgComponent; className?: string }> = {
   pending: { Icon: Spinner },
   active: { Icon: IconCircleCheck, className: 'text-green' },
   error: { Icon: IconCircleAlert, className: 'text-red' },

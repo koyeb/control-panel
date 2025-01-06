@@ -1,6 +1,7 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import { ServiceType } from 'src/api/model';
+import { SvgComponent } from 'src/application/types';
 import { ControlledSelectBox } from 'src/components/controlled';
 import { IconSettings, IconGlobe } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -61,7 +62,7 @@ function SectionTitle() {
 
 type ServiceTypeOptionProps = {
   type: ServiceType;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  Icon: SvgComponent;
   title: React.ReactNode;
   description: React.ReactNode;
 };

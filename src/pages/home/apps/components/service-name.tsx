@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { Spinner, Tooltip } from '@koyeb/design-system';
 import { Service, ServiceStatus } from 'src/api/model';
 import { getServiceLink } from 'src/application/service-functions';
+import { SvgComponent } from 'src/application/types';
 import { IconCircleAlert, IconCircleCheck, IconCirclePause } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
@@ -54,7 +55,7 @@ function ServiceStatusIcon({ status, ...props }: ServiceIconProps) {
   return <Icon {...props} className={clsx(className, props.className)} />;
 }
 
-const icons: Record<ServiceStatus, [React.ComponentType<React.SVGProps<SVGSVGElement>>, string]> = {
+const icons: Record<ServiceStatus, [SvgComponent, string]> = {
   starting: [Spinner, ''],
   healthy: [IconCircleCheck, clsx('text-green')],
   degraded: [IconCircleAlert, clsx('text-orange')],

@@ -1,3 +1,4 @@
+import { SvgComponent } from 'src/application/types';
 import { createTranslate } from 'src/intl/translate';
 
 import Autoscaling from './images/autoscaling.svg?react';
@@ -38,7 +39,7 @@ export function FeaturesList() {
 }
 
 type FeatureItemProps = {
-  Image: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  Image: SvgComponent;
   title: React.ReactNode;
   description: React.ReactNode;
 };

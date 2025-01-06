@@ -1,3 +1,4 @@
+import { SvgComponent } from 'src/application/types';
 import { ControlledSelectBox } from 'src/components/controlled';
 import { IconPackage } from 'src/components/icons';
 import IconDocker from 'src/icons/docker.svg?react';
@@ -62,7 +63,7 @@ function SectionTitle() {
 
 type BuilderTypeOptionProps = {
   type: BuilderType;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  Icon: SvgComponent;
   title: React.ReactNode;
   description: React.ReactNode;
 };

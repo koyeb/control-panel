@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { Children, createElement } from 'react';
 
+import { SvgComponent } from 'src/application/types';
+
 import { Link } from './link';
 
 export function ActionsList({ items }: { items: React.ReactNode[] }) {
@@ -17,13 +19,13 @@ export function ActionsList({ items }: { items: React.ReactNode[] }) {
 }
 
 type ActionsListButtonOwnProps = {
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  Icon?: SvgComponent;
 };
 
 type ActionsListButtonProps = ActionsListButtonOwnProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof ActionsListButtonOwnProps>;
 
-export function ActionsListButton({ icon: Icon, className, children, ...props }: ActionsListButtonProps) {
+export function ActionsListButton({ Icon, className, children, ...props }: ActionsListButtonProps) {
   return (
     <button
       type="button"
@@ -44,7 +46,7 @@ export function ActionsListButton({ icon: Icon, className, children, ...props }:
 type ActionsListLinkOwnProps = {
   component?: 'a' | typeof Link;
   href: string;
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  Icon: SvgComponent;
   openInNewTab?: true;
 };
 
@@ -53,7 +55,7 @@ type ActionsListLinkProps = ActionsListLinkOwnProps &
 
 export function ActionsListLink({
   component = Link,
-  icon: Icon,
+  Icon,
   openInNewTab,
   className,
   children,

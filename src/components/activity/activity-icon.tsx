@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 
 import { Activity } from 'src/api/model';
+import { SvgComponent } from 'src/application/types';
 import {
   IconBox,
   IconBoxes,
@@ -40,7 +41,7 @@ export function ActivityIcon({ activity }: { activity: Activity }) {
   );
 }
 
-const icons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
+const icons: Record<string, SvgComponent> = {
   domain: IconGlobe,
   secret: IconFileKey2,
   session: IconUserRound,

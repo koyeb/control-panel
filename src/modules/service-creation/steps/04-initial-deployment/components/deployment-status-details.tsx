@@ -85,7 +85,7 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
           items={[
             <ActionsListLink
               key="inspect"
-              icon={IconArrowRight}
+              Icon={IconArrowRight}
               href={routes.service.overview(service.id)}
               className="row justify-between text-xs font-medium"
             >
@@ -96,7 +96,7 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
               <ActionsListLink
                 key="access"
                 component="a"
-                icon={IconExternalLink}
+                Icon={IconExternalLink}
                 openInNewTab
                 href={`https://${url.externalUrl}`}
                 className="row justify-between text-xs font-medium"
@@ -119,7 +119,7 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
           items={[
             <ActionsListLink
               key="inspect"
-              icon={IconArrowRight}
+              Icon={IconArrowRight}
               href={routes.service.overview(service.id)}
               className="row justify-between text-xs font-medium"
             >
@@ -162,7 +162,7 @@ function ReportIssueButton({ deployment, phase, onReported, children }: ReportIs
         <ActionsListButton
           key="inspect"
           disabled={reported}
-          icon={IconSendHorizontal}
+          Icon={IconSendHorizontal}
           onClick={reportIssue}
           className="row justify-between text-xs font-medium"
         >
