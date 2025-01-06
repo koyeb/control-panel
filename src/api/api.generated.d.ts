@@ -2349,13 +2349,19 @@ export interface components {
         NextInvoiceReply: {
             stripe_invoice?: Record<string, never>;
             lines?: components["schemas"]["NextInvoiceReply.Line"][];
-            discounts?: components["schemas"]["NextInvoiceReply.Discount"][]
+            discounts?: components["schemas"]["NextInvoiceReply.Discount"][];
         };
         "NextInvoiceReply.Discount": {
-            type?: 'AMOUNT_OFF' | 'PERCENT_OFF';
+            type?: components["schemas"]["NextInvoiceReply.Discount.Type"];
             name?: string;
-            amount?: number;
-        },
+            /** Format: int64 */
+            amount?: string;
+        };
+        /**
+         * @default PERCENT_OFF
+         * @enum {string}
+         */
+        "NextInvoiceReply.Discount.Type": "PERCENT_OFF" | "AMOUNT_OFF";
         "NextInvoiceReply.Line": {
             /** Format: int32 */
             amount_excluding_tax?: number;
@@ -3144,7 +3150,7 @@ export interface components {
             instance_types?: components["schemas"]["DeploymentInstanceType"][];
             health_checks?: components["schemas"]["DeploymentHealthCheck"][];
             volumes?: components["schemas"]["DeploymentVolume"][];
-            file_mounts?: components["schemas"]["FileMount"][];
+            files?: components["schemas"]["File"][];
             skip_cache?: boolean;
             docker?: components["schemas"]["DockerSource"];
             git?: components["schemas"]["GitSource"];
@@ -3385,14 +3391,10 @@ export interface components {
             /** A flag to run the container in privileged mode */
             privileged?: boolean;
         };
-        FileMount: {
+        File: {
             /** the path where the file is mounted to */
             path?: string;
-            /**
-             * the content of the file
-             * @description interpolation_enabled is a flag to enable/disable interpolation in the file content
-             *      bool interpolation_enabled = 3;
-             */
+            /** the content of the file */
             permissions?: string;
             /** the content of the file */
             content?: string;
@@ -4179,7 +4181,7 @@ export interface components {
             deployment_group?: string;
             health_checks?: components["schemas"]["DeploymentHealthCheck"][];
             volumes?: components["schemas"]["RegionalDeploymentVolume"][];
-            file_mounts?: components["schemas"]["FileMount"][];
+            files?: components["schemas"]["File"][];
             skip_cache?: boolean;
             docker?: components["schemas"]["DockerSource"];
             git?: components["schemas"]["GitSource"];
