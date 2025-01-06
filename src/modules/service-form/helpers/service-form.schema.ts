@@ -5,7 +5,7 @@ import { TranslateFn, TranslationKeys } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { isSlug } from 'src/utils/strings';
 
-import { FileMount } from '../service-form.types';
+import { File } from '../service-form.types';
 
 type RemovePrefix<T extends string, P extends string> = T extends `${P}${infer R}` ? R : never;
 type Keys = RemovePrefix<TranslationKeys, 'serviceForm.errors.'>;
@@ -46,7 +46,7 @@ export function serviceFormSchema(translate: TranslateFn) {
     environmentVariables: z
       .array(environmentVariable())
       .transform((variables) => variables.filter((variable) => variable.name !== '')),
-    fileMounts: z.preprocess(preprocessFileMounts, z.array(fileMount())),
+    files: z.preprocess(preprocessFiles, z.array(file())),
     regions: regions(),
     instance: instance(),
     scaling: scaling(t),
@@ -138,11 +138,11 @@ function environmentVariable() {
   });
 }
 
-function preprocessFileMounts(value: unknown) {
-  return (value as FileMount[]).filter((value) => value.mountPath !== '');
+function preprocessFiles(value: unknown) {
+  return (value as File[]).filter((value) => value.mountPath !== '');
 }
 
-function fileMount() {
+function file() {
   return z.object({
     mountPath: z.string(),
     content: z.string(),

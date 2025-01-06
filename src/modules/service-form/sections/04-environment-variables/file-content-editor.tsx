@@ -26,16 +26,16 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
     }
 
     readFile(file).then(
-      ({ content }) => form.setValue(`fileMounts.${index}.content`, content),
+      ({ content }) => form.setValue(`files.${index}.content`, content),
       (error: unknown) => hasMessage(error) && notify.error(error.message),
     );
   };
 
   return (
     <FileDropZone onDrop={([file]) => file && onFileDropped(file)}>
-      <ControlledTextArea<ServiceForm, `fileMounts.${number}.content`>
+      <ControlledTextArea<ServiceForm, `files.${number}.content`>
         autoFocus
-        name={`fileMounts.${index}.content`}
+        name={`files.${index}.content`}
         label={<T id="label" />}
         placeholder={t('placeholder')}
         rows={12}

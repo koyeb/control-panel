@@ -236,7 +236,7 @@ export function defaultServiceForm(): ServiceForm {
         regions: [],
       },
     ],
-    fileMounts: [],
+    files: [],
     scaling: {
       min: 1,
       max: 1,

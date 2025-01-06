@@ -10,7 +10,7 @@ import {
   Builder,
   DockerDeploymentOptions,
   DockerSource,
-  FileMount,
+  File,
   GitSource,
   Port,
   Scaling,
@@ -31,7 +31,7 @@ export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.Deploy
     instance_types: [{ type: form.instance ?? '' }],
     scalings: scalings(form.scaling),
     env: env(form.environmentVariables),
-    file_mounts: hasMountFiles ? fileMounts(form.fileMounts) : undefined,
+    files: hasMountFiles ? files(form.files) : undefined,
     volumes: volumes(form.volumes),
     ...(form.serviceType === 'web' && {
       ports: ports(form.ports),
@@ -151,7 +151,7 @@ function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
   }));
 }
 
-function fileMounts(files: Array<FileMount>): Array<Api.DeploymentFileMount> {
+function files(files: Array<File>): Array<Api.DeploymentFileMount> {
   return files.map(
     (file): Api.DeploymentFileMount => ({
       path: file.mountPath,

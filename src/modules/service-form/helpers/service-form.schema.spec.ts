@@ -101,12 +101,12 @@ describe('serviceFormSchema', () => {
     ]);
   });
 
-  it('removes empty file mounts', () => {
+  it('removes empty files', () => {
     const form = createServiceForm();
 
-    form.fileMounts = [{ mountPath: '', content: '' }];
+    form.files = [{ mountPath: '', content: '' }];
 
-    expect(parse(form)).toHaveProperty('fileMounts', []);
+    expect(parse(form)).toHaveProperty('files', []);
   });
 
   it('ports', () => {

@@ -15,7 +15,7 @@ const T = Translate.prefix('serviceForm.files');
 
 export function Files() {
   const t = T.useTranslate();
-  const { fields, append, remove } = useFieldArray<ServiceForm, 'fileMounts'>({ name: 'fileMounts' });
+  const { fields, append, remove } = useFieldArray<ServiceForm, 'files'>({ name: 'files' });
 
   const [expandedIndex, setExpandedIndex] = useState<number>();
   const isExpanded = (index: number) => index === expandedIndex;
@@ -46,8 +46,8 @@ export function Files() {
             <FileContentEditor index={index} />
 
             <div className="row items-end gap-4">
-              <ControlledInput<ServiceForm, `fileMounts.${number}.mountPath`>
-                name={`fileMounts.${index}.mountPath`}
+              <ControlledInput<ServiceForm, `files.${number}.mountPath`>
+                name={`files.${index}.mountPath`}
                 label={<T id="mountPath.label" />}
                 placeholder={t('mountPath.placeholder')}
                 className="w-full"
@@ -60,8 +60,8 @@ export function Files() {
           </div>
         ) : (
           <div key={file.id} className="row items-end gap-4 rounded-md border p-4">
-            <ControlledInput<ServiceForm, `fileMounts.${number}.content`>
-              name={`fileMounts.${index}.content`}
+            <ControlledInput<ServiceForm, `files.${number}.content`>
+              name={`files.${index}.content`}
               label={<T id="content.label" />}
               placeholder={t('content.placeholder')}
               onFocus={() => setExpandedIndex(index)}
@@ -69,8 +69,8 @@ export function Files() {
               inputClassName="truncate"
             />
 
-            <ControlledInput<ServiceForm, `fileMounts.${number}.mountPath`>
-              name={`fileMounts.${index}.mountPath`}
+            <ControlledInput<ServiceForm, `files.${number}.mountPath`>
+              name={`files.${index}.mountPath`}
               label={<T id="mountPath.label" />}
               placeholder={t('mountPath.placeholder')}
               className="flex-1"

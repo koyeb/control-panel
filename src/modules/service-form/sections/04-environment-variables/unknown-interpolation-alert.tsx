@@ -5,7 +5,7 @@ import { EnvironmentVariable } from 'src/api/model';
 import { Translate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 
-import { FileMount, ServiceForm } from '../../service-form.types';
+import { File, ServiceForm } from '../../service-form.types';
 
 import { ServiceVariables, useServiceVariables } from './service-variables';
 
@@ -39,7 +39,7 @@ export function UnknownInterpolationAlert() {
 function useUnknownInterpolations() {
   const form = useFormContext<ServiceForm>();
   const environmentVariables = form.watch('environmentVariables');
-  const files = form.watch('fileMounts');
+  const files = form.watch('files');
   const variables = useServiceVariables();
 
   if (variables !== undefined) {
@@ -50,7 +50,7 @@ function useUnknownInterpolations() {
 function findUnknownInterpolations(
   variables: ServiceVariables,
   environmentVariables: EnvironmentVariable[],
-  files: FileMount[],
+  files: File[],
 ) {
   const interpolations = [...variables.secrets, ...variables.systemEnv, ...variables.userEnv];
 

@@ -14,7 +14,7 @@ export namespace Api {
   export type Deployment = schemas['Deployment'];
   export type DeploymentDefinition = schemas['DeploymentDefinition'];
   export type DeploymentEnv = schemas['DeploymentEnv'];
-  export type DeploymentFileMount = schemas['FileMount'];
+  export type DeploymentFileMount = schemas['File'];
   export type DeploymentHealthCheck = schemas['DeploymentHealthCheck'];
   export type DeploymentNeonPostgresDatabaseInfo = schemas['DeploymentNeonPostgresDatabaseInfo'];
   export type DeploymentScaling = schemas['DeploymentScaling'];

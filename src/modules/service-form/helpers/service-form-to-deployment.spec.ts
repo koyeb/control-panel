@@ -14,7 +14,7 @@ describe('serviceFormToDeploymentDefinition', () => {
     form.source.git.organizationRepository.repositoryName = 'org/repo';
     form.source.git.organizationRepository.branch = 'branch';
     form.environmentVariables = [];
-    form.fileMounts = [];
+    form.files = [];
 
     expect(serviceFormToDeploymentDefinition(form)).toEqual<Api.DeploymentDefinition>({
       name: 'name',

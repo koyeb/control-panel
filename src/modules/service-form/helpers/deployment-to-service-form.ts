@@ -17,7 +17,7 @@ import {
   PortProtocol,
   ServiceForm,
   ServiceVolume,
-  FileMount,
+  File,
 } from '../service-form.types';
 
 import { defaultHealthCheck } from './initialize-service-form';
@@ -44,7 +44,7 @@ export function deploymentDefinitionToServiceForm(
     environmentVariables: environmentVariables(definition),
     ports: ports(definition),
     volumes: volumes(definition, apiVolumes),
-    fileMounts: fileMounts(definition),
+    files: files(definition),
   };
 }
 
@@ -226,8 +226,8 @@ function environmentVariables(
   }));
 }
 
-function fileMounts(definition: Api.DeploymentDefinition): Array<Partial<FileMount>> | undefined {
-  return definition.file_mounts?.map((file) => ({
+function files(definition: Api.DeploymentDefinition): Array<Partial<File>> | undefined {
+  return definition.files?.map((file) => ({
     mountPath: file.path,
     content: file.content,
   }));
