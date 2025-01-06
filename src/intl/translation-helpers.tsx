@@ -5,7 +5,7 @@ type Values = Parameters<IntlShape['formatMessage']>[1];
 
 export interface TranslateFunction<Key extends string> {
   (id: Key): string;
-  (id: Key, values: Values): string | JSX.Element;
+  (id: Key, values: Values): string | React.ReactNode;
 }
 
 export function createTranslationHelper<Key extends string>(commonValues: Values = {}) {

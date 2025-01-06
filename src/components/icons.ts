@@ -11,6 +11,7 @@ export { default as IconArrowUp } from 'lucide-static/icons/arrow-up.svg?react';
 export { default as IconArrowUpRight } from 'lucide-static/icons/arrow-up-right.svg?react';
 export { default as IconBookMarked } from 'lucide-static/icons/book-marked.svg?react';
 export { default as IconBookOpen } from 'lucide-static/icons/book-open.svg?react';
+export { default as IconBotMessageSquare } from 'lucide-static/icons/bot-message-square.svg?react';
 export { default as IconBox } from 'lucide-static/icons/box.svg?react';
 export { default as IconBoxes } from 'lucide-static/icons/boxes.svg?react';
 export { default as IconBraces } from 'lucide-static/icons/braces.svg?react';

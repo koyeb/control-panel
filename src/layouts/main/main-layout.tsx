@@ -15,12 +15,14 @@ import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useLocation, useNavigate } from 'src/hooks/router';
 import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 import { CommandPalette } from 'src/modules/command-palette/command-palette';
 import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
+import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { inArray } from 'src/utils/arrays';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
@@ -46,6 +48,10 @@ export function MainLayout({ children }: LayoutProps) {
     <CommandPalette>
       <DocumentTitle />
       <CreateServiceDialog />
+
+      <FeatureFlag feature="trial">
+        <TrialWelcomeDialog />
+      </FeatureFlag>
 
       <Layout
         banner={<SessionTokenBanner />}

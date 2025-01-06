@@ -1358,6 +1358,19 @@
       "submitButton": "Upgrade and deploy"
     }
   },
+  "trial": {
+    "welcomeDialog": {
+      "title": "Welcome to Your Free Trial!",
+      "description": "Your trial has started! <strong>We've credited your account with $10</strong> to explore our full range of deployment services. Here's what you can do during your trial:",
+      "features": {
+        "models": "Run and manage LLM models on GPUs",
+        "compute": "Host and scale your applications seamlessly",
+        "web": "Deploy backend web services effortlessly"
+      },
+      "footer": "For the next 7 days, enjoy all Pro account features.",
+      "cta": "Let's go!"
+    }
+  },
   "layouts": {
     "createOrganization": "Create organization",
     "main": {
