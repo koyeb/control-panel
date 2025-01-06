@@ -1,9 +1,10 @@
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
+import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconListPlus, IconPlus } from 'src/components/icons';
 import { QueryGuard } from 'src/components/query-error';
@@ -21,11 +22,14 @@ const T = createTranslate('pages.secrets');
 
 export function SecretsPage() {
   const historyState = useHistoryState<{ create: boolean }>();
-  const [openDialog, setOpenDialog] = useState<'create' | 'bulkCreate' | 'bulkDelete' | undefined>(
-    historyState.create ? 'create' : undefined,
-  );
+  const openDialog = Dialog.useOpen();
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const closeDialog = () => setOpenDialog(undefined);
+  useEffect(() => {
+    if (historyState.create) {
+      openDialog('CreateSecret');
+    }
+  }, [historyState, openDialog]);
 
   const query = useSecretsQuery('simple');
   const secrets = query.data;
@@ -41,19 +45,19 @@ export function SecretsPage() {
         end={
           <div className="row items-center gap-2">
             {selected.size > 0 && (
-              <Button variant="outline" onClick={() => setOpenDialog('bulkDelete')}>
+              <Button variant="outline" onClick={() => setDeleteDialogOpen(true)}>
                 <T id="deleteSecrets" values={{ count: selected.size }} />
               </Button>
             )}
 
-            <Button variant="outline" onClick={() => setOpenDialog('bulkCreate')}>
+            <Button variant="outline" onClick={() => openDialog('BulkCreateSecrets')}>
               <IconListPlus className="size-4" />
               <T id="importSecrets" />
             </Button>
 
             <Button
               className={clsx(secrets && secrets.length === 0 && 'hidden')}
-              onClick={() => setOpenDialog('create')}
+              onClick={() => openDialog('CreateSecret')}
             >
               <IconPlus className="size-4" />
               <T id="createSecret" />
@@ -66,7 +70,7 @@ export function SecretsPage() {
         {(secrets) => (
           <SecretsList
             secrets={secrets}
-            onCreate={() => setOpenDialog('create')}
+            onCreate={() => openDialog('CreateSecret')}
             selected={selected}
             toggleSelected={toggle}
             selectAll={() => set(secrets ?? [])}
@@ -76,17 +80,17 @@ export function SecretsPage() {
       </QueryGuard>
 
       <BulkDeleteSecretsDialog
-        open={openDialog === 'bulkDelete'}
-        onClose={closeDialog}
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
         secrets={Array.from(selected.values())}
         onDeleted={() => {
           clear();
-          closeDialog();
+          setDeleteDialogOpen(false);
         }}
       />
 
-      <BulkCreateSecretsDialog open={openDialog === 'bulkCreate'} onClose={closeDialog} />
-      <CreateSecretDialog open={openDialog === 'create'} onClose={closeDialog} onCreated={closeDialog} />
+      <BulkCreateSecretsDialog />
+      <CreateSecretDialog />
     </div>
   );
 }

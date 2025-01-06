@@ -1,38 +1,39 @@
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
 const T = createTranslate('secrets.registrySecretForm');
 
 type CreateRegistrySecretDialogProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onCreated: (secretName: string) => void;
+  onCreated?: (secretName: string) => void;
 };
 
-export function CreateRegistrySecretDialog({ isOpen, onClose, onCreated }: CreateRegistrySecretDialogProps) {
+export function CreateRegistrySecretDialog({ onCreated }: CreateRegistrySecretDialogProps) {
+  const closeDialog = Dialog.useClose();
+
   return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="xl"
-      className="col gap-2"
-    >
+    <Dialog id="CreateRegistrySecret" className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <RegistrySecretForm
+        onSubmitted={(secretName) => {
+          closeDialog();
+          onCreated?.(secretName);
+        }}
         renderFooter={(formState) => (
-          <footer className="row mt-2 justify-end gap-2">
-            <Button variant="ghost" color="gray" onClick={onClose}>
-              <Translate id="common.cancel" />
-            </Button>
+          <DialogFooter className="mt-2">
+            <CloseDialogButton />
 
             <Button type="submit" loading={formState.isSubmitting}>
               <Translate id="common.save" />
             </Button>
-          </footer>
+          </DialogFooter>
         )}
-        onSubmitted={onCreated}
       />
     </Dialog>
   );

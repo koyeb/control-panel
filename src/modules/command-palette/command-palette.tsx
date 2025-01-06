@@ -2,7 +2,7 @@ import * as intercom from '@intercom/messenger-js-sdk';
 import clsx from 'clsx';
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { Dialog, Spinner } from '@koyeb/design-system';
+import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useOneClickApps } from 'src/api/hooks/catalog';
@@ -13,6 +13,7 @@ import { notify } from 'src/application/notify';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
+import { Dialog } from 'src/components/dialog';
 import { IconChevronRight } from 'src/components/icons';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate } from 'src/hooks/router';
@@ -41,7 +42,9 @@ type Item = {
 };
 
 function CommandPaletteDialog() {
-  const [open, setOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
+
   const [search, setSearch] = useState('');
   const [highlightedIndex, setHighlightedIndex] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -53,7 +56,7 @@ function CommandPaletteDialog() {
     const result = fn();
 
     if (result === undefined) {
-      setOpen(false);
+      closeDialog();
     } else {
       const handleError = (error: unknown) => {
         notify.error(hasMessage(error) ? error.message : 'Unknown error');
@@ -62,8 +65,7 @@ function CommandPaletteDialog() {
 
       Promise.resolve()
         .then(() => setLoading(true))
-        .then(() => result)
-        .then(() => setOpen(false), handleError)
+        .then(closeDialog, handleError)
         .finally(() => setLoading(false));
     }
   }, []);
@@ -98,7 +100,10 @@ function CommandPaletteDialog() {
     }));
   }, [command, commands, search, execute]);
 
-  useShortcut(['meta', 'k'], useFeatureFlag('new-command-palette') ? () => setOpen(true) : undefined);
+  useShortcut(
+    ['meta', 'k'],
+    useFeatureFlag('new-command-palette') ? () => openDialog('CommandPalette') : undefined,
+  );
 
   useEffect(() => {
     setHighlightedIndex(0);
@@ -152,16 +157,14 @@ function CommandPaletteDialog() {
 
   return (
     <Dialog
-      isOpen={open}
-      onClose={() => setOpen(false)}
+      id="CommandPalette"
       onClosed={() => {
         setCommand(undefined);
         setHighlightedIndex(0);
         setSearch('');
       }}
-      width="3xl"
       overlayClassName="!items-start pt-8 md:pt-[20vh]"
-      className="!p-0"
+      className="w-full max-w-3xl !p-0"
     >
       <div className="row items-center gap-2 border-b px-2">
         <div>

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
-import { Dialog, Json, TabButton, TabButtons } from '@koyeb/design-system';
+import { Json, TabButton, TabButtons } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
 import type {
   BuildpackBuilder,
@@ -14,7 +14,8 @@ import type {
   Scaling,
 } from 'src/api/model';
 import { CopyIconButton } from 'src/application/copy-icon-button';
-import { IconPackage, IconGithub } from 'src/components/icons';
+import { Dialog, DialogHeader } from 'src/components/dialog';
+import { IconGithub, IconPackage } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
@@ -27,16 +28,16 @@ import { assert } from 'src/utils/assert';
 const T = createTranslate('deploymentInfo.definitionDialog');
 
 type DeploymentDefinitionDialogProps = {
-  open: boolean;
-  onClose: () => void;
   deployment: ComputeDeployment;
 };
 
-export function DeploymentDefinitionDialog({ open, onClose, deployment }: DeploymentDefinitionDialogProps) {
+export function DeploymentDefinitionDialog({ deployment }: DeploymentDefinitionDialogProps) {
   const [tab, setTab] = useState<'json' | 'parsed'>('json');
 
   return (
-    <Dialog isOpen={open} onClose={onClose} width="4xl" title={<T id="title" />} className="col gap-4">
+    <Dialog id="DeploymentDefinition" className="col w-full max-w-4xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
       <TabButtons>
         <TabButton selected={tab === 'json'} onClick={() => setTab('json')}>
           <T id="json" />

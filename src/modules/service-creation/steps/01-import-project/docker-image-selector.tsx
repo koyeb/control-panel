@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { Dialog } from 'src/components/dialog';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
 import { handleSubmit } from 'src/hooks/form';
@@ -111,7 +112,7 @@ type RegistrySecretFieldProps = {
 };
 
 function RegistrySecretField({ form }: RegistrySecretFieldProps) {
-  const [createSecretDialogOpen, setCreateSecretDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
   const registrySecrets = useSecrets('registry');
 
   return (
@@ -137,19 +138,14 @@ function RegistrySecretField({ form }: RegistrySecretFieldProps) {
         }}
         onChangeEffect={(item) => {
           if (item === 'create') {
-            return setCreateSecretDialogOpen(true);
+            openDialog('CreateRegistrySecret');
           }
         }}
         className="w-full max-w-xs"
       />
 
       <CreateRegistrySecretDialog
-        isOpen={createSecretDialogOpen}
-        onClose={() => setCreateSecretDialogOpen(false)}
-        onCreated={(secretName) => {
-          form.setValue('registrySecret', secretName, { shouldValidate: true });
-          setCreateSecretDialogOpen(false);
-        }}
+        onCreated={(secretName) => form.setValue('registrySecret', secretName, { shouldValidate: true })}
       />
     </>
   );

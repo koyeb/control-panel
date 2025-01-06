@@ -5,6 +5,7 @@ import { Button, TabButton, TabButtons } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
+import { Dialog } from 'src/components/dialog';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { IconPlus } from 'src/components/icons';
 import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
@@ -63,6 +64,8 @@ export function EnvironmentVariablesSection() {
 
 function EnvironmentVariables() {
   const t = T.useTranslate();
+  const openDialog = Dialog.useOpen();
+
   const { setValue } = useFormContext<ServiceForm>();
 
   const { fields, append, remove } = useFieldArray<ServiceForm, 'environmentVariables'>({
@@ -113,7 +116,10 @@ function EnvironmentVariables() {
                     remove(index);
                   }
                 }}
-                onCreateSecret={() => setCreateSecretIndex(index)}
+                onCreateSecret={() => {
+                  setCreateSecretIndex(index);
+                  openDialog('CreateSecret');
+                }}
               />
             ))}
           </div>
@@ -137,8 +143,6 @@ function EnvironmentVariables() {
       />
 
       <CreateSecretDialog
-        open={createSecretIndex !== undefined}
-        onClose={() => setCreateSecretIndex(undefined)}
         onCreated={(secretName) => {
           setValue(
             `environmentVariables.${createSecretIndex as number}.value`,

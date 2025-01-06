@@ -3,13 +3,14 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
 import { ControlledTextArea } from 'src/components/controlled';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { dotenvParse } from 'src/utils/dotenv';
@@ -17,13 +18,9 @@ import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.secrets.bulkCreateSecretsDialog');
 
-type BulkCreateSecretsDialogProps = {
-  open: boolean;
-  onClose: () => void;
-};
-
-export function BulkCreateSecretsDialog({ open, onClose }: BulkCreateSecretsDialogProps) {
+export function BulkCreateSecretsDialog() {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
   const track = useTrackEvent();
 
   const form = useForm<{ value: string }>({
@@ -70,32 +67,31 @@ export function BulkCreateSecretsDialog({ open, onClose }: BulkCreateSecretsDial
         notify.warning(<T id="errorNotification" values={{ names: errors.join(', ') }} />);
       }
 
-      onClose();
+      closeDialog();
       track('BulkSecretsCreated', { count: created });
     },
   });
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      onClosed={() => form.reset()}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="lg"
-      className="col gap-2"
-    >
+    <Dialog id="BulkCreateSecrets" onClosed={() => form.reset()} className="col w-full max-w-2xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <form onSubmit={handleSubmit(form, mutation.mutate)} className="col gap-4">
         <ControlledTextArea control={form.control} name="value" rows={10} />
 
-        <div className="row justify-end gap-2">
-          <Button variant="ghost" color="gray" onClick={onClose}>
+        <DialogFooter>
+          <CloseDialogButton>
             <Translate id="common.cancel" />
-          </Button>
+          </CloseDialogButton>
+
           <Button type="submit" loading={mutation.isPending}>
             <Translate id="common.import" />
           </Button>
-        </div>
+        </DialogFooter>
       </form>
     </Dialog>
   );

@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useSecrets } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { ControlledSelect } from 'src/components/controlled';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
 
@@ -14,11 +14,10 @@ import { DockerImageField } from './docker-image-field';
 const T = createTranslate('serviceForm.source.docker');
 
 export function DockerSource() {
-  const { setValue } = useFormContext<ServiceForm>();
+  const openDialog = Dialog.useOpen();
 
   const secrets = useSecrets('registry');
-
-  const [registryDialogOpen, setRegistryDialogOpen] = useState(false);
+  const { setValue } = useFormContext<ServiceForm>();
 
   return (
     <>
@@ -46,18 +45,15 @@ export function DockerSource() {
         }}
         onChangeEffect={(item) => {
           if (item === 'create') {
-            return setRegistryDialogOpen(true);
+            openDialog('CreateRegistrySecret');
           }
         }}
         className="max-w-md"
       />
 
       <CreateRegistrySecretDialog
-        isOpen={registryDialogOpen}
-        onClose={() => setRegistryDialogOpen(false)}
         onCreated={(secretName) => {
           setValue('source.docker.registrySecret', secretName, { shouldValidate: true });
-          setRegistryDialogOpen(false);
         }}
       />
     </>

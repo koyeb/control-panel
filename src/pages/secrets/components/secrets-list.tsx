@@ -15,6 +15,7 @@ import { Secret } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { Dialog } from 'src/components/dialog';
 import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
@@ -172,26 +173,31 @@ function Value({ secret }: { secret: Secret }) {
 }
 
 function SecretActions({ secret }: { secret: Secret }) {
-  const [openDialog, setOpenDialog] = useState<'edit' | 'delete'>();
-  const onClose = () => setOpenDialog(undefined);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
 
   return (
     <>
       <ActionsMenu>
         {(withClose) => (
           <>
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('edit'))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`EditSecret-${secret.id}`))}>
               <T id="actions.edit" />
             </ButtonMenuItem>
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
+            <ButtonMenuItem onClick={withClose(() => setDeleteDialogOpen(true))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
         )}
       </ActionsMenu>
 
-      <EditSecretDialog open={openDialog === 'edit'} onClose={onClose} secret={secret} />
-      <DeleteSecretDialog open={openDialog === 'delete'} onClose={onClose} secret={secret} />
+      <EditSecretDialog secret={secret} />
+
+      <DeleteSecretDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        secret={secret}
+      />
     </>
   );
 }

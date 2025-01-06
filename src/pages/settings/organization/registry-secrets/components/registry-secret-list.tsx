@@ -5,6 +5,7 @@ import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
 import { RegistrySecret } from 'src/api/model';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
@@ -90,27 +91,32 @@ function Skeleton() {
 }
 
 function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
-  const [openDialog, setOpenDialog] = useState<'edit' | 'delete'>();
-  const onClose = () => setOpenDialog(undefined);
+  const [deleteDialogOpen, setDeleteOpenDialog] = useState(false);
+  const openDialog = Dialog.useOpen();
 
   return (
     <>
       <ActionsMenu>
         {(withClose) => (
           <>
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('edit'))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`EditRegistrySecret-${secret.id}`))}>
               <T id="actions.edit" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
+            <ButtonMenuItem onClick={withClose(() => setDeleteOpenDialog(true))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
         )}
       </ActionsMenu>
 
-      <EditRegistrySecretDialog open={openDialog === 'edit'} onClose={onClose} secret={secret} />
-      <DeleteRegistrySecretDialog open={openDialog === 'delete'} onClose={onClose} secret={secret} />
+      <EditRegistrySecretDialog secret={secret} />
+
+      <DeleteRegistrySecretDialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteOpenDialog(false)}
+        secret={secret}
+      />
     </>
   );
 }

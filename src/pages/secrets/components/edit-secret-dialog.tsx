@@ -1,45 +1,44 @@
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { Secret } from 'src/api/model';
 import { notify } from 'src/application/notify';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { Translate, createTranslate, useTranslate } from 'src/intl/translate';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 
 const T = createTranslate('pages.secrets.editSecretDialog');
 
 type EditSecretDialogProps = {
-  open: boolean;
-  onClose: () => void;
   secret: Secret;
 };
 
-export function EditSecretDialog({ open, onClose, secret }: EditSecretDialogProps) {
+export function EditSecretDialog({ secret }: EditSecretDialogProps) {
   const t = useTranslate();
+  const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="lg"
-      className="col gap-2"
-    >
+    <Dialog id={`EditSecret-${secret.id}`} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <SecretForm
         secret={secret}
         renderFooter={(formState) => (
-          <footer className="row mt-2 justify-end gap-2">
-            <Button variant="ghost" color="gray" onClick={onClose}>
+          <DialogFooter>
+            <CloseDialogButton>
               <Translate id="common.cancel" />
-            </Button>
+            </CloseDialogButton>
 
             <Button type="submit" loading={formState.isSubmitting}>
               <T id="confirm" />
             </Button>
-          </footer>
+          </DialogFooter>
         )}
         onSubmitted={(name) => {
           notify.success(t('secrets.simpleSecretForm.editSuccess', { name }));
-          onClose();
+          closeDialog();
         }}
       />
     </Dialog>

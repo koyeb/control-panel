@@ -5,6 +5,8 @@ import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate } from 'src/intl/translate';
 
+import { Dialog } from '../dialog';
+
 import { ApiCredentialsList } from './api-credentials-list';
 import { CreateApiCredentialDialog } from './create-api-credential-dialog';
 
@@ -13,18 +15,11 @@ type ApiCredentialsProps = {
   loading: boolean;
   error: Error | null;
   credentials?: ApiCredential[];
-  createDialogOpen: boolean;
-  setCreateDialogOpen: (open: boolean) => void;
 };
 
-export function ApiCredentials({
-  type,
-  loading,
-  error,
-  credentials = [],
-  createDialogOpen,
-  setCreateDialogOpen,
-}: ApiCredentialsProps) {
+export function ApiCredentials({ type, loading, error, credentials = [] }: ApiCredentialsProps) {
+  const openDialog = Dialog.useOpen();
+
   if (loading) {
     return (
       <Loading>
@@ -39,13 +34,13 @@ export function ApiCredentials({
 
   return (
     <>
-      <ApiCredentialsList type={type} credentials={credentials} onCreate={() => setCreateDialogOpen(true)} />
-
-      <CreateApiCredentialDialog
+      <ApiCredentialsList
         type={type}
-        open={createDialogOpen}
-        onClose={() => setCreateDialogOpen(false)}
+        credentials={credentials}
+        onCreate={() => openDialog('CreateApiCredential')}
       />
+
+      <CreateApiCredentialDialog type={type} />
     </>
   );
 }

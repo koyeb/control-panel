@@ -1,46 +1,45 @@
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { RegistrySecret } from 'src/api/model';
 import { notify } from 'src/application/notify';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
 const T = createTranslate('pages.organizationSettings.registrySecrets.editDialog');
 
 type EditRegistrySecretDialogProps = {
-  open: boolean;
-  onClose: () => void;
   secret: RegistrySecret;
 };
 
-export function EditRegistrySecretDialog({ open, onClose, secret }: EditRegistrySecretDialogProps) {
+export function EditRegistrySecretDialog({ secret }: EditRegistrySecretDialogProps) {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="lg"
-      className="col gap-2"
-    >
+    <Dialog id={`EditRegistrySecret-${secret.id}`} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <RegistrySecretForm
         secret={secret}
+        onSubmitted={(name) => {
+          notify.success(t('successNotification', { name }));
+          closeDialog();
+        }}
         renderFooter={(formState) => (
-          <footer className="row mt-2 justify-end gap-2">
-            <Button variant="ghost" color="gray" onClick={onClose}>
+          <DialogFooter className="mt-2">
+            <CloseDialogButton>
               <Translate id="common.cancel" />
-            </Button>
+            </CloseDialogButton>
 
             <Button type="submit" loading={formState.isSubmitting}>
               <Translate id="common.save" />
             </Button>
-          </footer>
+          </DialogFooter>
         )}
-        onSubmitted={(name) => {
-          notify.success(t('successNotification', { name }));
-          onClose();
-        }}
       />
     </Dialog>
   );

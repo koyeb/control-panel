@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
 import { App, ComputeDeployment, Service } from 'src/api/model';
+import { Dialog } from 'src/components/dialog';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { createTranslate, Translate } from 'src/intl/translate';
 
@@ -34,10 +33,10 @@ type DeploymentInfoProps = {
 };
 
 export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps) {
+  const openDialog = Dialog.useOpen();
+
   const { definition } = deployment;
   const { type, source, builder, privileged } = definition;
-
-  const [definitionDialogOpen, setDefinitionDialogOpen] = useState(false);
 
   return (
     <section className="rounded-md border">
@@ -92,16 +91,12 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
       </div>
 
       <div className="row mb-4 justify-center">
-        <button className="text-link" onClick={() => setDefinitionDialogOpen(true)}>
+        <button className="text-link" onClick={() => openDialog('DeploymentDefinition')}>
           <T id="viewMore" />
         </button>
       </div>
 
-      <DeploymentDefinitionDialog
-        open={definitionDialogOpen}
-        onClose={() => setDefinitionDialogOpen(false)}
-        deployment={deployment}
-      />
+      <DeploymentDefinitionDialog deployment={deployment} />
     </section>
   );
 }

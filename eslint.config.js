@@ -70,7 +70,7 @@ export default [
           ],
         },
       ],
-      '@typescript-eslint/no-deprecated': 'warn',
+      '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',

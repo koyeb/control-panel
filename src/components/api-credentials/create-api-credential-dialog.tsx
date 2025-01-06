@@ -3,7 +3,7 @@ import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Dialog, Input } from '@koyeb/design-system';
+import { Button, Input } from '@koyeb/design-system';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { ApiCredential } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -15,51 +15,56 @@ import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { upperCase } from 'src/utils/strings';
 
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from '../dialog';
+
 type CreateApiCredentialDialogProps = {
   type: ApiCredential['type'];
-  open: boolean;
-  onClose: () => void;
 };
 
-export function CreateApiCredentialDialog({ type, open, onClose }: CreateApiCredentialDialogProps) {
+export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogProps) {
   const T = createTranslate(`pages.${type}Settings.apiCredential`);
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
+
   const user = useUser();
   const organization = useOrganization();
+
   const [created, setCreated] = useState<string>();
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <>
-      <Dialog
-        isOpen={open && created === undefined}
-        onClose={onClose}
-        width="lg"
-        title={<T id="createDialog.title" />}
-        description={
+      <Dialog id="CreateApiCredential" className="col w-full max-w-xl gap-4">
+        <DialogHeader title={<T id="createDialog.title" />} />
+
+        <p className="text-dim">
           <T
             id="createDialog.description"
             values={{ organizationName: organization.name, userName: user.name }}
           />
-        }
-      >
+        </p>
+
         <CreateApiCredentialForm
           type={type}
-          onCancel={onClose}
+          onCancel={closeDialog}
           onCreated={(created) => {
             setCreated(created);
-            onClose();
+            openDialog('ApiCredentialCreated');
           }}
         />
       </Dialog>
 
       <Dialog
-        isOpen={created !== undefined}
-        onClose={() => setCreated(undefined)}
-        width="lg"
-        title={<T id="createDialog.createdTitle" />}
-        description={<T id="createDialog.createdDescription" />}
-        className="col gap-4"
+        id="ApiCredentialCreated"
+        onClosed={() => setCreated(undefined)}
+        className="col w-full max-w-xl gap-4"
       >
+        <DialogHeader title={<T id="createDialog.createdTitle" />} />
+
+        <p className="text-dim">
+          <T id="createDialog.createdDescription" />
+        </p>
+
         <Input
           ref={inputRef}
           value={created ?? ''}
@@ -69,9 +74,9 @@ export function CreateApiCredentialDialog({ type, open, onClose }: CreateApiCred
           inputClassName="truncate"
         />
 
-        <Button variant="ghost" color="gray" onClick={() => setCreated(undefined)} className="self-end">
-          <Translate id="common.close" />
-        </Button>
+        <DialogFooter>
+          <CloseDialogButton />
+        </DialogFooter>
       </Dialog>
     </>
   );
@@ -137,15 +142,13 @@ function CreateApiCredentialForm({ type, onCancel, onCreated }: CreateApiCredent
         label={<T id="createDialog.descriptionLabel" />}
       />
 
-      <footer className="row mt-2 justify-end gap-2">
-        <Button variant="ghost" color="gray" onClick={onCancel}>
-          <Translate id="common.cancel" />
-        </Button>
+      <DialogFooter>
+        <CloseDialogButton />
 
         <Button type="submit" loading={form.formState.isSubmitting}>
           <Translate id="common.create" />
         </Button>
-      </footer>
+      </DialogFooter>
     </form>
   );
 }
