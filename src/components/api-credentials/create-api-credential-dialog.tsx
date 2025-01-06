@@ -7,7 +7,7 @@ import { Button, Input } from '@koyeb/design-system';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { ApiCredential } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { CopyIconButton } from 'src/application/copy-icon-button';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';

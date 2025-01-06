@@ -1,5 +1,5 @@
 import { Tooltip } from '@koyeb/design-system';
-import { CopyIconButton } from 'src/application/copy-icon-button';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { IconInfo } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 

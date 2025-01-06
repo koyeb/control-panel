@@ -5,7 +5,7 @@ import { api } from 'src/api/api';
 import { useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { App, Deployment, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { CopyIconButton } from 'src/application/copy-icon-button';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';

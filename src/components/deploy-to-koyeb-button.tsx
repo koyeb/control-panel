@@ -1,5 +1,5 @@
 import { InfoTooltip, Input, InputEnd } from '@koyeb/design-system';
-import { CopyIconButton } from 'src/application/copy-icon-button';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { createTranslate } from 'src/intl/translate';
 
 import { ExternalLink } from './link';

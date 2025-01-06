@@ -1,6 +1,6 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
 import { App, ComputeDeployment, Service } from 'src/api/model';
-import { CopyIconButton } from 'src/application/copy-icon-button';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { Metadata } from 'src/components/metadata';
 import { useClipboard } from 'src/hooks/clipboard';

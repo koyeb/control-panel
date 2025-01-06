@@ -13,7 +13,7 @@ import type {
   GitDeploymentSource,
   Scaling,
 } from 'src/api/model';
-import { CopyIconButton } from 'src/application/copy-icon-button';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Dialog, DialogHeader } from 'src/components/dialog';
 import { IconGithub, IconPackage } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';

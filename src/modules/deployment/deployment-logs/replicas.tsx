@@ -7,7 +7,7 @@ import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-syste
 import type { Api } from 'src/api/api-types';
 import { useInstance } from 'src/api/hooks/catalog';
 import { Instance, InstanceStatus } from 'src/api/model';
-import { CopyIconButton } from 'src/application/copy-icon-button';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
 import { Metadata } from 'src/components/metadata';
