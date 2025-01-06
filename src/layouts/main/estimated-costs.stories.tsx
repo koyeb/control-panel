@@ -88,18 +88,18 @@ function mockApi(args: Args) {
     const discount: Api.NextInvoiceDiscount = {
       type: 'AMOUNT_OFF',
       name: 'Discount name',
-      amount: 0,
+      amount: '0',
     };
 
     if (args.discount === 'amount_off') {
       discount.type = 'AMOUNT_OFF';
-      discount.amount = 1000;
+      discount.amount = '1000';
       invoice.total_excluding_tax -= 1000;
     }
 
     if (args.discount === 'percent_off') {
       discount.type = 'PERCENT_OFF';
-      discount.amount = 50;
+      discount.amount = '50';
       invoice.total_excluding_tax /= 2;
     }
 

@@ -116,7 +116,7 @@ describe('mapInvoice', () => {
     const discount: Api.NextInvoiceDiscount = {
       type: 'AMOUNT_OFF',
       name: 'Koyeb free tier',
-      amount: 550,
+      amount: '550',
     };
 
     expect(transform(stripeInvoice, [], [discount])).toHaveProperty('totalWithoutDiscount', 123);
@@ -138,7 +138,7 @@ describe('mapInvoice', () => {
     const discount: Api.NextInvoiceDiscount = {
       type: 'PERCENT_OFF',
       name: 'Preview for instance usage',
-      amount: 5432,
+      amount: '5432',
     };
 
     expect(transform(stripeInvoice, [], [discount])).toHaveProperty('totalWithoutDiscount', 123);
