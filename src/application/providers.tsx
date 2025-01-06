@@ -12,6 +12,7 @@ import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
 import { getConfig } from './config';
+import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
 import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
@@ -44,9 +45,11 @@ export function Providers({ children }: ProvidersProps) {
             <QueryClientProvider>
               <PostHogProvider>
                 <StripeElements stripe={stripePromise}>
-                  <ReactQueryDevtools />
-                  <NotificationContainer />
-                  <ErrorBoundary>{children}</ErrorBoundary>
+                  <DialogProvider>
+                    <ReactQueryDevtools />
+                    <NotificationContainer />
+                    <ErrorBoundary>{children}</ErrorBoundary>
+                  </DialogProvider>
                 </StripeElements>
               </PostHogProvider>
             </QueryClientProvider>
