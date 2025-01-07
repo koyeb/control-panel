@@ -17,7 +17,8 @@ import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
 
 type LayoutProps = {
-  banner?: React.ReactNode;
+  banner: React.ReactNode;
+  hasBanner: boolean;
   header: React.ReactNode;
   menu: React.ReactNode;
   menuCollapsed: React.ReactNode;
@@ -41,17 +42,17 @@ export function Layout(props: LayoutProps) {
   return <LayoutMobile {...props} />;
 }
 
-function LayoutDesktop({ banner, header, menu, main, context, contextExpanded }: LayoutProps) {
+function LayoutDesktop({ banner, hasBanner, header, menu, main, context, contextExpanded }: LayoutProps) {
   return (
     <>
       {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
 
-      <div className={clsx('fixed z-20 h-screen w-64', banner && 'pt-8')}>
+      <div className={clsx('fixed z-20 h-screen w-64', hasBanner && 'pt-8')}>
         <Aside>{menu}</Aside>
       </div>
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className={clsx('pl-64', banner && 'pt-8', contextExpanded && '3xl:pr-[32rem]')}>
+      <div className={clsx('pl-64', hasBanner && 'pt-8', contextExpanded && '3xl:pr-[32rem]')}>
         <div className="mx-auto max-w-main">
           <header className="px-4">{header}</header>
           {main}
@@ -63,7 +64,16 @@ function LayoutDesktop({ banner, header, menu, main, context, contextExpanded }:
   );
 }
 
-function LayoutTablet({ banner, header, menu, menuCollapsed, main, context, contextExpanded }: LayoutProps) {
+function LayoutTablet({
+  banner,
+  hasBanner,
+  header,
+  menu,
+  menuCollapsed,
+  main,
+  context,
+  contextExpanded,
+}: LayoutProps) {
   const [state, setState] = useState<'opened' | 'collapsed'>('collapsed');
 
   return (
@@ -73,7 +83,7 @@ function LayoutTablet({ banner, header, menu, menuCollapsed, main, context, cont
       <div
         onMouseEnter={() => setState('opened')}
         onMouseLeave={() => setState('collapsed')}
-        className={clsx('fixed z-20 h-screen w-16 overflow-x-visible', banner && 'pt-8')}
+        className={clsx('fixed z-20 h-screen w-16 overflow-x-visible', hasBanner && 'pt-8')}
       >
         <Aside className={clsx({ 'w-full': state === 'collapsed', 'w-64': state === 'opened' })}>
           {state === 'opened' && menu}
@@ -81,7 +91,7 @@ function LayoutTablet({ banner, header, menu, menuCollapsed, main, context, cont
         </Aside>
       </div>
 
-      <div className={clsx('pl-16', banner && 'pt-8')}>
+      <div className={clsx('pl-16', hasBanner && 'pt-8')}>
         <div className="mx-auto max-w-main">
           <header className="px-4">{header}</header>
           {main}
@@ -115,7 +125,7 @@ function LayoutMobile({ banner, header, menu, main }: LayoutProps) {
         {menu}
       </MobileMenu>
 
-      {banner && <div className="h-8 bg-neutral">{banner}</div>}
+      {banner}
 
       {main}
     </>

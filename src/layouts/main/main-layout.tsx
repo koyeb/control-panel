@@ -43,6 +43,7 @@ type LayoutProps = {
 
 export function MainLayout({ children }: LayoutProps) {
   const pageContext = usePageContext();
+  const banner = useBanner();
 
   return (
     <CommandPalette>
@@ -54,7 +55,8 @@ export function MainLayout({ children }: LayoutProps) {
       </FeatureFlag>
 
       <Layout
-        banner={<Banner />}
+        banner={banner ? { session: <SessionTokenBanner />, trial: <TrialBanner /> }[banner] : null}
+        hasBanner={banner !== undefined}
         header={<AppBreadcrumbs />}
         menu={<Menu />}
         menuCollapsed={<Menu collapsed />}
@@ -131,14 +133,26 @@ function Main({ children }: { children: React.ReactNode }) {
   );
 }
 
-function Banner() {
+function useBanner(): 'session' | 'trial' | void {
   const { session } = useToken();
 
   if (session) {
-    return <SessionTokenBanner />;
+    return 'session';
   }
 
-  return null;
+  if (false as boolean) {
+    return 'trial';
+  }
+}
+
+function TrialBanner() {
+  return (
+    <FeatureFlag feature="trial">
+      <div className="bg-green/10 px-4 py-1.5 text-center text-green md:h-full md:whitespace-nowrap">
+        <T id="trial" values={{ days: 7 }} />
+      </div>
+    </FeatureFlag>
+  );
 }
 
 function SessionTokenBanner() {
@@ -157,7 +171,7 @@ function SessionTokenBanner() {
   }
 
   return (
-    <div className="row h-full items-center justify-center bg-orange font-medium">
+    <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">
       <T id="sessionTokenWarning" values={{ organizationName: organization.name }} />
       <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => mutation.mutate()}>
         <IconX className="size-5" />
