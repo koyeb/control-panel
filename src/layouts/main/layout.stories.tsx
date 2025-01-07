@@ -29,10 +29,8 @@ export default {
   },
   component: Layout,
   args: {
-    header: (
-      <div className="w-fit whitespace-nowrap p-2">Header header header header header header header</div>
-    ),
-    menu: () => <div>menu</div>,
+    header: <div className="row h-14 items-center whitespace-nowrap">Header header header header header</div>,
+    menu: <div>menu</div>,
     main: <div>main</div>,
   },
   argTypes: {
