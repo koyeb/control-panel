@@ -54,18 +54,19 @@ export function MainLayout({ children }: LayoutProps) {
       </FeatureFlag>
 
       <Layout
-        banner={<SessionTokenBanner />}
+        banner={<Banner />}
         header={<AppBreadcrumbs />}
-        menu={(collapsed) => <Menu collapsed={collapsed} />}
+        menu={<Menu />}
+        menuCollapsed={<Menu collapsed />}
         main={<Main>{children}</Main>}
-        context={pageContext.enabled ? <PageContext {...pageContext} /> : undefined}
+        context={pageContext.enabled ? <PageContext {...pageContext} /> : null}
         contextExpanded={pageContext.expanded}
       />
     </CommandPalette>
   );
 }
 
-function Menu({ collapsed }: { collapsed: boolean }) {
+function Menu({ collapsed = false }: { collapsed?: boolean }) {
   const organization = useOrganizationUnsafe();
   const isDeactivated = inArray(organization?.status, ['deactivating', 'deactivated']);
 
@@ -130,9 +131,19 @@ function Main({ children }: { children: React.ReactNode }) {
   );
 }
 
+function Banner() {
+  const { session } = useToken();
+
+  if (session) {
+    return <SessionTokenBanner />;
+  }
+
+  return null;
+}
+
 function SessionTokenBanner() {
   const organization = useOrganizationUnsafe();
-  const { session, clearToken } = useToken();
+  const { clearToken } = useToken();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -141,12 +152,12 @@ function SessionTokenBanner() {
     onSuccess: () => navigate(routes.home()),
   });
 
-  if (!session || !organization) {
+  if (!organization) {
     return null;
   }
 
   return (
-    <div className="sticky inset-x-0 top-0 z-30 bg-orange py-1 text-center font-medium">
+    <div className="row h-full items-center justify-center bg-orange font-medium">
       <T id="sessionTokenWarning" values={{ organizationName: organization.name }} />
       <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => mutation.mutate()}>
         <IconX className="size-5" />
@@ -156,12 +167,11 @@ function SessionTokenBanner() {
 }
 
 type PageContextProps = {
-  enabled: boolean;
   expanded?: boolean;
   setExpanded: (expanded: boolean) => void;
 };
 
-function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
+function PageContext({ expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
   const { token } = useToken();
@@ -188,12 +198,8 @@ function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
     }
   }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
 
-  if (!enabled) {
-    return null;
-  }
-
   return (
-    <div className={clsx('fixed inset-y-0 right-0 w-0 bg-muted', expanded && 'w-full max-w-lg')}>
+    <>
       <button
         onClick={() => setExpanded(!expanded)}
         className="col absolute right-full h-full justify-center bg-muted/50 opacity-0 transition-opacity hover:opacity-100"
@@ -207,19 +213,18 @@ function PageContext({ enabled, expanded, setExpanded }: PageContextProps) {
         allow="clipboard-write"
         className="size-full border-l"
       />
-    </div>
+    </>
   );
 }
 
 const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }));
 
-function usePageContext(): PageContextProps {
+function usePageContext() {
   const { data: user } = useUserQuery();
   const { pageContextBaseUrl } = getConfig();
 
   const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
-
-  const [expanded, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
+  const [expanded = false, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
 
   return {
     enabled,

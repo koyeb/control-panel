@@ -9,7 +9,7 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react';
 import clsx from 'clsx';
-import { useCallback, useEffect, useState } from 'react';
+import { forwardRef, useState } from 'react';
 
 import { Button, useBreakpoint } from '@koyeb/design-system';
 import { IconMenu } from 'src/components/icons';
@@ -19,109 +19,116 @@ import { useLocation } from 'src/hooks/router';
 type LayoutProps = {
   banner?: React.ReactNode;
   header: React.ReactNode;
-  menu: (collapsed: boolean) => React.ReactNode;
+  menu: React.ReactNode;
+  menuCollapsed: React.ReactNode;
   main: React.ReactNode;
-  context?: React.ReactNode;
-  contextExpanded?: boolean;
+  context: React.ReactNode;
+  contextExpanded: boolean;
 };
 
-export function Layout({ banner, header, menu, main, context, contextExpanded }: LayoutProps) {
-  const [menuState, setMenuState] = useSideMenuState();
-
-  return (
-    <>
-      <SideMenu state={menuState} setState={setMenuState}>
-        {menu(menuState === 'collapsed')}
-      </SideMenu>
-
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className={clsx('sm:pl-16 xl:pl-64', contextExpanded && '3xl:pr-[32rem]')}>
-        {banner}
-
-        <div className="mx-auto max-w-main">
-          <Header onOpen={() => setMenuState('opened')}>{header}</Header>
-          {main}
-        </div>
-      </div>
-
-      {context}
-    </>
-  );
-}
-
-function Header({ onOpen, children }: { onOpen: () => void; children: React.ReactNode }) {
-  return (
-    <header
-      className={clsx(
-        'row z-10 items-center gap-1 px-2 sm:px-4',
-        'sticky top-0 border-b bg-neutral shadow-sm sm:static sm:border-none sm:shadow-none',
-      )}
-    >
-      <Button size={1} color="gray" variant="ghost" onClick={onOpen} className="!px-1 sm:hidden">
-        <IconMenu className="size-5 text-dim" />
-      </Button>
-
-      <div className="flex-1 overflow-x-auto">{children}</div>
-    </header>
-  );
-}
-
-type SideMenuState = 'closed' | 'collapsed' | 'opened';
-type SetSideMenuState = (state: SideMenuState) => void;
-
-type SideMenuProps = {
-  state: SideMenuState;
-  setState: SetSideMenuState;
-  children: React.ReactNode;
-};
-
-function SideMenu(props: SideMenuProps) {
+export function Layout(props: LayoutProps) {
   const isDesktop = useBreakpoint('xl');
   const isTablet = useBreakpoint('sm') && !isDesktop;
 
   if (isDesktop) {
-    return <SideMenuDesktop {...props} />;
+    return <LayoutDesktop {...props} />;
   }
 
   if (isTablet) {
-    return <SideMenuTablet {...props} />;
+    return <LayoutTablet {...props} />;
   }
 
-  return <SideMenuMobile {...props} />;
+  return <LayoutMobile {...props} />;
 }
 
-function SideMenuDesktop({ children }: SideMenuProps) {
+function LayoutDesktop({ banner, header, menu, main, context, contextExpanded }: LayoutProps) {
   return (
-    <aside
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className="fixed z-20 h-screen w-64 overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]"
-    >
-      {children}
-    </aside>
+    <>
+      {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
+
+      <div className={clsx('fixed z-20 h-screen w-64', banner && 'pt-8')}>
+        <Aside>{menu}</Aside>
+      </div>
+
+      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+      <div className={clsx('pl-64', banner && 'pt-8', contextExpanded && '3xl:pr-[32rem]')}>
+        <div className="mx-auto max-w-main">
+          <header className="px-4">{header}</header>
+          {main}
+        </div>
+      </div>
+
+      <Context context={context} expanded={contextExpanded} banner={Boolean(banner)} />
+    </>
   );
 }
 
-function SideMenuTablet({ state, setState, children }: SideMenuProps) {
+function LayoutTablet({ banner, header, menu, menuCollapsed, main, context, contextExpanded }: LayoutProps) {
+  const [state, setState] = useState<'opened' | 'collapsed'>('collapsed');
+
   return (
-    <div
-      onMouseEnter={() => setState('opened')}
-      onMouseLeave={() => setState('collapsed')}
-      className={clsx('fixed z-20 w-16 overflow-x-visible')}
-    >
-      <aside
-        // eslint-disable-next-line tailwindcss/no-arbitrary-value
-        className={clsx('h-screen overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', {
-          'w-full': state === 'collapsed',
-          'w-64': state === 'opened',
-        })}
+    <>
+      {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
+
+      <div
+        onMouseEnter={() => setState('opened')}
+        onMouseLeave={() => setState('collapsed')}
+        className={clsx('fixed z-20 h-screen w-16 overflow-x-visible', banner && 'pt-8')}
       >
-        {children}
-      </aside>
-    </div>
+        <Aside className={clsx({ 'w-full': state === 'collapsed', 'w-64': state === 'opened' })}>
+          {state === 'opened' && menu}
+          {state === 'collapsed' && menuCollapsed}
+        </Aside>
+      </div>
+
+      <div className={clsx('pl-16', banner && 'pt-8')}>
+        <div className="mx-auto max-w-main">
+          <header className="px-4">{header}</header>
+          {main}
+        </div>
+      </div>
+
+      <Context context={context} expanded={contextExpanded} banner={Boolean(banner)} />
+    </>
   );
 }
 
-function SideMenuMobile({ state, setState, children }: SideMenuProps) {
+function LayoutMobile({ banner, header, menu, main }: LayoutProps) {
+  const [state, setState] = useState<'opened' | 'closed'>('closed');
+  const location = useLocation();
+
+  useUpdateEffect(() => {
+    setState('closed');
+  }, [location]);
+
+  return (
+    <>
+      <header className="row sticky top-0 z-10 items-center gap-1 border-b bg-neutral px-2 shadow-sm">
+        <Button size={1} color="gray" variant="ghost" onClick={() => setState('opened')} className="!px-1">
+          <IconMenu className="size-5 text-dim" />
+        </Button>
+
+        <div className="flex-1 overflow-x-auto">{header}</div>
+      </header>
+
+      <MobileMenu state={state} setState={setState}>
+        {menu}
+      </MobileMenu>
+
+      {banner && <div className="h-8 bg-neutral">{banner}</div>}
+
+      {main}
+    </>
+  );
+}
+
+type MobileMenuProps = {
+  state: 'opened' | 'closed';
+  setState: (state: 'opened' | 'closed') => void;
+  children: React.ReactNode;
+};
+
+function MobileMenu({ state, setState, children }: MobileMenuProps) {
   const { refs, floatingStyles, context } = useFloating({
     whileElementsMounted: autoUpdate,
     onOpenChange: (open) => {
@@ -150,43 +157,47 @@ function SideMenuMobile({ state, setState, children }: SideMenuProps) {
       className={clsx('z-20 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
     >
       <FloatingPortal root={document.getElementById('root')}>
-        <aside
+        <Aside
           ref={refs.setFloating}
           style={{ ...floatingStyles, ...styles }}
-          // eslint-disable-next-line tailwindcss/no-arbitrary-value
-          className="inset-y-0 z-20 h-screen w-64 overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]"
+          className="z-20 w-64"
           {...getFloatingProps()}
         >
           {children}
-        </aside>
+        </Aside>
       </FloatingPortal>
     </FloatingOverlay>
   );
 }
 
-function useSideMenuState() {
-  const isDesktop = useBreakpoint('xl');
-  const isTablet = useBreakpoint('sm');
+const Aside = forwardRef<HTMLElement, React.ComponentProps<'aside'>>(function Aside(
+  { className, ...props },
+  ref,
+) {
+  return (
+    <aside
+      ref={ref}
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
+      className={clsx('h-full overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', className)}
+      {...props}
+    />
+  );
+});
 
-  const getState = useCallback((): SideMenuState => {
-    if (isDesktop) return 'opened';
-    else if (isTablet) return 'collapsed';
-    else return 'closed';
-  }, [isDesktop, isTablet]);
+type ContextProps = {
+  context: React.ReactNode;
+  expanded: boolean;
+  banner: boolean;
+};
 
-  const [state, setState] = useState(getState);
+function Context({ context, expanded, banner }: ContextProps) {
+  if (!context) {
+    return null;
+  }
 
-  useEffect(() => {
-    setState(getState);
-  }, [getState]);
-
-  const location = useLocation();
-
-  useUpdateEffect(() => {
-    if (!isDesktop && !isTablet) {
-      setState('closed');
-    }
-  }, [location]);
-
-  return [state, setState] as const;
+  return (
+    <div className={clsx('fixed inset-y-0 right-0 w-0', expanded && 'w-full max-w-lg', banner && 'pt-8')}>
+      {context}
+    </div>
+  );
 }
