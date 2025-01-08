@@ -5,9 +5,9 @@ import { IconCheck } from 'src/components/icons';
 import { PlanIcon } from 'src/components/plan-icon';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 
-const T = createTranslate('modules.trial.endedDialog');
+const T = createTranslate('modules.trial.ended.selectPlanDialog');
 
-export function TrialEndedDialog() {
+export function SelectPlanDialog({ onDowngrade }: { onDowngrade: () => void }) {
   return (
     <Dialog2 open className="col w-full max-w-4xl gap-6">
       <DialogHeader title={<T id="title" />} />
@@ -29,7 +29,11 @@ export function TrialEndedDialog() {
           id="footer"
           values={{
             reachOut: (children) => <span className="underline">{children}</span>,
-            create: (children) => <span className="underline">{children}</span>,
+            downgrade: (children) => (
+              <button type="button" onClick={onDowngrade} className="underline">
+                {children}
+              </button>
+            ),
           }}
         />
       </DialogFooter>

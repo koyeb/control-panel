@@ -12,9 +12,8 @@ import { LinkButton } from './components/link';
 import { Loading } from './components/loading';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
-import { SecondaryLayout } from './layouts/secondary/secondary-layout';
 import { ConfirmDeactivateOrganization } from './modules/account/confirm-deactivate-organization';
-import { TrialEndedDialog } from './modules/trial/trial-ended-dialog';
+import { TrialEnded } from './modules/trial/trial-ended/trial-ended';
 import { AccountPages } from './pages/account/account.pages';
 import { ActivityPage } from './pages/activity/activity.page';
 import { AuthenticationPages } from './pages/authentication/authentication.pages';
@@ -55,11 +54,7 @@ export function App() {
   }
 
   if (organizationQuery.data?.trial && isBefore(organizationQuery.data.trial.endsAt, new Date())) {
-    return (
-      <SecondaryLayout>
-        <TrialEndedDialog />
-      </SecondaryLayout>
-    );
+    return <TrialEnded />;
   }
 
   return (
