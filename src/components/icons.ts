@@ -49,9 +49,9 @@ export { default as IconEyeOff } from 'lucide-static/icons/eye-off.svg?react';
 export { default as IconFileKey } from 'lucide-static/icons/file-key.svg?react';
 export { default as IconFileKey2 } from 'lucide-static/icons/file-key-2.svg?react';
 export { default as IconFilePlus } from 'lucide-static/icons/file-plus-2.svg?react';
+export { default as IconFolderCode } from 'lucide-static/icons/folder-code.svg?react';
 export { default as IconFolders } from 'lucide-static/icons/folders.svg?react';
 export { default as IconFullscreen } from 'lucide-static/icons/fullscreen.svg?react';
-export { default as IconFolderCode } from 'lucide-static/icons/folder-code.svg?react';
 export { default as IconGitBranch } from 'lucide-static/icons/git-branch.svg?react';
 export { default as IconGitCommitHorizontal } from 'lucide-static/icons/git-commit-horizontal.svg?react';
 export { default as IconGithub } from 'lucide-static/icons/github.svg?react';
@@ -87,6 +87,7 @@ export { default as IconSettings } from 'lucide-static/icons/settings.svg?react'
 export { default as IconSignal } from 'lucide-static/icons/signal.svg?react';
 export { default as IconSlash } from 'lucide-static/icons/slash.svg?react';
 export { default as IconSparkles } from 'lucide-static/icons/sparkles.svg?react';
+export { default as IconSquareArrowOutUpRight } from 'lucide-static/icons/square-arrow-out-up-right.svg?react';
 export { default as IconSquareCode } from 'lucide-static/icons/square-code.svg?react';
 export { default as IconSunDim } from 'lucide-static/icons/sun-dim.svg?react';
 export { default as IconTicketPercent } from 'lucide-static/icons/ticket-percent.svg?react';

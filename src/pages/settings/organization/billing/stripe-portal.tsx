@@ -1,5 +1,6 @@
 import { Alert } from '@koyeb/design-system';
 import { useManageBillingQuery } from 'src/api/hooks/billing';
+import { IconSquareArrowOutUpRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
@@ -15,20 +16,20 @@ export function StripePortal() {
   }
 
   return (
-    <section className="col gap-6">
-      <div className="row items-start gap-8">
-        <SectionHeader title={<T id="title" />} description={<T id="description" />} />
+    <section className="col items-start gap-4">
+      <SectionHeader title={<T id="title" />} description={<T id="description" />} />
 
-        <LinkButton
-          disabled={query.isPending || query.data === null}
-          href={query.data?.url}
-          component="a"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <T id="cta" />
-        </LinkButton>
-      </div>
+      <LinkButton
+        disabled={query.isPending || query.data === null}
+        href={query.data?.url}
+        component="a"
+        color="gray"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <T id="cta" />
+        <IconSquareArrowOutUpRight className="size-4" />
+      </LinkButton>
 
       {query.data === null && <Alert variant="info" description={<T id="noBillingInformation" />} />}
     </section>
