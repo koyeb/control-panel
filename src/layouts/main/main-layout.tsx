@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { intervalToDuration } from 'date-fns';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
@@ -23,9 +22,9 @@ import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 import { CommandPalette } from 'src/modules/command-palette/command-palette';
 import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
+import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { inArray } from 'src/utils/arrays';
-import { defined } from 'src/utils/assert';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
 import { EstimatedCosts } from './estimated-costs';
@@ -150,25 +149,6 @@ function useBanner(): 'session' | 'trial' | void {
   if (organization.trial) {
     return 'trial';
   }
-}
-
-function TrialBanner() {
-  const trial = defined(useOrganization().trial);
-  const { days } = intervalToDuration({ start: new Date(), end: trial.endsAt });
-
-  const upgrade = (children: React.ReactNode) => (
-    <Link to={routes.organizationSettings.plans()} className="underline">
-      {children}
-    </Link>
-  );
-
-  return (
-    <FeatureFlag feature="trial">
-      <div className="bg-green/10 px-4 py-1.5 text-center text-green md:h-full md:whitespace-nowrap">
-        <T id="trial" values={{ days: defined(days) + 1, upgrade }} />
-      </div>
-    </FeatureFlag>
-  );
 }
 
 function SessionTokenBanner() {
