@@ -10,7 +10,7 @@ export function Introduction({ data, next }: { data: WrappedData; next: () => vo
     <div onClick={next} className="col h-full justify-between gap-4 text-center text-3xl font-semibold">
       <p className="my-8">What a year, {user.name}!</p>
 
-      <p>You deployed {data.deployments} times this year!</p>
+      <p>You deployed {data.deployments} times last year!</p>
 
       <div>
         <img src={imgWand} className="h-48" />

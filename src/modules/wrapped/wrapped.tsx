@@ -65,7 +65,7 @@ export function Wrapped() {
       <Alert
         icon={<Croissant className="w-16" />}
         variant="info"
-        title="End of year surprise!"
+        title="Happy new year!"
         description={<>Curious about your stats? {link('Click here')} to see your yearly recap.</>}
         className="mb-8"
       />
