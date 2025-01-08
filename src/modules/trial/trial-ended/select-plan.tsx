@@ -1,15 +1,15 @@
 import clsx from 'clsx';
 
-import { Badge, Button, Dialog2, DialogFooter, DialogHeader } from '@koyeb/design-system';
+import { Badge, Button, DialogFooter, DialogHeader } from '@koyeb/design-system';
 import { IconCheck } from 'src/components/icons';
 import { PlanIcon } from 'src/components/plan-icon';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 
-const T = createTranslate('modules.trial.ended.selectPlanDialog');
+const T = createTranslate('modules.trial.ended.selectPlan');
 
-export function SelectPlanDialog({ onDowngrade }: { onDowngrade: () => void }) {
+export function SelectPlan({ onDowngrade }: { onDowngrade: () => void }) {
   return (
-    <Dialog2 open className="col w-full max-w-4xl gap-6">
+    <>
       <DialogHeader title={<T id="title" />} />
 
       <div className="col gap-8">
@@ -37,7 +37,7 @@ export function SelectPlanDialog({ onDowngrade }: { onDowngrade: () => void }) {
           }}
         />
       </DialogFooter>
-    </Dialog2>
+    </>
   );
 }
 

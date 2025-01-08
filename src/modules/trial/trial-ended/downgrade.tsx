@@ -2,18 +2,18 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Alert, Button, Dialog2, DialogFooter, DialogHeader } from '@koyeb/design-system';
+import { Alert, Button, DialogFooter, DialogHeader } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { ControlledInput } from 'src/components/controlled';
-import { FormValues, useFormErrorHandler, handleSubmit } from 'src/hooks/form';
+import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { isSlug } from 'src/utils/strings';
 
-const T = createTranslate('modules.trial.ended.downgradeDialog');
+const T = createTranslate('modules.trial.ended.downgrade');
 
 const schema = z.object({
   organizationName: z
@@ -23,7 +23,12 @@ const schema = z.object({
     .refine(isSlug, { params: { refinement: 'isSlug' } }),
 });
 
-export function DowngradeDialog({ onCancel }: { onCancel: () => void }) {
+type DowngradeProps = {
+  onCancel: () => void;
+  onDeleteAccount: () => void;
+};
+
+export function Downgrade({ onCancel, onDeleteAccount }: DowngradeProps) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
   const { token, setToken } = useToken();
@@ -63,7 +68,7 @@ export function DowngradeDialog({ onCancel }: { onCancel: () => void }) {
   });
 
   return (
-    <Dialog2 open className="col w-full max-w-4xl gap-8">
+    <>
       <DialogHeader title={<T id="title" />} />
 
       <p className="text-dim">
@@ -86,7 +91,7 @@ export function DowngradeDialog({ onCancel }: { onCancel: () => void }) {
               id="footer.message"
               values={{
                 delete: (children) => (
-                  <button type="button" className="underline">
+                  <button type="button" className="underline" onClick={onDeleteAccount}>
                     {children}
                   </button>
                 ),
@@ -108,6 +113,6 @@ export function DowngradeDialog({ onCancel }: { onCancel: () => void }) {
           </Button>
         </DialogFooter>
       </form>
-    </Dialog2>
+    </>
   );
 }
