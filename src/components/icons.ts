@@ -51,6 +51,7 @@ export { default as IconFileKey2 } from 'lucide-static/icons/file-key-2.svg?reac
 export { default as IconFilePlus } from 'lucide-static/icons/file-plus-2.svg?react';
 export { default as IconFolders } from 'lucide-static/icons/folders.svg?react';
 export { default as IconFullscreen } from 'lucide-static/icons/fullscreen.svg?react';
+export { default as IconFolderCode } from 'lucide-static/icons/folder-code.svg?react';
 export { default as IconGitBranch } from 'lucide-static/icons/git-branch.svg?react';
 export { default as IconGitCommitHorizontal } from 'lucide-static/icons/git-commit-horizontal.svg?react';
 export { default as IconGithub } from 'lucide-static/icons/github.svg?react';
