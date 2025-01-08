@@ -52,11 +52,12 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       open={open}
       setOpen={setOpen}
       placement={isMobile ? 'bottom' : 'left'}
+      offset={8}
       renderReference={(ref, props) => (
         <button
           ref={ref}
           type="button"
-          className="row mx-3 items-center gap-2 p-2 text-start text-dim hover:text-default"
+          className="row w-full items-center gap-2 px-3 py-2 text-start transition-colors hover:bg-muted/50"
           onClick={() => setOpen(true)}
           {...props}
         >

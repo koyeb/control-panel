@@ -7,6 +7,7 @@ import { z } from 'zod';
 
 import { Tooltip } from '@koyeb/design-system';
 import { reportError } from 'src/application/report-error';
+import { IconSquareArrowOutUpRight } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
@@ -108,28 +109,35 @@ export function PlatformStatus({ collapsed }: { collapsed: boolean }) {
     <ExternalLink
       openInNewTab
       href={statusPageUrl}
-      className={clsx('row mx-4 items-center gap-1 rounded-md border px-2 py-1', {
-        'border-green bg-green/10': color === 'green',
-        'border-orange bg-orange/10': color === 'orange',
-        'border-red bg-red/10': color === 'red',
-      })}
+      className={clsx(
+        'row mx-4 items-center gap-1',
+        'rounded-md border px-2 py-1',
+        'transition-colors hover:bg-muted/50',
+        'text-start text-xs font-medium text-dim',
+      )}
     >
       <span
-        className={clsx('my-0.5 size-3 rounded-full border bg-gradient-to-br', {
-          'border-green from-green/50 to-green/0 text-green': color === 'green',
-          'border-orange from-orange/50 to-orange/0 text-orange': color === 'orange',
-          'border-red from-red/50 to-red/0 text-red': color === 'red',
+        className={clsx('my-0.5 size-3 rounded-full', {
+          'bg-green': color === 'green',
+          'bg-orange': color === 'orange',
+          'bg-red': color === 'red',
         })}
       />
 
       {!collapsed && (
         <Tooltip allowHover content={message}>
           {(props) => (
-            <span className="text-xs font-medium" {...props}>
+            <span {...props}>
               <T id={status} />
             </span>
           )}
         </Tooltip>
+      )}
+
+      {!collapsed && (
+        <div className="ms-auto">
+          <IconSquareArrowOutUpRight className="size-4 text-dim" />
+        </div>
       )}
     </ExternalLink>
   );

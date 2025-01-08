@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 import { Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
@@ -9,7 +10,6 @@ import {
   IconMessageMoreCircle,
   IconNewspaper,
   IconSignal,
-  IconUsers,
 } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
@@ -29,26 +29,27 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
     <Floating
       open={open}
       setOpen={setOpen}
-      placement={isMobile ? 'bottom' : 'left'}
+      placement={isMobile ? 'top-end' : 'right-end'}
+      strategy="fixed"
+      offset={8}
       renderReference={(ref, props) => (
         <button
           ref={ref}
           type="button"
-          className="row mx-3 items-center gap-2 p-2 text-left text-dim hover:text-default"
+          className={clsx(
+            'row mx-4 items-center gap-1',
+            'rounded-md border px-2 py-1',
+            'transition-colors hover:bg-muted/50',
+            'text-start text-xs font-medium text-dim',
+          )}
           onClick={() => setOpen(true)}
           {...props}
         >
-          <div>
-            <IconUsers className="size-6" />
+          {!collapsed && <T id="label" />}
+
+          <div className="ms-auto">
+            <IconChevronRight className="size-4 text-dim" />
           </div>
-          {!collapsed && (
-            <>
-              <span className="flex-1 font-medium">
-                <T id="label" />
-              </span>
-              <IconChevronRight className="size-6" />
-            </>
-          )}
         </button>
       )}
       renderFloating={(ref, props) => (

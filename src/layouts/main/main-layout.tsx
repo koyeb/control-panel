@@ -105,12 +105,12 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
       {!collapsed && <EstimatedCosts />}
 
+      <UserMenu collapsed={collapsed} />
+
       <div className="col gap-2">
         <HelpLinks collapsed={collapsed} />
-        <UserMenu collapsed={collapsed} />
+        <PlatformStatus collapsed={collapsed} />
       </div>
-
-      <PlatformStatus collapsed={collapsed} />
     </div>
   );
 }
