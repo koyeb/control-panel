@@ -1,18 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { add, endOfMonth, format, isBefore, isEqual, startOfMonth, sub } from 'date-fns';
-import { useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { useForm } from 'react-hook-form';
 import { FormattedDate, FormattedNumber } from 'react-intl';
 
-import { Button, Dialog, Tooltip } from '@koyeb/design-system';
+import { Button, Tooltip } from '@koyeb/design-system';
 import { useNextInvoiceQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
 import { InvoiceDiscount, InvoicePeriod } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { ControlledSelect } from 'src/components/controlled';
+import { Dialog, DialogHeader } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { FormattedPrice } from 'src/intl/formatted';
@@ -269,7 +269,8 @@ function secondsToHMS(seconds: number) {
 }
 
 function DownloadUsage() {
-  const [open, setOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
 
   const form = useForm({
     defaultValues: {
@@ -299,18 +300,17 @@ function DownloadUsage() {
 
   return (
     <>
-      <Button color="gray" className="self-start" onClick={() => setOpen(true)}>
+      <Button color="gray" onClick={() => openDialog('DownloadUsage')} className="self-start">
         <T id="downloadUsage" />
       </Button>
 
-      <Dialog
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onClosed={() => form.reset()}
-        width="lg"
-        title={<T id="downloadUsageDialog.title" />}
-        description={<T id="downloadUsageDialog.description" />}
-      >
+      <Dialog id="DownloadUsage" onClosed={() => form.reset()} className="col w-full max-w-lg gap-4">
+        <DialogHeader title={<T id="downloadUsageDialog.title" />} />
+
+        <div className="text-dim">
+          <T id="downloadUsageDialog.description" />
+        </div>
+
         <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
           <ControlledSelect
             control={form.control}
@@ -324,7 +324,7 @@ function DownloadUsage() {
           />
 
           <footer className="row justify-end gap-2">
-            <Button color="gray" variant="ghost" onClick={() => setOpen(false)}>
+            <Button color="gray" variant="ghost" onClick={closeDialog}>
               <Translate id="common.close" />
             </Button>
             <Button type="submit" loading={form.formState.isSubmitting}>
