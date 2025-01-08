@@ -1283,6 +1283,14 @@
       "banner": {
         "content": "Your trial is active for the next <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong> or until your <strong>credit runs out</strong>. Enjoy exploring or <upgrade>upgrade to Pro</upgrade>!"
       },
+      "summaryPopup": {
+        "currentPlan": "{plan} Plan",
+        "badge": "Trial",
+        "usage": "Usage",
+        "creditLeft": "Trial credit left",
+        "timeLeft": "{days, plural, =1 {{days} day} other {{days} days}} of trial left",
+        "cta": "Go to billing"
+      },
       "ended": {
         "planItem": {
           "upgrade": "Upgrade to {plan} Plan",
@@ -1375,6 +1383,22 @@
         "light": "Light",
         "system": "System",
         "logout": "Log out"
+      },
+      "organizationPlan": {
+        "currentPlan": "{plan} Plan",
+        "upgrade": "Upgrade now",
+        "free": "Free",
+        "estimatedCost": {
+          "plan": "Monthly plan",
+          "usage": "Additional usage",
+          "estimatedCost": "Estimated cost",
+          "cta": "Go to billing"
+        },
+        "upsell": {
+          "title": "Get the full experience",
+          "description": "Upgrade to the Starter plan and get $20 of credit on your first invoice to try the full Koyeb experience",
+          "cta": "Upgrade"
+        }
       },
       "estimatedCost": {
         "currentPlan": "{plan} plan",

@@ -3,11 +3,17 @@ import { useFeatureFlagEnabled } from 'posthog-js/react';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-export function FeatureFlag({ feature, children }: { feature: string; children: React.ReactNode }) {
+type FeatureFlagProps = {
+  feature: string;
+  fallback?: React.ReactNode;
+  children: React.ReactNode;
+};
+
+export function FeatureFlag({ feature, fallback = null, children }: FeatureFlagProps) {
   const enabled = useFeatureFlag(feature);
 
   if (!enabled) {
-    return null;
+    return fallback;
   }
 
   return children;

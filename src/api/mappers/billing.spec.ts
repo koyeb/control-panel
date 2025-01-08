@@ -64,35 +64,20 @@ describe('mapInvoice', () => {
     });
   });
 
-  it('filters out the starter plan invoice line', () => {
+  it('transforms a plan invoice line', () => {
     const invoice = createStripeInvoice();
 
     const lines = [
       createStripeInvoiceLine({
-        amount_excluding_tax: 0,
-        plan_nickname: 'Starter',
-        price: { unit_amount_decimal: 0 },
-        quantity: 1,
-      }),
-    ];
-
-    expect(transform(invoice, lines)).toHaveProperty('periods', []);
-  });
-
-  it('transforms the startup plan invoice line', () => {
-    const invoice = createStripeInvoice();
-
-    const lines = [
-      createStripeInvoiceLine({
-        amount_excluding_tax: 7900,
-        plan_nickname: 'Startup',
-        price: { unit_amount_decimal: 7900 },
+        amount_excluding_tax: 2900,
+        plan_nickname: 'Pro',
+        price: { unit_amount_decimal: 2900 },
         quantity: 1,
       }),
     ];
 
     expect(transform(invoice, lines)).toHaveProperty<InvoicePlanLine[]>('periods.0.lines', [
-      { type: 'plan', label: 'Startup', total: 7900 },
+      { type: 'plan', label: 'Pro', total: 2900 },
     ]);
   });
 

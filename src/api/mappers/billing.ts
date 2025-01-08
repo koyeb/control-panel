@@ -1,5 +1,6 @@
 import { sub } from 'date-fns';
 
+import { inArray } from 'src/utils/arrays';
 import { isDefined } from 'src/utils/generic';
 
 import { ApiEndpointResult } from '../api';
@@ -54,11 +55,7 @@ function getLines(lines: Api.NextInvoiceLine[]): InvoiceLine[] {
 }
 
 function transformLine(line: Api.NextInvoiceLine): InvoiceLine | undefined {
-  if (line.plan_nickname === 'Starter') {
-    return;
-  }
-
-  if (line.plan_nickname === 'Startup') {
+  if (inArray(line.plan_nickname, ['Starter', 'Startup', 'Pro', 'Scale', 'Business', 'Enterprise'])) {
     return {
       type: 'plan',
       label: line.plan_nickname,

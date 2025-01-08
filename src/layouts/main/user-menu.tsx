@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { useUserUnsafe } from 'src/api/hooks/session';
@@ -34,10 +34,6 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    setOpen(false);
-  }, [collapsed]);
-
   const { mutate: logout } = useMutation({
     ...useApiMutationFn('logout', {}),
     onSuccess() {
@@ -51,19 +47,18 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
     <Floating
       open={open}
       setOpen={setOpen}
-      placement={isMobile ? 'bottom' : 'left'}
+      hover
+      placement={isMobile ? 'top-end' : 'left-end'}
       offset={8}
       renderReference={(ref, props) => (
-        <button
+        <div
           ref={ref}
-          type="button"
-          className="row w-full items-center gap-2 px-3 py-2 text-start transition-colors hover:bg-muted/50"
-          onClick={() => setOpen(true)}
+          className="row items-center gap-2 px-3 py-2 transition-colors hover:bg-muted/50"
           {...props}
         >
           <UserAvatar user={user} />
           {!collapsed && <span className="flex-1 truncate font-medium">{user?.name}</span>}
-        </button>
+        </div>
       )}
       renderFloating={(ref, props) => (
         <Menu ref={ref} {...props}>
@@ -79,12 +74,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
 
           <ThemeMenuItem />
 
-          <ButtonMenuItem
-            onClick={() => {
-              setOpen(false);
-              logout();
-            }}
-          >
+          <ButtonMenuItem onClick={() => logout()}>
             <IconLogOut className="icon" />
             <T id="logout" />
           </ButtonMenuItem>

@@ -32,6 +32,7 @@ import { GlobalAlert } from './global-alert';
 import { HelpLinks } from './help-links';
 import { Layout } from './layout';
 import { Navigation } from './navigation';
+import { OrganizationPlan } from './organization-plan';
 import { OrganizationSwitcher } from './organization-switcher';
 import { PlatformStatus } from './platform-status';
 import { UserMenu } from './user-menu';
@@ -103,13 +104,20 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
       <Navigation collapsed={collapsed} />
 
-      {!collapsed && <EstimatedCosts />}
+      <div className="col gap-4">
+        {!collapsed && (
+          <div className="mx-4 divide-y rounded-md border bg-neutral">
+            <UserMenu collapsed={collapsed} />
+            <FeatureFlag feature="trial" fallback={<EstimatedCosts />}>
+              <OrganizationPlan />
+            </FeatureFlag>
+          </div>
+        )}
 
-      <UserMenu collapsed={collapsed} />
-
-      <div className="col gap-2">
-        <HelpLinks collapsed={collapsed} />
-        <PlatformStatus collapsed={collapsed} />
+        <div className="col gap-2">
+          <HelpLinks collapsed={collapsed} />
+          <PlatformStatus collapsed={collapsed} />
+        </div>
       </div>
     </div>
   );

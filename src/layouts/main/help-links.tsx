@@ -29,20 +29,19 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
     <Floating
       open={open}
       setOpen={setOpen}
+      hover
       placement={isMobile ? 'top-end' : 'right-end'}
       strategy="fixed"
       offset={8}
       renderReference={(ref, props) => (
-        <button
+        <div
           ref={ref}
-          type="button"
           className={clsx(
             'row mx-4 items-center gap-1',
             'rounded-md border px-2 py-1',
             'transition-colors hover:bg-muted/50',
-            'text-start text-xs font-medium text-dim',
+            'text-xs font-medium text-dim',
           )}
-          onClick={() => setOpen(true)}
           {...props}
         >
           {!collapsed && <T id="label" />}
@@ -50,7 +49,7 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
           <div className="ms-auto">
             <IconChevronRight className="size-4 text-dim" />
           </div>
-        </button>
+        </div>
       )}
       renderFloating={(ref, props) => (
         <Menu ref={ref} className="z-30 min-w-52" {...props}>

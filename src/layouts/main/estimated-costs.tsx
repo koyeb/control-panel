@@ -20,7 +20,7 @@ export function EstimatedCosts() {
   }
 
   return (
-    <div className="mx-4 divide-y rounded-md border bg-neutral">
+    <>
       <div className="row justify-between p-2 font-medium">
         <div className="capitalize">
           <T id="currentPlan" values={{ plan: organization.plan }} />
@@ -37,7 +37,7 @@ export function EstimatedCosts() {
           {nextInvoiceQuery.isSuccess && <CostsDetails costs={getCosts(nextInvoiceQuery.data)} />}
         </>
       )}
-    </div>
+    </>
   );
 }
 
