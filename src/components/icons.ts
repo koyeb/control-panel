@@ -38,6 +38,7 @@ export { default as IconCopy } from 'lucide-static/icons/copy.svg?react';
 export { default as IconCornerDownLeft } from 'lucide-static/icons/corner-down-left.svg?react';
 export { default as IconCpu } from 'lucide-static/icons/cpu.svg?react';
 export { default as IconCreditCard } from 'lucide-static/icons/credit-card.svg?react';
+export { default as IconCrown } from 'lucide-static/icons/crown.svg?react';
 export { default as IconDatabase } from 'lucide-static/icons/database.svg?react';
 export { default as IconDownload } from 'lucide-static/icons/download.svg?react';
 export { default as IconEarth } from 'lucide-static/icons/earth.svg?react';
@@ -52,6 +53,7 @@ export { default as IconFilePlus } from 'lucide-static/icons/file-plus-2.svg?rea
 export { default as IconFolderCode } from 'lucide-static/icons/folder-code.svg?react';
 export { default as IconFolders } from 'lucide-static/icons/folders.svg?react';
 export { default as IconFullscreen } from 'lucide-static/icons/fullscreen.svg?react';
+export { default as IconGem } from 'lucide-static/icons/gem.svg?react';
 export { default as IconGitBranch } from 'lucide-static/icons/git-branch.svg?react';
 export { default as IconGitCommitHorizontal } from 'lucide-static/icons/git-commit-horizontal.svg?react';
 export { default as IconGithub } from 'lucide-static/icons/github.svg?react';
@@ -79,6 +81,7 @@ export { default as IconPanelsLeftBottom } from 'lucide-static/icons/panels-left
 export { default as IconPlus } from 'lucide-static/icons/plus.svg?react';
 export { default as IconRefresh } from 'lucide-static/icons/rotate-ccw.svg?react';
 export { default as IconRefreshCcw } from 'lucide-static/icons/refresh-ccw.svg?react';
+export { default as IconRocket } from 'lucide-static/icons/rocket.svg?react';
 export { default as IconScale3d } from 'lucide-static/icons/scale-3d.svg?react';
 export { default as IconScaling } from 'lucide-static/icons/scaling.svg?react';
 export { default as IconSearch } from 'lucide-static/icons/search.svg?react';

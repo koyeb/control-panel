@@ -1279,6 +1279,30 @@
       },
       "banner": {
         "content": "Your trial is active for the next <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong> or until your <strong>credit runs out</strong>. Enjoy exploring or <upgrade>upgrade to Pro</upgrade>!"
+      },
+      "endedDialog": {
+        "title": "Your Free Trial ended",
+        "description": "All deployed services have been paused. Your account remains active, but the organization is locked until upgrade to a paid plan.",
+        "upgrade": "Upgrade to {plan} Plan",
+        "popular": "Most popular",
+        "price": "{price} /month {price, select, 0 {+ pay as you go} other {}}",
+        "cta": "Upgrade to {plan}",
+        "footer": "Want to extend your trial, <reachOut>reach out</reachOut> or <create>create new organization</create> on a free Hobby plan",
+        "starter": {
+          "feature1": "Key plan benefit short text",
+          "feature2": "Key plan benefit short text",
+          "feature3": "Key plan benefit short text"
+        },
+        "pro": {
+          "feature1": "Key plan benefit short text",
+          "feature2": "Key plan benefit short text",
+          "feature3": "Key plan benefit short text"
+        },
+        "scale": {
+          "feature1": "Key plan benefit short text",
+          "feature2": "Key plan benefit short text",
+          "feature3": "Key plan benefit short text"
+        }
       }
     }
   },

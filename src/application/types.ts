@@ -1,1 +1,2 @@
-export type SvgComponent = React.ComponentType<React.SVGProps<SVGSVGElement>>;
+export type SvgProps = React.SVGProps<SVGSVGElement>;
+export type SvgComponent = React.ComponentType<SvgProps>;
