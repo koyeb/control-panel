@@ -185,11 +185,11 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
         </div>
       </div>
 
-      {renderFooter(form.formState)}
-
-      <p className="text-xs text-dim">
+      <p className="text-dim">
         <T id="temporaryHoldMessage" />
       </p>
+
+      {renderFooter(form.formState)}
     </form>
   );
 }

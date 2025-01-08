@@ -75,7 +75,7 @@ export function Downgrade({ onCancel, onDeleteAccount }: DowngradeProps) {
         <T id="description" />
       </p>
 
-      <Alert variant="info" title={<T id="dataLossWarning" />} description={false} />
+      <Alert variant="warning" title={<T id="dataLossWarning" />} description={false} />
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-8">
         <ControlledInput

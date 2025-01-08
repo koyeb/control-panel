@@ -7,7 +7,7 @@ export function PlanIcon({ plan, ...props }: { plan: OrganizationPlan } & SvgPro
   const Icon = map[plan];
 
   if (Icon) {
-    return <IconRocket {...props} />;
+    return <Icon {...props} />;
   }
 
   return null;

@@ -13,7 +13,7 @@ export function DeleteAccount({ onCancel }: { onCancel: () => void }) {
         <T id="description" />
       </p>
 
-      <Alert variant="info" title={<T id="dataLossWarning" />} description={false} />
+      <Alert variant="warning" title={<T id="dataLossWarning" />} description={false} />
 
       <DialogFooter>
         <Button variant="outline" color="gray" onClick={onCancel}>
