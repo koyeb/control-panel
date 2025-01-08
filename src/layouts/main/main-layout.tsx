@@ -1,9 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { intervalToDuration } from 'date-fns';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { useOrganizationUnsafe, useUserQuery, useUserUnsafe } from 'src/api/hooks/session';
+import { useOrganization, useOrganizationUnsafe, useUserQuery, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
@@ -24,6 +25,7 @@ import { CommandPalette } from 'src/modules/command-palette/command-palette';
 import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { inArray } from 'src/utils/arrays';
+import { defined } from 'src/utils/assert';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
 import { EstimatedCosts } from './estimated-costs';
@@ -135,28 +137,42 @@ function Main({ children }: { children: React.ReactNode }) {
 
 function useBanner(): 'session' | 'trial' | void {
   const { session } = useToken();
+  const organization = useOrganizationUnsafe();
+
+  if (organization === undefined) {
+    return;
+  }
 
   if (session) {
     return 'session';
   }
 
-  if (false as boolean) {
+  if (organization.trial) {
     return 'trial';
   }
 }
 
 function TrialBanner() {
+  const trial = defined(useOrganization().trial);
+  const { days } = intervalToDuration({ start: new Date(), end: trial.endsAt });
+
+  const upgrade = (children: React.ReactNode) => (
+    <Link to={routes.organizationSettings.plans()} className="underline">
+      {children}
+    </Link>
+  );
+
   return (
     <FeatureFlag feature="trial">
       <div className="bg-green/10 px-4 py-1.5 text-center text-green md:h-full md:whitespace-nowrap">
-        <T id="trial" values={{ days: 7 }} />
+        <T id="trial" values={{ days: defined(days) + 1, upgrade }} />
       </div>
     </FeatureFlag>
   );
 }
 
 function SessionTokenBanner() {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
   const { clearToken } = useToken();
   const navigate = useNavigate();
 
@@ -165,10 +181,6 @@ function SessionTokenBanner() {
     onMutate: clearToken,
     onSuccess: () => navigate(routes.home()),
   });
-
-  if (!organization) {
-    return null;
-  }
 
   return (
     <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">

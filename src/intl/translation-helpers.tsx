@@ -19,7 +19,7 @@ export function createTranslationHelper<Key extends string>(commonValues: Values
 
     function translate(suffix: string, values?: Values): string | React.ReactNode[] {
       const id = prefix === '' ? suffix : `${prefix}.${suffix}`;
-      return intl.formatMessage({ id }, { ...values, ...commonValues });
+      return intl.formatMessage({ id }, { ...commonValues, ...values });
     }
 
     return translate;
