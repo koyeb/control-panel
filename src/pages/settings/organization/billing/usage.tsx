@@ -16,7 +16,7 @@ import { ControlledSelect } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { FormattedPrice } from 'src/intl/formatted';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { createTranslate, Translate, TranslateEnum } from 'src/intl/translate';
 import { removeTimezoneOffset } from 'src/utils/date';
 
 const T = createTranslate('pages.organizationSettings.billing.usage');
@@ -30,10 +30,16 @@ export function Usage() {
       <SectionHeader
         title={<T id="title" />}
         description={
-          <T
-            id="description"
-            values={{ plan: <span className="capitalize text-default">{organization.plan}</span> }}
-          />
+          <>
+            <T
+              id={organization.trial ? 'descriptionTrial' : 'description'}
+              values={{
+                strong: (children) => <strong className="text-default">{children}</strong>,
+                plan: <TranslateEnum enum="plans" value={organization.plan} />,
+                upgrade: <T id="upgrade" />,
+              }}
+            />
+          </>
         }
       />
 
