@@ -7,7 +7,7 @@ import { IconInfo } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-const T = createTranslate('deploymentFailedInfo');
+const T = createTranslate('modules.deployment.deploymentFailedInfo');
 
 type DeploymentFailedInfoProps = {
   deployment: ComputeDeployment;

@@ -4,7 +4,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { ExternalLink } from './link';
 
-const T = createTranslate('deployToKoyebButton');
+const T = createTranslate('components.deployToKoyebButton');
 
 export function DeployToKoyebButton({ deployUrl }: { deployUrl?: string }) {
   if (deployUrl === undefined) {

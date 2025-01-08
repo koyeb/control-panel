@@ -24,7 +24,7 @@ import { DeploymentDefinitionDialog } from './deployment-definition-dialog';
 import { ExternalUrl } from './external-url';
 import { InternalUrl } from './internal-url';
 
-const T = createTranslate('deploymentInfo');
+const T = createTranslate('modules.deployment.deploymentInfo');
 
 type DeploymentInfoProps = {
   app: App;

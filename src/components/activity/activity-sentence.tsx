@@ -15,7 +15,7 @@ import {
   isVolumeActivity,
 } from './activity-guards';
 
-const T = createTranslate('activity.sentences');
+const T = createTranslate('components.activity.sentences');
 
 export function ActivitySentence({ activity }: { activity: Activity }) {
   if (isAutoscalingActivity(activity)) {

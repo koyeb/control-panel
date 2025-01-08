@@ -6,7 +6,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 
 import { VolumeForm } from './volume-form';
 
-const T = createTranslate('volumes.createDialog');
+const T = createTranslate('pages.volumes.createDialog');
 
 type CreateVolumeDialogProps = {
   open: boolean;

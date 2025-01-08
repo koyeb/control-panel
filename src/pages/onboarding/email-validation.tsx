@@ -8,7 +8,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { OnboardingStepper } from './stepper';
 
-const T = createTranslate('onboarding.emailValidation');
+const T = createTranslate('pages.onboarding.emailValidation');
 
 export function EmailValidation() {
   const user = useUser();

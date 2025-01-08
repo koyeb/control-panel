@@ -6,7 +6,7 @@ import { createTranslate } from 'src/intl/translate';
 import { DatabaseServiceFormSection } from '../components/database-service-form-section';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = createTranslate('databaseForm.serviceName');
+const T = createTranslate('modules.databaseForm.serviceName');
 
 export function ServiceNameSection() {
   const serviceId = useWatch<DatabaseServiceForm, 'meta.databaseServiceId'>({

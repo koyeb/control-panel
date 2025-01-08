@@ -12,7 +12,7 @@ import { inArray } from 'src/utils/arrays';
 import { ServiceForm } from '../service-form.types';
 import { useWatchServiceForm } from '../use-service-form';
 
-const T = createTranslate('serviceForm.submitButton');
+const T = createTranslate('modules.serviceForm.submitButton');
 
 type SubmitButtonProps = {
   loading: boolean;

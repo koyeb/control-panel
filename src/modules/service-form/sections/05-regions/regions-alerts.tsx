@@ -8,7 +8,7 @@ import { createTranslate } from 'src/intl/translate';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.regions.alerts');
+const T = createTranslate('modules.serviceForm.regions.alerts');
 
 export function RegionsAlerts() {
   const { setValue } = useFormContext<ServiceForm>();

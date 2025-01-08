@@ -11,7 +11,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { HealthCheckFields } from './health-check-fields';
 import { HealthCheckProtocol } from './health-check-protocol';
 
-const T = createTranslate('serviceForm.healthChecks');
+const T = createTranslate('modules.serviceForm.healthChecks');
 
 export function HealthChecksSection() {
   const ports = useFormValues<ServiceForm>().ports;

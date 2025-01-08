@@ -5,7 +5,7 @@ import { CatalogInstance, CatalogRegion } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
 import { QuotaAlert } from 'src/modules/service-form/components/quota-alert';
 
-const T = createTranslate('serviceCreation.instanceRegions.alerts');
+const T = createTranslate('modules.serviceCreation.instanceRegions.alerts');
 
 type InstanceRegionAlertsProps = {
   selectedInstance: CatalogInstance | null;

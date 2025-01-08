@@ -14,7 +14,7 @@ import { handleSubmit } from 'src/hooks/form';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
 
-const T = createTranslate('serviceCreation.importProject.docker');
+const T = createTranslate('modules.serviceCreation.importProject.docker');
 
 const schema = z.object({
   image: z.string().min(1),

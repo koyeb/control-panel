@@ -25,7 +25,7 @@ import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
-const T = createTranslate('deploymentInfo.definitionDialog');
+const T = createTranslate('modules.deployment.deploymentInfo.definitionDialog');
 
 type DeploymentDefinitionDialogProps = {
   deployment: ComputeDeployment;

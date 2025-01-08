@@ -7,7 +7,7 @@ import { lowerCase } from 'src/utils/strings';
 
 import countriesJson from './countries.json';
 
-const T = createTranslate('addressAutocomplete');
+const T = createTranslate('components.addressAutocomplete');
 
 type CountrySelectorProps = {
   countries?: string[];

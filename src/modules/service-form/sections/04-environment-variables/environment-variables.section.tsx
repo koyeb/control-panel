@@ -21,7 +21,7 @@ import { EnvironmentVariableFields } from './environment-variable-fields';
 import { Files } from './files';
 import { UnknownInterpolationAlert } from './unknown-interpolation-alert';
 
-const T = createTranslate('serviceForm.environmentVariables');
+const T = createTranslate('modules.serviceForm.environmentVariables');
 
 export function EnvironmentVariablesSection() {
   const variables = useFormContext<ServiceForm>()

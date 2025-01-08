@@ -2,7 +2,7 @@ import { OrganizationPlan } from 'src/api/model';
 import { PaymentDialog } from 'src/components/payment-form';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('serviceForm');
+const T = createTranslate('modules.serviceForm');
 
 type ServiceFormPaymentDialogProps = {
   requiredPlan?: OrganizationPlan;

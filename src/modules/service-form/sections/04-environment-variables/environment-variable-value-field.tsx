@@ -25,7 +25,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { useServiceVariables } from './service-variables';
 
-const T = createTranslate('serviceForm.environmentVariables');
+const T = createTranslate('modules.serviceForm.environmentVariables');
 
 type EnvironmentVariableValueFieldProps = {
   index: number;

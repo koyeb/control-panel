@@ -16,7 +16,7 @@ import { identity } from 'src/utils/generic';
 
 import { OnboardingStepper } from './stepper';
 
-const T = createTranslate('onboarding.qualification');
+const T = createTranslate('pages.onboarding.qualification');
 
 export function Qualification() {
   const user = useUser();

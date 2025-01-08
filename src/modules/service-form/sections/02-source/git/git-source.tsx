@@ -13,7 +13,7 @@ import { useWatchServiceForm } from '../../../use-service-form';
 import { OrganizationRepository } from './organization-repository';
 import { PublicRepository } from './public-repository';
 
-const T = createTranslate('serviceForm.source.git');
+const T = createTranslate('modules.serviceForm.source.git');
 
 export function GitSource() {
   const githubApp = useGithubApp();

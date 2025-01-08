@@ -9,7 +9,7 @@ import { wait } from 'src/utils/promises';
 import { ControlledInput } from './controlled';
 import { IconBookMarked } from './icons';
 
-const T = createTranslate('instanceSelector.instanceAssistant');
+const T = createTranslate('components.instanceSelector.instanceAssistant');
 
 type DataType = {
   instance_type: string;

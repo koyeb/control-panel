@@ -7,7 +7,7 @@ import { hasProperty } from 'src/utils/object';
 
 import { ServiceTypeItem } from './components/service-type-item';
 
-const T = createTranslate('serviceCreation.serviceType');
+const T = createTranslate('modules.serviceCreation.serviceType');
 
 export function OneClickAppList() {
   const oneClickApps = useOneClickApps();

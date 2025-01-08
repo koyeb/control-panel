@@ -9,7 +9,7 @@ import { File, ServiceForm } from '../../service-form.types';
 
 import { ServiceVariables, useServiceVariables } from './service-variables';
 
-const T = createTranslate('serviceForm.environmentVariables.unknownInterpolation');
+const T = createTranslate('modules.serviceForm.environmentVariables.unknownInterpolation');
 
 export function UnknownInterpolationAlert() {
   const result = useUnknownInterpolations();

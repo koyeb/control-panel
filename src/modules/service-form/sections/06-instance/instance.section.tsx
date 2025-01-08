@@ -18,7 +18,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { InstanceAlerts } from './instance-alerts';
 
-const T = createTranslate('serviceForm.instance');
+const T = createTranslate('modules.serviceForm.instance');
 
 export function InstanceSection() {
   const instances = useInstances();

@@ -7,7 +7,7 @@ import { FeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 
-const T = createTranslate('trial.banner');
+const T = createTranslate('modules.trial.banner');
 
 export function TrialBanner() {
   const trial = defined(useOrganization().trial);

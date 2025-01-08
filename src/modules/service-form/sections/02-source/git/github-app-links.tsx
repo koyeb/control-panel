@@ -6,7 +6,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('serviceForm.source.git');
+const T = createTranslate('modules.serviceForm.source.git');
 
 export function GithubAppLinks() {
   const t = T.useTranslate();

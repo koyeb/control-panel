@@ -11,7 +11,7 @@ import { ServiceForm } from '../../../service-form.types';
 
 import { DockerImageField } from './docker-image-field';
 
-const T = createTranslate('serviceForm.source.docker');
+const T = createTranslate('modules.serviceForm.source.docker');
 
 export function DockerSource() {
   const openDialog = Dialog.useOpen();

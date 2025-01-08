@@ -7,7 +7,7 @@ import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
-const T = createTranslate('deploymentInfo');
+const T = createTranslate('modules.deployment.deploymentInfo');
 
 export function RepositoryMetadata({ repository }: { repository: string | null }) {
   return (

@@ -9,7 +9,7 @@ import { LogoLoading } from 'src/components/logo-loading';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('account.deactivateOrganization');
+const T = createTranslate('modules.account.deactivateOrganization');
 
 export function ConfirmDeactivateOrganization() {
   const invalidate = useInvalidateApiQuery();

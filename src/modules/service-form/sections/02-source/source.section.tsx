@@ -12,7 +12,7 @@ import { ArchiveSource } from './archive/archive-source';
 import { DockerSource } from './docker/docker-source';
 import { GitSource } from './git/git-source';
 
-const T = createTranslate('serviceForm.source');
+const T = createTranslate('modules.serviceForm.source');
 
 export function SourceSection() {
   const sourceType = useWatchServiceForm('source.type');

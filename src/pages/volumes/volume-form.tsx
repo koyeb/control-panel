@@ -16,7 +16,7 @@ import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('volumes.form');
+const T = createTranslate('pages.volumes.volumeForm');
 
 const schema = z.object({
   name: z.string().min(2).max(63),

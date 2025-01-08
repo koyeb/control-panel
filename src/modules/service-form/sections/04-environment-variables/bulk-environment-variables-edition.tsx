@@ -12,7 +12,7 @@ import {
 } from '../../helpers/parse-environment-variables';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.environmentVariables.bulkEdition');
+const T = createTranslate('modules.serviceForm.environmentVariables.bulkEdition');
 
 type BulkEnvironmentVariablesEditionDialogProps = {
   isOpen: boolean;

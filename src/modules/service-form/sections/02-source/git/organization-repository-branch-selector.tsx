@@ -12,7 +12,7 @@ import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../../service-form.types';
 
-const T = createTranslate('serviceForm.source.git');
+const T = createTranslate('modules.serviceForm.source.git');
 
 export function OrganizationRepositoryBranchSelector() {
   const values = useFormValues<ServiceForm>();

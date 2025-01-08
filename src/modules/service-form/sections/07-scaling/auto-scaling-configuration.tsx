@@ -22,7 +22,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { handleScalingValueBlurred } from './handle-scaling-value-blurred';
 
-const T = createTranslate('serviceForm.scaling.autoscalingSettings');
+const T = createTranslate('modules.serviceForm.scaling.autoscalingSettings');
 
 export function AutoScalingConfiguration() {
   const min = useWatchServiceForm('scaling.min');

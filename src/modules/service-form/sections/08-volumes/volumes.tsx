@@ -14,7 +14,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumeFields } from './volume-fields.new';
 
-const T = createTranslate('serviceForm.volumes');
+const T = createTranslate('modules.serviceForm.volumes');
 
 // this was implemented when working on file mounts
 // todo: integrate it into the form

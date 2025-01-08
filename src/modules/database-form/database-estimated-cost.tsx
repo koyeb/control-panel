@@ -3,7 +3,7 @@ import { IconInfo, IconTicketPercent } from 'src/components/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('databaseForm.estimatedCost');
+const T = createTranslate('modules.databaseForm.estimatedCost');
 
 export function DatabaseEstimatedCost({ cost }: { cost?: number }) {
   return (

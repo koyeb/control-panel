@@ -6,7 +6,7 @@ import { Activity, ApiCredential } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('activity');
+const T = createTranslate('components.activity');
 
 export function ActivityApiCredentialIcon({ activity }: { activity: Activity }) {
   const apiCredential = useApiCredential(activity);

@@ -22,7 +22,7 @@ import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-const T = createTranslate('serviceCreation.importProject.github');
+const T = createTranslate('modules.serviceCreation.importProject.github');
 
 type RepositorySelectorProps = {
   onImport: (repositoryName: string) => void;

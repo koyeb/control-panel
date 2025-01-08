@@ -12,7 +12,7 @@ import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('account.deleteOrganization');
+const T = createTranslate('modules.account.deleteOrganization');
 
 export function DeleteOrganization() {
   const { token, setToken } = useToken();

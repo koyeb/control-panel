@@ -11,7 +11,7 @@ import { useGenerateServiceName } from '../../00-service-name/use-generate-servi
 
 import { PublicRepositoryBranchSelector } from './public-repository-branch-selector';
 
-const T = createTranslate('serviceForm.source.git');
+const T = createTranslate('modules.serviceForm.source.git');
 
 export function PublicRepository() {
   const t = T.useTranslate();

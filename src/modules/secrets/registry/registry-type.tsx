@@ -8,7 +8,7 @@ import IconGitlab from 'src/icons/gitlab.svg?react';
 import IconPrivateRegistry from 'src/icons/private-registry.svg?react';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('secrets');
+const T = createTranslate('modules.secrets');
 
 type RegistryTypeProps = {
   registry: RegistryType;

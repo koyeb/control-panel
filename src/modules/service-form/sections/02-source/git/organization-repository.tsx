@@ -10,7 +10,7 @@ import { OrganizationRepositoryBranchSelector } from './organization-repository-
 import { OrganizationRepositorySelector } from './organization-repository-selector';
 import { RepositoriesIndexing } from './repositories-indexing';
 
-const T = createTranslate('serviceForm.source.git');
+const T = createTranslate('modules.serviceForm.source.git');
 
 export function OrganizationRepository() {
   const githubApp = useGithubApp();

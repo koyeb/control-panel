@@ -10,7 +10,7 @@ import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../service-form.types';
 
-const T = createTranslate('serviceForm');
+const T = createTranslate('modules.serviceForm');
 
 export function GpuAlert() {
   const organization = useOrganization();

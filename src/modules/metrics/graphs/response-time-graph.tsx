@@ -5,7 +5,7 @@ import { LineGraph } from '../components/line-graph';
 import { toGraph } from '../metrics-helpers';
 import { Metric } from '../metrics-types';
 
-const T = createTranslate('pages.service.metrics.responseTime');
+const T = createTranslate('modules.metrics.responseTime');
 
 type Data = Record<'50p' | '90p' | '99p' | 'max', Array<Metric> | undefined>;
 

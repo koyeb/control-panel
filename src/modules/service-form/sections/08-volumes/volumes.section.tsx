@@ -14,7 +14,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumeFields } from './volume-fields';
 
-const T = createTranslate('serviceForm.volumes');
+const T = createTranslate('modules.serviceForm.volumes');
 
 export function VolumesSection() {
   const volumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '');

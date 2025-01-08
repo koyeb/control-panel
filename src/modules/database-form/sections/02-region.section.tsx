@@ -13,7 +13,7 @@ import { assert } from 'src/utils/assert';
 import { DatabaseServiceFormSection } from '../components/database-service-form-section';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = createTranslate('databaseForm.region');
+const T = createTranslate('modules.databaseForm.region');
 
 const neonRegions = ['fra', 'was', 'sin'];
 

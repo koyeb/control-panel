@@ -20,7 +20,7 @@ import {
   isVolumeActivity,
 } from './activity-guards';
 
-const T = createTranslate('activity.sentences');
+const T = createTranslate('components.activity.sentences');
 
 export function ActivityResources({ activity }: { activity: Activity }) {
   const object = activity.object;

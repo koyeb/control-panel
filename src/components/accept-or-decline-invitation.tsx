@@ -10,7 +10,7 @@ import { useToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('invitation');
+const T = createTranslate('components.invitation');
 
 type AcceptOrDeclineInvitationProps = {
   invitation: OrganizationInvitation;

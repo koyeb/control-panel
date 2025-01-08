@@ -4,7 +4,7 @@ import { IconTriangleAlert } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = createTranslate('pages.service.metrics');
+const T = createTranslate('modules.metrics');
 
 type NoMetricsProps = {
   loading: boolean;

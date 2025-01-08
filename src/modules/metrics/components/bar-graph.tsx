@@ -11,7 +11,7 @@ import { GraphTooltip } from './graph-tooltip';
 import { nivoTheme } from './nivo-theme';
 import { NoMetrics } from './no-metrics';
 
-const T = createTranslate('pages.service.metrics');
+const T = createTranslate('modules.metrics');
 
 type BarGraphProps = React.ComponentProps<typeof NoMetrics> &
   React.ComponentProps<typeof ResponsiveBar> & {

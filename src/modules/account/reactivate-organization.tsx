@@ -7,7 +7,7 @@ import { notify } from 'src/application/notify';
 import { SectionHeader } from 'src/components/section-header';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('account.reactivateOrganization');
+const T = createTranslate('modules.account.reactivateOrganization');
 
 export function ReactivateOrganization() {
   const organization = useOrganization();

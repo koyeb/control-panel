@@ -2,7 +2,7 @@ import { BadgeNew } from 'src/components/badge-new';
 import { Title } from 'src/components/title';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('featureUnavailable');
+const T = createTranslate('components.featureUnavailable');
 
 type FeatureUnavailableProps = {
   preview?: 'technical' | 'public';

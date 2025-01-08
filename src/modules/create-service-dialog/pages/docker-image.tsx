@@ -16,7 +16,7 @@ import { getId, getName } from 'src/utils/object';
 
 import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = createTranslate('createServiceDialog');
+const T = createTranslate('modules.createServiceDialog');
 
 const schema = z.object({
   image: z.string().min(1),

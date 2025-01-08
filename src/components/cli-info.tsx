@@ -5,7 +5,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { DocumentationLink } from './documentation-link';
 
-const T = createTranslate('cliInfo');
+const T = createTranslate('components.cliInfo');
 
 type CliInfoButtonProps = {
   button: React.ReactNode;

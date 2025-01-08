@@ -12,7 +12,7 @@ import { identity } from 'src/utils/generic';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.ports');
+const T = createTranslate('modules.serviceForm.ports');
 
 type PortFieldsProps = {
   index: number;

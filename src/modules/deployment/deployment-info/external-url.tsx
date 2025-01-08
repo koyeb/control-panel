@@ -8,7 +8,7 @@ import { Metadata } from 'src/components/metadata';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
-const T = createTranslate('deploymentInfo');
+const T = createTranslate('modules.deployment.deploymentInfo');
 
 type ExternalUrlProps = {
   app: App;

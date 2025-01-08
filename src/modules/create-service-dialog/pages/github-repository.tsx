@@ -21,7 +21,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { useCreateServiceDialog } from '../use-create-service-dialog';
 
-const T = createTranslate('createServiceDialog');
+const T = createTranslate('modules.createServiceDialog');
 
 export function GithubOrganizationImage() {
   const githubApp = useGithubApp();

@@ -22,7 +22,7 @@ import { inArray } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('deploymentLogs.replicas');
+const T = createTranslate('modules.deployment.deploymentLogs.replicas');
 
 type Filters = {
   region: string;

@@ -36,7 +36,7 @@ import {
   useCreateServiceDialog,
 } from './use-create-service-dialog';
 
-const T = createTranslate('createServiceDialog');
+const T = createTranslate('modules.createServiceDialog');
 
 function useGetSections() {
   const t = T.useTranslate();

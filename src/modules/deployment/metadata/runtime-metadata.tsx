@@ -8,7 +8,7 @@ import { RegionsList } from 'src/components/regions-list';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('deploymentInfo');
+const T = createTranslate('modules.deployment.deploymentInfo');
 
 export function InstanceTypeMetadata({ instanceType }: { instanceType: string | null }) {
   const instance = useInstance(instanceType);

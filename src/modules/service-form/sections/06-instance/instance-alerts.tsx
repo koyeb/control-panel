@@ -10,7 +10,7 @@ import { createTranslate } from 'src/intl/translate';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.instance.alerts');
+const T = createTranslate('modules.serviceForm.instance.alerts');
 
 export function InstanceAlerts({ selectedCategory }: { selectedCategory: InstanceCategory }) {
   const { plan } = useOrganization();

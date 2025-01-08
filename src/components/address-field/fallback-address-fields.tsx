@@ -4,7 +4,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { CountrySelector } from './country-selector';
 
-const T = createTranslate('addressAutocomplete');
+const T = createTranslate('components.addressAutocomplete');
 
 type FallbackAddressFieldsProps = {
   value?: Address;

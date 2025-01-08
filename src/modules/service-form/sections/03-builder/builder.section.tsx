@@ -11,7 +11,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 import { BuildpackOptions } from './buildpack-options';
 import { DockerfileOptions } from './dockerfile-options';
 
-const T = createTranslate('serviceForm.builder');
+const T = createTranslate('modules.serviceForm.builder');
 
 export function BuilderSection() {
   const builderType = useWatchServiceForm('builder.type');

@@ -6,7 +6,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 
 import { buildStatusMap } from './deployment-status-icons';
 
-const T = createTranslate('deploymentLogs.build');
+const T = createTranslate('modules.deployment.deploymentLogs.build');
 
 type BuildStepsProps = {
   deployment: ComputeDeployment;

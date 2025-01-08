@@ -12,7 +12,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { ServiceTypeAlerts } from './service-type-alerts';
 
-const T = createTranslate('serviceForm.serviceType');
+const T = createTranslate('modules.serviceForm.serviceType');
 
 export function ServiceTypeSection() {
   return (

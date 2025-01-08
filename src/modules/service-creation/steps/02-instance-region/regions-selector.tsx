@@ -12,7 +12,7 @@ import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('serviceCreation.instanceRegions');
+const T = createTranslate('modules.serviceCreation.instanceRegions');
 
 type RegionsSelectorProps = {
   regions: CatalogRegion[];

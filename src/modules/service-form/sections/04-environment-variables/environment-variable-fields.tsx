@@ -11,7 +11,7 @@ import { ServiceForm } from '../../service-form.types';
 import { EnvironmentVariableValueField } from './environment-variable-value-field';
 import { RegionsScope } from './regions-scope';
 
-const T = createTranslate('serviceForm.environmentVariables');
+const T = createTranslate('modules.serviceForm.environmentVariables');
 
 type EnvironmentVariableFieldsProps = {
   index: number;

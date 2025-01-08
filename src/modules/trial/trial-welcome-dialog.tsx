@@ -4,7 +4,7 @@ import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { IconBotMessageSquare, IconCpu, IconFolderCode } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('trial.welcomeDialog');
+const T = createTranslate('modules.trial.welcomeDialog');
 
 export function TrialWelcomeDialog() {
   const closeDialog = Dialog.useClose();

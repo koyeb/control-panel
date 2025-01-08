@@ -8,7 +8,7 @@ import { AutoScalingConfiguration } from './auto-scaling-configuration';
 import { FixedScalingConfiguration } from './fixed-scaling-configuration';
 import { ScalingAlerts } from './scaling-alerts';
 
-const T = createTranslate('serviceForm.scaling');
+const T = createTranslate('modules.serviceForm.scaling');
 
 export function ScalingSection() {
   const instance = useInstance(useWatchServiceForm('instance'));

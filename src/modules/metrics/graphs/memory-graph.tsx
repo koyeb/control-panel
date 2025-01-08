@@ -10,7 +10,7 @@ import { LineGraph } from '../components/line-graph';
 import { toGraph } from '../metrics-helpers';
 import { Metric } from '../metrics-types';
 
-const T = createTranslate('pages.service.metrics.memory');
+const T = createTranslate('modules.metrics.memory');
 
 type MemoryGraphProps = {
   loading: boolean;

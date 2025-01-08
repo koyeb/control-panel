@@ -18,7 +18,7 @@ import { identity } from 'src/utils/generic';
 
 import { RegistryType as RegistryTypeComponent } from './registry-type';
 
-const T = createTranslate('secrets.registrySecretForm');
+const T = createTranslate('modules.secrets.registrySecretForm');
 
 const schema = z.object({
   name: z.string().min(2),

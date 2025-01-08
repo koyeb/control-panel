@@ -12,7 +12,7 @@ import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
-const T = createTranslate('deploymentLogs.build');
+const T = createTranslate('modules.deployment.deploymentLogs.build');
 
 type BuildLogsProps = {
   app: App;

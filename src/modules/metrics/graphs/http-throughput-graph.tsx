@@ -3,7 +3,7 @@ import { createTranslate } from 'src/intl/translate';
 import { BarGraph } from '../components/bar-graph';
 import { Metric } from '../metrics-types';
 
-const T = createTranslate('pages.service.metrics.httpThroughput');
+const T = createTranslate('modules.metrics.httpThroughput');
 
 type Data = Array<Metric>;
 type StatusCodeClass = '1xx' | '2xx' | '3xx' | '4xx' | '5xx';

@@ -12,7 +12,7 @@ import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('account.deleteAccount');
+const T = createTranslate('modules.account.deleteAccount');
 
 export function DeleteAccount() {
   const t = T.useTranslate();

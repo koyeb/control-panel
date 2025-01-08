@@ -6,7 +6,7 @@ import { LineGraph } from '../components/line-graph';
 import { toGraph } from '../metrics-helpers';
 import { Metric } from '../metrics-types';
 
-const T = createTranslate('pages.service.metrics.publicDataTransfer');
+const T = createTranslate('modules.metrics.publicDataTransfer');
 
 type Data = Record<'in' | 'out', Array<Metric> | undefined>;
 

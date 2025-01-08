@@ -9,7 +9,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { handleScalingValueBlurred } from './handle-scaling-value-blurred';
 
-const T = createTranslate('serviceForm.scaling');
+const T = createTranslate('modules.serviceForm.scaling');
 
 export function FixedScalingConfiguration() {
   const instance = useWatchServiceForm('instance');

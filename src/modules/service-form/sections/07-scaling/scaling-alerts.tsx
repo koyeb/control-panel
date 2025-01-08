@@ -8,7 +8,7 @@ import { createTranslate } from 'src/intl/translate';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.scaling.alerts');
+const T = createTranslate('modules.serviceForm.scaling.alerts');
 
 export function ScalingAlerts() {
   const { setValue } = useFormContext<ServiceForm>();

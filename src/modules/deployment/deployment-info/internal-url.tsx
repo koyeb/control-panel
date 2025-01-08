@@ -7,7 +7,7 @@ import { useClipboard } from 'src/hooks/clipboard';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { assert, defined } from 'src/utils/assert';
 
-const T = createTranslate('deploymentInfo');
+const T = createTranslate('modules.deployment.deploymentInfo');
 
 type InternalUrlProps = {
   app: App;

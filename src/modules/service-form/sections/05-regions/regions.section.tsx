@@ -15,7 +15,7 @@ import { RegionItem } from './region-item';
 import { RegionsAlerts } from './regions-alerts';
 import { RegionsList } from './regions-list';
 
-const T = createTranslate('serviceForm.regions');
+const T = createTranslate('modules.serviceForm.regions');
 
 export function RegionsSection() {
   const firstRegion = useRegion(useWatchServiceForm('regions')[0]);

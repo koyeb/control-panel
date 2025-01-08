@@ -3,7 +3,7 @@ import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/compo
 import { createTranslate, Translate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
-const T = createTranslate('secrets.registrySecretForm');
+const T = createTranslate('modules.secrets.registrySecretForm');
 
 type CreateRegistrySecretDialogProps = {
   onCreated?: (secretName: string) => void;

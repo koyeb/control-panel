@@ -26,7 +26,7 @@ import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
 
-const T = createTranslate('paymentDialog');
+const T = createTranslate('components.paymentDialog');
 
 const waitForPaymentMethodTimeout = 12 * 1000;
 

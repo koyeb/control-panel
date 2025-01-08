@@ -5,7 +5,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { ExternalLink, Link } from '../link';
 
-const T = createTranslate('errorBoundary.unhandledError');
+const T = createTranslate('components.errorBoundary.unhandledError');
 
 type ErrorViewProps = {
   httpStatus?: number;

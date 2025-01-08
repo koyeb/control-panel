@@ -14,7 +14,7 @@ import { isDefined } from 'src/utils/generic';
 
 import { FallbackAddressFields } from './fallback-address-fields';
 
-const T = createTranslate('addressAutocomplete');
+const T = createTranslate('components.addressAutocomplete');
 
 type AddressFieldOwnProps = {
   value?: Address;

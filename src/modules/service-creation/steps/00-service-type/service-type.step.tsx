@@ -13,7 +13,7 @@ import { inArray } from 'src/utils/arrays';
 import { OneClickAppList } from './one-click-app-list';
 import { ExtendedServiceType, ServiceTypeList } from './service-type-list';
 
-const T = createTranslate('serviceCreation.serviceType');
+const T = createTranslate('modules.serviceCreation.serviceType');
 
 function isServiceType(value: unknown): value is ExtendedServiceType {
   return inArray(value, ['web', 'private', 'worker', 'database', 'model']);

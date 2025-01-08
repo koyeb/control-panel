@@ -22,7 +22,7 @@ import { entries } from 'src/utils/object';
 
 import { OnboardingStepper } from './stepper';
 
-const T = createTranslate('onboarding.joinOrganization');
+const T = createTranslate('pages.onboarding.joinOrganization');
 
 const schema = z.object({
   organizationName: z

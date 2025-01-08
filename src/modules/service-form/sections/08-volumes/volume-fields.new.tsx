@@ -14,7 +14,7 @@ import { getName, hasProperty } from 'src/utils/object';
 import { ServiceForm, ServiceVolume } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.volumes');
+const T = createTranslate('modules.serviceForm.volumes');
 
 type VolumeFieldsProps = {
   index: number;

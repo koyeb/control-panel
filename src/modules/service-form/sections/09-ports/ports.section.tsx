@@ -10,7 +10,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { PortFields } from './port-fields';
 
-const T = createTranslate('serviceForm.ports');
+const T = createTranslate('modules.serviceForm.ports');
 
 export function PortsSection() {
   const { fields, append, remove } = useFieldArray({ name: 'ports' });

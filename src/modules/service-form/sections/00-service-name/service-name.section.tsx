@@ -9,7 +9,7 @@ import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.serviceName');
+const T = createTranslate('modules.serviceForm.serviceName');
 
 export function ServiceNameSection() {
   const serviceId = useWatchServiceForm('meta.serviceId');

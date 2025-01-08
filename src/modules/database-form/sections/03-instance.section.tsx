@@ -8,7 +8,7 @@ import { DatabaseServiceFormSection } from '../components/database-service-form-
 import { databaseInstances } from '../database-instance-types';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = createTranslate('databaseForm.instance');
+const T = createTranslate('modules.databaseForm.instance');
 
 export function InstanceSection() {
   const serviceId = useWatch<DatabaseServiceForm, 'meta.databaseServiceId'>({

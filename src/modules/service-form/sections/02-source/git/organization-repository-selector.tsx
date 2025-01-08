@@ -15,7 +15,7 @@ import { getId, getName } from 'src/utils/object';
 import { ServiceForm } from '../../../service-form.types';
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
 
-const T = createTranslate('serviceForm.source.git');
+const T = createTranslate('modules.serviceForm.source.git');
 
 export function OrganizationRepositorySelector() {
   const t = T.useTranslate();

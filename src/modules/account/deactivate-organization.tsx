@@ -9,7 +9,7 @@ import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('account.deactivateOrganization');
+const T = createTranslate('modules.account.deactivateOrganization');
 
 export function DeactivateOrganization() {
   const organization = useOrganization();

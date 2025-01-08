@@ -4,7 +4,7 @@ import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { entries } from 'src/utils/object';
 
-const T = createTranslate('serviceEstimatedCost');
+const T = createTranslate('components.serviceEstimatedCost');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function hasAutoscaling(cost: ServiceCost): cost is [any, any] {

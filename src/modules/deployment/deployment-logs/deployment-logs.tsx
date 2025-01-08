@@ -26,7 +26,7 @@ import { RuntimeLogs } from './runtime-logs';
 
 type DeploymentPhase = 'build' | 'runtime';
 
-const T = createTranslate('deploymentLogs');
+const T = createTranslate('modules.deployment.deploymentLogs');
 
 type DeploymentLogsProps = {
   app: App;

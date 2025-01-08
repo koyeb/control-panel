@@ -14,7 +14,7 @@ import { HealthCheck, Port, ServiceForm } from '../../service-form.types';
 import { HealthCheckProtocol } from './health-check-protocol';
 import { HttpHealthCheckFields } from './http-health-check-fields';
 
-const T = createTranslate('serviceForm.healthChecks.healthCheck');
+const T = createTranslate('modules.serviceForm.healthChecks.healthCheck');
 
 type HealthCheckFieldsProps = {
   port: Port;

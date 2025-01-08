@@ -13,7 +13,7 @@ import { hasProperty } from 'src/utils/object';
 
 import { InstanceAssistant } from './instance-assistant';
 
-const T = createTranslate('instanceSelector');
+const T = createTranslate('components.instanceSelector');
 
 type InstanceSelectorProps = {
   instances: CatalogInstance[];

@@ -5,7 +5,7 @@ import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 
 import { ExternalLink } from './link';
 
-const T = createTranslate('errorBoundary.accountLocked');
+const T = createTranslate('components.errorBoundary.accountLocked');
 
 export function AccountLocked() {
   const idenfyLink = useIdenfyLink();

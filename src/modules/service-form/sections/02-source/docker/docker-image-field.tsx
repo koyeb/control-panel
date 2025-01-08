@@ -11,7 +11,7 @@ import { createTranslate } from 'src/intl/translate';
 import { ServiceForm } from '../../../service-form.types';
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
 
-const T = createTranslate('serviceForm.source.docker');
+const T = createTranslate('modules.serviceForm.source.docker');
 
 export function DockerImageField() {
   const t = T.useTranslate();

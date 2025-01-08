@@ -8,7 +8,7 @@ import { useNavigate } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('onboarding.ai');
+const T = createTranslate('pages.onboarding.ai');
 
 export function AiOnboarding() {
   const organization = useOrganization();

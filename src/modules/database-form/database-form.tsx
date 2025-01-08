@@ -17,7 +17,7 @@ import { ServiceNameSection } from './sections/05-service-name.section';
 import { useDatabaseServiceForm } from './use-database-service-form';
 import { useSubmitDatabaseServiceForm } from './use-submit-database-service-form';
 
-const T = createTranslate('databaseForm');
+const T = createTranslate('modules.databaseForm');
 
 type DatabaseFormProps = {
   deployment?: DatabaseDeployment;

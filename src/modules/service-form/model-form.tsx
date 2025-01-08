@@ -44,7 +44,7 @@ import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
 
-const T = createTranslate('modelForm');
+const T = createTranslate('modules.serviceForm.modelForm');
 
 const schema = z.object({
   modelSlug: z.string(),

@@ -5,7 +5,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 
 import { ServiceTypeItem } from './components/service-type-item';
 
-const T = createTranslate('serviceCreation.serviceType');
+const T = createTranslate('modules.serviceCreation.serviceType');
 
 export type ExtendedServiceType = ServiceType | 'private' | 'model';
 

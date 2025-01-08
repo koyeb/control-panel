@@ -29,7 +29,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('deploymentLogs.runtime');
+const T = createTranslate('modules.deployment.deploymentLogs.runtime');
 
 type Filters = {
   region: string | null;

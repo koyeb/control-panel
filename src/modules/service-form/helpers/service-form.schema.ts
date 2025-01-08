@@ -8,14 +8,14 @@ import { isSlug } from 'src/utils/strings';
 import { File } from '../service-form.types';
 
 type RemovePrefix<T extends string, P extends string> = T extends `${P}${infer R}` ? R : never;
-type Keys = RemovePrefix<TranslationKeys, 'serviceForm.errors.'>;
+type Keys = RemovePrefix<TranslationKeys, 'modules.serviceForm.errors.'>;
 
 type TranslateErrorFunction = (key: Keys, values?: Record<string, string | number>) => string;
 
 export function serviceFormSchema(translate: TranslateFn) {
   // @ts-expect-error this works
   const t: TranslateErrorFunction = (key, values) => {
-    return translate(`serviceForm.errors.${key}`, values);
+    return translate(`modules.serviceForm.errors.${key}`, values);
   };
 
   const appName = t('appName');

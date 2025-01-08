@@ -47,7 +47,7 @@ import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
 
-const T = createTranslate('oneClickAppForm');
+const T = createTranslate('modules.serviceForm.oneClickAppForm');
 
 const schema = z.object({
   instance: z.string().nullable(),

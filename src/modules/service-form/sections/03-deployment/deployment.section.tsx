@@ -6,7 +6,7 @@ import { ServiceFormSection } from '../../components/service-form-section';
 import { DockerDeploymentOptions, ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.deployment');
+const T = createTranslate('modules.serviceForm.deployment');
 
 export function DeploymentSection() {
   const t = T.useTranslate();

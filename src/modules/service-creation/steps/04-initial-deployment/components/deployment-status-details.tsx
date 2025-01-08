@@ -12,7 +12,7 @@ import { TimeoutUi } from 'src/components/timeout-ui';
 import { createTranslate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 
-const T = createTranslate('serviceCreation.initialDeployment.deploymentStatusDetails');
+const T = createTranslate('modules.serviceCreation.initialDeployment.deploymentStatusDetails');
 
 type DeploymentStatusDetailsProps = {
   app: App;

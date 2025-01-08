@@ -11,7 +11,7 @@ import { upperCase } from 'src/utils/strings';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('serviceForm.healthChecks.healthCheck');
+const T = createTranslate('modules.serviceForm.healthChecks.healthCheck');
 
 type HttpHealthCheckFieldsProps = {
   index: number;

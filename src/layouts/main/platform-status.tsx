@@ -10,7 +10,7 @@ import { reportError } from 'src/application/report-error';
 import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('platformStatus');
+const T = createTranslate('components.platformStatus');
 
 const schema = z.object({
   page: z.object({

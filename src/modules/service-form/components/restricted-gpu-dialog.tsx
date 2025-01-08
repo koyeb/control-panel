@@ -3,7 +3,7 @@ import { useInstance } from 'src/api/hooks/catalog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('serviceForm');
+const T = createTranslate('modules.serviceForm');
 
 type RestrictedGpuDialogProps = {
   open: boolean;

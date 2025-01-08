@@ -3,7 +3,7 @@ import { PaymentForm } from 'src/components/payment-form';
 import { createTranslate } from 'src/intl/translate';
 import { FeaturesList } from 'src/layouts/secondary/features-list';
 
-const T = createTranslate('onboarding.paymentMethod');
+const T = createTranslate('pages.onboarding.paymentMethod');
 
 export function PaymentMethod() {
   return (

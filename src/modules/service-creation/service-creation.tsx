@@ -16,7 +16,7 @@ import { InstanceRegionStep } from './steps/02-instance-region/instance-region.s
 import { ReviewStep } from './steps/03-review/review.step';
 import { InitialDeploymentStep } from './steps/04-initial-deployment/initial-deployment.step';
 
-const T = createTranslate('serviceCreation');
+const T = createTranslate('modules.serviceCreation');
 
 enum Step {
   serviceType = 'serviceType',

@@ -11,7 +11,7 @@ import { isAutoscalingActivity, isDeploymentActivity } from './activity-guards';
 import { ActivityResources } from './activity-resources';
 import { ActivitySentence } from './activity-sentence';
 
-const T = createTranslate('activity.sentences');
+const T = createTranslate('components.activity.sentences');
 
 export function ActivityItem({ activity, className }: { activity: Activity; className?: string }) {
   const isSystemUser = activity.actor.type === 'system_user';

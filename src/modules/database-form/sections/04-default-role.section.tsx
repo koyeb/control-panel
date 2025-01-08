@@ -6,7 +6,7 @@ import { createTranslate } from 'src/intl/translate';
 import { DatabaseServiceFormSection } from '../components/database-service-form-section';
 import { DatabaseServiceForm } from '../database-service-form.types';
 
-const T = createTranslate('databaseForm.defaultRole');
+const T = createTranslate('modules.databaseForm.defaultRole');
 
 export function DefaultRoleSection() {
   const defaultRole = useWatch<DatabaseServiceForm, 'defaultRole'>({ name: 'defaultRole' });

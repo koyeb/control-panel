@@ -20,7 +20,7 @@ import { getInitialLogOptions, LogOptions, storeLogOptions } from './log-options
 
 export { type LogOptions };
 
-const T = createTranslate('logs');
+const T = createTranslate('components.logs');
 
 type LogsProps = {
   appName: string;

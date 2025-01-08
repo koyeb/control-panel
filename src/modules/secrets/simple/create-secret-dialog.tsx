@@ -4,7 +4,7 @@ import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 
-const T = createTranslate('secrets.simpleSecretForm');
+const T = createTranslate('modules.secrets.simpleSecretForm');
 
 type CreateSecretDialogProps = {
   onCreated?: (secretName: string) => void;
@@ -35,7 +35,7 @@ export function CreateSecretDialog({ onCreated }: CreateSecretDialogProps) {
           </DialogFooter>
         )}
         onSubmitted={(secretName) => {
-          notify.success(t('createSuccess', { name: secretName }));
+          notify.success(t('createSuccessNotification', { name: secretName }));
           closeDialog();
           onCreated?.(secretName);
         }}

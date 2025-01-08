@@ -11,7 +11,7 @@ import { ServiceForm } from '../../service-form.types';
 
 import { FileContentEditor } from './file-content-editor';
 
-const T = createTranslate('serviceForm.files');
+const T = createTranslate('modules.serviceForm.files');
 
 export function Files() {
   const t = T.useTranslate();

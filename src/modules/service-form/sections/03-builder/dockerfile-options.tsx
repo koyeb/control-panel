@@ -4,7 +4,7 @@ import { createTranslate } from 'src/intl/translate';
 import { OverridableInput, OverridableInputArray } from '../../components/overridable-input';
 import { ServiceForm } from '../../service-form.types';
 
-const T = createTranslate('serviceForm.builder.dockerfileConfiguration');
+const T = createTranslate('modules.serviceForm.builder.dockerfileConfiguration');
 
 export function DockerfileOptions() {
   const t = T.useTranslate();

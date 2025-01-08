@@ -16,7 +16,7 @@ import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('secrets.simpleSecretForm');
+const T = createTranslate('modules.secrets.simpleSecretForm');
 
 const schema = z.object({
   name: z.string().min(2).max(64),

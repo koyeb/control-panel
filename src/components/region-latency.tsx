@@ -2,7 +2,7 @@ import { CatalogRegion } from 'src/api/model';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('regionLatency');
+const T = createTranslate('components.regionLatency');
 
 type RegionLatencyProps = {
   region: CatalogRegion;
