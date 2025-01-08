@@ -181,7 +181,7 @@ export function Dialog2({ open, onClose, onClosed, overlayClassName, className, 
               overlayClassName,
             )}
           >
-            <FloatingFocusManager context={context}>
+            <FloatingFocusManager context={context} initialFocus={-1}>
               <div
                 ref={refs.setFloating}
                 className={clsx(

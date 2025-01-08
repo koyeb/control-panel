@@ -1,13 +1,27 @@
+import { useEffect } from 'react';
+
 import { Button } from '@koyeb/design-system';
+import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { SvgComponent } from 'src/application/types';
 import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { IconBotMessageSquare, IconCpu, IconFolderCode } from 'src/components/icons';
+import { useSearchParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('trial.welcomeDialog');
 
 export function TrialWelcomeDialog() {
   const closeDialog = Dialog.useClose();
+  const openDialog = Dialog.useOpen();
+
+  const organization = useOrganizationUnsafe();
+  const [onboardingCompleted] = useSearchParam('onboarding-completed');
+
+  useEffect(() => {
+    if (onboardingCompleted && organization?.trial) {
+      openDialog('TrialWelcome');
+    }
+  }, [onboardingCompleted, organization, openDialog]);
 
   return (
     <Dialog id="TrialWelcome" className="col w-full max-w-2xl gap-8">

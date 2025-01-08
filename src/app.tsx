@@ -1,14 +1,17 @@
+import { useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
-import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
+import { useOrganizationQuery, useOrganizationUnsafe, useUserQuery } from './api/hooks/session';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { useRefreshToken } from './application/token';
 import { AccountLocked } from './components/account-locked';
 import { LinkButton } from './components/link';
 import { Loading } from './components/loading';
+import { usePrevious } from './hooks/lifecycle';
+import { useNavigate } from './hooks/router';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
 import { ConfirmDeactivateOrganization } from './modules/account/confirm-deactivate-organization';
@@ -64,6 +67,8 @@ function AuthenticatedRoutes() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
   const onboardingStep = useOnboardingStep();
+
+  useSetOnboardingCompletedSearchParam();
 
   if (!userQuery.isSuccess || organizationQuery.isPending) {
     return (
@@ -159,4 +164,16 @@ function PageNotFound() {
       </LinkButton>
     </div>
   );
+}
+
+function useSetOnboardingCompletedSearchParam() {
+  const onboardingStep = useOnboardingStep();
+  const prevOnboardingStep = usePrevious(onboardingStep);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (prevOnboardingStep !== null && onboardingStep === null) {
+      navigate((url) => url.searchParams.set('onboarding-completed', 'true'), { replace: true });
+    }
+  }, [prevOnboardingStep, onboardingStep, navigate]);
 }
