@@ -1,9 +1,10 @@
 type ProgressBarProps = {
   progress?: number;
+  label?: boolean;
   className?: string;
 };
 
-export const ProgressBar = ({ progress = 0, className }: ProgressBarProps) => {
+export function ProgressBar({ progress = 0, label = true, className }: ProgressBarProps) {
   const percent = Math.round(progress * 100);
 
   return (
@@ -16,7 +17,7 @@ export const ProgressBar = ({ progress = 0, className }: ProgressBarProps) => {
         />
       </div>
 
-      <div className="mt-1 text-center text-xs text-dim">{percent}%</div>
+      {label && <div className="mt-1 text-center text-xs text-dim">{percent}%</div>}
     </div>
   );
-};
+}
