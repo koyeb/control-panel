@@ -68,6 +68,19 @@
       "slug": "{label} must only contain lowercase letters, numbers, dashes and dots"
     }
   },
+  "enums": {
+    "plans": {
+      "hobby": "Hobby",
+      "starter": "Starter",
+      "startup": "Startup",
+      "pro": "Pro",
+      "scale": "Scale",
+      "business": "Business",
+      "enterprise": "Enterprise",
+      "internal": "Internal",
+      "no_plan": "No plan"
+    }
+  },
   "account": {
     "deleteAccount": {
       "label": "Delete account",
