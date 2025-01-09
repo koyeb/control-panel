@@ -63,10 +63,10 @@ export function Wrapped() {
   return (
     <>
       <Alert
-        icon={<Croissant className="w-16" />}
+        icon={<Croissant className="h-auto w-16" />}
         variant="info"
         title="Happy new year!"
-        description={<>Curious about your stats? {link('Click here')} to see your yearly recap.</>}
+        description={<>Curious about your 2024 stats? {link('Click here')} to see your yearly recap.</>}
         className="mb-8"
       />
 

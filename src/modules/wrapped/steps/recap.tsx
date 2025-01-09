@@ -12,7 +12,7 @@ export function Recap({ data, next }: { data: WrappedData; next: () => void }) {
   const regions = useRegions().filter((region) => data.regions.includes(region.identifier));
 
   const baseUrl = 'https://koyeb-wrapped.koyeb.app';
-  const pathname = `${data.createdServices};${data.deployments};${data.buildTime};${data.requests};${regions.map((region) => region.displayName).join(',')}`;
+  const pathname = `${data.createdServices};${data.deployments};${data.buildTime};${data.requests};${regions.map((region) => regionMap[region.identifier]).join(',')}`;
 
   return (
     <div onClick={next} className="col h-full justify-between gap-4 text-center text-3xl font-semibold">
@@ -33,9 +33,10 @@ export function Recap({ data, next }: { data: WrappedData; next: () => void }) {
             type="button"
             title={`Share on ${name}`}
             className="text-dim transition-transform hover:scale-125 hover:text-black"
-            onClick={() =>
-              window.open(shareUrl('Check out my Koyeb stats for 2024!', `${baseUrl}/share/${pathname}`))
-            }
+            onClick={(event) => {
+              event.stopPropagation();
+              window.open(shareUrl('Check out my Koyeb stats for 2024!', `${baseUrl}/share/${pathname}`));
+            }}
           >
             <Icon className="size-6" />
           </button>
@@ -44,6 +45,15 @@ export function Recap({ data, next }: { data: WrappedData; next: () => void }) {
     </div>
   );
 }
+
+const regionMap: Record<string, number> = {
+  fra: 0,
+  par: 1,
+  sfo: 2,
+  sin: 3,
+  tyo: 4,
+  was: 5,
+};
 
 const links: Array<{
   name: string;
