@@ -553,7 +553,8 @@
           "cpu": "CPU",
           "memory": "Memory",
           "regionLabel": "Region",
-          "instanceTypeLabel": "Instance type",
+          "instanceTypeLabel": "Type",
+          "creationDateLabel": "Creation date",
           "filters": {
             "allRegions": "All regions",
             "allStatuses": "All statuses"

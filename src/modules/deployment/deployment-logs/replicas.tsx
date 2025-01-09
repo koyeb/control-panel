@@ -2,14 +2,15 @@ import clsx from 'clsx';
 import uniq from 'lodash-es/uniq';
 import { useMemo, useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
+import { FormattedDate } from 'react-intl';
 
 import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
 import type { Api } from 'src/api/api-types';
 import { useInstance } from 'src/api/hooks/catalog';
 import { Instance, InstanceStatus } from 'src/api/model';
-import { CopyIconButton } from 'src/components/copy-icon-button';
 import { parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
+import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
@@ -257,7 +258,7 @@ function InstanceDetails({ instance }: { instance: Instance }) {
 
       <div className="border-t" />
 
-      <div className="row gap-12">
+      <div className="row gap-8">
         <Metadata
           label={<T id="regionLabel" />}
           value={
@@ -269,6 +270,11 @@ function InstanceDetails({ instance }: { instance: Instance }) {
         />
 
         <Metadata label={<T id="instanceTypeLabel" />} value={instanceType?.displayName} />
+
+        <Metadata
+          label={<T id="creationDateLabel" />}
+          value={<FormattedDate value={instance.createdAt} dateStyle="short" timeStyle="short" />}
+        />
       </div>
 
       <TabButtons className="my-2 self-start">
