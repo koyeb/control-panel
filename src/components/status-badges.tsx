@@ -16,6 +16,7 @@ import {
   IconCircleDot,
   IconCircleOff,
   IconCircleX,
+  IconMoon,
   IconTrash,
 } from 'src/components/icons';
 
@@ -79,7 +80,7 @@ export const DeploymentStatusBadge = createResourceStatus<DeploymentStatus>({
   erroring: [Spinner, 'red'],
   error: [IconCircleAlert, 'red'],
   stashed: [IconCircleOff, 'gray'],
-  sleeping: [IconCircleDashed, 'gray'],
+  sleeping: [IconMoon, 'gray'],
 });
 
 export const InstanceStatusBadge = createResourceStatus<InstanceStatus>({
@@ -90,7 +91,7 @@ export const InstanceStatusBadge = createResourceStatus<InstanceStatus>({
   stopping: [Spinner, 'gray'],
   stopped: [IconCircleOff, 'gray'],
   error: [IconCircleAlert, 'red'],
-  sleeping: [Spinner, 'gray'],
+  sleeping: [IconMoon, 'gray'],
 });
 
 export const VolumeStatusBadge = createResourceStatus<VolumeStatus>({
