@@ -59,7 +59,7 @@ export function Files() {
             </Button>
           </div>
         ) : (
-          <div key={file.id} className="row items-end gap-4 rounded-md border p-4">
+          <div key={file.id} className="row items-start gap-4 rounded-md border p-4">
             <ControlledInput<ServiceForm, `files.${number}.content`>
               name={`files.${index}.content`}
               label={<T id="content.label" />}
@@ -76,7 +76,8 @@ export function Files() {
               className="flex-1"
             />
 
-            <IconButton color="gray" Icon={IconTrash} onClick={() => remove(index)}>
+            {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+            <IconButton color="gray" Icon={IconTrash} onClick={() => remove(index)} className="mt-[1.625rem]">
               <T id="remove" />
             </IconButton>
           </div>
