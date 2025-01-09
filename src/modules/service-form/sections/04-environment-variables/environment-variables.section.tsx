@@ -27,7 +27,11 @@ export function EnvironmentVariablesSection() {
   const variables = useFormContext<ServiceForm>()
     .watch('environmentVariables')
     .filter((field) => field.name !== '');
-  const files = useFormContext<ServiceForm>().watch('files');
+
+  const files = useFormContext<ServiceForm>()
+    .watch('files')
+    .filter((file) => file.mountPath !== '' || file.content !== '');
+
   const [tab, setTab] = useState<'environmentVariables' | 'files'>('environmentVariables');
 
   const hasMountFiles = useFeatureFlag('mount-files');
