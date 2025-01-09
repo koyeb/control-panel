@@ -865,6 +865,7 @@
         "source.docker.image": "Docker image URL is required",
         "environmentVariable.name": "Please provide a name for this variable",
         "environmentVariable.secretValue": "Please select a secret or create a new one",
+        "file.mountPath.startWithSlash": "Mount path must start with /",
         "scaling.fixedLabel": "Instances",
         "scaling.autoScalingMinLabel": "Min",
         "scaling.autoScalingMaxLabel": "Max",

@@ -46,7 +46,7 @@ export function serviceFormSchema(translate: TranslateFn) {
     environmentVariables: z
       .array(environmentVariable())
       .transform((variables) => variables.filter((variable) => variable.name !== '')),
-    files: z.preprocess(preprocessFiles, z.array(file())),
+    files: z.preprocess(preprocessFiles, z.array(file(t))),
     regions: regions(),
     instance: instance(),
     scaling: scaling(t),
@@ -142,9 +142,9 @@ function preprocessFiles(value: unknown) {
   return (value as File[]).filter((value) => value.mountPath !== '');
 }
 
-function file() {
+function file(t: TranslateErrorFunction) {
   return z.object({
-    mountPath: z.string(),
+    mountPath: z.string().startsWith('/', t('file.mountPath.startWithSlash')),
     content: z.string(),
   });
 }
