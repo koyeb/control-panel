@@ -52,23 +52,26 @@ function CommandPaletteDialog() {
   const commands = useCommands(search);
   const [command, setCommand] = useState<Command>();
 
-  const execute = useCallback((fn: () => void | Promise<void>) => {
-    const result = fn();
+  const execute = useCallback(
+    (fn: () => void | Promise<void>) => {
+      const result = fn();
 
-    if (result === undefined) {
-      closeDialog();
-    } else {
-      const handleError = (error: unknown) => {
-        notify.error(hasMessage(error) ? error.message : 'Unknown error');
-        reportError(error);
-      };
+      if (result === undefined) {
+        closeDialog();
+      } else {
+        const handleError = (error: unknown) => {
+          notify.error(hasMessage(error) ? error.message : 'Unknown error');
+          reportError(error);
+        };
 
-      Promise.resolve()
-        .then(() => setLoading(true))
-        .then(closeDialog, handleError)
-        .finally(() => setLoading(false));
-    }
-  }, []);
+        Promise.resolve()
+          .then(() => setLoading(true))
+          .then(closeDialog, handleError)
+          .finally(() => setLoading(false));
+      }
+    },
+    [closeDialog],
+  );
 
   const options = useMemo((): Array<Item> => {
     if (command && 'options' in command) {
