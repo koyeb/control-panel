@@ -27,7 +27,6 @@ import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { inArray } from 'src/utils/arrays';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
-import { EstimatedCosts } from './estimated-costs';
 import { GlobalAlert } from './global-alert';
 import { HelpLinks } from './help-links';
 import { Layout } from './layout';
@@ -108,9 +107,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
         {!collapsed && (
           <div className="mx-4 divide-y rounded-md border bg-neutral">
             <UserMenu collapsed={collapsed} />
-            <FeatureFlag feature="trial" fallback={<EstimatedCosts />}>
-              <OrganizationPlan />
-            </FeatureFlag>
+            <OrganizationPlan />
           </div>
         )}
 

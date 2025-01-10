@@ -1389,6 +1389,7 @@
         "upgrade": "Upgrade now",
         "free": "Free",
         "estimatedCost": {
+          "currentPlan": "{plan} Plan",
           "plan": "Monthly plan",
           "usage": "Additional usage",
           "estimatedCost": "Estimated cost",

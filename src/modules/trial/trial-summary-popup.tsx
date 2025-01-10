@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { intervalToDuration } from 'date-fns';
 import { forwardRef } from 'react';
 
 import { Badge, ProgressBar } from '@koyeb/design-system';
@@ -6,6 +7,7 @@ import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
+import { defined } from 'src/utils/assert';
 
 const T = createTranslate('modules.trial.summaryPopup');
 
@@ -14,6 +16,9 @@ type TrialSummaryPopupProps = React.ComponentProps<'div'>;
 export const TrialSummaryPopup = forwardRef<HTMLDivElement, TrialSummaryPopupProps>(
   function TrialSummaryPopup({ className, ...props }, ref) {
     const organization = useOrganization();
+
+    const trial = defined(useOrganization().trial);
+    const { days } = intervalToDuration({ start: new Date(), end: trial.endsAt });
 
     return (
       <div ref={ref} {...props} className={clsx('w-56 rounded-md border bg-popover', className)}>
@@ -45,10 +50,10 @@ export const TrialSummaryPopup = forwardRef<HTMLDivElement, TrialSummaryPopupPro
           <ProgressBar progress={1} label={false} />
 
           <div className="text-center text-xs text-dim">
-            <T id="timeLeft" values={{ days: 7 }} />
+            <T id="timeLeft" values={{ days: Number(days) + 1 }} />
           </div>
 
-          <LinkButton color="gray" href={routes.organizationSettings.billing()}>
+          <LinkButton color="gray" size={1} href={routes.organizationSettings.billing()}>
             <T id="cta" />
           </LinkButton>
         </div>
