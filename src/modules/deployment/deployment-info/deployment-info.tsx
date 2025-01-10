@@ -13,7 +13,7 @@ import {
 } from '../metadata/build-metadata';
 import { DockerImageMetadata } from '../metadata/docker-metadata';
 import {
-  EnvironmentVariablesMetadata,
+  EnvironmentMetadata,
   InstanceTypeMetadata,
   RegionsMetadata,
   ScalingMetadata,
@@ -85,7 +85,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
           <InstanceTypeMetadata instanceType={definition.instanceType} />
           <ScalingMetadata scaling={definition.scaling} />
           <RegionsMetadata regions={definition.regions} />
-          <EnvironmentVariablesMetadata definition={definition} />
+          <EnvironmentMetadata definition={definition} />
           <VolumesMetadata definition={definition} />
         </div>
       </div>

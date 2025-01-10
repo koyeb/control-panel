@@ -62,8 +62,8 @@ export function RegionsMetadata({ regions }: { regions: string[] }) {
   );
 }
 
-export function EnvironmentVariablesMetadata({ definition }: { definition: DeploymentDefinition }) {
-  const { environmentVariables } = definition;
+export function EnvironmentMetadata({ definition }: { definition: DeploymentDefinition }) {
+  const { environmentVariables, files } = definition;
 
   const content = () => {
     if (environmentVariables.length === 0) {
@@ -83,12 +83,15 @@ export function EnvironmentVariablesMetadata({ definition }: { definition: Deplo
 
   return (
     <Metadata
-      label={<T id="environmentVariablesLabel" />}
+      label={<T id="environmentLabel" />}
       value={
         <Tooltip allowHover content={content()} className="max-w-md">
           {(props) => (
             <span {...props}>
-              <T id="environmentVariablesValue" values={{ count: environmentVariables.length }} />
+              <T
+                id="environmentValue"
+                values={{ variables: environmentVariables.length, files: files.length }}
+              />
             </span>
           )}
         </Tooltip>

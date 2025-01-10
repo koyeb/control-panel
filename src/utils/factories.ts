@@ -190,6 +190,7 @@ const deploymentDefinition = createFactory<DeploymentDefinition>(() => ({
   strategy: 'rolling',
   source: { type: 'git', repository: '', branch: '', autoDeploy: false },
   environmentVariables: [],
+  files: [],
   volumes: [],
   instanceType: '',
   regions: [],

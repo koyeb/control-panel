@@ -212,6 +212,7 @@ export type DeploymentDefinition = {
   builder?: BuildpackBuilder | DockerfileBuilder;
   privileged?: boolean;
   environmentVariables: EnvironmentVariable[];
+  files: File[];
   volumes: AttachedVolume[];
   instanceType: string;
   regions: string[];
@@ -227,6 +228,11 @@ export type EnvironmentVariable = {
   name: string;
   value: string;
   regions: string[];
+};
+
+export type File = {
+  mountPath: string;
+  content: string;
 };
 
 export type AttachedVolume = {
