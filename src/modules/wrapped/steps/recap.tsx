@@ -35,7 +35,7 @@ export function Recap({ data, next }: { data: WrappedData; next: () => void }) {
             className="text-dim transition-transform hover:scale-125 hover:text-black"
             onClick={(event) => {
               event.stopPropagation();
-              window.open(shareUrl('Check out my Koyeb stats for 2024!', `${baseUrl}/share/${pathname}`));
+              window.open(shareUrl('Check out my Koyeb stats in 2024!', `${baseUrl}/share/${pathname}`));
             }}
           >
             <Icon className="size-6" />
