@@ -51,4 +51,4 @@ const volumes = [
 
 export const volumesList = () => <VolumesList volumes={volumes} onCreate={action('onCreate')} />;
 
-export const createVolumeDialog = () => <CreateVolumeDialog open onClose={action('onClose')} />;
+export const createVolumeDialog = () => <CreateVolumeDialog />;

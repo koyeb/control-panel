@@ -5,6 +5,7 @@ import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-sys
 import { useVolumes } from 'src/api/hooks/volume';
 import { VolumeSnapshot } from 'src/api/model';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
@@ -80,7 +81,8 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
 }
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
-  const [openDialog, setOpenDialog] = useState<'create' | 'update' | 'delete'>();
+  const [openedDialog, setOpenedDialog] = useState<'update' | 'delete'>();
+  const openDialog = Dialog.useOpen();
   const canCreate = snapshot.status === 'available' && snapshot.type === 'remote';
 
   return (
@@ -93,39 +95,35 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
                 <ButtonMenuItem
                   {...props}
                   disabled={!canCreate}
-                  onClick={withClose(() => setOpenDialog('create'))}
+                  onClick={withClose(() => openDialog('CreateVolume'))}
                 >
                   <T id="actions.createVolume" />
                 </ButtonMenuItem>
               )}
             </Tooltip>
 
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('update'))}>
+            <ButtonMenuItem onClick={withClose(() => setOpenedDialog('update'))}>
               <T id="actions.update" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
+            <ButtonMenuItem onClick={withClose(() => setOpenedDialog('delete'))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
         )}
       </ActionsMenu>
 
-      <CreateVolumeDialog
-        open={openDialog === 'create'}
-        onClose={() => setOpenDialog(undefined)}
-        snapshot={snapshot}
-      />
+      <CreateVolumeDialog snapshot={snapshot} />
 
       <UpdateSnapshotDialog
-        open={openDialog === 'update'}
-        onClose={() => setOpenDialog(undefined)}
+        open={openedDialog === 'update'}
+        onClose={() => setOpenedDialog(undefined)}
         snapshot={snapshot}
       />
 
       <DeleteSnapshotDialog
-        open={openDialog === 'delete'}
-        onClose={() => setOpenDialog(undefined)}
+        open={openedDialog === 'delete'}
+        onClose={() => setOpenedDialog(undefined)}
         snapshot={snapshot}
       />
     </>

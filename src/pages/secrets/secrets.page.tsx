@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
@@ -10,6 +10,7 @@ import { IconListPlus, IconPlus } from 'src/components/icons';
 import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
+import { useMount } from 'src/hooks/lifecycle';
 import { useHistoryState } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
@@ -25,11 +26,11 @@ export function SecretsPage() {
   const openDialog = Dialog.useOpen();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  useEffect(() => {
+  useMount(() => {
     if (historyState.create) {
       openDialog('CreateSecret');
     }
-  }, [historyState, openDialog]);
+  });
 
   const query = useSecretsQuery('simple');
   const secrets = query.data;
