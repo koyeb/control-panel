@@ -11,6 +11,7 @@ import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/h
 import { ServiceType } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { useResetIdentifyUser } from 'src/application/posthog';
+import { reportError } from 'src/application/report-error';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { Dialog } from 'src/components/dialog';

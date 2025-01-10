@@ -1,8 +1,6 @@
-import { useUserQuery, useOrganizationQuery } from 'src/api/hooks/session';
-import { Organization, OnboardingStep, User } from 'src/api/model';
+import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
+import { OnboardingStep, Organization, User } from 'src/api/model';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-
-import { UnexpectedError } from './errors';
 
 export function useOnboardingStep() {
   const userQuery = useUserQuery();
@@ -46,13 +44,6 @@ function getOnboardingStep(
     if (organization.statusMessage === 'reviewing_account') {
       return 'automaticReview';
     }
-
-    reportError(
-      new UnexpectedError('Unhandled organization status', {
-        status: organization.status,
-        statusMessage: organization.statusMessage,
-      }),
-    );
   }
 
   return null;
