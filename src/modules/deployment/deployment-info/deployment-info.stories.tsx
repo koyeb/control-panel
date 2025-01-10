@@ -35,9 +35,9 @@ const deployment = create.computeDeployment({
       create.environmentVariable({ name: 'URL', value: 'https://{{ KOYEB_PUBLIC_DOMAIN }}' }),
     ],
     ports: [
-      { portNumber: 3000, protocol: 'http2', public: true, path: '/v1' },
-      { portNumber: 8000, protocol: 'http', public: true, path: '/' },
-      { portNumber: 4242, protocol: 'tcp', public: false },
+      { portNumber: 3000, protocol: 'http2', path: '/v1' },
+      { portNumber: 8000, protocol: 'http', path: '/' },
+      { portNumber: 4242, protocol: 'tcp' },
     ],
   }),
   build: {

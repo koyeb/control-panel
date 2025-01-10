@@ -191,7 +191,6 @@ function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployme
     return definition.ports!.map((port) => ({
       portNumber: port.port!,
       protocol: port.protocol! as PortProtocol,
-      public: port.protocol !== 'tcp',
       path: definition.routes!.find(hasProperty('port', port.port))?.path,
     }));
   };

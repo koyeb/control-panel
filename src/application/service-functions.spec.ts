@@ -12,8 +12,8 @@ describe('getServiceUrls', () => {
       create.computeDeployment({
         definition: create.deploymentDefinition({
           ports: [
-            { portNumber: 8000, protocol: 'http', public: true, path: '/' },
-            { portNumber: 8001, protocol: 'http', public: true, path: '/path' },
+            { portNumber: 8000, protocol: 'http', path: '/' },
+            { portNumber: 8001, protocol: 'http', path: '/path' },
           ],
         }),
       }),
@@ -32,7 +32,7 @@ describe('getServiceUrls', () => {
       create.computeDeployment({
         definition: create.deploymentDefinition({
           instanceType: 'free',
-          ports: [{ portNumber: 8000, protocol: 'http', public: true, path: '/' }],
+          ports: [{ portNumber: 8000, protocol: 'http', path: '/' }],
         }),
       }),
     );
@@ -46,7 +46,7 @@ describe('getServiceUrls', () => {
       create.service({ name: 'svc', type: 'web' }),
       create.computeDeployment({
         definition: create.deploymentDefinition({
-          ports: [{ portNumber: 8000, protocol: 'tcp', public: false }],
+          ports: [{ portNumber: 8000, protocol: 'tcp' }],
         }),
       }),
     );

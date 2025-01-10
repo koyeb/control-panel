@@ -238,7 +238,6 @@ export type Port = {
   portNumber: number;
   protocol: PortProtocol;
   path?: string;
-  public: boolean;
 };
 
 export type PortProtocol = 'http' | 'http2' | 'tcp';

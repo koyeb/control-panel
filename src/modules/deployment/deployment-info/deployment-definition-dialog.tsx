@@ -295,14 +295,14 @@ function Ports({ definition }: { definition: DeploymentDefinition }) {
       <ul>
         {definition.ports.map((port, index) => (
           <li key={index}>
-            {port.public && (
+            {port.path && (
               <T
                 id="ports.publicPort"
                 values={{ portNumber: port.portNumber, path: port.path, protocol: port.protocol }}
               />
             )}
 
-            {!port.public && <T id="ports.privatePort" values={{ portNumber: port.portNumber }} />}
+            {!port.path && <T id="ports.privatePort" values={{ portNumber: port.portNumber }} />}
           </li>
         ))}
       </ul>

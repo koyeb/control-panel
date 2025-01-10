@@ -56,11 +56,9 @@ function internalUrl(service: Service, app: App, instanceType: string, port: Por
 }
 
 function externalUrl(domain: AppDomain, port: Port) {
-  if (!port.public) {
-    return;
+  if (port.path !== undefined) {
+    return domain.name + port.path;
   }
-
-  return domain.name + port.path;
 }
 
 const upcomingDeploymentStatuses: DeploymentStatus[] = [
