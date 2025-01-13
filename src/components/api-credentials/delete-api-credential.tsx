@@ -6,16 +6,17 @@ import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { createTranslate } from 'src/intl/translate';
 
+import { Dialog } from '../dialog';
+
 type DeleteCredentialDialogProps = {
   type: ApiCredentialType;
-  open: boolean;
-  onClose: () => void;
   credential: ApiCredential;
 };
 
-export function DeleteCredentialDialog({ type, open, onClose, credential }: DeleteCredentialDialogProps) {
+export function DeleteCredentialDialog({ type, credential }: DeleteCredentialDialogProps) {
   const T = createTranslate(`pages.${type}Settings.apiCredential.deleteDialog`);
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
 
   const invalidate = useInvalidateApiQuery();
 
@@ -26,14 +27,13 @@ export function DeleteCredentialDialog({ type, open, onClose, credential }: Dele
     async onSuccess() {
       await invalidate('listApiCredentials');
       notify.info(t('successNotification', { name: credential.name }));
-      onClose();
+      closeDialog();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id="ConfirmDeleteApiCredential"
       title={<T id="title" />}
       description={
         <T

@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
@@ -24,7 +23,6 @@ const T = createTranslate('pages.secrets');
 export function SecretsPage() {
   const historyState = useHistoryState<{ create: boolean }>();
   const openDialog = Dialog.useOpen();
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useMount(() => {
     if (historyState.create) {
@@ -46,7 +44,7 @@ export function SecretsPage() {
         end={
           <div className="row items-center gap-2">
             {selected.size > 0 && (
-              <Button variant="outline" onClick={() => setDeleteDialogOpen(true)}>
+              <Button variant="outline" onClick={() => openDialog('ConfirmBulkDeleteSecrets')}>
                 <T id="deleteSecrets" values={{ count: selected.size }} />
               </Button>
             )}
@@ -80,16 +78,7 @@ export function SecretsPage() {
         )}
       </QueryGuard>
 
-      <BulkDeleteSecretsDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        secrets={Array.from(selected.values())}
-        onDeleted={() => {
-          clear();
-          setDeleteDialogOpen(false);
-        }}
-      />
-
+      <BulkDeleteSecretsDialog secrets={Array.from(selected.values())} onDeleted={clear} />
       <BulkCreateSecretsDialog />
       <CreateSecretDialog />
     </div>

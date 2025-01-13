@@ -30,7 +30,7 @@ export function EditRegistrySecretDialog({ secret }: EditRegistrySecretDialogPro
           closeDialog();
         }}
         renderFooter={(formState) => (
-          <DialogFooter className="mt-2">
+          <DialogFooter>
             <CloseDialogButton>
               <Translate id="common.cancel" />
             </CloseDialogButton>

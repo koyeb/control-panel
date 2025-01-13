@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { Alert, ButtonMenuItem, Spinner, Table, useBreakpoint } from '@koyeb/design-system';
 import { useDomainsQuery } from 'src/api/hooks/domain';
@@ -8,6 +7,7 @@ import { Domain, type DomainStatus } from 'src/api/model';
 import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { Dialog } from 'src/components/dialog';
 import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -125,7 +125,7 @@ function AppName({ appId }: { appId: string | null }) {
 }
 
 function DomainActions({ domain }: { domain: Domain }) {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
 
   return (
     <div onClick={stopPropagation}>
@@ -133,18 +133,14 @@ function DomainActions({ domain }: { domain: Domain }) {
         {(withClose) => (
           <ButtonMenuItem
             disabled={domain.status === 'deleting'}
-            onClick={withClose(() => setDeleteDialogOpen(true))}
+            onClick={withClose(() => openDialog(`ConfirmDeleteDomain-${domain.id}`))}
           >
             <T id="actions.delete" />
           </ButtonMenuItem>
         )}
       </ActionsMenu>
 
-      <DeleteDomainDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        domain={domain}
-      />
+      <DeleteDomainDialog domain={domain} />
     </div>
   );
 }

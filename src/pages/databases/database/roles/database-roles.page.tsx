@@ -9,6 +9,7 @@ import { DatabaseRole, Service } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { Dialog } from 'src/components/dialog';
 import { IconEye, IconEyeOff } from 'src/components/icons';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
@@ -144,24 +145,19 @@ type DatabaseRoleActionsProps = {
 };
 
 function DatabaseRoleActions({ service, role }: DatabaseRoleActionsProps) {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
 
   return (
     <>
       <ActionsMenu>
         {(withClose) => (
-          <ButtonMenuItem onClick={withClose(() => setDeleteDialogOpen(true))}>
+          <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteDatabaseRole-${role.name}`))}>
             <T id="actions.delete" />
           </ButtonMenuItem>
         )}
       </ActionsMenu>
 
-      <DeleteDatabaseRoleDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        service={service}
-        role={role}
-      />
+      <DeleteDatabaseRoleDialog service={service} role={role} />
     </>
   );
 }

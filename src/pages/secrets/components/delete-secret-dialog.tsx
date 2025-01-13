@@ -4,18 +4,15 @@ import { Secret } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.secrets.deleteSecretDialog');
 
-type DeleteSecretDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  secret: Secret;
-};
-
-export function DeleteSecretDialog({ open, onClose, secret }: DeleteSecretDialogProps) {
+export function DeleteSecretDialog({ secret }: { secret: Secret }) {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
+
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
@@ -25,14 +22,13 @@ export function DeleteSecretDialog({ open, onClose, secret }: DeleteSecretDialog
     async onSuccess() {
       await invalidate('listSecrets');
       notify.info(t('successNotification', { name: secret.name }));
-      onClose();
+      closeDialog();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id={`ConfirmDeleteSecret-${secret.id}`}
       title={<T id="title" />}
       description={
         <T

@@ -26,7 +26,7 @@ export function CreateVolumeDialog({ snapshot }: { snapshot?: VolumeSnapshot }) 
           navigate(routes.volumes.index());
         }}
         renderFooter={(formState) => (
-          <DialogFooter className="mt-4">
+          <DialogFooter>
             <CloseDialogButton>
               <Translate id="common.cancel" />
             </CloseDialogButton>

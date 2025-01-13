@@ -6,6 +6,7 @@ import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { DatabaseDeployment, LogicalDatabase, Service } from 'src/api/model';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useHistoryState, useRouteParam } from 'src/hooks/router';
@@ -95,25 +96,21 @@ type DatabaseActionsProps = {
 };
 
 function DatabaseActions({ service, deployment, database }: DatabaseActionsProps) {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
 
   return (
     <>
       <ActionsMenu>
         {(withClose) => (
-          <ButtonMenuItem onClick={withClose(() => setDeleteDialogOpen(true))}>
+          <ButtonMenuItem
+            onClick={withClose(() => openDialog(`ConfirmDeleteLogicalDatabase-${database.name}`))}
+          >
             <T id="actions.delete" />
           </ButtonMenuItem>
         )}
       </ActionsMenu>
 
-      <DeleteLogicalDatabaseDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        service={service}
-        deployment={deployment}
-        database={database}
-      />
+      <DeleteLogicalDatabaseDialog service={service} deployment={deployment} database={database} />
     </>
   );
 }

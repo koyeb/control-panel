@@ -218,5 +218,5 @@ export function DialogHeader({ title, onClose }: DialogHeaderProps) {
 }
 
 export function DialogFooter({ className, children }: { className?: string; children: React.ReactNode }) {
-  return <footer className={clsx('row items-center justify-end gap-2', className)}>{children}</footer>;
+  return <footer className={clsx('row mt-2 items-center justify-end gap-2', className)}>{children}</footer>;
 }

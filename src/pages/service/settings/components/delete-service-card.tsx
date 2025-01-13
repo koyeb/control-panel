@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
 import { api } from 'src/api/api';
@@ -8,6 +7,7 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
@@ -19,9 +19,11 @@ type DeleteServiceCardProps = {
 
 export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   const t = T.useTranslate();
-  const { token } = useToken();
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
   const navigate = useNavigate();
-  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const { token } = useToken();
 
   const { mutateAsync: deleteService } = useMutation({
     mutationFn: async () => {
@@ -43,7 +45,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       }
     },
     onSuccess: () => {
-      setDialogOpen(false);
+      closeDialog();
       navigate(routes.home());
       notify.info(t('deleting'));
     },
@@ -64,7 +66,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       <div className="row ml-auto gap-4">
         <Button
           color="red"
-          onClick={() => setDialogOpen(true)}
+          onClick={() => openDialog(`ConfirmDeleteService-${service.id}`)}
           disabled={service.status === 'pausing' || service.status === 'deleted'}
         >
           <T id="delete" />
@@ -72,8 +74,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       </div>
 
       <ConfirmationDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        id={`ConfirmDeleteService-${service.id}`}
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
         destructiveAction

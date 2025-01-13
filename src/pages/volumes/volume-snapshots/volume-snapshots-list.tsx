@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { useVolumes } from 'src/api/hooks/volume';
@@ -81,9 +80,8 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
 }
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
-  const [openedDialog, setOpenedDialog] = useState<'update' | 'delete'>();
-  const openDialog = Dialog.useOpen();
   const canCreate = snapshot.status === 'available' && snapshot.type === 'remote';
+  const openDialog = Dialog.useOpen();
 
   return (
     <>
@@ -102,11 +100,11 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
               )}
             </Tooltip>
 
-            <ButtonMenuItem onClick={withClose(() => setOpenedDialog('update'))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`UpdateSnapshot-${snapshot.id}`))}>
               <T id="actions.update" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => setOpenedDialog('delete'))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteSnapshot-${snapshot.id}`))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
@@ -114,18 +112,8 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
       </ActionsMenu>
 
       <CreateVolumeDialog snapshot={snapshot} />
-
-      <UpdateSnapshotDialog
-        open={openedDialog === 'update'}
-        onClose={() => setOpenedDialog(undefined)}
-        snapshot={snapshot}
-      />
-
-      <DeleteSnapshotDialog
-        open={openedDialog === 'delete'}
-        onClose={() => setOpenedDialog(undefined)}
-        snapshot={snapshot}
-      />
+      <UpdateSnapshotDialog snapshot={snapshot} />
+      <DeleteSnapshotDialog snapshot={snapshot} />
     </>
   );
 }

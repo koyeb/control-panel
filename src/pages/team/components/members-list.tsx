@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/design-system';
 import { api } from 'src/api/api';
@@ -14,6 +13,7 @@ import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
@@ -143,12 +143,11 @@ function OrganizationMember({ membership }: { membership: OrganizationMember }) 
 }
 
 function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }) {
-  const user = useUser();
+  const openDialog = Dialog.useOpen();
 
+  const user = useUser();
   const organization = useOrganization();
   const organizationName = organization.name;
-
-  const [openDialog, setOpenDialog] = useState<'removeMember' | 'leaveOrganization'>();
 
   const resendInvitationMutation = useResendInvitation();
   const deleteInvitationMutation = useDeleteInvitation();
@@ -175,13 +174,17 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
             {!isInvitation(item) && (
               <>
                 {item.member.id === user.id && (
-                  <ButtonMenuItem onClick={withClose(() => setOpenDialog('leaveOrganization'))}>
+                  <ButtonMenuItem
+                    onClick={withClose(() => openDialog(`ConfirmLeaveOrganization-${item.member.id}`))}
+                  >
                     <T id="actions.leave" />
                   </ButtonMenuItem>
                 )}
 
                 {item.member.id !== user.id && (
-                  <ButtonMenuItem onClick={withClose(() => setOpenDialog('removeMember'))}>
+                  <ButtonMenuItem
+                    onClick={withClose(() => openDialog(`ConfirmRemoveMember-${item.member.id}`))}
+                  >
                     <T id="actions.removeMember" />
                   </ButtonMenuItem>
                 )}
@@ -194,8 +197,7 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
       {!isInvitation(item) && (
         <>
           <ConfirmationDialog
-            open={openDialog === 'removeMember'}
-            onClose={() => setOpenDialog(undefined)}
+            id={`ConfirmRemoveMember-${item.member.id}`}
             title={<T id="removeMember.title" />}
             description={
               <T id="removeMember.description" values={{ name: item.member.name, organizationName }} />
@@ -206,8 +208,7 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
           />
 
           <ConfirmationDialog
-            open={openDialog === 'leaveOrganization'}
-            onClose={() => setOpenDialog(undefined)}
+            id={`ConfirmLeaveOrganization-${item.member.id}`}
             title={<T id="leaveOrganization.title" />}
             description={<T id="leaveOrganization.description" values={{ organizationName }} />}
             confirmationText={organizationName}

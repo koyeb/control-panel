@@ -1,14 +1,14 @@
 import { useForm } from 'react-hook-form';
 
-import { Button, ButtonColor, Dialog } from '@koyeb/design-system';
+import { Button, ButtonColor } from '@koyeb/design-system';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 
 import { ControlledInput } from './controlled';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
 
 type ConfirmationDialogProps = {
-  open: boolean;
-  onClose: () => void;
+  id: string;
   title: React.ReactNode;
   description: React.ReactNode;
   destructiveAction?: boolean;
@@ -20,8 +20,7 @@ type ConfirmationDialogProps = {
 };
 
 export function ConfirmationDialog({
-  open,
-  onClose,
+  id,
   title,
   description,
   destructiveAction,
@@ -38,16 +37,13 @@ export function ConfirmationDialog({
   });
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      onClosed={form.reset}
-      title={title}
-      description={description}
-      width="lg"
-    >
+    <Dialog id={id} onClosed={form.reset} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={title} />
+
+      <p className="text-dim">{description}</p>
+
       {destructiveAction && (
-        <p className="mb-4 font-medium text-red">
+        <p className="font-medium text-red">
           {destructiveAction && (destructiveActionMessage ?? <Translate id="common.destructiveAction" />)}
         </p>
       )}
@@ -73,10 +69,10 @@ export function ConfirmationDialog({
           }}
         />
 
-        <footer className="row mt-2 justify-end gap-2">
-          <Button variant="ghost" color="gray" onClick={onClose}>
+        <DialogFooter>
+          <CloseDialogButton>
             <Translate id="common.cancel" />
-          </Button>
+          </CloseDialogButton>
 
           <Button
             type="submit"
@@ -86,7 +82,7 @@ export function ConfirmationDialog({
           >
             {submitText}
           </Button>
-        </footer>
+        </DialogFooter>
       </form>
     </Dialog>
   );

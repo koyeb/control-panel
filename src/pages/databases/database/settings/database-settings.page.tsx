@@ -11,6 +11,7 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -44,12 +45,12 @@ export function DatabaseSettingsPage() {
 }
 
 function DeleteDatabaseService({ service }: { service: Service }) {
+  const t = T.useTranslate();
+  const navigate = useNavigate();
+  const openDialog = Dialog.useOpen();
+
   const invalidate = useInvalidateApiQuery();
   const { token } = useToken();
-  const navigate = useNavigate();
-  const t = T.useTranslate();
-
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   const mutation = useMutation({
     async mutationFn() {
@@ -87,14 +88,17 @@ function DeleteDatabaseService({ service }: { service: Service }) {
           className="flex-1"
         />
 
-        <Button color="red" loading={mutation.isPending} onClick={() => setDialogOpen(true)}>
+        <Button
+          color="red"
+          loading={mutation.isPending}
+          onClick={() => openDialog(`ConfirmDeleteDatabaseService-${service.id}`)}
+        >
           <T id="delete.delete" />
         </Button>
       </div>
 
       <ConfirmationDialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        id={`ConfirmDeleteDatabaseService-${service.id}`}
         title={<T id="delete.confirmationDialog.title" />}
         description={<T id="delete.confirmationDialog.description" />}
         destructiveAction

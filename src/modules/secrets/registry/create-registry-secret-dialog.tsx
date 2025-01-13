@@ -26,7 +26,7 @@ export function CreateRegistrySecretDialog({ onCreated }: CreateRegistrySecretDi
           onCreated?.(secretName);
         }}
         renderFooter={(formState) => (
-          <DialogFooter className="mt-2">
+          <DialogFooter>
             <CloseDialogButton />
 
             <Button type="submit" loading={formState.isSubmitting}>

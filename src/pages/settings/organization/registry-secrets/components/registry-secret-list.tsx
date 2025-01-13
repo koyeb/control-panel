@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
@@ -91,7 +90,6 @@ function Skeleton() {
 }
 
 function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
-  const [deleteDialogOpen, setDeleteOpenDialog] = useState(false);
   const openDialog = Dialog.useOpen();
 
   return (
@@ -103,7 +101,7 @@ function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
               <T id="actions.edit" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => setDeleteOpenDialog(true))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteRegistrySecret-${secret.id}`))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
@@ -111,12 +109,7 @@ function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
       </ActionsMenu>
 
       <EditRegistrySecretDialog secret={secret} />
-
-      <DeleteRegistrySecretDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteOpenDialog(false)}
-        secret={secret}
-      />
+      <DeleteRegistrySecretDialog secret={secret} />
     </>
   );
 }

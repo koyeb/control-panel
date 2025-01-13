@@ -6,26 +6,25 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.database.logicalDatabases.deleteDialog');
 
 type DeleteLogicalDatabaseDialogProps = {
-  open: boolean;
-  onClose: () => void;
   service: Service;
   deployment: DatabaseDeployment;
   database: LogicalDatabase;
 };
 
 export function DeleteLogicalDatabaseDialog({
-  open,
-  onClose,
   service,
   deployment,
   database,
 }: DeleteLogicalDatabaseDialogProps) {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
+
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
@@ -52,14 +51,13 @@ export function DeleteLogicalDatabaseDialog({
     async onSuccess() {
       await invalidate('getService', { path: { id: service.id } });
       notify.info(t('successNotification', { name: database.name }));
-      onClose();
+      closeDialog();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id={`ConfirmDeleteLogicalDatabase-${database.name}`}
       title={<T id="title" />}
       description={<T id="description" />}
       destructiveAction

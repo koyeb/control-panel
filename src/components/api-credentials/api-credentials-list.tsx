@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import { ApiCredential, ApiCredentialType } from 'src/api/model';
 import { NoResource } from 'src/components/no-resource';
@@ -7,6 +5,7 @@ import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
 import { ActionsMenu } from '../actions-menu';
+import { Dialog } from '../dialog';
 
 import { DeleteCredentialDialog } from './delete-api-credential';
 
@@ -61,25 +60,19 @@ export function ApiCredentialsList({ type, credentials, onCreate }: ApiCredentia
 
 function CredentialActions({ type, credential }: { type: ApiCredentialType; credential: ApiCredential }) {
   const T = createTranslate(`pages.${type}Settings.apiCredential.list`);
-
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
 
   return (
     <>
       <ActionsMenu>
         {(withClose) => (
-          <ButtonMenuItem onClick={withClose(() => setDeleteDialogOpen(true))}>
+          <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteApiCredential'))}>
             <T id="actions.delete" />
           </ButtonMenuItem>
         )}
       </ActionsMenu>
 
-      <DeleteCredentialDialog
-        type={type}
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        credential={credential}
-      />
+      <DeleteCredentialDialog type={type} credential={credential} />
     </>
   );
 }

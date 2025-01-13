@@ -4,19 +4,16 @@ import { Volume } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.volumes.deleteVolume');
 
-type DeleteVolumeDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  volume: Volume;
-};
-
-export function DeleteVolumeDialog({ open, onClose, volume }: DeleteVolumeDialogProps) {
-  const invalidate = useInvalidateApiQuery();
+export function DeleteVolumeDialog({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
+
+  const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     ...useApiMutationFn('deleteVolume', {
@@ -24,15 +21,14 @@ export function DeleteVolumeDialog({ open, onClose, volume }: DeleteVolumeDialog
     }),
     async onSuccess() {
       await invalidate('listVolumes');
-      onClose();
       notify.info(t('deleteSuccess', { name: volume.name }));
+      closeDialog();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id={`ConfirmDeleteVolume-${volume.id}`}
       title={<T id="title" />}
       description={
         <T

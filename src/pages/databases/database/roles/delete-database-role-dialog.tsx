@@ -5,20 +5,21 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.database.roles.deleteDialog');
 
 type DeleteDatabaseRoleDialogProps = {
-  open: boolean;
-  onClose: () => void;
   service: Service;
   role: DatabaseRole;
 };
 
-export function DeleteDatabaseRoleDialog({ open, onClose, service, role }: DeleteDatabaseRoleDialogProps) {
+export function DeleteDatabaseRoleDialog({ service, role }: DeleteDatabaseRoleDialogProps) {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
+
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
@@ -35,14 +36,13 @@ export function DeleteDatabaseRoleDialog({ open, onClose, service, role }: Delet
     async onSuccess() {
       await invalidate('getService', { path: { id: service.id } });
       notify.info(t('successNotification', { name: role.name }));
-      onClose();
+      closeDialog();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id={`ConfirmDeleteDatabaseRole-${role.name}`}
       title={<T id="title" />}
       description={<T id="description" />}
       destructiveAction

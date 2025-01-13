@@ -6,19 +6,19 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.secrets.bulkDelete');
 
 type BulkDeleteSecretsDialogProps = {
-  open: boolean;
-  onClose: () => void;
   secrets: Secret[];
   onDeleted: () => void;
 };
 
-export function BulkDeleteSecretsDialog({ open, onClose, secrets, onDeleted }: BulkDeleteSecretsDialogProps) {
+export function BulkDeleteSecretsDialog({ secrets, onDeleted }: BulkDeleteSecretsDialogProps) {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
 
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
@@ -35,14 +35,14 @@ export function BulkDeleteSecretsDialog({ open, onClose, secrets, onDeleted }: B
       const fulfilled = result.filter((result) => result.status === 'fulfilled');
       notify.success(t('successNotification', { count: fulfilled.length }));
 
+      closeDialog();
       onDeleted();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id="ConfirmBulkDeleteSecrets"
       title={<T id="title" />}
       description={<T id="description" values={{ count: secrets.length }} />}
       confirmationText={t('confirmationText')}

@@ -1,39 +1,36 @@
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { Volume } from 'src/api/model';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 import { VolumeForm } from '../volume-form';
 
 const T = createTranslate('pages.volumes.editDialog');
 
-type EditVolumeDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  volume: Volume;
-};
+export function EditVolumeDialog({ volume }: { volume: Volume }) {
+  const closeDialog = Dialog.useClose();
 
-export function EditVolumeDialog({ open, onClose, volume }: EditVolumeDialogProps) {
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="lg"
-    >
+    <Dialog id={`EditVolume-${volume.id}`} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <VolumeForm
         volume={volume}
-        onSubmitted={onClose}
+        onSubmitted={closeDialog}
         renderFooter={(formState) => (
-          <footer className="row mt-2 justify-end gap-2">
-            <Button variant="ghost" color="gray" onClick={onClose}>
+          <DialogFooter>
+            <CloseDialogButton>
               <Translate id="common.cancel" />
-            </Button>
+            </CloseDialogButton>
 
             <Button type="submit" loading={formState.isSubmitting} autoFocus>
               <Translate id="common.save" />
             </Button>
-          </footer>
+          </DialogFooter>
         )}
       />
     </Dialog>

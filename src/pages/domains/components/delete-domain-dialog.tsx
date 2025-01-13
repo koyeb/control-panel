@@ -4,19 +4,15 @@ import { Domain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.domains.deleteDialog');
 
-export type DeleteDomainDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  domain: Domain;
-};
-
-export function DeleteDomainDialog({ open, onClose, domain }: DeleteDomainDialogProps) {
+export function DeleteDomainDialog({ domain }: { domain: Domain }) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
+  const closeDialog = Dialog.useClose();
 
   const { mutateAsync: deleteDomain } = useMutation({
     ...useApiMutationFn('deleteDomain', {
@@ -25,14 +21,13 @@ export function DeleteDomainDialog({ open, onClose, domain }: DeleteDomainDialog
     async onSuccess() {
       await invalidate('listDomains');
       notify.success(t('successNotification', { domainName: domain.name }));
-      onClose();
+      closeDialog();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id={`ConfirmDeleteDomain-${domain.id}`}
       title={<T id="title" />}
       description={
         <T

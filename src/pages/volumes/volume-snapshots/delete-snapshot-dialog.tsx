@@ -4,19 +4,16 @@ import { VolumeSnapshot } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
+import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.volumeSnapshots.deleteSnapshot');
 
-type DeleteSnapshotDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  snapshot: VolumeSnapshot;
-};
-
-export function DeleteSnapshotDialog({ open, onClose, snapshot }: DeleteSnapshotDialogProps) {
-  const invalidate = useInvalidateApiQuery();
+export function DeleteSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
   const t = T.useTranslate();
+  const closeDialog = Dialog.useClose();
+
+  const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     ...useApiMutationFn('deleteSnapshot', {
@@ -24,15 +21,14 @@ export function DeleteSnapshotDialog({ open, onClose, snapshot }: DeleteSnapshot
     }),
     async onSuccess() {
       await invalidate('listSnapshots');
-      onClose();
       notify.info(t('deleteSuccess', { name: snapshot.name }));
+      closeDialog();
     },
   });
 
   return (
     <ConfirmationDialog
-      open={open}
-      onClose={onClose}
+      id={`ConfirmDeleteSnapshot-${snapshot.id}`}
       title={<T id="title" />}
       description={
         <T

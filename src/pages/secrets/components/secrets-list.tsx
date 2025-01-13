@@ -173,7 +173,6 @@ function Value({ secret }: { secret: Secret }) {
 }
 
 function SecretActions({ secret }: { secret: Secret }) {
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const openDialog = Dialog.useOpen();
 
   return (
@@ -184,7 +183,7 @@ function SecretActions({ secret }: { secret: Secret }) {
             <ButtonMenuItem onClick={withClose(() => openDialog(`EditSecret-${secret.id}`))}>
               <T id="actions.edit" />
             </ButtonMenuItem>
-            <ButtonMenuItem onClick={withClose(() => setDeleteDialogOpen(true))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteSecret-${secret.id}`))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
@@ -192,12 +191,7 @@ function SecretActions({ secret }: { secret: Secret }) {
       </ActionsMenu>
 
       <EditSecretDialog secret={secret} />
-
-      <DeleteSecretDialog
-        open={deleteDialogOpen}
-        onClose={() => setDeleteDialogOpen(false)}
-        secret={secret}
-      />
+      <DeleteSecretDialog secret={secret} />
     </>
   );
 }

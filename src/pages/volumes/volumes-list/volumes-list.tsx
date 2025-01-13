@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { Button, ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
 import { useService } from 'src/api/hooks/service';
@@ -10,6 +9,7 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { formatBytes } from 'src/application/memory';
 import { routes } from 'src/application/routes';
 import { ActionsMenu } from 'src/components/actions-menu';
+import { Dialog } from 'src/components/dialog';
 import { LinkButton } from 'src/components/link';
 import { NoResource } from 'src/components/no-resource';
 import { RegionFlag } from 'src/components/region-flag';
@@ -127,48 +127,34 @@ function AttachedService({ serviceId }: { serviceId?: string }) {
 }
 
 function Actions({ volume }: { volume: Volume }) {
-  const [openDialog, setOpenDialog] = useState<'edit' | 'createSnapshot' | 'delete'>();
   const snapshots = useFeatureFlag('snapshots');
+  const openDialog = Dialog.useOpen();
 
   return (
     <>
       <ActionsMenu>
         {(withClose) => (
           <>
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('edit'))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`EditVolume-${volume.id}`))}>
               <T id="actions.edit" />
             </ButtonMenuItem>
 
             {snapshots && (
-              <ButtonMenuItem onClick={withClose(() => setOpenDialog('createSnapshot'))}>
+              <ButtonMenuItem onClick={withClose(() => openDialog(`CreateSnapshotFromVolume-${volume.id}`))}>
                 <T id="actions.createSnapshot" />
               </ButtonMenuItem>
             )}
 
-            <ButtonMenuItem onClick={withClose(() => setOpenDialog('delete'))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteVolume-${volume.id}`))}>
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
         )}
       </ActionsMenu>
 
-      <EditVolumeDialog
-        open={openDialog === 'edit'}
-        onClose={() => setOpenDialog(undefined)}
-        volume={volume}
-      />
-
-      <CreateSnapshotDialog
-        open={openDialog === 'createSnapshot'}
-        onClose={() => setOpenDialog(undefined)}
-        volume={volume}
-      />
-
-      <DeleteVolumeDialog
-        open={openDialog === 'delete'}
-        onClose={() => setOpenDialog(undefined)}
-        volume={volume}
-      />
+      <EditVolumeDialog volume={volume} />
+      <CreateSnapshotDialog volume={volume} />
+      <DeleteVolumeDialog volume={volume} />
     </>
   );
 }
