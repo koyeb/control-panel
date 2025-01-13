@@ -1779,8 +1779,11 @@
           "refreshSuccess": "Domain <strong>{domainName}</strong> is being verified"
         },
         "changeApp": {
-          "appLabel": "Change the app assigned to domain <strong>{domainName}</strong>",
-          "appPlaceholder": "Select an app",
+          "app": {
+            "label": "Change the app assigned to domain <strong>{domainName}</strong>",
+            "placeholder": "Select an app"
+          },
+          "submit": "Apply",
           "noApp": "No app",
           "appAttachedSuccessNotification": "Domain <strong>{domainName}</strong> is now attached to app <strong>{appName}</strong>",
           "appDetachedSuccessNotification": "Domain <strong>{domainName}</strong> was detached from app"

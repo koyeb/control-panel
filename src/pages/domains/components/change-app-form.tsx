@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Button } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useApps } from 'src/api/hooks/service';
 import { Domain } from 'src/api/model';
@@ -63,20 +64,23 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
   });
 
   return (
-    <form ref={formRef} onSubmit={handleSubmit(form, mutation.mutateAsync)}>
+    <form ref={formRef} onSubmit={handleSubmit(form, mutation.mutateAsync)} className="row items-end gap-4">
       <ControlledSelect
         control={form.control}
         name="appId"
-        label={<T id="appLabel" values={{ domainName: domain.name }} />}
-        placeholder={t('appPlaceholder')}
+        label={<T id="app.label" values={{ domainName: domain.name }} />}
+        placeholder={t('app.placeholder')}
         items={['none', ...(apps ?? [])] as const}
         getKey={(app) => (app === 'none' ? 'none' : app.id)}
         itemToString={(app) => (app === 'none' ? 'none' : app.name)}
         itemToValue={(app) => (app === 'none' ? null : app.id)}
         renderItem={(app) => (app === 'none' ? <T id="noApp" /> : app.name)}
-        onChangeEffect={() => formRef.current?.requestSubmit()}
         className="max-w-sm"
       />
+
+      <Button variant="ghost" type="submit">
+        <T id="submit" />
+      </Button>
     </form>
   );
 }
