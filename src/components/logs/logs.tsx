@@ -10,11 +10,11 @@ import { downloadFileFromString } from 'src/application/download-file-from-strin
 import { notify } from 'src/application/notify';
 import { IconCopy, IconDownload, IconEllipsis, IconFullscreen } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
-import { useShortcut } from 'src/hooks/shortcut';
 import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 
 import { ControlledCheckbox } from '../controlled';
+import { FullScreen } from '../full-screen';
 
 import { getInitialLogOptions, LogOptions, storeLogOptions } from './log-options';
 
@@ -52,11 +52,10 @@ export function Logs({
   }, [form]);
 
   return (
-    <section
-      className={clsx(
-        'col divide-y bg-neutral',
-        form.watch('fullScreen') ? 'fixed inset-0 z-50' : 'rounded-lg border',
-      )}
+    <FullScreen
+      enabled={form.watch('fullScreen')}
+      exit={() => form.setValue('fullScreen', false)}
+      className={clsx('col divide-y bg-neutral', !form.watch('fullScreen') && 'rounded-lg border')}
     >
       <LogsHeader expired={expired} header={header} form={form} />
 
@@ -79,7 +78,7 @@ export function Logs({
         lines={lines}
         form={form}
       />
-    </section>
+    </FullScreen>
   );
 }
 
@@ -90,7 +89,7 @@ type LogsHeaderProps = {
 };
 
 function LogsHeader({ expired, header, form }: LogsHeaderProps) {
-  const toggleFullScreen = useFullScreen(form);
+  const toggleFullScreen = () => form.setValue('fullScreen', !form.getValues('fullScreen'));
   const isDesktop = useBreakpoint('md');
 
   const fullScreenButton = !expired && (
@@ -203,30 +202,6 @@ function useCopyLogs(lines: LogLine[]) {
   };
 }
 
-function useFullScreen(form: UseFormReturn<LogOptions>) {
-  useShortcut(['escape'], () => {
-    if (form.getValues('fullScreen')) {
-      form.setValue('fullScreen', false);
-    }
-  });
-
-  useEffect(() => {
-    const { unsubscribe } = form.watch((values) => {
-      if (values.fullScreen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-    });
-
-    return unsubscribe;
-  });
-
-  return () => {
-    form.setValue('fullScreen', !form.getValues('fullScreen'));
-  };
-}
-
 type LogLinesProps = {
   expired?: boolean;
   hasFilters?: boolean;
@@ -266,9 +241,8 @@ function LogLines({ expired, hasFilters, options, setOption, lines, renderLine }
       className={clsx(
         'scrollbar-green scrollbar-thin overflow-auto py-2',
         !options.fullScreen && 'h-[32rem] resize-y',
+        options.fullScreen && 'h-full',
       )}
-      // set height with style to clear the one set manually when resizing
-      style={{ height: options.fullScreen ? '100%' : undefined }}
     >
       {lines.length === 0 && <NoLogs expired={expired} hasFilters={hasFilters} />}
 
