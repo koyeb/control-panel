@@ -75,6 +75,11 @@ export default defineConfig({
           xterm: ['@xterm/xterm'],
           nivo: ['@nivo/line', '@nivo/bar'],
           analytics: ['@sentry/react', 'posthog-js'],
+          'code-mirror': [
+            '@uiw/codemirror-extensions-langs',
+            '@uiw/codemirror-theme-github',
+            '@uiw/react-codemirror',
+          ],
           vendors: [
             '@floating-ui/react',
             'ansi_up',

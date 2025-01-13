@@ -1161,6 +1161,7 @@
         "content": {
           "label": "File content",
           "placeholder": "Add content, like secrets and variables",
+          "languageSelect.placeholder": "Language...",
           "fileTooLarge": "File too large"
         },
         "add": "Add file",
