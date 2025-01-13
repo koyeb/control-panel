@@ -27,7 +27,7 @@ type AutocompleteProps<Item> = {
   selectedItem?: Item | null;
   onSelectedItemChange?: (item: Item) => void;
   inputValue?: string;
-  onInputValueChange?: (value: string) => void;
+  onInputValueChange?: (value: string, isItemSelected: boolean) => void;
   resetOnBlur?: boolean;
   onBlur?: (event: React.FocusEvent) => void;
   getKey: (item: NonNullable<Item>) => React.Key;
@@ -81,9 +81,16 @@ export const Autocomplete = forwardRef(function Autocomplete<Item>(
     id,
     items,
     inputValue,
-    onInputValueChange({ inputValue }) {
+    onInputValueChange({ inputValue, type }) {
+      const isItemSelected = [
+        '__item_click__',
+        '__input_keydown_enter__',
+        '__input_blur__',
+        '__controlled_prop_updated_selected_item__',
+      ].includes(type);
+
       if (inputValue !== undefined) {
-        onInputValueChange?.(inputValue);
+        onInputValueChange?.(inputValue, isItemSelected);
       }
     },
     selectedItem,
@@ -133,6 +140,7 @@ export const Autocomplete = forwardRef(function Autocomplete<Item>(
     >
       <InputBox
         boxRef={dropdown.setReference}
+        type="search"
         size={size}
         name={name}
         placeholder={placeholder}
