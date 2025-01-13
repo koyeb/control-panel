@@ -1161,8 +1161,10 @@
         "content": {
           "label": "File content",
           "placeholder": "Add content, like secrets and variables",
+          "fileTooLarge": "File too large",
           "languageSelect.placeholder": "Language...",
-          "fileTooLarge": "File too large"
+          "toggleFullScreen": "Toggle full screen",
+          "fullScreenTitle": "Edit file {mountPath}"
         },
         "add": "Add file",
         "remove": "Remove"

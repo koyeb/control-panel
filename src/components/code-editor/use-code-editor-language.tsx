@@ -3,16 +3,11 @@ import { useState, useEffect } from 'react';
 
 import { type CodeEditorLanguage } from './code-editor';
 
-// eslint-disable-next-line react-refresh/only-export-components
 export function useCodeEditorLanguage(fileName?: string) {
   const [language, setLanguage] = useState<CodeEditorLanguage>(() => detectLanguage(fileName) ?? 'plaintext');
 
   useEffect(() => {
-    const detected = detectLanguage(fileName);
-
-    if (detected) {
-      setLanguage(detected);
-    }
+    setLanguage(detectLanguage(fileName) ?? 'plaintext');
   }, [fileName]);
 
   return [language, setLanguage] as const;
