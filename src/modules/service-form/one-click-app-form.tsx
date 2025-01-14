@@ -38,7 +38,7 @@ import {
 } from '../deployment/metadata/runtime-metadata';
 
 import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
-import { ServiceFormPaymentDialog } from './components/service-form-payment-dialog';
+import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
 import { generateAppName } from './helpers/generate-app-name';
 import { defaultServiceForm } from './helpers/initialize-service-form';
@@ -115,8 +115,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
-    usePreSubmitServiceForm();
+  const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
 
   useOnCostEstimationChanged(form, onCostChanged);
 
@@ -149,17 +148,8 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         </div>
       </form>
 
-      <RestrictedGpuDialog
-        open={restrictedGpuDialogOpen}
-        onClose={() => setRestrictedGpuDialogOpen(false)}
-        instanceIdentifier={form.watch('instance')}
-      />
-
-      <ServiceFormPaymentDialog
-        requiredPlan={requiredPlan}
-        onClose={() => setRequiredPlan(undefined)}
-        submitForm={() => formRef.current?.requestSubmit()}
-      />
+      <RestrictedGpuDialog instanceIdentifier={form.watch('instance')} />
+      <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );
 }

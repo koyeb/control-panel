@@ -10,7 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Controller, FormState, useForm } from 'react-hook-form';
 
-import { Button, Dialog, Field, FieldLabel } from '@koyeb/design-system';
+import { Button, Field, FieldLabel } from '@koyeb/design-system';
 import { api, ApiEndpointParams } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { Address, OrganizationPlan } from 'src/api/model';
@@ -26,7 +26,9 @@ import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
 
-const T = createTranslate('components.paymentDialog');
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
+
+const T = createTranslate('components.upgradeDialog');
 
 const waitForPaymentMethodTimeout = 12 * 1000;
 
@@ -194,29 +196,39 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
   );
 }
 
-type PaymentDialogProps = {
-  open: boolean;
-  onClose: () => void;
+type UpgradeDialogProps = {
+  plan?: OrganizationPlan;
+  onPlanChanged: () => void;
   title: React.ReactNode;
-  description: React.ReactNode;
+  description?: React.ReactNode;
   submit: React.ReactNode;
-} & Omit<PaymentFormProps, 'renderFooter'>;
+};
 
-export function PaymentDialog({ open, onClose, title, description, submit, ...props }: PaymentDialogProps) {
+export function UpgradeDialog({ plan, onPlanChanged, title, description, submit }: UpgradeDialogProps) {
+  const closeDialog = Dialog.useClose();
+
   return (
-    <Dialog isOpen={open} onClose={onClose} width="lg" title={title} description={description}>
+    <Dialog id={`Upgrade-${plan}`} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={title} />
+
+      {description && <p className="text-dim">{description}</p>}
+
       <PaymentForm
-        {...props}
+        plan={plan}
+        onPlanChanged={() => {
+          closeDialog();
+          onPlanChanged();
+        }}
         renderFooter={(formState) => (
-          <footer className="row justify-end gap-2">
-            <Button variant="outline" color="gray" size={3} onClick={onClose}>
+          <DialogFooter>
+            <CloseDialogButton size={3}>
               <Translate id="common.cancel" />
-            </Button>
+            </CloseDialogButton>
 
             <Button type="submit" size={3} loading={formState.isSubmitting}>
               {submit}
             </Button>
-          </footer>
+          </DialogFooter>
         )}
       />
     </Dialog>

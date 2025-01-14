@@ -13,8 +13,8 @@ import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form
 import { GpuAlert } from './components/gpu-alert';
 import { QuotaAlert } from './components/quota-alert';
 import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
-import { ServiceFormPaymentDialog } from './components/service-form-payment-dialog';
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
+import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { SubmitButton } from './components/submit-button';
 import { ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
 import { getDeployParams } from './helpers/get-deploy-params';
@@ -85,8 +85,7 @@ function ServiceForm_({
     },
   });
 
-  const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
-    usePreSubmitServiceForm();
+  const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
 
   const instance = useInstance(form.watch('instance'));
   const cost = useEstimatedCost(useFormValues(form));
@@ -139,17 +138,8 @@ function ServiceForm_({
         </form>
       </FormProvider>
 
-      <RestrictedGpuDialog
-        open={restrictedGpuDialogOpen}
-        onClose={() => setRestrictedGpuDialogOpen(false)}
-        instanceIdentifier={form.watch('instance')}
-      />
-
-      <ServiceFormPaymentDialog
-        requiredPlan={requiredPlan}
-        onClose={() => setRequiredPlan(undefined)}
-        submitForm={() => formRef.current?.requestSubmit()}
-      />
+      <RestrictedGpuDialog instanceIdentifier={form.watch('instance')} />
+      <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );
 }

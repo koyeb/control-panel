@@ -1,14 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
-import { Tooltip, Button } from '@koyeb/design-system';
+import { Button, Tooltip } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
-import { useInvalidateApiQuery, useApiMutationFn } from 'src/api/use-api';
+import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
+import { Dialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
-import { PaymentDialog } from 'src/components/payment-form';
-import { createTranslate } from 'src/intl/translate';
+import { UpgradeDialog } from 'src/components/payment-form';
+import { createTranslate, TranslateEnum } from 'src/intl/translate';
 
 type Plan = Extract<OrganizationPlan, 'starter' | 'pro' | 'scale' | 'enterprise'>;
 
@@ -18,10 +19,11 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   const organization = useOrganization();
   const oldPlan = useRef(organization.plan);
 
-  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
 
   const onPlanChanged = () => {
-    setPaymentDialogOpen(false);
+    closeDialog();
     notify.success(<PlanChangedNotification oldPlan={oldPlan.current} newPlan={plan} />);
   };
 
@@ -31,7 +33,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
     if (organization.hasPaymentMethod) {
       mutation.mutate(plan);
     } else {
-      setPaymentDialogOpen(true);
+      openDialog(`Upgrade-${plan}`);
     }
   };
 
@@ -68,14 +70,11 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
         )}
       </Tooltip>
 
-      <PaymentDialog
+      <UpgradeDialog
         plan={plan}
-        open={paymentDialogOpen}
-        onClose={() => setPaymentDialogOpen(false)}
         onPlanChanged={onPlanChanged}
-        title={<T id="paymentDialog.title" values={{ plan: <T id={`plans.${plan}.name`} /> }} />}
-        description={null}
-        submit={<T id="paymentDialog.submit" />}
+        title={<T id="upgradeDialog.title" values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />}
+        submit={<T id="upgradeDialog.submit" />}
       />
     </>
   );

@@ -1,28 +1,18 @@
-import { Dialog } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
+import { Dialog, DialogHeader } from 'src/components/dialog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.serviceForm');
 
-type RestrictedGpuDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  instanceIdentifier: string | null;
-};
-
-export function RestrictedGpuDialog({ open, onClose, instanceIdentifier }: RestrictedGpuDialogProps) {
+export function RestrictedGpuDialog({ instanceIdentifier }: { instanceIdentifier: string | null }) {
   const instance = useInstance(instanceIdentifier);
   const link = 'https://app.reclaim.ai/m/koyeb-intro/short-call';
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      width="lg"
-      title={<T id="gpuRestrictedDialog.title" />}
-      className="col gap-4"
-    >
+    <Dialog id="RestrictedGpu" className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="gpuRestrictedDialog.title" />} />
+
       <p>
         <T id="gpuRestrictedDialog.line1" values={{ instance: instance?.displayName }} />
       </p>

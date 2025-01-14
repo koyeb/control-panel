@@ -38,7 +38,7 @@ import { getName, hasProperty } from 'src/utils/object';
 import { slugify } from 'src/utils/strings';
 
 import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
-import { ServiceFormPaymentDialog } from './components/service-form-payment-dialog';
+import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
@@ -112,8 +112,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   const model = useModel(form.watch('modelSlug'));
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [[requiredPlan, setRequiredPlan], [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen], preSubmit] =
-    usePreSubmitServiceForm();
+  const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
 
   useOnCostEstimationChanged(form, onCostChanged);
 
@@ -146,17 +145,8 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
         </div>
       </form>
 
-      <RestrictedGpuDialog
-        open={restrictedGpuDialogOpen}
-        onClose={() => setRestrictedGpuDialogOpen(false)}
-        instanceIdentifier={form.watch('instance')}
-      />
-
-      <ServiceFormPaymentDialog
-        requiredPlan={requiredPlan}
-        onClose={() => setRequiredPlan(undefined)}
-        submitForm={() => formRef.current?.requestSubmit()}
-      />
+      <RestrictedGpuDialog instanceIdentifier={form.watch('instance')} />
+      <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );
 }

@@ -3,18 +3,19 @@ import { useState } from 'react';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { CatalogInstance, OrganizationPlan } from 'src/api/model';
 import { useTrackEvent } from 'src/application/posthog';
+import { Dialog } from 'src/components/dialog';
 
 export function usePreSubmitServiceForm() {
+  const openDialog = Dialog.useOpen();
+
   const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
-  const [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen] = useState(false);
 
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
   const trackEvent = useTrackEvent();
 
   return [
-    [requiredPlan, setRequiredPlan],
-    [restrictedGpuDialogOpen, setRestrictedGpuDialogOpen],
+    requiredPlan,
     (instance: CatalogInstance): boolean => {
       const isRestrictedGpu =
         instance?.category === 'gpu' &&
@@ -26,10 +27,13 @@ export function usePreSubmitServiceForm() {
       }
 
       if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
-        setRequiredPlan(instance.plans[0] as OrganizationPlan);
+        const plan = instance.plans[0] as OrganizationPlan;
+
+        setRequiredPlan(plan);
+        openDialog(`Upgrade-${plan}`);
         return false;
       } else if (isRestrictedGpu) {
-        setRestrictedGpuDialogOpen(true);
+        openDialog('RestrictedGpu');
         return false;
       }
 

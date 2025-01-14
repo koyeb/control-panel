@@ -230,7 +230,7 @@
         "description": "There are no logs to show, the latest logs may be older than 72 hours."
       }
     },
-    "paymentDialog": {
+    "upgradeDialog": {
       "cardNumberLabel": "Card number",
       "expirationLabel": "Expiration",
       "cvcLabel": "CVC",
@@ -398,9 +398,9 @@
         "total": "Total cost",
         "pricePerMonth": "{price}/month"
       },
-      "paymentDialog": {
-        "title": "Start for free with $20 of credit over 30 days",
-        "description": "The current selected instance is available on the {plan} plan at ${price}/mo. Add a payment method to upgrade and deploy.",
+      "upgradeDialog": {
+        "title": "Add credit card",
+        "description": "The current selected instance is available on the {plan} plan at 0/mo. Add a payment method to upgrade and deploy.",
         "submitButton": "Upgrade and deploy"
       }
     },
@@ -850,9 +850,9 @@
         "line2": "Let's <link>chat</link> to learn more about your needs and get started.",
         "cta": "Book a call"
       },
-      "paymentDialog": {
-        "title": "Start for free with $20 of credit over 30 days",
-        "description": "The current selected instance is available on the {plan} plan at ${price}/mo. Add a payment method to upgrade and deploy.",
+      "upgradeDialog": {
+        "title": "Add credit card",
+        "description": "The current selected instance is available on the {plan} plan at 0/mo. Add a payment method to upgrade and deploy.",
         "submitButton": "Upgrade and deploy"
       },
       "errors": {
@@ -2352,7 +2352,7 @@
             }
           }
         },
-        "paymentDialog": {
+        "upgradeDialog": {
           "title": "Upgrade to the {plan} plan",
           "submit": "Upgrade"
         },
