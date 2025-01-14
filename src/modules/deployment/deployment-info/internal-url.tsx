@@ -16,9 +16,7 @@ type InternalUrlProps = {
 };
 
 export function InternalUrl({ app, service, deployment }: InternalUrlProps) {
-  const urls = getServiceUrls(app, service, deployment).filter(
-    (url) => url.externalUrl === undefined && url.internalUrl !== undefined,
-  );
+  const urls = getServiceUrls(app, service, deployment).filter((url) => url.internalUrl !== undefined);
 
   if (urls.length === 0) {
     return null;
