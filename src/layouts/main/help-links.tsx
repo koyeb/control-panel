@@ -38,7 +38,7 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
           ref={ref}
           className={clsx(
             'row mx-4 items-center gap-1',
-            'rounded-md border px-2 py-1',
+            'rounded-md border py-1 pl-3 pr-2',
             'transition-colors hover:bg-muted/50',
             'text-xs font-medium text-dim',
           )}

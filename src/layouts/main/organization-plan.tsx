@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Badge, Floating, useBreakpoint } from '@koyeb/design-system';
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
+import { IconChevronRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { PlanIcon } from 'src/components/plan-icon';
 import { FeatureFlag } from 'src/hooks/feature-flag';
@@ -45,7 +46,7 @@ export function OrganizationPlan() {
       renderReference={(ref, props) => (
         <div
           ref={ref}
-          className={clsx('col gap-4 px-3 py-2 text-start transition-colors', open && 'bg-muted/50')}
+          className={clsx('col gap-4 py-2 pl-3 pr-2 text-start transition-colors', open && 'bg-muted/50')}
           {...props}
         >
           <div className="row items-center gap-2">
@@ -60,13 +61,17 @@ export function OrganizationPlan() {
               />
             </div>
 
-            <FeatureFlag feature="trial">
-              {organization.trial && (
-                <Badge size={1} color="green" className="ms-auto">
+            {organization.trial && (
+              <FeatureFlag feature="trial">
+                <Badge size={1} color="green">
                   Trial
                 </Badge>
-              )}
-            </FeatureFlag>
+              </FeatureFlag>
+            )}
+
+            <div className="ms-auto">
+              <IconChevronRight className="size-4 text-dim" />
+            </div>
           </div>
 
           {organization?.trial && (

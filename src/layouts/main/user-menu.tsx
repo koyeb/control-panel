@@ -53,11 +53,18 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       renderReference={(ref, props) => (
         <div
           ref={ref}
-          className="row items-center gap-2 px-3 py-2 transition-colors hover:bg-muted/50"
+          className="row items-center gap-2 py-2 pl-3 pr-2 transition-colors hover:bg-muted/50"
           {...props}
         >
           <UserAvatar user={user} />
+
           {!collapsed && <span className="flex-1 truncate font-medium">{user?.name}</span>}
+
+          {!collapsed && (
+            <span>
+              <IconChevronRight className="size-4 text-dim" />
+            </span>
+          )}
         </div>
       )}
       renderFloating={(ref, props) => (
