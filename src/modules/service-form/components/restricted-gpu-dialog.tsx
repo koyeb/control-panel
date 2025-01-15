@@ -1,5 +1,5 @@
 import { useInstance } from 'src/api/hooks/catalog';
-import { Dialog, DialogHeader } from 'src/components/dialog';
+import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
@@ -30,11 +30,11 @@ export function RestrictedGpuDialog({ instanceIdentifier }: { instanceIdentifier
         />
       </p>
 
-      <div className="row mt-2 items-center justify-end gap-4">
+      <DialogFooter>
         <ExternalLinkButton openInNewTab href={link}>
           <T id="gpuRestrictedDialog.cta" />
         </ExternalLinkButton>
-      </div>
+      </DialogFooter>
     </Dialog>
   );
 }

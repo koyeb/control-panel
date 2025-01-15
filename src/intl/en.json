@@ -177,16 +177,25 @@
       "free": "Free",
       "freeInstanceDescription": "Run 1x web service for free",
       "inUse": "In use",
+      "requiresHigherQuota": "Requires higher quota",
       "insufficientVRam": "Insufficient VRAM",
       "bestFit": "Best fit",
       "comingSoon": "Coming soon",
       "new": "New",
       "pricePerMonth": "{price}/month",
       "pricePerHour": "{price}/hour",
+      "addCreditCard": "Add credit card",
       "upgradeDialog": {
         "title": "Add credit card",
         "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
         "submitButton": "Add credit card"
+      },
+      "requestQuotaIncrease": "Request increase",
+      "requestQuotaIncreaseDialog": {
+        "title": "Quota increase request",
+        "line1": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
+        "line2": "Let's <link>chat</link> to learn more about your needs and get started.",
+        "cta": "Book a call"
       },
       "instanceAssistant": {
         "title": "Need help to decide? Tell us what you want to deploy:",

@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 
-import { Badge, Button, Radio, TabButton, TabButtons } from '@koyeb/design-system';
+import { Badge, Button, DialogFooter, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
@@ -12,8 +12,9 @@ import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
-import { Dialog } from './dialog';
+import { Dialog, DialogHeader } from './dialog';
 import { InstanceAssistant } from './instance-assistant';
+import { ExternalLink, ExternalLinkButton } from './link';
 import { UpgradeDialog } from './payment-form';
 
 const T = createTranslate('components.instanceSelector');
@@ -206,10 +207,57 @@ function InstanceItem({
           onClick={() => openDialog('UpgradeInstanceSelector')}
           className="invisible mr-4 group-hover/instance-item:visible"
         >
-          Add credit card
+          <T id="addCreditCard" />
         </Button>
       )}
+
+      {organization.plan !== 'hobby' && instance.status === 'restricted' && (
+        <Button
+          variant="outline"
+          color="gray"
+          size={1}
+          onClick={() => openDialog(`RequestQuotaIncrease-${instance.identifier}`)}
+          className="invisible mr-4 group-hover/instance-item:visible"
+        >
+          <T id="requestQuotaIncrease" />
+        </Button>
+      )}
+
+      <RequestQuotaIncreaseDialog instance={instance} />
     </li>
+  );
+}
+
+export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInstance }) {
+  const link = 'https://app.reclaim.ai/m/koyeb-intro/short-call';
+
+  return (
+    <Dialog id={`RequestQuotaIncrease-${instance.identifier}`} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="requestQuotaIncreaseDialog.title" />} />
+
+      <p>
+        <T id="requestQuotaIncreaseDialog.line1" values={{ instance: instance?.displayName }} />
+      </p>
+
+      <p>
+        <T
+          id="requestQuotaIncreaseDialog.line2"
+          values={{
+            link: (children) => (
+              <ExternalLink openInNewTab href={link} className="underline">
+                {children}
+              </ExternalLink>
+            ),
+          }}
+        />
+      </p>
+
+      <DialogFooter>
+        <ExternalLinkButton openInNewTab href={link}>
+          <T id="requestQuotaIncreaseDialog.cta" />
+        </ExternalLinkButton>
+      </DialogFooter>
+    </Dialog>
   );
 }
 
@@ -342,6 +390,12 @@ function InstanceBadge({ instance, availability, insufficientVRam, bestFit }: In
         <Badge size={1} color="blue">
           <T id="new" />
         </Badge>
+
+        {instance.status === 'restricted' && (
+          <Badge size={1} color="orange">
+            <T id="requiresHigherQuota" />
+          </Badge>
+        )}
 
         {insufficientVRam && (
           <Badge size={1} color="orange">
