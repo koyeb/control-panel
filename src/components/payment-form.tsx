@@ -8,7 +8,6 @@ import {
 import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect } from 'react';
 import { Controller, FormState, useForm } from 'react-hook-form';
 
 import { Button, Field, FieldLabel } from '@koyeb/design-system';

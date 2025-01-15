@@ -205,7 +205,7 @@ function InstanceItem({
           color="gray"
           size={1}
           onClick={() => openDialog('UpgradeInstanceSelector')}
-          className="invisible mr-4 group-hover/instance-item:visible"
+          className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
         >
           <T id="addCreditCard" />
         </Button>
@@ -217,7 +217,7 @@ function InstanceItem({
           color="gray"
           size={1}
           onClick={() => openDialog(`RequestQuotaIncrease-${instance.identifier}`)}
-          className="invisible mr-4 group-hover/instance-item:visible"
+          className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
         >
           <T id="requestQuotaIncrease" />
         </Button>

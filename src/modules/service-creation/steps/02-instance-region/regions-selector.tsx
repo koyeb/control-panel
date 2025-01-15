@@ -9,8 +9,8 @@ import {
 import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
-import { RegionsMap } from 'src/components/regions-map/regions-map';
 import { createTranslate } from 'src/intl/translate';
+import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.serviceCreation.instanceRegions');
 
@@ -28,26 +28,12 @@ export function RegionsSelector({
   onRegionSelected,
 }: RegionsSelectorProps) {
   return (
-    <div>
+    <div className="flex-1 lg:mt-16">
       <RegionsList
-        className="2xl:hidden"
         selectedInstance={selectedInstance}
-        regions={regions}
+        regions={regions.filter(hasProperty('status', 'available'))}
         selectedRegions={selectedRegions}
         onRegionSelected={onRegionSelected}
-      />
-
-      <RegionsMap
-        className="hidden 2xl:block"
-        regions={regions}
-        renderRegion={(region) => (
-          <RegionItem
-            selectedInstance={selectedInstance}
-            region={region}
-            selected={selectedRegions.includes(region)}
-            onSelected={onRegionSelected}
-          />
-        )}
       />
 
       <Tooltip content={<T id="awsRegions.tooltip" />}>

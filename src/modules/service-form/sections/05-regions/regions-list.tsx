@@ -2,6 +2,7 @@ import sortBy from 'lodash-es/sortBy';
 
 import { useRegions } from 'src/api/hooks/catalog';
 import { useRegionAvailabilities } from 'src/application/instance-region-availability';
+import { hasProperty } from 'src/utils/object';
 
 import { RegionItem } from './region-item';
 
@@ -10,7 +11,7 @@ export function RegionsList() {
 
   return (
     <div className="gaps grid grid-cols-1 md:grid-cols-2">
-      {regions.map((region) => (
+      {regions.filter(hasProperty('status', 'available')).map((region) => (
         <RegionItem key={region.identifier} region={region} />
       ))}
     </div>

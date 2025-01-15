@@ -65,7 +65,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         selectedRegions={state.selectedRegions}
       />
 
-      <div className="col lg:row items-center gap-8 lg:gap-4">
+      <div className="col lg:row gap-8 lg:gap-4">
         <InstanceSelector
           instances={state.instances}
           selectedInstance={state.selectedInstance}
