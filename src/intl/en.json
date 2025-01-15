@@ -183,6 +183,11 @@
       "new": "New",
       "pricePerMonth": "{price}/month",
       "pricePerHour": "{price}/hour",
+      "upgradeDialog": {
+        "title": "Add credit card",
+        "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
+        "submitButton": "Add credit card"
+      },
       "instanceAssistant": {
         "title": "Need help to decide? Tell us what you want to deploy:",
         "queryPlaceholder": "Click an example or explain your usage",

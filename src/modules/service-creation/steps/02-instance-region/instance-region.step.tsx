@@ -71,8 +71,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
           selectedInstance={state.selectedInstance}
           checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
           onInstanceSelected={actions.instanceSelected}
-          // eslint-disable-next-line tailwindcss/no-arbitrary-value
-          className="w-full max-w-[30rem]"
+          className="w-full max-w-xl"
         />
 
         <RegionsSelector

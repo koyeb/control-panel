@@ -1,17 +1,20 @@
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 
-import { Badge, Radio, TabButton, TabButtons } from '@koyeb/design-system';
+import { Badge, Button, Radio, TabButton, TabButtons } from '@koyeb/design-system';
+import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { FormattedPrice } from 'src/intl/formatted';
-import { createTranslate } from 'src/intl/translate';
+import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
+import { Dialog } from './dialog';
 import { InstanceAssistant } from './instance-assistant';
+import { UpgradeDialog } from './payment-form';
 
 const T = createTranslate('components.instanceSelector');
 
@@ -85,6 +88,19 @@ export function InstanceSelector({
       />
 
       {hasKoyebAI && <InstanceAssistant />}
+
+      <UpgradeDialog
+        id="UpgradeInstanceSelector"
+        plan="starter"
+        title={<T id="upgradeDialog.title" />}
+        description={
+          <T
+            id="upgradeDialog.description"
+            values={{ plan: <TranslateEnum enum="plans" value="starter" /> }}
+          />
+        }
+        submit={<T id="upgradeDialog.submitButton" />}
+      />
     </div>
   );
 }
@@ -142,6 +158,11 @@ function InstanceItem({
   availability,
   onSelected,
 }: InstanceItemProps) {
+  const openDialog = Dialog.useOpen();
+
+  const organization = useOrganization();
+  const upgradeRequired = instance.plans && organization && !instance.plans.includes(organization?.plan);
+
   const ref = useRef<HTMLLIElement>(null);
   const [isAvailable] = availability;
   const disabled = !isAvailable;
@@ -153,7 +174,7 @@ function InstanceItem({
   }, [selected]);
 
   return (
-    <li ref={ref}>
+    <li ref={ref} className="row group/instance-item items-center justify-between">
       <Radio
         name="instance"
         value={instance.identifier}
@@ -176,6 +197,18 @@ function InstanceItem({
         onChange={onSelected}
         className="row w-full items-center gap-3 px-3 py-2"
       />
+
+      {organization.plan === 'hobby' && upgradeRequired && (
+        <Button
+          variant="outline"
+          color="gray"
+          size={1}
+          onClick={() => openDialog('UpgradeInstanceSelector')}
+          className="invisible mr-4 group-hover/instance-item:visible"
+        >
+          Add credit card
+        </Button>
+      )}
     </li>
   );
 }

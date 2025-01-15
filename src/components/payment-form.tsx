@@ -8,6 +8,7 @@ import {
 import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { useEffect } from 'react';
 import { Controller, FormState, useForm } from 'react-hook-form';
 
 import { Button, Field, FieldLabel } from '@koyeb/design-system';
@@ -15,6 +16,7 @@ import { api, ApiEndpointParams } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { Address, OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { getToken, useToken } from 'src/application/token';
@@ -138,7 +140,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
   const style = theme === ThemeMode.light ? stylesLight : stylesDark;
 
   return (
-    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-6">
+    <form onSubmit={withStopPropagation(handleSubmit(form, mutation.mutateAsync))} className="col gap-6">
       <div className="grid grid-cols-2 gap-4">
         <Field className="col-span-2">
           <FieldLabel>
@@ -197,18 +199,19 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
 }
 
 type UpgradeDialogProps = {
+  id?: string;
   plan?: OrganizationPlan;
-  onPlanChanged: () => void;
+  onPlanChanged?: () => void;
   title: React.ReactNode;
   description?: React.ReactNode;
   submit: React.ReactNode;
 };
 
-export function UpgradeDialog({ plan, onPlanChanged, title, description, submit }: UpgradeDialogProps) {
+export function UpgradeDialog({ id, plan, onPlanChanged, title, description, submit }: UpgradeDialogProps) {
   const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog id={`Upgrade-${plan}`} className="col w-full max-w-xl gap-4">
+    <Dialog id={id ?? `Upgrade-${plan}`} className="col w-full max-w-xl gap-4">
       <DialogHeader title={title} />
 
       {description && <p className="text-dim">{description}</p>}
@@ -217,7 +220,7 @@ export function UpgradeDialog({ plan, onPlanChanged, title, description, submit 
         plan={plan}
         onPlanChanged={() => {
           closeDialog();
-          onPlanChanged();
+          onPlanChanged?.();
         }}
         renderFooter={(formState) => (
           <DialogFooter>
