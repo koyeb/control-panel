@@ -413,8 +413,8 @@
         "pricePerMonth": "{price}/month"
       },
       "upgradeDialog": {
-        "title": "Add credit card",
-        "description": "The current selected instance is available on the {plan} plan at 0/mo. Add a payment method to upgrade and deploy.",
+        "title": "Upgrade plan",
+        "description": "The current selected instance is available on the {plan} plan at $0/mo. Add a payment method to upgrade and deploy.",
         "submitButton": "Upgrade and deploy"
       }
     },
@@ -865,8 +865,8 @@
         "cta": "Book a call"
       },
       "upgradeDialog": {
-        "title": "Add credit card",
-        "description": "The current selected instance is available on the {plan} plan at 0/mo. Add a payment method to upgrade and deploy.",
+        "title": "Upgrade plan",
+        "description": "The current selected instance is available on the {plan} plan at $0/mo. Add a payment method to upgrade and deploy.",
         "submitButton": "Upgrade and deploy"
       },
       "errors": {
@@ -1167,10 +1167,10 @@
       },
       "files": {
         "title": "Files",
-        "description": "Seamlessly mount runtime files with dynamic interpolation and secure permissions",
+        "description": "Access content as a file at a specific path",
         "mountPath": {
-          "label": "Mount path",
-          "placeholder": "e.g. /folder/folder"
+          "label": "Path",
+          "placeholder": "/path/to/file.conf"
         },
         "content": {
           "label": "File content",
