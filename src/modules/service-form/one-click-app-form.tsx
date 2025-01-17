@@ -37,7 +37,7 @@ import {
   ScalingMetadata,
 } from '../deployment/metadata/runtime-metadata';
 
-import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
+import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
 import { generateAppName } from './helpers/generate-app-name';
@@ -148,7 +148,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         </div>
       </form>
 
-      <RestrictedGpuDialog instanceIdentifier={form.watch('instance')} />
+      <QuotaIncreaseRequestDialog instanceIdentifier={form.watch('instance')} />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );

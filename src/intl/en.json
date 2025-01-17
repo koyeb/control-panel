@@ -858,7 +858,7 @@
         "save": "Save",
         "noPreviousBuild": "Your service doesn't have any successful build yet"
       },
-      "gpuRestrictedDialog": {
+      "quotaIncreaseRequestDialog": {
         "title": "Quota increase request",
         "line1": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
         "line2": "Let's <link>chat</link> to learn more about your needs and get started.",

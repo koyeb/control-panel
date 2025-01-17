@@ -37,7 +37,7 @@ import { defined } from 'src/utils/assert';
 import { getName, hasProperty } from 'src/utils/object';
 import { slugify } from 'src/utils/strings';
 
-import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
+import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
@@ -145,7 +145,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
         </div>
       </form>
 
-      <RestrictedGpuDialog instanceIdentifier={form.watch('instance')} />
+      <QuotaIncreaseRequestDialog instanceIdentifier={form.watch('instance')} />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );

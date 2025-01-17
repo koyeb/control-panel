@@ -12,7 +12,7 @@ import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form
 
 import { GpuAlert } from './components/gpu-alert';
 import { QuotaAlert } from './components/quota-alert';
-import { RestrictedGpuDialog } from './components/restricted-gpu-dialog';
+import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { SubmitButton } from './components/submit-button';
@@ -138,7 +138,7 @@ function ServiceForm_({
         </form>
       </FormProvider>
 
-      <RestrictedGpuDialog instanceIdentifier={form.watch('instance')} />
+      <QuotaIncreaseRequestDialog instanceIdentifier={form.watch('instance')} />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );

@@ -5,21 +5,21 @@ import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.serviceForm');
 
-export function RestrictedGpuDialog({ instanceIdentifier }: { instanceIdentifier: string | null }) {
+export function QuotaIncreaseRequestDialog({ instanceIdentifier }: { instanceIdentifier: string | null }) {
   const instance = useInstance(instanceIdentifier);
   const link = 'https://app.reclaim.ai/m/koyeb-intro/short-call';
 
   return (
-    <Dialog id="RestrictedGpu" className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="gpuRestrictedDialog.title" />} />
+    <Dialog id="QuotaIncreaseRequest" className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="quotaIncreaseRequestDialog.title" />} />
 
       <p>
-        <T id="gpuRestrictedDialog.line1" values={{ instance: instance?.displayName }} />
+        <T id="quotaIncreaseRequestDialog.line1" values={{ instance: instance?.displayName }} />
       </p>
 
       <p>
         <T
-          id="gpuRestrictedDialog.line2"
+          id="quotaIncreaseRequestDialog.line2"
           values={{
             link: (children) => (
               <ExternalLink openInNewTab href={link} className="underline">
@@ -32,7 +32,7 @@ export function RestrictedGpuDialog({ instanceIdentifier }: { instanceIdentifier
 
       <DialogFooter>
         <ExternalLinkButton openInNewTab href={link}>
-          <T id="gpuRestrictedDialog.cta" />
+          <T id="quotaIncreaseRequestDialog.cta" />
         </ExternalLinkButton>
       </DialogFooter>
     </Dialog>

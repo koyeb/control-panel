@@ -1,9 +1,10 @@
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Badge, Button, DialogFooter, Radio, TabButton, TabButtons } from '@koyeb/design-system';
-import { useOrganization, useOrganizationQuotas, useOrganizationSummary } from 'src/api/hooks/session';
+import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
+import { useInstanceQuota } from 'src/application/instance-quota';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
@@ -228,39 +229,6 @@ function InstanceItem({
       <RequestQuotaIncreaseDialog instance={instance} />
     </li>
   );
-}
-
-function useInstanceQuota(instance: CatalogInstance) {
-  const organization = useOrganization();
-  const quotas = useOrganizationQuotas();
-  const summary = useOrganizationSummary();
-
-  return useMemo(() => {
-    const max = () => {
-      const { maxInstancesByType, instanceTypes } = quotas ?? {};
-      const quota = maxInstancesByType?.[instance.identifier];
-
-      if (quota !== undefined) {
-        return quota;
-      }
-
-      if (instance.plans && !instance.plans.includes(organization.plan)) {
-        return 0;
-      }
-
-      if (instanceTypes !== undefined && !instanceTypes.includes(instance.identifier)) {
-        return 0;
-      }
-
-      return Infinity;
-    };
-
-    const used = () => {
-      return summary?.instancesUsed[instance.identifier] ?? 0;
-    };
-
-    return { max: max(), used: used() };
-  }, [instance, organization, quotas, summary]);
 }
 
 export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInstance }) {

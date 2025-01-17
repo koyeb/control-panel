@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
+import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance, OrganizationPlan } from 'src/api/model';
+import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { Dialog } from 'src/components/dialog';
 
@@ -11,16 +12,14 @@ export function usePreSubmitServiceForm() {
   const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
 
   const organization = useOrganization();
-  const quotas = useOrganizationQuotas();
+  const getInstanceQuota = useGetInstanceQuota();
   const trackEvent = useTrackEvent();
 
   return [
     requiredPlan,
     (instance: CatalogInstance): boolean => {
-      const isRestrictedGpu =
-        instance?.category === 'gpu' &&
-        quotas?.maxInstancesByType[instance.identifier] === 0 &&
-        instance.status === 'restricted';
+      const quotas = getInstanceQuota(instance);
+      const hasQuotas = quotas.used < quotas.max;
 
       if (instance?.category === 'gpu') {
         trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.identifier });
@@ -32,8 +31,8 @@ export function usePreSubmitServiceForm() {
         setRequiredPlan(plan);
         openDialog(`Upgrade-${plan}`);
         return false;
-      } else if (isRestrictedGpu) {
-        openDialog('RestrictedGpu');
+      } else if (!hasQuotas) {
+        openDialog('QuotaIncreaseRequest');
         return false;
       }
 
