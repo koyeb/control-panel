@@ -181,12 +181,10 @@ function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployme
   };
 
   const files = (): DeploymentDefinition['files'] => {
-    return (
-      definition.files?.map(({ path, content }) => ({
-        mountPath: path!,
-        content: content!,
-      })) ?? []
-    );
+    return definition.config_files!.map(({ path, content }) => ({
+      mountPath: path!,
+      content: content!,
+    }));
   };
 
   const volumes = (): DeploymentDefinition['volumes'] => {
