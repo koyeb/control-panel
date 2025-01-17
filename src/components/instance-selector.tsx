@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Badge, Button, DialogFooter, Radio, TabButton, TabButtons } from '@koyeb/design-system';
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganization, useOrganizationQuotas, useOrganizationSummary } from 'src/api/hooks/session';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
@@ -162,7 +162,7 @@ function InstanceItem({
   const openDialog = Dialog.useOpen();
 
   const organization = useOrganization();
-  const upgradeRequired = instance.plans && organization && !instance.plans.includes(organization?.plan);
+  const quotas = useInstanceQuota(instance);
 
   const ref = useRef<HTMLLIElement>(null);
   const [isAvailable] = availability;
@@ -199,33 +199,68 @@ function InstanceItem({
         className="row w-full items-center gap-3 px-3 py-2"
       />
 
-      {organization.plan === 'hobby' && upgradeRequired && (
-        <Button
-          variant="outline"
-          color="gray"
-          size={1}
-          onClick={() => openDialog('UpgradeInstanceSelector')}
-          className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
-        >
-          <T id="addCreditCard" />
-        </Button>
-      )}
-
-      {organization.plan !== 'hobby' && instance.status === 'restricted' && (
-        <Button
-          variant="outline"
-          color="gray"
-          size={1}
-          onClick={() => openDialog(`RequestQuotaIncrease-${instance.identifier}`)}
-          className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
-        >
-          <T id="requestQuotaIncrease" />
-        </Button>
+      {quotas.used >= quotas.max && (
+        <>
+          {organization.plan === 'hobby' ? (
+            <Button
+              variant="outline"
+              color="gray"
+              size={1}
+              onClick={() => openDialog('UpgradeInstanceSelector')}
+              className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
+            >
+              <T id="addCreditCard" />
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              color="gray"
+              size={1}
+              onClick={() => openDialog(`RequestQuotaIncrease-${instance.identifier}`)}
+              className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
+            >
+              <T id="requestQuotaIncrease" />
+            </Button>
+          )}
+        </>
       )}
 
       <RequestQuotaIncreaseDialog instance={instance} />
     </li>
   );
+}
+
+function useInstanceQuota(instance: CatalogInstance) {
+  const organization = useOrganization();
+  const quotas = useOrganizationQuotas();
+  const summary = useOrganizationSummary();
+
+  return useMemo(() => {
+    const max = () => {
+      const { maxInstancesByType, instanceTypes } = quotas ?? {};
+      const quota = maxInstancesByType?.[instance.identifier];
+
+      if (quota !== undefined) {
+        return quota;
+      }
+
+      if (instance.plans && !instance.plans.includes(organization.plan)) {
+        return 0;
+      }
+
+      if (instanceTypes !== undefined && !instanceTypes.includes(instance.identifier)) {
+        return 0;
+      }
+
+      return Infinity;
+    };
+
+    const used = () => {
+      return summary?.instancesUsed[instance.identifier] ?? 0;
+    };
+
+    return { max: max(), used: used() };
+  }, [instance, organization, quotas, summary]);
 }
 
 export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInstance }) {
@@ -373,6 +408,8 @@ type InstanceBadgeProps = {
 };
 
 function InstanceBadge({ instance, availability, insufficientVRam, bestFit }: InstanceBadgeProps) {
+  const organization = useOrganization();
+  const quotas = useInstanceQuota(instance);
   const [isAvailable, reason] = availability;
   const inUse = !isAvailable && reason === 'freeAlreadyUsed';
 
@@ -384,34 +421,6 @@ function InstanceBadge({ instance, availability, insufficientVRam, bestFit }: In
     );
   }
 
-  if (instance.category === 'gpu') {
-    return (
-      <>
-        <Badge size={1} color="blue">
-          <T id="new" />
-        </Badge>
-
-        {instance.status === 'restricted' && (
-          <Badge size={1} color="orange">
-            <T id="requiresHigherQuota" />
-          </Badge>
-        )}
-
-        {insufficientVRam && (
-          <Badge size={1} color="orange">
-            <T id="insufficientVRam" />
-          </Badge>
-        )}
-
-        {bestFit && (
-          <Badge size={1} color="green">
-            <T id="bestFit" />
-          </Badge>
-        )}
-      </>
-    );
-  }
-
   if (instance.status === 'coming_soon') {
     return (
       <Badge size={1} color="blue">
@@ -420,5 +429,38 @@ function InstanceBadge({ instance, availability, insufficientVRam, bestFit }: In
     );
   }
 
-  return null;
+  const result = new Array<React.ReactNode>();
+
+  if (instance.category === 'gpu') {
+    result.push(
+      <Badge key="new" size={1} color="blue">
+        <T id="new" />
+      </Badge>,
+    );
+  }
+
+  if (organization.plan !== 'hobby' && quotas.used >= quotas.max) {
+    result.push(
+      <Badge key="quotas" size={1} color="orange">
+        <T id="requiresHigherQuota" />
+      </Badge>,
+    );
+  }
+
+  if (insufficientVRam) {
+    result.push(
+      <Badge key="insufficientVRam" size={1} color="orange">
+        <T id="insufficientVRam" />
+      </Badge>,
+    );
+  }
+  if (bestFit) {
+    result.push(
+      <Badge key="bestFit" size={1} color="green">
+        <T id="bestFit" />
+      </Badge>,
+    );
+  }
+
+  return <>{result}</>;
 }

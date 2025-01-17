@@ -44,6 +44,7 @@ const organization = createFactory<Organization>(() => ({
 const organizationSummary = createFactory<OrganizationSummary>(() => ({
   freeInstanceUsed: false,
   freeDatabaseUsed: false,
+  instancesUsed: {},
 }));
 
 const quotas = createFactory<OrganizationQuotas>(() => ({

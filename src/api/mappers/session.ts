@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { parseBytes } from 'src/application/memory';
-import { toObject } from 'src/utils/object';
+import { entries, toObject } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
@@ -144,6 +144,11 @@ export function mapOrganizationSummary({
   return {
     freeInstanceUsed: freeInstances > 0,
     freeDatabaseUsed: freeDatabases > 0,
+    instancesUsed: toObject(
+      entries(summary!.instances!.by_type!),
+      ([key]) => String(key),
+      ([, value]) => Number(value),
+    ),
   };
 }
 
@@ -154,6 +159,7 @@ export function mapOrganizationQuotas({
     maxNumberOfApps: Number(quotas?.apps),
     maxNumberOfServices: Number(quotas?.services),
     maxOrganizationMembers: Number(quotas?.max_organization_members),
+    instanceTypes: quotas!.instance_types!.length > 0 ? quotas!.instance_types! : undefined,
     maxInstancesByType: toObject(
       Object.entries(quotas!.max_instances_by_type!),
       ([key]) => key,

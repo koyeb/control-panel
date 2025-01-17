@@ -613,6 +613,7 @@ export type OrganizationQuotas = {
   maxNumberOfApps: number;
   maxNumberOfServices: number;
   maxOrganizationMembers: number;
+  instanceTypes?: string[];
   maxInstancesByType: Record<string, number>;
   regions?: string[];
   volumesByRegion: Record<string, { maxVolumeSize: number; maxTotalSize: number }>;
@@ -623,6 +624,7 @@ export type OrganizationQuotas = {
 export type OrganizationSummary = {
   freeInstanceUsed: boolean;
   freeDatabaseUsed: boolean;
+  instancesUsed: Record<string, number>;
 };
 
 export type Address = {
