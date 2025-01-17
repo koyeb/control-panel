@@ -12,7 +12,6 @@ import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
-import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 
 // todo: use main controlled input
 import { ControlledInput } from '../authentication/components/controlled-input';
@@ -21,15 +20,13 @@ const T = createTranslate('pages.account.changePassword');
 
 export function ChangePasswordPage() {
   return (
-    <SecondaryLayout>
-      <div className="col gap-8">
-        <h1 className="text-center text-3xl font-semibold">
-          <T id="title" />
-        </h1>
+    <div className="col gap-8">
+      <h1 className="text-center text-3xl font-semibold">
+        <T id="title" />
+      </h1>
 
-        <ChangePasswordForm />
-      </div>
-    </SecondaryLayout>
+      <ChangePasswordForm />
+    </div>
   );
 }
 
