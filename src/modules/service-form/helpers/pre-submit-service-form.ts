@@ -6,20 +6,20 @@ import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { Dialog } from 'src/components/dialog';
 
-export function usePreSubmitServiceForm() {
+export function usePreSubmitServiceForm(previousInstance?: string | null) {
   const openDialog = Dialog.useOpen();
-
-  const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
 
   const organization = useOrganization();
   const getInstanceQuota = useGetInstanceQuota();
   const trackEvent = useTrackEvent();
 
+  const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
+
   return [
     requiredPlan,
     (instance: CatalogInstance): boolean => {
       const quotas = getInstanceQuota(instance);
-      const hasQuotas = quotas.used < quotas.max;
+      const hasQuotas = previousInstance === instance.identifier || quotas.used < quotas.max;
 
       if (instance?.category === 'gpu') {
         trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.identifier });

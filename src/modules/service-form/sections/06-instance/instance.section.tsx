@@ -86,6 +86,7 @@ export function InstanceSection() {
         instances={instances.filter(hasProperty('regionCategory', firstRegion?.category ?? 'koyeb'))}
         checkAvailability={(instance) => instanceAvailabilities[instance] ?? [false, 'instanceNotFound']}
         selectedInstance={instances.find(hasProperty('identifier', field.value)) ?? null}
+        previousInstance={previousInstance}
         onInstanceSelected={handleInstanceSelected}
         onCategoryChanged={setCategory}
         className="w-full"

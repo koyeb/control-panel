@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Badge, Button, DialogFooter, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
-import { useInstanceQuota } from 'src/application/instance-quota';
+import { useHasInstanceQuota } from 'src/application/instance-quota';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
@@ -23,6 +23,7 @@ const T = createTranslate('components.instanceSelector');
 type InstanceSelectorProps = {
   instances: CatalogInstance[];
   selectedInstance: CatalogInstance | null;
+  previousInstance?: CatalogInstance;
   onInstanceSelected: (instance: CatalogInstance | null) => void;
   onCategoryChanged?: (category: InstanceCategory) => void;
   checkAvailability: (instance: string) => InstanceAvailability;
@@ -32,6 +33,7 @@ type InstanceSelectorProps = {
 export function InstanceSelector({
   instances,
   selectedInstance,
+  previousInstance,
   onInstanceSelected,
   onCategoryChanged,
   checkAvailability,
@@ -85,6 +87,7 @@ export function InstanceSelector({
       <InstanceSelectorList
         instances={instances.filter(hasProperty('category', selectedCategory))}
         selectedInstance={selectedInstance}
+        previousInstance={previousInstance}
         onInstanceSelected={onInstanceSelected}
         checkAvailability={checkAvailability}
       />
@@ -110,6 +113,7 @@ export function InstanceSelector({
 type InstanceSelectorListProps = {
   instances: readonly CatalogInstance[];
   selectedInstance: CatalogInstance | null;
+  previousInstance?: CatalogInstance;
   bestFit?: CatalogInstance;
   minimumVRam?: number;
   onInstanceSelected: (instance: CatalogInstance) => void;
@@ -119,6 +123,7 @@ type InstanceSelectorListProps = {
 export function InstanceSelectorList({
   instances,
   selectedInstance,
+  previousInstance,
   bestFit,
   minimumVRam,
   onInstanceSelected,
@@ -132,6 +137,7 @@ export function InstanceSelectorList({
           instance={instance}
           availability={checkAvailability(instance.identifier)}
           selected={selectedInstance?.identifier === instance.identifier}
+          previousInstance={previousInstance}
           onSelected={() => onInstanceSelected(instance)}
           bestFit={bestFit === instance}
           insufficientVRam={
@@ -146,6 +152,7 @@ export function InstanceSelectorList({
 type InstanceItemProps = {
   instance: CatalogInstance;
   selected: boolean;
+  previousInstance?: CatalogInstance;
   bestFit?: boolean;
   insufficientVRam?: boolean;
   availability: InstanceAvailability;
@@ -155,6 +162,7 @@ type InstanceItemProps = {
 function InstanceItem({
   instance,
   selected,
+  previousInstance,
   bestFit,
   insufficientVRam,
   availability,
@@ -163,7 +171,7 @@ function InstanceItem({
   const openDialog = Dialog.useOpen();
 
   const organization = useOrganization();
-  const quotas = useInstanceQuota(instance);
+  const hasQuotas = useHasInstanceQuota(instance, previousInstance);
 
   const ref = useRef<HTMLLIElement>(null);
   const [isAvailable] = availability;
@@ -187,6 +195,7 @@ function InstanceItem({
             badge={
               <InstanceBadge
                 instance={instance}
+                hasQuotas={hasQuotas}
                 availability={availability}
                 bestFit={bestFit}
                 insufficientVRam={insufficientVRam}
@@ -200,7 +209,7 @@ function InstanceItem({
         className="row w-full items-center gap-3 px-3 py-2"
       />
 
-      {quotas.used >= quotas.max && (
+      {!hasQuotas && (
         <>
           {organization.plan === 'hobby' ? (
             <Button
@@ -370,14 +379,14 @@ function Divider({ className }: DividerProps) {
 
 type InstanceBadgeProps = {
   instance: CatalogInstance;
+  hasQuotas: boolean;
   availability: InstanceAvailability;
   bestFit?: boolean;
   insufficientVRam?: boolean;
 };
 
-function InstanceBadge({ instance, availability, insufficientVRam, bestFit }: InstanceBadgeProps) {
+function InstanceBadge({ instance, hasQuotas, availability, insufficientVRam, bestFit }: InstanceBadgeProps) {
   const organization = useOrganization();
-  const quotas = useInstanceQuota(instance);
   const [isAvailable, reason] = availability;
   const inUse = !isAvailable && reason === 'freeAlreadyUsed';
 
@@ -407,7 +416,7 @@ function InstanceBadge({ instance, availability, insufficientVRam, bestFit }: In
     );
   }
 
-  if (organization.plan !== 'hobby' && quotas.used >= quotas.max) {
+  if (organization.plan !== 'hobby' && !hasQuotas) {
     result.push(
       <Badge key="quotas" size={1} color="orange">
         <T id="requiresHigherQuota" />

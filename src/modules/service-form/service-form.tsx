@@ -85,7 +85,7 @@ function ServiceForm_({
     },
   });
 
-  const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
+  const [requiredPlan, preSubmit] = usePreSubmitServiceForm(form.watch('meta.previousInstance'));
 
   const instance = useInstance(form.watch('instance'));
   const cost = useEstimatedCost(useFormValues(form));

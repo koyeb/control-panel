@@ -9,6 +9,19 @@ export function useInstanceQuota(instance: CatalogInstance) {
   return useMemo(() => getInstanceQuota(instance), [getInstanceQuota, instance]);
 }
 
+export function useHasInstanceQuota(instance: CatalogInstance, previousInstance?: CatalogInstance) {
+  const quota = useInstanceQuota(instance);
+
+  return useMemo(() => {
+    // allow keeping the same instance
+    if (previousInstance?.identifier === instance.identifier) {
+      return true;
+    }
+
+    return quota.used < quota.max;
+  }, [instance, previousInstance, quota]);
+}
+
 export function useGetInstanceQuota() {
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
