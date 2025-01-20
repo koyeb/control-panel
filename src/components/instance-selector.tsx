@@ -220,6 +220,10 @@ function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
 
   const dialog = isHobby ? 'UpgradeInstanceSelector' : `RequestQuotaIncrease-${instance.identifier}`;
 
+  if (instance.identifier === 'free') {
+    return null;
+  }
+
   return (
     <Button
       variant="outline"
