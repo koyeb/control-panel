@@ -168,9 +168,6 @@ function InstanceItem({
   availability,
   onSelected,
 }: InstanceItemProps) {
-  const openDialog = Dialog.useOpen();
-
-  const organization = useOrganization();
   const hasQuotas = useHasInstanceQuota(instance, previousInstance);
 
   const ref = useRef<HTMLLIElement>(null);
@@ -209,34 +206,30 @@ function InstanceItem({
         className="row w-full items-center gap-3 px-3 py-2"
       />
 
-      {!hasQuotas && (
-        <>
-          {organization.plan === 'hobby' ? (
-            <Button
-              variant="outline"
-              color="gray"
-              size={1}
-              onClick={() => openDialog('UpgradeInstanceSelector')}
-              className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
-            >
-              <T id="addCreditCard" />
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              color="gray"
-              size={1}
-              onClick={() => openDialog(`RequestQuotaIncrease-${instance.identifier}`)}
-              className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
-            >
-              <T id="requestQuotaIncrease" />
-            </Button>
-          )}
-        </>
-      )}
-
+      {!hasQuotas && <InstanceQuotaButton instance={instance} />}
       <RequestQuotaIncreaseDialog instance={instance} />
     </li>
+  );
+}
+
+function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
+  const openDialog = Dialog.useOpen();
+
+  const organization = useOrganization();
+  const isHobby = organization.plan === 'hobby';
+
+  const dialog = isHobby ? 'UpgradeInstanceSelector' : `RequestQuotaIncrease-${instance.identifier}`;
+
+  return (
+    <Button
+      variant="outline"
+      color="gray"
+      size={1}
+      onClick={() => openDialog(dialog)}
+      className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
+    >
+      {isHobby ? <T id="addCreditCard" /> : <T id="requestQuotaIncrease" />}
+    </Button>
   );
 }
 
