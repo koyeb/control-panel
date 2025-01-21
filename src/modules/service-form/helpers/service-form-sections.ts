@@ -43,7 +43,7 @@ export function sectionHasError(section: ServiceFormSection, errors: FieldErrors
       return errors.dockerDeployment !== undefined;
 
     case 'environmentVariables':
-      return errors.environmentVariables !== undefined;
+      return errors.environmentVariables !== undefined || errors.files !== undefined;
 
     case 'regions':
       return errors.regions !== undefined;
