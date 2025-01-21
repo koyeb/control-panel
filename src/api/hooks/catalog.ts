@@ -65,6 +65,7 @@ type OneClickAppApiResponse = {
   repository: string;
   deploy_button_url: string;
   slug: string;
+  env?: Array<{ name: string; value: string }>;
   model_name?: string;
   model_size?: string;
   model_inference_engine?: string;
@@ -136,6 +137,7 @@ function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
     dockerImage: app.model_docker_image!,
     minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
     metadata: app.metadata ?? [],
+    env: app.env?.map((env) => ({ name: env.name, value: env.value, regions: [] })),
   };
 }
 

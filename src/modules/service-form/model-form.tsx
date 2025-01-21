@@ -93,7 +93,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
 
       serviceForm.appName = slugify(model.name.slice(0, 23));
       serviceForm.serviceName = slugify(model.name);
-      serviceForm.environmentVariables = [];
+      serviceForm.environmentVariables = model.env ?? [];
 
       serviceForm.instance = instance;
       serviceForm.regions = [region];

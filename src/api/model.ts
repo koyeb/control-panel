@@ -140,6 +140,7 @@ export type AiModel = {
   dockerImage: string;
   minVRam: number;
   metadata: Array<{ name: string; value: string }>;
+  env?: Array<EnvironmentVariable>;
 };
 
 // deployment
