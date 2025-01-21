@@ -2,7 +2,6 @@ import { ComputeDeployment, DeploymentDefinition } from 'src/api/model';
 import { IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
-import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
@@ -61,6 +60,10 @@ export function CommitMetadata({ deployment }: { deployment: ComputeDeployment }
 
   assert(source.type === 'git');
 
+  if (sha === undefined) {
+    return null;
+  }
+
   return (
     <Metadata
       label={<T id="commitLabel" />}
@@ -70,8 +73,7 @@ export function CommitMetadata({ deployment }: { deployment: ComputeDeployment }
             <IconGitCommitHorizontal className="size-em" />
           </span>
 
-          {!sha && <TextSkeleton width={4} />}
-          {sha && <ExternalLink href={`https://${source.repository}/commit/${sha}`}>{sha}</ExternalLink>}
+          <ExternalLink href={`https://${source.repository}/commit/${sha}`}>{sha}</ExternalLink>
         </div>
       }
     />
