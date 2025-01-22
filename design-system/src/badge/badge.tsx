@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
+
+import { Extend } from '../utils/types';
 
 export type BadgeSize = 1 | 2;
 export type BadgeColor = 'red' | 'green' | 'blue' | 'orange' | 'gray';
@@ -9,15 +10,11 @@ type BadgeOwnProps = {
   color?: BadgeColor;
 };
 
-type BadgeProps = BadgeOwnProps & React.HTMLAttributes<HTMLSpanElement>;
+type BadgeProps = Extend<React.ComponentProps<'span'>, BadgeOwnProps>;
 
-export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
-  { size = 2, color = 'gray', className, ...props },
-  ref,
-) {
+export function Badge({ size = 2, color = 'gray', className, ...props }: BadgeProps) {
   return (
     <span
-      ref={ref}
       className={clsx(
         'rounded-md text-center font-medium',
         {
@@ -36,4 +33,4 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(function Badge(
       {...props}
     />
   );
-});
+}

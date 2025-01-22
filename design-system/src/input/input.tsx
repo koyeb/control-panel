@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { Field, FieldHelperText, FieldLabel } from '../field/field';
+import { Extend } from '../utils/types';
 import { useId } from '../utils/use-id';
 
 type InputOwnProps = {
@@ -17,23 +17,20 @@ type InputOwnProps = {
   inputClassName?: string;
 };
 
-type InputProps = InputOwnProps & Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof InputOwnProps>;
+type InputProps = Extend<React.ComponentProps<'input'>, InputOwnProps>;
 
-export const Input = forwardRef(function Input(
-  {
-    size,
-    label,
-    helpTooltip,
-    helperText,
-    error,
-    invalid = Boolean(error),
-    className,
-    inputBoxClassName,
-    inputClassName,
-    ...props
-  }: InputProps,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+export function Input({
+  size,
+  label,
+  helpTooltip,
+  helperText,
+  error,
+  invalid = Boolean(error),
+  className,
+  inputBoxClassName,
+  inputClassName,
+  ...props
+}: InputProps) {
   const id = useId(props.id);
   const helperTextId = `${id}-helper-text`;
 
@@ -52,7 +49,6 @@ export const Input = forwardRef(function Input(
       className={className}
     >
       <InputBox
-        ref={ref}
         id={id}
         size={size}
         boxClassName={inputBoxClassName}
@@ -63,7 +59,7 @@ export const Input = forwardRef(function Input(
       />
     </Field>
   );
-});
+}
 
 type InputBoxOwnProps = {
   boxRef?: React.Ref<HTMLDivElement>;
@@ -74,13 +70,23 @@ type InputBoxOwnProps = {
   end?: React.ReactNode;
 };
 
-type InputBoxProps = InputBoxOwnProps &
-  Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof InputBoxOwnProps>;
+type InputBoxProps = Extend<React.ComponentProps<'input'>, InputBoxOwnProps>;
 
-export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(function InputBox(
-  { boxRef, boxClassName, size = 2, placeholder, value, min, max, step, start, end, id, className, ...props },
-  ref,
-) {
+export function InputBox({
+  boxRef,
+  boxClassName,
+  size = 2,
+  placeholder,
+  value,
+  min,
+  max,
+  step,
+  start,
+  end,
+  id,
+  className,
+  ...props
+}: InputBoxProps) {
   return (
     <div
       ref={boxRef}
@@ -100,7 +106,6 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(function Inp
       {start}
 
       <input
-        ref={ref}
         id={id}
         className={clsx(
           'w-full min-w-0 flex-1 rounded bg-inherit px-2 outline-none',
@@ -120,7 +125,7 @@ export const InputBox = forwardRef<HTMLInputElement, InputBoxProps>(function Inp
       {end}
     </div>
   );
-});
+}
 
 type InputStartProps = {
   children: React.ReactNode;

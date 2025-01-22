@@ -15,6 +15,8 @@ import {
 } from '@koyeb/design-system';
 import { usePureFunction } from 'src/hooks/lifecycle';
 
+import { Extend } from '../../design-system/src/utils/types';
+
 import { StringArrayInput } from './string-array-input';
 
 type ControlledProps<
@@ -22,11 +24,14 @@ type ControlledProps<
   Component extends React.JSXElementConstructor<any>,
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
-> = React.ComponentProps<Component> & {
-  control?: Control<Form>;
-  name: Name;
-  onChangeEffect?: (event: React.ChangeEvent<React.ComponentRef<Component>>) => void;
-};
+> = Extend<
+  React.ComponentProps<Component>,
+  {
+    control?: Control<Form>;
+    name: Name;
+    onChangeEffect?: (event: React.ChangeEvent<React.ComponentRef<Component>>) => void;
+  }
+>;
 
 export function ControlledCheckbox<
   Form extends FieldValues = FieldValues,

@@ -33,9 +33,8 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
       placement={isMobile ? 'top-end' : 'right-end'}
       strategy="fixed"
       offset={8}
-      renderReference={(ref, props) => (
+      renderReference={(props) => (
         <div
-          ref={ref}
           className={clsx(
             'row mx-4 items-center gap-1',
             'rounded-md border py-1 pl-3 pr-2',
@@ -51,8 +50,8 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
           </div>
         </div>
       )}
-      renderFloating={(ref, props) => (
-        <Menu ref={ref} className="z-30 min-w-52" {...props}>
+      renderFloating={(props) => (
+        <Menu className="z-30 min-w-52" {...props}>
           <LinkMenuItem href="https://koyeb.com/docs" onClick={onClose}>
             <IconBookMarked className="icon" />
             <T id="documentation" />

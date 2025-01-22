@@ -28,3 +28,5 @@ export type Paths<T> = ValueOf<{
 export type Flatten<T> = {
   [Key in Extract<Paths<T>, string>]: Get<T, Key>;
 };
+
+export type Extend<T, U> = Omit<T, keyof U> & U;

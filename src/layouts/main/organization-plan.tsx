@@ -43,9 +43,8 @@ export function OrganizationPlan() {
       strategy="fixed"
       placement={isMobile ? 'top-end' : 'right-end'}
       offset={8}
-      renderReference={(ref, props) => (
+      renderReference={(props) => (
         <div
-          ref={ref}
           className={clsx('col gap-4 py-2 pl-3 pr-2 text-start transition-colors', open && 'bg-muted/50')}
           {...props}
         >
@@ -86,12 +85,12 @@ export function OrganizationPlan() {
           )}
         </div>
       )}
-      renderFloating={(ref, props) => (
-        <FeatureFlag feature="trial" fallback={<EstimatedCostsPopup ref={ref} className="z-30" {...props} />}>
+      renderFloating={(props) => (
+        <FeatureFlag feature="trial" fallback={<EstimatedCostsPopup className="z-30" {...props} />}>
           {organization.trial ? (
-            <TrialSummaryPopup ref={ref} className="z-30" {...props} />
+            <TrialSummaryPopup className="z-30" {...props} />
           ) : (
-            <EstimatedCostsPopup ref={ref} className="z-30" {...props} />
+            <EstimatedCostsPopup className="z-30" {...props} />
           )}
         </FeatureFlag>
       )}

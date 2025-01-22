@@ -56,9 +56,8 @@ function OrganizationSwitcher() {
       strategy="fixed"
       placement="bottom-start"
       offset={8}
-      renderReference={(ref, props) => (
+      renderReference={(props) => (
         <button
-          ref={ref}
           type="button"
           data-testid="organization-switcher"
           className="row items-center gap-2 rounded-lg text-start"
@@ -70,13 +69,8 @@ function OrganizationSwitcher() {
           <IconChevronUpDown className="size-4 text-dim" />
         </button>
       )}
-      renderFloating={(ref, props) => (
-        <OrganizationSwitcherMenu
-          ref={ref}
-          onClose={() => setOpen(false)}
-          showCreateOrganization={false}
-          {...props}
-        />
+      renderFloating={(props) => (
+        <OrganizationSwitcherMenu onClose={() => setOpen(false)} showCreateOrganization={false} {...props} />
       )}
     />
   );

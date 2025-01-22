@@ -31,9 +31,8 @@ export function OrganizationSwitcher() {
           },
         }),
       ]}
-      renderReference={(ref, props) => (
+      renderReference={(props) => (
         <button
-          ref={ref}
           type="button"
           data-testid="organization-switcher"
           className="row items-center gap-2 rounded-lg border px-3 py-1 text-start"
@@ -45,13 +44,8 @@ export function OrganizationSwitcher() {
           <IconChevronUpDown className="size-4 text-dim" />
         </button>
       )}
-      renderFloating={(ref, props) => (
-        <OrganizationSwitcherMenu
-          ref={ref}
-          onClose={() => setOpen(false)}
-          showCreateOrganization
-          {...props}
-        />
+      renderFloating={(props) => (
+        <OrganizationSwitcherMenu onClose={() => setOpen(false)} showCreateOrganization {...props} />
       )}
     />
   );

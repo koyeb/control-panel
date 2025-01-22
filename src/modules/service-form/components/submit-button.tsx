@@ -72,9 +72,8 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
       setOpen={setMenuOpen}
       placement="bottom-end"
       offset={8}
-      renderReference={(ref, props) => (
+      renderReference={(props) => (
         <Button
-          ref={ref}
           {...props}
           disabled={disabled}
           loading={loading && !saveOnly}
@@ -86,8 +85,8 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
           </div>
         </Button>
       )}
-      renderFloating={(ref, props) => (
-        <Menu ref={ref} {...props}>
+      renderFloating={(props) => (
+        <Menu {...props}>
           <ButtonMenuItem onClick={() => deploy()} className="max-w-72 text-start">
             <BuildOption
               label={<T id="withBuild.label" />}

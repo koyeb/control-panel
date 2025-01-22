@@ -248,9 +248,8 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
       setOpen={setMenuOpen}
       placement="bottom-start"
       offset={8}
-      renderReference={(ref, props) => (
+      renderReference={(props) => (
         <button
-          ref={ref}
           type="button"
           onClick={() => setMenuOpen(true)}
           className={clsx({ hidden: !appServices || appServices.length <= 1 })}
@@ -259,8 +258,8 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
           <IconChevronDown className="text-icon size-4" />
         </button>
       )}
-      renderFloating={(ref, props) => (
-        <Menu ref={ref} className="min-w-48" {...props}>
+      renderFloating={(props) => (
+        <Menu className="min-w-48" {...props}>
           {appServices?.map((service) => (
             <MenuItem
               key={service.id}

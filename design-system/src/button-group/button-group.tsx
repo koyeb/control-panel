@@ -1,15 +1,10 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 type ButtonGroupProps = React.ComponentProps<'div'>;
 
-export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(function ButtonGroup(
-  { className, ...props },
-  ref,
-) {
+export function ButtonGroup({ className, ...props }: ButtonGroupProps) {
   return (
     <div
-      ref={ref}
       className={clsx(
         'row items-stretch divide-x divide-gray/20 dark:divide-gray/80',
         '[&>button]:rounded-none',
@@ -21,4 +16,4 @@ export const ButtonGroup = forwardRef<HTMLDivElement, ButtonGroupProps>(function
       {...props}
     />
   );
-});
+}

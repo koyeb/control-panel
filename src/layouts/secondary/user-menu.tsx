@@ -38,13 +38,13 @@ export function UserMenu() {
       setOpen={setOpen}
       placement="bottom-end"
       offset={8}
-      renderReference={(ref, props) => (
-        <button ref={ref} type="button" onClick={() => setOpen(true)} className="ml-auto" {...props}>
+      renderReference={(props) => (
+        <button type="button" onClick={() => setOpen(true)} className="ml-auto" {...props}>
           <UserAvatar user={user} />
         </button>
       )}
-      renderFloating={(ref, props) => (
-        <Menu ref={ref} className="min-w-48" {...props}>
+      renderFloating={(props) => (
+        <Menu className="min-w-48" {...props}>
           <MenuItem element={Link} href={'?settings'} onClick={() => setOpen(false)} className="row gap-2">
             <IconSettings className="icon" />
             <T id="settings" />

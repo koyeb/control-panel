@@ -154,8 +154,8 @@ function LogsFooter({ appName, serviceName, expired, hasInstanceOption, lines, f
         open={menuOpen}
         setOpen={setMenuOpen}
         placement="bottom-start"
-        renderReference={(ref, props) => (
-          <div ref={ref}>
+        renderReference={(props) => (
+          <div>
             <IconButton
               variant="ghost"
               color="gray"
@@ -165,8 +165,8 @@ function LogsFooter({ appName, serviceName, expired, hasInstanceOption, lines, f
             />
           </div>
         )}
-        renderFloating={(ref, props) => (
-          <Menu ref={ref} className={clsx(form.watch('fullScreen') && 'z-50')} {...props}>
+        renderFloating={(props) => (
+          <Menu className={clsx(form.watch('fullScreen') && 'z-50')} {...props}>
             {options.map((option) => (
               <MenuItem key={option}>
                 <ControlledCheckbox

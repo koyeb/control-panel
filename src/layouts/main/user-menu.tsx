@@ -50,12 +50,8 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       hover
       placement={isMobile ? 'top-end' : 'left-end'}
       offset={8}
-      renderReference={(ref, props) => (
-        <div
-          ref={ref}
-          className="row items-center gap-2 py-2 pl-3 pr-2 transition-colors hover:bg-muted/50"
-          {...props}
-        >
+      renderReference={(props) => (
+        <div className="row items-center gap-2 py-2 pl-3 pr-2 transition-colors hover:bg-muted/50" {...props}>
           <UserAvatar user={user} />
 
           {!collapsed && <span className="flex-1 truncate font-medium">{user?.name}</span>}
@@ -67,8 +63,8 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
           )}
         </div>
       )}
-      renderFloating={(ref, props) => (
-        <Menu ref={ref} {...props}>
+      renderFloating={(props) => (
+        <Menu {...props}>
           <MenuItem
             element={Link}
             href={routes.userSettings.index()}

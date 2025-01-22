@@ -50,7 +50,7 @@ export function ConfirmationDialog({
 
       <form className="col gap-4" onSubmit={handleSubmit(form, onConfirm)}>
         <ControlledInput
-          ref={(ref) => ref && setTimeout(() => ref.focus(), 0)}
+          ref={(ref) => void (ref && setTimeout(() => ref.focus(), 0))}
           control={form.control}
           name="confirmationText"
           label={

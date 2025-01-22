@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { FieldLabel } from '../field/field';
 import { HelpTooltip } from '../help-tooltip/help-tooltip';
+import { Extend } from '../utils/types';
 import { useId } from '../utils/use-id';
 
 type SwitchOwnProps = {
@@ -11,12 +11,9 @@ type SwitchOwnProps = {
   helpTooltip?: React.ReactNode;
 };
 
-type SwitchProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof SwitchOwnProps> & SwitchOwnProps;
+type SwitchProps = Extend<React.ComponentProps<'input'>, SwitchOwnProps>;
 
-export const Switch = forwardRef(function Switch(
-  { label, labelPosition = 'top', helpTooltip, className, ...props }: SwitchProps,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+export function Switch({ label, labelPosition = 'top', helpTooltip, className, ...props }: SwitchProps) {
   const id = useId(props.id);
 
   return (
@@ -41,14 +38,7 @@ export const Switch = forwardRef(function Switch(
       )}
 
       <div className="row h-8 items-center">
-        <input
-          ref={ref}
-          type="checkbox"
-          className="peer sr-only"
-          aria-labelledby={`${id}-label`}
-          id={id}
-          {...props}
-        />
+        <input type="checkbox" className="peer sr-only" aria-labelledby={`${id}-label`} id={id} {...props} />
 
         <div
           className={clsx(
@@ -61,4 +51,4 @@ export const Switch = forwardRef(function Switch(
       </div>
     </FieldLabel>
   );
-});
+}

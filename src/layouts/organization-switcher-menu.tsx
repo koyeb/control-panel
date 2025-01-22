@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { ButtonMenuItem, Menu, MenuItem, Spinner } from '@koyeb/design-system';
-import { useUserOrganizationMemberships, useOrganizationUnsafe } from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
@@ -14,6 +13,7 @@ import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
+import { Extend } from 'src/utils/types';
 
 import { OrganizationAvatar } from '../components/organization-avatar';
 
@@ -22,68 +22,71 @@ type OrganizationSwitcherMenuOwnProps = {
   showCreateOrganization: boolean;
 };
 
-type OrganizationSwitcherMenuProps = OrganizationSwitcherMenuOwnProps & React.HTMLAttributes<HTMLDivElement>;
+type OrganizationSwitcherMenuProps = Extend<
+  React.ComponentProps<typeof Menu>,
+  OrganizationSwitcherMenuOwnProps
+>;
 
-export const OrganizationSwitcherMenu = forwardRef<HTMLDivElement, OrganizationSwitcherMenuProps>(
-  function OrganizationSwitcherMenu({ onClose, showCreateOrganization, ...props }, ref) {
-    const currentOrganization = useOrganizationUnsafe();
-    const { data: organizationMembers = [] } = useUserOrganizationMemberships();
+export function OrganizationSwitcherMenu({
+  onClose,
+  showCreateOrganization,
+  ...props
+}: OrganizationSwitcherMenuProps) {
+  const currentOrganization = useOrganizationUnsafe();
+  const { data: organizationMembers = [] } = useUserOrganizationMemberships();
 
-    const {
-      mutate: switchOrganization,
-      isPending,
-      variables: switchingOrganizationId,
-    } = useSwitchOrganization(onClose);
+  const {
+    mutate: switchOrganization,
+    isPending,
+    variables: switchingOrganizationId,
+  } = useSwitchOrganization(onClose);
 
-    if (currentOrganization === undefined) {
-      return null;
-    }
+  if (currentOrganization === undefined) {
+    return null;
+  }
 
-    return (
-      <Menu ref={ref} {...props}>
-        {organizationMembers.filter(isNotDeleting).map(({ id, organization }) => (
-          <ButtonMenuItem
-            key={id}
-            onClick={() => switchOrganization(organization.id)}
-            className={clsx(
-              'row items-center gap-2 rounded px-2 py-1 font-medium',
-              'hover:bg-green/25',
-              organization.id === currentOrganization.id && 'pointer-events-none',
-            )}
-          >
-            <OrganizationAvatar organizationName={organization.name} className="size-6 rounded-full" />
+  return (
+    <Menu {...props}>
+      {organizationMembers.filter(isNotDeleting).map(({ id, organization }) => (
+        <ButtonMenuItem
+          key={id}
+          onClick={() => switchOrganization(organization.id)}
+          className={clsx(
+            'row items-center gap-2 rounded px-2 py-1 font-medium',
+            'hover:bg-green/25',
+            organization.id === currentOrganization.id && 'pointer-events-none',
+          )}
+        >
+          <OrganizationAvatar organizationName={organization.name} className="size-6 rounded-full" />
 
-            {organization.name}
+          {organization.name}
 
-            {organization.id === currentOrganization.id && <IconCheck className="ml-auto size-4" />}
+          {organization.id === currentOrganization.id && <IconCheck className="ml-auto size-4" />}
 
-            {isPending && organization.id === switchingOrganizationId && (
-              <Spinner className="ml-auto size-4" />
-            )}
-          </ButtonMenuItem>
-        ))}
+          {isPending && organization.id === switchingOrganizationId && <Spinner className="ml-auto size-4" />}
+        </ButtonMenuItem>
+      ))}
 
-        {showCreateOrganization && (
-          <>
-            <hr />
+      {showCreateOrganization && (
+        <>
+          <hr />
 
-            <MenuItem className="!p-0">
-              <Link
-                href={routes.userSettings.organizations()}
-                state={{ create: true }}
-                onClick={onClose}
-                className="row w-full items-center gap-2 rounded p-2 font-medium hover:bg-muted"
-              >
-                <IconCirclePlus className="icon" />
-                <Translate id="layouts.createOrganization" />
-              </Link>
-            </MenuItem>
-          </>
-        )}
-      </Menu>
-    );
-  },
-);
+          <MenuItem className="!p-0">
+            <Link
+              href={routes.userSettings.organizations()}
+              state={{ create: true }}
+              onClick={onClose}
+              className="row w-full items-center gap-2 rounded p-2 font-medium hover:bg-muted"
+            >
+              <IconCirclePlus className="icon" />
+              <Translate id="layouts.createOrganization" />
+            </Link>
+          </MenuItem>
+        </>
+      )}
+    </Menu>
+  );
+}
 
 function isNotDeleting({ organization }: OrganizationMember) {
   return !inArray(organization.status, ['deleting', 'deleted']);

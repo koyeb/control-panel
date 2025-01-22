@@ -1,15 +1,12 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 type SpinnerProps = {
+  ref?: React.Ref<SVGSVGElement>;
   progress?: number;
   className?: string;
 };
 
-export const Spinner = forwardRef<SVGSVGElement, SpinnerProps>(function Spinner(
-  { progress, className },
-  ref,
-) {
+export function Spinner({ ref, progress, className }: SpinnerProps) {
   return (
     <svg
       ref={ref}
@@ -30,7 +27,7 @@ export const Spinner = forwardRef<SVGSVGElement, SpinnerProps>(function Spinner(
       />
     </svg>
   );
-});
+}
 
 const circumference = Math.PI * (24 - 4);
 

@@ -1,13 +1,11 @@
 import clsx from 'clsx';
-import React, { createElement, forwardRef } from 'react';
+import React, { JSX, createElement } from 'react';
 
-export const Menu = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(function Menu(
-  { className, ...props },
-  ref,
-) {
+import { Extend } from '../utils/types';
+
+export function Menu({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      ref={ref}
       className={clsx(
         'col z-30 items-stretch rounded-md border bg-popover p-1 text-contrast-popover shadow-lg',
         className,
@@ -15,25 +13,23 @@ export const Menu = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEleme
       {...props}
     />
   );
-});
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Element = keyof JSX.IntrinsicElements | React.JSXElementConstructor<any>;
 
-type MenuItemProps<E extends Element> = {
+type MenuItemOwnProps<E extends Element> = {
   element?: E;
   className?: string;
   children?: React.ReactNode;
-} & Omit<React.ComponentProps<E>, 'element' | 'className' | 'children'>;
+};
 
-function MenuItem_<E extends Element>(
-  { element, className, children, ...props }: MenuItemProps<E>,
-  ref: React.ForwardedRef<React.ElementRef<E>>,
-) {
+type MenuItemProps<E extends Element> = Extend<React.ComponentProps<E>, MenuItemOwnProps<E>>;
+
+export function MenuItem<E extends Element>({ element, className, children, ...props }: MenuItemProps<E>) {
   return createElement(
     element ?? 'div',
     {
-      ref,
       className: clsx(
         'row w-full items-center gap-2 rounded px-1.5 py-2 hover:bg-muted disabled:text-dim disabled:hover:bg-transparent',
         className,
@@ -44,10 +40,6 @@ function MenuItem_<E extends Element>(
   );
 }
 
-export const MenuItem = forwardRef(MenuItem_);
-
-export const ButtonMenuItem = forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
-  function ButtonMenuItem(props, ref) {
-    return <MenuItem ref={ref} element="button" type="button" {...props} />;
-  },
-);
+export function ButtonMenuItem(props: React.ComponentProps<'button'>) {
+  return <MenuItem element="button" type="button" {...props} />;
+}

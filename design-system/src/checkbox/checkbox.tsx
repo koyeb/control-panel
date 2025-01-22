@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { FieldLabel } from '../field/field';
+import { Extend } from '../utils/types';
 import { useId } from '../utils/use-id';
 
 type CheckboxOwnProps = {
@@ -9,13 +9,9 @@ type CheckboxOwnProps = {
   helpTooltip?: React.ReactNode;
 };
 
-type CheckboxProps = CheckboxOwnProps &
-  Omit<React.ComponentProps<typeof CheckboxInput>, 'type' | keyof CheckboxOwnProps>;
+type CheckboxProps = Extend<CheckboxInputProps, CheckboxOwnProps>;
 
-export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Checkbox(
-  { label, helpTooltip, className, ...props },
-  ref,
-) {
+export function Checkbox({ label, helpTooltip, className, ...props }: CheckboxProps) {
   const id = useId(props.id);
 
   return (
@@ -31,19 +27,18 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(function Che
         className,
       )}
     >
-      <CheckboxInput ref={ref} {...props} id={id} />
+      <CheckboxInput {...props} id={id} />
       {label}
     </FieldLabel>
   );
-});
+}
 
-export const CheckboxInput = forwardRef<
-  HTMLInputElement,
-  React.ComponentProps<'input'> & { indeterminate?: boolean }
->(function CheckboxInput({ indeterminate, ...props }, ref) {
+type CheckboxInputProps = Extend<React.ComponentProps<'input'>, { indeterminate?: boolean }>;
+
+export function CheckboxInput({ indeterminate, ...props }: CheckboxInputProps) {
   return (
     <>
-      <input ref={ref} type="checkbox" className="peer sr-only" {...props} />
+      <input type="checkbox" className="peer sr-only" {...props} />
 
       <span className="leading-none peer-checked:hidden peer-disabled:[&>span]:bg-muted">
         <span className="inline-block size-4 rounded border" />
@@ -54,7 +49,7 @@ export const CheckboxInput = forwardRef<
       </span>
     </>
   );
-});
+}
 
 function Checked(props: React.SVGProps<SVGSVGElement>) {
   return (

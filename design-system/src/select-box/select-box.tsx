@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { CheckboxInput } from '../checkbox/checkbox';
 import { RadioInput } from '../radio/radio';
+import { Extend } from '../utils/types';
 import { useId } from '../utils/use-id';
 
 type SelectBoxType = 'checkbox' | 'radio';
@@ -20,13 +20,20 @@ type SelectBoxOwnProps = {
   children?: React.ReactNode;
 };
 
-type SelectBoxProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, keyof SelectBoxOwnProps> &
-  SelectBoxOwnProps;
+type SelectBoxProps = Extend<React.ComponentProps<'input'>, SelectBoxOwnProps>;
 
-export const SelectBox = forwardRef<HTMLInputElement, SelectBoxProps>(function SelectBox(
-  { type, icon, title, description, footer, disabled, className, classes, children, ...props },
-  ref,
-) {
+export function SelectBox({
+  type,
+  icon,
+  title,
+  description,
+  footer,
+  disabled,
+  className,
+  classes,
+  children,
+  ...props
+}: SelectBoxProps) {
   const id = useId(props.id);
 
   return (
@@ -42,8 +49,8 @@ export const SelectBox = forwardRef<HTMLInputElement, SelectBoxProps>(function S
       )}
     >
       <div className="flex items-center justify-center rounded-l-lg px-2">
-        {type === 'checkbox' && <CheckboxInput ref={ref} id={id} disabled={disabled} {...props} />}
-        {type === 'radio' && <RadioInput ref={ref} id={id} disabled={disabled} {...props} />}
+        {type === 'checkbox' && <CheckboxInput id={id} disabled={disabled} {...props} />}
+        {type === 'radio' && <RadioInput id={id} disabled={disabled} {...props} />}
       </div>
 
       {children ?? (
@@ -60,4 +67,4 @@ export const SelectBox = forwardRef<HTMLInputElement, SelectBoxProps>(function S
       )}
     </label>
   );
-});
+}

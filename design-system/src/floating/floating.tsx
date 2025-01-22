@@ -18,8 +18,8 @@ type FloatingProps = {
   offset?: number;
   hover?: boolean;
   role?: UseRoleProps['role'];
-  renderReference: (ref: React.RefCallback<Element>, props: Record<string, unknown>) => React.ReactNode;
-  renderFloating: (ref: React.RefCallback<Element>, props: Record<string, unknown>) => React.ReactNode;
+  renderReference: (props: Record<string, unknown>) => React.ReactNode;
+  renderFloating: (props: Record<string, unknown>) => React.ReactNode;
 };
 
 export function Floating({
@@ -54,11 +54,11 @@ export function Floating({
 
   return (
     <>
-      {renderReference(setReference, getReferenceProps())}
+      {renderReference(getReferenceProps({ ref: setReference }))}
 
       {isMounted && (
         <FloatingPortal>
-          {renderFloating(setFloating, { style: styles, ...getFloatingProps() })}
+          {renderFloating(getFloatingProps({ ref: setFloating, style: styles }))}
         </FloatingPortal>
       )}
     </>

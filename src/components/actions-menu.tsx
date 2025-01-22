@@ -27,9 +27,8 @@ export function ActionsMenu({ Icon = IconEllipsisVertical, children }: ActionsMe
       setOpen={setMenuOpen}
       placement="bottom-end"
       offset={8}
-      renderReference={(ref, props) => (
+      renderReference={(props) => (
         <IconButton
-          ref={ref}
           variant="ghost"
           color="gray"
           size={1}
@@ -38,8 +37,8 @@ export function ActionsMenu({ Icon = IconEllipsisVertical, children }: ActionsMe
           {...props}
         />
       )}
-      renderFloating={(ref, props) => (
-        <Menu ref={ref} className="min-w-24" {...props}>
+      renderFloating={(props) => (
+        <Menu className="min-w-24" {...props}>
           {children(withClose, onClose)}
         </Menu>
       )}

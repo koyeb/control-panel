@@ -1,10 +1,11 @@
 import clsx from 'clsx';
-import { forwardRef, isValidElement } from 'react';
+import { isValidElement } from 'react';
 
 import { Spinner } from '../spinner/spinner';
 import { Tooltip } from '../tooltip/tooltip';
 import { useBreakpoint } from '../utils/media-query';
 import { mergeRefs } from '../utils/merge-refs';
+import { Extend } from '../utils/types';
 
 export type ButtonVariant = 'solid' | 'outline' | 'ghost';
 export type ButtonSize = 1 | 2 | 3;
@@ -17,25 +18,16 @@ type ButtonOwnProps = {
   loading?: boolean;
 };
 
-type ButtonProps = ButtonOwnProps & React.ButtonHTMLAttributes<HTMLButtonElement>;
+type ButtonProps = Extend<React.ComponentProps<'button'>, ButtonOwnProps>;
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { loading, children, className, ...props },
-  ref,
-) {
+export function Button({ loading, children, className, ...props }: ButtonProps) {
   return (
-    <button
-      ref={ref}
-      type="button"
-      disabled={loading}
-      className={buttonClassName(props, className)}
-      {...props}
-    >
+    <button type="button" disabled={loading} className={buttonClassName(props, className)} {...props}>
       {loading && <Spinner className="size-4" />}
       {children}
     </button>
   );
-});
+}
 
 type IconButtonComponentProps = {
   Icon: React.ComponentType<{ className?: string }>;
@@ -47,10 +39,14 @@ type IconButtonNodeProps = {
 
 type IconButtonProps = ButtonProps & (IconButtonComponentProps | IconButtonNodeProps);
 
-export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(function IconButton(
-  { variant = 'outline', size = 2, className, children, ...props },
+export function IconButton({
   ref,
-) {
+  variant = 'outline',
+  size = 2,
+  className,
+  children,
+  ...props
+}: IconButtonProps) {
   // prettier-ignore
   const { Icon, icon, ...rest } = props as ButtonProps & Partial<IconButtonComponentProps & IconButtonNodeProps>;
   const sm = useBreakpoint('sm');
@@ -98,7 +94,7 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       )}
     </Tooltip>
   );
-});
+}
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function buttonClassName(

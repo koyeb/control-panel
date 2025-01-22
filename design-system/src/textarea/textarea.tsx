@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { Field, FieldHelperText, FieldLabel } from '../field/field';
+import { Extend } from '../utils/types';
 import { useId } from '../utils/use-id';
 
 type TextAreaOwnProps = {
@@ -13,13 +13,18 @@ type TextAreaOwnProps = {
   textAreaClassName?: string;
 };
 
-type TextAreaProps = TextAreaOwnProps &
-  Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, keyof TextAreaOwnProps>;
+type TextAreaProps = Extend<React.ComponentProps<'textarea'>, TextAreaOwnProps>;
 
-export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea(
-  { label, placeholder, helperText, error, invalid = Boolean(error), className, textAreaClassName, ...props },
-  ref,
-) {
+export function TextArea({
+  label,
+  placeholder,
+  helperText,
+  error,
+  invalid = Boolean(error),
+  className,
+  textAreaClassName,
+  ...props
+}: TextAreaProps) {
   const id = useId(props.id);
   const helperTextId = `${id}-error-text`;
 
@@ -34,7 +39,6 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       }
     >
       <textarea
-        ref={ref}
         id={id}
         aria-invalid={invalid}
         aria-errormessage={invalid ? helperTextId : undefined}
@@ -50,4 +54,4 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
       />
     </Field>
   );
-});
+}

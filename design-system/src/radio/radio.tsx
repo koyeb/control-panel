@@ -1,7 +1,7 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { FieldLabel } from '../field/field';
+import { Extend } from '../utils/types';
 import { useId } from '../utils/use-id';
 
 type RadioOwnProps = {
@@ -9,13 +9,9 @@ type RadioOwnProps = {
   helpTooltip?: React.ReactNode;
 };
 
-type RadioProps = RadioOwnProps &
-  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | keyof RadioOwnProps>;
+type RadioProps = Extend<React.ComponentProps<'input'>, RadioOwnProps>;
 
-export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
-  { label, helpTooltip, className, ...props },
-  ref,
-) {
+export function Radio({ label, helpTooltip, className, ...props }: RadioProps) {
   const id = useId(props.id);
 
   return (
@@ -31,29 +27,27 @@ export const Radio = forwardRef<HTMLInputElement, RadioProps>(function Radio(
         className,
       )}
     >
-      <RadioInput ref={ref} {...props} id={id} />
+      <RadioInput {...props} id={id} />
       {label}
     </FieldLabel>
   );
-});
+}
 
-export const RadioInput = forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
-  function RadioInput(props, ref) {
-    return (
-      <>
-        <input ref={ref} type="radio" className="peer sr-only" {...props} />
+export function RadioInput(props: React.ComponentProps<'input'>) {
+  return (
+    <>
+      <input type="radio" className="peer sr-only" {...props} />
 
-        <span className="leading-none peer-checked:hidden  peer-disabled:[&>span]:bg-muted">
-          <span className="inline-block size-4 rounded-full border" />
-        </span>
+      <span className="leading-none peer-checked:hidden  peer-disabled:[&>span]:bg-muted">
+        <span className="inline-block size-4 rounded-full border" />
+      </span>
 
-        <span className="hidden leading-none peer-checked:block">
-          <Checked className="size-4" />
-        </span>
-      </>
-    );
-  },
-);
+      <span className="hidden leading-none peer-checked:block">
+        <Checked className="size-4" />
+      </span>
+    </>
+  );
+}
 
 function Checked(props: React.SVGProps<SVGSVGElement>) {
   return (
