@@ -1,16 +1,11 @@
 import { FitAddon } from '@xterm/addon-fit';
 import { ITerminalOptions, Terminal as XTerm } from '@xterm/xterm';
-import { forwardRef, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import { useEffect, useImperativeHandle, useMemo, useState } from 'react';
 
 import { useWatchElementSize } from '@koyeb/design-system';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 
 import '@xterm/xterm/css/xterm.css';
-
-type TerminalProps = {
-  onSizeChange: (size: { cols: number; rows: number }) => void;
-  onData: (data: string) => void;
-};
 
 export type TerminalRef = {
   focus(): void;
@@ -18,7 +13,13 @@ export type TerminalRef = {
   write(chunk: string): void;
 };
 
-export default forwardRef<TerminalRef, TerminalProps>(function Terminal({ onSizeChange, onData }, ref) {
+type TerminalProps = {
+  ref?: React.Ref<TerminalRef>;
+  onSizeChange: (size: { cols: number; rows: number }) => void;
+  onData: (data: string) => void;
+};
+
+export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
   const xterm = useMemo(() => new XTerm(), []);
   const fitAddon = useMemo(() => new FitAddon(), []);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -54,7 +55,7 @@ export default forwardRef<TerminalRef, TerminalProps>(function Terminal({ onSize
       <div ref={setContainer} className="h-96 resize-y overflow-hidden" />
     </div>
   );
-});
+}
 
 function useTerminalTheme(xterm: XTerm) {
   const themeMode = useThemeModeOrPreferred();

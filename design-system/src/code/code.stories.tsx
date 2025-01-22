@@ -16,7 +16,7 @@ export default meta;
 export const Default: StoryObj<typeof Code> = {
   render: (args) => <Code {...args} />,
   args: {
-    lang: 'typescript',
+    lang: 'javascript',
     value:
       "import type { Meta } from '@storybook/react';\n\nexport default {\n  title: 'MyStory',\n} satisfies Meta;",
   },

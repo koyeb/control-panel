@@ -1,11 +1,10 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { FormattedNumber } from 'react-intl';
 
 import { useNextInvoiceQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
-import { InvoiceLine, InvoiceUsageLine, InvoicePlanLine, Invoice } from 'src/api/model';
+import { Invoice, InvoiceLine, InvoicePlanLine, InvoiceUsageLine } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -14,25 +13,23 @@ import { createTranslate, TranslateEnum } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.organizationPlan.estimatedCost');
 
-export const EstimatedCostsPopup = forwardRef<HTMLDivElement, React.ComponentProps<'div'>>(
-  function EstimatedCostsPopup({ className, ...props }, ref) {
-    const organization = useOrganization();
-    const nextInvoiceQuery = useNextInvoiceQuery();
+export function EstimatedCostsPopup({ className, ...props }: React.ComponentProps<'div'>) {
+  const organization = useOrganization();
+  const nextInvoiceQuery = useNextInvoiceQuery();
 
-    return (
-      <div ref={ref} className={clsx('w-56 rounded-md border bg-popover', className)} {...props}>
-        <div className="p-3 font-medium">
-          <T id="currentPlan" values={{ plan: <TranslateEnum enum="plans" value={organization.plan} /> }} />
-        </div>
-
-        <hr />
-
-        {nextInvoiceQuery.isLoading && <Loading className="min-h-12" />}
-        {nextInvoiceQuery.isSuccess && <CostsDetails costs={getCosts(nextInvoiceQuery.data)} />}
+  return (
+    <div className={clsx('w-56 rounded-md border bg-popover', className)} {...props}>
+      <div className="p-3 font-medium">
+        <T id="currentPlan" values={{ plan: <TranslateEnum enum="plans" value={organization.plan} /> }} />
       </div>
-    );
-  },
-);
+
+      <hr />
+
+      {nextInvoiceQuery.isLoading && <Loading className="min-h-12" />}
+      {nextInvoiceQuery.isSuccess && <CostsDetails costs={getCosts(nextInvoiceQuery.data)} />}
+    </div>
+  );
+}
 
 function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
   return (

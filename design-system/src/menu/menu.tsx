@@ -5,6 +5,8 @@ import { Extend } from '../utils/types';
 
 export function Menu({ className, ...props }: React.ComponentProps<'div'>) {
   return (
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     <div
       className={clsx(
         'col z-30 items-stretch rounded-md border bg-popover p-1 text-contrast-popover shadow-lg',

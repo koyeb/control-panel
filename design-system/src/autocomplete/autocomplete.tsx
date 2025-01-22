@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
-import { forwardRef, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { Dropdown } from '../dropdown/dropdown';
 import { useDropdown } from '../dropdown/use-dropdown';
@@ -10,6 +10,7 @@ import { InputBox } from '../input/input';
 import { useId } from '../utils/use-id';
 
 type AutocompleteProps<Item> = {
+  ref?: React.Ref<HTMLInputElement>;
   open?: boolean;
   size?: 1 | 2 | 3;
   label?: React.ReactNode;
@@ -36,35 +37,33 @@ type AutocompleteProps<Item> = {
   renderNoItems?: () => React.ReactNode;
 };
 
-export const Autocomplete = forwardRef(function Autocomplete<Item>(
-  {
-    open,
-    size,
-    label,
-    helpTooltip,
-    helperText,
-    placeholder,
-    error,
-    invalid = Boolean(error),
-    required,
-    disabled,
-    className,
-    id: idProp,
-    name,
-    items,
-    selectedItem,
-    onSelectedItemChange,
-    inputValue,
-    onInputValueChange,
-    resetOnBlur = true,
-    onBlur,
-    getKey,
-    itemToString,
-    renderItem,
-    renderNoItems,
-  }: AutocompleteProps<Item>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+export function Autocomplete<Item>({
+  ref,
+  open,
+  size,
+  label,
+  helpTooltip,
+  helperText,
+  placeholder,
+  error,
+  invalid = Boolean(error),
+  required,
+  disabled,
+  className,
+  id: idProp,
+  name,
+  items,
+  selectedItem,
+  onSelectedItemChange,
+  inputValue,
+  onInputValueChange,
+  resetOnBlur = true,
+  onBlur,
+  getKey,
+  itemToString,
+  renderItem,
+  renderNoItems,
+}: AutocompleteProps<Item>) {
   const id = useId(idProp);
   const helperTextId = `${id}-helper-text`;
 
@@ -154,6 +153,8 @@ export const Autocomplete = forwardRef(function Autocomplete<Item>(
         className="peer"
         aria-invalid={invalid}
         aria-errormessage={helperTextId}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         {...getInputProps({ ref, id, onBlur, required })}
       />
 
@@ -169,4 +170,4 @@ export const Autocomplete = forwardRef(function Autocomplete<Item>(
       />
     </Field>
   );
-});
+}

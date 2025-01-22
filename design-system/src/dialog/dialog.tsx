@@ -140,7 +140,7 @@ export function Dialog({
   );
 }
 
-const MotionFloatingOverlay = motion(FloatingOverlay);
+const MotionFloatingOverlay = motion.create(FloatingOverlay);
 
 type Dialog2Props = {
   open: boolean;

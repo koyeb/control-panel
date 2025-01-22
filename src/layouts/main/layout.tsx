@@ -9,7 +9,7 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react';
 import clsx from 'clsx';
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
 
 import { Button, useBreakpoint } from '@koyeb/design-system';
 import { IconMenu } from 'src/components/icons';
@@ -180,19 +180,14 @@ function MobileMenu({ state, setState, children }: MobileMenuProps) {
   );
 }
 
-const Aside = forwardRef<HTMLElement, React.ComponentProps<'aside'>>(function Aside(
-  { className, ...props },
-  ref,
-) {
+export function Aside({ className, ...props }: React.ComponentProps<'aside'>) {
   return (
     <aside
-      ref={ref}
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx('h-full overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', className)}
       {...props}
     />
   );
-});
+}
 
 type ContextProps = {
   context: React.ReactNode;

@@ -1,6 +1,6 @@
 import { Meta, StoryFn } from '@storybook/react';
 import clsx from 'clsx';
-import { HTMLAttributes, forwardRef, useState } from 'react';
+import { useState } from 'react';
 import { parseColor } from 'tailwindcss/lib/util/color';
 
 export default {
@@ -18,15 +18,11 @@ const getHexColor = (value: string) => {
   return `#${rgb}${alpha !== undefined ? (255 * alpha)?.toString(16).padStart(2, '0') : ''}`;
 };
 
-const Box = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(function Box(props, ref) {
+const Box = function Box(props: React.ComponentProps<'div'>) {
   return (
-    <div
-      ref={ref}
-      {...props}
-      className={clsx(props.className, 'flex size-12 items-center justify-center rounded')}
-    />
+    <div {...props} className={clsx(props.className, 'flex size-12 items-center justify-center rounded')} />
   );
-});
+};
 
 type DesignTokenProps = {
   name: string;

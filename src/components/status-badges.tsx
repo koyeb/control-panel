@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 
 import { Badge, BadgeColor, Spinner } from '@koyeb/design-system';
 import {
@@ -21,6 +20,7 @@ import {
 } from 'src/components/icons';
 
 type ResourceStatusProps<Status> = {
+  ref?: React.Ref<React.ComponentRef<typeof Badge>>;
   status: Status;
   className?: string;
 };
@@ -28,10 +28,7 @@ type ResourceStatusProps<Status> = {
 function createResourceStatus<Status extends string>(
   map: Record<Status, [React.ComponentType<{ className?: string }>, BadgeColor]>,
 ) {
-  function ResourceStatus(
-    { status, className }: ResourceStatusProps<Status>,
-    ref: React.ForwardedRef<HTMLSpanElement>,
-  ) {
+  return function ResourceStatus({ ref, status, className }: ResourceStatusProps<Status>) {
     const [Icon, color] = map[status] ?? unknownStatusBadge;
 
     return (
@@ -45,9 +42,7 @@ function createResourceStatus<Status extends string>(
         <span className="capitalize">{status}</span>
       </Badge>
     );
-  }
-
-  return forwardRef(ResourceStatus);
+  };
 }
 
 const unknownStatusBadge = [IconCircleDot, 'blue'] as const;

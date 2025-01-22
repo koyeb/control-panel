@@ -1,12 +1,13 @@
 import { useRanger } from '@tanstack/react-ranger';
 import clsx from 'clsx';
-import { forwardRef, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import { Field, FieldHelperText, FieldLabel } from '../field/field';
 import { mergeRefs } from '../utils/merge-refs';
 import { useId } from '../utils/use-id';
 
 type SliderProps = {
+  ref?: React.Ref<HTMLDivElement>;
   value?: number[];
   onChange?: (values: number[]) => void;
   disabled?: boolean;
@@ -24,25 +25,24 @@ type SliderProps = {
   className?: string;
 };
 
-export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
-  const {
-    value,
-    onChange,
-    disabled,
-    label,
-    helpTooltip,
-    helperText,
-    invalid,
-    error,
-    min = 0,
-    max = 100,
-    step = 1,
-    tickSize = step,
-    renderTick,
-    id: idProp,
-    className,
-  } = props;
-
+export function Slider({
+  ref,
+  value,
+  onChange,
+  disabled,
+  label,
+  helpTooltip,
+  helperText,
+  invalid,
+  error,
+  min = 0,
+  max = 100,
+  step = 1,
+  tickSize = step,
+  renderTick,
+  id: idProp,
+  className,
+}: SliderProps) {
   const id = useId(idProp);
   const helperTextId = `${id}-helper-text`;
 
@@ -104,7 +104,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(pr
       {renderTick && <Ticks ticks={ranger.getTicks()} renderTick={renderTick} />}
     </Field>
   );
-});
+}
 
 type ConnectorProps = {
   steps: Array<{ left: number; width: number }>;

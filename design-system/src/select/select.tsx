@@ -1,14 +1,16 @@
 import clsx from 'clsx';
 import { useSelect, UseSelectProps, UseSelectState, UseSelectStateChangeOptions } from 'downshift';
 import IconChevronDown from 'lucide-static/icons/chevron-down.svg?react';
-import { forwardRef, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { Dropdown, DropdownGroup } from '../dropdown/dropdown';
 import { useDropdown } from '../dropdown/use-dropdown';
 import { Field, FieldHelperText, FieldLabel } from '../field/field';
+import { Extend } from '../utils/types';
 import { useId } from '../utils/use-id';
 
 type SelectProps<Item> = {
+  ref?: React.Ref<HTMLDivElement>;
   open?: boolean;
   size?: 1 | 2 | 3;
   label?: React.ReactNode;
@@ -36,36 +38,34 @@ type SelectProps<Item> = {
   stateReducer?: UseSelectProps<Item>['stateReducer'];
 };
 
-export const Select = forwardRef(function Select<Item>(
-  {
-    open,
-    size = 2,
-    label,
-    helpTooltip,
-    helperText,
-    error,
-    invalid = Boolean(error),
-    disabled,
-    readOnly,
-    placeholder,
-    className,
-    id: idProp,
-    items,
-    groups,
-    selectedItem: selectedItemProp,
-    onSelectedItemChange,
-    onItemClick,
-    onBlur,
-    getKey,
-    itemToString,
-    renderItem,
-    renderNoItems,
-    renderSelectedItem,
-    canSelectItem,
-    stateReducer,
-  }: SelectProps<Item>,
-  forwardedRef: React.ForwardedRef<HTMLElement>,
-) {
+export function Select<Item>({
+  ref: forwardedRef,
+  open,
+  size = 2,
+  label,
+  helpTooltip,
+  helperText,
+  error,
+  invalid = Boolean(error),
+  disabled,
+  readOnly,
+  placeholder,
+  className,
+  id: idProp,
+  items,
+  groups,
+  selectedItem: selectedItemProp,
+  onSelectedItemChange,
+  onItemClick,
+  onBlur,
+  getKey,
+  itemToString,
+  renderItem,
+  renderNoItems,
+  renderSelectedItem,
+  canSelectItem,
+  stateReducer,
+}: SelectProps<Item>) {
   const id = useId(idProp);
   const helperTextId = `${id}-helper-text`;
 
@@ -105,7 +105,7 @@ export const Select = forwardRef(function Select<Item>(
 
       if (typeof forwardedRef === 'function') {
         forwardedRef(ref);
-      } else if (forwardedRef) {
+      } else if (forwardedRef != null) {
         forwardedRef.current = ref;
       }
     },
@@ -173,33 +173,29 @@ export const Select = forwardRef(function Select<Item>(
       />
     </Field>
   );
-});
+}
 
-type MultiSelectProps<Item> = Omit<
+type MultiSelectProps<Item> = Extend<
   SelectProps<Item>,
-  'selectedItem' | 'onSelectedItemChange' | 'renderItem' | 'renderSelectedItem'
-> & {
-  selectedItems?: Item[];
-  onItemsSelected?: (item: Item) => void;
-  onItemsUnselected?: (item: Item) => void;
-  renderItem: (item: Item, selected: boolean, index?: number) => React.ReactNode;
-  renderSelectedItems: (items: Item[]) => React.ReactNode;
-};
-
-export const MultiSelect = forwardRef(function MultiSelect<Item>(
   {
-    selectedItems = [],
-    onItemsSelected,
-    onItemsUnselected,
-    renderItem,
-    renderSelectedItems,
-    ...props
-  }: MultiSelectProps<Item>,
-  ref: React.ForwardedRef<HTMLElement>,
-) {
+    selectedItems?: Item[];
+    onItemsSelected?: (item: Item) => void;
+    onItemsUnselected?: (item: Item) => void;
+    renderItem: (item: Item, selected: boolean, index?: number) => React.ReactNode;
+    renderSelectedItems: (items: Item[]) => React.ReactNode;
+  }
+>;
+
+export function MultiSelect<Item>({
+  selectedItems = [],
+  onItemsSelected,
+  onItemsUnselected,
+  renderItem,
+  renderSelectedItems,
+  ...props
+}: MultiSelectProps<Item>) {
   return (
     <Select
-      ref={ref}
       selectedItem={null}
       onItemClick={(item) => {
         if (selectedItems.includes(item)) {
@@ -214,7 +210,7 @@ export const MultiSelect = forwardRef(function MultiSelect<Item>(
       {...props}
     />
   );
-});
+}
 
 function multiSelectStateReducer<Item>(
   state: UseSelectState<Item>,

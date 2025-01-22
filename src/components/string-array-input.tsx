@@ -1,16 +1,17 @@
-import { useState, useEffect, forwardRef } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Input } from '@koyeb/design-system';
+import { Extend } from 'src/utils/types';
 
-type StringArrayInputProps = Omit<React.ComponentProps<typeof Input>, 'value' | 'onChange'> & {
-  value?: string[];
-  onChange?: (value: string[]) => void;
-};
+type StringArrayInputProps = Extend<
+  React.ComponentProps<typeof Input>,
+  {
+    value?: string[];
+    onChange?: (value: string[]) => void;
+  }
+>;
 
-export const StringArrayInput = forwardRef(function StringArrayInput(
-  { value, onChange, ...props }: StringArrayInputProps,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+export function StringArrayInput({ value, onChange, ...props }: StringArrayInputProps) {
   const [valueStr, setValueStr] = useState('');
 
   useEffect(() => {
@@ -23,14 +24,13 @@ export const StringArrayInput = forwardRef(function StringArrayInput(
 
   return (
     <Input
-      ref={ref}
       {...props}
       value={valueStr}
       onChange={(event) => setValueStr(event.target.value)}
       onBlur={() => onChange?.(parseArray(valueStr))}
     />
   );
-});
+}
 
 function parseArray(input: string): string[] {
   if (input === '') {

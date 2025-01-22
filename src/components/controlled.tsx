@@ -1,4 +1,4 @@
-import React, { forwardRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Control, FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
 
 import {
@@ -117,13 +117,10 @@ export function ControlledSelectBox<
   return <SelectBox {...field} {...controlProps} {...props} />;
 }
 
-function ControlledInput_<
+export function ControlledInput<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
->(
-  { control, name, helperText, onChangeEffect, ...props }: ControlledProps<typeof Input, Form, Name>,
-  ref: React.ForwardedRef<HTMLInputElement>,
-) {
+>({ ref, control, name, helperText, onChangeEffect, ...props }: ControlledProps<typeof Input, Form, Name>) {
   const { field, fieldState } = useController({ control, name });
 
   return (
@@ -141,8 +138,6 @@ function ControlledInput_<
     />
   );
 }
-
-export const ControlledInput = forwardRef(ControlledInput_);
 
 export function ControlledStringArrayInput<
   Form extends FieldValues = FieldValues,

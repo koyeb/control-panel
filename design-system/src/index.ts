@@ -1,5 +1,3 @@
-import './react.d';
-
 export * from './accordion/accordion';
 export * from './alert/alert';
 export * from './autocomplete/autocomplete';

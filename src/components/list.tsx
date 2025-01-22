@@ -1,6 +1,7 @@
 import clsx from 'clsx';
-import { forwardRef } from 'react';
 import { Fragment } from 'react/jsx-runtime';
+
+import { Extend } from 'src/utils/types';
 
 type ListSection<Item> = {
   title: React.ReactNode;
@@ -30,20 +31,19 @@ export function ListSections<Item>({ sections, getKey, renderItem }: ListProps<I
   );
 }
 
-type ListItemProps = React.ComponentProps<'li'> & {
-  isActive?: boolean;
-  start?: React.ReactNode;
-  end?: React.ReactNode;
-  children: React.ReactNode;
-};
+type ListItemProps = Extend<
+  React.ComponentProps<'li'>,
+  {
+    isActive?: boolean;
+    start?: React.ReactNode;
+    end?: React.ReactNode;
+    children: React.ReactNode;
+  }
+>;
 
-export const ListItem = forwardRef<HTMLLIElement, ListItemProps>(function ListItem(
-  { isActive, className, start, end, children, ...props },
-  ref,
-) {
+export function ListItem({ isActive, className, start, end, children, ...props }: ListItemProps) {
   return (
     <li
-      ref={ref}
       className={clsx('row gap-3 rounded-lg px-3 py-2 font-medium', isActive && 'bg-muted', className)}
       {...props}
     >
@@ -52,4 +52,4 @@ export const ListItem = forwardRef<HTMLLIElement, ListItemProps>(function ListIt
       {end && <div className="ml-auto">{end}</div>}
     </li>
   );
-});
+}

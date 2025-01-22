@@ -18,9 +18,9 @@ const meta = {
     setOpen: action('setOpen'),
     offset: 8,
     placement: 'bottom',
-    renderReference: (ref, props) => <div ref={ref} {...props} className="size-8 bg-muted/20" />,
-    renderFloating: (ref, props) => (
-      <div ref={ref} {...props} className="w-fit rounded border bg-neutral p-2 shadow">
+    renderReference: (props) => <div {...props} className="size-8 bg-muted/20" />,
+    renderFloating: (props) => (
+      <div {...props} className="w-fit rounded border bg-neutral p-2 shadow">
         Floating
       </div>
     ),

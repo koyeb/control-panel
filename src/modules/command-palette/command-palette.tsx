@@ -1,6 +1,6 @@
 import * as intercom from '@intercom/messenger-js-sdk';
 import clsx from 'clsx';
-import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
@@ -211,16 +211,14 @@ function CommandPaletteDialog() {
 }
 
 type OptionProps = {
+  ref?: React.Ref<HTMLButtonElement>;
   onClick: () => void;
   setHighlighted: () => void;
   isHighlighted: boolean;
   children: React.ReactNode;
 };
 
-const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
-  { onClick, isHighlighted, setHighlighted, children },
-  ref,
-) {
+export function Option({ ref, onClick, isHighlighted, setHighlighted, children }: OptionProps) {
   return (
     <button
       ref={ref}
@@ -231,7 +229,7 @@ const Option = forwardRef<HTMLButtonElement, OptionProps>(function Option(
       {children}
     </button>
   );
-});
+}
 
 function RegisterCommonCommands() {
   useRegisterInternalNavigationCommands();

@@ -14,7 +14,6 @@ const meta = {
   args: {
     className: 'max-w-sm',
     disabled: false,
-    ticks: true,
     min: 0,
     max: 8,
     step: 1,
