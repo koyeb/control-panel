@@ -1,5 +1,6 @@
 import { useReducer, useEffect, createContext, createElement, useContext, useCallback, useRef } from 'react';
 
+import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 
 export type CreateServiceDialogPage = {
@@ -15,7 +16,6 @@ export type CreateServiceDialogSection = {
 };
 
 type CreateServiceDialogState = {
-  isOpen: boolean;
   serviceType: ServiceType | undefined;
   deploymentMethod: DeploymentMethod | undefined;
   sections: CreateServiceDialogSection[];
@@ -55,10 +55,11 @@ export const CreateServiceDialogProvider = ({ getSections, children }: CreateSer
 };
 
 function useCreateCreateServiceDialog(getSections: GetSections) {
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
   const navigate = useNavigate();
 
   const [state, dispatch] = useReducer(reducer, {
-    isOpen: false,
     serviceType: undefined,
     deploymentMethod: undefined,
     sections: [],
@@ -69,10 +70,10 @@ function useCreateCreateServiceDialog(getSections: GetSections) {
   });
 
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const { isOpen, serviceType, deploymentMethod, filteredSections, search, page, navigationRefs } = state;
+  const { serviceType, deploymentMethod, filteredSections, search, page, navigationRefs } = state;
 
   const focusSearchInput = useCallback(() => {
-    searchInputRef.current?.focus();
+    setTimeout(() => searchInputRef.current?.focus(), 0);
   }, []);
 
   useEffect(() => {
@@ -80,7 +81,6 @@ function useCreateCreateServiceDialog(getSections: GetSections) {
   }, [getSections, serviceType, deploymentMethod]);
 
   return {
-    isOpen,
     serviceType,
     deploymentMethod,
     sections: filteredSections,
@@ -94,20 +94,16 @@ function useCreateCreateServiceDialog(getSections: GetSections) {
 
     navigate: useCallback(
       (to: string) => {
-        dispatch({ type: 'dialog-state-changed', isOpen: false });
+        closeDialog();
         navigate(to);
       },
-      [navigate],
+      [closeDialog, navigate],
     ),
 
     dialogOpened: useCallback(() => {
-      dispatch({ type: 'dialog-state-changed', isOpen: true });
+      openDialog('CreateService');
       focusSearchInput();
-    }, [focusSearchInput]),
-
-    dialogClosed: useCallback(() => {
-      dispatch({ type: 'dialog-state-changed', isOpen: false });
-    }, []),
+    }, [openDialog, focusSearchInput]),
 
     reset: useCallback(() => {
       dispatch({ type: 'reset' });
@@ -141,11 +137,6 @@ function useCreateCreateServiceDialog(getSections: GetSections) {
 
 type Reset = {
   type: 'reset';
-};
-
-type DialogStateChanged = {
-  type: 'dialog-state-changed';
-  isOpen: boolean;
 };
 
 type ServiceTypeChanged = {
@@ -183,7 +174,6 @@ type BackspaceKeyPressed = {
 };
 
 type CreateServiceDialogAction =
-  | DialogStateChanged
   | Reset
   | ServiceTypeChanged
   | DeploymentMethodChanged
@@ -208,10 +198,6 @@ function reducer(
     if (action.type === 'arrow-key-pressed') {
       return state;
     }
-  }
-
-  if (action.type === 'dialog-state-changed') {
-    return { ...state, isOpen: action.isOpen };
   }
 
   if (action.type === 'reset') {
