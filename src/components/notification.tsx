@@ -1,18 +1,10 @@
 import { ToastContainer, ToastContentProps, cssTransition } from 'react-toastify';
-import 'react-toastify/ReactToastify.minimal.css';
 
 import { Notification } from '@koyeb/design-system';
 
 export function NotificationContainer() {
   return (
-    <ToastContainer
-      transition={transition}
-      autoClose={5 * 1000}
-      closeButton={false}
-      hideProgressBar={true}
-      toastClassName="relative py-1 col"
-      bodyClassName="flex-1"
-    />
+    <ToastContainer transition={transition} autoClose={5 * 1000} closeButton={false} hideProgressBar={true} />
   );
 }
 
@@ -23,5 +15,5 @@ const transition = cssTransition({
 });
 
 export function Toast({ closeToast, data }: ToastContentProps<React.ComponentProps<typeof Notification>>) {
-  return <Notification {...data} onClose={closeToast} />;
+  return <Notification {...data} className="flex-1" onClose={closeToast} />;
 }

@@ -117,20 +117,12 @@
   animation: 240ms reverse both notification;
 }
 
-.Toastify__toast-container {
-  z-index: 60;
-  position: fixed;
-  width: 440px;
-  top: max(16px, env(safe-area-inset-top));
-  right: max(16px, env(safe-area-inset-right));
-}
-
-@media only screen and (max-width: 480px) {
-  .Toastify__toast-container {
-    width: 100vw;
-    top: env(safe-area-inset-top);
-    left: env(safe-area-inset-left);
-  }
+:root {
+  --toastify-z-index: 60;
+  --toastify-toast-background: var(--toastify-color-transparent);
+  --toastify-toast-shadow: none;
+  --toastify-toast-width: theme(maxWidth.md);
+  --toastify-toast-padding: 0;
 }
 
 .intercom-lightweight-app {
