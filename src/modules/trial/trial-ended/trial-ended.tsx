@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Dialog2 } from '@koyeb/design-system';
+import { Dialog } from '@koyeb/design-system';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 import { defined } from 'src/utils/assert';
 
@@ -55,9 +55,9 @@ export function TrialEnded() {
 
   return (
     <SecondaryLayout>
-      <Dialog2 open className="col w-full max-w-4xl gap-8">
+      <Dialog open className="col w-full max-w-4xl gap-8">
         {content()}
-      </Dialog2>
+      </Dialog>
     </SecondaryLayout>
   );
 }

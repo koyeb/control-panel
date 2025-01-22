@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 import {
-  Dialog2 as BaseDialog,
+  Dialog as BaseDialog,
   DialogFooter as BaseDialogFooter,
   DialogHeader as BaseDialogHeader,
   Button,
