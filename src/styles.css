@@ -97,6 +97,16 @@
 
 /* react-toastify */
 
+:root {
+  --toastify-color-light: theme(colors.transparent);
+  --toastify-text-color-light: theme(textColor.default);
+  --toastify-toast-width: theme(maxWidth.md);
+  --toastify-font-family: theme(fontFamily.sans);
+  --toastify-toast-shadow: none;
+  --toastify-toast-padding: 0;
+  --toastify-z-index: 60;
+}
+
 @keyframes notification {
   0% {
     transform: translateY(-1rem);
@@ -117,19 +127,14 @@
   animation: 240ms reverse both notification;
 }
 
-:root {
-  --toastify-z-index: 60;
-  --toastify-toast-background: var(--toastify-color-transparent);
-  --toastify-toast-shadow: none;
-  --toastify-toast-width: theme(maxWidth.md);
-  --toastify-toast-padding: 0;
-}
+/* intercom */
 
 .intercom-lightweight-app {
   z-index: 30 !important;
 }
 
 /* hide reCAPTCHA badge */
+
 .grecaptcha-badge {
   visibility: hidden;
 }
