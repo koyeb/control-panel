@@ -2,12 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Dialog, InputEnd } from '@koyeb/design-system';
+import { Button, InputEnd } from '@koyeb/design-system';
 import { mapVolume } from 'src/api/mappers/volume';
 import { Volume } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { ControlledInput } from 'src/components/controlled';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -23,12 +24,10 @@ const schema = z.object({
 });
 
 type CreateVolumeDialogProps = {
-  open: boolean;
-  onClose: () => void;
   onCreated: (volume: Volume, mountPath: string) => void;
 };
 
-export function CreateVolumeDialog({ open, onClose, onCreated }: CreateVolumeDialogProps) {
+export function CreateVolumeDialog({ onCreated }: CreateVolumeDialogProps) {
   const regions = useWatchServiceForm('regions');
   const invalidate = useInvalidateApiQuery();
   const t = T.useTranslate();
@@ -67,14 +66,13 @@ export function CreateVolumeDialog({ open, onClose, onCreated }: CreateVolumeDia
   });
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      onClosed={() => form.reset()}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="lg"
-    >
+    <Dialog id="CreateVolume" onClosed={() => form.reset()} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <form className="col gap-4" onSubmit={withStopPropagation(handleSubmit(form, mutation.mutateAsync))}>
         <ControlledInput
           control={form.control}
@@ -87,6 +85,7 @@ export function CreateVolumeDialog({ open, onClose, onCreated }: CreateVolumeDia
           control={form.control}
           type="number"
           name="size"
+          min={1}
           label={<T id="sizeLabel" />}
           placeholder={t('sizePlaceholder')}
           end={
@@ -98,15 +97,15 @@ export function CreateVolumeDialog({ open, onClose, onCreated }: CreateVolumeDia
 
         <ControlledInput control={form.control} name="mountPath" label={<T id="mountPathLabel" />} />
 
-        <footer className="row mt-2 justify-end gap-2">
-          <Button variant="ghost" color="gray" onClick={onClose}>
+        <DialogFooter>
+          <CloseDialogButton>
             <Translate id="common.cancel" />
-          </Button>
+          </CloseDialogButton>
 
-          <Button type="submit" loading={form.formState.isSubmitting} autoFocus>
+          <Button type="submit" loading={form.formState.isSubmitting}>
             <Translate id="common.create" />
           </Button>
-        </footer>
+        </DialogFooter>
       </form>
     </Dialog>
   );

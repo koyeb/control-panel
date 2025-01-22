@@ -2,12 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { Service } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -19,14 +20,9 @@ const schema = z.object({
   name: z.string().min(1).max(63),
 });
 
-type CreateDatabaseRoleDialogProps = {
-  open: boolean;
-  onClose: () => void;
-  service: Service;
-};
-
-export function CreateDatabaseRoleDialog({ open, onClose, service }: CreateDatabaseRoleDialogProps) {
+export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
   const invalidate = useInvalidateApiQuery();
+  const closeDialog = Dialog.useClose();
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -48,20 +44,22 @@ export function CreateDatabaseRoleDialog({ open, onClose, service }: CreateDatab
     async onSuccess(_, { name }) {
       await invalidate('getService', { path: { id: service.id } });
       notify.info(t('successNotification', { name }));
-      onClose();
+      closeDialog();
     },
     onError: useFormErrorHandler(form, mapError),
   });
 
   return (
-    <Dialog isOpen={open} onClose={onClose} onClosed={form.reset} title={<T id="title" />} width="lg">
+    <Dialog id="CreateDatabaseRole" onClosed={form.reset} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
         <ControlledInput control={form.control} name="name" label={<T id="nameLabel" />} />
 
-        <footer className="row justify-end gap-4">
-          <Button variant="ghost" color="gray" onClick={onClose}>
+        <DialogFooter>
+          <CloseDialogButton>
             <Translate id="common.cancel" />
-          </Button>
+          </CloseDialogButton>
 
           <Button
             type="submit"
@@ -70,7 +68,7 @@ export function CreateDatabaseRoleDialog({ open, onClose, service }: CreateDatab
           >
             <Translate id="common.create" />
           </Button>
-        </footer>
+        </DialogFooter>
       </form>
     </Dialog>
   );

@@ -25,13 +25,14 @@ import { DeleteDatabaseRoleDialog } from './delete-database-role-dialog';
 const T = createTranslate('pages.database.roles');
 
 export function DatabaseRolesPage() {
+  const openDialog = Dialog.useOpen();
+
   const service = useService(useRouteParam('databaseServiceId'));
   const deployment = useDeployment(service?.latestDeploymentId);
 
   assert(service !== undefined);
   assert(isDatabaseDeployment(deployment));
 
-  const [createRole, setCreateRole] = useState(false);
   const roles = deployment.roles ?? [];
 
   return (
@@ -40,7 +41,7 @@ export function DatabaseRolesPage() {
         title={<T id="title" />}
         end={
           roles.length > 0 && (
-            <Button onClick={() => setCreateRole(true)}>
+            <Button onClick={() => openDialog('CreateDatabaseRole')}>
               <T id="createRole" />
             </Button>
           )
@@ -52,7 +53,7 @@ export function DatabaseRolesPage() {
           title={<T id="noRole.title" />}
           description={<T id="noRole.description" />}
           cta={
-            <Button onClick={() => setCreateRole(true)}>
+            <Button onClick={() => openDialog('CreateDatabaseRole')}>
               <T id="noRole.cta" />
             </Button>
           }
@@ -81,7 +82,7 @@ export function DatabaseRolesPage() {
         />
       )}
 
-      <CreateDatabaseRoleDialog open={createRole} onClose={() => setCreateRole(false)} service={service} />
+      <CreateDatabaseRoleDialog service={service} />
     </>
   );
 }

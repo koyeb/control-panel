@@ -1,16 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { Button, Dialog, Tooltip } from '@koyeb/design-system';
+import { Button, Tooltip } from '@koyeb/design-system';
 import { useDeployment } from 'src/api/hooks/service';
 import { App, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { hasBuild } from 'src/application/service-functions';
-import { CliInfoTooltip, CliInfoButton } from 'src/components/cli-info';
+import { CliInfoButton, CliInfoTooltip } from 'src/components/cli-info';
 import { ControlledCheckbox } from 'src/components/controlled';
+import { Dialog, DialogHeader } from 'src/components/dialog';
 import { IconArrowRight } from 'src/components/icons';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, usePathname } from 'src/hooks/router';
@@ -22,12 +22,12 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
   const latestDeployment = useDeployment(service.latestDeploymentId);
   const latestStashed = latestDeployment?.status === 'stashed';
 
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
   const pathname = usePathname();
   const navigate = useNavigate();
 
   const t = T.useTranslate();
-
-  const [open, setOpen] = useState(false);
 
   const form = useForm({
     defaultValues: {
@@ -48,7 +48,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
     ),
     async onSuccess({ deployment }) {
       await invalidate('listDeployments');
-      setOpen(false);
+      closeDialog();
       navigate(routes.service.overview(service.id, deployment!.id));
       notify.info(t('redeploying'));
     },
@@ -64,7 +64,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
         button={
           <Button
             loading={form.formState.isSubmitting}
-            onClick={() => setOpen(true)}
+            onClick={() => openDialog('Redeploy')}
             className="self-stretch sm:self-start"
           >
             <T id="redeploy" />
@@ -79,13 +79,10 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
         }
       />
 
-      <Dialog
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onClosed={form.reset}
-        width="lg"
-        title={<T id="redeployDialog.title" />}
-        description={
+      <Dialog id="Redeploy" onClosed={form.reset} className="w-full max-w-xl">
+        <DialogHeader title={<T id="redeployDialog.title" />} />
+
+        <p className="text-dim">
           <T
             id={
               hasBuild(latestDeployment)
@@ -93,8 +90,8 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
                 : 'redeployDialog.descriptionWithoutBuild'
             }
           />
-        }
-      >
+        </p>
+
         <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-2">
           {hasBuild(latestDeployment) && (
             <>

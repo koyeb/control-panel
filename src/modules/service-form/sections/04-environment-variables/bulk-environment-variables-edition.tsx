@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Button, Dialog, TextArea } from '@koyeb/design-system';
+import { Button, TextArea } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 import {
@@ -14,15 +15,8 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 const T = createTranslate('modules.serviceForm.environmentVariables.bulkEdition');
 
-type BulkEnvironmentVariablesEditionDialogProps = {
-  isOpen: boolean;
-  onClose: () => void;
-};
-
-export function BulkEnvironmentVariablesEditionDialog({
-  isOpen,
-  onClose,
-}: BulkEnvironmentVariablesEditionDialogProps) {
+export function BulkEnvironmentVariablesEditionDialog() {
+  const closeDialog = Dialog.useClose();
   const t = T.useTranslate();
 
   const { setValue, trigger } = useFormContext();
@@ -50,7 +44,7 @@ export function BulkEnvironmentVariablesEditionDialog({
         }
 
         void trigger('environmentVariables');
-        onClose();
+        closeDialog();
       } catch (error) {
         if (error instanceof SecretNotFoundError) {
           setUnknownSecretName(error.name);
@@ -59,27 +53,26 @@ export function BulkEnvironmentVariablesEditionDialog({
         }
       }
     },
-    [setValue, trigger, onClose, secrets],
+    [setValue, trigger, closeDialog, secrets],
   );
-
-  useEffect(() => {
-    setUnknownSecretName(undefined);
-  }, [isOpen]);
 
   return (
     <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="xl"
-      className="col gap-6"
+      id="BulkEnvironmentVariablesEdition"
+      onClosed={() => setUnknownSecretName(undefined)}
+      className="col w-full max-w-2xl gap-4"
     >
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <p className="text-dim">
         <T id="line1" values={{ code }} />
       </p>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="col gap-4">
         <TextArea
           name="environment-variables"
           placeholder={t('variablesPlaceholder')}
@@ -91,15 +84,15 @@ export function BulkEnvironmentVariablesEditionDialog({
           }
         />
 
-        <footer className="row mt-2 justify-end gap-2">
-          <Button variant="ghost" color="gray" onClick={onClose}>
+        <DialogFooter>
+          <CloseDialogButton>
             <T id="cancel" />
-          </Button>
+          </CloseDialogButton>
 
           <Button type="submit">
             <T id="save" />
           </Button>
-        </footer>
+        </DialogFooter>
       </form>
     </Dialog>
   );

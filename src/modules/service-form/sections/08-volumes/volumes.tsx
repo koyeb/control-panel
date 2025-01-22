@@ -1,9 +1,9 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 import { useFieldArray, UseFieldArrayReturn, useFormContext } from 'react-hook-form';
 
 import { Alert, Button, InfoTooltip } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
+import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -50,7 +50,8 @@ export function Volumes() {
 type VolumesListProps = Pick<UseFieldArrayReturn<ServiceForm, 'volumes'>, 'fields' | 'append' | 'remove'>;
 
 function VolumesList({ fields, append, remove }: VolumesListProps) {
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
 
   const documentationLink = (children: React.ReactNode) => (
     <DocumentationLink path="/docs/reference/volumes" className="whitespace-nowrap !text-default underline">
@@ -82,17 +83,15 @@ function VolumesList({ fields, append, remove }: VolumesListProps) {
         <VolumeFields
           key={variable.id}
           index={index}
-          onCreate={() => setCreateDialogOpen(true)}
+          onCreate={() => openDialog('CreateVolume')}
           onRemove={() => remove(index)}
         />
       ))}
 
       <CreateVolumeDialog
-        open={createDialogOpen}
-        onClose={() => setCreateDialogOpen(false)}
         onCreated={(volume, mountPath) => {
           append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath, mounted: false });
-          setCreateDialogOpen(false);
+          closeDialog();
         }}
       />
     </>

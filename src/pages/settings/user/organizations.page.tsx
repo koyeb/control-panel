@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Dialog, Spinner } from '@koyeb/design-system';
+import { Button, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMembers } from 'src/api/mappers/session';
@@ -13,10 +12,12 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { ControlledInput } from 'src/components/controlled';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { useMount } from 'src/hooks/lifecycle';
 import { useHistoryState, useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -26,19 +27,25 @@ const T = createTranslate('pages.userSettings.organizations');
 
 export function OrganizationsPage() {
   const historyState = useHistoryState<{ create: boolean }>();
-  const [createDialogOpen, setCreateDialogOpen] = useState(Boolean(historyState.create));
+  const openDialog = Dialog.useOpen();
+
+  useMount(() => {
+    if (historyState.create) {
+      openDialog('CreateOrganization');
+    }
+  });
 
   return (
     <>
       <Title
         title={<T id="title" />}
         end={
-          <Button onClick={() => setCreateDialogOpen(true)}>
+          <Button onClick={() => openDialog('CreateOrganization')}>
             <T id="createOrganization" />
           </Button>
         }
       />
-      <CreateOrganizationDialog open={createDialogOpen} onClose={() => setCreateDialogOpen(false)} />
+      <CreateOrganizationDialog />
       <OrganizationList />
     </>
   );
@@ -52,7 +59,7 @@ const schema = z.object({
     .refine(isSlug, { params: { refinement: 'isSlug' } }),
 });
 
-function CreateOrganizationDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+function CreateOrganizationDialog() {
   const t = T.useTranslate();
   const navigate = useNavigate();
   const { token, setToken } = useToken();
@@ -94,14 +101,13 @@ function CreateOrganizationDialog({ open, onClose }: { open: boolean; onClose: (
   });
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      onClosed={form.reset}
-      width="lg"
-      title={<T id="createOrganizationDialog.title" />}
-      description={<T id="createOrganizationDialog.description" />}
-    >
+    <Dialog id="CreateOrganization" onClosed={form.reset} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="createOrganizationDialog.title" />} />
+
+      <p className="text-dim">
+        <T id="createOrganizationDialog.description" />
+      </p>
+
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
         <ControlledInput
           control={form.control}
@@ -109,10 +115,11 @@ function CreateOrganizationDialog({ open, onClose }: { open: boolean; onClose: (
           label={<T id="createOrganizationDialog.organizationNameLabel" />}
         />
 
-        <footer className="row mt-2 justify-end gap-2">
-          <Button variant="ghost" color="gray" onClick={onClose}>
+        <DialogFooter>
+          <CloseDialogButton>
             <Translate id="common.cancel" />
-          </Button>
+          </CloseDialogButton>
+
           <Button
             type="submit"
             loading={form.formState.isSubmitting}
@@ -121,7 +128,7 @@ function CreateOrganizationDialog({ open, onClose }: { open: boolean; onClose: (
           >
             <Translate id="common.next" />
           </Button>
-        </footer>
+        </DialogFooter>
       </form>
     </Dialog>
   );

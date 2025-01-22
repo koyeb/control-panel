@@ -3,11 +3,12 @@ import { useMutation } from '@tanstack/react-query';
 import { FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useApps } from 'src/api/hooks/service';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
@@ -15,37 +16,35 @@ import { getId, getName } from 'src/utils/object';
 const T = createTranslate('pages.domains.createDialog');
 
 type CreateDomainDialogProps = {
-  open: boolean;
-  onClose: () => void;
   onCreated: (domainId: string) => void;
 };
 
-export function CreateDomainDialog({ open, onClose, onCreated }: CreateDomainDialogProps) {
+export function CreateDomainDialog({ onCreated }: CreateDomainDialogProps) {
   const t = T.useTranslate();
 
   return (
-    <Dialog
-      isOpen={open}
-      onClose={onClose}
-      title={<T id="title" />}
-      description={<T id="description" />}
-      width="lg"
-    >
+    <Dialog id="CreateDomain" className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
+      <p className="text-dim">
+        <T id="description" />
+      </p>
+
       <DomainForm
         onCreated={(domainId, domainName) => {
           notify.success(t('successNotification', { domainName }));
           onCreated(domainId);
         }}
         renderFooter={(formState) => (
-          <footer className="row mt-2 justify-end gap-2">
-            <Button variant="ghost" color="gray" onClick={onClose}>
+          <DialogFooter>
+            <CloseDialogButton>
               <Translate id="common.cancel" />
-            </Button>
+            </CloseDialogButton>
 
             <Button type="submit" loading={formState.isSubmitting}>
               <T id="submitButton" />
             </Button>
-          </footer>
+          </DialogFooter>
         )}
       />
     </Dialog>

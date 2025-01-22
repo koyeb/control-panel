@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import { useDeployment, useService } from 'src/api/hooks/service';
@@ -9,6 +8,7 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
+import { useMount } from 'src/hooks/lifecycle';
 import { useHistoryState, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
@@ -29,7 +29,13 @@ export function LogicalDatabasesPage() {
   const databases = deployment.databases ?? [];
 
   const historyState = useHistoryState<{ create: boolean }>();
-  const [createDatabase, setCreateDatabase] = useState(Boolean(historyState.create));
+  const openDialog = Dialog.useOpen();
+
+  useMount(() => {
+    if (historyState.create) {
+      openDialog('CreateLogicalDatabase');
+    }
+  });
 
   return (
     <>
@@ -37,7 +43,7 @@ export function LogicalDatabasesPage() {
         title={<T id="title" />}
         end={
           databases.length > 0 && (
-            <Button onClick={() => setCreateDatabase(true)}>
+            <Button onClick={() => openDialog('CreateLogicalDatabase')}>
               <T id="createDatabase" />
             </Button>
           )
@@ -49,7 +55,7 @@ export function LogicalDatabasesPage() {
           title={<T id="noDatabase.title" />}
           description={<T id="noDatabase.description" />}
           cta={
-            <Button onClick={() => setCreateDatabase(true)}>
+            <Button onClick={() => openDialog('CreateLogicalDatabase')}>
               <T id="noDatabase.cta" />
             </Button>
           }
@@ -79,12 +85,7 @@ export function LogicalDatabasesPage() {
         />
       )}
 
-      <CreateLogicalDatabaseDialog
-        open={createDatabase}
-        onClose={() => setCreateDatabase(false)}
-        service={service}
-        deployment={deployment}
-      />
+      <CreateLogicalDatabaseDialog service={service} deployment={deployment} />
     </>
   );
 }

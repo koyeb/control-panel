@@ -1,6 +1,6 @@
-import { Button, DialogFooter } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { notify } from 'src/application/notify';
-import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 

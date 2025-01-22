@@ -2,12 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Dialog } from '@koyeb/design-system';
+import { Button, DialogFooter } from '@koyeb/design-system';
 import { DatabaseDeployment, Service } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -21,19 +22,13 @@ const schema = z.object({
 });
 
 type CreateLogicalDatabaseDialogProps = {
-  open: boolean;
-  onClose: () => void;
   service: Service;
   deployment: DatabaseDeployment;
 };
 
-export function CreateLogicalDatabaseDialog({
-  open,
-  onClose,
-  service,
-  deployment,
-}: CreateLogicalDatabaseDialogProps) {
+export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogicalDatabaseDialogProps) {
   const invalidate = useInvalidateApiQuery();
+  const closeDialog = Dialog.useClose();
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -53,12 +48,14 @@ export function CreateLogicalDatabaseDialog({
     async onSuccess(_, { name }) {
       await invalidate('getService', { path: { id: service.id } });
       notify.info(t('successNotification', { name }));
-      onClose();
+      closeDialog();
     },
   });
 
   return (
-    <Dialog isOpen={open} onClose={onClose} onClosed={form.reset} title={<T id="title" />} width="lg">
+    <Dialog id="CreateLogicalDatabase" onClosed={form.reset} className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
+
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
         <ControlledInput control={form.control} name="name" label={<T id="nameLabel" />} />
 
@@ -74,10 +71,10 @@ export function CreateLogicalDatabaseDialog({
           renderNoItems={() => <T id="noRoles" />}
         />
 
-        <footer className="row justify-end gap-4">
-          <Button variant="ghost" color="gray" onClick={onClose}>
+        <DialogFooter>
+          <CloseDialogButton>
             <Translate id="common.cancel" />
-          </Button>
+          </CloseDialogButton>
 
           <Button
             type="submit"
@@ -86,7 +83,7 @@ export function CreateLogicalDatabaseDialog({
           >
             <Translate id="common.create" />
           </Button>
-        </footer>
+        </DialogFooter>
       </form>
     </Dialog>
   );

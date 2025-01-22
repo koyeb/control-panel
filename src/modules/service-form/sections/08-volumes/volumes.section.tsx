@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { Alert, Button } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
+import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -34,7 +34,9 @@ export function VolumesSection() {
 
 function SectionContent() {
   const { fields, append, remove } = useFieldArray<ServiceForm, 'volumes'>({ name: 'volumes' });
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
 
   const documentationLink = (children: React.ReactNode) => (
     <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
@@ -68,7 +70,7 @@ function SectionContent() {
             <VolumeFields
               key={variable.id}
               index={index}
-              onCreate={() => setCreateDialogOpen(true)}
+              onCreate={() => openDialog('CreateVolume')}
               onRemove={() => remove(index)}
             />
           ))}
@@ -87,11 +89,9 @@ function SectionContent() {
       </div>
 
       <CreateVolumeDialog
-        open={createDialogOpen}
-        onClose={() => setCreateDialogOpen(false)}
         onCreated={(volume, mountPath) => {
           append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath, mounted: false });
-          setCreateDialogOpen(false);
+          closeDialog();
         }}
       />
     </>

@@ -76,7 +76,6 @@ function EnvironmentVariables() {
     name: 'environmentVariables',
   });
 
-  const [bulkEditionDialogOpen, setBulkEditionDialogOpen] = useState(false);
   const [createSecretIndex, setCreateSecretIndex] = useState<number>();
 
   const secrets = useSecrets('simple');
@@ -134,17 +133,18 @@ function EnvironmentVariables() {
               <T id="addVariable" />
             </Button>
 
-            <Button variant="outline" color="gray" onClick={() => setBulkEditionDialogOpen(true)}>
+            <Button
+              variant="outline"
+              color="gray"
+              onClick={() => openDialog('BulkEnvironmentVariablesEdition')}
+            >
               <T id="bulkEdit" />
             </Button>
           </div>
         </div>
       </FileDropZone>
 
-      <BulkEnvironmentVariablesEditionDialog
-        isOpen={bulkEditionDialogOpen}
-        onClose={() => setBulkEditionDialogOpen(false)}
-      />
+      <BulkEnvironmentVariablesEditionDialog />
 
       <CreateSecretDialog
         onCreated={(secretName) => {

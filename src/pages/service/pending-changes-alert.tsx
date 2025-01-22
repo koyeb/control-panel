@@ -2,9 +2,9 @@ import { useMutation, UseMutationResult, useQuery } from '@tanstack/react-query'
 import clsx from 'clsx';
 import { dequal } from 'dequal';
 import { diffJson } from 'diff';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 
-import { Alert, Button, Dialog } from '@koyeb/design-system';
+import { Alert, Button, DialogFooter } from '@koyeb/design-system';
 import { useDeployment } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
 import { ComputeDeployment, Service } from 'src/api/model';
@@ -12,6 +12,7 @@ import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/
 import { useTrackEvent } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
+import { Dialog, DialogHeader } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
@@ -26,10 +27,11 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
   const latestDeployment = useDeployment(service.latestDeploymentId);
   const latestNonStashedDeployment = useLatestNonStashedDeployment(service);
 
-  const [changesDialogOpen, setChangesDialogOpen] = useState(false);
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
 
   const discard = useDiscardChanges(service);
-  const deploy = useApplyChanges(service, () => setChangesDialogOpen(false));
+  const deploy = useApplyChanges(service, () => closeDialog());
 
   if (latestDeployment === undefined || latestNonStashedDeployment === undefined) {
     return null;
@@ -55,7 +57,7 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
         variant="ghost"
         color="blue"
         loading={deploy.isPending}
-        onClick={() => setChangesDialogOpen(true)}
+        onClick={() => openDialog('DeploymentsDiff')}
         className="self-center"
       >
         <T id="viewChanges" />
@@ -66,8 +68,6 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
       </Button>
 
       <DeploymentsDiffDialog
-        isOpen={changesDialogOpen}
-        onClose={() => setChangesDialogOpen(false)}
         deploy={deploy}
         discard={discard}
         deployment1={latestNonStashedDeployment}
@@ -139,35 +139,26 @@ function useApplyChanges(service: Service, onSuccess: () => void) {
 }
 
 type DeploymentsDiffDialog = {
-  isOpen: boolean;
-  onClose: () => void;
   deploy: UseMutationResult<unknown, unknown, void>;
   discard: UseMutationResult<unknown, unknown, void>;
   deployment1: ComputeDeployment;
   deployment2: ComputeDeployment;
 };
 
-function DeploymentsDiffDialog({
-  isOpen,
-  onClose,
-  deploy,
-  discard,
-  deployment1,
-  deployment2,
-}: DeploymentsDiffDialog) {
+function DeploymentsDiffDialog({ deploy, discard, deployment1, deployment2 }: DeploymentsDiffDialog) {
   const diff = useMemo(
     () => diffJson(deployment1.definitionApi, deployment2.definitionApi),
     [deployment1, deployment2],
   );
 
   return (
-    <Dialog
-      isOpen={isOpen}
-      onClose={onClose}
-      title={<T id="diffDialog.title" />}
-      description={<T id="diffDialog.description" />}
-      width="2xl"
-    >
+    <Dialog id="DeploymentsDiff" className="w-full max-w-4xl">
+      <DialogHeader title={<T id="diffDialog.title" />} />
+
+      <p className="text-dim">
+        <T id="diffDialog.description" />
+      </p>
+
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <pre className="scrollbar-green max-h-[32rem] overflow-auto rounded bg-muted p-2 dark:bg-neutral">
         {diff.map(({ added, removed, value }, index) => (
@@ -177,7 +168,7 @@ function DeploymentsDiffDialog({
         ))}
       </pre>
 
-      <footer className="row mt-4 justify-end gap-4">
+      <DialogFooter>
         <Button
           variant="ghost"
           color="gray"
@@ -191,7 +182,7 @@ function DeploymentsDiffDialog({
         <Button loading={deploy.isPending} onClick={() => deploy.mutate()}>
           <T id="deploy" />
         </Button>
-      </footer>
+      </DialogFooter>
     </Dialog>
   );
 }
