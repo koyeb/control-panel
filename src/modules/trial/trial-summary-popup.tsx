@@ -18,7 +18,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
   const organization = useOrganization();
   const trial = defined(organization.trial);
 
-  const { data: subscription } = useSubscriptionQuery(organization.currentSubscriptionId);
+  const { data: subscription } = useSubscriptionQuery(organization.latestSubscriptionId);
   const { currentSpend, maxSpend } = defined(subscription?.trial);
 
   const { days } = intervalToDuration({ start: new Date(), end: trial.endsAt });

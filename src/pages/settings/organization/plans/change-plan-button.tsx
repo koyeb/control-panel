@@ -38,12 +38,12 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   };
 
   const text = () => {
-    if (organization.plan === plan) {
-      return <T id="currentPlan" />;
+    if (organization.trial || organization.plan === 'startup') {
+      return <T id="select" />;
     }
 
-    if (organization.plan === 'startup') {
-      return <T id="select" />;
+    if (organization.plan === plan) {
+      return <T id="currentPlan" />;
     }
 
     if (isUpgrade(organization.plan, plan)) {
@@ -59,7 +59,9 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
         {(props) => (
           <div {...props}>
             <Button
-              disabled={organization.plan === plan || organization.plan === 'enterprise'}
+              disabled={
+                !organization.trial && (organization.plan === plan || organization.plan === 'enterprise')
+              }
               className="w-full"
               loading={mutation.isPending}
               onClick={onChangePlan}
