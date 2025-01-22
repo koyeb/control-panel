@@ -9,6 +9,7 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { Dialog } from 'src/components/dialog';
 import { IconArrowRight } from 'src/components/icons';
 import { handleSubmit } from 'src/hooks/form';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -56,6 +57,7 @@ function QualificationForm() {
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const track = useTrackEvent();
+  const openDialog = Dialog.useOpen();
 
   const form = useForm<QualificationFormType>({
     defaultValues: {
@@ -101,6 +103,10 @@ function QualificationForm() {
       await invalidate('getCurrentUser');
       await invalidate('getCurrentOrganization');
       track('Form Submitted', { category: 'User Qualification', action: 'Clicked', ...values });
+
+      if (organization.trial) {
+        openDialog('TrialWelcome');
+      }
     },
   });
 
