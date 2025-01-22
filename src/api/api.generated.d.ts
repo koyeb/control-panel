@@ -2583,7 +2583,7 @@ export interface components {
             privileged?: boolean;
         };
         ConfigFile: {
-            /** the path where the file is mounted to */
+            /** the path where the file is copied */
             path?: string;
             /** the permissions of the file in format 0644 */
             permissions?: string;
@@ -3787,6 +3787,8 @@ export interface components {
             coordinates?: string[];
             /** e.g. true */
             use_gpu?: boolean;
+            /** e.g. "par", "fra" */
+            regions?: string[];
         };
         ListDatacentersReply: {
             datacenters?: components["schemas"]["DatacenterListItem"][];
@@ -3879,6 +3881,7 @@ export interface components {
             flags?: components["schemas"]["UserFlags"][];
             name?: string;
             email_validated?: boolean;
+            trialed?: boolean;
         };
         /**
          * - ADMIN: A user is an admin user
@@ -4022,6 +4025,13 @@ export interface components {
             /** Format: int64 */
             amount_remaining?: string;
             payment_failure?: components["schemas"]["Subscription.PaymentFailure"];
+            trialing?: boolean;
+            /** Format: date-time */
+            trial_ends_at?: string;
+            /** Format: int64 */
+            trial_max_spend?: string;
+            /** Format: int64 */
+            current_spend?: string;
         };
         "Subscription.PaymentFailure": {
             /** Format: date-time */

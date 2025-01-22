@@ -43,6 +43,10 @@ export type Subscription = {
   id: string;
   hasPaymentFailure: boolean;
   hasPendingUpdate: boolean;
+  trial?: {
+    currentSpend: number;
+    maxSpend: number;
+  };
 };
 
 export type Invoice = {

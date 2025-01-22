@@ -49,6 +49,7 @@ export namespace Api {
   export type Service = schemas['Service'];
   export type ServiceVariables = schemas['AutocompleteReply'];
   export type Snapshot = schemas['Snapshot'];
+  export type Subscription = schemas['Subscription'];
   export type TcpHealthCheck = schemas['TCPHealthCheck'];
   export type Token = schemas['Token'];
   export type User = schemas['User'];

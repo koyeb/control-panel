@@ -2,9 +2,11 @@ import clsx from 'clsx';
 import { intervalToDuration } from 'date-fns';
 
 import { Badge, ProgressBar } from '@koyeb/design-system';
+import { useSubscriptionQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
+import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 
@@ -14,8 +16,11 @@ type TrialSummaryPopupProps = React.ComponentProps<'div'>;
 
 export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProps) {
   const organization = useOrganization();
+  const trial = defined(organization.trial);
 
-  const trial = defined(useOrganization().trial);
+  const { data: subscription } = useSubscriptionQuery(organization.currentSubscriptionId);
+  const { currentSpend, maxSpend } = defined(subscription?.trial);
+
   const { days } = intervalToDuration({ start: new Date(), end: trial.endsAt });
 
   return (
@@ -33,7 +38,9 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
           <div>
             <T id="usage" />
           </div>
-          <div>$0.00</div>
+          <div>
+            <FormattedPrice value={currentSpend / 100} />
+          </div>
         </div>
 
         <hr />
@@ -42,10 +49,12 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
           <div className="font-medium">
             <T id="creditLeft" />
           </div>
-          <div className="text-green">$10.00</div>
+          <div className="text-green">
+            <FormattedPrice value={maxSpend / 100} />
+          </div>
         </div>
 
-        <ProgressBar progress={1} label={false} />
+        <ProgressBar progress={currentSpend / maxSpend} label={false} />
 
         <div className="text-center text-xs text-dim">
           <T id="timeLeft" values={{ days: Number(days) + 1 }} />
