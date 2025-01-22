@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       lucide-static:
-        specifier: ^0.469.0
-        version: 0.469.0
+        specifier: ^0.473.0
+        version: 0.473.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.18.0
@@ -1871,8 +1871,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucide-static@0.469.0:
-    resolution: {integrity: sha512-ravTgZodIVLO53rJyjIq0iuCRHs+kjd3dAfOcTbA41KCDfdy0Pt6Me8akkhda3jRpbIxjKe1PpYZOg2eQnI/lA==}
+  lucide-static@0.473.0:
+    resolution: {integrity: sha512-fHDRD9De8oyAVXkcmHTtC4ENT6jGxcyey7y/wBLkKlLvU/+zhR2VnAcwA2Hvsa9TJIEizc06jdC7PWoboc6Mkg==}
 
   magic-string@0.27.0:
     resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
@@ -4597,7 +4597,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-static@0.469.0: {}
+  lucide-static@0.473.0: {}
 
   magic-string@0.27.0:
     dependencies:

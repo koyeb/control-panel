@@ -66,6 +66,6 @@
     "vite-plugin-svgr": "^4.3.0"
   },
   "dependencies": {
-    "lucide-static": "^0.469.0"
+    "lucide-static": "^0.473.0"
   }
 }
