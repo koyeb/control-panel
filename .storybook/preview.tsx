@@ -1,15 +1,16 @@
 import type { Preview } from '@storybook/react';
-import { Elements as StripeElements } from '@stripe/react-stripe-js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
-import { PostHogProvider } from '../src/application/posthog';
-import { ApiMock } from '../src/api/mock/mock-api';
-import { IntlProvider } from '../src/intl/translation-provider';
-import { TokenProvider } from '../src/application/token';
-
 import '@fontsource-variable/inter';
 
+import { api } from '../src/api/api';
+import { catalogInstanceFixtures, catalogRegionFixtures } from '../src/api/mock/fixtures';
+import { DialogProvider } from '../src/application/dialog-context';
+import { TokenProvider } from '../src/application/token';
+import { IntlProvider } from '../src/intl/translation-provider';
 import '../src/styles.css';
+
+api.listCatalogInstances = async () => ({ instances: catalogInstanceFixtures });
+api.listCatalogRegions = async () => ({ regions: catalogRegionFixtures });
 
 export default {
   parameters: {
@@ -40,47 +41,24 @@ export default {
       );
     },
     (Story) => (
-      <StripeElements stripe={new Promise<never>(() => {})}>
-        <Story />
-      </StripeElements>
-    ),
-    (Story) => (
-      <PostHogProvider>
-        <Story />
-      </PostHogProvider>
-    ),
-    (Story) => (
-      <QueryClientProvider client={queryClient}>
-        <Story />
-      </QueryClientProvider>
-    ),
-    (Story) => (
       <TokenProvider>
         <Story />
       </TokenProvider>
+    ),
+    (Story) => (
+      <QueryClientProvider client={new QueryClient()}>
+        <Story />
+      </QueryClientProvider>
     ),
     (Story) => (
       <IntlProvider>
         <Story />
       </IntlProvider>
     ),
-    (Story, { args, parameters }) => {
-      new ApiMock();
-      parameters.mockApi?.(args);
-      return <Story />;
-    },
+    (Story) => (
+      <DialogProvider>
+        <Story />
+      </DialogProvider>
+    ),
   ],
 } satisfies Preview;
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchInterval: 1000,
-      retry: false,
-      throwOnError: true,
-    },
-    mutations: {
-      throwOnError: true,
-    },
-  },
-});

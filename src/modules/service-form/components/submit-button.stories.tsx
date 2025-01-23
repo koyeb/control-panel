@@ -9,7 +9,7 @@ import { SubmitButton } from './submit-button';
 const client = new QueryClient();
 
 export default {
-  title: 'Modules/ServiceForm/SubmitButton',
+  title: 'Components/SubmitServiceFormButton',
   decorators: [
     (Story) => (
       <QueryClientProvider client={client}>
@@ -33,4 +33,4 @@ export default {
   ],
 } satisfies Meta;
 
-export const submitButton: StoryFn = () => <SubmitButton loading={false} />;
+export const submitServiceFormButton: StoryFn = () => <SubmitButton loading={false} />;

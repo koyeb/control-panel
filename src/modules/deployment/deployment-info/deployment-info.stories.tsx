@@ -6,7 +6,7 @@ import { create } from 'src/utils/factories';
 import { DeploymentInfo } from './deployment-info';
 
 export default {
-  title: 'Modules/Deployment/DeploymentInfo',
+  title: 'Components/DeploymentInfo',
 } satisfies Meta;
 
 const app = create.app({
