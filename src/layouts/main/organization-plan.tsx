@@ -12,6 +12,7 @@ import { useObserve } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { TrialSummaryPopup } from 'src/modules/trial/trial-summary-popup';
+import { useTrial } from 'src/modules/trial/use-trial';
 
 import { EstimatedCostsPopup } from './estimated-costs-popup';
 
@@ -19,6 +20,7 @@ const T = createTranslate('layouts.main.organizationPlan');
 
 export function OrganizationPlan() {
   const organization = useOrganizationUnsafe();
+  const trial = useTrial();
   const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -60,7 +62,7 @@ export function OrganizationPlan() {
               />
             </div>
 
-            {organization.trial && (
+            {trial && (
               <FeatureFlag feature="trial">
                 <Badge size={1} color="green">
                   Trial
@@ -73,7 +75,7 @@ export function OrganizationPlan() {
             </div>
           </div>
 
-          {organization?.trial && (
+          {trial && (
             <LinkButton
               variant="outline"
               size={1}
@@ -87,7 +89,7 @@ export function OrganizationPlan() {
       )}
       renderFloating={(props) => (
         <FeatureFlag feature="trial" fallback={<EstimatedCostsPopup className="z-30" {...props} />}>
-          {organization.trial ? (
+          {trial ? (
             <TrialSummaryPopup className="z-30" {...props} />
           ) : (
             <EstimatedCostsPopup className="z-30" {...props} />

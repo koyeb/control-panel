@@ -53,18 +53,24 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
     return <T id="downgrade" />;
   };
 
+  const disabled = () => {
+    if (organization.trial) {
+      return false;
+    }
+
+    return organization.plan === plan || organization.plan === 'enterprise';
+  };
+
   return (
     <>
       <Tooltip content={organization.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
         {(props) => (
           <div {...props}>
             <Button
-              disabled={
-                !organization.trial && (organization.plan === plan || organization.plan === 'enterprise')
-              }
-              className="w-full"
+              disabled={disabled()}
               loading={mutation.isPending}
               onClick={onChangePlan}
+              className="w-full"
             >
               {text()}
             </Button>

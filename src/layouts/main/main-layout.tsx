@@ -24,6 +24,7 @@ import { CommandPalette } from 'src/modules/command-palette/command-palette';
 import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
 import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
+import { useTrial } from 'src/modules/trial/use-trial';
 import { inArray } from 'src/utils/arrays';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
@@ -142,6 +143,7 @@ function Main({ children }: { children: React.ReactNode }) {
 function useBanner(): 'session' | 'trial' | void {
   const { session } = useToken();
   const organization = useOrganizationUnsafe();
+  const trial = useTrial();
 
   if (organization === undefined) {
     return;
@@ -151,7 +153,7 @@ function useBanner(): 'session' | 'trial' | void {
     return 'session';
   }
 
-  if (organization.trial) {
+  if (trial) {
     return 'trial';
   }
 }

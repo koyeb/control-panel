@@ -1,15 +1,14 @@
 import clsx from 'clsx';
-import { intervalToDuration } from 'date-fns';
 
 import { Badge, ProgressBar } from '@koyeb/design-system';
-import { useSubscriptionQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
-import { Loading } from 'src/components/loading';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
-import { assert, AssertionError } from 'src/utils/assert';
+import { defined } from 'src/utils/assert';
+
+import { useTrial } from './use-trial';
 
 const T = createTranslate('modules.trial.summaryPopup');
 
@@ -17,17 +16,7 @@ type TrialSummaryPopupProps = React.ComponentProps<'div'>;
 
 export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProps) {
   const organization = useOrganization();
-  const { data: subscription } = useSubscriptionQuery(organization.latestSubscriptionId);
-
-  if (!subscription) {
-    return <Loading {...props} className={clsx('w-56 rounded-md border bg-popover', className)} />;
-  }
-
-  assert(organization.trial !== undefined, new AssertionError('Organization is not in trial'));
-  assert(subscription.trial !== undefined, new AssertionError('Subscription is not in trial'));
-
-  const { currentSpend, maxSpend } = subscription.trial;
-  const { days } = intervalToDuration({ start: new Date(), end: organization.trial.endsAt });
+  const trial = defined(useTrial());
 
   return (
     <div {...props} className={clsx('w-56 rounded-md border bg-popover', className)}>
@@ -45,7 +34,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
             <T id="usage" />
           </div>
           <div>
-            <FormattedPrice value={currentSpend / 100} />
+            <FormattedPrice value={trial.credits.currentSpend / 100} />
           </div>
         </div>
 
@@ -56,14 +45,14 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
             <T id="creditLeft" />
           </div>
           <div className="text-green">
-            <FormattedPrice value={maxSpend / 100} />
+            <FormattedPrice value={trial.credits.maxSpend / 100} />
           </div>
         </div>
 
-        <ProgressBar progress={currentSpend / maxSpend} label={false} />
+        <ProgressBar progress={trial.credits.currentSpend / trial.credits.maxSpend} label={false} />
 
         <div className="text-center text-xs text-dim">
-          <T id="timeLeft" values={{ days: Number(days) + 1 }} />
+          <T id="timeLeft" values={{ days: trial.daysLeft }} />
         </div>
 
         <LinkButton color="gray" size={1} href={routes.organizationSettings.billing()}>

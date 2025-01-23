@@ -1,4 +1,3 @@
-import { isBefore } from 'date-fns';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch } from 'wouter';
 
@@ -14,6 +13,7 @@ import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
 import { ConfirmDeactivateOrganization } from './modules/account/confirm-deactivate-organization';
 import { TrialEnded } from './modules/trial/trial-ended/trial-ended';
+import { useTrial } from './modules/trial/use-trial';
 import { AccountPages } from './pages/account/account.pages';
 import { ActivityPage } from './pages/activity/activity.page';
 import { AuthenticationPages } from './pages/authentication/authentication.pages';
@@ -42,6 +42,7 @@ import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page'
 export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
+  const trial = useTrial();
 
   useRefreshToken();
 
@@ -53,7 +54,7 @@ export function App() {
     return <AccountLocked />;
   }
 
-  if (organizationQuery.data?.trial && isBefore(organizationQuery.data.trial.endsAt, new Date())) {
+  if (trial?.ended) {
     return <TrialEnded />;
   }
 
