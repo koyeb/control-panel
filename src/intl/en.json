@@ -2287,7 +2287,7 @@
         "stripePortal": {
           "title": "Manage billing",
           "description": "Access your invoices and manage your payment methods",
-          "noBillingInformation": "You need to provide your billing information using the form bellow before you can access your invoices and manage your payment methods",
+          "upgradeRequired": "You have no invoices or payment methods",
           "cta": "Manage billing"
         },
         "billingInformation": {

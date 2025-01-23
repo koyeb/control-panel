@@ -1,5 +1,5 @@
-import { Alert } from '@koyeb/design-system';
 import { useManageBillingQuery } from 'src/api/hooks/billing';
+import { useOrganization } from 'src/api/hooks/session';
 import { IconSquareArrowOutUpRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
@@ -9,6 +9,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('pages.organizationSettings.billing.stripePortal');
 
 export function StripePortal() {
+  const organization = useOrganization();
   const query = useManageBillingQuery();
 
   if (query.isError) {
@@ -20,7 +21,7 @@ export function StripePortal() {
       <SectionHeader title={<T id="title" />} description={<T id="description" />} />
 
       <LinkButton
-        disabled={query.isPending || query.data === null}
+        disabled={query.isPending || query.data === undefined}
         href={query.data?.url}
         component="a"
         color="gray"
@@ -31,7 +32,11 @@ export function StripePortal() {
         <IconSquareArrowOutUpRight className="size-4" />
       </LinkButton>
 
-      {query.data === null && <Alert variant="info" description={<T id="noBillingInformation" />} />}
+      {organization.plan === 'hobby' && (
+        <p className="border-l-4 border-green/50 pl-3 text-xs text-dim">
+          <T id="upgradeRequired" />
+        </p>
+      )}
     </section>
   );
 }
