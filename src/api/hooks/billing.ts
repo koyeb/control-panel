@@ -8,12 +8,14 @@ import { ApiError } from '../api-errors';
 import { mapInvoice, mapSubscription } from '../mappers/billing';
 import { useApiQueryFn } from '../use-api';
 
-import { useOrganizationQuery } from './session';
+import { useOrganization, useOrganizationQuery } from './session';
 
 export function useManageBillingQuery() {
+  const organization = useOrganization();
   const { token } = useToken();
 
   return useQuery({
+    enabled: organization.latestSubscriptionId !== undefined,
     queryKey: ['manageBilling', { token }],
     async queryFn() {
       try {
