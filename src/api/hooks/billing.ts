@@ -42,7 +42,10 @@ export function useNextInvoiceQuery() {
 
   return useQuery({
     ...useApiQueryFn('getNextInvoice'),
-    enabled: inArray(organization?.plan, ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise']),
+    enabled:
+      organization &&
+      !organization.trial &&
+      inArray(organization.plan, ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise']),
     select: mapInvoice,
     meta: { showError: false },
   });
