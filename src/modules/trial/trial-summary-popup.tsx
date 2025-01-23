@@ -6,9 +6,10 @@ import { useSubscriptionQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
+import { Loading } from 'src/components/loading';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
-import { defined } from 'src/utils/assert';
+import { assert, AssertionError } from 'src/utils/assert';
 
 const T = createTranslate('modules.trial.summaryPopup');
 
@@ -16,12 +17,17 @@ type TrialSummaryPopupProps = React.ComponentProps<'div'>;
 
 export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProps) {
   const organization = useOrganization();
-  const trial = defined(organization.trial);
-
   const { data: subscription } = useSubscriptionQuery(organization.latestSubscriptionId);
-  const { currentSpend, maxSpend } = defined(subscription?.trial);
 
-  const { days } = intervalToDuration({ start: new Date(), end: trial.endsAt });
+  if (!subscription) {
+    return <Loading {...props} className={clsx('w-56 rounded-md border bg-popover', className)} />;
+  }
+
+  assert(organization.trial !== undefined, new AssertionError('Organization is not in trial'));
+  assert(subscription.trial !== undefined, new AssertionError('Subscription is not in trial'));
+
+  const { currentSpend, maxSpend } = subscription.trial;
+  const { days } = intervalToDuration({ start: new Date(), end: organization.trial.endsAt });
 
   return (
     <div {...props} className={clsx('w-56 rounded-md border bg-popover', className)}>
