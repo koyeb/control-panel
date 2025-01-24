@@ -1,7 +1,13 @@
 import clsx from 'clsx';
 
-import { Alert, ButtonMenuItem, Spinner, Table, useBreakpoint } from '@koyeb/design-system';
-import { useDomainsQuery } from 'src/api/hooks/domain';
+import {
+  Alert,
+  ButtonMenuItem,
+  Spinner,
+  Table,
+  TableColumnSelection,
+  useBreakpoint,
+} from '@koyeb/design-system';
 import { useApps } from 'src/api/hooks/service';
 import { Domain, type DomainStatus } from 'src/api/model';
 import { stopPropagation } from 'src/application/dom-events';
@@ -9,8 +15,6 @@ import { SvgComponent } from 'src/application/types';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/components/icons';
-import { Loading } from 'src/components/loading';
-import { QueryError } from 'src/components/query-error';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -23,22 +27,15 @@ import { NoDomains } from './no-domains';
 const T = createTranslate('pages.domains.domainsList');
 
 type DomainsListProps = {
+  domains: Domain[];
   expanded: string | undefined;
   toggleExpanded: (domain: Domain) => void;
   onCreate: () => void;
+  selection: TableColumnSelection<Domain>;
 };
 
-export function DomainsList({ expanded, toggleExpanded, onCreate }: DomainsListProps) {
+export function DomainsList({ domains, expanded, toggleExpanded, onCreate, selection }: DomainsListProps) {
   const isMobile = !useBreakpoint('sm');
-  const { data: domains, isPending, isError, error } = useDomainsQuery('custom');
-
-  if (isPending) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <QueryError error={error} />;
-  }
 
   if (domains.length === 0) {
     return <NoDomains onCreate={onCreate} />;
@@ -86,6 +83,7 @@ export function DomainsList({ expanded, toggleExpanded, onCreate }: DomainsListP
           <ChangeAppForm domain={domain} />
         </div>
       )}
+      selection={selection}
       classes={{
         tr: (domain) => clsx(expanded === domain?.id && 'bg-gradient-to-b from-inverted/5 to-inverted/0'),
       }}

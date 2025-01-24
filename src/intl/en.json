@@ -1752,6 +1752,7 @@
     "domains": {
       "documentTitle": "Domains",
       "title": "Domains",
+      "deleteDomains": "Delete selected ({count})",
       "createDomain": "Add domain",
       "createDialog": {
         "title": "Create domain",
@@ -1762,6 +1763,13 @@
         "noApps": "No apps found",
         "submitButton": "Create domain",
         "successNotification": "Domain <strong>{domainName}</strong> created"
+      },
+      "bulkDelete": {
+        "title": "Delete domains",
+        "description": "Are you sure you want to delete these {count} {count, plural, =1 {domain} other {domains}}?",
+        "successNotification": "{count} {count, plural, =1 {domain} other {domains}} are being deleted",
+        "confirmationText": "delete",
+        "cta": "Delete"
       },
       "deleteDialog": {
         "title": "Delete domain",
