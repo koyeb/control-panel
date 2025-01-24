@@ -11,7 +11,7 @@ export function useManageBillingQuery() {
   const organization = useOrganization();
 
   return useQuery({
-    enabled: organization.latestSubscriptionId !== undefined,
+    enabled: organization.latestSubscriptionId !== undefined && !organization.trial,
     ...useApiQueryFn('manageBilling'),
   });
 }
