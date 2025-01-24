@@ -25,7 +25,7 @@ export function EstimatedCostsPopup({ className, ...props }: React.ComponentProp
 
       <hr />
 
-      {nextInvoiceQuery.isPending && <Loading className="min-h-12" />}
+      {nextInvoiceQuery.isFetching && <Loading className="min-h-12" />}
       {nextInvoiceQuery.isSuccess && <CostsDetails costs={getCosts(nextInvoiceQuery.data)} />}
     </div>
   );
