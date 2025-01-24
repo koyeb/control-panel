@@ -70,10 +70,7 @@ export function SecretsPage() {
           <SecretsList
             secrets={secrets}
             onCreate={() => openDialog('CreateSecret')}
-            selected={selected}
-            toggleSelected={toggle}
-            selectAll={() => set(secrets ?? [])}
-            clearSelection={clear}
+            selection={{ selected, selectAll: () => set(secrets), clear, toggle }}
           />
         )}
       </QueryGuard>

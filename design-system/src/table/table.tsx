@@ -1,12 +1,21 @@
 import clsx from 'clsx';
 import { Fragment } from 'react/jsx-runtime';
 
+import { Checkbox } from '../checkbox/checkbox';
+
 type TableColumn<Item> = {
   render: (item: Item) => React.ReactNode;
   hidden?: boolean;
   header?: React.ReactNode;
   className?: string;
   headerClassName?: string;
+};
+
+export type TableColumnSelection<Item> = {
+  selected: Set<Item>;
+  selectAll: () => void;
+  clear: () => void;
+  toggle: (item: Item) => void;
 };
 
 type TableProps<Item, Column extends string> = {
@@ -16,6 +25,7 @@ type TableProps<Item, Column extends string> = {
   onRowClick?: (item: Item) => void;
   isExpanded?: (item: Item) => boolean;
   renderExpanded?: (item: Item) => React.ReactNode;
+  selection?: TableColumnSelection<Item>;
   classes?: Partial<
     Record<'table' | 'thead' | 'tbody', string> & Record<'tr' | 'th' | 'td', (item: Item | null) => string>
   >;
@@ -28,9 +38,21 @@ export function Table<Item, Column extends string>({
   onRowClick,
   isExpanded,
   renderExpanded,
+  selection,
   classes,
 }: TableProps<Item, Column>) {
   const columnsArray = Object.entries<TableColumn<Item>>(columns).filter(([, value]) => !value.hidden);
+
+  if (selection !== undefined) {
+    columnsArray.unshift([
+      'selection',
+      {
+        className: 'w-4',
+        header: <SelectionHeader items={items} selection={selection} />,
+        render: (item) => <SelectionColumn item={item} selection={selection} />,
+      },
+    ]);
+  }
 
   return (
     <table className={clsx('table', classes?.table)}>
@@ -81,4 +103,36 @@ function defaultGetKey<T>(item: T): React.Key | undefined {
   if ('id' in item && typeof item.id === 'string') {
     return item.id;
   }
+}
+
+type SelectionHeaderProps<T> = {
+  items: Array<T>;
+  selection: TableColumnSelection<T>;
+};
+
+function SelectionHeader<T>({ items, selection }: SelectionHeaderProps<T>) {
+  const indeterminate = selection.selected.size < items.length;
+
+  return (
+    <Checkbox
+      checked={selection.selected.size > 0}
+      indeterminate={indeterminate}
+      onChange={() => (indeterminate ? selection.selectAll() : selection.clear())}
+    />
+  );
+}
+
+type SelectionColumnProps<T> = {
+  item: T;
+  selection: TableColumnSelection<T>;
+};
+
+function SelectionColumn<T>({ item, selection }: SelectionColumnProps<T>) {
+  return (
+    <Checkbox
+      className="mt-1"
+      checked={selection.selected.has(item)}
+      onChange={() => selection.toggle(item)}
+    />
+  );
 }
