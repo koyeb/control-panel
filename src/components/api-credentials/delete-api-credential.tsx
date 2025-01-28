@@ -33,7 +33,7 @@ export function DeleteCredentialDialog({ type, credential }: DeleteCredentialDia
 
   return (
     <ConfirmationDialog
-      id="ConfirmDeleteApiCredential"
+      id={`ConfirmDeleteApiCredential-${credential.id}`}
       title={<T id="title" />}
       description={
         <T
