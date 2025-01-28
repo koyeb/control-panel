@@ -1,3 +1,6 @@
+import { Api } from './api-types';
+import { FromApi } from './from-api';
+
 // activity
 
 export type Activity = {
@@ -26,15 +29,7 @@ export type ActivityObject = {
 
 // api credential
 
-export type ApiCredential = {
-  id: string;
-  type: ApiCredentialType;
-  name: string;
-  description?: string;
-  token?: string;
-  createdAt: string;
-};
-
+export type ApiCredential = FromApi<Api.Credential>;
 export type ApiCredentialType = 'user' | 'organization';
 
 // billing

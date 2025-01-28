@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
 
-import { mapApiCredential } from '../mappers/api-credential';
+import { fromApi } from '../from-api';
+import { ApiCredential } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useApiCredentialsQuery(type?: 'user' | 'organization') {
@@ -13,6 +14,6 @@ export function useApiCredentialsQuery(type?: 'user' | 'organization') {
         type: type !== undefined ? upperCase(type) : undefined,
       },
     }),
-    select: mapApiCredential,
+    select: ({ credentials }): ApiCredential[] => fromApi(credentials!),
   });
 }

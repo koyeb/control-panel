@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { Button, Input } from '@koyeb/design-system';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { ApiCredential } from 'src/api/model';
+import { ApiCredentialType } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
@@ -18,7 +18,7 @@ import { upperCase } from 'src/utils/strings';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from '../dialog';
 
 type CreateApiCredentialDialogProps = {
-  type: ApiCredential['type'];
+  type: ApiCredentialType;
 };
 
 export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogProps) {
@@ -86,7 +86,7 @@ const schema = z.object({
 });
 
 type CreateApiCredentialFormProps = {
-  type: ApiCredential['type'];
+  type: ApiCredentialType;
   onCreated: (value: string) => void;
 };
 
