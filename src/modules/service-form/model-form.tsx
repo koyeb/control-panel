@@ -33,7 +33,7 @@ import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { defined } from 'src/utils/assert';
+import { assert, defined } from 'src/utils/assert';
 import { getName, hasProperty } from 'src/utils/object';
 import { slugify } from 'src/utils/strings';
 
@@ -100,6 +100,9 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
 
       serviceForm.source.type = 'docker';
       serviceForm.source.docker.image = model.dockerImage;
+
+      assert(serviceForm.ports[0] !== undefined);
+      serviceForm.ports[0].healthCheck.gracePeriod = 300;
 
       return submitServiceForm(serviceForm);
     },
