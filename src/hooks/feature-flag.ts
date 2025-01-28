@@ -1,4 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
+import posthog from 'posthog-js';
+// eslint-disable-next-line no-restricted-imports
 import { useFeatureFlagEnabled } from 'posthog-js/react';
 import { useMemo } from 'react';
 import { z } from 'zod';
@@ -43,4 +45,12 @@ function useLocalStorageFlags() {
 
     return {};
   }, []);
+}
+
+export async function getFeatureFlag(flag: string) {
+  if (posthog.isFeatureEnabled(flag) === undefined) {
+    await new Promise((resolve) => posthog.onFeatureFlags(resolve));
+  }
+
+  return Boolean(posthog.isFeatureEnabled(flag));
 }

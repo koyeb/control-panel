@@ -7,6 +7,7 @@ import { CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api
 import { notify } from 'src/application/notify';
 import { getToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
+import { getFeatureFlag } from 'src/hooks/feature-flag';
 
 import { generateServiceName } from '../sections/00-service-name/use-generate-service-name';
 import { HealthCheck, ServiceForm } from '../service-form.types';
@@ -88,6 +89,10 @@ export async function initializeServiceForm(
 
     if (registrySecret) {
       values.source.docker.registrySecret = registrySecret;
+    }
+
+    if ((await getFeatureFlag('scale-to-zero-default')) && values.serviceType === 'web') {
+      values.scaling.min = 0;
     }
   }
 
