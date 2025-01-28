@@ -1,3 +1,5 @@
+import { SnakeToCamelCase } from './types';
+
 export function lowerCase(str: undefined): undefined;
 export function lowerCase<S extends string>(str: S): Lowercase<S>;
 export function lowerCase(str?: string): string | undefined {
@@ -20,6 +22,13 @@ export function capitalize(str?: string): string | undefined {
   const rest = str.slice(1);
 
   return `${upperCase(firstLetter)}${rest}`;
+}
+
+export function snakeToCamelCase<Str extends string>(str: Str): SnakeToCamelCase<Str> {
+  return str
+    .split('_')
+    .map((str, i) => (i === 0 ? str : capitalize(str)))
+    .join('') as SnakeToCamelCase<Str>;
 }
 
 export function removePrefix<S extends string, Prefix extends string>(
