@@ -71,14 +71,17 @@ export { default as IconListMinus } from 'lucide-static/icons/list-minus.svg?rea
 export { default as IconListPlus } from 'lucide-static/icons/list-plus.svg?react';
 export { default as IconLock } from 'lucide-static/icons/lock.svg?react';
 export { default as IconLogOut } from 'lucide-static/icons/log-out.svg?react';
+export { default as IconMemoryStick } from 'lucide-static/icons/memory-stick.svg?react';
 export { default as IconMenu } from 'lucide-static/icons/menu.svg?react';
 export { default as IconMessageMoreCircle } from 'lucide-static/icons/message-circle-more.svg?react';
+export { default as IconMicrochip } from 'lucide-static/icons/microchip.svg?react';
 export { default as IconMoon } from 'lucide-static/icons/moon.svg?react';
 export { default as IconMoveHorizontal } from 'lucide-static/icons/move-horizontal.svg?react';
 export { default as IconNewspaper } from 'lucide-static/icons/newspaper.svg?react';
 export { default as IconPackage } from 'lucide-static/icons/package.svg?react';
 export { default as IconPanelsLeftBottom } from 'lucide-static/icons/panels-left-bottom.svg?react';
 export { default as IconPlus } from 'lucide-static/icons/plus.svg?react';
+export { default as IconRadioReceiver } from 'lucide-static/icons/radio-receiver.svg?react';
 export { default as IconRefresh } from 'lucide-static/icons/rotate-ccw.svg?react';
 export { default as IconRefreshCcw } from 'lucide-static/icons/refresh-ccw.svg?react';
 export { default as IconRocket } from 'lucide-static/icons/rocket.svg?react';

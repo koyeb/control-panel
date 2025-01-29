@@ -10,16 +10,27 @@ export function useInstanceQuota(instance: CatalogInstance) {
 }
 
 export function useHasInstanceQuota(instance: CatalogInstance, previousInstance?: CatalogInstance) {
-  const quota = useInstanceQuota(instance);
+  const hasQuota = useGetHasInstanceQuota(previousInstance);
 
-  return useMemo(() => {
-    // allow keeping the same instance
-    if (previousInstance?.identifier === instance.identifier) {
-      return true;
-    }
+  return useMemo(() => hasQuota(instance), [instance, hasQuota]);
+}
 
-    return quota.used < quota.max;
-  }, [instance, previousInstance, quota]);
+export function useGetHasInstanceQuota(previousInstance?: CatalogInstance) {
+  const getQuota = useGetInstanceQuota();
+
+  return useCallback(
+    (instance: CatalogInstance) => {
+      const quota = getQuota(instance);
+
+      // allow keeping the same instance
+      if (previousInstance?.identifier === instance.identifier) {
+        return true;
+      }
+
+      return quota.used < quota.max;
+    },
+    [getQuota, previousInstance],
+  );
 }
 
 export function useGetInstanceQuota() {
