@@ -13,7 +13,10 @@ import { defaultServiceForm, initializeServiceForm } from './initialize-service-
 const mockFetchGithubRepository = fetchGithubRepository as MockedFunction<typeof fetchGithubRepository>;
 const mockApi = api as MockedObject<typeof api>;
 
-// todo: dependency inversion
+vi.mock('src/hooks/feature-flag', () => ({
+  getFeatureFlag: vi.fn(),
+}));
+
 vi.mock('src/components/public-github-repository-input/github-api', () => ({
   fetchGithubRepository: vi.fn(),
 }));
