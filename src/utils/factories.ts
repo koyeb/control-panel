@@ -91,6 +91,7 @@ const region = createFactory<CatalogRegion>(() => ({
   datacenters: [],
   hasVolumes: false,
   category: 'koyeb',
+  scope: 'metropolitan',
 }));
 
 const instance = createFactory<CatalogInstance>(() => ({
