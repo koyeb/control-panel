@@ -173,7 +173,7 @@ function LogsFilters({ form, regions, instances }: LogsFiltersProps) {
         onItemClick={(region) => region.identifier === form.watch('region') && form.setValue('region', null)}
         renderItem={(region) => (
           <div className="row gap-2 whitespace-nowrap">
-            <RegionFlag identifier={region.identifier} className="size-4 rounded-full shadow-badge" />
+            <RegionFlag identifier={region.identifier} className="size-4" />
             {region.displayName}
           </div>
         )}

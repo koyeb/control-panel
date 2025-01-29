@@ -14,7 +14,7 @@ export function RegionsList({ identifiers }: { identifiers: string[] }) {
         .filter(isDefined)
         .map((region) => (
           <li key={region.identifier} className="row items-center gap-2">
-            <RegionFlag identifier={region.identifier} className="size-4 rounded-full shadow-badge" />
+            <RegionFlag identifier={region.identifier} className="size-4" />
             {region.displayName}
           </li>
         ))}
