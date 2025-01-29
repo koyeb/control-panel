@@ -4,6 +4,320 @@
  */
 
 export interface paths {
+    "/v1/account/activities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetAccountActivities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/invite": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CreateInvite"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Login user */
+        post: operations["Login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Logout user */
+        delete: operations["Logout"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/oauth": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get OAuth Providers */
+        get: operations["GetOAuthOptions"];
+        put?: never;
+        /** Authenticate using OAuth */
+        post: operations["OAuthCallback"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/organization": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetCurrentOrganization"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/organization_invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListUserOrganizationInvitations"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/organization_invitations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetUserOrganizationInvitation"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/organization_invitations/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AcceptOrganizationInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/organization_invitations/{id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["DeclineOrganizationInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetCurrentUser"];
+        put: operations["UpdateUser"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["UpdateUser2"];
+        trace?: never;
+    };
+    "/v1/account/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Refresh token */
+        put: operations["RefreshToken"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/resend_validation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResendEmailValidation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/reset_password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResetPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/session": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * New session
+         * @description Creates a new session without an organization for current user.
+         *     NOTE: If you want a session linked to another organization, please use "Switch organization".
+         */
+        post: operations["NewSession"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["Signup"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/update_password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UpdatePassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/validate/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["Validate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/activities": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListActivities"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/app_events": {
         parameters: {
             query?: never;
@@ -108,6 +422,411 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/archives": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create a signed URL to upload an archive. */
+        post: operations["CreateArchive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/has_unpaid_invoices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Experimental: Has unpaid invoices
+         * @description WARNING: Please don't use the following method.
+         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
+         *     USE AT YOUR OWN RISK.
+         */
+        get: operations["HasUnpaidInvoices"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/manage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["Manage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/billing/next_invoice": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Experimental: Fetch next invoice
+         * @description WARNING: Please don't use the following method.
+         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
+         *     USE AT YOUR OWN RISK.
+         */
+        get: operations["NextInvoice"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/datacenters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List datacenters */
+        get: operations["ListDatacenters"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/instances": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Instance */
+        get: operations["ListCatalogInstances"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/instances/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Instance */
+        get: operations["GetCatalogInstance"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/regions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Region */
+        get: operations["ListRegions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/catalog/regions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Region */
+        get: operations["GetRegion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/credentials": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List credentials */
+        get: operations["ListCredentials"];
+        put?: never;
+        /** Create credential */
+        post: operations["CreateCredential"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/credentials/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get credential */
+        get: operations["GetCredential"];
+        /** Update credential */
+        put: operations["UpdateCredential"];
+        post?: never;
+        /** Delete credential */
+        delete: operations["DeleteCredential"];
+        options?: never;
+        head?: never;
+        /** Update credential */
+        patch: operations["UpdateCredential2"];
+        trace?: never;
+    };
+    "/v1/deployment_events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Deployment events */
+        get: operations["ListDeploymentEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/deployments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Deployments */
+        get: operations["ListDeployments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/deployments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Deployment */
+        get: operations["GetDeployment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/deployments/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Cancel Deployment
+         * @description Deployment cancellation is allowed for the following status:
+         *      - pending
+         *      - provisioning
+         *      - scheduled
+         */
+        post: operations["CancelDeployment"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/docker-helper/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Verify if a docker image is reachable */
+        get: operations["VerifyDockerImage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/domains": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListDomains"];
+        put?: never;
+        post: operations["CreateDomain"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/domains/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetDomain"];
+        put?: never;
+        post?: never;
+        delete: operations["DeleteDomain"];
+        options?: never;
+        head?: never;
+        patch: operations["UpdateDomain"];
+        trace?: never;
+    };
+    "/v1/domains/{id}/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RefreshDomainStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/git/branches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListBranches"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/git/repositories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListRepositories"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/git/sync/organization/{organization_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResyncOrganization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/github/installation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Fetch github installation configuration */
+        get: operations["GetGithubInstallation"];
+        put?: never;
+        /** Start github installation */
+        post: operations["GithubInstallation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/instance_events": {
         parameters: {
             query?: never;
@@ -159,6 +878,468 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/intercom/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get intercom profile */
+        get: operations["GetIntercomProfile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListNotifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organization_confirmations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm organization action */
+        post: operations["ConfirmOrganizationAction"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organization_invitations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ListOrganizationInvitations"];
+        put?: never;
+        post: operations["CreateOrganizationInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organization_invitations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetOrganizationInvitation"];
+        put?: never;
+        post?: never;
+        delete: operations["DeleteOrganizationInvitation"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organization_invitations/{id}/resend": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ResendOrganizationInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organization_members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List organization members */
+        get: operations["ListOrganizationMembers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organization_members/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove an organization member */
+        delete: operations["RemoveOrganizationMember"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create organization */
+        post: operations["CreateOrganization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get organization */
+        get: operations["GetOrganization"];
+        /** Update organization */
+        put: operations["UpdateOrganization"];
+        post?: never;
+        /** Delete an organization */
+        delete: operations["DeleteOrganization"];
+        options?: never;
+        head?: never;
+        /** Update organization */
+        patch: operations["UpdateOrganization2"];
+        trace?: never;
+    };
+    "/v1/organizations/{id}/deactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Deactivate an organization */
+        post: operations["DeactivateOrganization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{id}/plan": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Update organization plan */
+        post: operations["UpdateOrganizationPlan"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{id}/reactivate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reactivate an organization */
+        post: operations["ReactivateOrganization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{id}/signup_qualification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upsert organization's signup qualification */
+        post: operations["UpsertSignupQualification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{id}/switch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Switch organization context */
+        post: operations["SwitchOrganization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{organization_id}/quotas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetQuotas"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{organization_id}/summary": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get organization usage summary */
+        get: operations["GetOrganizationSummary"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/payment_methods": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List payment methods */
+        get: operations["ListPaymentMethods"];
+        put?: never;
+        /** Create payment authorization */
+        post: operations["CreatePaymentAuthorization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/payment_methods/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get payment method */
+        get: operations["GetPaymentMethod"];
+        put?: never;
+        post?: never;
+        /** Delete payment method */
+        delete: operations["DeletePaymentMethod"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/payment_methods/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirm payment authorization */
+        post: operations["ConfirmPaymentAuthorization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/provisioning/{deployment_id}/status/{stage}/{attempt}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create an attempt for a stage */
+        post: operations["CreateStageAttempt"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Declare stage progress */
+        patch: operations["DeclareStageProgress"];
+        trace?: never;
+    };
+    "/v1/provisioning/{deployment_id}/status/{stage}/{attempt}/{step}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Declare step progress */
+        patch: operations["DeclareStepProgress"];
+        trace?: never;
+    };
+    "/v1/quotas/capacity": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Review Organization Capacity */
+        post: operations["ReviewOrganizationCapacity"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/regional_deployment_events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Regional Deployment events */
+        get: operations["ListRegionalDeploymentEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/regional_deployments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Experimental: List regional deployments
+         *     Use at your own risk */
+        get: operations["ListRegionalDeployments"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/regional_deployments/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Experimental: Get regional deployment
+         *     Use at your own risk */
+        get: operations["GetRegionalDeployment"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Search */
+        get: operations["Search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/secrets": {
         parameters: {
             query?: never;
@@ -201,231 +1382,6 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["RevealSecret"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/docker-helper/verify": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Verify if a docker image is reachable */
-        get: operations["VerifyDockerImage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/volume_events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Persistent Volume events */
-        get: operations["ListPersistentVolumeEvents"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/volumes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all PersistentVolumes */
-        get: operations["ListPersistentVolumes"];
-        put?: never;
-        /** Create a PersistentVolume */
-        post: operations["CreatePersistentVolume"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/volumes/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get a PersistentVolume */
-        get: operations["GetPersistentVolume"];
-        put?: never;
-        /** Update a PersistentVolume */
-        post: operations["UpdatePersistentVolume"];
-        /** Delete a PersistentVolume */
-        delete: operations["DeletePersistentVolume"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/snapshots": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all Snapshots */
-        get: operations["ListSnapshots"];
-        put?: never;
-        /** Create a Snapshot */
-        post: operations["CreateSnapshot"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/snapshots/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get a Snapshot */
-        get: operations["GetSnapshot"];
-        put?: never;
-        /** Update a Snapshot */
-        post: operations["UpdateSnapshot"];
-        /** Delete a Snapshot */
-        delete: operations["DeleteSnapshot"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/provisioning/{deployment_id}/status/{stage}/{attempt}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create an attempt for a stage */
-        post: operations["CreateStageAttempt"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Declare stage progress */
-        patch: operations["DeclareStageProgress"];
-        trace?: never;
-    };
-    "/v1/provisioning/{deployment_id}/status/{stage}/{attempt}/{step}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Declare step progress */
-        patch: operations["DeclareStepProgress"];
-        trace?: never;
-    };
-    "/v1/usages": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get organization usage */
-        get: operations["GetOrganizationUsage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/usages/details": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get organization usage details */
-        get: operations["GetOrganizationUsageDetails"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/domains": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ListDomains"];
-        put?: never;
-        post: operations["CreateDomain"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/domains/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GetDomain"];
-        put?: never;
-        post?: never;
-        delete: operations["DeleteDomain"];
-        options?: never;
-        head?: never;
-        patch: operations["UpdateDomain"];
-        trace?: never;
-    };
-    "/v1/domains/{id}/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["RefreshDomainStatus"];
         delete?: never;
         options?: never;
         head?: never;
@@ -570,1071 +1526,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/deployment_events": {
+    "/v1/snapshots": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Deployment events */
-        get: operations["ListDeploymentEvents"];
+        /** List all Snapshots */
+        get: operations["ListSnapshots"];
         put?: never;
-        post?: never;
+        /** Create a Snapshot */
+        post: operations["CreateSnapshot"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/deployments": {
+    "/v1/snapshots/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List Deployments */
-        get: operations["ListDeployments"];
+        /** Get a Snapshot */
+        get: operations["GetSnapshot"];
         put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/deployments/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Deployment */
-        get: operations["GetDeployment"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/deployments/{id}/cancel": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Cancel Deployment
-         * @description Deployment cancellation is allowed for the following status:
-         *      - pending
-         *      - provisioning
-         *      - scheduled
-         */
-        post: operations["CancelDeployment"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/archives": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create a signed URL to upload an archive. */
-        post: operations["CreateArchive"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/quotas/capacity": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Review Organization Capacity */
-        post: operations["ReviewOrganizationCapacity"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/regional_deployment_events": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Regional Deployment events */
-        get: operations["ListRegionalDeploymentEvents"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/regional_deployments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Experimental: List regional deployments
-         *     Use at your own risk */
-        get: operations["ListRegionalDeployments"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/regional_deployments/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Experimental: Get regional deployment
-         *     Use at your own risk */
-        get: operations["GetRegionalDeployment"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/git/branches": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ListBranches"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/git/repositories": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ListRepositories"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/git/sync/organization/{organization_id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ResyncOrganization"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/activities": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ListActivities"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/notifications": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ListNotifications"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/streams/instances/exec": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Exec Command
-         * @description This endpoint opens a websocket. Once open, all frames going through the websocket should be formatted in JSON. Input frames should match the format specified below. Output frames will match the response schema.
-         */
-        get: operations["ExecCommand"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/streams/metrics": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GetMetrics"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/streams/logs/tail": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Tails logs */
-        get: operations["TailLogs"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/catalog/instances": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Instance */
-        get: operations["ListCatalogInstances"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/catalog/instances/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Instance */
-        get: operations["GetCatalogInstance"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/catalog/regions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List Region */
-        get: operations["ListRegions"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/catalog/regions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Region */
-        get: operations["GetRegion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/catalog/datacenters": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List datacenters */
-        get: operations["ListDatacenters"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/credentials": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List credentials */
-        get: operations["ListCredentials"];
-        put?: never;
-        /** Create credential */
-        post: operations["CreateCredential"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/credentials/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get credential */
-        get: operations["GetCredential"];
-        /** Update credential */
-        put: operations["UpdateCredential"];
-        post?: never;
-        /** Delete credential */
-        delete: operations["DeleteCredential"];
-        options?: never;
-        head?: never;
-        /** Update credential */
-        patch: operations["UpdateCredential2"];
-        trace?: never;
-    };
-    "/v1/intercom/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get intercom profile */
-        get: operations["GetIntercomProfile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/users/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Delete user */
-        delete: operations["DeleteUser"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organization_members": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List organization members */
-        get: operations["ListOrganizationMembers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organization_members/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Remove an organization member */
-        delete: operations["RemoveOrganizationMember"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organization_confirmations/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Confirm organization action */
-        post: operations["ConfirmOrganizationAction"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/login": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Login user */
-        post: operations["Login"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/logout": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** Logout user */
-        delete: operations["Logout"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/refresh": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** Refresh token */
-        put: operations["RefreshToken"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/session": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * New session
-         * @description Creates a new session without an organization for current user.
-         *     NOTE: If you want a session linked to another organization, please use "Switch organization".
-         */
-        post: operations["NewSession"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/subscriptions/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Subscription */
-        get: operations["GetSubscription"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/payment_methods": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List payment methods */
-        get: operations["ListPaymentMethods"];
-        put?: never;
-        /** Create payment authorization */
-        post: operations["CreatePaymentAuthorization"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/payment_methods/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get payment method */
-        get: operations["GetPaymentMethod"];
-        put?: never;
-        post?: never;
-        /** Delete payment method */
-        delete: operations["DeletePaymentMethod"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/payment_methods/{id}/confirm": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Confirm payment authorization */
-        post: operations["ConfirmPaymentAuthorization"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/activities": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GetAccountActivities"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/invite": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CreateInvite"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/oauth": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get OAuth Providers */
-        get: operations["GetOAuthOptions"];
-        put?: never;
-        /** Authenticate using OAuth */
-        post: operations["OAuthCallback"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/organization": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GetCurrentOrganization"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/organization_invitations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ListUserOrganizationInvitations"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/organization_invitations/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GetUserOrganizationInvitation"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/organization_invitations/{id}/accept": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["AcceptOrganizationInvitation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/organization_invitations/{id}/decline": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["DeclineOrganizationInvitation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/profile": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["GetCurrentUser"];
-        put: operations["UpdateUser"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["UpdateUser2"];
-        trace?: never;
-    };
-    "/v1/account/resend_validation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ResendEmailValidation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/reset_password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ResetPassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/signup": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["Signup"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/update_password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["UpdatePassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/account/validate/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["Validate"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/billing/has_unpaid_invoices": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Experimental: Has unpaid invoices
-         * @description WARNING: Please don't use the following method.
-         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-         *     USE AT YOUR OWN RISK.
-         */
-        get: operations["HasUnpaidInvoices"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/billing/manage": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["Manage"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/billing/next_invoice": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Experimental: Fetch next invoice
-         * @description WARNING: Please don't use the following method.
-         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-         *     USE AT YOUR OWN RISK.
-         */
-        get: operations["NextInvoice"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/github/installation": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Fetch github installation configuration */
-        get: operations["GetGithubInstallation"];
-        put?: never;
-        /** Start github installation */
-        post: operations["GithubInstallation"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organizations": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Create organization */
-        post: operations["CreateOrganization"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organizations/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get organization */
-        get: operations["GetOrganization"];
-        /** Update organization */
-        put: operations["UpdateOrganization"];
-        post?: never;
-        /** Delete an organization */
-        delete: operations["DeleteOrganization"];
-        options?: never;
-        head?: never;
-        /** Update organization */
-        patch: operations["UpdateOrganization2"];
-        trace?: never;
-    };
-    "/v1/organizations/{id}/deactivate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Deactivate an organization */
-        post: operations["DeactivateOrganization"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organizations/{id}/plan": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Update organization plan */
-        post: operations["UpdateOrganizationPlan"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organizations/{id}/reactivate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Reactivate an organization */
-        post: operations["ReactivateOrganization"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organizations/{id}/signup_qualification": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Upsert organization's signup qualification */
-        post: operations["UpsertSignupQualification"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/organizations/{id}/switch": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Switch organization context */
-        post: operations["SwitchOrganization"];
-        delete?: never;
+        /** Update a Snapshot */
+        post: operations["UpdateSnapshot"];
+        /** Delete a Snapshot */
+        delete: operations["DeleteSnapshot"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1672,6 +1595,76 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/streams/instances/exec": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Exec Command
+         * @description This endpoint opens a websocket. Once open, all frames going through the websocket should be formatted in JSON. Input frames should match the format specified below. Output frames will match the response schema.
+         */
+        get: operations["ExecCommand"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/streams/logs/tail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Tails logs */
+        get: operations["TailLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/streams/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetMetrics"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/subscriptions/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Subscription */
+        get: operations["GetSubscription"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/unscope_organization_token": {
         parameters: {
             query?: never;
@@ -1692,39 +1685,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/organization_invitations": {
+    "/v1/usages": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["ListOrganizationInvitations"];
+        /** Get organization usage */
+        get: operations["GetOrganizationUsage"];
         put?: never;
-        post: operations["CreateOrganizationInvitation"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/organization_invitations/{id}": {
+    "/v1/usages/details": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["GetOrganizationInvitation"];
+        /** Get organization usage details */
+        get: operations["GetOrganizationUsageDetails"];
         put?: never;
         post?: never;
-        delete: operations["DeleteOrganizationInvitation"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/organization_invitations/{id}/resend": {
+    "/v1/users/{id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1733,21 +1728,23 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post: operations["ResendOrganizationInvitation"];
-        delete?: never;
+        post?: never;
+        /** Delete user */
+        delete: operations["DeleteUser"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/organizations/{organization_id}/quotas": {
+    "/v1/volume_events": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get: operations["GetQuotas"];
+        /** List Persistent Volume events */
+        get: operations["ListPersistentVolumeEvents"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1756,35 +1753,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/organizations/{organization_id}/summary": {
+    "/v1/volumes": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get organization usage summary */
-        get: operations["GetOrganizationSummary"];
+        /** List all PersistentVolumes */
+        get: operations["ListPersistentVolumes"];
         put?: never;
-        post?: never;
+        /** Create a PersistentVolume */
+        post: operations["CreatePersistentVolume"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/search": {
+    "/v1/volumes/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Search */
-        get: operations["Search"];
+        /** Get a PersistentVolume */
+        get: operations["GetPersistentVolume"];
         put?: never;
-        post?: never;
-        delete?: never;
+        /** Update a PersistentVolume */
+        post: operations["UpdatePersistentVolume"];
+        /** Delete a PersistentVolume */
+        delete: operations["DeletePersistentVolume"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1794,68 +1794,54 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        "google.protobuf.Any": {
-            "@type"?: string;
-        } & {
-            [key: string]: Record<string, never>;
+        AcceptOrganizationInvitationReply: {
+            invitation?: components["schemas"]["OrganizationInvitation"];
         };
         /**
-         * @description `NullValue` is a singleton enumeration to represent the null value for the
-         *     `Value` type union.
-         *
-         *      The JSON representation for `NullValue` is JSON `null`.
-         *
-         *      - NULL_VALUE: Null value.
-         * @default NULL_VALUE
+         * @default signin
          * @enum {string}
          */
-        "google.protobuf.NullValue": "NULL_VALUE";
-        "google.rpc.Status": {
-            /** Format: int32 */
-            code?: number;
-            message?: string;
-            details?: components["schemas"]["google.protobuf.Any"][];
-        };
-        Error: {
-            /** Format: int32 */
-            status?: number;
-            code?: string;
-            message?: string;
-        };
-        ErrorField: {
-            field?: string;
-            description?: string;
-        };
-        ErrorWithFields: {
-            /** Format: int32 */
-            status?: number;
-            code?: string;
-            message?: string;
-            fields?: components["schemas"]["ErrorField"][];
-        };
-        App: {
-            id?: string;
-            name?: string;
-            organization_id?: string;
+        Action: "signin" | "signup" | "register";
+        Activity: {
+            actor?: components["schemas"]["Object"];
             /** Format: date-time */
             created_at?: string;
+            id?: string;
+            metadata?: Record<string, never>;
+            object?: components["schemas"]["Object"];
+            verb?: string;
+        };
+        ActivityList: {
+            activities?: components["schemas"]["Activity"][];
+            has_next?: boolean;
+            /** Format: int64 */
+            limit?: number;
+            /** Format: int64 */
+            offset?: number;
+        };
+        App: {
             /** Format: date-time */
-            updated_at?: string;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            succeeded_at?: string;
+            created_at?: string;
+            domains?: components["schemas"]["Domain"][];
+            id?: string;
+            messages?: string[];
+            name?: string;
+            organization_id?: string;
             /** Format: date-time */
             paused_at?: string;
             /** Format: date-time */
             resumed_at?: string;
             /** Format: date-time */
-            terminated_at?: string;
+            started_at?: string;
             status?: components["schemas"]["App.Status"];
-            messages?: string[];
+            /** Format: date-time */
+            succeeded_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
             /** Format: uint64 */
             version?: string;
-            domains?: components["schemas"]["Domain"][];
         };
         /**
          * @default STARTING
@@ -1863,26 +1849,242 @@ export interface components {
          */
         "App.Status": "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "DELETING" | "DELETED" | "PAUSING" | "PAUSED" | "RESUMING";
         AppEvent: {
-            id?: string;
-            /** Format: date-time */
-            when?: string;
-            organization_id?: string;
             app_id?: string;
-            type?: string;
+            id?: string;
             message?: string;
             metadata?: Record<string, never>;
+            organization_id?: string;
+            type?: string;
+            /** Format: date-time */
+            when?: string;
         };
         AppListItem: {
-            id?: string;
-            name?: string;
-            organization_id?: string;
-            /** Format: date-time */
-            updated_at?: string;
             /** Format: date-time */
             created_at?: string;
             domains?: components["schemas"]["Domain"][];
-            status?: components["schemas"]["App.Status"];
+            id?: string;
             messages?: string[];
+            name?: string;
+            organization_id?: string;
+            status?: components["schemas"]["App.Status"];
+            /** Format: date-time */
+            updated_at?: string;
+        };
+        AppsSummary: {
+            /** Number of apps grouped by status */
+            by_status?: {
+                [key: string]: string;
+            };
+            /**
+             * Total number of apps
+             * Format: int64
+             */
+            total?: string;
+        };
+        AppUsage: {
+            app_id?: string;
+            app_name?: string;
+            services?: components["schemas"]["ServiceUsage"][];
+        };
+        Archive: {
+            /**
+             * Format: date-time
+             * @description Date of creation of the archive.
+             */
+            created_at?: string;
+            /**
+             * Format: date-time
+             * @description This field is automatically set by Koyeb when the
+             *     archive is garbage collected.
+             */
+            deleted_at?: string;
+            /** @description The archive id, that can be referenced when creating or updating a service. */
+            id?: string;
+            /** @description Organization owning the archive. */
+            organization_id?: string;
+            /**
+             * Format: uint64
+             * @description The provisioned space for the archive.
+             */
+            size?: string;
+            /** @description The URL where to upload the archive. This URL is signed and can only be
+             *     used to upload the archive until `valid_until`. */
+            upload_url?: string;
+        };
+        ArchiveDeploymentMetadata: {
+            last_provisioned_deployment_id?: string;
+        };
+        ArchiveSource: {
+            buildpack?: components["schemas"]["BuildpackBuilder"];
+            docker?: components["schemas"]["DockerBuilder"];
+            /** The ID of the archive to deploy */
+            id?: string;
+        };
+        AutocompleteReply: {
+            /** List of available secrets */
+            secrets?: string[];
+            /** List of available system's environment variables */
+            system_env?: string[];
+            /** List of available user's environment variables */
+            user_env?: string[];
+        };
+        AutocompleteRequest: {
+            definition?: components["schemas"]["DeploymentDefinition"];
+        };
+        AutoRelease: {
+            groups?: components["schemas"]["AutoRelease.Group"][];
+        };
+        /** Configuration extracted from the latest deployment in this deployment_group */
+        "AutoRelease.Group": {
+            /** A git ref to track (.e.g: refs/tags/<tag> or refs/heads/<branch> */
+            git_ref?: string;
+            /** The last hash that was resolved (used to avoid triggering releases when things haven't changed) */
+            latest_sha?: string;
+            name?: string;
+            repository?: string;
+        };
+        AzureContainerRegistryConfiguration: {
+            password?: string;
+            registry_name?: string;
+            username?: string;
+        };
+        BuildpackBuilder: {
+            /** A command used to override the build command, run after all build steps */
+            build_command?: string;
+            /** A flag to run the container in privileged mode */
+            privileged?: boolean;
+            /** A command used to override the default run command */
+            run_command?: string;
+        };
+        CancelDeploymentReply: Record<string, never>;
+        CannyAuthReply: {
+            token?: string;
+        };
+        CannyAuthRequest: Record<string, never>;
+        CatalogGPUDetails: {
+            /** The brand of GPU */
+            brand?: string;
+            /**
+             * The number of GPUs
+             * Format: int64
+             */
+            count?: number;
+            /** GPU memory */
+            memory?: string;
+            /** Name of GPU */
+            name?: string;
+        };
+        CatalogInstance: {
+            /** Aliases */
+            aliases?: string[];
+            /** A short description of the instance */
+            description?: string;
+            /** The size of the disk in bytes in a format like 5MB */
+            disk?: string;
+            /** The display name of the instance */
+            display_name?: string;
+            gpu?: components["schemas"]["CatalogGPUDetails"];
+            /** The name of the instance */
+            id?: string;
+            /** The memory in bytes in a format like 5MB */
+            memory?: string;
+            /** The price to pay per hour */
+            price_hourly?: string;
+            /** The price to pay per month */
+            price_monthly?: string;
+            /** The price to pay per second */
+            price_per_second?: string;
+            /** The regions where this instance type is available */
+            regions?: string[];
+            /** The plan required to use instance */
+            require_plan?: string[];
+            /** Allowed service types for this instance (e.g. ["web", "worker"]) */
+            service_types?: string[];
+            /** The status of the instance */
+            status?: string;
+            /** The type of the instance (e.g. "gpu") */
+            type?: string;
+            /**
+             * Format: int64
+             * @description The number of cpus. Deprecated. Use vcpu_shares instead.
+             */
+            vcpu?: number;
+            /**
+             * Format: float
+             * @description The number of vcpu shares reserved for the instance.
+             */
+            vcpu_shares?: number;
+            /** Are the volumes enabled for this instance type */
+            volumes_enabled?: boolean;
+        };
+        CatalogInstanceListItem: {
+            /** Aliases */
+            aliases?: string[];
+            /** A short description of the instance */
+            description?: string;
+            /** The size of the disk in bytes in a format like 5MB */
+            disk?: string;
+            /** The display name of the instance */
+            display_name?: string;
+            gpu?: components["schemas"]["CatalogGPUDetails"];
+            /** The name of the instance */
+            id?: string;
+            /** The memory in bytes in a format like 5MB */
+            memory?: string;
+            /** The price to pay per hour */
+            price_hourly?: string;
+            /** The price to pay per month */
+            price_monthly?: string;
+            /** The price to pay per second */
+            price_per_second?: string;
+            /** The regions where this instance type is available */
+            regions?: string[];
+            /** The plan required to use instance */
+            require_plan?: string[];
+            /** Allowed service types for this instance (e.g. ["web", "worker"]) */
+            service_types?: string[];
+            /** The status of the instance */
+            status?: string;
+            /** The type of the instance (e.g. "gpu") */
+            type?: string;
+            /**
+             * Format: int64
+             * @description The number of cpus. Deprecated. Use vcpu_shares instead.
+             */
+            vcpu?: number;
+            /**
+             * Format: float
+             * @description The number of vcpu shares reserved for the instance.
+             */
+            vcpu_shares?: number;
+            /** Are the volumes enabled for this instance type */
+            volumes_enabled?: boolean;
+        };
+        ConfigFile: {
+            /** the content of the file */
+            content?: string;
+            /** the path where the file is copied */
+            path?: string;
+            /** the permissions of the file in format 0644 */
+            permissions?: string;
+        };
+        ConfirmOrganizationActionReply: Record<string, never>;
+        ConfirmPaymentAuthorizationReply: {
+            payment_method?: components["schemas"]["PaymentMethod"];
+        };
+        /**
+         * Create new account
+         * @description Create new account
+         * @example {
+         *       "email": "john@snow.com",
+         *       "password": "..."
+         *     }
+         */
+        CreateAccountRequest: {
+            captcha?: string;
+            email: string;
+            name?: string;
+            password: string;
         };
         CreateApp: {
             name?: string;
@@ -1890,705 +2092,87 @@ export interface components {
         CreateAppReply: {
             app?: components["schemas"]["App"];
         };
-        DeleteAppReply: Record<string, never>;
-        Domain: {
-            id?: string;
-            organization_id?: string;
+        CreateArchive: {
+            /**
+             * Format: uint64
+             * @description How much space to provision for the archive, in bytes.
+             */
+            size?: string;
+        };
+        CreateArchiveReply: {
+            archive?: components["schemas"]["Archive"];
+        };
+        CreateCredential: {
+            /** Credential description */
+            description?: string;
+            /** Credential name */
             name?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            status?: components["schemas"]["Domain.Status"];
+            /** Organization id for user credential */
+            organization_id?: string;
+            type?: components["schemas"]["Credential.Type"];
+        };
+        CreateCredentialReply: {
+            credential?: components["schemas"]["Credential"];
+        };
+        CreateDomain: {
+            /** to auto-attach to an app. Optional */
+            app_id?: string;
+            name?: string;
             type?: components["schemas"]["Domain.Type"];
-            app_id?: string;
-            deployment_group?: string;
-            /** Format: date-time */
-            verified_at?: string;
-            intended_cname?: string;
-            messages?: string[];
-            /** Format: uint64 */
-            version?: string;
         };
-        /**
-         * @default PENDING
-         * @enum {string}
-         */
-        "Domain.Status": "PENDING" | "ACTIVE" | "ERROR" | "DELETING" | "DELETED";
-        /**
-         * - AUTOASSIGNED: Domain like <appName>-<orgName>.koyeb.app
-         * @default AUTOASSIGNED
-         * @enum {string}
-         */
-        "Domain.Type": "AUTOASSIGNED" | "CUSTOM";
-        GetAppReply: {
-            app?: components["schemas"]["App"];
+        CreateDomainReply: {
+            domain?: components["schemas"]["Domain"];
         };
-        ListAppEventsReply: {
-            /** The collection of events */
-            events?: components["schemas"]["AppEvent"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /** The order in the request */
-            order?: string;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
+        CreateOrganizationInvitationReply: {
+            invitation?: components["schemas"]["OrganizationInvitation"];
         };
-        ListAppsReply: {
-            apps?: components["schemas"]["AppListItem"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
+        CreateOrganizationInvitationRequest: {
+            /** The email of the person to invite */
+            email?: string;
         };
-        PauseAppReply: Record<string, never>;
-        ResumeAppReply: Record<string, never>;
-        UpdateApp: {
+        CreateOrganizationReply: {
+            organization?: components["schemas"]["Organization"];
+        };
+        CreateOrganizationRequest: {
             name?: string;
         };
-        UpdateAppReply: {
-            app?: components["schemas"]["App"];
+        CreatePaymentAuthorizationReply: {
+            payment_method?: components["schemas"]["PaymentMethod"];
         };
-        GetInstanceReply: {
-            instance?: components["schemas"]["Instance"];
-        };
-        Instance: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            organization_id?: string;
-            app_id?: string;
-            service_id?: string;
-            regional_deployment_id?: string;
-            allocation_id?: string;
-            type?: string;
-            /** Format: int64 */
-            replica_index?: number;
-            region?: string;
-            datacenter?: string;
-            hypervisor?: string;
-            status?: components["schemas"]["Instance.Status"];
-            messages?: string[];
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            succeeded_at?: string;
-            /** Format: date-time */
-            terminated_at?: string;
-            /** @description WARNING: Please don't use the following attribute.
-             *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-             *     USE AT YOUR OWN RISK. */
-            xyz_deployment_id?: string;
-        };
-        /**
-         * @default ALLOCATING
-         * @enum {string}
-         */
-        "Instance.Status": "ALLOCATING" | "STARTING" | "HEALTHY" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERROR" | "SLEEPING";
-        InstanceEvent: {
-            id?: string;
-            /** Format: date-time */
-            when?: string;
-            organization_id?: string;
-            instance_id?: string;
-            type?: string;
-            message?: string;
-            metadata?: Record<string, never>;
-        };
-        InstanceListItem: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            organization_id?: string;
-            app_id?: string;
-            service_id?: string;
-            regional_deployment_id?: string;
-            allocation_id?: string;
-            type?: string;
-            /** Format: int64 */
-            replica_index?: number;
-            region?: string;
-            datacenter?: string;
-            status?: components["schemas"]["Instance.Status"];
-            messages?: string[];
-            /** @description WARNING: Please don't use the following attribute.
-             *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-             *     USE AT YOUR OWN RISK. */
-            xyz_deployment_id?: string;
-        };
-        ListInstanceEventsReply: {
-            /** The collection of events */
-            events?: components["schemas"]["InstanceEvent"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /** The order in the request */
-            order?: string;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        ListInstancesReply: {
-            /** The collection of instances */
-            instances?: components["schemas"]["InstanceListItem"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-            /** The order in the request */
-            order?: string;
-        };
-        AzureContainerRegistryConfiguration: {
-            registry_name?: string;
-            username?: string;
-            password?: string;
-        };
-        CreateSecret: {
-            name?: string;
-            type?: components["schemas"]["SecretType"];
-            value?: string;
-            docker_hub_registry?: components["schemas"]["DockerHubRegistryConfiguration"];
-            private_registry?: components["schemas"]["PrivateRegistryConfiguration"];
-            digital_ocean_registry?: components["schemas"]["DigitalOceanRegistryConfiguration"];
-            github_registry?: components["schemas"]["GitHubRegistryConfiguration"];
-            gitlab_registry?: components["schemas"]["GitLabRegistryConfiguration"];
-            gcp_container_registry?: components["schemas"]["GCPContainerRegistryConfiguration"];
-            azure_container_registry?: components["schemas"]["AzureContainerRegistryConfiguration"];
-        };
-        CreateSecretReply: {
-            secret?: components["schemas"]["Secret"];
-        };
-        DatabaseRolePassword: {
-            username?: string;
-            password?: string;
-        };
-        DeleteSecretReply: Record<string, never>;
-        DigitalOceanRegistryConfiguration: {
-            username?: string;
-            password?: string;
-        };
-        DockerHubRegistryConfiguration: {
-            username?: string;
-            password?: string;
-        };
-        GCPContainerRegistryConfiguration: {
-            keyfile_content?: string;
-            url?: string;
-        };
-        GetSecretReply: {
-            secret?: components["schemas"]["Secret"];
-        };
-        GitHubRegistryConfiguration: {
-            username?: string;
-            password?: string;
-        };
-        GitLabRegistryConfiguration: {
-            username?: string;
-            password?: string;
-        };
-        ListSecretsReply: {
-            secrets?: components["schemas"]["Secret"][];
-            /** Format: int64 */
-            limit?: number;
-            /** Format: int64 */
-            offset?: number;
-            /** Format: int64 */
-            count?: number;
-        };
-        PrivateRegistryConfiguration: {
-            username?: string;
-            password?: string;
-            url?: string;
-        };
-        RevealSecretReply: {
-            value?: Record<string, never>;
-        };
-        Secret: {
-            id?: string;
-            name?: string;
-            organization_id?: string;
-            type?: components["schemas"]["SecretType"];
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: date-time */
-            created_at?: string;
-            value?: string;
-            docker_hub_registry?: components["schemas"]["DockerHubRegistryConfiguration"];
-            private_registry?: components["schemas"]["PrivateRegistryConfiguration"];
-            digital_ocean_registry?: components["schemas"]["DigitalOceanRegistryConfiguration"];
-            github_registry?: components["schemas"]["GitHubRegistryConfiguration"];
-            gitlab_registry?: components["schemas"]["GitLabRegistryConfiguration"];
-            gcp_container_registry?: components["schemas"]["GCPContainerRegistryConfiguration"];
-            azure_container_registry?: components["schemas"]["AzureContainerRegistryConfiguration"];
-            database_role_password?: components["schemas"]["DatabaseRolePassword"];
-        };
-        /**
-         * @default SIMPLE
-         * @enum {string}
-         */
-        SecretType: "SIMPLE" | "REGISTRY" | "MANAGED";
-        UpdateSecretReply: {
-            secret?: components["schemas"]["Secret"];
-        };
-        VerifyDockerImageReply: {
-            /** Whether the image is accessible or not */
-            success?: boolean;
-            /** (Optional) If the image is not accessible, the reason */
-            reason?: string;
-            code?: components["schemas"]["VerifyDockerImageReply.ErrCode"];
-        };
-        /**
-         * The error code associated to each specific failure mode
-         * @description - UNKNOWN: Default value
-         *      - AUTH_ACCESS_DENIED: The registry denied access to an authenticated request
-         *      - ANON_ACCESS_DENIED: The registry denied access to an anonymous request
-         *      - AUTH_NOT_FOUND: The image has not been found after an authenticated request
-         *      - ANON_NOT_FOUND: The image has not been found after an anonymous request
-         *      - REGISTRY_ERROR: The registry returned an error
-         *      - TIMEOUT: The request to the registry timed out
-         *      - DNS: There was an error trying to resolve the name of the registry
-         *      - MALFORMED: The provided image name is malformed
-         *      - INVALID_OS: The operating system is not supported
-         *      - INVALID_ARCH: The architecture is not supported
-         * @default UNKNOWN
-         * @enum {string}
-         */
-        "VerifyDockerImageReply.ErrCode": "UNKNOWN" | "AUTH_ACCESS_DENIED" | "ANON_ACCESS_DENIED" | "AUTH_NOT_FOUND" | "ANON_NOT_FOUND" | "REGISTRY_ERROR" | "TIMEOUT" | "DNS" | "MALFORMED" | "INVALID_OS" | "INVALID_ARCH";
+        CreatePaymentAuthorizationRequest: Record<string, never>;
         CreatePersistentVolumeReply: {
             volume?: components["schemas"]["PersistentVolume"];
         };
         CreatePersistentVolumeRequest: {
-            volume_type?: components["schemas"]["PersistentVolumeBackingStore"];
-            /** the volume name */
-            name?: string;
-            /** the volume region */
-            region?: string;
-            /** whether the volume must be set as read only */
-            read_only?: boolean;
             /**
              * the size of the volume (in Gigabyte / GB)
              * Format: int64
              */
             max_size?: number;
-            /** (optional) the id of the snapshot whence the volume comes from */
-            snapshot_id?: string;
-        };
-        DeletePersistentVolumeReply: {
-            volume?: components["schemas"]["PersistentVolume"];
-        };
-        GetPersistentVolumeReply: {
-            volume?: components["schemas"]["PersistentVolume"];
-        };
-        ListPersistentVolumeEventsReply: {
-            /** The collection of events */
-            events?: components["schemas"]["PersistentVolumeEvent"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /** The order in the request */
-            order?: string;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        ListPersistentVolumesReply: {
-            /** The collection of persistent volumes */
-            volumes?: components["schemas"]["PersistentVolume"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        /** The object that represent a volume to handle persistency for deployments */
-        PersistentVolume: {
-            /** the identifier for the volume object */
-            id?: string;
             /** the volume name */
             name?: string;
+            /** whether the volume must be set as read only */
+            read_only?: boolean;
+            /** the volume region */
+            region?: string;
             /** (optional) the id of the snapshot whence the volume comes from */
             snapshot_id?: string;
-            /**
-             * creation timestamp
-             * Format: date-time
-             */
-            created_at?: string;
-            /**
-             * last change timestamp
-             * Format: date-time
-             */
-            updated_at?: string;
-            /**
-             * deletion timestamp
-             * Format: date-time
-             */
-            deleted_at?: string;
-            /** the organization to which the volume belongs to */
-            organization_id?: string;
-            /** the service_id to which the volume is eventually bound to */
-            service_id?: string;
-            /** the region where the volume exists */
-            region?: string;
-            /** whether to mount the volume in read-only mode */
-            read_only?: boolean;
-            /**
-             * the maximum size of the volume (in Gigabyte / GB)
-             * Format: int64
-             */
-            max_size?: number;
-            /**
-             * the used amount of space as measured the last time (in Gigabyte / GB)
-             * Format: int64
-             */
-            cur_size?: number;
-            status?: components["schemas"]["PersistentVolumeStatus"];
-            backing_store?: components["schemas"]["PersistentVolumeBackingStore"];
+            volume_type?: components["schemas"]["PersistentVolumeBackingStore"];
         };
-        /**
-         * - PERSISTENT_VOLUME_BACKING_STORE_INVALID: zero value, invalid
-         *      - PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK: the backing store is a locally reachable block device
-         * @default PERSISTENT_VOLUME_BACKING_STORE_INVALID
-         * @enum {string}
-         */
-        PersistentVolumeBackingStore: "PERSISTENT_VOLUME_BACKING_STORE_INVALID" | "PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK";
-        PersistentVolumeEvent: {
-            id?: string;
-            /** Format: date-time */
-            when?: string;
-            organization_id?: string;
-            persistent_volume_id?: string;
-            type?: string;
-            message?: string;
-            metadata?: Record<string, never>;
-        };
-        /**
-         * - PERSISTENT_VOLUME_STATUS_INVALID: zero value, invalid
-         *      - PERSISTENT_VOLUME_STATUS_ATTACHED: the volume is attached to an instance
-         *      - PERSISTENT_VOLUME_STATUS_DETACHED: the volume is free to use
-         *      - PERSISTENT_VOLUME_STATUS_DELETING: the volume will be deleted
-         *      - PERSISTENT_VOLUME_STATUS_DELETED: the volume was deleted
-         * @default PERSISTENT_VOLUME_STATUS_INVALID
-         * @enum {string}
-         */
-        PersistentVolumeStatus: "PERSISTENT_VOLUME_STATUS_INVALID" | "PERSISTENT_VOLUME_STATUS_ATTACHED" | "PERSISTENT_VOLUME_STATUS_DETACHED" | "PERSISTENT_VOLUME_STATUS_DELETING" | "PERSISTENT_VOLUME_STATUS_DELETED";
-        UpdatePersistentVolumeReply: {
-            volume?: components["schemas"]["PersistentVolume"];
-        };
-        CreateSnapshotReply: {
-            snapshot?: components["schemas"]["Snapshot"];
-        };
-        CreateSnapshotRequest: {
-            /** The id of the volume to snapshot */
-            parent_volume_id?: string;
-            /** The name of the snapshot */
+        CreateSecret: {
+            azure_container_registry?: components["schemas"]["AzureContainerRegistryConfiguration"];
+            digital_ocean_registry?: components["schemas"]["DigitalOceanRegistryConfiguration"];
+            docker_hub_registry?: components["schemas"]["DockerHubRegistryConfiguration"];
+            gcp_container_registry?: components["schemas"]["GCPContainerRegistryConfiguration"];
+            github_registry?: components["schemas"]["GitHubRegistryConfiguration"];
+            gitlab_registry?: components["schemas"]["GitLabRegistryConfiguration"];
             name?: string;
+            private_registry?: components["schemas"]["PrivateRegistryConfiguration"];
+            type?: components["schemas"]["SecretType"];
+            value?: string;
         };
-        DeleteSnapshotReply: {
-            snapshot?: components["schemas"]["Snapshot"];
-        };
-        GetSnapshotReply: {
-            snapshot?: components["schemas"]["Snapshot"];
-        };
-        ListSnapshotsReply: {
-            /** The collection of snapshots */
-            snapshots?: components["schemas"]["Snapshot"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        /** @description The object that represents a snapshot. It can either be local, on a node, or remote, in a cold storage. */
-        Snapshot: {
-            /** the identifier of the snapshot object */
-            id?: string;
-            /** the snapshot name */
-            name?: string;
-            /**
-             * the original volume size
-             * Format: int64
-             */
-            size?: number;
-            /**
-             * creation timestamp
-             * Format: date-time
-             */
-            created_at?: string;
-            /**
-             * last change timestamp
-             * Format: date-time
-             */
-            updated_at?: string;
-            /**
-             * deletion timestamp
-             * Format: date-time
-             */
-            deleted_at?: string;
-            /** the organization to which the snapshot belongs to */
-            organization_id?: string;
-            /** the volume from which the snapshot has been created */
-            parent_volume_id?: string;
-            /** the region where the snapshot resides, if any */
-            region?: string;
-            status?: components["schemas"]["SnapshotStatus"];
-            type?: components["schemas"]["SnapshotType"];
-        };
-        /**
-         * - SNAPSHOT_STATUS_INVALID: zero value, invalid
-         *      - SNAPSHOT_STATUS_CREATING: the snapshot is being created
-         *      - SNAPSHOT_STATUS_AVAILABLE: the snapshot is complete and available
-         *      - SNAPSHOT_STATUS_MIGRATING: the snapshot is being migrated
-         *      - SNAPSHOT_STATUS_DELETING: the snapshot is being deleted
-         *      - SNAPSHOT_STATUS_DELETED: the snapshot is deleted
-         * @default SNAPSHOT_STATUS_INVALID
-         * @enum {string}
-         */
-        SnapshotStatus: "SNAPSHOT_STATUS_INVALID" | "SNAPSHOT_STATUS_CREATING" | "SNAPSHOT_STATUS_AVAILABLE" | "SNAPSHOT_STATUS_MIGRATING" | "SNAPSHOT_STATUS_DELETING" | "SNAPSHOT_STATUS_DELETED";
-        /**
-         * - SNAPSHOT_TYPE_INVALID: zero value, invalid
-         *      - SNAPSHOT_TYPE_LOCAL: the snapshot is local to the machine
-         *      - SNAPSHOT_TYPE_REMOTE: the snapshot is remote in a cold storage
-         * @default SNAPSHOT_TYPE_INVALID
-         * @enum {string}
-         */
-        SnapshotType: "SNAPSHOT_TYPE_INVALID" | "SNAPSHOT_TYPE_LOCAL" | "SNAPSHOT_TYPE_REMOTE";
-        UpdateSnapshotReply: {
-            snapshot?: components["schemas"]["Snapshot"];
-        };
-        CreateStageAttemptReply: Record<string, never>;
-        DeclareStageProgressReply: Record<string, never>;
-        DeclareStepProgressReply: Record<string, never>;
-        /**
-         * @default UNKNOWN
-         * @enum {string}
-         */
-        "DeploymentProvisioningInfo.Stage.Status": "UNKNOWN" | "PENDING" | "RUNNING" | "FAILED" | "COMPLETED" | "ABORTED";
-        AppUsage: {
-            app_id?: string;
-            app_name?: string;
-            services?: components["schemas"]["ServiceUsage"][];
-        };
-        GetOrganizationUsageDetailsReply: {
-            /** The collection of usage instances */
-            usage_details?: components["schemas"]["UsageDetails"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-            /** The order in the request */
-            order?: string;
-        };
-        GetOrganizationUsageReply: {
-            usage?: components["schemas"]["Usage"];
-        };
-        InstanceUsage: {
-            /** Format: int64 */
-            duration_seconds?: number;
-        };
-        PeriodUsage: {
-            /** Format: date-time */
-            starting_time?: string;
-            /** Format: date-time */
-            ending_time?: string;
-            apps?: components["schemas"]["AppUsage"][];
-        };
-        RegionUsage: {
-            instances?: {
-                [key: string]: components["schemas"]["InstanceUsage"];
-            };
-        };
-        ServiceUsage: {
-            service_id?: string;
-            service_name?: string;
-            regions?: {
-                [key: string]: components["schemas"]["RegionUsage"];
-            };
-        };
-        Usage: {
-            organization_id?: string;
-            periods?: {
-                [key: string]: components["schemas"]["PeriodUsage"];
-            };
-        };
-        UsageDetails: {
-            organization_id?: string;
-            instance_id?: string;
-            app_id?: string;
-            app_name?: string;
-            service_id?: string;
-            service_name?: string;
-            regional_deployment_id?: string;
-            region?: string;
-            deployment_id?: string;
-            instance_type?: string;
-            /** Format: int64 */
-            duration_seconds?: number;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            terminated_at?: string;
-        };
-        CreateDomain: {
-            name?: string;
-            type?: components["schemas"]["Domain.Type"];
-            /** to auto-attach to an app. Optional */
-            app_id?: string;
-        };
-        CreateDomainReply: {
-            domain?: components["schemas"]["Domain"];
-        };
-        DeleteDomainReply: Record<string, never>;
-        GetDomainReply: {
-            domain?: components["schemas"]["Domain"];
-        };
-        ListDomainsReply: {
-            domains?: components["schemas"]["Domain"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-        };
-        RefreshDomainStatusReply: Record<string, never>;
-        UpdateDomain: {
-            /** @description To attach or detach from an app for custom domain. */
-            app_id?: string;
-            /** @description To change subdomain for auto-assigned domain. */
-            subdomain?: string;
-        };
-        UpdateDomainReply: {
-            domain?: components["schemas"]["Domain"];
-        };
-        ArchiveDeploymentMetadata: {
-            last_provisioned_deployment_id?: string;
-        };
-        ArchiveSource: {
-            /** The ID of the archive to deploy */
-            id?: string;
-            buildpack?: components["schemas"]["BuildpackBuilder"];
-            docker?: components["schemas"]["DockerBuilder"];
-        };
-        AutoRelease: {
-            groups?: components["schemas"]["AutoRelease.Group"][];
-        };
-        /** Configuration extracted from the latest deployment in this deployment_group */
-        "AutoRelease.Group": {
-            name?: string;
-            repository?: string;
-            /** A git ref to track (.e.g: refs/tags/<tag> or refs/heads/<branch> */
-            git_ref?: string;
-            /** The last hash that was resolved (used to avoid triggering releases when things haven't changed) */
-            latest_sha?: string;
-        };
-        AutocompleteReply: {
-            /** List of available secrets */
-            secrets?: string[];
-            /** List of available user's environment variables */
-            user_env?: string[];
-            /** List of available system's environment variables */
-            system_env?: string[];
-        };
-        AutocompleteRequest: {
-            definition?: components["schemas"]["DeploymentDefinition"];
-        };
-        BuildpackBuilder: {
-            /** A command used to override the build command, run after all build steps */
-            build_command?: string;
-            /** A command used to override the default run command */
-            run_command?: string;
-            /** A flag to run the container in privileged mode */
-            privileged?: boolean;
-        };
-        ConfigFile: {
-            /** the path where the file is copied */
-            path?: string;
-            /** the permissions of the file in format 0644 */
-            permissions?: string;
-            /** the content of the file */
-            content?: string;
+        CreateSecretReply: {
+            secret?: components["schemas"]["Secret"];
         };
         CreateService: {
             app_id?: string;
@@ -2597,43 +2181,115 @@ export interface components {
         CreateServiceReply: {
             service?: components["schemas"]["Service"];
         };
+        CreateSnapshotReply: {
+            snapshot?: components["schemas"]["Snapshot"];
+        };
+        CreateSnapshotRequest: {
+            /** The name of the snapshot */
+            name?: string;
+            /** The id of the volume to snapshot */
+            parent_volume_id?: string;
+        };
+        CreateStageAttemptReply: Record<string, never>;
+        Credential: {
+            /** Format: date-time */
+            created_at?: string;
+            description?: string;
+            id?: string;
+            name?: string;
+            organization_id?: string;
+            token?: string;
+            type?: components["schemas"]["Credential.Type"];
+            /** Format: date-time */
+            updated_at?: string;
+            user_id?: string;
+        };
+        /**
+         * @default INVALID
+         * @enum {string}
+         */
+        "Credential.Type": "INVALID" | "USER" | "ORGANIZATION";
         DatabaseDeploymentMetadata: {
             neon_postgres?: components["schemas"]["NeonPostgresDatabaseDeploymentMetadata"];
+        };
+        DatabaseRolePassword: {
+            password?: string;
+            username?: string;
         };
         DatabaseSource: {
             neon_postgres?: components["schemas"]["NeonPostgresDatabase"];
         };
-        DeleteServiceReply: Record<string, never>;
-        Deployment: {
+        DatacenterListItem: {
+            /** e.g. "8.856614" ,"2.352221"? */
+            coordinates?: string[];
+            /** e.g. "all-par1.infra.prod.koyeb.com" */
+            domain?: string;
+            /** e.g. "par1" */
             id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
+            /** e.g. "par" */
+            region_id?: string;
+            /** e.g. "par", "fra" */
+            regions?: string[];
+            /** e.g. true */
+            use_gpu?: boolean;
+        };
+        DeactivateOrganizationReply: {
+            organization?: components["schemas"]["Organization"];
+        };
+        DeclareStageProgressReply: Record<string, never>;
+        DeclareStepProgressReply: Record<string, never>;
+        DeclineOrganizationInvitationReply: {
+            invitation?: components["schemas"]["OrganizationInvitation"];
+        };
+        DeleteAppReply: Record<string, never>;
+        DeleteCredentialReply: Record<string, never>;
+        DeleteDomainReply: Record<string, never>;
+        DeleteOrganizationInvitationReply: Record<string, never>;
+        DeleteOrganizationReply: {
+            organization?: components["schemas"]["Organization"];
+        };
+        DeletePaymentMethodReply: Record<string, never>;
+        DeletePersistentVolumeReply: {
+            volume?: components["schemas"]["PersistentVolume"];
+        };
+        DeleteSecretReply: Record<string, never>;
+        DeleteServiceReply: Record<string, never>;
+        DeleteSnapshotReply: {
+            snapshot?: components["schemas"]["Snapshot"];
+        };
+        DeleteUserReply: {
+            user?: components["schemas"]["User"];
+        };
+        Deployment: {
             /** Format: date-time */
             allocated_at?: string;
+            app_id?: string;
+            child_id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            database_info?: components["schemas"]["DeploymentDatabaseInfo"];
+            definition?: components["schemas"]["DeploymentDefinition"];
+            deployment_group?: string;
+            id?: string;
+            messages?: string[];
+            metadata?: components["schemas"]["DeploymentMetadata"];
+            organization_id?: string;
+            parent_id?: string;
+            provisioning_info?: components["schemas"]["DeploymentProvisioningInfo"];
+            role?: components["schemas"]["Deployment.Role"];
+            service_id?: string;
+            skip_build?: boolean;
             /** Format: date-time */
             started_at?: string;
+            status?: components["schemas"]["Deployment.Status"];
             /** Format: date-time */
             succeeded_at?: string;
             /** Format: date-time */
             terminated_at?: string;
-            organization_id?: string;
-            app_id?: string;
-            service_id?: string;
-            parent_id?: string;
-            child_id?: string;
-            status?: components["schemas"]["Deployment.Status"];
-            metadata?: components["schemas"]["DeploymentMetadata"];
-            definition?: components["schemas"]["DeploymentDefinition"];
-            messages?: string[];
-            provisioning_info?: components["schemas"]["DeploymentProvisioningInfo"];
-            database_info?: components["schemas"]["DeploymentDatabaseInfo"];
-            skip_build?: boolean;
-            role?: components["schemas"]["Deployment.Role"];
+            /** Format: date-time */
+            updated_at?: string;
             /** Format: uint64 */
             version?: string;
-            deployment_group?: string;
         };
         /**
          * @default INVALID
@@ -2649,23 +2305,23 @@ export interface components {
             neon_postgres?: components["schemas"]["DeploymentNeonPostgresDatabaseInfo"];
         };
         DeploymentDefinition: {
-            name?: string;
-            type?: components["schemas"]["DeploymentDefinition.Type"];
-            strategy?: components["schemas"]["DeploymentStrategy"];
-            routes?: components["schemas"]["DeploymentRoute"][];
-            ports?: components["schemas"]["DeploymentPort"][];
-            env?: components["schemas"]["DeploymentEnv"][];
-            regions?: string[];
-            scalings?: components["schemas"]["DeploymentScaling"][];
-            instance_types?: components["schemas"]["DeploymentInstanceType"][];
-            health_checks?: components["schemas"]["DeploymentHealthCheck"][];
-            volumes?: components["schemas"]["DeploymentVolume"][];
-            config_files?: components["schemas"]["ConfigFile"][];
-            skip_cache?: boolean;
-            docker?: components["schemas"]["DockerSource"];
-            git?: components["schemas"]["GitSource"];
-            database?: components["schemas"]["DatabaseSource"];
             archive?: components["schemas"]["ArchiveSource"];
+            config_files?: components["schemas"]["ConfigFile"][];
+            database?: components["schemas"]["DatabaseSource"];
+            docker?: components["schemas"]["DockerSource"];
+            env?: components["schemas"]["DeploymentEnv"][];
+            git?: components["schemas"]["GitSource"];
+            health_checks?: components["schemas"]["DeploymentHealthCheck"][];
+            instance_types?: components["schemas"]["DeploymentInstanceType"][];
+            name?: string;
+            ports?: components["schemas"]["DeploymentPort"][];
+            regions?: string[];
+            routes?: components["schemas"]["DeploymentRoute"][];
+            scalings?: components["schemas"]["DeploymentScaling"][];
+            skip_cache?: boolean;
+            strategy?: components["schemas"]["DeploymentStrategy"];
+            type?: components["schemas"]["DeploymentDefinition.Type"];
+            volumes?: components["schemas"]["DeploymentVolume"][];
         };
         /**
          * @default INVALID
@@ -2673,10 +2329,20 @@ export interface components {
          */
         "DeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER" | "DATABASE";
         DeploymentEnv: {
-            scopes?: string[];
             key?: string;
-            value?: string;
+            scopes?: string[];
             secret?: string;
+            value?: string;
+        };
+        DeploymentEvent: {
+            deployment_id?: string;
+            id?: string;
+            message?: string;
+            metadata?: Record<string, never>;
+            organization_id?: string;
+            type?: string;
+            /** Format: date-time */
+            when?: string;
         };
         DeploymentHealthCheck: {
             /**
@@ -2684,6 +2350,7 @@ export interface components {
              * Format: int64
              */
             grace_period?: number;
+            http?: components["schemas"]["HTTPHealthCheck"];
             /**
              * An optional period in seconds between two health checks, default is 60s
              * Format: int64
@@ -2694,23 +2361,51 @@ export interface components {
              * Format: int64
              */
             restart_limit?: number;
+            tcp?: components["schemas"]["TCPHealthCheck"];
             /**
              * An optional maximum time to wait in seconds before considering the check as a failure, default is 5s
              * Format: int64
              */
             timeout?: number;
-            tcp?: components["schemas"]["TCPHealthCheck"];
-            http?: components["schemas"]["HTTPHealthCheck"];
         };
         DeploymentInstanceType: {
             scopes?: string[];
             type?: string;
         };
+        DeploymentListItem: {
+            /** Format: date-time */
+            allocated_at?: string;
+            app_id?: string;
+            child_id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            database_info?: components["schemas"]["DeploymentDatabaseInfo"];
+            definition?: components["schemas"]["DeploymentDefinition"];
+            deployment_group?: string;
+            id?: string;
+            messages?: string[];
+            metadata?: components["schemas"]["DeploymentMetadata"];
+            organization_id?: string;
+            parent_id?: string;
+            provisioning_info?: components["schemas"]["DeploymentProvisioningInfo"];
+            service_id?: string;
+            /** Format: date-time */
+            started_at?: string;
+            status?: components["schemas"]["Deployment.Status"];
+            /** Format: date-time */
+            succeeded_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
+            /** Format: uint64 */
+            version?: string;
+        };
         DeploymentMetadata: {
-            trigger?: components["schemas"]["TriggerDeploymentMetadata"];
+            archive?: components["schemas"]["ArchiveDeploymentMetadata"];
             database?: components["schemas"]["DatabaseDeploymentMetadata"];
             git?: components["schemas"]["GitDeploymentMetadata"];
-            archive?: components["schemas"]["ArchiveDeploymentMetadata"];
+            trigger?: components["schemas"]["TriggerDeploymentMetadata"];
         };
         DeploymentNeonPostgresDatabaseInfo: {
             /** Format: int64 */
@@ -2718,23 +2413,23 @@ export interface components {
             /** Format: int64 */
             compute_time_seconds?: string;
             /** Format: int64 */
-            written_data_bytes?: string;
+            data_storage_bytes_hour?: string;
             /** Format: int64 */
             data_transfer_bytes?: string;
+            default_branch_id?: string;
             /** Format: int64 */
-            data_storage_bytes_hour?: string;
+            default_branch_logical_size?: string;
+            default_branch_name?: string;
+            default_branch_state?: string;
+            /** Format: date-time */
+            endpoint_last_active?: string;
+            endpoint_state?: string;
+            roles?: components["schemas"]["DeploymentNeonPostgresDatabaseInfoRole"][];
             server_host?: string;
             /** Format: int64 */
             server_port?: number;
-            endpoint_state?: string;
-            /** Format: date-time */
-            endpoint_last_active?: string;
-            default_branch_id?: string;
-            default_branch_name?: string;
-            default_branch_state?: string;
             /** Format: int64 */
-            default_branch_logical_size?: string;
-            roles?: components["schemas"]["DeploymentNeonPostgresDatabaseInfoRole"][];
+            written_data_bytes?: string;
         };
         DeploymentNeonPostgresDatabaseInfoRole: {
             name?: string;
@@ -2747,66 +2442,71 @@ export interface components {
             protocol?: string;
         };
         DeploymentProvisioningInfo: {
-            /** @description The git sha for this build (we resolve the reference at the start of the build). */
-            sha?: string;
             /** @description The docker image built as a result of this build. */
             image?: string;
+            /** @description The git sha for this build (we resolve the reference at the start of the build). */
+            sha?: string;
             /** @description Some info about the build. */
             stages?: components["schemas"]["DeploymentProvisioningInfo.Stage"][];
         };
         "DeploymentProvisioningInfo.Stage": {
-            name?: string;
-            status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
-            messages?: string[];
-            /** Format: date-time */
-            started_at?: string;
+            build_attempts?: components["schemas"]["DeploymentProvisioningInfo.Stage.BuildAttempt"][];
             /** Format: date-time */
             finished_at?: string;
-            build_attempts?: components["schemas"]["DeploymentProvisioningInfo.Stage.BuildAttempt"][];
+            messages?: string[];
+            name?: string;
+            /** Format: date-time */
+            started_at?: string;
+            status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
         };
         "DeploymentProvisioningInfo.Stage.BuildAttempt": {
-            /** Format: int64 */
-            id?: number;
-            status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
-            messages?: string[];
-            /** Format: date-time */
-            started_at?: string;
             /** Format: date-time */
             finished_at?: string;
-            steps?: components["schemas"]["DeploymentProvisioningInfo.Stage.BuildAttempt.BuildStep"][];
+            /** Format: int64 */
+            id?: number;
             image_pushed?: boolean;
             internal_failure?: boolean;
+            messages?: string[];
             retryable_failure?: boolean;
+            /** Format: date-time */
+            started_at?: string;
+            status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
+            steps?: components["schemas"]["DeploymentProvisioningInfo.Stage.BuildAttempt.BuildStep"][];
             /** @description This flag is used to finalize the build, and continue the deployment in case of success, or cancel and potentially retry the build in case of failure. */
             wait_completion?: boolean;
         };
         "DeploymentProvisioningInfo.Stage.BuildAttempt.BuildStep": {
-            name?: string;
-            status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
-            messages?: string[];
-            /** Format: date-time */
-            started_at?: string;
             /** Format: date-time */
             finished_at?: string;
+            messages?: string[];
+            name?: string;
+            /** Format: date-time */
+            started_at?: string;
+            status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
         };
+        /**
+         * @default UNKNOWN
+         * @enum {string}
+         */
+        "DeploymentProvisioningInfo.Stage.Status": "UNKNOWN" | "PENDING" | "RUNNING" | "FAILED" | "COMPLETED" | "ABORTED";
         DeploymentRoute: {
+            path?: string;
             /** Format: int64 */
             port?: number;
-            path?: string;
         };
         DeploymentScaling: {
-            scopes?: string[];
-            /** Format: int64 */
-            min?: number;
             /** Format: int64 */
             max?: number;
+            /** Format: int64 */
+            min?: number;
+            scopes?: string[];
             targets?: components["schemas"]["DeploymentScalingTarget"][];
         };
         DeploymentScalingTarget: {
             average_cpu?: components["schemas"]["DeploymentScalingTargetAverageCPU"];
             average_mem?: components["schemas"]["DeploymentScalingTargetAverageMem"];
-            requests_per_second?: components["schemas"]["DeploymentScalingTargetRequestsPerSecond"];
             concurrent_requests?: components["schemas"]["DeploymentScalingTargetConcurrentRequests"];
+            requests_per_second?: components["schemas"]["DeploymentScalingTargetRequestsPerSecond"];
             requests_response_time?: components["schemas"]["DeploymentScalingTargetRequestsResponseTime"];
             sleep_idle_delay?: components["schemas"]["DeploymentScalingTargetSleepIdleDelay"];
         };
@@ -2827,14 +2527,14 @@ export interface components {
             value?: number;
         };
         DeploymentScalingTargetRequestsResponseTime: {
-            /** Format: int64 */
-            value?: number;
             /**
              * Format: int64
              * @description The quantile to use for autoscaling. For example, set to 95 to use the 95th
              *     percentile (p95) for autoscaling.  Valid values are between 0 and 100.
              */
             quantile?: number;
+            /** Format: int64 */
+            value?: number;
         };
         DeploymentScalingTargetSleepIdleDelay: {
             /**
@@ -2875,78 +2575,216 @@ export interface components {
             groups?: components["schemas"]["DesiredDeployment.Group"][];
         };
         "DesiredDeployment.Group": {
-            name?: string;
             deployment_ids?: string[];
+            name?: string;
+        };
+        DigitalOceanRegistryConfiguration: {
+            password?: string;
+            username?: string;
+        };
+        DiscourseAuthReply: {
+            sig?: string;
+            sso?: string;
+        };
+        DiscourseAuthRequest: {
+            payload?: string;
+            sig?: string;
         };
         DockerBuilder: {
+            /** The docker CMD args */
+            args?: string[];
+            /** The docker CMD */
+            command?: string;
             /** A path to the Dockerfile */
             dockerfile?: string;
             /** The docker ENTRYPOINT */
             entrypoint?: string[];
-            /** The docker CMD */
-            command?: string;
-            /** The docker CMD args */
-            args?: string[];
+            /** A flag to run the container in privileged mode */
+            privileged?: boolean;
             /** The target for multi-stage builds */
             target?: string;
-            /** A flag to run the container in privileged mode */
-            privileged?: boolean;
+        };
+        DockerHubRegistryConfiguration: {
+            password?: string;
+            username?: string;
         };
         DockerSource: {
-            image?: string;
-            command?: string;
             args?: string[];
-            image_registry_secret?: string;
+            command?: string;
             entrypoint?: string[];
+            image?: string;
+            image_registry_secret?: string;
             /** A flag to run the container in privileged mode */
             privileged?: boolean;
         };
-        GetServiceReply: {
-            service?: components["schemas"]["Service"];
+        Domain: {
+            app_id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            deployment_group?: string;
+            id?: string;
+            intended_cname?: string;
+            messages?: string[];
+            name?: string;
+            organization_id?: string;
+            status?: components["schemas"]["Domain.Status"];
+            type?: components["schemas"]["Domain.Type"];
+            /** Format: date-time */
+            updated_at?: string;
+            /** Format: date-time */
+            verified_at?: string;
+            /** Format: uint64 */
+            version?: string;
         };
-        GitDeploymentMetadata: {
-            last_provisioned_deployment_id?: string;
-        };
-        GitSource: {
-            /** @description A url to a git repository (contains the provider as well) .e.g: github.com/koyeb/test. */
-            repository?: string;
-            /** A git branch that will be tracked for new commits and deployments will be created */
-            branch?: string;
-            /** A git tag that should be built */
-            tag?: string;
-            /** A git commit that should be built (useful for pinning to a commit, this will always be set when a deployment is created by a code push) */
-            sha?: string;
-            /** A command used to override the build command, run after all build steps — deprecated, use buildpack.build_command instead */
-            build_command?: string;
-            /** A command used to override the default run command - deprecated, use buildpack.run_command instead */
-            run_command?: string;
-            /** A flag to disable a new deployment when a push event is detected */
-            no_deploy_on_push?: boolean;
-            /** A subdirectory to use as the build directory */
-            workdir?: string;
-            buildpack?: components["schemas"]["BuildpackBuilder"];
-            docker?: components["schemas"]["DockerBuilder"];
-        };
-        HTTPHeader: {
-            key?: string;
-            value?: string;
-        };
-        HTTPHealthCheck: {
+        /**
+         * @default PENDING
+         * @enum {string}
+         */
+        "Domain.Status": "PENDING" | "ACTIVE" | "ERROR" | "DELETING" | "DELETED";
+        /**
+         * - AUTOASSIGNED: Domain like <appName>-<orgName>.koyeb.app
+         * @default AUTOASSIGNED
+         * @enum {string}
+         */
+        "Domain.Type": "AUTOASSIGNED" | "CUSTOM";
+        DomainsSummary: {
+            /** Number of domains grouped by status */
+            by_status?: {
+                [key: string]: string;
+            };
             /**
-             * The port to use to perform the health check, must be declared in the ports section
+             * Total number of domains
              * Format: int64
              */
-            port?: number;
-            /** The path to use to perform the HTTP health check */
-            path?: string;
-            /** An optional HTTP method to use to perform the health check, default is GET */
-            method?: string;
-            /** An optional list of HTTP headers to provide when performing the request, default is empty */
-            headers?: components["schemas"]["HTTPHeader"][];
+            total?: string;
         };
-        ListServiceEventsReply: {
-            /** The collection of events */
-            events?: components["schemas"]["ServiceEvent"][];
+        Empty: Record<string, never>;
+        Env: {
+            key?: string;
+            secret?: string;
+            value?: string;
+        };
+        Error: {
+            code?: string;
+            message?: string;
+            /** Format: int32 */
+            status?: number;
+        };
+        ErrorField: {
+            description?: string;
+            field?: string;
+        };
+        ErrorWithFields: {
+            code?: string;
+            fields?: components["schemas"]["ErrorField"][];
+            message?: string;
+            /** Format: int32 */
+            status?: number;
+        };
+        ExecCommandIO: {
+            /** @description Indicate last data frame */
+            close?: boolean;
+            /**
+             * Format: byte
+             * @description Data is base64 encoded
+             */
+            data?: string;
+        };
+        ExecCommandReply: {
+            /** Format: int32 */
+            exit_code?: number;
+            exited?: boolean;
+            stderr?: components["schemas"]["ExecCommandIO"];
+            stdout?: components["schemas"]["ExecCommandIO"];
+        };
+        "ExecCommandRequest.Body": {
+            /** @description Command to exec. Mandatory in the first frame sent */
+            command?: string[];
+            /** @description Disable TTY. It's enough to specify it in the first frame */
+            disableTty?: boolean;
+            stdin?: components["schemas"]["ExecCommandIO"];
+            tty_size?: components["schemas"]["ExecCommandRequest.TerminalSize"];
+        };
+        /**
+         * @default INVALID
+         * @enum {string}
+         */
+        "ExecCommandRequest.IdType": "INVALID" | "INSTANCE_ID" | "SERVICE_ID";
+        "ExecCommandRequest.TerminalSize": {
+            /** Format: int32 */
+            height?: number;
+            /** Format: int32 */
+            width?: number;
+        };
+        GCPContainerRegistryConfiguration: {
+            keyfile_content?: string;
+            url?: string;
+        };
+        GetAppReply: {
+            app?: components["schemas"]["App"];
+        };
+        GetCatalogInstanceReply: {
+            instance?: components["schemas"]["CatalogInstance"];
+        };
+        GetCredentialReply: {
+            credential?: components["schemas"]["Credential"];
+        };
+        GetDeploymentReply: {
+            deployment?: components["schemas"]["Deployment"];
+        };
+        GetDomainReply: {
+            domain?: components["schemas"]["Domain"];
+        };
+        GetGithubInstallationReply: {
+            avatar_url?: string;
+            /** Format: int64 */
+            indexed_repositories?: number;
+            indexing_status?: components["schemas"]["kgitproxy.IndexingStatus"];
+            installation_id?: string;
+            installation_url?: string;
+            /** Format: date-time */
+            installed_at?: string;
+            name?: string;
+            status?: components["schemas"]["kgitproxy.GithubInstallation.Status"];
+            /** Format: date-time */
+            suspended_at?: string;
+            /** Format: int64 */
+            total_repositories?: number;
+        };
+        GetInstanceReply: {
+            instance?: components["schemas"]["Instance"];
+        };
+        GetIntercomProfileReply: {
+            hash?: string;
+        };
+        GetMetricsReply: {
+            metrics?: components["schemas"]["GetMetricsReply.Metric"][];
+        };
+        "GetMetricsReply.Metric": {
+            labels?: {
+                [key: string]: string;
+            };
+            samples?: components["schemas"]["Sample"][];
+        };
+        /** @description A list of providers which you can use for single sign-on. */
+        GetOAuthOptionsReply: {
+            oauth_providers?: components["schemas"]["OAuthProvider"][];
+        };
+        GetOrganizationInvitationReply: {
+            invitation?: components["schemas"]["OrganizationInvitation"];
+        };
+        GetOrganizationReply: {
+            organization?: components["schemas"]["Organization"];
+        };
+        GetOrganizationSummaryReply: {
+            summary?: components["schemas"]["OrganizationSummary"];
+        };
+        GetOrganizationUsageDetailsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
             /**
              * The limit in the request
              * Format: int64
@@ -2959,11 +2797,355 @@ export interface components {
             offset?: number;
             /** The order in the request */
             order?: string;
+            /** The collection of usage instances */
+            usage_details?: components["schemas"]["UsageDetails"][];
+        };
+        GetOrganizationUsageReply: {
+            usage?: components["schemas"]["Usage"];
+        };
+        GetPaymentMethodReply: {
+            payment_method?: components["schemas"]["PaymentMethod"];
+        };
+        GetPersistentVolumeReply: {
+            volume?: components["schemas"]["PersistentVolume"];
+        };
+        GetQuotasReply: {
+            quotas?: components["schemas"]["Quotas"];
+        };
+        GetRegionalDeploymentReply: {
+            regional_deployment?: components["schemas"]["RegionalDeployment"];
+        };
+        GetRegionReply: {
+            region?: components["schemas"]["Region"];
+        };
+        GetSecretReply: {
+            secret?: components["schemas"]["Secret"];
+        };
+        GetServiceReply: {
+            service?: components["schemas"]["Service"];
+        };
+        GetSnapshotReply: {
+            snapshot?: components["schemas"]["Snapshot"];
+        };
+        GetSubscriptionReply: {
+            subscription?: components["schemas"]["Subscription"];
+        };
+        GetUserOrganizationInvitationReply: {
+            invitation?: components["schemas"]["OrganizationInvitation"];
+        };
+        GitDeploymentMetadata: {
+            last_provisioned_deployment_id?: string;
+        };
+        GithubInstallationReply: {
+            /**
+             * The github app id
+             * Format: int64
+             */
+            app_id?: string;
+            /** The github app name */
+            app_name?: string;
+            /** The state required by the protocol, it is only valid 10 minutes and encodes information about the type of flow */
+            state?: string;
+            /** The url to start the installation flow */
+            url?: string;
+        };
+        GithubInstallationRequest: {
+            /** A small (limited to 400 characters) string of arbitrary metadata which will be encoded in the state */
+            metadata?: string;
+        };
+        GitHubRegistryConfiguration: {
+            password?: string;
+            username?: string;
+        };
+        GitLabRegistryConfiguration: {
+            password?: string;
+            username?: string;
+        };
+        GitSource: {
+            /** A git branch that will be tracked for new commits and deployments will be created */
+            branch?: string;
+            /** A command used to override the build command, run after all build steps — deprecated, use buildpack.build_command instead */
+            build_command?: string;
+            buildpack?: components["schemas"]["BuildpackBuilder"];
+            docker?: components["schemas"]["DockerBuilder"];
+            /** A flag to disable a new deployment when a push event is detected */
+            no_deploy_on_push?: boolean;
+            /** @description A url to a git repository (contains the provider as well) .e.g: github.com/koyeb/test. */
+            repository?: string;
+            /** A command used to override the default run command - deprecated, use buildpack.run_command instead */
+            run_command?: string;
+            /** A git commit that should be built (useful for pinning to a commit, this will always be set when a deployment is created by a code push) */
+            sha?: string;
+            /** A git tag that should be built */
+            tag?: string;
+            /** A subdirectory to use as the build directory */
+            workdir?: string;
+        };
+        "google.protobuf.Any": {
+            "@type"?: string;
+        } & {
+            [key: string]: Record<string, never>;
+        };
+        /**
+         * @description `NullValue` is a singleton enumeration to represent the null value for the
+         *     `Value` type union.
+         *
+         *      The JSON representation for `NullValue` is JSON `null`.
+         *
+         *      - NULL_VALUE: Null value.
+         * @default NULL_VALUE
+         * @enum {string}
+         */
+        "google.protobuf.NullValue": "NULL_VALUE";
+        "google.rpc.Status": {
+            /** Format: int32 */
+            code?: number;
+            details?: components["schemas"]["google.protobuf.Any"][];
+            message?: string;
+        };
+        HasUnpaidInvoicesReply: {
+            has_unpaid_invoices?: boolean;
+        };
+        HTTPHeader: {
+            key?: string;
+            value?: string;
+        };
+        HTTPHealthCheck: {
+            /** An optional list of HTTP headers to provide when performing the request, default is empty */
+            headers?: components["schemas"]["HTTPHeader"][];
+            /** An optional HTTP method to use to perform the health check, default is GET */
+            method?: string;
+            /** The path to use to perform the HTTP health check */
+            path?: string;
+            /**
+             * The port to use to perform the health check, must be declared in the ports section
+             * Format: int64
+             */
+            port?: number;
+        };
+        Instance: {
+            allocation_id?: string;
+            app_id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            datacenter?: string;
+            hypervisor?: string;
+            id?: string;
+            messages?: string[];
+            organization_id?: string;
+            region?: string;
+            regional_deployment_id?: string;
+            /** Format: int64 */
+            replica_index?: number;
+            service_id?: string;
+            /** Format: date-time */
+            started_at?: string;
+            status?: components["schemas"]["Instance.Status"];
+            /** Format: date-time */
+            succeeded_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
+            type?: string;
+            /** Format: date-time */
+            updated_at?: string;
+            /** @description WARNING: Please don't use the following attribute.
+             *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
+             *     USE AT YOUR OWN RISK. */
+            xyz_deployment_id?: string;
+        };
+        /**
+         * @default ALLOCATING
+         * @enum {string}
+         */
+        "Instance.Status": "ALLOCATING" | "STARTING" | "HEALTHY" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERROR" | "SLEEPING";
+        InstanceEvent: {
+            id?: string;
+            instance_id?: string;
+            message?: string;
+            metadata?: Record<string, never>;
+            organization_id?: string;
+            type?: string;
+            /** Format: date-time */
+            when?: string;
+        };
+        InstanceListItem: {
+            allocation_id?: string;
+            app_id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            datacenter?: string;
+            id?: string;
+            messages?: string[];
+            organization_id?: string;
+            region?: string;
+            regional_deployment_id?: string;
+            /** Format: int64 */
+            replica_index?: number;
+            service_id?: string;
+            status?: components["schemas"]["Instance.Status"];
+            type?: string;
+            /** Format: date-time */
+            updated_at?: string;
+            /** @description WARNING: Please don't use the following attribute.
+             *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
+             *     USE AT YOUR OWN RISK. */
+            xyz_deployment_id?: string;
+        };
+        InstancesSummary: {
+            /** Number of instances grouped by type */
+            by_type?: {
+                [key: string]: string;
+            };
+            /**
+             * Total number of instances
+             * Format: int64
+             */
+            total?: string;
+        };
+        InstanceUsage: {
+            /** Format: int64 */
+            duration_seconds?: number;
+        };
+        InviteUserRequest: {
+            email?: string;
+            message?: string;
+            name?: string;
+        };
+        "kgitproxy.Branch": {
+            id?: string;
+            is_default?: boolean;
+            is_protected?: boolean;
+            name?: string;
+            organization_id?: string;
+            provider?: components["schemas"]["kgitproxy.RepositoryProvider"];
+            repository_id?: string;
+        };
+        /**
+         * @default INVALID
+         * @enum {string}
+         */
+        "kgitproxy.GithubInstallation.Status": "INVALID" | "INSTALLED" | "SUSPENDED" | "DELETED";
+        "kgitproxy.GitHubRepository": {
+            github_id?: string;
+        };
+        /**
+         * @default INVALID_INDEXING_STATUS
+         * @enum {string}
+         */
+        "kgitproxy.IndexingStatus": "INVALID_INDEXING_STATUS" | "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
+        "kgitproxy.ListBranchesReply": {
+            /** @description The collection of branches. */
+            branches?: components["schemas"]["kgitproxy.Branch"][];
+            /**
+             * Format: int64
+             * @description The total number of items.
+             */
+            count?: number;
+            /**
+             * Format: int64
+             * @description The limit in the request.
+             */
+            limit?: number;
+            /**
+             * Format: int64
+             * @description The offset in the request.
+             */
+            offset?: number;
+        };
+        "kgitproxy.ListRepositoriesReply": {
+            /**
+             * Format: int64
+             * @description The total number of items.
+             */
+            count?: number;
+            /**
+             * Format: int64
+             * @description The limit in the request.
+             */
+            limit?: number;
+            /**
+             * Format: int64
+             * @description The offset in the request.
+             */
+            offset?: number;
+            /** @description The collection of repositories. */
+            repositories?: components["schemas"]["kgitproxy.Repository"][];
+        };
+        "kgitproxy.Repository": {
+            default_branch?: string;
+            description?: string;
+            github?: components["schemas"]["kgitproxy.GitHubRepository"];
+            id?: string;
+            is_disabled?: boolean;
+            is_private?: boolean;
+            /** Format: date-time */
+            last_push_date?: string;
+            name?: string;
+            organization_id?: string;
+            provider?: components["schemas"]["kgitproxy.RepositoryProvider"];
+            url?: string;
+        };
+        /**
+         * @default INVALID_PROVIDER
+         * @enum {string}
+         */
+        "kgitproxy.RepositoryProvider": "INVALID_PROVIDER" | "GITHUB";
+        "kgitproxy.ResyncOrganizationReply": Record<string, never>;
+        "ksearch.App": {
+            id?: string;
+            name?: string;
+            organization_id?: string;
+        };
+        "ksearch.GlobalDeployment": {
+            app_id?: string;
+            id?: string;
+            organization_id?: string;
+            service_id?: string;
+        };
+        "ksearch.Instance": {
+            allocation_id?: string;
+            app_id?: string;
+            id?: string;
+            organization_id?: string;
+            service_id?: string;
+        };
+        "ksearch.Organization": {
+            id?: string;
+            name?: string;
+        };
+        "ksearch.RegionalDeployment": {
+            app_id?: string;
+            id?: string;
+            organization_id?: string;
+            region?: string;
+            service_id?: string;
+        };
+        "ksearch.SearchReply": {
+            apps?: components["schemas"]["ksearch.App"][];
+            global_deployments?: components["schemas"]["ksearch.GlobalDeployment"][];
+            instances?: components["schemas"]["ksearch.Instance"][];
+            organizations?: components["schemas"]["ksearch.Organization"][];
+            regional_deployments?: components["schemas"]["ksearch.RegionalDeployment"][];
+            services?: components["schemas"]["ksearch.Service"][];
+            users?: components["schemas"]["ksearch.User"][];
+        };
+        "ksearch.Service": {
+            app_id?: string;
+            id?: string;
+            name?: string;
+            organization_id?: string;
+        };
+        "ksearch.User": {
+            email?: string;
+            github_user?: string;
+            id?: string;
+            name?: string;
+        };
+        ListAppEventsReply: {
+            /** The collection of events */
+            events?: components["schemas"]["AppEvent"][];
             /** If there is more items after in the collection */
             has_next?: boolean;
-        };
-        ListServicesReply: {
-            services?: components["schemas"]["ServiceListItem"][];
             /**
              * The limit in the request
              * Format: int64
@@ -2974,6 +3156,11 @@ export interface components {
              * Format: int64
              */
             offset?: number;
+            /** The order in the request */
+            order?: string;
+        };
+        ListAppsReply: {
+            apps?: components["schemas"]["AppListItem"][];
             /**
              * The total number of items
              * Format: int64
@@ -2981,14 +3168,421 @@ export interface components {
             count?: number;
             /** If there is more items after in the collection */
             has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
         };
+        ListCatalogInstancesReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            instances?: components["schemas"]["CatalogInstanceListItem"][];
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+        };
+        ListCredentialsReply: {
+            /** Format: int64 */
+            count?: number;
+            credentials?: components["schemas"]["Credential"][];
+            /** Format: int64 */
+            limit?: number;
+            /** Format: int64 */
+            offset?: number;
+        };
+        ListDatacentersReply: {
+            datacenters?: components["schemas"]["DatacenterListItem"][];
+        };
+        ListDeploymentEventsReply: {
+            /** The collection of events */
+            events?: components["schemas"]["DeploymentEvent"][];
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The order in the request */
+            order?: string;
+        };
+        ListDeploymentsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /** The collection of deployments */
+            deployments?: components["schemas"]["DeploymentListItem"][];
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+        };
+        ListDomainsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            domains?: components["schemas"]["Domain"][];
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+        };
+        ListInstanceEventsReply: {
+            /** The collection of events */
+            events?: components["schemas"]["InstanceEvent"][];
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The order in the request */
+            order?: string;
+        };
+        ListInstancesReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /** The collection of instances */
+            instances?: components["schemas"]["InstanceListItem"][];
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The order in the request */
+            order?: string;
+        };
+        ListOrganizationInvitationsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /** The collection of organization invitations */
+            invitations?: components["schemas"]["OrganizationInvitation"][];
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+        };
+        ListOrganizationMembersReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /** The collection of organization members */
+            members?: components["schemas"]["OrganizationMember"][];
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+        };
+        ListPaymentMethodsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The collection of payment methods */
+            payment_methods?: components["schemas"]["PaymentMethod"][];
+        };
+        ListPersistentVolumeEventsReply: {
+            /** The collection of events */
+            events?: components["schemas"]["PersistentVolumeEvent"][];
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The order in the request */
+            order?: string;
+        };
+        ListPersistentVolumesReply: {
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The collection of persistent volumes */
+            volumes?: components["schemas"]["PersistentVolume"][];
+        };
+        ListRegionalDeploymentEventsReply: {
+            /** The collection of events */
+            events?: components["schemas"]["RegionalDeploymentEvent"][];
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The order in the request */
+            order?: string;
+        };
+        ListRegionalDeploymentsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The collection of regional deployments */
+            regional_deployments?: components["schemas"]["RegionalDeploymentListItem"][];
+        };
+        ListRegionsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            regions?: components["schemas"]["RegionListItem"][];
+        };
+        ListSecretsReply: {
+            /** Format: int64 */
+            count?: number;
+            /** Format: int64 */
+            limit?: number;
+            /** Format: int64 */
+            offset?: number;
+            secrets?: components["schemas"]["Secret"][];
+        };
+        ListServiceEventsReply: {
+            /** The collection of events */
+            events?: components["schemas"]["ServiceEvent"][];
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The order in the request */
+            order?: string;
+        };
+        ListServicesReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            services?: components["schemas"]["ServiceListItem"][];
+        };
+        ListSnapshotsReply: {
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The collection of snapshots */
+            snapshots?: components["schemas"]["Snapshot"][];
+        };
+        ListUserOrganizationInvitationsReply: {
+            /**
+             * The total number of items
+             * Format: int64
+             */
+            count?: number;
+            /** The collection of organization invitations */
+            invitations?: components["schemas"]["OrganizationInvitation"][];
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+        };
+        LogEntry: {
+            /** Format: date-time */
+            created_at?: string;
+            labels?: Record<string, never>;
+            msg?: string;
+        };
+        LoginReply: {
+            token?: components["schemas"]["Token"];
+        };
+        /** @example {
+         *       "email": "john@snow.com",
+         *       "password": "..."
+         *     } */
+        LoginRequest: {
+            /** User email */
+            email?: string;
+            /** (Optional) Login into this organization */
+            organization_id?: string;
+            /** User password */
+            password?: string;
+        };
+        LogoutReply: Record<string, never>;
+        ManageReply: {
+            url?: string;
+        };
+        MembersSummary: {
+            /** Number of invitations grouped by status */
+            invitations_by_status?: {
+                [key: string]: string;
+            };
+            /**
+             * Number of members
+             * Format: int64
+             */
+            total?: string;
+        };
+        /**
+         * @default UNKNOWN
+         * @enum {string}
+         */
+        MetricName: "UNKNOWN" | "CPU_TOTAL_PERCENT" | "MEM_RSS" | "HTTP_THROUGHPUT" | "HTTP_RESPONSE_TIME_50P" | "HTTP_RESPONSE_TIME_90P" | "HTTP_RESPONSE_TIME_99P" | "HTTP_RESPONSE_TIME_MAX" | "PUBLIC_DATA_TRANSFER_IN" | "PUBLIC_DATA_TRANSFER_OUT";
         NeonPostgresDatabase: {
+            databases?: components["schemas"]["NeonPostgresDatabase.NeonDatabase"][];
+            instance_type?: string;
             /** Format: int64 */
             pg_version?: number;
             region?: string;
-            instance_type?: string;
             roles?: components["schemas"]["NeonPostgresDatabase.NeonRole"][];
-            databases?: components["schemas"]["NeonPostgresDatabase.NeonDatabase"][];
         };
         "NeonPostgresDatabase.NeonDatabase": {
             name?: string;
@@ -3001,351 +3595,455 @@ export interface components {
         NeonPostgresDatabaseDeploymentMetadata: {
             reset_role_passwords?: string[];
         };
+        NeonPostgresSummary: {
+            /** Number of databases grouped by instance type */
+            by_instance_type?: {
+                [key: string]: string;
+            };
+            /**
+             * Total number of databases
+             * Format: int64
+             */
+            total?: string;
+        };
+        NextInvoiceReply: {
+            discounts?: components["schemas"]["NextInvoiceReply.Discount"][];
+            lines?: components["schemas"]["NextInvoiceReply.Line"][];
+            stripe_invoice?: Record<string, never>;
+        };
+        "NextInvoiceReply.Discount": {
+            /** Format: int64 */
+            amount?: string;
+            name?: string;
+            type?: components["schemas"]["NextInvoiceReply.Discount.Type"];
+        };
+        /**
+         * @default PERCENT_OFF
+         * @enum {string}
+         */
+        "NextInvoiceReply.Discount.Type": "PERCENT_OFF" | "AMOUNT_OFF";
+        "NextInvoiceReply.Line": {
+            /** Format: int32 */
+            amount_excluding_tax?: number;
+            period?: components["schemas"]["NextInvoiceReply.Line.Period"];
+            plan_nickname?: string;
+            price?: components["schemas"]["NextInvoiceReply.Line.Price"];
+            /** Format: int32 */
+            quantity?: number;
+        };
+        "NextInvoiceReply.Line.Period": {
+            /** Format: date-time */
+            end?: string;
+            /** Format: date-time */
+            start?: string;
+        };
+        "NextInvoiceReply.Line.Price": {
+            /** Format: double */
+            unit_amount_decimal?: number;
+        };
+        Notification: {
+            activity?: components["schemas"]["Activity"];
+            /** Format: date-time */
+            created_at?: string;
+            id?: string;
+            is_read?: boolean;
+            is_seen?: boolean;
+        };
+        NotificationList: {
+            /** Format: int64 */
+            count?: number;
+            is_read?: boolean;
+            is_seen?: boolean;
+            /** Format: int64 */
+            limit?: number;
+            notifications?: components["schemas"]["Notification"][];
+            /** Format: int64 */
+            offset?: number;
+            /** Format: int64 */
+            unread?: number;
+            /** Format: int64 */
+            unseen?: number;
+        };
+        OAuthCallbackReply: {
+            token?: components["schemas"]["Token"];
+        };
+        OAuthCallbackRequest: {
+            /** The code returned by the OAuth provider */
+            code?: string;
+            /** @description installation_id is populated in the context of a GitHub app installation request. For logins and
+             *     signups, it is not set. */
+            installation_id?: string;
+            /** @description setup_action is populated in the context of a GitHub app installation request. For logins and
+             *     signups, it is not set. */
+            setup_action?: string;
+            /** The state created at the origin of the OAuth flow */
+            state?: string;
+        };
+        OAuthProvider: {
+            /** The name of the provider (.e.g github, google) */
+            id?: string;
+            /** The OAuth state required by the protocol, it is only valid 10 minutes and encodes information about the type of flow */
+            state?: string;
+            /** The URL to call to initiate the OAuth flow */
+            url?: string;
+        };
+        Object: {
+            deleted?: boolean;
+            id?: string;
+            metadata?: Record<string, never>;
+            name?: string;
+            type?: string;
+        };
+        /** Represent an Organization */
+        Organization: {
+            address1?: string;
+            address2?: string;
+            billing_email?: string;
+            billing_name?: string;
+            city?: string;
+            company?: boolean;
+            country?: string;
+            current_subscription_id?: string;
+            deactivation_reason?: components["schemas"]["Organization.DeactivationReason"];
+            has_payment_method?: boolean;
+            id?: string;
+            latest_subscription_id?: string;
+            name?: string;
+            plan?: components["schemas"]["Plan"];
+            /** Format: date-time */
+            plan_updated_at?: string;
+            postal_code?: string;
+            qualifies_for_hobby23?: boolean;
+            /** Format: date-time */
+            reprocess_after?: string;
+            signup_qualification?: Record<string, never>;
+            state?: string;
+            status?: components["schemas"]["Organization.Status"];
+            status_message?: components["schemas"]["OrganizationDetailedStatus"];
+            subscription_id?: string;
+            /** Format: date-time */
+            trial_ends_at?: string;
+            /** Format: date-time */
+            trial_starts_at?: string;
+            trialing?: boolean;
+            vat_number?: string;
+            verified?: boolean;
+        };
+        /**
+         * @default INVALID
+         * @enum {string}
+         */
+        "Organization.DeactivationReason": "INVALID" | "REQUESTED_BY_OWNER" | "SUBSCRIPTION_TERMINATION" | "LOCKED_BY_ADMIN" | "VERIFICATION_FAILED";
+        /**
+         * @default WARNING
+         * @enum {string}
+         */
+        "Organization.Status": "WARNING" | "LOCKED" | "ACTIVE" | "DEACTIVATING" | "DEACTIVATED" | "DELETING" | "DELETED";
+        /**
+         * @default NEW
+         * @enum {string}
+         */
+        OrganizationDetailedStatus: "NEW" | "EMAIL_NOT_VALIDATED" | "BILLING_INFO_MISSING" | "LOCKED" | "PAYMENT_FAILURE" | "VALID" | "PENDING_VERIFICATION" | "VERIFICATION_FAILED" | "REVIEWING_ACCOUNT" | "PLAN_UPGRADE_REQUIRED";
+        OrganizationInvitation: {
+            email?: string;
+            /** Format: date-time */
+            expires_at?: string;
+            id?: string;
+            invitee?: components["schemas"]["PublicUser"];
+            invitee_id?: string;
+            inviter?: components["schemas"]["PublicUser"];
+            inviter_id?: string;
+            organization?: components["schemas"]["PublicOrganization"];
+            organization_id?: string;
+            role?: components["schemas"]["UserRole.Role"];
+            status?: components["schemas"]["OrganizationInvitation.Status"];
+        };
+        /**
+         * @default INVALID
+         * @enum {string}
+         */
+        "OrganizationInvitation.Status": "INVALID" | "PENDING" | "ACCEPTED" | "REFUSED" | "EXPIRED";
+        OrganizationMember: {
+            id?: string;
+            /** Format: date-time */
+            joined_at?: string;
+            organization?: components["schemas"]["PublicOrganization"];
+            organization_id?: string;
+            role?: components["schemas"]["UserRole.Role"];
+            status?: components["schemas"]["OrganizationMember.Status"];
+            user?: components["schemas"]["PublicUser"];
+            user_id?: string;
+        };
+        /**
+         * @default INVALID
+         * @enum {string}
+         */
+        "OrganizationMember.Status": "INVALID" | "ACTIVE" | "DELETED";
+        OrganizationSummary: {
+            apps?: components["schemas"]["AppsSummary"];
+            domains?: components["schemas"]["DomainsSummary"];
+            instances?: components["schemas"]["InstancesSummary"];
+            members?: components["schemas"]["MembersSummary"];
+            neon_postgres?: components["schemas"]["NeonPostgresSummary"];
+            organization_id?: string;
+            secrets?: components["schemas"]["SecretsSummary"];
+            /** Number of services grouped by type */
+            services?: {
+                [key: string]: components["schemas"]["ServiceSummary"];
+            };
+        };
+        PauseAppReply: Record<string, never>;
         PauseServiceReply: Record<string, never>;
+        PaymentMethod: {
+            /** Format: date-time */
+            authorization_canceled_at?: string;
+            authorization_stripe_payment_intent_client_secret?: string;
+            authorization_stripe_payment_intent_id?: string;
+            /** Format: date-time */
+            authorization_verified_at?: string;
+            card_brand?: string;
+            card_country?: string;
+            /** Format: int64 */
+            card_expiration_month?: number;
+            /** Format: int64 */
+            card_expiration_year?: number;
+            card_fingerprint?: string;
+            card_funding?: string;
+            card_last_digits?: string;
+            /** Format: date-time */
+            created_at?: string;
+            id?: string;
+            messages?: string[];
+            organization_id?: string;
+            provider?: string;
+            status?: components["schemas"]["PaymentMethod.Status"];
+            stripe_payment_method_id?: string;
+            type?: string;
+            /** Format: date-time */
+            updated_at?: string;
+            /** Format: uint64 */
+            version?: string;
+        };
+        /**
+         * @default INVALID
+         * @enum {string}
+         */
+        "PaymentMethod.Status": "INVALID" | "CREATED" | "AUTHORIZED" | "DECLINED" | "CANCELED" | "EXPIRED" | "UNCHECKED";
+        PeriodUsage: {
+            apps?: components["schemas"]["AppUsage"][];
+            /** Format: date-time */
+            ending_time?: string;
+            /** Format: date-time */
+            starting_time?: string;
+        };
+        /** The object that represent a volume to handle persistency for deployments */
+        PersistentVolume: {
+            backing_store?: components["schemas"]["PersistentVolumeBackingStore"];
+            /**
+             * creation timestamp
+             * Format: date-time
+             */
+            created_at?: string;
+            /**
+             * the used amount of space as measured the last time (in Gigabyte / GB)
+             * Format: int64
+             */
+            cur_size?: number;
+            /**
+             * deletion timestamp
+             * Format: date-time
+             */
+            deleted_at?: string;
+            /** the identifier for the volume object */
+            id?: string;
+            /**
+             * the maximum size of the volume (in Gigabyte / GB)
+             * Format: int64
+             */
+            max_size?: number;
+            /** the volume name */
+            name?: string;
+            /** the organization to which the volume belongs to */
+            organization_id?: string;
+            /** whether to mount the volume in read-only mode */
+            read_only?: boolean;
+            /** the region where the volume exists */
+            region?: string;
+            /** the service_id to which the volume is eventually bound to */
+            service_id?: string;
+            /** (optional) the id of the snapshot whence the volume comes from */
+            snapshot_id?: string;
+            status?: components["schemas"]["PersistentVolumeStatus"];
+            /**
+             * last change timestamp
+             * Format: date-time
+             */
+            updated_at?: string;
+        };
+        /**
+         * - PERSISTENT_VOLUME_BACKING_STORE_INVALID: zero value, invalid
+         *      - PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK: the backing store is a locally reachable block device
+         * @default PERSISTENT_VOLUME_BACKING_STORE_INVALID
+         * @enum {string}
+         */
+        PersistentVolumeBackingStore: "PERSISTENT_VOLUME_BACKING_STORE_INVALID" | "PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK";
+        PersistentVolumeEvent: {
+            id?: string;
+            message?: string;
+            metadata?: Record<string, never>;
+            organization_id?: string;
+            persistent_volume_id?: string;
+            type?: string;
+            /** Format: date-time */
+            when?: string;
+        };
+        PersistentVolumeQuotas: {
+            /**
+             * Format: int64
+             * @description MaxPerInstanceSize for all volumes on an instance (in Gigabyte / GB).
+             */
+            max_per_instance_size?: number;
+            /**
+             * Format: int64
+             * @description MaxTotalSize for all volumes on a region (in Gigabyte / GB).
+             */
+            max_total_size?: number;
+            /**
+             * Format: int64
+             * @description MaxVolumeSize for one volume (in Gigabyte / GB).
+             */
+            max_volume_size?: number;
+        };
+        /**
+         * - PERSISTENT_VOLUME_STATUS_INVALID: zero value, invalid
+         *      - PERSISTENT_VOLUME_STATUS_ATTACHED: the volume is attached to an instance
+         *      - PERSISTENT_VOLUME_STATUS_DETACHED: the volume is free to use
+         *      - PERSISTENT_VOLUME_STATUS_DELETING: the volume will be deleted
+         *      - PERSISTENT_VOLUME_STATUS_DELETED: the volume was deleted
+         * @default PERSISTENT_VOLUME_STATUS_INVALID
+         * @enum {string}
+         */
+        PersistentVolumeStatus: "PERSISTENT_VOLUME_STATUS_INVALID" | "PERSISTENT_VOLUME_STATUS_ATTACHED" | "PERSISTENT_VOLUME_STATUS_DETACHED" | "PERSISTENT_VOLUME_STATUS_DELETING" | "PERSISTENT_VOLUME_STATUS_DELETED";
+        /**
+         * @default hobby
+         * @enum {string}
+         */
+        Plan: "hobby" | "starter" | "startup" | "business" | "enterprise" | "internal" | "hobby23" | "no_plan" | "pro" | "scale";
+        Port: {
+            /** Format: int64 */
+            port?: number;
+            protocol?: string;
+        };
+        PrivateRegistryConfiguration: {
+            password?: string;
+            url?: string;
+            username?: string;
+        };
+        PublicOrganization: {
+            id?: string;
+            name?: string;
+            plan?: components["schemas"]["Plan"];
+            status?: components["schemas"]["Organization.Status"];
+        };
+        PublicUser: {
+            avatar_url?: string;
+            email?: string;
+            github_id?: string;
+            github_user?: string;
+            id?: string;
+            name?: string;
+        };
+        Quotas: {
+            /** Format: int64 */
+            apps?: string;
+            /** Format: int64 */
+            domains?: string;
+            instance_types?: string[];
+            max_instances_by_type?: {
+                [key: string]: string;
+            };
+            /** Format: int64 */
+            max_organization_members?: string;
+            /** Format: int64 */
+            memory_mb?: string;
+            persistent_volumes_by_region?: {
+                [key: string]: components["schemas"]["PersistentVolumeQuotas"];
+            };
+            regions?: string[];
+            /** Format: int64 */
+            service_provisioning_concurrency?: string;
+            /** Format: int64 */
+            services?: string;
+            /** Format: int64 */
+            services_by_app?: string;
+        };
+        ReactivateOrganizationReply: {
+            organization?: components["schemas"]["Organization"];
+        };
         RedeployReply: {
             deployment?: components["schemas"]["Deployment"];
         };
         "RedeployRequest.Info": {
             deployment_group?: string;
             sha?: string;
+            /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
+             *     The call fails if no previous successful builds happened. */
+            skip_build?: boolean;
             use_cache?: boolean;
-            /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
-             *     The call fails if no previous successful builds happened. */
-            skip_build?: boolean;
         };
-        ResumeServiceReply: Record<string, never>;
-        Service: {
+        RefreshDomainStatusReply: Record<string, never>;
+        Region: {
+            /** The coordinates of the region (lat/long) */
+            coordinates?: string[];
+            /** A list of datacenters available in this region */
+            datacenters?: string[];
+            /** The id of the region */
             id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            succeeded_at?: string;
-            /** Format: date-time */
-            paused_at?: string;
-            /** Format: date-time */
-            resumed_at?: string;
-            /** Format: date-time */
-            terminated_at?: string;
+            /** A list of instances available in this region */
+            instances?: string[];
+            /** The name of the region */
             name?: string;
-            type?: components["schemas"]["Service.Type"];
-            organization_id?: string;
-            app_id?: string;
-            status?: components["schemas"]["Service.Status"];
-            messages?: string[];
-            /** Format: uint64 */
-            version?: string;
-            active_deployment_id?: string;
-            latest_deployment_id?: string;
-            last_provisioned_deployment_id?: string;
-            state?: components["schemas"]["ServiceState"];
-        };
-        /**
-         * @default STARTING
-         * @enum {string}
-         */
-        "Service.Status": "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "DELETING" | "DELETED" | "PAUSING" | "PAUSED" | "RESUMING";
-        /**
-         * @default INVALID_TYPE
-         * @enum {string}
-         */
-        "Service.Type": "INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE";
-        ServiceEvent: {
-            id?: string;
-            /** Format: date-time */
-            when?: string;
-            organization_id?: string;
-            service_id?: string;
-            type?: string;
-            message?: string;
-            metadata?: Record<string, never>;
-        };
-        ServiceListItem: {
-            id?: string;
-            name?: string;
-            type?: components["schemas"]["Service.Type"];
-            organization_id?: string;
-            app_id?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: date-time */
-            created_at?: string;
-            status?: components["schemas"]["Service.Status"];
-            messages?: string[];
-            /**
-             * A version updated whenever this state changes (useful for caching)
-             * Format: uint64
-             */
-            version?: string;
-            state?: components["schemas"]["ServiceState"];
-            active_deployment_id?: string;
-            latest_deployment_id?: string;
-        };
-        ServiceState: {
-            desired_deployment?: components["schemas"]["DesiredDeployment"];
-            auto_release?: components["schemas"]["AutoRelease"];
-        };
-        TCPHealthCheck: {
-            /**
-             * The port to use to perform the health check, must be declared in the ports section
-             * Format: int64
-             */
-            port?: number;
-        };
-        TriggerDeploymentMetadata: {
-            type?: components["schemas"]["TriggerDeploymentMetadata.TriggerType"];
-            actor?: components["schemas"]["TriggerDeploymentMetadata.ActorType"];
-            git?: components["schemas"]["TriggerGitDeploymentMetadata"];
-        };
-        /**
-         * @default UNKNOWN_ACTOR
-         * @enum {string}
-         */
-        "TriggerDeploymentMetadata.ActorType": "UNKNOWN_ACTOR" | "USER" | "SYSTEM";
-        /**
-         * @default UNKNOWN_TYPE
-         * @enum {string}
-         */
-        "TriggerDeploymentMetadata.TriggerType": "UNKNOWN_TYPE" | "GIT" | "RESUME" | "DATABASE_SYNC";
-        TriggerGitDeploymentMetadata: {
-            provider?: components["schemas"]["TriggerGitDeploymentMetadata.Provider"];
-            repository?: string;
-            branch?: string;
-            sha?: string;
-            message?: string;
-            sender_username?: string;
-            sender_avatar_url?: string;
-            sender_profile_url?: string;
-        };
-        /**
-         * @default UNKNOWN
-         * @enum {string}
-         */
-        "TriggerGitDeploymentMetadata.Provider": "UNKNOWN" | "GITHUB";
-        UpdateService: {
-            definition?: components["schemas"]["DeploymentDefinition"];
-            metadata?: components["schemas"]["DeploymentMetadata"];
-            /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
-             *     The call fails if no previous successful builds happened. */
-            skip_build?: boolean;
-            /** If set, do not trigger a deployment, only store the new settings */
-            save_only?: boolean;
-        };
-        UpdateServiceReply: {
-            service?: components["schemas"]["Service"];
-        };
-        CancelDeploymentReply: Record<string, never>;
-        DeploymentEvent: {
-            id?: string;
-            /** Format: date-time */
-            when?: string;
-            organization_id?: string;
-            deployment_id?: string;
-            type?: string;
-            message?: string;
-            metadata?: Record<string, never>;
-        };
-        DeploymentListItem: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: date-time */
-            allocated_at?: string;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            succeeded_at?: string;
-            /** Format: date-time */
-            terminated_at?: string;
-            organization_id?: string;
-            app_id?: string;
-            service_id?: string;
-            parent_id?: string;
-            child_id?: string;
-            status?: components["schemas"]["Deployment.Status"];
-            metadata?: components["schemas"]["DeploymentMetadata"];
-            definition?: components["schemas"]["DeploymentDefinition"];
-            messages?: string[];
-            provisioning_info?: components["schemas"]["DeploymentProvisioningInfo"];
-            database_info?: components["schemas"]["DeploymentDatabaseInfo"];
-            /** Format: uint64 */
-            version?: string;
-            deployment_group?: string;
-        };
-        GetDeploymentReply: {
-            deployment?: components["schemas"]["Deployment"];
-        };
-        ListDeploymentEventsReply: {
-            /** The collection of events */
-            events?: components["schemas"]["DeploymentEvent"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /** The order in the request */
-            order?: string;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        ListDeploymentsReply: {
-            /** The collection of deployments */
-            deployments?: components["schemas"]["DeploymentListItem"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        Archive: {
-            /** @description The archive id, that can be referenced when creating or updating a service. */
-            id?: string;
-            /** @description Organization owning the archive. */
-            organization_id?: string;
-            /** @description The URL where to upload the archive. This URL is signed and can only be
-             *     used to upload the archive until `valid_until`. */
-            upload_url?: string;
-            /**
-             * Format: uint64
-             * @description The provisioned space for the archive.
-             */
-            size?: string;
-            /**
-             * Format: date-time
-             * @description Date of creation of the archive.
-             */
-            created_at?: string;
-            /**
-             * Format: date-time
-             * @description This field is automatically set by Koyeb when the
-             *     archive is garbage collected.
-             */
-            deleted_at?: string;
-        };
-        CreateArchive: {
-            /**
-             * Format: uint64
-             * @description How much space to provision for the archive, in bytes.
-             */
-            size?: string;
-        };
-        CreateArchiveReply: {
-            archive?: components["schemas"]["Archive"];
-        };
-        ReviewOrganizationCapacityReply: {
-            has_capacity?: boolean;
-        };
-        ReviewOrganizationCapacityRequest: {
-            plan?: string;
-        };
-        Env: {
-            key?: string;
-            value?: string;
-            secret?: string;
-        };
-        GetRegionalDeploymentReply: {
-            regional_deployment?: components["schemas"]["RegionalDeployment"];
-        };
-        ListRegionalDeploymentEventsReply: {
-            /** The collection of events */
-            events?: components["schemas"]["RegionalDeploymentEvent"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /** The order in the request */
-            order?: string;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        ListRegionalDeploymentsReply: {
-            /** The collection of regional deployments */
-            regional_deployments?: components["schemas"]["RegionalDeploymentListItem"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-            /** If there is more items after in the collection */
-            has_next?: boolean;
-        };
-        Port: {
-            /** Format: int64 */
-            port?: number;
-            protocol?: string;
+            /** @description The scope of the region, continent, metropolitan area, etc. */
+            scope?: string;
+            /** The status of the region */
+            status?: string;
+            /** Are the volumes enabled for this instance type */
+            volumes_enabled?: boolean;
         };
         RegionalDeployment: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: date-time */
-            scheduled_at?: string;
             /** Format: date-time */
             allocated_at?: string;
-            /** Format: date-time */
-            started_at?: string;
-            /** Format: date-time */
-            succeeded_at?: string;
-            /** Format: date-time */
-            terminated_at?: string;
-            organization_id?: string;
             app_id?: string;
-            service_id?: string;
-            region?: string;
-            parent_id?: string;
             child_id?: string;
-            status?: components["schemas"]["RegionalDeployment.Status"];
-            messages?: string[];
-            definition?: components["schemas"]["RegionalDeploymentDefinition"];
+            /** Format: date-time */
+            created_at?: string;
             datacenters?: string[];
-            metadata?: components["schemas"]["RegionalDeploymentMetadata"];
-            provisioning_info?: components["schemas"]["DeploymentProvisioningInfo"];
-            role?: components["schemas"]["RegionalDeployment.Role"];
-            /** Format: uint64 */
-            version?: string;
+            definition?: components["schemas"]["RegionalDeploymentDefinition"];
             /** Legacy stuff */
             deployment_group?: string;
             deployment_id?: string;
+            id?: string;
+            messages?: string[];
+            metadata?: components["schemas"]["RegionalDeploymentMetadata"];
+            organization_id?: string;
+            parent_id?: string;
+            provisioning_info?: components["schemas"]["DeploymentProvisioningInfo"];
+            region?: string;
+            role?: components["schemas"]["RegionalDeployment.Role"];
+            /** Format: date-time */
+            scheduled_at?: string;
+            service_id?: string;
+            /** Format: date-time */
+            started_at?: string;
+            status?: components["schemas"]["RegionalDeployment.Status"];
+            /** Format: date-time */
+            succeeded_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
+            /** Format: date-time */
+            updated_at?: string;
+            /** Format: uint64 */
+            version?: string;
         };
         /**
          * @default INVALID
@@ -3358,23 +4056,23 @@ export interface components {
          */
         "RegionalDeployment.Status": "PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "SLEEPING";
         RegionalDeploymentDefinition: {
-            name?: string;
-            type?: components["schemas"]["RegionalDeploymentDefinition.Type"];
-            strategy?: components["schemas"]["DeploymentStrategy"];
-            routes?: components["schemas"]["Route"][];
-            ports?: components["schemas"]["Port"][];
-            env?: components["schemas"]["Env"][];
-            region?: string;
-            scaling?: components["schemas"]["Scaling"];
-            instance_type?: string;
-            deployment_group?: string;
-            health_checks?: components["schemas"]["DeploymentHealthCheck"][];
-            volumes?: components["schemas"]["RegionalDeploymentVolume"][];
-            config_files?: components["schemas"]["ConfigFile"][];
-            skip_cache?: boolean;
-            docker?: components["schemas"]["DockerSource"];
-            git?: components["schemas"]["GitSource"];
             archive?: components["schemas"]["ArchiveSource"];
+            config_files?: components["schemas"]["ConfigFile"][];
+            deployment_group?: string;
+            docker?: components["schemas"]["DockerSource"];
+            env?: components["schemas"]["Env"][];
+            git?: components["schemas"]["GitSource"];
+            health_checks?: components["schemas"]["DeploymentHealthCheck"][];
+            instance_type?: string;
+            name?: string;
+            ports?: components["schemas"]["Port"][];
+            region?: string;
+            routes?: components["schemas"]["Route"][];
+            scaling?: components["schemas"]["Scaling"];
+            skip_cache?: boolean;
+            strategy?: components["schemas"]["DeploymentStrategy"];
+            type?: components["schemas"]["RegionalDeploymentDefinition.Type"];
+            volumes?: components["schemas"]["RegionalDeploymentVolume"][];
         };
         /**
          * @default INVALID
@@ -3383,24 +4081,24 @@ export interface components {
         "RegionalDeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER";
         RegionalDeploymentEvent: {
             id?: string;
-            /** Format: date-time */
-            when?: string;
+            message?: string;
+            metadata?: Record<string, never>;
             organization_id?: string;
             regional_deployment_id?: string;
             type?: string;
-            message?: string;
-            metadata?: Record<string, never>;
+            /** Format: date-time */
+            when?: string;
         };
         RegionalDeploymentListItem: {
-            id?: string;
             /** Format: date-time */
             created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
+            definition?: components["schemas"]["RegionalDeploymentDefinition"];
+            id?: string;
+            messages?: string[];
             region?: string;
             status?: components["schemas"]["RegionalDeployment.Status"];
-            messages?: string[];
-            definition?: components["schemas"]["RegionalDeploymentDefinition"];
+            /** Format: date-time */
+            updated_at?: string;
         };
         RegionalDeploymentMetadata: Record<string, never>;
         RegionalDeploymentVolume: {
@@ -3414,436 +4112,455 @@ export interface components {
              */
             replica_index?: number;
         };
+        RegionListItem: {
+            /** The coordinates of the region (lat/long) */
+            coordinates?: string[];
+            /** A list of datacenters available in this region */
+            datacenters?: string[];
+            /** The id of the region */
+            id?: string;
+            /** A list of instances available in this region */
+            instances?: string[];
+            /** The name of the region */
+            name?: string;
+            /** @description The scope of the region, continent, metropolitan area, etc. */
+            scope?: string;
+            /** The status of the region */
+            status?: string;
+            /** Are the volumes enabled for this instance type */
+            volumes_enabled?: boolean;
+        };
+        RegionUsage: {
+            instances?: {
+                [key: string]: components["schemas"]["InstanceUsage"];
+            };
+        };
+        RemoveOrganizationMemberReply: {
+            member?: components["schemas"]["OrganizationMember"];
+        };
+        ResendEmailValidationReply: Record<string, never>;
+        ResendEmailValidationRequest: Record<string, never>;
+        ResendOrganizationInvitationReply: {
+            invitation?: components["schemas"]["OrganizationInvitation"];
+        };
+        ResetPasswordReply: Record<string, never>;
+        /** @example {
+         *       "email": "john@snow.com"
+         *     } */
+        ResetPasswordRequest: {
+            email?: string;
+        };
+        ResumeAppReply: Record<string, never>;
+        ResumeServiceReply: Record<string, never>;
+        RevealSecretReply: {
+            value?: Record<string, never>;
+        };
+        ReviewOrganizationCapacityReply: {
+            has_capacity?: boolean;
+        };
+        ReviewOrganizationCapacityRequest: {
+            plan?: string;
+        };
         Route: {
+            path?: string;
             /** Format: int64 */
             port?: number;
-            path?: string;
         };
-        Scaling: {
-            /** Format: int64 */
-            min?: number;
-            /** Format: int64 */
-            max?: number;
-            targets?: components["schemas"]["DeploymentScalingTarget"][];
-        };
-        "kgitproxy.Branch": {
-            id?: string;
-            organization_id?: string;
-            repository_id?: string;
-            name?: string;
-            is_default?: boolean;
-            is_protected?: boolean;
-            provider?: components["schemas"]["kgitproxy.RepositoryProvider"];
-        };
-        "kgitproxy.GitHubRepository": {
-            github_id?: string;
-        };
-        "kgitproxy.ListBranchesReply": {
-            /** @description The collection of branches. */
-            branches?: components["schemas"]["kgitproxy.Branch"][];
-            /**
-             * Format: int64
-             * @description The limit in the request.
-             */
-            limit?: number;
-            /**
-             * Format: int64
-             * @description The offset in the request.
-             */
-            offset?: number;
-            /**
-             * Format: int64
-             * @description The total number of items.
-             */
-            count?: number;
-        };
-        "kgitproxy.ListRepositoriesReply": {
-            /** @description The collection of repositories. */
-            repositories?: components["schemas"]["kgitproxy.Repository"][];
-            /**
-             * Format: int64
-             * @description The limit in the request.
-             */
-            limit?: number;
-            /**
-             * Format: int64
-             * @description The offset in the request.
-             */
-            offset?: number;
-            /**
-             * Format: int64
-             * @description The total number of items.
-             */
-            count?: number;
-        };
-        "kgitproxy.Repository": {
-            id?: string;
-            organization_id?: string;
-            name?: string;
-            url?: string;
-            description?: string;
-            is_private?: boolean;
-            is_disabled?: boolean;
-            default_branch?: string;
-            provider?: components["schemas"]["kgitproxy.RepositoryProvider"];
-            /** Format: date-time */
-            last_push_date?: string;
-            github?: components["schemas"]["kgitproxy.GitHubRepository"];
-        };
-        /**
-         * @default INVALID_PROVIDER
-         * @enum {string}
-         */
-        "kgitproxy.RepositoryProvider": "INVALID_PROVIDER" | "GITHUB";
-        "kgitproxy.ResyncOrganizationReply": Record<string, never>;
-        Activity: {
-            id?: string;
-            actor?: components["schemas"]["Object"];
-            object?: components["schemas"]["Object"];
-            verb?: string;
-            metadata?: Record<string, never>;
-            /** Format: date-time */
-            created_at?: string;
-        };
-        ActivityList: {
-            activities?: components["schemas"]["Activity"][];
-            /** Format: int64 */
-            limit?: number;
-            /** Format: int64 */
-            offset?: number;
-            has_next?: boolean;
-        };
-        Notification: {
-            id?: string;
-            activity?: components["schemas"]["Activity"];
-            is_read?: boolean;
-            is_seen?: boolean;
-            /** Format: date-time */
-            created_at?: string;
-        };
-        NotificationList: {
-            notifications?: components["schemas"]["Notification"][];
-            /** Format: int64 */
-            limit?: number;
-            /** Format: int64 */
-            offset?: number;
-            /** Format: int64 */
-            count?: number;
-            is_read?: boolean;
-            is_seen?: boolean;
-            /** Format: int64 */
-            unread?: number;
-            /** Format: int64 */
-            unseen?: number;
-        };
-        Object: {
-            id?: string;
-            name?: string;
-            type?: string;
-            metadata?: Record<string, never>;
-            deleted?: boolean;
-        };
-        ExecCommandIO: {
-            /**
-             * Format: byte
-             * @description Data is base64 encoded
-             */
-            data?: string;
-            /** @description Indicate last data frame */
-            close?: boolean;
-        };
-        ExecCommandReply: {
-            stdout?: components["schemas"]["ExecCommandIO"];
-            stderr?: components["schemas"]["ExecCommandIO"];
-            exited?: boolean;
-            /** Format: int32 */
-            exit_code?: number;
-        };
-        "ExecCommandRequest.Body": {
-            /** @description Command to exec. Mandatory in the first frame sent */
-            command?: string[];
-            tty_size?: components["schemas"]["ExecCommandRequest.TerminalSize"];
-            stdin?: components["schemas"]["ExecCommandIO"];
-            /** @description Disable TTY. It's enough to specify it in the first frame */
-            disableTty?: boolean;
-        };
-        /**
-         * @default INVALID
-         * @enum {string}
-         */
-        "ExecCommandRequest.IdType": "INVALID" | "INSTANCE_ID" | "SERVICE_ID";
-        "ExecCommandRequest.TerminalSize": {
-            /** Format: int32 */
-            height?: number;
-            /** Format: int32 */
-            width?: number;
-        };
-        GetMetricsReply: {
-            metrics?: components["schemas"]["GetMetricsReply.Metric"][];
-        };
-        "GetMetricsReply.Metric": {
-            labels?: {
-                [key: string]: string;
-            };
-            samples?: components["schemas"]["Sample"][];
-        };
-        /**
-         * @default UNKNOWN
-         * @enum {string}
-         */
-        MetricName: "UNKNOWN" | "CPU_TOTAL_PERCENT" | "MEM_RSS" | "HTTP_THROUGHPUT" | "HTTP_RESPONSE_TIME_50P" | "HTTP_RESPONSE_TIME_90P" | "HTTP_RESPONSE_TIME_99P" | "HTTP_RESPONSE_TIME_MAX" | "PUBLIC_DATA_TRANSFER_IN" | "PUBLIC_DATA_TRANSFER_OUT";
         Sample: {
             timestamp?: string;
             /** Format: double */
             value?: number;
         };
-        LogEntry: {
-            msg?: string;
+        Scaling: {
+            /** Format: int64 */
+            max?: number;
+            /** Format: int64 */
+            min?: number;
+            targets?: components["schemas"]["DeploymentScalingTarget"][];
+        };
+        Secret: {
+            azure_container_registry?: components["schemas"]["AzureContainerRegistryConfiguration"];
             /** Format: date-time */
             created_at?: string;
-            labels?: Record<string, never>;
-        };
-        CatalogGPUDetails: {
-            /**
-             * The number of GPUs
-             * Format: int64
-             */
-            count?: number;
-            /** The brand of GPU */
-            brand?: string;
-            /** GPU memory */
-            memory?: string;
-            /** Name of GPU */
+            database_role_password?: components["schemas"]["DatabaseRolePassword"];
+            digital_ocean_registry?: components["schemas"]["DigitalOceanRegistryConfiguration"];
+            docker_hub_registry?: components["schemas"]["DockerHubRegistryConfiguration"];
+            gcp_container_registry?: components["schemas"]["GCPContainerRegistryConfiguration"];
+            github_registry?: components["schemas"]["GitHubRegistryConfiguration"];
+            gitlab_registry?: components["schemas"]["GitLabRegistryConfiguration"];
+            id?: string;
             name?: string;
-        };
-        CatalogInstance: {
-            /** The name of the instance */
-            id?: string;
-            /** A short description of the instance */
-            description?: string;
-            /**
-             * Format: int64
-             * @description The number of cpus. Deprecated. Use vcpu_shares instead.
-             */
-            vcpu?: number;
-            /** The memory in bytes in a format like 5MB */
-            memory?: string;
-            /** The size of the disk in bytes in a format like 5MB */
-            disk?: string;
-            /** The price to pay per second */
-            price_per_second?: string;
-            /** The price to pay per hour */
-            price_hourly?: string;
-            /** The price to pay per month */
-            price_monthly?: string;
-            /** The regions where this instance type is available */
-            regions?: string[];
-            /** The status of the instance */
-            status?: string;
-            /** The plan required to use instance */
-            require_plan?: string[];
-            /**
-             * Format: float
-             * @description The number of vcpu shares reserved for the instance.
-             */
-            vcpu_shares?: number;
-            /** The display name of the instance */
-            display_name?: string;
-            /** Aliases */
-            aliases?: string[];
-            /** The type of the instance (e.g. "gpu") */
-            type?: string;
-            gpu?: components["schemas"]["CatalogGPUDetails"];
-            /** Allowed service types for this instance (e.g. ["web", "worker"]) */
-            service_types?: string[];
-            /** Are the volumes enabled for this instance type */
-            volumes_enabled?: boolean;
-        };
-        CatalogInstanceListItem: {
-            /** The name of the instance */
-            id?: string;
-            /** A short description of the instance */
-            description?: string;
-            /**
-             * Format: int64
-             * @description The number of cpus. Deprecated. Use vcpu_shares instead.
-             */
-            vcpu?: number;
-            /** The memory in bytes in a format like 5MB */
-            memory?: string;
-            /** The size of the disk in bytes in a format like 5MB */
-            disk?: string;
-            /** The price to pay per second */
-            price_per_second?: string;
-            /** The price to pay per hour */
-            price_hourly?: string;
-            /** The price to pay per month */
-            price_monthly?: string;
-            /** The regions where this instance type is available */
-            regions?: string[];
-            /** The status of the instance */
-            status?: string;
-            /** The plan required to use instance */
-            require_plan?: string[];
-            /**
-             * Format: float
-             * @description The number of vcpu shares reserved for the instance.
-             */
-            vcpu_shares?: number;
-            /** The display name of the instance */
-            display_name?: string;
-            /** Aliases */
-            aliases?: string[];
-            /** The type of the instance (e.g. "gpu") */
-            type?: string;
-            gpu?: components["schemas"]["CatalogGPUDetails"];
-            /** Allowed service types for this instance (e.g. ["web", "worker"]) */
-            service_types?: string[];
-            /** Are the volumes enabled for this instance type */
-            volumes_enabled?: boolean;
-        };
-        GetCatalogInstanceReply: {
-            instance?: components["schemas"]["CatalogInstance"];
-        };
-        ListCatalogInstancesReply: {
-            instances?: components["schemas"]["CatalogInstanceListItem"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-        };
-        GetRegionReply: {
-            region?: components["schemas"]["Region"];
-        };
-        ListRegionsReply: {
-            regions?: components["schemas"]["RegionListItem"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-        };
-        Region: {
-            /** The id of the region */
-            id?: string;
-            /** The name of the region */
-            name?: string;
-            /** The coordinates of the region (lat/long) */
-            coordinates?: string[];
-            /** The status of the region */
-            status?: string;
-            /** A list of instances available in this region */
-            instances?: string[];
-            /** A list of datacenters available in this region */
-            datacenters?: string[];
-            /** Are the volumes enabled for this instance type */
-            volumes_enabled?: boolean;
-        };
-        RegionListItem: {
-            /** The id of the region */
-            id?: string;
-            /** The name of the region */
-            name?: string;
-            /** The coordinates of the region (lat/long) */
-            coordinates?: string[];
-            /** The status of the region */
-            status?: string;
-            /** A list of instances available in this region */
-            instances?: string[];
-            /** A list of datacenters available in this region */
-            datacenters?: string[];
-            /** Are the volumes enabled for this instance type */
-            volumes_enabled?: boolean;
-        };
-        DatacenterListItem: {
-            /** e.g. "par1" */
-            id?: string;
-            /** e.g. "par" */
-            region_id?: string;
-            /** e.g. "all-par1.infra.prod.koyeb.com" */
-            domain?: string;
-            /** e.g. "8.856614" ,"2.352221"? */
-            coordinates?: string[];
-            /** e.g. true */
-            use_gpu?: boolean;
-            /** e.g. "par", "fra" */
-            regions?: string[];
-        };
-        ListDatacentersReply: {
-            datacenters?: components["schemas"]["DatacenterListItem"][];
-        };
-        CreateCredential: {
-            /** Credential name */
-            name?: string;
-            /** Credential description */
-            description?: string;
-            type?: components["schemas"]["Credential.Type"];
-            /** Organization id for user credential */
             organization_id?: string;
-        };
-        CreateCredentialReply: {
-            credential?: components["schemas"]["Credential"];
-        };
-        Credential: {
-            id?: string;
-            type?: components["schemas"]["Credential.Type"];
-            name?: string;
-            token?: string;
-            description?: string;
-            user_id?: string;
-            organization_id?: string;
+            private_registry?: components["schemas"]["PrivateRegistryConfiguration"];
+            type?: components["schemas"]["SecretType"];
             /** Format: date-time */
             updated_at?: string;
+            value?: string;
+        };
+        SecretsSummary: {
+            /** Number of secrets grouped by type */
+            by_type?: {
+                [key: string]: string;
+            };
+            /**
+             * Total number of secrets
+             * Format: int64
+             */
+            total?: string;
+        };
+        /**
+         * @default SIMPLE
+         * @enum {string}
+         */
+        SecretType: "SIMPLE" | "REGISTRY" | "MANAGED";
+        Service: {
+            active_deployment_id?: string;
+            app_id?: string;
             /** Format: date-time */
             created_at?: string;
+            id?: string;
+            last_provisioned_deployment_id?: string;
+            latest_deployment_id?: string;
+            messages?: string[];
+            name?: string;
+            organization_id?: string;
+            /** Format: date-time */
+            paused_at?: string;
+            /** Format: date-time */
+            resumed_at?: string;
+            /** Format: date-time */
+            started_at?: string;
+            state?: components["schemas"]["ServiceState"];
+            status?: components["schemas"]["Service.Status"];
+            /** Format: date-time */
+            succeeded_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
+            type?: components["schemas"]["Service.Type"];
+            /** Format: date-time */
+            updated_at?: string;
+            /** Format: uint64 */
+            version?: string;
+        };
+        /**
+         * @default STARTING
+         * @enum {string}
+         */
+        "Service.Status": "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "DELETING" | "DELETED" | "PAUSING" | "PAUSED" | "RESUMING";
+        /**
+         * @default INVALID_TYPE
+         * @enum {string}
+         */
+        "Service.Type": "INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE";
+        ServiceEvent: {
+            id?: string;
+            message?: string;
+            metadata?: Record<string, never>;
+            organization_id?: string;
+            service_id?: string;
+            type?: string;
+            /** Format: date-time */
+            when?: string;
+        };
+        ServiceListItem: {
+            active_deployment_id?: string;
+            app_id?: string;
+            /** Format: date-time */
+            created_at?: string;
+            id?: string;
+            latest_deployment_id?: string;
+            messages?: string[];
+            name?: string;
+            organization_id?: string;
+            state?: components["schemas"]["ServiceState"];
+            status?: components["schemas"]["Service.Status"];
+            type?: components["schemas"]["Service.Type"];
+            /** Format: date-time */
+            updated_at?: string;
+            /**
+             * A version updated whenever this state changes (useful for caching)
+             * Format: uint64
+             */
+            version?: string;
+        };
+        ServiceState: {
+            auto_release?: components["schemas"]["AutoRelease"];
+            desired_deployment?: components["schemas"]["DesiredDeployment"];
+        };
+        ServiceSummary: {
+            /** Number of services grouped by status */
+            by_status?: {
+                [key: string]: string;
+            };
+            /**
+             * Total number of services
+             * Format: int64
+             */
+            total?: string;
+        };
+        ServiceUsage: {
+            regions?: {
+                [key: string]: components["schemas"]["RegionUsage"];
+            };
+            service_id?: string;
+            service_name?: string;
+        };
+        /** @description The object that represents a snapshot. It can either be local, on a node, or remote, in a cold storage. */
+        Snapshot: {
+            /**
+             * creation timestamp
+             * Format: date-time
+             */
+            created_at?: string;
+            /**
+             * deletion timestamp
+             * Format: date-time
+             */
+            deleted_at?: string;
+            /** the identifier of the snapshot object */
+            id?: string;
+            /** the snapshot name */
+            name?: string;
+            /** the organization to which the snapshot belongs to */
+            organization_id?: string;
+            /** the volume from which the snapshot has been created */
+            parent_volume_id?: string;
+            /** the region where the snapshot resides, if any */
+            region?: string;
+            /**
+             * the original volume size
+             * Format: int64
+             */
+            size?: number;
+            status?: components["schemas"]["SnapshotStatus"];
+            type?: components["schemas"]["SnapshotType"];
+            /**
+             * last change timestamp
+             * Format: date-time
+             */
+            updated_at?: string;
+        };
+        /**
+         * - SNAPSHOT_STATUS_INVALID: zero value, invalid
+         *      - SNAPSHOT_STATUS_CREATING: the snapshot is being created
+         *      - SNAPSHOT_STATUS_AVAILABLE: the snapshot is complete and available
+         *      - SNAPSHOT_STATUS_MIGRATING: the snapshot is being migrated
+         *      - SNAPSHOT_STATUS_DELETING: the snapshot is being deleted
+         *      - SNAPSHOT_STATUS_DELETED: the snapshot is deleted
+         * @default SNAPSHOT_STATUS_INVALID
+         * @enum {string}
+         */
+        SnapshotStatus: "SNAPSHOT_STATUS_INVALID" | "SNAPSHOT_STATUS_CREATING" | "SNAPSHOT_STATUS_AVAILABLE" | "SNAPSHOT_STATUS_MIGRATING" | "SNAPSHOT_STATUS_DELETING" | "SNAPSHOT_STATUS_DELETED";
+        /**
+         * - SNAPSHOT_TYPE_INVALID: zero value, invalid
+         *      - SNAPSHOT_TYPE_LOCAL: the snapshot is local to the machine
+         *      - SNAPSHOT_TYPE_REMOTE: the snapshot is remote in a cold storage
+         * @default SNAPSHOT_TYPE_INVALID
+         * @enum {string}
+         */
+        SnapshotType: "SNAPSHOT_TYPE_INVALID" | "SNAPSHOT_TYPE_LOCAL" | "SNAPSHOT_TYPE_REMOTE";
+        Subscription: {
+            /** Format: int64 */
+            amount_paid?: string;
+            /** Format: int64 */
+            amount_payable?: string;
+            /** Format: int64 */
+            amount_remaining?: string;
+            /** Format: date-time */
+            canceled_at?: string;
+            /** Format: date-time */
+            created_at?: string;
+            currency?: string;
+            /** Format: date-time */
+            current_period_end?: string;
+            /** Format: date-time */
+            current_period_start?: string;
+            /** Format: int64 */
+            current_spend?: string;
+            has_pending_update?: boolean;
+            id?: string;
+            messages?: string[];
+            organization_id?: string;
+            payment_failure?: components["schemas"]["Subscription.PaymentFailure"];
+            status?: components["schemas"]["Subscription.Status"];
+            stripe_pending_invoice_id?: string;
+            stripe_subscription_id?: string;
+            /** Format: date-time */
+            terminate_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
+            /** Format: date-time */
+            trial_ends_at?: string;
+            /** Format: int64 */
+            trial_max_spend?: string;
+            trialing?: boolean;
+            /** Format: date-time */
+            updated_at?: string;
+            /** Format: uint64 */
+            version?: string;
+        };
+        "Subscription.PaymentFailure": {
+            /** Format: int64 */
+            attempt_count?: string;
+            error_code?: string;
+            error_message?: string;
+            error_reason?: string;
+            error_type?: string;
+            /** Format: date-time */
+            failed_at?: string;
+            /** Format: date-time */
+            next_attempt?: string;
+            payment_method_required?: boolean;
+            redirect_url?: string;
+            stripe_sdk?: components["schemas"]["Subscription.PaymentFailure.StripeSDK"];
+        };
+        "Subscription.PaymentFailure.StripeSDK": {
+            client_secret_key?: string;
+            raw_json?: string;
         };
         /**
          * @default INVALID
          * @enum {string}
          */
-        "Credential.Type": "INVALID" | "USER" | "ORGANIZATION";
-        DeleteCredentialReply: Record<string, never>;
-        GetCredentialReply: {
-            credential?: components["schemas"]["Credential"];
+        "Subscription.Status": "INVALID" | "CREATED" | "ACTIVE" | "WARNING" | "URGENT" | "CANCELING" | "CANCELED" | "TERMINATING" | "TERMINATED";
+        TCPHealthCheck: {
+            /**
+             * The port to use to perform the health check, must be declared in the ports section
+             * Format: int64
+             */
+            port?: number;
         };
-        ListCredentialsReply: {
-            credentials?: components["schemas"]["Credential"][];
-            /** Format: int64 */
-            limit?: number;
-            /** Format: int64 */
-            offset?: number;
-            /** Format: int64 */
-            count?: number;
+        /** @example {
+         *       "id": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+         *       "expires": "2022-09-08T14:00:00Z",
+         *       "user_id": "996d7822-6b58-11e9-956f-32001b70f000",
+         *       "organization_id": "9f33b2c6-6b58-11e9-883c-32001b70f000"
+         *     } */
+        Token: {
+            /** Format: date-time */
+            expires_at?: string;
+            id?: string;
+            organization_id?: string;
+            user_id?: string;
+        };
+        TriggerDeploymentMetadata: {
+            actor?: components["schemas"]["TriggerDeploymentMetadata.ActorType"];
+            git?: components["schemas"]["TriggerGitDeploymentMetadata"];
+            type?: components["schemas"]["TriggerDeploymentMetadata.TriggerType"];
+        };
+        /**
+         * @default UNKNOWN_ACTOR
+         * @enum {string}
+         */
+        "TriggerDeploymentMetadata.ActorType": "UNKNOWN_ACTOR" | "USER" | "SYSTEM";
+        /**
+         * @default UNKNOWN_TYPE
+         * @enum {string}
+         */
+        "TriggerDeploymentMetadata.TriggerType": "UNKNOWN_TYPE" | "GIT" | "RESUME" | "DATABASE_SYNC";
+        TriggerGitDeploymentMetadata: {
+            branch?: string;
+            message?: string;
+            provider?: components["schemas"]["TriggerGitDeploymentMetadata.Provider"];
+            repository?: string;
+            sender_avatar_url?: string;
+            sender_profile_url?: string;
+            sender_username?: string;
+            sha?: string;
+        };
+        /**
+         * @default UNKNOWN
+         * @enum {string}
+         */
+        "TriggerGitDeploymentMetadata.Provider": "UNKNOWN" | "GITHUB";
+        UnscopeOrganizationTokenRequest: Record<string, never>;
+        UpdateApp: {
+            name?: string;
+        };
+        UpdateAppReply: {
+            app?: components["schemas"]["App"];
         };
         UpdateCredentialReply: {
             credential?: components["schemas"]["Credential"];
         };
-        GetIntercomProfileReply: {
-            hash?: string;
+        UpdateDomain: {
+            /** @description To attach or detach from an app for custom domain. */
+            app_id?: string;
+            /** @description To change subdomain for auto-assigned domain. */
+            subdomain?: string;
         };
-        DeleteUserReply: {
-            user?: components["schemas"]["User"];
+        UpdateDomainReply: {
+            domain?: components["schemas"]["Domain"];
+        };
+        UpdateOrganizationPlanReply: {
+            organization?: components["schemas"]["Organization"];
+        };
+        UpdateOrganizationReply: {
+            organization?: components["schemas"]["Organization"];
+        };
+        /** @example {
+         *       "id": "...",
+         *       "password": "..."
+         *     } */
+        UpdatePasswordRequest: {
+            id?: string;
+            password?: string;
+        };
+        UpdatePersistentVolumeReply: {
+            volume?: components["schemas"]["PersistentVolume"];
+        };
+        UpdateSecretReply: {
+            secret?: components["schemas"]["Secret"];
+        };
+        UpdateService: {
+            definition?: components["schemas"]["DeploymentDefinition"];
+            metadata?: components["schemas"]["DeploymentMetadata"];
+            /** If set, do not trigger a deployment, only store the new settings */
+            save_only?: boolean;
+            /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
+             *     The call fails if no previous successful builds happened. */
+            skip_build?: boolean;
+        };
+        UpdateServiceReply: {
+            service?: components["schemas"]["Service"];
+        };
+        UpdateSnapshotReply: {
+            snapshot?: components["schemas"]["Snapshot"];
+        };
+        "UpdateUserRequest.UserUpdateBody": {
+            current_password?: string;
+            email?: string;
+            id?: string;
+            name?: string;
+            newsletter_subscribed?: boolean;
+            password?: string;
+        };
+        UpsertSignupQualificationReply: {
+            organization?: components["schemas"]["Organization"];
+        };
+        Usage: {
+            organization_id?: string;
+            periods?: {
+                [key: string]: components["schemas"]["PeriodUsage"];
+            };
+        };
+        UsageDetails: {
+            app_id?: string;
+            app_name?: string;
+            deployment_id?: string;
+            /** Format: int64 */
+            duration_seconds?: number;
+            instance_id?: string;
+            instance_type?: string;
+            organization_id?: string;
+            region?: string;
+            regional_deployment_id?: string;
+            service_id?: string;
+            service_name?: string;
+            /** Format: date-time */
+            started_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
         };
         /**
          * Represent a User
@@ -3864,24 +4581,24 @@ export interface components {
          *     }
          */
         User: {
-            id?: string;
-            email?: string;
             avatar_url?: string;
-            two_factor_authentication?: boolean;
+            /** Format: date-time */
+            created_at?: string;
+            email?: string;
+            email_validated?: boolean;
+            flags?: components["schemas"]["UserFlags"][];
+            github_id?: string;
+            github_user?: string;
+            id?: string;
             /** Format: date-time */
             last_login?: string;
             last_login_ip?: string;
+            name?: string;
+            newsletter_subscribed?: boolean;
+            trialed?: boolean;
+            two_factor_authentication?: boolean;
             /** Format: date-time */
             updated_at?: string;
-            /** Format: date-time */
-            created_at?: string;
-            newsletter_subscribed?: boolean;
-            github_id?: string;
-            github_user?: string;
-            flags?: components["schemas"]["UserFlags"][];
-            name?: string;
-            email_validated?: boolean;
-            trialed?: boolean;
         };
         /**
          * - ADMIN: A user is an admin user
@@ -3893,751 +4610,38 @@ export interface components {
          * @enum {string}
          */
         UserFlags: "ADMIN" | "TEST" | "RESTRICTED" | "ACTIVE" | "BETA";
-        ListOrganizationMembersReply: {
-            /** The collection of organization members */
-            members?: components["schemas"]["OrganizationMember"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-        };
-        /**
-         * @default WARNING
-         * @enum {string}
-         */
-        "Organization.Status": "WARNING" | "LOCKED" | "ACTIVE" | "DEACTIVATING" | "DEACTIVATED" | "DELETING" | "DELETED";
-        OrganizationMember: {
-            id?: string;
-            organization_id?: string;
-            user_id?: string;
-            /** Format: date-time */
-            joined_at?: string;
-            role?: components["schemas"]["UserRole.Role"];
-            status?: components["schemas"]["OrganizationMember.Status"];
-            user?: components["schemas"]["PublicUser"];
-            organization?: components["schemas"]["PublicOrganization"];
-        };
-        /**
-         * @default INVALID
-         * @enum {string}
-         */
-        "OrganizationMember.Status": "INVALID" | "ACTIVE" | "DELETED";
-        /**
-         * @default hobby
-         * @enum {string}
-         */
-        Plan: "hobby" | "starter" | "startup" | "business" | "enterprise" | "internal" | "hobby23" | "no_plan" | "pro" | "scale";
-        PublicOrganization: {
-            id?: string;
-            name?: string;
-            plan?: components["schemas"]["Plan"];
-            status?: components["schemas"]["Organization.Status"];
-        };
-        PublicUser: {
-            id?: string;
-            email?: string;
-            name?: string;
-            avatar_url?: string;
-            github_id?: string;
-            github_user?: string;
-        };
-        RemoveOrganizationMemberReply: {
-            member?: components["schemas"]["OrganizationMember"];
+        UserReply: {
+            user?: components["schemas"]["User"];
         };
         /**
          * @default INVALID
          * @enum {string}
          */
         "UserRole.Role": "INVALID" | "OWNER";
-        ConfirmOrganizationActionReply: Record<string, never>;
-        LoginReply: {
-            token?: components["schemas"]["Token"];
-        };
-        /** @example {
-         *       "email": "john@snow.com",
-         *       "password": "..."
-         *     } */
-        LoginRequest: {
-            /** User email */
-            email?: string;
-            /** User password */
-            password?: string;
-            /** (Optional) Login into this organization */
-            organization_id?: string;
-        };
-        LogoutReply: Record<string, never>;
-        /** @example {
-         *       "id": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-         *       "expires": "2022-09-08T14:00:00Z",
-         *       "user_id": "996d7822-6b58-11e9-956f-32001b70f000",
-         *       "organization_id": "9f33b2c6-6b58-11e9-883c-32001b70f000"
-         *     } */
-        Token: {
-            id?: string;
-            user_id?: string;
-            organization_id?: string;
-            /** Format: date-time */
-            expires_at?: string;
-        };
-        GetSubscriptionReply: {
-            subscription?: components["schemas"]["Subscription"];
-        };
-        Subscription: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: uint64 */
-            version?: string;
-            organization_id?: string;
-            stripe_subscription_id?: string;
-            status?: components["schemas"]["Subscription.Status"];
-            messages?: string[];
-            has_pending_update?: boolean;
-            stripe_pending_invoice_id?: string;
-            /** Format: date-time */
-            terminate_at?: string;
-            /** Format: date-time */
-            canceled_at?: string;
-            /** Format: date-time */
-            terminated_at?: string;
-            /** Format: date-time */
-            current_period_start?: string;
-            /** Format: date-time */
-            current_period_end?: string;
-            currency?: string;
-            /** Format: int64 */
-            amount_payable?: string;
-            /** Format: int64 */
-            amount_paid?: string;
-            /** Format: int64 */
-            amount_remaining?: string;
-            payment_failure?: components["schemas"]["Subscription.PaymentFailure"];
-            trialing?: boolean;
-            /** Format: date-time */
-            trial_ends_at?: string;
-            /** Format: int64 */
-            trial_max_spend?: string;
-            /** Format: int64 */
-            current_spend?: string;
-        };
-        "Subscription.PaymentFailure": {
-            /** Format: date-time */
-            failed_at?: string;
-            /** Format: date-time */
-            next_attempt?: string;
-            /** Format: int64 */
-            attempt_count?: string;
-            error_code?: string;
-            error_reason?: string;
-            error_type?: string;
-            error_message?: string;
-            payment_method_required?: boolean;
-            redirect_url?: string;
-            stripe_sdk?: components["schemas"]["Subscription.PaymentFailure.StripeSDK"];
-        };
-        "Subscription.PaymentFailure.StripeSDK": {
-            client_secret_key?: string;
-            raw_json?: string;
+        VerifyDockerImageReply: {
+            code?: components["schemas"]["VerifyDockerImageReply.ErrCode"];
+            /** (Optional) If the image is not accessible, the reason */
+            reason?: string;
+            /** Whether the image is accessible or not */
+            success?: boolean;
         };
         /**
-         * @default INVALID
+         * The error code associated to each specific failure mode
+         * @description - UNKNOWN: Default value
+         *      - AUTH_ACCESS_DENIED: The registry denied access to an authenticated request
+         *      - ANON_ACCESS_DENIED: The registry denied access to an anonymous request
+         *      - AUTH_NOT_FOUND: The image has not been found after an authenticated request
+         *      - ANON_NOT_FOUND: The image has not been found after an anonymous request
+         *      - REGISTRY_ERROR: The registry returned an error
+         *      - TIMEOUT: The request to the registry timed out
+         *      - DNS: There was an error trying to resolve the name of the registry
+         *      - MALFORMED: The provided image name is malformed
+         *      - INVALID_OS: The operating system is not supported
+         *      - INVALID_ARCH: The architecture is not supported
+         * @default UNKNOWN
          * @enum {string}
          */
-        "Subscription.Status": "INVALID" | "CREATED" | "ACTIVE" | "WARNING" | "URGENT" | "CANCELING" | "CANCELED" | "TERMINATING" | "TERMINATED";
-        ConfirmPaymentAuthorizationReply: {
-            payment_method?: components["schemas"]["PaymentMethod"];
-        };
-        CreatePaymentAuthorizationReply: {
-            payment_method?: components["schemas"]["PaymentMethod"];
-        };
-        CreatePaymentAuthorizationRequest: Record<string, never>;
-        DeletePaymentMethodReply: Record<string, never>;
-        GetPaymentMethodReply: {
-            payment_method?: components["schemas"]["PaymentMethod"];
-        };
-        ListPaymentMethodsReply: {
-            /** The collection of payment methods */
-            payment_methods?: components["schemas"]["PaymentMethod"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-        };
-        PaymentMethod: {
-            id?: string;
-            /** Format: date-time */
-            created_at?: string;
-            /** Format: date-time */
-            updated_at?: string;
-            /** Format: uint64 */
-            version?: string;
-            organization_id?: string;
-            type?: string;
-            provider?: string;
-            status?: components["schemas"]["PaymentMethod.Status"];
-            messages?: string[];
-            stripe_payment_method_id?: string;
-            /** Format: date-time */
-            authorization_verified_at?: string;
-            /** Format: date-time */
-            authorization_canceled_at?: string;
-            authorization_stripe_payment_intent_id?: string;
-            authorization_stripe_payment_intent_client_secret?: string;
-            card_brand?: string;
-            card_country?: string;
-            card_funding?: string;
-            card_fingerprint?: string;
-            card_last_digits?: string;
-            /** Format: int64 */
-            card_expiration_month?: number;
-            /** Format: int64 */
-            card_expiration_year?: number;
-        };
-        /**
-         * @default INVALID
-         * @enum {string}
-         */
-        "PaymentMethod.Status": "INVALID" | "CREATED" | "AUTHORIZED" | "DECLINED" | "CANCELED" | "EXPIRED" | "UNCHECKED";
-        AcceptOrganizationInvitationReply: {
-            invitation?: components["schemas"]["OrganizationInvitation"];
-        };
-        /**
-         * @default signin
-         * @enum {string}
-         */
-        Action: "signin" | "signup" | "register";
-        CannyAuthReply: {
-            token?: string;
-        };
-        CannyAuthRequest: Record<string, never>;
-        /**
-         * Create new account
-         * @description Create new account
-         * @example {
-         *       "email": "john@snow.com",
-         *       "password": "..."
-         *     }
-         */
-        CreateAccountRequest: {
-            email: string;
-            password: string;
-            name?: string;
-            captcha?: string;
-        };
-        CreateOrganizationReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        CreateOrganizationRequest: {
-            name?: string;
-        };
-        DeactivateOrganizationReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        DeclineOrganizationInvitationReply: {
-            invitation?: components["schemas"]["OrganizationInvitation"];
-        };
-        DeleteOrganizationReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        DiscourseAuthReply: {
-            sso?: string;
-            sig?: string;
-        };
-        DiscourseAuthRequest: {
-            payload?: string;
-            sig?: string;
-        };
-        GetGithubInstallationReply: {
-            installation_id?: string;
-            installation_url?: string;
-            name?: string;
-            avatar_url?: string;
-            status?: components["schemas"]["kgitproxy.GithubInstallation.Status"];
-            /** Format: date-time */
-            installed_at?: string;
-            /** Format: date-time */
-            suspended_at?: string;
-            indexing_status?: components["schemas"]["kgitproxy.IndexingStatus"];
-            /** Format: int64 */
-            indexed_repositories?: number;
-            /** Format: int64 */
-            total_repositories?: number;
-        };
-        /** @description A list of providers which you can use for single sign-on. */
-        GetOAuthOptionsReply: {
-            oauth_providers?: components["schemas"]["OAuthProvider"][];
-        };
-        GetOrganizationReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        GetUserOrganizationInvitationReply: {
-            invitation?: components["schemas"]["OrganizationInvitation"];
-        };
-        GithubInstallationReply: {
-            /** The github app name */
-            app_name?: string;
-            /**
-             * The github app id
-             * Format: int64
-             */
-            app_id?: string;
-            /** The url to start the installation flow */
-            url?: string;
-            /** The state required by the protocol, it is only valid 10 minutes and encodes information about the type of flow */
-            state?: string;
-        };
-        GithubInstallationRequest: {
-            /** A small (limited to 400 characters) string of arbitrary metadata which will be encoded in the state */
-            metadata?: string;
-        };
-        HasUnpaidInvoicesReply: {
-            has_unpaid_invoices?: boolean;
-        };
-        InviteUserRequest: {
-            email?: string;
-            name?: string;
-            message?: string;
-        };
-        ListUserOrganizationInvitationsReply: {
-            /** The collection of organization invitations */
-            invitations?: components["schemas"]["OrganizationInvitation"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-        };
-        ManageReply: {
-            url?: string;
-        };
-        NextInvoiceReply: {
-            stripe_invoice?: Record<string, never>;
-            lines?: components["schemas"]["NextInvoiceReply.Line"][];
-            discounts?: components["schemas"]["NextInvoiceReply.Discount"][];
-        };
-        "NextInvoiceReply.Discount": {
-            type?: components["schemas"]["NextInvoiceReply.Discount.Type"];
-            name?: string;
-            /** Format: int64 */
-            amount?: string;
-        };
-        /**
-         * @default PERCENT_OFF
-         * @enum {string}
-         */
-        "NextInvoiceReply.Discount.Type": "PERCENT_OFF" | "AMOUNT_OFF";
-        "NextInvoiceReply.Line": {
-            /** Format: int32 */
-            amount_excluding_tax?: number;
-            period?: components["schemas"]["NextInvoiceReply.Line.Period"];
-            plan_nickname?: string;
-            price?: components["schemas"]["NextInvoiceReply.Line.Price"];
-            /** Format: int32 */
-            quantity?: number;
-        };
-        "NextInvoiceReply.Line.Period": {
-            /** Format: date-time */
-            start?: string;
-            /** Format: date-time */
-            end?: string;
-        };
-        "NextInvoiceReply.Line.Price": {
-            /** Format: double */
-            unit_amount_decimal?: number;
-        };
-        OAuthCallbackReply: {
-            token?: components["schemas"]["Token"];
-        };
-        OAuthCallbackRequest: {
-            /** The state created at the origin of the OAuth flow */
-            state?: string;
-            /** The code returned by the OAuth provider */
-            code?: string;
-            /** @description setup_action is populated in the context of a GitHub app installation request. For logins and
-             *     signups, it is not set. */
-            setup_action?: string;
-            /** @description installation_id is populated in the context of a GitHub app installation request. For logins and
-             *     signups, it is not set. */
-            installation_id?: string;
-        };
-        OAuthProvider: {
-            /** The name of the provider (.e.g github, google) */
-            id?: string;
-            /** The URL to call to initiate the OAuth flow */
-            url?: string;
-            /** The OAuth state required by the protocol, it is only valid 10 minutes and encodes information about the type of flow */
-            state?: string;
-        };
-        /** Represent an Organization */
-        Organization: {
-            id?: string;
-            address1?: string;
-            address2?: string;
-            city?: string;
-            postal_code?: string;
-            state?: string;
-            country?: string;
-            company?: boolean;
-            vat_number?: string;
-            billing_name?: string;
-            billing_email?: string;
-            name?: string;
-            plan?: components["schemas"]["Plan"];
-            /** Format: date-time */
-            plan_updated_at?: string;
-            has_payment_method?: boolean;
-            subscription_id?: string;
-            current_subscription_id?: string;
-            latest_subscription_id?: string;
-            signup_qualification?: Record<string, never>;
-            status?: components["schemas"]["Organization.Status"];
-            status_message?: components["schemas"]["OrganizationDetailedStatus"];
-            deactivation_reason?: components["schemas"]["Organization.DeactivationReason"];
-            verified?: boolean;
-            qualifies_for_hobby23?: boolean;
-            /** Format: date-time */
-            reprocess_after?: string;
-            trialing?: boolean;
-            /** Format: date-time */
-            trial_starts_at?: string;
-            /** Format: date-time */
-            trial_ends_at?: string;
-        };
-        /**
-         * @default INVALID
-         * @enum {string}
-         */
-        "Organization.DeactivationReason": "INVALID" | "REQUESTED_BY_OWNER" | "SUBSCRIPTION_TERMINATION" | "LOCKED_BY_ADMIN" | "VERIFICATION_FAILED";
-        /**
-         * @default NEW
-         * @enum {string}
-         */
-        OrganizationDetailedStatus: "NEW" | "EMAIL_NOT_VALIDATED" | "BILLING_INFO_MISSING" | "LOCKED" | "PAYMENT_FAILURE" | "VALID" | "PENDING_VERIFICATION" | "VERIFICATION_FAILED" | "REVIEWING_ACCOUNT" | "PLAN_UPGRADE_REQUIRED";
-        OrganizationInvitation: {
-            id?: string;
-            email?: string;
-            role?: components["schemas"]["UserRole.Role"];
-            status?: components["schemas"]["OrganizationInvitation.Status"];
-            /** Format: date-time */
-            expires_at?: string;
-            organization_id?: string;
-            organization?: components["schemas"]["PublicOrganization"];
-            invitee_id?: string;
-            invitee?: components["schemas"]["PublicUser"];
-            inviter_id?: string;
-            inviter?: components["schemas"]["PublicUser"];
-        };
-        /**
-         * @default INVALID
-         * @enum {string}
-         */
-        "OrganizationInvitation.Status": "INVALID" | "PENDING" | "ACCEPTED" | "REFUSED" | "EXPIRED";
-        ReactivateOrganizationReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        ResendEmailValidationReply: Record<string, never>;
-        ResendEmailValidationRequest: Record<string, never>;
-        ResetPasswordReply: Record<string, never>;
-        /** @example {
-         *       "email": "john@snow.com"
-         *     } */
-        ResetPasswordRequest: {
-            email?: string;
-        };
-        UnscopeOrganizationTokenRequest: Record<string, never>;
-        UpdateOrganizationPlanReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        UpdateOrganizationReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        /** @example {
-         *       "id": "...",
-         *       "password": "..."
-         *     } */
-        UpdatePasswordRequest: {
-            id?: string;
-            password?: string;
-        };
-        "UpdateUserRequest.UserUpdateBody": {
-            id?: string;
-            email?: string;
-            current_password?: string;
-            password?: string;
-            newsletter_subscribed?: boolean;
-            name?: string;
-        };
-        UpsertSignupQualificationReply: {
-            organization?: components["schemas"]["Organization"];
-        };
-        UserReply: {
-            user?: components["schemas"]["User"];
-        };
-        Empty: Record<string, never>;
-        /**
-         * @default INVALID
-         * @enum {string}
-         */
-        "kgitproxy.GithubInstallation.Status": "INVALID" | "INSTALLED" | "SUSPENDED" | "DELETED";
-        /**
-         * @default INVALID_INDEXING_STATUS
-         * @enum {string}
-         */
-        "kgitproxy.IndexingStatus": "INVALID_INDEXING_STATUS" | "NOT_STARTED" | "IN_PROGRESS" | "COMPLETED";
-        CreateOrganizationInvitationReply: {
-            invitation?: components["schemas"]["OrganizationInvitation"];
-        };
-        CreateOrganizationInvitationRequest: {
-            /** The email of the person to invite */
-            email?: string;
-        };
-        DeleteOrganizationInvitationReply: Record<string, never>;
-        GetOrganizationInvitationReply: {
-            invitation?: components["schemas"]["OrganizationInvitation"];
-        };
-        ListOrganizationInvitationsReply: {
-            /** The collection of organization invitations */
-            invitations?: components["schemas"]["OrganizationInvitation"][];
-            /**
-             * The limit in the request
-             * Format: int64
-             */
-            limit?: number;
-            /**
-             * The offset in the request
-             * Format: int64
-             */
-            offset?: number;
-            /**
-             * The total number of items
-             * Format: int64
-             */
-            count?: number;
-        };
-        ResendOrganizationInvitationReply: {
-            invitation?: components["schemas"]["OrganizationInvitation"];
-        };
-        GetQuotasReply: {
-            quotas?: components["schemas"]["Quotas"];
-        };
-        PersistentVolumeQuotas: {
-            /**
-             * Format: int64
-             * @description MaxTotalSize for all volumes on a region (in Gigabyte / GB).
-             */
-            max_total_size?: number;
-            /**
-             * Format: int64
-             * @description MaxVolumeSize for one volume (in Gigabyte / GB).
-             */
-            max_volume_size?: number;
-            /**
-             * Format: int64
-             * @description MaxPerInstanceSize for all volumes on an instance (in Gigabyte / GB).
-             */
-            max_per_instance_size?: number;
-        };
-        Quotas: {
-            /** Format: int64 */
-            apps?: string;
-            /** Format: int64 */
-            services?: string;
-            /** Format: int64 */
-            domains?: string;
-            /** Format: int64 */
-            services_by_app?: string;
-            /** Format: int64 */
-            service_provisioning_concurrency?: string;
-            /** Format: int64 */
-            memory_mb?: string;
-            instance_types?: string[];
-            regions?: string[];
-            /** Format: int64 */
-            max_organization_members?: string;
-            max_instances_by_type?: {
-                [key: string]: string;
-            };
-            persistent_volumes_by_region?: {
-                [key: string]: components["schemas"]["PersistentVolumeQuotas"];
-            };
-        };
-        AppsSummary: {
-            /**
-             * Total number of apps
-             * Format: int64
-             */
-            total?: string;
-            /** Number of apps grouped by status */
-            by_status?: {
-                [key: string]: string;
-            };
-        };
-        DomainsSummary: {
-            /**
-             * Total number of domains
-             * Format: int64
-             */
-            total?: string;
-            /** Number of domains grouped by status */
-            by_status?: {
-                [key: string]: string;
-            };
-        };
-        GetOrganizationSummaryReply: {
-            summary?: components["schemas"]["OrganizationSummary"];
-        };
-        InstancesSummary: {
-            /**
-             * Total number of instances
-             * Format: int64
-             */
-            total?: string;
-            /** Number of instances grouped by type */
-            by_type?: {
-                [key: string]: string;
-            };
-        };
-        MembersSummary: {
-            /**
-             * Number of members
-             * Format: int64
-             */
-            total?: string;
-            /** Number of invitations grouped by status */
-            invitations_by_status?: {
-                [key: string]: string;
-            };
-        };
-        NeonPostgresSummary: {
-            /**
-             * Total number of databases
-             * Format: int64
-             */
-            total?: string;
-            /** Number of databases grouped by instance type */
-            by_instance_type?: {
-                [key: string]: string;
-            };
-        };
-        OrganizationSummary: {
-            organization_id?: string;
-            instances?: components["schemas"]["InstancesSummary"];
-            apps?: components["schemas"]["AppsSummary"];
-            /** Number of services grouped by type */
-            services?: {
-                [key: string]: components["schemas"]["ServiceSummary"];
-            };
-            domains?: components["schemas"]["DomainsSummary"];
-            secrets?: components["schemas"]["SecretsSummary"];
-            neon_postgres?: components["schemas"]["NeonPostgresSummary"];
-            members?: components["schemas"]["MembersSummary"];
-        };
-        SecretsSummary: {
-            /**
-             * Total number of secrets
-             * Format: int64
-             */
-            total?: string;
-            /** Number of secrets grouped by type */
-            by_type?: {
-                [key: string]: string;
-            };
-        };
-        ServiceSummary: {
-            /**
-             * Total number of services
-             * Format: int64
-             */
-            total?: string;
-            /** Number of services grouped by status */
-            by_status?: {
-                [key: string]: string;
-            };
-        };
-        "ksearch.App": {
-            id?: string;
-            organization_id?: string;
-            name?: string;
-        };
-        "ksearch.GlobalDeployment": {
-            id?: string;
-            organization_id?: string;
-            app_id?: string;
-            service_id?: string;
-        };
-        "ksearch.Instance": {
-            id?: string;
-            organization_id?: string;
-            app_id?: string;
-            service_id?: string;
-            allocation_id?: string;
-        };
-        "ksearch.Organization": {
-            id?: string;
-            name?: string;
-        };
-        "ksearch.RegionalDeployment": {
-            id?: string;
-            organization_id?: string;
-            app_id?: string;
-            service_id?: string;
-            region?: string;
-        };
-        "ksearch.SearchReply": {
-            organizations?: components["schemas"]["ksearch.Organization"][];
-            users?: components["schemas"]["ksearch.User"][];
-            apps?: components["schemas"]["ksearch.App"][];
-            services?: components["schemas"]["ksearch.Service"][];
-            global_deployments?: components["schemas"]["ksearch.GlobalDeployment"][];
-            regional_deployments?: components["schemas"]["ksearch.RegionalDeployment"][];
-            instances?: components["schemas"]["ksearch.Instance"][];
-        };
-        "ksearch.Service": {
-            id?: string;
-            organization_id?: string;
-            app_id?: string;
-            name?: string;
-        };
-        "ksearch.User": {
-            id?: string;
-            email?: string;
-            name?: string;
-            github_user?: string;
-        };
+        "VerifyDockerImageReply.ErrCode": "UNKNOWN" | "AUTH_ACCESS_DENIED" | "ANON_ACCESS_DENIED" | "AUTH_NOT_FOUND" | "ANON_NOT_FOUND" | "REGISTRY_ERROR" | "TIMEOUT" | "DNS" | "MALFORMED" | "INVALID_OS" | "INVALID_ARCH";
     };
     responses: never;
     parameters: never;
@@ -4647,5764 +4651,11 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    ListAppEvents: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on app id */
-                app_id?: string;
-                /** @description (Optional) Filter on app event types */
-                types?: string[];
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListAppEventsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListApps: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) A filter for name */
-                name?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListAppsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateApp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateApp"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateAppReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetApp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the App */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetAppReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateApp: {
-        parameters: {
-            query?: {
-                update_mask?: string;
-            };
-            header?: never;
-            path: {
-                /** @description The id of the app to update. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["UpdateApp"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateAppReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteApp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the App to delete */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteAppReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateApp2: {
-        parameters: {
-            query?: {
-                update_mask?: string;
-            };
-            header?: never;
-            path: {
-                /** @description The id of the app to update. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["UpdateApp"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateAppReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    PauseApp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the app to pause. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["PauseAppReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ResumeApp: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the app to resume. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResumeAppReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListInstanceEvents: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on list of instance id */
-                instance_ids?: string[];
-                /** @description (Optional) Filter on instance event types */
-                types?: string[];
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListInstanceEventsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListInstances: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on application id */
-                app_id?: string;
-                /** @description (Optional) Filter on service id */
-                service_id?: string;
-                /** @description (Optional) Filter on deployment id */
-                deployment_id?: string;
-                /** @description (Optional) Filter on regional deployment id */
-                regional_deployment_id?: string;
-                /** @description (Optional) Filter on allocation id */
-                allocation_id?: string;
-                /** @description (Optional) Filter on replica index */
-                replica_index?: string;
-                /** @description (Optional) Filter on instance statuses */
-                statuses?: ("ALLOCATING" | "STARTING" | "HEALTHY" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERROR" | "SLEEPING")[];
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-                /** @description (Optional) The starting time of the period of running instance */
-                starting_time?: string;
-                /** @description (Optional) The ending time of the period of running instance */
-                ending_time?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListInstancesReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetInstance: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the instance */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetInstanceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListSecrets: {
-        parameters: {
-            query?: {
-                name?: string;
-                limit?: string;
-                offset?: string;
-                /** @description Filter by secret types */
-                types?: ("SIMPLE" | "REGISTRY" | "MANAGED")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListSecretsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateSecret: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateSecret"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateSecretReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetSecret: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetSecretReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateSecret: {
-        parameters: {
-            query?: {
-                update_mask?: string;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["Secret"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateSecretReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteSecret: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteSecretReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateSecret2: {
-        parameters: {
-            query?: {
-                update_mask?: string;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["Secret"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateSecretReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    RevealSecret: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": Record<string, never>;
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["RevealSecretReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    VerifyDockerImage: {
-        parameters: {
-            query?: {
-                /** @description The full image uri to be verified */
-                image?: string;
-                /** @description (Optional) the id of the secret to use to authenticate to the registry */
-                secret_id?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["VerifyDockerImageReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListPersistentVolumeEvents: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on persistent volume id */
-                persistent_volume_id?: string;
-                /** @description (Optional) Filter on persistent volume event types */
-                types?: string[];
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListPersistentVolumeEventsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListPersistentVolumes: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) A filter for the service id */
-                service_id?: string;
-                /** @description (Optional) A filter for the region */
-                region?: string;
-                /** @description (Optional) A filter for the name */
-                name?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListPersistentVolumesReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreatePersistentVolume: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreatePersistentVolumeRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreatePersistentVolumeReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetPersistentVolume: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetPersistentVolumeReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdatePersistentVolume: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": {
-                    /** (Optional) change the name of the volume */
-                    name?: string;
-                    /**
-                     * (Optional) increase the volume size (in Gigabyte / GB)
-                     * Format: int64
-                     */
-                    max_size?: number;
-                };
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdatePersistentVolumeReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeletePersistentVolume: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeletePersistentVolumeReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListSnapshots: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Filter by organization_id */
-                organization_id?: string;
-                /** @description (Optional) Filter by status
-                 *
-                 *      - SNAPSHOT_STATUS_INVALID: zero value, invalid
-                 *      - SNAPSHOT_STATUS_CREATING: the snapshot is being created
-                 *      - SNAPSHOT_STATUS_AVAILABLE: the snapshot is complete and available
-                 *      - SNAPSHOT_STATUS_MIGRATING: the snapshot is being migrated
-                 *      - SNAPSHOT_STATUS_DELETING: the snapshot is being deleted
-                 *      - SNAPSHOT_STATUS_DELETED: the snapshot is deleted */
-                statuses?: ("SNAPSHOT_STATUS_INVALID" | "SNAPSHOT_STATUS_CREATING" | "SNAPSHOT_STATUS_AVAILABLE" | "SNAPSHOT_STATUS_MIGRATING" | "SNAPSHOT_STATUS_DELETING" | "SNAPSHOT_STATUS_DELETED")[];
-                /** @description (Optional) A filter for the region */
-                region?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListSnapshotsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateSnapshot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateSnapshotRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateSnapshotReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetSnapshot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetSnapshotReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateSnapshot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the snapshot */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": {
-                    /** Change the name of the snapshot */
-                    name?: string;
-                };
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateSnapshotReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteSnapshot: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteSnapshotReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateStageAttempt: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                deployment_id: string;
-                stage: string;
-                attempt: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": {
-                    secret?: string;
-                    status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
-                    /** Format: date-time */
-                    started_at?: string;
-                    messages?: string[];
-                    steps?: string[];
-                };
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateStageAttemptReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeclareStageProgress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                deployment_id: string;
-                stage: string;
-                attempt: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": {
-                    secret?: string;
-                    status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
-                    /** Format: date-time */
-                    finished_at?: string;
-                    messages?: string[];
-                    image_pushed?: boolean;
-                    internal_failure?: boolean;
-                    retryable_failure?: boolean;
-                };
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeclareStageProgressReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeclareStepProgress: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                deployment_id: string;
-                stage: string;
-                attempt: string;
-                step: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": {
-                    secret?: string;
-                    status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
-                    /** Format: date-time */
-                    started_at?: string;
-                    /** Format: date-time */
-                    finished_at?: string;
-                    messages?: string[];
-                };
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeclareStepProgressReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetOrganizationUsage: {
-        parameters: {
-            query?: {
-                /** @description The starting time of the period to get data from */
-                starting_time?: string;
-                /** @description The ending time of the period to get data from */
-                ending_time?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetOrganizationUsageReply"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetOrganizationUsageDetails: {
-        parameters: {
-            query?: {
-                /** @description The starting time of the period to get data from */
-                starting_time?: string;
-                /** @description The ending time of the period to get data from */
-                ending_time?: string;
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-            };
-            header?: {
-                /** @description If defined with the value 'text/csv', a csv file is returned */
-                Accept?: string;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetOrganizationUsageDetailsReply"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListDomains: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) A filter for types
-                 *
-                 *      - AUTOASSIGNED: Domain like <appName>-<orgName>.koyeb.app */
-                types?: ("AUTOASSIGNED" | "CUSTOM")[];
-                /** @description (Optional) A filter for statuses */
-                statuses?: ("PENDING" | "ACTIVE" | "ERROR" | "DELETING" | "DELETED")[];
-                /** @description (Optional) A filter for apps */
-                app_ids?: string[];
-                /** @description (Optional) A filter for name */
-                name?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListDomainsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateDomain: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateDomain"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateDomainReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetDomain: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetDomainReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteDomain: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteDomainReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateDomain: {
-        parameters: {
-            query?: {
-                update_mask?: string;
-                /** @description If set, run validation and check that the domain is available. */
-                dry_run?: boolean;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["UpdateDomain"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateDomainReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    RefreshDomainStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["RefreshDomainStatusReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListServiceEvents: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on service id */
-                service_id?: string;
-                /** @description (Optional) Filter on service event types */
-                types?: string[];
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListServiceEventsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListServices: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The id of the app */
-                app_id?: string;
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) A filter for name */
-                name?: string;
-                /** @description (Optional) Filter on service types */
-                types?: ("INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListServicesReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateService: {
-        parameters: {
-            query?: {
-                /** @description If set only run validation */
-                dry_run?: boolean;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateService"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateServiceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    Autocomplete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["AutocompleteRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["AutocompleteReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the Service */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetServiceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateService: {
-        parameters: {
-            query?: {
-                /** @description If set, run validation and check that the service exists */
-                dry_run?: boolean;
-            };
-            header?: never;
-            path: {
-                /** @description The id of the entity to update */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["UpdateService"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateServiceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the entity to delete */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteServiceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateService2: {
-        parameters: {
-            query?: {
-                /** @description If set, run validation and check that the service exists */
-                dry_run?: boolean;
-            };
-            header?: never;
-            path: {
-                /** @description The id of the entity to update */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["UpdateService"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateServiceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    PauseService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the service to pause. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["PauseServiceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ReDeploy: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["RedeployRequest.Info"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["RedeployReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ResumeService: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the service to pause. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResumeServiceReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListDeploymentEvents: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on deployment id */
-                deployment_id?: string;
-                /** @description (Optional) Filter on deployment event types */
-                types?: string[];
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListDeploymentEventsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListDeployments: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on application id */
-                app_id?: string;
-                /** @description (Optional) Filter on service id */
-                service_id?: string;
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Filter on statuses */
-                statuses?: ("PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "STASHED" | "SLEEPING")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListDeploymentsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetDeployment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the deployment */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetDeploymentReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CancelDeployment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the deployment to cancel. */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CancelDeploymentReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateArchive: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateArchive"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateArchiveReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ReviewOrganizationCapacity: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["ReviewOrganizationCapacityRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ReviewOrganizationCapacityReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListRegionalDeploymentEvents: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on regional deployment id */
-                regional_deployment_id?: string;
-                /** @description (Optional) Filter on regional deployment event types */
-                types?: string[];
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Sorts the list in the ascending or the descending order */
-                order?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListRegionalDeploymentEventsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListRegionalDeployments: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on deployment id */
-                deployment_id?: string;
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListRegionalDeploymentsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetRegionalDeployment: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the regional deployment */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetRegionalDeploymentReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListBranches: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on one repository. */
-                repository_id?: string;
-                /** @description (Optional) Filter on branch name using a fuzzy search.
-                 *     Repository filter is required to enable this filter. */
-                name?: string;
-                /** @description (Optional) The number of items to return. */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return. */
-                offset?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["kgitproxy.ListBranchesReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListRepositories: {
-        parameters: {
-            query?: {
-                /** @description (Optional) Filter on repository name using a fuzzy search. */
-                name?: string;
-                /** @description (Optional) Define search operation for repository name. Accept either "fuzzy" or "equality", use "fuzzy" by default. */
-                name_search_op?: string;
-                /** @description (Optional) The number of items to return. */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return. */
-                offset?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["kgitproxy.ListRepositoriesReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ResyncOrganization: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                organization_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["kgitproxy.ResyncOrganizationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListActivities: {
+    GetAccountActivities: {
         parameters: {
             query?: {
                 limit?: string;
                 offset?: string;
-                /** @description (Optional) Filter on object type */
-                types?: string[];
             };
             header?: never;
             path?: never;
@@ -10486,651 +4737,7 @@ export interface operations {
             };
         };
     };
-    ListNotifications: {
-        parameters: {
-            query?: {
-                limit?: string;
-                offset?: string;
-                mark_read?: string;
-                mark_seen?: string;
-                unread?: string;
-                unseen?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["NotificationList"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ExecCommand: {
-        parameters: {
-            query?: {
-                /** @description ID of the resource to exec on. */
-                id?: string;
-                /** @description Command to exec. Mandatory in the first frame sent */
-                "body.command"?: string[];
-                "body.tty_size.height"?: number;
-                "body.tty_size.width"?: number;
-                /** @description Data is base64 encoded */
-                "body.stdin.data"?: string;
-                /** @description Indicate last data frame */
-                "body.stdin.close"?: boolean;
-                /** @description Disable TTY. It's enough to specify it in the first frame */
-                "body.disableTty"?: boolean;
-                /** @description When specified, it is used to determine if the kind of resource the id refers to. If missing, defaults to the instance id. */
-                id_type?: "INVALID" | "INSTANCE_ID" | "SERVICE_ID";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response.(streaming responses) */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": {
-                        result?: components["schemas"]["ExecCommandReply"];
-                        error?: components["schemas"]["google.rpc.Status"];
-                    };
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetMetrics: {
-        parameters: {
-            query?: {
-                /** @description ID of the service to query instances metrics for. Ignored if instance_id is set. */
-                service_id?: string;
-                /** @description ID of the instance to query metrics for. */
-                instance_id?: string;
-                /** @description Metric to query. */
-                name?: "UNKNOWN" | "CPU_TOTAL_PERCENT" | "MEM_RSS" | "HTTP_THROUGHPUT" | "HTTP_RESPONSE_TIME_50P" | "HTTP_RESPONSE_TIME_90P" | "HTTP_RESPONSE_TIME_99P" | "HTTP_RESPONSE_TIME_MAX" | "PUBLIC_DATA_TRANSFER_IN" | "PUBLIC_DATA_TRANSFER_OUT";
-                /** @description (Optional) Defaults to an hour prior to end. */
-                start?: string;
-                /** @description (Optional) Defaults to now. */
-                end?: string;
-                /** @description (Optional) Must be a valid duration in hours (h) or minutes (m). Defaulst to 5m. */
-                step?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetMetricsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    TailLogs: {
-        parameters: {
-            query?: {
-                type?: string;
-                app_id?: string;
-                service_id?: string;
-                deployment_id?: string;
-                regional_deployment_id?: string;
-                instance_id?: string;
-                stream?: string;
-                start?: string;
-                limit?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response.(streaming responses) */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": {
-                        result?: components["schemas"]["LogEntry"];
-                        error?: components["schemas"]["google.rpc.Status"];
-                    };
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListCatalogInstances: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) A filter for instances */
-                id?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListCatalogInstancesReply"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetCatalogInstance: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the instance */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetCatalogInstanceReply"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListRegions: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) A filter for regions */
-                id?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListRegionsReply"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetRegion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The name of the region */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetRegionReply"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListDatacenters: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListDatacentersReply"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListCredentials: {
-        parameters: {
-            query?: {
-                /** @description (Optional) A filter for type */
-                type?: "INVALID" | "USER" | "ORGANIZATION";
-                /** @description (Optional) A filter for name */
-                name?: string;
-                /** @description (Optional) Filter for an organization */
-                organization_id?: string;
-                /** @description (Optional) Filter for an user */
-                user_id?: string;
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListCredentialsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateCredential: {
+    CreateInvite: {
         parameters: {
             query?: never;
             header?: never;
@@ -11139,7 +4746,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "*/*": components["schemas"]["CreateCredential"];
+                "*/*": components["schemas"]["InviteUserRequest"];
             };
         };
         responses: {
@@ -11149,790 +4756,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["CreateCredentialReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetCredential: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetCredentialReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateCredential: {
-        parameters: {
-            query?: {
-                update_mask?: string;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["Credential"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateCredentialReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteCredential: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteCredentialReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    UpdateCredential2: {
-        parameters: {
-            query?: {
-                update_mask?: string;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["Credential"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["UpdateCredentialReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetIntercomProfile: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetIntercomProfileReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the user */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteUserReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListOrganizationMembers: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Filter for an organization */
-                organization_id?: string;
-                /** @description (Optional) Filter for an user */
-                user_id?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListOrganizationMembersReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    RemoveOrganizationMember: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["RemoveOrganizationMemberReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ConfirmOrganizationAction: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ConfirmOrganizationActionReply"];
+                    "*/*": components["schemas"]["Empty"];
                 };
             };
             /** @description Validation error */
@@ -12106,867 +4930,6 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["LogoutReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    RefreshToken: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["LoginReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    NewSession: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["LoginReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetSubscription: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the instance */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetSubscriptionReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ListPaymentMethods: {
-        parameters: {
-            query?: {
-                /** @description (Optional) The number of items to return */
-                limit?: string;
-                /** @description (Optional) The offset in the list of item to return */
-                offset?: string;
-                /** @description (Optional) Filter on payment method statuses */
-                statuses?: ("INVALID" | "CREATED" | "AUTHORIZED" | "DECLINED" | "CANCELED" | "EXPIRED" | "UNCHECKED")[];
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ListPaymentMethodsReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreatePaymentAuthorization: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreatePaymentAuthorizationRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreatePaymentAuthorizationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetPaymentMethod: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetPaymentMethodReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeletePaymentMethod: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeletePaymentMethodReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ConfirmPaymentAuthorization: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": Record<string, never>;
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ConfirmPaymentAuthorizationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetAccountActivities: {
-        parameters: {
-            query?: {
-                limit?: string;
-                offset?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ActivityList"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    CreateInvite: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["InviteUserRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Empty"];
                 };
             };
             /** @description Validation error */
@@ -13912,6 +5875,89 @@ export interface operations {
             };
         };
     };
+    RefreshToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LoginReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     ResendEmailValidation: {
         parameters: {
             query?: never;
@@ -14019,6 +6065,89 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ResetPasswordReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    NewSession: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LoginReply"];
                 };
             };
             /** @description Validation error */
@@ -14355,6 +6484,980 @@ export interface operations {
             };
         };
     };
+    ListActivities: {
+        parameters: {
+            query?: {
+                limit?: string;
+                offset?: string;
+                /** @description (Optional) Filter on object type */
+                types?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ActivityList"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListAppEvents: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on app id */
+                app_id?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Filter on app event types */
+                types?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListAppEventsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListApps: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) A filter for name */
+                name?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListAppsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateApp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateApp"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateAppReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetApp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the App */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetAppReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateApp: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path: {
+                /** @description The id of the app to update. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateApp"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateAppReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteApp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the App to delete */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteAppReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateApp2: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path: {
+                /** @description The id of the app to update. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateApp"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateAppReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    PauseApp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the app to pause. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PauseAppReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ResumeApp: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the app to resume. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ResumeAppReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateArchive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateArchive"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateArchiveReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     HasUnpaidInvoices: {
         parameters: {
             query?: never;
@@ -14604,6 +7707,1957 @@ export interface operations {
             };
         };
     };
+    ListDatacenters: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListDatacentersReply"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListCatalogInstances: {
+        parameters: {
+            query?: {
+                /** @description (Optional) A filter for instances */
+                id?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListCatalogInstancesReply"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetCatalogInstance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The name of the instance */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetCatalogInstanceReply"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListRegions: {
+        parameters: {
+            query?: {
+                /** @description (Optional) A filter for regions */
+                id?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListRegionsReply"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetRegion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The name of the region */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetRegionReply"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListCredentials: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) A filter for name */
+                name?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Filter for an organization */
+                organization_id?: string;
+                /** @description (Optional) A filter for type */
+                type?: "INVALID" | "USER" | "ORGANIZATION";
+                /** @description (Optional) Filter for an user */
+                user_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListCredentialsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateCredential: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateCredential"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateCredentialReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetCredential: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetCredentialReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateCredential: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["Credential"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateCredentialReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteCredential: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteCredentialReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateCredential2: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["Credential"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateCredentialReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListDeploymentEvents: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on deployment id */
+                deployment_id?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Filter on deployment event types */
+                types?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListDeploymentEventsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListDeployments: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on application id */
+                app_id?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Filter on service id */
+                service_id?: string;
+                /** @description (Optional) Filter on statuses */
+                statuses?: ("PENDING" | "PROVISIONING" | "SCHEDULED" | "CANCELING" | "CANCELED" | "ALLOCATING" | "STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERRORING" | "ERROR" | "STASHED" | "SLEEPING")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListDeploymentsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetDeployment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the deployment */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetDeploymentReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CancelDeployment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the deployment to cancel. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CancelDeploymentReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    VerifyDockerImage: {
+        parameters: {
+            query?: {
+                /** @description The full image uri to be verified */
+                image?: string;
+                /** @description (Optional) the id of the secret to use to authenticate to the registry */
+                secret_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerifyDockerImageReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListDomains: {
+        parameters: {
+            query?: {
+                /** @description (Optional) A filter for apps */
+                app_ids?: string[];
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) A filter for name */
+                name?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) A filter for statuses */
+                statuses?: ("PENDING" | "ACTIVE" | "ERROR" | "DELETING" | "DELETED")[];
+                /** @description (Optional) A filter for types
+                 *
+                 *      - AUTOASSIGNED: Domain like <appName>-<orgName>.koyeb.app */
+                types?: ("AUTOASSIGNED" | "CUSTOM")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListDomainsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateDomain"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateDomainReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetDomainReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteDomain: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteDomainReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateDomain: {
+        parameters: {
+            query?: {
+                /** @description If set, run validation and check that the domain is available. */
+                dry_run?: boolean;
+                update_mask?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateDomain"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateDomainReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    RefreshDomainStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RefreshDomainStatusReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListBranches: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return. */
+                limit?: string;
+                /** @description (Optional) Filter on branch name using a fuzzy search.
+                 *     Repository filter is required to enable this filter. */
+                name?: string;
+                /** @description (Optional) The offset in the list of item to return. */
+                offset?: string;
+                /** @description (Optional) Filter on one repository. */
+                repository_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["kgitproxy.ListBranchesReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListRepositories: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return. */
+                limit?: string;
+                /** @description (Optional) Filter on repository name using a fuzzy search. */
+                name?: string;
+                /** @description (Optional) Define search operation for repository name. Accept either "fuzzy" or "equality", use "fuzzy" by default. */
+                name_search_op?: string;
+                /** @description (Optional) The offset in the list of item to return. */
+                offset?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["kgitproxy.ListRepositoriesReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ResyncOrganization: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organization_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["kgitproxy.ResyncOrganizationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     GetGithubInstallation: {
         parameters: {
             query?: never;
@@ -14707,6 +9761,1172 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GithubInstallationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListInstanceEvents: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on list of instance id */
+                instance_ids?: string[];
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Filter on instance event types */
+                types?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListInstanceEventsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListInstances: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on allocation id */
+                allocation_id?: string;
+                /** @description (Optional) Filter on application id */
+                app_id?: string;
+                /** @description (Optional) Filter on deployment id */
+                deployment_id?: string;
+                /** @description (Optional) The ending time of the period of running instance */
+                ending_time?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Filter on regional deployment id */
+                regional_deployment_id?: string;
+                /** @description (Optional) Filter on replica index */
+                replica_index?: string;
+                /** @description (Optional) Filter on service id */
+                service_id?: string;
+                /** @description (Optional) The starting time of the period of running instance */
+                starting_time?: string;
+                /** @description (Optional) Filter on instance statuses */
+                statuses?: ("ALLOCATING" | "STARTING" | "HEALTHY" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERROR" | "SLEEPING")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListInstancesReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetInstance: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the instance */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetInstanceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetIntercomProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetIntercomProfileReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListNotifications: {
+        parameters: {
+            query?: {
+                limit?: string;
+                mark_read?: string;
+                mark_seen?: string;
+                offset?: string;
+                unread?: string;
+                unseen?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["NotificationList"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ConfirmOrganizationAction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ConfirmOrganizationActionReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListOrganizationInvitations: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Filter on organization invitation statuses */
+                statuses?: ("INVALID" | "PENDING" | "ACCEPTED" | "REFUSED" | "EXPIRED")[];
+                /** @description (Optional) Filter on invitee ID. Will match both invitations sent to
+                 *     that user_id and invitations sent to the email of that user_id.
+                 *     The only valid value is the requester's user_id */
+                user_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListOrganizationInvitationsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateOrganizationInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateOrganizationInvitationRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateOrganizationInvitationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetOrganizationInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the invitation to get */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetOrganizationInvitationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteOrganizationInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the organization invitation to delete */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteOrganizationInvitationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ResendOrganizationInvitation: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the organization invitation to resend */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ResendOrganizationInvitationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListOrganizationMembers: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Filter for an organization */
+                organization_id?: string;
+                /** @description (Optional) Filter for an user */
+                user_id?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListOrganizationMembersReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    RemoveOrganizationMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RemoveOrganizationMemberReply"];
                 };
             };
             /** @description Validation error */
@@ -15665,6 +11885,3406 @@ export interface operations {
             };
         };
     };
+    GetQuotas: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                organization_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetQuotasReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetOrganizationSummary: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization ID */
+                organization_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetOrganizationSummaryReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListPaymentMethods: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Filter on payment method statuses */
+                statuses?: ("INVALID" | "CREATED" | "AUTHORIZED" | "DECLINED" | "CANCELED" | "EXPIRED" | "UNCHECKED")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListPaymentMethodsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreatePaymentAuthorization: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreatePaymentAuthorizationRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreatePaymentAuthorizationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetPaymentMethod: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetPaymentMethodReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeletePaymentMethod: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeletePaymentMethodReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ConfirmPaymentAuthorization: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ConfirmPaymentAuthorizationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateStageAttempt: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt: string;
+                deployment_id: string;
+                stage: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    messages?: string[];
+                    secret?: string;
+                    /** Format: date-time */
+                    started_at?: string;
+                    status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
+                    steps?: string[];
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateStageAttemptReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeclareStageProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt: string;
+                deployment_id: string;
+                stage: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    /** Format: date-time */
+                    finished_at?: string;
+                    image_pushed?: boolean;
+                    internal_failure?: boolean;
+                    messages?: string[];
+                    retryable_failure?: boolean;
+                    secret?: string;
+                    status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeclareStageProgressReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeclareStepProgress: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                attempt: string;
+                deployment_id: string;
+                stage: string;
+                step: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    /** Format: date-time */
+                    finished_at?: string;
+                    messages?: string[];
+                    secret?: string;
+                    /** Format: date-time */
+                    started_at?: string;
+                    status?: components["schemas"]["DeploymentProvisioningInfo.Stage.Status"];
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeclareStepProgressReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ReviewOrganizationCapacity: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["ReviewOrganizationCapacityRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ReviewOrganizationCapacityReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListRegionalDeploymentEvents: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Filter on regional deployment id */
+                regional_deployment_id?: string;
+                /** @description (Optional) Filter on regional deployment event types */
+                types?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListRegionalDeploymentEventsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListRegionalDeployments: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on deployment id */
+                deployment_id?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListRegionalDeploymentsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetRegionalDeployment: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the regional deployment */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetRegionalDeploymentReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    Search: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Search query */
+                query?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ksearch.SearchReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListSecrets: {
+        parameters: {
+            query?: {
+                limit?: string;
+                name?: string;
+                offset?: string;
+                /** @description Filter by secret types */
+                types?: ("SIMPLE" | "REGISTRY" | "MANAGED")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListSecretsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateSecret: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateSecret"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateSecretReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetSecret: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetSecretReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateSecret: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["Secret"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateSecretReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteSecret: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteSecretReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateSecret2: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["Secret"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateSecretReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    RevealSecret: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RevealSecretReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListServiceEvents: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Filter on service id */
+                service_id?: string;
+                /** @description (Optional) Filter on service event types */
+                types?: string[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListServiceEventsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListServices: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The id of the app */
+                app_id?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) A filter for name */
+                name?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Filter on service types */
+                types?: ("INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListServicesReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateService: {
+        parameters: {
+            query?: {
+                /** @description If set only run validation */
+                dry_run?: boolean;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateService"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateServiceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    Autocomplete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["AutocompleteRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AutocompleteReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the Service */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetServiceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateService: {
+        parameters: {
+            query?: {
+                /** @description If set, run validation and check that the service exists */
+                dry_run?: boolean;
+            };
+            header?: never;
+            path: {
+                /** @description The id of the entity to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateService"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateServiceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the entity to delete */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteServiceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateService2: {
+        parameters: {
+            query?: {
+                /** @description If set, run validation and check that the service exists */
+                dry_run?: boolean;
+            };
+            header?: never;
+            path: {
+                /** @description The id of the entity to update */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateService"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateServiceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    PauseService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the service to pause. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PauseServiceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ReDeploy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["RedeployRequest.Info"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["RedeployReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ResumeService: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the service to pause. */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ResumeServiceReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListSnapshots: {
+        parameters: {
+            query?: {
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Filter by organization_id */
+                organization_id?: string;
+                /** @description (Optional) A filter for the region */
+                region?: string;
+                /** @description (Optional) Filter by status
+                 *
+                 *      - SNAPSHOT_STATUS_INVALID: zero value, invalid
+                 *      - SNAPSHOT_STATUS_CREATING: the snapshot is being created
+                 *      - SNAPSHOT_STATUS_AVAILABLE: the snapshot is complete and available
+                 *      - SNAPSHOT_STATUS_MIGRATING: the snapshot is being migrated
+                 *      - SNAPSHOT_STATUS_DELETING: the snapshot is being deleted
+                 *      - SNAPSHOT_STATUS_DELETED: the snapshot is deleted */
+                statuses?: ("SNAPSHOT_STATUS_INVALID" | "SNAPSHOT_STATUS_CREATING" | "SNAPSHOT_STATUS_AVAILABLE" | "SNAPSHOT_STATUS_MIGRATING" | "SNAPSHOT_STATUS_DELETING" | "SNAPSHOT_STATUS_DELETED")[];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListSnapshotsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateSnapshotRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateSnapshotReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetSnapshotReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the snapshot */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    /** Change the name of the snapshot */
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateSnapshotReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteSnapshot: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteSnapshotReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     CannyAuth: {
         parameters: {
             query?: never;
@@ -15839,6 +15459,385 @@ export interface operations {
             };
         };
     };
+    ExecCommand: {
+        parameters: {
+            query?: {
+                /** @description Command to exec. Mandatory in the first frame sent */
+                "body.command"?: string[];
+                /** @description Disable TTY. It's enough to specify it in the first frame */
+                "body.disableTty"?: boolean;
+                /** @description Indicate last data frame */
+                "body.stdin.close"?: boolean;
+                /** @description Data is base64 encoded */
+                "body.stdin.data"?: string;
+                "body.tty_size.height"?: number;
+                "body.tty_size.width"?: number;
+                /** @description ID of the resource to exec on. */
+                id?: string;
+                /** @description When specified, it is used to determine if the kind of resource the id refers to. If missing, defaults to the instance id. */
+                id_type?: "INVALID" | "INSTANCE_ID" | "SERVICE_ID";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response.(streaming responses) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": {
+                        error?: components["schemas"]["google.rpc.Status"];
+                        result?: components["schemas"]["ExecCommandReply"];
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    TailLogs: {
+        parameters: {
+            query?: {
+                app_id?: string;
+                deployment_id?: string;
+                instance_id?: string;
+                limit?: string;
+                regional_deployment_id?: string;
+                service_id?: string;
+                start?: string;
+                stream?: string;
+                type?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response.(streaming responses) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": {
+                        error?: components["schemas"]["google.rpc.Status"];
+                        result?: components["schemas"]["LogEntry"];
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetMetrics: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Defaults to now. */
+                end?: string;
+                /** @description ID of the instance to query metrics for. */
+                instance_id?: string;
+                /** @description Metric to query. */
+                name?: "UNKNOWN" | "CPU_TOTAL_PERCENT" | "MEM_RSS" | "HTTP_THROUGHPUT" | "HTTP_RESPONSE_TIME_50P" | "HTTP_RESPONSE_TIME_90P" | "HTTP_RESPONSE_TIME_99P" | "HTTP_RESPONSE_TIME_MAX" | "PUBLIC_DATA_TRANSFER_IN" | "PUBLIC_DATA_TRANSFER_OUT";
+                /** @description ID of the service to query instances metrics for. Ignored if instance_id is set. */
+                service_id?: string;
+                /** @description (Optional) Defaults to an hour prior to end. */
+                start?: string;
+                /** @description (Optional) Must be a valid duration in hours (h) or minutes (m). Defaulst to 5m. */
+                step?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetMetricsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetSubscription: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the instance */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetSubscriptionReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     UnscopeOrganizationToken: {
         parameters: {
             query?: never;
@@ -15929,19 +15928,182 @@ export interface operations {
             };
         };
     };
-    ListOrganizationInvitations: {
+    GetOrganizationUsage: {
+        parameters: {
+            query?: {
+                /** @description The ending time of the period to get data from */
+                ending_time?: string;
+                /** @description The starting time of the period to get data from */
+                starting_time?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetOrganizationUsageReply"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetOrganizationUsageDetails: {
+        parameters: {
+            query?: {
+                /** @description The ending time of the period to get data from */
+                ending_time?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description The starting time of the period to get data from */
+                starting_time?: string;
+            };
+            header?: {
+                /** @description If defined with the value 'text/csv', a csv file is returned */
+                Accept?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetOrganizationUsageDetailsReply"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the user */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteUserReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListPersistentVolumeEvents: {
         parameters: {
             query?: {
                 /** @description (Optional) The number of items to return */
                 limit?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
-                /** @description (Optional) Filter on organization invitation statuses */
-                statuses?: ("INVALID" | "PENDING" | "ACCEPTED" | "REFUSED" | "EXPIRED")[];
-                /** @description (Optional) Filter on invitee ID. Will match both invitations sent to
-                 *     that user_id and invitations sent to the email of that user_id.
-                 *     The only valid value is the requester's user_id */
-                user_id?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Filter on persistent volume id */
+                persistent_volume_id?: string;
+                /** @description (Optional) Filter on persistent volume event types */
+                types?: string[];
             };
             header?: never;
             path?: never;
@@ -15955,7 +16117,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ListOrganizationInvitationsReply"];
+                    "*/*": components["schemas"]["ListPersistentVolumeEventsReply"];
                 };
             };
             /** @description Validation error */
@@ -16023,531 +16185,19 @@ export interface operations {
             };
         };
     };
-    CreateOrganizationInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": components["schemas"]["CreateOrganizationInvitationRequest"];
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["CreateOrganizationInvitationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetOrganizationInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the invitation to get */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetOrganizationInvitationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    DeleteOrganizationInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the organization invitation to delete */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["DeleteOrganizationInvitationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    ResendOrganizationInvitation: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description The id of the organization invitation to resend */
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "*/*": Record<string, never>;
-            };
-        };
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ResendOrganizationInvitationReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetQuotas: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                organization_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetQuotasReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    GetOrganizationSummary: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Organization ID */
-                organization_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description A successful response. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["GetOrganizationSummaryReply"];
-                };
-            };
-            /** @description Validation error */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["ErrorWithFields"];
-                };
-            };
-            /** @description Returned when the token is not valid. */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the user does not have permission to access the resource. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned when the resource does not exist. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Returned in case of server error. */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description Service is unavailable. */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["Error"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "*/*": components["schemas"]["google.rpc.Status"];
-                };
-            };
-        };
-    };
-    Search: {
+    ListPersistentVolumes: {
         parameters: {
             query?: {
-                /** @description (Optional) Search query */
-                query?: string;
+                /** @description (Optional) The number of items to return */
+                limit?: string;
+                /** @description (Optional) A filter for the name */
+                name?: string;
+                /** @description (Optional) The offset in the list of item to return */
+                offset?: string;
+                /** @description (Optional) A filter for the region */
+                region?: string;
+                /** @description (Optional) A filter for the service id */
+                service_id?: string;
             };
             header?: never;
             path?: never;
@@ -16561,7 +16211,361 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "*/*": components["schemas"]["ksearch.SearchReply"];
+                    "*/*": components["schemas"]["ListPersistentVolumesReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreatePersistentVolume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreatePersistentVolumeRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreatePersistentVolumeReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetPersistentVolume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetPersistentVolumeReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdatePersistentVolume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    /**
+                     * (Optional) increase the volume size (in Gigabyte / GB)
+                     * Format: int64
+                     */
+                    max_size?: number;
+                    /** (Optional) change the name of the volume */
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdatePersistentVolumeReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeletePersistentVolume: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeletePersistentVolumeReply"];
                 };
             };
             /** @description Validation error */

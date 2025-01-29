@@ -17,7 +17,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev --ci -p 6006",
     "build-storybook": "storybook build",
-    "api-codegen": "curl 'https://converter.swagger.io/api/convert?url=https://developer.koyeb.com/public.swagger.json' | openapi-typescript -o ./src/api/api.generated.d.ts"
+    "api-codegen": "curl 'https://converter.swagger.io/api/convert?url=https://developer.koyeb.com/public.swagger.json' | openapi-typescript --alphabetize --output ./src/api/api.generated.d.ts"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.1",
