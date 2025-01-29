@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import { CheckboxInput, Collapse, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogRegion, RegionScope } from 'src/api/model';
 import { useRegionLatency } from 'src/hooks/region-latency';
