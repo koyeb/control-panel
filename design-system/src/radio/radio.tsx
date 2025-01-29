@@ -36,7 +36,7 @@ export function Radio({ label, helpTooltip, className, ...props }: RadioProps) {
 export function RadioInput(props: React.ComponentProps<'input'>) {
   return (
     <>
-      <input type="radio" className="peer sr-only" {...props} />
+      <input type="radio" className="peer sr-only fixed" {...props} />
 
       <span className="leading-none peer-checked:hidden  peer-disabled:[&>span]:bg-muted">
         <span className="inline-block size-4 rounded-full border" />

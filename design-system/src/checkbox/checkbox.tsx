@@ -38,7 +38,7 @@ type CheckboxInputProps = Extend<React.ComponentProps<'input'>, { indeterminate?
 export function CheckboxInput({ indeterminate, ...props }: CheckboxInputProps) {
   return (
     <>
-      <input type="checkbox" className="peer sr-only" {...props} />
+      <input type="checkbox" className="peer sr-only fixed" {...props} />
 
       <span className="leading-none peer-checked:hidden peer-disabled:[&>span]:bg-muted">
         <span className="inline-block size-4 rounded border" />

@@ -38,7 +38,13 @@ export function Switch({ label, labelPosition = 'top', helpTooltip, className, .
       )}
 
       <div className="row h-8 items-center">
-        <input type="checkbox" className="peer sr-only" aria-labelledby={`${id}-label`} id={id} {...props} />
+        <input
+          type="checkbox"
+          className="peer sr-only fixed"
+          aria-labelledby={`${id}-label`}
+          id={id}
+          {...props}
+        />
 
         <div
           className={clsx(
