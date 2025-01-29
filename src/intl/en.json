@@ -1415,6 +1415,7 @@
         "upsell": {
           "title": "Get the full experience",
           "description": "Upgrade to the Starter plan and get $20 of credit on your first invoice to try the full Koyeb experience",
+          "description.new": "Upgrade to the Starter pay-as-you-go plan to access the full Koyeb experience",
           "cta": "Upgrade"
         }
       },
@@ -1423,12 +1424,7 @@
         "free": "Free",
         "usage": "Usage",
         "estimatedCost": "Estimated cost",
-        "viewBilling": "View billing",
-        "upsell": {
-          "title": "Get the full experience",
-          "description": "Upgrade to the Starter plan and get $20 of credit on your first invoice to try the full Koyeb experience",
-          "cta": "Upgrade"
-        }
+        "viewBilling": "View billing"
       },
       "breadcrumbs": {
         "services": "Services",

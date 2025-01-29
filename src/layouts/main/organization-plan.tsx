@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
 import { Badge, Floating, useBreakpoint } from '@koyeb/design-system';
@@ -117,7 +118,9 @@ function HobbyPlan() {
         </div>
 
         <div className="text-xs text-dim">
-          <T id="upsell.description" />
+          <T
+            id={isAfter(new Date(), '2025-02-01T00:00Z') ? 'upsell.description.new' : 'upsell.description'}
+          />
         </div>
       </div>
 
