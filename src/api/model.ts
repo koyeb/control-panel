@@ -124,9 +124,11 @@ export type CatalogRegion = {
   instances?: string[];
   hasVolumes: boolean;
   category: RegionCategory;
+  scope: RegionScope;
 };
 
 export type RegionCategory = 'koyeb' | 'aws';
+export type RegionScope = 'continental' | 'metropolitan';
 
 export type OneClickApp = {
   name: string;

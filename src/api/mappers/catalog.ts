@@ -9,10 +9,15 @@ import {
   CatalogInstanceStatus,
   CatalogRegion,
   InstanceCategory,
+  RegionScope,
 } from '../model';
 
 export function mapCatalogRegionsList({ regions }: ApiEndpointResult<'listCatalogRegions'>): CatalogRegion[] {
-  return regions!.map((region) => ({
+  return regions!.map(mapCatalogRegion);
+}
+
+export function mapCatalogRegion(region: Api.CatalogRegion): CatalogRegion {
+  return {
     identifier: region.id!,
     displayName: region.name!,
     status: lowerCase(region.status!) as CatalogRegion['status'],
@@ -20,7 +25,8 @@ export function mapCatalogRegionsList({ regions }: ApiEndpointResult<'listCatalo
     instances: region.instances,
     hasVolumes: region.volumes_enabled!,
     category: region.id!.startsWith('aws-') ? 'aws' : 'koyeb',
-  }));
+    scope: region.scope as RegionScope,
+  };
 }
 
 export function mapCatalogDatacentersList({
