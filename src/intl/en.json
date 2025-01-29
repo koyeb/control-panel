@@ -209,6 +209,55 @@
         "aiReplyHeader": "Koyeb AI recommends an instance of type {recommendedInstanceType}"
       }
     },
+    "instanceSelector.new": {
+      "instanceType": {
+        "standard": "CPU Standard ✨",
+        "eco": "CPU Eco 🌱",
+        "gpu": "GPU 🚀"
+      },
+      "regionScope": {
+        "continental": "Continental",
+        "metropolitan": "Metropolitan"
+      },
+      "instanceSpec": {
+        "cpu": "{value} vCPU",
+        "ram": "{value} RAM",
+        "vram": "{value} VRAM",
+        "disk": "{value} Disk"
+      },
+      "regions": {
+        "label": "Available in regions",
+        "latency": "{value, number, :: precision-integer}ms latency",
+        "checkingLatency": "Checking latency..."
+      },
+      "badge": {
+        "inUse": "In use",
+        "new": "New",
+        "comingSoon": "Coming soon",
+        "bestFit": "Best fit",
+        "insufficientVRam": "Insufficient VRAM",
+        "requiresHigherQuota": "Requires higher quota"
+      },
+      "costs": {
+        "free": "Free",
+        "price": "${perMonth}/month • ${perHour}/hour"
+      },
+      "actions": {
+        "addCreditCard": "Add credit card",
+        "upgradeDialog": {
+          "title": "Add credit card",
+          "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
+          "submitButton": "Add credit card"
+        },
+        "requestQuotaIncrease": "Request increase",
+        "requestQuotaIncreaseDialog": {
+          "title": "Quota increase request",
+          "line1": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
+          "line2": "Let's <link>chat</link> to learn more about your needs and get started.",
+          "cta": "Book a call"
+        }
+      }
+    },
     "invitation": {
       "title": "You have been invited to join the <organization>{organizationName} organization</organization>",
       "description": "You were invited by {name} ({email})",
