@@ -83,10 +83,7 @@ function RegionItem({ region, selected, onSelected }: RegionItemProps) {
 
   return (
     <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 has-[:checked]:border-green">
-      <RegionFlag
-        identifier={region.identifier}
-        className={clsx('size-6', region.scope === 'continental' ? 'rounded' : 'rounded-full')}
-      />
+      <RegionFlag identifier={region.identifier} className="size-6" />
 
       <div className="flex-1">
         <div className="leading-none">{region.displayName}</div>

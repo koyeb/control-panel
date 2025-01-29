@@ -159,7 +159,7 @@ function ServiceResource({
 function RegionResource({ identifier }: { identifier: string }) {
   return (
     <ActivityResource className="min-w-max">
-      <RegionFlag identifier={identifier} className="size-4 rounded-full shadow-badge" />
+      <RegionFlag identifier={identifier} className="size-4" />
       <span className="uppercase">{identifier}</span>
     </ActivityResource>
   );
