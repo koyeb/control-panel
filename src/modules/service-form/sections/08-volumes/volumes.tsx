@@ -3,6 +3,7 @@ import { useFieldArray, UseFieldArrayReturn, useFormContext } from 'react-hook-f
 
 import { Alert, Button, InfoTooltip } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
+import { parseBytes } from 'src/application/memory';
 import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
@@ -90,7 +91,14 @@ function VolumesList({ fields, append, remove }: VolumesListProps) {
 
       <CreateVolumeDialog
         onCreated={(volume, mountPath) => {
-          append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath, mounted: false });
+          append({
+            volumeId: volume.id,
+            name: volume.name,
+            size: parseBytes(`${volume.maxSize}GB`),
+            mountPath,
+            mounted: false,
+          });
+
           closeDialog();
         }}
       />

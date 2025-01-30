@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { AppStatus, DomainStatus, InstanceStatus, ServiceStatus } from 'src/api/model';
+import { AppStatus, InstanceStatus, ServiceStatus } from 'src/api/model';
 
 type StatusDotProps<Status extends string> = {
   status: Status;
@@ -46,12 +46,4 @@ export const InstanceStatusDot = createStatusDotComponent<InstanceStatus>({
   stopped: clsx('bg-gray'),
   error: clsx('bg-red'),
   sleeping: clsx('animate-pulse bg-gray'),
-});
-
-export const DomainStatusDot = createStatusDotComponent<DomainStatus>({
-  pending: clsx('animate-pulse bg-blue'),
-  active: clsx('bg-green'),
-  error: clsx('bg-red'),
-  deleting: clsx('animate-pulse bg-gray'),
-  deleted: clsx('bg-gray'),
 });

@@ -44,14 +44,18 @@ export function Translate({ id, values }: { id: TranslationKeys; values?: Values
   return <>{translate(id, values)}</>;
 }
 
-type Enums =
-  Extract<TranslationKeys, `enums.${string}.${string}`> extends `enums.${infer E}.${infer V}`
-    ? [E, V]
-    : never;
+type EnumKeys<E extends string = string> = Extract<TranslationKeys, `enums.${E}.${string}`>;
+type Enums = EnumKeys extends `enums.${infer K}.${string}` ? K : never;
 
-type Enum = Enums extends [infer Enum, string] ? Enum : never;
-type EnumValue<E extends Enum> = Enums extends [E, infer V] ? V : never;
+type EnumValues = {
+  [Key in Enums]: EnumKeys<Key> extends `enums.${Key}.${infer V}` ? V : never;
+};
 
-export function TranslateEnum<E extends Enum>({ enum: enumName, value }: { enum: E; value: EnumValue<E> }) {
+type TranslateEnumProps<E extends Enums> = {
+  enum: E;
+  value: EnumValues[E];
+};
+
+export function TranslateEnum<E extends Enums>({ enum: enumName, value }: TranslateEnumProps<E>) {
   return <Translate id={`enums.${enumName}.${value}` as TranslationKeys} />;
 }

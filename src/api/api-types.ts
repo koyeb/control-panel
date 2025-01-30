@@ -6,6 +6,7 @@ export namespace Api {
 
   export type Activity = schemas['Activity'];
   export type App = schemas['App'];
+  export type Credential = schemas['Credential'];
   export type ArchiveSource = schemas['ArchiveSource'];
   export type BuildpackBuilder = schemas['BuildpackBuilder'];
   export type CatalogDatacenters = schemas['DatacenterListItem'];

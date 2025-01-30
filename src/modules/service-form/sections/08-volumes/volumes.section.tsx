@@ -2,6 +2,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { Alert, Button } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
+import { parseBytes } from 'src/application/memory';
 import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/components/icons';
@@ -90,7 +91,14 @@ function SectionContent() {
 
       <CreateVolumeDialog
         onCreated={(volume, mountPath) => {
-          append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath, mounted: false });
+          append({
+            volumeId: volume.id,
+            name: volume.name,
+            size: parseBytes(`${volume.maxSize}GB`),
+            mountPath,
+            mounted: false,
+          });
+
           closeDialog();
         }}
       />
