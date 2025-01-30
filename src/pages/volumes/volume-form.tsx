@@ -4,8 +4,8 @@ import { z } from 'zod';
 
 import { InputEnd } from '@koyeb/design-system';
 import { api } from 'src/api/api';
+import { fromApi } from 'src/api/from-api';
 import { useRegion, useRegions } from 'src/api/hooks/catalog';
-import { mapVolume } from 'src/api/mappers/volume';
 import { Volume, VolumeSnapshot } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -23,12 +23,6 @@ const schema = z.object({
   region: z.string().min(1),
   size: z.number(),
 });
-
-function toGigaBytes(bytes: number | undefined) {
-  if (bytes !== undefined) {
-    return bytes / Math.pow(1000, 3);
-  }
-}
 
 type VolumeFormProps = {
   snapshot?: VolumeSnapshot;
@@ -48,7 +42,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
     defaultValues: {
       name: volume?.name ?? '',
       region: snapshot?.region ?? volume?.region ?? '',
-      size: toGigaBytes(snapshot?.size ?? volume?.size) ?? NaN,
+      size: snapshot?.size ?? volume?.maxSize ?? NaN,
     },
     resolver: useZodResolver(schema, {
       name: t('nameLabel'),
@@ -66,7 +60,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
             path: { id: volume.id },
             body: { name },
           })
-          .then(({ volume }) => mapVolume(volume!));
+          .then(({ volume }) => fromApi(volume!));
       } else {
         return api
           .createVolume({
@@ -79,7 +73,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
               region,
             },
           })
-          .then(({ volume }) => mapVolume(volume!));
+          .then(({ volume }) => fromApi(volume!));
       }
     },
     async onSuccess(createVolume) {
@@ -113,7 +107,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
       <ControlledSelect
         control={form.control}
         name="region"
-        disabled={snapshot?.type === 'local' || volume !== undefined}
+        disabled={snapshot?.type === 'SNAPSHOT_TYPE_LOCAL' || volume !== undefined}
         label={<T id="regionLabel" />}
         placeholder={t('regionPlaceholder')}
         items={regions}
@@ -122,7 +116,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
         itemToValue={(region) => region.identifier}
         renderItem={(region) => region.displayName}
         helperText={
-          snapshot?.type === 'local' && (
+          snapshot?.type === 'SNAPSHOT_TYPE_LOCAL' && (
             <T id="regionBoundedToLocalSnapshot" values={{ region: snapshotRegion?.displayName }} />
           )
         }

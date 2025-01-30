@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { mapSnapshotList } from 'src/api/mappers/volume';
+import { fromApi } from 'src/api/from-api';
 import { useApiQueryFn } from 'src/api/use-api';
 import { DocumentTitle } from 'src/components/document-title';
 import { QueryGuard } from 'src/components/query-error';
@@ -18,7 +18,7 @@ export function VolumeSnapshotsPage() {
     ...useApiQueryFn('listSnapshots', {
       query: { limit: '100' },
     }),
-    select: (data) => mapSnapshotList(data.snapshots!),
+    select: (data) => fromApi(data.snapshots!),
   });
 
   return (

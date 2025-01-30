@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button, InputEnd } from '@koyeb/design-system';
-import { mapVolume } from 'src/api/mappers/volume';
+import { fromApi } from 'src/api/from-api';
 import { Volume } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
@@ -56,7 +56,7 @@ export function CreateVolumeDialog({ onCreated }: CreateVolumeDialogProps) {
     })),
     async onSuccess({ volume }, { mountPath }) {
       await invalidate('listVolumes');
-      onCreated(mapVolume(volume!), mountPath);
+      onCreated(fromApi(volume!), mountPath);
     },
     onError: useFormErrorHandler(form, (error) => ({
       name: error.name,

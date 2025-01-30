@@ -18,7 +18,6 @@ import {
   OrganizationSummary,
   Secret,
   Service,
-  Volume,
 } from 'src/api/model';
 
 import { createDate } from './date';
@@ -112,15 +111,6 @@ const environmentVariable = createFactory<EnvironmentVariable>(() => ({
   name: '',
   value: '',
   regions: [],
-}));
-
-const volume = createFactory<Volume>(() => ({
-  id: createId(),
-  status: 'attached',
-  name: '',
-  region: '',
-  size: 0,
-  createdAt: createDate(),
 }));
 
 const simpleSecret = createFactory<Secret>(() => ({
@@ -233,7 +223,6 @@ export const create = {
   region,
   instance,
   environmentVariable,
-  volume,
   simpleSecret,
   githubApp,
   repository,

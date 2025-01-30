@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
 import { Button, ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
+import { fromApi } from 'src/api/from-api';
 import { useService } from 'src/api/hooks/service';
-import { mapSnapshot } from 'src/api/mappers/volume';
 import { Volume } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
-import { formatBytes } from 'src/application/memory';
+import { formatBytes, parseBytes } from 'src/application/memory';
 import { routes } from 'src/application/routes';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
@@ -53,7 +53,7 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
         },
         status: {
           header: <T id="status" />,
-          render: (volume) => <VolumeStatusBadge status={volume.status} />,
+          render: (volume) => <VolumeStatusBadge enum="volumeStatus" status={volume.status} />,
         },
         region: {
           hidden: isMobile,
@@ -67,7 +67,7 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
         },
         size: {
           header: <T id="size" />,
-          render: (volume) => formatBytes(volume.size, { decimal: true }),
+          render: (volume) => formatBytes(parseBytes(volume.maxSize + 'GB'), { decimal: true }),
         },
         attachedTo: {
           hidden: isMobile,
@@ -93,7 +93,7 @@ function VolumeName({ volume }: { volume: Volume }) {
   const snapshot = useQuery({
     ...useApiQueryFn('getSnapshot', { path: { id: volume.snapshotId! } }),
     enabled: volume.snapshotId !== undefined,
-    select: ({ snapshot }) => mapSnapshot(snapshot!),
+    select: ({ snapshot }) => fromApi(snapshot!),
   });
 
   return (

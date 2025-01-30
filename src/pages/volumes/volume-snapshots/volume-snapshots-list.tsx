@@ -12,6 +12,7 @@ import { VolumeSnapshotStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
+import { lowerCase, removePrefix } from 'src/utils/strings';
 
 import { CreateVolumeDialog } from '../create-volume-dialog';
 
@@ -44,7 +45,7 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
         },
         status: {
           header: <T id="status" />,
-          render: (snapshot) => <VolumeSnapshotStatusBadge status={snapshot.status} />,
+          render: (snapshot) => <VolumeSnapshotStatusBadge enum="snapshotStatus" status={snapshot.status} />,
         },
         region: {
           hidden: isMobile,
@@ -58,11 +59,13 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
         },
         type: {
           header: <T id="type" />,
-          render: (snapshot) => <T id={`snapshotType.${snapshot.type}`} />,
+          render: (snapshot) => (
+            <T id={`snapshotType.${lowerCase(removePrefix('SNAPSHOT_TYPE_', snapshot.type))}`} />
+          ),
         },
         volumeName: {
           header: <T id="volumeName" />,
-          render: (snapshot) => volumes?.find(hasProperty('id', snapshot.volumeId))?.name,
+          render: (snapshot) => volumes?.find(hasProperty('id', snapshot.parentVolumeId))?.name,
         },
         created: {
           className: 'w-48',
@@ -80,7 +83,6 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
 }
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
-  const canCreate = snapshot.status === 'available' && snapshot.type === 'remote';
   const openDialog = Dialog.useOpen();
 
   return (
@@ -88,12 +90,12 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
       <ActionsMenu>
         {(withClose) => (
           <>
-            <Tooltip content={canCreate ? undefined : <T id="actions.cannotCreateVolume" />}>
+            <Tooltip content={canCreateVolume(snapshot) ? undefined : <T id="actions.cannotCreateVolume" />}>
               {(props) => (
                 <ButtonMenuItem
                   {...props}
-                  disabled={!canCreate}
-                  onClick={withClose(() => openDialog('CreateVolume'))}
+                  disabled={!canCreateVolume(snapshot)}
+                  onClick={withClose(() => openDialog(`CreateVolume-${snapshot.id}`))}
                 >
                   <T id="actions.createVolume" />
                 </ButtonMenuItem>
@@ -116,4 +118,8 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
       <DeleteSnapshotDialog snapshot={snapshot} />
     </>
   );
+}
+
+function canCreateVolume(snapshot: VolumeSnapshot) {
+  return snapshot.status === 'SNAPSHOT_STATUS_AVAILABLE' && snapshot.type === 'SNAPSHOT_TYPE_REMOTE';
 }

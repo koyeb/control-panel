@@ -359,7 +359,7 @@ export type LogicalDatabase = {
 
 // domains
 
-export type Domain = FromApi<Api.Domain, 'verified_at'>;
+export type Domain = FromApi<Api.Domain, { verified_at: string | null }>;
 
 // git
 
@@ -625,36 +625,9 @@ export type Address = {
 
 // volumes
 
-export type Volume = {
-  id: string;
-  status: VolumeStatus;
-  name: string;
-  region: string;
-  size: number;
-  snapshotId?: string;
-  serviceId?: string;
-  createdAt: string;
-};
+export type Volume = FromApi<
+  Api.PersistentVolume,
+  { snapshot_id?: string; service_id?: string; deleted_at: string | null }
+>;
 
-export type VolumeStatus = 'invalid' | 'attached' | 'detached' | 'deleting' | 'deleted';
-
-export type VolumeSnapshot = {
-  id: string;
-  volumeId: string;
-  name: string;
-  size: number;
-  region: string;
-  status: VolumeSnapshotStatus;
-  type: VolumeSnapshotType;
-  createdAt: string;
-};
-
-export type VolumeSnapshotStatus =
-  | 'invalid'
-  | 'creating'
-  | 'available'
-  | 'migrating'
-  | 'deleting'
-  | 'deleted';
-
-export type VolumeSnapshotType = 'invalid' | 'local' | 'remote';
+export type VolumeSnapshot = FromApi<Api.Snapshot>;

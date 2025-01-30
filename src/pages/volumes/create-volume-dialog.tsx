@@ -14,7 +14,7 @@ export function CreateVolumeDialog({ snapshot }: { snapshot?: VolumeSnapshot }) 
   const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog id="CreateVolume" className="col w-full max-w-xl gap-4">
+    <Dialog id={`CreateVolume-${snapshot?.id}`} className="col w-full max-w-xl gap-4">
       <DialogHeader title={<T id="title" />} />
 
       <p className="text-dim">{<T id="description" />}</p>

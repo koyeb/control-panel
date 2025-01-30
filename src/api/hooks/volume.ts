@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { mapVolumesList } from '../mappers/volume';
+import { fromApi } from '../from-api';
 import { useApiQueryFn } from '../use-api';
 
 export function useVolumesQuery(region?: string) {
   return useQuery({
     ...useApiQueryFn('listVolumes', { query: { limit: '100', region } }),
-    select: mapVolumesList,
+    select: ({ volumes }) => fromApi(volumes!),
   });
 }
 

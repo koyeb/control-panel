@@ -75,6 +75,21 @@
       "enterprise": "Enterprise",
       "internal": "Internal",
       "no_plan": "No plan"
+    },
+    "volumeStatus": {
+      "PERSISTENT_VOLUME_STATUS_INVALID": "Invalid",
+      "PERSISTENT_VOLUME_STATUS_ATTACHED": "Attached",
+      "PERSISTENT_VOLUME_STATUS_DETACHED": "Detached",
+      "PERSISTENT_VOLUME_STATUS_DELETING": "Deleting",
+      "PERSISTENT_VOLUME_STATUS_DELETED": "DeleteD"
+    },
+    "snapshotStatus": {
+      "SNAPSHOT_STATUS_INVALID": "Invalid",
+      "SNAPSHOT_STATUS_CREATING": "Creating",
+      "SNAPSHOT_STATUS_AVAILABLE": "Available",
+      "SNAPSHOT_STATUS_MIGRATING": "Migrating",
+      "SNAPSHOT_STATUS_DELETING": "Deleting",
+      "SNAPSHOT_STATUS_DELETED": "Deleted"
     }
   },
   "components": {
