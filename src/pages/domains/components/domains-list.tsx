@@ -9,7 +9,7 @@ import {
   useBreakpoint,
 } from '@koyeb/design-system';
 import { useApps } from 'src/api/hooks/service';
-import { Domain, type DomainStatus } from 'src/api/model';
+import { Domain } from 'src/api/model';
 import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { ActionsMenu } from 'src/components/actions-menu';
@@ -91,7 +91,7 @@ export function DomainsList({ domains, expanded, toggleExpanded, onCreate, selec
   );
 }
 
-function DomainStatus({ status }: { status: DomainStatus }) {
+function DomainStatus({ status }: { status: Domain['status'] }) {
   const { Icon, className } = domainStatusIconMap[status];
 
   return (
@@ -104,15 +104,15 @@ function DomainStatus({ status }: { status: DomainStatus }) {
   );
 }
 
-const domainStatusIconMap: Record<DomainStatus, { Icon: SvgComponent; className?: string }> = {
-  pending: { Icon: Spinner },
-  active: { Icon: IconCircleCheck, className: 'text-green' },
-  error: { Icon: IconCircleAlert, className: 'text-red' },
-  deleting: { Icon: Spinner },
-  deleted: { Icon: IconCircleCheck },
+const domainStatusIconMap: Record<Domain['status'], { Icon: SvgComponent; className?: string }> = {
+  PENDING: { Icon: Spinner },
+  ACTIVE: { Icon: IconCircleCheck, className: 'text-green' },
+  ERROR: { Icon: IconCircleAlert, className: 'text-red' },
+  DELETING: { Icon: Spinner },
+  DELETED: { Icon: IconCircleCheck },
 };
 
-function AppName({ appId }: { appId: string | null }) {
+function AppName({ appId }: { appId: string }) {
   const app = useApps()?.find(hasProperty('id', appId));
 
   if (app) {
@@ -130,7 +130,7 @@ function DomainActions({ domain }: { domain: Domain }) {
       <ActionsMenu>
         {(withClose) => (
           <ButtonMenuItem
-            disabled={domain.status === 'deleting'}
+            disabled={domain.status === 'DELETING'}
             onClick={withClose(() => openDialog(`ConfirmDeleteDomain-${domain.id}`))}
           >
             <T id="actions.delete" />
@@ -144,7 +144,7 @@ function DomainActions({ domain }: { domain: Domain }) {
 }
 
 function DomainError({ domain }: { domain: Domain }) {
-  if (domain.status !== 'error') {
+  if (domain.status !== 'ERROR') {
     return null;
   }
 

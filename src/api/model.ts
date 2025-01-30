@@ -359,20 +359,7 @@ export type LogicalDatabase = {
 
 // domains
 
-export type Domain = {
-  id: string;
-  appId: string | null;
-  name: string;
-  intendedCname: string;
-  type: 'autoassigned' | 'custom';
-  status: DomainStatus;
-  messages: string[];
-  verifiedAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
-
-export type DomainStatus = 'pending' | 'active' | 'error' | 'deleting' | 'deleted';
+export type Domain = FromApi<Api.Domain, 'verified_at'>;
 
 // git
 

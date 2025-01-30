@@ -2,7 +2,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
 
-import { mapDomains } from '../mappers/domain';
+import { fromApi } from '../from-api';
+import { Domain } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useDomainsQuery(type?: 'autoassigned' | 'custom') {
@@ -13,6 +14,6 @@ export function useDomainsQuery(type?: 'autoassigned' | 'custom') {
         types: type ? [upperCase(type)] : undefined,
       },
     }),
-    select: mapDomains,
+    select: ({ domains }): Domain[] => fromApi(domains!),
   });
 }
