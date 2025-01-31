@@ -1,4 +1,5 @@
 import { DialogFooter, DialogHeader } from '@koyeb/design-system';
+import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
 import { PlanItem } from './plan-item';
@@ -31,7 +32,15 @@ export function SelectPlan({ onDowngrade, onSelected }: SelectPlanProps) {
         <T
           id="footer"
           values={{
-            reachOut: (children) => <span className="underline">{children}</span>,
+            reachOut: (children) => (
+              <ExternalLink
+                openInNewTab
+                href="https://app.reclaim.ai/m/koyeb-intro/short-call"
+                className="underline"
+              >
+                {children}
+              </ExternalLink>
+            ),
             downgrade: (children) => (
               <button type="button" onClick={onDowngrade} className="underline">
                 {children}
