@@ -12,11 +12,12 @@ type PlanItemProps = {
   plan: 'starter' | 'pro' | 'scale';
   popular?: boolean;
   onUpgrade?: () => void;
+  className?: string;
 };
 
-export function PlanItem({ plan, popular, onUpgrade }: PlanItemProps) {
+export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps) {
   return (
-    <div className={clsx('col rounded-lg border p-4 shadow-lg', popular ? 'gap-10' : 'gap-6')}>
+    <div className={clsx('col rounded-lg border p-4 shadow-lg', popular ? 'gap-10' : 'gap-6', className)}>
       <div className="row items-center justify-between">
         <PlanIcon plan={plan} className={clsx(popular ? 'text-[#5341AE]' : 'text-green')} />
         {popular && <PopularBadge />}
@@ -25,7 +26,7 @@ export function PlanItem({ plan, popular, onUpgrade }: PlanItemProps) {
       <div className="col gap-2">
         <div className="font-medium">
           <T
-            id="upgrade"
+            id={`${plan}.cta`}
             values={{
               plan: <TranslateEnum enum="plans" value={plan} />,
             }}
@@ -50,7 +51,7 @@ export function PlanItem({ plan, popular, onUpgrade }: PlanItemProps) {
 
       {onUpgrade && (
         <Button variant={popular ? 'solid' : 'outline'} onClick={onUpgrade}>
-          <T id="cta" values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
+          <T id={`${plan}.cta`} values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
         </Button>
       )}
     </div>

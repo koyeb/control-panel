@@ -1310,34 +1310,35 @@
       },
       "ended": {
         "planItem": {
-          "upgrade": "Upgrade to {plan} Plan",
           "popular": "Most popular",
           "price": "{price} /month {price, select, 0 {+ pay as you go} other {}}",
-          "cta": "Upgrade to {plan}",
           "starter": {
-            "feature1": "Key plan benefit short text",
-            "feature2": "Key plan benefit short text",
-            "feature3": "Key plan benefit short text"
+            "feature1": "Generous Free Tier",
+            "feature2": "Scale-to-Zero and Autoscaling",
+            "feature3": "CPU and GPU access",
+            "cta": "Downgrade to {plan}"
           },
           "pro": {
-            "feature1": "Key plan benefit short text",
-            "feature2": "Key plan benefit short text",
-            "feature3": "Key plan benefit short text"
+            "feature1": "$10 included compute",
+            "feature2": "10 users",
+            "feature3": "5 concurrent builds",
+            "cta": "Continue on {plan}"
           },
           "scale": {
-            "feature1": "Key plan benefit short text",
-            "feature2": "Key plan benefit short text",
-            "feature3": "Key plan benefit short text"
+            "feature1": "$100 included compute",
+            "feature2": "50 users",
+            "feature3": "Slack cross-connect",
+            "cta": "Upgrade to {plan}"
           }
         },
         "selectPlan": {
-          "title": "Your Free Trial ended",
-          "description": "All deployed services have been paused. Your account remains active, but the organization is locked until upgrade to a paid plan.",
-          "footer": "Want to extend your trial, <reachOut>reach out</reachOut> or <downgrade>create new organization</downgrade> on a free Hobby plan"
+          "title": "Your trial is over",
+          "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
+          "footer": "Want to extend your trial? <reachOut>Book a call</reachOut> or <downgrade>create a new organization</downgrade> on a Hobby plan.<br></br>After 14 days, the organization and all related resources will be automatically deleted."
         },
         "upgrade": {
-          "title": "Your Free Trial ended",
-          "description": "All deployed services have been paused. Your account remains active, but to regain access, please downgrade to the free plan or upgrade to a paid plan.",
+          "title": "Your trial is over",
+          "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
           "submit": "Upgrade",
           "successNotification": "Welcome to your {plan} Plan"
         },
