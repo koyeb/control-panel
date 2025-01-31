@@ -1334,7 +1334,8 @@
         "selectPlan": {
           "title": "Your trial is over",
           "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
-          "footer": "Want to extend your trial? <reachOut>Book a call</reachOut> or <downgrade>create a new organization</downgrade> on a Hobby plan.<br></br>After 14 days, the organization and all related resources will be automatically deleted."
+          "footer": "Want to extend your trial? <reachOut>Book a call</reachOut> or <downgrade>create a new organization</downgrade> on a Hobby plan.<br></br>After 14 days, the organization and all related resources will be automatically deleted.",
+          "manageAccount": "Manage account"
         },
         "upgrade": {
           "title": "Your trial is over",
