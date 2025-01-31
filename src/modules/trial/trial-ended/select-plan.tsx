@@ -1,5 +1,5 @@
 import { DialogFooter, DialogHeader } from '@koyeb/design-system';
-import { ExternalLink } from 'src/components/link';
+import { ExternalLink, Link } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
 import { PlanItem } from './plan-item';
@@ -14,7 +14,12 @@ type SelectPlanProps = {
 export function SelectPlan({ onDowngrade, onSelected }: SelectPlanProps) {
   return (
     <>
-      <DialogHeader title={<T id="title" />} />
+      <div className="row justify-between gap-4">
+        <DialogHeader title={<T id="title" />} />
+        <Link href={`?settings`} className="text-dim hover:underline">
+          <T id="manageAccount" />
+        </Link>
+      </div>
 
       <div className="col gap-8">
         <p className="text-dim">

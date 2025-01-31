@@ -38,6 +38,7 @@ export const createApiRegion = createFactory<Api.CatalogRegion>(() => ({
   id: createId(),
   name: '',
   status: 'AVAILABLE',
+  datacenters: [],
 }));
 
 export const createApiDatacenter = createFactory<Api.CatalogDatacenters>(() => ({

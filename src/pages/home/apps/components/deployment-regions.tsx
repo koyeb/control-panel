@@ -18,7 +18,7 @@ export function DeploymentRegions({ regions }: DeploymentRegionsProps) {
 
   return (
     <div className="row items-center gap-2">
-      <RegionFlag identifier={firstRegion} className="size-4 rounded-full shadow-badge" />
+      <RegionFlag identifier={firstRegion} className="size-4" />
 
       {region?.displayName}
 

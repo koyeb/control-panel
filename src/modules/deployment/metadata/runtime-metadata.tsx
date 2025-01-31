@@ -43,7 +43,7 @@ export function RegionsMetadata({ regions }: { regions: string[] }) {
       label={<T id="regionsLabel" />}
       value={
         <div className="row items-center gap-2">
-          <RegionFlag identifier={firstRegion} className="size-4 rounded-full shadow-badge" />
+          <RegionFlag identifier={firstRegion} className="size-4" />
 
           {catalogRegion?.displayName}
 

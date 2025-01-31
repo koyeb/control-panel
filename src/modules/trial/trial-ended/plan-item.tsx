@@ -12,20 +12,24 @@ type PlanItemProps = {
   plan: 'starter' | 'pro' | 'scale';
   popular?: boolean;
   onUpgrade?: () => void;
+  className?: string;
 };
 
-export function PlanItem({ plan, popular, onUpgrade }: PlanItemProps) {
+export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps) {
   return (
-    <div className={clsx('col rounded-lg border p-4 shadow-lg', popular ? 'gap-10' : 'gap-6')}>
+    <div className={clsx('col rounded-lg border p-4 shadow-lg', popular ? 'gap-10' : 'gap-6', className)}>
       <div className="row items-center justify-between">
-        <PlanIcon plan={plan} className={clsx(popular ? 'text-[#5341AE]' : 'text-green')} />
+        <PlanIcon
+          plan={plan}
+          className={clsx(popular ? 'text-[#5341AE] dark:text-[#9B87FF]' : 'text-green')}
+        />
         {popular && <PopularBadge />}
       </div>
 
       <div className="col gap-2">
         <div className="font-medium">
           <T
-            id="upgrade"
+            id={`${plan}.cta`}
             values={{
               plan: <TranslateEnum enum="plans" value={plan} />,
             }}
@@ -50,7 +54,7 @@ export function PlanItem({ plan, popular, onUpgrade }: PlanItemProps) {
 
       {onUpgrade && (
         <Button variant={popular ? 'solid' : 'outline'} onClick={onUpgrade}>
-          <T id="cta" values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
+          <T id={`${plan}.cta`} values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
         </Button>
       )}
     </div>
@@ -70,7 +74,10 @@ function PlanFeature({ text }: { text: React.ReactNode }) {
 
 function PopularBadge() {
   return (
-    <Badge size={1} className="!bg-[#3B00FF]/5 !text-[#180091]/70">
+    <Badge
+      size={1}
+      className="!bg-[#3B00FF]/5 !text-[#180091]/70 dark:!bg-[#4E19FF80]/50 dark:!text-[#BBADFF]"
+    >
       <T id="popular" />
     </Badge>
   );

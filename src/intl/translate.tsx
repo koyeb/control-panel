@@ -13,6 +13,7 @@ export type TranslationKeys = keyof Flatten<typeof translations>;
 export type TranslateFn = TranslateFunction<TranslationKeys>;
 
 export const createTranslate = createTranslationHelper<TranslationKeys>({
+  br: () => <br />,
   strong: (children) => <strong>{children}</strong>,
   code: (children) => <code>{children}</code>,
   dim: (children) => <span className="text-dim">{children}</span>,

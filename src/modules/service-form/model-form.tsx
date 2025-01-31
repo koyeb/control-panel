@@ -355,11 +355,7 @@ function RegionSection({ form }: { form: ModelForm }) {
 function SelectRegionItem({ region, disabled }: { region: CatalogRegion; disabled: boolean }) {
   return (
     <div className="row items-center gap-2">
-      <RegionFlag
-        identifier={region.identifier}
-        className={clsx('size-6 rounded-full shadow-badge', { 'opacity-50': disabled })}
-      />
-
+      <RegionFlag identifier={region.identifier} className={clsx('size-6', { 'opacity-50': disabled })} />
       <RegionName identifier={region.identifier} className={clsx({ 'opacity-50': disabled })} />
 
       {disabled && (
