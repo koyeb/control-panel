@@ -1,7 +1,10 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
 import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
+import { api } from 'src/api/api';
+import { mapInstances } from 'src/api/mappers/deployment';
 import {
   App,
   ComputeDeployment,
@@ -12,11 +15,13 @@ import {
   Service,
 } from 'src/api/model';
 import { hasBuild } from 'src/application/service-functions';
+import { useToken } from 'src/application/token';
 import { IconCircleDashed } from 'src/components/icons';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
+import { createArray } from 'src/utils/arrays';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
@@ -53,6 +58,8 @@ export function DeploymentLogs({ app, service, deployment, instances }: Deployme
 
   const runtimeExpanded = expanded === 'runtime';
   const runtimeLogs = useLogs(deployment.id, 'runtime', connectToRuntimeLogs(deployment, runtimeExpanded));
+
+  const replicas = useReplicas(deployment);
 
   return (
     <div className="rounded-md border">
@@ -94,7 +101,7 @@ export function DeploymentLogs({ app, service, deployment, instances }: Deployme
             instances={instances}
             {...runtimeLogs}
           />
-          {instances.length > 0 && <Replicas instances={instances} />}
+          {replicas.flat().length > 0 && <Replicas replicas={replicas} />}
         </div>
       </AccordionSection>
     </div>
@@ -150,6 +157,34 @@ function useAutoExpandSection(set: (values: DeploymentPhase | null) => void, dep
       }
     },
   );
+}
+
+function useReplicas(deployment: ComputeDeployment) {
+  const { token } = useToken();
+  const { scaling, regions } = deployment.definition;
+  const maxReplicas = scaling.max * regions.length;
+
+  const { data = [] } = useQuery({
+    queryKey: ['listReplicas', { deploymentId: deployment.id, maxReplicas }, token],
+    async queryFn() {
+      return Promise.all(
+        createArray(maxReplicas, (index) =>
+          api.listInstances({
+            token,
+            query: {
+              deployment_id: deployment.id,
+              replica_index: String(index),
+              limit: '10',
+              order: 'desc',
+            },
+          }),
+        ),
+      );
+    },
+    select: (results) => results.map(mapInstances),
+  });
+
+  return data;
 }
 
 type BuildSectionHeaderProps = {

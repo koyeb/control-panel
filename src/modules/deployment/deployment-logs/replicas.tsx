@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import uniq from 'lodash-es/uniq';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { FormattedDate } from 'react-intl';
 
@@ -30,11 +30,9 @@ type Filters = {
   status: InstanceStatus | 'all';
 };
 
-export function Replicas({ instances }: { instances: Instance[] }) {
-  const replicas = useReplicas(instances);
-
-  const regions = uniq(instances.map((instance) => instance.region));
-  const statuses = uniq(instances.map((instance) => instance.status));
+export function Replicas({ replicas }: { replicas: Instance[][] }) {
+  const regions = uniq(replicas.flat().map((instance) => instance.region));
+  const statuses = uniq(replicas.flat().map((instance) => instance.status));
 
   const filters = useForm<Filters>({
     defaultValues: {
@@ -49,9 +47,7 @@ export function Replicas({ instances }: { instances: Instance[] }) {
   const statusFilter = filters.watch('status');
   const filteredStatuses = statusFilter === 'all' ? statuses : [statusFilter];
 
-  const filteredReplicas = replicas.filter(
-    ([instance]) => inArray(instance.region, filteredRegions) && inArray(instance.status, filteredStatuses),
-  );
+  const filteredReplicas = replicas.filter(createInstancesFilter(filteredRegions, filteredStatuses));
 
   return (
     <div className="rounded-md border">
@@ -68,12 +64,24 @@ export function Replicas({ instances }: { instances: Instance[] }) {
       </div>
 
       <div className="grid grid-cols-1 gap-3 bg-muted/50 p-4 sm:grid-cols-2 md:grid-cols-3">
-        {filteredReplicas.map((instances) => (
-          <Replica key={instances[0].id} instances={instances} />
+        {filteredReplicas.map((instances, index) => (
+          <Replica key={index} instances={instances} />
         ))}
       </div>
     </div>
   );
+}
+
+function createInstancesFilter(regions: string[], statuses: InstanceStatus[]) {
+  return (instances: Instance[]): instances is [Instance, ...Instance[]] => {
+    const [instance] = instances;
+
+    if (!instance) {
+      return false;
+    }
+
+    return inArray(instance.region, regions) && inArray(instance.status, statuses);
+  };
 }
 
 type RegionFilterProps = {
@@ -133,43 +141,6 @@ function StatusFilter({ filters, statuses }: StatusFilterProps) {
   );
 }
 
-function useReplicas(instances: Instance[]) {
-  return useMemo(() => {
-    // Map<region, Map<replicaIndex, Instance[]>>
-    const map = new Map<string, Map<number, Instance[]>>();
-
-    for (const instance of instances) {
-      if (!map.has(instance.region)) {
-        map.set(instance.region, new Map());
-      }
-
-      const regionMap = map.get(instance.region)!;
-
-      if (!regionMap.has(instance.replicaIndex)) {
-        regionMap.set(instance.replicaIndex, []);
-      }
-
-      regionMap.get(instance.replicaIndex)!.push(instance);
-    }
-
-    const result: Array<[Instance, ...Instance[]]> = [];
-
-    for (const regionsMap of map.values()) {
-      for (const instances of regionsMap.values()) {
-        result.push(instances as [Instance, ...Instance[]]);
-      }
-    }
-
-    return result.sort(([a], [b]) => {
-      if (a.region !== b.region) {
-        return a.region.localeCompare(b.region);
-      }
-
-      return a.replicaIndex - b.replicaIndex;
-    });
-  }, [instances]);
-}
-
 function Replica({ instances }: { instances: [Instance, ...Instance[]] }) {
   const instance = instances.find(hasProperty('status', 'healthy')) ?? instances[0];
 
@@ -196,7 +167,7 @@ function Replica({ instances }: { instances: [Instance, ...Instance[]] }) {
       <div className="border-t" />
 
       <div className="row flex-wrap gap-2">
-        {instances.slice(0, 10).map((instance) => (
+        {instances.map((instance) => (
           <Tooltip
             key={instance.id}
             allowHover
