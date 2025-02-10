@@ -473,7 +473,7 @@
         "autoScalingValue": "{min}-{max} instances",
         "regionsLabel": "Regions",
         "environmentLabel": "Environment",
-        "environmentValue": "{variables} {variables, plural, one {variable} other {variables}}{files, plural, =0 {} =1 {, 1 file} other {, {file} files}}",
+        "environmentValue": "{variables} {variables, plural, one {variable} other {variables}}{files, plural, =0 {} =1 {, 1 file} other {, {files} files}}",
         "volumesLabel": "Volumes",
         "volumesValue": "{count} {count, plural, one {volume} other {volumes}} attached",
         "attachedVolume": "{volumeName} mounted at {mountPath}",
