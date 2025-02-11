@@ -8,7 +8,6 @@ import { routes } from 'src/application/routes';
 import { IconChevronRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { PlanIcon } from 'src/components/plan-icon';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
@@ -64,11 +63,9 @@ export function OrganizationPlan() {
             </div>
 
             {trial && (
-              <FeatureFlag feature="trial">
-                <Badge size={1} color="green">
-                  Trial
-                </Badge>
-              </FeatureFlag>
+              <Badge size={1} color="green">
+                Trial
+              </Badge>
             )}
 
             <div className="ms-auto">
@@ -88,15 +85,13 @@ export function OrganizationPlan() {
           )}
         </div>
       )}
-      renderFloating={(props) => (
-        <FeatureFlag feature="trial" fallback={<EstimatedCostsPopup className="z-30" {...props} />}>
-          {trial ? (
-            <TrialSummaryPopup className="z-30" {...props} />
-          ) : (
-            <EstimatedCostsPopup className="z-30" {...props} />
-          )}
-        </FeatureFlag>
-      )}
+      renderFloating={(props) =>
+        trial ? (
+          <TrialSummaryPopup className="z-30" {...props} />
+        ) : (
+          <EstimatedCostsPopup className="z-30" {...props} />
+        )
+      }
     />
   );
 }

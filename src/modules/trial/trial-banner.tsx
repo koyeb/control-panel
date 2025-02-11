@@ -1,6 +1,5 @@
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 
@@ -18,10 +17,8 @@ export function TrialBanner() {
   );
 
   return (
-    <FeatureFlag feature="trial">
-      <div className="bg-green/10 px-4 py-1.5 text-center text-green md:h-full md:whitespace-nowrap">
-        <T id="content" values={{ days: trial.daysLeft, upgrade }} />
-      </div>
-    </FeatureFlag>
+    <div className="bg-green/10 px-4 py-1.5 text-center text-green md:h-full md:whitespace-nowrap">
+      <T id="content" values={{ days: trial.daysLeft, upgrade }} />
+    </div>
   );
 }

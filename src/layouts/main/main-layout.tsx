@@ -15,7 +15,6 @@ import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useLocation, useNavigate } from 'src/hooks/router';
 import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
@@ -52,9 +51,7 @@ export function MainLayout({ children }: LayoutProps) {
       <DocumentTitle />
       <CreateServiceDialog />
 
-      <FeatureFlag feature="trial">
-        <TrialWelcomeDialog />
-      </FeatureFlag>
+      <TrialWelcomeDialog />
 
       <Layout
         banner={banner ? { session: <SessionTokenBanner />, trial: <TrialBanner /> }[banner] : null}
