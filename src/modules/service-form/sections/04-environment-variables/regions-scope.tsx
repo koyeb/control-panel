@@ -68,7 +68,7 @@ function SelectedRegions({ regions }: { regions: CatalogRegion[] }) {
           key={region.identifier}
           identifier={region.identifier}
           style={{ marginLeft: `${-index / 2}rem` }}
-          className="size-5 rounded-full shadow-badge"
+          className="size-5"
         />
       ))}
       <span className="ml-2">{regions.length} regions</span>
@@ -79,7 +79,7 @@ function SelectedRegions({ regions }: { regions: CatalogRegion[] }) {
 function RegionItem({ region }: { region?: CatalogRegion }) {
   return (
     <>
-      <RegionFlag identifier={region?.identifier} className="size-5 rounded-full shadow-badge" />
+      <RegionFlag identifier={region?.identifier} className="size-5" />
       <RegionName identifier={region?.identifier} />
     </>
   );

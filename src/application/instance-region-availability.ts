@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useInstances, useRegion, useRegions } from 'src/api/hooks/catalog';
 import { useOrganizationSummary } from 'src/api/hooks/session';
@@ -11,25 +11,46 @@ export type RegionAvailability = [available: true] | [available: false, reason: 
 
 export type RegionUnavailableReason = 'unavailable' | 'regionNotFound' | 'unavailableForInstance';
 
-export function useRegionAvailabilities() {
+export function useRegionAvailabilities(options?: CheckRegionAvailabilityOptions) {
   const regions = useRegions();
+  const optionsMemo = useDeepCompareMemo(options);
 
   return useMemo(() => {
     return toObject(
       regions,
       (region) => region.identifier,
-      (region) => checkRegionAvailability(region),
+      (region) => checkRegionAvailability(region, optionsMemo),
     );
-  }, [regions]);
+  }, [regions, optionsMemo]);
+}
+
+export function useIsRegionAvailable(options?: CheckRegionAvailabilityOptions) {
+  const availabilities = useRegionAvailabilities(options);
+
+  return useCallback(
+    ({ identifier }: CatalogRegion) => Boolean(availabilities[identifier]?.[0]),
+    [availabilities],
+  );
 }
 
 export function useRegionAvailability(regionIdentifier: string) {
   return useRegionAvailabilities()[regionIdentifier] ?? [false, 'regionNotFound'];
 }
 
-function checkRegionAvailability(region: CatalogRegion): RegionAvailability {
+export type CheckRegionAvailabilityOptions = {
+  instance?: CatalogInstance;
+};
+
+function checkRegionAvailability(
+  region: CatalogRegion,
+  options: CheckRegionAvailabilityOptions = {},
+): RegionAvailability {
   if (region.status !== 'available') {
     return [false, 'unavailable'];
+  }
+
+  if (options.instance && region.instances && !region.instances.includes(options.instance.identifier)) {
+    return [false, 'unavailableForInstance'];
   }
 
   return [true];
@@ -61,19 +82,35 @@ export type InstanceUnavailableReason =
 
 export function useInstanceAvailabilities(options: CheckInstanceAvailabilityOptions = {}) {
   const instances = useInstances();
+  const check = useCheckInstanceAvailability(options);
+
+  return useMemo(() => {
+    return toObject(instances, (instance) => instance.identifier, check);
+  }, [instances, check]);
+}
+
+export function useIsInstanceAvailable(options: CheckInstanceAvailabilityOptions = {}) {
+  const availabilities = useInstanceAvailabilities(options);
+
+  return useCallback(
+    ({ identifier }: CatalogInstance) => Boolean(availabilities[identifier]?.[0]),
+    [availabilities],
+  );
+}
+
+export function useCheckInstanceAvailability(options: CheckInstanceAvailabilityOptions = {}) {
   const organizationSummary = useOrganizationSummary();
   const optionsMemo = useDeepCompareMemo(options);
 
-  return useMemo(() => {
-    return toObject(
-      instances,
-      (instance) => instance.identifier,
-      (instance) => checkInstanceAvailability(instance, organizationSummary, optionsMemo),
-    );
-  }, [instances, organizationSummary, optionsMemo]);
+  return useCallback(
+    (instance: CatalogInstance) => {
+      return checkInstanceAvailability(instance, organizationSummary, optionsMemo);
+    },
+    [organizationSummary, optionsMemo],
+  );
 }
 
-type CheckInstanceAvailabilityOptions = {
+export type CheckInstanceAvailabilityOptions = {
   serviceType?: ServiceType;
   hasVolumes?: boolean;
   previousInstance?: CatalogInstance;
