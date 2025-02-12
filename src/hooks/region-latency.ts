@@ -24,7 +24,7 @@ export function useRegionLatency(region: CatalogRegion | undefined) {
     refetchInterval: disablePolling ? false : 10 * 1000,
     queryFn() {
       return new Promise<number | null>((resolve) => {
-        const unsubscribe = observeResources((entries) => {
+        const [observe, unsubscribe] = observeResources((entries) => {
           const entry = entries.find((entry) => entry.url === url);
 
           if (entry) {
@@ -32,6 +32,8 @@ export function useRegionLatency(region: CatalogRegion | undefined) {
             resolve(entry.latency);
           }
         });
+
+        observe();
 
         fetch(url as string, { mode: 'no-cors' }).catch(() => {
           unsubscribe();
@@ -67,16 +69,14 @@ type ResourceTiming = {
   latency: number;
 };
 
-function observeResources(cb: (entry: Array<ResourceTiming>) => void): () => void {
+function observeResources(cb: (entry: Array<ResourceTiming>) => void): [() => void, () => void] {
   const observer = new PerformanceObserver((list) => {
     const entries = list.getEntries().filter(isPerformanceResourceTiming).map(transformResourceTiming);
 
     cb(entries);
   });
 
-  observer.observe({ type: 'resource', buffered: true });
-
-  return () => observer.disconnect();
+  return [() => observer.observe({ type: 'resource', buffered: true }), () => observer.disconnect()];
 }
 
 function isPerformanceResourceTiming(
