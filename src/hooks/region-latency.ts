@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useBreakpoint } from '@koyeb/design-system';
 import { mapCatalogDatacentersList } from 'src/api/mappers/catalog';
 import { CatalogRegion } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
@@ -11,11 +10,7 @@ const { disablePolling } = getConfig();
 export function useRegionLatency(region: CatalogRegion | undefined) {
   const datacenter = useRegionDatacenter(region);
   const url = datacenter ? `https://${datacenter?.domain}/health` : undefined;
-
-  const isDesktop = useBreakpoint('lg');
-
-  // avoid "Cannot access uninitialized variable" error on iOS
-  const enabled = url !== undefined && isDesktop;
+  const enabled = url !== undefined;
 
   const { data } = useQuery({
     queryKey: ['datacenterLatency', url],
