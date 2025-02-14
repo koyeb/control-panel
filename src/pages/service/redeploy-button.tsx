@@ -79,7 +79,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
         }
       />
 
-      <Dialog id="Redeploy" onClosed={form.reset} className="w-full max-w-xl">
+      <Dialog id="Redeploy" onClosed={form.reset} className="col w-full max-w-xl gap-4">
         <DialogHeader title={<T id="redeployDialog.title" />} />
 
         <p className="text-dim">
@@ -106,10 +106,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
                   </div>
                 </div>
 
-                <Tooltip
-                  content={latestStashed && <T id="redeployDialog.skipBuild.latestStashed" />}
-                  className="z-40"
-                >
+                <Tooltip content={latestStashed && <T id="redeployDialog.skipBuild.latestStashed" />}>
                   {(props) => (
                     <div {...props}>
                       <Button

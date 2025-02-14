@@ -45,7 +45,7 @@ export function Layout(props: LayoutProps) {
 function LayoutDesktop({ banner, hasBanner, header, menu, main, context, contextExpanded }: LayoutProps) {
   return (
     <>
-      {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
+      {banner && <div className="fixed inset-x-0 top-0 h-8 bg-neutral">{banner}</div>}
 
       <div className={clsx('fixed z-20 h-screen w-64', hasBanner && 'pt-8')}>
         <Aside>{menu}</Aside>
@@ -78,7 +78,7 @@ function LayoutTablet({
 
   return (
     <>
-      {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
+      {banner && <div className="fixed inset-x-0 top-0 z-40 h-8 bg-neutral">{banner}</div>}
 
       <div
         onMouseEnter={() => setState('opened')}
