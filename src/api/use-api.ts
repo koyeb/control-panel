@@ -86,3 +86,25 @@ export function useInvalidateApiQuery() {
     [queryClient, token],
   );
 }
+
+export function usePrefetchApiQuery() {
+  const queryClient = useQueryClient();
+  const { token } = useToken();
+
+  return useCallback(
+    <E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) => {
+      return queryClient.prefetchQuery({
+        queryKey: [endpoint, params, token],
+        queryFn() {
+          const fn = api[endpoint] as AnyFunction;
+
+          return fn({
+            token,
+            ...params,
+          }) as Promise<ApiEndpointResult<E>>;
+        },
+      });
+    },
+    [queryClient, token],
+  );
+}
