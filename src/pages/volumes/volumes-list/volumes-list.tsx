@@ -60,7 +60,7 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
           header: <T id="region" />,
           render: (volume) => (
             <div className="row items-center gap-2">
-              <RegionFlag identifier={volume.region} className="size-4 rounded-full shadow-badge" />
+              <RegionFlag identifier={volume.region} className="size-4" />
               <RegionName identifier={volume.region} />
             </div>
           ),

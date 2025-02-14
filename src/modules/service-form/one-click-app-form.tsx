@@ -262,7 +262,7 @@ function RegionSection({ form }: { form: OneClickAppForm }) {
         itemToValue={(region) => region.identifier}
         renderItem={(region) => (
           <div className="row items-center gap-2">
-            <RegionFlag identifier={region.identifier} className="size-6 rounded-full shadow-badge" />
+            <RegionFlag identifier={region.identifier} className="size-6" />
             <RegionName identifier={region.identifier} />
           </div>
         )}
