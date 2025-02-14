@@ -147,8 +147,11 @@ function OrganizationNameTooltip({ name }: { name: string }) {
     () => ({
       maxLength: name !== '' && name.length < 40,
       letters: name !== '' && name.match(/[A-Z]/) === null,
+      startEndAlphanumeric:
+        name !== '' && name.match(/^[a-z0-9]/) !== null && name.match(/[a-z0-9]$/) !== null,
       whitespace: name !== '' && name.match(/ /) === null,
       alphanumeric: name !== '' && name.match(/^[- A-Za-z0-9]+$/) !== null,
+      noConsecutiveDashes: name !== '' && name.match(/--/) === null,
     }),
     [name],
   );

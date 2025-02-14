@@ -707,7 +707,7 @@
           "missingRepositoryLink": "Missing a GitHub repository? <link>Edit GitHub app permissions</link>",
           "noRepository": {
             "title": "No repositories found",
-            "description": "This can happen when Koyeb doesn't have access to the repositories in your GitHub organization.",
+            "description": "This can happen when Koyeb doesn't have access to the repositories in your nization.",
             "searchEmptyResults": "Your search for \"{search}\" did not return any results."
           },
           "publicRepository": {
@@ -1903,8 +1903,10 @@
         "organizationNameRules": {
           "maxLength": "Maximum 39 characters",
           "letters": "Letters are only lowercase",
+          "startEndAlphanumeric": "Start and end with an alphanumeric symbol",
           "whitespace": "No whitespace",
-          "alphanumeric": "No non-alphanumeric symbol except \"-\""
+          "alphanumeric": "No non-alphanumeric symbol except \"-\"",
+          "noConsecutiveDashes": "No consecutive dashes"
         }
       },
       "qualification": {
