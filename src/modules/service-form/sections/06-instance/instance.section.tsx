@@ -1,10 +1,11 @@
+import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 
 import { Badge } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
-import { FeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
@@ -16,13 +17,15 @@ import { InstanceSelectorNew } from './instance-selector.new';
 const T = createTranslate('modules.serviceForm.instance');
 
 export function InstanceSection() {
+  const hasNewInstanceSelector = useFeatureFlag('new-instance-selector');
+
   return (
     <ServiceFormSection
       section="instance"
       title={<SectionTitle />}
       description={<T id="description" />}
       expandedTitle={<T id="expandedTitle" />}
-      className="col gap-6"
+      className={clsx('col gap-6', hasNewInstanceSelector && 'pb-0')}
     >
       <FeatureFlag feature="new-instance-selector" fallback={<InstanceSelector />}>
         <InstanceSelectorNew />

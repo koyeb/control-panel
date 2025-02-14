@@ -41,7 +41,7 @@ export function InstanceSelector({
   onRegionsSelected,
   getBadges,
 }: InstanceSelectorProps) {
-  const [scope, setScope] = useState<RegionScope>(regions[0]?.scope ?? 'metropolitan');
+  const [scope, setScope] = useState<RegionScope>(selectedRegions[0]?.scope ?? 'metropolitan');
 
   const onScopeChanged = (scope: RegionScope) => {
     setScope(scope);
@@ -57,7 +57,7 @@ export function InstanceSelector({
   }, [regions, selectedRegions, onRegionsSelected]);
 
   return (
-    <div className="col max-h-96 gap-3 overflow-auto pe-2">
+    <div className="col scrollbar-green scrollbar-thin max-h-96 gap-3 overflow-auto pe-2">
       {instances.map((instance) => (
         <InstanceItem
           key={instance.identifier}
@@ -68,7 +68,7 @@ export function InstanceSelector({
           regionSelector={
             <RegionSelector
               expanded={instance === selectedInstance}
-              regions={regions.filter((region) => region.scope === scope)}
+              regions={regions}
               selected={selectedRegions}
               onSelected={onRegionsSelected}
               scope={scope}
@@ -77,6 +77,7 @@ export function InstanceSelector({
           }
         />
       ))}
+      <div />
     </div>
   );
 }
@@ -115,18 +116,20 @@ export function InstanceItem({
       )}
     >
       <div className="rounded-t-lg p-4">
-        <InstanceDescription
-          instance={instance}
-          disabled={disabled}
-          selected={selected}
-          onSelected={onSelected}
-          badges={<InstanceBadges badges={badges} />}
-        />
+        <div className="row gap-4">
+          <InstanceDescription
+            instance={instance}
+            disabled={disabled}
+            selected={selected}
+            onSelected={onSelected}
+            badges={<InstanceBadges badges={badges} />}
+          />
+
+          <InstancePrice instance={instance} />
+        </div>
 
         {regionSelector}
       </div>
-
-      <InstanceFooter instance={instance} />
     </label>
   );
 }
@@ -141,7 +144,7 @@ type InstanceDescriptionProps = {
 
 function InstanceDescription({ instance, disabled, selected, onSelected, badges }: InstanceDescriptionProps) {
   return (
-    <div className="col gap-2">
+    <div className="col flex-1 gap-2">
       <div className="row items-center gap-2 font-medium">
         <RadioInput disabled={disabled} checked={selected} onChange={onSelected} data-instance />
         {instance.displayName}
@@ -149,6 +152,20 @@ function InstanceDescription({ instance, disabled, selected, onSelected, badges 
       </div>
 
       <InstanceSpec instance={instance} />
+    </div>
+  );
+}
+
+function InstancePrice({ instance }: { instance: CatalogInstance }) {
+  return (
+    <div className="text-right">
+      <div>
+        <T id="costs.pricePerHour" values={{ price: instance.pricePerHour }} />
+      </div>
+
+      <div className="text-xs text-dim">
+        <T id="costs.pricePerMonth" values={{ price: instance.pricePerMonth }} />
+      </div>
     </div>
   );
 }
@@ -180,19 +197,6 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
         <IconRadioReceiver className="size-4 stroke-1 text-dim" />
         <T id="instanceSpec.disk" values={{ value: instance.ram }} />
       </div>
-    </div>
-  );
-}
-
-function InstanceFooter({ instance }: { instance: CatalogInstance }) {
-  return (
-    <div
-      className={clsx(
-        'rounded-b-lg bg-muted px-4 py-1 text-dim',
-        'group-has-[[data-instance]:checked]/instance:bg-green group-has-[[data-instance]:checked]/instance:text-white',
-      )}
-    >
-      <T id="costs.price" values={{ perMonth: instance.pricePerMonth, perHour: instance.pricePerHour }} />
     </div>
   );
 }

@@ -226,7 +226,7 @@
         "disk": "{value} Disk"
       },
       "regions": {
-        "label": "Available in regions",
+        "label": "Deploy in regions",
         "latency": "{value, number, :: precision-integer}ms latency",
         "checkingLatency": "Checking latency..."
       },
@@ -240,7 +240,8 @@
       },
       "costs": {
         "free": "Free",
-        "price": "${perMonth}/month • ${perHour}/hour"
+        "pricePerHour": "${price}/h",
+        "pricePerMonth": "${price}/month"
       },
       "actions": {
         "addCreditCard": "Add credit card",

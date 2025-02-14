@@ -3,7 +3,14 @@ import { createElement } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Link } from 'wouter';
 
-import { buttonClassName, ButtonColor, ButtonSize, ButtonVariant, Spinner } from '@koyeb/design-system';
+import {
+  buttonClassName,
+  ButtonColor,
+  ButtonSize,
+  ButtonVariant,
+  Spinner,
+  TabButton,
+} from '@koyeb/design-system';
 import { Extend } from 'src/utils/types';
 
 export { Link };
@@ -74,12 +81,7 @@ export function TabButtonLink({ href, selected, panelId, className, children }: 
     <Link
       href={href}
       role="tab"
-      className={clsx(
-        'col focusable flex-1 items-center rounded px-3 py-2 font-medium transition-all',
-        !selected && 'text-dim hover:bg-neutral/50 hover:text-default',
-        selected && 'bg-neutral',
-        className,
-      )}
+      className={clsx(TabButton.class({ selected, className }))}
       aria-selected={selected}
       aria-controls={panelId}
     >

@@ -2,12 +2,11 @@ import { CheckboxInput, Collapse, TabButton, TabButtons } from '@koyeb/design-sy
 import { CatalogRegion, RegionScope } from 'src/api/model';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
+import { unique } from 'src/utils/arrays';
 
 import { RegionFlag } from '../region-flag';
 
 const T = createTranslate('components.instanceSelector.new');
-
-const scopes: RegionScope[] = ['continental', 'metropolitan'];
 
 type RegionSelectorProps = {
   expanded: boolean;
@@ -26,6 +25,9 @@ export function RegionSelector({
   scope: currentScope,
   onScopeChanged,
 }: RegionSelectorProps) {
+  const regionsInScope = regions.filter((region) => region.scope === currentScope);
+  const uniqueScopes = unique(regions.map((region) => region.scope));
+
   const toggleRegion = (region: CatalogRegion) => {
     const index = selected.indexOf(region);
 
@@ -38,22 +40,29 @@ export function RegionSelector({
 
   return (
     <Collapse open={expanded}>
-      <div className="row my-4 items-center justify-between">
+      <div className="row mb-2 mt-4 items-center justify-between">
         <div className="text-dim">
           <T id="regions.label" />
         </div>
 
-        <TabButtons className="w-full">
-          {scopes.map((scope) => (
-            <TabButton key={scope} selected={currentScope === scope} onClick={() => onScopeChanged(scope)}>
-              <T id={`regionScope.${scope}`} />
-            </TabButton>
-          ))}
-        </TabButtons>
+        {uniqueScopes.length > 1 && (
+          <TabButtons size={1} className="w-full">
+            {uniqueScopes.map((scope) => (
+              <TabButton
+                key={scope}
+                size={1}
+                selected={currentScope === scope}
+                onClick={() => onScopeChanged(scope)}
+              >
+                <T id={`regionScope.${scope}`} />
+              </TabButton>
+            ))}
+          </TabButtons>
+        )}
       </div>
 
       <ul className="row flex-wrap justify-start gap-4">
-        {regions.map((region) => (
+        {regionsInScope.map((region) => (
           <li key={region.identifier} className="w-56">
             <RegionItem
               region={region}
@@ -64,7 +73,7 @@ export function RegionSelector({
         ))}
 
         {/* todo: empty state */}
-        {regions.length === 0 && <>No region available</>}
+        {regionsInScope.length === 0 && <>No region available</>}
       </ul>
     </Collapse>
   );
