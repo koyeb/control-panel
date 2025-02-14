@@ -22,11 +22,16 @@ import { assert } from 'src/utils/assert';
 const T = createTranslate('pages.database.settings');
 
 export function DatabaseSettingsPage() {
-  const service = useService(useRouteParam('databaseServiceId'));
+  const databaseServiceId = useRouteParam('databaseServiceId');
+  const service = useService(databaseServiceId);
   const deployment = useDeployment(service?.latestDeploymentId);
+
   const [cost, setCost] = useState<number>();
 
-  assert(service !== undefined);
+  if (!service || !deployment) {
+    return null;
+  }
+
   assert(isDatabaseDeployment(deployment));
 
   return (

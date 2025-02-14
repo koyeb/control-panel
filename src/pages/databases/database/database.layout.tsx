@@ -1,12 +1,16 @@
 import { useState } from 'react';
 
 import { TabButtons } from '@koyeb/design-system';
-import { DatabaseDeployment, Service } from 'src/api/model';
+import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
+import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { routes } from 'src/application/routes';
 import { TabButtonLink } from 'src/components/link';
+import { Loading } from 'src/components/loading';
+import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { usePathname, useRouteParam } from 'src/hooks/router';
 import { createTranslate, Translate } from 'src/intl/translate';
+import { assert } from 'src/utils/assert';
 
 import { DatabaseAlerts } from './database-alerts';
 import { DatabaseNotHealth } from './database-not-healthy';
@@ -14,15 +18,30 @@ import { DatabaseStarting } from './database-starting';
 
 const T = createTranslate('pages.database.layout');
 
-type DatabaseLayoutProps = {
-  service: Service;
-  deployment: DatabaseDeployment;
-  children: React.ReactNode;
-};
+export function DatabaseLayout({ children }: { children: React.ReactNode }) {
+  const databaseServiceId = useRouteParam('databaseServiceId');
+  const serviceQuery = useServiceQuery(databaseServiceId);
+  const deploymentQuery = useDeploymentQuery(serviceQuery.data?.latestDeploymentId);
 
-export function DatabaseLayout({ service, deployment, children }: DatabaseLayoutProps) {
-  const isStarting = service.status === 'starting';
+  const isStarting = serviceQuery.data?.status === 'starting';
   const [starting, setStarting] = useState(isStarting);
+
+  if (serviceQuery.isPending || deploymentQuery.isPending) {
+    return <Loading />;
+  }
+
+  if (serviceQuery.isError) {
+    return <QueryError error={serviceQuery.error} />;
+  }
+
+  if (deploymentQuery.isError) {
+    return <QueryError error={deploymentQuery.error} />;
+  }
+
+  const service = serviceQuery.data;
+  const deployment = deploymentQuery.data;
+
+  assert(isDatabaseDeployment(deployment));
 
   return (
     <div className="col gap-6">

@@ -25,12 +25,16 @@ import { DeleteDatabaseRoleDialog } from './delete-database-role-dialog';
 const T = createTranslate('pages.database.roles');
 
 export function DatabaseRolesPage() {
-  const openDialog = Dialog.useOpen();
-
-  const service = useService(useRouteParam('databaseServiceId'));
+  const databaseServiceId = useRouteParam('databaseServiceId');
+  const service = useService(databaseServiceId);
   const deployment = useDeployment(service?.latestDeploymentId);
 
-  assert(service !== undefined);
+  const openDialog = Dialog.useOpen();
+
+  if (!service || !deployment) {
+    return null;
+  }
+
   assert(isDatabaseDeployment(deployment));
 
   const roles = deployment.roles ?? [];

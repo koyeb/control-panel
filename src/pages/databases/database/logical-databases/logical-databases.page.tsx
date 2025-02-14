@@ -8,7 +8,7 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
-import { useRouteParam, useOnRouteStateCreate } from 'src/hooks/router';
+import { useOnRouteStateCreate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
@@ -19,19 +19,23 @@ import { DeleteLogicalDatabaseDialog } from './delete-logical-database-dialog';
 const T = createTranslate('pages.database.logicalDatabases');
 
 export function LogicalDatabasesPage() {
-  const service = useService(useRouteParam('databaseServiceId'));
+  const databaseServiceId = useRouteParam('databaseServiceId');
+  const service = useService(databaseServiceId);
   const deployment = useDeployment(service?.latestDeploymentId);
-
-  assert(service !== undefined);
-  assert(isDatabaseDeployment(deployment));
-
-  const databases = deployment.databases ?? [];
 
   const openDialog = Dialog.useOpen();
 
   useOnRouteStateCreate(() => {
     openDialog('CreateLogicalDatabase');
   });
+
+  if (!service || !deployment) {
+    return null;
+  }
+
+  assert(isDatabaseDeployment(deployment));
+
+  const databases = deployment.databases ?? [];
 
   return (
     <>

@@ -79,7 +79,7 @@ function databaseRoleSecret(databaseServiceName: string) {
 }
 
 function mapError(fields: Record<string, string>) {
-  const field = Object.keys(fields).find((field) => field.match(/neon_postgres.roles.\d.name$/));
+  const field = Object.keys(fields).find((field) => field.match(/neon_postgres.roles.(\d+).name$/));
 
   if (field) {
     return { name: fields[field] };

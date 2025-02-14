@@ -13,10 +13,14 @@ import { DatabaseInfo } from './database-info';
 const T = createTranslate('pages.database.overview');
 
 export function OverviewPage() {
-  const service = useService(useRouteParam('databaseServiceId'));
-  const deployment = useDeployment(service?.activeDeploymentId);
+  const databaseServiceId = useRouteParam('databaseServiceId');
+  const service = useService(databaseServiceId);
+  const deployment = useDeployment(service?.latestDeploymentId);
 
-  assert(service !== undefined);
+  if (!service || !deployment) {
+    return null;
+  }
+
   assert(isDatabaseDeployment(deployment));
 
   if (deployment.databases?.length === 0) {
