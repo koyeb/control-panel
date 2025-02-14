@@ -110,7 +110,7 @@ export function CreateOrganization() {
           open={inputFocused}
           allowHover
           arrow={false}
-          placement="bottom-end"
+          placement="bottom-start"
           offset={8}
           content={<OrganizationNameTooltip name={form.watch('organizationName')} />}
           className="!bg-muted"
