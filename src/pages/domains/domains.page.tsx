@@ -10,8 +10,7 @@ import { DocumentTitle } from 'src/components/document-title';
 import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
-import { useMount } from 'src/hooks/lifecycle';
-import { useHistoryState } from 'src/hooks/router';
+import { useOnRouteStateCreate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 import { BulkDeleteDomainsDialog } from './components/bulk-delete-domains-dialog';
@@ -24,14 +23,11 @@ const T = createTranslate('pages.domains');
 export function DomainsPage() {
   const t = T.useTranslate();
 
-  const historyState = useHistoryState<{ create: boolean }>();
   const openDialog = Dialog.useOpen();
   const closeDialog = Dialog.useClose();
 
-  useMount(() => {
-    if (historyState.create) {
-      openDialog('CreateDomain');
-    }
+  useOnRouteStateCreate(() => {
+    openDialog('CreateDomain');
   });
 
   const [selected, { toggle, set, clear }] = useSet<Domain>();

@@ -17,8 +17,7 @@ import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useMount } from 'src/hooks/lifecycle';
-import { useHistoryState, useNavigate } from 'src/hooks/router';
+import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { isSlug } from 'src/utils/strings';
@@ -26,13 +25,10 @@ import { isSlug } from 'src/utils/strings';
 const T = createTranslate('pages.userSettings.organizations');
 
 export function OrganizationsPage() {
-  const historyState = useHistoryState<{ create: boolean }>();
   const openDialog = Dialog.useOpen();
 
-  useMount(() => {
-    if (historyState.create) {
-      openDialog('CreateOrganization');
-    }
+  useOnRouteStateCreate(() => {
+    openDialog('CreateOrganization');
   });
 
   return (

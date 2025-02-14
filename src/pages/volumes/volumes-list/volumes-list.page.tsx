@@ -5,8 +5,7 @@ import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
-import { useMount } from 'src/hooks/lifecycle';
-import { useHistoryState } from 'src/hooks/router';
+import { useOnRouteStateCreate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 import { CreateVolumeDialog } from '../create-volume-dialog';
@@ -16,14 +15,11 @@ import { VolumesList } from './volumes-list';
 const T = createTranslate('pages.volumes');
 
 export function VolumesListPage() {
-  const historyState = useHistoryState<{ create: boolean }>();
   const openDialog = Dialog.useOpen();
   const t = T.useTranslate();
 
-  useMount(() => {
-    if (historyState.create) {
-      openDialog('CreateVolume');
-    }
+  useOnRouteStateCreate(() => {
+    openDialog('CreateVolume');
   });
 
   const volumesQuery = useVolumesQuery();

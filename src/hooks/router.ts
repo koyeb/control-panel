@@ -1,7 +1,9 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useParams, useSearch } from 'wouter';
 import { navigate, usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
+
+import { usePureFunction } from './lifecycle';
 
 export { usePathname } from 'wouter/use-browser-location';
 
@@ -93,4 +95,17 @@ export function useSearchParam(name: string, options?: { array: true }) {
   );
 
   return [value, setValue as unknown] as const;
+}
+
+export function useOnRouteStateCreate(cb: () => void) {
+  const historyState = useHistoryState<{ create: boolean }>();
+  const navigate = useNavigate();
+  const cbMemo = usePureFunction(cb);
+
+  useEffect(() => {
+    if (historyState.create) {
+      navigate('#', { replace: true, state: { create: false } });
+      cbMemo();
+    }
+  }, [historyState, navigate, cbMemo]);
 }

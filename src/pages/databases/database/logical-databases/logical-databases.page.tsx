@@ -8,8 +8,7 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
-import { useMount } from 'src/hooks/lifecycle';
-import { useHistoryState, useRouteParam } from 'src/hooks/router';
+import { useRouteParam, useOnRouteStateCreate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
@@ -28,13 +27,10 @@ export function LogicalDatabasesPage() {
 
   const databases = deployment.databases ?? [];
 
-  const historyState = useHistoryState<{ create: boolean }>();
   const openDialog = Dialog.useOpen();
 
-  useMount(() => {
-    if (historyState.create) {
-      openDialog('CreateLogicalDatabase');
-    }
+  useOnRouteStateCreate(() => {
+    openDialog('CreateLogicalDatabase');
   });
 
   return (

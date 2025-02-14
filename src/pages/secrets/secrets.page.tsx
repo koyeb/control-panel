@@ -9,8 +9,7 @@ import { IconListPlus, IconPlus } from 'src/components/icons';
 import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
-import { useMount } from 'src/hooks/lifecycle';
-import { useHistoryState } from 'src/hooks/router';
+import { useOnRouteStateCreate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
@@ -21,13 +20,10 @@ import { SecretsList } from './components/secrets-list';
 const T = createTranslate('pages.secrets');
 
 export function SecretsPage() {
-  const historyState = useHistoryState<{ create: boolean }>();
   const openDialog = Dialog.useOpen();
 
-  useMount(() => {
-    if (historyState.create) {
-      openDialog('CreateSecret');
-    }
+  useOnRouteStateCreate(() => {
+    openDialog('CreateSecret');
   });
 
   const query = useSecretsQuery('simple');
