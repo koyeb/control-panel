@@ -9,6 +9,7 @@ import { InstanceAvailability } from 'src/application/instance-region-availabili
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
+import { useTallyDialog } from 'src/hooks/tally';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -214,6 +215,7 @@ function InstanceItem({
 
 function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
   const openDialog = Dialog.useOpen();
+  const tally = useTallyDialog('npRak8');
 
   const organization = useOrganization();
   const isHobby = organization.plan === 'hobby';
@@ -224,12 +226,20 @@ function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
     return null;
   }
 
+  const handleClick = () => {
+    if (instance.identifier === 'gpu-tenstorrent-n300s' && !isHobby) {
+      tally.onOpen();
+    } else {
+      openDialog(dialog);
+    }
+  };
+
   return (
     <Button
       variant="outline"
       color="gray"
       size={1}
-      onClick={() => openDialog(dialog)}
+      onClick={handleClick}
       className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
     >
       {isHobby ? <T id="addCreditCard" /> : <T id="requestQuotaIncrease" />}
