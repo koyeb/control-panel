@@ -11,16 +11,15 @@ import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
-import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
+import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { isSlug } from 'src/utils/strings';
 
 const T = createTranslate('pages.userSettings.organizations');
 
@@ -48,11 +47,7 @@ export function OrganizationsPage() {
 }
 
 const schema = z.object({
-  organizationName: z
-    .string()
-    .min(1)
-    .max(39)
-    .refine(isSlug, { params: { refinement: 'isSlug' } }),
+  organizationName: z.string().min(1).max(39),
 });
 
 function CreateOrganizationDialog() {
@@ -105,9 +100,8 @@ function CreateOrganizationDialog() {
       </p>
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <ControlledInput
-          control={form.control}
-          name="organizationName"
+        <OrganizationNameField
+          form={form}
           label={<T id="createOrganizationDialog.organizationNameLabel" />}
         />
 

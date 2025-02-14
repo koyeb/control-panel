@@ -1,24 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
-import clsx from 'clsx';
-import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, InfoTooltip, Tooltip } from '@koyeb/design-system';
+import { Button, InfoTooltip } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useToken } from 'src/application/token';
 import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
-import { ControlledInput } from 'src/components/controlled';
-import { IconCheck, IconArrowRight } from 'src/components/icons';
+import { IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
+import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { entries } from 'src/utils/object';
 
 import { OnboardingStepper } from './stepper';
 
@@ -56,7 +53,6 @@ export function JoinOrganization() {
 export function CreateOrganization() {
   const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
-  const [inputFocused, setInputFocused] = useState(false);
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -106,27 +102,7 @@ export function CreateOrganization() {
       </div>
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <Tooltip
-          open={inputFocused}
-          allowHover
-          arrow={false}
-          placement="bottom-start"
-          offset={8}
-          content={<OrganizationNameTooltip name={form.watch('organizationName')} />}
-          className="!bg-muted"
-        >
-          {(props) => (
-            <div {...props}>
-              <ControlledInput
-                control={form.control}
-                name="organizationName"
-                label={<T id="organizationNameLabel" />}
-                onFocus={() => setInputFocused(true)}
-                onBlur={() => setInputFocused(false)}
-              />
-            </div>
-          )}
-        </Tooltip>
+        <OrganizationNameField form={form} label={<T id="organizationNameLabel" />} />
 
         <Button
           type="submit"
@@ -139,34 +115,5 @@ export function CreateOrganization() {
         </Button>
       </form>
     </section>
-  );
-}
-
-function OrganizationNameTooltip({ name }: { name: string }) {
-  const rules = useMemo(
-    () => ({
-      maxLength: name !== '' && name.length < 40,
-      letters: name !== '' && name.match(/[A-Z]/) === null,
-      startEndAlphanumeric:
-        name !== '' && name.match(/^[a-z0-9]/) !== null && name.match(/[a-z0-9]$/) !== null,
-      whitespace: name !== '' && name.match(/ /) === null,
-      alphanumeric: name !== '' && name.match(/^[- A-Za-z0-9]+$/) !== null,
-      noConsecutiveDashes: name !== '' && name.match(/--/) === null,
-    }),
-    [name],
-  );
-
-  return (
-    <ul className="col gap-1">
-      {entries(rules).map(([rule, valid]) => (
-        <li
-          key={rule}
-          className={clsx('row items-center gap-1', valid && 'text-green', !valid && 'text-dim')}
-        >
-          <IconCheck className="size-em" />
-          <T id={`organizationNameRules.${rule}`} />
-        </li>
-      ))}
-    </ul>
   );
 }
