@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useOrganizationSummary } from 'src/api/hooks/session';
@@ -11,7 +11,7 @@ export type RegionAvailability = [available: true] | [available: false, reason: 
 export type RegionUnavailableReason = 'unavailable' | 'regionNotFound' | 'unavailableForInstance';
 
 type RegionAvailabilityOptions = {
-  instance?: CatalogInstance;
+  instance?: CatalogInstance | null;
 };
 
 export function useRegionAvailabilities(options?: RegionAvailabilityOptions) {
@@ -25,15 +25,6 @@ export function useRegionAvailabilities(options?: RegionAvailabilityOptions) {
       (region) => checkRegionAvailability(region, optionsMemo),
     );
   }, [regions, optionsMemo]);
-}
-
-export function useIsRegionAvailable(options?: RegionAvailabilityOptions) {
-  const availabilities = useRegionAvailabilities(options);
-
-  return useCallback(
-    ({ identifier }: CatalogRegion) => Boolean(availabilities[identifier]?.[0]),
-    [availabilities],
-  );
 }
 
 export function useRegionAvailability(regionIdentifier: string, options?: RegionAvailabilityOptions) {
@@ -84,15 +75,6 @@ export function useInstanceAvailabilities(options: InstanceAvailabilityOptions =
       (instance) => checkInstanceAvailability(instance, organizationSummary, optionsMemo),
     );
   }, [instances, organizationSummary, optionsMemo]);
-}
-
-export function useIsInstanceAvailable(options: InstanceAvailabilityOptions = {}) {
-  const availabilities = useInstanceAvailabilities(options);
-
-  return useCallback(
-    ({ identifier }: CatalogInstance) => Boolean(availabilities[identifier]?.[0]),
-    [availabilities],
-  );
 }
 
 function checkInstanceAvailability(

@@ -19,7 +19,7 @@ export function useInstancesQuery() {
   });
 }
 
-export function useInstances(identifiers?: string) {
+export function useInstances(identifiers?: string[]) {
   const { data: instances = [] } = useInstancesQuery();
 
   if (identifiers === undefined) {
