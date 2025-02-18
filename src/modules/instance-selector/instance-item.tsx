@@ -6,6 +6,7 @@ import { CatalogInstance } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/components/icons';
 import { useMount } from 'src/hooks/lifecycle';
+import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
 import { InstanceSelectorBadge } from './instance-selector';
@@ -68,11 +69,14 @@ function InstancePrice({ instance }: { instance: CatalogInstance }) {
   return (
     <div className="text-right">
       <div>
-        <T id="costs.pricePerHour" values={{ price: instance.pricePerHour }} />
+        <T
+          id="costs.pricePerHour"
+          values={{ price: <FormattedPrice value={instance.pricePerHour} digits={6} /> }}
+        />
       </div>
 
       <div className="text-xs text-dim">
-        <T id="costs.pricePerMonth" values={{ price: instance.pricePerMonth }} />
+        <T id="costs.pricePerMonth" values={{ price: <FormattedPrice value={instance.pricePerMonth} /> }} />
       </div>
     </div>
   );

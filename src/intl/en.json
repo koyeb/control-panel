@@ -240,8 +240,8 @@
       },
       "costs": {
         "free": "Free",
-        "pricePerHour": "${price}/h",
-        "pricePerMonth": "${price}/month"
+        "pricePerHour": "{price}/h",
+        "pricePerMonth": "{price}/month"
       },
       "actions": {
         "addCreditCard": "Add credit card",
