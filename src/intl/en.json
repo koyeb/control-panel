@@ -765,7 +765,7 @@
           "missingRepositoryLink": "Missing a GitHub repository? <link>Edit GitHub app permissions</link>",
           "noRepository": {
             "title": "No repositories found",
-            "description": "This can happen when Koyeb doesn't have access to the repositories in your nization.",
+            "description": "This can happen when Koyeb doesn't have access to the repositories in your organization.",
             "searchEmptyResults": "Your search for \"{search}\" did not return any results."
           },
           "publicRepository": {
@@ -1115,6 +1115,8 @@
           "gpu": "GPU"
         },
         "alerts": {
+          "noRegionSelectedTitle": "At least, one region must be selected",
+          "noRegionSelectedDescription": "Select one or more regions to deploy your service",
           "ecoHasVolumesTitle": "Volumes are not supported on Eco instances",
           "ecoHasVolumesDescription": "Select a Standard or GPU instance to keep the volumes attached to your service",
           "gpuVolumesTitle": "GPU Instance can't be changed when volumes are attached",
