@@ -1,11 +1,9 @@
 import { Controller } from 'react-hook-form';
 
 import { SelectBox } from '@koyeb/design-system';
+import { useInstance } from 'src/api/hooks/catalog';
 import { CatalogRegion } from 'src/api/model';
-import {
-  useRegionAvailability,
-  useRegionAvailabilityForInstance,
-} from 'src/application/instance-region-availability';
+import { useRegionAvailability } from 'src/application/instance-region-availability';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 
@@ -18,10 +16,9 @@ type RegionItemProps = {
 };
 
 export function RegionItem({ region, classes }: RegionItemProps) {
-  const selectedInstance = useWatchServiceForm('instance');
+  const selectedInstance = useInstance(useWatchServiceForm('instance'));
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
-  const [isAvailable] = useRegionAvailability(region.identifier);
-  const isAvailableForInstance = useRegionAvailabilityForInstance(region.identifier, selectedInstance);
+  const [isAvailable] = useRegionAvailability(region.identifier, { instance: selectedInstance ?? undefined });
 
   return (
     <Controller<ServiceForm, 'regions'>
@@ -31,13 +28,13 @@ export function RegionItem({ region, classes }: RegionItemProps) {
           {...field}
           type="checkbox"
           value={region.identifier}
-          disabled={!isAvailable || !isAvailableForInstance || hasVolumes}
+          disabled={!isAvailable || hasVolumes}
           icon={<RegionFlag identifier={region.identifier} className="size-5" />}
           title={region.displayName}
           description={<RegionLatency region={region} />}
           checked={value.includes(region.identifier)}
           onChange={(event) => {
-            if (selectedInstance === 'free') {
+            if (selectedInstance?.identifier === 'free') {
               onChange([event.target.value]);
               return;
             }

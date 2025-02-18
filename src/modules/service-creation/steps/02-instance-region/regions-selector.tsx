@@ -2,10 +2,7 @@ import clsx from 'clsx';
 
 import { SelectBox, Tooltip } from '@koyeb/design-system';
 import { CatalogInstance, CatalogRegion } from 'src/api/model';
-import {
-  useRegionAvailability,
-  useRegionAvailabilityForInstance,
-} from 'src/application/instance-region-availability';
+import { useRegionAvailability } from 'src/application/instance-region-availability';
 import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
@@ -91,16 +88,14 @@ type RegionItemProps = {
 };
 
 function RegionItem({ selectedInstance, region, selected, onSelected }: RegionItemProps) {
-  const [isAvailable] = useRegionAvailability(region.identifier);
-  const isAvailableForInstance = useRegionAvailabilityForInstance(
-    region.identifier,
-    selectedInstance?.identifier,
-  );
+  const [isAvailable] = useRegionAvailability(region.identifier, {
+    instance: selectedInstance ?? undefined,
+  });
 
   return (
     <SelectBox
       type="checkbox"
-      disabled={!isAvailable || !isAvailableForInstance}
+      disabled={!isAvailable}
       icon={<RegionFlag identifier={region.identifier} className="size-5" />}
       title={region.displayName}
       description={<RegionLatency region={region} />}
