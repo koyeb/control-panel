@@ -1,12 +1,15 @@
-import { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
 import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
-import { CatalogInstance, CatalogRegion, InstanceCategory } from 'src/api/model';
-import { useIsInstanceAvailable, useIsRegionAvailable } from 'src/application/instance-region-availability';
+import { CatalogInstance, CatalogRegion } from 'src/api/model';
+import {
+  useInstanceAvailabilities,
+  useRegionAvailabilities,
+} from 'src/application/instance-region-availability';
 import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
 import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
 import { InstanceSelector as InstanceSelectorComponent } from 'src/modules/instance-selector/instance-selector';
+import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../../service-form.types';
@@ -22,75 +25,59 @@ export function InstanceSelectorNew() {
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
 
-  const selectedRegions = useWatchServiceForm('regions').map(
+  const { getValues, setValue, trigger } = useFormContext<ServiceForm>();
+
+  const instanceCtrl = useController<ServiceForm, 'instance'>({ name: 'instance' });
+  const selectedInstance = useInstance(instanceCtrl.field.value) ?? null;
+
+  const regionsCtrl = useController<ServiceForm, 'regions'>({ name: 'regions' });
+  const selectedRegions = regionsCtrl.field.value.map(
     (identifier) => regions.find(hasProperty('identifier', identifier))!,
   );
 
-  const { getValues, setValue, trigger } = useFormContext<ServiceForm>();
+  const instanceAvailabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
+  const regionAvailabilities = useRegionAvailabilities({ instance: selectedInstance });
 
-  const { field } = useController<ServiceForm, 'instance'>({ name: 'instance' });
-  const instance = useInstance(field.value);
-
-  const [category, setCategory] = useState<InstanceCategory>(instance?.category ?? 'standard');
-
-  const isInstanceAvailable = useIsInstanceAvailable({ serviceType, hasVolumes, previousInstance });
-  const isRegionAvailable = useIsRegionAvailable({ instance });
+  const getBadges = useGetInstanceBadges({ previousInstance });
 
   const handleInstanceSelected = (instance: CatalogInstance | null) => {
-    if (!instance || !isInstanceAvailable(instance)) {
-      field.onChange(null);
-      return;
-    }
+    instanceCtrl.field.onChange(instance?.identifier ?? null);
 
-    field.onChange(instance.identifier);
-
-    if (instance.category === 'eco') {
-      setValue('scaling.max', getValues('scaling.min'));
-      void trigger('scaling');
-    }
-
-    if (instance.identifier === 'free') {
+    if (instance?.identifier === 'free') {
       setValue('scaling.min', 1);
       setValue('scaling.max', 1);
+      void trigger('scaling');
+    } else if (instance?.category === 'eco') {
+      setValue('scaling.max', getValues('scaling.min'));
       void trigger('scaling');
     }
   };
 
   const handleRegionsSelected = (regions: CatalogRegion[]) => {
-    setValue(
-      'regions',
-      regions.map((region) => region.identifier),
-      { shouldValidate: true },
-    );
+    regionsCtrl.field.onChange(regions.map((region) => region.identifier));
   };
 
-  const getBadges = useGetInstanceBadges({
-    previousInstance: useInstance(useFormContext<ServiceForm>().watch('meta.previousInstance')),
+  const selector = useInstanceSelector({
+    instances,
+    regions,
+    instanceAvailabilities,
+    regionAvailabilities,
+    selectedInstance,
+    setSelectedInstance: handleInstanceSelected,
+    selectedRegions,
+    setSelectedRegions: handleRegionsSelected,
   });
 
   return (
     <>
       <InstanceCategoryTabs
-        category={category}
-        setCategory={setCategory}
-        instances={instances.filter(hasProperty('regionCategory', 'koyeb')).filter(isInstanceAvailable)}
-        setInstance={handleInstanceSelected}
+        category={selector.instanceCategory}
+        setCategory={selector.onInstanceCategorySelected}
       />
 
-      <InstanceAlerts selectedCategory={category} />
+      <InstanceAlerts selectedCategory={selector.instanceCategory} />
 
-      <InstanceSelectorComponent
-        instances={instances
-          .filter(hasProperty('regionCategory', 'koyeb'))
-          .filter(hasProperty('category', category))
-          .filter(isInstanceAvailable)}
-        selectedInstance={instances.find(hasProperty('identifier', field.value)) ?? null}
-        onInstanceSelected={handleInstanceSelected}
-        regions={regions.filter(isRegionAvailable)}
-        selectedRegions={selectedRegions}
-        onRegionsSelected={handleRegionsSelected}
-        getBadges={getBadges}
-      />
+      <InstanceSelectorComponent {...selector} getBadges={getBadges} />
     </>
   );
 }

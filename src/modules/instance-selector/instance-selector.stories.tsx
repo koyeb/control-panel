@@ -3,11 +3,13 @@ import { useState } from 'react';
 
 import { mapCatalogInstance, mapCatalogRegion } from 'src/api/mappers/catalog';
 import { catalogInstanceFixtures, catalogRegionFixtures } from 'src/api/mock/fixtures';
-import { CatalogInstance, InstanceCategory } from 'src/api/model';
-import { hasProperty } from 'src/utils/object';
+import { CatalogInstance } from 'src/api/model';
+import { InstanceAvailability, RegionAvailability } from 'src/application/instance-region-availability';
+import { toObject } from 'src/utils/object';
 
 import { InstanceCategoryTabs } from './instance-category-tabs';
 import { InstanceSelector, InstanceSelectorBadge } from './instance-selector';
+import { useInstanceSelector } from './instance-selector-state';
 
 export default {
   title: 'Components/InstanceSelector',
@@ -15,34 +17,48 @@ export default {
 } satisfies Meta;
 
 const instances = catalogInstanceFixtures.map(mapCatalogInstance);
-const regions = catalogRegionFixtures.map(mapCatalogRegion).filter((region) => region.status === 'available');
+const regions = catalogRegionFixtures.map(mapCatalogRegion);
 
 export const instanceSelector = () => {
-  const [selectedCategory, setSelectedCategory] = useState<InstanceCategory>('eco');
   const [selectedInstance, setSelectedInstance] = useState<CatalogInstance | null>(instances[1]!);
   const [selectedRegions, setSelectedRegions] = useState([regions[1]!]);
+
+  const selector = useInstanceSelector({
+    instances,
+    regions,
+    instanceAvailabilities,
+    regionAvailabilities,
+    selectedInstance,
+    setSelectedInstance,
+    selectedRegions,
+    setSelectedRegions,
+  });
 
   return (
     <div className="col gap-4">
       <InstanceCategoryTabs
-        category={selectedCategory}
-        setCategory={setSelectedCategory}
-        instances={instances}
-        setInstance={setSelectedInstance}
+        category={selector.instanceCategory}
+        setCategory={selector.onInstanceCategorySelected}
       />
 
-      <InstanceSelector
-        instances={instances.filter(hasProperty('category', selectedCategory))}
-        regions={regions}
-        selectedInstance={selectedInstance}
-        onInstanceSelected={setSelectedInstance}
-        selectedRegions={selectedRegions}
-        onRegionsSelected={setSelectedRegions}
-        getBadges={({ identifier }) => badges[identifier] ?? []}
-      />
+      <InstanceSelector {...selector} getBadges={({ identifier }) => badges[identifier] ?? []} />
     </div>
   );
 };
+
+const instanceAvailabilities = toObject(
+  instances,
+  (instance) => instance.identifier,
+  (): InstanceAvailability => [true],
+);
+
+instanceAvailabilities.free = [false, 'freeAlreadyUsed'];
+
+const regionAvailabilities = toObject(
+  regions,
+  (region) => region.identifier,
+  (): RegionAvailability => [true],
+);
 
 const badges: Record<string, InstanceSelectorBadge[]> = {
   '4xlarge': ['requiresHigherQuota'],

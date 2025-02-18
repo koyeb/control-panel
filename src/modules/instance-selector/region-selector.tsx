@@ -3,16 +3,17 @@ import { CatalogRegion, RegionScope } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
-import { unique } from 'src/utils/arrays';
 
 const T = createTranslate('components.instanceSelector.new');
+
+const scopes: RegionScope[] = ['metropolitan', 'continental'];
 
 type RegionSelectorProps = {
   expanded: boolean;
   regions: CatalogRegion[];
   selected: CatalogRegion[];
-  onSelected: (selected: CatalogRegion[]) => void;
-  scope: RegionScope;
+  onSelected: (selected: CatalogRegion) => void;
+  scope: RegionScope | null;
   onScopeChanged: (scope: RegionScope) => void;
 };
 
@@ -24,19 +25,6 @@ export function RegionSelector({
   scope: currentScope,
   onScopeChanged,
 }: RegionSelectorProps) {
-  const regionsInScope = regions.filter((region) => region.scope === currentScope);
-  const uniqueScopes = unique(regions.map((region) => region.scope));
-
-  const toggleRegion = (region: CatalogRegion) => {
-    const index = selected.indexOf(region);
-
-    if (index === -1) {
-      onSelected([...selected, region]);
-    } else {
-      onSelected(selected.filter((r) => r !== region));
-    }
-  };
-
   return (
     <Collapse open={expanded}>
       <div className="row mb-2 mt-4 items-center justify-between">
@@ -44,9 +32,9 @@ export function RegionSelector({
           <T id="regions.label" />
         </div>
 
-        {uniqueScopes.length > 1 && (
+        {currentScope !== null && (
           <TabButtons size={1} className="w-full">
-            {uniqueScopes.map((scope) => (
+            {scopes.map((scope) => (
               <TabButton
                 key={scope}
                 size={1}
@@ -61,18 +49,18 @@ export function RegionSelector({
       </div>
 
       <ul className="row flex-wrap justify-start gap-4">
-        {regionsInScope.map((region) => (
+        {regions.map((region) => (
           <li key={region.identifier} className="w-56">
             <RegionItem
               region={region}
               selected={selected.includes(region)}
-              onSelected={() => toggleRegion(region)}
+              onSelected={() => onSelected(region)}
             />
           </li>
         ))}
 
         {/* todo: empty state */}
-        {regionsInScope.length === 0 && <>No region available</>}
+        {regions.length === 0 && <>No region available</>}
       </ul>
     </Collapse>
   );
