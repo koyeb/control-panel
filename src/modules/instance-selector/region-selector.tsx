@@ -1,10 +1,9 @@
 import { CheckboxInput, Collapse, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogRegion, RegionScope } from 'src/api/model';
+import { RegionFlag } from 'src/components/region-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
-
-import { RegionFlag } from '../region-flag';
 
 const T = createTranslate('components.instanceSelector.new');
 

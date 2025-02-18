@@ -4,11 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { Badge, RadioInput } from '@koyeb/design-system';
 import { CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
+import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/components/icons';
 import { useMount } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
-
-import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from '../icons';
 
 import { RegionSelector } from './region-selector';
 

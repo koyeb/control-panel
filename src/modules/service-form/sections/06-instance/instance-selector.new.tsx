@@ -4,9 +4,9 @@ import { useController, useFormContext } from 'react-hook-form';
 import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { CatalogInstance, CatalogRegion, InstanceCategory } from 'src/api/model';
 import { useIsInstanceAvailable, useIsRegionAvailable } from 'src/application/instance-region-availability';
-import { useGetInstanceBadges } from 'src/components/instance-selector/instance-badges';
-import { InstanceCategoryTabs } from 'src/components/instance-selector/instance-category-tabs';
-import { InstanceSelector as InstanceSelectorComponent } from 'src/components/instance-selector/instance-selector';
+import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
+import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
+import { InstanceSelector as InstanceSelectorComponent } from 'src/modules/instance-selector/instance-selector';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../../service-form.types';
