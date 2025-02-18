@@ -104,7 +104,7 @@ type RegionLineProps = {
 };
 
 function Region({ cost }: RegionLineProps) {
-  if (!hasAutoscaling(cost) && cost.regionCount === 1) {
+  if (!hasAutoscaling(cost) && cost.regionCount <= 1) {
     return null;
   }
 
