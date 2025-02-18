@@ -2,6 +2,7 @@ import sortBy from 'lodash-es/sortBy';
 
 import { useRegions } from 'src/api/hooks/catalog';
 import { useRegionAvailabilities } from 'src/application/instance-region-availability';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { hasProperty } from 'src/utils/object';
 
 import { RegionItem } from './region-item';
@@ -19,8 +20,11 @@ export function RegionsList() {
 }
 
 function useSortedRegions() {
+  const hasAwsRegions = useFeatureFlag('aws-regions');
   const regions = useRegions();
   const availabilities = useRegionAvailabilities();
 
-  return sortBy(regions, (region) => (availabilities[region.identifier]?.[0] ? -1 : 1));
+  return sortBy(regions, (region) => (availabilities[region.identifier]?.[0] ? -1 : 1)).filter(
+    (region) => hasAwsRegions || !region.identifier.startsWith('aws-'),
+  );
 }
