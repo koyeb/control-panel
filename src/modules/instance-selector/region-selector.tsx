@@ -85,24 +85,31 @@ type RegionItemProps = {
 };
 
 function RegionItem({ region, selected, onSelected }: RegionItemProps) {
-  const latency = useRegionLatency(region);
-
   return (
     <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 has-[:checked]:border-green">
       <RegionFlag identifier={region.identifier} className="size-6" />
 
       <div className="flex-1">
         <div className="leading-none">{region.displayName}</div>
-
-        {latency !== null && (
-          <div className="mt-1 text-xs leading-none text-dim">
-            {latency === undefined && <T id="regions.checkingLatency" />}
-            {latency !== undefined && <T id="regions.latency" values={{ value: latency }} />}
-          </div>
-        )}
+        <RegionLatency region={region} />
       </div>
 
       <CheckboxInput checked={selected} onChange={onSelected} />
     </label>
+  );
+}
+
+function RegionLatency({ region }: { region: CatalogRegion }) {
+  const latency = useRegionLatency(region);
+
+  if (region === null) {
+    return null;
+  }
+
+  return (
+    <div className="mt-1 text-xs leading-none text-dim">
+      {latency === undefined && <T id="regions.checkingLatency" />}
+      {latency !== undefined && <T id="regions.latency" values={{ value: latency }} />}
+    </div>
   );
 }
