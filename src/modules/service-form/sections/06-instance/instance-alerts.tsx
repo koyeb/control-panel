@@ -5,7 +5,6 @@ import { useInstance, useRegion } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationSummary } from 'src/api/hooks/session';
 import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -16,22 +15,9 @@ const T = createTranslate('modules.serviceForm.instance.alerts');
 export function InstanceAlerts({ selectedCategory }: { selectedCategory: InstanceCategory }) {
   const { plan } = useOrganization();
 
-  const newInstanceSelector = useFeatureFlag('new-instance-selector');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useInstance(useWatchServiceForm('instance'));
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
-  const regions = useWatchServiceForm('regions');
-
-  if (newInstanceSelector && regions.length === 0) {
-    return (
-      <Alert
-        variant="error"
-        style="outline"
-        title={<T id="noRegionSelectedTitle" />}
-        description={<T id="noRegionSelectedDescription" />}
-      />
-    );
-  }
 
   if (hasVolumes && selectedCategory === 'eco') {
     return (

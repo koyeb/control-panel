@@ -228,7 +228,8 @@
       "regions": {
         "label": "Deploy in regions",
         "latency": "{value, number, :: precision-integer}ms latency",
-        "checkingLatency": "Checking latency..."
+        "checkingLatency": "Checking latency...",
+        "noRegionSelected": "Please select at least one region"
       },
       "badge": {
         "inUse": "In use",

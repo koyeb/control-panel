@@ -1,4 +1,4 @@
-import { CheckboxInput, Collapse, TabButton, TabButtons } from '@koyeb/design-system';
+import { Alert, CheckboxInput, Collapse, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogRegion, RegionScope } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
@@ -62,6 +62,10 @@ export function RegionSelector({
         {/* todo: empty state */}
         {regions.length === 0 && <>No region available</>}
       </ul>
+
+      {selected.length === 0 && (
+        <Alert variant="error" description={<T id="regions.noRegionSelected" />} className="mt-4" />
+      )}
     </Collapse>
   );
 }
