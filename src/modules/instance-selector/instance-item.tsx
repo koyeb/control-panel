@@ -34,7 +34,7 @@ export function InstanceItem({
 
   useMount(() => {
     if (selected) {
-      ref.current?.scrollIntoView({ block: 'center' });
+      ref.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
     }
   });
 
