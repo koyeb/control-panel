@@ -1,7 +1,10 @@
+import { useFormContext } from 'react-hook-form';
+
 import { useInstance } from 'src/api/hooks/catalog';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
+import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { AutoScalingConfiguration } from './auto-scaling-configuration';
@@ -11,8 +14,11 @@ import { ScalingAlerts } from './scaling-alerts';
 const T = createTranslate('modules.serviceForm.scaling');
 
 export function ScalingSection() {
-  const instance = useInstance(useWatchServiceForm('instance'));
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
+  const { watch } = useFormContext<ServiceForm>();
+
+  const instance = useInstance(watch('instance'));
+  const hasVolumes = watch('volumes').filter((volume) => volume.name !== '').length > 0;
+  const scaling = watch('scaling');
 
   return (
     <ServiceFormSection
@@ -24,7 +30,7 @@ export function ScalingSection() {
     >
       <ScalingAlerts />
 
-      {hasVolumes || instance?.category === 'eco' ? (
+      {hasVolumes || (scaling.min === scaling.max && instance?.category === 'eco') ? (
         <FixedScalingConfiguration />
       ) : (
         <AutoScalingConfiguration />

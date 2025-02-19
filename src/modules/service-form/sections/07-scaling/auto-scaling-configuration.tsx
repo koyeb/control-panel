@@ -25,8 +25,12 @@ import { handleScalingValueBlurred } from './handle-scaling-value-blurred';
 const T = createTranslate('modules.serviceForm.scaling.autoscalingSettings');
 
 export function AutoScalingConfiguration() {
-  const min = useWatchServiceForm('scaling.min');
+  const { watch } = useFormContext<ServiceForm>();
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
+
+  if (watch('instance') === 'free') {
+    return <AutoscalingFreeInstance />;
+  }
 
   return (
     <>
@@ -43,7 +47,7 @@ export function AutoScalingConfiguration() {
         </p>
       </div>
 
-      {scaleToZeroIdleDelay && min === 0 && (
+      {scaleToZeroIdleDelay && watch('scaling.min') === 0 && (
         <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={3 * 60} max={60 * 60} />
       )}
 
@@ -56,22 +60,30 @@ export function AutoScalingConfiguration() {
   );
 }
 
+function AutoscalingFreeInstance() {
+  return (
+    <div className="col gap-6">
+      <ScalingValues />
+
+      <p className="rounded-md border p-4">
+        <T id="freeInstanceMessage" />
+      </p>
+    </div>
+  );
+}
+
 function ScalingValues() {
-  const { setValue } = useFormContext<ServiceForm>();
+  const { watch, setValue } = useFormContext<ServiceForm>();
 
-  const serviceType = useWatchServiceForm('serviceType');
-  const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
-  const instance = useWatchServiceForm('instance');
-
-  const canChangeScaling = instance !== 'free' && !hasVolumes;
-
+  const hasVolumes = watch('volumes').filter((volume) => volume.name !== '').length > 0;
+  const canChangeScaling = watch('instance') !== 'free' && !hasVolumes;
   const scaleToZero = useFeatureFlag('scale-to-zero');
 
   const setScalingValue = (field: 'min' | 'max') => {
     return (value: number) => setValue(`scaling.${field}`, value, { shouldValidate: true });
   };
 
-  const min = scaleToZero && serviceType === 'web' ? 0 : 1;
+  const min = scaleToZero && watch('serviceType') === 'web' ? 0 : 1;
   const max = 20;
 
   const { field: minField } = useController<ServiceForm, 'scaling.min'>({ name: 'scaling.min' });
@@ -96,6 +108,7 @@ function ScalingValues() {
         min={min}
         max={max}
         tickSize={2}
+        disabled={watch('instance') === 'free'}
         renderTick={(value) => {
           if (value === 0) {
             return <IconMoon className="mt-0.5 size-4" />;

@@ -1151,6 +1151,7 @@
         "autoscalingSettings": {
           "description": "Keep one or more instances running to prevent your service from going idle. To maintain a fixed number of instances in a region, set both the minimum and maximum instances per region to the same value.",
           "scaleToZeroPreview": "Scale to zero is currently in preview, check out the <announcement>announcement</announcement>. <feedback>Give feedback?</feedback>",
+          "freeInstanceMessage": "Free instances are scaled to zero when they are inactive",
           "enableAutoscaling": "To enable autoscaling and set scaling criteria, the maximum instances per region must be greater than one",
           "min": "Min",
           "max": "Max",
@@ -1177,8 +1178,8 @@
           "criterionNotAvailableWorker": "This criterion is not available for workers"
         },
         "alerts": {
-          "freeInstanceAlertTitle": "Services with the {instanceName} instance type cannot be scaled",
-          "freeInstanceAlertDescription": "Select a different instance type if you need to scale",
+          "freeInstanceAlertTitle": "Scaling on services with the {instanceName} instance type cannot be changed",
+          "freeInstanceAlertDescription": "Select a different instance type if you need to change the scaling",
           "ecoInstanceAlertTitle": "Services with the {instanceName} instance type cannot be scaled automatically",
           "ecoInstanceAlertDescription": "Select a Standard instance type if you need to set up autoscaling",
           "noTargetAlertTitle": "One scaling criteria must be set",
