@@ -1348,18 +1348,18 @@
     },
     "trial": {
       "welcomeDialog": {
-        "title": "Welcome to Your Free Trial!",
-        "description": "Your trial has started! <strong>We've credited your account with $10</strong> to explore our full range of deployment services. Here's what you can do during your trial:",
+        "title": "Welcome to your Pro Trial!",
+        "description": "Your trial starts today! It lasts for 7 days with a spending limit of $10 so you can explore all Pro plan features. Here's what you can do during your trial:",
         "features": {
-          "models": "Run and manage LLM models on GPUs",
-          "compute": "Host and scale your applications seamlessly",
-          "web": "Deploy backend web services effortlessly"
+          "models": "Deploy web services or workers on any CPUs",
+          "compute": "Deploy inference endpoints on GPUs",
+          "web": "Scale your applications with autoscaling and scale to zero"
         },
-        "footer": "For the next 7 days, enjoy all Pro account features.",
+        "footer": "You can subscribe to a plan at any time during your trial.",
         "cta": "Let's go!"
       },
       "banner": {
-        "content": "Your trial is active for the next <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong> or until your <strong>credit runs out</strong>. Enjoy exploring or <upgrade>upgrade to Pro</upgrade>!"
+        "content": "Your trial is active for <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong> or until your <strong>credit runs out</strong>. You can <upgrade>subscribe to a plan</upgrade> at any time!"
       },
       "summaryPopup": {
         "currentPlan": "{plan} Plan",
@@ -1395,7 +1395,7 @@
         "selectPlan": {
           "title": "Your trial is over",
           "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
-          "footer": "Want to extend your trial? <reachOut>Book a call</reachOut> or <downgrade>create a new organization</downgrade> on a Hobby plan.<br></br>After 14 days, the organization and all related resources will be automatically deleted.",
+          "footer": "Want to extend your trial? <reachOut>Book a call</reachOut>. You can <downgrade>create a new organization</downgrade> on a Hobby plan.<br></br>14 days after the trial ends, the organization and all related resources will be automatically deleted.",
           "manageAccount": "Manage account"
         },
         "upgrade": {

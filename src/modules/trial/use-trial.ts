@@ -11,7 +11,7 @@ export function useTrial() {
     return null;
   }
 
-  const { days } = intervalToDuration({
+  const { days = 0 } = intervalToDuration({
     start: new Date(),
     end: organization.trial.endsAt,
   });
