@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { mapCatalogInstance, mapCatalogRegion } from 'src/api/mappers/catalog';
 import { catalogInstanceFixtures, catalogRegionFixtures } from 'src/api/mock/fixtures';
 import { CatalogInstance } from 'src/api/model';
-import { InstanceAvailability, RegionAvailability } from 'src/application/instance-region-availability';
+import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { toObject } from 'src/utils/object';
 
 import { InstanceCategoryTabs } from './instance-category-tabs';
@@ -26,8 +26,7 @@ export const instanceSelector = () => {
   const selector = useInstanceSelector({
     instances,
     regions,
-    instanceAvailabilities,
-    regionAvailabilities,
+    availabilities,
     selectedInstance,
     setSelectedInstance,
     selectedRegions,
@@ -46,18 +45,10 @@ export const instanceSelector = () => {
   );
 };
 
-const instanceAvailabilities = toObject(
+const availabilities = toObject(
   instances,
   (instance) => instance.identifier,
   (): InstanceAvailability => [true],
-);
-
-instanceAvailabilities.free = [false, 'freeAlreadyUsed'];
-
-const regionAvailabilities = toObject(
-  regions,
-  (region) => region.identifier,
-  (): RegionAvailability => [true],
 );
 
 const badges: Record<string, InstanceSelectorBadge[]> = {

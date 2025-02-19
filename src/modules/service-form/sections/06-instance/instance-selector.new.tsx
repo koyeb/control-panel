@@ -2,10 +2,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { CatalogInstance, CatalogRegion } from 'src/api/model';
-import {
-  useInstanceAvailabilities,
-  useRegionAvailabilities,
-} from 'src/application/instance-region-availability';
+import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
 import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
 import { InstanceSelector as InstanceSelectorComponent } from 'src/modules/instance-selector/instance-selector';
@@ -28,15 +25,14 @@ export function InstanceSelectorNew() {
   const { getValues, setValue, trigger } = useFormContext<ServiceForm>();
 
   const instanceCtrl = useController<ServiceForm, 'instance'>({ name: 'instance' });
-  const selectedInstance = useInstance(instanceCtrl.field.value) ?? null;
+  const selectedInstance = instances.find(hasProperty('identifier', instanceCtrl.field.value)) ?? null;
 
   const regionsCtrl = useController<ServiceForm, 'regions'>({ name: 'regions' });
   const selectedRegions = regionsCtrl.field.value.map(
     (identifier) => regions.find(hasProperty('identifier', identifier))!,
   );
 
-  const instanceAvailabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
-  const regionAvailabilities = useRegionAvailabilities({ instance: selectedInstance });
+  const availabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
 
   const getBadges = useGetInstanceBadges({ previousInstance });
 
@@ -60,8 +56,7 @@ export function InstanceSelectorNew() {
   const selector = useInstanceSelector({
     instances,
     regions,
-    instanceAvailabilities,
-    regionAvailabilities,
+    availabilities,
     selectedInstance,
     setSelectedInstance: handleInstanceSelected,
     selectedRegions,

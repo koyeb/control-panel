@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
-import { InstanceAvailability, RegionAvailability } from 'src/application/instance-region-availability';
+import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { create } from 'src/utils/factories';
 
 import { useInstanceSelector } from './instance-selector-state';
@@ -15,8 +15,7 @@ describe('instance selector', () => {
 
   let fra: CatalogRegion, par: CatalogRegion, eu: CatalogRegion;
 
-  let instanceAvailabilities: Record<string, InstanceAvailability>;
-  let regionAvailabilities: Record<string, RegionAvailability>;
+  let availabilities: Record<string, InstanceAvailability>;
 
   beforeEach(() => {
     free = create.instance({ identifier: 'free', category: 'eco' });
@@ -34,7 +33,7 @@ describe('instance selector', () => {
     par = create.region({ identifier: 'par', scope: 'metropolitan' });
     eu = create.region({ identifier: 'eu', scope: 'continental' });
 
-    instanceAvailabilities = {
+    availabilities = {
       [free.identifier]: [true],
       [ecoNano.identifier]: [true],
       [ecoMicro.identifier]: [true],
@@ -43,12 +42,6 @@ describe('instance selector', () => {
       [awsNano.identifier]: [true],
       [gpu1.identifier]: [true],
       [gpu2.identifier]: [true],
-    };
-
-    regionAvailabilities = {
-      [fra.identifier]: [true],
-      [par.identifier]: [true],
-      [eu.identifier]: [true],
     };
   });
 
@@ -65,8 +58,7 @@ describe('instance selector', () => {
       ...useInstanceSelector({
         instances: [free, ecoNano, ecoMicro, nano, micro, awsNano, gpu1, gpu2],
         regions: [fra, par, eu],
-        instanceAvailabilities,
-        regionAvailabilities,
+        availabilities,
         selectedInstance,
         setSelectedInstance,
         selectedRegions,
@@ -81,7 +73,7 @@ describe('instance selector', () => {
     expect(result.current.instanceCategory).toEqual<InstanceCategory>('standard');
     expect(result.current.regionScope).toEqual<RegionScope>('metropolitan');
     expect(result.current.selectedInstance).toBeNull();
-    expect(result.current.selectedRegions).toHaveLength(1);
+    expect(result.current.selectedRegions).toHaveLength(0);
     expect(result.current.instances).toHaveLength(2);
     expect(result.current.regions).toHaveLength(2);
   });
@@ -102,7 +94,7 @@ describe('instance selector', () => {
     });
 
     it('filters out unavailable instances', () => {
-      instanceAvailabilities[ecoMicro.identifier] = [false, 'unavailableInCatalog'];
+      availabilities[ecoMicro.identifier] = [false, 'unavailableInCatalog'];
 
       const { result } = renderHook(() => useTest({ initialInstance: free }));
 
@@ -118,11 +110,19 @@ describe('instance selector', () => {
     });
 
     it('filters out unavailable regions', () => {
-      regionAvailabilities[par.identifier] = [false, 'unavailable'];
+      nano.regions = ['fra'];
 
-      const { result } = renderHook(() => useTest({ initialRegions: [fra] }));
+      const { result } = renderHook(() => useTest({ initialInstance: nano, initialRegions: [fra] }));
 
       expect(result.current.regions).toEqual([fra]);
+    });
+
+    it('allows only one region to be selected with the free instance', () => {
+      const { result } = renderHook(() => useTest({ initialInstance: free, initialRegions: [fra] }));
+
+      act(() => result.current.onRegionSelected(par));
+
+      expect(result.current.selectedRegions).toEqual([par]);
     });
   });
 
@@ -145,7 +145,7 @@ describe('instance selector', () => {
     });
 
     it('selects the first available instance', () => {
-      instanceAvailabilities[free.identifier] = [false, 'freeAlreadyUsed'];
+      availabilities[free.identifier] = [false, 'freeAlreadyUsed'];
 
       const { result } = renderHook(() => useTest());
 
@@ -187,7 +187,7 @@ describe('instance selector', () => {
 
   describe('region scope', () => {
     it('does not return a scope when there is no available region in the other scope', () => {
-      regionAvailabilities[eu.identifier] = [false, 'unavailable'];
+      eu.status = 'coming_soon';
 
       const { result } = renderHook(() => useTest());
 
@@ -210,7 +210,16 @@ describe('instance selector', () => {
       expect(result.current.selectedRegions).toEqual([eu]);
     });
 
-    it.todo('changes the scope when no instance is available in the current one but some are in the other');
+    it('changes the scope when no instance is available in the current one but some are in the other', () => {
+      micro.regions = ['par'];
+
+      const { result } = renderHook(() => useTest({ initialInstance: nano, initialRegions: [eu] }));
+
+      act(() => result.current.onInstanceSelected(micro));
+
+      expect(result.current.regionScope).toEqual(null);
+      expect(result.current.selectedRegions).toEqual([par]);
+    });
   });
 
   describe('region selection', () => {
