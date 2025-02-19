@@ -1,4 +1,4 @@
-import { Alert, CheckboxInput, Collapse, TabButton, TabButtons } from '@koyeb/design-system';
+import { Alert, CheckboxInput, Collapse, RadioInput, TabButton, TabButtons } from '@koyeb/design-system';
 import { CatalogRegion, RegionScope } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
@@ -15,6 +15,7 @@ type RegionSelectorProps = {
   onSelected: (selected: CatalogRegion) => void;
   scope: RegionScope | null;
   onScopeChanged: (scope: RegionScope) => void;
+  type: 'radio' | 'checkbox';
 };
 
 export function RegionSelector({
@@ -24,6 +25,7 @@ export function RegionSelector({
   onSelected,
   scope: currentScope,
   onScopeChanged,
+  type,
 }: RegionSelectorProps) {
   return (
     <Collapse open={expanded}>
@@ -52,6 +54,7 @@ export function RegionSelector({
         {regions.map((region) => (
           <li key={region.identifier} className="w-56">
             <RegionItem
+              type={type}
               region={region}
               selected={selected.includes(region)}
               onSelected={() => onSelected(region)}
@@ -71,12 +74,13 @@ export function RegionSelector({
 }
 
 type RegionItemProps = {
+  type: 'radio' | 'checkbox';
   region: CatalogRegion;
   selected: boolean;
   onSelected: () => void;
 };
 
-function RegionItem({ region, selected, onSelected }: RegionItemProps) {
+function RegionItem({ type, region, selected, onSelected }: RegionItemProps) {
   return (
     <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 has-[:checked]:border-green">
       <RegionFlag identifier={region.identifier} className="size-6" />
@@ -86,7 +90,8 @@ function RegionItem({ region, selected, onSelected }: RegionItemProps) {
         <RegionLatency region={region} />
       </div>
 
-      <CheckboxInput checked={selected} onChange={onSelected} />
+      {type === 'radio' && <RadioInput checked={selected} onChange={onSelected} />}
+      {type === 'checkbox' && <CheckboxInput checked={selected} onChange={onSelected} />}
     </label>
   );
 }
