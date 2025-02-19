@@ -8,6 +8,7 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { ControlledInput } from 'src/components/controlled';
+import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -23,12 +24,7 @@ const schema = z.object({
     .refine(isSlug, { params: { refinement: 'isSlug' } }),
 });
 
-type DowngradeProps = {
-  onCancel: () => void;
-  onDeleteAccount: () => void;
-};
-
-export function Downgrade({ onCancel, onDeleteAccount }: DowngradeProps) {
+export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
   const { token, setToken } = useToken();
@@ -91,9 +87,9 @@ export function Downgrade({ onCancel, onDeleteAccount }: DowngradeProps) {
               id="footer.message"
               values={{
                 delete: (children) => (
-                  <button type="button" className="underline" onClick={onDeleteAccount}>
+                  <Link href={`?settings`} className="underline">
                     {children}
-                  </button>
+                  </Link>
                 ),
               }}
             />

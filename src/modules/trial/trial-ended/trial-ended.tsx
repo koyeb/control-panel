@@ -4,16 +4,12 @@ import { Dialog } from '@koyeb/design-system';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 import { defined } from 'src/utils/assert';
 
-import { DeleteAccount } from './delete-account';
 import { Downgrade } from './downgrade';
 import { SelectPlan } from './select-plan';
 import { Upgrade } from './upgrade';
 
 export function TrialEnded() {
-  const [dialog, setDialog] = useState<'select-plan' | 'upgrade' | 'downgrade' | 'delete-account'>(
-    'select-plan',
-  );
-
+  const [dialog, setDialog] = useState<'select-plan' | 'upgrade' | 'downgrade'>('select-plan');
   const [selectedPlan, setSelectedPlan] = useState<'starter' | 'pro' | 'scale'>();
 
   const content = () => {
@@ -30,16 +26,7 @@ export function TrialEnded() {
     }
 
     if (dialog === 'downgrade') {
-      return (
-        <Downgrade
-          onCancel={() => setDialog('select-plan')}
-          onDeleteAccount={() => setDialog('delete-account')}
-        />
-      );
-    }
-
-    if (dialog === 'delete-account') {
-      return <DeleteAccount onCancel={() => setDialog('select-plan')} />;
+      return <Downgrade onCancel={() => setDialog('select-plan')} />;
     }
 
     return (
