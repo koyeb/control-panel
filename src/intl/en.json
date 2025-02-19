@@ -1352,9 +1352,9 @@
         "title": "Welcome to your Pro Trial!",
         "description": "Your trial starts today! It lasts for 7 days with a spending limit of $10 so you can explore all Pro plan features. Here's what you can do during your trial:",
         "features": {
-          "models": "Deploy web services or workers on any CPUs",
-          "compute": "Deploy inference endpoints on GPUs",
-          "web": "Scale your applications with autoscaling and scale to zero"
+          "cpu": "Deploy web services or workers on any CPUs",
+          "gpu": "Deploy inference endpoints on GPUs",
+          "scaling": "Scale your applications with autoscaling and scale to zero"
         },
         "footer": "You can subscribe to a plan at any time during your trial.",
         "cta": "Let's go!"
@@ -1394,13 +1394,13 @@
           }
         },
         "selectPlan": {
-          "title": "Your trial is over",
+          "title": "Your Trial Is Over",
           "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
           "footer": "Want to extend your trial? <reachOut>Book a call</reachOut>. You can <downgrade>create a new organization</downgrade> on a Hobby plan.<br></br>14 days after the trial ends, the organization and all related resources will be automatically deleted.",
           "manageAccount": "Manage account"
         },
         "upgrade": {
-          "title": "Your trial is over",
+          "title": "Your Trial Is Over",
           "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
           "submit": "Upgrade",
           "successNotification": "Welcome to your {plan} Plan"

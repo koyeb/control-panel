@@ -99,6 +99,7 @@ export { default as IconSunDim } from 'lucide-static/icons/sun-dim.svg?react';
 export { default as IconTicketPercent } from 'lucide-static/icons/ticket-percent.svg?react';
 export { default as IconTimer } from 'lucide-static/icons/timer.svg?react';
 export { default as IconTrash } from 'lucide-static/icons/trash-2.svg?react';
+export { default as IconTrendingUp } from 'lucide-static/icons/trending-up.svg?react';
 export { default as IconTriangleAlert } from 'lucide-static/icons/triangle-alert.svg?react';
 export { default as IconUnlink } from 'lucide-static/icons/unlink.svg?react';
 export { default as IconUser } from 'lucide-static/icons/user.svg?react';
