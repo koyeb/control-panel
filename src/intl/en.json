@@ -1375,22 +1375,33 @@
           "popular": "Most popular",
           "price": "{price} /month {price, select, 0 {+ pay as you go} other {}}",
           "starter": {
-            "feature1": "Generous Free Tier",
+            "description": "For individuals. Pay-per-use by the second after the free tier, perfect for small apps.",
+            "cta": "Downgrade to {plan}",
+            "feature1": "Generous Free Tier (1x Web Service, 1x Postgres, 5x custom domains)",
             "feature2": "Scale-to-Zero and Autoscaling",
             "feature3": "CPU and GPU access",
-            "cta": "Downgrade to {plan}"
+            "feature4": "US, EU, and Asia regions",
+            "feature5": "Run Inference, APIs, Web Apps, Workers, and Databases"
           },
           "pro": {
+            "description": "Everything in Starter, plus team and support features for production apps",
+            "cta": "Continue on {plan}",
             "feature1": "$10 included compute",
             "feature2": "10 users",
-            "feature3": "5 concurrent builds",
-            "cta": "Continue on {plan}"
+            "feature3": "100 services",
+            "feature4": "NVMe Volumes and Snapshots",
+            "feature5": "5 concurrent builds",
+            "feature6": "E-mail support and chat"
           },
           "scale": {
+            "description": "Supercharged security and support features, starting at $1000/mo",
+            "cta": "Upgrade to {plan}",
             "feature1": "$100 included compute",
             "feature2": "50 users",
-            "feature3": "Slack cross-connect",
-            "cta": "Upgrade to {plan}"
+            "feature3": "1000 services",
+            "feature4": "AWS Regions",
+            "feature5": "Slack cross-connect",
+            "feature6": "99.9% uptime SLA"
           }
         },
         "selectPlan": {

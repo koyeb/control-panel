@@ -5,8 +5,21 @@ import { IconCheck } from 'src/components/icons';
 import { PlanIcon } from 'src/components/plan-icon';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
+import { createArray } from 'src/utils/arrays';
 
 const T = createTranslate('modules.trial.ended.planItem');
+
+const prices = {
+  starter: 0,
+  pro: 29,
+  scale: 299,
+};
+
+const features = {
+  starter: 5,
+  pro: 6,
+  scale: 6,
+};
 
 type PlanItemProps = {
   plan: 'starter' | 'pro' | 'scale';
@@ -17,7 +30,13 @@ type PlanItemProps = {
 
 export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps) {
   return (
-    <div className={clsx('col rounded-lg border p-4 shadow-lg', popular ? 'gap-10' : 'gap-6', className)}>
+    <div
+      className={clsx(
+        'col rounded-lg border p-4 shadow-lg',
+        popular ? 'h-[33rem] gap-8' : 'h-[30rem] gap-6',
+        className,
+      )}
+    >
       <div className="row items-center justify-between">
         <PlanIcon
           plan={plan}
@@ -28,32 +47,26 @@ export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps)
 
       <div className="col gap-2">
         <div className="font-medium">
-          <T
-            id={`${plan}.cta`}
-            values={{
-              plan: <TranslateEnum enum="plans" value={plan} />,
-            }}
-          />
+          <T id={`${plan}.cta`} values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
         </div>
 
         <div className="text-dim">
-          <T
-            id="price"
-            values={{
-              price: <FormattedPrice value={{ starter: 0, pro: 29, scale: 299 }[plan]} digits={0} />,
-            }}
-          />
+          <T id="price" values={{ price: <FormattedPrice value={prices[plan]} digits={0} /> }} />
         </div>
       </div>
 
+      <div className="text-dim">
+        <T id={`${plan}.description`} />
+      </div>
+
       <ul className="col gap-1">
-        <PlanFeature text={<T id={`${plan}.feature1`} />} />
-        <PlanFeature text={<T id={`${plan}.feature2`} />} />
-        <PlanFeature text={<T id={`${plan}.feature3`} />} />
+        {createArray(features[plan], (i) => (
+          <PlanFeature text={<T id={`${plan}.feature${(i + 1) as 1}`} />} />
+        ))}
       </ul>
 
       {onUpgrade && (
-        <Button variant={popular ? 'solid' : 'outline'} onClick={onUpgrade}>
+        <Button variant={popular ? 'solid' : 'outline'} onClick={onUpgrade} className="mt-auto">
           <T id={`${plan}.cta`} values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
         </Button>
       )}
@@ -63,8 +76,8 @@ export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps)
 
 function PlanFeature({ text }: { text: React.ReactNode }) {
   return (
-    <li className="row items-center gap-1">
-      <div>
+    <li className="row items-start gap-1">
+      <div className="pt-0.5">
         <IconCheck className="size-4 text-green" />
       </div>
       <div className="text-dim">{text}</div>

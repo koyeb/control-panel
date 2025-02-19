@@ -27,7 +27,7 @@ export function SelectPlan({ onDowngrade, onSelected }: SelectPlanProps) {
         </p>
       </div>
 
-      <div className="grid items-center gap-4 sm:grid-cols-3">
+      <div className="grid items-center gap-4 md:grid-cols-3">
         <PlanItem plan="starter" onUpgrade={() => onSelected('starter')} />
         <PlanItem plan="pro" popular onUpgrade={() => onSelected('pro')} />
         <PlanItem plan="scale" onUpgrade={() => onSelected('scale')} />
