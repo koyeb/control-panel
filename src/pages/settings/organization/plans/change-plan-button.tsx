@@ -38,7 +38,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   };
 
   const text = () => {
-    if (organization.trial || organization.plan === 'startup') {
+    if (organization.trialing || organization.plan === 'startup') {
       return <T id="select" />;
     }
 
@@ -54,7 +54,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   };
 
   const disabled = () => {
-    if (organization.trial) {
+    if (organization.trialing) {
       return false;
     }
 

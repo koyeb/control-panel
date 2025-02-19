@@ -39,6 +39,7 @@ const organization = createFactory<Organization>(() => ({
   hasSignupQualification: false,
   hasPaymentMethod: false,
   billing: {},
+  trialing: false,
 }));
 
 const organizationSummary = createFactory<OrganizationSummary>(() => ({

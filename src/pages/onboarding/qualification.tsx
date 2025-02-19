@@ -104,7 +104,7 @@ function QualificationForm() {
       await invalidate('getCurrentOrganization');
       track('Form Submitted', { category: 'User Qualification', action: 'Clicked', ...values });
 
-      if (organization.trial) {
+      if (organization.trialing) {
         openDialog('TrialWelcome');
       }
     },

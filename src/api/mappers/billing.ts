@@ -14,6 +14,7 @@ export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscrip
     hasPendingUpdate: subscription!.has_pending_update!,
     trial: subscription?.trialing
       ? {
+          endsAt: subscription.trial_ends_at!,
           currentSpend: Number(subscription.current_spend),
           maxSpend: Number(subscription.trial_max_spend),
         }

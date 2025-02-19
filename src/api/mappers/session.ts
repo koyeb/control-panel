@@ -41,7 +41,7 @@ export function mapOrganization({ organization }: ApiEndpointResult<'getCurrentO
     latestSubscriptionId: organization?.latest_subscription_id || undefined,
     hasPaymentMethod: organization!.has_payment_method!,
     billing: mapOrganizationBilling(organization!),
-    trial: mapOrganizationTrial(organization!),
+    trialing: organization!.trialing!,
   };
 }
 
@@ -72,17 +72,6 @@ function mapOrganizationBilling(organization: Api.Organization): Organization['b
     address: isAddress(address) ? address : undefined,
     company: organization.company,
     vatNumber: organization.vat_number || undefined,
-  };
-}
-
-function mapOrganizationTrial(organization: Api.Organization): Organization['trial'] {
-  if (!organization.trialing) {
-    return;
-  }
-
-  return {
-    startsAt: organization.trial_starts_at!,
-    endsAt: organization.trial_ends_at!,
   };
 }
 

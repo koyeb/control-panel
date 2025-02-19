@@ -44,6 +44,7 @@ export type Subscription = {
   hasPaymentFailure: boolean;
   hasPendingUpdate: boolean;
   trial?: {
+    endsAt: string;
     currentSpend: number;
     maxSpend: number;
   };
@@ -543,10 +544,7 @@ export type Organization = {
     company?: boolean;
     vatNumber?: string;
   };
-  trial?: {
-    startsAt: string;
-    endsAt: string;
-  };
+  trialing: boolean;
 };
 
 export type OrganizationStatus =
