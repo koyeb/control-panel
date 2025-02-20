@@ -1,48 +1,32 @@
 import clsx from 'clsx';
-import { Children } from 'react';
 
 type StepperProps = {
-  children: Array<React.ReactElement<StepProps>>;
+  totalSteps: number;
+  activeStep: number;
+  onClick?: (index: number) => void;
 };
 
-export function Stepper({ children }: StepperProps) {
-  const steps = Children.map(children, (child) => {
-    return {
-      active: Boolean(child.props.active),
-      label: child.props.children,
-      onClick: child.props.onClick,
-    };
-  });
-
-  const activeIndex = steps.findIndex((step) => step.active);
-
+export function Stepper({ totalSteps, activeStep, onClick }: StepperProps) {
   return (
-    <div>
-      <div className="row gap-3">
-        {steps.map((step, index) => (
+    <div className="row">
+      {Array(totalSteps)
+        .fill(null)
+        .map((_, index) => (
           <button
             key={index}
             type="button"
-            disabled={step.onClick === undefined}
-            onClick={step.onClick}
-            className={clsx('flex-1 border-t-2 border-solid pt-1.5', index <= activeIndex && 'border-green')}
-          />
+            disabled={onClick === undefined}
+            onClick={() => onClick?.(index)}
+            className="px-2 py-1"
+          >
+            <div
+              className={clsx('h-1 w-10 rounded-full transition-colors', {
+                'bg-inverted/75': index <= activeStep,
+                'bg-inverted/25': index > activeStep,
+              })}
+            />
+          </button>
         ))}
-      </div>
-
-      <div className="row max-w-full items-center gap-2 overflow-visible whitespace-nowrap">
-        {steps[activeIndex]?.label}
-      </div>
     </div>
   );
-}
-
-type StepProps = {
-  active?: boolean;
-  onClick?: () => void;
-  children: React.ReactNode;
-};
-
-export function Step(_props: StepProps) {
-  return null;
 }

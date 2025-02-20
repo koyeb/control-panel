@@ -1,12 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { Button } from '@koyeb/design-system';
+import { Button, Stepper } from '@koyeb/design-system';
 import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { createTranslate } from 'src/intl/translate';
-
-import { OnboardingStepper } from './stepper';
 
 const T = createTranslate('pages.onboarding.emailValidation');
 
@@ -23,7 +21,7 @@ export function EmailValidation() {
 
   return (
     <section className="col w-full max-w-xl items-start gap-6">
-      <OnboardingStepper step={1} />
+      <Stepper totalSteps={3} activeStep={1} />
 
       <h1 className="typo-heading">
         <T id="title" />
