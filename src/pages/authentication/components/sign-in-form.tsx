@@ -109,7 +109,7 @@ export function SignInForm() {
         disabled={form.formState.submitCount > 0 && !form.formState.isValid}
         loading={form.formState.isSubmitting}
       >
-        <T id="signIn" />
+        <T id="submit" />
       </AuthButton>
     </form>
   );
