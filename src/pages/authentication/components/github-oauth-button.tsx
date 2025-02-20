@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
 
 import { Spinner } from '@koyeb/design-system';
 import { useApiMutationFn } from 'src/api/use-api';
@@ -9,10 +10,11 @@ import { hasProperty } from 'src/utils/object';
 
 type GithubOAuthButtonProps = {
   action: 'signin' | 'signup';
+  className?: string;
   children: React.ReactNode;
 };
 
-export function GithubOAuthButton({ action, children }: GithubOAuthButtonProps) {
+export function GithubOAuthButton({ action, className, children }: GithubOAuthButtonProps) {
   const [next] = useSearchParam('next');
 
   const mutation = useMutation({
@@ -33,9 +35,16 @@ export function GithubOAuthButton({ action, children }: GithubOAuthButtonProps) 
   });
 
   return (
-    <button type="button" onClick={() => mutation.mutate()} className="github-oauth-button">
-      {children}
+    <button
+      type="button"
+      onClick={() => mutation.mutate()}
+      className={clsx(
+        'row w-full items-center justify-center gap-2 rounded-md bg-[#0F0F0F] px-4 py-2 font-medium text-white',
+        className,
+      )}
+    >
       {mutation.isPending ? <Spinner className="size-4" /> : <IconGithub className="size-4" />}
+      {children}
     </button>
   );
 }

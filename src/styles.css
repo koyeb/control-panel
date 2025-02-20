@@ -29,54 +29,6 @@
   }
 }
 
-@layer components {
-  .authenticate-button {
-    @apply w-full rounded-full py-4 bg-green;
-    @apply text-xs font-semibold uppercase text-inverted;
-    @apply hover:shadow-none hover:bg-green/80;
-
-    transition: box-shadow 220ms ease-out;
-
-    box-shadow:
-      rgb(135 252 196 / 14%) 0px 81.5873px 65.2699px,
-      rgb(135 252 196 / 10%) 0px 34.0852px 27.2682px,
-      rgb(135 252 196 / 8%) 0px 18.2236px 14.5789px,
-      rgb(135 252 196 / 7%) 0px 10.216px 8.1728px,
-      rgb(135 252 196 / 6%) 0px 5.42564px 4.34051px,
-      rgb(135 252 196 / 4%) 0px 2.25773px 1.80619px;
-  }
-
-  .github-oauth-button {
-    @apply relative py-4;
-    @apply row items-center justify-center gap-2;
-    @apply text-xs font-semibold uppercase tracking-wider;
-
-    &:hover {
-      box-shadow: 0px 20px 15px 0px #000;
-    }
-
-    &::before,
-    &::after {
-      @apply absolute inset-0 -z-10 rounded-full;
-      content: '';
-    }
-
-    &::before {
-      /* prettier-ignore */
-      background: linear-gradient(10deg, theme(colors.green), transparent 30%, transparent 60%, theme(colors.green));
-      transition: background 220ms ease-out;
-
-      &:hover {
-        @apply bg-green;
-      }
-    }
-
-    &::after {
-      @apply bg-muted m-px;
-    }
-  }
-}
-
 /* react-toastify */
 
 :root {

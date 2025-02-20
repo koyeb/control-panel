@@ -1562,13 +1562,13 @@
         "githubSignIn": "Sign in with GitHub",
         "or": "or",
         "emailLabel": "Email",
-        "emailPlaceholder": "Email",
+        "emailPlaceholder": "email",
         "passwordLabel": "Password",
-        "passwordPlaceholder": "Password",
+        "passwordPlaceholder": "p@55w0RD",
         "signIn": "Sign in",
         "invalidCredential": "Incorrect email or password",
-        "signUpLink": "Don't have an account? <link>Sign up</link>",
-        "forgotPasswordLink": "<link>Forgot password</link>",
+        "signUpLink": "Don't have an account? <link>Create one</link>",
+        "forgotPasswordLink": "Forgot password? <link>Reset</link>",
         "communityLink": "<link>Join the community</link>"
       },
       "signUp": {
