@@ -1,17 +1,20 @@
-import type { Meta, StoryFn } from '@storybook/react';
+import { action } from '@storybook/addon-actions';
+import type { Meta, StoryObj } from '@storybook/react';
 
-import { Step, Stepper } from './stepper';
+import { Stepper } from './stepper';
 
-export default {
+const meta = {
   title: 'DesignSystem/Stepper',
   component: Stepper,
 } satisfies Meta<typeof Stepper>;
 
-export const Default: StoryFn = () => (
-  <Stepper>
-    <Step>Step 1</Step>
-    <Step active>Step 2</Step>
-    <Step>Step 3</Step>
-    <Step>Step 4</Step>
-  </Stepper>
-);
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    activeStep: 2,
+    totalSteps: 5,
+    onClick: action('onClick'),
+  },
+};
