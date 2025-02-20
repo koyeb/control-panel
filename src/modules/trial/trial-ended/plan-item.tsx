@@ -31,9 +31,10 @@ type PlanItemProps = {
 export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps) {
   return (
     <div
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
-        'col rounded-lg border p-4 shadow-lg',
-        popular ? 'h-[33rem] gap-8' : 'h-[30rem] gap-6',
+        'col gap-6 rounded-lg border p-4 shadow-lg',
+        popular ? 'h-[30rem]' : 'h-[27rem]',
         className,
       )}
     >
@@ -45,6 +46,8 @@ export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps)
         {popular && <PopularBadge />}
       </div>
 
+      {popular && <div />}
+
       <div className="col gap-2">
         <div className="font-medium">
           <T id={`${plan}.cta`} values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
@@ -55,9 +58,11 @@ export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps)
         </div>
       </div>
 
-      <div className="text-dim">
-        <T id={`${plan}.description`} />
-      </div>
+      {plan !== 'starter' && (
+        <div className="text-dim">
+          <T id={`${plan}.description`} />
+        </div>
+      )}
 
       <ul className="col gap-1">
         {createArray(features[plan], (i) => (

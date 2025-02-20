@@ -1375,7 +1375,6 @@
           "popular": "Most popular",
           "price": "{price} /month {price, select, 0 {+ pay as you go} other {}}",
           "starter": {
-            "description": "For individuals. Pay-per-use by the second after the free tier, perfect for small apps.",
             "cta": "Downgrade to {plan}",
             "feature1": "Generous Free Tier (1x Web Service, 1x Postgres, 5x custom domains)",
             "feature2": "Scale-to-Zero and Autoscaling",
@@ -1394,7 +1393,7 @@
             "feature6": "E-mail support and chat"
           },
           "scale": {
-            "description": "Supercharged security and support features, starting at $1000/mo",
+            "description": "Scale your infrastructure, team and support",
             "cta": "Upgrade to {plan}",
             "feature1": "$100 included compute",
             "feature2": "50 users",
