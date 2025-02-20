@@ -8,7 +8,7 @@ const Customers = lazy(() => import('./customers'));
 
 export function AuthenticationLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="row h-screen">
+    <div className="row h-screen bg-[#F2F2F2]">
       <div className="col flex-1 justify-between p-16">
         <div>
           <LogoKoyeb className="h-8" />
@@ -18,7 +18,7 @@ export function AuthenticationLayout({ children }: { children: React.ReactNode }
 
         <div className="col items-center gap-3 text-[#6B6965]">
           <div className="text-xs font-medium">Trusted by the most ambitious teams</div>
-          <div className="row flex-wrap justify-evenly gap-x-4 gap-y-3 px-32">
+          <div className="row max-w-md flex-wrap justify-evenly gap-x-4 gap-y-3">
             <Customers />
           </div>
         </div>

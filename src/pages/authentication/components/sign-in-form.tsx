@@ -1,22 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { Spinner } from '@koyeb/design-system';
 import { isApiError } from 'src/api/api-errors';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
-import { IconEye, IconEyeOff } from 'src/components/icons';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
-
-import { AuthenticateButton } from './authenticate-button';
-import { ControlledInput } from './controlled-input';
 
 const T = createTranslate('pages.authentication.signIn');
 
@@ -67,7 +64,6 @@ export function SignInForm() {
   });
 
   const [invalidCredential, setInvalidCredential] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
     const { unsubscribe } = form.watch(() => {
@@ -80,39 +76,61 @@ export function SignInForm() {
   }, [form]);
 
   return (
-    <form onSubmit={handleSubmit(form, signIn)} className="col gap-4">
+    <form onSubmit={handleSubmit(form, signIn)} className="col gap-6">
+      <Controller
+        control={form.control}
+        name="email"
+        render={({ field, fieldState }) => (
+          <div className="text-start">
+            <input
+              autoFocus
+              type="email"
+              required
+              placeholder={t('emailPlaceholder')}
+              className="w-full rounded-md border border-[#9F9F9F] bg-white/40 px-3 py-2"
+              {...field}
+            />
+            {fieldState.error?.message && (
+              <div className="mt-1 text-xs text-red">{fieldState.error.message}</div>
+            )}
+          </div>
+        )}
+      />
+
+      <Controller
+        control={form.control}
+        name="password"
+        render={({ field, fieldState }) => (
+          <div className="text-start">
+            <input
+              autoFocus
+              autoComplete="current-password"
+              type="password"
+              required
+              placeholder={t('passwordPlaceholder')}
+              className="w-full rounded-md border border-[#9F9F9F] bg-white/40 px-3 py-2"
+              {...field}
+            />
+            {fieldState.error?.message && (
+              <div className="mt-1 text-xs text-red">{fieldState.error.message}</div>
+            )}
+          </div>
+        )}
+      />
+
       {invalidCredential && (
-        <div className="rounded-md bg-red p-4 text-black">
+        <div className="text-red">
           <T id="invalidCredential" />
         </div>
       )}
 
-      <ControlledInput
-        control={form.control}
-        autoFocus
-        name="email"
-        type="email"
-        required
-        placeholder={t('emailPlaceholder')}
-      />
-
-      <ControlledInput
-        control={form.control}
-        name="password"
-        type={passwordVisible ? 'text' : 'password'}
-        autoComplete="current-password"
-        required
-        placeholder={t('passwordPlaceholder')}
-        end={
-          <button type="button" onClick={() => setPasswordVisible(!passwordVisible)} className="mx-6">
-            {passwordVisible ? <IconEyeOff className="icon" /> : <IconEye className="icon" />}
-          </button>
-        }
-      />
-
-      <AuthenticateButton loading={form.formState.isSubmitting}>
-        <T id="signIn" />
-      </AuthenticateButton>
+      <button
+        type="submit"
+        disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+        className="row w-full items-center justify-center gap-2 rounded-md bg-[#1A1917] px-4 py-2 font-medium text-white disabled:bg-[#1A1917]/50"
+      >
+        {form.formState.isSubmitting ? <Spinner className="size-5" /> : <T id="signIn" />}
+      </button>
     </form>
   );
 }
