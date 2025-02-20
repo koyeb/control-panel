@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, useEffect } from 'react';
 
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 
@@ -7,6 +7,8 @@ import { Slides } from './slides';
 const Customers = lazy(() => import('./customers'));
 
 export function AuthenticationLayout({ children }: { children: React.ReactNode }) {
+  useForceLightMode();
+
   return (
     <div className="row h-screen bg-[#F2F2F2]">
       <div className="col flex-1 justify-between p-16">
@@ -25,9 +27,20 @@ export function AuthenticationLayout({ children }: { children: React.ReactNode }
       </div>
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="m-4 w-[44rem]">
+      <div className="m-2 w-[44rem]">
         <Slides />
       </div>
     </div>
   );
+}
+
+function useForceLightMode() {
+  useEffect(() => {
+    const html = document.documentElement;
+
+    if (html.classList.contains('dark')) {
+      html.classList.remove('dark');
+      return () => html.classList.add('dark');
+    }
+  }, []);
 }

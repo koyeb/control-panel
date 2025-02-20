@@ -11,8 +11,8 @@ import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
+import { AuthInput } from './components/auth-input';
 import { AuthenticateButton } from './components/authenticate-button';
-import { ControlledInput } from './components/controlled-input';
 
 const T = createTranslate('pages.authentication.resetPassword');
 
@@ -65,7 +65,7 @@ export function ResetPasswordForm() {
 
   return (
     <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-      <ControlledInput
+      <AuthInput
         control={form.control}
         autoFocus
         name="email"

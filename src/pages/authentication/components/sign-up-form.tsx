@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -9,7 +9,6 @@ import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
-import { IconEye, IconEyeOff } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -17,8 +16,8 @@ import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
-import { AuthenticateButton } from './authenticate-button';
-import { ControlledInput } from './controlled-input';
+import { AuthButton } from './auth-button';
+import { AuthInput } from './auth-input';
 
 const T = createTranslate('pages.authentication.signUp');
 
@@ -73,46 +72,43 @@ export function SignUpForm() {
     }),
   });
 
-  const [passwordVisible, setPasswordVisible] = useState(false);
-
   useInjectRecaptchaScript();
 
   return (
     <form onSubmit={handleSubmit(form, signUp)} className="col gap-4">
-      <ControlledInput
+      <AuthInput
         control={form.control}
+        required
         autoFocus
         name="name"
         type="text"
-        required
         placeholder={t('namePlaceholder')}
       />
 
-      <ControlledInput
+      <AuthInput
         control={form.control}
+        required
         name="email"
         type="email"
-        required
         placeholder={t('emailPlaceholder')}
       />
 
-      <ControlledInput
+      <AuthInput
         control={form.control}
-        name="password"
-        type={passwordVisible ? 'text' : 'password'}
-        autoComplete="current-password"
         required
+        name="password"
+        type="password"
+        autoComplete="current-password"
         placeholder={t('passwordPlaceholder')}
-        end={
-          <button type="button" onClick={() => setPasswordVisible(!passwordVisible)} className="mx-6">
-            {passwordVisible ? <IconEyeOff className="icon" /> : <IconEye className="icon" />}
-          </button>
-        }
       />
 
-      <AuthenticateButton loading={form.formState.isSubmitting}>
+      <AuthButton
+        type="submit"
+        disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+        loading={form.formState.isSubmitting}
+      >
         <T id="signUp" />
-      </AuthenticateButton>
+      </AuthButton>
 
       <p className="text-center text-xs text-dim">
         <T

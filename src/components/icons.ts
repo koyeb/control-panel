@@ -71,6 +71,7 @@ export { default as IconListMinus } from 'lucide-static/icons/list-minus.svg?rea
 export { default as IconListPlus } from 'lucide-static/icons/list-plus.svg?react';
 export { default as IconLock } from 'lucide-static/icons/lock.svg?react';
 export { default as IconLogOut } from 'lucide-static/icons/log-out.svg?react';
+export { default as IconMail } from 'lucide-static/icons/mail.svg?react';
 export { default as IconMemoryStick } from 'lucide-static/icons/memory-stick.svg?react';
 export { default as IconMenu } from 'lucide-static/icons/menu.svg?react';
 export { default as IconMessageMoreCircle } from 'lucide-static/icons/message-circle-more.svg?react';

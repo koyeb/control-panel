@@ -7,14 +7,12 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
+import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
-
-// todo: use main controlled input
-import { ControlledInput } from '../authentication/components/controlled-input';
 
 const T = createTranslate('pages.account.changePassword');
 

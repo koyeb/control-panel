@@ -4,6 +4,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignInForm } from './components/sign-in-form';
+import { Separator } from './separator';
 
 const T = createTranslate('pages.authentication.signIn');
 
@@ -14,7 +15,9 @@ export function SignInPage() {
         <T id="title" />
       </h1>
 
-      <div className="mt-2 font-medium text-[#363533]">Back to work, back to building.</div>
+      <div className="mt-2 font-medium text-[#363533]">
+        <T id="subtitle" />
+      </div>
 
       <GithubOAuthButton action="signin" className="mt-12">
         <T id="githubSignIn" />
@@ -24,47 +27,36 @@ export function SignInPage() {
 
       <SignInForm />
 
-      <Links />
+      <SignUpLink />
+      <PasswordResetLink />
     </div>
   );
 }
 
-function Separator() {
-  return (
-    <div className="row my-6 items-center justify-center">
-      <hr className="flex-1 border-[#9F9F9F]/30" />
-
-      <span className="px-6 text-xs text-[#9F9F9F]">
-        <T id="or" />
-      </span>
-
-      <hr className="flex-1 border-[#9F9F9F]/30" />
-    </div>
-  );
-}
-
-function Links() {
-  const signUp = (children: React.ReactNode[]) => (
+function SignUpLink() {
+  const link = (children: React.ReactNode[]) => (
     <Link href={routes.signUp()} className="text-default underline">
       {children}
     </Link>
   );
 
-  const forgotPassword = (children: React.ReactNode[]) => (
+  return (
+    <p className="mt-6 text-center text-xs text-[#6B6965]">
+      <T id="signUpLink" values={{ link }} />
+    </p>
+  );
+}
+
+function PasswordResetLink() {
+  const link = (children: React.ReactNode[]) => (
     <Link href={routes.resetPassword()} className="text-default underline">
       {children}
     </Link>
   );
 
   return (
-    <>
-      <p className="mt-6 text-center text-xs text-[#6B6965]">
-        <T id="signUpLink" values={{ link: signUp }} />
-      </p>
-
-      <p className="mt-1 text-center text-xs text-[#6B6965]">
-        <T id="forgotPasswordLink" values={{ link: forgotPassword }} />
-      </p>
-    </>
+    <p className="mt-1 text-center text-xs text-[#6B6965]">
+      <T id="forgotPasswordLink" values={{ link }} />
+    </p>
   );
 }
