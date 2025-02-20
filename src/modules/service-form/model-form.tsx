@@ -341,7 +341,7 @@ function RegionSection({ form }: { form: ModelForm }) {
       <ControlledSelect
         control={form.control}
         name="region"
-        items={availableRegions}
+        items={availableRegions.sort((a) => (canSelect(a) ? -1 : 1))}
         getKey={(region) => region.identifier}
         itemToString={(region) => region.displayName}
         itemToValue={(region) => region.identifier}
