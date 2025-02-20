@@ -1,6 +1,9 @@
 import clsx from 'clsx';
 import { useState, useCallback, useEffect } from 'react';
 
+import { Stepper } from '@koyeb/design-system';
+import { stopPropagation } from 'src/application/dom-events';
+
 import deployment from './images/deployment.svg';
 import map from './images/map.svg';
 import scaling from './images/scaling.svg';
@@ -21,8 +24,11 @@ export function Slides() {
   }, [next]);
 
   return (
-    <div className="col h-full rounded-2xl bg-[#111111] [&_*]:border-[#1E1E1E]" onClick={next}>
+    <div className="col dark relative h-full rounded-2xl bg-[#111111] [&_*]:border-[#1E1E1E]" onClick={next}>
       {[0, 1, 2].map((idx) => idx === index && <Slide key={idx} content={content[idx]!} />)}
+      <div className="row absolute inset-x-0 bottom-12 justify-center" onClick={stopPropagation}>
+        <Stepper totalSteps={3} activeStep={index} onClick={setIndex} />
+      </div>
     </div>
   );
 }
@@ -44,13 +50,13 @@ function Slide({ content }: { content: SlideContent }) {
         </div>
 
         <div className="row flex-1 border-t">
-          <div className="p-6 text-white">image</div>
+          <div className="p-6">image</div>
 
           <div className="col flex-1 border-l">
             <div className={clsx('px-6 py-3 text-5xl font-semibold', gradientText)}>{content.line2}</div>
 
             <div className="border-t">
-              <div className="p-4 text-lg text-white/80">
+              <div className="p-4 text-lg text-dim">
                 {content.features.map((feature, index) => (
                   <div key={index}>{feature}</div>
                 ))}

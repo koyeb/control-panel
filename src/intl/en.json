@@ -1519,6 +1519,9 @@
         "title": "Native autoscaling",
         "description": "Enjoy autoscaling with high-end performance thanks to high-frequency CPUs and secure Firecracker microVMs"
       }
+    },
+    "authentication": {
+      "argumentumAdPopulum": "Trusted by the most ambitious teams"
     }
   },
   "pages": {
