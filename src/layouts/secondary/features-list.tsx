@@ -10,7 +10,7 @@ const T = createTranslate('layouts.secondary');
 
 export function FeaturesList() {
   return (
-    <ul className="col max-w-sm gap-6 font-gilroy">
+    <ul className="col max-w-sm gap-6">
       <FeatureItem
         Image={StartForFree}
         title={<T id="startForFree.title" />}
