@@ -1,5 +1,7 @@
 import { lazy, useEffect } from 'react';
 
+import { routes } from 'src/application/routes';
+import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { createTranslate } from 'src/intl/translate';
 
@@ -15,9 +17,9 @@ export function AuthenticationLayout({ children }: { children: React.ReactNode }
   return (
     <div className="row h-screen bg-[#F2F2F2]">
       <div className="col flex-1 justify-between p-16">
-        <div>
+        <Link href={routes.signIn()} className="self-start">
           <LogoKoyeb className="h-8" />
-        </div>
+        </Link>
 
         {children}
 
