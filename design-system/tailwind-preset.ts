@@ -85,7 +85,6 @@ export default {
     fontFamily: {
       sans: ['Inter Variable', ...defaultTheme.fontFamily.sans],
       mono: ['JetBrains Mono Variable', ...defaultTheme.fontFamily.mono],
-      gilroy: ['Gilroy', ...defaultTheme.fontFamily.sans],
     },
     extend: {
       spacing: {

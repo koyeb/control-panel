@@ -1,23 +1,5 @@
 @import '../design-system/src/styles.css';
 
-@font-face {
-  font-family: Gilroy;
-  font-weight: 400;
-  src: url(./layouts/secondary/gilroy/gilroy-regular.ttf) format('truetype');
-}
-
-@font-face {
-  font-family: Gilroy;
-  font-weight: 500;
-  src: url(./layouts/secondary/gilroy/gilroy-medium.ttf) format('truetype');
-}
-
-@font-face {
-  font-family: Gilroy;
-  font-weight: 600;
-  src: url(./layouts/secondary/gilroy/gilroy-semibold.ttf) format('truetype');
-}
-
 @layer base {
   body {
     @apply bg-neutral;
