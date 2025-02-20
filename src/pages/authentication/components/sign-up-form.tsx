@@ -107,7 +107,7 @@ export function SignUpForm() {
         disabled={form.formState.submitCount > 0 && !form.formState.isValid}
         loading={form.formState.isSubmitting}
       >
-        <T id="signUp" />
+        <T id="submit" />
       </AuthButton>
 
       <p className="text-center text-xs text-dim">

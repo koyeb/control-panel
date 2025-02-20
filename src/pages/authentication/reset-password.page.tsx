@@ -11,25 +11,25 @@ import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
+import { AuthButton } from './components/auth-button';
 import { AuthInput } from './components/auth-input';
-import { AuthenticateButton } from './components/authenticate-button';
 
 const T = createTranslate('pages.authentication.resetPassword');
 
 export function ResetPasswordPage() {
   return (
-    <div className="col gap-8">
-      <h1 className="text-center text-3xl font-semibold">
+    <div className="mx-auto w-full max-w-80 text-center">
+      <h1 className="text-3xl font-semibold">
         <T id="title" />
       </h1>
 
-      <p className="text-center text-dim">
-        <T id="description" />
-      </p>
+      <div className="mt-2 font-medium text-[#363533]">
+        <T id="subtitle" />
+      </div>
 
       <ResetPasswordForm />
 
-      <Links />
+      <SignInLink />
     </div>
   );
 }
@@ -64,7 +64,7 @@ export function ResetPasswordForm() {
   });
 
   return (
-    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
+    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col mt-12 gap-6">
       <AuthInput
         control={form.control}
         autoFocus
@@ -74,35 +74,27 @@ export function ResetPasswordForm() {
         placeholder={t('emailPlaceholder')}
       />
 
-      <AuthenticateButton loading={form.formState.isSubmitting}>
-        <T id="resetPassword" />
-      </AuthenticateButton>
+      <AuthButton
+        type="submit"
+        disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+        loading={form.formState.isSubmitting}
+      >
+        <T id="submit" />
+      </AuthButton>
     </form>
   );
 }
 
-function Links() {
-  const signIn = (children: React.ReactNode[]) => (
-    <Link href={routes.signIn()} className="text-link">
-      {children}
-    </Link>
-  );
-
-  const signUp = (children: React.ReactNode[]) => (
-    <Link href={routes.signUp()} className="text-link">
+function SignInLink() {
+  const link = (children: React.ReactNode[]) => (
+    <Link href={routes.signIn()} className="text-default underline">
       {children}
     </Link>
   );
 
   return (
-    <div className="col gap-4 text-center text-xs">
-      <p className="text-dim">
-        <T id="signInLink" values={{ link: signIn }} />
-      </p>
-
-      <p className="text-dim">
-        <T id="signUpLink" values={{ link: signUp }} />
-      </p>
-    </div>
+    <p className="mt-6 text-center text-xs text-[#6B6965]">
+      <T id="signInLink" values={{ link }} />
+    </p>
   );
 }

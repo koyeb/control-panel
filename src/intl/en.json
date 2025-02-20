@@ -1566,7 +1566,7 @@
         "emailPlaceholder": "email",
         "passwordLabel": "Password",
         "passwordPlaceholder": "p@55w0RD",
-        "signIn": "Sign in",
+        "submit": "Sign in",
         "invalidCredential": "Incorrect email or password",
         "signUpLink": "Don't have an account? <link>Create one</link>",
         "forgotPasswordLink": "Forgot password? <link>Reset</link>"
@@ -1582,20 +1582,19 @@
         "emailPlaceholder": "email",
         "passwordLabel": "Password",
         "passwordPlaceholder": "p@55w0RD",
-        "signUp": "Create free account",
+        "submit": "Create free account",
         "reCAPTCHA": "protected by reCAPTCHA - <privacy>Privacy</privacy> • <terms>Terms</terms>",
         "signInLink": "Already have an account? <link>Sign in</link>",
         "agreements": "By signing up, you agree to the<br></br><tos>Terms of Services</tos> and <privacy>Privacy Policy</privacy>"
       },
       "resetPassword": {
         "title": "Reset password",
-        "description": "Enter your account email address and we will send you a link to reset your password",
+        "subtitle": "Enter the email associated with your account and we'll send you an email with instructions to reset your password",
         "emailLabel": "Email",
-        "emailPlaceholder": "Email address",
-        "resetPassword": "Reset password",
+        "emailPlaceholder": "email",
+        "submit": "Send reset instruction",
         "successNotification": "We've sent you an email with a password reset link",
-        "signInLink": "Already have an account? <link>Sign in</link>",
-        "signUpLink": "Don't have an account? <link>Sign up</link>"
+        "signInLink": "Go back to <link>sign in</link>"
       },
       "sso": {
         "cannyError": "Error: failed to sign in to canny",
