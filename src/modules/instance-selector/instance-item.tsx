@@ -47,7 +47,7 @@ export function InstanceItem({
       )}
     >
       <div className="rounded-t-lg p-4">
-        <div className="row gap-4">
+        <div className="col sm:row gap-4">
           <InstanceDescription
             instance={instance}
             disabled={disabled}
@@ -67,7 +67,7 @@ export function InstanceItem({
 
 function InstancePrice({ instance }: { instance: CatalogInstance }) {
   return (
-    <div className="text-right">
+    <div className="sm:text-right">
       <div>
         <T
           id="costs.pricePerHour"

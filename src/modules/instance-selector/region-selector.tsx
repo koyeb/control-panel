@@ -29,7 +29,7 @@ export function RegionSelector({
 }: RegionSelectorProps) {
   return (
     <Collapse open={expanded}>
-      <div className="row mb-2 mt-4 items-center justify-between">
+      <div className="col sm:row mb-2 mt-4 items-start justify-between gap-2 sm:items-center">
         <div className="text-dim">
           <T id="regions.label" />
         </div>
@@ -52,7 +52,7 @@ export function RegionSelector({
 
       <ul className="row flex-wrap justify-start gap-4">
         {regions.map((region) => (
-          <li key={region.identifier} className="w-56">
+          <li key={region.identifier} className="w-full sm:w-56">
             <RegionItem
               type={type}
               region={region}
