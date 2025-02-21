@@ -1521,6 +1521,27 @@
       }
     },
     "authentication": {
+      "zeroConfig": {
+        "line1": "Zero config",
+        "line2": "infrastructure",
+        "feature1": "Smart and fast autoscaling on GPU and CPU",
+        "feature2": "Zero-downtime deployments",
+        "feature3": "Built-in observability"
+      },
+      "seamlessDeployment": {
+        "line1": "Seamless",
+        "line2": "deployment",
+        "feature1": "Instant API endpoint",
+        "feature2": "Build and deploy anything from web apps to inference",
+        "feature3": "Native HTTP/2, WebSocket, and gRPC support"
+      },
+      "anyHardware": {
+        "line1": "Any hardware",
+        "line2": "anywhere",
+        "feature1": "High-performance CPUs, GPUs, and accelerators",
+        "feature2": "Available globally across 10 regions and containers",
+        "feature3": "Ultra-fast NVME storage"
+      },
       "argumentumAdPopulum": "Trusted by the most ambitious teams"
     }
   },
