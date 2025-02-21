@@ -1402,14 +1402,14 @@
           }
         },
         "selectPlan": {
-          "title": "Your Trial Is Over",
-          "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
-          "footer": "Want to extend your trial? <reachOut>Book a call</reachOut>. You can <downgrade>create a new organization</downgrade> on a Hobby plan.<br></br>14 days after the trial ends, the organization and all related resources will be automatically deleted.",
+          "title": "Your Koyeb Pro trial has expired",
+          "description": "You can easily reactivate your organization by upgrading to a plan",
+          "footer": "Need more time? <reachOut>Let's chat</reachOut>. You can also continue using our limited Free plan by <downgrade>creating a new organization</downgrade>.",
           "manageAccount": "Manage account"
         },
         "upgrade": {
-          "title": "Your Trial Is Over",
-          "description": "All deployed services have been paused. The organization is locked until you subscribe to a plan.",
+          "title": "Your Koyeb Pro trial has expired",
+          "description": "You can easily reactivate your organization by upgrading to a plan",
           "submit": "Upgrade",
           "successNotification": "Welcome to your {plan} Plan"
         },
