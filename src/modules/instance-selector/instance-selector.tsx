@@ -28,7 +28,7 @@ export function InstanceSelector({
   getBadges,
 }: InstanceSelectorProps) {
   return (
-    <div className="col scrollbar-green scrollbar-thin max-h-96 gap-3 overflow-auto pe-2">
+    <>
       {instances.map((instance) => (
         <InstanceItem
           key={instance.identifier}
@@ -49,7 +49,6 @@ export function InstanceSelector({
           }
         />
       ))}
-      <div />
-    </div>
+    </>
   );
 }

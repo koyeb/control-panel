@@ -1,14 +1,19 @@
 import { Button } from '@koyeb/design-system';
-import { useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
+import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
 import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { InstanceSelector } from 'src/components/instance-selector';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
+import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
+import { InstanceSelector as NewInstanceSelector } from 'src/modules/instance-selector/instance-selector';
+import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
+import { hasProperty } from 'src/utils/object';
 
 import { InstanceRegionAlerts } from './instance-region-alerts';
 import { useInstanceRegionState } from './instance-region-state';
@@ -41,10 +46,14 @@ export function InstanceRegionStep(props: InstanceRegionStepProps) {
     return <QueryError error={organizationQuotasQuery.error} />;
   }
 
-  return <InstanceRegionStep_ {...props} />;
+  return (
+    <FeatureFlag feature="new-instance-selector" fallback={<InstanceRegionStepOld {...props} />}>
+      <InstanceRegionStepNew {...props} />
+    </FeatureFlag>
+  );
 }
 
-function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
+function InstanceRegionStepOld({ onNext }: InstanceRegionStepProps) {
   const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
   const [state, actions] = useInstanceRegionState();
   const navigate = useNavigate();
@@ -98,5 +107,62 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         <Translate id="common.next" />
       </Button>
     </>
+  );
+}
+
+function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
+  const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
+  const navigate = useNavigate();
+
+  const availabilities = useInstanceAvailabilities({ serviceType });
+
+  const searchParams = useSearchParams();
+  const instances = useInstances();
+  const regions = useRegions();
+
+  const selectedInstance =
+    instances.find(hasProperty('identifier', searchParams.get('instance_type'))) ?? null;
+
+  const selectedRegions = regions.filter((region) =>
+    searchParams.getAll('regions').includes(region.identifier),
+  );
+
+  const selector = useInstanceSelector({
+    instances,
+    regions,
+    availabilities,
+    selectedInstance,
+    setSelectedInstance: (instance) => {
+      if (instance) {
+        navigate((url) => url.searchParams.set('instance_type', instance?.identifier));
+      }
+    },
+    selectedRegions,
+    setSelectedRegions: (regions) => {
+      navigate((url) => {
+        url.searchParams.delete('regions');
+        regions.forEach((region) => url.searchParams.append('regions', region.identifier));
+      });
+    },
+  });
+
+  return (
+    <div className="col max-w-3xl gap-4">
+      <InstanceRegionAlerts selectedInstance={selectedInstance} selectedRegions={selectedRegions} />
+
+      <InstanceCategoryTabs
+        category={selector.instanceCategory}
+        setCategory={selector.onInstanceCategorySelected}
+      />
+
+      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+      <div className="col scrollbar-green scrollbar-thin max-h-[32rem] gap-3 overflow-auto pe-2">
+        <NewInstanceSelector {...selector} getBadges={() => []} />
+      </div>
+
+      <Button onClick={onNext} disabled={selectedRegions.length === 0} className="self-start">
+        <Translate id="common.next" />
+      </Button>
+    </div>
   );
 }

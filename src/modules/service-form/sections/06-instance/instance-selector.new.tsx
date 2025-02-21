@@ -72,7 +72,10 @@ export function InstanceSelectorNew() {
 
       <InstanceAlerts selectedCategory={selector.instanceCategory} />
 
-      <InstanceSelectorComponent {...selector} getBadges={getBadges} />
+      <div className="col scrollbar-green scrollbar-thin max-h-96 gap-3 overflow-auto pe-2">
+        <InstanceSelectorComponent {...selector} getBadges={getBadges} />
+        <div />
+      </div>
     </>
   );
 }
