@@ -34,7 +34,7 @@ export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps)
       // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
         'col gap-6 rounded-lg border p-4 shadow-lg',
-        popular ? 'h-[30rem]' : 'h-[27rem]',
+        popular ? 'h-[31rem]' : 'h-[28rem]',
         className,
       )}
     >
@@ -58,11 +58,9 @@ export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps)
         </div>
       </div>
 
-      {plan !== 'starter' && (
-        <div className="text-dim">
-          <T id={`${plan}.description`} />
-        </div>
-      )}
+      <div className="text-dim">
+        <T id={`${plan}.description`} />
+      </div>
 
       <ul className="col gap-1">
         {createArray(features[plan], (i) => (

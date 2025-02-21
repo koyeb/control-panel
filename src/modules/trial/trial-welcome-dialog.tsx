@@ -1,7 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import { SvgComponent } from 'src/application/types';
 import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
-import { IconCpu, IconPackage, IconTrendingUp } from 'src/components/icons';
+import { IconCpu, IconGlobe, IconTrendingUp } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.trial.welcomeDialog');
@@ -19,14 +19,14 @@ export function TrialWelcomeDialog() {
         </p>
 
         <div className="grid gap-4 sm:grid-cols-3">
-          <TrialFeature Icon={IconCpu} description={<T id="features.cpu" />} />
-          <TrialFeature Icon={IconPackage} description={<T id="features.gpu" />} />
+          <TrialFeature Icon={IconCpu} description={<T id="features.gpu" />} />
           <TrialFeature Icon={IconTrendingUp} description={<T id="features.scaling" />} />
+          <TrialFeature Icon={IconGlobe} description={<T id="features.cpu" />} />
         </div>
       </div>
 
       <DialogFooter>
-        <p className="me-auto text-dim">
+        <p className="me-auto text-dim" onClick={closeDialog}>
           <T id="footer" />
         </p>
 

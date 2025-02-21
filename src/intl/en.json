@@ -1346,18 +1346,18 @@
     },
     "trial": {
       "welcomeDialog": {
-        "title": "Welcome to your Pro Trial!",
-        "description": "Your trial starts today! It lasts for 7 days with a spending limit of $10 so you can explore all Pro plan features. Here's what you can do during your trial:",
+        "title": "Welcome to Koyeb, let's get you set up!",
+        "description": "Start your 7-day trial of the Koyeb Pro plan to access advanced platform and collaboration features",
         "features": {
-          "cpu": "Deploy web services or workers on any CPUs",
-          "gpu": "Deploy inference endpoints on GPUs",
-          "scaling": "Scale your applications with autoscaling and scale to zero"
+          "gpu": "Deploy intensive applications across GPUs, CPUs, and Accelerators in minutes",
+          "scaling": "Deploy production-grade containers with zero configuration and automatic scaling",
+          "cpu": "Deploy APIs, distributed systems, or blazing-fast inference endpoints worldwide"
         },
-        "footer": "You can subscribe to a plan at any time during your trial.",
-        "cta": "Let's go!"
+        "footer": "To ensure that you and your team can continue using your account without interruption, we recommend <upgrade>subscribing to a plan</upgrade> as soon as possible",
+        "cta": "Deploy now"
       },
       "banner": {
-        "content": "Your trial is active for <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong> or until your <strong>credit runs out</strong>. You can <upgrade>subscribe to a plan</upgrade> at any time!"
+        "content": "Your Pro trial ends in <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong>. To maintain access to Pro features, <upgrade>upgrade</upgrade> now."
       },
       "summaryPopup": {
         "currentPlan": "{plan} Plan",
@@ -1372,6 +1372,7 @@
           "popular": "Most popular",
           "price": "{price} /month {price, select, 0 {+ pay as you go} other {}}",
           "starter": {
+            "description": "For individuals. Pay-per-use, perfect for small apps.",
             "cta": "Downgrade to {plan}",
             "feature1": "Generous Free Tier (1x Web Service, 1x Postgres, 5x custom domains)",
             "feature2": "Scale-to-Zero and Autoscaling",
