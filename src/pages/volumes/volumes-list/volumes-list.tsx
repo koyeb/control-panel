@@ -16,7 +16,6 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate, Translate } from 'src/intl/translate';
 
@@ -127,7 +126,6 @@ function AttachedService({ serviceId }: { serviceId?: string }) {
 }
 
 function Actions({ volume }: { volume: Volume }) {
-  const snapshots = useFeatureFlag('snapshots');
   const openDialog = Dialog.useOpen();
 
   return (
@@ -139,11 +137,9 @@ function Actions({ volume }: { volume: Volume }) {
               <T id="actions.edit" />
             </ButtonMenuItem>
 
-            {snapshots && (
-              <ButtonMenuItem onClick={withClose(() => openDialog(`CreateSnapshotFromVolume-${volume.id}`))}>
-                <T id="actions.createSnapshot" />
-              </ButtonMenuItem>
-            )}
+            <ButtonMenuItem onClick={withClose(() => openDialog(`CreateSnapshotFromVolume-${volume.id}`))}>
+              <T id="actions.createSnapshot" />
+            </ButtonMenuItem>
 
             <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteVolume-${volume.id}`))}>
               <T id="actions.delete" />
