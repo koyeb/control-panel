@@ -19,7 +19,7 @@ export function Upgrade({ plan, onCancel }: { plan: 'starter' | 'pro' | 'scale';
       </p>
 
       <div className="row items-start gap-8">
-        <PlanItem plan={plan} popular={plan === 'pro'} className="!hidden min-w-72 md:!flex" />
+        <PlanItem plan={plan} popular={plan === 'pro'} className="!hidden !h-auto w-72 md:!flex" />
 
         <PaymentForm
           plan={plan}
