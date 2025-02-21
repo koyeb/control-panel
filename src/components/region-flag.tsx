@@ -50,5 +50,6 @@ const map: Record<string, string> = {
   sin: sg,
   tyo: jp,
   was: us,
+  dal: us,
   'aws-us-east-1': us,
 };
