@@ -4,17 +4,28 @@ import { useState, useCallback, useEffect } from 'react';
 
 import { Stepper } from '@koyeb/design-system';
 import { stopPropagation } from 'src/application/dom-events';
+import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
 import deployment from './images/deployment.svg';
 import map from './images/map.svg';
 import scaling from './images/scaling.png';
 
+const T = createTranslate('layouts.authentication');
+
+const slides = ['zeroConfig', 'seamlessDeployment', 'anyHardware'] as const;
+
+const illustrations = {
+  zeroConfig: { src: scaling, width: 488 },
+  seamlessDeployment: { src: deployment },
+  anyHardware: { src: map },
+};
+
 export function Slides() {
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState<0 | 1 | 2>(0);
 
   const next = useCallback(() => {
-    setIndex((index + 1) % content.length);
+    setIndex(((index + 1) % 3) as typeof index);
   }, [index]);
 
   useEffect(() => {
@@ -31,11 +42,11 @@ export function Slides() {
       onClick={next}
     >
       {createArray(3, (idx) => (
-        <Slide key={idx} show={idx === index} content={content[index]!} />
+        <Slide key={idx} show={idx === index} slide={slides[index]} />
       ))}
 
       <div className="row absolute inset-x-0 bottom-12 justify-center" onClick={stopPropagation}>
-        <Stepper totalSteps={3} activeStep={index} onClick={setIndex} />
+        <Stepper totalSteps={3} activeStep={index} onClick={(i) => setIndex(i as typeof index)} />
       </div>
     </div>
   );
@@ -45,7 +56,7 @@ const gradientText = clsx(
   'bg-gradient-to-tr from-[#D1D8DC] via-[#B0A6B6] to-[#E2E7E9] bg-clip-text text-transparent',
 );
 
-function Slide({ show, content }: { show: boolean; content: SlideContent }) {
+function Slide({ show, slide }: { show: boolean; slide: (typeof slides)[number] }) {
   return (
     <AnimatePresence>
       {show && (
@@ -57,24 +68,26 @@ function Slide({ show, content }: { show: boolean; content: SlideContent }) {
           className="col absolute inset-0"
         >
           <div className="col flex-1 items-center justify-center">
-            <img {...content.illustration} />
+            <img {...illustrations[slide]} />
           </div>
 
           <div className="col ml-24 flex-1 border-l border-t">
             <div className={clsx('inline-block px-6 py-3 text-5xl font-semibold', gradientText)}>
-              {content.line1}
+              <T id={`${slide}.line1`} />
             </div>
 
             <div className="row flex-1 border-t">
               <div className="p-6">image</div>
 
               <div className="col flex-1 border-l">
-                <div className={clsx('px-6 py-3 text-5xl font-semibold', gradientText)}>{content.line2}</div>
+                <div className={clsx('px-6 py-3 text-5xl font-semibold', gradientText)}>
+                  <T id={`${slide}.line2`} />
+                </div>
 
                 <div className="border-t">
                   <div className="p-4 text-lg text-dim">
-                    {content.features.map((feature, index) => (
-                      <div key={index}>{feature}</div>
+                    {createArray(3, (index) => (
+                      <div key={index}>{<T id={`${slide}.feature${(index + 1) as 1 | 2 | 3}`} />}</div>
                     ))}
                   </div>
                 </div>
@@ -86,43 +99,3 @@ function Slide({ show, content }: { show: boolean; content: SlideContent }) {
     </AnimatePresence>
   );
 }
-
-type SlideContent = {
-  illustration: { src: string; width?: number };
-  line1: string;
-  line2: string;
-  features: string[];
-};
-
-const content: SlideContent[] = [
-  {
-    illustration: { src: scaling, width: 488 },
-    line1: 'Zero config',
-    line2: 'infrastructure',
-    features: [
-      'Smart and fast autoscaling on GPU and CPU',
-      'Zero-downtime deployments',
-      'Built-in observability',
-    ],
-  },
-  {
-    illustration: { src: deployment },
-    line1: 'Seamless',
-    line2: 'deployment',
-    features: [
-      'Instant API endpoint',
-      'Build and deploy anything from web apps to inference',
-      'Native HTTP/2, WebSocket, and gRPC support',
-    ],
-  },
-  {
-    illustration: { src: map },
-    line1: 'Any hardware',
-    line2: 'anywhere',
-    features: [
-      'High-performance CPUs, GPUs, and accelerators',
-      'Available globally across 10 regions and containers',
-      'Ultra-fast NVME storage',
-    ],
-  },
-];
