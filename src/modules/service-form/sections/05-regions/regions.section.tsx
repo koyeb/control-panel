@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 
-import { useRegion, useRegions } from 'src/api/hooks/catalog';
+import { useBreakpoint } from '@koyeb/design-system';
+import { useInstance, useRegion, useRegions } from 'src/api/hooks/catalog';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
 import { RegionsMap } from 'src/components/regions-map/regions-map';
@@ -18,9 +19,11 @@ import { RegionsList } from './regions-list';
 const T = createTranslate('modules.serviceForm.regions');
 
 export function RegionsSection() {
+  const instance = useInstance(useWatchServiceForm('instance'));
   const firstRegion = useRegion(useWatchServiceForm('regions')[0]);
   const category = useRef(firstRegion?.category ?? 'koyeb');
   const regions = useRegions().filter(hasProperty('category', category.current));
+  const isDesktop = useBreakpoint('xl');
 
   return (
     <ServiceFormSection
@@ -32,7 +35,7 @@ export function RegionsSection() {
     >
       <RegionsAlerts />
 
-      <div className="hidden xl:block">
+      {isDesktop && instance?.category !== 'gpu' ? (
         <RegionsMap
           regions={regions}
           renderRegion={(region) => (
@@ -46,11 +49,9 @@ export function RegionsSection() {
             />
           )}
         />
-      </div>
-
-      <div className="xl:hidden">
+      ) : (
         <RegionsList />
-      </div>
+      )}
     </ServiceFormSection>
   );
 }
