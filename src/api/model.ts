@@ -544,7 +544,9 @@ export type Organization = {
     company?: boolean;
     vatNumber?: string;
   };
-  trialing: boolean;
+  trial?: {
+    endsAt: string;
+  };
 };
 
 export type OrganizationStatus =

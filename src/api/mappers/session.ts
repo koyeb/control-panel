@@ -41,7 +41,7 @@ export function mapOrganization({ organization }: ApiEndpointResult<'getCurrentO
     latestSubscriptionId: organization?.latest_subscription_id || undefined,
     hasPaymentMethod: organization!.has_payment_method!,
     billing: mapOrganizationBilling(organization!),
-    trialing: organization!.trialing!,
+    trial: organization!.trialing ? { endsAt: organization!.trial_ends_at! } : undefined,
   };
 }
 

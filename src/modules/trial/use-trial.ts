@@ -7,7 +7,7 @@ export function useTrial() {
   const organization = useOrganizationUnsafe();
   const { data: subscription } = useSubscriptionQuery(organization?.latestSubscriptionId);
 
-  if (!organization?.trialing || !subscription?.trial) {
+  if (!organization?.trial || !subscription?.trial) {
     return null;
   }
 
@@ -17,7 +17,7 @@ export function useTrial() {
   });
 
   return {
-    ended: isAfter(new Date(), subscription.trial.endsAt),
+    ended: isAfter(new Date(), organization.trial.endsAt),
     daysLeft: Number(days) + 1,
     credits: subscription.trial,
   };
