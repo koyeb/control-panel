@@ -1,4 +1,4 @@
-import clsx from 'clsx';
+import { cva } from 'class-variance-authority';
 import { Control, FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { useId } from '@koyeb/design-system';
@@ -28,11 +28,7 @@ export function AuthInput<
       <input
         aria-invalid={invalid}
         aria-errormessage={helperTextId}
-        className={clsx(
-          'w-full rounded-md border border-[#9F9F9F] bg-white/40 px-3 py-2',
-          'transition-colors focus:border-black',
-          className,
-        )}
+        className={AuthInput.class({ invalid, className })}
         {...field}
         {...props}
       />
@@ -45,3 +41,12 @@ export function AuthInput<
     </div>
   );
 }
+
+AuthInput.class = cva(['w-full rounded-md border border-[#9F9F9F] bg-white/40 px-3 py-2 transition-colors'], {
+  variants: {
+    invalid: {
+      true: 'border-red',
+      false: 'focus:border-black',
+    },
+  },
+});
