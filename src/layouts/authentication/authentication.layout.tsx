@@ -20,13 +20,13 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
   useForceLightMode();
 
   return (
-    <div className="row h-screen bg-[#F2F2F2]">
-      <div className="col flex-1 justify-between p-16">
+    <div className="row min-h-screen bg-[#F2F2F2]">
+      <div className="col flex-1 justify-between p-4 lg:p-16">
         <Link href={routes.signIn()} className="self-start">
           <LogoKoyeb className="h-8" />
         </Link>
 
-        {children}
+        <div className="col flex-1 justify-center py-8">{children}</div>
 
         <div className="col items-center gap-3 text-[#6B6965]">
           <div className="text-xs font-medium">
@@ -40,7 +40,7 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
 
       {slides && (
         // eslint-disable-next-line tailwindcss/no-arbitrary-value
-        <div className="m-2 w-[44rem]">
+        <div className="m-2 hidden min-w-[36rem] flex-1 lg:block">
           <Slides />
         </div>
       )}
