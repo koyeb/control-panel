@@ -8,7 +8,7 @@ import { createArray } from 'src/utils/arrays';
 
 import deployment from './images/deployment.svg';
 import map from './images/map.svg';
-import scaling from './images/scaling.svg';
+import scaling from './images/scaling.png';
 
 export function Slides() {
   const [index, setIndex] = useState(0);
@@ -57,7 +57,7 @@ function Slide({ show, content }: { show: boolean; content: SlideContent }) {
           className="col absolute inset-0"
         >
           <div className="col flex-1 items-center justify-center">
-            <img src={content.illustration} />
+            <img {...content.illustration} />
           </div>
 
           <div className="col ml-24 flex-1 border-l border-t">
@@ -88,7 +88,7 @@ function Slide({ show, content }: { show: boolean; content: SlideContent }) {
 }
 
 type SlideContent = {
-  illustration: string;
+  illustration: { src: string; width?: number };
   line1: string;
   line2: string;
   features: string[];
@@ -96,7 +96,7 @@ type SlideContent = {
 
 const content: SlideContent[] = [
   {
-    illustration: scaling,
+    illustration: { src: scaling, width: 488 },
     line1: 'Zero config',
     line2: 'infrastructure',
     features: [
@@ -106,7 +106,7 @@ const content: SlideContent[] = [
     ],
   },
   {
-    illustration: deployment,
+    illustration: { src: deployment },
     line1: 'Seamless',
     line2: 'deployment',
     features: [
@@ -116,7 +116,7 @@ const content: SlideContent[] = [
     ],
   },
   {
-    illustration: map,
+    illustration: { src: map },
     line1: 'Any hardware',
     line2: 'anywhere',
     features: [
