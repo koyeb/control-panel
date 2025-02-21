@@ -8,11 +8,12 @@ export function AuthButton({
   className,
   children,
   ...props
-}: Extend<React.ComponentProps<'button'>, { loading: boolean }>) {
+}: Extend<React.ComponentProps<'button'>, { loading?: boolean }>) {
   return (
     <button
+      type="button"
       className={clsx(
-        'row w-full items-center justify-center gap-2 rounded-md bg-[#1A1917] px-4 py-2 font-medium text-white disabled:bg-[#1A1917]/50',
+        'row w-full items-center justify-center gap-2 rounded-md bg-[#1A1917] px-4 py-2 font-medium text-white outline-offset-2 outline-blue focus-visible:outline-2 disabled:bg-[#1A1917]/50',
         className,
       )}
       {...props}
