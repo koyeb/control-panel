@@ -31,7 +31,7 @@ describe('serviceFormToDeploymentDefinition', () => {
       instance_types: [{ type: 'nano' }],
       scalings: [{ min: 1, max: 1 }],
       env: [],
-      // file_mounts: [],
+      config_files: [],
       ports: [
         {
           port: 8000,

@@ -1189,12 +1189,9 @@
         }
       },
       "environmentVariables": {
-        "title": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}",
-        "description": "Environment variables",
-        "expandedTitle": "Edit variables",
-        "title.new": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}, {files, plural, =0 {no files} =1 {{files} file} other {{files} files}}",
-        "description.new": "Environment variables and files",
-        "expandedTitle.new": "Edit variables and files",
+        "title": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}, {files, plural, =0 {no files} =1 {{files} file} other {{files} files}}",
+        "description": "Environment variables and files",
+        "expandedTitle": "Edit variables and files",
         "tabs": {
           "environmentVariables": "Environment variables",
           "files": "Files"

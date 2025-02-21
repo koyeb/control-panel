@@ -19,8 +19,6 @@ import {
 } from '../service-form.types';
 
 export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.DeploymentDefinition {
-  const hasMountFiles = posthog.featureFlags.isFeatureEnabled('mount-files');
-
   return {
     name: form.serviceName,
     type: form.serviceType === 'web' ? 'WEB' : 'WORKER',
@@ -31,7 +29,7 @@ export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.Deploy
     instance_types: [{ type: form.instance ?? '' }],
     scalings: scalings(form.scaling),
     env: env(form.environmentVariables),
-    config_files: hasMountFiles ? files(form.files) : undefined,
+    config_files: files(form.files),
     volumes: volumes(form.volumes),
     ...(form.serviceType === 'web' && {
       ports: ports(form.ports),

@@ -8,7 +8,6 @@ import { readFile } from 'src/application/read-file';
 import { Dialog } from 'src/components/dialog';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { IconPlus } from 'src/components/icons';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
@@ -34,27 +33,22 @@ export function EnvironmentVariablesSection() {
 
   const [tab, setTab] = useState<'environmentVariables' | 'files'>('environmentVariables');
 
-  const hasMountFiles = useFeatureFlag('mount-files');
-  const id = <T extends string>(id: T): `${T}.new` | T => (hasMountFiles ? `${id}.new` : id);
-
   return (
     <ServiceFormSection
       section="environmentVariables"
-      title={<T id={id('title')} values={{ variables: variables.length, files: files.length }} />}
-      description={<T id={id('description')} />}
-      expandedTitle={<T id={id('expandedTitle')} />}
+      title={<T id="title" values={{ variables: variables.length, files: files.length }} />}
+      description={<T id="description" />}
+      expandedTitle={<T id="expandedTitle" />}
       className="col gaps"
     >
-      {hasMountFiles && (
-        <TabButtons>
-          <TabButton selected={tab === 'environmentVariables'} onClick={() => setTab('environmentVariables')}>
-            <T id="tabs.environmentVariables" />
-          </TabButton>
-          <TabButton selected={tab === 'files'} onClick={() => setTab('files')}>
-            <T id="tabs.files" />
-          </TabButton>
-        </TabButtons>
-      )}
+      <TabButtons>
+        <TabButton selected={tab === 'environmentVariables'} onClick={() => setTab('environmentVariables')}>
+          <T id="tabs.environmentVariables" />
+        </TabButton>
+        <TabButton selected={tab === 'files'} onClick={() => setTab('files')}>
+          <T id="tabs.files" />
+        </TabButton>
+      </TabButtons>
 
       <UnknownInterpolationAlert />
 
