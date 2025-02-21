@@ -29,7 +29,7 @@ export function AutoScalingConfiguration() {
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
 
   if (watch('instance') === 'free') {
-    return <AutoscalingFreeInstance />;
+    return <ScalingValues />;
   }
 
   return (
@@ -57,18 +57,6 @@ export function AutoScalingConfiguration() {
       <ScalingTarget target="concurrentRequests" Icon={IconListMinus} min={1} max={1e9} />
       <ScalingTarget target="responseTime" Icon={IconAlarmClockCheck} min={1} max={1e9} />
     </>
-  );
-}
-
-function AutoscalingFreeInstance() {
-  return (
-    <div className="col gap-6">
-      <ScalingValues />
-
-      <p className="rounded-md border p-4">
-        <T id="freeInstanceMessage" />
-      </p>
-    </div>
   );
 }
 

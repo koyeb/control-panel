@@ -3,6 +3,7 @@ import { useFormContext, useFormState } from 'react-hook-form';
 import { Alert } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
+import { IconMoon } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -34,9 +35,10 @@ export function ScalingAlerts() {
     return (
       <Alert
         variant="info"
+        icon={<IconMoon className="size-6" />}
         style="outline"
-        title={<T id="freeInstanceAlertTitle" values={{ instanceName: instance.displayName }} />}
-        description={<T id="freeInstanceAlertDescription" />}
+        title={<T id="freeInstanceAlertTitle" />}
+        description={<T id="freeInstanceAlertDescription" values={{ instanceName: instance.displayName }} />}
       />
     );
   }

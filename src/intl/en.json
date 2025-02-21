@@ -1178,8 +1178,8 @@
           "criterionNotAvailableWorker": "This criterion is not available for workers"
         },
         "alerts": {
-          "freeInstanceAlertTitle": "Scaling on services with the {instanceName} instance type cannot be changed",
-          "freeInstanceAlertDescription": "Select a different instance type if you need to change the scaling",
+          "freeInstanceAlertTitle": "Upgrade to another instance type to configure scaling",
+          "freeInstanceAlertDescription": "The {instanceName} instance scales down to zero after periods of inactivity. Select any paid instance type to configure scaling.",
           "ecoInstanceAlertTitle": "Services with the {instanceName} instance type cannot be scaled automatically",
           "ecoInstanceAlertDescription": "Select a Standard instance type if you need to set up autoscaling",
           "noTargetAlertTitle": "One scaling criteria must be set",
