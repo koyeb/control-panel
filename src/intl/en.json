@@ -1530,7 +1530,7 @@
         "title": "Reset password",
         "passwordLabel": "Password",
         "passwordPlaceholder": "New password",
-        "resetPassword": "Reset password",
+        "submit": "Set new password",
         "successNotification": "Your password was updated successfully"
       },
       "githubOAuthCallback": {
