@@ -21,6 +21,11 @@
   .secondary-layout .dark {
     --color-background-neutral: 18 18 18;
   }
+
+  a:focus-visible {
+    outline-width: 1px;
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {

@@ -64,7 +64,7 @@ function Slide({ show, slide }: { show: boolean; slide: (typeof slides)[number] 
           initial={{ opacity: 0, x: 60 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.35, ease: 'easeOut' }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
           className="col absolute inset-0"
         >
           <div className="col flex-1 items-center justify-center">
