@@ -11,7 +11,12 @@ const Customers = lazy(() => import('./customers'));
 
 const T = createTranslate('layouts.authentication');
 
-export function AuthenticationLayout({ children }: { children: React.ReactNode }) {
+type AuthenticationLayoutProps = {
+  slides?: boolean;
+  children: React.ReactNode;
+};
+
+export function AuthenticationLayout({ slides = true, children }: AuthenticationLayoutProps) {
   useForceLightMode();
 
   return (
@@ -33,10 +38,12 @@ export function AuthenticationLayout({ children }: { children: React.ReactNode }
         </div>
       </div>
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="m-2 w-[44rem]">
-        <Slides />
-      </div>
+      {slides && (
+        // eslint-disable-next-line tailwindcss/no-arbitrary-value
+        <div className="m-2 w-[44rem]">
+          <Slides />
+        </div>
+      )}
     </div>
   );
 }
