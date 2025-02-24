@@ -1,4 +1,5 @@
 import { routes } from 'src/application/routes';
+import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
@@ -9,8 +10,12 @@ import { Separator } from './separator';
 const T = createTranslate('pages.authentication.signIn');
 
 export function SignInPage() {
+  const t = T.useTranslate();
+
   return (
     <div className="mx-auto w-full max-w-72 text-center">
+      <DocumentTitle title={t('title')} />
+
       <h1 className="text-3xl font-semibold">
         <T id="title" />
       </h1>

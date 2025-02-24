@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
+import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
@@ -17,8 +18,12 @@ import { AuthInput } from './components/auth-input';
 const T = createTranslate('pages.authentication.resetPassword');
 
 export function ResetPasswordPage() {
+  const t = T.useTranslate();
+
   return (
     <div className="mx-auto w-full max-w-80 text-center">
+      <DocumentTitle title={t('title')} />
+
       <h1 className="text-3xl font-semibold">
         <T id="title" />
       </h1>
