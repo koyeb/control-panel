@@ -6,6 +6,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
+import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -19,8 +20,12 @@ import { AuthInput } from '../authentication/components/auth-input';
 const T = createTranslate('pages.account.changePassword');
 
 export function ChangePasswordPage() {
+  const t = T.useTranslate();
+
   return (
     <AuthenticationLayout slides={false}>
+      <DocumentTitle title={t('title')} />
+
       <div className="mx-auto w-full max-w-72 text-center">
         <h1 className="text-3xl font-semibold">
           <T id="title" />
