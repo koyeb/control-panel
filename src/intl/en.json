@@ -1363,8 +1363,8 @@
         "currentPlan": "{plan} Plan",
         "badge": "Trial",
         "usage": "Usage",
-        "creditLeft": "Trial credit left",
-        "timeLeft": "{days, plural, =1 {{days} day} other {{days} days}} of trial left",
+        "creditLeft": "Pro trial credit left",
+        "timeLeft": "{days, plural, =1 {{days} day} other {{days} days}} left in Pro trial",
         "cta": "Go to billing"
       },
       "ended": {
@@ -2332,7 +2332,7 @@
         "usage": {
           "title": "Usage summary",
           "description": "You are currently on the <strong>{plan}</strong> plan. {upgrade}",
-          "descriptionTrial": "You are currently on the <strong>{plan}</strong> plan with active trial for the next <strong>{days} days</strong>. {upgrade}",
+          "descriptionTrial": "You are currently on the <strong>{plan}</strong> plan. You still have <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong> left. {upgrade}",
           "upgrade": "<upgrade>View all plans and upgrade →</upgrade>",
           "noUsage": "You have not used any resources this month",
           "startEnd": "{start} - {end}",
