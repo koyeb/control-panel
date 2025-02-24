@@ -44,7 +44,6 @@ export type Subscription = {
   hasPaymentFailure: boolean;
   hasPendingUpdate: boolean;
   trial?: {
-    endsAt: string;
     currentSpend: number;
     maxSpend: number;
   };

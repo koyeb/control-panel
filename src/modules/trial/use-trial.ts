@@ -13,7 +13,7 @@ export function useTrial() {
 
   const { days = 0 } = intervalToDuration({
     start: new Date(),
-    end: subscription.trial.endsAt,
+    end: organization.trial.endsAt,
   });
 
   return {
