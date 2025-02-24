@@ -1,4 +1,5 @@
 import { routes } from 'src/application/routes';
+import { DocumentTitle } from 'src/components/document-title';
 import { IconMail } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
 import { useSearchParam } from 'src/hooks/router';
@@ -11,10 +12,13 @@ import { Separator } from './separator';
 const T = createTranslate('pages.authentication.signUp');
 
 export function SignUpPage() {
+  const t = T.useTranslate();
   const [method, setMethod] = useSearchParam('method');
 
   return (
     <div className="mx-auto w-full max-w-72 text-center">
+      <DocumentTitle title={t('title')} />
+
       <h1 className="text-3xl font-semibold">
         <T id="title" />
       </h1>
