@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
-import { useState, useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { Stepper } from '@koyeb/design-system';
 import { stopPropagation } from 'src/application/dom-events';
@@ -52,9 +52,11 @@ export function Slides() {
   );
 }
 
-const gradientText = clsx(
+const gradientText = clsx([
   'bg-gradient-to-tr from-[#D1D8DC] via-[#B0A6B6] to-[#E2E7E9] bg-clip-text text-transparent',
-);
+  'text-5xl font-semibold',
+  'px-6 py-3',
+]);
 
 function Slide({ show, slide }: { show: boolean; slide: (typeof slides)[number] }) {
   return (
@@ -71,27 +73,22 @@ function Slide({ show, slide }: { show: boolean; slide: (typeof slides)[number] 
             <img {...illustrations[slide]} />
           </div>
 
-          <div className="col ml-24 flex-1 border-l border-t">
-            <div className={clsx('inline-block px-6 py-3 text-5xl font-semibold', gradientText)}>
+          {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+          <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] [&>*]:border-l [&>*]:border-t">
+            <div className={clsx(gradientText, 'col-span-2 inline-block')}>
               <T id={`${slide}.line1`} />
             </div>
 
-            <div className="row flex-1 border-t">
-              <div className="p-6">image</div>
+            <div className="row-span-2 p-6">image</div>
 
-              <div className="col flex-1 border-l">
-                <div className={clsx('px-6 py-3 text-5xl font-semibold', gradientText)}>
-                  <T id={`${slide}.line2`} />
-                </div>
+            <div className={gradientText}>
+              <T id={`${slide}.line2`} />
+            </div>
 
-                <div className="border-t">
-                  <div className="p-4 text-lg text-dim">
-                    {createArray(3, (index) => (
-                      <div key={index}>{<T id={`${slide}.feature${(index + 1) as 1 | 2 | 3}`} />}</div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+            <div className="p-4 text-lg text-dim">
+              {createArray(3, (index) => (
+                <div key={index}>{<T id={`${slide}.feature${(index + 1) as 1 | 2 | 3}`} />}</div>
+              ))}
             </div>
           </div>
         </motion.div>
