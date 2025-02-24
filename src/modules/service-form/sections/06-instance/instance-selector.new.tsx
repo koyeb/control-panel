@@ -37,6 +37,10 @@ export function InstanceSelectorNew() {
   const getBadges = useGetInstanceBadges({ previousInstance });
 
   const handleInstanceSelected = (instance: CatalogInstance | null) => {
+    const isServiceCreation = getValues('meta.serviceId') === null;
+    const isWeb = getValues('serviceType') === 'web';
+    const previousInstance = instances.find(hasProperty('identifier', instanceCtrl.field.value));
+
     instanceCtrl.field.onChange(instance?.identifier ?? null);
 
     if (instance?.identifier === 'free') {
@@ -45,6 +49,11 @@ export function InstanceSelectorNew() {
       void trigger('scaling');
     } else if (instance?.category === 'eco') {
       setValue('scaling.max', getValues('scaling.min'));
+      void trigger('scaling');
+    }
+
+    if (isServiceCreation && isWeb && previousInstance?.category === 'eco' && instance?.category !== 'eco') {
+      setValue('scaling.min', 0);
       void trigger('scaling');
     }
   };

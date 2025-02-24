@@ -13,10 +13,6 @@ import { defaultServiceForm, initializeServiceForm } from './initialize-service-
 const mockFetchGithubRepository = fetchGithubRepository as MockedFunction<typeof fetchGithubRepository>;
 const mockApi = api as MockedObject<typeof api>;
 
-vi.mock('src/hooks/feature-flag', () => ({
-  getFeatureFlag: vi.fn(),
-}));
-
 vi.mock('src/components/public-github-repository-input/github-api', () => ({
   fetchGithubRepository: vi.fn(),
 }));
@@ -68,6 +64,23 @@ describe('initializeServiceForm', () => {
 
   it('initializes a default service form', async () => {
     expect(await initialize()).toEqual(serviceForm);
+  });
+
+  it('initialization with an eco instance', async () => {
+    const params = new URLSearchParams({
+      instance_type: 'eco-nano',
+    });
+
+    const instances = [create.instance({ identifier: 'eco-nano', category: 'eco' })];
+
+    expect(await initialize({ params, instances })).toEqual({
+      ...serviceForm,
+      instance: 'eco-nano',
+      scaling: {
+        ...serviceForm.scaling,
+        min: 1,
+      },
+    });
   });
 
   it('handles organization repository not found', async () => {

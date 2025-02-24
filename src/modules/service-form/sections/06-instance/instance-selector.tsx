@@ -36,6 +36,9 @@ export function InstanceSelector() {
   const [category, setCategory] = useState<InstanceCategory>(instance?.category ?? 'standard');
 
   const handleInstanceSelected = (instance: CatalogInstance | null) => {
+    const isServiceCreation = getValues('meta.serviceId') === null;
+    const isWeb = getValues('serviceType') === 'web';
+    const previousInstance = instances.find(hasProperty('identifier', field.value));
     const [isAvailable] = instance ? (instanceAvailabilities[instance.identifier] ?? [false]) : [false];
 
     if (!instance || !isAvailable) {
@@ -53,6 +56,11 @@ export function InstanceSelector() {
     if (instance.identifier === 'free') {
       setValue('scaling.min', 1);
       setValue('scaling.max', 1);
+      void trigger('scaling');
+    }
+
+    if (isServiceCreation && isWeb && previousInstance?.category === 'eco' && instance.category !== 'eco') {
+      setValue('scaling.min', 0);
       void trigger('scaling');
     }
 
