@@ -52,9 +52,14 @@ export function InstanceSelectorNew() {
       void trigger('scaling');
     }
 
-    if (isServiceCreation && isWeb && previousInstance?.category === 'eco' && instance?.category !== 'eco') {
-      setValue('scaling.min', 0);
-      void trigger('scaling');
+    if (isServiceCreation && isWeb) {
+      if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu') {
+        setValue('scaling.min', 0);
+        void trigger('scaling');
+      } else if (previousInstance?.category === 'gpu' && instance?.category !== 'gpu') {
+        setValue('scaling.min', 1);
+        void trigger('scaling');
+      }
     }
   };
 

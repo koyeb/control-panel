@@ -93,8 +93,8 @@ export async function initializeServiceForm(
 
     const instance = instances.find(hasProperty('identifier', values.instance));
 
-    if (values.serviceType === 'web' && instance?.category === 'eco') {
-      values.scaling.min = 1;
+    if (values.serviceType === 'web' && instance?.category === 'gpu') {
+      values.scaling.min = 0;
     }
   }
 
@@ -245,7 +245,7 @@ export function defaultServiceForm(): ServiceForm {
     ],
     files: [],
     scaling: {
-      min: 0,
+      min: 1,
       max: 1,
       targets: {
         requests: { enabled: false, value: 50 },

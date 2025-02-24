@@ -66,19 +66,19 @@ describe('initializeServiceForm', () => {
     expect(await initialize()).toEqual(serviceForm);
   });
 
-  it('initialization with an eco instance', async () => {
+  it('initialization with a GPU instance', async () => {
     const params = new URLSearchParams({
-      instance_type: 'eco-nano',
+      instance_type: 'gpu',
     });
 
-    const instances = [create.instance({ identifier: 'eco-nano', category: 'eco' })];
+    const instances = [create.instance({ identifier: 'gpu', category: 'gpu' })];
 
     expect(await initialize({ params, instances })).toEqual({
       ...serviceForm,
-      instance: 'eco-nano',
+      instance: 'gpu',
       scaling: {
         ...serviceForm.scaling,
-        min: 1,
+        min: 0,
       },
     });
   });
