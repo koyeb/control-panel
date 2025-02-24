@@ -93,7 +93,7 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
                 <ButtonMenuItem
                   {...props}
                   disabled={!canCreate}
-                  onClick={withClose(() => openDialog('CreateVolume'))}
+                  onClick={withClose(() => openDialog(`CreateVolume-${snapshot.id}`))}
                 >
                   <T id="actions.createVolume" />
                 </ButtonMenuItem>
