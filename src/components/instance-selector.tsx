@@ -228,7 +228,7 @@ function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
 
   const handleClick = () => {
     if (!isHobby && isTenstorrentGpu(instance)) {
-      tally.onOpen();
+      tally.openPopup();
     } else {
       openDialog(dialog);
     }

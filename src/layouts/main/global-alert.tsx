@@ -29,7 +29,7 @@ export function GlobalAlert() {
 
 function AccountUnderReviewAlert() {
   const idenfyLink = useIdenfyLink();
-  const { onOpen } = useTallyDialog('wQRgBY');
+  const tally = useTallyDialog('wQRgBY');
 
   return (
     <Alert
@@ -45,7 +45,7 @@ function AccountUnderReviewAlert() {
                   {children}
                 </ExternalLink>
               ) : (
-                <button type="button" className="underline" onClick={onOpen}>
+                <button type="button" className="underline" onClick={tally.openPopup}>
                   {children}
                 </button>
               ),

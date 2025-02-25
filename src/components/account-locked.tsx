@@ -9,7 +9,7 @@ const T = createTranslate('components.errorBoundary.accountLocked');
 
 export function AccountLocked() {
   const idenfyLink = useIdenfyLink();
-  const { onOpen } = useTallyDialog('wQRgBY');
+  const tally = useTallyDialog('wQRgBY');
 
   return (
     <SecondaryLayout className="col mx-auto max-w-xl gap-4 text-center">
@@ -44,7 +44,7 @@ export function AccountLocked() {
                   {children}
                 </ExternalLink>
               ) : (
-                <button type="button" className="text-link" onClick={onOpen}>
+                <button type="button" className="text-link" onClick={tally.openPopup}>
                   {children}
                 </button>
               ),
