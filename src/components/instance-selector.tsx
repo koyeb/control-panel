@@ -350,7 +350,7 @@ type InstancePriceProps = {
 };
 
 function InstancePrice({ instance }: InstancePriceProps) {
-  if (instance.pricePerMonth === 0) {
+  if (instance.identifier === 'free') {
     return (
       <>
         <span className="text-green">
@@ -363,6 +363,14 @@ function InstancePrice({ instance }: InstancePriceProps) {
           <T id="freeInstanceDescription" />
         </span>
       </>
+    );
+  }
+
+  if (instance.pricePerMonth === 0) {
+    return (
+      <span className="text-green">
+        <T id="free" />
+      </span>
     );
   }
 
