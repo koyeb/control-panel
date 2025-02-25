@@ -5,9 +5,11 @@ import { CatalogInstance, OrganizationPlan } from 'src/api/model';
 import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { Dialog } from 'src/components/dialog';
+import { useTallyDialog } from 'src/hooks/tally';
 
 export function usePreSubmitServiceForm(previousInstance?: string | null) {
   const openDialog = Dialog.useOpen();
+  const tally = useTallyDialog('npRak8');
 
   const organization = useOrganization();
   const getInstanceQuota = useGetInstanceQuota();
@@ -32,11 +34,20 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         openDialog(`Upgrade-${plan}`);
         return false;
       } else if (!hasQuotas) {
-        openDialog('QuotaIncreaseRequest');
+        if (isTenstorrentGpu(instance)) {
+          tally.openPopup();
+        } else {
+          openDialog('QuotaIncreaseRequest');
+        }
+
         return false;
       }
 
       return true;
     },
   ] as const;
+}
+
+function isTenstorrentGpu(instance: CatalogInstance) {
+  return instance.identifier === 'gpu-tenstorrent-n300s' || instance.identifier === '4-gpu-tenstorrent-n300s';
 }
