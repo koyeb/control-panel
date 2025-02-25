@@ -7,18 +7,21 @@ import { stopPropagation } from 'src/application/dom-events';
 import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-import deployment from './images/deployment.svg';
-import map from './images/map.svg';
-import scaling from './images/scaling.png';
+import anyHardware from './images/any-hardware.png';
+import Dots from './images/dots.svg?react';
+import Lines from './images/lines.svg?react';
+import Progress from './images/progress.svg?react';
+import seamlessDeployment from './images/seamless-deployment.png';
+import zeroConfig from './images/zero-config.png';
 
 const T = createTranslate('layouts.authentication');
 
 const slides = ['zeroConfig', 'seamlessDeployment', 'anyHardware'] as const;
 
 const illustrations = {
-  zeroConfig: { src: scaling, width: 488 },
-  seamlessDeployment: { src: deployment },
-  anyHardware: { src: map },
+  zeroConfig: { src: zeroConfig, width: 488 },
+  seamlessDeployment: { src: seamlessDeployment, width: 592 },
+  anyHardware: { src: anyHardware, width: 568 },
 };
 
 export function Slides() {
@@ -59,6 +62,12 @@ const gradientText = clsx([
 ]);
 
 function Slide({ show, slide }: { show: boolean; slide: (typeof slides)[number] }) {
+  const images = {
+    zeroConfig: [Dots, Progress, Lines],
+    seamlessDeployment: [Progress, Lines, Dots],
+    anyHardware: [Lines, Dots, Progress],
+  }[slide];
+
   return (
     <AnimatePresence>
       {show && (
@@ -79,7 +88,11 @@ function Slide({ show, slide }: { show: boolean; slide: (typeof slides)[number] 
               <T id={`${slide}.line1`} />
             </div>
 
-            <div className="row-span-2 p-6">image</div>
+            <div className="row-span-2 p-6">
+              {images.map((Image, index) => (
+                <Image key={index} className="w-14" />
+              ))}
+            </div>
 
             <div className={gradientText}>
               <T id={`${slide}.line2`} />
