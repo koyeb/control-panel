@@ -177,6 +177,7 @@
       "free": "Free",
       "freeInstanceDescription": "Run 1x web service for free",
       "inUse": "In use",
+      "privatePreview": "Private preview",
       "requiresHigherQuota": "Requires higher quota",
       "insufficientVRam": "Insufficient VRAM",
       "bestFit": "Best fit",
@@ -190,6 +191,7 @@
         "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
         "submitButton": "Add credit card"
       },
+      "requestAccess": "Request access",
       "requestQuotaIncrease": "Request increase",
       "requestQuotaIncreaseDialog": {
         "title": "Quota increase request",

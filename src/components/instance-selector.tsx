@@ -227,11 +227,23 @@ function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
   }
 
   const handleClick = () => {
-    if (instance.identifier === 'gpu-tenstorrent-n300s' && !isHobby) {
+    if (!isHobby && isTenstorrentGpu(instance)) {
       tally.onOpen();
     } else {
       openDialog(dialog);
     }
+  };
+
+  const text = () => {
+    if (isHobby) {
+      return <T id="addCreditCard" />;
+    }
+
+    if (isTenstorrentGpu(instance)) {
+      return <T id="requestAccess" />;
+    }
+
+    return <T id="requestQuotaIncrease" />;
   };
 
   return (
@@ -242,7 +254,7 @@ function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
       onClick={handleClick}
       className="invisible mr-4 hidden group-hover/instance-item:visible md:block"
     >
-      {isHobby ? <T id="addCreditCard" /> : <T id="requestQuotaIncrease" />}
+      {text()}
     </Button>
   );
 }
@@ -424,11 +436,19 @@ function InstanceBadge({ instance, hasQuotas, availability, insufficientVRam, be
   }
 
   if (organization.plan !== 'hobby' && !hasQuotas) {
-    result.push(
-      <Badge key="quotas" size={1} color="orange">
-        <T id="requiresHigherQuota" />
-      </Badge>,
-    );
+    if (isTenstorrentGpu(instance)) {
+      result.push(
+        <Badge key="preview" size={1} color="orange">
+          <T id="privatePreview" />
+        </Badge>,
+      );
+    } else {
+      result.push(
+        <Badge key="quotas" size={1} color="orange">
+          <T id="requiresHigherQuota" />
+        </Badge>,
+      );
+    }
   }
 
   if (insufficientVRam) {
@@ -438,6 +458,7 @@ function InstanceBadge({ instance, hasQuotas, availability, insufficientVRam, be
       </Badge>,
     );
   }
+
   if (bestFit) {
     result.push(
       <Badge key="bestFit" size={1} color="green">
@@ -447,4 +468,8 @@ function InstanceBadge({ instance, hasQuotas, availability, insufficientVRam, be
   }
 
   return <>{result}</>;
+}
+
+function isTenstorrentGpu(instance: CatalogInstance) {
+  return instance.identifier === 'gpu-tenstorrent-n300s' || instance.identifier === '4-gpu-tenstorrent-n300s';
 }
