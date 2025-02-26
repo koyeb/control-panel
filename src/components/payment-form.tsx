@@ -189,7 +189,8 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
       </div>
 
       <p className="text-dim">
-        <T id="temporaryHoldMessage" />
+        {plan === 'starter' && <T id="temporaryHoldMessage" />}
+        {plan !== 'starter' && <T id="proratedChargeMessage" />}
       </p>
 
       {renderFooter(form.formState)}
