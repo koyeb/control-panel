@@ -2441,7 +2441,7 @@
         },
         "planChangedNotification": {
           "title": "Welcome to the {plan} plan",
-          "details": "We successfully {upgraded, select, true {upgraded} other {downgraded}} your subscription to the {plan} plan"
+          "details": "We're glad to have you onboard"
         }
       },
       "apiCredential": {

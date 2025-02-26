@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { useRef } from 'react';
 
 import { Button, Tooltip } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
@@ -18,14 +17,13 @@ const T = createTranslate('pages.organizationSettings.plans');
 
 export function ChangePlanButton({ plan }: { plan: Plan }) {
   const organization = useOrganization();
-  const oldPlan = useRef(organization.plan);
 
   const openDialog = Dialog.useOpen();
   const closeDialog = Dialog.useClose();
 
   const onPlanChanged = () => {
     closeDialog();
-    notify.success(<PlanChangedNotification oldPlan={oldPlan.current} newPlan={plan} />);
+    notify.success(<PlanChangedNotification plan={plan} />);
   };
 
   const mutation = useChangePlan(onPlanChanged);
@@ -105,20 +103,15 @@ export function ChangePlanEnterpriseButton() {
   );
 }
 
-function PlanChangedNotification({ oldPlan, newPlan }: { oldPlan: OrganizationPlan; newPlan: Plan }) {
-  const planName = <T id={`plans.${newPlan}.name`} />;
-
+function PlanChangedNotification({ plan }: { plan: Plan }) {
   return (
     <>
       <strong>
-        <T id="planChangedNotification.title" values={{ plan: planName }} />
+        <T id="planChangedNotification.title" values={{ plan: <T id={`plans.${plan}.name`} /> }} />
       </strong>
 
       <div>
-        <T
-          id="planChangedNotification.details"
-          values={{ upgraded: isUpgrade(oldPlan, newPlan), plan: planName }}
-        />
+        <T id="planChangedNotification.details" />
       </div>
     </>
   );
