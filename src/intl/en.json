@@ -239,6 +239,7 @@
         "inUse": "In use",
         "new": "New",
         "comingSoon": "Coming soon",
+        "preview": "Private preview",
         "bestFit": "Best fit",
         "insufficientVRam": "Insufficient VRAM",
         "requiresHigherQuota": "Requires higher quota"
@@ -255,6 +256,7 @@
           "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
           "submitButton": "Add credit card"
         },
+        "requestAccess": "Request access",
         "requestQuotaIncrease": "Request increase",
         "requestQuotaIncreaseDialog": {
           "title": "Quota increase request",
