@@ -17,8 +17,6 @@ import { usePureFunction } from 'src/hooks/lifecycle';
 
 import { Extend } from '../../design-system/src/utils/types';
 
-import { StringArrayInput } from './string-array-input';
-
 type ControlledProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Component extends React.JSXElementConstructor<any>,
@@ -129,27 +127,11 @@ export function ControlledInput<
       ref={mergeRefs(ref, field.ref)}
       invalid={fieldState.invalid}
       helperText={fieldState.error?.message ?? helperText}
-      value={Number.isNaN(field.value) ? '' : field.value}
+      value={Number.isNaN(field.value) ? '' : (field.value ?? '')}
       onChange={(event) => {
         field.onChange(props.type === 'number' ? event.target.valueAsNumber : event.target.value);
         onChangeEffect?.(event);
       }}
-      {...props}
-    />
-  );
-}
-
-export function ControlledStringArrayInput<
-  Form extends FieldValues = FieldValues,
-  Name extends FieldPath<Form> = FieldPath<Form>,
->({ control, name, ...props }: ControlledProps<typeof StringArrayInput, Form, Name>) {
-  const { field, fieldState } = useController({ control, name });
-
-  return (
-    <StringArrayInput
-      {...field}
-      invalid={fieldState.invalid}
-      helperText={fieldState.error?.message}
       {...props}
     />
   );

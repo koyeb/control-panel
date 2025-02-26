@@ -13,7 +13,6 @@ import {
   ControlledSelect,
   ControlledSelectBox,
   ControlledSlider,
-  ControlledStringArrayInput,
   ControlledSwitch,
 } from './controlled';
 
@@ -96,12 +95,6 @@ export const input: Story = () => {
 };
 
 input.decorators = [form({ field: 'value' })];
-
-export const stringArrayInput: Story = () => {
-  return <ControlledStringArrayInput name="field" className="max-w-sm" />;
-};
-
-stringArrayInput.decorators = [form({ field: ['foo', 'bar'] })];
 
 export const radio: Story = () => {
   return (
