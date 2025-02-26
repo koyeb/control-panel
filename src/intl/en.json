@@ -2688,7 +2688,7 @@
         "namePlaceholder": "my-volume",
         "regionLabel": "Region",
         "regionPlaceholder": "Select a region",
-        "regionBoundedToLocalSnapshot": "The snapshot is only available in {region}. Once it is remotely stored, you can use it in other regions.",
+        "regionBoundedToSnapshot": "The volume must be created in the snapshot's region",
         "sizeLabel": "Size",
         "sizePlaceholder": "Select a size",
         "sizeUnit": "GB",

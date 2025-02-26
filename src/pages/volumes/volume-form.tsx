@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import { InputEnd } from '@koyeb/design-system';
 import { api } from 'src/api/api';
-import { useRegion, useRegions } from 'src/api/hooks/catalog';
+import { useRegions } from 'src/api/hooks/catalog';
 import { mapVolume } from 'src/api/mappers/volume';
 import { Volume, VolumeSnapshot } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
@@ -41,7 +41,6 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const regions = useRegions().filter(hasProperty('hasVolumes', true));
-  const snapshotRegion = useRegion(snapshot?.region);
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -113,7 +112,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
       <ControlledSelect
         control={form.control}
         name="region"
-        disabled={snapshot?.type === 'local' || volume !== undefined}
+        disabled={snapshot !== undefined || volume !== undefined}
         label={<T id="regionLabel" />}
         placeholder={t('regionPlaceholder')}
         items={regions}
@@ -121,11 +120,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
         itemToString={(region) => region.displayName}
         itemToValue={(region) => region.identifier}
         renderItem={(region) => region.displayName}
-        helperText={
-          snapshot?.type === 'local' && (
-            <T id="regionBoundedToLocalSnapshot" values={{ region: snapshotRegion?.displayName }} />
-          )
-        }
+        helperText={snapshot !== undefined && <T id="regionBoundedToSnapshot" />}
       />
 
       <ControlledInput
