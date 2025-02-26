@@ -1,11 +1,12 @@
-import LogoEtoro from './images/etoro.svg?react';
-import LogoMirakl from './images/mirakl.svg?react';
-import LogoOllama from './images/ollama.svg?react';
-import LogoSimplismart from './images/simplismart.svg?react';
-import LogoSumologic from './images/sumologic.svg?react';
-import LogoUltralytics from './images/ultralytics.svg?react';
-import LogoWeaviate from './images/weaviate.svg?react';
-import LogoZilliz from './images/zilliz.svg?react';
+import LogoEtoro from './logos/etoro.svg?react';
+import LogoMirakl from './logos/mirakl.svg?react';
+import LogoOllama from './logos/ollama.svg?react';
+import LogoPhotoroom from './logos/photoroom.svg?react';
+import LogoSimplismart from './logos/simplismart.svg?react';
+import LogoSumologic from './logos/sumologic.svg?react';
+import LogoUltralytics from './logos/ultralytics.svg?react';
+import LogoWeaviate from './logos/weaviate.svg?react';
+import LogoZilliz from './logos/zilliz.svg?react';
 
 export default function Customers() {
   return (
@@ -13,6 +14,7 @@ export default function Customers() {
       <LogoEtoro className="h-5" />
       <LogoOllama className="h-5" />
       <LogoSimplismart className="h-5" />
+      <LogoPhotoroom className="h-5" />
       <LogoZilliz className="h-5" />
       <LogoWeaviate className="h-5" />
       <LogoSumologic className="h-5" />
