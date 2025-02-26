@@ -39,8 +39,7 @@ function transformService(service: Api.Service): Service {
     appId: service.app_id!,
     latestDeploymentId: service.latest_deployment_id!,
     activeDeploymentId: service.active_deployment_id || undefined,
-    lastProvisionedDeploymentId:
-      'last_provisioned_deployment_id' in service ? service.last_provisioned_deployment_id : undefined,
+    lastProvisionedDeploymentId: service.last_provisioned_deployment_id || undefined,
     type: lowerCase(service.type!) as ServiceType,
     name: service.name!,
     status: lowerCase(service.status!),

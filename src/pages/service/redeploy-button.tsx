@@ -58,6 +58,8 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
     return null;
   }
 
+  const wasBuilt = hasBuild(latestDeployment) && service.lastProvisionedDeploymentId !== undefined;
+
   return (
     <>
       <CliInfoButton
@@ -84,16 +86,12 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
 
         <p className="text-dim">
           <T
-            id={
-              hasBuild(latestDeployment)
-                ? 'redeployDialog.descriptionWithBuild'
-                : 'redeployDialog.descriptionWithoutBuild'
-            }
+            id={wasBuilt ? 'redeployDialog.descriptionWithBuild' : 'redeployDialog.descriptionWithoutBuild'}
           />
         </p>
 
         <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-2">
-          {hasBuild(latestDeployment) && (
+          {wasBuilt && (
             <>
               <div className="col items-start gap-4 rounded-md border p-3">
                 <div className="col gap-1">
@@ -150,7 +148,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
             </>
           )}
 
-          {!hasBuild(latestDeployment) && (
+          {!wasBuilt && (
             <Button type="submit" loading={form.formState.isSubmitting} autoFocus className="self-end">
               <T id="redeployDialog.submitButton" />
             </Button>
