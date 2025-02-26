@@ -1583,8 +1583,8 @@
     "authentication": {
       "or": "or",
       "signIn": {
-        "title": "Sign in",
-        "subtitle": "Back to work, back to building",
+        "title": "Welcome back",
+        "subtitle": "Sign in to your account",
         "githubSignIn": "Sign in with GitHub",
         "emailLabel": "Email",
         "emailPlaceholder": "Email",

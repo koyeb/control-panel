@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 
 import { Stepper } from '@koyeb/design-system';
 import { stopPropagation } from 'src/application/dom-events';
+import { SvgComponent } from 'src/application/types';
 import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
@@ -15,14 +17,6 @@ import seamlessDeployment from './images/seamless-deployment.png';
 import zeroConfig from './images/zero-config.png';
 
 const T = createTranslate('layouts.authentication');
-
-const slides = ['zeroConfig', 'seamlessDeployment', 'anyHardware'] as const;
-
-const illustrations = {
-  zeroConfig: { src: zeroConfig, width: 488 },
-  seamlessDeployment: { src: seamlessDeployment, width: 592 },
-  anyHardware: { src: anyHardware, width: 568 },
-};
 
 export function Slides() {
   const [index, setIndex] = useState<0 | 1 | 2>(0);
@@ -39,13 +33,64 @@ export function Slides() {
     };
   }, [next]);
 
+  const props: Record<0 | 1 | 2, SlideProps> = [
+    {
+      illustration: zeroConfig,
+      line1: <T id="zeroConfig.line1" />,
+      line2: <T id="zeroConfig.line2" />,
+      features: [
+        <T key={1} id="zeroConfig.feature1" />,
+        <T key={2} id="zeroConfig.feature2" />,
+        <T key={3} id="zeroConfig.feature3" />,
+      ],
+      images: [Dots, Progress, Lines],
+    },
+    {
+      illustration: seamlessDeployment,
+      line1: <T id="seamlessDeployment.line1" />,
+      line2: <T id="seamlessDeployment.line2" />,
+      features: [
+        <T key={1} id="seamlessDeployment.feature1" />,
+        <T key={2} id="seamlessDeployment.feature2" />,
+        <T key={3} id="seamlessDeployment.feature3" />,
+      ],
+      images: [Progress, Lines, Dots],
+    },
+    {
+      illustration: anyHardware,
+      line1: <T id="anyHardware.line1" />,
+      line2: <T id="anyHardware.line2" />,
+      features: [
+        <T key={1} id="anyHardware.feature1" />,
+        <T key={2} id="anyHardware.feature2" />,
+        <T key={3} id="anyHardware.feature3" />,
+      ],
+      images: [Lines, Dots, Progress],
+    },
+  ];
+
   return (
-    <div
-      className="dark relative h-full overflow-hidden rounded-2xl bg-[#111111] [&_*]:border-[#1E1E1E]"
-      onClick={next}
-    >
-      {createArray(3, (idx) => (
-        <Slide key={idx} show={idx === index} slide={slides[index]} />
+    <div className="dark relative h-full rounded-2xl bg-[#111111] [&_*]:border-[#1E1E1E]" onClick={next}>
+      <Helmet>
+        {createArray(3, (i) => (
+          <link rel="preload" href={props[i as 0 | 1 | 2].illustration} as="image" />
+        ))}
+      </Helmet>
+
+      {createArray(3, (i) => (
+        <AnimatePresence>
+          {i === index && (
+            <motion.div
+              className="absolute inset-0 h-full"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+            >
+              <Slide {...props[i]} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       ))}
 
       <div className="row absolute inset-x-0 bottom-12 justify-center" onClick={stopPropagation}>
@@ -61,51 +106,37 @@ const gradientText = clsx([
   'px-6 py-3',
 ]);
 
-function Slide({ show, slide }: { show: boolean; slide: (typeof slides)[number] }) {
-  const images = {
-    zeroConfig: [Dots, Progress, Lines],
-    seamlessDeployment: [Progress, Lines, Dots],
-    anyHardware: [Lines, Dots, Progress],
-  }[slide];
+type SlideProps = {
+  illustration: string;
+  line1: React.ReactNode;
+  line2: React.ReactNode;
+  features: React.ReactNode[];
+  images: SvgComponent[];
+};
 
+function Slide({ illustration, line1, line2, features, images }: SlideProps) {
   return (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="col absolute inset-0"
-        >
-          <div className="col flex-1 items-center justify-center">
-            <img {...illustrations[slide]} />
-          </div>
+    <div className="col h-full">
+      <img src={illustration} style={{ maxHeight: '50vh' }} className="mx-auto object-cover" />
 
-          {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-          <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] [&>*]:border-l [&>*]:border-t">
-            <div className={clsx(gradientText, 'col-span-2 inline-block')}>
-              <T id={`${slide}.line1`} />
-            </div>
+      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+      <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] [&>*]:border-l [&>*]:border-t">
+        <div className={clsx(gradientText, 'col-span-2 inline-block')}>{line1}</div>
 
-            <div className="row-span-2 p-6">
-              {images.map((Image, index) => (
-                <Image key={index} className="w-14" />
-              ))}
-            </div>
+        <div className="row-span-2 p-6">
+          {images.map((Image, index) => (
+            <Image key={index} className="w-14" />
+          ))}
+        </div>
 
-            <div className={gradientText}>
-              <T id={`${slide}.line2`} />
-            </div>
+        <div className={gradientText}>{line2}</div>
 
-            <div className="p-4 text-lg text-dim">
-              {createArray(3, (index) => (
-                <div key={index}>{<T id={`${slide}.feature${(index + 1) as 1 | 2 | 3}`} />}</div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+        <div className="p-4 text-lg text-dim">
+          {features.map((feature, index) => (
+            <div key={index}>{feature}</div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }

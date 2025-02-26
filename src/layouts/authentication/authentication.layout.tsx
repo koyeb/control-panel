@@ -28,11 +28,11 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
 
         <div className="col flex-1 justify-center py-8">{children}</div>
 
-        <div className="col items-center gap-3 text-[#6B6965]">
+        <div className="lg:col hidden items-center gap-3 text-[#6B6965]">
           <div className="text-xs font-medium">
             <T id="argumentumAdPopulum" />
           </div>
-          <div className="row max-w-md flex-wrap justify-evenly gap-x-4 gap-y-3">
+          <div className="row max-w-lg flex-wrap justify-evenly gap-x-4 gap-y-3">
             <Customers />
           </div>
         </div>
@@ -40,7 +40,7 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
 
       {slides && (
         // eslint-disable-next-line tailwindcss/no-arbitrary-value
-        <div className="m-2 hidden min-w-[36rem] flex-1 lg:block">
+        <div className="m-2 hidden min-w-[36rem] max-w-3xl flex-1 lg:block">
           <Slides />
         </div>
       )}
