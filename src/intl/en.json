@@ -1353,14 +1353,14 @@
     },
     "trial": {
       "welcomeDialog": {
-        "title": "Welcome to Koyeb, let's get you set up!",
-        "description": "Start your 7-day trial of the Koyeb Pro plan to access advanced platform and collaboration features",
+        "title": "Your 7-day Pro trial just started!",
+        "description": "Try the Koyeb Pro plan free for 7 days and access advanced platform and collaboration features",
         "features": {
           "gpu": "Deploy intensive applications across GPUs, CPUs, and Accelerators in minutes",
           "scaling": "Deploy production-grade containers with zero configuration and automatic scaling",
           "cpu": "Deploy APIs, distributed systems, or blazing-fast inference endpoints worldwide"
         },
-        "footer": "To ensure that you and your team can continue using your account without interruption, we recommend <upgrade>subscribing to a plan</upgrade> as soon as possible",
+        "footer": "Once the trial period ends for your Koyeb organization, you can continue with the Pro plan or choose another plan that best fits your needs",
         "cta": "Deploy now"
       },
       "banner": {
