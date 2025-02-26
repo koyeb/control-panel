@@ -94,6 +94,8 @@
         "volume": "volume",
         "loggedIn": "Logged in",
         "loggedOut": "Logged out",
+        "subscriptionTrialCreated": "Started a trial on the {plan} plan",
+        "subscriptionTrialEnded": "The {plan} trial has ended",
         "subscriptionCreated": "A new subscription was created",
         "subscriptionCanceled": "A subscription was canceled",
         "paymentFailed": "Payment was not successfully processed",

@@ -112,6 +112,10 @@ export const isSubscriptionActivity = createValidationGuard(
   z.object({
     object: z.object({
       type: z.literal('subscription'),
+      metadata: z.object({
+        trial: z.boolean().optional(),
+        plan: z.literal('pro').optional(),
+      }),
     }),
   }),
 );

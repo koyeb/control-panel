@@ -1,5 +1,5 @@
 import { Activity } from 'src/api/model';
-import { createTranslate } from 'src/intl/translate';
+import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { capitalize, shortId } from 'src/utils/strings';
 
@@ -70,12 +70,24 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
   }
 
   if (isSubscriptionActivity(activity)) {
+    const { trial, plan } = activity.object.metadata;
+
     if (activity.verb === 'created') {
+      if (trial && plan) {
+        return (
+          <T id="subscriptionTrialCreated" values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />
+        );
+      }
+
       return <T id="subscriptionCreated" />;
     }
 
     if (activity.verb === 'canceled') {
       return <T id="subscriptionCanceled" />;
+    }
+
+    if (activity.verb === 'trial_ended' && plan) {
+      return <T id="subscriptionTrialEnded" values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />;
     }
 
     if (activity.verb === 'payment_failed') {
