@@ -78,15 +78,19 @@ export function InstanceItem({
   );
 }
 
+const bullet = '•';
+
 function InstancePrice({ instance }: { instance: CatalogInstance }) {
   return (
-    <div className="sm:text-right">
+    <div className="row items-center gap-2 sm:block sm:text-right">
       <div>
         <T
           id="costs.pricePerHour"
           values={{ price: <FormattedPrice value={instance.pricePerHour} digits={6} /> }}
         />
       </div>
+
+      <div className="sm:hidden">{bullet}</div>
 
       <div className="text-xs text-dim">
         <T id="costs.pricePerMonth" values={{ price: <FormattedPrice value={instance.pricePerMonth} /> }} />
