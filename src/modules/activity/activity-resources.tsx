@@ -3,12 +3,11 @@ import { createElement } from 'react';
 
 import { Activity, ServiceType } from 'src/api/model';
 import { routes } from 'src/application/routes';
+import { IconFolders } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { createTranslate, Translate } from 'src/intl/translate';
-
-import { IconFolders } from '../icons';
 
 import {
   isAutoscalingActivity,

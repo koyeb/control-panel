@@ -7,8 +7,6 @@ import { api } from 'src/api/api';
 import { mapActivities } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
 import { useToken } from 'src/application/token';
-import { ActivityIcon } from 'src/components/activity/activity-icon';
-import { ActivityItem } from 'src/components/activity/activity-item';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -17,6 +15,8 @@ import { Title } from 'src/components/title';
 import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { useMount } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';
+import { ActivityIcon } from 'src/modules/activity/activity-icon';
+import { ActivityItem } from 'src/modules/activity/activity-item';
 import { createArray } from 'src/utils/arrays';
 
 const T = createTranslate('pages.activity');

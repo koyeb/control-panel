@@ -1,14 +1,14 @@
 import clsx from 'clsx';
 
 import { Activity } from 'src/api/model';
-import { ActivityActorImage } from 'src/components/activity/activity-actor';
-import { ActivityApiCredentialIcon } from 'src/components/activity/activity-api-credential-icon';
-import { ActivityIcon } from 'src/components/activity/activity-icon';
-import { ActivityResources } from 'src/components/activity/activity-resources';
-import { ActivitySentence } from 'src/components/activity/activity-sentence';
 import { IconClock } from 'src/components/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { ActivityActorImage } from 'src/modules/activity/activity-actor';
+import { ActivityApiCredentialIcon } from 'src/modules/activity/activity-api-credential-icon';
+import { ActivityIcon } from 'src/modules/activity/activity-icon';
+import { ActivityResources } from 'src/modules/activity/activity-resources';
+import { ActivitySentence } from 'src/modules/activity/activity-sentence';
 
 const T = createTranslate('pages.home.activity');
 
