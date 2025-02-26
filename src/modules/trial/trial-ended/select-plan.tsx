@@ -1,5 +1,6 @@
 import { DialogFooter, DialogHeader } from '@koyeb/design-system';
 import { ExternalLink, Link } from 'src/components/link';
+import { useTallyLink, tallyForms } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
 import { PlanItem } from './plan-item';
@@ -12,6 +13,8 @@ type SelectPlanProps = {
 };
 
 export function SelectPlan({ onDowngrade, onSelected }: SelectPlanProps) {
+  const tallyLink = useTallyLink(tallyForms.getInTouch);
+
   return (
     <>
       <div className="row justify-between gap-4">
@@ -38,11 +41,7 @@ export function SelectPlan({ onDowngrade, onSelected }: SelectPlanProps) {
           id="footer"
           values={{
             reachOut: (children) => (
-              <ExternalLink
-                openInNewTab
-                href="https://app.reclaim.ai/m/koyeb-intro/short-call"
-                className="underline"
-              >
+              <ExternalLink openInNewTab href={tallyLink} className="underline">
                 {children}
               </ExternalLink>
             ),

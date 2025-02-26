@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import { usePathname } from 'wouter/use-browser-location';
 
 import { useUserUnsafe } from 'src/api/hooks/session';
 
@@ -16,6 +17,11 @@ declare global {
     };
   }
 }
+
+export const tallyForms = {
+  getInTouch: 'nGLjGo',
+  tenstorrentRequest: 'npRak8',
+};
 
 export function useTallyDialog(formId: string, onSubmitted?: () => void) {
   const user = useUserUnsafe();
@@ -68,4 +74,15 @@ export function useTallyDialog(formId: string, onSubmitted?: () => void) {
     openPopup,
     closePopup,
   };
+}
+
+export function useTallyLink(formId: string) {
+  const pathname = usePathname();
+  const url = new URL(`/r/${formId}`, 'https://tally.so');
+
+  url.searchParams.set('utm_campaign', pathname);
+  url.searchParams.set('utm_source', 'console');
+  url.searchParams.set('utm_medium', 'app');
+
+  return url.toString();
 }

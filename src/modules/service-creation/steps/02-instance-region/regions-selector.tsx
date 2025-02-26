@@ -6,6 +6,7 @@ import { useRegionAvailability } from 'src/application/instance-region-availabil
 import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionLatency } from 'src/components/region-latency';
+import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
@@ -24,6 +25,8 @@ export function RegionsSelector({
   selectedRegions,
   onRegionSelected,
 }: RegionsSelectorProps) {
+  const tallyLink = useTallyLink(tallyForms.getInTouch);
+
   return (
     <div className="flex-1 lg:mt-16">
       <RegionsList
@@ -35,12 +38,7 @@ export function RegionsSelector({
 
       <Tooltip content={<T id="awsRegions.tooltip" />}>
         {(props) => (
-          <ExternalLink
-            {...props}
-            openInNewTab
-            href="https://app.reclaim.ai/m/koyeb-intro/short-call"
-            className="mt-8 inline-block underline"
-          >
+          <ExternalLink {...props} openInNewTab href={tallyLink} className="mt-8 inline-block underline">
             <T id="awsRegions.title" />
           </ExternalLink>
         )}

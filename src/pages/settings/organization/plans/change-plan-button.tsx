@@ -9,6 +9,7 @@ import { notify } from 'src/application/notify';
 import { Dialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
 import { UpgradeDialog } from 'src/components/payment-form';
+import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 
 type Plan = Extract<OrganizationPlan, 'starter' | 'pro' | 'scale' | 'enterprise'>;
@@ -90,11 +91,12 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
 
 export function ChangePlanEnterpriseButton() {
   const organization = useOrganization();
+  const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (
     <ExternalLinkButton
       openInNewTab
-      href="https://app.reclaim.ai/m/koyeb-intro/short-call"
+      href={tallyLink}
       disabled={organization.plan === 'enterprise'}
       className="w-full"
     >

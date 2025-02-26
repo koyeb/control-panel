@@ -9,7 +9,7 @@ import { InstanceAvailability } from 'src/application/instance-region-availabili
 import { formatBytes } from 'src/application/memory';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
-import { useTallyDialog } from 'src/hooks/tally';
+import { tallyForms, useTallyDialog, useTallyLink } from 'src/hooks/tally';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -215,7 +215,7 @@ function InstanceItem({
 
 function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
   const openDialog = Dialog.useOpen();
-  const tally = useTallyDialog('npRak8');
+  const tally = useTallyDialog(tallyForms.tenstorrentRequest);
 
   const organization = useOrganization();
   const isHobby = organization.plan === 'hobby';
@@ -260,7 +260,7 @@ function InstanceQuotaButton({ instance }: { instance: CatalogInstance }) {
 }
 
 export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInstance }) {
-  const link = 'https://app.reclaim.ai/m/koyeb-intro/short-call';
+  const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (
     <Dialog id={`RequestQuotaIncrease-${instance.identifier}`} className="col w-full max-w-xl gap-4">
@@ -275,7 +275,7 @@ export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInst
           id="requestQuotaIncreaseDialog.line2"
           values={{
             link: (children) => (
-              <ExternalLink openInNewTab href={link} className="underline">
+              <ExternalLink openInNewTab href={tallyLink} className="underline">
                 {children}
               </ExternalLink>
             ),
@@ -284,7 +284,7 @@ export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInst
       </p>
 
       <DialogFooter>
-        <ExternalLinkButton openInNewTab href={link}>
+        <ExternalLinkButton openInNewTab href={tallyLink}>
           <T id="requestQuotaIncreaseDialog.cta" />
         </ExternalLinkButton>
       </DialogFooter>

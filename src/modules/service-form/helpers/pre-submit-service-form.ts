@@ -5,11 +5,11 @@ import { CatalogInstance, OrganizationPlan } from 'src/api/model';
 import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { Dialog } from 'src/components/dialog';
-import { useTallyDialog } from 'src/hooks/tally';
+import { tallyForms, useTallyDialog } from 'src/hooks/tally';
 
 export function usePreSubmitServiceForm(previousInstance?: string | null) {
   const openDialog = Dialog.useOpen();
-  const tally = useTallyDialog('npRak8');
+  const tally = useTallyDialog(tallyForms.tenstorrentRequest);
 
   const organization = useOrganization();
   const getInstanceQuota = useGetInstanceQuota();

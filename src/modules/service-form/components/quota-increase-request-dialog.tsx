@@ -1,13 +1,14 @@
 import { useInstance } from 'src/api/hooks/catalog';
 import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
+import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.serviceForm');
 
 export function QuotaIncreaseRequestDialog({ instanceIdentifier }: { instanceIdentifier: string | null }) {
   const instance = useInstance(instanceIdentifier);
-  const link = 'https://app.reclaim.ai/m/koyeb-intro/short-call';
+  const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (
     <Dialog id="QuotaIncreaseRequest" className="col w-full max-w-xl gap-4">
@@ -22,7 +23,7 @@ export function QuotaIncreaseRequestDialog({ instanceIdentifier }: { instanceIde
           id="quotaIncreaseRequestDialog.line2"
           values={{
             link: (children) => (
-              <ExternalLink openInNewTab href={link} className="underline">
+              <ExternalLink openInNewTab href={tallyLink} className="underline">
                 {children}
               </ExternalLink>
             ),
@@ -31,7 +32,7 @@ export function QuotaIncreaseRequestDialog({ instanceIdentifier }: { instanceIde
       </p>
 
       <DialogFooter>
-        <ExternalLinkButton openInNewTab href={link}>
+        <ExternalLinkButton openInNewTab href={tallyLink}>
           <T id="quotaIncreaseRequestDialog.cta" />
         </ExternalLinkButton>
       </DialogFooter>
