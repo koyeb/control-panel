@@ -4,6 +4,7 @@ import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance, OrganizationPlan } from 'src/api/model';
 import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
+import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
 import { tallyForms, useTallyDialog } from 'src/hooks/tally';
 
@@ -46,8 +47,4 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
       return true;
     },
   ] as const;
-}
-
-function isTenstorrentGpu(instance: CatalogInstance) {
-  return instance.identifier === 'gpu-tenstorrent-n300s' || instance.identifier === '4-gpu-tenstorrent-n300s';
 }

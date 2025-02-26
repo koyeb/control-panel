@@ -7,6 +7,7 @@ import { CatalogInstance, InstanceCategory } from 'src/api/model';
 import { useHasInstanceQuota } from 'src/application/instance-quota';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
+import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { tallyForms, useTallyDialog, useTallyLink } from 'src/hooks/tally';
@@ -476,8 +477,4 @@ function InstanceBadge({ instance, hasQuotas, availability, insufficientVRam, be
   }
 
   return <>{result}</>;
-}
-
-function isTenstorrentGpu(instance: CatalogInstance) {
-  return instance.identifier === 'gpu-tenstorrent-n300s' || instance.identifier === '4-gpu-tenstorrent-n300s';
 }
