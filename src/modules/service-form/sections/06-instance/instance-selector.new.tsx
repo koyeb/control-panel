@@ -18,7 +18,7 @@ export function InstanceSelectorNew() {
   const instances = useInstances();
   const regions = useRegions();
 
-  const isServiceCreation = useWatchServiceForm('meta.serviceId') === null;
+  const isServiceEdition = useWatchServiceForm('meta.serviceId') !== null;
   const serviceType = useWatchServiceForm('serviceType');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
@@ -70,13 +70,21 @@ export function InstanceSelectorNew() {
 
   const selector = useInstanceSelector({
     instances,
-    regions: !isServiceCreation && hasVolumes ? selectedRegions : regions,
+    regions: isServiceEdition && hasVolumes ? selectedRegions : regions,
     availabilities,
     selectedInstance,
     setSelectedInstance: handleInstanceSelected,
     selectedRegions,
     setSelectedRegions: handleRegionsSelected,
   });
+
+  if (isServiceEdition && hasVolumes && selectedInstance?.category === 'gpu') {
+    return (
+      <div className="mb-4">
+        <InstanceAlerts selectedCategory={selector.instanceCategory} />
+      </div>
+    );
+  }
 
   return (
     <>
