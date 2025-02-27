@@ -11,7 +11,7 @@ type UseGetInstanceBadgesOptions = {
   insufficientVRam?: boolean;
 };
 
-export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions) {
+export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions = {}) {
   const organization = useOrganization();
   const hasQuotas = useGetHasInstanceQuota(options.previousInstance);
 
