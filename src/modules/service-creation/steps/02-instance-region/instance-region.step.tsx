@@ -1,6 +1,10 @@
 import { Button } from '@koyeb/design-system';
 import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
-import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
+import {
+  useOrganization,
+  useOrganizationQuotasQuery,
+  useOrganizationSummaryQuery,
+} from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { InstanceSelector } from 'src/components/instance-selector';
@@ -112,14 +116,14 @@ function InstanceRegionStepOld({ onNext }: InstanceRegionStepProps) {
 }
 
 function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
-  const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
+  const searchParams = useSearchParams();
   const navigate = useNavigate();
 
-  const availabilities = useInstanceAvailabilities({ serviceType });
-
-  const searchParams = useSearchParams();
   const instances = useInstances();
   const regions = useRegions();
+
+  const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
+  const availabilities = useInstanceAvailabilities({ serviceType });
 
   const selectedInstance =
     instances.find(hasProperty('identifier', searchParams.get('instance_type'))) ?? null;
@@ -127,6 +131,29 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
   const selectedRegions = regions.filter((region) =>
     searchParams.getAll('regions').includes(region.identifier),
   );
+
+  const organization = useOrganization();
+
+  const setInstanceParam = (instance: string) => {
+    navigate((url) => url.searchParams.set('instance_type', instance), { replace: true });
+  };
+
+  const setRegionsParam = (regions: string[]) => {
+    navigate(
+      (url) => {
+        url.searchParams.delete('regions');
+        regions.forEach((region) => url.searchParams.append('regions', region));
+      },
+      { replace: true },
+    );
+  };
+
+  useMount(() => {
+    if (!searchParams.has('instance_type')) {
+      setInstanceParam(organization.plan === 'hobby' ? 'free' : 'nano');
+      setRegionsParam(['fra']);
+    }
+  });
 
   const getBadges = useGetInstanceBadges();
 
@@ -136,16 +163,13 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
     availabilities,
     selectedInstance,
     setSelectedInstance: (instance) => {
-      if (instance) {
-        navigate((url) => url.searchParams.set('instance_type', instance?.identifier));
+      if (instance !== null) {
+        setInstanceParam(instance.identifier);
       }
     },
     selectedRegions,
     setSelectedRegions: (regions) => {
-      navigate((url) => {
-        url.searchParams.delete('regions');
-        regions.forEach((region) => url.searchParams.append('regions', region.identifier));
-      });
+      setRegionsParam(regions.map((region) => region.identifier));
     },
   });
 
@@ -159,7 +183,7 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
       />
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="col scrollbar-green scrollbar-thin max-h-[32rem] gap-3 overflow-auto pe-2">
+      <div className="col scrollbar-green scrollbar-thin max-h-[32rem] gap-3 overflow-auto rounded-md border p-2">
         <NewInstanceSelector {...selector} getBadges={getBadges} />
       </div>
 
