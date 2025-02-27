@@ -18,6 +18,7 @@ export function InstanceSelectorNew() {
   const instances = useInstances();
   const regions = useRegions();
 
+  const isServiceCreation = useWatchServiceForm('meta.serviceId') === null;
   const serviceType = useWatchServiceForm('serviceType');
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
@@ -69,7 +70,7 @@ export function InstanceSelectorNew() {
 
   const selector = useInstanceSelector({
     instances,
-    regions,
+    regions: !isServiceCreation && hasVolumes ? selectedRegions : regions,
     availabilities,
     selectedInstance,
     setSelectedInstance: handleInstanceSelected,
