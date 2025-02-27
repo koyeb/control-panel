@@ -129,15 +129,15 @@ export function InstanceDescription({
 
 function InstanceSpec({ instance }: { instance: CatalogInstance }) {
   return (
-    <div className="row gap-3 text-sm">
+    <div className="row gap-3 text-sm text-dim">
       <div className="row items-center gap-1">
-        <IconCpu className="size-4 stroke-1 text-dim" />
+        <IconCpu className="size-4 stroke-1" />
         <T id="instanceSpec.cpu" values={{ value: instance.cpu }} />
       </div>
 
       {instance.vram && (
         <div className="row items-center gap-1">
-          <IconMicrochip className="size-4 stroke-1 text-dim" />
+          <IconMicrochip className="size-4 stroke-1" />
           <T
             id="instanceSpec.vram"
             values={{ value: formatBytes(instance.vram, { round: true, decimal: true }) }}
@@ -146,12 +146,12 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
       )}
 
       <div className="row items-center gap-1">
-        <IconMemoryStick className="size-4 stroke-1 text-dim" />
+        <IconMemoryStick className="size-4 stroke-1" />
         <T id="instanceSpec.ram" values={{ value: instance.ram }} />
       </div>
 
       <div className="row items-center gap-1">
-        <IconRadioReceiver className="size-4 stroke-1 text-dim" />
+        <IconRadioReceiver className="size-4 stroke-1" />
         <T id="instanceSpec.disk" values={{ value: instance.ram }} />
       </div>
     </div>
