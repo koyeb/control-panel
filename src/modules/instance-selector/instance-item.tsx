@@ -1,17 +1,22 @@
 import clsx from 'clsx';
 import { useRef } from 'react';
 
-import { Badge, RadioInput } from '@koyeb/design-system';
+import { Badge, Button, RadioInput } from '@koyeb/design-system';
+import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
+import { isTenstorrentGpu } from 'src/application/tenstorrent';
+import { Dialog } from 'src/components/dialog';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/components/icons';
 import { useMount } from 'src/hooks/lifecycle';
+import { tallyForms, useTallyDialog } from 'src/hooks/tally';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
 import { InstanceSelectorBadge } from './instance-selector';
+import { RequestQuotaIncreaseDialog } from './request-quota-increase-dialog';
 
-export const T = createTranslate('components.instanceSelector.new');
+const T = createTranslate('components.instanceSelector.new');
 
 type InstanceItemProps = {
   instance: CatalogInstance;
@@ -30,6 +35,13 @@ export function InstanceItem({
   onSelected,
   regionSelector,
 }: InstanceItemProps) {
+  const organization = useOrganization();
+
+  const requiresHigherQuota =
+    organization.plan === 'hobby'
+      ? instance.identifier !== 'free'
+      : badges.includes('requiresHigherQuota') || badges.includes('preview');
+
   const ref = useRef<HTMLLabelElement>(null);
 
   useMount(() => {
@@ -59,21 +71,26 @@ export function InstanceItem({
           <InstancePrice instance={instance} />
         </div>
 
-        {regionSelector}
+        {requiresHigherQuota && <RequestQuota instance={instance} />}
+        {!requiresHigherQuota && regionSelector}
       </div>
     </label>
   );
 }
 
+const bullet = '•';
+
 function InstancePrice({ instance }: { instance: CatalogInstance }) {
   return (
-    <div className="sm:text-right">
+    <div className="row items-center gap-2 sm:block sm:text-right">
       <div>
         <T
           id="costs.pricePerHour"
           values={{ price: <FormattedPrice value={instance.pricePerHour} digits={6} /> }}
         />
       </div>
+
+      <div className="sm:hidden">{bullet}</div>
 
       <div className="text-xs text-dim">
         <T id="costs.pricePerMonth" values={{ price: <FormattedPrice value={instance.pricePerMonth} /> }} />
@@ -162,6 +179,12 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
         </Badge>
       )}
 
+      {badges.includes('preview') && (
+        <Badge size={1} color="orange">
+          <T id="badge.preview" />
+        </Badge>
+      )}
+
       {badges.includes('bestFit') && (
         <Badge key="bestFit" size={1} color="green">
           <T id="badge.bestFit" />
@@ -179,6 +202,50 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
           <T id="badge.requiresHigherQuota" />
         </Badge>
       )}
+    </>
+  );
+}
+
+function RequestQuota({ instance }: { instance: CatalogInstance }) {
+  const openDialog = Dialog.useOpen();
+  const tally = useTallyDialog(tallyForms.tenstorrentRequest);
+
+  const organization = useOrganization();
+  const isHobby = organization.plan === 'hobby';
+
+  const dialog = isHobby ? 'UpgradeInstanceSelector' : `RequestQuotaIncrease-${instance.identifier}`;
+
+  if (instance.identifier === 'free') {
+    return null;
+  }
+
+  const handleClick = () => {
+    if (!isHobby && isTenstorrentGpu(instance)) {
+      tally.openPopup();
+    } else {
+      openDialog(dialog);
+    }
+  };
+
+  const text = () => {
+    if (isHobby) {
+      return <T id="actions.addCreditCard" />;
+    }
+
+    if (isTenstorrentGpu(instance)) {
+      return <T id="actions.requestAccess" />;
+    }
+
+    return <T id="actions.requestQuotaIncrease" />;
+  };
+
+  return (
+    <>
+      <Button color="gray" onClick={handleClick} className="mt-4">
+        {text()}
+      </Button>
+
+      <RequestQuotaIncreaseDialog instance={instance} />
     </>
   );
 }

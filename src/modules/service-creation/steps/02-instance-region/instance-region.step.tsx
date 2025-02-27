@@ -10,6 +10,7 @@ import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
+import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
 import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
 import { InstanceSelector as NewInstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
@@ -127,6 +128,8 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
     searchParams.getAll('regions').includes(region.identifier),
   );
 
+  const getBadges = useGetInstanceBadges();
+
   const selector = useInstanceSelector({
     instances,
     regions,
@@ -157,7 +160,7 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className="col scrollbar-green scrollbar-thin max-h-[32rem] gap-3 overflow-auto pe-2">
-        <NewInstanceSelector {...selector} getBadges={() => []} />
+        <NewInstanceSelector {...selector} getBadges={getBadges} />
       </div>
 
       <Button onClick={onNext} disabled={selectedRegions.length === 0} className="self-start">
