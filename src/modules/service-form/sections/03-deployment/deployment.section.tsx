@@ -1,12 +1,11 @@
 import { useController } from 'react-hook-form';
 
-import { Input } from '@koyeb/design-system';
-import { formatCommand, parseCommand } from 'src/application/parse-command';
+import { formatCommand } from 'src/application/parse-command';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';
 
-import { OverridableField } from '../../components/overridable-input';
 import { ServiceFormSection } from '../../components/service-form-section';
+import { ShellCommandInput } from '../../components/shell-command-input';
 import { DockerDeploymentOptions, ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
@@ -52,64 +51,63 @@ function EntrypointInput() {
   });
 
   return (
-    <OverridableField
-      override={field.value !== null}
-      onOverride={(override) => field.onChange(override ? [] : null)}
-    >
-      {(disabled) => (
-        <Input
-          label={<T id="entrypointLabel" />}
-          helpTooltip={<T id="entrypointTooltip" />}
-          placeholder={t('entrypointPlaceholder')}
-          disabled={disabled}
-          defaultValue={formatCommand(field.value ?? [])}
-          onChange={(event) => field.onChange(parseCommand(event.target.value))}
-          error={fieldState.error?.message}
-          className="w-full max-w-md"
-        />
-      )}
-    </OverridableField>
+    <ShellCommandInput
+      label={<T id="entrypointLabel" />}
+      helpTooltip={<T id="entrypointTooltip" />}
+      placeholder={t('entrypointPlaceholder')}
+      helperText={<EntrypointHelperText value={field.value} />}
+      value={field.value}
+      onChange={field.onChange}
+      error={fieldState.error?.message}
+      className="w-full max-w-md"
+    />
   );
+}
+
+function EntrypointHelperText({ value }: { value: string[] | null }) {
+  if (value === null) {
+    return null;
+  }
+
+  const [command = '', ...args] = value;
+
+  return <code>{`docker run --entrypoint ${command} [...] ${formatCommand(args)}`}</code>;
 }
 
 function CommandInput() {
   const t = T.useTranslate();
 
-  const command = useController<ServiceForm, 'dockerDeployment.command'>({
+  const { field: command, fieldState: cmdState } = useController<ServiceForm, 'dockerDeployment.command'>({
     name: 'dockerDeployment.command',
   });
 
-  const args = useController<ServiceForm, 'dockerDeployment.args'>({
+  const { field: args, fieldState: argsState } = useController<ServiceForm, 'dockerDeployment.args'>({
     name: 'dockerDeployment.args',
   });
 
-  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const parsed = parseCommand(event.target.value);
-
-    command.field.onChange(parsed[0] ?? '');
-    args.field.onChange(parsed.slice(1));
-  };
+  const value = command.value === null ? null : [command.value, ...(args.value ?? [])];
 
   return (
-    <OverridableField
-      override={command.field.value !== null}
-      onOverride={(override) => {
-        command.field.onChange(override ? '' : null);
-        args.field.onChange(override ? [] : null);
+    <ShellCommandInput
+      label={<T id="commandLabel" />}
+      helpTooltip={<T id="commandTooltip" />}
+      placeholder={t('commandPlaceholder')}
+      helperText={<CommandHelperText value={value} />}
+      value={value}
+      onChange={(value) => {
+        command.onChange(value ? (value[0] ?? '') : null);
+        args.onChange(value ? value.slice(1) : null);
       }}
-    >
-      {(disabled) => (
-        <Input
-          label={<T id="commandLabel" />}
-          helpTooltip={<T id="commandTooltip" />}
-          placeholder={t('commandPlaceholder')}
-          disabled={disabled}
-          defaultValue={formatCommand([command.field.value ?? '', ...(args.field.value ?? [])])}
-          onChange={handleChange}
-          error={command.fieldState.error?.message ?? args.fieldState.error?.message}
-          className="w-full max-w-md"
-        />
-      )}
-    </OverridableField>
+      error={cmdState.error?.message ?? argsState.error?.message}
+      className="w-full max-w-md"
+    />
   );
+}
+
+function CommandHelperText({ value }: { value: string[] | null }) {
+  if (value === null) {
+    return null;
+  }
+
+  return <code>{`docker run [...] ${formatCommand(value)}`}</code>;
 }

@@ -1,11 +1,10 @@
 import { useController } from 'react-hook-form';
 
-import { Input } from '@koyeb/design-system';
-import { formatCommand, parseCommand } from 'src/application/parse-command';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';
 
-import { OverridableField, OverridableInput } from '../../components/overridable-input';
+import { OverridableInput } from '../../components/overridable-input';
+import { ShellCommandInput } from '../../components/shell-command-input';
 import { ServiceForm } from '../../service-form.types';
 
 const T = createTranslate('modules.serviceForm.builder.dockerfileConfiguration');
@@ -55,66 +54,64 @@ export function DockerfileOptions() {
   );
 }
 
+type EntrypointPath = 'builder.dockerfileOptions.entrypoint';
+type CommandPath = 'builder.dockerfileOptions.command';
+type ArgsPath = 'builder.dockerfileOptions.args';
+
 function EntrypointInput() {
-  const { field, fieldState } = useController<ServiceForm, 'builder.dockerfileOptions.entrypoint'>({
+  const { field, fieldState } = useController<ServiceForm, EntrypointPath>({
     name: 'builder.dockerfileOptions.entrypoint',
   });
 
   return (
-    <OverridableField
-      override={field.value !== null}
-      onOverride={(override) => field.onChange(override ? [] : null)}
-    >
-      {(disabled) => (
-        <Input
-          label={<T id="entrypointLabel" />}
-          helpTooltip={<T id="entrypointTooltip" />}
-          disabled={disabled}
-          defaultValue={formatCommand(field.value ?? [])}
-          onChange={(event) => field.onChange(parseCommand(event.target.value))}
-          error={fieldState.error?.message}
-          className="w-full max-w-md"
-        />
-      )}
-    </OverridableField>
+    <ShellCommandInput
+      label={<T id="entrypointLabel" />}
+      helpTooltip={<T id="entrypointTooltip" />}
+      helperText={<HelperText instruction="ENTRYPOINT" command={field.value} />}
+      value={field.value}
+      onChange={field.onChange}
+      error={fieldState.error?.message}
+      className="w-full max-w-md"
+    />
   );
 }
 
 function CommandInput() {
-  const command = useController<ServiceForm, 'builder.dockerfileOptions.command'>({
+  const { field: command, fieldState: commandState } = useController<ServiceForm, CommandPath>({
     name: 'builder.dockerfileOptions.command',
   });
 
-  const args = useController<ServiceForm, 'builder.dockerfileOptions.args'>({
+  const { field: args, fieldState: argsState } = useController<ServiceForm, ArgsPath>({
     name: 'builder.dockerfileOptions.args',
   });
 
-  const handleChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    const parsed = parseCommand(event.target.value);
-
-    command.field.onChange(parsed[0] ?? '');
-    args.field.onChange(parsed.slice(1));
-  };
+  const value = command.value === null ? null : [command.value, ...(args.value ?? [])];
 
   return (
-    <OverridableField
-      override={command.field.value !== null}
-      onOverride={(override) => {
-        command.field.onChange(override ? '' : null);
-        args.field.onChange(override ? [] : null);
+    <ShellCommandInput
+      label={<T id="commandLabel" />}
+      helpTooltip={<T id="commandTooltip" />}
+      helperText={<HelperText instruction="CMD" command={value} />}
+      value={value}
+      onChange={(value) => {
+        command.onChange(value ? (value[0] ?? '') : null);
+        args.onChange(value ? value.slice(1) : null);
       }}
-    >
-      {(disabled) => (
-        <Input
-          label={<T id="commandLabel" />}
-          helpTooltip={<T id="commandTooltip" />}
-          disabled={disabled}
-          defaultValue={formatCommand([command.field.value ?? '', ...(args.field.value ?? [])])}
-          onChange={handleChange}
-          error={command.fieldState.error?.message ?? args.fieldState.error?.message}
-          className="w-full max-w-md"
-        />
-      )}
-    </OverridableField>
+      error={commandState.error?.message ?? argsState.error?.message}
+      className="w-full max-w-md"
+    />
   );
+}
+
+type HelperTextProps = {
+  instruction: string;
+  command: string[] | null;
+};
+
+function HelperText({ instruction, command }: HelperTextProps) {
+  if (command === null) {
+    return null;
+  }
+
+  return <code>{`${instruction} [${command.map((value) => `"${value}"`).join(', ')}]`}</code>;
 }
