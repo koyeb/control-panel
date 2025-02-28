@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, InfoTooltip } from '@koyeb/design-system';
+import { Button, InfoTooltip, Stepper } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
@@ -16,8 +16,6 @@ import { QueryError } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
-
-import { OnboardingStepper } from './stepper';
 
 const T = createTranslate('pages.onboarding.joinOrganization');
 
@@ -89,7 +87,7 @@ export function CreateOrganization() {
 
   return (
     <section className="col w-full max-w-xl gap-6">
-      <OnboardingStepper step={2} />
+      <Stepper totalSteps={3} activeStep={2} />
 
       <div>
         <h1 className="typo-heading mb-1">

@@ -67,7 +67,7 @@ function EntrypointInput() {
     <ShellCommandInput
       label={<T id="entrypointLabel" />}
       helpTooltip={<T id="entrypointTooltip" />}
-      helperText={<HelperText instruction="ENTRYPOINT" command={field.value} />}
+      instruction="ENTRYPOINT"
       value={field.value}
       onChange={field.onChange}
       error={fieldState.error?.message}
@@ -91,7 +91,7 @@ function CommandInput() {
     <ShellCommandInput
       label={<T id="commandLabel" />}
       helpTooltip={<T id="commandTooltip" />}
-      helperText={<HelperText instruction="CMD" command={value} />}
+      instruction="CMD"
       value={value}
       onChange={(value) => {
         command.onChange(value ? (value[0] ?? '') : null);
@@ -101,17 +101,4 @@ function CommandInput() {
       className="w-full max-w-md"
     />
   );
-}
-
-type HelperTextProps = {
-  instruction: string;
-  command: string[] | null;
-};
-
-function HelperText({ instruction, command }: HelperTextProps) {
-  if (command === null) {
-    return null;
-  }
-
-  return <code>{`${instruction} [${command.map((value) => `"${value}"`).join(', ')}]`}</code>;
 }
