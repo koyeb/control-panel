@@ -1,6 +1,5 @@
 import { useController } from 'react-hook-form';
 
-import { formatCommand } from 'src/application/parse-command';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';
 
@@ -55,23 +54,13 @@ function EntrypointInput() {
       label={<T id="entrypointLabel" />}
       helpTooltip={<T id="entrypointTooltip" />}
       placeholder={t('entrypointPlaceholder')}
-      helperText={<EntrypointHelperText value={field.value} />}
+      instruction="ENTRYPOINT"
       value={field.value}
       onChange={field.onChange}
       error={fieldState.error?.message}
       className="w-full max-w-md"
     />
   );
-}
-
-function EntrypointHelperText({ value }: { value: string[] | null }) {
-  if (value === null) {
-    return null;
-  }
-
-  const [command = '', ...args] = value;
-
-  return <code>{`docker run --entrypoint ${command} [...] ${formatCommand(args)}`}</code>;
 }
 
 function CommandInput() {
@@ -92,7 +81,7 @@ function CommandInput() {
       label={<T id="commandLabel" />}
       helpTooltip={<T id="commandTooltip" />}
       placeholder={t('commandPlaceholder')}
-      helperText={<CommandHelperText value={value} />}
+      instruction="CMD"
       value={value}
       onChange={(value) => {
         command.onChange(value ? (value[0] ?? '') : null);
@@ -102,12 +91,4 @@ function CommandInput() {
       className="w-full max-w-md"
     />
   );
-}
-
-function CommandHelperText({ value }: { value: string[] | null }) {
-  if (value === null) {
-    return null;
-  }
-
-  return <code>{`docker run [...] ${formatCommand(value)}`}</code>;
 }
