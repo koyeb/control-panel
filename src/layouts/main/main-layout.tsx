@@ -27,6 +27,7 @@ import { useTrial } from 'src/modules/trial/use-trial';
 import { inArray } from 'src/utils/arrays';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
+import { FeatureFlagsDialog } from './feature-flags-dialog';
 import { GlobalAlert } from './global-alert';
 import { HelpLinks } from './help-links';
 import { Layout } from './layout';
@@ -49,8 +50,9 @@ export function MainLayout({ children }: LayoutProps) {
   return (
     <CommandPalette>
       <DocumentTitle />
-      <CreateServiceDialog />
 
+      <CreateServiceDialog />
+      <FeatureFlagsDialog />
       <TrialWelcomeDialog />
 
       <Layout

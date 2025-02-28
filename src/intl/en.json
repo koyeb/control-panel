@@ -1494,6 +1494,15 @@
         "estimatedCost": "Estimated cost",
         "viewBilling": "View billing"
       },
+      "featureFlags": {
+        "title": "Feature flags",
+        "disableAll": "Disable all",
+        "enableAll": "Enable all",
+        "resetAll": "Reset all",
+        "enabled": "enabled",
+        "disabled": "disabled",
+        "default": "default"
+      },
       "breadcrumbs": {
         "services": "Services",
         "volumes": "Volumes",
