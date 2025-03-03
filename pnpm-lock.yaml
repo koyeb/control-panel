@@ -159,6 +159,9 @@ importers:
       '@sentry/vite-plugin':
         specifier: ^3.2.1
         version: 3.2.1
+      '@seontechnologies/seon-javascript-sdk':
+        specifier: ^6.5.0
+        version: 6.5.0
       '@storybook/addon-actions':
         specifier: ^8.6.0
         version: 8.6.0(storybook@8.6.0(prettier@3.5.2))
@@ -1309,6 +1312,9 @@ packages:
   '@sentry/vite-plugin@3.2.1':
     resolution: {integrity: sha512-A/R9PAWPkWR6iqbJJ4C9BygcET0HAq5irEKy7xPmzB0mjW5XbDwbhQtHHnb6C1q/JrfzufB3TZWrG2XfrBRazg==}
     engines: {node: '>= 14'}
+
+  '@seontechnologies/seon-javascript-sdk@6.5.0':
+    resolution: {integrity: sha512-ND7d2bdErrda0GfqmTrgBd1O8EMwGBxppP21m7Ie63Qg1J1udJt0O4wXQX8DzMYMUr6+qxzyZebnlor1hexFuQ==}
 
   '@shikijs/core@2.5.0':
     resolution: {integrity: sha512-uu/8RExTKtavlpH7XqnVYBrfBkUc20ngXiX9NSrBhOVZYv/7XQRKUyhtkeflY5QsxC0GbJThCerruZfsUaSldg==}
@@ -5808,6 +5814,8 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@seontechnologies/seon-javascript-sdk@6.5.0': {}
 
   '@shikijs/core@2.5.0':
     dependencies:
