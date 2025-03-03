@@ -28,7 +28,7 @@ export function InstanceSelector() {
   const instanceAvailabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
   const regionAvailabilities = useRegionAvailabilities();
 
-  const { getValues, setValue, trigger } = useFormContext<ServiceForm>();
+  const { getValues, setValue } = useFormContext<ServiceForm>();
 
   const { field } = useController<ServiceForm, 'instance'>({ name: 'instance' });
   const instance = useInstance(field.value);
@@ -36,9 +36,6 @@ export function InstanceSelector() {
   const [category, setCategory] = useState<InstanceCategory>(instance?.category ?? 'standard');
 
   const handleInstanceSelected = (instance: CatalogInstance | null) => {
-    const isServiceCreation = getValues('meta.serviceId') === null;
-    const isWeb = getValues('serviceType') === 'web';
-    const previousInstance = instances.find(hasProperty('identifier', field.value));
     const [isAvailable] = instance ? (instanceAvailabilities[instance.identifier] ?? [false]) : [false];
 
     if (!instance || !isAvailable) {
@@ -47,27 +44,6 @@ export function InstanceSelector() {
     }
 
     field.onChange(instance.identifier);
-
-    if (instance.category === 'eco') {
-      setValue('scaling.max', getValues('scaling.min'));
-      void trigger('scaling');
-    }
-
-    if (instance.identifier === 'free') {
-      setValue('scaling.min', 1);
-      setValue('scaling.max', 1);
-      void trigger('scaling');
-    }
-
-    if (isServiceCreation && isWeb) {
-      if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu') {
-        setValue('scaling.min', 0);
-        void trigger('scaling');
-      } else if (previousInstance?.category === 'gpu' && instance?.category !== 'gpu') {
-        setValue('scaling.min', 1);
-        void trigger('scaling');
-      }
-    }
 
     let availableRegions = getValues('regions')
       .filter((region) => regionAvailabilities[region]?.[0])

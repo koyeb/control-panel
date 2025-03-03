@@ -84,5 +84,14 @@ describe('object', () => {
       expect(onChange).toHaveBeenCalledTimes(1);
       expect(onChange).toHaveBeenCalledWith('foo.bar', 2);
     });
+
+    it('does not invoke the callback when the value does not change', () => {
+      const onChange = vi.fn();
+      const proxy = trackChanges({ foo: 1 }, onChange);
+
+      proxy.foo = 1;
+
+      expect(onChange).not.toHaveBeenCalled();
+    });
   });
 });

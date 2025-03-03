@@ -43,7 +43,9 @@ export function trackChanges<T extends object>(object: T, onChange: (path: strin
       }
     },
     set(target, property, value, receiver) {
-      onChange(String(property), value);
+      if (target[property as keyof T] !== value) {
+        onChange(String(property), value);
+      }
 
       return Reflect.set(target, property, value, receiver);
     },

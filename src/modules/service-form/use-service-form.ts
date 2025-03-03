@@ -3,13 +3,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { FieldPath, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 
-import { useInstances, useRegions } from 'src/api/hooks/catalog';
+import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParams } from 'src/hooks/router';
 import { useTranslate } from 'src/intl/translate';
-import { trackChanges } from 'src/utils/object';
+import { hasProperty, trackChanges } from 'src/utils/object';
 
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
@@ -47,7 +48,7 @@ export function useServiceForm(serviceId?: string) {
   useTriggerInstanceValidationOnLoad(form);
   useExpandFirstSectionInError(form, sections);
   useTriggerValidationOnChange(form);
-  useEnsureBusinessRules(form);
+  useEnsureScalingBusinessRules(form);
 
   return form;
 }
@@ -121,9 +122,11 @@ const scaleAboveZeroTargets: Array<keyof Scaling['targets']> = [
   'responseTime',
 ];
 
-function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
+function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
   const scaleToZero = useFeatureFlag('scale-to-zero');
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
+  const instances = useInstances();
+  const previousInstance = usePrevious(useInstance(watch('instance')));
 
   useEffect(() => {
     const subscription = watch((formValues, { type, name }) => {
@@ -142,7 +145,25 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
         }
       });
 
-      const { serviceType, scaling } = values;
+      const { meta, serviceType, scaling } = values;
+      const instance = instances.find(hasProperty('identifier', values.instance));
+
+      if (scaleToZero && instance?.identifier === 'free') {
+        scaling.min = 1;
+        scaling.max = 1;
+      }
+
+      if (instance?.category === 'eco' && instance.identifier !== 'free') {
+        scaling.min = scaling.max;
+      }
+
+      if (name === 'instance' && meta.serviceId === null) {
+        if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu') {
+          scaling.min = 0;
+        } else if (previousInstance?.category === 'gpu' && instance?.category === 'standard') {
+          scaling.min = 1;
+        }
+      }
 
       if (scaling.min === 0 && !scaleToZero) {
         scaling.min = 1;
@@ -188,5 +209,5 @@ function useEnsureBusinessRules({ watch, setValue, trigger }: UseFormReturn<Serv
     return () => {
       subscription.unsubscribe();
     };
-  }, [scaleToZero, scaleToZeroIdleDelay, watch, setValue, trigger]);
+  }, [scaleToZero, scaleToZeroIdleDelay, instances, previousInstance, watch, setValue, trigger]);
 }
