@@ -2,7 +2,14 @@ import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, MockedObject, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { api } from 'src/api/api';
-import { CatalogRegion, CatalogInstance, Organization, OrganizationSummary, GithubApp } from 'src/api/model';
+import {
+  CatalogRegion,
+  CatalogInstance,
+  Organization,
+  OrganizationSummary,
+  GithubApp,
+  CatalogDatacenter,
+} from 'src/api/model';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { create } from 'src/utils/factories';
 
@@ -36,6 +43,7 @@ describe('initializeServiceForm', () => {
   async function initialize(
     options: Partial<{
       params: URLSearchParams;
+      datacenters: CatalogDatacenter[];
       regions: CatalogRegion[];
       instances: CatalogInstance[];
       organization: Organization;
@@ -46,6 +54,7 @@ describe('initializeServiceForm', () => {
   ) {
     return initializeServiceForm(
       options.params ?? new URLSearchParams(),
+      options.datacenters ?? [],
       options.regions ?? [],
       options.instances ?? [],
       options.organization ?? create.organization(),

@@ -5,7 +5,11 @@ import { getConfig } from 'src/application/config';
 import { parseBytes } from 'src/application/memory';
 import { hasProperty } from 'src/utils/object';
 
-import { mapCatalogInstancesList, mapCatalogRegionsList } from '../mappers/catalog';
+import {
+  mapCatalogDatacentersList,
+  mapCatalogInstancesList,
+  mapCatalogRegionsList,
+} from '../mappers/catalog';
 import { AiModel, OneClickApp } from '../model';
 import { useApiQueryFn } from '../use-api';
 
@@ -55,6 +59,16 @@ export function useRegions(identifiers?: string[]) {
 
 export function useRegion(identifier?: string) {
   return useRegions().find(hasProperty('identifier', identifier));
+}
+
+export function useDatacenters() {
+  const { data: datacenters = [] } = useQuery({
+    ...useApiQueryFn('listCatalogDatacenters'),
+    refetchInterval: false,
+    select: mapCatalogDatacentersList,
+  });
+
+  return datacenters;
 }
 
 type OneClickAppApiResponse = {

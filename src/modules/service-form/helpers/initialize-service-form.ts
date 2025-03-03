@@ -3,7 +3,8 @@ import merge from 'lodash-es/merge';
 
 import { api } from 'src/api/api';
 import { mapRepositoriesList } from 'src/api/mappers/git';
-import { CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
+import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
+import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
 import { getToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
@@ -18,6 +19,7 @@ import { parseDeployParams } from './parse-deploy-params';
 
 export async function initializeServiceForm(
   params: URLSearchParams,
+  datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
   instances: CatalogInstance[],
   organization: Organization,
@@ -95,6 +97,14 @@ export async function initializeServiceForm(
 
     if (values.serviceType === 'web' && instance?.category === 'gpu') {
       values.scaling.min = 0;
+    }
+
+    if (!params.has('regions')) {
+      const defaultRegion = await getDefaultRegion(queryClient, datacenters, regions, values.instance);
+
+      if (defaultRegion !== undefined) {
+        values.regions = [defaultRegion.identifier];
+      }
     }
   }
 

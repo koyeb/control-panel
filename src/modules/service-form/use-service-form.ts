@@ -3,7 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { FieldPath, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 
-import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
+import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
@@ -21,6 +21,7 @@ export function useServiceForm(serviceId?: string) {
   const translate = useTranslate();
 
   const params = useSearchParams();
+  const datacenters = useDatacenters();
   const regions = useRegions();
   const instances = useInstances();
   const organization = useOrganization();
@@ -32,6 +33,7 @@ export function useServiceForm(serviceId?: string) {
     defaultValues() {
       return initializeServiceForm(
         params,
+        datacenters,
         regions,
         instances,
         organization,
