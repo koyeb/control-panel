@@ -1,11 +1,20 @@
+import { useQueryClient } from '@tanstack/react-query';
+
 import { Button } from '@koyeb/design-system';
-import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
+import {
+  useDatacenters,
+  useInstances,
+  useInstancesQuery,
+  useRegions,
+  useRegionsQuery,
+} from 'src/api/hooks/catalog';
 import {
   useOrganization,
   useOrganizationQuotasQuery,
   useOrganizationSummaryQuery,
 } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
+import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { InstanceSelector } from 'src/components/instance-selector';
 import { Loading } from 'src/components/loading';
@@ -116,11 +125,13 @@ function InstanceRegionStepOld({ onNext }: InstanceRegionStepProps) {
 }
 
 function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
   const instances = useInstances();
   const regions = useRegions();
+  const datacenters = useDatacenters();
 
   const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
   const availabilities = useInstanceAvailabilities({ serviceType });
@@ -149,9 +160,17 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
   };
 
   useMount(() => {
+    const instance = organization.plan === 'hobby' ? 'free' : 'nano';
+
     if (!searchParams.has('instance_type')) {
-      setInstanceParam(organization.plan === 'hobby' ? 'free' : 'nano');
-      setRegionsParam(['fra']);
+      setInstanceParam(instance);
+    }
+
+    if (!searchParams.has('regions')) {
+      getDefaultRegion(queryClient, datacenters, regions, instance).then(
+        (region) => setRegionsParam([region?.identifier ?? 'fra']),
+        () => setRegionsParam(['fra']),
+      );
     }
   });
 
