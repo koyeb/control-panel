@@ -137,7 +137,9 @@ function PaidPlanAlerts({ instance }: { instance?: CatalogInstance }) {
   const free = useInstance('free')?.displayName;
 
   const selectedRegions = useWatchServiceForm('regions');
-  const onlyEcoRegionSelected = selectedRegions.every((region) => ['fra', 'sin', 'was'].includes(region));
+  const onlyEcoRegionSelected = selectedRegions.every((region) =>
+    ['fra', 'sin', 'was', 'eu'].includes(region),
+  );
   const standardInstanceRegionSelected = !onlyEcoRegionSelected;
 
   const sinSelected = selectedRegions.includes('sin');
