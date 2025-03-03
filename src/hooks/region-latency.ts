@@ -4,6 +4,7 @@ import { mapCatalogDatacentersList } from 'src/api/mappers/catalog';
 import { CatalogRegion } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
+import { getUrlLatency } from 'src/application/url-latency';
 
 const { disablePolling } = getConfig();
 
@@ -17,25 +18,7 @@ export function useRegionLatency(region: CatalogRegion | undefined) {
     retry: false,
     enabled,
     refetchInterval: disablePolling ? false : 10 * 1000,
-    queryFn() {
-      return new Promise<number | null>((resolve) => {
-        const [observe, unsubscribe] = observeResources((entries) => {
-          const entry = entries.find((entry) => entry.url === url);
-
-          if (entry) {
-            unsubscribe();
-            resolve(entry.latency);
-          }
-        });
-
-        observe();
-
-        fetch(url as string, { mode: 'no-cors' }).catch(() => {
-          unsubscribe();
-          resolve(null);
-        });
-      });
-    },
+    queryFn: () => getUrlLatency(url as string),
   });
 
   if (!enabled) {
@@ -57,40 +40,4 @@ function useDatacenters() {
 
 function useRegionDatacenter(region: CatalogRegion | undefined) {
   return useDatacenters().find((datacenter) => datacenter.identifier === region?.datacenters[0]);
-}
-
-type ResourceTiming = {
-  url: string;
-  latency: number;
-};
-
-function observeResources(cb: (entry: Array<ResourceTiming>) => void): [() => void, () => void] {
-  const observer = new PerformanceObserver((list) => {
-    const entries = list.getEntries().filter(isPerformanceResourceTiming).map(transformResourceTiming);
-
-    cb(entries);
-  });
-
-  return [() => observer.observe({ type: 'resource', buffered: true }), () => observer.disconnect()];
-}
-
-function isPerformanceResourceTiming(
-  this: void,
-  entry: PerformanceEntry,
-): entry is PerformanceResourceTiming {
-  return entry instanceof PerformanceResourceTiming;
-}
-
-function transformResourceTiming(this: void, entry: PerformanceResourceTiming): ResourceTiming {
-  let latency = entry.responseStart - entry.requestStart;
-
-  // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Timing-Allow-Origin
-  if (latency === 0) {
-    latency = entry.duration;
-  }
-
-  return {
-    url: entry.name,
-    latency,
-  };
 }
