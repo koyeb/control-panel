@@ -1,5 +1,6 @@
-import { last } from 'lodash-es';
 import { useState, useEffect } from 'react';
+
+import { last } from 'src/utils/arrays';
 
 import { type CodeEditorLanguage } from './code-editor';
 
