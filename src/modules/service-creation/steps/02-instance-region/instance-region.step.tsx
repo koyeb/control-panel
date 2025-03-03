@@ -160,9 +160,10 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
   };
 
   useMount(() => {
-    const instance = organization.plan === 'hobby' ? 'free' : 'nano';
+    let instance = searchParams.get('instance_type');
 
     if (!searchParams.has('instance_type')) {
+      instance = organization.plan === 'hobby' ? 'free' : 'nano';
       setInstanceParam(instance);
     }
 

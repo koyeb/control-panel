@@ -12,12 +12,12 @@ export async function getDefaultRegion(
   regions: CatalogRegion[],
   instance: string | null,
 ) {
-  const regionLatencies = await getRegionLatencies(queryClient, datacenters, regions);
-
   const availableRegions = regions
     .filter((region) => region.status === 'available')
     .filter((region) => region.scope === 'metropolitan')
     .filter((region) => !region.instances || inArray(instance, region.instances));
+
+  const regionLatencies = await getRegionLatencies(queryClient, datacenters, availableRegions);
 
   availableRegions.sort(
     (a, b) => (regionLatencies.get(a) ?? Infinity) - (regionLatencies.get(b) ?? Infinity),
