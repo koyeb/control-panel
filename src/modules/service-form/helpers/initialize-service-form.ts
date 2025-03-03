@@ -85,6 +85,10 @@ export async function initializeServiceForm(
       values.instance = 'free';
     }
 
+    if (values.instance === 'free') {
+      values.scaling.min = 0;
+    }
+
     // todo: remove
     // eslint-disable-next-line
     const registrySecret: string | undefined = (window as any).__KOYEB_REGISTRY_SECRET_HACK;

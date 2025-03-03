@@ -151,7 +151,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
       const instance = instances.find(hasProperty('identifier', values.instance));
 
       if (scaleToZero && instance?.identifier === 'free') {
-        scaling.min = 1;
+        scaling.min = 0;
         scaling.max = 1;
       }
 
