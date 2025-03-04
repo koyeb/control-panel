@@ -1539,7 +1539,7 @@
         "line1": "Any hardware",
         "line2": "anywhere",
         "feature1": "High-performance CPUs, GPUs, and accelerators",
-        "feature2": "Available globally across 10 regions and containers",
+        "feature2": "Available globally across 10 regions and 3 continents",
         "feature3": "Ultra-fast NVME storage"
       },
       "argumentumAdPopulum": "Trusted by the most ambitious teams"
@@ -1583,8 +1583,8 @@
     "authentication": {
       "or": "or",
       "signIn": {
-        "title": "Welcome back",
-        "subtitle": "Sign in to your account",
+        "title": "Sign in to Koyeb",
+        "subtitle": "Welcome back! To continue, sign in to your account",
         "githubSignIn": "Sign in with GitHub",
         "emailLabel": "Email",
         "emailPlaceholder": "Email",
@@ -1592,31 +1592,31 @@
         "passwordPlaceholder": "Password",
         "submit": "Sign in",
         "invalidCredential": "Incorrect email or password",
-        "signUpLink": "Don't have an account? <link>Create one</link>",
-        "forgotPasswordLink": "Forgot password? <link>Reset</link>"
+        "signUpLink": "Don't have an account? <link>Sign up</link>",
+        "forgotPasswordLink": "Forgot password? <link>Reset it</link>"
       },
       "signUp": {
-        "title": "Create an account",
+        "title": "Sign up for Koyeb",
         "subtitle": "Get started deploying for free",
-        "githubSignUp": "Sign up with GitHub",
-        "emailSignUp": "Sign up with email",
+        "githubSignUp": "Continue with GitHub",
+        "emailSignUp": "Continue with email",
         "nameLabel": "Name",
         "namePlaceholder": "Full name",
         "emailLabel": "Email",
         "emailPlaceholder": "Email",
         "passwordLabel": "Password",
         "passwordPlaceholder": "Password",
-        "submit": "Create free account",
-        "reCAPTCHA": "protected by reCAPTCHA - <privacy>Privacy</privacy> • <terms>Terms</terms>",
+        "submit": "Continue",
+        "reCAPTCHA": "Protected by reCAPTCHA, <terms>Terms of Services</terms> and <privacy>Privacy Policy</privacy>",
         "signInLink": "Already have an account? <link>Sign in</link>",
-        "agreements": "By signing up, you agree to the<br></br><tos>Terms of Services</tos> and <privacy>Privacy Policy</privacy>"
+        "agreements": "By signing up, you agree to the <tos>Terms of Services</tos> and <privacy>Privacy Policy</privacy>"
       },
       "resetPassword": {
         "title": "Reset password",
-        "subtitle": "Enter the email associated with your account and we'll send you an email with instructions to reset your password",
+        "subtitle": "Enter the email associated with your account, and we will send you a password reset link",
         "emailLabel": "Email",
         "emailPlaceholder": "Email",
-        "submit": "Send reset instruction",
+        "submit": "Send password reset email",
         "successNotification": "We've sent you an email with a password reset link",
         "signInLink": "Go back to <link>sign in</link>"
       },

@@ -3,18 +3,13 @@ import { lazy, useEffect } from 'react';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
-import { createTranslate } from 'src/intl/translate';
-
-import { Slides } from './slides';
-
-const Customers = lazy(() => import('./customers'));
-
-const T = createTranslate('layouts.authentication');
 
 type AuthenticationLayoutProps = {
   slides?: boolean;
   children: React.ReactNode;
 };
+
+const Slides = lazy(() => import('./slides'));
 
 export function AuthenticationLayout({ slides = true, children }: AuthenticationLayoutProps) {
   useForceLightMode();
@@ -26,16 +21,7 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
           <LogoKoyeb className="h-8" />
         </Link>
 
-        <div className="col flex-1 justify-center py-8">{children}</div>
-
-        <div className="lg:col hidden items-center gap-3 text-[#6B6965]">
-          <div className="text-xs font-medium">
-            <T id="argumentumAdPopulum" />
-          </div>
-          <div className="row max-w-lg flex-wrap justify-evenly gap-x-4 gap-y-3">
-            <Customers />
-          </div>
-        </div>
+        {children}
       </div>
 
       {slides && (

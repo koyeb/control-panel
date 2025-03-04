@@ -1,6 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { Spinner } from '@koyeb/design-system';
 import { useApiMutationFn } from 'src/api/use-api';
 import { IconGithub } from 'src/components/icons';
 import { useSearchParam } from 'src/hooks/router';
@@ -36,8 +35,13 @@ export function GithubOAuthButton({ action, className, children }: GithubOAuthBu
   });
 
   return (
-    <AuthButton type="button" onClick={() => mutation.mutate()} className={className}>
-      {mutation.isPending ? <Spinner className="size-4" /> : <IconGithub className="size-4" />}
+    <AuthButton
+      type="button"
+      loading={mutation.isPending || mutation.isSuccess}
+      onClick={() => mutation.mutate()}
+      className={className}
+    >
+      <IconGithub className="size-4" />
       {children}
     </AuthButton>
   );

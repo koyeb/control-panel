@@ -16,33 +16,37 @@ export function SignUpPage() {
   const [method, setMethod] = useSearchParam('method');
 
   return (
-    <div className="mx-auto w-full max-w-72 text-center">
+    <div className="col flex-1">
       <DocumentTitle title={t('title')} />
 
-      <h1 className="text-3xl font-semibold">
-        <T id="title" />
-      </h1>
+      <div className="col mx-auto w-full max-w-72 flex-1 justify-center py-8 text-center">
+        <h1 className="text-3xl font-semibold">
+          <T id="title" />
+        </h1>
 
-      <div className="mt-2 font-medium text-[#363533]">
-        <T id="subtitle" />
+        <div className="mt-2 font-medium text-[#363533]">
+          <T id="subtitle" />
+        </div>
+
+        <GithubOAuthButton action="signin" className="mt-12">
+          <T id="githubSignUp" />
+        </GithubOAuthButton>
+
+        <Separator />
+
+        {method === 'email' && <SignUpForm />}
+
+        {method === null && (
+          <button type="button" className="row mx-auto items-center gap-1" onClick={() => setMethod('email')}>
+            <IconMail className="size-4" /> <T id="emailSignUp" />
+          </button>
+        )}
+
+        <SignInLink />
+        <TermsOfServices />
       </div>
 
-      <GithubOAuthButton action="signin" className="mt-12">
-        <T id="githubSignUp" />
-      </GithubOAuthButton>
-
-      <Separator />
-
-      {method === 'email' && <SignUpForm />}
-
-      {method === null && (
-        <button type="button" className="row mx-auto items-center gap-1" onClick={() => setMethod('email')}>
-          <IconMail className="size-4" /> <T id="emailSignUp" />
-        </button>
-      )}
-
-      <SignInLink />
-      <TermsOfServices />
+      {method === 'email' && <ReCaptcha />}
     </div>
   );
 }
@@ -62,27 +66,45 @@ function SignInLink() {
 }
 
 function TermsOfServices() {
+  const tos = (children: React.ReactNode) => (
+    <ExternalLink openInNewTab href="https://www.koyeb.com/docs/legal/terms" className="underline">
+      {children}
+    </ExternalLink>
+  );
+
+  const privacy = (children: React.ReactNode) => (
+    <ExternalLink
+      openInNewTab
+      href="https://www.koyeb.com/docs/legal/data-processing-agreement"
+      className="underline"
+    >
+      {children}
+    </ExternalLink>
+  );
+
   return (
-    <p className="mt-12 text-xs leading-loose">
-      <T
-        id="agreements"
-        values={{
-          tos: (children) => (
-            <ExternalLink openInNewTab href="https://www.koyeb.com/docs/legal/terms" className="underline">
-              {children}
-            </ExternalLink>
-          ),
-          privacy: (children) => (
-            <ExternalLink
-              openInNewTab
-              href="https://www.koyeb.com/docs/legal/data-processing-agreement"
-              className="underline"
-            >
-              {children}
-            </ExternalLink>
-          ),
-        }}
-      />
+    <p className="mt-8 text-xs leading-normal">
+      <T id="agreements" values={{ tos, privacy }} />
+    </p>
+  );
+}
+
+function ReCaptcha() {
+  const privacy = (children: React.ReactNode) => (
+    <ExternalLink href="https://policies.google.com/privacy" className="underline">
+      {children}
+    </ExternalLink>
+  );
+
+  const terms = (children: React.ReactNode) => (
+    <ExternalLink href="https://policies.google.com/terms" className="underline">
+      {children}
+    </ExternalLink>
+  );
+
+  return (
+    <p className="mt-2 text-center text-xs">
+      <T id="reCAPTCHA" values={{ privacy, terms }} />
     </p>
   );
 }
