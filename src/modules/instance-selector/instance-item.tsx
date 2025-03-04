@@ -118,7 +118,7 @@ export function InstanceDescription({
     <div className="col flex-1 gap-2">
       <div className="row items-center gap-2 font-medium">
         <RadioInput disabled={disabled} checked={selected} onChange={onSelected} data-instance />
-        {instance.displayName}
+        <span className="text-base">{instance.displayName}</span>
         {badges}
       </div>
 
