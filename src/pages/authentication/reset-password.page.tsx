@@ -21,7 +21,7 @@ export function ResetPasswordPage() {
   const t = T.useTranslate();
 
   return (
-    <div className="mx-auto w-full max-w-80 text-center">
+    <div className="col mx-auto w-full max-w-80 flex-1 justify-center py-8 text-center">
       <DocumentTitle title={t('title')} />
 
       <h1 className="text-3xl font-semibold">
