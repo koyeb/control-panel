@@ -92,7 +92,7 @@ function InstancePrice({ instance }: { instance: CatalogInstance }) {
 
       <div className="sm:hidden">{bullet}</div>
 
-      <div className="text-xs text-dim">
+      <div className="mt-1 text-xs text-dim">
         <T id="costs.pricePerMonth" values={{ price: <FormattedPrice value={instance.pricePerMonth} /> }} />
       </div>
     </div>
