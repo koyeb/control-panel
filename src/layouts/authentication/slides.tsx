@@ -1,6 +1,5 @@
 import clsx from 'clsx';
-import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useEffect, useState } from 'react';
+import { lazy, useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
 import { Stepper } from '@koyeb/design-system';
@@ -15,6 +14,8 @@ import Lines from './images/lines.svg?react';
 import Progress from './images/progress.svg?react';
 import seamlessDeployment from './images/seamless-deployment.png';
 import zeroConfig from './images/zero-config.png';
+
+const Customers = lazy(() => import('./customers'));
 
 const T = createTranslate('layouts.authentication');
 
@@ -70,32 +71,18 @@ export function Slides() {
   ];
 
   return (
-    <div className="dark relative h-full rounded-2xl bg-[#111111] [&_*]:border-[#1E1E1E]" onClick={next}>
+    <div className="col dark h-full rounded-2xl bg-[#111111] [&_*]:border-[#1E1E1E]" onClick={next}>
       <Helmet>
         {createArray(3, (i) => (
           <link rel="preload" href={props[i as 0 | 1 | 2].illustration} as="image" />
         ))}
       </Helmet>
 
-      {createArray(3, (i) => (
-        <AnimatePresence>
-          {i === index && (
-            <motion.div
-              className="absolute inset-0 h-full"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: 'easeOut' }}
-            >
-              <Slide {...props[i]} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      ))}
-
-      <div className="row absolute inset-x-0 bottom-12 justify-center" onClick={stopPropagation}>
+      <div className="row justify-center py-8" onClick={stopPropagation}>
         <Stepper totalSteps={3} activeStep={index} onClick={(i) => setIndex(i as typeof index)} />
       </div>
+
+      <Slide {...props[index]} />
     </div>
   );
 }
@@ -116,8 +103,8 @@ type SlideProps = {
 
 function Slide({ illustration, line1, line2, features, images }: SlideProps) {
   return (
-    <div className="col h-full">
-      <img src={illustration} style={{ maxHeight: '50vh' }} className="mx-auto object-cover" />
+    <>
+      <img src={illustration} className="mx-auto" style={{ maxHeight: '40vh' }} />
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] [&>*]:border-l [&>*]:border-t">
@@ -131,11 +118,28 @@ function Slide({ illustration, line1, line2, features, images }: SlideProps) {
 
         <div className={gradientText}>{line2}</div>
 
-        <div className="p-4 text-lg text-dim">
-          {features.map((feature, index) => (
-            <div key={index}>{feature}</div>
-          ))}
+        <div className="col justify-between p-4">
+          <div className="text-lg text-dim">
+            {features.map((feature, index) => (
+              <div key={index}>{feature}</div>
+            ))}
+          </div>
+
+          <CustomerLogos />
         </div>
+      </div>
+    </>
+  );
+}
+
+function CustomerLogos() {
+  return (
+    <div className="col gap-3 py-6 text-[#6B6965]">
+      <div className="text-xs font-medium">
+        <T id="argumentumAdPopulum" />
+      </div>
+      <div className="row max-w-lg flex-wrap gap-x-4 gap-y-3">
+        <Customers />
       </div>
     </div>
   );
