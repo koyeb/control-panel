@@ -9,7 +9,6 @@ import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
-import { ExternalLink } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -109,24 +108,6 @@ export function SignUpForm() {
       >
         <T id="submit" />
       </AuthButton>
-
-      <p className="text-center text-xs text-dim">
-        <T
-          id="reCAPTCHA"
-          values={{
-            privacy: (children) => (
-              <ExternalLink href="https://policies.google.com/privacy" className="underline">
-                {children}
-              </ExternalLink>
-            ),
-            terms: (children) => (
-              <ExternalLink href="https://policies.google.com/terms" className="underline">
-                {children}
-              </ExternalLink>
-            ),
-          }}
-        />
-      </p>
     </form>
   );
 }
