@@ -1,4 +1,4 @@
-import seon from '@seontechnologies/seon-javascript-sdk';
+import seon, { SDKOptions } from '@seontechnologies/seon-javascript-sdk';
 import { sub } from 'date-fns';
 import { useCallback } from 'react';
 
@@ -7,6 +7,13 @@ import { getCookie, setCookie } from 'src/application/cookies';
 import { useMount } from './lifecycle';
 
 const cookieName = 'SSID';
+
+const options: SDKOptions = {
+  dnsResolverDomain: 'deviceinfresolver.com',
+  networkTimeoutMs: 5_000,
+  fieldTimeoutMs: 5_000,
+  silentMode: true,
+};
 
 export function useSeon() {
   useMount(() => {
@@ -22,8 +29,5 @@ export function useSeon() {
     }
   });
 
-  return useCallback(
-    () => seon.getSession({ silentMode: true, dnsResolverDomain: 'deviceinfresolver.com' }),
-    [],
-  );
+  return useCallback(() => seon.getSession(options), []);
 }
