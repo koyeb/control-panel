@@ -534,9 +534,6 @@ describe('parseDeployParams', () => {
       test.params.set('dockerfile', 'dockerfile');
       test.params.append('entrypoint', 'entry1');
       test.params.append('entrypoint', 'entry2');
-      test.params.set('command', 'command');
-      test.params.append('args', 'arg1');
-      test.params.append('args', 'arg2');
       test.params.set('target', 'target');
 
       expect(test.getValues()).toHaveProperty('builder.type', 'dockerfile');
@@ -544,10 +541,31 @@ describe('parseDeployParams', () => {
       expect(test.getValues()).toHaveProperty('builder.dockerfileOptions', {
         dockerfile: 'dockerfile',
         entrypoint: ['entry1', 'entry2'],
-        command: 'command',
-        args: ['arg1', 'arg2'],
         target: 'target',
       });
+    });
+
+    it('command', () => {
+      test.params.set('builder', 'dockerfile');
+      test.params.set('command', 'command');
+      expect(test.getValues()).toHaveProperty('builder.dockerfileOptions.command', 'command');
+    });
+
+    it('args', () => {
+      test.params.set('builder', 'dockerfile');
+      test.params.append('args', 'arg1');
+      test.params.append('args', 'arg2');
+      expect(test.getValues()).toHaveProperty('builder.dockerfileOptions.command', 'arg1');
+      expect(test.getValues()).toHaveProperty('builder.dockerfileOptions.args', ['arg2']);
+    });
+
+    it('command and args', () => {
+      test.params.set('builder', 'dockerfile');
+      test.params.set('command', 'command');
+      test.params.append('args', 'arg1');
+      test.params.append('args', 'arg2');
+      expect(test.getValues()).toHaveProperty('builder.dockerfileOptions.command', 'command');
+      expect(test.getValues()).toHaveProperty('builder.dockerfileOptions.args', ['arg1', 'arg2']);
     });
   });
 
@@ -590,6 +608,15 @@ describe('parseDeployParams', () => {
       it('args', () => {
         test.params.append('args', 'arg1');
         test.params.append('args', 'arg2');
+        expect(test.getValues()).toHaveProperty('dockerDeployment.command', 'arg1');
+        expect(test.getValues()).toHaveProperty('dockerDeployment.args', ['arg2']);
+      });
+
+      it('command and args', () => {
+        test.params.set('command', 'command');
+        test.params.append('args', 'arg1');
+        test.params.append('args', 'arg2');
+        expect(test.getValues()).toHaveProperty('dockerDeployment.command', 'command');
         expect(test.getValues()).toHaveProperty('dockerDeployment.args', ['arg1', 'arg2']);
       });
     });

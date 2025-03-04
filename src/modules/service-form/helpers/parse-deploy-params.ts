@@ -593,11 +593,21 @@ class ServiceFormBuilder {
     }
 
     if (this.type === 'git') {
-      this.set('builder', { dockerfileOptions: { args } });
+      if (!this.values.builder?.dockerfileOptions?.command) {
+        this.set('builder', { dockerfileOptions: { command: args[0] } });
+        this.set('builder', { dockerfileOptions: { args: args.slice(1) } });
+      } else {
+        this.set('builder', { dockerfileOptions: { args } });
+      }
     }
 
     if (this.type === 'docker') {
-      this.set('dockerDeployment', { args });
+      if (!this.values.dockerDeployment?.command) {
+        this.set('dockerDeployment', { command: args[0] });
+        this.set('dockerDeployment', { args: args.slice(1) });
+      } else {
+        this.set('dockerDeployment', { args });
+      }
     }
   }
 
