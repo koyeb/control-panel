@@ -22,5 +22,8 @@ export function useSeon() {
     }
   });
 
-  return useCallback(() => seon.getSession({ silentMode: true }), []);
+  return useCallback(
+    () => seon.getSession({ silentMode: true, dnsResolverDomain: 'deviceinfresolver.com' }),
+    [],
+  );
 }
