@@ -1,11 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
-import merge from 'lodash-es/merge';
-import { Fragment, useEffect, useMemo, useRef } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@koyeb/design-system';
 import {
+  useDatacenters,
+  useDatacentersQuery,
   useInstance,
   useInstances,
   useInstancesQuery,
@@ -14,6 +15,7 @@ import {
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
+import { useOrganization } from 'src/api/hooks/session';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
@@ -27,6 +29,7 @@ import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
+import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 import { BranchMetadata, RepositoryMetadata } from '../deployment/metadata/build-metadata';
@@ -41,8 +44,7 @@ import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
 import { generateAppName } from './helpers/generate-app-name';
-import { defaultServiceForm } from './helpers/initialize-service-form';
-import { parseDeployParams } from './helpers/parse-deploy-params';
+import { initializeServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
@@ -63,11 +65,12 @@ type OneClickAppFormProps = {
 };
 
 export function OneClickAppForm(props: OneClickAppFormProps) {
-  const instances = useInstancesQuery();
+  const datacenters = useDatacentersQuery();
   const regions = useRegionsQuery();
+  const instances = useInstancesQuery();
   const githubApp = useGithubAppQuery();
 
-  if (instances.isPending || regions.isPending || githubApp.isPending) {
+  if (datacenters.isPending || regions.isPending || instances.isPending || githubApp.isPending) {
     return <Loading />;
   }
 
@@ -75,37 +78,53 @@ export function OneClickAppForm(props: OneClickAppFormProps) {
 }
 
 function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
-  const searchParams = useSearchParams();
-  const instances = useInstances();
-  const regions = useRegions();
-  const githubApp = useGithubApp();
-
-  const serviceForm = useMemo(() => {
-    return merge(
-      defaultServiceForm(),
-      parseDeployParams(searchParams, instances, regions, githubApp?.organizationName),
-    );
-  }, [searchParams, instances, regions, githubApp]);
-
   const navigate = useNavigate();
 
+  const params = useSearchParams();
+  const datacenters = useDatacenters();
+  const regions = useRegions();
+  const instances = useInstances();
+  const organization = useOrganization();
+  const githubApp = useGithubApp();
+  const queryClient = useQueryClient();
+
+  const [serviceForm, setServiceForm] = useState<ServiceForm>();
+
   const form = useForm<OneClickAppFormType>({
-    defaultValues: {
-      instance: serviceForm.instance,
-      region: serviceForm.regions[0],
-      environmentVariables: serviceForm.environmentVariables,
+    async defaultValues() {
+      const values = await initializeServiceForm(
+        params,
+        datacenters,
+        regions,
+        instances,
+        organization,
+        githubApp,
+        undefined,
+        queryClient,
+      );
+
+      setServiceForm(values);
+
+      return {
+        instance: values.instance,
+        region: values.regions[0]!,
+        environmentVariables: values.environmentVariables,
+      };
     },
     resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({
     async mutationFn({ instance, region, environmentVariables }: FormValues<typeof form>) {
-      serviceForm.appName = generateAppName();
-      serviceForm.instance = instance;
-      serviceForm.regions = [region];
-      serviceForm.environmentVariables = environmentVariables.map((env) => ({ ...env, regions: [] }));
+      assert(serviceForm !== undefined);
 
-      return submitServiceForm(serviceForm);
+      return submitServiceForm({
+        ...serviceForm,
+        appName: generateAppName(),
+        instance,
+        regions: [region],
+        environmentVariables: environmentVariables.map((env) => ({ ...env, regions: [] })),
+      });
     },
     onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {
@@ -118,6 +137,10 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
 
   useOnCostEstimationChanged(form, onCostChanged);
+
+  if (!serviceForm) {
+    return null;
+  }
 
   return (
     <>

@@ -61,12 +61,16 @@ export function useRegion(identifier?: string) {
   return useRegions().find(hasProperty('identifier', identifier));
 }
 
-export function useDatacenters() {
-  const { data: datacenters = [] } = useQuery({
+export function useDatacentersQuery() {
+  return useQuery({
     ...useApiQueryFn('listCatalogDatacenters'),
     refetchInterval: false,
     select: mapCatalogDatacentersList,
   });
+}
+
+export function useDatacenters() {
+  const { data: datacenters = [] } = useDatacentersQuery();
 
   return datacenters;
 }
