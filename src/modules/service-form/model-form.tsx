@@ -98,6 +98,8 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
       serviceForm.instance = instance;
       serviceForm.regions = [region];
 
+      serviceForm.scaling.min = 0;
+
       serviceForm.source.type = 'docker';
       serviceForm.source.docker.image = model.dockerImage;
 
