@@ -108,7 +108,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
       return {
         instance: values.instance,
         region: values.regions[0]!,
-        environmentVariables: values.environmentVariables,
+        environmentVariables: values.environmentVariables.filter((env) => env.name !== ''),
       };
     },
     resolver: useZodResolver(schema),
