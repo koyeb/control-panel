@@ -43,6 +43,15 @@ export function useTerminal(instanceId: string) {
     return () => stream?.close();
   }, [stream]);
 
+  useEffect(() => {
+    if (stream && terminal) {
+      stream?.close();
+      reset(terminal);
+      connect(instanceId);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [instanceId]);
+
   const onData = useCallback(
     (data: string) => {
       if (prompt !== undefined) {
