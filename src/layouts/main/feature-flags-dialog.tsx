@@ -1,18 +1,12 @@
 import { Button, ButtonGroup } from '@koyeb/design-system';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { useFeatureFlags } from 'src/hooks/feature-flag';
-import { useShortcut } from 'src/hooks/shortcut';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.featureFlags');
 
 export function FeatureFlagsDialog() {
-  const openDialog = Dialog.useOpen();
   const flags = useFeatureFlags();
-
-  useShortcut(['meta', 'i'], () => {
-    openDialog('FeatureFlags');
-  });
 
   return (
     <Dialog id="FeatureFlags" className="col w-full max-w-xl gap-4">
