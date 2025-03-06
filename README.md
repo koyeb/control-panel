@@ -17,7 +17,7 @@ If this documentation is unclear or outdated, feel free to [open a pull request]
 To bootstrap a development environment, you need:
 
 - [Node.js](https://nodejs.org), a JavaScript runtime
-- [pNpm](https://pnpm.io), a package manager for Node.js
+- [pnpm](https://pnpm.io), a package manager for Node.js
 
 To easily install and use specific versions of Node.js, we recommend using [Node Version Manager](https://github.com/nvm-sh/nvm).
 
