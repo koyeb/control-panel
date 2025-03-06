@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useController } from 'react-hook-form';
 
 import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
@@ -27,9 +28,8 @@ export function InstanceSelectorNew() {
   const selectedInstance = instances.find(hasProperty('identifier', instanceCtrl.field.value)) ?? null;
 
   const regionsCtrl = useController<ServiceForm, 'regions'>({ name: 'regions' });
-  const selectedRegions = regionsCtrl.field.value.map(
-    (identifier) => regions.find(hasProperty('identifier', identifier))!,
-  );
+  const selectedRegions = regionsCtrl.field.value.map((id) => regions.find(hasProperty('identifier', id))!);
+  const originalSelectedRegions = useRef(selectedRegions);
 
   const availabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
 
@@ -45,7 +45,7 @@ export function InstanceSelectorNew() {
 
   const selector = useInstanceSelector({
     instances,
-    regions: isServiceEdition && hasVolumes ? selectedRegions : regions,
+    regions: isServiceEdition && hasVolumes ? originalSelectedRegions.current : regions,
     availabilities,
     selectedInstance,
     setSelectedInstance: handleInstanceSelected,
