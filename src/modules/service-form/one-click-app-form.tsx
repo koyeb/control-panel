@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
+import { useController, useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@koyeb/design-system';
@@ -10,7 +10,6 @@ import {
   useInstance,
   useInstances,
   useInstancesQuery,
-  useRegion,
   useRegions,
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
@@ -19,26 +18,28 @@ import { useOrganization } from 'src/api/hooks/session';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { InstanceSelector } from 'src/components/instance-selector';
+import { ControlledInput } from 'src/components/controlled';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
-import { RegionFlag } from 'src/components/region-flag';
-import { RegionName } from 'src/components/region-name';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { assert } from 'src/utils/assert';
-import { hasProperty } from 'src/utils/object';
-
-import { BranchMetadata, RepositoryMetadata } from '../deployment/metadata/build-metadata';
-import { DockerImageMetadata } from '../deployment/metadata/docker-metadata';
+import { BranchMetadata, RepositoryMetadata } from 'src/modules/deployment/metadata/build-metadata';
+import { DockerImageMetadata } from 'src/modules/deployment/metadata/docker-metadata';
 import {
   InstanceTypeMetadata,
   RegionsMetadata,
   ScalingMetadata,
-} from '../deployment/metadata/runtime-metadata';
+} from 'src/modules/deployment/metadata/runtime-metadata';
+import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
+import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
+import { inArray } from 'src/utils/arrays';
+import { assert } from 'src/utils/assert';
+import { hasProperty } from 'src/utils/object';
+
+import { useGetInstanceBadges } from '../instance-selector/instance-badges';
+import { InstanceCategoryTabs } from '../instance-selector/instance-category-tabs';
 
 import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
@@ -53,7 +54,7 @@ const T = createTranslate('modules.serviceForm.oneClickAppForm');
 
 const schema = z.object({
   instance: z.string().nullable(),
-  region: z.string(),
+  regions: z.string().array(),
   environmentVariables: z.array(z.object({ name: z.string(), value: z.string() })),
 });
 
@@ -107,7 +108,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
 
       return {
         instance: values.instance,
-        region: values.regions[0]!,
+        regions: values.regions,
         environmentVariables: values.environmentVariables.filter((env) => env.name !== ''),
       };
     },
@@ -115,14 +116,14 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   });
 
   const mutation = useMutation({
-    async mutationFn({ instance, region, environmentVariables }: FormValues<typeof form>) {
+    async mutationFn({ instance, regions, environmentVariables }: FormValues<typeof form>) {
       assert(serviceForm !== undefined);
 
       return submitServiceForm({
         ...serviceForm,
         appName: generateAppName(),
         instance,
-        regions: [region],
+        regions,
         environmentVariables: environmentVariables.map((env) => ({ ...env, regions: [] })),
       });
     },
@@ -157,7 +158,6 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
       >
         <OverviewSection serviceForm={serviceForm} form={form} />
         <InstanceSection serviceForm={serviceForm} form={form} />
-        <RegionSection form={form} />
         <EnvironmentVariablesSection form={form} />
 
         <div className="row justify-end gap-2">
@@ -179,17 +179,21 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
 
 function useOnCostEstimationChanged(form: OneClickAppForm, onChanged: (cost?: ServiceCost) => void) {
   const instance = useInstance(form.watch('instance'));
-  const region = useRegion(form.watch('region'));
+  const regions = useRegions(form.watch('regions'));
 
   useEffect(() => {
-    const cost = computeEstimatedCost(instance, region ? [region.identifier] : [], {
-      min: 1,
-      max: 1,
-      targets: null as never,
-    });
+    const cost = computeEstimatedCost(
+      instance,
+      regions.map((region) => region.identifier),
+      {
+        min: 1,
+        max: 1,
+        targets: null as never,
+      },
+    );
 
     onChanged(cost);
-  }, [instance, region, onChanged]);
+  }, [instance, regions, onChanged]);
 }
 
 type SectionProps = {
@@ -237,7 +241,7 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           <InstanceTypeMetadata instanceType={form.watch('instance')} />
           <ScalingMetadata scaling={serviceForm.scaling} />
-          <RegionsMetadata regions={[form.watch('region')]} />
+          <RegionsMetadata regions={form.watch('regions')} />
         </div>
       </div>
     </Section>
@@ -246,50 +250,41 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
 
 function InstanceSection({ serviceForm, form }: { serviceForm: ServiceForm; form: OneClickAppForm }) {
   const instances = useInstances();
-  const instance = useInstance(form.watch('instance'));
+  const regions = useRegions();
+
+  const instanceCtrl = useController({ control: form.control, name: 'instance' });
+  const regionsCtrl = useController({ control: form.control, name: 'regions' });
+
+  const selectedInstance = instances.find(hasProperty('identifier', instanceCtrl.field.value));
+  const selectedRegions = regions.filter((region) => inArray(region.identifier, regionsCtrl.field.value));
 
   const availabilities = useInstanceAvailabilities({
     serviceType: serviceForm.serviceType,
     hasVolumes: serviceForm.volumes.length > 0,
   });
 
+  const selector = useInstanceSelector({
+    instances,
+    regions,
+    availabilities,
+    selectedInstance: selectedInstance ?? null,
+    selectedRegions,
+    setSelectedInstance: (instance) => instanceCtrl.field.onChange(instance?.identifier ?? null),
+    setSelectedRegions: (regions) => regionsCtrl.field.onChange(regions.map((region) => region.identifier)),
+  });
+
+  const getBadges = useGetInstanceBadges();
+
   return (
     <Section title={<T id="instance" />}>
-      <InstanceSelector
-        instances={instances.filter(hasProperty('regionCategory', 'koyeb'))}
-        selectedInstance={instance ?? null}
-        onInstanceSelected={(instance) => {
-          form.setValue('instance', instance?.identifier ?? null);
-          form.setValue('region', instance?.regions?.[0] ?? 'fra');
-        }}
-        checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
+      <InstanceCategoryTabs
+        category={selector.instanceCategory}
+        setCategory={selector.onInstanceCategorySelected}
       />
-    </Section>
-  );
-}
 
-function RegionSection({ form }: { form: OneClickAppForm }) {
-  const availableRegions = useRegions().filter(hasProperty('status', 'available'));
-  const instance = useInstance(form.watch('instance'));
-
-  return (
-    <Section title={<T id="region" />}>
-      <ControlledSelect
-        control={form.control}
-        name="region"
-        items={availableRegions.filter((region) =>
-          instance?.regions ? instance.regions?.includes(region.identifier) : true,
-        )}
-        getKey={(region) => region.identifier}
-        itemToString={(region) => region.displayName}
-        itemToValue={(region) => region.identifier}
-        renderItem={(region) => (
-          <div className="row items-center gap-2">
-            <RegionFlag identifier={region.identifier} className="size-6" />
-            <RegionName identifier={region.identifier} />
-          </div>
-        )}
-      />
+      <div className="col scrollbar-green scrollbar-thin mt-4 max-h-96 gap-3 overflow-auto rounded-md border p-2">
+        <InstanceSelector {...selector} getBadges={getBadges} />
+      </div>
     </Section>
   );
 }
