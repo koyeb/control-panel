@@ -6,8 +6,9 @@ import { InstanceAvailability } from 'src/application/instance-region-availabili
 import { hasProperty } from 'src/utils/object';
 
 export type InstanceSelectorParams = {
-  instances: CatalogInstance[];
-  regions: CatalogRegion[];
+  instances: readonly CatalogInstance[];
+  regions: readonly CatalogRegion[];
+  singleRegion?: boolean;
   availabilities: Record<string, InstanceAvailability>;
   selectedInstance: CatalogInstance | null;
   setSelectedInstance: (instance: CatalogInstance | null) => void;
@@ -35,6 +36,7 @@ export type InstanceSelector = {
 export function useInstanceSelector({
   instances,
   regions,
+  singleRegion,
   availabilities,
   selectedInstance,
   setSelectedInstance,
@@ -143,7 +145,7 @@ export function useInstanceSelector({
 
     selectedRegions,
     onRegionSelected: (region) => {
-      if (selectedInstance?.identifier === 'free') {
+      if (selectedInstance?.identifier === 'free' || singleRegion) {
         update({ selectedRegions: [region] });
         return;
       }

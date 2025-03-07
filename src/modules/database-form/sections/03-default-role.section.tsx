@@ -16,7 +16,7 @@ export function DefaultRoleSection() {
       section="defaultRole"
       title={defaultRole || <T id="defaultRoleMissing" />}
       expandedTitle={<T id="expandedTitle" />}
-      shortcut={4}
+      shortcut={3}
       description={<T id="description" />}
     >
       <ControlledInput<DatabaseServiceForm, 'defaultRole'>

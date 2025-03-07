@@ -11,10 +11,9 @@ import { handleSubmit } from 'src/hooks/form';
 import { createTranslate, Translate, TranslateEnum } from 'src/intl/translate';
 
 import { DatabaseEngineSection } from './sections/01-database-engine.section';
-import { RegionSection } from './sections/02-region.section';
-import { InstanceSection } from './sections/03-instance.section';
-import { DefaultRoleSection } from './sections/04-default-role.section';
-import { ServiceNameSection } from './sections/05-service-name.section';
+import { InstanceSection } from './sections/02-instance.section';
+import { DefaultRoleSection } from './sections/03-default-role.section';
+import { ServiceNameSection } from './sections/04-service-name.section';
 import { useDatabaseServiceForm } from './use-database-service-form';
 import { useSubmitDatabaseServiceForm } from './use-submit-database-service-form';
 
@@ -54,7 +53,6 @@ function DatabaseForm_({ deployment, onCostChanged }: DatabaseFormProps) {
       <form ref={formRef} className="col gap-8" onSubmit={handleSubmit(form, onSubmit)}>
         <div className="rounded-lg border">
           {deployment == undefined && <DatabaseEngineSection />}
-          {deployment == undefined && <RegionSection />}
           <InstanceSection />
           {deployment == undefined && <DefaultRoleSection />}
           <ServiceNameSection />
