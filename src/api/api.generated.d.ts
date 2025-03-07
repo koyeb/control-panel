@@ -1615,6 +1615,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/streams/logs/query": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Query logs */
+        get: operations["QueryLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/streams/logs/tail": {
         parameters: {
             query?: never;
@@ -2117,6 +2134,8 @@ export interface components {
         CreateDomain: {
             /** to auto-attach to an app. Optional */
             app_id?: string;
+            cloudflare?: components["schemas"]["Domain.LoadBalancerCloudflare"];
+            koyeb?: components["schemas"]["Domain.LoadBalancerKoyeb"];
             name?: string;
             type?: components["schemas"]["Domain.Type"];
         };
@@ -2619,11 +2638,13 @@ export interface components {
         };
         Domain: {
             app_id?: string;
+            cloudflare?: components["schemas"]["Domain.LoadBalancerCloudflare"];
             /** Format: date-time */
             created_at?: string;
             deployment_group?: string;
             id?: string;
             intended_cname?: string;
+            koyeb?: components["schemas"]["Domain.LoadBalancerKoyeb"];
             messages?: string[];
             name?: string;
             organization_id?: string;
@@ -2636,6 +2657,14 @@ export interface components {
             /** Format: uint64 */
             version?: string;
         };
+        "Domain.LoadBalancerCloudflare": Record<string, never>;
+        "Domain.LoadBalancerKoyeb": {
+            /**
+             * Between 100 and 900
+             * Format: int64
+             */
+            request_timeout_seconds?: number;
+        };
         /**
          * @default PENDING
          * @enum {string}
@@ -2647,6 +2676,10 @@ export interface components {
          * @enum {string}
          */
         "Domain.Type": "AUTOASSIGNED" | "CUSTOM";
+        DomainLoadBalancerQuotas: {
+            /** Format: int64 */
+            max_koyeb?: number;
+        };
         DomainsSummary: {
             /** Number of domains grouped by status */
             by_status?: {
@@ -3733,7 +3766,7 @@ export interface components {
          * @default INVALID
          * @enum {string}
          */
-        "Organization.DeactivationReason": "INVALID" | "REQUESTED_BY_OWNER" | "SUBSCRIPTION_TERMINATION" | "LOCKED_BY_ADMIN" | "VERIFICATION_FAILED";
+        "Organization.DeactivationReason": "INVALID" | "REQUESTED_BY_OWNER" | "SUBSCRIPTION_TERMINATION" | "LOCKED_BY_ADMIN" | "VERIFICATION_FAILED" | "TRIAL_DID_NOT_CONVERT";
         /**
          * @default WARNING
          * @enum {string}
@@ -3953,11 +3986,20 @@ export interface components {
             id?: string;
             name?: string;
         };
+        QueryLogsReply: {
+            data?: components["schemas"]["LogEntry"][];
+        };
         Quotas: {
             /** Format: int64 */
             apps?: string;
             /** Format: int64 */
+            custom_domains?: string;
+            /**
+             * Deprecated, use custom_domains instead
+             * Format: int64
+             */
             domains?: string;
+            domains_load_balancer?: components["schemas"]["DomainLoadBalancerQuotas"];
             instance_types?: string[];
             max_instances_by_type?: {
                 [key: string]: string;
@@ -15493,6 +15535,103 @@ export interface operations {
                         error?: components["schemas"]["google.rpc.Status"];
                         result?: components["schemas"]["ExecCommandReply"];
                     };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    QueryLogs: {
+        parameters: {
+            query?: {
+                app_id?: string;
+                deployment_id?: string;
+                end?: string;
+                instance_id?: string;
+                limit?: string;
+                order?: string;
+                regex?: string;
+                regional_deployment_id?: string;
+                service_id?: string;
+                start?: string;
+                stream?: string;
+                text?: string;
+                type?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["QueryLogsReply"];
                 };
             };
             /** @description Validation error */
