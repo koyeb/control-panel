@@ -450,10 +450,6 @@
         "engineLabel": "Engine",
         "engineItem": "Postgres (v{version})"
       },
-      "region": {
-        "description": "Region",
-        "expandedTitle": "Select region"
-      },
       "instance": {
         "description": "Instance",
         "expandedTitle": "Select instance",
