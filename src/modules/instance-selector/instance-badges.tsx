@@ -7,8 +7,8 @@ import { InstanceSelectorBadge } from './instance-selector';
 
 type UseGetInstanceBadgesOptions = {
   previousInstance?: CatalogInstance;
-  bestFit?: boolean;
-  insufficientVRam?: boolean;
+  bestFit?: CatalogInstance;
+  insufficientVRam?: (instance: CatalogInstance) => boolean;
 };
 
 export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions = {}) {
@@ -30,11 +30,11 @@ export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions = {}) 
       }
     }
 
-    if (options.insufficientVRam) {
+    if (options.insufficientVRam?.(instance)) {
       result.push('insufficientVRam');
     }
 
-    if (options.bestFit) {
+    if (instance === options.bestFit) {
       result.push('bestFit');
     }
 
