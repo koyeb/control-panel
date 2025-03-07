@@ -427,11 +427,10 @@ export type InstanceStatus =
 // logs
 
 export type LogLine = {
-  date: string;
+  date: Date;
   stream: 'stdout' | 'stderr' | 'koyeb';
   instanceId?: string;
   text: string;
-  html: string;
 };
 
 // secret

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { LogLine } from 'src/api/model';
 import { ComponentPlaceholder } from 'src/storybook';
 import { createArray } from 'src/utils/arrays';
-import { createDate } from 'src/utils/date';
 
 import { Logs } from './logs';
 
@@ -42,10 +41,9 @@ export function logs() {
 
 function generateLogLine(): LogLine {
   return {
-    date: createDate(),
+    date: new Date(),
     stream: 'stdout',
     text: generateSentence(),
-    html: '',
   };
 }
 

@@ -321,7 +321,7 @@ export function LogLineContent({ line, options }: { line: LogLine; options: LogO
   return (
     <span
       className={clsx(options.wordWrap ? 'whitespace-pre-wrap' : 'whitespace-pre')}
-      dangerouslySetInnerHTML={{ __html: line.html }}
+      dangerouslySetInnerHTML={{ __html: line.text }}
     />
   );
 }
