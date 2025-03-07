@@ -1,11 +1,8 @@
-import posthog from 'posthog-js';
 import { FieldErrors } from 'react-hook-form';
 
 import { ServiceForm, ServiceFormSection } from '../service-form.types';
 
 export function getServiceFormSections(form: ServiceForm) {
-  const hasNewInstanceSelector = posthog.isFeatureEnabled('new-instance-selector');
-
   const sections: Array<ServiceFormSection | false> = [
     'serviceType',
     'source',
@@ -13,8 +10,6 @@ export function getServiceFormSections(form: ServiceForm) {
     form.source.type === 'docker' && 'deployment',
     'environmentVariables',
     'instance',
-    !hasNewInstanceSelector && 'regions',
-    'scaling',
     'volumes',
     form.serviceType === 'web' && 'ports',
     form.serviceType === 'web' && 'healthChecks',
