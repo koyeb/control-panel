@@ -28,12 +28,11 @@ import { SourceSection } from './sections/02-source/source.section';
 import { BuilderSection } from './sections/03-builder/builder.section';
 import { DeploymentSection } from './sections/03-deployment/deployment.section';
 import { EnvironmentVariablesSection } from './sections/04-environment-variables/environment-variables.section';
-import { RegionsSection } from './sections/05-regions/regions.section';
-import { InstanceSection } from './sections/06-instance/instance.section';
-import { ScalingSection } from './sections/07-scaling/scaling.section';
-import { VolumesSection } from './sections/08-volumes/volumes.section';
-import { PortsSection } from './sections/09-ports/ports.section';
-import { HealthChecksSection } from './sections/10-health-checks/health-checks.section';
+import { InstanceSection } from './sections/05-instance/instance.section';
+import { ScalingSection } from './sections/06-scaling/scaling.section';
+import { VolumesSection } from './sections/07-volumes/volumes.section';
+import { PortsSection } from './sections/08-ports/ports.section';
+import { HealthChecksSection } from './sections/09-health-checks/health-checks.section';
 import { ServiceFormSection, type ServiceForm } from './service-form.types';
 import { useServiceForm } from './use-service-form';
 
@@ -151,7 +150,6 @@ const sectionComponents: Record<ServiceFormSection, React.ComponentType<unknown>
   deployment: DeploymentSection,
   environmentVariables: EnvironmentVariablesSection,
   instance: InstanceSection,
-  regions: RegionsSection,
   scaling: ScalingSection,
   volumes: VolumesSection,
   ports: PortsSection,

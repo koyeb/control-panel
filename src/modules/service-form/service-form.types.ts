@@ -6,7 +6,6 @@ export type ServiceFormSection =
   | 'builder'
   | 'deployment'
   | 'environmentVariables'
-  | 'regions'
   | 'instance'
   | 'scaling'
   | 'ports'
