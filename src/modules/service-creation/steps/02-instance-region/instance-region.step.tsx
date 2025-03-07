@@ -16,22 +16,18 @@ import {
 import { ServiceType } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
-import { InstanceSelector } from 'src/components/instance-selector';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
 import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
-import { InstanceSelector as NewInstanceSelector } from 'src/modules/instance-selector/instance-selector';
+import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { hasProperty } from 'src/utils/object';
 
 import { InstanceRegionAlerts } from './instance-region-alerts';
-import { useInstanceRegionState } from './instance-region-state';
-import { RegionsSelector } from './regions-selector';
 
 type InstanceRegionStepProps = {
   onNext: () => void;
@@ -60,71 +56,10 @@ export function InstanceRegionStep(props: InstanceRegionStepProps) {
     return <QueryError error={organizationQuotasQuery.error} />;
   }
 
-  return (
-    <FeatureFlag feature="new-instance-selector" fallback={<InstanceRegionStepOld {...props} />}>
-      <InstanceRegionStepNew {...props} />
-    </FeatureFlag>
-  );
+  return <InstanceRegionStep_ {...props} />;
 }
 
-function InstanceRegionStepOld({ onNext }: InstanceRegionStepProps) {
-  const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
-  const [state, actions] = useInstanceRegionState();
-  const navigate = useNavigate();
-
-  const availabilities = useInstanceAvailabilities({ serviceType });
-
-  useMount(() => {
-    navigate((url) => {
-      url.searchParams.delete('instance_type');
-      url.searchParams.delete('regions');
-    });
-  });
-
-  return (
-    <>
-      <InstanceRegionAlerts
-        selectedInstance={state.selectedInstance}
-        selectedRegions={state.selectedRegions}
-      />
-
-      <div className="col lg:row gap-8 lg:gap-4">
-        <InstanceSelector
-          instances={state.instances}
-          selectedInstance={state.selectedInstance}
-          checkAvailability={(instance) => availabilities[instance] ?? [false, 'instanceNotFound']}
-          onInstanceSelected={actions.instanceSelected}
-          // eslint-disable-next-line tailwindcss/no-arbitrary-value
-          className="w-full max-w-[37rem]"
-        />
-
-        <RegionsSelector
-          regions={state.regions}
-          selectedInstance={state.selectedInstance}
-          selectedRegions={state.selectedRegions}
-          onRegionSelected={actions.regionSelected}
-        />
-      </div>
-
-      <Button
-        onClick={() => {
-          navigate((url) => {
-            url.searchParams.set('instance_type', state.selectedInstance?.identifier ?? 'nano');
-            state.selectedRegions.forEach((region) => url.searchParams.append('regions', region.identifier));
-          });
-
-          onNext();
-        }}
-        disabled={state.selectedRegions.length === 0}
-        className="self-start"
-      >
-        <Translate id="common.next" />
-      </Button>
-    </>
-  );
-}
-
-function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
+function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
@@ -207,7 +142,7 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className="col scrollbar-green scrollbar-thin max-h-[32rem] gap-3 overflow-auto rounded-md border p-2">
-        <NewInstanceSelector {...selector} getBadges={getBadges} />
+        <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 
       <Button onClick={onNext} disabled={selectedRegions.length === 0} className="self-start">

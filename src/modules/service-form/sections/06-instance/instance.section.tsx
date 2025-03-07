@@ -1,35 +1,28 @@
-import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 
 import { Badge } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
-import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';
 
-import { InstanceSelector } from './instance-selector';
-import { InstanceSelectorNew } from './instance-selector.new';
+import { InstanceSelector } from './instance';
 
 const T = createTranslate('modules.serviceForm.instance');
 
 export function InstanceSection() {
-  const hasNewInstanceSelector = useFeatureFlag('new-instance-selector');
-
   return (
     <ServiceFormSection
       section="instance"
       title={<SectionTitle />}
       description={<T id="description" />}
       expandedTitle={<T id="expandedTitle" />}
-      className={clsx('col gap-6', hasNewInstanceSelector && 'pb-0')}
+      className="col gap-6 pb-0"
     >
-      <FeatureFlag feature="new-instance-selector" fallback={<InstanceSelector />}>
-        <InstanceSelectorNew />
-      </FeatureFlag>
+      <InstanceSelector />
     </ServiceFormSection>
   );
 }
@@ -61,29 +54,27 @@ function SectionTitle() {
         <T id={`category.${instance.category}`} />
       </Badge>
 
-      <FeatureFlag feature="new-instance-selector">
-        {regions.length === 1 && (
-          <span className="inline-flex flex-row items-center gap-2">
-            <RegionName identifier={regions[0]!.identifier} />
-            <RegionFlag identifier={regions[0]!.identifier} className="size-em" />
-          </span>
-        )}
+      {regions.length === 1 && (
+        <span className="inline-flex flex-row items-center gap-2">
+          <RegionName identifier={regions[0]!.identifier} />
+          <RegionFlag identifier={regions[0]!.identifier} className="size-em" />
+        </span>
+      )}
 
-        {regions.length > 1 && (
-          <span>
-            {regions.map((region, index) => (
-              <RegionFlag
-                key={region.identifier}
-                identifier={region.identifier}
-                className="inline-block size-em"
-                style={{ marginLeft: `-${index / 2}rem` }}
-              />
-            ))}
+      {regions.length > 1 && (
+        <span>
+          {regions.map((region, index) => (
+            <RegionFlag
+              key={region.identifier}
+              identifier={region.identifier}
+              className="inline-block size-em"
+              style={{ marginLeft: `-${index / 2}rem` }}
+            />
+          ))}
 
-            <span className="ml-1">{regions.length} regions</span>
-          </span>
-        )}
-      </FeatureFlag>
+          <span className="ml-1">{regions.length} regions</span>
+        </span>
+      )}
     </div>
   );
 }
