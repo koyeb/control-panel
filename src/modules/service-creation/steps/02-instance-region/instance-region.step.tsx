@@ -165,6 +165,10 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
     if (!searchParams.has('instance_type')) {
       instance = organization.plan === 'hobby' ? 'free' : 'nano';
       setInstanceParam(instance);
+
+      if (instance === 'free') {
+        selector.onInstanceCategorySelected('eco');
+      }
     }
 
     if (!searchParams.has('regions')) {
