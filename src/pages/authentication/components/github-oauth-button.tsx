@@ -7,12 +7,15 @@ import { useSearchParam } from 'src/hooks/router';
 import { assert, AssertionError } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
+import { AuthButton } from './auth-button';
+
 type GithubOAuthButtonProps = {
   action: 'signin' | 'signup';
+  className?: string;
   children: React.ReactNode;
 };
 
-export function GithubOAuthButton({ action, children }: GithubOAuthButtonProps) {
+export function GithubOAuthButton({ action, className, children }: GithubOAuthButtonProps) {
   const [next] = useSearchParam('next');
 
   const mutation = useMutation({
@@ -33,9 +36,9 @@ export function GithubOAuthButton({ action, children }: GithubOAuthButtonProps) 
   });
 
   return (
-    <button type="button" onClick={() => mutation.mutate()} className="github-oauth-button">
-      {children}
+    <AuthButton type="button" onClick={() => mutation.mutate()} className={className}>
       {mutation.isPending ? <Spinner className="size-4" /> : <IconGithub className="size-4" />}
-    </button>
+      {children}
+    </AuthButton>
   );
 }

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 
-import { Stepper, Step as StepperStep } from '@koyeb/design-system';
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { routes } from 'src/application/routes';
@@ -10,6 +9,7 @@ import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { enumIndex, isEnumValue } from 'src/utils/enums';
 
+import { Stepper, Step as StepperStep } from './stepper';
 import { ServiceTypeStep } from './steps/00-service-type/service-type.step';
 import { ImportProjectStep } from './steps/01-import-project/import-project.step';
 import { InstanceRegionStep } from './steps/02-instance-region/instance-region.step';

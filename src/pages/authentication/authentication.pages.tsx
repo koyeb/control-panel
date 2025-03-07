@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
 
-import { SecondaryLayoutTwoTones } from 'src/layouts/secondary/secondary-layout-two-tones';
+import { AuthenticationLayout } from 'src/layouts/authentication/authentication.layout';
 
 import { ResetPasswordPage } from './reset-password.page';
 import { SignInPage } from './sign-in.page';
@@ -15,13 +15,13 @@ export function AuthenticationPages() {
       <Route path="/auth/sso/discourse" component={DiscourseSsoPage} />
 
       <Route>
-        <SecondaryLayoutTwoTones className="font-gilroy font-medium" contentClassName="!max-w-md">
+        <AuthenticationLayout>
           <Switch>
             <Route path="/auth/signin" component={SignInPage} />
             <Route path="/auth/signup" component={SignUpPage} />
             <Route path="/auth/reset-password" component={ResetPasswordPage} />
           </Switch>
-        </SecondaryLayoutTwoTones>
+        </AuthenticationLayout>
       </Route>
     </Switch>
   );

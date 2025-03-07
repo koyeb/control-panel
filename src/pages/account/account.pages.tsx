@@ -10,13 +10,17 @@ import { ValidateAccountPage } from './validate-account.page';
 
 export function AccountPages() {
   return (
-    <SecondaryLayout>
-      <Switch>
-        <Route path="/account/validate/:token" component={ValidateAccountPage} />
-        <Route path="/account/reset-password/:token" component={ChangePasswordPage} />
-        <Route path="/account/organization_invitations/:invitationId" component={InvitationPage} />
-        <Route path="/account/oauth/github/callback" component={GithubOauthCallbackPage} />
-      </Switch>
-    </SecondaryLayout>
+    <Switch>
+      <Route path="/account/reset-password/:token" component={ChangePasswordPage} />
+      <Route>
+        <SecondaryLayout>
+          <Switch>
+            <Route path="/account/validate/:token" component={ValidateAccountPage} />
+            <Route path="/account/organization_invitations/:invitationId" component={InvitationPage} />
+            <Route path="/account/oauth/github/callback" component={GithubOauthCallbackPage} />
+          </Switch>
+        </SecondaryLayout>
+      </Route>
+    </Switch>
   );
 }
