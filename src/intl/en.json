@@ -898,10 +898,6 @@
             "description": "The model might be too large for the GPUs we offer. You can still try to deploy the model."
           }
         },
-        "region": {
-          "title": "Select region",
-          "notAvailable": "Not available"
-        },
         "submitButton": "Deploy"
       },
       "oneClickAppForm": {

@@ -22,6 +22,7 @@ import { ControlledInput } from 'src/components/controlled';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { FormValues, handleSubmit } from 'src/hooks/form';
+import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -179,7 +180,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
 
 function useOnCostEstimationChanged(form: OneClickAppForm, onChanged: (cost?: ServiceCost) => void) {
   const instance = useInstance(form.watch('instance'));
-  const regions = useRegions(form.watch('regions'));
+  const regions = useDeepCompareMemo(useRegions(form.watch('regions')));
 
   useEffect(() => {
     const cost = computeEstimatedCost(
