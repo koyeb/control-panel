@@ -41,7 +41,6 @@ export function ServiceFormSection({ section, ...props }: ServiceFormSectionProp
           }
         }
       }}
-      keepMounted={section === 'regions'}
       shortcut={getShortcut(watch(), section)}
       hasError={sectionHasError(section, errors)}
       {...props}

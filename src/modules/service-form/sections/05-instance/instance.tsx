@@ -15,7 +15,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 
 import { InstanceAlerts } from './instance-alerts';
 
-export function InstanceSelectorNew() {
+export function InstanceSelector() {
   const instances = useInstances();
   const regions = useRegions();
 

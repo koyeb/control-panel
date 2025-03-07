@@ -450,10 +450,6 @@
         "engineLabel": "Engine",
         "engineItem": "Postgres (v{version})"
       },
-      "region": {
-        "description": "Region",
-        "expandedTitle": "Select region"
-      },
       "instance": {
         "description": "Instance",
         "expandedTitle": "Select instance",
@@ -897,10 +893,6 @@
             "description": "The model might be too large for the GPUs we offer. You can still try to deploy the model."
           }
         },
-        "region": {
-          "title": "Select region",
-          "notAvailable": "Not available"
-        },
         "submitButton": "Deploy"
       },
       "oneClickAppForm": {
@@ -1331,9 +1323,9 @@
           "multipleInstancesTitle": "Volumes are not supported for services deployed with more than one instance or with autoscaling enabled",
           "multipleInstancesDescription": "Select fixed <scalingLink>scaling</scalingLink> and one instance in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>",
           "unavailableForRegionTitle": "Volumes are not supported in {regionName}",
-          "unavailableForRegionDescription": "Select another <regionsLink>region</regionsLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
+          "unavailableForRegionDescription": "Select another <instancesLink>region</instancesLink> in order attach volumes to your service. <documentationLink>Learn more</documentationLink>",
           "multipleRegionsTitle": "Volumes are not supported for services deployed across multiple regions",
-          "multipleRegionsDescription": "Select a single <regionsLink>region</regionsLink> in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>"
+          "multipleRegionsDescription": "Select a single <instancesLink>region</instancesLink> in order to attach volumes to your service. <documentationLink>Learn more</documentationLink>"
         }
       },
       "serviceName": {

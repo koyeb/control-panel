@@ -1,4 +1,4 @@
-import { useController, useWatch } from 'react-hook-form';
+import { useWatch } from 'react-hook-form';
 
 import { createTranslate, Translate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -19,21 +19,16 @@ export function InstanceSection() {
     { name: 'meta.allowFreeInstanceIfAlreadyUsed' },
   );
 
-  const { field } = useController<DatabaseServiceForm, 'instance'>({ name: 'instance' });
-
   return (
     <DatabaseServiceFormSection
       section="instance"
       title={<SectionTitle />}
       expandedTitle={<T id="expandedTitle" />}
-      shortcut={serviceId ? 1 : 3}
+      shortcut={serviceId ? 1 : 2}
       description={<T id="description" />}
+      className="pb-0"
     >
-      <DatabaseInstanceSelector
-        value={field.value}
-        onChange={field.onChange}
-        allowFreeInstanceIfAlreadyUsed={allowFreeInstanceIfAlreadyUsed}
-      />
+      <DatabaseInstanceSelector allowFreeInstanceIfAlreadyUsed={allowFreeInstanceIfAlreadyUsed} />
     </DatabaseServiceFormSection>
   );
 }
