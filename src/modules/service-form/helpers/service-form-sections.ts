@@ -10,6 +10,7 @@ export function getServiceFormSections(form: ServiceForm) {
     form.source.type === 'docker' && 'deployment',
     'environmentVariables',
     'instance',
+    'scaling',
     'volumes',
     form.serviceType === 'web' && 'ports',
     form.serviceType === 'web' && 'healthChecks',
@@ -42,9 +43,6 @@ export function sectionHasError(section: ServiceFormSection, errors: FieldErrors
 
     case 'environmentVariables':
       return errors.environmentVariables !== undefined || errors.files !== undefined;
-
-    case 'regions':
-      return errors.regions !== undefined;
 
     case 'instance':
       return errors.instance !== undefined;

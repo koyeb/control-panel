@@ -122,7 +122,6 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
     instanceName: instance?.displayName,
     regionName: firstUnavailableRegion?.displayName,
     instancesLink: sectionLink('instance'),
-    regionsLink: sectionLink('regions'),
     scalingLink: sectionLink('scaling'),
     documentationLink: (children: React.ReactNode) => (
       <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
