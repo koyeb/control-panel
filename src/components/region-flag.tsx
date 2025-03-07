@@ -25,6 +25,10 @@ export function RegionFlag({ identifier, className, ...props }: RegionFlagProps)
     return null;
   }
 
+  if (typeof flag !== 'string') {
+    return flag;
+  }
+
   return (
     <img
       src={flag}
@@ -37,11 +41,11 @@ export function RegionFlag({ identifier, className, ...props }: RegionFlagProps)
   );
 }
 
-const map: Record<string, string> = {
+const map: Record<string, string | React.ReactNode> = {
   na,
   sa,
   nea,
-  sea,
+  ap: sea,
   af,
   eu,
   fra: de,
