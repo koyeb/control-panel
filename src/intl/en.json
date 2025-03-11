@@ -226,13 +226,6 @@
       "declineSuccess": "The invitation was declined"
     },
     "logs": {
-      "title": "Logs",
-      "fullScreen": "Toggle full screen",
-      "tail": "Tail logs",
-      "stream": "Show stream",
-      "instance": "Show instance",
-      "date": "Show timestamp",
-      "wordWrap": "Word wrap",
       "download": "Download",
       "copy": "Copy",
       "copySuccess": "Logs copied to clipboard"
@@ -539,6 +532,17 @@
           "duration": "<dim>Duration: {duration}s</dim>",
           "elapsed": "<dim>{time}s</dim>",
           "completed": "{elapsed, select, undefined {} other {<dim>Completed in</dim> {elapsed}s}}",
+          "header": {
+            "title": "Logs",
+            "fullScreen": "Toggle full screen"
+          },
+          "options": {
+            "tail": "Tail logs",
+            "stream": "Show stream",
+            "instance": "Show instance",
+            "date": "Show timestamp",
+            "wordWrap": "Word wrap"
+          },
           "waitingForLogs": {
             "title": "Getting ready to build your service",
             "description": "Hang tight while we get everything ready to start building your service"
@@ -547,11 +551,20 @@
         "runtime": {
           "title": "Deployment",
           "notStarted": "Not started",
-          "filters": {
+          "header": {
+            "title": "Logs",
             "allRegions": "All regions",
             "allInstances": "All instances",
+            "fullScreen": "Toggle full screen",
             "logs": "Logs",
             "events": "Events"
+          },
+          "options": {
+            "tail": "Tail logs",
+            "stream": "Show stream",
+            "instance": "Show instance",
+            "date": "Show timestamp",
+            "wordWrap": "Word wrap"
           },
           "waitingForLogs": {
             "title": "Booting up the magic",

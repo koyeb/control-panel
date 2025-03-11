@@ -1,11 +1,24 @@
+import clsx from 'clsx';
 import { isBefore, sub } from 'date-fns';
 import { useCallback } from 'react';
+import { useForm, UseFormReturn } from 'react-hook-form';
 
-import { Alert } from '@koyeb/design-system';
+import { Alert, IconButton, Menu, MenuItem } from '@koyeb/design-system';
 import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
+import { ControlledCheckbox } from 'src/components/controlled';
+import { FullScreen } from 'src/components/full-screen';
+import { IconFullscreen } from 'src/components/icons';
 import { Link } from 'src/components/link';
-import { LogLineContent, LogLineDate, LogLineStream, LogOptions, Logs } from 'src/components/logs/logs';
+import { getInitialLogOptions } from 'src/components/logs/log-options';
+import {
+  LogLineContent,
+  LogLineDate,
+  LogLines,
+  LogLineStream,
+  LogOptions,
+  LogsFooter,
+} from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { LogsApi } from 'src/hooks/logs';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -24,6 +37,10 @@ type BuildLogsProps = {
 
 export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
   const { error, lines } = logs;
+
+  const optionsForm = useForm<LogOptions>({
+    defaultValues: () => Promise.resolve(getInitialLogOptions()),
+  });
 
   const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
     return <LogLine line={line} options={options} />;
@@ -52,13 +69,43 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
   };
 
   return (
-    <Logs
-      appName={app.name}
-      serviceName={service.name}
-      logs={logs}
-      renderLine={renderLine}
-      renderNoLogs={renderNoLogs}
-    />
+    <>
+      <FullScreen
+        enabled={optionsForm.watch('fullScreen')}
+        exit={() => optionsForm.setValue('fullScreen', false)}
+        className={clsx('col divide-y bg-neutral', !optionsForm.watch('fullScreen') && 'rounded-lg border')}
+      >
+        <LogsHeader options={optionsForm} />
+
+        <LogLines
+          options={optionsForm.watch()}
+          setOption={optionsForm.setValue}
+          logs={logs}
+          renderLine={renderLine}
+          renderNoLogs={renderNoLogs}
+        />
+
+        <LogsFooter
+          appName={app.name}
+          serviceName={service.name}
+          lines={lines}
+          renderMenu={(props) => (
+            <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
+              {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
+                <MenuItem key={option}>
+                  <ControlledCheckbox
+                    control={optionsForm.control}
+                    name={option}
+                    label={<T id={`options.${option}`} />}
+                    className="flex-1"
+                  />
+                </MenuItem>
+              ))}
+            </Menu>
+          )}
+        />
+      </FullScreen>
+    </>
   );
 }
 
@@ -106,6 +153,28 @@ function BuiltInPreviousDeployment({ service }: { service: Service }) {
         />
       }
     />
+  );
+}
+
+type LogsHeaderProps = {
+  options: UseFormReturn<LogOptions>;
+};
+
+function LogsHeader({ options }: LogsHeaderProps) {
+  return (
+    <header className="row items-center gap-4 p-4">
+      <div className="mr-auto">
+        <T id="header.title" />
+      </div>
+
+      <IconButton
+        variant="solid"
+        Icon={IconFullscreen}
+        onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
+      >
+        <T id="header.fullScreen" />
+      </IconButton>
+    </header>
   );
 }
 

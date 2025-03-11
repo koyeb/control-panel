@@ -3,6 +3,7 @@ import { isBefore, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 
+import { IconButton, Menu, MenuItem } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
 import {
   App,
@@ -13,13 +14,17 @@ import {
   Service,
 } from 'src/api/model';
 import { ControlledCheckbox, ControlledSelect } from 'src/components/controlled';
+import { FullScreen } from 'src/components/full-screen';
+import { IconFullscreen } from 'src/components/icons';
+import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {
   LogLineContent,
   LogLineDate,
   LogLineInstanceId,
+  LogLines,
   LogLineStream,
   LogOptions,
-  Logs,
+  LogsFooter,
 } from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { RegionFlag } from 'src/components/region-flag';
@@ -51,7 +56,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
   const { error, lines } = logs;
   const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.identifier));
 
-  const form = useForm<Filters>({
+  const filtersForm = useForm<Filters>({
     defaultValues: {
       region: null,
       instance: null,
@@ -60,7 +65,11 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
     },
   });
 
-  const filters = useFormValues(form);
+  const optionsForm = useForm<LogOptions>({
+    defaultValues: () => Promise.resolve(getInitialLogOptions()),
+  });
+
+  const filters = useFormValues(filtersForm);
   const filteredLines = useFilteredLines(lines, filters, instances);
   const filteredInstances = useFilteredInstances(filters, instances);
 
@@ -88,7 +97,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
       return <>Logs have expired</>;
     }
 
-    if (form.formState.isDirty) {
+    if (filtersForm.formState.isDirty) {
       return <>Results filtered</>;
     }
 
@@ -96,15 +105,48 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
   };
 
   return (
-    <Logs
-      appName={app.name}
-      serviceName={service.name}
-      header={<LogsFilters form={form} regions={regions} instances={filteredInstances} />}
-      hasInstanceOption
-      logs={{ ...logs, lines: filteredLines }}
-      renderLine={renderLine}
-      renderNoLogs={renderNoLogs}
-    />
+    <>
+      <FullScreen
+        enabled={optionsForm.watch('fullScreen')}
+        exit={() => optionsForm.setValue('fullScreen', false)}
+        className={clsx('col divide-y bg-neutral', !optionsForm.watch('fullScreen') && 'rounded-lg border')}
+      >
+        <LogsHeader
+          filters={filtersForm}
+          options={optionsForm}
+          regions={regions}
+          instances={filteredInstances}
+        />
+
+        <LogLines
+          options={optionsForm.watch()}
+          setOption={optionsForm.setValue}
+          logs={{ ...logs, lines: filteredLines }}
+          renderLine={renderLine}
+          renderNoLogs={renderNoLogs}
+        />
+
+        <LogsFooter
+          appName={app.name}
+          serviceName={service.name}
+          lines={lines}
+          renderMenu={(props) => (
+            <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
+              {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
+                <MenuItem key={option}>
+                  <ControlledCheckbox
+                    control={optionsForm.control}
+                    name={option}
+                    label={<T id={`options.${option}`} />}
+                    className="flex-1"
+                  />
+                </MenuItem>
+              ))}
+            </Menu>
+          )}
+        />
+      </FullScreen>
+    </>
   );
 }
 
@@ -160,44 +202,51 @@ function WaitingForLogs() {
   );
 }
 
-type LogsFiltersProps = {
-  form: UseFormReturn<Filters>;
+type LogsHeaderProps = {
+  filters: UseFormReturn<Filters>;
+  options: UseFormReturn<LogOptions>;
   regions: CatalogRegion[];
   instances: Instance[];
 };
 
-function LogsFilters({ form, regions, instances }: LogsFiltersProps) {
+function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
   return (
-    <div className="col sm:row gap-4">
+    <header className="col md:row flex-wrap gap-4 p-4 md:items-center">
+      <div className="mr-auto">
+        <T id="header.title" />
+      </div>
+
       <ControlledSelect
-        control={form.control}
+        control={filters.control}
         name="region"
         items={regions}
-        placeholder={<T id="filters.allRegions" />}
+        placeholder={<T id="header.allRegions" />}
         getKey={(region) => region.identifier}
         itemToString={(region) => region.displayName}
         itemToValue={(region) => region.identifier}
-        onItemClick={(region) => region.identifier === form.watch('region') && form.setValue('region', null)}
+        onItemClick={(region) =>
+          region.identifier === filters.watch('region') && filters.setValue('region', null)
+        }
         renderItem={(region) => (
           <div className="row gap-2 whitespace-nowrap">
             <RegionFlag identifier={region.identifier} className="size-4" />
             {region.displayName}
           </div>
         )}
-        onChangeEffect={() => form.setValue('instance', null)}
+        onChangeEffect={() => filters.setValue('instance', null)}
         className="md:min-w-48"
       />
 
       <Controller
-        control={form.control}
+        control={filters.control}
         name="instance"
         render={({ field }) => (
           <SelectInstance
             instances={instances}
-            placeholder={<T id="filters.allInstances" />}
+            placeholder={<T id="header.allInstances" />}
             value={instances.find(hasProperty('id', field.value)) ?? null}
             onChange={(instance) => field.onChange(instance.id)}
-            unselect={<T id="filters.allInstances" />}
+            unselect={<T id="header.allInstances" />}
             onUnselect={() => field.onChange(null)}
             className="min-w-64"
           />
@@ -205,10 +254,18 @@ function LogsFilters({ form, regions, instances }: LogsFiltersProps) {
       />
 
       <div className="row gap-4">
-        <ControlledCheckbox control={form.control} name="logs" label={<T id="filters.logs" />} />
-        <ControlledCheckbox control={form.control} name="events" label={<T id="filters.events" />} />
+        <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
+        <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
       </div>
-    </div>
+
+      <IconButton
+        variant="solid"
+        Icon={IconFullscreen}
+        onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
+      >
+        <T id="header.fullScreen" />
+      </IconButton>
+    </header>
   );
 }
 
