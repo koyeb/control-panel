@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AnsiUp } from 'ansi_up';
+import { max, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
@@ -73,7 +74,7 @@ function useLogsHistory(filters: LogsFilters, enabled: boolean) {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     initialPageParam: {
-      start: new Date(filters.start),
+      start: max([sub(new Date(), { days: 7 }), new Date(filters.start)]),
       end: new Date(),
     },
     getNextPageParam: () => null,
