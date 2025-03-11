@@ -82,7 +82,7 @@ export function DeploymentLogs({ app, service, deployment, instances }: Deployme
         >
           <div className="col gap-4 p-4">
             <BuildSteps deployment={deployment} />
-            <BuildLogs app={app} service={service} deployment={deployment} {...buildLogs} />
+            <BuildLogs app={app} service={service} deployment={deployment} logs={buildLogs} />
           </div>
         </AccordionSection>
       )}
@@ -104,7 +104,7 @@ export function DeploymentLogs({ app, service, deployment, instances }: Deployme
             service={service}
             deployment={deployment}
             instances={instances}
-            {...runtimeLogs}
+            logs={runtimeLogs}
           />
           {instances.length > 0 && <Replicas instances={instances} />}
         </div>

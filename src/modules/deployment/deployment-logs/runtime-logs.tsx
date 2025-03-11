@@ -25,6 +25,7 @@ import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { RegionFlag } from 'src/components/region-flag';
 import { SelectInstance } from 'src/components/select-instance';
 import { useFormValues } from 'src/hooks/form';
+import { LogsApi } from 'src/hooks/logs';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
@@ -43,11 +44,11 @@ type RuntimeLogsProps = {
   service: Service;
   deployment: ComputeDeployment;
   instances: Instance[];
-  error?: unknown;
-  lines: LogLineType[];
+  logs: LogsApi;
 };
 
-export function RuntimeLogs({ app, service, deployment, instances, error, lines }: RuntimeLogsProps) {
+export function RuntimeLogs({ app, service, deployment, instances, logs }: RuntimeLogsProps) {
+  const { error, lines } = logs;
   const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.identifier));
 
   const form = useForm<Filters>({
@@ -68,11 +69,7 @@ export function RuntimeLogs({ app, service, deployment, instances, error, lines 
   }, []);
 
   if (error) {
-    if (typeof error === 'string') {
-      return <Translate id="common.errorMessage" values={{ message: error }} />;
-    }
-
-    return <Translate id="common.unknownError" />;
+    return <Translate id="common.errorMessage" values={{ message: error.message }} />;
   }
 
   const waitingForLogs = instances.length === 0;
@@ -96,7 +93,7 @@ export function RuntimeLogs({ app, service, deployment, instances, error, lines 
       expired={expired}
       hasFilters={hasFilters}
       hasInstanceOption
-      lines={filteredLines}
+      logs={{ ...logs, lines: filteredLines }}
       renderLine={renderLine}
     />
   );

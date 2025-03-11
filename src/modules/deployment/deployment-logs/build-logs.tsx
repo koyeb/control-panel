@@ -7,6 +7,7 @@ import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { LogLineContent, LogLineDate, LogLineStream, LogOptions, Logs } from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
+import { LogsApi } from 'src/hooks/logs';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
@@ -18,11 +19,12 @@ type BuildLogsProps = {
   app: App;
   service: Service;
   deployment: ComputeDeployment;
-  error?: unknown;
-  lines: LogLineType[];
+  logs: LogsApi;
 };
 
-export function BuildLogs({ app, service, deployment, error, lines }: BuildLogsProps) {
+export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
+  const { error, lines } = logs;
+
   const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
     return <LogLine line={line} options={options} />;
   }, []);
@@ -32,11 +34,7 @@ export function BuildLogs({ app, service, deployment, error, lines }: BuildLogsP
   }
 
   if (error) {
-    if (typeof error === 'string') {
-      return error;
-    }
-
-    return <Translate id="common.unknownError" />;
+    return <Translate id="common.errorMessage" values={{ message: error.message }} />;
   }
 
   const waitingForLogs = lines.length === 0;
@@ -51,7 +49,7 @@ export function BuildLogs({ app, service, deployment, error, lines }: BuildLogsP
       appName={app.name}
       serviceName={service.name}
       expired={expired}
-      lines={lines}
+      logs={logs}
       renderLine={renderLine}
     />
   );

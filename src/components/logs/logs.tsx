@@ -10,6 +10,7 @@ import { downloadFileFromString } from 'src/application/download-file-from-strin
 import { notify } from 'src/application/notify';
 import { IconCopy, IconDownload, IconEllipsis, IconFullscreen } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
+import { LogsApi } from 'src/hooks/logs';
 import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 
@@ -29,7 +30,7 @@ type LogsProps = {
   hasFilters?: boolean;
   hasInstanceOption?: boolean;
   header?: React.ReactNode;
-  lines: LogLine[];
+  logs: LogsApi;
   renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
 };
 
@@ -40,9 +41,11 @@ export function Logs({
   hasFilters,
   hasInstanceOption,
   header,
-  lines,
+  logs,
   renderLine,
 }: LogsProps) {
+  const { lines } = logs;
+
   const form = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
@@ -65,7 +68,7 @@ export function Logs({
           hasFilters={hasFilters}
           options={form.watch()}
           setOption={form.setValue}
-          lines={lines}
+          logs={logs}
           renderLine={renderLine}
         />
       </div>
@@ -207,11 +210,12 @@ type LogLinesProps = {
   hasFilters?: boolean;
   options: LogOptions;
   setOption: (option: keyof LogOptions, value: boolean) => void;
-  lines: LogLine[];
+  logs: LogsApi;
   renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
 };
 
-function LogLines({ expired, hasFilters, options, setOption, lines, renderLine }: LogLinesProps) {
+function LogLines({ expired, hasFilters, options, setOption, logs, renderLine }: LogLinesProps) {
+  const { lines } = logs;
   const container = useRef<HTMLDivElement>(null);
   const ignoreNextScrollEventRef = useRef(false);
 
