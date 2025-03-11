@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { isBefore, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
-import { Controller, UseFormReturn, useForm } from 'react-hook-form';
+import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 
 import { useRegions } from 'src/api/hooks/catalog';
 import {
@@ -72,29 +72,38 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
     return <Translate id="common.errorMessage" values={{ message: error.message }} />;
   }
 
-  const waitingForLogs = instances.length === 0;
-  const hasFilters = form.formState.isDirty;
-
-  const expired = [
-    lines.length === 0,
-    inArray(deployment.status, ['canceled', 'error', 'stopped']),
-    isBefore(new Date(deployment.date), sub(new Date(), { hours: 72 })),
-  ].every(Boolean);
-
-  if (waitingForLogs && inArray(deployment.status, ['pending', 'provisioning', 'scheduled', 'allocating'])) {
+  if (
+    lines.length === 0 &&
+    inArray(deployment.status, ['pending', 'provisioning', 'scheduled', 'allocating'])
+  ) {
     return <WaitingForLogs />;
   }
+
+  const renderNoLogs = () => {
+    const expired =
+      inArray(deployment.status, ['canceled', 'stopped', 'error']) &&
+      isBefore(deployment.date, sub(new Date(), { days: 7 }));
+
+    if (expired) {
+      return <>Logs have expired</>;
+    }
+
+    if (form.formState.isDirty) {
+      return <>Results filtered</>;
+    }
+
+    return <>Waiting for logs</>;
+  };
 
   return (
     <Logs
       appName={app.name}
       serviceName={service.name}
       header={<LogsFilters form={form} regions={regions} instances={filteredInstances} />}
-      expired={expired}
-      hasFilters={hasFilters}
       hasInstanceOption
       logs={{ ...logs, lines: filteredLines }}
       renderLine={renderLine}
+      renderNoLogs={renderNoLogs}
     />
   );
 }
@@ -143,6 +152,7 @@ function WaitingForLogs() {
       <p className="font-medium">
         <T id="waitingForLogs.title" />
       </p>
+
       <p className="max-w-xl text-center">
         <T id="waitingForLogs.description" />
       </p>
@@ -203,24 +213,20 @@ function LogsFilters({ form, regions, instances }: LogsFiltersProps) {
 }
 
 function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) {
+  const dateProps: Partial<React.ComponentProps<typeof LogLineDate>> = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
+
   return (
     <div className={clsx('row px-4', line.stream === 'koyeb' && 'bg-blue/10')}>
-      {options.date && (
-        <LogLineDate
-          line={line}
-          year="numeric"
-          month="2-digit"
-          day="2-digit"
-          hour="2-digit"
-          minute="2-digit"
-          second="2-digit"
-        />
-      )}
-
+      {options.date && <LogLineDate line={line} {...dateProps} />}
       {options.stream && <LogLineStream line={line} />}
-
       {options.instance && <LogLineInstanceId line={line} />}
-
       <LogLineContent line={line} options={options} />
     </div>
   );

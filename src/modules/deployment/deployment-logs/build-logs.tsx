@@ -10,7 +10,7 @@ import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { LogsApi } from 'src/hooks/logs';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
-import { AssertionError, assert } from 'src/utils/assert';
+import { assert, AssertionError } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
 const T = createTranslate('modules.deployment.deploymentLogs.build');
@@ -37,20 +37,27 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
     return <Translate id="common.errorMessage" values={{ message: error.message }} />;
   }
 
-  const waitingForLogs = lines.length === 0;
-  const expired = isBefore(new Date(deployment.date), sub(new Date(), { hours: 72 }));
-
-  if (waitingForLogs && inArray(deployment.status, ['pending', 'provisioning'])) {
+  if (lines.length === 0 && inArray(deployment.status, ['pending', 'provisioning'])) {
     return <WaitingForLogs />;
   }
+
+  const renderNoLogs = () => {
+    const expired = isBefore(new Date(deployment.date), sub(new Date(), { hours: 72 }));
+
+    if (expired) {
+      return <>Logs have expired</>;
+    }
+
+    return <>No logs</>;
+  };
 
   return (
     <Logs
       appName={app.name}
       serviceName={service.name}
-      expired={expired}
       logs={logs}
       renderLine={renderLine}
+      renderNoLogs={renderNoLogs}
     />
   );
 }

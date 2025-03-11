@@ -26,23 +26,21 @@ const T = createTranslate('components.logs');
 type LogsProps = {
   appName: string;
   serviceName: string;
-  expired?: boolean;
-  hasFilters?: boolean;
   hasInstanceOption?: boolean;
   header?: React.ReactNode;
   logs: LogsApi;
   renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
+  renderNoLogs: () => React.ReactNode;
 };
 
 export function Logs({
   appName,
   serviceName,
-  expired,
-  hasFilters,
   hasInstanceOption,
   header,
   logs,
   renderLine,
+  renderNoLogs,
 }: LogsProps) {
   const { lines } = logs;
 
@@ -60,23 +58,21 @@ export function Logs({
       exit={() => form.setValue('fullScreen', false)}
       className={clsx('col divide-y bg-neutral', !form.watch('fullScreen') && 'rounded-lg border')}
     >
-      <LogsHeader expired={expired} header={header} form={form} />
+      <LogsHeader header={header} form={form} />
 
       <div className="flex-1 overflow-hidden">
         <LogLines
-          expired={expired}
-          hasFilters={hasFilters}
           options={form.watch()}
           setOption={form.setValue}
           logs={logs}
           renderLine={renderLine}
+          renderNoLogs={renderNoLogs}
         />
       </div>
 
       <LogsFooter
         appName={appName}
         serviceName={serviceName}
-        expired={expired}
         hasInstanceOption={hasInstanceOption}
         lines={lines}
         form={form}
@@ -86,16 +82,15 @@ export function Logs({
 }
 
 type LogsHeaderProps = {
-  expired?: boolean;
   header?: React.ReactNode;
   form: UseFormReturn<LogOptions>;
 };
 
-function LogsHeader({ expired, header, form }: LogsHeaderProps) {
+function LogsHeader({ header, form }: LogsHeaderProps) {
   const toggleFullScreen = () => form.setValue('fullScreen', !form.getValues('fullScreen'));
   const isDesktop = useBreakpoint('md');
 
-  const fullScreenButton = !expired && (
+  const fullScreenButton = (
     <IconButton variant="solid" Icon={IconFullscreen} onClick={toggleFullScreen} className="sm:self-start">
       <T id="fullScreen" />
     </IconButton>
@@ -111,7 +106,7 @@ function LogsHeader({ expired, header, form }: LogsHeaderProps) {
         <T id="title" />
       </div>
 
-      {!expired && header}
+      {header}
 
       {fullScreenButton}
     </header>
@@ -121,21 +116,16 @@ function LogsHeader({ expired, header, form }: LogsHeaderProps) {
 type LogsFooterProps = {
   appName: string;
   serviceName: string;
-  expired?: boolean;
   hasInstanceOption?: boolean;
   lines: LogLine[];
   form: UseFormReturn<LogOptions>;
 };
 
-function LogsFooter({ appName, serviceName, expired, hasInstanceOption, lines, form }: LogsFooterProps) {
+function LogsFooter({ appName, serviceName, hasInstanceOption, lines, form }: LogsFooterProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const downloadLogs = useDownloadLogs(appName, serviceName, lines);
   const copyLogs = useCopyLogs(lines);
-
-  if (expired) {
-    return null;
-  }
 
   const options: Array<keyof LogOptions> = hasInstanceOption
     ? ['tail', 'stream', 'date', 'instance', 'wordWrap']
@@ -206,15 +196,14 @@ function useCopyLogs(lines: LogLine[]) {
 }
 
 type LogLinesProps = {
-  expired?: boolean;
-  hasFilters?: boolean;
   options: LogOptions;
   setOption: (option: keyof LogOptions, value: boolean) => void;
   logs: LogsApi;
   renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
+  renderNoLogs: () => React.ReactNode;
 };
 
-function LogLines({ expired, hasFilters, options, setOption, logs, renderLine }: LogLinesProps) {
+function LogLines({ options, setOption, logs, renderLine, renderNoLogs }: LogLinesProps) {
   const { lines } = logs;
   const container = useRef<HTMLDivElement>(null);
   const ignoreNextScrollEventRef = useRef(false);
@@ -264,7 +253,9 @@ function LogLines({ expired, hasFilters, options, setOption, logs, renderLine }:
         options.fullScreen && 'h-full',
       )}
     >
-      {lines.length === 0 && <NoLogs expired={expired} hasFilters={hasFilters} />}
+      {lines.length === 0 && (
+        <div className="col h-full items-center justify-center gap-2 py-12">{renderNoLogs()}</div>
+      )}
 
       {logs.lines.length > 0 && logs.loading && (
         <div className="row justify-center">
@@ -272,11 +263,13 @@ function LogLines({ expired, hasFilters, options, setOption, logs, renderLine }:
         </div>
       )}
 
-      <div className="min-w-min break-all font-mono">
-        {lines.map((line) => (
-          <Fragment key={line.id}>{renderLine(line, options)}</Fragment>
-        ))}
-      </div>
+      {logs.lines.length > 0 && (
+        <div className="min-w-min break-all font-mono">
+          {lines.map((line) => (
+            <Fragment key={line.id}>{renderLine(line, options)}</Fragment>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -296,30 +289,6 @@ const hasReachedEnd = (element: HTMLElement | null) => {
 
   return element.scrollTop + element.clientHeight >= element.scrollHeight;
 };
-
-type NoLogsFallbackProps = {
-  expired?: boolean;
-  hasFilters?: boolean;
-};
-
-function NoLogs({ expired, hasFilters }: NoLogsFallbackProps) {
-  const prefix = ((hasFilters) => {
-    if (expired) return 'logsExpired' as const;
-    if (hasFilters) return 'logsFiltered' as const;
-    return 'noLogs' as const;
-  })(hasFilters);
-
-  return (
-    <div className="col h-full items-center justify-center gap-2 py-12">
-      <p className="font-medium">
-        <T id={`${prefix}.title`} />
-      </p>
-      <p className="max-w-xl text-center">
-        <T id={`${prefix}.description`} />
-      </p>
-    </div>
-  );
-}
 
 type LogLineDateProps = { line: LogLine } & Omit<React.ComponentProps<typeof FormattedTime>, 'value'>;
 

@@ -235,19 +235,7 @@
       "wordWrap": "Word wrap",
       "download": "Download",
       "copy": "Copy",
-      "copySuccess": "Logs copied to clipboard",
-      "noLogs": {
-        "title": "Waiting for logs...",
-        "description": "Logs will show up here, and they'll be kept for 72 hours. If there are no logs, it might be because there haven't been any in the last 72 hours."
-      },
-      "logsFiltered": {
-        "title": "No logs to show",
-        "description": "No results match the current filters"
-      },
-      "logsExpired": {
-        "title": "No logs to show",
-        "description": "There are no logs to show, the latest logs may be older than 72 hours."
-      }
+      "copySuccess": "Logs copied to clipboard"
     },
     "organizationNameField": {
       "maxLength": "Maximum 39 characters",
