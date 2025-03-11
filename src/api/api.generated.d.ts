@@ -3988,6 +3988,14 @@ export interface components {
         };
         QueryLogsReply: {
             data?: components["schemas"]["LogEntry"][];
+            pagination?: components["schemas"]["QueryLogsReplyPagination"];
+        };
+        QueryLogsReplyPagination: {
+            has_more?: boolean;
+            /** Format: date-time */
+            next_end?: string;
+            /** Format: date-time */
+            next_start?: string;
         };
         Quotas: {
             /** Format: int64 */
@@ -15607,15 +15615,21 @@ export interface operations {
             query?: {
                 app_id?: string;
                 deployment_id?: string;
+                /** @description (Optional) Must always be after `start`. Defaults to now. */
                 end?: string;
                 instance_id?: string;
+                /** @description (Optional) Defaults to 100. Maximum of 1000. */
                 limit?: string;
+                /** @description (Optional) `asc` or `desc`. Defaults to `desc`. */
                 order?: string;
+                /** @description (Optional) Apply a regex to filter logs. Can't be used with `text`. */
                 regex?: string;
                 regional_deployment_id?: string;
                 service_id?: string;
+                /** @description (Optional) Must always be before `end`. Defaults to 15 minutes ago. */
                 start?: string;
                 stream?: string;
+                /** @description (Optional) Looks for this string in logs. Can't be used with `regex`. */
                 text?: string;
                 type?: string;
             };
