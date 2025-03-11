@@ -9,7 +9,7 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Button, useBreakpoint } from '@koyeb/design-system';
 import { IconMenu } from 'src/components/icons';
@@ -28,40 +28,13 @@ type LayoutProps = {
 };
 
 export function Layout(props: LayoutProps) {
-  const isDesktop = useBreakpoint('xl');
-  const isTablet = useBreakpoint('sm') && !isDesktop;
+  const isMobile = !useBreakpoint('sm');
 
-  if (isDesktop) {
-    return <LayoutDesktop {...props} />;
+  if (isMobile) {
+    return <LayoutMobile {...props} />;
   }
 
-  if (isTablet) {
-    return <LayoutTablet {...props} />;
-  }
-
-  return <LayoutMobile {...props} />;
-}
-
-function LayoutDesktop({ banner, hasBanner, header, menu, main, context, contextExpanded }: LayoutProps) {
-  return (
-    <>
-      {banner && <div className="fixed inset-x-0 top-0 h-8 bg-neutral">{banner}</div>}
-
-      <div className={clsx('fixed z-20 h-screen w-64', hasBanner && 'pt-8')}>
-        <Aside>{menu}</Aside>
-      </div>
-
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className={clsx('pl-64', hasBanner && 'pt-8', contextExpanded && '3xl:pr-[32rem]')}>
-        <div className="mx-auto max-w-main">
-          <header className="px-4">{header}</header>
-          {main}
-        </div>
-      </div>
-
-      <Context context={context} expanded={contextExpanded} banner={Boolean(banner)} />
-    </>
-  );
+  return <LayoutTablet {...props} />;
 }
 
 function LayoutTablet({
@@ -75,14 +48,23 @@ function LayoutTablet({
   contextExpanded,
 }: LayoutProps) {
   const [state, setState] = useState<'opened' | 'collapsed'>('collapsed');
+  const isDesktop = useBreakpoint('xl');
+
+  useEffect(() => {
+    if (isDesktop) {
+      setState('opened');
+    } else {
+      setState('collapsed');
+    }
+  }, [isDesktop]);
 
   return (
     <>
       {banner && <div className="fixed inset-x-0 top-0 z-40 h-8 bg-neutral">{banner}</div>}
 
       <div
-        onMouseEnter={() => setState('opened')}
-        onMouseLeave={() => setState('collapsed')}
+        onMouseEnter={() => !isDesktop && setState('opened')}
+        onMouseLeave={() => !isDesktop && setState('collapsed')}
         className={clsx('fixed z-20 h-screen w-16 overflow-x-visible', hasBanner && 'pt-8')}
       >
         <Aside className={clsx({ 'w-full': state === 'collapsed', 'w-64': state === 'opened' })}>
@@ -91,7 +73,8 @@ function LayoutTablet({
         </Aside>
       </div>
 
-      <div className={clsx('pl-16', hasBanner && 'pt-8')}>
+      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
+      <div className={clsx('pl-16 xl:pl-64', hasBanner && 'pt-8', contextExpanded && '3xl:pr-[32rem]')}>
         <div className="mx-auto max-w-main">
           <header className="px-4">{header}</header>
           {main}
