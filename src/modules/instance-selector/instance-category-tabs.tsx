@@ -2,7 +2,7 @@ import { TabButton, TabButtons } from '@koyeb/design-system';
 import { InstanceCategory } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('components.instanceSelector.new');
+const T = createTranslate('components.instanceSelector');
 
 const tabs: InstanceCategory[] = ['eco', 'standard', 'gpu'];
 

@@ -15,7 +15,7 @@ export type InstanceSelectorBadge =
   | 'insufficientVRam'
   | 'requiresHigherQuota';
 
-const T = createTranslate('components.instanceSelector.new');
+const T = createTranslate('components.instanceSelector');
 
 type InstanceSelectorProps = InstanceSelector & {
   getBadges: (instance: CatalogInstance) => InstanceSelectorBadge[];

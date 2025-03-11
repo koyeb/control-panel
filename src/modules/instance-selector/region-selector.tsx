@@ -4,7 +4,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('components.instanceSelector.new');
+const T = createTranslate('components.instanceSelector');
 
 const scopes: RegionScope[] = ['metropolitan', 'continental'];
 

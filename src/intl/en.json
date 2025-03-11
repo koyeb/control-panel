@@ -162,58 +162,6 @@
       "publicPreview": "Public preview"
     },
     "instanceSelector": {
-      "tabs": {
-        "standard": "CPU Standard ✨",
-        "eco": "CPU Eco 🌱",
-        "gpu": "GPU 🚀"
-      },
-      "descriptions": {
-        "standard": "High-performance CPU instances ideal for production workloads billed by the second",
-        "eco": "Designed for development and non-production environments billed by the second",
-        "gpu": "High-performance GPU instances for LLMs, Computer Vision, and AI inference billed by the second"
-      },
-      "cpu": "{value} vCPU",
-      "ram": "{value} RAM",
-      "vram": "{value} VRAM",
-      "disk": "{value} Disk",
-      "free": "Free",
-      "freeInstanceDescription": "Run 1x web service for free",
-      "inUse": "In use",
-      "privatePreview": "Private preview",
-      "requiresHigherQuota": "Requires higher quota",
-      "insufficientVRam": "Insufficient VRAM",
-      "bestFit": "Best fit",
-      "comingSoon": "Coming soon",
-      "new": "New",
-      "pricePerMonth": "{price}/month",
-      "pricePerHour": "{price}/hour",
-      "addCreditCard": "Add credit card",
-      "upgradeDialog": {
-        "title": "Add credit card",
-        "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
-        "submitButton": "Add credit card"
-      },
-      "requestAccess": "Request access",
-      "requestQuotaIncrease": "Request increase",
-      "requestQuotaIncreaseDialog": {
-        "title": "Quota increase request",
-        "line1": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
-        "line2": "Let's <link>chat</link> to learn more about your needs and get started.",
-        "cta": "Book a call"
-      },
-      "instanceAssistant": {
-        "title": "Need help to decide? Tell us what you want to deploy:",
-        "queryPlaceholder": "Click an example or explain your usage",
-        "examples": {
-          "small": "Small personal website with low traffic",
-          "high": "Intensive data processing with high CPU requirements",
-          "ml": "Fine-tune a model with 8B parameters"
-        },
-        "aiLoadingText": "Loading…",
-        "aiReplyHeader": "Koyeb AI recommends an instance of type {recommendedInstanceType}"
-      }
-    },
-    "instanceSelector.new": {
       "instanceType": {
         "standard": "CPU Standard ✨",
         "eco": "CPU Eco 🌱",

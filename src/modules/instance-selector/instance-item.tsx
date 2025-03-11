@@ -16,7 +16,7 @@ import { createTranslate } from 'src/intl/translate';
 import { InstanceSelectorBadge } from './instance-selector';
 import { RequestQuotaIncreaseDialog } from './request-quota-increase-dialog';
 
-const T = createTranslate('components.instanceSelector.new');
+const T = createTranslate('components.instanceSelector');
 
 type InstanceItemProps = {
   instance: CatalogInstance;

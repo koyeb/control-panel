@@ -4,7 +4,7 @@ import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { useTallyLink, tallyForms } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('components.instanceSelector.new.actions.requestQuotaIncreaseDialog');
+const T = createTranslate('components.instanceSelector.actions.requestQuotaIncreaseDialog');
 
 export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInstance }) {
   const tallyLink = useTallyLink(tallyForms.getInTouch);
