@@ -880,6 +880,7 @@
           "title": "Overview",
           "instanceTypeLabel": "Instance type",
           "scalingLabel": "Scaling",
+          "scalingValue": "0-1 instance",
           "regionLabel": "Region"
         },
         "model": {
