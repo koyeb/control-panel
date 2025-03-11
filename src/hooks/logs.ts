@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 import { api, apiStreams } from 'src/api/api';
 import { LogLine } from 'src/api/model';
+import { reportError } from 'src/application/report-error';
 import { useToken } from 'src/application/token';
 import { createId } from 'src/utils/strings';
 
@@ -47,7 +48,7 @@ export function useLogs(enabled: boolean, filters: LogsFilters): LogsApi {
     lines,
     loading: query.isFetching,
     hasPrevious: query.hasPreviousPage,
-    loadPrevious: query.fetchPreviousPage,
+    loadPrevious: () => void query.fetchPreviousPage(),
   };
 }
 
@@ -122,7 +123,7 @@ function useLogsStream(filters: LogsFilters, enabled: boolean) {
 
   useEffect(() => {
     if (enabled) {
-      initialize().catch(console.error);
+      initialize().catch(reportError);
     }
 
     return () => {
@@ -159,7 +160,7 @@ function tailLogs(token: string | undefined, filters: LogsFilters, listeners: Pa
   const onError = () => listeners.onError?.(new Error('Websocket error'));
 
   const onMessage = (event: MessageEvent) => {
-    const { success, data, error } = apiMessageSchema.safeParse(JSON.parse(event.data));
+    const { success, data, error } = apiMessageSchema.safeParse(JSON.parse(event.data as string));
 
     if (!success) {
       listeners.onError?.(error);
