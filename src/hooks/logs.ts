@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { api, apiStreams } from 'src/api/api';
 import { LogLine } from 'src/api/model';
 import { useToken } from 'src/application/token';
+import { createId } from 'src/utils/strings';
 
 import { useDeepCompareMemo } from './lifecycle';
 
@@ -187,7 +188,7 @@ function tailLogs(token: string | undefined, filters: LogsFilters, listeners: Pa
 
 function getLogLine(result: z.infer<typeof apiLogLineSchema>): Omit<LogLine, 'html'> {
   return {
-    id: result.created_at,
+    id: createId(),
     date: new Date(result.created_at),
     stream: result.labels.stream,
     instanceId: result.labels.instance_id,
