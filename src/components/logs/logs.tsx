@@ -4,7 +4,7 @@ import { Fragment } from 'react/jsx-runtime';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { FormattedTime } from 'react-intl';
 
-import { Floating, IconButton, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
+import { Floating, IconButton, Menu, MenuItem, Spinner, useBreakpoint } from '@koyeb/design-system';
 import { LogLine } from 'src/api/model';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { notify } from 'src/application/notify';
@@ -226,7 +226,23 @@ function LogLines({ expired, hasFilters, options, setOption, logs, renderLine }:
     }
   }, [lines, options.fullScreen, options.tail]);
 
+  const prevHeight = useRef<number>(null);
+
+  useEffect(() => {
+    if (prevHeight.current && container.current?.scrollTop === 0) {
+      container.current.scrollTop = container.current.scrollHeight - prevHeight.current;
+    }
+  }, [lines]);
+
   const onScroll = () => {
+    if (container.current) {
+      prevHeight.current = container.current.scrollHeight;
+
+      if (container.current.scrollTop < 100 && logs.hasPrevious && !logs.loading) {
+        logs.loadPrevious();
+      }
+    }
+
     if (ignoreNextScrollEventRef.current === true) {
       ignoreNextScrollEventRef.current = false;
       return;
@@ -249,6 +265,12 @@ function LogLines({ expired, hasFilters, options, setOption, logs, renderLine }:
       )}
     >
       {lines.length === 0 && <NoLogs expired={expired} hasFilters={hasFilters} />}
+
+      {logs.lines.length > 0 && logs.loading && (
+        <div className="row justify-center">
+          <Spinner className="size-4" />
+        </div>
+      )}
 
       <div className="min-w-min break-all font-mono">
         {lines.map((line) => (

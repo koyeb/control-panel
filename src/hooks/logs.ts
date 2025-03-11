@@ -54,7 +54,7 @@ function useLogsHistory(filters: LogsFilters, enabled: boolean) {
 
   return useInfiniteQuery({
     enabled,
-    queryKey: ['logs', filters, token],
+    queryKey: ['logsQuery', filters, token],
     queryFn: ({ pageParam: { start, end } }) => {
       return api.logsQuery({
         token,
