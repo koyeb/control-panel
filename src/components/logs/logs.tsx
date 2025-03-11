@@ -247,8 +247,8 @@ function LogLines({ expired, hasFilters, options, setOption, lines, renderLine }
       {lines.length === 0 && <NoLogs expired={expired} hasFilters={hasFilters} />}
 
       <div className="min-w-min break-all font-mono">
-        {lines.map((line, index) => (
-          <Fragment key={index}>{renderLine(line, options)}</Fragment>
+        {lines.map((line) => (
+          <Fragment key={line.id}>{renderLine(line, options)}</Fragment>
         ))}
       </div>
     </div>

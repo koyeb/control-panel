@@ -48,11 +48,23 @@ export function DeploymentLogs({ app, service, deployment, instances }: Deployme
     }
   };
 
+  const [now] = useState(new Date());
+
   const buildExpanded = expanded === 'build';
-  const buildLogs = useLogs(deployment.id, 'build', connectToBuildLogs(deployment, buildExpanded));
+  const buildLogs = useLogs(connectToBuildLogs(deployment, buildExpanded), {
+    deploymentId: deployment.id,
+    type: 'build',
+    start: new Date(deployment.date),
+    end: now,
+  });
 
   const runtimeExpanded = expanded === 'runtime';
-  const runtimeLogs = useLogs(deployment.id, 'runtime', connectToRuntimeLogs(deployment, runtimeExpanded));
+  const runtimeLogs = useLogs(connectToRuntimeLogs(deployment, runtimeExpanded), {
+    deploymentId: deployment.id,
+    type: 'runtime',
+    start: new Date(deployment.date),
+    end: now,
+  });
 
   return (
     <div className="rounded-md border">

@@ -427,7 +427,8 @@ export type InstanceStatus =
 // logs
 
 export type LogLine = {
-  date: string;
+  id: string;
+  date: Date;
   stream: 'stdout' | 'stderr' | 'koyeb';
   instanceId?: string;
   text: string;
