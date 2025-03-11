@@ -172,10 +172,9 @@ function InstanceRegionStepNew({ onNext }: InstanceRegionStepProps) {
     }
 
     if (!searchParams.has('regions')) {
-      getDefaultRegion(queryClient, datacenters, regions, instance).then(
-        (region) => setRegionsParam([region?.identifier ?? 'fra']),
-        () => setRegionsParam(['fra']),
-      );
+      const defaultRegion = getDefaultRegion(queryClient, datacenters, regions, instance);
+
+      setRegionsParam(defaultRegion ? [defaultRegion.identifier] : ['fra']);
     }
   });
 

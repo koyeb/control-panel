@@ -4,9 +4,7 @@ import { CatalogDatacenter, CatalogRegion } from 'src/api/model';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-import { getUrlLatency } from './url-latency';
-
-export async function getDefaultRegion(
+export function getDefaultRegion(
   queryClient: QueryClient,
   datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
@@ -17,7 +15,7 @@ export async function getDefaultRegion(
     .filter((region) => region.scope === 'metropolitan')
     .filter((region) => !region.instances || inArray(instance, region.instances));
 
-  const regionLatencies = await getRegionLatencies(queryClient, datacenters, availableRegions);
+  const regionLatencies = getRegionLatencies(queryClient, datacenters, availableRegions);
 
   availableRegions.sort(
     (a, b) => (regionLatencies.get(a) ?? Infinity) - (regionLatencies.get(b) ?? Infinity),
@@ -36,31 +34,12 @@ function getRegionDatacenterUrl(datacenters: CatalogDatacenter[], region: Catalo
   }
 }
 
-async function getRegionLatencies(
+function getRegionLatencies(
   queryClient: QueryClient,
   datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
 ) {
   const result = new Map<CatalogRegion, number>();
-
-  await Promise.all(
-    regions.map(async (region) => {
-      const url = getRegionDatacenterUrl(datacenters, region);
-
-      if (url === undefined) {
-        return;
-      }
-
-      const state = queryClient.getQueryState(['datacenterLatency', url]);
-
-      if (state?.status !== 'success') {
-        await queryClient.fetchQuery({
-          queryKey: ['datacenterLatency', url],
-          queryFn: () => getUrlLatency(url),
-        });
-      }
-    }),
-  );
 
   for (const region of regions) {
     const url = getRegionDatacenterUrl(datacenters, region);

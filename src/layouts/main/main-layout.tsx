@@ -35,6 +35,7 @@ import { Navigation } from './navigation';
 import { OrganizationPlan } from './organization-plan';
 import { OrganizationSwitcher } from './organization-switcher';
 import { PlatformStatus } from './platform-status';
+import { PreloadDatacenterLatencies } from './preload-datacenter-latencies';
 import { UserMenu } from './user-menu';
 
 const T = createTranslate('layouts.main');
@@ -50,6 +51,7 @@ export function MainLayout({ children }: LayoutProps) {
   return (
     <CommandPalette>
       <DocumentTitle />
+      <PreloadDatacenterLatencies />
 
       <CreateServiceDialog />
       <FeatureFlagsDialog />
