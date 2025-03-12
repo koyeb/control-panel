@@ -533,7 +533,7 @@
           "elapsed": "<dim>{time}s</dim>",
           "completed": "{elapsed, select, undefined {} other {<dim>Completed in</dim> {elapsed}s}}",
           "header": {
-            "title": "Logs",
+            "title": "Logs <dim>(Retention period: {retention, plural, =1 {{retention} day} other {{retention} days}})</dim>",
             "fullScreen": "Toggle full screen"
           },
           "options": {
@@ -546,13 +546,17 @@
           "waitingForLogs": {
             "title": "Getting ready to build your service",
             "description": "Hang tight while we get everything ready to start building your service"
+          },
+          "noLogs": {
+            "expired": "No logs available in the {retention, plural, =1 {{retention} day} other {{retention} days}} retention period",
+            "upgrade": "<upgrade>Upgrade</upgrade> your plan to increase retention period"
           }
         },
         "runtime": {
           "title": "Deployment",
           "notStarted": "Not started",
           "header": {
-            "title": "Logs",
+            "title": "Logs <dim>(Retention period: {retention, plural, =1 {{retention} day} other {{retention} days}})</dim>",
             "allRegions": "All regions",
             "allInstances": "All instances",
             "fullScreen": "Toggle full screen",
@@ -569,6 +573,12 @@
           "waitingForLogs": {
             "title": "Booting up the magic",
             "description": "We're juicing up the servers and provisioning the resources to deploy your service"
+          },
+          "noLogs": {
+            "expired": "No logs available in the {retention, plural, =1 {{retention} day} other {{retention} days}} retention period",
+            "upgrade": "<upgrade>Upgrade</upgrade> your plan to increase retention period",
+            "tailing": "New logs will show up here",
+            "filtered": "No logs match the current filters"
           }
         },
         "replicas": {

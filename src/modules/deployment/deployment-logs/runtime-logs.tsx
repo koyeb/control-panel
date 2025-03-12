@@ -1,10 +1,10 @@
 import clsx from 'clsx';
-import { isBefore, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 
-import { IconButton, Menu, MenuItem } from '@koyeb/design-system';
+import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
+import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import {
   App,
   CatalogRegion,
@@ -88,22 +88,6 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
     return <WaitingForLogs />;
   }
 
-  const renderNoLogs = () => {
-    const expired =
-      inArray(deployment.status, ['canceled', 'stopped', 'error']) &&
-      isBefore(deployment.date, sub(new Date(), { days: 7 }));
-
-    if (expired) {
-      return <>Logs have expired</>;
-    }
-
-    if (filtersForm.formState.isDirty) {
-      return <>Results filtered</>;
-    }
-
-    return <>Waiting for logs</>;
-  };
-
   return (
     <>
       <FullScreen
@@ -123,7 +107,13 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
           setOption={optionsForm.setValue}
           logs={{ ...logs, lines: filteredLines }}
           renderLine={renderLine}
-          renderNoLogs={renderNoLogs}
+          renderNoLogs={() => (
+            <NoLogs
+              deployment={deployment}
+              loading={logs.loading}
+              hasFilters={filtersForm.formState.isDirty}
+            />
+          )}
         />
 
         <LogsFooter
@@ -146,6 +136,49 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
           )}
         />
       </FullScreen>
+    </>
+  );
+}
+
+type NoLogsProps = {
+  deployment: ComputeDeployment;
+  loading: boolean;
+  hasFilters: boolean;
+};
+
+function NoLogs({ deployment, loading, hasFilters }: NoLogsProps) {
+  const { plan } = useOrganization();
+  const quotas = useOrganizationQuotas();
+
+  if (loading) {
+    return <Spinner className="size-6" />;
+  }
+
+  if (hasFilters) {
+    return (
+      <p className="text-base">
+        <T id="noLogs.filtered" />
+      </p>
+    );
+  }
+
+  return (
+    <>
+      <p className="text-base">
+        <T id="noLogs.expired" values={{ retention: quotas?.logsRetention }} />
+      </p>
+
+      {inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && (
+        <p>
+          <T id="noLogs.upgrade" />
+        </p>
+      )}
+
+      {inArray(deployment.status, ['healthy', 'degraded', 'unhealthy', 'sleeping']) && (
+        <p>
+          <T id="noLogs.tailing" />
+        </p>
+      )}
     </>
   );
 }
@@ -210,10 +243,12 @@ type LogsHeaderProps = {
 };
 
 function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
+  const quotas = useOrganizationQuotas();
+
   return (
     <header className="col md:row flex-wrap gap-4 p-4 md:items-center">
       <div className="mr-auto">
-        <T id="header.title" />
+        <T id="header.title" values={{ retention: quotas?.logsRetention }} />
       </div>
 
       <ControlledSelect

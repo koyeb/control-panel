@@ -145,7 +145,7 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
         <div className="col h-full items-center justify-center gap-2 py-12">{renderNoLogs()}</div>
       )}
 
-      {logs.lines.length > 0 && logs.loading && (
+      {logs.lines.length > 0 && logs.fetching && (
         <div className="row justify-center">
           <Spinner className="size-4" />
         </div>

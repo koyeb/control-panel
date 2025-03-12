@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
 import { Alert, IconButton, Menu, MenuItem } from '@koyeb/design-system';
+import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { ControlledCheckbox } from 'src/components/controlled';
@@ -58,16 +59,6 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
     return <WaitingForLogs />;
   }
 
-  const renderNoLogs = () => {
-    const expired = isBefore(new Date(deployment.date), sub(new Date(), { hours: 72 }));
-
-    if (expired) {
-      return <>Logs have expired</>;
-    }
-
-    return <>No logs</>;
-  };
-
   return (
     <>
       <FullScreen
@@ -82,7 +73,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
           setOption={optionsForm.setValue}
           logs={logs}
           renderLine={renderLine}
-          renderNoLogs={renderNoLogs}
+          renderNoLogs={() => <NoLogs deployment={deployment} />}
         />
 
         <LogsFooter
@@ -124,6 +115,26 @@ function WaitingForLogs() {
   );
 }
 
+function NoLogs({ deployment }: { deployment: ComputeDeployment }) {
+  const { plan } = useOrganization();
+  const quotas = useOrganizationQuotas();
+  const expired = isBefore(new Date(deployment.date), sub(new Date(), { days: quotas?.logsRetention }));
+
+  if (expired) {
+    return (
+      <>
+        <p className="text-base">
+          <T id="noLogs.expired" values={{ retention: quotas?.logsRetention }} />
+        </p>
+
+        <p>{inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}</p>
+      </>
+    );
+  }
+
+  return null;
+}
+
 function BuiltInPreviousDeployment({ service }: { service: Service }) {
   const deploymentId = service.lastProvisionedDeploymentId;
 
@@ -161,10 +172,12 @@ type LogsHeaderProps = {
 };
 
 function LogsHeader({ options }: LogsHeaderProps) {
+  const quotas = useOrganizationQuotas();
+
   return (
     <header className="row items-center gap-4 p-4">
       <div className="mr-auto">
-        <T id="header.title" />
+        <T id="header.title" values={{ retention: quotas?.logsRetention }} />
       </div>
 
       <IconButton

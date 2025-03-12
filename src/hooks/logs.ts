@@ -27,6 +27,7 @@ export type LogsApi = {
   error?: Error;
   lines: LogLine[];
   loading: boolean;
+  fetching: boolean;
   hasPrevious: boolean;
   loadPrevious: () => void;
 };
@@ -47,7 +48,8 @@ export function useLogs(enabled: boolean, filters: LogsFilters): LogsApi {
   return {
     error: query.error ?? stream.error,
     lines,
-    loading: query.isFetching,
+    loading: query.isLoading,
+    fetching: query.isFetching,
     hasPrevious: query.hasPreviousPage,
     loadPrevious: () => void query.fetchPreviousPage(),
   };
