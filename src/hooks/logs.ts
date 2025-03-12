@@ -32,9 +32,9 @@ export type LogsApi = {
   loadPrevious: () => void;
 };
 
-export function useLogs(enabled: boolean, filters: LogsFilters): LogsApi {
-  const { data: historyLines = [], ...query } = useLogsHistory(filters, enabled);
-  const stream = useLogsStream({ ...filters, start: filters.end }, enabled);
+export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
+  const { data: historyLines = [], ...query } = useLogsHistory(filters);
+  const stream = useLogsStream(tail, { ...filters, start: filters.end });
 
   const lines = useMemo<LogLine[]>(() => {
     const ansi = new AnsiUp();
@@ -51,16 +51,20 @@ export function useLogs(enabled: boolean, filters: LogsFilters): LogsApi {
     loading: query.isLoading,
     fetching: query.isFetching,
     hasPrevious: query.hasPreviousPage,
-    loadPrevious: () => void query.fetchPreviousPage(),
+    loadPrevious: () => !query.isFetching && void query.fetchPreviousPage(),
   };
 }
 
-function useLogsHistory(filters: LogsFilters, enabled: boolean) {
+function useLogsHistory(filters: LogsFilters) {
   const { token } = useToken();
   const quotas = useOrganizationQuotas();
 
+  const withinQuota = (date: Date) => {
+    return max([sub(new Date(), { days: quotas?.logsRetention }), date]);
+  };
+
   return useInfiniteQuery({
-    enabled: enabled && quotas !== undefined,
+    enabled: quotas !== undefined,
     queryKey: ['logsQuery', filters, token],
     queryFn: ({ pageParam: { start, end } }) => {
       return api.logsQuery({
@@ -68,8 +72,8 @@ function useLogsHistory(filters: LogsFilters, enabled: boolean) {
         query: {
           type: filters.type,
           deployment_id: filters.deploymentId,
-          start: start.toISOString(),
-          end: end.toISOString(),
+          start,
+          end,
           order: 'desc',
           limit: String(100),
         },
@@ -80,8 +84,8 @@ function useLogsHistory(filters: LogsFilters, enabled: boolean) {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     initialPageParam: {
-      start: max([sub(new Date(), { days: quotas?.logsRetention }), new Date(filters.start)]),
-      end: new Date(),
+      start: withinQuota(filters.start).toISOString(),
+      end: withinQuota(filters.end).toISOString(),
     },
     getNextPageParam: () => null,
     getPreviousPageParam: (firstPage) => {
@@ -92,19 +96,19 @@ function useLogsHistory(filters: LogsFilters, enabled: boolean) {
       }
 
       return {
-        start: new Date(next_start!),
-        end: new Date(next_end!),
+        start: next_start!,
+        end: next_end!,
       };
     },
     select: (data) => {
       return data.pages.flatMap(({ data }) =>
-        data!.map((data) => getLogLine(apiLogLineSchema.parse(data))).reverse(),
+        data!.map((data) => getLogLine(data as unknown as ApiLogLine)).reverse(),
       );
     },
   });
 }
 
-function useLogsStream(filters: LogsFilters, enabled: boolean) {
+function useLogsStream(connect: boolean, filters: LogsFilters) {
   const { token } = useToken();
   const filtersMemo = useDeepCompareMemo(filters);
 
@@ -114,9 +118,6 @@ function useLogsStream(filters: LogsFilters, enabled: boolean) {
   const [error, setError] = useState<Error>();
 
   const initialize = useCallback(async () => {
-    stream.current?.close();
-    setLines([]);
-
     stream.current = tailLogs(token, filtersMemo, {
       onOpen: () => setConnected(true),
       onClose: () => setConnected(false),
@@ -126,14 +127,15 @@ function useLogsStream(filters: LogsFilters, enabled: boolean) {
   }, [token, filtersMemo]);
 
   useEffect(() => {
-    if (enabled) {
+    if (connect) {
       initialize().catch(reportError);
     }
 
     return () => {
+      setLines([]);
       stream.current?.close();
     };
-  }, [enabled, initialize]);
+  }, [connect, initialize]);
 
   return {
     connected,
@@ -191,7 +193,7 @@ function tailLogs(token: string | undefined, filters: LogsFilters, listeners: Pa
   };
 }
 
-function getLogLine(result: z.infer<typeof apiLogLineSchema>): Omit<LogLine, 'html'> {
+function getLogLine(result: ApiLogLine): Omit<LogLine, 'html'> {
   return {
     id: createId(),
     date: new Date(result.created_at),
@@ -200,6 +202,8 @@ function getLogLine(result: z.infer<typeof apiLogLineSchema>): Omit<LogLine, 'ht
     text: result.msg,
   };
 }
+
+type ApiLogLine = z.infer<typeof apiLogLineSchema>;
 
 const apiLogLineSchema = z.object({
   created_at: z.string(),

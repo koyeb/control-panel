@@ -159,6 +159,7 @@ export type ComputeDeployment = {
   serviceId: string;
   name: string;
   date: string;
+  terminatedAt?: string;
   status: DeploymentStatus;
   messages: string[];
   definition: DeploymentDefinition;

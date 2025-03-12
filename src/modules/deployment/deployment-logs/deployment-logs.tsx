@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import {
@@ -17,6 +17,7 @@ import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
+import { inArray } from 'src/utils/arrays';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
@@ -40,75 +41,26 @@ export function DeploymentLogs({ app, service, deployment, instances }: Deployme
 
   useAutoExpandSection(setExpanded, deployment);
 
-  const toggleExpanded = (phase: DeploymentPhase) => {
-    if (phase === expanded) {
-      setExpanded(null);
-    } else {
-      setExpanded(phase);
-    }
-  };
-
-  const [now] = useState(new Date());
-
-  const buildExpanded = expanded === 'build';
-  const buildLogs = useLogs(connectToBuildLogs(deployment, buildExpanded), {
-    deploymentId: deployment.id,
-    type: 'build',
-    start: new Date(deployment.date),
-    end: now,
-  });
-
-  const runtimeExpanded = expanded === 'runtime';
-  const runtimeLogs = useLogs(connectToRuntimeLogs(deployment, runtimeExpanded), {
-    deploymentId: deployment.id,
-    type: 'runtime',
-    start: new Date(deployment.date),
-    end: now,
-  });
-
   return (
     <div className="rounded-md border">
       {hasBuild(deployment) && (
-        <AccordionSection
-          isExpanded={buildExpanded}
-          header={
-            <BuildSectionHeader
-              expanded={buildExpanded}
-              setExpanded={canToggleBuild(deployment) && (() => toggleExpanded('build'))}
-              deployment={deployment}
-              lines={buildLogs.lines}
-            />
-          }
-        >
-          <div className="col gap-4 p-4">
-            <BuildSteps deployment={deployment} />
-            <BuildLogs app={app} service={service} deployment={deployment} logs={buildLogs} />
-          </div>
-        </AccordionSection>
+        <BuildSection
+          app={app}
+          service={service}
+          deployment={deployment}
+          expanded={expanded === 'build'}
+          setExpanded={(expanded) => setExpanded(expanded ? 'build' : null)}
+        />
       )}
 
-      <AccordionSection
-        isExpanded={runtimeExpanded}
-        header={
-          <RuntimeSectionHeader
-            expanded={runtimeExpanded}
-            setExpanded={canToggleRuntime(deployment) && (() => toggleExpanded('runtime'))}
-            deployment={deployment}
-            lines={runtimeLogs.lines}
-          />
-        }
-      >
-        <div className="col gap-4 p-4">
-          <RuntimeLogs
-            app={app}
-            service={service}
-            deployment={deployment}
-            instances={instances}
-            logs={runtimeLogs}
-          />
-          {instances.length > 0 && <Replicas instances={instances} />}
-        </div>
-      </AccordionSection>
+      <RuntimeSection
+        app={app}
+        service={service}
+        deployment={deployment}
+        instances={instances}
+        expanded={expanded === 'runtime'}
+        setExpanded={(expanded) => setExpanded(expanded ? 'runtime' : null)}
+      />
     </div>
   );
 }
@@ -133,18 +85,6 @@ function canToggleRuntime(deployment: ComputeDeployment) {
   return !hasBuild(deployment) || deployment.buildSkipped || deployment.build?.status === 'completed';
 }
 
-function connectToBuildLogs(deployment: ComputeDeployment, expanded: boolean) {
-  if (!hasBuild(deployment)) {
-    return false;
-  }
-
-  return expanded || deployment.build?.status === 'running';
-}
-
-function connectToRuntimeLogs(deployment: ComputeDeployment, expanded: boolean) {
-  return expanded || deployment.status === 'starting';
-}
-
 function useAutoExpandSection(set: (values: DeploymentPhase | null) => void, deployment: ComputeDeployment) {
   useObserve(
     [canToggleBuild(deployment), canToggleRuntime(deployment)] as const,
@@ -164,19 +104,68 @@ function useAutoExpandSection(set: (values: DeploymentPhase | null) => void, dep
   );
 }
 
-type BuildSectionHeaderProps = {
+type BuildSectionProps = {
+  app: App;
+  service: Service;
+  deployment: ComputeDeployment;
   expanded: boolean;
-  setExpanded: ((expanded: boolean) => void) | false;
+  setExpanded: (expanded: boolean) => void;
+};
+
+function BuildSection({ app, service, deployment, expanded, setExpanded }: BuildSectionProps) {
+  const now = useMemo(() => new Date(), []);
+
+  const end = useMemo(() => {
+    if (deployment.build?.finishedAt) {
+      return new Date(deployment.build.finishedAt);
+    }
+
+    return now;
+  }, [now, deployment.build?.finishedAt]);
+
+  const logs = useLogs(deployment.build?.status === 'running', {
+    deploymentId: deployment.id,
+    type: 'build',
+    start: new Date(deployment.date),
+    end,
+  });
+
+  return (
+    <AccordionSection
+      isExpanded={expanded}
+      header={
+        <BuildSectionHeader
+          disabled={!canToggleBuild(deployment)}
+          expanded={expanded}
+          setExpanded={setExpanded}
+          deployment={deployment}
+          lines={[]}
+        />
+      }
+    >
+      <div className="col gap-4 p-4">
+        <BuildSteps deployment={deployment} />
+        <BuildLogs app={app} service={service} deployment={deployment} logs={logs} />
+      </div>
+    </AccordionSection>
+  );
+}
+
+type BuildSectionHeaderProps = {
+  disabled: boolean;
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
   deployment: ComputeDeployment;
   lines: LogLine[];
 };
 
-function BuildSectionHeader({ expanded, setExpanded, deployment, lines }: BuildSectionHeaderProps) {
+function BuildSectionHeader({ disabled, expanded, setExpanded, deployment, lines }: BuildSectionHeaderProps) {
   const status = getBuildStatus(deployment);
   const [StatusIcon, statusColorClassName] = buildStatusMap[status];
 
   return (
     <SectionHeader
+      disabled={disabled}
       expanded={expanded}
       setExpanded={setExpanded}
       title={<T id="build.title" />}
@@ -252,14 +241,69 @@ function elapsed({ startedAt, finishedAt }: DeploymentBuild) {
   return (new Date(finishedAt).getTime() - new Date(startedAt).getTime()) / 1000;
 }
 
-type RuntimeSectionHeaderProps = {
+type RuntimeSectionProps = {
+  app: App;
+  service: Service;
+  deployment: ComputeDeployment;
+  instances: Instance[];
   expanded: boolean;
-  setExpanded: ((expanded: boolean) => void) | false;
+  setExpanded: (expanded: boolean) => void;
+};
+
+function RuntimeSection({ app, service, deployment, instances, expanded, setExpanded }: RuntimeSectionProps) {
+  const now = useMemo(() => new Date(), []);
+
+  const end = useMemo(() => {
+    if (deployment.terminatedAt) {
+      return new Date(deployment.terminatedAt);
+    }
+
+    return now;
+  }, [now, deployment.terminatedAt]);
+
+  const logs = useLogs(inArray(deployment.status, ['healthy', 'unhealthy', 'degraded']), {
+    deploymentId: deployment.id,
+    type: 'runtime',
+    start: new Date(deployment.date),
+    end,
+  });
+
+  return (
+    <AccordionSection
+      isExpanded={expanded}
+      header={
+        <RuntimeSectionHeader
+          disabled={!canToggleRuntime(deployment)}
+          expanded={expanded}
+          setExpanded={setExpanded}
+          deployment={deployment}
+          lines={[]}
+        />
+      }
+    >
+      <div className="col gap-4 p-4">
+        <RuntimeLogs app={app} service={service} deployment={deployment} instances={instances} logs={logs} />
+        {instances.length > 0 && <Replicas instances={instances} />}
+      </div>
+    </AccordionSection>
+  );
+}
+
+type RuntimeSectionHeaderProps = {
+  disabled: boolean;
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
   deployment: ComputeDeployment;
   lines: LogLine[];
 };
 
-function RuntimeSectionHeader({ expanded, setExpanded, deployment, lines }: RuntimeSectionHeaderProps) {
+function RuntimeSectionHeader({
+  disabled,
+  expanded,
+  setExpanded,
+  deployment,
+  lines,
+}: RuntimeSectionHeaderProps) {
   const notStarted =
     hasBuild(deployment) && !deployment.buildSkipped && deployment.build?.status !== 'completed';
 
@@ -269,6 +313,7 @@ function RuntimeSectionHeader({ expanded, setExpanded, deployment, lines }: Runt
 
   return (
     <SectionHeader
+      disabled={disabled}
       expanded={expanded}
       setExpanded={setExpanded}
       title={<T id="runtime.title" />}
@@ -281,8 +326,9 @@ function RuntimeSectionHeader({ expanded, setExpanded, deployment, lines }: Runt
 }
 
 type SectionHeaderProps = {
+  disabled: boolean;
   expanded: boolean;
-  setExpanded: ((expanded: boolean) => void) | false;
+  setExpanded: (expanded: boolean) => void;
   title: React.ReactNode;
   status: React.ReactNode;
   statusColorClassName: string;
@@ -292,6 +338,7 @@ type SectionHeaderProps = {
 };
 
 function SectionHeader({
+  disabled,
   expanded,
   setExpanded,
   title,
@@ -302,11 +349,7 @@ function SectionHeader({
   end,
 }: SectionHeaderProps) {
   return (
-    <AccordionHeader
-      expanded={expanded}
-      setExpanded={setExpanded || undefined}
-      className={clsx(setExpanded === false && 'opacity-50')}
-    >
+    <AccordionHeader expanded={expanded} setExpanded={setExpanded} className={clsx(disabled && 'opacity-50')}>
       <div className="col gap-1">
         <div className="font-medium">{title}</div>
         <div className={clsx('text-xs first-letter:capitalize', statusColorClassName)}>{status}</div>

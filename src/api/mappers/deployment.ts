@@ -252,6 +252,7 @@ function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployme
     serviceId: deployment.service_id!,
     name: shortId(deployment.id)!,
     date: deployment.created_at!,
+    terminatedAt: deployment.terminated_at!,
     status: lowerCase(deployment.status!),
     messages: deployment.messages!,
     buildSkipped: deployment.skip_build,

@@ -37,8 +37,6 @@ type BuildLogsProps = {
 };
 
 export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
-  const { error, lines } = logs;
-
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
@@ -51,11 +49,11 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
     return <BuiltInPreviousDeployment service={service} />;
   }
 
-  if (error) {
-    return <Translate id="common.errorMessage" values={{ message: error.message }} />;
+  if (logs.error) {
+    return <Translate id="common.errorMessage" values={{ message: logs.error.message }} />;
   }
 
-  if (lines.length === 0 && inArray(deployment.status, ['pending', 'provisioning'])) {
+  if (logs.lines.length === 0 && inArray(deployment.status, ['pending', 'provisioning'])) {
     return <WaitingForLogs />;
   }
 
@@ -79,7 +77,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
         <LogsFooter
           appName={app.name}
           serviceName={service.name}
-          lines={lines}
+          lines={logs.lines}
           renderMenu={(props) => (
             <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
               {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (

@@ -53,7 +53,6 @@ type RuntimeLogsProps = {
 };
 
 export function RuntimeLogs({ app, service, deployment, instances, logs }: RuntimeLogsProps) {
-  const { error, lines } = logs;
   const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.identifier));
 
   const filtersForm = useForm<Filters>({
@@ -70,19 +69,19 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
   });
 
   const filters = useFormValues(filtersForm);
-  const filteredLines = useFilteredLines(lines, filters, instances);
+  const filteredLines = useFilteredLines(logs.lines, filters, instances);
   const filteredInstances = useFilteredInstances(filters, instances);
 
   const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
     return <LogLine options={options} line={line} />;
   }, []);
 
-  if (error) {
-    return <Translate id="common.errorMessage" values={{ message: error.message }} />;
+  if (logs.error) {
+    return <Translate id="common.errorMessage" values={{ message: logs.error.message }} />;
   }
 
   if (
-    lines.length === 0 &&
+    logs.lines.length === 0 &&
     inArray(deployment.status, ['pending', 'provisioning', 'scheduled', 'allocating'])
   ) {
     return <WaitingForLogs />;
@@ -119,7 +118,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
         <LogsFooter
           appName={app.name}
           serviceName={service.name}
-          lines={lines}
+          lines={logs.lines}
           renderMenu={(props) => (
             <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
               {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
