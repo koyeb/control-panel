@@ -13,6 +13,7 @@ import {
   LogLine as LogLineType,
   Service,
 } from 'src/api/model';
+import { isDeploymentRunning } from 'src/application/service-functions';
 import { ControlledCheckbox, ControlledSelect } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
 import { IconFullscreen } from 'src/components/icons';
@@ -173,7 +174,7 @@ function NoLogs({ deployment, loading, hasFilters }: NoLogsProps) {
         </p>
       )}
 
-      {inArray(deployment.status, ['healthy', 'degraded', 'unhealthy', 'sleeping']) && (
+      {isDeploymentRunning(deployment) && (
         <p>
           <T id="noLogs.tailing" />
         </p>

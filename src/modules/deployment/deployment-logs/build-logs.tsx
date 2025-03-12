@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { isBefore, sub } from 'date-fns';
 import { useCallback } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
@@ -71,7 +70,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
           setOption={optionsForm.setValue}
           logs={logs}
           renderLine={renderLine}
-          renderNoLogs={() => <NoLogs deployment={deployment} />}
+          renderNoLogs={() => <NoLogs />}
         />
 
         <LogsFooter
@@ -113,24 +112,19 @@ function WaitingForLogs() {
   );
 }
 
-function NoLogs({ deployment }: { deployment: ComputeDeployment }) {
+function NoLogs() {
   const { plan } = useOrganization();
   const quotas = useOrganizationQuotas();
-  const expired = isBefore(new Date(deployment.date), sub(new Date(), { days: quotas?.logsRetention }));
 
-  if (expired) {
-    return (
-      <>
-        <p className="text-base">
-          <T id="noLogs.expired" values={{ retention: quotas?.logsRetention }} />
-        </p>
+  return (
+    <>
+      <p className="text-base">
+        <T id="noLogs.expired" values={{ retention: quotas?.logsRetention }} />
+      </p>
 
-        <p>{inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}</p>
-      </>
-    );
-  }
-
-  return null;
+      <p>{inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}</p>
+    </>
+  );
 }
 
 function BuiltInPreviousDeployment({ service }: { service: Service }) {

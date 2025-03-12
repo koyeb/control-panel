@@ -11,13 +11,12 @@ import {
   LogLine,
   Service,
 } from 'src/api/model';
-import { hasBuild } from 'src/application/service-functions';
+import { hasBuild, isDeploymentRunning } from 'src/application/service-functions';
 import { IconCircleDashed } from 'src/components/icons';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
-import { inArray } from 'src/utils/arrays';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
@@ -261,7 +260,7 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
     return now;
   }, [now, deployment.terminatedAt]);
 
-  const logs = useLogs(inArray(deployment.status, ['healthy', 'unhealthy', 'degraded']), {
+  const logs = useLogs(isDeploymentRunning(deployment), {
     deploymentId: deployment.id,
     type: 'runtime',
     start: new Date(deployment.date),

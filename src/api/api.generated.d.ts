@@ -4009,6 +4009,11 @@ export interface components {
             domains?: string;
             domains_load_balancer?: components["schemas"]["DomainLoadBalancerQuotas"];
             instance_types?: string[];
+            /**
+             * Time in days
+             * Format: int32
+             */
+            logs_retention?: number;
             max_instances_by_type?: {
                 [key: string]: string;
             };
@@ -4016,6 +4021,11 @@ export interface components {
             max_organization_members?: string;
             /** Format: int64 */
             memory_mb?: string;
+            /**
+             * Time in days
+             * Format: int32
+             */
+            metrics_retention?: number;
             persistent_volumes_by_region?: {
                 [key: string]: components["schemas"]["PersistentVolumeQuotas"];
             };

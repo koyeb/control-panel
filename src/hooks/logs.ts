@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AnsiUp } from 'ansi_up';
-import { max, sub } from 'date-fns';
+import { add, max, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
@@ -59,13 +59,17 @@ function useLogsHistory(filters: LogsFilters) {
   const quotas = useOrganizationQuotas();
 
   const withinQuota = (date: Date) => {
-    return max([sub(new Date(), { days: quotas?.logsRetention }), date]);
+    return max([add(sub(new Date(), { days: quotas?.logsRetention }), { minutes: 1 }), date]);
   };
 
   return useInfiniteQuery({
     enabled: quotas !== undefined,
     queryKey: ['logsQuery', filters, token],
     queryFn: ({ pageParam: { start, end } }) => {
+      if (start === end) {
+        return { data: [], pagination: { has_more: false } };
+      }
+
       return api.logsQuery({
         token,
         query: {

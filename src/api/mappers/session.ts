@@ -165,6 +165,6 @@ export function mapOrganizationQuotas({
     ),
     maxMemory: parseBytes(`${quotas!.memory_mb}MiB`),
     maxDomains: Number(quotas!.custom_domains),
-    logsRetention: 7,
+    logsRetention: Number(quotas!.logs_retention),
   };
 }

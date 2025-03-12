@@ -77,6 +77,19 @@ export function hasBuild(deployment?: Deployment) {
   return isComputeDeployment(deployment) && inArray(deployment.definition.source.type, ['git', 'archive']);
 }
 
+export function isDeploymentRunning({ status }: Deployment) {
+  return inArray(status, [
+    'canceling',
+    'allocating',
+    'starting',
+    'healthy',
+    'degraded',
+    'unhealthy',
+    'stopping',
+    'erroring',
+  ]);
+}
+
 export async function updateDatabaseService(
   serviceId: string,
   updater: (deployment: Api.DeploymentDefinition) => void,
