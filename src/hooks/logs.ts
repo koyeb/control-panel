@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import { api, apiStreams } from 'src/api/api';
+import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
 import { reportError } from 'src/application/report-error';
 import { useToken } from 'src/application/token';
@@ -54,9 +55,10 @@ export function useLogs(enabled: boolean, filters: LogsFilters): LogsApi {
 
 function useLogsHistory(filters: LogsFilters, enabled: boolean) {
   const { token } = useToken();
+  const quotas = useOrganizationQuotas();
 
   return useInfiniteQuery({
-    enabled,
+    enabled: enabled && quotas !== undefined,
     queryKey: ['logsQuery', filters, token],
     queryFn: ({ pageParam: { start, end } }) => {
       return api.logsQuery({
@@ -76,7 +78,7 @@ function useLogsHistory(filters: LogsFilters, enabled: boolean) {
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
     initialPageParam: {
-      start: max([sub(new Date(), { days: 7 }), new Date(filters.start)]),
+      start: max([sub(new Date(), { days: quotas?.logsRetention }), new Date(filters.start)]),
       end: new Date(),
     },
     getNextPageParam: () => null,

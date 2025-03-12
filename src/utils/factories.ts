@@ -55,6 +55,7 @@ const quotas = createFactory<OrganizationQuotas>(() => ({
   volumesByRegion: {},
   maxMemory: 0,
   maxDomains: 0,
+  logsRetention: 0,
 }));
 
 const activity = createFactory<Activity>(() => ({

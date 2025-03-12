@@ -79,6 +79,7 @@ export function useOrganizationQuotasQuery() {
   return useQuery({
     ...useApiQueryFn('organizationQuotas', { path: { organization_id: organizationId! } }),
     enabled: organizationId !== undefined,
+    refetchInterval: false,
     select: mapOrganizationQuotas,
   });
 }

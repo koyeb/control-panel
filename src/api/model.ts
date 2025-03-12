@@ -626,6 +626,7 @@ export type OrganizationQuotas = {
   volumesByRegion: Record<string, { maxVolumeSize: number; maxTotalSize: number }>;
   maxMemory: number;
   maxDomains: number;
+  logsRetention: number;
 };
 
 export type OrganizationSummary = {
