@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { api, apiStreams } from 'src/api/api';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
-import { reportError } from 'src/application/report-error';
 import { useToken } from 'src/application/token';
 import { createId } from 'src/utils/strings';
 
@@ -108,6 +107,8 @@ function useLogsHistory(filters: LogsFilters) {
   });
 }
 
+const reconnectTimeout = [0, 1_000, 5_000, 60_000];
+
 function useLogsStream(connect: boolean, filters: LogsFilters) {
   const { token } = useToken();
   const filtersMemo = useDeepCompareMemo(filters);
@@ -117,25 +118,43 @@ function useLogsStream(connect: boolean, filters: LogsFilters) {
   const [lines, setLines] = useState<Omit<LogLine, 'html'>[]>([]);
   const [error, setError] = useState<Error>();
 
-  const initialize = useCallback(async () => {
+  const [nonce, setNonce] = useState(Math.random());
+  const reconnectIndex = useRef<number>(null);
+
+  const initialize = useCallback(() => {
     stream.current = tailLogs(token, filtersMemo, {
-      onOpen: () => setConnected(true),
-      onClose: () => setConnected(false),
-      onError: setError,
+      onOpen: () => {
+        setError(undefined);
+        setConnected(true);
+        reconnectIndex.current = null;
+      },
+      onClose: () => {
+        setConnected(false);
+        setNonce(Math.random());
+      },
+      onError: (error) => {
+        setError(error);
+        setNonce(Math.random());
+        reconnectIndex.current ??= 0;
+        reconnectIndex.current++;
+      },
       onLogLine: (line) => setLines((lines) => [...lines, line]),
     });
   }, [token, filtersMemo]);
 
   useEffect(() => {
+    let timeout: number;
+
     if (connect) {
-      initialize().catch(reportError);
+      timeout = window.setTimeout(initialize, reconnectTimeout[reconnectIndex.current ?? 0]);
     }
 
     return () => {
-      setLines([]);
+      window.clearTimeout(timeout);
       stream.current?.close();
+      setLines([]);
     };
-  }, [connect, initialize]);
+  }, [connect, initialize, nonce]);
 
   return {
     connected,
