@@ -9,7 +9,6 @@ import jp from 'src/icons/flags/JP.png';
 import na from 'src/icons/flags/NA.png';
 import nea from 'src/icons/flags/NEA.png';
 import sa from 'src/icons/flags/SA.png';
-import sea from 'src/icons/flags/SEA.png';
 import sg from 'src/icons/flags/SG.png';
 import us from 'src/icons/flags/US.png';
 
@@ -41,7 +40,7 @@ const map: Record<string, string> = {
   na,
   sa,
   nea,
-  sea,
+  ap: sg,
   af,
   eu,
   fra: de,
