@@ -146,6 +146,10 @@ export function instanceSelector(
       }
     }
 
+    if (singleRegion && nextState.selectedRegions.length >= 2) {
+      nextState.selectedRegions = [nextState.selectedRegions[0]!];
+    }
+
     setState(nextState);
   };
 

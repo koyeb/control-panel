@@ -15,6 +15,8 @@ describe('instance selector', () => {
 
   let availabilities: Record<string, InstanceAvailability>;
 
+  let singleRegion: boolean | undefined;
+
   let state: InstanceSelectorState;
   let selector: InstanceSelector;
 
@@ -44,6 +46,8 @@ describe('instance selector', () => {
       [gpu1.identifier]: [true],
       [gpu2.identifier]: [true],
     };
+
+    singleRegion = undefined;
 
     state = {
       regionScope: 'metropolitan',
@@ -75,6 +79,7 @@ describe('instance selector', () => {
         instances: [free, ecoNano, ecoMicro, nano, micro, awsNano, gpu1, gpu2],
         regions: [fra, par, eu],
         availabilities,
+        singleRegion,
       },
       state,
       (next) => (state = next),
@@ -290,6 +295,29 @@ describe('instance selector', () => {
       act(() => selector.onRegionSelected(fra));
 
       expect(selector.selectedRegions).toEqual([]);
+    });
+
+    it('allows selecting a single region', () => {
+      setup(() => {
+        singleRegion = true;
+        setInitialRegions([fra]);
+      });
+
+      act(() => selector.onRegionSelected(par));
+
+      expect(selector.selectedRegions).toEqual([par]);
+    });
+
+    it('keeps a single region when singleRegion is enabled', () => {
+      setup(() => {
+        setInitialRegions([fra, par]);
+        setInitialInstance(nano);
+      });
+
+      act(() => (singleRegion = true));
+      act(() => selector.onInstanceCategorySelected('eco'));
+
+      expect(selector.selectedRegions).toEqual([fra]);
     });
   });
 });
