@@ -336,7 +336,7 @@ describe('instance selector', () => {
       act(() => (singleRegion = true));
       act(() => selector.onInstanceCategorySelected('eco'));
 
-      expect(selector.selectedRegions).toEqual([fra]);
+      expect(selector.selectedRegions).toEqual([par]);
     });
   });
 });

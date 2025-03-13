@@ -6,6 +6,7 @@ import { useDatacenters } from 'src/api/hooks/catalog';
 import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { last } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
 export type InstanceSelectorParams = {
@@ -163,8 +164,10 @@ export function instanceSelector(
       }
     }
 
-    if (singleRegion && nextState.selectedRegions.length >= 2) {
-      nextState.selectedRegions = [nextState.selectedRegions[0]!];
+    const isFreeInstance = nextState.selectedInstance?.identifier === 'free';
+
+    if ((singleRegion || isFreeInstance) && nextState.selectedRegions.length >= 2) {
+      nextState.selectedRegions = [last(nextState.selectedRegions)!];
     }
 
     setState(nextState);
@@ -196,11 +199,6 @@ export function instanceSelector(
 
     selectedRegions,
     onRegionSelected: (region) => {
-      if (selectedInstance?.identifier === 'free' || singleRegion) {
-        update({ selectedRegions: [region] });
-        return;
-      }
-
       const regions = selectedRegions.slice();
       const index = regions.indexOf(region);
 
