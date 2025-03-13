@@ -1,12 +1,10 @@
-import { act, renderHook } from '@testing-library/react';
-import { useState } from 'react';
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { create } from 'src/utils/factories';
 
-import { useInstanceSelector } from './instance-selector-state';
+import { InstanceSelector, instanceSelector, InstanceSelectorState } from './instance-selector-state';
 
 describe('instance selector', () => {
   let free: CatalogInstance, ecoNano: CatalogInstance, ecoMicro: CatalogInstance;
@@ -16,6 +14,9 @@ describe('instance selector', () => {
   let fra: CatalogRegion, par: CatalogRegion, eu: CatalogRegion;
 
   let availabilities: Record<string, InstanceAvailability>;
+
+  let state: InstanceSelectorState;
+  let selector: InstanceSelector;
 
   beforeEach(() => {
     free = create.instance({ identifier: 'free', category: 'eco' });
@@ -43,208 +44,244 @@ describe('instance selector', () => {
       [gpu1.identifier]: [true],
       [gpu2.identifier]: [true],
     };
+
+    state = {
+      regionScope: 'metropolitan',
+      instanceCategory: 'standard',
+      selectedInstance: null,
+      selectedRegions: [],
+    };
   });
 
-  function useTest({
-    initialInstance = null,
-    initialRegions = [],
-  }: { initialInstance?: CatalogInstance | null; initialRegions?: CatalogRegion[] } = {}) {
-    const [selectedInstance, setSelectedInstance] = useState<CatalogInstance | null>(initialInstance);
-    const [selectedRegions, setSelectedRegions] = useState<CatalogRegion[]>(initialRegions);
+  const setInitialInstance = (instance: CatalogInstance) => {
+    state.instanceCategory = instance.category;
+    state.selectedInstance = instance;
+  };
 
-    return {
-      setSelectedInstance,
-      setSelectedRegions,
-      ...useInstanceSelector({
+  const setInitialRegions = (regions: CatalogRegion[]) => {
+    state.regionScope = regions[0]!.scope;
+    state.selectedRegions = regions;
+  };
+
+  const setup = (cb?: () => void) => {
+    act(cb);
+  };
+
+  const act = (cb?: () => void) => {
+    cb?.();
+
+    selector = instanceSelector(
+      {
         instances: [free, ecoNano, ecoMicro, nano, micro, awsNano, gpu1, gpu2],
         regions: [fra, par, eu],
         availabilities,
-        selectedInstance,
-        setSelectedInstance,
-        selectedRegions,
-        setSelectedRegions,
-      }),
-    };
-  }
+      },
+      state,
+      (next) => (state = next),
+    );
+  };
 
   it('initializes the instance selector', () => {
-    const { result } = renderHook(() => useTest({ initialInstance: null }));
+    setup();
 
-    expect(result.current.instanceCategory).toEqual<InstanceCategory>('standard');
-    expect(result.current.regionScope).toEqual<RegionScope>('metropolitan');
-    expect(result.current.selectedInstance).toBeNull();
-    expect(result.current.selectedRegions).toHaveLength(0);
-    expect(result.current.instances).toHaveLength(2);
-    expect(result.current.regions).toHaveLength(2);
+    expect(selector.instanceCategory).toEqual<InstanceCategory>('standard');
+    expect(selector.regionScope).toEqual<RegionScope>('metropolitan');
+    expect(selector.selectedInstance).toBeNull();
+    expect(selector.selectedRegions).toHaveLength(0);
+    expect(selector.instances).toHaveLength(2);
+    expect(selector.regions).toHaveLength(2);
   });
 
   it('initializes with a selected instance and regions', () => {
-    const { result } = renderHook(() => useTest({ initialInstance: free, initialRegions: [fra] }));
+    setup(() => {
+      setInitialInstance(free);
+      setInitialRegions([fra]);
+    });
 
-    expect(result.current.instanceCategory).toEqual<InstanceCategory>('eco');
-    expect(result.current.selectedInstance).toBe(free);
-    expect(result.current.selectedRegions).toEqual([fra]);
+    expect(selector.instanceCategory).toEqual<InstanceCategory>('eco');
+    expect(selector.selectedInstance).toBe(free);
+    expect(selector.selectedRegions).toEqual([fra]);
   });
 
   describe('instances list', () => {
     it('filters the instances list by instance category', () => {
-      const { result } = renderHook(() => useTest({ initialInstance: free }));
+      setup(() => {
+        setInitialInstance(free);
+      });
 
-      expect(result.current.instances).toEqual([free, ecoNano, ecoMicro]);
+      expect(selector.instances).toEqual([free, ecoNano, ecoMicro]);
     });
 
     it('filters out unavailable instances', () => {
-      availabilities[ecoMicro.identifier] = [false, 'unavailableInCatalog'];
+      setup(() => {
+        availabilities[ecoMicro.identifier] = [false, 'unavailableInCatalog'];
+        setInitialInstance(free);
+      });
 
-      const { result } = renderHook(() => useTest({ initialInstance: free }));
-
-      expect(result.current.instances).toEqual([free, ecoNano]);
+      expect(selector.instances).toEqual([free, ecoNano]);
     });
   });
 
   describe('regions list', () => {
     it('filters regions by selected region scope', () => {
-      const { result } = renderHook(() => useTest({ initialRegions: [fra] }));
+      setup(() => {
+        setInitialRegions([fra]);
+      });
 
-      expect(result.current.regions).toEqual([fra, par]);
+      expect(selector.regions).toEqual([fra, par]);
     });
 
     it('filters out unavailable regions', () => {
-      nano.regions = ['fra'];
+      setup(() => {
+        setInitialInstance(nano);
+        setInitialRegions([fra]);
+        nano.regions = ['fra'];
+      });
 
-      const { result } = renderHook(() => useTest({ initialInstance: nano, initialRegions: [fra] }));
-
-      expect(result.current.regions).toEqual([fra]);
+      expect(selector.regions).toEqual([fra]);
     });
 
     it('allows only one region to be selected with the free instance', () => {
-      const { result } = renderHook(() => useTest({ initialInstance: free, initialRegions: [fra] }));
+      setup(() => {
+        setInitialInstance(free);
+        setInitialRegions([fra]);
+      });
 
-      act(() => result.current.onRegionSelected(par));
+      act(() => selector.onRegionSelected(par));
 
-      expect(result.current.selectedRegions).toEqual([par]);
+      expect(selector.selectedRegions).toEqual([par]);
     });
   });
 
   describe('instance category selection', () => {
     it('changes the selected instance category', () => {
-      const { result } = renderHook(() => useTest());
+      setup();
 
-      act(() => result.current.onInstanceCategorySelected('eco'));
+      act(() => selector.onInstanceCategorySelected('eco'));
 
-      expect(result.current.instanceCategory).toEqual<InstanceCategory>('eco');
-      expect(result.current.instances).toEqual([free, ecoNano, ecoMicro]);
+      expect(selector.instanceCategory).toEqual<InstanceCategory>('eco');
+      expect(selector.instances).toEqual([free, ecoNano, ecoMicro]);
     });
 
     it('selects the first instance when the category changes', () => {
-      const { result } = renderHook(() => useTest());
+      setup();
 
-      act(() => result.current.onInstanceCategorySelected('eco'));
+      act(() => selector.onInstanceCategorySelected('eco'));
 
-      expect(result.current.selectedInstance).toBe(free);
+      expect(selector.selectedInstance).toBe(free);
     });
 
     it('selects the first available instance', () => {
-      availabilities[free.identifier] = [false, 'freeAlreadyUsed'];
+      setup(() => {
+        availabilities[free.identifier] = [false, 'freeAlreadyUsed'];
+      });
 
-      const { result } = renderHook(() => useTest());
+      act(() => selector.onInstanceCategorySelected('eco'));
 
-      act(() => result.current.onInstanceCategorySelected('eco'));
-
-      expect(result.current.selectedInstance).toBe(ecoNano);
+      expect(selector.selectedInstance).toBe(ecoNano);
     });
   });
 
   describe('instance selection', () => {
     it('selects an instance', () => {
-      const { result } = renderHook(() => useTest());
+      setup();
 
-      act(() => result.current.onInstanceSelected(nano));
+      act(() => selector.onInstanceSelected(nano));
 
-      expect(result.current.selectedInstance).toBe(nano);
+      expect(selector.selectedInstance).toBe(nano);
     });
 
     it('unselects regions that became unavailable when selecting the instance', () => {
-      micro.regions = ['fra'];
+      setup(() => {
+        micro.regions = ['fra'];
+        setInitialRegions([fra, par]);
+      });
 
-      const { result } = renderHook(() => useTest({ initialRegions: [fra, par] }));
+      act(() => selector.onInstanceSelected(micro));
 
-      act(() => result.current.onInstanceSelected(micro));
-
-      expect(result.current.selectedRegions).toEqual([fra]);
+      expect(selector.selectedRegions).toEqual([fra]);
     });
 
     it('selects the first available region when all previously selected regions became unavailable', () => {
-      micro.regions = ['fra'];
+      setup(() => {
+        micro.regions = ['fra'];
+        setInitialRegions([par]);
+      });
 
-      const { result } = renderHook(() => useTest({ initialRegions: [par] }));
+      act(() => selector.onInstanceSelected(micro));
 
-      act(() => result.current.onInstanceSelected(micro));
-
-      expect(result.current.selectedRegions).toEqual([fra]);
+      expect(selector.selectedRegions).toEqual([fra]);
     });
   });
 
   describe('region scope', () => {
     it('does not return a scope when there is no available region in the other scope', () => {
-      eu.status = 'coming_soon';
+      setup(() => {
+        eu.status = 'coming_soon';
+      });
 
-      const { result } = renderHook(() => useTest());
-
-      expect(result.current.regionScope).toBeNull();
+      expect(selector.regionScope).toBeNull();
     });
 
     it('selects a region scope', () => {
-      const { result } = renderHook(() => useTest());
+      setup();
 
-      act(() => result.current.onRegionScopeSelected('continental'));
+      act(() => selector.onRegionScopeSelected('continental'));
 
-      expect(result.current.regionScope).toEqual<RegionScope>('continental');
+      expect(selector.regionScope).toEqual<RegionScope>('continental');
     });
 
     it('selects the first available region in the selected scope', () => {
-      const { result } = renderHook(() => useTest());
+      setup();
 
-      act(() => result.current.onRegionScopeSelected('continental'));
+      act(() => selector.onRegionScopeSelected('continental'));
 
-      expect(result.current.selectedRegions).toEqual([eu]);
+      expect(selector.selectedRegions).toEqual([eu]);
     });
 
     it('changes the scope when no instance is available in the current one but some are in the other', () => {
-      micro.regions = ['par'];
+      setup(() => {
+        micro.regions = ['par'];
+        setInitialInstance(nano);
+        setInitialRegions([eu]);
+      });
 
-      const { result } = renderHook(() => useTest({ initialInstance: nano, initialRegions: [eu] }));
+      act(() => selector.onInstanceSelected(micro));
 
-      act(() => result.current.onInstanceSelected(micro));
-
-      expect(result.current.regionScope).toEqual(null);
-      expect(result.current.selectedRegions).toEqual([par]);
+      expect(selector.regionScope).toEqual(null);
+      expect(selector.selectedRegions).toEqual([par]);
     });
   });
 
   describe('region selection', () => {
     it('adds a region to the selection', () => {
-      const { result } = renderHook(() => useTest({ initialRegions: [fra] }));
+      setup(() => {
+        setInitialRegions([fra]);
+      });
 
-      act(() => result.current.onRegionSelected(par));
+      act(() => selector.onRegionSelected(par));
 
-      expect(result.current.selectedRegions).toEqual([fra, par]);
+      expect(selector.selectedRegions).toEqual([fra, par]);
     });
 
     it('removes a region from the selection', () => {
-      const { result } = renderHook(() => useTest({ initialRegions: [fra, par] }));
+      setup(() => {
+        setInitialRegions([fra, par]);
+      });
 
-      act(() => result.current.onRegionSelected(par));
+      act(() => selector.onRegionSelected(par));
 
-      expect(result.current.selectedRegions).toEqual([fra]);
+      expect(selector.selectedRegions).toEqual([fra]);
     });
 
     it('allows unselecting all regions', () => {
-      const { result } = renderHook(() => useTest({ initialRegions: [fra] }));
+      setup(() => {
+        setInitialRegions([fra]);
+      });
 
-      act(() => result.current.onRegionSelected(fra));
+      act(() => selector.onRegionSelected(fra));
 
-      expect(result.current.selectedRegions).toEqual([]);
+      expect(selector.selectedRegions).toEqual([]);
     });
   });
 });

@@ -61,7 +61,7 @@ export function useInstanceSelector({
   );
 }
 
-type InstanceSelectorState = {
+export type InstanceSelectorState = {
   instanceCategory: InstanceCategory;
   regionScope: RegionScope;
   selectedInstance: CatalogInstance | null;
