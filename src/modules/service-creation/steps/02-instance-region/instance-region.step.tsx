@@ -107,7 +107,12 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
     }
 
     if (!searchParams.has('regions')) {
-      const defaultRegion = getDefaultRegion(queryClient, datacenters, regions, instance);
+      const defaultRegion = getDefaultRegion(
+        queryClient,
+        datacenters,
+        regions,
+        instances.find(hasProperty('identifier', instance)),
+      );
 
       setRegionsParam(defaultRegion ? [defaultRegion.identifier] : ['fra']);
     }

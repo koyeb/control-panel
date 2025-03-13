@@ -104,7 +104,7 @@ export async function initializeServiceForm(
     }
 
     if (!params.has('regions')) {
-      const defaultRegion = getDefaultRegion(queryClient, datacenters, regions, values.instance);
+      const defaultRegion = getDefaultRegion(queryClient, datacenters, regions, instance);
 
       if (defaultRegion !== undefined) {
         values.regions = [defaultRegion.identifier];

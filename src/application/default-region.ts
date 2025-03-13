@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 
-import { CatalogDatacenter, CatalogRegion } from 'src/api/model';
+import { CatalogDatacenter, CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
@@ -8,12 +8,14 @@ export function getDefaultRegion(
   queryClient: QueryClient,
   datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
-  instance: string | null,
+  instance: CatalogInstance | undefined,
 ) {
+  const targetScope: RegionScope = instance?.category === 'gpu' ? 'continental' : 'metropolitan';
+
   const availableRegions = regions
     .filter((region) => region.status === 'available')
-    .filter((region) => region.scope === 'metropolitan')
-    .filter((region) => !region.instances || inArray(instance, region.instances));
+    .filter((region) => region.scope === targetScope)
+    .filter((region) => !region.instances || inArray(instance?.identifier, region.instances));
 
   const regionLatencies = getRegionLatencies(queryClient, datacenters, availableRegions);
 
