@@ -212,6 +212,14 @@ describe('instance selector', () => {
 
       expect(selector.selectedRegions).toEqual([fra]);
     });
+
+    it('selects a continental region when selecting a GPU', () => {
+      setup();
+
+      act(() => selector.onInstanceCategorySelected('gpu'));
+
+      expect(selector.selectedRegions).toEqual([eu]);
+    });
   });
 
   describe('region scope', () => {

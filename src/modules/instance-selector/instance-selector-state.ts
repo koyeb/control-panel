@@ -118,6 +118,10 @@ export function instanceSelector(
       }
     }
 
+    if (updates.instanceCategory === 'gpu') {
+      nextState.regionScope = 'continental';
+    }
+
     const filteredRegions = filterRegions(nextState.regionScope, nextState.selectedInstance);
 
     nextState.selectedRegions = nextState.selectedRegions.filter((region) =>
