@@ -1,7 +1,10 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { dequal } from 'dequal';
 import { useState } from 'react';
 
+import { useDatacenters } from 'src/api/hooks/catalog';
 import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
+import { getDefaultRegion } from 'src/application/default-region';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { hasProperty } from 'src/utils/object';
 
@@ -43,6 +46,9 @@ export function useInstanceSelector({
   selectedRegions,
   setSelectedRegions,
 }: InstanceSelectorParams): InstanceSelector {
+  const queryClient = useQueryClient();
+  const datacenters = useDatacenters();
+
   const [instanceCategory, setInstanceCategory] = useState<InstanceCategory>(
     selectedInstance?.category ?? 'standard',
   );
@@ -51,6 +57,7 @@ export function useInstanceSelector({
 
   return instanceSelector(
     { availabilities, instances, regions, singleRegion },
+    (regions, instance) => getDefaultRegion(queryClient, datacenters, regions, instance),
     { instanceCategory, regionScope, selectedInstance, selectedRegions },
     (next) => {
       if (instanceCategory !== next.instanceCategory) setInstanceCategory(next.instanceCategory);
@@ -60,6 +67,11 @@ export function useInstanceSelector({
     },
   );
 }
+
+type GetDefaultRegion = (
+  regions: CatalogRegion[],
+  instance: CatalogInstance | undefined,
+) => CatalogRegion | undefined;
 
 export type InstanceSelectorState = {
   instanceCategory: InstanceCategory;
@@ -75,6 +87,7 @@ export function instanceSelector(
     regions,
     singleRegion,
   }: Pick<InstanceSelectorParams, 'availabilities' | 'instances' | 'regions' | 'singleRegion'>,
+  getDefaultRegion: GetDefaultRegion,
   state: InstanceSelectorState,
   setState: (state: InstanceSelectorState) => void,
 ): InstanceSelector {
@@ -129,20 +142,24 @@ export function instanceSelector(
     );
 
     if (nextState.selectedRegions.length === 0 && updates.selectedRegions === undefined) {
-      const firstAvailableRegion = filteredRegions[0];
+      const selectDefaultRegion = (scope: RegionScope) => {
+        const regions = filterRegions(scope, nextState.selectedInstance);
+        let defaultRegion = getDefaultRegion(regions, nextState.selectedInstance ?? undefined);
 
-      if (firstAvailableRegion) {
-        nextState.selectedRegions = [firstAvailableRegion];
-      } else {
-        const firstAvailableRegion = filterRegions(
-          otherScope(nextState.regionScope),
-          nextState.selectedInstance,
-        )[0];
-
-        if (firstAvailableRegion) {
-          nextState.regionScope = otherScope(nextState.regionScope);
-          nextState.selectedRegions = [firstAvailableRegion];
+        if (!defaultRegion) {
+          defaultRegion = regions[0];
         }
+
+        if (defaultRegion) {
+          nextState.selectedRegions = [defaultRegion];
+          nextState.regionScope = scope;
+        }
+      };
+
+      selectDefaultRegion(nextState.regionScope);
+
+      if (nextState.selectedRegions.length === 0) {
+        selectDefaultRegion(otherScope(nextState.regionScope));
       }
     }
 

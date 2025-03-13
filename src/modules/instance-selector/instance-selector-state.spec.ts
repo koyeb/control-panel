@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
@@ -11,11 +11,13 @@ describe('instance selector', () => {
   let nano: CatalogInstance, micro: CatalogInstance, awsNano: CatalogInstance;
   let gpu1: CatalogInstance, gpu2: CatalogInstance;
 
-  let fra: CatalogRegion, par: CatalogRegion, eu: CatalogRegion;
+  let fra: CatalogRegion, par: CatalogRegion, eu: CatalogRegion, na: CatalogRegion;
 
   let availabilities: Record<string, InstanceAvailability>;
 
   let singleRegion: boolean | undefined;
+
+  const getDefaultRegion = vi.fn();
 
   let state: InstanceSelectorState;
   let selector: InstanceSelector;
@@ -35,6 +37,7 @@ describe('instance selector', () => {
     fra = create.region({ identifier: 'fra', scope: 'metropolitan' });
     par = create.region({ identifier: 'par', scope: 'metropolitan' });
     eu = create.region({ identifier: 'eu', scope: 'continental' });
+    na = create.region({ identifier: 'na', scope: 'continental' });
 
     availabilities = {
       [free.identifier]: [true],
@@ -48,6 +51,8 @@ describe('instance selector', () => {
     };
 
     singleRegion = undefined;
+
+    getDefaultRegion.mockReset();
 
     state = {
       regionScope: 'metropolitan',
@@ -77,10 +82,11 @@ describe('instance selector', () => {
     selector = instanceSelector(
       {
         instances: [free, ecoNano, ecoMicro, nano, micro, awsNano, gpu1, gpu2],
-        regions: [fra, par, eu],
+        regions: [fra, par, eu, na],
         availabilities,
         singleRegion,
       },
+      getDefaultRegion,
       state,
       (next) => (state = next),
     );
@@ -231,6 +237,7 @@ describe('instance selector', () => {
     it('does not return a scope when there is no available region in the other scope', () => {
       setup(() => {
         eu.status = 'coming_soon';
+        na.status = 'coming_soon';
       });
 
       expect(selector.regionScope).toBeNull();
@@ -244,8 +251,20 @@ describe('instance selector', () => {
       expect(selector.regionScope).toEqual<RegionScope>('continental');
     });
 
-    it('selects the first available region in the selected scope', () => {
+    it('selects the default region in the selected scope', () => {
       setup();
+
+      getDefaultRegion.mockReturnValue(na);
+
+      act(() => selector.onRegionScopeSelected('continental'));
+
+      expect(selector.selectedRegions).toEqual([na]);
+    });
+
+    it('selects the first available region in the selected scope when no default region is returned', () => {
+      setup();
+
+      getDefaultRegion.mockReturnValue(undefined);
 
       act(() => selector.onRegionScopeSelected('continental'));
 

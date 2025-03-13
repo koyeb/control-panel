@@ -1,20 +1,17 @@
 import { QueryClient } from '@tanstack/react-query';
 
-import { CatalogDatacenter, CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
+import { CatalogDatacenter, CatalogInstance, CatalogRegion } from 'src/api/model';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
 export function getDefaultRegion(
   queryClient: QueryClient,
-  datacenters: CatalogDatacenter[],
-  regions: CatalogRegion[],
+  datacenters: readonly CatalogDatacenter[],
+  regions: readonly CatalogRegion[],
   instance: CatalogInstance | undefined,
 ) {
-  const targetScope: RegionScope = instance?.category === 'gpu' ? 'continental' : 'metropolitan';
-
   const availableRegions = regions
     .filter((region) => region.status === 'available')
-    .filter((region) => region.scope === targetScope)
     .filter((region) => !region.instances || inArray(instance?.identifier, region.instances));
 
   const regionLatencies = getRegionLatencies(queryClient, datacenters, availableRegions);
@@ -28,7 +25,7 @@ export function getDefaultRegion(
   }
 }
 
-function getRegionDatacenterUrl(datacenters: CatalogDatacenter[], region: CatalogRegion) {
+function getRegionDatacenterUrl(datacenters: readonly CatalogDatacenter[], region: CatalogRegion) {
   const datacenter = datacenters.find(hasProperty('identifier', region.datacenters[0]));
 
   if (datacenter) {
@@ -38,8 +35,8 @@ function getRegionDatacenterUrl(datacenters: CatalogDatacenter[], region: Catalo
 
 function getRegionLatencies(
   queryClient: QueryClient,
-  datacenters: CatalogDatacenter[],
-  regions: CatalogRegion[],
+  datacenters: readonly CatalogDatacenter[],
+  regions: readonly CatalogRegion[],
 ) {
   const result = new Map<CatalogRegion, number>();
 
