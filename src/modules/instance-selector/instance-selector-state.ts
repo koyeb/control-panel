@@ -49,6 +49,35 @@ export function useInstanceSelector({
 
   const [regionScope, setRegionScope] = useState<RegionScope>(selectedRegions[0]?.scope ?? 'metropolitan');
 
+  return instanceSelector(
+    { availabilities, instances, regions, singleRegion },
+    { instanceCategory, regionScope, selectedInstance, selectedRegions },
+    (next) => {
+      if (instanceCategory !== next.instanceCategory) setInstanceCategory(next.instanceCategory);
+      if (regionScope !== next.regionScope) setRegionScope(next.regionScope);
+      if (selectedInstance !== next.selectedInstance) setSelectedInstance(next.selectedInstance);
+      if (!dequal(selectedRegions, next.selectedRegions)) setSelectedRegions(next.selectedRegions);
+    },
+  );
+}
+
+type InstanceSelectorState = {
+  instanceCategory: InstanceCategory;
+  regionScope: RegionScope;
+  selectedInstance: CatalogInstance | null;
+  selectedRegions: CatalogRegion[];
+};
+
+export function instanceSelector(
+  {
+    availabilities,
+    instances,
+    regions,
+    singleRegion,
+  }: Pick<InstanceSelectorParams, 'availabilities' | 'instances' | 'regions' | 'singleRegion'>,
+  state: InstanceSelectorState,
+  setState: (state: InstanceSelectorState) => void,
+): InstanceSelector {
   const isInstanceAvailable = (instance: CatalogInstance) => {
     return availabilities[instance.identifier]?.[0];
   };
@@ -72,54 +101,51 @@ export function useInstanceSelector({
       .filter((region) => isRegionAvailableForInstance(region, instance));
   };
 
-  function update(
-    values: Partial<{
-      instanceCategory: InstanceCategory;
-      regionScope: RegionScope;
-      selectedInstance: CatalogInstance;
-      selectedRegions: CatalogRegion[];
-    }>,
-  ) {
-    const state = { instanceCategory, regionScope, selectedInstance, selectedRegions, ...values };
+  const update = (updates: Partial<InstanceSelectorState>) => {
+    const nextState = { ...state, ...updates };
 
-    const filteredInstances = filterInstances(state.instanceCategory);
+    const filteredInstances = filterInstances(nextState.instanceCategory);
 
-    if (state.selectedInstance && !filteredInstances.includes(state.selectedInstance)) {
-      state.selectedInstance = null;
+    if (nextState.selectedInstance && !filteredInstances.includes(nextState.selectedInstance)) {
+      nextState.selectedInstance = null;
     }
 
-    if (state.selectedInstance === null) {
+    if (nextState.selectedInstance === null) {
       const firstAvailableInstance = filteredInstances.find(isInstanceAvailable);
 
       if (firstAvailableInstance) {
-        state.selectedInstance = firstAvailableInstance;
+        nextState.selectedInstance = firstAvailableInstance;
       }
     }
 
-    const filteredRegions = filterRegions(state.regionScope, state.selectedInstance);
+    const filteredRegions = filterRegions(nextState.regionScope, nextState.selectedInstance);
 
-    state.selectedRegions = state.selectedRegions.filter((region) => filteredRegions.includes(region));
+    nextState.selectedRegions = nextState.selectedRegions.filter((region) =>
+      filteredRegions.includes(region),
+    );
 
-    if (state.selectedRegions.length === 0 && values.selectedRegions === undefined) {
+    if (nextState.selectedRegions.length === 0 && updates.selectedRegions === undefined) {
       const firstAvailableRegion = filteredRegions[0];
 
       if (firstAvailableRegion) {
-        state.selectedRegions = [firstAvailableRegion];
+        nextState.selectedRegions = [firstAvailableRegion];
       } else {
-        const firstAvailableRegion = filterRegions(otherScope(state.regionScope), state.selectedInstance)[0];
+        const firstAvailableRegion = filterRegions(
+          otherScope(nextState.regionScope),
+          nextState.selectedInstance,
+        )[0];
 
         if (firstAvailableRegion) {
-          state.regionScope = otherScope(state.regionScope);
-          state.selectedRegions = [firstAvailableRegion];
+          nextState.regionScope = otherScope(nextState.regionScope);
+          nextState.selectedRegions = [firstAvailableRegion];
         }
       }
     }
 
-    if (instanceCategory !== state.instanceCategory) setInstanceCategory(state.instanceCategory);
-    if (regionScope !== state.regionScope) setRegionScope(state.regionScope);
-    if (selectedInstance !== state.selectedInstance) setSelectedInstance(state.selectedInstance);
-    if (!dequal(selectedRegions, state.selectedRegions)) setSelectedRegions(state.selectedRegions);
-  }
+    setState(nextState);
+  };
+
+  const { instanceCategory, regionScope, selectedInstance, selectedRegions } = state;
 
   return {
     instanceCategory,
