@@ -4,15 +4,7 @@ import { useController, useFieldArray, useForm, UseFormReturn } from 'react-hook
 import { z } from 'zod';
 
 import { Button } from '@koyeb/design-system';
-import {
-  useDatacenters,
-  useDatacentersQuery,
-  useInstance,
-  useInstances,
-  useInstancesQuery,
-  useRegions,
-  useRegionsQuery,
-} from 'src/api/hooks/catalog';
+import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
@@ -67,12 +59,9 @@ type OneClickAppFormProps = {
 };
 
 export function OneClickAppForm(props: OneClickAppFormProps) {
-  const datacenters = useDatacentersQuery();
-  const regions = useRegionsQuery();
-  const instances = useInstancesQuery();
   const githubApp = useGithubAppQuery();
 
-  if (datacenters.isPending || regions.isPending || instances.isPending || githubApp.isPending) {
+  if (githubApp.isPending) {
     return <Loading />;
   }
 

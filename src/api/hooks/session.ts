@@ -13,6 +13,13 @@ import {
 } from '../mappers/session';
 import { useApiQueryFn } from '../use-api';
 
+const disableRefetch = {
+  refetchInterval: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+} as const;
+
 export function useUserQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentUser'),
@@ -62,6 +69,7 @@ export function useOrganizationSummaryQuery() {
   const organizationId = organization?.id;
 
   return useQuery({
+    ...disableRefetch,
     ...useApiQueryFn('organizationSummary', { path: { organization_id: organizationId! } }),
     enabled: organizationId !== undefined,
     select: mapOrganizationSummary,
@@ -77,9 +85,9 @@ export function useOrganizationQuotasQuery() {
   const organizationId = organization?.id;
 
   return useQuery({
+    ...disableRefetch,
     ...useApiQueryFn('organizationQuotas', { path: { organization_id: organizationId! } }),
     enabled: organizationId !== undefined,
-    refetchInterval: false,
     select: mapOrganizationQuotas,
   });
 }
@@ -92,6 +100,7 @@ export function useUserOrganizationMemberships() {
   const user = useUserUnsafe();
 
   return useQuery({
+    ...disableRefetch,
     ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
     enabled: user !== undefined,
     select: mapOrganizationMembers,

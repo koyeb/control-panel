@@ -3,9 +3,8 @@ import clsx from 'clsx';
 import { useEffect, useMemo, useRef } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
-import { useInstance, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
+import { useInstance } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
-import { useOrganizationQuery, useOrganizationSummaryQuery, useUserQuery } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
@@ -46,11 +45,13 @@ type ServiceFormProps = {
 };
 
 export function ServiceForm(props: ServiceFormProps) {
-  return (
-    <FetchServiceFormResources className={props.className}>
-      <ServiceForm_ {...props} />
-    </FetchServiceFormResources>
-  );
+  const githubAppQuery = useGithubAppQuery();
+
+  if (githubAppQuery.isPending) {
+    return <ServiceFormSkeleton className={props.className} />;
+  }
+
+  return <ServiceForm_ {...props} />;
 }
 
 function ServiceForm_({
@@ -165,33 +166,6 @@ function mapError(fields: Record<string, string>): Record<string, string> {
   }
 
   return mapped as Record<string, string>;
-}
-
-type FetchServiceFormResourcesProps = {
-  className?: string;
-  children: React.ReactNode;
-};
-
-function FetchServiceFormResources({ className, children }: FetchServiceFormResourcesProps) {
-  const userQuery = useUserQuery();
-  const organizationQuery = useOrganizationQuery();
-  const organizationSummaryQuery = useOrganizationSummaryQuery();
-  const regionsQuery = useRegionsQuery();
-  const instancesQuery = useInstancesQuery();
-  const githubAppQuery = useGithubAppQuery();
-
-  if (
-    userQuery.isPending ||
-    organizationQuery.isPending ||
-    organizationSummaryQuery.isPending ||
-    regionsQuery.isPending ||
-    instancesQuery.isPending ||
-    githubAppQuery.isPending
-  ) {
-    return <ServiceFormSkeleton className={className} />;
-  }
-
-  return children;
 }
 
 function useDeployUrl({ formState, getValues }: UseFormReturn<ServiceForm>) {

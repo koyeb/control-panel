@@ -13,12 +13,17 @@ import {
 import { AiModel, OneClickApp } from '../model';
 import { useApiQueryFn } from '../use-api';
 
+const disableRefetch = {
+  refetchInterval: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+} as const;
+
 export function useInstancesQuery() {
   return useQuery({
-    ...useApiQueryFn('listCatalogInstances', {
-      query: { limit: '100' },
-    }),
-    refetchInterval: false,
+    ...disableRefetch,
+    ...useApiQueryFn('listCatalogInstances', { query: { limit: '100' } }),
     select: mapCatalogInstancesList,
   });
 }
@@ -39,10 +44,8 @@ export function useInstance(identifier: string | null) {
 
 export function useRegionsQuery() {
   return useQuery({
-    ...useApiQueryFn('listCatalogRegions', {
-      query: { limit: '100' },
-    }),
-    refetchInterval: false,
+    ...disableRefetch,
+    ...useApiQueryFn('listCatalogRegions', { query: { limit: '100' } }),
     select: mapCatalogRegionsList,
   });
 }
@@ -63,8 +66,8 @@ export function useRegion(identifier?: string) {
 
 export function useDatacentersQuery() {
   return useQuery({
+    ...disableRefetch,
     ...useApiQueryFn('listCatalogDatacenters'),
-    refetchInterval: false,
     select: mapCatalogDatacentersList,
   });
 }

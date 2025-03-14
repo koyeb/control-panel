@@ -8,14 +8,11 @@ import {
   useDatacenters,
   useInstance,
   useInstances,
-  useInstancesQuery,
   useModel,
   useModels,
   useModelsQuery,
   useRegions,
-  useRegionsQuery,
 } from 'src/api/hooks/catalog';
-import { useGithubAppQuery } from 'src/api/hooks/git';
 import { AiModel, CatalogInstance } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
@@ -64,12 +61,9 @@ type ModelFormProps = {
 };
 
 export function ModelForm(props: ModelFormProps) {
-  const instances = useInstancesQuery();
-  const regions = useRegionsQuery();
-  const githubApp = useGithubAppQuery();
   const models = useModelsQuery();
 
-  if (instances.isPending || regions.isPending || githubApp.isPending || models.isPending) {
+  if (models.isPending) {
     return <Loading />;
   }
 
