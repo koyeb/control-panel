@@ -1,10 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { useController, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Alert, Button } from '@koyeb/design-system';
 import {
+  useDatacenters,
   useInstance,
   useInstances,
   useInstancesQuery,
@@ -16,6 +17,7 @@ import {
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { AiModel, CatalogInstance } from 'src/api/model';
+import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
@@ -81,7 +83,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
   const t = T.useTranslate();
 
   const form = useForm<ModelFormType>({
-    defaultValues: getInitialValues(instances, initialModel ?? defined(models[0])),
+    defaultValues: useInitialValues(initialModel ?? defined(models[0])),
     resolver: useZodResolver(schema, {
       modelSlug: t('model.label'),
     }),
@@ -189,13 +191,20 @@ function instanceBestFit(model?: AiModel) {
   };
 }
 
-function getInitialValues(instances: CatalogInstance[], model: AiModel): Partial<ModelFormType> {
+function useInitialValues(model: AiModel): Partial<ModelFormType> {
+  const queryClient = useQueryClient();
+  const instances = useInstances();
+  const datacenters = useDatacenters();
+  const regions = useRegions();
+
   const instance = instances.find(instanceBestFit(model));
+  const continentalRegions = regions.filter(hasProperty('scope', 'continental'));
+  const defaultRegion = getDefaultRegion(queryClient, datacenters, continentalRegions, instance);
 
   return {
     modelSlug: model?.slug,
     instance: instance?.identifier,
-    regions: [instance?.regions?.[0] ?? 'fra'],
+    regions: [defaultRegion?.identifier ?? 'fra'],
   };
 }
 
