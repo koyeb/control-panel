@@ -1,6 +1,6 @@
 import { useInfiniteQuery, UseInfiniteQueryResult, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
@@ -90,19 +90,17 @@ function useInfiniteScroll(query: UseInfiniteQueryResult) {
 
   useIntersectionObserver(
     elementRef,
-    useMemo(() => ({ root: null }), []),
-    useCallback(
-      (entry) => {
-        if (entry.intersectionRatio === 0) {
-          return;
-        }
+    { root: null },
+    ([entry]) => {
+      if (entry?.intersectionRatio === 0) {
+        return;
+      }
 
-        if (!error && hasNextPage && !isFetchingNextPage) {
-          void fetchNextPage();
-        }
-      },
-      [error, hasNextPage, isFetchingNextPage, fetchNextPage],
-    ),
+      if (!error && hasNextPage && !isFetchingNextPage) {
+        void fetchNextPage();
+      }
+    },
+    [error, hasNextPage, isFetchingNextPage, fetchNextPage],
   );
 
   return setElementRef;

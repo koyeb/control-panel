@@ -1,6 +1,5 @@
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
-import { Fragment } from 'react/jsx-runtime';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedTime } from 'react-intl';
 
 import { Floating, IconButton, Spinner } from '@koyeb/design-system';
@@ -9,6 +8,7 @@ import { downloadFileFromString } from 'src/application/download-file-from-strin
 import { notify } from 'src/application/notify';
 import { IconCopy, IconDownload, IconEllipsis } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
+import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { LogsApi } from 'src/hooks/logs';
 import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
@@ -94,46 +94,45 @@ type LogLinesProps = {
 export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }: LogLinesProps) {
   const { lines } = logs;
   const container = useRef<HTMLDivElement>(null);
-  const ignoreNextScrollEventRef = useRef(false);
+  const before = useRef<HTMLDivElement>(null);
+  const after = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (container.current && options.tail) {
-      container.current.scrollTop = container.current.scrollHeight;
-      ignoreNextScrollEventRef.current = true;
+    if (options.tail) {
+      container.current?.scrollTo({ top: container.current.scrollHeight });
     }
-  }, [lines, options.fullScreen, options.tail]);
+  }, [options.tail, lines]);
 
-  const prevHeight = useRef<number>(null);
+  useIntersectionObserver(
+    before.current,
+    { root: container.current },
+    ([entry]) => entry?.isIntersecting && logs.hasPrevious && logs.loadPrevious(),
+    [lines],
+  );
+
+  useIntersectionObserver(
+    after.current,
+    { root: container.current },
+    ([entry]) => setOption('tail', Boolean(entry?.isIntersecting)),
+    [lines],
+  );
+
+  const lastScrollHeight = useRef<number>(null);
 
   useEffect(() => {
-    if (prevHeight.current && container.current?.scrollTop === 0) {
-      container.current.scrollTop = container.current.scrollHeight - prevHeight.current;
+    if (lastScrollHeight.current !== null && container.current?.scrollTop === 0) {
+      container.current.scrollTo({ top: container.current.scrollHeight - lastScrollHeight.current });
     }
   }, [lines]);
 
-  const onScroll = () => {
-    if (container.current) {
-      prevHeight.current = container.current.scrollHeight;
-
-      if (container.current.scrollTop < 100 && logs.hasPrevious && !logs.loading) {
-        logs.loadPrevious();
-      }
-    }
-
-    if (ignoreNextScrollEventRef.current === true) {
-      ignoreNextScrollEventRef.current = false;
-      return;
-    }
-
-    if (isScrollable(container.current)) {
-      setOption('tail', hasReachedEnd(container.current));
-    }
-  };
+  const loaderRef = useCallback((elem: HTMLDivElement | null) => {
+    elem?.scrollIntoView();
+    lastScrollHeight.current = container.current?.scrollHeight ?? null;
+  }, []);
 
   return (
     <div
       ref={container}
-      onScroll={onScroll}
       // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
         'scrollbar-green scrollbar-thin overflow-auto py-2',
@@ -145,38 +144,28 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
         <div className="col h-full items-center justify-center gap-2 py-12">{renderNoLogs()}</div>
       )}
 
-      {logs.lines.length > 0 && logs.fetching && (
-        <div className="row justify-center">
-          <Spinner className="size-4" />
-        </div>
-      )}
+      {lines.length > 0 && (
+        <>
+          <div ref={before} />
 
-      {logs.lines.length > 0 && (
-        <div className="min-w-min break-all font-mono">
-          {lines.map((line) => (
-            <Fragment key={line.id}>{renderLine(line, options)}</Fragment>
-          ))}
-        </div>
+          {logs.fetching && (
+            <div ref={loaderRef} className="row justify-center">
+              <Spinner className="mt-1 size-4" />
+            </div>
+          )}
+
+          <div className="min-w-min break-all font-mono">
+            {lines.map((line) => (
+              <Fragment key={line.id}>{renderLine(line, options)}</Fragment>
+            ))}
+          </div>
+
+          <div ref={after} />
+        </>
       )}
     </div>
   );
 }
-
-const isScrollable = (element: HTMLElement | null) => {
-  if (!element) {
-    return false;
-  }
-
-  return element.scrollHeight > element.clientHeight;
-};
-
-const hasReachedEnd = (element: HTMLElement | null) => {
-  if (!element) {
-    return false;
-  }
-
-  return element.scrollTop + element.clientHeight >= element.scrollHeight;
-};
 
 type LogLineDateProps = { line: LogLine } & Omit<React.ComponentProps<typeof FormattedTime>, 'value'>;
 

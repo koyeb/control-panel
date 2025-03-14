@@ -1,23 +1,23 @@
 import { useEffect } from 'react';
 
 export function useIntersectionObserver(
-  element: HTMLElement | null,
-  options: IntersectionObserverInit | undefined,
-  callback: (entry: IntersectionObserverEntry) => void,
+  target: Element | null,
+  options: IntersectionObserverInit,
+  cb: IntersectionObserverCallback,
+  deps: React.DependencyList,
 ) {
   useEffect(() => {
-    if (element === null) {
+    if (target === null) {
       return;
     }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => callback(entry));
-    }, options);
+    const observer = new IntersectionObserver(cb, options);
 
-    observer.observe(element);
+    observer.observe(target);
 
     return () => {
       observer.disconnect();
     };
-  }, [element, callback, options]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps);
 }
