@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 import { useDatacenters } from 'src/api/hooks/catalog';
 import { CatalogRegion } from 'src/api/model';
@@ -7,27 +8,43 @@ import { getUrlLatency } from 'src/application/url-latency';
 
 const { disablePolling } = getConfig();
 
-export function useRegionLatency(region: CatalogRegion | undefined) {
-  const datacenter = useRegionDatacenter(region);
-  const url = datacenter ? `https://${datacenter?.domain}/health` : undefined;
-  const enabled = url !== undefined;
+export function useRegionLatency(region: CatalogRegion | undefined): undefined | null | number {
+  const latenciesQuery = useDatacenterLatencies();
 
-  const { data } = useQuery({
-    queryKey: ['datacenterLatency', url],
-    enabled,
-    retry: false,
-    refetchOnMount: false,
-    refetchInterval: disablePolling ? false : 10 * 1000,
-    queryFn: () => getUrlLatency(url as string),
-  });
+  return useMemo(() => {
+    if (latenciesQuery.pending) {
+      return undefined;
+    }
 
-  if (!enabled) {
-    return null;
-  }
+    const latencies = region?.datacenters
+      .map((identifier) => latenciesQuery.latencies.get(identifier))
+      .filter((value): value is number => typeof value === 'number');
 
-  return data;
+    latencies?.sort();
+
+    return latencies?.at(0);
+  }, [region, latenciesQuery]);
 }
 
-function useRegionDatacenter(region: CatalogRegion | undefined) {
-  return useDatacenters().find((datacenter) => datacenter.identifier === region?.datacenters[0]);
+export function useDatacenterLatencies() {
+  const datacenters = useDatacenters().filter(({ identifier }) => !identifier.includes('aws'));
+
+  return useQueries({
+    queries: datacenters.map((datacenter) => ({
+      queryKey: ['datacenterLatency', datacenter.domain],
+      queryFn: () => getUrlLatency(`https://${datacenter.domain}/health`),
+      select: (latency: number | null) => [datacenter.identifier, latency] as const,
+      refetchInterval: disablePolling ? (false as const) : 10_000,
+      retry: false,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    })),
+    combine(results) {
+      return {
+        pending: results.some((result) => result.isPending),
+        latencies: new Map(results.map((result) => (result.isSuccess ? result.data : ['', null]))),
+      };
+    },
+  });
 }
