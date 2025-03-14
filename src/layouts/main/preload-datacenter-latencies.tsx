@@ -4,7 +4,7 @@ import { useDatacenters } from 'src/api/hooks/catalog';
 import { getUrlLatency } from 'src/application/url-latency';
 
 export function PreloadDatacenterLatencies() {
-  const datacenters = useDatacenters();
+  const datacenters = useDatacenters().filter(({ identifier }) => !identifier.includes('aws'));
   const urls = datacenters.map((datacenter) => `https://${datacenter.domain}/health`);
 
   useQueries({
