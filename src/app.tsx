@@ -1,10 +1,8 @@
-import { useQueries } from '@tanstack/react-query';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
-import { useApiQueryFn } from './api/use-api';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { useRefreshToken } from './application/token';
@@ -70,17 +68,11 @@ export function App() {
 }
 
 function AuthenticatedRoutes() {
-  const sessionQueries = useSessionQueries();
-  const userQueries = useUserQueries(sessionQueries.userId);
-  const organizationQueries = useOrganizationQueries(sessionQueries.organizationId);
-  const catalogQueries = useCatalogQueries();
-
-  const allQueries = [sessionQueries, catalogQueries, organizationQueries, userQueries];
-
   const userQuery = useUserQuery();
+  const organizationQuery = useOrganizationQuery();
   const onboardingStep = useOnboardingStep();
 
-  if (allQueries.some((query) => query.pending) || !userQuery.isSuccess) {
+  if (!userQuery.isSuccess || organizationQuery.isPending) {
     return (
       <Loading>
         <MainLayout />
@@ -174,73 +166,4 @@ function PageNotFound() {
       </LinkButton>
     </div>
   );
-}
-
-const disableRefetch = {
-  refetchInterval: false,
-  refetchOnWindowFocus: false,
-  refetchOnReconnect: false,
-} as const;
-
-function useSessionQueries() {
-  return useQueries({
-    queries: [useApiQueryFn('getCurrentUser'), useApiQueryFn('getCurrentOrganization')],
-    combine(queries) {
-      const [{ data: user }, { data: organization }] = queries;
-
-      return {
-        pending: queries.some((query) => query.isPending),
-        userId: user?.user?.id,
-        organizationId: organization?.organization?.id,
-      };
-    },
-  });
-}
-
-function useCatalogQueries() {
-  return useQueries({
-    queries: [
-      useApiQueryFn('listCatalogDatacenters'),
-      useApiQueryFn('listCatalogRegions', { query: { limit: '100' } }),
-      useApiQueryFn('listCatalogInstances', { query: { limit: '100' } }),
-    ].map((query) => ({
-      ...disableRefetch,
-      ...query,
-    })),
-    combine(queries) {
-      return { pending: queries.some((query) => query.isPending) };
-    },
-  });
-}
-
-function useOrganizationQueries(organizationId: string | undefined) {
-  return useQueries({
-    queries: [
-      useApiQueryFn('organizationQuotas', { path: { organization_id: organizationId! } }),
-      useApiQueryFn('organizationSummary', { path: { organization_id: organizationId! } }),
-    ].map((query) => ({
-      enabled: organizationId !== undefined,
-      ...disableRefetch,
-      ...query,
-    })),
-    combine(queries) {
-      return { pending: queries.some((query) => query.isPending) };
-    },
-  });
-}
-
-function useUserQueries(userId: string | undefined) {
-  return useQueries({
-    queries: [
-      //
-      useApiQueryFn('listOrganizationMembers', { query: { user_id: userId } }),
-    ].map((query) => ({
-      enabled: userId !== undefined,
-      ...disableRefetch,
-      ...query,
-    })),
-    combine(queries) {
-      return { pending: queries.some((query) => query.isPending) };
-    },
-  });
 }
