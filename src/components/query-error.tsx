@@ -23,7 +23,7 @@ export function QueryGuard<Data>({ query, children }: QueryGuardProps<Data>) {
   return children?.(query.data) ?? null;
 }
 
-export function QueryError({ error }: { error: Error }) {
+export function QueryError({ error, className }: { error: Error; className?: string }) {
   const description = () => {
     if (isApiValidationError(error) && error.fields[0]) {
       return error.fields[0].description;
@@ -36,5 +36,5 @@ export function QueryError({ error }: { error: Error }) {
     return <Translate id="common.unknownError" />;
   };
 
-  return <Alert variant="error" title={error.message} description={description()} />;
+  return <Alert variant="error" title={error.message} description={description()} className={className} />;
 }
