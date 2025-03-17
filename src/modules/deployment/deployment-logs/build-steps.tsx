@@ -20,7 +20,7 @@ export function BuildSteps({ deployment }: BuildStepsProps) {
   }
 
   return (
-    <div className="col gap-4 lg:gap-2">
+    <div className="col gap-4 p-4 lg:gap-2">
       {steps.map((step) => (
         <BuildStep key={step.name} step={step} />
       ))}

@@ -93,7 +93,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
       <FullScreen
         enabled={optionsForm.watch('fullScreen')}
         exit={() => optionsForm.setValue('fullScreen', false)}
-        className={clsx('col divide-y bg-neutral', !optionsForm.watch('fullScreen') && 'rounded-lg border')}
+        className="col gap-2 p-4"
       >
         <LogsHeader
           filters={filtersForm}
@@ -244,8 +244,8 @@ type LogsHeaderProps = {
 
 function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
   return (
-    <header className="col md:row flex-wrap gap-4 p-4 md:items-center">
-      <div className="mr-auto">
+    <header className="col gap-4">
+      <div>
         <T id="header.title" />
       </div>
 
@@ -284,18 +284,18 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
         )}
       />
 
-      <div className="row gap-4">
+      <div className="row ml-auto gap-4">
         <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
         <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
-      </div>
 
-      <IconButton
-        variant="solid"
-        Icon={IconFullscreen}
-        onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
-      >
-        <T id="header.fullScreen" />
-      </IconButton>
+        <IconButton
+          variant="solid"
+          Icon={IconFullscreen}
+          onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
+        >
+          <T id="header.fullScreen" />
+        </IconButton>
+      </div>
     </header>
   );
 }

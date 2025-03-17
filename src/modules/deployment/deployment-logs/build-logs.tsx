@@ -61,7 +61,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
       <FullScreen
         enabled={optionsForm.watch('fullScreen')}
         exit={() => optionsForm.setValue('fullScreen', false)}
-        className={clsx('col divide-y bg-neutral', !optionsForm.watch('fullScreen') && 'rounded-lg border')}
+        className="col gap-2 p-4"
       >
         <LogsHeader options={optionsForm} />
 
@@ -167,7 +167,7 @@ function LogsHeader({ options }: LogsHeaderProps) {
   const quotas = useOrganizationQuotas();
 
   return (
-    <header className="row items-center gap-4 p-4">
+    <header className="row items-center gap-4">
       <div className="mr-auto">
         <T id="header.title" values={{ retention: quotas?.logsRetention }} />
       </div>

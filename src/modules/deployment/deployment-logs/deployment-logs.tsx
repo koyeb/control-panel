@@ -142,7 +142,7 @@ function BuildSection({ app, service, deployment, expanded, setExpanded }: Build
         />
       }
     >
-      <div className="col gap-4 p-4">
+      <div className="divide-y border-t">
         <BuildSteps deployment={deployment} />
         <BuildLogs app={app} service={service} deployment={deployment} logs={logs} />
       </div>
@@ -280,7 +280,7 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
         />
       }
     >
-      <div className="col gap-4 p-4">
+      <div className="divide-y border-t">
         <RuntimeLogs app={app} service={service} deployment={deployment} instances={instances} logs={logs} />
         <Replicas deployment={deployment} />
       </div>
