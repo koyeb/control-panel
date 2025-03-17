@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { sub } from 'date-fns';
 import React, { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
@@ -251,8 +252,13 @@ type RuntimeSectionProps = {
 };
 
 function RuntimeSection({ app, service, deployment, instances, expanded, setExpanded }: RuntimeSectionProps) {
+  const now = new Date();
+
   const filtersForm = useForm<RuntimeLogsFilters>({
     defaultValues: {
+      period: '1h',
+      start: sub(now, { hours: 1 }),
+      end: now,
       region: null,
       instance: null,
       search: '',
@@ -261,21 +267,11 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
     },
   });
 
-  const now = useMemo(() => new Date(), []);
-
-  const end = useMemo(() => {
-    if (deployment.terminatedAt) {
-      return new Date(deployment.terminatedAt);
-    }
-
-    return now;
-  }, [now, deployment.terminatedAt]);
-
   const logs = useLogs(isDeploymentRunning(deployment), {
     deploymentId: deployment.id,
     type: 'runtime',
-    start: new Date(deployment.date),
-    end,
+    start: filtersForm.watch('start'),
+    end: filtersForm.watch('end'),
     search: useDebouncedValue(filtersForm.watch('search') || undefined, 500),
   });
 
