@@ -1,10 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AnsiUp } from 'ansi_up';
-import { add, max, sub } from 'date-fns';
+import { add, max, min, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import { api, apiStreams } from 'src/api/api';
+import { useComputeDeployment } from 'src/api/hooks/service';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
 import { useToken } from 'src/application/token';
@@ -36,14 +37,25 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
   const { data: historyLines = [], ...query } = useLogsHistory(filters);
   const stream = useLogsStream(tail, { ...filters, start: filters.end });
 
+  const highlightSearchMatches = useCallback(
+    (html: string) => {
+      if (filters.search === undefined) {
+        return html;
+      }
+
+      return html.replaceAll(filters.search, (value) => `<mark>${value}</mark>`);
+    },
+    [filters.search],
+  );
+
   const lines = useMemo<LogLine[]>(() => {
     const ansi = new AnsiUp();
 
     return [...historyLines, ...stream.lines].map((line) => ({
       ...line,
-      html: ansi.ansi_to_html(line.text),
+      html: highlightSearchMatches(ansi.ansi_to_html(line.text)),
     }));
-  }, [historyLines, stream.lines]);
+  }, [historyLines, stream.lines, highlightSearchMatches]);
 
   return {
     error: query.error ?? stream.error,
