@@ -74,7 +74,7 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
         }
         className="relative"
       >
-        <FullScreen enabled={fullScreen} exit={() => setFullScreen(false)} className="col w-full bg-neutral">
+        <FullScreen enabled={fullScreen} exit={() => setFullScreen(false)} className="col w-full">
           {fullScreen && (
             <div className="row justify-between p-2">
               <div className="truncate text-lg">

@@ -93,7 +93,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
       <FullScreen
         enabled={optionsForm.watch('fullScreen')}
         exit={() => optionsForm.setValue('fullScreen', false)}
-        className={clsx('col divide-y bg-neutral', !optionsForm.watch('fullScreen') && 'rounded-lg border')}
+        className="col gap-2 p-4"
       >
         <LogsHeader
           filters={filtersForm}
@@ -244,60 +244,62 @@ type LogsHeaderProps = {
 
 function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
   return (
-    <header className="col md:row flex-wrap gap-4 p-4 md:items-center">
-      <div className="mr-auto">
+    <header className="col gap-4">
+      <div>
         <T id="header.title" />
       </div>
 
-      <ControlledSelect
-        control={filters.control}
-        name="region"
-        items={regions}
-        placeholder={<T id="header.allRegions" />}
-        getKey={(region) => region.identifier}
-        itemToString={(region) => region.displayName}
-        itemToValue={(region) => region.identifier}
-        onItemClick={(region) =>
-          region.identifier === filters.watch('region') && filters.setValue('region', null)
-        }
-        renderItem={(region) => (
-          <div className="row gap-2 whitespace-nowrap">
-            <RegionFlag identifier={region.identifier} className="size-4" />
-            {region.displayName}
-          </div>
-        )}
-        onChangeEffect={() => filters.setValue('instance', null)}
-        className="md:min-w-48"
-      />
+      <div className="row flex-wrap gap-2">
+        <ControlledSelect
+          control={filters.control}
+          name="region"
+          items={regions}
+          placeholder={<T id="header.allRegions" />}
+          getKey={(region) => region.identifier}
+          itemToString={(region) => region.displayName}
+          itemToValue={(region) => region.identifier}
+          onItemClick={(region) =>
+            region.identifier === filters.watch('region') && filters.setValue('region', null)
+          }
+          renderItem={(region) => (
+            <div className="row gap-2 whitespace-nowrap">
+              <RegionFlag identifier={region.identifier} className="size-4" />
+              {region.displayName}
+            </div>
+          )}
+          onChangeEffect={() => filters.setValue('instance', null)}
+          className="min-w-48"
+        />
 
-      <Controller
-        control={filters.control}
-        name="instance"
-        render={({ field }) => (
-          <SelectInstance
-            instances={instances}
-            placeholder={<T id="header.allInstances" />}
-            value={instances.find(hasProperty('id', field.value)) ?? null}
-            onChange={(instance) => field.onChange(instance.id)}
-            unselect={<T id="header.allInstances" />}
-            onUnselect={() => field.onChange(null)}
-            className="min-w-64"
-          />
-        )}
-      />
+        <Controller
+          control={filters.control}
+          name="instance"
+          render={({ field }) => (
+            <SelectInstance
+              instances={instances}
+              placeholder={<T id="header.allInstances" />}
+              value={instances.find(hasProperty('id', field.value)) ?? null}
+              onChange={(instance) => field.onChange(instance.id)}
+              unselect={<T id="header.allInstances" />}
+              onUnselect={() => field.onChange(null)}
+              className="min-w-64"
+            />
+          )}
+        />
 
-      <div className="row gap-4">
-        <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
-        <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
+        <div className="row ml-auto gap-4">
+          <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
+          <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
+
+          <IconButton
+            variant="solid"
+            Icon={IconFullscreen}
+            onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
+          >
+            <T id="header.fullScreen" />
+          </IconButton>
+        </div>
       </div>
-
-      <IconButton
-        variant="solid"
-        Icon={IconFullscreen}
-        onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
-      >
-        <T id="header.fullScreen" />
-      </IconButton>
     </header>
   );
 }
