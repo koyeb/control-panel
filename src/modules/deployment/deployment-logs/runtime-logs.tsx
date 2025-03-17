@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 
@@ -33,12 +34,18 @@ import { SelectInstance } from 'src/components/select-instance';
 import { useFormValues } from 'src/hooks/form';
 import { LogsApi } from 'src/hooks/logs';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { inArray } from 'src/utils/arrays';
+import { inArray, last } from 'src/utils/arrays';
+import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
 
+type LogsPeriod = 'live' | '1h' | '6h' | '24h' | '7d' | '30d';
+
 export type RuntimeLogsFilters = {
+  period: LogsPeriod;
+  start: Date;
+  end: Date;
   region: string | null;
   instance: string | null;
   search: string;
@@ -100,13 +107,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs, filters
           setOption={optionsForm.setValue}
           logs={{ ...logs, lines: filteredLines }}
           renderLine={renderLine}
-          renderNoLogs={() => (
-            <NoLogs
-              deployment={deployment}
-              loading={logs.loading}
-              hasFilters={filtersForm.formState.isDirty}
-            />
-          )}
+          renderNoLogs={() => <NoLogs deployment={deployment} loading={logs.loading} filters={filtersForm} />}
         />
 
         <LogsFooter
@@ -136,32 +137,29 @@ export function RuntimeLogs({ app, service, deployment, instances, logs, filters
 type NoLogsProps = {
   deployment: ComputeDeployment;
   loading: boolean;
-  hasFilters: boolean;
+  filters: UseFormReturn<RuntimeLogsFilters>;
 };
 
-function NoLogs({ deployment, loading, hasFilters }: NoLogsProps) {
+function NoLogs({ deployment, loading, filters }: NoLogsProps) {
   const { plan } = useOrganization();
-  const quotas = useOrganizationQuotas();
+  const periods = useRetentionPeriods();
+  const period = filters.watch('period');
 
   if (loading) {
     return <Spinner className="size-6" />;
   }
 
-  if (hasFilters) {
-    return (
-      <p className="text-base">
-        <T id="noLogs.filtered" />
-      </p>
-    );
-  }
-
   return (
     <>
       <p className="text-base">
-        <T id="noLogs.expired" values={{ retention: quotas?.logsRetention }} />
+        {period === 'live' ? (
+          <T id="noLogs.expiredLive" />
+        ) : (
+          <T id="noLogs.expired" values={{ period: <T id={`retentionPeriods.${period}`} /> }} />
+        )}
       </p>
 
-      {inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && (
+      {inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && period === last(periods) && (
         <p>
           <T id="noLogs.upgrade" />
         </p>
@@ -236,6 +234,7 @@ type LogsHeaderProps = {
 };
 
 function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
+  const periods = useRetentionPeriods();
   const t = T.useTranslate();
 
   return (
@@ -245,6 +244,37 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
       </div>
 
       <div className="row flex-wrap gap-2">
+        <ControlledSelect
+          control={filters.control}
+          name="period"
+          items={periods}
+          getKey={identity}
+          itemToString={identity}
+          itemToValue={identity}
+          renderItem={(period) => (
+            <div className="first-letter:capitalize">
+              <T id={`retentionPeriods.${period}`} />
+            </div>
+          )}
+          renderSelectedItem={() =>
+            [filters.watch('start'), filters.watch('end')]
+              .map((date) => format(date, 'MMM dd, hh:mm aa'))
+              .join(' - ')
+          }
+          onChangeEffect={(period) => {
+            const duration: Duration = {};
+
+            if (period === '1h') duration.hours = 1;
+            if (period === '6h') duration.hours = 6;
+            if (period === '24h') duration.hours = 24;
+            if (period === '7d') duration.days = 7;
+            if (period === '30d') duration.days = 30;
+
+            filters.setValue('start', sub(new Date(), duration));
+          }}
+          className="min-w-36"
+        />
+
         <ControlledSelect
           control={filters.control}
           name="region"
@@ -305,6 +335,32 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
       </div>
     </header>
   );
+}
+
+function useRetentionPeriods() {
+  const quotas = useOrganizationQuotas();
+
+  return useMemo(() => {
+    const periods: LogsPeriod[] = ['live', '1h', '6h'];
+
+    if (quotas?.logsRetention === undefined) {
+      return periods;
+    }
+
+    if (quotas.logsRetention >= 1) {
+      periods.push('24h');
+    }
+
+    if (quotas.logsRetention >= 7) {
+      periods.push('7d');
+    }
+
+    if (quotas.logsRetention >= 30) {
+      periods.push('30d');
+    }
+
+    return periods;
+  }, [quotas]);
 }
 
 function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) {

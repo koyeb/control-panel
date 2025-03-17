@@ -56,15 +56,47 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
 }
 
 function useLogsHistory(filters: LogsFilters) {
-  const { token } = useToken();
   const quotas = useOrganizationQuotas();
+  const deployment = useComputeDeployment(filters.deploymentId);
+  const { token } = useToken();
 
-  const withinQuota = (date: Date) => {
-    return max([add(sub(new Date(), { days: quotas?.logsRetention }), { minutes: 1 }), date]);
-  };
+  const initialPageParam = useMemo(() => {
+    if (!quotas || !deployment) {
+      return {};
+    }
+
+    let start = filters.start;
+    let end = filters.end;
+
+    if (filters.type === 'build') {
+      if (deployment.build?.startedAt) {
+        start = max([start, deployment.build.startedAt]);
+      }
+
+      if (deployment.build?.finishedAt) {
+        end = min([end, deployment.build.finishedAt]);
+      }
+    }
+
+    if (filters.type === 'runtime') {
+      start = max([start, deployment.date]);
+
+      if (deployment.terminatedAt) {
+        end = min([end, deployment.terminatedAt]);
+      }
+    }
+
+    start = max([start, add(sub(new Date(), { days: quotas.logsRetention }), { minutes: 1 })]);
+    end = max([start, end]);
+
+    return {
+      start: start.toISOString(),
+      end: end.toISOString(),
+    };
+  }, [quotas, deployment, filters.type, filters.start, filters.end]);
 
   return useInfiniteQuery({
-    enabled: quotas !== undefined,
+    enabled: quotas !== undefined && deployment !== undefined,
     queryKey: ['logsQuery', filters, token],
     queryFn: ({ pageParam: { start, end } }) => {
       if (start === end) {
@@ -88,10 +120,7 @@ function useLogsHistory(filters: LogsFilters) {
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-    initialPageParam: {
-      start: withinQuota(filters.start).toISOString(),
-      end: withinQuota(filters.end).toISOString(),
-    },
+    initialPageParam,
     getNextPageParam: () => null,
     getPreviousPageParam: (firstPage) => {
       const { has_more, next_start, next_end } = firstPage.pagination!;
