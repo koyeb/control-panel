@@ -31,6 +31,7 @@ import {
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { RegionFlag } from 'src/components/region-flag';
 import { SelectInstance } from 'src/components/select-instance';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useFormValues } from 'src/hooks/form';
 import { LogsApi } from 'src/hooks/logs';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -244,36 +245,38 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
       </div>
 
       <div className="row flex-wrap gap-2">
-        <ControlledSelect
-          control={filters.control}
-          name="period"
-          items={periods}
-          getKey={identity}
-          itemToString={identity}
-          itemToValue={identity}
-          renderItem={(period) => (
-            <div className="first-letter:capitalize">
-              <T id={`retentionPeriods.${period}`} />
-            </div>
-          )}
-          renderSelectedItem={() =>
-            [filters.watch('start'), filters.watch('end')]
-              .map((date) => format(date, 'MMM dd, hh:mm aa'))
-              .join(' - ')
-          }
-          onChangeEffect={(period) => {
-            const duration: Duration = {};
+        <FeatureFlag feature="logs-filters">
+          <ControlledSelect
+            control={filters.control}
+            name="period"
+            items={periods}
+            getKey={identity}
+            itemToString={identity}
+            itemToValue={identity}
+            renderItem={(period) => (
+              <div className="first-letter:capitalize">
+                <T id={`retentionPeriods.${period}`} />
+              </div>
+            )}
+            renderSelectedItem={() =>
+              [filters.watch('start'), filters.watch('end')]
+                .map((date) => format(date, 'MMM dd, hh:mm aa'))
+                .join(' - ')
+            }
+            onChangeEffect={(period) => {
+              const duration: Duration = {};
 
-            if (period === '1h') duration.hours = 1;
-            if (period === '6h') duration.hours = 6;
-            if (period === '24h') duration.hours = 24;
-            if (period === '7d') duration.days = 7;
-            if (period === '30d') duration.days = 30;
+              if (period === '1h') duration.hours = 1;
+              if (period === '6h') duration.hours = 6;
+              if (period === '24h') duration.hours = 24;
+              if (period === '7d') duration.days = 7;
+              if (period === '30d') duration.days = 30;
 
-            filters.setValue('start', sub(new Date(), duration));
-          }}
-          className="min-w-36"
-        />
+              filters.setValue('start', sub(new Date(), duration));
+            }}
+            className="min-w-36"
+          />
+        </FeatureFlag>
 
         <ControlledSelect
           control={filters.control}
@@ -310,13 +313,15 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
           )}
         />
 
-        <ControlledInput
-          control={filters.control}
-          name="search"
-          type="search"
-          placeholder={t('header.search')}
-          className="min-w-64"
-        />
+        <FeatureFlag feature="logs-filters">
+          <ControlledInput
+            control={filters.control}
+            name="search"
+            type="search"
+            placeholder={t('header.search')}
+            className="min-w-64"
+          />
+        </FeatureFlag>
 
         <div className="row ml-auto gap-4">
           <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
