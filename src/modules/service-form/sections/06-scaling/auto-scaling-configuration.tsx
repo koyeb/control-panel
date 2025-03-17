@@ -1,6 +1,7 @@
 import { useController, useFormContext, useFormState } from 'react-hook-form';
 
 import { InputEnd, Slider, Tooltip } from '@koyeb/design-system';
+import { useOrganization } from 'src/api/hooks/session';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
 import {
@@ -25,12 +26,19 @@ import { handleScalingValueBlurred } from './handle-scaling-value-blurred';
 const T = createTranslate('modules.serviceForm.scaling.autoscalingSettings');
 
 export function AutoScalingConfiguration() {
+  const organization = useOrganization();
   const { watch } = useFormContext<ServiceForm>();
   const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
 
   if (watch('instance') === 'free') {
     return <ScalingValues />;
   }
+
+  const showSleepIdleDelay = [
+    scaleToZeroIdleDelay,
+    ['pro', 'scale', 'enterprise'].includes(organization.plan),
+    watch('scaling.min') === 0,
+  ].every(Boolean);
 
   return (
     <>
@@ -42,14 +50,14 @@ export function AutoScalingConfiguration() {
         <ScalingValues />
         <ScaleToZeroPreview />
 
+        {showSleepIdleDelay && (
+          <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={3 * 60} max={60 * 60} />
+        )}
+
         <p>
           <T id="enableAutoscaling" />
         </p>
       </div>
-
-      {scaleToZeroIdleDelay && watch('scaling.min') === 0 && (
-        <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={3 * 60} max={60 * 60} />
-      )}
 
       <ScalingTarget target="requests" Icon={IconTimer} min={1} max={1e9} />
       <ScalingTarget target="cpu" Icon={IconCpu} min={1} max={100} />
