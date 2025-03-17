@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { sub } from 'date-fns';
-import React, { useMemo, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
@@ -15,6 +15,7 @@ import {
 } from 'src/api/model';
 import { hasBuild, isDeploymentRunning } from 'src/application/service-functions';
 import { IconCircleDashed } from 'src/components/icons';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
 import { useDebouncedValue, useNow } from 'src/hooks/timers';
@@ -114,21 +115,13 @@ type BuildSectionProps = {
 };
 
 function BuildSection({ app, service, deployment, expanded, setExpanded }: BuildSectionProps) {
-  const now = useMemo(() => new Date(), []);
-
-  const end = useMemo(() => {
-    if (deployment.build?.finishedAt) {
-      return new Date(deployment.build.finishedAt);
-    }
-
-    return now;
-  }, [now, deployment.build?.finishedAt]);
+  const now = useRef(new Date());
 
   const logs = useLogs(deployment.build?.status === 'running', {
     deploymentId: deployment.id,
     type: 'build',
     start: new Date(deployment.date),
-    end,
+    end: now.current,
   });
 
   return (
@@ -252,12 +245,13 @@ type RuntimeSectionProps = {
 };
 
 function RuntimeSection({ app, service, deployment, instances, expanded, setExpanded }: RuntimeSectionProps) {
+  const logsFilters = useFeatureFlag('logs-filters');
   const now = new Date();
 
   const filtersForm = useForm<RuntimeLogsFilters>({
     defaultValues: {
-      period: '1h',
-      start: sub(now, { hours: 1 }),
+      period: logsFilters ? '1h' : '30d',
+      start: sub(now, logsFilters ? { hours: 1 } : { days: 30 }),
       end: now,
       region: null,
       instance: null,
