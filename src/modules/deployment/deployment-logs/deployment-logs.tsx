@@ -349,10 +349,7 @@ function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <AccordionHeader expanded={expanded} setExpanded={setExpanded} className={clsx(disabled && 'opacity-50')}>
-      <div className="col gap-1">
-        <div className="font-medium">{title}</div>
-        <div className={clsx('text-xs first-letter:capitalize', statusColorClassName)}>{status}</div>
-      </div>
+      <div className="font-medium">{title}</div>
 
       <div className="row ms-auto min-w-0 items-center gap-2 ps-4 text-xs">
         {end}
@@ -361,7 +358,10 @@ function SectionHeader({
           <div className="max-w-96 truncate font-mono text-dim">{lastLogLine.text}</div>
         )}
 
-        <StatusIcon className={clsx('size-5', statusColorClassName)} />
+        <div className="row items-center gap-2">
+          <div className={clsx('text-xs first-letter:capitalize', statusColorClassName)}>{status}</div>
+          <StatusIcon className={clsx('size-5', statusColorClassName)} />
+        </div>
       </div>
     </AccordionHeader>
   );
