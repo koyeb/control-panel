@@ -60,7 +60,7 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
   return (
     <QueryGuard query={query}>
       {(replicas) => (
-        <div className="rounded-md border">
+        <>
           <div className="col md:row gap-4 px-3 py-4 md:items-center">
             <div className="row me-auto items-center gap-2 font-medium">
               <T id="title" />
@@ -74,7 +74,7 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
           </div>
 
           <ReplicaList filters={filters} replicas={replicas} />
-        </div>
+        </>
       )}
     </QueryGuard>
   );

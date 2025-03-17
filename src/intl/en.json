@@ -568,6 +568,7 @@
           },
           "header": {
             "title": "Logs",
+            "now": "Now",
             "allRegions": "All regions",
             "allInstances": "All instances",
             "search": "Search...",

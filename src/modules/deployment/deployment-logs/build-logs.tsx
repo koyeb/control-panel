@@ -20,8 +20,9 @@ import {
   LogsFooter,
 } from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
+import { QueryError } from 'src/components/query-error';
 import { LogsApi } from 'src/hooks/logs';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { assert, AssertionError } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
@@ -49,7 +50,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
   }
 
   if (logs.error) {
-    return <Translate id="common.errorMessage" values={{ message: logs.error.message }} />;
+    return <QueryError error={logs.error} className="m-4" />;
   }
 
   if (logs.lines.length === 0 && inArray(deployment.status, ['pending', 'provisioning'])) {
@@ -57,43 +58,41 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
   }
 
   return (
-    <>
-      <FullScreen
-        enabled={optionsForm.watch('fullScreen')}
-        exit={() => optionsForm.setValue('fullScreen', false)}
-        className="col gap-2 p-4"
-      >
-        <LogsHeader options={optionsForm} />
+    <FullScreen
+      enabled={optionsForm.watch('fullScreen')}
+      exit={() => optionsForm.setValue('fullScreen', false)}
+      className="col gap-2 p-4"
+    >
+      <LogsHeader options={optionsForm} />
 
-        <LogLines
-          options={optionsForm.watch()}
-          setOption={optionsForm.setValue}
-          logs={logs}
-          renderLine={renderLine}
-          renderNoLogs={() => <NoLogs />}
-        />
+      <LogLines
+        options={optionsForm.watch()}
+        setOption={optionsForm.setValue}
+        logs={logs}
+        renderLine={renderLine}
+        renderNoLogs={() => <NoLogs />}
+      />
 
-        <LogsFooter
-          appName={app.name}
-          serviceName={service.name}
-          lines={logs.lines}
-          renderMenu={(props) => (
-            <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
-              {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
-                <MenuItem key={option}>
-                  <ControlledCheckbox
-                    control={optionsForm.control}
-                    name={option}
-                    label={<T id={`options.${option}`} />}
-                    className="flex-1"
-                  />
-                </MenuItem>
-              ))}
-            </Menu>
-          )}
-        />
-      </FullScreen>
-    </>
+      <LogsFooter
+        appName={app.name}
+        serviceName={service.name}
+        lines={logs.lines}
+        renderMenu={(props) => (
+          <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
+            {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
+              <MenuItem key={option}>
+                <ControlledCheckbox
+                  control={optionsForm.control}
+                  name={option}
+                  label={<T id={`options.${option}`} />}
+                  className="flex-1"
+                />
+              </MenuItem>
+            ))}
+          </Menu>
+        )}
+      />
+    </FullScreen>
   );
 }
 
@@ -155,6 +154,7 @@ function BuiltInPreviousDeployment({ service }: { service: Service }) {
           }}
         />
       }
+      className="m-4"
     />
   );
 }

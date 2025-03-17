@@ -29,12 +29,13 @@ import {
   LogsFooter,
 } from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
+import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useFormValues } from 'src/hooks/form';
 import { LogsApi } from 'src/hooks/logs';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
@@ -79,7 +80,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs, filters
   }, []);
 
   if (logs.error) {
-    return <Translate id="common.errorMessage" values={{ message: logs.error.message }} />;
+    return <QueryError error={logs.error} className="m-4" />;
   }
 
   if (
@@ -90,48 +91,46 @@ export function RuntimeLogs({ app, service, deployment, instances, logs, filters
   }
 
   return (
-    <>
-      <FullScreen
-        enabled={optionsForm.watch('fullScreen')}
-        exit={() => optionsForm.setValue('fullScreen', false)}
-        className="col gap-2 p-4"
-      >
-        <LogsHeader
-          filters={filtersForm}
-          options={optionsForm}
-          regions={regions}
-          instances={filteredInstances}
-        />
+    <FullScreen
+      enabled={optionsForm.watch('fullScreen')}
+      exit={() => optionsForm.setValue('fullScreen', false)}
+      className="col gap-2 p-4"
+    >
+      <LogsHeader
+        filters={filtersForm}
+        options={optionsForm}
+        regions={regions}
+        instances={filteredInstances}
+      />
 
-        <LogLines
-          options={optionsForm.watch()}
-          setOption={optionsForm.setValue}
-          logs={{ ...logs, lines: filteredLines }}
-          renderLine={renderLine}
-          renderNoLogs={() => <NoLogs deployment={deployment} loading={logs.loading} filters={filtersForm} />}
-        />
+      <LogLines
+        options={optionsForm.watch()}
+        setOption={optionsForm.setValue}
+        logs={{ ...logs, lines: filteredLines }}
+        renderLine={renderLine}
+        renderNoLogs={() => <NoLogs deployment={deployment} loading={logs.loading} filters={filtersForm} />}
+      />
 
-        <LogsFooter
-          appName={app.name}
-          serviceName={service.name}
-          lines={logs.lines}
-          renderMenu={(props) => (
-            <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
-              {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
-                <MenuItem key={option}>
-                  <ControlledCheckbox
-                    control={optionsForm.control}
-                    name={option}
-                    label={<T id={`options.${option}`} />}
-                    className="flex-1"
-                  />
-                </MenuItem>
-              ))}
-            </Menu>
-          )}
-        />
-      </FullScreen>
-    </>
+      <LogsFooter
+        appName={app.name}
+        serviceName={service.name}
+        lines={logs.lines}
+        renderMenu={(props) => (
+          <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
+            {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
+              <MenuItem key={option}>
+                <ControlledCheckbox
+                  control={optionsForm.control}
+                  name={option}
+                  label={<T id={`options.${option}`} />}
+                  className="flex-1"
+                />
+              </MenuItem>
+            ))}
+          </Menu>
+        )}
+      />
+    </FullScreen>
   );
 }
 
@@ -238,6 +237,8 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
   const periods = useRetentionPeriods();
   const t = T.useTranslate();
 
+  const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
+
   return (
     <header className="col gap-4">
       <div>
@@ -259,9 +260,10 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
               </div>
             )}
             renderSelectedItem={() =>
-              [filters.watch('start'), filters.watch('end')]
-                .map((date) => format(date, 'MMM dd, hh:mm aa'))
-                .join(' - ')
+              [
+                formatPeriodDate(filters.watch('start')),
+                filters.watch('period') === 'live' ? t('header.now') : formatPeriodDate(filters.watch('end')),
+              ].join(' - ')
             }
             onChangeEffect={(period) => {
               const duration: Duration = {};
@@ -274,7 +276,7 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
 
               filters.setValue('start', sub(new Date(), duration));
             }}
-            className="min-w-36"
+            className="min-w-80"
           />
         </FeatureFlag>
 

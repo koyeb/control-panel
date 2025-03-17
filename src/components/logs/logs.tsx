@@ -126,7 +126,7 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
   }, [lines]);
 
   const loaderRef = useCallback((elem: HTMLDivElement | null) => {
-    elem?.scrollIntoView();
+    elem?.scrollIntoView({ block: 'nearest' });
     lastScrollHeight.current = container.current?.scrollHeight ?? null;
   }, []);
 
