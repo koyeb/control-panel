@@ -6,17 +6,19 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { handleSubmit } from 'src/hooks/form';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.coupon');
 
 export function Coupon() {
+  const params = useSearchParams();
   const organization = useOrganization();
   const t = T.useTranslate();
 
   const form = useForm({
     defaultValues: {
-      coupon: '',
+      coupon: params.get('coupon') ?? '',
     },
   });
 
