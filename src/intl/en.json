@@ -562,6 +562,7 @@
             "title": "Logs",
             "allRegions": "All regions",
             "allInstances": "All instances",
+            "search": "Search...",
             "fullScreen": "Toggle full screen",
             "logs": "Logs",
             "events": "Events"

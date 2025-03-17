@@ -18,6 +18,7 @@ export type LogType = 'build' | 'runtime';
 export type LogsFilters = {
   type: LogType;
   deploymentId: string;
+  search?: string;
   start: Date;
   end: Date;
 };
@@ -77,6 +78,7 @@ function useLogsHistory(filters: LogsFilters) {
           deployment_id: filters.deploymentId,
           start,
           end,
+          text: filters.search,
           order: 'desc',
           limit: String(100),
         },
@@ -181,6 +183,7 @@ function tailLogs(token: string | undefined, filters: LogsFilters, listeners: Pa
       type: filters.type,
       deployment_id: filters.deploymentId,
       start: filters.start.toISOString(),
+      text: filters.search,
     },
   });
 

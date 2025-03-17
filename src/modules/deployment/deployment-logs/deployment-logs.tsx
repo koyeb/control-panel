@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import React, { useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import {
@@ -15,14 +16,14 @@ import { hasBuild, isDeploymentRunning } from 'src/application/service-functions
 import { IconCircleDashed } from 'src/components/icons';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
-import { useNow } from 'src/hooks/timers';
+import { useDebouncedValue, useNow } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
 import { buildStatusMap, runtimeStatusMap } from './deployment-status-icons';
 import { Replicas } from './replicas';
-import { RuntimeLogs } from './runtime-logs';
+import { RuntimeLogs, RuntimeLogsFilters } from './runtime-logs';
 
 type DeploymentPhase = 'build' | 'runtime';
 
@@ -250,6 +251,16 @@ type RuntimeSectionProps = {
 };
 
 function RuntimeSection({ app, service, deployment, instances, expanded, setExpanded }: RuntimeSectionProps) {
+  const filtersForm = useForm<RuntimeLogsFilters>({
+    defaultValues: {
+      region: null,
+      instance: null,
+      search: '',
+      logs: true,
+      events: true,
+    },
+  });
+
   const now = useMemo(() => new Date(), []);
 
   const end = useMemo(() => {
@@ -265,6 +276,7 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
     type: 'runtime',
     start: new Date(deployment.date),
     end,
+    search: useDebouncedValue(filtersForm.watch('search') || undefined, 500),
   });
 
   return (
@@ -276,12 +288,20 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
           expanded={expanded}
           setExpanded={setExpanded}
           deployment={deployment}
-          lines={[]}
+          lines={logs.lines}
         />
       }
     >
       <div className="divide-y border-t">
-        <RuntimeLogs app={app} service={service} deployment={deployment} instances={instances} logs={logs} />
+        <RuntimeLogs
+          app={app}
+          service={service}
+          deployment={deployment}
+          instances={instances}
+          logs={logs}
+          filtersForm={filtersForm}
+        />
+
         <Replicas deployment={deployment} />
       </div>
     </AccordionSection>

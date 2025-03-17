@@ -14,7 +14,7 @@ import {
   Service,
 } from 'src/api/model';
 import { isDeploymentRunning } from 'src/application/service-functions';
-import { ControlledCheckbox, ControlledSelect } from 'src/components/controlled';
+import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
 import { IconFullscreen } from 'src/components/icons';
 import { getInitialLogOptions } from 'src/components/logs/log-options';
@@ -38,9 +38,10 @@ import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
 
-type Filters = {
+export type RuntimeLogsFilters = {
   region: string | null;
   instance: string | null;
+  search: string;
   logs: boolean;
   events: boolean;
 };
@@ -51,19 +52,11 @@ type RuntimeLogsProps = {
   deployment: ComputeDeployment;
   instances: Instance[];
   logs: LogsApi;
+  filtersForm: UseFormReturn<RuntimeLogsFilters>;
 };
 
-export function RuntimeLogs({ app, service, deployment, instances, logs }: RuntimeLogsProps) {
+export function RuntimeLogs({ app, service, deployment, instances, logs, filtersForm }: RuntimeLogsProps) {
   const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.id));
-
-  const filtersForm = useForm<Filters>({
-    defaultValues: {
-      region: null,
-      instance: null,
-      logs: true,
-      events: true,
-    },
-  });
 
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
@@ -183,7 +176,7 @@ function NoLogs({ deployment, loading, hasFilters }: NoLogsProps) {
   );
 }
 
-function useFilteredLines(lines: LogLineType[], filters: Filters, instances: Instance[]) {
+function useFilteredLines(lines: LogLineType[], filters: RuntimeLogsFilters, instances: Instance[]) {
   return useMemo(() => {
     return lines.filter((line) => {
       const instance = instances.find(hasProperty('id', line.instanceId));
@@ -209,7 +202,7 @@ function useFilteredLines(lines: LogLineType[], filters: Filters, instances: Ins
   }, [lines, filters, instances]);
 }
 
-function useFilteredInstances(filters: Filters, instances: Instance[]) {
+function useFilteredInstances(filters: RuntimeLogsFilters, instances: Instance[]) {
   return useMemo(() => {
     if (filters.region === null) {
       return instances;
@@ -236,13 +229,15 @@ function WaitingForLogs() {
 }
 
 type LogsHeaderProps = {
-  filters: UseFormReturn<Filters>;
+  filters: UseFormReturn<RuntimeLogsFilters>;
   options: UseFormReturn<LogOptions>;
   regions: CatalogRegion[];
   instances: Instance[];
 };
 
 function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
+  const t = T.useTranslate();
+
   return (
     <header className="col gap-4">
       <div>
@@ -282,6 +277,14 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
             className="min-w-64"
           />
         )}
+      />
+
+      <ControlledInput
+        control={filters.control}
+        name="search"
+        type="search"
+        placeholder={t('header.search')}
+        className="min-w-64"
       />
 
       <div className="row ml-auto gap-4">
