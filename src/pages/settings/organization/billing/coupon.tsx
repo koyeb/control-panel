@@ -8,17 +8,19 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit } from 'src/hooks/form';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.coupon');
 
 export function Coupon() {
+  const params = useSearchParams();
   const organization = useOrganization();
   const t = T.useTranslate();
 
   const form = useForm({
     defaultValues: {
-      code: '',
+      code: params.get('coupon') ?? '',
     },
   });
 
