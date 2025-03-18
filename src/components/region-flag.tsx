@@ -45,10 +45,12 @@ const map: Record<string, string> = {
   eu,
   fra: de,
   par: fr,
-  sfo: us,
   sin: sg,
   tyo: jp,
+  sfo: us,
   was: us,
   dal: us,
+  rdu: us,
+  dsm: us,
   'aws-us-east-1': us,
 };
