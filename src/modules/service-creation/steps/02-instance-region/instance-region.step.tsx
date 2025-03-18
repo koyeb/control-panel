@@ -1,20 +1,11 @@
-import { useQueryClient } from '@tanstack/react-query';
-
 import { Button } from '@koyeb/design-system';
-import {
-  useDatacenters,
-  useInstances,
-  useInstancesQuery,
-  useRegions,
-  useRegionsQuery,
-} from 'src/api/hooks/catalog';
+import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
 import {
   useOrganization,
   useOrganizationQuotasQuery,
   useOrganizationSummaryQuery,
 } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
-import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -60,25 +51,22 @@ export function InstanceRegionStep(props: InstanceRegionStepProps) {
 }
 
 function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
-  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
+  const organization = useOrganization();
+
   const instances = useInstances();
   const regions = useRegions();
-  const datacenters = useDatacenters();
 
   const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
   const availabilities = useInstanceAvailabilities({ serviceType });
 
-  const selectedInstance =
-    instances.find(hasProperty('identifier', searchParams.get('instance_type'))) ?? null;
+  const instanceParam = searchParams.get('instance_type');
+  const selectedInstance = instances.find(hasProperty('identifier', instanceParam)) ?? null;
 
-  const selectedRegions = regions.filter((region) =>
-    searchParams.getAll('regions').includes(region.identifier),
-  );
-
-  const organization = useOrganization();
+  const regionsParam = searchParams.getAll('regions');
+  const selectedRegions = regions.filter((region) => regionsParam.includes(region.identifier));
 
   const setInstanceParam = (instance: string) => {
     navigate((url) => url.searchParams.set('instance_type', instance), { replace: true });
@@ -94,32 +82,6 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
     );
   };
 
-  useMount(() => {
-    let instance = searchParams.get('instance_type');
-
-    if (!searchParams.has('instance_type')) {
-      instance = organization.plan === 'hobby' ? 'free' : 'nano';
-      setInstanceParam(instance);
-
-      if (instance === 'free') {
-        selector.onInstanceCategorySelected('eco');
-      }
-    }
-
-    if (!searchParams.has('regions')) {
-      const defaultRegion = getDefaultRegion(
-        queryClient,
-        datacenters,
-        regions,
-        instances.find(hasProperty('identifier', instance)),
-      );
-
-      setRegionsParam(defaultRegion ? [defaultRegion.identifier] : ['fra']);
-    }
-  });
-
-  const getBadges = useGetInstanceBadges();
-
   const selector = useInstanceSelector({
     instances,
     regions,
@@ -134,6 +96,14 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
     setSelectedRegions: (regions) => {
       setRegionsParam(regions.map((region) => region.identifier));
     },
+  });
+
+  const getBadges = useGetInstanceBadges();
+
+  useMount(() => {
+    if (!selectedInstance) {
+      selector.onInstanceCategorySelected(organization.plan === 'hobby' ? 'eco' : 'standard');
+    }
   });
 
   return (
