@@ -148,14 +148,14 @@ describe('mapServiceFormApiValidationError', () => {
         'health_checks.0.http.headers.0.value',
       ],
       expected: {
-        'healthChecks.0.gracePeriod': 'health_checks.0.grace_period',
-        'healthChecks.0.interval': 'health_checks.0.interval',
-        'healthChecks.0.restartLimit': 'health_checks.0.restart_limit',
-        'healthChecks.0.timeout': 'health_checks.0.timeout',
-        'healthChecks.0.method': 'health_checks.0.http.method',
-        'healthChecks.0.path': 'health_checks.0.http.path',
-        'healthChecks.0.header.0.name': 'health_checks.0.http.headers.0.key',
-        'healthChecks.0.header.0.value': 'health_checks.0.http.headers.0.value',
+        'ports.0.healthCheck.gracePeriod': 'health_checks.0.grace_period',
+        'ports.0.healthCheck.interval': 'health_checks.0.interval',
+        'ports.0.healthCheck.restartLimit': 'health_checks.0.restart_limit',
+        'ports.0.healthCheck.timeout': 'health_checks.0.timeout',
+        'ports.0.healthCheck.method': 'health_checks.0.http.method',
+        'ports.0.healthCheck.path': 'health_checks.0.http.path',
+        'ports.0.healthCheck.header.0.name': 'health_checks.0.http.headers.0.key',
+        'ports.0.healthCheck.header.0.value': 'health_checks.0.http.headers.0.value',
       },
     });
   });
