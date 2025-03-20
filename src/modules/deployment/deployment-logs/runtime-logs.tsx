@@ -243,12 +243,10 @@ type LogsHeaderProps = {
 };
 
 function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
-  const quotas = useOrganizationQuotas();
-
   return (
     <header className="col md:row flex-wrap gap-4 p-4 md:items-center">
       <div className="mr-auto">
-        <T id="header.title" values={{ retention: quotas?.logsRetention }} />
+        <T id="header.title" />
       </div>
 
       <ControlledSelect
