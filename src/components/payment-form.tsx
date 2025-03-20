@@ -18,6 +18,7 @@ import { useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
+import { StripeProvider } from 'src/application/stripe';
 import { getToken, useToken } from 'src/application/token';
 import { AddressField } from 'src/components/address-field/address-field';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -138,6 +139,10 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
   const theme = useThemeModeOrPreferred();
   const style = theme === ThemeMode.light ? stylesLight : stylesDark;
 
+  if (stripe === null) {
+    return <T id="loadingStripe" />;
+  }
+
   return (
     <form onSubmit={withStopPropagation(handleSubmit(form, mutation.mutateAsync))} className="col gap-6">
       <div className="grid grid-cols-2 gap-4">
@@ -216,24 +221,26 @@ export function UpgradeDialog({ id, plan, onPlanChanged, title, description, sub
 
       {description && <p className="text-dim">{description}</p>}
 
-      <PaymentForm
-        plan={plan}
-        onPlanChanged={() => {
-          closeDialog();
-          onPlanChanged?.();
-        }}
-        renderFooter={(formState) => (
-          <DialogFooter>
-            <CloseDialogButton size={3}>
-              <Translate id="common.cancel" />
-            </CloseDialogButton>
+      <StripeProvider>
+        <PaymentForm
+          plan={plan}
+          onPlanChanged={() => {
+            closeDialog();
+            onPlanChanged?.();
+          }}
+          renderFooter={(formState) => (
+            <DialogFooter>
+              <CloseDialogButton size={3}>
+                <Translate id="common.cancel" />
+              </CloseDialogButton>
 
-            <Button type="submit" size={3} loading={formState.isSubmitting}>
-              {submit}
-            </Button>
-          </DialogFooter>
-        )}
-      />
+              <Button type="submit" size={3} loading={formState.isSubmitting}>
+                {submit}
+              </Button>
+            </DialogFooter>
+          )}
+        />
+      </StripeProvider>
     </Dialog>
   );
 }

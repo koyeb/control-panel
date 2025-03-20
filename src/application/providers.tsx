@@ -1,5 +1,3 @@
-import { Elements as StripeElements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { QueryClientProvider as TanstackQueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Component, Suspense, useMemo } from 'react';
@@ -11,28 +9,17 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
-import { getConfig } from './config';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
 import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
 import { TokenProvider, useToken } from './token';
 
-const { stripePublicKey } = getConfig();
-
 export type ProvidersProps = {
   children: React.ReactNode;
 };
 
 export function Providers({ children }: ProvidersProps) {
-  const stripePromise = useMemo(() => {
-    if (stripePublicKey !== undefined) {
-      return loadStripe(stripePublicKey);
-    }
-
-    return new Promise<never>(() => {});
-  }, []);
-
   if (useStoreSessionToken()) {
     return null;
   }
@@ -44,13 +31,11 @@ export function Providers({ children }: ProvidersProps) {
           <TokenProvider>
             <QueryClientProvider>
               <PostHogProvider>
-                <StripeElements stripe={stripePromise}>
-                  <DialogProvider>
-                    <ReactQueryDevtools />
-                    <NotificationContainer />
-                    <ErrorBoundary>{children}</ErrorBoundary>
-                  </DialogProvider>
-                </StripeElements>
+                <DialogProvider>
+                  <ReactQueryDevtools />
+                  <NotificationContainer />
+                  <ErrorBoundary>{children}</ErrorBoundary>
+                </DialogProvider>
               </PostHogProvider>
             </QueryClientProvider>
           </TokenProvider>
