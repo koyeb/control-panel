@@ -167,7 +167,7 @@ function scaling(t: TranslateErrorFunction) {
         enabled: z.literal(true),
         value: z
           .number({ invalid_type_error: t('scaling.targetEmpty') })
-          .min(min, t('scaling.targetTooSmall', { min: min - 1 }))
+          .min(min, t('scaling.targetTooSmall', { min }))
           .max(max, t('scaling.targetTooBig', { max })),
       }),
       z.object({
