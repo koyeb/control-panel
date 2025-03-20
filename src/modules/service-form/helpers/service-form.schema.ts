@@ -229,7 +229,7 @@ function ports(t: TranslateErrorFunction) {
 
 function healthCheckSchema(t: TranslateErrorFunction) {
   const common = z.object({
-    gracePeriod: number(t, t('healthCheck.gracePeriod'), 5, 5 * 60),
+    gracePeriod: number(t, t('healthCheck.gracePeriod'), 5, 15 * 60),
     interval: number(t, t('healthCheck.interval'), 30, 5 * 60),
     restartLimit: number(t, t('healthCheck.restartLimit'), 1, 10),
     timeout: number(t, t('healthCheck.timeout'), 1, 10 * 60),

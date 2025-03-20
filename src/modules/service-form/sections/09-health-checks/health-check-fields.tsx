@@ -47,7 +47,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         helpTooltip={<T id="gracePeriodTooltip" />}
         onKeyDown={onKeyDownPositiveInteger}
         min={5}
-        max={5 * 60}
+        max={15 * 60}
         end={
           <InputEnd>
             <T id="gracePeriodUnit" />
