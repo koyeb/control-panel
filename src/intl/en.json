@@ -903,7 +903,7 @@
         "scaling.autoScalingMaxLabel": "Max",
         "scaling.targetEmpty": "When enabled, the target cannot be empty",
         "scaling.targetTooSmall": "When enabled, the target must be at least {min}",
-        "scaling.targetTooBig": "When enabled, the target must be lower than {max}",
+        "scaling.targetTooBig": "When enabled, the target cannot be higher than {max}",
         "port.portNumber.min": "Port must be greater than 0",
         "port.portNumber.max": "Port must be lower than 65000",
         "port.path.startWithSlash": "Path must start with /",
