@@ -126,7 +126,6 @@ const scaleAboveZeroTargets: Array<keyof Scaling['targets']> = [
 
 function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
   const scaleToZero = useFeatureFlag('scale-to-zero');
-  const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
   const instances = useInstances();
   const previousInstance = usePrevious(useInstance(watch('instance')));
 
@@ -209,5 +208,5 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
     return () => {
       subscription.unsubscribe();
     };
-  }, [scaleToZero, scaleToZeroIdleDelay, instances, previousInstance, watch, setValue, trigger]);
+  }, [scaleToZero, instances, previousInstance, watch, setValue, trigger]);
 }

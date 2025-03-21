@@ -28,17 +28,13 @@ const T = createTranslate('modules.serviceForm.scaling.autoscalingSettings');
 export function AutoScalingConfiguration() {
   const organization = useOrganization();
   const { watch } = useFormContext<ServiceForm>();
-  const scaleToZeroIdleDelay = useFeatureFlag('scale-to-zero-idle-delay');
 
   if (watch('instance') === 'free') {
     return <ScalingValues />;
   }
 
-  const showSleepIdleDelay = [
-    scaleToZeroIdleDelay,
-    ['startup', 'pro', 'scale', 'enterprise'].includes(organization.plan),
-    watch('scaling.min') === 0,
-  ].every(Boolean);
+  const showSleepIdleDelay =
+    ['startup', 'pro', 'scale', 'enterprise'].includes(organization.plan) && watch('scaling.min') === 0;
 
   return (
     <>
