@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { assert } from 'src/utils/assert';
 import { upperCase } from 'src/utils/strings';
 
-import { mapDeployment, mapInstances } from '../mappers/deployment';
+import { isComputeDeployment, mapDeployment, mapInstances } from '../mappers/deployment';
 import { mapApp, mapApps, mapService, mapServices } from '../mappers/service';
 import { InstanceStatus } from '../model';
 import { useApiQueryFn } from '../use-api';
@@ -63,6 +64,14 @@ export function useDeploymentQuery(deploymentId: string | undefined) {
 
 export function useDeployment(deploymentId: string | undefined) {
   return useDeploymentQuery(deploymentId).data;
+}
+
+export function useComputeDeployment(deploymentId: string | undefined) {
+  const deployment = useDeploymentQuery(deploymentId).data;
+
+  assert(isComputeDeployment(deployment));
+
+  return deployment;
 }
 
 type InstancesQueryOptions = {

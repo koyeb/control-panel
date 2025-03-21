@@ -54,7 +54,7 @@ export function Replicas({ instances }: { instances: Instance[] }) {
   );
 
   return (
-    <div className="rounded-md border">
+    <>
       <div className="col md:row gap-4 px-3 py-4 md:items-center">
         <div className="row me-auto items-center gap-2 font-medium">
           <T id="title" />
@@ -72,7 +72,7 @@ export function Replicas({ instances }: { instances: Instance[] }) {
           <Replica key={instances[0].id} instances={instances} />
         ))}
       </div>
-    </div>
+    </>
   );
 }
 

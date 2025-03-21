@@ -1,5 +1,7 @@
 import clsx from 'clsx';
-import React, { useMemo, useState } from 'react';
+import { sub } from 'date-fns';
+import React, { useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import {
@@ -13,16 +15,17 @@ import {
 } from 'src/api/model';
 import { hasBuild, isDeploymentRunning } from 'src/application/service-functions';
 import { IconCircleDashed } from 'src/components/icons';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLogs } from 'src/hooks/logs';
-import { useNow } from 'src/hooks/timers';
+import { useDebouncedValue, useNow } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
 import { buildStatusMap, runtimeStatusMap } from './deployment-status-icons';
 import { Replicas } from './replicas';
-import { RuntimeLogs } from './runtime-logs';
+import { RuntimeLogs, RuntimeLogsFilters } from './runtime-logs';
 
 type DeploymentPhase = 'build' | 'runtime';
 
@@ -112,21 +115,13 @@ type BuildSectionProps = {
 };
 
 function BuildSection({ app, service, deployment, expanded, setExpanded }: BuildSectionProps) {
-  const now = useMemo(() => new Date(), []);
-
-  const end = useMemo(() => {
-    if (deployment.build?.finishedAt) {
-      return new Date(deployment.build.finishedAt);
-    }
-
-    return now;
-  }, [now, deployment.build?.finishedAt]);
+  const now = useRef(new Date());
 
   const logs = useLogs(deployment.build?.status === 'running', {
     deploymentId: deployment.id,
     type: 'build',
     start: new Date(deployment.date),
-    end,
+    end: now.current,
   });
 
   return (
@@ -142,7 +137,7 @@ function BuildSection({ app, service, deployment, expanded, setExpanded }: Build
         />
       }
     >
-      <div className="col gap-4 p-4">
+      <div className="divide-y border-t">
         <BuildSteps deployment={deployment} />
         <BuildLogs app={app} service={service} deployment={deployment} logs={logs} />
       </div>
@@ -250,21 +245,28 @@ type RuntimeSectionProps = {
 };
 
 function RuntimeSection({ app, service, deployment, instances, expanded, setExpanded }: RuntimeSectionProps) {
-  const now = useMemo(() => new Date(), []);
+  const logsFilters = useFeatureFlag('logs-filters');
+  const now = new Date();
 
-  const end = useMemo(() => {
-    if (deployment.terminatedAt) {
-      return new Date(deployment.terminatedAt);
-    }
-
-    return now;
-  }, [now, deployment.terminatedAt]);
+  const filtersForm = useForm<RuntimeLogsFilters>({
+    defaultValues: {
+      period: logsFilters ? '1h' : '30d',
+      start: sub(now, logsFilters ? { hours: 1 } : { days: 30 }),
+      end: now,
+      region: null,
+      instance: null,
+      search: '',
+      logs: true,
+      events: true,
+    },
+  });
 
   const logs = useLogs(isDeploymentRunning(deployment), {
     deploymentId: deployment.id,
     type: 'runtime',
-    start: new Date(deployment.date),
-    end,
+    start: filtersForm.watch('start'),
+    end: filtersForm.watch('end'),
+    search: useDebouncedValue(filtersForm.watch('search') || undefined, 500),
   });
 
   return (
@@ -276,12 +278,20 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
           expanded={expanded}
           setExpanded={setExpanded}
           deployment={deployment}
-          lines={[]}
+          lines={logs.lines}
         />
       }
     >
-      <div className="col gap-4 p-4">
-        <RuntimeLogs app={app} service={service} deployment={deployment} instances={instances} logs={logs} />
+      <div className="divide-y border-t">
+        <RuntimeLogs
+          app={app}
+          service={service}
+          deployment={deployment}
+          instances={instances}
+          logs={logs}
+          filtersForm={filtersForm}
+        />
+
         {instances.length > 0 && <Replicas instances={instances} />}
       </div>
     </AccordionSection>
@@ -349,10 +359,7 @@ function SectionHeader({
 }: SectionHeaderProps) {
   return (
     <AccordionHeader expanded={expanded} setExpanded={setExpanded} className={clsx(disabled && 'opacity-50')}>
-      <div className="col gap-1">
-        <div className="font-medium">{title}</div>
-        <div className={clsx('text-xs first-letter:capitalize', statusColorClassName)}>{status}</div>
-      </div>
+      <div className="font-medium">{title}</div>
 
       <div className="row ms-auto min-w-0 items-center gap-2 ps-4 text-xs">
         {end}
@@ -361,7 +368,10 @@ function SectionHeader({
           <div className="max-w-96 truncate font-mono text-dim">{lastLogLine.text}</div>
         )}
 
-        <StatusIcon className={clsx('size-5', statusColorClassName)} />
+        <div className="row items-center gap-2">
+          <div className={clsx('text-xs first-letter:capitalize', statusColorClassName)}>{status}</div>
+          <StatusIcon className={clsx('size-5', statusColorClassName)} />
+        </div>
       </div>
     </AccordionHeader>
   );

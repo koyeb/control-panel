@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 
@@ -14,7 +15,7 @@ import {
   Service,
 } from 'src/api/model';
 import { isDeploymentRunning } from 'src/application/service-functions';
-import { ControlledCheckbox, ControlledSelect } from 'src/components/controlled';
+import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
 import { IconFullscreen } from 'src/components/icons';
 import { getInitialLogOptions } from 'src/components/logs/log-options';
@@ -28,19 +29,28 @@ import {
   LogsFooter,
 } from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
+import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { SelectInstance } from 'src/components/select-instance';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useFormValues } from 'src/hooks/form';
 import { LogsApi } from 'src/hooks/logs';
-import { createTranslate, Translate } from 'src/intl/translate';
-import { inArray } from 'src/utils/arrays';
+import { createTranslate } from 'src/intl/translate';
+import { inArray, last } from 'src/utils/arrays';
+import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
 
-type Filters = {
+type LogsPeriod = 'live' | '1h' | '6h' | '24h' | '7d' | '30d';
+
+export type RuntimeLogsFilters = {
+  period: LogsPeriod;
+  start: Date;
+  end: Date;
   region: string | null;
   instance: string | null;
+  search: string;
   logs: boolean;
   events: boolean;
 };
@@ -51,19 +61,11 @@ type RuntimeLogsProps = {
   deployment: ComputeDeployment;
   instances: Instance[];
   logs: LogsApi;
+  filtersForm: UseFormReturn<RuntimeLogsFilters>;
 };
 
-export function RuntimeLogs({ app, service, deployment, instances, logs }: RuntimeLogsProps) {
+export function RuntimeLogs({ app, service, deployment, instances, logs, filtersForm }: RuntimeLogsProps) {
   const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.identifier));
-
-  const filtersForm = useForm<Filters>({
-    defaultValues: {
-      region: null,
-      instance: null,
-      logs: true,
-      events: true,
-    },
-  });
 
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
@@ -78,7 +80,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
   }, []);
 
   if (logs.error) {
-    return <Translate id="common.errorMessage" values={{ message: logs.error.message }} />;
+    return <QueryError error={logs.error} className="m-4" />;
   }
 
   if (
@@ -89,86 +91,75 @@ export function RuntimeLogs({ app, service, deployment, instances, logs }: Runti
   }
 
   return (
-    <>
-      <FullScreen
-        enabled={optionsForm.watch('fullScreen')}
-        exit={() => optionsForm.setValue('fullScreen', false)}
-        className={clsx('col divide-y bg-neutral', !optionsForm.watch('fullScreen') && 'rounded-lg border')}
-      >
-        <LogsHeader
-          filters={filtersForm}
-          options={optionsForm}
-          regions={regions}
-          instances={filteredInstances}
-        />
+    <FullScreen
+      enabled={optionsForm.watch('fullScreen')}
+      exit={() => optionsForm.setValue('fullScreen', false)}
+      className="col gap-2 p-4"
+    >
+      <LogsHeader
+        filters={filtersForm}
+        options={optionsForm}
+        regions={regions}
+        instances={filteredInstances}
+      />
 
-        <LogLines
-          options={optionsForm.watch()}
-          setOption={optionsForm.setValue}
-          logs={{ ...logs, lines: filteredLines }}
-          renderLine={renderLine}
-          renderNoLogs={() => (
-            <NoLogs
-              deployment={deployment}
-              loading={logs.loading}
-              hasFilters={filtersForm.formState.isDirty}
-            />
-          )}
-        />
+      <LogLines
+        options={optionsForm.watch()}
+        setOption={optionsForm.setValue}
+        logs={{ ...logs, lines: filteredLines }}
+        renderLine={renderLine}
+        renderNoLogs={() => <NoLogs deployment={deployment} loading={logs.loading} filters={filtersForm} />}
+      />
 
-        <LogsFooter
-          appName={app.name}
-          serviceName={service.name}
-          lines={logs.lines}
-          renderMenu={(props) => (
-            <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
-              {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
-                <MenuItem key={option}>
-                  <ControlledCheckbox
-                    control={optionsForm.control}
-                    name={option}
-                    label={<T id={`options.${option}`} />}
-                    className="flex-1"
-                  />
-                </MenuItem>
-              ))}
-            </Menu>
-          )}
-        />
-      </FullScreen>
-    </>
+      <LogsFooter
+        appName={app.name}
+        serviceName={service.name}
+        lines={logs.lines}
+        renderMenu={(props) => (
+          <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
+            {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
+              <MenuItem key={option}>
+                <ControlledCheckbox
+                  control={optionsForm.control}
+                  name={option}
+                  label={<T id={`options.${option}`} />}
+                  className="flex-1"
+                />
+              </MenuItem>
+            ))}
+          </Menu>
+        )}
+      />
+    </FullScreen>
   );
 }
 
 type NoLogsProps = {
   deployment: ComputeDeployment;
   loading: boolean;
-  hasFilters: boolean;
+  filters: UseFormReturn<RuntimeLogsFilters>;
 };
 
-function NoLogs({ deployment, loading, hasFilters }: NoLogsProps) {
+function NoLogs({ deployment, loading, filters }: NoLogsProps) {
   const { plan } = useOrganization();
-  const quotas = useOrganizationQuotas();
+  const periods = useRetentionPeriods();
+  const period = filters.watch('period');
 
   if (loading) {
     return <Spinner className="size-6" />;
   }
 
-  if (hasFilters) {
-    return (
-      <p className="text-base">
-        <T id="noLogs.filtered" />
-      </p>
-    );
-  }
-
   return (
     <>
       <p className="text-base">
-        <T id="noLogs.expired" values={{ retention: quotas?.logsRetention }} />
+        {period === 'live' ? (
+          <T id="noLogs.expiredLive" />
+        ) : (
+          <T id="noLogs.expired" values={{ period: <T id={`retentionPeriods.${period}`} /> }} />
+        )}
       </p>
 
-      {inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && (
+      {inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && period === last(periods) && (
         <p>
           <T id="noLogs.upgrade" />
         </p>
@@ -183,7 +174,7 @@ function NoLogs({ deployment, loading, hasFilters }: NoLogsProps) {
   );
 }
 
-function useFilteredLines(lines: LogLineType[], filters: Filters, instances: Instance[]) {
+function useFilteredLines(lines: LogLineType[], filters: RuntimeLogsFilters, instances: Instance[]) {
   return useMemo(() => {
     return lines.filter((line) => {
       const instance = instances.find(hasProperty('id', line.instanceId));
@@ -209,7 +200,7 @@ function useFilteredLines(lines: LogLineType[], filters: Filters, instances: Ins
   }, [lines, filters, instances]);
 }
 
-function useFilteredInstances(filters: Filters, instances: Instance[]) {
+function useFilteredInstances(filters: RuntimeLogsFilters, instances: Instance[]) {
   return useMemo(() => {
     if (filters.region === null) {
       return instances;
@@ -236,70 +227,147 @@ function WaitingForLogs() {
 }
 
 type LogsHeaderProps = {
-  filters: UseFormReturn<Filters>;
+  filters: UseFormReturn<RuntimeLogsFilters>;
   options: UseFormReturn<LogOptions>;
   regions: CatalogRegion[];
   instances: Instance[];
 };
 
 function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
+  const periods = useRetentionPeriods();
+  const t = T.useTranslate();
+
+  const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
+
   return (
-    <header className="col md:row flex-wrap gap-4 p-4 md:items-center">
-      <div className="mr-auto">
+    <header className="col gap-4">
+      <div>
         <T id="header.title" />
       </div>
 
-      <ControlledSelect
-        control={filters.control}
-        name="region"
-        items={regions}
-        placeholder={<T id="header.allRegions" />}
-        getKey={(region) => region.identifier}
-        itemToString={(region) => region.displayName}
-        itemToValue={(region) => region.identifier}
-        onItemClick={(region) =>
-          region.identifier === filters.watch('region') && filters.setValue('region', null)
-        }
-        renderItem={(region) => (
-          <div className="row gap-2 whitespace-nowrap">
-            <RegionFlag identifier={region.identifier} className="size-4" />
-            {region.displayName}
-          </div>
-        )}
-        onChangeEffect={() => filters.setValue('instance', null)}
-        className="md:min-w-48"
-      />
+      <div className="row flex-wrap gap-2">
+        <FeatureFlag feature="logs-filters">
+          <ControlledSelect
+            control={filters.control}
+            name="period"
+            items={periods}
+            getKey={identity}
+            itemToString={identity}
+            itemToValue={identity}
+            renderItem={(period) => (
+              <div className="first-letter:capitalize">
+                <T id={`retentionPeriods.${period}`} />
+              </div>
+            )}
+            renderSelectedItem={() =>
+              [
+                formatPeriodDate(filters.watch('start')),
+                filters.watch('period') === 'live' ? t('header.now') : formatPeriodDate(filters.watch('end')),
+              ].join(' - ')
+            }
+            onChangeEffect={(period) => {
+              const duration: Duration = {};
 
-      <Controller
-        control={filters.control}
-        name="instance"
-        render={({ field }) => (
-          <SelectInstance
-            instances={instances}
-            placeholder={<T id="header.allInstances" />}
-            value={instances.find(hasProperty('id', field.value)) ?? null}
-            onChange={(instance) => field.onChange(instance.id)}
-            unselect={<T id="header.allInstances" />}
-            onUnselect={() => field.onChange(null)}
+              if (period === '1h') duration.hours = 1;
+              if (period === '6h') duration.hours = 6;
+              if (period === '24h') duration.hours = 24;
+              if (period === '7d') duration.days = 7;
+              if (period === '30d') duration.days = 30;
+
+              filters.setValue('start', sub(new Date(), duration));
+            }}
+            className="min-w-80"
+          />
+        </FeatureFlag>
+
+        <ControlledSelect
+          control={filters.control}
+          name="region"
+          items={regions}
+          placeholder={<T id="header.allRegions" />}
+          getKey={(region) => region.identifier}
+          itemToString={(region) => region.displayName}
+          itemToValue={(region) => region.identifier}
+          onItemClick={(region) =>
+            region.identifier === filters.watch('region') && filters.setValue('region', null)
+          }
+          renderItem={(region) => (
+            <div className="row gap-2 whitespace-nowrap">
+              <RegionFlag identifier={region.identifier} className="size-4" />
+              {region.displayName}
+            </div>
+          )}
+          onChangeEffect={() => filters.setValue('instance', null)}
+          className="min-w-48"
+        />
+
+        <Controller
+          control={filters.control}
+          name="instance"
+          render={({ field }) => (
+            <SelectInstance
+              instances={instances}
+              placeholder={<T id="header.allInstances" />}
+              value={instances.find(hasProperty('id', field.value)) ?? null}
+              onChange={(instance) => field.onChange(instance.id)}
+              unselect={<T id="header.allInstances" />}
+              onUnselect={() => field.onChange(null)}
+              className="min-w-64"
+            />
+          )}
+        />
+
+        <FeatureFlag feature="logs-filters">
+          <ControlledInput
+            control={filters.control}
+            name="search"
+            type="search"
+            placeholder={t('header.search')}
             className="min-w-64"
           />
-        )}
-      />
+        </FeatureFlag>
 
-      <div className="row gap-4">
-        <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
-        <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
+        <div className="row ml-auto gap-4">
+          <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
+          <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
+
+          <IconButton
+            variant="solid"
+            Icon={IconFullscreen}
+            onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
+          >
+            <T id="header.fullScreen" />
+          </IconButton>
+        </div>
       </div>
-
-      <IconButton
-        variant="solid"
-        Icon={IconFullscreen}
-        onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
-      >
-        <T id="header.fullScreen" />
-      </IconButton>
     </header>
   );
+}
+
+function useRetentionPeriods() {
+  const quotas = useOrganizationQuotas();
+
+  return useMemo(() => {
+    const periods: LogsPeriod[] = ['live', '1h', '6h'];
+
+    if (quotas?.logsRetention === undefined) {
+      return periods;
+    }
+
+    if (quotas.logsRetention >= 1) {
+      periods.push('24h');
+    }
+
+    if (quotas.logsRetention >= 7) {
+      periods.push('7d');
+    }
+
+    if (quotas.logsRetention >= 30) {
+      periods.push('30d');
+    }
+
+    return periods;
+  }, [quotas]);
 }
 
 function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) {

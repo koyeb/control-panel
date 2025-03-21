@@ -25,7 +25,7 @@ export function FullScreen({ enabled, exit, className, ...props }: FullScreenPro
   }
 
   return createPortal(
-    <div className={clsx('fixed inset-0 z-50', className)} {...props} />,
+    <div className={clsx('fixed inset-0 z-50 bg-neutral', className)} {...props} />,
     document.getElementById('root') ?? document.body,
   );
 }

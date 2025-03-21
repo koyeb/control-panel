@@ -33,7 +33,7 @@ export function LogsFooter({ appName, serviceName, lines, renderMenu }: LogsFoot
   const copyLogs = useCopyLogs(lines);
 
   return (
-    <footer className="row flex-wrap items-center justify-end gap-4 px-4 py-2">
+    <footer className="row flex-wrap items-center justify-end gap-4">
       <button type="button" className="text-link row items-center gap-2" onClick={downloadLogs}>
         <IconDownload className="size-em" />
         <T id="download" />
@@ -135,9 +135,9 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
       ref={container}
       // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
-        'scrollbar-green scrollbar-thin overflow-auto py-2',
+        'scrollbar-green scrollbar-thin overflow-auto rounded border py-2',
         !options.fullScreen && 'h-[32rem] resize-y',
-        options.fullScreen && 'h-full',
+        options.fullScreen && 'flex-1',
       )}
     >
       {lines.length === 0 && (

@@ -1,10 +1,11 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AnsiUp } from 'ansi_up';
-import { add, max, sub } from 'date-fns';
+import { add, max, min, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import { api, apiStreams } from 'src/api/api';
+import { useComputeDeployment } from 'src/api/hooks/service';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
 import { useToken } from 'src/application/token';
@@ -18,6 +19,7 @@ export type LogType = 'build' | 'runtime';
 export type LogsFilters = {
   type: LogType;
   deploymentId: string;
+  search?: string;
   start: Date;
   end: Date;
 };
@@ -35,14 +37,25 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
   const { data: historyLines = [], ...query } = useLogsHistory(filters);
   const stream = useLogsStream(tail, { ...filters, start: filters.end });
 
+  const highlightSearchMatches = useCallback(
+    (html: string) => {
+      if (filters.search === undefined) {
+        return html;
+      }
+
+      return html.replaceAll(filters.search, (value) => `<mark>${value}</mark>`);
+    },
+    [filters.search],
+  );
+
   const lines = useMemo<LogLine[]>(() => {
     const ansi = new AnsiUp();
 
     return [...historyLines, ...stream.lines].map((line) => ({
       ...line,
-      html: ansi.ansi_to_html(line.text),
+      html: highlightSearchMatches(ansi.ansi_to_html(line.text)),
     }));
-  }, [historyLines, stream.lines]);
+  }, [historyLines, stream.lines, highlightSearchMatches]);
 
   return {
     error: query.error ?? stream.error,
@@ -55,15 +68,47 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
 }
 
 function useLogsHistory(filters: LogsFilters) {
-  const { token } = useToken();
   const quotas = useOrganizationQuotas();
+  const deployment = useComputeDeployment(filters.deploymentId);
+  const { token } = useToken();
 
-  const withinQuota = (date: Date) => {
-    return max([add(sub(new Date(), { days: quotas?.logsRetention }), { minutes: 1 }), date]);
-  };
+  const initialPageParam = useMemo(() => {
+    if (!quotas || !deployment) {
+      return {};
+    }
+
+    let start = filters.start;
+    let end = filters.end;
+
+    if (filters.type === 'build') {
+      if (deployment.build?.startedAt) {
+        start = max([start, deployment.build.startedAt]);
+      }
+
+      if (deployment.build?.finishedAt) {
+        end = min([end, deployment.build.finishedAt]);
+      }
+    }
+
+    if (filters.type === 'runtime') {
+      start = max([start, deployment.date]);
+
+      if (deployment.terminatedAt) {
+        end = min([end, deployment.terminatedAt]);
+      }
+    }
+
+    start = max([start, add(sub(new Date(), { days: quotas.logsRetention }), { minutes: 1 })]);
+    end = max([start, end]);
+
+    return {
+      start: start.toISOString(),
+      end: end.toISOString(),
+    };
+  }, [quotas, deployment, filters.type, filters.start, filters.end]);
 
   return useInfiniteQuery({
-    enabled: quotas !== undefined,
+    enabled: quotas !== undefined && deployment !== undefined,
     queryKey: ['logsQuery', filters, token],
     queryFn: ({ pageParam: { start, end } }) => {
       if (start === end) {
@@ -77,6 +122,7 @@ function useLogsHistory(filters: LogsFilters) {
           deployment_id: filters.deploymentId,
           start,
           end,
+          text: filters.search,
           order: 'desc',
           limit: String(100),
         },
@@ -86,10 +132,7 @@ function useLogsHistory(filters: LogsFilters) {
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
-    initialPageParam: {
-      start: withinQuota(filters.start).toISOString(),
-      end: withinQuota(filters.end).toISOString(),
-    },
+    initialPageParam,
     getNextPageParam: () => null,
     getPreviousPageParam: (firstPage) => {
       const { has_more, next_start, next_end } = firstPage.pagination!;
@@ -181,6 +224,7 @@ function tailLogs(token: string | undefined, filters: LogsFilters, listeners: Pa
       type: filters.type,
       deployment_id: filters.deploymentId,
       start: filters.start.toISOString(),
+      text: filters.search,
     },
   });
 

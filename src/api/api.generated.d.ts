@@ -15730,10 +15730,14 @@ export interface operations {
                 deployment_id?: string;
                 instance_id?: string;
                 limit?: string;
+                /** @description (Optional) Apply a regex to filter logs. Can't be used with `text`. */
+                regex?: string;
                 regional_deployment_id?: string;
                 service_id?: string;
                 start?: string;
                 stream?: string;
+                /** @description (Optional) Looks for this string in logs. Can't be used with `regex`. */
+                text?: string;
                 type?: string;
             };
             header?: never;
