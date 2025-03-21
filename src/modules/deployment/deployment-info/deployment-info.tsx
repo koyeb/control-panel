@@ -4,7 +4,6 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 import {
-  AutoDeployMetadata,
   BranchMetadata,
   BuilderMetadata,
   CommitMetadata,
@@ -73,7 +72,6 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
           {(source.type === 'git' || source.type === 'archive') && (
             <>
               <BuilderMetadata builder={builder} />
-              {source.type === 'git' && <AutoDeployMetadata autoDeploy={source.autoDeploy} />}
               <PrivilegedMetadata privileged={privileged} />
             </>
           )}

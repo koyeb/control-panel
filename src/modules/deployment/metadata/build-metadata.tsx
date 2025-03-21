@@ -95,21 +95,6 @@ export function BuilderMetadata({ builder }: { builder: DeploymentDefinition['bu
   );
 }
 
-export function AutoDeployMetadata({ autoDeploy }: { autoDeploy?: boolean }) {
-  assert(autoDeploy !== undefined);
-
-  return (
-    <Metadata
-      label={<T id="autoDeployLabel" />}
-      value={
-        <div className="row items-center gap-2">
-          <T id={String(autoDeploy) as 'true' | 'false'} />
-        </div>
-      }
-    />
-  );
-}
-
 export function PrivilegedMetadata({ privileged }: { privileged?: boolean }) {
   assert(privileged !== undefined);
 

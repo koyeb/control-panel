@@ -454,7 +454,6 @@
         "builderLabel": "Builder type",
         "buildpack": "Buildpack",
         "dockerfile": "Dockerfile",
-        "autoDeployLabel": "Auto deploy",
         "privilegedLabel": "Privileged",
         "true": "True",
         "false": "False",
