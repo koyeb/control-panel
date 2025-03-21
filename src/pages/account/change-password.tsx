@@ -2,31 +2,38 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@koyeb/design-system';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
+import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
+import { AuthenticationLayout } from 'src/layouts/authentication/authentication.layout';
 
-// todo: use main controlled input
-import { ControlledInput } from '../authentication/components/controlled-input';
+import { AuthButton } from '../authentication/components/auth-button';
+import { AuthInput } from '../authentication/components/auth-input';
 
 const T = createTranslate('pages.account.changePassword');
 
 export function ChangePasswordPage() {
-  return (
-    <div className="col gap-8">
-      <h1 className="text-center text-3xl font-semibold">
-        <T id="title" />
-      </h1>
+  const t = T.useTranslate();
 
-      <ChangePasswordForm />
-    </div>
+  return (
+    <AuthenticationLayout slides={false}>
+      <DocumentTitle title={t('title')} />
+
+      <div className="mx-auto w-full max-w-72 text-center">
+        <h1 className="text-3xl font-semibold">
+          <T id="title" />
+        </h1>
+
+        <ChangePasswordForm />
+      </div>
+    </AuthenticationLayout>
   );
 }
 
@@ -64,19 +71,19 @@ export function ChangePasswordForm() {
   });
 
   return (
-    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-      <ControlledInput
+    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col mt-12 gap-6">
+      <AuthInput
         control={form.control}
         autoFocus
+        required
         name="password"
         type="password"
-        required
         placeholder={t('passwordPlaceholder')}
       />
 
-      <Button type="submit" loading={form.formState.isSubmitting} className="!rounded-full py-3">
-        <T id="resetPassword" />
-      </Button>
+      <AuthButton type="submit" loading={form.formState.isSubmitting}>
+        <T id="submit" />
+      </AuthButton>
     </form>
   );
 }

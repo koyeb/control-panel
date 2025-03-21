@@ -8,15 +8,14 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
-import { IconEye, IconEyeOff } from 'src/components/icons';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
-import { AuthenticateButton } from './authenticate-button';
-import { ControlledInput } from './controlled-input';
+import { AuthButton } from './auth-button';
+import { AuthInput } from './auth-input';
 
 const T = createTranslate('pages.authentication.signIn');
 
@@ -67,7 +66,6 @@ export function SignInForm() {
   });
 
   const [invalidCredential, setInvalidCredential] = useState(false);
-  const [passwordVisible, setPasswordVisible] = useState(false);
 
   useEffect(() => {
     const { unsubscribe } = form.watch(() => {
@@ -80,39 +78,39 @@ export function SignInForm() {
   }, [form]);
 
   return (
-    <form onSubmit={handleSubmit(form, signIn)} className="col gap-4">
-      {invalidCredential && (
-        <div className="rounded-md bg-red p-4 text-black">
-          <T id="invalidCredential" />
-        </div>
-      )}
-
-      <ControlledInput
+    <form onSubmit={handleSubmit(form, signIn)} className="col gap-6">
+      <AuthInput
         control={form.control}
-        autoFocus
         name="email"
+        autoFocus
         type="email"
         required
         placeholder={t('emailPlaceholder')}
       />
 
-      <ControlledInput
+      <AuthInput
         control={form.control}
         name="password"
-        type={passwordVisible ? 'text' : 'password'}
+        autoFocus
         autoComplete="current-password"
+        type="password"
         required
         placeholder={t('passwordPlaceholder')}
-        end={
-          <button type="button" onClick={() => setPasswordVisible(!passwordVisible)} className="mx-6">
-            {passwordVisible ? <IconEyeOff className="icon" /> : <IconEye className="icon" />}
-          </button>
-        }
       />
 
-      <AuthenticateButton loading={form.formState.isSubmitting}>
-        <T id="signIn" />
-      </AuthenticateButton>
+      {invalidCredential && (
+        <div className="text-red">
+          <T id="invalidCredential" />
+        </div>
+      )}
+
+      <AuthButton
+        type="submit"
+        disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+        loading={form.formState.isSubmitting}
+      >
+        <T id="submit" />
+      </AuthButton>
     </form>
   );
 }
