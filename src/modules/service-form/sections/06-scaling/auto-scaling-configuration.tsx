@@ -34,7 +34,8 @@ export function AutoScalingConfiguration() {
   }
 
   const showSleepIdleDelay =
-    ['startup', 'pro', 'scale', 'enterprise'].includes(organization.plan) && watch('scaling.min') === 0;
+    ['startup', 'pro', 'scale', 'enterprise', 'internal'].includes(organization.plan) &&
+    watch('scaling.min') === 0;
 
   return (
     <>
