@@ -71,6 +71,17 @@ describe('deploymentDefinitionToServiceForm', () => {
     });
   });
 
+  it('sleep idle delay', () => {
+    const definition: Api.DeploymentDefinition = {
+      scalings: [{ min: 0, max: 1, targets: [] }],
+    };
+
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
+      'scaling.targets.sleepIdleDelay',
+      { enabled: true },
+    );
+  });
+
   it('volumes mapping', () => {
     const definition: Api.DeploymentDefinition = {
       volumes: [{ id: 'volumeId', path: '/path' }],

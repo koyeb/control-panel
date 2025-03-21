@@ -185,9 +185,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         }
       }
 
-      if (scaling.min > 0 && scaling.targets.sleepIdleDelay.enabled) {
-        scaling.targets.sleepIdleDelay.enabled = false;
-      }
+      scaling.targets.sleepIdleDelay.enabled = scaling.min === 0;
 
       if (scaling.min === scaling.max || scaling.max === 1) {
         scaleAboveZeroTargets.forEach((target) => {

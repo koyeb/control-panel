@@ -36,7 +36,7 @@ export function AutoScalingConfiguration() {
 
   const showSleepIdleDelay = [
     scaleToZeroIdleDelay,
-    ['pro', 'scale', 'enterprise'].includes(organization.plan),
+    ['startup', 'pro', 'scale', 'enterprise'].includes(organization.plan),
     watch('scaling.min') === 0,
   ].every(Boolean);
 
@@ -51,7 +51,7 @@ export function AutoScalingConfiguration() {
         <ScaleToZeroPreview />
 
         {showSleepIdleDelay && (
-          <ScalingTarget target="sleepIdleDelay" Icon={IconClock} min={3 * 60} max={60 * 60} />
+          <ScaleToZeroIdleDelay target="sleepIdleDelay" Icon={IconClock} min={3 * 60} max={60 * 60} />
         )}
 
         <p>
@@ -184,6 +184,41 @@ type ScalingTargetProps = {
   min?: number;
   max?: number;
 };
+
+function ScaleToZeroIdleDelay({ target, Icon, min, max }: ScalingTargetProps) {
+  return (
+    <div className="row relative rounded-lg border">
+      <div className="col sm:row flex-1 gap-4 p-3 sm:items-center">
+        <div className="col flex-1 gap-1">
+          <div className="row items-center gap-1 font-semibold">
+            <Icon className="icon" />
+            <T id={`${target}Label`} />
+          </div>
+
+          <div className="text-xs text-dim">
+            <TargetDescription target={target} />
+          </div>
+        </div>
+
+        <ControlledInput
+          name={`scaling.targets.${target}.value`}
+          error={false}
+          type="number"
+          onKeyDown={onKeyDownPositiveInteger}
+          end={
+            <InputEnd>
+              <T id={`${target}Unit`} />
+            </InputEnd>
+          }
+          className="max-w-24 self-center"
+          min={min}
+          max={max}
+          step={1}
+        />
+      </div>
+    </div>
+  );
+}
 
 function ScalingTarget({ target: targetName, Icon, min, max }: ScalingTargetProps) {
   const { resetField, trigger } = useFormContext<ServiceForm>();
