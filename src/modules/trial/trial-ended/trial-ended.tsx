@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Dialog } from '@koyeb/design-system';
+import { StripeProvider } from 'src/application/stripe';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 import { defined } from 'src/utils/assert';
 
@@ -43,7 +44,7 @@ export function TrialEnded() {
   return (
     <SecondaryLayout>
       <Dialog open className="col w-full max-w-4xl gap-8">
-        {content()}
+        <StripeProvider>{content()}</StripeProvider>
       </Dialog>
     </SecondaryLayout>
   );

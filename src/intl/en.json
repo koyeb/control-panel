@@ -239,6 +239,7 @@
       "noConsecutiveDashes": "No consecutive dashes"
     },
     "upgradeDialog": {
+      "loadingStripe": "Loading stripe...",
       "cardNumberLabel": "Card number",
       "expirationLabel": "Expiration",
       "cvcLabel": "CVC",

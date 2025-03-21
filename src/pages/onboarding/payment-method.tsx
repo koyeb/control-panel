@@ -1,4 +1,5 @@
 import { Button } from '@koyeb/design-system';
+import { StripeProvider } from 'src/application/stripe';
 import { PaymentForm } from 'src/components/payment-form';
 import { createTranslate } from 'src/intl/translate';
 import { FeaturesList } from 'src/layouts/secondary/features-list';
@@ -18,14 +19,16 @@ export function PaymentMethod() {
           </div>
         </div>
 
-        <PaymentForm
-          plan="starter"
-          renderFooter={(formState) => (
-            <Button type="submit" loading={formState.isSubmitting} className="mt-4">
-              <T id="submit" />
-            </Button>
-          )}
-        />
+        <StripeProvider>
+          <PaymentForm
+            plan="starter"
+            renderFooter={(formState) => (
+              <Button type="submit" loading={formState.isSubmitting} className="mt-4">
+                <T id="submit" />
+              </Button>
+            )}
+          />
+        </StripeProvider>
       </section>
 
       <section className="lg:col hidden justify-center">
