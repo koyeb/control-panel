@@ -62,15 +62,17 @@ function SectionTitle() {
       )}
 
       {regions.length > 1 && (
-        <span>
-          {regions.map((region, index) => (
-            <RegionFlag
-              key={region.identifier}
-              identifier={region.identifier}
-              className="inline-block size-em"
-              style={{ marginLeft: `-${index / 2}rem` }}
-            />
-          ))}
+        <span className="inline-flex flex-row items-center gap-2">
+          <span className="inline-flex flex-row" style={{ width: `${regions.length / 2}em` }}>
+            {regions.map((region, index) => (
+              <RegionFlag
+                key={region.identifier}
+                identifier={region.identifier}
+                className="inline-block size-em"
+                style={{ transform: `translateX(-${index / 2}em)` }}
+              />
+            ))}
+          </span>
 
           <span className="ml-1">{regions.length} regions</span>
         </span>
