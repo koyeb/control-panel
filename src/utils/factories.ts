@@ -80,13 +80,13 @@ const activityObject = createFactory<ActivityObject>(() => ({
 }));
 
 const datacenter = createFactory<CatalogDatacenter>(() => ({
-  identifier: '',
+  id: '',
   domain: '',
-  regionIdentifier: '',
+  regionId: '',
 }));
 
 const region = createFactory<CatalogRegion>(() => ({
-  identifier: '',
+  id: '',
   displayName: '',
   status: 'available',
   datacenters: [],
@@ -96,7 +96,7 @@ const region = createFactory<CatalogRegion>(() => ({
 }));
 
 const instance = createFactory<CatalogInstance>(() => ({
-  identifier: '',
+  id: '',
   displayName: '',
   status: 'available',
   category: 'standard',

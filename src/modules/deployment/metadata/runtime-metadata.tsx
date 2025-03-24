@@ -36,19 +36,19 @@ export function RegionsMetadata({ regions }: { regions: string[] }) {
     return null;
   }
 
-  const catalogRegion = catalogRegions.find(hasProperty('identifier', firstRegion));
+  const catalogRegion = catalogRegions.find(hasProperty('id', firstRegion));
 
   return (
     <Metadata
       label={<T id="regionsLabel" />}
       value={
         <div className="row items-center gap-2">
-          <RegionFlag identifier={firstRegion} className="size-4" />
+          <RegionFlag regionId={firstRegion} className="size-4" />
 
           {catalogRegion?.displayName}
 
           {otherRegions.length > 0 && (
-            <Tooltip content={<RegionsList identifiers={otherRegions} />}>
+            <Tooltip content={<RegionsList regionIds={otherRegions} />}>
               {(props) => (
                 <Badge size={1} {...props}>
                   <Translate id="common.plusCount" values={{ count: otherRegions.length }} />

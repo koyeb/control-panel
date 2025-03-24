@@ -25,7 +25,7 @@ export function ServiceEstimatedCost({ cost }: ServiceEstimatedCostProps) {
       return <T id="descriptionScaling" />;
     }
 
-    if (cost.instance.identifier === 'free') {
+    if (cost.instance.id === 'free') {
       return <T id="descriptionFreeInstance" />;
     }
 
@@ -145,7 +145,7 @@ function Total({ cost }: TotalLineProps) {
       return <AutoscalingPrice min={cost[0].totalPrice} max={cost[1].totalPrice} />;
     }
 
-    if (cost.instance.identifier === 'free') {
+    if (cost.instance.id === 'free') {
       return <T id="free" />;
     }
 

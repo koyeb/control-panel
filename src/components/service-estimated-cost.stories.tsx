@@ -13,7 +13,7 @@ export default {
 export const freeInstance: StoryObj<typeof ServiceEstimatedCost> = {
   args: {
     cost: {
-      instance: create.instance({ identifier: 'free', displayName: 'Free' }),
+      instance: create.instance({ id: 'free', displayName: 'Free' }),
       instanceCount: 1,
       regionCount: 1,
       instancesPrice: { perHour: 0, perMonth: 0 },

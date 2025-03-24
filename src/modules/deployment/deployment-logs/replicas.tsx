@@ -97,8 +97,8 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
 
         return (
           <div className="row items-center gap-2">
-            <RegionFlag identifier={region} className="size-4" />
-            <RegionName identifier={region} />
+            <RegionFlag regionId={region} className="size-4" />
+            <RegionName regionId={region} />
           </div>
         );
       }}
@@ -180,7 +180,7 @@ function Replica({ instances }: { instances: [Instance, ...Instance[]] }) {
           <T id="replicaIndex" values={{ index: instance.replicaIndex }} />
         </div>
 
-        <RegionFlag identifier={instance.region} className="size-4" />
+        <RegionFlag regionId={instance.region} className="size-4" />
 
         <InstanceStatusBadge status={instance.status} className="ms-auto" />
       </div>
@@ -263,8 +263,8 @@ function InstanceDetails({ instance }: { instance: Instance }) {
           label={<T id="regionLabel" />}
           value={
             <div className="row gap-2">
-              <RegionFlag identifier={instance.region} className="size-4" />
-              <RegionName identifier={instance.region} />
+              <RegionFlag regionId={instance.region} className="size-4" />
+              <RegionName regionId={instance.region} />
             </div>
           }
         />

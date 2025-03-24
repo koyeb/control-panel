@@ -23,18 +23,18 @@ export function useInstancesQuery() {
   });
 }
 
-export function useInstances(identifiers?: string[]) {
+export function useInstances(ids?: string[]) {
   const { data: instances = [] } = useInstancesQuery();
 
-  if (identifiers === undefined) {
+  if (ids === undefined) {
     return instances;
   }
 
-  return instances.filter((instance) => identifiers.includes(instance.identifier));
+  return instances.filter((instance) => ids.includes(instance.id));
 }
 
-export function useInstance(identifier: string | null) {
-  return useInstances().find(hasProperty('identifier', identifier));
+export function useInstance(id: string | null) {
+  return useInstances().find(hasProperty('id', id));
 }
 
 export function useRegionsQuery() {
@@ -47,18 +47,18 @@ export function useRegionsQuery() {
   });
 }
 
-export function useRegions(identifiers?: string[]) {
+export function useRegions(ids?: string[]) {
   const { data: regions = [] } = useRegionsQuery();
 
-  if (identifiers === undefined) {
+  if (ids === undefined) {
     return regions;
   }
 
-  return regions.filter((region) => identifiers.includes(region.identifier));
+  return regions.filter((region) => ids.includes(region.id));
 }
 
-export function useRegion(identifier?: string) {
-  return useRegions().find(hasProperty('identifier', identifier));
+export function useRegion(id?: string) {
+  return useRegions().find(hasProperty('id', id));
 }
 
 export function useDatacentersQuery() {

@@ -54,7 +54,7 @@ type RuntimeLogsProps = {
 };
 
 export function RuntimeLogs({ app, service, deployment, instances, logs }: RuntimeLogsProps) {
-  const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.identifier));
+  const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.id));
 
   const filtersForm = useForm<Filters>({
     defaultValues: {
@@ -254,15 +254,13 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
         name="region"
         items={regions}
         placeholder={<T id="header.allRegions" />}
-        getKey={(region) => region.identifier}
+        getKey={(region) => region.id}
         itemToString={(region) => region.displayName}
-        itemToValue={(region) => region.identifier}
-        onItemClick={(region) =>
-          region.identifier === filters.watch('region') && filters.setValue('region', null)
-        }
+        itemToValue={(region) => region.id}
+        onItemClick={(region) => region.id === filters.watch('region') && filters.setValue('region', null)}
         renderItem={(region) => (
           <div className="row gap-2 whitespace-nowrap">
-            <RegionFlag identifier={region.identifier} className="size-4" />
+            <RegionFlag regionId={region.id} className="size-4" />
             {region.displayName}
           </div>
         )}

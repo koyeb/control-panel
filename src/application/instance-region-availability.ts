@@ -21,14 +21,14 @@ export function useRegionAvailabilities(options?: RegionAvailabilityOptions) {
   return useMemo(() => {
     return toObject(
       regions,
-      (region) => region.identifier,
+      (region) => region.id,
       (region) => checkRegionAvailability(region, optionsMemo),
     );
   }, [regions, optionsMemo]);
 }
 
-export function useRegionAvailability(regionIdentifier: string, options?: RegionAvailabilityOptions) {
-  return useRegionAvailabilities(options)[regionIdentifier] ?? [false, 'regionNotFound'];
+export function useRegionAvailability(regionId: string, options?: RegionAvailabilityOptions) {
+  return useRegionAvailabilities(options)[regionId] ?? [false, 'regionNotFound'];
 }
 
 function checkRegionAvailability(
@@ -39,7 +39,7 @@ function checkRegionAvailability(
     return [false, 'unavailable'];
   }
 
-  if (options.instance && region.instances && !region.instances.includes(options.instance.identifier)) {
+  if (options.instance && region.instances && !region.instances.includes(options.instance.id)) {
     return [false, 'unavailableForInstance'];
   }
 
@@ -71,7 +71,7 @@ export function useInstanceAvailabilities(options: InstanceAvailabilityOptions =
   return useMemo(() => {
     return toObject(
       instances,
-      (instance) => instance.identifier,
+      (instance) => instance.id,
       (instance) => checkInstanceAvailability(instance, organizationSummary, optionsMemo),
     );
   }, [instances, organizationSummary, optionsMemo]);
@@ -89,7 +89,7 @@ function checkInstanceAvailability(
       return [false, 'changeCpuToGpuWithVolume'];
     }
 
-    if (previousInstance.category === 'gpu' && previousInstance.identifier !== instance.identifier) {
+    if (previousInstance.category === 'gpu' && previousInstance.id !== instance.id) {
       return [false, 'changeGpuWithVolume'];
     }
   }
@@ -106,8 +106,8 @@ function checkInstanceAvailability(
     return [false, 'volumesNotEnabled'];
   }
 
-  if (instance.identifier === 'free') {
-    if (summary?.freeInstanceUsed && (!previousInstance || previousInstance.identifier !== 'free')) {
+  if (instance.id === 'free') {
+    if (summary?.freeInstanceUsed && (!previousInstance || previousInstance.id !== 'free')) {
       return [false, 'freeAlreadyUsed'];
     }
 

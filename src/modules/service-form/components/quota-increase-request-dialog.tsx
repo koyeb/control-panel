@@ -6,8 +6,8 @@ import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.serviceForm');
 
-export function QuotaIncreaseRequestDialog({ instanceIdentifier }: { instanceIdentifier: string | null }) {
-  const instance = useInstance(instanceIdentifier);
+export function QuotaIncreaseRequestDialog({ catalogInstanceId }: { catalogInstanceId: string | null }) {
+  const instance = useInstance(catalogInstanceId);
   const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (

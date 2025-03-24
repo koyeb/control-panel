@@ -42,7 +42,7 @@ export function DatabaseInfo({ service, deployment }: { service: Service; deploy
           label={<T id="region" />}
           value={
             <div className="row items-center gap-2">
-              <RegionFlag identifier={deployment.region} className="size-em" />
+              <RegionFlag regionId={deployment.region} className="size-em" />
               {region?.displayName}
             </div>
           }

@@ -42,7 +42,7 @@ export function ActivityResources({ activity }: { activity: Activity }) {
           deleted={deleted}
         />
 
-        <RegionResource identifier={region} />
+        <RegionResource regionId={region} />
       </div>
     );
   }
@@ -155,11 +155,11 @@ function ServiceResource({
   );
 }
 
-function RegionResource({ identifier }: { identifier: string }) {
+function RegionResource({ regionId }: { regionId: string }) {
   return (
     <ActivityResource className="min-w-max">
-      <RegionFlag identifier={identifier} className="size-4" />
-      <span className="uppercase">{identifier}</span>
+      <RegionFlag regionId={regionId} className="size-4" />
+      <span className="uppercase">{regionId}</span>
     </ActivityResource>
   );
 }

@@ -129,7 +129,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
       <form
         ref={formRef}
         onSubmit={handleSubmit(form, (values) => {
-          const instance = instances.find(hasProperty('identifier', values.instance));
+          const instance = instances.find(hasProperty('id', values.instance));
 
           if (instance && preSubmit(instance)) {
             return mutation.mutateAsync(values);
@@ -152,7 +152,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
         </div>
       </form>
 
-      <QuotaIncreaseRequestDialog instanceIdentifier={form.watch('instance')} />
+      <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );
@@ -165,7 +165,7 @@ function useOnCostEstimationChanged(form: ModelForm, onChanged: (cost?: ServiceC
   useEffect(() => {
     const cost = computeEstimatedCost(
       instance,
-      regions.map((region) => region.identifier),
+      regions.map((region) => region.id),
       {
         min: 0,
         max: 1,
@@ -203,8 +203,8 @@ function useInitialValues(model: AiModel): Partial<ModelFormType> {
 
   return {
     modelSlug: model?.slug,
-    instance: instance?.identifier,
-    regions: [defaultRegion?.identifier ?? 'fra'],
+    instance: instance?.id,
+    regions: [defaultRegion?.id ?? 'fra'],
   };
 }
 
@@ -265,7 +265,7 @@ function ModelSection({ form }: { form: ModelForm }) {
           const instance = instances.find(instanceBestFit(model));
 
           if (instance) {
-            form.setValue('instance', instance.identifier);
+            form.setValue('instance', instance.id);
             form.setValue('regions', [instance.regions?.[0] ?? 'fra']);
           }
         }}
@@ -284,8 +284,8 @@ function InstanceSection({ model, form }: { model?: AiModel; form: ModelForm }) 
   const instanceCtrl = useController({ control: form.control, name: 'instance' });
   const regionsCtrl = useController({ control: form.control, name: 'regions' });
 
-  const selectedInstance = instances.find(hasProperty('identifier', instanceCtrl.field.value));
-  const selectedRegions = regions.filter((region) => inArray(region.identifier, regionsCtrl.field.value));
+  const selectedInstance = instances.find(hasProperty('id', instanceCtrl.field.value));
+  const selectedRegions = regions.filter((region) => inArray(region.id, regionsCtrl.field.value));
 
   const selector = useInstanceSelector({
     instances,
@@ -293,8 +293,8 @@ function InstanceSection({ model, form }: { model?: AiModel; form: ModelForm }) 
     availabilities,
     selectedInstance: selectedInstance ?? null,
     selectedRegions,
-    setSelectedInstance: (instance) => instanceCtrl.field.onChange(instance?.identifier ?? null),
-    setSelectedRegions: (regions) => regionsCtrl.field.onChange(regions.map((region) => region.identifier)),
+    setSelectedInstance: (instance) => instanceCtrl.field.onChange(instance?.id ?? null),
+    setSelectedRegions: (regions) => regionsCtrl.field.onChange(regions.map((region) => region.id)),
   });
 
   const getBadges = useGetInstanceBadges({

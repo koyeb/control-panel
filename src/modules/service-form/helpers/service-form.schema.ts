@@ -157,7 +157,7 @@ function instance() {
   return z
     .string()
     .nullable()
-    .refine((identifier) => identifier !== null, 'noInstanceSelected');
+    .refine((id) => id !== null, 'noInstanceSelected');
 }
 
 function scaling(t: TranslateErrorFunction) {

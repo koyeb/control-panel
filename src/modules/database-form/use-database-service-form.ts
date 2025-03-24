@@ -94,16 +94,16 @@ function useExpandFirstSectionInError(form: UseFormReturn<DatabaseServiceForm>) 
 }
 
 function useWatchEstimatedCost(form: UseFormReturn<DatabaseServiceForm>, onChange: (cost: number) => void) {
-  const instanceIdentifier = useWatch<DatabaseServiceForm, 'instance'>({
+  const catalogInstanceId = useWatch<DatabaseServiceForm, 'instance'>({
     control: form.control,
     name: 'instance',
   });
 
   useEffect(() => {
-    const instance = databaseInstances.find(hasProperty('identifier', instanceIdentifier));
+    const instance = databaseInstances.find(hasProperty('id', catalogInstanceId));
 
     if (instance) {
       onChange(instance.pricePerMonth);
     }
-  }, [instanceIdentifier, onChange]);
+  }, [catalogInstanceId, onChange]);
 }

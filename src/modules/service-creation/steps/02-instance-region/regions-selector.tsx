@@ -65,7 +65,7 @@ function RegionsList({
   return (
     <ul className={clsx('gaps grid grid-cols-1 sm:grid-cols-2', className)}>
       {regions.map((region) => (
-        <li key={region.identifier}>
+        <li key={region.id}>
           <RegionItem
             selectedInstance={selectedInstance}
             region={region}
@@ -86,7 +86,7 @@ type RegionItemProps = {
 };
 
 function RegionItem({ selectedInstance, region, selected, onSelected }: RegionItemProps) {
-  const [isAvailable] = useRegionAvailability(region.identifier, {
+  const [isAvailable] = useRegionAvailability(region.id, {
     instance: selectedInstance ?? undefined,
   });
 
@@ -94,7 +94,7 @@ function RegionItem({ selectedInstance, region, selected, onSelected }: RegionIt
     <SelectBox
       type="checkbox"
       disabled={!isAvailable}
-      icon={<RegionFlag identifier={region.identifier} className="size-5" />}
+      icon={<RegionFlag regionId={region.id} className="size-5" />}
       title={region.displayName}
       description={<RegionLatency region={region} />}
       checked={selected}

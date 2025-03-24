@@ -69,8 +69,8 @@ function VolumeField({ index, label, onCreate }: VolumeFieldProps) {
   const t = T.useTranslate();
   const form = useFormContext<ServiceForm>();
 
-  const [regionIdentifier] = useWatchServiceForm('regions');
-  const region = useRegion(regionIdentifier);
+  const [regionId] = useWatchServiceForm('regions');
+  const region = useRegion(regionId);
 
   const items = useVolumeItems();
 

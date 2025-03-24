@@ -25,12 +25,12 @@ export function DatabaseInstanceSelector({ allowFreeInstanceIfAlreadyUsed }: Dat
   const instanceCtrl = useController<DatabaseServiceForm, 'instance'>({ name: 'instance' });
   const regionCtrl = useController<DatabaseServiceForm, 'region'>({ name: 'region' });
 
-  const instance = databaseInstances.find(hasProperty('identifier', instanceCtrl.field.value));
-  const region = regions.find(hasProperty('identifier', regionCtrl.field.value));
+  const instance = databaseInstances.find(hasProperty('id', instanceCtrl.field.value));
+  const region = regions.find(hasProperty('id', regionCtrl.field.value));
   const summary = useOrganizationSummary();
 
   const checkAvailability = (instance: CatalogInstance): InstanceAvailability => {
-    if (instance.identifier === 'free' && summary?.freeDatabaseUsed && !allowFreeInstanceIfAlreadyUsed) {
+    if (instance.id === 'free' && summary?.freeDatabaseUsed && !allowFreeInstanceIfAlreadyUsed) {
       return [false, 'freeAlreadyUsed'];
     }
 
@@ -49,11 +49,11 @@ export function DatabaseInstanceSelector({ allowFreeInstanceIfAlreadyUsed }: Dat
     instances: databaseInstances,
     regions,
     singleRegion: true,
-    availabilities: toObject(databaseInstances, (instance) => instance.identifier, checkAvailability),
+    availabilities: toObject(databaseInstances, (instance) => instance.id, checkAvailability),
     selectedInstance: instance ?? null,
-    setSelectedInstance: (instance) => instance && instanceCtrl.field.onChange(instance.identifier),
+    setSelectedInstance: (instance) => instance && instanceCtrl.field.onChange(instance.id),
     selectedRegions: region ? [region] : [],
-    setSelectedRegions: (region) => regionCtrl.field.onChange(region[0]?.identifier),
+    setSelectedRegions: (region) => regionCtrl.field.onChange(region[0]?.id),
   });
 
   return (

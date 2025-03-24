@@ -63,10 +63,10 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
   const availabilities = useInstanceAvailabilities({ serviceType });
 
   const instanceParam = searchParams.get('instance_type');
-  const selectedInstance = instances.find(hasProperty('identifier', instanceParam)) ?? null;
+  const selectedInstance = instances.find(hasProperty('id', instanceParam)) ?? null;
 
   const regionsParam = searchParams.getAll('regions');
-  const selectedRegions = regions.filter((region) => regionsParam.includes(region.identifier));
+  const selectedRegions = regions.filter((region) => regionsParam.includes(region.id));
 
   const setInstanceParam = (instance: string) => {
     navigate((url) => url.searchParams.set('instance_type', instance), { replace: true });
@@ -89,12 +89,12 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
     selectedInstance,
     setSelectedInstance: (instance) => {
       if (instance !== null) {
-        setInstanceParam(instance.identifier);
+        setInstanceParam(instance.id);
       }
     },
     selectedRegions,
     setSelectedRegions: (regions) => {
-      setRegionsParam(regions.map((region) => region.identifier));
+      setRegionsParam(regions.map((region) => region.id));
     },
   });
 

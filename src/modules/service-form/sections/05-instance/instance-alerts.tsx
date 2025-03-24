@@ -95,7 +95,7 @@ function HobbyPlanAlerts({ instance }: { instance?: CatalogInstance }) {
     );
   }
 
-  if (summary?.freeInstanceUsed && previousInstance && previousInstance.identifier !== 'free') {
+  if (summary?.freeInstanceUsed && previousInstance && previousInstance.id !== 'free') {
     return (
       <Alert
         variant="error"

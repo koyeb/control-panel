@@ -18,12 +18,12 @@ export function DeploymentRegions({ regions }: DeploymentRegionsProps) {
 
   return (
     <div className="row items-center gap-2">
-      <RegionFlag identifier={firstRegion} className="size-4" />
+      <RegionFlag regionId={firstRegion} className="size-4" />
 
       {region?.displayName}
 
       {regions.length >= 2 && (
-        <Tooltip content={<RegionsList identifiers={regions} />}>
+        <Tooltip content={<RegionsList regionIds={regions} />}>
           {(props) => (
             <Badge {...props} size={1}>
               <Translate id="common.plusCount" values={{ count: regions.length - 1 }} />

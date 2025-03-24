@@ -97,7 +97,7 @@ export async function initializeServiceForm(
       values.source.docker.registrySecret = registrySecret;
     }
 
-    const instance = instances.find(hasProperty('identifier', values.instance));
+    const instance = instances.find(hasProperty('id', values.instance));
 
     if (values.serviceType === 'web' && instance?.category === 'gpu') {
       values.scaling.min = 0;
@@ -107,7 +107,7 @@ export async function initializeServiceForm(
       const defaultRegion = getDefaultRegion(queryClient, datacenters, regions, instance);
 
       if (defaultRegion !== undefined) {
-        values.regions = [defaultRegion.identifier];
+        values.regions = [defaultRegion.id];
       }
     }
   }

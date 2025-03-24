@@ -149,7 +149,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
       <form
         ref={formRef}
         onSubmit={handleSubmit(form, (values) => {
-          const instance = instances.find(hasProperty('identifier', values.instance));
+          const instance = instances.find(hasProperty('id', values.instance));
 
           if (instance && preSubmit(instance)) {
             return mutation.mutateAsync(values);
@@ -172,7 +172,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         </div>
       </form>
 
-      <QuotaIncreaseRequestDialog instanceIdentifier={form.watch('instance')} />
+      <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );
@@ -185,7 +185,7 @@ function useOnCostEstimationChanged(form: OneClickAppForm, onChanged: (cost?: Se
   useEffect(() => {
     const cost = computeEstimatedCost(
       instance,
-      regions.map((region) => region.identifier),
+      regions.map((region) => region.id),
       {
         min: 1,
         max: 1,
@@ -256,8 +256,8 @@ function InstanceSection({ serviceForm, form }: { serviceForm: ServiceForm; form
   const instanceCtrl = useController({ control: form.control, name: 'instance' });
   const regionsCtrl = useController({ control: form.control, name: 'regions' });
 
-  const selectedInstance = instances.find(hasProperty('identifier', instanceCtrl.field.value));
-  const selectedRegions = regions.filter((region) => inArray(region.identifier, regionsCtrl.field.value));
+  const selectedInstance = instances.find(hasProperty('id', instanceCtrl.field.value));
+  const selectedRegions = regions.filter((region) => inArray(region.id, regionsCtrl.field.value));
 
   const availabilities = useInstanceAvailabilities({
     serviceType: serviceForm.serviceType,
@@ -270,8 +270,8 @@ function InstanceSection({ serviceForm, form }: { serviceForm: ServiceForm; form
     availabilities,
     selectedInstance: selectedInstance ?? null,
     selectedRegions,
-    setSelectedInstance: (instance) => instanceCtrl.field.onChange(instance?.identifier ?? null),
-    setSelectedRegions: (regions) => regionsCtrl.field.onChange(regions.map((region) => region.identifier)),
+    setSelectedInstance: (instance) => instanceCtrl.field.onChange(instance?.id ?? null),
+    setSelectedRegions: (regions) => regionsCtrl.field.onChange(regions.map((region) => region.id)),
   });
 
   const getBadges = useGetInstanceBadges();

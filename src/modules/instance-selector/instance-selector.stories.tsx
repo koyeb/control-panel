@@ -40,14 +40,14 @@ export const instanceSelector = () => {
         setCategory={selector.onInstanceCategorySelected}
       />
 
-      <InstanceSelector {...selector} getBadges={({ identifier }) => badges[identifier] ?? []} />
+      <InstanceSelector {...selector} getBadges={({ id }) => badges[id] ?? []} />
     </div>
   );
 };
 
 const availabilities = toObject(
   instances,
-  (instance) => instance.identifier,
+  (instance) => instance.id,
   (): InstanceAvailability => [true],
 );
 

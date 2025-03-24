@@ -31,7 +31,7 @@ export function ScalingAlerts() {
     );
   }
 
-  if (instance?.identifier === 'free') {
+  if (instance?.id === 'free') {
     return (
       <Alert
         variant="info"

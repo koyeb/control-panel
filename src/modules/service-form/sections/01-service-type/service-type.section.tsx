@@ -73,7 +73,7 @@ function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOption
   const instance = useInstance(useWatchServiceForm('instance'));
 
   const canSelect = () => {
-    if (instance?.identifier === 'free') {
+    if (instance?.id === 'free') {
       return type !== 'worker';
     }
 

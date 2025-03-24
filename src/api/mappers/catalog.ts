@@ -18,7 +18,7 @@ export function mapCatalogRegionsList({ regions }: ApiEndpointResult<'listCatalo
 
 export function mapCatalogRegion(region: Api.CatalogRegion): CatalogRegion {
   return {
-    identifier: region.id!,
+    id: region.id!,
     displayName: region.name!,
     status: lowerCase(region.status!) as CatalogRegion['status'],
     datacenters: region.datacenters!,
@@ -33,8 +33,8 @@ export function mapCatalogDatacentersList({
   datacenters,
 }: ApiEndpointResult<'listCatalogDatacenters'>): CatalogDatacenter[] {
   return datacenters!.map((datacenter) => ({
-    identifier: datacenter.id!,
-    regionIdentifier: datacenter.region_id!,
+    id: datacenter.id!,
+    regionId: datacenter.region_id!,
     domain: datacenter.domain!,
   }));
 }
@@ -47,7 +47,7 @@ export function mapCatalogInstancesList({
 
 export function mapCatalogInstance(instance: Api.CatalogInstance): CatalogInstance {
   return {
-    identifier: instance.id!,
+    id: instance.id!,
     displayName: instance.display_name!,
     status: lowerCase(instance.status!) as CatalogInstanceStatus,
     plans: instance.require_plan!.length > 0 ? instance.require_plan! : undefined,

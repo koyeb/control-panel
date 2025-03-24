@@ -144,7 +144,7 @@ function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
     value: variable.value,
     scopes:
       hasEnvScopes && variable.regions.length > 0
-        ? variable.regions.map((identifier) => `region:${identifier}`)
+        ? variable.regions.map((regionId) => `region:${regionId}`)
         : undefined,
   }));
 }

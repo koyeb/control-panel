@@ -137,7 +137,7 @@ function ServiceForm_({
         </form>
       </FormProvider>
 
-      <QuotaIncreaseRequestDialog instanceIdentifier={form.watch('instance')} />
+      <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );

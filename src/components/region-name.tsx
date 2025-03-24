@@ -1,11 +1,11 @@
 import { useRegion } from 'src/api/hooks/catalog';
 
 type RegionNameProps = React.HTMLAttributes<HTMLDivElement> & {
-  identifier?: string;
+  regionId?: string;
 };
 
-export function RegionName({ identifier, ...props }: RegionNameProps) {
-  const region = useRegion(identifier);
+export function RegionName({ regionId, ...props }: RegionNameProps) {
+  const region = useRegion(regionId);
 
   return <div {...props}>{region?.displayName}</div>;
 }

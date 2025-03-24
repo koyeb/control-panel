@@ -88,8 +88,11 @@ export type InvoiceDiscountType = 'unknown' | 'amountOff' | 'percentOff';
 
 // catalog
 
+export type CatalogInstanceStatus = 'available' | 'coming_soon' | 'restricted';
+export type InstanceCategory = 'eco' | 'standard' | 'gpu';
+
 export type CatalogInstance = {
-  identifier: string;
+  id: string;
   displayName: string;
   status: CatalogInstanceStatus;
   plans?: string[];
@@ -106,29 +109,26 @@ export type CatalogInstance = {
   pricePerSecond: number;
 };
 
-export type CatalogInstanceStatus = 'available' | 'coming_soon' | 'restricted';
-
-export type InstanceCategory = 'eco' | 'standard' | 'gpu';
-
 export type CatalogDatacenter = {
-  identifier: string;
-  regionIdentifier: string;
+  id: string;
+  regionId: string;
   domain: string;
 };
 
+export type RegionStatus = 'available' | 'coming_soon';
+export type RegionCategory = 'koyeb' | 'aws';
+export type RegionScope = 'continental' | 'metropolitan';
+
 export type CatalogRegion = {
-  identifier: string;
+  id: string;
   displayName: string;
-  status: 'available' | 'coming_soon';
+  status: RegionStatus;
   datacenters: string[];
   instances?: string[];
   hasVolumes: boolean;
   category: RegionCategory;
   scope: RegionScope;
 };
-
-export type RegionCategory = 'koyeb' | 'aws';
-export type RegionScope = 'continental' | 'metropolitan';
 
 export type OneClickApp = {
   name: string;

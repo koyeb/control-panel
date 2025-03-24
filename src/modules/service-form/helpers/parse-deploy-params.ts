@@ -161,7 +161,7 @@ class ServiceFormBuilder {
   }
 
   private isValidInstance(instanceType: string): boolean {
-    return this.instancesCatalog.some(hasProperty('identifier', instanceType));
+    return this.instancesCatalog.some(hasProperty('id', instanceType));
   }
 
   set instanceType(instanceType: string | null) {
@@ -170,10 +170,8 @@ class ServiceFormBuilder {
     }
   }
 
-  private isValidRegion(identifier: string): boolean {
-    return this.regionsCatalog.some(
-      (region) => region.identifier === identifier && region.status === 'available',
-    );
+  private isValidRegion(regionId: string): boolean {
+    return this.regionsCatalog.some((region) => region.id === regionId && region.status === 'available');
   }
 
   set regions(regions: string[]) {

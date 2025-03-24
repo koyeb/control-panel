@@ -62,7 +62,7 @@ export function useSubmitDatabaseServiceForm(
   });
 
   return async (values: DatabaseServiceForm) => {
-    const instance = databaseInstances.find(hasProperty('identifier', values.instance));
+    const instance = databaseInstances.find(hasProperty('id', values.instance));
 
     if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
       onPlanUpgradeRequired(instance.plans[0] as OrganizationPlan);

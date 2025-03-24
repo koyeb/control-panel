@@ -51,8 +51,8 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
           header: <T id="region" />,
           render: (volume) => (
             <div className="row items-center gap-2">
-              <RegionFlag identifier={volume.region} className="size-4" />
-              <RegionName identifier={volume.region} />
+              <RegionFlag regionId={volume.region} className="size-4" />
+              <RegionName regionId={volume.region} />
             </div>
           ),
         },

@@ -22,10 +22,10 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
     requiredPlan,
     (instance: CatalogInstance): boolean => {
       const quotas = getInstanceQuota(instance);
-      const hasQuotas = previousInstance === instance.identifier || quotas.used < quotas.max;
+      const hasQuotas = previousInstance === instance.id || quotas.used < quotas.max;
 
       if (instance?.category === 'gpu') {
-        trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.identifier });
+        trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.id });
       }
 
       if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {

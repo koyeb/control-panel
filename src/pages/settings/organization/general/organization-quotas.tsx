@@ -172,9 +172,7 @@ function useAllowedRegions() {
     return availableRegions;
   }
 
-  return quotas.regions
-    .map((region) => availableRegions.find(hasProperty('identifier', region)))
-    .filter(isDefined);
+  return quotas.regions.map((region) => availableRegions.find(hasProperty('id', region))).filter(isDefined);
 }
 
 function useInstanceTypeQuotaItems(): Record<'koyeb' | 'aws' | 'gpu', QuotaItem[]> {
@@ -185,9 +183,9 @@ function useInstanceTypeQuotaItems(): Record<'koyeb' | 'aws' | 'gpu', QuotaItem[
   const unset = organization.plan === 'hobby' ? <T id="zero" /> : <T id="infinity" />;
 
   const getQuota = (instance: CatalogInstance): QuotaItem => ({
-    key: instance.identifier,
+    key: instance.id,
     label: instance.displayName,
-    value: quotas?.maxInstancesByType[instance.identifier] ?? unset,
+    value: quotas?.maxInstancesByType[instance.id] ?? unset,
   });
 
   return {
@@ -203,19 +201,19 @@ function useVolumesQuotaItems(): QuotaItem[] {
   const quotas = useOrganizationQuotas();
   const regions = useAllowedRegions();
 
-  const quota = (regionIdentifier: string) => {
-    return quotas?.volumesByRegion[regionIdentifier] ?? quotas?.volumesByRegion['*'];
+  const quota = (regionId: string) => {
+    return quotas?.volumesByRegion[regionId] ?? quotas?.volumesByRegion['*'];
   };
 
   return regions.map((region) => ({
-    key: region.identifier,
+    key: region.id,
     label: region.displayName,
     value: (
       <T
         id="volumeQuota"
         values={{
-          maxVolumeSize: formatBytes(quota(region.identifier)?.maxVolumeSize ?? 0, { decimal: true }),
-          maxTotalSize: formatBytes(quota(region.identifier)?.maxTotalSize ?? 0, { decimal: true }),
+          maxVolumeSize: formatBytes(quota(region.id)?.maxVolumeSize ?? 0, { decimal: true }),
+          maxTotalSize: formatBytes(quota(region.id)?.maxTotalSize ?? 0, { decimal: true }),
         }}
       />
     ),

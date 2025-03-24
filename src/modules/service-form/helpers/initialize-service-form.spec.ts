@@ -93,7 +93,7 @@ describe('initializeServiceForm', () => {
       instance_type: 'free',
     });
 
-    const instances = [create.instance({ identifier: 'free' })];
+    const instances = [create.instance({ id: 'free' })];
 
     expect(await initialize({ params, instances })).toEqual({
       ...serviceForm,
@@ -110,7 +110,7 @@ describe('initializeServiceForm', () => {
       instance_type: 'gpu',
     });
 
-    const instances = [create.instance({ identifier: 'gpu', category: 'gpu' })];
+    const instances = [create.instance({ id: 'gpu', category: 'gpu' })];
 
     expect(await initialize({ params, instances })).toEqual({
       ...serviceForm,

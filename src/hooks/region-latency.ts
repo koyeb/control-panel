@@ -17,7 +17,7 @@ export function useRegionLatency(region: CatalogRegion | undefined): undefined |
     }
 
     const latencies = region?.datacenters
-      .map((identifier) => latenciesQuery.latencies.get(identifier))
+      .map((id) => latenciesQuery.latencies.get(id))
       .filter((value): value is number => typeof value === 'number');
 
     latencies?.sort();
@@ -27,13 +27,13 @@ export function useRegionLatency(region: CatalogRegion | undefined): undefined |
 }
 
 export function useDatacenterLatencies() {
-  const datacenters = useDatacenters().filter(({ identifier }) => !identifier.includes('aws'));
+  const datacenters = useDatacenters().filter(({ id }) => !id.includes('aws'));
 
   return useQueries({
     queries: datacenters.map((datacenter) => ({
       queryKey: ['datacenterLatency', datacenter.domain],
       queryFn: () => getUrlLatency(`https://${datacenter.domain}/health`),
-      select: (latency: number | null) => [datacenter.identifier, latency] as const,
+      select: (latency: number | null) => [datacenter.id, latency] as const,
       refetchInterval: disablePolling ? (false as const) : 10_000,
       retry: false,
       refetchOnMount: false,

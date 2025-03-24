@@ -106,9 +106,9 @@ describe('parseDeployParams', () => {
 
   describe('instance_type', () => {
     beforeEach(() => {
-      test.instancesCatalog.push(create.instance({ identifier: 'free', status: 'available' }));
-      test.instancesCatalog.push(create.instance({ identifier: 'medium', status: 'available' }));
-      test.instancesCatalog.push(create.instance({ identifier: 'large', status: 'coming_soon' }));
+      test.instancesCatalog.push(create.instance({ id: 'free', status: 'available' }));
+      test.instancesCatalog.push(create.instance({ id: 'medium', status: 'available' }));
+      test.instancesCatalog.push(create.instance({ id: 'large', status: 'coming_soon' }));
     });
 
     it('valid instance type', () => {
@@ -124,9 +124,9 @@ describe('parseDeployParams', () => {
 
   describe('regions', () => {
     beforeEach(() => {
-      test.regionsCatalog.push(create.region({ identifier: 'fra', status: 'available' }));
-      test.regionsCatalog.push(create.region({ identifier: 'par', status: 'available' }));
-      test.regionsCatalog.push(create.region({ identifier: 'mrs', status: 'coming_soon' }));
+      test.regionsCatalog.push(create.region({ id: 'fra', status: 'available' }));
+      test.regionsCatalog.push(create.region({ id: 'par', status: 'available' }));
+      test.regionsCatalog.push(create.region({ id: 'mrs', status: 'coming_soon' }));
     });
 
     it('valid region', () => {

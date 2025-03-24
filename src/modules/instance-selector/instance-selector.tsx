@@ -36,20 +36,20 @@ export function InstanceSelector({
     <>
       {instances.map((instance) => (
         <InstanceItem
-          key={instance.identifier}
+          key={instance.id}
           instance={instance}
           badges={getBadges(instance)}
-          selected={instance.identifier === selectedInstance?.identifier}
+          selected={instance.id === selectedInstance?.id}
           onSelected={() => onInstanceSelected(instance)}
           regionSelector={
             <RegionSelector
-              expanded={instance.identifier === selectedInstance?.identifier}
+              expanded={instance.id === selectedInstance?.id}
               regions={regions}
               selected={selectedRegions}
               onSelected={onRegionSelected}
               scope={regionScope}
               onScopeChanged={onRegionScopeSelected}
-              type={selectedInstance?.identifier === 'free' ? 'radio' : 'checkbox'}
+              type={selectedInstance?.id === 'free' ? 'radio' : 'checkbox'}
             />
           }
         />

@@ -23,31 +23,31 @@ describe('instance selector', () => {
   let selector: InstanceSelector;
 
   beforeEach(() => {
-    free = create.instance({ identifier: 'free', category: 'eco' });
-    ecoNano = create.instance({ identifier: 'eco-nano', category: 'eco' });
-    ecoMicro = create.instance({ identifier: 'eco-micro', category: 'eco' });
+    free = create.instance({ id: 'free', category: 'eco' });
+    ecoNano = create.instance({ id: 'eco-nano', category: 'eco' });
+    ecoMicro = create.instance({ id: 'eco-micro', category: 'eco' });
 
-    nano = create.instance({ identifier: 'nano', category: 'standard' });
-    micro = create.instance({ identifier: 'micro', category: 'standard' });
-    awsNano = create.instance({ identifier: 'aws-nano', category: 'standard' });
+    nano = create.instance({ id: 'nano', category: 'standard' });
+    micro = create.instance({ id: 'micro', category: 'standard' });
+    awsNano = create.instance({ id: 'aws-nano', category: 'standard' });
 
-    gpu1 = create.instance({ identifier: 'gpu-1', category: 'gpu' });
-    gpu2 = create.instance({ identifier: 'gpu-2', category: 'gpu' });
+    gpu1 = create.instance({ id: 'gpu-1', category: 'gpu' });
+    gpu2 = create.instance({ id: 'gpu-2', category: 'gpu' });
 
-    fra = create.region({ identifier: 'fra', scope: 'metropolitan' });
-    par = create.region({ identifier: 'par', scope: 'metropolitan' });
-    eu = create.region({ identifier: 'eu', scope: 'continental' });
-    na = create.region({ identifier: 'na', scope: 'continental' });
+    fra = create.region({ id: 'fra', scope: 'metropolitan' });
+    par = create.region({ id: 'par', scope: 'metropolitan' });
+    eu = create.region({ id: 'eu', scope: 'continental' });
+    na = create.region({ id: 'na', scope: 'continental' });
 
     availabilities = {
-      [free.identifier]: [true],
-      [ecoNano.identifier]: [true],
-      [ecoMicro.identifier]: [true],
-      [nano.identifier]: [true],
-      [micro.identifier]: [true],
-      [awsNano.identifier]: [true],
-      [gpu1.identifier]: [true],
-      [gpu2.identifier]: [true],
+      [free.id]: [true],
+      [ecoNano.id]: [true],
+      [ecoMicro.id]: [true],
+      [nano.id]: [true],
+      [micro.id]: [true],
+      [awsNano.id]: [true],
+      [gpu1.id]: [true],
+      [gpu2.id]: [true],
     };
 
     singleRegion = undefined;
@@ -125,7 +125,7 @@ describe('instance selector', () => {
 
     it('filters out unavailable instances', () => {
       setup(() => {
-        availabilities[ecoMicro.identifier] = [false, 'unavailableInCatalog'];
+        availabilities[ecoMicro.id] = [false, 'unavailableInCatalog'];
         setInitialInstance(free);
       });
 
@@ -184,7 +184,7 @@ describe('instance selector', () => {
 
     it('selects the first available instance', () => {
       setup(() => {
-        availabilities[free.identifier] = [false, 'freeAlreadyUsed'];
+        availabilities[free.id] = [false, 'freeAlreadyUsed'];
       });
 
       act(() => selector.onInstanceCategorySelected('eco'));

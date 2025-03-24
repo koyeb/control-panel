@@ -56,8 +56,8 @@ function SectionTitle() {
 
       {regions.length === 1 && (
         <span className="inline-flex flex-row items-center gap-2">
-          <RegionName identifier={regions[0]!.identifier} />
-          <RegionFlag identifier={regions[0]!.identifier} className="size-em" />
+          <RegionName regionId={regions[0]!.id} />
+          <RegionFlag regionId={regions[0]!.id} className="size-em" />
         </span>
       )}
 
@@ -66,8 +66,8 @@ function SectionTitle() {
           <span className="inline-flex flex-row" style={{ width: `${regions.length / 2}em` }}>
             {regions.map((region, index) => (
               <RegionFlag
-                key={region.identifier}
-                identifier={region.identifier}
+                key={region.id}
+                regionId={region.id}
                 className="inline-block size-em"
                 style={{ transform: `translateX(-${index / 2}em)` }}
               />

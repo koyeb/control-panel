@@ -34,8 +34,8 @@ export function InstanceSection() {
 }
 
 function SectionTitle() {
-  const instanceIdentifier = useWatch<DatabaseServiceForm, 'instance'>({ name: 'instance' });
-  const instance = databaseInstances.find(hasProperty('identifier', instanceIdentifier));
+  const catalogInstanceId = useWatch<DatabaseServiceForm, 'instance'>({ name: 'instance' });
+  const instance = databaseInstances.find(hasProperty('id', catalogInstanceId));
 
   if (instance === undefined) {
     return null;

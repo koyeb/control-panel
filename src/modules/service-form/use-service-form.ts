@@ -147,14 +147,14 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
       });
 
       const { meta, serviceType, scaling } = values;
-      const instance = instances.find(hasProperty('identifier', values.instance));
+      const instance = instances.find(hasProperty('id', values.instance));
 
-      if (scaleToZero && instance?.identifier === 'free') {
+      if (scaleToZero && instance?.id === 'free') {
         scaling.min = 0;
         scaling.max = 1;
       }
 
-      if (instance?.category === 'eco' && instance.identifier !== 'free') {
+      if (instance?.category === 'eco' && instance.id !== 'free') {
         scaling.min = scaling.max;
       }
 

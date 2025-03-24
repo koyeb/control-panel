@@ -9,7 +9,7 @@ const T = createTranslate('modules.serviceForm.serviceType.alerts');
 export function ServiceTypeAlerts() {
   const instance = useInstance(useWatchServiceForm('instance'));
 
-  if (instance?.identifier === 'free') {
+  if (instance?.id === 'free') {
     return (
       <Alert
         variant="info"

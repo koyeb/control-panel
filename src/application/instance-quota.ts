@@ -23,7 +23,7 @@ export function useGetHasInstanceQuota(previousInstance?: CatalogInstance) {
       const quota = getQuota(instance);
 
       // allow keeping the same instance
-      if (previousInstance?.identifier === instance.identifier) {
+      if (previousInstance?.id === instance.id) {
         return true;
       }
 
@@ -42,7 +42,7 @@ export function useGetInstanceQuota() {
     (instance: CatalogInstance) => {
       const max = () => {
         const { maxInstancesByType, instanceTypes } = quotas ?? {};
-        const quota = maxInstancesByType?.[instance.identifier];
+        const quota = maxInstancesByType?.[instance.id];
 
         if (quota !== undefined) {
           return quota;
@@ -52,7 +52,7 @@ export function useGetInstanceQuota() {
           return 0;
         }
 
-        if (instanceTypes !== undefined && !instanceTypes.includes(instance.identifier)) {
+        if (instanceTypes !== undefined && !instanceTypes.includes(instance.id)) {
           return 0;
         }
 
@@ -60,7 +60,7 @@ export function useGetInstanceQuota() {
       };
 
       const used = () => {
-        return summary?.instancesUsed[instance.identifier] ?? 0;
+        return summary?.instancesUsed[instance.id] ?? 0;
       };
 
       return { max: max(), used: used() };

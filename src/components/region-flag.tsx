@@ -13,12 +13,12 @@ import sg from 'src/icons/flags/SG.png';
 import us from 'src/icons/flags/US.png';
 
 type RegionFlagProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & {
-  identifier?: string;
+  regionId?: string;
 };
 
-export function RegionFlag({ identifier, className, ...props }: RegionFlagProps) {
-  const region = useRegion(identifier);
-  const flag = region?.identifier ? map[region.identifier] : undefined;
+export function RegionFlag({ regionId, className, ...props }: RegionFlagProps) {
+  const region = useRegion(regionId);
+  const flag = region?.id ? map[region.id] : undefined;
 
   if (!flag) {
     return null;

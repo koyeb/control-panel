@@ -21,7 +21,7 @@ export function GpuAlert() {
     const instance = instances.find(hasProperty('category', 'gpu'));
 
     setValue('meta.expandedSection', 'instance');
-    setValue('instance', instance?.identifier ?? null);
+    setValue('instance', instance?.id ?? null);
   };
 
   if (!useFeatureFlag('gpu')) {

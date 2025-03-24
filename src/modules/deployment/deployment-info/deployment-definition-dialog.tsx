@@ -265,10 +265,10 @@ function Instances({ definition }: { definition: DeploymentDefinition }) {
 
       <Data name={<T id="instances.regionsLabel" />}>
         <div className="row flex-wrap gap-4">
-          {definition.regions.map((identifier) => (
-            <div key={identifier} className="row items-center gap-2">
-              <RegionFlag identifier={identifier} className="size-4" />
-              <RegionName identifier={identifier} />
+          {definition.regions.map((regionId) => (
+            <div key={regionId} className="row items-center gap-2">
+              <RegionFlag regionId={regionId} className="size-4" />
+              <RegionName regionId={regionId} />
             </div>
           ))}
         </div>

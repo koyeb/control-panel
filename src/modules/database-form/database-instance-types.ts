@@ -9,7 +9,7 @@ export const databaseInstances = Object.freeze([
 ])
 
 function createDatabaseInstanceType(
-  identifier: string,
+  catalogInstanceId: string,
   displayName: string,
   [cpu, ram, disk]: [cpu: number, ram: number, disk: number | null],
   pricePerMonth: number,
@@ -17,7 +17,7 @@ function createDatabaseInstanceType(
   pricePerSecond: number,
 ): CatalogInstance {
   return {
-    identifier,
+    id: catalogInstanceId,
     status: 'available',
     category: 'standard',
     regionCategory: 'koyeb',
@@ -29,7 +29,7 @@ function createDatabaseInstanceType(
     pricePerHour,
     pricePerSecond,
     plans:
-      identifier !== 'free'
+      catalogInstanceId !== 'free'
         ? ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise', 'internal']
         : undefined,
     hasVolumes: false,

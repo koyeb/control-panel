@@ -36,9 +36,9 @@ export function InstanceRegionAlerts({
     );
   }
 
-  if (instance?.identifier === 'free') {
+  if (instance?.id === 'free') {
     return <Alert variant="info" description={<T id="freeMessage" values={{ fra, was }} />} />;
   }
 
-  return <QuotaAlert instance={instance?.identifier} regions={regions.map((region) => region.identifier)} />;
+  return <QuotaAlert instance={instance?.id} regions={regions.map((region) => region.id)} />;
 }

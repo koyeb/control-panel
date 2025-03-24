@@ -116,9 +116,9 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
         label={<T id="regionLabel" />}
         placeholder={t('regionPlaceholder')}
         items={regions}
-        getKey={(region) => region.identifier}
+        getKey={(region) => region.id}
         itemToString={(region) => region.displayName}
-        itemToValue={(region) => region.identifier}
+        itemToValue={(region) => region.id}
         renderItem={(region) => region.displayName}
         helperText={snapshot !== undefined && <T id="regionBoundedToSnapshot" />}
       />

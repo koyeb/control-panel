@@ -25,10 +25,10 @@ export function InstanceSelector() {
   const previousInstance = useInstance(useWatchServiceForm('meta.previousInstance'));
 
   const instanceCtrl = useController<ServiceForm, 'instance'>({ name: 'instance' });
-  const selectedInstance = instances.find(hasProperty('identifier', instanceCtrl.field.value)) ?? null;
+  const selectedInstance = instances.find(hasProperty('id', instanceCtrl.field.value)) ?? null;
 
   const regionsCtrl = useController<ServiceForm, 'regions'>({ name: 'regions' });
-  const selectedRegions = regionsCtrl.field.value.map((id) => regions.find(hasProperty('identifier', id))!);
+  const selectedRegions = regionsCtrl.field.value.map((id) => regions.find(hasProperty('id', id))!);
   const originalSelectedRegions = useRef(selectedRegions);
 
   const availabilities = useInstanceAvailabilities({ serviceType, hasVolumes, previousInstance });
@@ -36,11 +36,11 @@ export function InstanceSelector() {
   const getBadges = useGetInstanceBadges({ previousInstance });
 
   const handleInstanceSelected = (instance: CatalogInstance | null) => {
-    instanceCtrl.field.onChange(instance?.identifier ?? null);
+    instanceCtrl.field.onChange(instance?.id ?? null);
   };
 
   const handleRegionsSelected = (regions: CatalogRegion[]) => {
-    regionsCtrl.field.onChange(regions.map((region) => region.identifier));
+    regionsCtrl.field.onChange(regions.map((region) => region.id));
   };
 
   const selector = useInstanceSelector({

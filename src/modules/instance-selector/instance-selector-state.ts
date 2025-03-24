@@ -93,23 +93,23 @@ export function instanceSelector(
   setState: (state: InstanceSelectorState) => void,
 ): InstanceSelector {
   const isInstanceAvailable = (instance: CatalogInstance) => {
-    return availabilities[instance.identifier]?.[0];
+    return availabilities[instance.id]?.[0];
   };
 
   const isRegionAvailableForInstance = (region: CatalogRegion, instance: CatalogInstance | null) => {
-    return !instance?.regions || instance.regions.includes(region.identifier);
+    return !instance?.regions || instance.regions.includes(region.id);
   };
 
   const filterInstances = (category: InstanceCategory) => {
     return instances
-      .filter((instance) => !instance.identifier.startsWith('aws-'))
+      .filter((instance) => !instance.id.startsWith('aws-'))
       .filter(hasProperty('category', category))
       .filter(isInstanceAvailable);
   };
 
   const filterRegions = (scope: RegionScope, instance: CatalogInstance | null) => {
     return regions
-      .filter((region) => !region.identifier.startsWith('aws-'))
+      .filter((region) => !region.id.startsWith('aws-'))
       .filter(hasProperty('scope', scope))
       .filter(hasProperty('status', 'available'))
       .filter((region) => isRegionAvailableForInstance(region, instance));
@@ -164,7 +164,7 @@ export function instanceSelector(
       }
     }
 
-    const isFreeInstance = nextState.selectedInstance?.identifier === 'free';
+    const isFreeInstance = nextState.selectedInstance?.id === 'free';
 
     if ((singleRegion || isFreeInstance) && nextState.selectedRegions.length >= 2) {
       nextState.selectedRegions = [last(nextState.selectedRegions)!];

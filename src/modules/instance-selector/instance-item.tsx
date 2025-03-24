@@ -39,7 +39,7 @@ export function InstanceItem({
 
   const requiresHigherQuota =
     organization.plan === 'hobby'
-      ? instance.identifier !== 'free'
+      ? instance.id !== 'free'
       : badges.includes('requiresHigherQuota') || badges.includes('preview');
 
   const ref = useRef<HTMLLabelElement>(null);
@@ -213,9 +213,9 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
   const organization = useOrganization();
   const isHobby = organization.plan === 'hobby';
 
-  const dialog = isHobby ? 'UpgradeInstanceSelector' : `RequestQuotaIncrease-${instance.identifier}`;
+  const dialog = isHobby ? 'UpgradeInstanceSelector' : `RequestQuotaIncrease-${instance.id}`;
 
-  if (instance.identifier === 'free') {
+  if (instance.id === 'free') {
     return null;
   }
 

@@ -12,7 +12,7 @@ export function getDefaultRegion(
 ) {
   const availableRegions = regions
     .filter((region) => region.status === 'available')
-    .filter((region) => !region.instances || inArray(instance?.identifier, region.instances));
+    .filter((region) => !region.instances || inArray(instance?.id, region.instances));
 
   const regionLatencies = getRegionLatencies(queryClient, datacenters, availableRegions);
 
@@ -26,7 +26,7 @@ export function getDefaultRegion(
 }
 
 function getRegionDatacenterUrl(datacenters: readonly CatalogDatacenter[], region: CatalogRegion) {
-  const datacenter = datacenters.find(hasProperty('identifier', region.datacenters[0]));
+  const datacenter = datacenters.find(hasProperty('id', region.datacenters[0]));
 
   if (datacenter) {
     return `https://${datacenter.domain}/health`;

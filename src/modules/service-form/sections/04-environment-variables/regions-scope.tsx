@@ -29,12 +29,10 @@ export function RegionsScope({ index, label, className }: RegionsScopeProps) {
       disabled={field.disabled}
       label={label}
       items={regions}
-      selectedItems={regions.filter((region) => field.value.includes(region.identifier))}
-      onItemsSelected={(region) => field.onChange([...field.value, region.identifier])}
-      onItemsUnselected={(region) =>
-        field.onChange(field.value.filter((value) => value !== region.identifier))
-      }
-      getKey={(region) => region.identifier}
+      selectedItems={regions.filter((region) => field.value.includes(region.id))}
+      onItemsSelected={(region) => field.onChange([...field.value, region.id])}
+      onItemsUnselected={(region) => field.onChange(field.value.filter((value) => value !== region.id))}
+      getKey={(region) => region.id}
       itemToString={(region) => region.displayName}
       renderItem={(region, selected) => (
         <div className="row items-center gap-2">
@@ -65,8 +63,8 @@ function SelectedRegions({ regions }: { regions: CatalogRegion[] }) {
     <div className="row items-center">
       {regions.map((region, index) => (
         <RegionFlag
-          key={region.identifier}
-          identifier={region.identifier}
+          key={region.id}
+          regionId={region.id}
           style={{ marginLeft: `${-index / 2}rem` }}
           className="size-5"
         />
@@ -79,8 +77,8 @@ function SelectedRegions({ regions }: { regions: CatalogRegion[] }) {
 function RegionItem({ region }: { region?: CatalogRegion }) {
   return (
     <>
-      <RegionFlag identifier={region?.identifier} className="size-5" />
-      <RegionName identifier={region?.identifier} />
+      <RegionFlag regionId={region?.id} className="size-5" />
+      <RegionName regionId={region?.id} />
     </>
   );
 }
