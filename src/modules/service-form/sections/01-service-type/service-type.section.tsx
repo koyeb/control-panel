@@ -1,5 +1,6 @@
 import { useFormContext, useWatch } from 'react-hook-form';
 
+import { useInstance } from 'src/api/hooks/catalog';
 import { ServiceType } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
 import { ControlledSelectBox } from 'src/components/controlled';
@@ -68,11 +69,11 @@ type ServiceTypeOptionProps = {
 };
 
 function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOptionProps) {
-  const instanceIdentifier = useWatchServiceForm('instance');
   const { setValue, trigger } = useFormContext<ServiceForm>();
+  const instance = useInstance(useWatchServiceForm('instance'));
 
   const canSelect = () => {
-    if (instanceIdentifier === 'free') {
+    if (instance?.identifier === 'free') {
       return type !== 'worker';
     }
 
@@ -94,6 +95,10 @@ function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOption
           setValue('scaling.targets.concurrentRequests.enabled', false);
           setValue('scaling.targets.responseTime.enabled', false);
           void trigger('scaling');
+        }
+
+        if (type === 'web') {
+          setValue('scaling.min', instance?.category === 'gpu' ? 0 : 1);
         }
       }}
       className="flex-1"
