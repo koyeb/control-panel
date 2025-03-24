@@ -2359,6 +2359,7 @@
         "coupon": {
           "title": "Discount",
           "description": "Enter a discount code",
+          "submit": "Apply",
           "couponSent": "The coupon code has been applied to your organization",
           "hobbyPlanUpgrade": "Have a coupon? <upgrade>Upgrade to the starter plan</upgrade> to apply it."
         },

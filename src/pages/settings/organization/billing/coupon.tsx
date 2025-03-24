@@ -7,7 +7,7 @@ import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { handleSubmit } from 'src/hooks/form';
 import { useSearchParams } from 'src/hooks/router';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.coupon');
 
@@ -38,7 +38,7 @@ export function Coupon() {
         <ControlledInput control={form.control} name="coupon" className="w-full" />
 
         <Button type="submit">
-          <Translate id="common.send" />
+          <T id="submit" />
         </Button>
       </form>
 
