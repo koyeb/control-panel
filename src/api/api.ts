@@ -129,6 +129,7 @@ export const api = {
   // deployments
   listDeployments: endpoint('get', '/v1/deployments'),
   getDeployment: endpoint('get', '/v1/deployments/{id}'),
+  getDeploymentScaling: endpoint('get', '/v1/deployment/{id}/scaling'),
   cancelDeployment: endpoint('post', '/v1/deployments/{id}/cancel'),
 
   // instances

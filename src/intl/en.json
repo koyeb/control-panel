@@ -588,6 +588,7 @@
           "title": "Scaling",
           "helpTooltip": "Instances scaling",
           "replicaIndex": "#{index}",
+          "noInstances": "No instances",
           "cpu": "CPU",
           "memory": "Memory",
           "regionLabel": "Region",

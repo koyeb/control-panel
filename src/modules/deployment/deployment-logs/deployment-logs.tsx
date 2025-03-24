@@ -282,7 +282,7 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
     >
       <div className="col gap-4 p-4">
         <RuntimeLogs app={app} service={service} deployment={deployment} instances={instances} logs={logs} />
-        {instances.length > 0 && <Replicas instances={instances} />}
+        <Replicas deployment={deployment} />
       </div>
     </AccordionSection>
   );

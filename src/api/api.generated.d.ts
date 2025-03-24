@@ -584,6 +584,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/compose": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create resources from compose. */
+        post: operations["Compose"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/credentials": {
         parameters: {
             query?: never;
@@ -631,6 +648,23 @@ export interface paths {
         };
         /** List Deployment events */
         get: operations["ListDeploymentEvents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/deployment/{id}/scaling": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Deployment Scaling */
+        get: operations["GetDeploymentScaling"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2077,6 +2111,10 @@ export interface components {
             /** Are the volumes enabled for this instance type */
             volumes_enabled?: boolean;
         };
+        ComposeReply: {
+            app?: components["schemas"]["App"];
+            services?: components["schemas"]["Service"][];
+        };
         ConfigFile: {
             /** the content of the file */
             content?: string;
@@ -2118,6 +2156,10 @@ export interface components {
         };
         CreateArchiveReply: {
             archive?: components["schemas"]["Archive"];
+        };
+        CreateCompose: {
+            app?: components["schemas"]["CreateApp"];
+            services?: components["schemas"]["CreateService"][];
         };
         CreateCredential: {
             /** Credential description */
@@ -2764,6 +2806,23 @@ export interface components {
         };
         GetDeploymentReply: {
             deployment?: components["schemas"]["Deployment"];
+        };
+        GetDeploymentScalingReply: {
+            /** The replicas */
+            replicas?: components["schemas"]["GetDeploymentScalingReplyItem"][];
+        };
+        GetDeploymentScalingReplyItem: {
+            /** @description An array of `active` and `starting` instances.
+             *
+             *     Status of the active instance (and if none the most recent instance)
+             *      string status = 4;
+             *      Status message of the active instance (and if none the most recent instance)
+             *      string message = 5; */
+            instances?: components["schemas"]["Instance"][];
+            /** The replica region */
+            region?: string;
+            /** Format: int64 */
+            replica_index?: number;
         };
         GetDomainReply: {
             domain?: components["schemas"]["Domain"];
@@ -4492,7 +4551,7 @@ export interface components {
         };
         /** @example {
          *       "id": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-         *       "expires": "2022-09-08T14:00:00Z",
+         *       "expires": "2022-09-08T14:00:00.000Z",
          *       "user_id": "996d7822-6b58-11e9-956f-32001b70f000",
          *       "organization_id": "9f33b2c6-6b58-11e9-883c-32001b70f000"
          *     } */
@@ -4632,10 +4691,10 @@ export interface components {
          *       "is_admin": false,
          *       "is_test": true,
          *       "two_factor_authentication": false,
-         *       "last_login": "0001-01-01T00:00:00Z",
+         *       "last_login": "1901-01-01T00:00:00.000Z",
          *       "last_login_id": "10.1.1.1",
-         *       "updated_at": "0001-01-01T00:00:00Z",
-         *       "created_at": "0001-01-01T00:00:00Z",
+         *       "updated_at": "1901-01-01T00:00:00.000Z",
+         *       "created_at": "1901-01-01T00:00:00.000Z",
          *       "newsletter_subscribed": true,
          *       "email_validated": true
          *     }
@@ -7932,6 +7991,93 @@ export interface operations {
             };
         };
     };
+    Compose: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["CreateCompose"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ComposeReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     ListCredentials: {
         parameters: {
             query?: {
@@ -8494,6 +8640,96 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["ListDeploymentEventsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetDeploymentScaling: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Filter on region */
+                region?: string;
+                /** @description (Optional) Filter on replica_index */
+                replica_index?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetDeploymentScalingReply"];
                 };
             };
             /** @description Validation error */
@@ -15730,10 +15966,14 @@ export interface operations {
                 deployment_id?: string;
                 instance_id?: string;
                 limit?: string;
+                /** @description (Optional) Apply a regex to filter logs. Can't be used with `text`. */
+                regex?: string;
                 regional_deployment_id?: string;
                 service_id?: string;
                 start?: string;
                 stream?: string;
+                /** @description (Optional) Looks for this string in logs. Can't be used with `regex`. */
+                text?: string;
                 type?: string;
             };
             header?: never;

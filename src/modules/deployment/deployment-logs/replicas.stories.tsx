@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/react';
 
 import { api } from 'src/api/api';
+import { createApiInstance } from 'src/api/mock/api-factories';
 import { create } from 'src/utils/factories';
 
 import { Replicas } from './replicas';
@@ -12,37 +13,58 @@ export default {
 
 api.getServiceMetrics = async () => ({ metrics: [] });
 
-const instances = [
-  create.deploymentInstance({
-    status: 'healthy',
-    name: '5fc01ca5',
-    region: 'was',
-    replicaIndex: 0,
-    messages: ['Instance is running on datacenter. All health checks are passing.'],
-  }),
-  create.deploymentInstance({ status: 'stopped', name: '55f176ec', replicaIndex: 0 }),
-  create.deploymentInstance({ status: 'error', name: '38d1347d', replicaIndex: 0 }),
-  create.deploymentInstance({ status: 'stopped', name: '44798ca2', replicaIndex: 0 }),
-  create.deploymentInstance({
-    status: 'error',
-    name: '6c2f2eab',
-    region: 'par',
-    replicaIndex: 1,
-    messages: ['Instance is running on datacenter. All health checks are passing.'],
-  }),
-  create.deploymentInstance({ status: 'stopped', name: '71e8cd3d', replicaIndex: 1 }),
-  create.deploymentInstance({ status: 'stopped', name: 'e883b671', replicaIndex: 1 }),
-  create.deploymentInstance({
-    status: 'starting',
-    name: 'f867450b',
-    region: 'tyo',
-    replicaIndex: 2,
-    messages: ['Instance is running on datacenter. All health checks are passing.'],
-  }),
-  create.deploymentInstance({ status: 'healthy', name: '53d0768c', replicaIndex: 2 }),
-  create.deploymentInstance({ status: 'error', name: '9f018cc6', replicaIndex: 2 }),
-  create.deploymentInstance({ status: 'stopped', name: 'd05f8de6', replicaIndex: 2 }),
-  create.deploymentInstance({ status: 'stopped', name: '5d9cbecb', replicaIndex: 2 }),
-];
+api.getDeploymentScaling = async () => ({
+  replicas: [
+    {
+      region: 'was',
+      replica_index: 0,
+      instances: [
+        createApiInstance({ status: 'STARTING', id: '41c7dd2f', messages: ['Instance is starting.'] }),
+        createApiInstance({
+          status: 'HEALTHY',
+          id: '5fc01ca5',
+          messages: ['Instance is running on datacenter. All health checks are passing.'],
+        }),
+        createApiInstance({ status: 'STOPPED', id: '55f176ec' }),
+        createApiInstance({ status: 'ERROR', id: '38d1347d' }),
+        createApiInstance({ status: 'STOPPED', id: '44798ca2' }),
+      ],
+    },
+    {
+      region: 'par',
+      replica_index: 0,
+      instances: [
+        createApiInstance({
+          status: 'ERROR',
+          id: '6c2f2eab',
+          messages: ['Instance is running on datacenter. All health checks are passing.'],
+        }),
+        createApiInstance({ status: 'STOPPED', id: '71e8cd3d' }),
+        createApiInstance({ status: 'STOPPED', id: 'e883b671' }),
+      ],
+    },
+    {
+      region: 'tyo',
+      replica_index: 0,
+      instances: [
+        createApiInstance({
+          status: 'STARTING',
+          id: 'f867450b',
+          messages: ['Instance is starting.'],
+        }),
+        createApiInstance({ status: 'ERROR', id: '9f018cc6' }),
+        createApiInstance({ status: 'STOPPED', id: 'd05f8de6' }),
+        createApiInstance({ status: 'STOPPED', id: '5d9cbecb' }),
+      ],
+    },
+  ],
+});
 
-export const replicas = () => <Replicas instances={instances} />;
+export const replicas = () => (
+  <Replicas
+    deployment={create.computeDeployment({
+      id: 'deploymentId',
+      definition: create.deploymentDefinition({ regions: ['was', 'par', 'tyo'] }),
+    })}
+  />
+);

@@ -425,6 +425,12 @@ export type InstanceStatus =
   | 'error'
   | 'sleeping';
 
+export type Replica = {
+  region: string;
+  index: number;
+  instances: Instance[];
+};
+
 // logs
 
 export type LogLine = {

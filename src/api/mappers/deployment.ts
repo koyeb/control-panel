@@ -36,7 +36,11 @@ export function isDatabaseDeployment(deployment: Deployment | undefined): deploy
 }
 
 export function mapInstances({ instances }: ApiEndpointResult<'listInstances'>): Instance[] {
-  return instances!.map((instance) => ({
+  return instances!.map(mapInstance);
+}
+
+export function mapInstance(instance: Api.Instance): Instance {
+  return {
     id: instance.id!,
     name: shortId(instance.id)!,
     status: lowerCase(instance.status!),
@@ -45,7 +49,7 @@ export function mapInstances({ instances }: ApiEndpointResult<'listInstances'>):
     replicaIndex: instance.replica_index ?? 0,
     messages: instance.messages!,
     createdAt: instance.created_at!,
-  }));
+  };
 }
 
 function transformDeployment(deployment: Api.Deployment): Deployment {

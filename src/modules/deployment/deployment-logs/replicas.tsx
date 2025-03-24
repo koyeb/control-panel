@@ -1,17 +1,21 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import uniq from 'lodash-es/uniq';
 import { useMemo, useState } from 'react';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { FormattedDate } from 'react-intl';
 
 import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
+import { ApiEndpointParams } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
-import { useInstance } from 'src/api/hooks/catalog';
-import { Instance, InstanceStatus } from 'src/api/model';
+import { useInstance, useRegions } from 'src/api/hooks/catalog';
+import { mapInstance } from 'src/api/mappers/deployment';
+import type { CatalogRegion, ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
+import { useApiQueryFn } from 'src/api/use-api';
 import { parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Metadata } from 'src/components/metadata';
+import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { InstanceStatusBadge } from 'src/components/status-badges';
@@ -19,110 +23,102 @@ import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
-import { inArray } from 'src/utils/arrays';
-import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentLogs.replicas');
 
 type Filters = {
-  region: string;
-  status: InstanceStatus | 'all';
+  region: string | null;
+  status: InstanceStatus | null;
 };
 
-export function Replicas({ instances }: { instances: Instance[] }) {
-  const replicas = useReplicas(instances);
+function getApiFilters(filters: Filters): ApiEndpointParams<'getDeploymentScaling'>['query'] {
+  return {
+    region: filters.region === null ? undefined : filters.region,
+  };
+}
 
-  const regions = uniq(instances.map((instance) => instance.region));
-  const statuses = uniq(instances.map((instance) => instance.status));
+export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
+  const regions = useRegions(deployment.definition.regions);
 
   const filters = useForm<Filters>({
     defaultValues: {
-      region: 'all',
-      status: 'all',
+      region: null,
+      status: null,
     },
   });
 
-  const regionFilter = filters.watch('region');
-  const filteredRegions = regionFilter === 'all' ? regions : [regionFilter];
-
-  const statusFilter = filters.watch('status');
-  const filteredStatuses = statusFilter === 'all' ? statuses : [statusFilter];
-
-  const filteredReplicas = replicas.filter(
-    ([instance]) => inArray(instance.region, filteredRegions) && inArray(instance.status, filteredStatuses),
-  );
+  const query = useQuery({
+    ...useApiQueryFn('getDeploymentScaling', {
+      path: { id: deployment.id },
+      query: getApiFilters(filters.watch()),
+    }),
+    select: ({ replicas }) =>
+      replicas!.map(
+        (replica): Replica => ({
+          index: replica.replica_index!,
+          region: replica.region!,
+          instances: replica.instances!.map(mapInstance),
+        }),
+      ),
+  });
 
   return (
-    <div className="rounded-md border">
-      <div className="col md:row gap-4 px-3 py-4 md:items-center">
-        <div className="row me-auto items-center gap-2 font-medium">
-          <T id="title" />
-          <HelpTooltip>
-            <T id="helpTooltip" />
-          </HelpTooltip>
-        </div>
+    <QueryGuard query={query}>
+      {(replicas) => (
+        <div className="rounded-md border">
+          <div className="col md:row gap-4 px-3 py-4 md:items-center">
+            <div className="row me-auto items-center gap-2 font-medium">
+              <T id="title" />
+              <HelpTooltip>
+                <T id="helpTooltip" />
+              </HelpTooltip>
+            </div>
 
-        <RegionFilter filters={filters} regions={regions} />
-        <StatusFilter filters={filters} statuses={statuses} />
-      </div>
-
-      <div className="grid grid-cols-1 gap-3 bg-muted/50 p-4 sm:grid-cols-2 md:grid-cols-3">
-        {filteredReplicas.map((instances) => (
-          <Replica key={instances[0].id} instances={instances} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-type RegionFilterProps = {
-  filters: UseFormReturn<Filters>;
-  regions: string[];
-};
-
-function RegionFilter({ filters, regions }: RegionFilterProps) {
-  return (
-    <ControlledSelect
-      control={filters.control}
-      name="region"
-      items={['all' as const, ...regions]}
-      getKey={identity}
-      itemToString={identity}
-      itemToValue={identity}
-      renderItem={(region) => {
-        if (region === 'all') {
-          return <T id="filters.allRegions" />;
-        }
-
-        return (
-          <div className="row items-center gap-2">
-            <RegionFlag regionId={region} className="size-4" />
-            <RegionName regionId={region} />
+            <StatusFilter filters={filters} />
+            <RegionFilter filters={filters} regions={regions} />
           </div>
-        );
-      }}
-      className="min-w-52"
-    />
+
+          <div className="grid grid-cols-1 gap-3 bg-muted/50 p-4 sm:grid-cols-2 md:grid-cols-3">
+            {replicas.map((replica) => (
+              <Replica key={`${replica.region}-${replica.index}`} replica={replica} />
+            ))}
+          </div>
+        </div>
+      )}
+    </QueryGuard>
   );
 }
 
 type StatusFilterProps = {
   filters: UseFormReturn<Filters>;
-  statuses: InstanceStatus[];
 };
 
-function StatusFilter({ filters, statuses }: StatusFilterProps) {
+function StatusFilter({ filters }: StatusFilterProps) {
+  const t = T.useTranslate();
+
+  const statuses: InstanceStatus[] = [
+    'allocating',
+    'starting',
+    'healthy',
+    'unhealthy',
+    'stopping',
+    'stopped',
+    'error',
+    'sleeping',
+  ];
+
   return (
     <ControlledSelect
       control={filters.control}
       name="status"
-      items={['all' as const, ...statuses]}
-      getKey={identity}
-      itemToString={identity}
-      itemToValue={identity}
+      items={[null, ...statuses]}
+      getKey={(item) => (item === null ? 'all' : item)}
+      itemToString={(item) => (item === null ? 'all' : item)}
+      itemToValue={(item) => (item === null ? null : item)}
+      placeholder={t('filters.allStatuses')}
       renderItem={(status) => {
-        if (status === 'all') {
+        if (status === null) {
           return <T id="filters.allStatuses" />;
         }
 
@@ -133,62 +129,68 @@ function StatusFilter({ filters, statuses }: StatusFilterProps) {
   );
 }
 
-function useReplicas(instances: Instance[]) {
-  return useMemo(() => {
-    // Map<region, Map<replicaIndex, Instance[]>>
-    const map = new Map<string, Map<number, Instance[]>>();
+type RegionFilterProps = {
+  filters: UseFormReturn<Filters>;
+  regions: CatalogRegion[];
+};
 
-    for (const instance of instances) {
-      if (!map.has(instance.region)) {
-        map.set(instance.region, new Map());
-      }
+function RegionFilter({ filters, regions }: RegionFilterProps) {
+  const t = T.useTranslate();
 
-      const regionMap = map.get(instance.region)!;
+  return (
+    <ControlledSelect
+      control={filters.control}
+      name="region"
+      items={[null, ...regions]}
+      getKey={(item) => (item === null ? 'all' : item.id)}
+      itemToString={(item) => (item === null ? 'all' : item.displayName)}
+      itemToValue={(item) => (item === null ? null : item.id)}
+      placeholder={t('filters.allRegions')}
+      renderItem={(item) => {
+        if (item === null) {
+          return <T id="filters.allRegions" />;
+        }
 
-      if (!regionMap.has(instance.replicaIndex)) {
-        regionMap.set(instance.replicaIndex, []);
-      }
-
-      regionMap.get(instance.replicaIndex)!.push(instance);
-    }
-
-    const result: Array<[Instance, ...Instance[]]> = [];
-
-    for (const regionsMap of map.values()) {
-      for (const instances of regionsMap.values()) {
-        result.push(instances as [Instance, ...Instance[]]);
-      }
-    }
-
-    return result.sort(([a], [b]) => {
-      if (a.region !== b.region) {
-        return a.region.localeCompare(b.region);
-      }
-
-      return a.replicaIndex - b.replicaIndex;
-    });
-  }, [instances]);
+        return (
+          <div className="row items-center gap-2">
+            <RegionFlag regionId={item.id} className="size-4" />
+            <RegionName regionId={item.id} />
+          </div>
+        );
+      }}
+      className="min-w-52"
+    />
+  );
 }
 
-function Replica({ instances }: { instances: [Instance, ...Instance[]] }) {
-  const instance = instances.find(hasProperty('status', 'healthy')) ?? instances[0];
+function Replica({ replica }: { replica: Replica }) {
+  const t = T.useTranslate();
+  const instance = replica.instances.find(hasProperty('status', 'healthy')) ?? replica.instances[0];
+
+  const message = useMemo(() => {
+    if (instance) {
+      return instance.messages.join(' ');
+    }
+
+    return t('noInstances');
+  }, [instance, t]);
 
   return (
     <div className="col min-w-0 gap-3 rounded-md border bg-neutral p-3">
       <div className="row items-center gap-2">
         <div className="font-medium">
-          <T id="replicaIndex" values={{ index: instance.replicaIndex }} />
+          <T id="replicaIndex" values={{ index: replica.index }} />
         </div>
 
-        <RegionFlag regionId={instance.region} className="size-4" />
+        <RegionFlag regionId={replica.region} className="size-4" />
 
-        <InstanceStatusBadge status={instance.status} className="ms-auto" />
+        {instance && <InstanceStatusBadge status={instance.status} className="ms-auto" />}
       </div>
 
-      <Tooltip allowHover content={instance.messages.join(' ')}>
+      <Tooltip allowHover content={message}>
         {(props) => (
           <div {...props} className="max-w-full self-start truncate text-dim">
-            {instance.messages.join(' ')}
+            {message}
           </div>
         )}
       </Tooltip>
@@ -196,7 +198,7 @@ function Replica({ instances }: { instances: [Instance, ...Instance[]] }) {
       <div className="border-t" />
 
       <div className="row flex-wrap gap-2">
-        {instances.slice(0, 10).map((instance) => (
+        {replica.instances.map((instance) => (
           <Tooltip
             key={instance.id}
             allowHover
@@ -211,6 +213,8 @@ function Replica({ instances }: { instances: [Instance, ...Instance[]] }) {
             )}
           </Tooltip>
         ))}
+
+        {replica.instances.length === 0 && <div className="size-5" />}
       </div>
     </div>
   );
