@@ -143,12 +143,6 @@
       "title": "{prefix, select, undefined {Koyeb} other {{prefix} - Koyeb}}"
     },
     "errorBoundary": {
-      "accountLocked": {
-        "title": "We cannot offer you access to Koyeb",
-        "line1": "Your account matches patterns often associated with violations of our <terms>Terms of Service</terms>",
-        "line2": "While we cannot provide details about the reason(s) triggering this behavior, we have determined that providing access to Koyeb is not possible",
-        "line3": "If you believe this is a bug, you can <link>verify your identity</link>"
-      },
       "unhandledError": {
         "title": "Whoops!",
         "httpStatus": "{httpStatus} - ERROR",
@@ -283,6 +277,12 @@
   },
   "modules": {
     "account": {
+      "accountLocked": {
+        "title": "We cannot offer you access to Koyeb",
+        "line1": "Your account matches patterns often associated with violations of our <terms>Terms of Service</terms>",
+        "line2": "While we cannot provide details about the reason(s) triggering this behavior, we have determined that providing access to Koyeb is not possible",
+        "line3": "If you believe this is a bug, you can <link>verify your identity</link>"
+      },
       "deleteAccount": {
         "label": "Delete account",
         "description": "Once this operation is performed, your account will be permanently deleted",
