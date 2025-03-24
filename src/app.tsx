@@ -83,12 +83,12 @@ function AuthenticatedRoutes() {
     return <ConfirmDeactivateOrganization />;
   }
 
-  if (onboardingStep !== null) {
-    return <OnboardingPage step={onboardingStep} />;
-  }
-
   if (trial?.ended) {
     return <TrialEnded />;
+  }
+
+  if (onboardingStep !== null) {
+    return <OnboardingPage step={onboardingStep} />;
   }
 
   return (
