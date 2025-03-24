@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { Redirect, Route, Switch } from 'wouter';
+import { Redirect, Route, Switch, useRoute } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
@@ -42,7 +42,6 @@ import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page'
 export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
-  const trial = useTrial();
 
   useRefreshToken();
 
@@ -52,10 +51,6 @@ export function App() {
     organizationQuery.data?.statusMessage === 'verification_failed'
   ) {
     return <AccountLocked />;
-  }
-
-  if (trial?.ended) {
-    return <TrialEnded />;
   }
 
   return (
@@ -70,7 +65,11 @@ export function App() {
 function AuthenticatedRoutes() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
+
   const onboardingStep = useOnboardingStep();
+  const trial = useTrial();
+
+  const [matchConfirmDeactivateOrganization] = useRoute('/organization/deactivate/confirm/:confirmationId');
 
   if (!userQuery.isSuccess || organizationQuery.isPending) {
     return (
@@ -80,18 +79,16 @@ function AuthenticatedRoutes() {
     );
   }
 
+  if (matchConfirmDeactivateOrganization) {
+    return <ConfirmDeactivateOrganization />;
+  }
+
   if (onboardingStep !== null) {
-    return (
-      <Switch>
-        <Route
-          path="/organization/deactivate/confirm/:confirmationId"
-          component={ConfirmDeactivateOrganization}
-        />
-        <Route>
-          <OnboardingPage step={onboardingStep} />
-        </Route>
-      </Switch>
-    );
+    return <OnboardingPage step={onboardingStep} />;
+  }
+
+  if (trial?.ended) {
+    return <TrialEnded />;
   }
 
   return (
@@ -134,11 +131,6 @@ function AuthenticatedRoutes() {
 
         <Route path="/settings/*?" component={OrganizationSettingsPages} />
         <Route path="/user/settings/*?" component={UserSettingsPages} />
-
-        <Route
-          path="/organization/deactivate/confirm/:confirmationId"
-          component={ConfirmDeactivateOrganization}
-        />
 
         <Route path="__error" component={ErrorTestPage} />
 
