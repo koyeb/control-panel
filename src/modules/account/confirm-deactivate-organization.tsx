@@ -6,17 +6,16 @@ import { notify } from 'src/application/notify';
 import { useOnboardingStep } from 'src/application/onboarding';
 import { routes } from 'src/application/routes';
 import { LogoLoading } from 'src/components/logo-loading';
-import { useNavigate, useRouteParam } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.account.deactivateOrganization');
 
-export function ConfirmDeactivateOrganization() {
+export function ConfirmDeactivateOrganization({ confirmationId }: { confirmationId: string }) {
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
-  const confirmationId = useRouteParam('confirmationId');
   const onboardingStep = useOnboardingStep();
 
   const { isIdle, mutate } = useMutation({

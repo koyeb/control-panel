@@ -69,7 +69,9 @@ function AuthenticatedRoutes() {
   const onboardingStep = useOnboardingStep();
   const trial = useTrial();
 
-  const [matchConfirmDeactivateOrganization] = useRoute('/organization/deactivate/confirm/:confirmationId');
+  const [confirmDeactivateOrganization, params] = useRoute(
+    '/organization/deactivate/confirm/:confirmationId',
+  );
 
   if (!userQuery.isSuccess || organizationQuery.isPending) {
     return (
@@ -79,8 +81,8 @@ function AuthenticatedRoutes() {
     );
   }
 
-  if (matchConfirmDeactivateOrganization) {
-    return <ConfirmDeactivateOrganization />;
+  if (confirmDeactivateOrganization) {
+    return <ConfirmDeactivateOrganization confirmationId={params.confirmationId} />;
   }
 
   if (trial?.ended) {
