@@ -27,7 +27,7 @@ export function serviceFormSchema(translate: TranslateFn) {
       .string()
       .trim()
       .min(3, t('minLength', { label: appName, min: 3 }))
-      .max(23, t('maxLength', { label: appName, max: 23 }))
+      .max(64, t('maxLength', { label: appName, max: 64 }))
       .refine(isSlug, t('slug', { label: appName })),
     serviceName: z
       .string()

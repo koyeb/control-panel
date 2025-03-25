@@ -71,7 +71,7 @@ const editAppSchema = z.object({
     .string()
     .trim()
     .min(3)
-    .max(23)
+    .max(64)
     .refine(isSlug, { params: { refinement: 'isSlug' } }),
   subdomain: z
     .string()
