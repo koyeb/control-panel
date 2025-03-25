@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
@@ -14,6 +14,7 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
@@ -52,6 +53,7 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
       path: { id: deployment.id },
       query: getApiFilters(filters.watch()),
     }),
+    placeholderData: keepPreviousData,
     select: ({ replicas }) => replicas!.map(mapReplica),
   });
 
@@ -155,6 +157,10 @@ function ReplicaList({ filters, replicas }: { filters: UseFormReturn<Filters>; r
   const filteredReplicas = replicas.filter(
     (replica) => filters.watch('status') === null || replica.status === filters.watch('status'),
   );
+
+  if (replicas.length === 0) {
+    return <Loading className="bg-muted/50" />;
+  }
 
   return (
     <div className="grid grid-cols-1 gap-3 bg-muted/50 p-4 sm:grid-cols-2 md:grid-cols-3">
