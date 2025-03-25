@@ -81,7 +81,8 @@ export default function Slides() {
   ];
 
   return (
-    <div className="col dark h-full rounded-2xl bg-[#111111] [&_*]:border-[#1E1E1E]" onClick={next}>
+    // eslint-disable-next-line tailwindcss/no-arbitrary-value
+    <div className="col dark h-full rounded-2xl bg-[#111111] [&_*]:border-default/70" onClick={next}>
       <Helmet>
         {createArray(3, (i) => (
           <link rel="preload" href={props[i as 0 | 1 | 2].illustration} as="image" />
@@ -97,6 +98,7 @@ export default function Slides() {
   );
 }
 
+// eslint-disable-next-line tailwindcss/no-arbitrary-value
 const gradientText = clsx([
   'bg-gradient-to-tr from-[#D1D8DC] via-[#B0A6B6] to-[#E2E7E9] bg-clip-text text-transparent',
   'text-5xl font-semibold',
@@ -129,7 +131,7 @@ function Slide({ illustration, line1, line2, features, images, logos }: SlidePro
 
         <div className={gradientText}>{line2}</div>
 
-        <div className="col justify-between p-4">
+        <div className="col p-4">
           <div className="text-lg text-dim">
             {features.map((feature, index) => (
               <div key={index}>{feature}</div>
@@ -145,7 +147,7 @@ function Slide({ illustration, line1, line2, features, images, logos }: SlidePro
 
 function CustomerLogos({ logos }: { logos: SvgComponent[] }) {
   return (
-    <div className="col gap-3 py-6 text-[#71717b]">
+    <div className="col mt-auto gap-3 py-6 text-gray/70">
       <div className="text-xs font-medium">
         <T id="argumentumAdPopulum" />
       </div>

@@ -15,7 +15,7 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
   useForceLightMode();
 
   return (
-    <div className="row min-h-screen bg-[#F2F2F2]">
+    <div className="row min-h-screen bg-muted">
       <div className="col flex-1 justify-between p-4 lg:p-16">
         <Link href={routes.signIn()} className="self-start">
           <LogoKoyeb className="h-8" />

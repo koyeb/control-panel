@@ -20,7 +20,7 @@ export function SignInPage() {
         <T id="title" />
       </h1>
 
-      <div className="mt-2 font-medium text-[#363533]">
+      <div className="mt-2 font-medium text-default/80">
         <T id="subtitle" />
       </div>
 
@@ -46,7 +46,7 @@ function SignUpLink() {
   );
 
   return (
-    <p className="mt-6 text-center text-xs text-[#6B6965]">
+    <p className="mt-6 text-center text-xs text-dim">
       <T id="signUpLink" values={{ link }} />
     </p>
   );
@@ -60,7 +60,7 @@ function PasswordResetLink() {
   );
 
   return (
-    <p className="mt-1 text-center text-xs text-[#6B6965]">
+    <p className="mt-1 text-center text-xs text-dim">
       <T id="forgotPasswordLink" values={{ link }} />
     </p>
   );

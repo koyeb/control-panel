@@ -42,7 +42,7 @@ export function AuthInput<
   );
 }
 
-AuthInput.class = cva(['w-full rounded-md border border-[#9F9F9F] bg-white/40 px-3 py-2 transition-colors'], {
+AuthInput.class = cva(['w-full rounded-md border border-strong bg-white/40 px-3 py-2 transition-colors'], {
   variants: {
     invalid: {
       true: 'border-red',
