@@ -1,4 +1,4 @@
-import { size } from '@floating-ui/react';
+import { flip, size } from '@floating-ui/react';
 
 import { useFloating } from '../floating/use-floating';
 
@@ -7,6 +7,7 @@ export function useDropdown(open: boolean) {
     open,
     placement: 'bottom-start',
     middlewares: [
+      flip(),
       size({
         apply({ rects, elements }) {
           Object.assign(elements.floating.style, {
