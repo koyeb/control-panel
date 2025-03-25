@@ -17,6 +17,7 @@ import {
   Instance,
   PortProtocol,
   PostgresVersion,
+  Replica,
 } from '../model';
 
 export function mapDeployments({ deployments }: ApiEndpointResult<'listDeployments'>): Deployment[] {
@@ -49,6 +50,20 @@ export function mapInstance(instance: Api.Instance): Instance {
     replicaIndex: instance.replica_index ?? 0,
     messages: instance.messages!,
     createdAt: instance.created_at!,
+  };
+}
+
+export function mapReplica(replica: Api.DeploymentReplica): Replica {
+  const instance = replica.instances?.find(hasProperty('status', 'HEALTHY')) ?? replica.instances?.[0];
+
+  return {
+    index: replica.replica_index!,
+    region: replica.region!,
+    instances: replica.instances!.map(mapInstance),
+    ...(instance && {
+      status: lowerCase(instance.status!),
+      messages: instance.messages!,
+    }),
   };
 }
 

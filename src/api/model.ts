@@ -429,6 +429,8 @@ export type Replica = {
   region: string;
   index: number;
   instances: Instance[];
+  status?: InstanceStatus;
+  messages?: string[];
 };
 
 // logs

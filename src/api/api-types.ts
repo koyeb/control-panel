@@ -12,11 +12,12 @@ export namespace Api {
   export type CatalogInstance = schemas['CatalogInstance'];
   export type CatalogRegion = schemas['Region'];
   export type Deployment = schemas['Deployment'];
+  export type DeploymentConfigFile = schemas['ConfigFile'];
   export type DeploymentDefinition = schemas['DeploymentDefinition'];
   export type DeploymentEnv = schemas['DeploymentEnv'];
-  export type DeploymentConfigFile = schemas['ConfigFile'];
   export type DeploymentHealthCheck = schemas['DeploymentHealthCheck'];
   export type DeploymentNeonPostgresDatabaseInfo = schemas['DeploymentNeonPostgresDatabaseInfo'];
+  export type DeploymentReplica = schemas['GetDeploymentScalingReplyItem'];
   export type DeploymentScaling = schemas['DeploymentScaling'];
   export type DeploymentScalingTarget = schemas['DeploymentScalingTarget'];
   export type DeploymentStage = schemas['DeploymentProvisioningInfo.Stage'];

@@ -587,6 +587,7 @@
         "replicas": {
           "title": "Scaling",
           "helpTooltip": "Instances scaling",
+          "noReplicas": "No instances",
           "replicaIndex": "#{index}",
           "noInstances": "No instances",
           "cpu": "CPU",

@@ -8,7 +8,7 @@ import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-syste
 import { ApiEndpointParams } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
-import { mapInstance } from 'src/api/mappers/deployment';
+import { mapReplica } from 'src/api/mappers/deployment';
 import type { CatalogRegion, ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { parseBytes } from 'src/application/memory';
@@ -23,7 +23,6 @@ import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
-import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentLogs.replicas');
 
@@ -53,14 +52,7 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
       path: { id: deployment.id },
       query: getApiFilters(filters.watch()),
     }),
-    select: ({ replicas }) =>
-      replicas!.map(
-        (replica): Replica => ({
-          index: replica.replica_index!,
-          region: replica.region!,
-          instances: replica.instances!.map(mapInstance),
-        }),
-      ),
+    select: ({ replicas }) => replicas!.map(mapReplica),
   });
 
   return (
@@ -79,11 +71,7 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
             <RegionFilter filters={filters} regions={regions} />
           </div>
 
-          <div className="grid grid-cols-1 gap-3 bg-muted/50 p-4 sm:grid-cols-2 md:grid-cols-3">
-            {replicas.map((replica) => (
-              <Replica key={`${replica.region}-${replica.index}`} replica={replica} />
-            ))}
-          </div>
+          <ReplicaList filters={filters} replicas={replicas} />
         </div>
       )}
     </QueryGuard>
@@ -163,17 +151,32 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
   );
 }
 
+function ReplicaList({ filters, replicas }: { filters: UseFormReturn<Filters>; replicas: Replica[] }) {
+  const filteredReplicas = replicas.filter(
+    (replica) => filters.watch('status') === null || replica.status === filters.watch('status'),
+  );
+
+  return (
+    <div className="grid grid-cols-1 gap-3 bg-muted/50 p-4 sm:grid-cols-2 md:grid-cols-3">
+      {filteredReplicas.map((replica) => (
+        <Replica key={`${replica.region}-${replica.index}`} replica={replica} />
+      ))}
+
+      {filteredReplicas.length === 0 && <T id="noReplicas" />}
+    </div>
+  );
+}
+
 function Replica({ replica }: { replica: Replica }) {
   const t = T.useTranslate();
-  const instance = replica.instances.find(hasProperty('status', 'healthy')) ?? replica.instances[0];
 
   const message = useMemo(() => {
-    if (instance) {
-      return instance.messages.join(' ');
+    if (replica.messages) {
+      return replica.messages.join(' ');
     }
 
     return t('noInstances');
-  }, [instance, t]);
+  }, [replica, t]);
 
   return (
     <div className="col min-w-0 gap-3 rounded-md border bg-neutral p-3">
@@ -184,7 +187,7 @@ function Replica({ replica }: { replica: Replica }) {
 
         <RegionFlag regionId={replica.region} className="size-4" />
 
-        {instance && <InstanceStatusBadge status={instance.status} className="ms-auto" />}
+        {replica.status && <InstanceStatusBadge status={replica.status} className="ms-auto" />}
       </div>
 
       <Tooltip allowHover content={message}>
