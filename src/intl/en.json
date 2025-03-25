@@ -66,15 +66,18 @@
   },
   "enums": {
     "plans": {
+      "no_plan": "No plan",
       "hobby": "Hobby",
       "starter": "Starter",
       "startup": "Startup",
-      "pro": "Pro",
-      "scale": "Scale",
       "business": "Business",
       "enterprise": "Enterprise",
       "internal": "Internal",
-      "no_plan": "No plan"
+      "hobby23": "Hobby",
+      "pro": "Pro",
+      "scale": "Scale",
+      "partner_csp": "Partner CSP",
+      "partner_csp_unit": "Partner CSP Unit"
     }
   },
   "components": {
