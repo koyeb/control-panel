@@ -28,7 +28,7 @@ export function SignUpPage() {
           <T id="subtitle" />
         </div>
 
-        <GithubOAuthButton action="signin" className="mt-12">
+        <GithubOAuthButton action="signup" className="mt-12">
           <T id="githubSignUp" />
         </GithubOAuthButton>
 
