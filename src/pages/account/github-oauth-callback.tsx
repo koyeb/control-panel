@@ -30,7 +30,7 @@ const schema = z.object({
 export function GithubOauthCallbackPage() {
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
-  const { setToken } = useToken();
+  const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
@@ -51,6 +51,8 @@ export function GithubOauthCallbackPage() {
       );
 
       return api.githubOAuthCallback({
+        // send the token for when setup_action=register
+        token,
         header: { 'seon-fp': await getSeonFingerprint() },
         body,
       });
