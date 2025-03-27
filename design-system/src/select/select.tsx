@@ -83,7 +83,9 @@ export function Select<Item>({
     isOpen: open,
     selectedItem: selectedItemProp,
     onSelectedItemChange({ selectedItem }) {
-      onSelectedItemChange?.(selectedItem);
+      if (selectedItem) {
+        onSelectedItemChange?.(selectedItem);
+      }
     },
     itemToString(item) {
       return item ? itemToString(item) : '';
