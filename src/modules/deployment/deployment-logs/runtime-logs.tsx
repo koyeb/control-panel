@@ -5,15 +5,9 @@ import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 
 import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
+import { useRegionalDeployments } from 'src/api/hooks/service';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import {
-  App,
-  CatalogRegion,
-  ComputeDeployment,
-  Instance,
-  LogLine as LogLineType,
-  Service,
-} from 'src/api/model';
+import { App, ComputeDeployment, Instance, LogLine as LogLineType, Service } from 'src/api/model';
 import { isDeploymentRunning } from 'src/application/service-functions';
 import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
@@ -31,49 +25,32 @@ import {
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
+import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
-import { useFormValues } from 'src/hooks/form';
-import { LogsApi } from 'src/hooks/logs';
+import { LogsApi, LogsFilters, LogsPeriod } from 'src/hooks/logs';
 import { createTranslate } from 'src/intl/translate';
 import { inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
-import { hasProperty } from 'src/utils/object';
+import { getId, hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
-
-type LogsPeriod = 'live' | '1h' | '6h' | '24h' | '7d' | '30d';
-
-export type RuntimeLogsFilters = {
-  period: LogsPeriod;
-  start: Date;
-  end: Date;
-  region: string | null;
-  instance: string | null;
-  search: string;
-  logs: boolean;
-  events: boolean;
-};
 
 type RuntimeLogsProps = {
   app: App;
   service: Service;
   deployment: ComputeDeployment;
   instances: Instance[];
+  filters: UseFormReturn<LogsFilters>;
   logs: LogsApi;
-  filtersForm: UseFormReturn<RuntimeLogsFilters>;
 };
 
-export function RuntimeLogs({ app, service, deployment, instances, logs, filtersForm }: RuntimeLogsProps) {
-  const regions = useRegions().filter((region) => deployment.definition.regions.includes(region.id));
-
+export function RuntimeLogs({ app, service, deployment, instances, filters, logs }: RuntimeLogsProps) {
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
 
-  const filters = useFormValues(filtersForm);
-  const filteredLines = useFilteredLines(logs.lines, filters, instances);
-  const filteredInstances = useFilteredInstances(filters, instances);
+  const filterLine = useFilterLine(filters.watch());
 
   const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
     return <LogLine options={options} line={line} />;
@@ -96,19 +73,15 @@ export function RuntimeLogs({ app, service, deployment, instances, logs, filters
       exit={() => optionsForm.setValue('fullScreen', false)}
       className="col gap-2 p-4"
     >
-      <LogsHeader
-        filters={filtersForm}
-        options={optionsForm}
-        regions={regions}
-        instances={filteredInstances}
-      />
+      <LogsHeader deployment={deployment} filters={filters} options={optionsForm} instances={instances} />
 
       <LogLines
         options={optionsForm.watch()}
         setOption={optionsForm.setValue}
-        logs={{ ...logs, lines: filteredLines }}
+        logs={logs}
+        filterLine={filterLine}
         renderLine={renderLine}
-        renderNoLogs={() => <NoLogs deployment={deployment} loading={logs.loading} filters={filtersForm} />}
+        renderNoLogs={() => <NoLogs deployment={deployment} loading={logs.loading} filters={filters} />}
       />
 
       <LogsFooter
@@ -134,10 +107,27 @@ export function RuntimeLogs({ app, service, deployment, instances, logs, filters
   );
 }
 
+function useFilterLine({ logs, events }: LogsFilters) {
+  return useCallback(
+    (line: LogLineType) => {
+      if (!logs && inArray(line.stream, ['stdout', 'stderr'])) {
+        return false;
+      }
+
+      if (!events && inArray(line.stream, ['koyeb'])) {
+        return false;
+      }
+
+      return true;
+    },
+    [logs, events],
+  );
+}
+
 type NoLogsProps = {
   deployment: ComputeDeployment;
   loading: boolean;
-  filters: UseFormReturn<RuntimeLogsFilters>;
+  filters: UseFormReturn<LogsFilters>;
 };
 
 function NoLogs({ deployment, loading, filters }: NoLogsProps) {
@@ -174,42 +164,6 @@ function NoLogs({ deployment, loading, filters }: NoLogsProps) {
   );
 }
 
-function useFilteredLines(lines: LogLineType[], filters: RuntimeLogsFilters, instances: Instance[]) {
-  return useMemo(() => {
-    return lines.filter((line) => {
-      const instance = instances.find(hasProperty('id', line.instanceId));
-
-      if (!filters.logs && line.stream !== 'koyeb') {
-        return false;
-      }
-
-      if (!filters.events && line.stream === 'koyeb') {
-        return false;
-      }
-
-      if (filters.region !== null && filters.region !== instance?.region) {
-        return false;
-      }
-
-      if (filters.instance !== null && filters.instance !== line.instanceId) {
-        return false;
-      }
-
-      return true;
-    });
-  }, [lines, filters, instances]);
-}
-
-function useFilteredInstances(filters: RuntimeLogsFilters, instances: Instance[]) {
-  return useMemo(() => {
-    if (filters.region === null) {
-      return instances;
-    }
-
-    return instances.filter(hasProperty('region', filters.region));
-  }, [filters, instances]);
-}
-
 function WaitingForLogs() {
   return (
     <div className="col h-full items-center justify-center gap-2 py-12">
@@ -227,14 +181,16 @@ function WaitingForLogs() {
 }
 
 type LogsHeaderProps = {
-  filters: UseFormReturn<RuntimeLogsFilters>;
+  deployment: ComputeDeployment;
+  filters: UseFormReturn<LogsFilters>;
   options: UseFormReturn<LogOptions>;
-  regions: CatalogRegion[];
   instances: Instance[];
 };
 
-function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
+function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps) {
+  const regionalDeployments = useRegionalDeployments(deployment.id);
   const periods = useRetentionPeriods();
+  const regions = useRegions();
   const t = T.useTranslate();
 
   const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
@@ -284,26 +240,27 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
 
         <ControlledSelect
           control={filters.control}
-          name="region"
-          items={regions}
+          name="regionalDeploymentId"
+          items={regionalDeployments ?? []}
           placeholder={<T id="header.allRegions" />}
-          getKey={(region) => region.id}
-          itemToString={(region) => region.displayName}
-          itemToValue={(region) => region.id}
-          onItemClick={(region) => region.id === filters.watch('region') && filters.setValue('region', null)}
-          renderItem={(region) => (
+          getKey={getId}
+          itemToString={({ id }) => regions.find(hasProperty('id', id))?.displayName ?? ''}
+          itemToValue={getId}
+          onItemClick={({ id }) =>
+            id === filters.watch('regionalDeploymentId') && filters.setValue('regionalDeploymentId', null)
+          }
+          renderItem={({ region }) => (
             <div className="row gap-2 whitespace-nowrap">
-              <RegionFlag regionId={region.id} className="size-4" />
-              {region.displayName}
+              <RegionFlag regionId={region} className="size-4" />
+              <RegionName regionId={region} className="size-4" />
             </div>
           )}
-          onChangeEffect={() => filters.setValue('instance', null)}
           className="min-w-48"
         />
 
         <Controller
           control={filters.control}
-          name="instance"
+          name="instanceId"
           render={({ field }) => (
             <SelectInstance
               instances={instances}

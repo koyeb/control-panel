@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { sub } from 'date-fns';
-import React, { useRef, useState } from 'react';
+import { max, sub } from 'date-fns';
+import React, { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
@@ -17,15 +17,15 @@ import { hasBuild, isDeploymentRunning } from 'src/application/service-functions
 import { IconCircleDashed } from 'src/components/icons';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
-import { useLogs } from 'src/hooks/logs';
-import { useDebouncedValue, useNow } from 'src/hooks/timers';
+import { LogsFilters, useLogs } from 'src/hooks/logs';
+import { useNow } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
 import { buildStatusMap, runtimeStatusMap } from './deployment-status-icons';
 import { Replicas } from './replicas';
-import { RuntimeLogs, RuntimeLogsFilters } from './runtime-logs';
+import { RuntimeLogs } from './runtime-logs';
 
 type DeploymentPhase = 'build' | 'runtime';
 
@@ -119,9 +119,15 @@ function BuildSection({ app, service, deployment, expanded, setExpanded }: Build
 
   const logs = useLogs(deployment.build?.status === 'running', {
     deploymentId: deployment.id,
+    regionalDeploymentId: null,
+    instanceId: null,
     type: 'build',
-    start: new Date(deployment.date),
-    end: now.current,
+    period: '30d',
+    start: new Date(deployment.build?.startedAt ?? deployment.date),
+    end: new Date(deployment.build?.finishedAt ?? now.current),
+    search: '',
+    logs: true,
+    events: true,
   });
 
   return (
@@ -246,28 +252,32 @@ type RuntimeSectionProps = {
 
 function RuntimeSection({ app, service, deployment, instances, expanded, setExpanded }: RuntimeSectionProps) {
   const logsFilters = useFeatureFlag('logs-filters');
-  const now = new Date();
+  const now = useMemo(() => new Date(), []);
 
-  const filtersForm = useForm<RuntimeLogsFilters>({
+  const start = useMemo(() => {
+    return max([sub(now, logsFilters ? { hours: 1 } : { days: 30 }), deployment.date]);
+  }, [now, logsFilters, deployment.date]);
+
+  const end = useMemo(() => {
+    return new Date(deployment.terminatedAt ?? now);
+  }, [now, deployment.terminatedAt]);
+
+  const filters = useForm<LogsFilters>({
     defaultValues: {
+      deploymentId: deployment.id,
+      regionalDeploymentId: null,
+      instanceId: null,
+      type: 'runtime',
       period: logsFilters ? '1h' : '30d',
-      start: sub(now, logsFilters ? { hours: 1 } : { days: 30 }),
-      end: now,
-      region: null,
-      instance: null,
+      start,
+      end,
       search: '',
       logs: true,
       events: true,
     },
   });
 
-  const logs = useLogs(isDeploymentRunning(deployment), {
-    deploymentId: deployment.id,
-    type: 'runtime',
-    start: filtersForm.watch('start'),
-    end: filtersForm.watch('end'),
-    search: useDebouncedValue(filtersForm.watch('search') || undefined, 500),
-  });
+  const logs = useLogs(isDeploymentRunning(deployment), filters.watch());
 
   return (
     <AccordionSection
@@ -288,8 +298,8 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
           service={service}
           deployment={deployment}
           instances={instances}
+          filters={filters}
           logs={logs}
-          filtersForm={filtersForm}
         />
 
         <Replicas deployment={deployment} />

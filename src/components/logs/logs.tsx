@@ -87,12 +87,13 @@ type LogLinesProps = {
   options: LogOptions;
   setOption: (option: keyof LogOptions, value: boolean) => void;
   logs: LogsApi;
+  filterLine?: (line: LogLine) => boolean;
   renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
   renderNoLogs: () => React.ReactNode;
 };
 
-export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }: LogLinesProps) {
-  const { lines } = logs;
+export function LogLines({ options, setOption, logs, filterLine, renderLine, renderNoLogs }: LogLinesProps) {
+  const lines = logs.lines.filter(filterLine ?? (() => true));
   const container = useRef<HTMLDivElement>(null);
   const [before, setBefore] = useState<HTMLDivElement | null>(null);
   const [after, setAfter] = useState<HTMLDivElement | null>(null);
@@ -122,6 +123,7 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
   useEffect(() => {
     if (lastScrollHeight.current !== null && container.current?.scrollTop === 0) {
       container.current.scrollTo({ top: container.current.scrollHeight - lastScrollHeight.current });
+      lastScrollHeight.current = null;
     }
   }, [lines]);
 
