@@ -78,6 +78,12 @@
       "scale": "Scale",
       "partner_csp": "Partner CSP",
       "partner_csp_unit": "Partner CSP Unit"
+    },
+    "catalogAvailability": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "unknown": "Unknown"
     }
   },
   "components": {
@@ -174,9 +180,12 @@
         "vram": "{value} VRAM",
         "disk": "{value} Disk"
       },
+      "latencyTooltip": "{latency, number, :: precision-integer}ms latency",
+      "availabilityTooltip": "{availability} availability",
       "regions": {
         "label": "Deploy in regions",
         "latency": "{value, number, :: precision-integer}ms latency",
+        "latencyNew": "{value, number, :: precision-integer}ms",
         "checkingLatency": "Checking latency...",
         "noRegionSelected": "Please select at least one region"
       },

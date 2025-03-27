@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { useRef } from 'react';
 
 import { Badge, Button, RadioInput } from '@koyeb/design-system';
+import { useCatalogInstanceAvailability } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
@@ -13,6 +14,7 @@ import { tallyForms, useTallyDialog } from 'src/hooks/tally';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
+import { CatalogAvailability } from './catalog-availability';
 import { InstanceSelectorBadge } from './instance-selector';
 import { RequestQuotaIncreaseDialog } from './request-quota-increase-dialog';
 
@@ -128,8 +130,10 @@ export function InstanceDescription({
 }
 
 function InstanceSpec({ instance }: { instance: CatalogInstance }) {
+  const instanceAvailability = useCatalogInstanceAvailability(instance.id);
+
   return (
-    <div className="row gap-3 text-sm text-dim">
+    <div className="row flex-wrap gap-3 text-sm text-dim">
       <div className="row items-center gap-1">
         <IconCpu className="size-4 stroke-1" />
         <T id="instanceSpec.cpu" values={{ value: instance.cpu }} />
@@ -154,6 +158,10 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
         <IconRadioReceiver className="size-4 stroke-1" />
         <T id="instanceSpec.disk" values={{ value: instance.ram }} />
       </div>
+
+      {instanceAvailability?.availability !== undefined && (
+        <CatalogAvailability availability={instanceAvailability.availability} />
+      )}
     </div>
   );
 }

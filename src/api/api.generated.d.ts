@@ -3121,6 +3121,7 @@ export interface components {
          */
         "Instance.Status": "ALLOCATING" | "STARTING" | "HEALTHY" | "UNHEALTHY" | "STOPPING" | "STOPPED" | "ERROR" | "SLEEPING";
         InstanceAvailability: {
+            availability?: components["schemas"]["AvailabilityLevel"];
             regions?: {
                 [key: string]: components["schemas"]["RegionAvailability"];
             };
@@ -4180,6 +4181,9 @@ export interface components {
             organization?: components["schemas"]["Organization"];
         };
         RedeemCouponReply: Record<string, never>;
+        RedeemCouponRequest: {
+            code?: string;
+        };
         RedeployReply: {
             deployment?: components["schemas"]["Deployment"];
         };
@@ -8201,14 +8205,16 @@ export interface operations {
     };
     RedeemCoupon: {
         parameters: {
-            query?: {
-                code?: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["RedeemCouponRequest"];
+            };
+        };
         responses: {
             /** @description A successful response. */
             200: {

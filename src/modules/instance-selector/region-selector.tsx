@@ -1,8 +1,21 @@
-import { Alert, CheckboxInput, Collapse, RadioInput, TabButton, TabButtons } from '@koyeb/design-system';
-import { CatalogRegion, RegionScope } from 'src/api/model';
+import {
+  Alert,
+  CheckboxInput,
+  Collapse,
+  RadioInput,
+  TabButton,
+  TabButtons,
+  Tooltip,
+} from '@koyeb/design-system';
+import { useCatalogRegionAvailability } from 'src/api/hooks/catalog';
+import { CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
+import { IconCircleGauge } from 'src/components/icons';
 import { RegionFlag } from 'src/components/region-flag';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
+
+import { CatalogAvailability as CatalogAvailabilityComponent } from './catalog-availability';
 
 const T = createTranslate('components.instanceSelector');
 
@@ -15,6 +28,7 @@ type RegionSelectorProps = {
   onSelected: (selected: CatalogRegion) => void;
   scope: RegionScope | null;
   onScopeChanged: (scope: RegionScope) => void;
+  instance: CatalogInstance;
   type: 'radio' | 'checkbox';
 };
 
@@ -25,6 +39,7 @@ export function RegionSelector({
   onSelected,
   scope: currentScope,
   onScopeChanged,
+  instance,
   type,
 }: RegionSelectorProps) {
   return (
@@ -55,6 +70,7 @@ export function RegionSelector({
           <li key={region.id} className="w-full sm:w-56">
             <RegionItem
               type={type}
+              instance={instance}
               region={region}
               selected={selected.includes(region)}
               onSelected={() => onSelected(region)}
@@ -75,19 +91,28 @@ export function RegionSelector({
 
 type RegionItemProps = {
   type: 'radio' | 'checkbox';
+  instance: CatalogInstance;
   region: CatalogRegion;
   selected: boolean;
   onSelected: () => void;
 };
 
-function RegionItem({ type, region, selected, onSelected }: RegionItemProps) {
+function RegionItem({ type, region, selected, onSelected, instance }: RegionItemProps) {
+  const availability = useCatalogRegionAvailability(instance.id, region.id);
+
   return (
     <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 has-[:checked]:border-green">
       <RegionFlag regionId={region.id} className="size-6" />
 
-      <div className="flex-1">
+      <div className="col flex-1 gap-1.5">
         <div className="leading-none">{region.displayName}</div>
-        <RegionLatency region={region} />
+
+        <FeatureFlag feature="region-availability" fallback={<RegionLatency region={region} />}>
+          <div className="row gap-2 text-xs text-dim">
+            <RegionLatencyNew region={region} />
+            {availability && <CatalogAvailabilityComponent availability={availability} />}
+          </div>
+        </FeatureFlag>
       </div>
 
       {type === 'radio' && <RadioInput checked={selected} onChange={onSelected} />}
@@ -108,5 +133,24 @@ function RegionLatency({ region }: { region: CatalogRegion }) {
       {latency === undefined && <T id="regions.checkingLatency" />}
       {latency !== undefined && <T id="regions.latency" values={{ value: latency }} />}
     </div>
+  );
+}
+
+function RegionLatencyNew({ region }: { region: CatalogRegion }) {
+  const latency = useRegionLatency(region);
+
+  if (!latency) {
+    return null;
+  }
+
+  return (
+    <Tooltip content={<T id="latencyTooltip" values={{ latency }} />}>
+      {(props) => (
+        <div {...props} className="row items-center gap-1">
+          <IconCircleGauge className="size-4" />
+          <T id="regions.latencyNew" values={{ value: latency }} />
+        </div>
+      )}
+    </Tooltip>
   );
 }

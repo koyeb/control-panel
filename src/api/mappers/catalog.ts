@@ -8,6 +8,7 @@ import {
   CatalogInstance,
   CatalogInstanceStatus,
   CatalogRegion,
+  CatalogUsage,
   InstanceCategory,
   RegionScope,
 } from '../model';
@@ -63,4 +64,21 @@ export function mapCatalogInstance(instance: Api.CatalogInstance): CatalogInstan
     pricePerHour: Number(instance.price_hourly!),
     pricePerSecond: Number(instance.price_per_second!),
   };
+}
+
+export function mapCatalogUsage(usage: Api.CatalogUsage): CatalogUsage {
+  return new Map(
+    Object.entries(usage.instances!).map(([instanceId, usage]) => [
+      instanceId,
+      {
+        availability: lowerCase(usage.availability!),
+        byRegion: new Map(
+          Object.entries(usage.regions!).map(([regionId, usage]) => [
+            regionId,
+            lowerCase(usage.availability!),
+          ]),
+        ),
+      },
+    ]),
+  );
 }

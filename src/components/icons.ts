@@ -1,4 +1,5 @@
 export { default as IconActivity } from 'lucide-static/icons/activity.svg?react';
+export { default as IconCircleGauge } from 'lucide-static/icons/circle-gauge.svg?react';
 export { default as IconAlarmClockCheck } from 'lucide-static/icons/alarm-clock-check.svg?react';
 export { default as IconAlert } from 'lucide-static/icons/circle-alert.svg?react';
 export { default as IconAlertCircle } from 'lucide-static/icons/circle-alert.svg?react';

@@ -11,6 +11,7 @@ export namespace Api {
   export type CatalogDatacenters = schemas['DatacenterListItem'];
   export type CatalogInstance = schemas['CatalogInstance'];
   export type CatalogRegion = schemas['Region'];
+  export type CatalogUsage = schemas['CatalogUsage'];
   export type Deployment = schemas['Deployment'];
   export type DeploymentConfigFile = schemas['ConfigFile'];
   export type DeploymentDefinition = schemas['DeploymentDefinition'];

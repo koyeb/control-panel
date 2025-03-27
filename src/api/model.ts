@@ -130,6 +130,16 @@ export type CatalogRegion = {
   scope: RegionScope;
 };
 
+export type CatalogAvailability = 'low' | 'medium' | 'high' | 'unknown';
+
+export type CatalogUsage = Map<
+  string,
+  {
+    availability?: CatalogAvailability;
+    byRegion: Map<string, CatalogAvailability>;
+  }
+>;
+
 export type OneClickApp = {
   name: string;
   slug: string;
