@@ -72,7 +72,7 @@ function ScalingValues() {
 
   const hasVolumes = watch('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useInstance(watch('instance'));
-  const canChangeScaling = instance?.id !== 'free' && !hasVolumes;
+  const canChangeScaling = instance?.id !== 'free';
   const scaleToZero = useFeatureFlag('scale-to-zero');
 
   const setScalingValue = (field: 'min' | 'max') => {
@@ -80,7 +80,7 @@ function ScalingValues() {
   };
 
   const min = scaleToZero && watch('serviceType') === 'web' && !isTenstorrentGpu(instance) ? 0 : 1;
-  const max = 20;
+  const max = hasVolumes ? 1 : 20;
 
   const { field: minField } = useController<ServiceForm, 'scaling.min'>({ name: 'scaling.min' });
   const { field: maxField } = useController<ServiceForm, 'scaling.max'>({ name: 'scaling.max' });

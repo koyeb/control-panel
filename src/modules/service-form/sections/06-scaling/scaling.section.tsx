@@ -17,7 +17,6 @@ export function ScalingSection() {
   const { watch } = useFormContext<ServiceForm>();
 
   const instance = useInstance(watch('instance'));
-  const hasVolumes = watch('volumes').filter((volume) => volume.name !== '').length > 0;
   const scaling = watch('scaling');
 
   return (
@@ -30,7 +29,7 @@ export function ScalingSection() {
     >
       <ScalingAlerts />
 
-      {hasVolumes || (scaling.min === scaling.max && instance?.category === 'eco') ? (
+      {scaling.min === scaling.max && instance?.category === 'eco' ? (
         <FixedScalingConfiguration />
       ) : (
         <AutoScalingConfiguration />
