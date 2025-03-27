@@ -6,6 +6,7 @@ import { FieldPath, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
+import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParams } from 'src/hooks/router';
@@ -172,6 +173,14 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
 
       if (scaling.min === 0 && serviceType !== 'web') {
         scaling.min = 1;
+      }
+
+      if (scaling.min === 0 && isTenstorrentGpu(instance)) {
+        scaling.min = 1;
+      }
+
+      if (isTenstorrentGpu(previousInstance) && !isTenstorrentGpu(instance)) {
+        scaling.min = 0;
       }
 
       if (scaling.min > scaling.max) {

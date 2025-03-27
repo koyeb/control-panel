@@ -1,8 +1,10 @@
 import { useController, useFormContext, useFormState } from 'react-hook-form';
 
 import { InputEnd, Slider, Tooltip } from '@koyeb/design-system';
+import { useInstance } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
+import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
 import {
   IconAlarmClockCheck,
@@ -69,14 +71,15 @@ function ScalingValues() {
   const { watch, setValue } = useFormContext<ServiceForm>();
 
   const hasVolumes = watch('volumes').filter((volume) => volume.name !== '').length > 0;
-  const canChangeScaling = watch('instance') !== 'free' && !hasVolumes;
+  const instance = useInstance(watch('instance'));
+  const canChangeScaling = instance?.id !== 'free' && !hasVolumes;
   const scaleToZero = useFeatureFlag('scale-to-zero');
 
   const setScalingValue = (field: 'min' | 'max') => {
     return (value: number) => setValue(`scaling.${field}`, value, { shouldValidate: true });
   };
 
-  const min = scaleToZero && watch('serviceType') === 'web' ? 0 : 1;
+  const min = scaleToZero && watch('serviceType') === 'web' && !isTenstorrentGpu(instance) ? 0 : 1;
   const max = 20;
 
   const { field: minField } = useController<ServiceForm, 'scaling.min'>({ name: 'scaling.min' });
