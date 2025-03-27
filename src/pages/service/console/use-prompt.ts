@@ -56,6 +56,10 @@ export function usePrompt(instanceId: string, stream: ApiStream | null, terminal
       }
 
       if (input === enter && command !== '') {
+        if (stream.readyState !== WebSocket.OPEN) {
+          return;
+        }
+
         stream.send(
           JSON.stringify({
             id: instanceId,
