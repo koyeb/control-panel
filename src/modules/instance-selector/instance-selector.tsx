@@ -25,6 +25,7 @@ export function InstanceSelector({
   regionScope,
   instances,
   regions,
+  usage,
   selectedInstance,
   selectedRegions,
   onRegionScopeSelected,
@@ -50,6 +51,7 @@ export function InstanceSelector({
               scope={regionScope}
               onScopeChanged={onRegionScopeSelected}
               type={selectedInstance?.id === 'free' ? 'radio' : 'checkbox'}
+              usage={usage}
             />
           }
         />

@@ -2,8 +2,15 @@ import { useQueryClient } from '@tanstack/react-query';
 import { dequal } from 'dequal';
 import { useState } from 'react';
 
-import { useDatacenters } from 'src/api/hooks/catalog';
-import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
+import { useCatalogUsage, useDatacenters } from 'src/api/hooks/catalog';
+import {
+  CatalogAvailability,
+  CatalogInstance,
+  CatalogRegion,
+  CatalogUsage,
+  InstanceCategory,
+  RegionScope,
+} from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { last } from 'src/utils/arrays';
@@ -35,6 +42,7 @@ export type InstanceSelector = {
 
   instances: CatalogInstance[];
   regions: CatalogRegion[];
+  usage?: Map<string, CatalogAvailability>;
 };
 
 export function useInstanceSelector({
@@ -49,6 +57,7 @@ export function useInstanceSelector({
 }: InstanceSelectorParams): InstanceSelector {
   const queryClient = useQueryClient();
   const datacenters = useDatacenters();
+  const catalogUsage = useCatalogUsage();
 
   const [instanceCategory, setInstanceCategory] = useState<InstanceCategory>(
     selectedInstance?.category ?? 'standard',
@@ -58,6 +67,7 @@ export function useInstanceSelector({
 
   return instanceSelector(
     { availabilities, instances, regions, singleRegion },
+    catalogUsage,
     (regions, instance) => getDefaultRegion(queryClient, datacenters, regions, instance),
     { instanceCategory, regionScope, selectedInstance, selectedRegions },
     (next) => {
@@ -88,6 +98,7 @@ export function instanceSelector(
     regions,
     singleRegion,
   }: Pick<InstanceSelectorParams, 'availabilities' | 'instances' | 'regions' | 'singleRegion'>,
+  catalogUsage: CatalogUsage,
   getDefaultRegion: GetDefaultRegion,
   state: InstanceSelectorState,
   setState: (state: InstanceSelectorState) => void,
@@ -213,6 +224,7 @@ export function instanceSelector(
 
     instances: filterInstances(instanceCategory),
     regions: filterRegions(regionScope, selectedInstance),
+    usage: catalogUsage.get(selectedInstance?.id ?? ''),
   };
 }
 

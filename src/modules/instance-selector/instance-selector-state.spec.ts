@@ -86,6 +86,7 @@ describe('instance selector', () => {
         availabilities,
         singleRegion,
       },
+      new Map(),
       getDefaultRegion,
       state,
       (next) => (state = next),

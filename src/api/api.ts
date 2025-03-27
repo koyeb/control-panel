@@ -69,6 +69,7 @@ export const api = {
   listCatalogRegions: endpoint('get', '/v1/catalog/regions'),
   listCatalogDatacenters: endpoint('get', '/v1/catalog/datacenters'),
   listCatalogInstances: endpoint('get', '/v1/catalog/instances'),
+  listCatalogUsage: endpoint('get', '/v1/catalog/usage'),
 
   // docker image verification
   verifyDockerImage: endpoint('get', '/v1/docker-helper/verify'),
