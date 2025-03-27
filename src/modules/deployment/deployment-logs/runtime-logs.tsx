@@ -266,6 +266,7 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
               ].join(' - ')
             }
             onChangeEffect={(period) => {
+              const now = new Date();
               const duration: Duration = {};
 
               if (period === '1h') duration.hours = 1;
@@ -274,7 +275,8 @@ function LogsHeader({ filters, options, regions, instances }: LogsHeaderProps) {
               if (period === '7d') duration.days = 7;
               if (period === '30d') duration.days = 30;
 
-              filters.setValue('start', sub(new Date(), duration));
+              filters.setValue('start', sub(now, duration));
+              filters.setValue('end', now);
             }}
             className="min-w-80"
           />
