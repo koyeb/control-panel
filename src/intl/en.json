@@ -599,6 +599,7 @@
           "helpTooltip": "Instances scaling",
           "replicaIndex": "#{index}",
           "noInstances": "No active instances",
+          "viewDetails": "View details",
           "cpu": "CPU",
           "memory": "Memory",
           "regionLabel": "Region",
@@ -608,6 +609,16 @@
             "allRegions": "All regions",
             "allStatuses": "All statuses"
           }
+        },
+        "replicaHistory": {
+          "title": "Scaling history",
+          "subtitle": "Scaling details of replica #{replicaIndex} in {region}",
+          "noInstancesYet": "This replica has no instances yet",
+          "noInstances": "No instances found for this replica",
+          "id": "ID",
+          "status": "Status",
+          "createdAt": "Created at",
+          "messages": "Messages"
         }
       }
     },

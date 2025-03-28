@@ -14,6 +14,7 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { Dialog } from 'src/components/dialog';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
@@ -26,6 +27,8 @@ import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
 import { identity } from 'src/utils/generic';
 import { getId } from 'src/utils/object';
+
+import { ReplicaHistoryDialog } from './replica-history-dialog';
 
 const T = createTranslate('modules.deployment.deploymentLogs.replicas');
 
@@ -74,7 +77,7 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
       </div>
 
       <QueryGuard query={query}>
-        {(replicas) => <ReplicaList filters={filters} replicas={replicas} />}
+        {(replicas) => <ReplicaList deployment={deployment} filters={filters} replicas={replicas} />}
       </QueryGuard>
     </div>
   );
@@ -145,7 +148,13 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
   );
 }
 
-function ReplicaList({ filters, replicas }: { filters: UseFormReturn<Filters>; replicas: Replica[] }) {
+type ReplicaListProps = {
+  deployment: ComputeDeployment;
+  filters: UseFormReturn<Filters>;
+  replicas: Replica[];
+};
+
+function ReplicaList({ deployment, filters, replicas }: ReplicaListProps) {
   const filteredReplicas = replicas.filter(
     (replica) => filters.watch('status') === null || replica.status === filters.watch('status'),
   );
@@ -157,7 +166,7 @@ function ReplicaList({ filters, replicas }: { filters: UseFormReturn<Filters>; r
   return (
     <div className="grid grid-cols-1 gap-3 bg-muted/50 p-4 sm:grid-cols-2 md:grid-cols-3">
       {filteredReplicas.map((replica) => (
-        <Replica key={`${replica.region}-${replica.index}`} replica={replica} />
+        <Replica key={`${replica.region}-${replica.index}`} deployment={deployment} replica={replica} />
       ))}
 
       {filteredReplicas.length === 0 && <T id="noInstances" />}
@@ -165,8 +174,9 @@ function ReplicaList({ filters, replicas }: { filters: UseFormReturn<Filters>; r
   );
 }
 
-function Replica({ replica }: { replica: Replica }) {
+function Replica({ deployment, replica }: { deployment: ComputeDeployment; replica: Replica }) {
   const t = T.useTranslate();
+  const openDialog = Dialog.useOpen();
 
   const message = useMemo(() => {
     if (replica.messages) {
@@ -177,47 +187,59 @@ function Replica({ replica }: { replica: Replica }) {
   }, [replica, t]);
 
   return (
-    <div className="col min-w-0 gap-3 rounded-md border bg-neutral p-3">
-      <div className="row items-center gap-2">
-        <div className="font-medium">
-          <T id="replicaIndex" values={{ index: replica.index }} />
+    <>
+      <ReplicaHistoryDialog deployment={deployment} region={replica.region} replicaIndex={replica.index} />
+
+      <div className="col min-w-0 gap-3 rounded-md border bg-neutral p-3">
+        <div className="row items-center gap-2">
+          <div className="font-medium">
+            <T id="replicaIndex" values={{ index: replica.index }} />
+          </div>
+
+          <RegionFlag regionId={replica.region} className="size-4" />
+
+          {replica.status && <InstanceStatusBadge status={replica.status} className="ms-auto" />}
         </div>
 
-        <RegionFlag regionId={replica.region} className="size-4" />
+        <Tooltip allowHover content={message}>
+          {(props) => (
+            <div {...props} className="max-w-full self-start truncate text-dim">
+              {message}
+            </div>
+          )}
+        </Tooltip>
 
-        {replica.status && <InstanceStatusBadge status={replica.status} className="ms-auto" />}
-      </div>
+        <div className="border-t" />
 
-      <Tooltip allowHover content={message}>
-        {(props) => (
-          <div {...props} className="max-w-full self-start truncate text-dim">
-            {message}
-          </div>
-        )}
-      </Tooltip>
+        <div className="row flex-wrap gap-2">
+          {replica.instances.map((instance) => (
+            <Tooltip
+              key={instance.id}
+              allowHover
+              color="neutral"
+              placement="top"
+              arrow={false}
+              content={<InstanceDetails instance={instance} />}
+              className="max-w-none dark:border"
+            >
+              {(props) => (
+                <div {...props} className={clsx('size-5 rounded', instanceStatusClasses[instance.status])} />
+              )}
+            </Tooltip>
+          ))}
 
-      <div className="border-t" />
+          {replica.instances.length === 0 && <div className="size-5" />}
 
-      <div className="row flex-wrap gap-2">
-        {replica.instances.map((instance) => (
-          <Tooltip
-            key={instance.id}
-            allowHover
-            color="neutral"
-            placement="top"
-            arrow={false}
-            content={<InstanceDetails instance={instance} />}
-            className="max-w-none dark:border"
+          <button
+            type="button"
+            onClick={() => openDialog(`replica-history-${deployment.id}-${replica.region}-${replica.index}`)}
+            className="text-link ms-auto text-xs"
           >
-            {(props) => (
-              <div {...props} className={clsx('size-5 rounded', instanceStatusClasses[instance.status])} />
-            )}
-          </Tooltip>
-        ))}
-
-        {replica.instances.length === 0 && <div className="size-5" />}
+            <T id="viewDetails" />
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
