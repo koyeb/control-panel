@@ -53,7 +53,7 @@ function GitDeploymentTrigger({ trigger }: GitDeploymentTriggerProps) {
       className="sm:row text-link hidden items-center gap-2 !text-default"
     >
       <IconGitBranch className="size-4" />
-      <span>{trigger.branch}</span>
+      <span className="line-clamp-1">{trigger.branch}</span>
     </ExternalLink>
   );
 
