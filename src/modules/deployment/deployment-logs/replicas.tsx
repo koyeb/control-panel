@@ -168,7 +168,7 @@ function ReplicaList({ filters, replicas }: { filters: UseFormReturn<Filters>; r
         <Replica key={`${replica.region}-${replica.index}`} replica={replica} />
       ))}
 
-      {filteredReplicas.length === 0 && <T id="noReplicas" />}
+      {filteredReplicas.length === 0 && <T id="noInstances" />}
     </div>
   );
 }
