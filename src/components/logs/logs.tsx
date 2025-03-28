@@ -94,8 +94,8 @@ type LogLinesProps = {
 export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }: LogLinesProps) {
   const { lines } = logs;
   const container = useRef<HTMLDivElement>(null);
-  const before = useRef<HTMLDivElement>(null);
-  const after = useRef<HTMLDivElement>(null);
+  const [before, setBefore] = useState<HTMLDivElement | null>(null);
+  const [after, setAfter] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (options.tail) {
@@ -104,17 +104,17 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
   }, [options.tail, lines]);
 
   useIntersectionObserver(
-    before.current,
+    before,
     { root: container.current },
     ([entry]) => entry?.isIntersecting && logs.hasPrevious && logs.loadPrevious(),
-    [lines],
+    [before, logs.hasPrevious],
   );
 
   useIntersectionObserver(
-    after.current,
+    after,
     { root: container.current },
     ([entry]) => setOption('tail', Boolean(entry?.isIntersecting)),
-    [lines],
+    [after],
   );
 
   const lastScrollHeight = useRef<number>(null);
@@ -146,7 +146,7 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
 
       {lines.length > 0 && (
         <>
-          <div ref={before} />
+          <div ref={setBefore} />
 
           {logs.fetching && (
             <div ref={loaderRef} className="row justify-center">
@@ -160,7 +160,7 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
             ))}
           </div>
 
-          <div ref={after} />
+          <div ref={setAfter} />
         </>
       )}
     </div>
