@@ -131,6 +131,7 @@ export const api = {
   getDeployment: endpoint('get', '/v1/deployments/{id}'),
   getDeploymentScaling: endpoint('get', '/v1/deployment/{id}/scaling'),
   cancelDeployment: endpoint('post', '/v1/deployments/{id}/cancel'),
+  listRegionalDeployments: endpoint('get', '/v1/regional_deployments'),
 
   // instances
   listInstances: endpoint('get', '/v1/instances'),

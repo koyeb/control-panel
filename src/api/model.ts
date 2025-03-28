@@ -174,6 +174,11 @@ export type ComputeDeployment = {
     | null;
 };
 
+export type RegionalDeployment = {
+  id: string;
+  region: string;
+};
+
 export type DeploymentStatus =
   | 'pending'
   | 'provisioning'

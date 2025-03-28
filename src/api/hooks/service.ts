@@ -3,7 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 import { assert } from 'src/utils/assert';
 import { upperCase } from 'src/utils/strings';
 
-import { isComputeDeployment, mapDeployment, mapInstances } from '../mappers/deployment';
+import {
+  isComputeDeployment,
+  mapDeployment,
+  mapInstances,
+  mapRegionalDeployment,
+} from '../mappers/deployment';
 import { mapApp, mapApps, mapService, mapServices } from '../mappers/service';
 import { InstanceStatus } from '../model';
 import { useApiQueryFn } from '../use-api';
@@ -72,6 +77,18 @@ export function useComputeDeployment(deploymentId: string | undefined) {
   assert(isComputeDeployment(deployment));
 
   return deployment;
+}
+
+export function useRegionalDeploymentsQuery(deploymentId: string | undefined) {
+  return useQuery({
+    ...useApiQueryFn('listRegionalDeployments', { query: { deployment_id: deploymentId } }),
+    enabled: deploymentId !== undefined,
+    select: ({ regional_deployments }) => regional_deployments!.map(mapRegionalDeployment),
+  });
+}
+
+export function useRegionalDeployments(deploymentId: string | undefined) {
+  return useRegionalDeploymentsQuery(deploymentId).data;
 }
 
 type InstancesQueryOptions = {

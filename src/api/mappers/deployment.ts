@@ -17,6 +17,7 @@ import {
   Instance,
   PortProtocol,
   PostgresVersion,
+  RegionalDeployment,
   Replica,
 } from '../model';
 
@@ -26,6 +27,13 @@ export function mapDeployments({ deployments }: ApiEndpointResult<'listDeploymen
 
 export function mapDeployment({ deployment }: ApiEndpointResult<'getDeployment'>): Deployment {
   return transformDeployment(deployment!);
+}
+
+export function mapRegionalDeployment(deployment: Api.RegionalDeployment): RegionalDeployment {
+  return {
+    id: deployment.id!,
+    region: deployment.region!,
+  };
 }
 
 export function isComputeDeployment(deployment: Deployment | undefined): deployment is ComputeDeployment {
