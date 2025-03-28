@@ -79,7 +79,7 @@ function useStoreSessionToken() {
 
   useMount(() => {
     if (token !== null) {
-      sessionStorage.setItem('session-token', token);
+      sessionStorage.setItem('session-token', token.replace(/^Bearer /, ''));
       setToken(null);
     }
   });
