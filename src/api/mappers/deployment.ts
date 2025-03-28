@@ -44,10 +44,6 @@ export function isDatabaseDeployment(deployment: Deployment | undefined): deploy
   return deployment !== undefined && 'postgresVersion' in deployment;
 }
 
-export function mapInstances({ instances }: ApiEndpointResult<'listInstances'>): Instance[] {
-  return instances!.map(mapInstance);
-}
-
 export function mapInstance(instance: Api.Instance): Instance {
   return {
     id: instance.id!,

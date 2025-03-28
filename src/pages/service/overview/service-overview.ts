@@ -65,7 +65,7 @@ export function useServiceOverview(serviceId: string): ServiceOverview {
   const [state, actions] = useContextState(service, deployments);
 
   const instancesQuery = useInstancesQuery({ deploymentId: state.selectedDeployment?.id });
-  const instances = instancesQuery.data ?? [];
+  const instances = instancesQuery.data?.instances ?? [];
 
   useShortcuts(
     state.sortedDeployments.findIndex(hasProperty('id', state.selectedDeployment?.id)),

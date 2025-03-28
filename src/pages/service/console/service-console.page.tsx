@@ -21,7 +21,7 @@ export function ServiceConsolePage() {
   const [instance, setInstance] = useState<Instance | null>(null);
 
   useEffect(() => {
-    const instances = instancesQuery.data;
+    const instances = instancesQuery.data?.instances ?? [];
 
     if (instances?.[0] === undefined) {
       return;
@@ -40,7 +40,7 @@ export function ServiceConsolePage() {
     return <QueryError error={instancesQuery.error} />;
   }
 
-  const instances = instancesQuery.data;
+  const instances = instancesQuery.data?.instances ?? [];
 
   if (instances.length === 0) {
     return (

@@ -1,12 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { assert } from 'src/utils/assert';
+import { hasProperty } from 'src/utils/object';
 import { upperCase } from 'src/utils/strings';
 
 import {
   isComputeDeployment,
   mapDeployment,
-  mapInstances,
+  mapInstance,
   mapRegionalDeployment,
 } from '../mappers/deployment';
 import { mapApp, mapApps, mapService, mapServices } from '../mappers/service';
@@ -91,24 +92,47 @@ export function useRegionalDeployments(deploymentId: string | undefined) {
   return useRegionalDeploymentsQuery(deploymentId).data;
 }
 
+export function useRegionalDeployment(deploymentId: string | undefined, region: string) {
+  return useRegionalDeployments(deploymentId)?.find(hasProperty('region', region));
+}
+
 type InstancesQueryOptions = {
-  deploymentId?: string;
   serviceId?: string;
+  deploymentId?: string;
+  regionalDeploymentId?: string;
   status?: InstanceStatus;
+  replicaIndex?: number;
+  limit?: number;
+  offset?: number;
 };
 
-export function useInstancesQuery({ deploymentId, serviceId, status }: InstancesQueryOptions = {}) {
+export function useInstancesQuery({
+  serviceId,
+  deploymentId,
+  regionalDeploymentId,
+  status,
+  replicaIndex,
+  limit = 100,
+  offset,
+}: InstancesQueryOptions = {}) {
   return useQuery({
     ...useApiQueryFn('listInstances', {
       query: {
-        deployment_id: deploymentId,
         service_id: serviceId,
-        limit: '100',
+        deployment_id: deploymentId,
+        regional_deployment_id: regionalDeploymentId,
+        replica_index: replicaIndex !== undefined ? String(replicaIndex) : undefined,
+        limit: String(limit),
+        offset: offset !== undefined ? String(offset) : undefined,
         order: 'desc',
         statuses: status ? [upperCase(status)] : undefined,
       },
     }),
-    enabled: deploymentId !== undefined || serviceId !== undefined,
-    select: mapInstances,
+    placeholderData: keepPreviousData,
+    enabled: serviceId !== undefined || deploymentId !== undefined || regionalDeploymentId !== undefined,
+    select: ({ count, instances }) => ({
+      instances: instances!.map((instance) => mapInstance(instance)),
+      count: count!,
+    }),
   });
 }

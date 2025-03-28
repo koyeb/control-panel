@@ -53,7 +53,7 @@ export function InitialDeploymentStep({ serviceId }: { serviceId: string }) {
   const app = appQuery.data;
   const service = serviceQuery.data;
   const deployment = deploymentQuery.data;
-  const instances = instancesQuery.data;
+  const { instances } = instancesQuery.data;
 
   assert(isComputeDeployment(deployment));
 
