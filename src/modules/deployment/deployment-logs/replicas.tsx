@@ -24,6 +24,8 @@ import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
+import { identity } from 'src/utils/generic';
+import { getId } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentLogs.replicas');
 
@@ -102,18 +104,13 @@ function StatusFilter({ filters }: StatusFilterProps) {
     <ControlledSelect
       control={filters.control}
       name="status"
-      items={[null, ...statuses]}
-      getKey={(item) => (item === null ? 'all' : item)}
-      itemToString={(item) => (item === null ? 'all' : item)}
-      itemToValue={(item) => (item === null ? null : item)}
+      items={statuses}
+      getKey={identity}
+      itemToString={identity}
+      itemToValue={identity}
       placeholder={t('filters.allStatuses')}
-      renderItem={(status) => {
-        if (status === null) {
-          return <T id="filters.allStatuses" />;
-        }
-
-        return <div className="capitalize">{status}</div>;
-      }}
+      renderItem={(status) => <div className="capitalize">{status}</div>}
+      onItemClick={(status) => status === filters.watch('status') && filters.setValue('status', null)}
       className="min-w-52"
     />
   );
@@ -131,16 +128,12 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
     <ControlledSelect
       control={filters.control}
       name="region"
-      items={[null, ...regions]}
-      getKey={(item) => (item === null ? 'all' : item.id)}
-      itemToString={(item) => (item === null ? 'all' : item.displayName)}
-      itemToValue={(item) => (item === null ? null : item.id)}
+      items={regions}
+      getKey={getId}
+      itemToString={(region) => region.displayName}
+      itemToValue={getId}
       placeholder={t('filters.allRegions')}
       renderItem={(item) => {
-        if (item === null) {
-          return <T id="filters.allRegions" />;
-        }
-
         return (
           <div className="row items-center gap-2">
             <RegionFlag regionId={item.id} className="size-4" />
@@ -148,6 +141,7 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
           </div>
         );
       }}
+      onItemClick={(region) => region.id === filters.watch('region') && filters.setValue('region', null)}
       className="min-w-52"
     />
   );
