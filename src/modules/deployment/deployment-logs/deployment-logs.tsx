@@ -282,7 +282,7 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
         />
       }
     >
-      <div className="divide-y border-t">
+      <div className="border-t">
         <RuntimeLogs
           app={app}
           service={service}

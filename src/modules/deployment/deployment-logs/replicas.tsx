@@ -60,25 +60,23 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
   });
 
   return (
-    <QueryGuard query={query}>
-      {(replicas) => (
-        <>
-          <div className="col md:row gap-4 px-3 py-4 md:items-center">
-            <div className="row me-auto items-center gap-2 font-medium">
-              <T id="title" />
-              <HelpTooltip>
-                <T id="helpTooltip" />
-              </HelpTooltip>
-            </div>
+    <div className="m-4 mt-0 rounded-md border">
+      <div className="col md:row gap-4 px-3 py-4 md:items-center">
+        <div className="row me-auto items-center gap-2 font-medium">
+          <T id="title" />
+          <HelpTooltip>
+            <T id="helpTooltip" />
+          </HelpTooltip>
+        </div>
 
-            <StatusFilter filters={filters} />
-            <RegionFilter filters={filters} regions={regions} />
-          </div>
+        <StatusFilter filters={filters} />
+        <RegionFilter filters={filters} regions={regions} />
+      </div>
 
-          <ReplicaList filters={filters} replicas={replicas} />
-        </>
-      )}
-    </QueryGuard>
+      <QueryGuard query={query}>
+        {(replicas) => <ReplicaList filters={filters} replicas={replicas} />}
+      </QueryGuard>
+    </div>
   );
 }
 
