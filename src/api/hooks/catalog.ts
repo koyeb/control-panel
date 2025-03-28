@@ -9,8 +9,9 @@ import {
   mapCatalogDatacentersList,
   mapCatalogInstancesList,
   mapCatalogRegionsList,
+  mapCatalogUsage,
 } from '../mappers/catalog';
-import { AiModel, OneClickApp } from '../model';
+import { AiModel, CatalogAvailability, CatalogUsage, OneClickApp } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -73,6 +74,18 @@ export function useDatacenters() {
   const { data: datacenters = [] } = useDatacentersQuery();
 
   return datacenters;
+}
+
+export function useCatalogUsageQuery() {
+  return useQuery({
+    ...useApiQueryFn('listCatalogUsage'),
+    refetchInterval: false,
+    select: ({ usage }) => mapCatalogUsage(usage!),
+  });
+}
+
+export function useCatalogUsage(): CatalogUsage {
+  return useCatalogUsageQuery().data ?? new Map<string, Map<string, CatalogAvailability>>();
 }
 
 type OneClickAppApiResponse = {

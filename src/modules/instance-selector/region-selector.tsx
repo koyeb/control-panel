@@ -1,6 +1,7 @@
 import { Alert, CheckboxInput, Collapse, RadioInput, TabButton, TabButtons } from '@koyeb/design-system';
-import { CatalogRegion, RegionScope } from 'src/api/model';
+import { CatalogAvailability, CatalogRegion, RegionScope } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
 
@@ -16,6 +17,7 @@ type RegionSelectorProps = {
   scope: RegionScope | null;
   onScopeChanged: (scope: RegionScope) => void;
   type: 'radio' | 'checkbox';
+  usage?: Map<string, CatalogAvailability>;
 };
 
 export function RegionSelector({
@@ -26,6 +28,7 @@ export function RegionSelector({
   scope: currentScope,
   onScopeChanged,
   type,
+  usage,
 }: RegionSelectorProps) {
   return (
     <Collapse open={expanded}>
@@ -58,6 +61,7 @@ export function RegionSelector({
               region={region}
               selected={selected.includes(region)}
               onSelected={() => onSelected(region)}
+              availability={usage?.get(region.id)}
             />
           </li>
         ))}
@@ -78,9 +82,10 @@ type RegionItemProps = {
   region: CatalogRegion;
   selected: boolean;
   onSelected: () => void;
+  availability?: CatalogAvailability;
 };
 
-function RegionItem({ type, region, selected, onSelected }: RegionItemProps) {
+function RegionItem({ type, region, selected, onSelected, availability }: RegionItemProps) {
   return (
     <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 has-[:checked]:border-green">
       <RegionFlag regionId={region.id} className="size-6" />
@@ -88,6 +93,9 @@ function RegionItem({ type, region, selected, onSelected }: RegionItemProps) {
       <div className="flex-1">
         <div className="leading-none">{region.displayName}</div>
         <RegionLatency region={region} />
+        <FeatureFlag feature="region-availability">
+          <div className="text-xs text-dim">Availability: {availability}</div>
+        </FeatureFlag>
       </div>
 
       {type === 'radio' && <RadioInput checked={selected} onChange={onSelected} />}
