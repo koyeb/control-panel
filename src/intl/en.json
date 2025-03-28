@@ -1336,14 +1336,14 @@
         "cta": "Deploy now"
       },
       "banner": {
-        "content": "Your Pro trial ends in <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong>. To maintain access to Pro features, <upgrade>upgrade</upgrade> now."
+        "content": "Your Pro trial ends in <strong>{days, plural, =0 {less than 24 hours} =1 {{days} day} other {{days} days}}</strong>. To maintain access to Pro features, <upgrade>upgrade</upgrade> now."
       },
       "summaryPopup": {
         "currentPlan": "{plan} Plan",
         "badge": "Trial",
         "usage": "Usage",
         "creditLeft": "Pro trial credit left",
-        "timeLeft": "{days, plural, =1 {{days} day} other {{days} days}} left in Pro trial",
+        "timeLeft": "{days, plural, =0 {1 day} =1 {{days} day} other {{days} days}} left in Pro trial",
         "cta": "Go to billing"
       },
       "ended": {
@@ -2344,7 +2344,7 @@
         "usage": {
           "title": "Usage summary",
           "description": "You are currently on the <strong>{plan}</strong> plan. {upgrade}",
-          "descriptionTrial": "You are currently on the <strong>{plan}</strong> plan. You still have <strong>{days, plural, =1 {{days} day} other {{days} days}}</strong> left. {upgrade}",
+          "descriptionTrial": "You are currently trialing the <strong>{plan}</strong> plan. You {days, plural, =0 {} =1 {} other {still}} have <strong>{days, plural, =0 {less than 24 hours} =1 {{days} day} other {{days} days}}</strong> left. {upgrade}",
           "upgrade": "<upgrade>View all plans and upgrade →</upgrade>",
           "noUsage": "You have not used any resources this month",
           "startEnd": "{start} - {end}",

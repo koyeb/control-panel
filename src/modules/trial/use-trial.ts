@@ -18,7 +18,7 @@ export function useTrial() {
 
   return {
     ended: isAfter(new Date(), organization.trial.endsAt),
-    daysLeft: Number(days) + 1,
+    daysLeft: days,
     credits: subscription.trial,
   };
 }
