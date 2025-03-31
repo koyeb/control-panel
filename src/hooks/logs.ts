@@ -16,7 +16,7 @@ import { useDebouncedValue } from './timers';
 
 export type LogType = 'build' | 'runtime';
 export type LogStream = 'stdout' | 'stderr' | 'koyeb';
-export type LogsPeriod = 'live' | '1h' | '6h' | '24h' | '7d' | '30d';
+export type LogsPeriod = 'live' | '1h' | '6h' | '24h' | '7d' | '30d' | 'custom';
 
 export type LogsFilters = {
   type: LogType;
@@ -98,7 +98,7 @@ function useLogsHistory(filters: LogsFilters) {
 
   return useInfiniteQuery({
     enabled: quotas !== undefined && deployment !== undefined,
-    queryKey: ['logsQuery', { filters }, token],
+    queryKey: ['logsQuery', { filters, initialPageParam }, token],
     queryFn: ({ pageParam: { start, end } }) => {
       if (start === end) {
         return { data: [], pagination: { has_more: false } };
