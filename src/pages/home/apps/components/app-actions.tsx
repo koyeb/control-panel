@@ -32,7 +32,7 @@ export function AppActions({ app }: { app: App }) {
       <ActionsMenu Icon={IconEllipsis}>
         {(withClose, onClose) => (
           <>
-            <MenuItem className="text-dim hover:bg-inherit">
+            <MenuItem className="text-dim hover:!bg-inherit">
               <T id="appActions.label" />
             </MenuItem>
 
