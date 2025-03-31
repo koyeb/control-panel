@@ -573,7 +573,8 @@
             "6h": "last 6 hours",
             "24h": "last 24 hours",
             "7d": "last 7 days",
-            "30d": "last 30 days"
+            "30d": "last 30 days",
+            "custom": "custom"
           },
           "header": {
             "title": "Logs",

@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
-import { Controller, useForm, UseFormReturn } from 'react-hook-form';
+import { Controller, useController, useForm, UseFormReturn } from 'react-hook-form';
 
-import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
+import { IconButton, Input, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
 import { useRegionalDeployments } from 'src/api/hooks/service';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
@@ -195,6 +195,9 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
 
   const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
 
+  const start = useController({ control: filters.control, name: 'start' });
+  const end = useController({ control: filters.control, name: 'end' });
+
   return (
     <header className="col gap-4">
       <div>
@@ -222,6 +225,10 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
               ].join(' - ')
             }
             onChangeEffect={(period) => {
+              if (period === 'custom') {
+                return;
+              }
+
               const now = new Date();
               const duration: Duration = {};
 
@@ -236,6 +243,22 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
             }}
             className="min-w-80"
           />
+
+          {filters.watch('period') === 'custom' && (
+            <>
+              <Input
+                type="datetime-local"
+                value={format(start.field.value, "yyyy-MM-dd'T'HH:mm:ss.SSS")}
+                onChange={(event) => start.field.onChange(new Date(event.target.value))}
+              />
+
+              <Input
+                type="datetime-local"
+                value={format(end.field.value, "yyyy-MM-dd'T'HH:mm:ss.SSS")}
+                onChange={(event) => end.field.onChange(new Date(event.target.value))}
+              />
+            </>
+          )}
         </FeatureFlag>
 
         <ControlledSelect
@@ -304,7 +327,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
 function useRetentionPeriods() {
   const quotas = useOrganizationQuotas();
 
-  return useMemo(() => {
+  return useMemo((): LogsPeriod[] => {
     const periods: LogsPeriod[] = ['live', '1h', '6h'];
 
     if (quotas?.logsRetention === undefined) {
@@ -323,7 +346,7 @@ function useRetentionPeriods() {
       periods.push('30d');
     }
 
-    return periods;
+    return [...periods, 'custom'];
   }, [quotas]);
 }
 
