@@ -60,7 +60,7 @@ function LayoutTablet({
 
   return (
     <>
-      {banner && <div className="fixed inset-x-0 top-0 z-40 h-8 bg-neutral">{banner}</div>}
+      {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
 
       <div
         onMouseEnter={() => !isDesktop && setState('opened')}

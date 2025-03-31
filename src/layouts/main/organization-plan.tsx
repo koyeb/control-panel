@@ -87,9 +87,9 @@ export function OrganizationPlan() {
       )}
       renderFloating={(props) =>
         trial ? (
-          <TrialSummaryPopup className="z-40" {...props} />
+          <TrialSummaryPopup className="z-50" {...props} />
         ) : (
-          <EstimatedCostsPopup className="z-40" {...props} />
+          <EstimatedCostsPopup className="z-50" {...props} />
         )
       }
     />

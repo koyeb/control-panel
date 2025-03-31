@@ -43,7 +43,7 @@
   --toastify-font-family: theme(fontFamily.sans);
   --toastify-toast-shadow: none;
   --toastify-toast-padding: 0;
-  --toastify-z-index: 60;
+  --toastify-z-index: 70;
 }
 
 @keyframes notification {

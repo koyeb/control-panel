@@ -6,7 +6,8 @@ This documentation is a work in progress.
 
 - 10: header
 - 20: menu
-- 30: dialogs
-- 40: floating (dropdown, tooltips, menus)
-- 50: full-screen elements (logs)
-- 60: toasts
+- 30: banner
+- 40: dialogs
+- 50: floating (dropdown, tooltips, menus)
+- 60: full-screen elements (logs)
+- 70: toasts

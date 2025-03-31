@@ -116,7 +116,7 @@ export function RuntimeLogs({ app, service, deployment, instances, logs, filters
         serviceName={service.name}
         lines={logs.lines}
         renderMenu={(props) => (
-          <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-50')} {...props}>
+          <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-60')} {...props}>
             {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
               <MenuItem key={option}>
                 <ControlledCheckbox

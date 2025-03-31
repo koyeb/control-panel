@@ -50,7 +50,7 @@ export function Dialog({ open, onClose, onClosed, overlayClassName, className, c
             transition={{ duration: duration / 1000 }}
             lockScroll
             className={clsx(
-              'z-30 flex items-center justify-center bg-black/5 p-2 backdrop-blur-md',
+              'z-40 flex items-center justify-center bg-black/5 p-2 backdrop-blur-md',
               overlayClassName,
             )}
           >

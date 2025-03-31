@@ -51,7 +51,7 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
         </div>
       )}
       renderFloating={(props) => (
-        <Menu className="z-40 min-w-52" {...props}>
+        <Menu className="min-w-52" {...props}>
           <LinkMenuItem href="https://koyeb.com/docs" onClick={onClose}>
             <IconBookMarked className="icon" />
             <T id="documentation" />

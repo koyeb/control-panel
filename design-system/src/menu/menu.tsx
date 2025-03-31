@@ -9,7 +9,7 @@ export function Menu({ className, ...props }: React.ComponentProps<'div'>) {
     // @ts-ignore
     <div
       className={clsx(
-        'col z-40 items-stretch rounded-md border bg-popover p-1 text-contrast-popover shadow-lg',
+        'col z-50 items-stretch rounded-md border bg-popover p-1 text-contrast-popover shadow-lg',
         className,
       )}
       {...props}

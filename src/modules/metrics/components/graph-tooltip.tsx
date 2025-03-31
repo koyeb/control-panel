@@ -13,7 +13,7 @@ type GraphTooltipProps = {
 
 export function GraphTooltip({ data }: GraphTooltipProps) {
   return (
-    <div className="z-40 max-w-80 rounded-lg bg-inverted p-2 text-inverted shadow-lg">
+    <div className="z-50 max-w-80 rounded-lg bg-inverted p-2 text-inverted shadow-lg">
       <div className="mb-4 text-xs font-medium text-inverted/80">
         <FormattedDate
           value={data[0]?.date}
