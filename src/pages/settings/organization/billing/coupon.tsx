@@ -26,7 +26,7 @@ export function Coupon() {
 
   const mutation = useMutation({
     ...useApiMutationFn('redeemCoupon', ({ code }: FormValues<typeof form>) => ({
-      query: { code },
+      body: { code },
     })),
     onSuccess() {
       form.reset();
