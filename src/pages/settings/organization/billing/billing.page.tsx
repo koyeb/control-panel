@@ -1,3 +1,5 @@
+import { FeatureFlag } from 'src/hooks/feature-flag';
+
 import { BillingInformation } from './billing-information';
 import { Coupon } from './coupon';
 import { StripePortal } from './stripe-portal';
@@ -8,7 +10,9 @@ export function BillingPage() {
     <>
       <Usage />
       <StripePortal />
-      <Coupon />
+      <FeatureFlag feature="coupons">
+        <Coupon />
+      </FeatureFlag>
       <BillingInformation />
     </>
   );
