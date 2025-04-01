@@ -2148,6 +2148,10 @@
           "title": "Redeploy service",
           "descriptionWithoutBuild": "You are about to create a new deployment of your service",
           "descriptionWithBuild": "Before redeploying service, chose between those two options",
+          "lowCapacity": {
+            "title": "The {instance} instance is in high demand",
+            "description": "The redeployment might fail. Update your service with another instance to ensure a successful redeployment."
+          },
           "skipBuild": {
             "title": "Use previous build",
             "description": "Reuse the previous build for faster deployment if unchanged build process",
@@ -2182,11 +2186,11 @@
         "instanceAvailability": {
           "sleeping": {
             "title": "The {instance} instance is in high demand",
-            "description": "This might prevent service wake up. Update your service with another instance or disable scale to zero to ensure service wake up."
+            "description": "This might prevent service wake-up. Update your service with another instance or disable scale to zero to ensure service wake-up."
           },
           "maxScale": {
             "title": "The {instance} instance is in high demand",
-            "description": "This might prevent service scale up. Update your service with another Instance to ensure service scale up."
+            "description": "This might prevent service scale-up. Update your service with another instance to ensure service scale-up."
           }
         },
         "navigation": {

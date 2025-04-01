@@ -1,8 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
-import { Button, Tooltip } from '@koyeb/design-system';
-import { useDeployment } from 'src/api/hooks/service';
+import { Alert, Button, Tooltip } from '@koyeb/design-system';
+import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
+import { useComputeDeployment } from 'src/api/hooks/service';
 import { App, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -19,8 +20,15 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('pages.service.layout');
 
 export function RedeployButton({ app, service }: { app: App; service: Service }) {
-  const latestDeployment = useDeployment(service.latestDeploymentId);
+  const latestDeployment = useComputeDeployment(service.latestDeploymentId);
   const latestStashed = latestDeployment?.status === 'stashed';
+
+  const availability = useCatalogInstanceRegionsAvailability(
+    latestDeployment?.definition.instanceType,
+    latestDeployment?.definition.regions,
+  );
+
+  const instance = useInstance(latestDeployment?.definition.instanceType);
 
   const openDialog = Dialog.useOpen();
   const closeDialog = Dialog.useClose();
@@ -89,6 +97,14 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
             id={wasBuilt ? 'redeployDialog.descriptionWithBuild' : 'redeployDialog.descriptionWithoutBuild'}
           />
         </p>
+
+        {availability === 'low' && (
+          <Alert
+            variant="info"
+            title={<T id="redeployDialog.lowCapacity.title" values={{ instance: instance?.displayName }} />}
+            description={<T id="redeployDialog.lowCapacity.description" />}
+          />
+        )}
 
         <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-2">
           {wasBuilt && (
