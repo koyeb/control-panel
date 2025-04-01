@@ -2179,6 +2179,10 @@
             "description": "These changes will be applied with your next deployment"
           }
         },
+        "instanceAvailability": {
+          "title": "The {instance} instance is in high demand",
+          "description": "This might prevent service wake up. Update your service with another instance or disable scale to zero to ensure service wake up."
+        },
         "navigation": {
           "overview": "Overview",
           "metrics": "Metrics",

@@ -75,7 +75,9 @@ export function useDeployment(deploymentId: string | undefined) {
 export function useComputeDeployment(deploymentId: string | undefined) {
   const deployment = useDeploymentQuery(deploymentId).data;
 
-  assert(isComputeDeployment(deployment));
+  if (deployment !== undefined) {
+    assert(isComputeDeployment(deployment));
+  }
 
   return deployment;
 }

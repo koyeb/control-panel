@@ -21,6 +21,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 import { useRegisterCommand } from 'src/modules/command-palette/command-palette-context';
 import { inArray } from 'src/utils/arrays';
 
+import { InstanceAvailabilityAlert } from './instance-availability-alert';
 import { PendingChangesAlert } from './pending-changes-alert';
 import { RedeployButton } from './redeploy-button';
 import { ServiceErrorAlert } from './service-error-alert';
@@ -72,6 +73,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
       <ServiceErrorAlert service={service} />
       <ServicePausedAlert service={service} />
       <PendingChangesAlert service={service} />
+      <InstanceAvailabilityAlert service={service} />
 
       <Navigation />
 

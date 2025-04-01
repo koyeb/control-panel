@@ -11,7 +11,7 @@ import {
   mapCatalogRegionsList,
   mapCatalogUsage,
 } from '../mappers/catalog';
-import { AiModel, OneClickApp } from '../model';
+import { AiModel, CatalogAvailability, OneClickApp } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -34,7 +34,7 @@ export function useInstances(ids?: string[]) {
   return instances.filter((instance) => ids.includes(instance.id));
 }
 
-export function useInstance(id: string | null) {
+export function useInstance(id?: string | null) {
   return useInstances().find(hasProperty('id', id));
 }
 
@@ -97,6 +97,25 @@ export function useCatalogRegionAvailability(instanceId?: string, regionId?: str
 
   if (instanceId !== undefined && regionId !== undefined) {
     return data?.get(instanceId)?.byRegion?.get(regionId);
+  }
+}
+
+export function useCatalogInstanceRegionsAvailability(
+  instanceId?: string,
+  regionIds?: string[],
+): CatalogAvailability | undefined {
+  const instanceAvailability = useCatalogInstanceAvailability(instanceId);
+
+  if (instanceAvailability === undefined) {
+    return;
+  }
+
+  const regionAvailabilities = regionIds?.map((regionId) => instanceAvailability.byRegion.get(regionId));
+
+  for (const availability of ['low', 'medium', 'high'] satisfies CatalogAvailability[]) {
+    if (regionAvailabilities?.includes(availability)) {
+      return availability;
+    }
   }
 }
 
