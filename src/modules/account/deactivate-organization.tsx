@@ -21,6 +21,7 @@ export function DeactivateOrganization() {
   const requestDeactivation = useMutation({
     ...useApiMutationFn('deactivateOrganization', {
       path: { id: organization.id },
+      body: {},
     }),
     onSuccess() {
       closeDialog();

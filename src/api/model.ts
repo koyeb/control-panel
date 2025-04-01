@@ -588,12 +588,15 @@ export type OrganizationPlan =
   | 'hobby'
   | 'starter'
   | 'startup'
-  | 'pro'
-  | 'scale'
   | 'business'
   | 'enterprise'
   | 'internal'
-  | 'no_plan';
+  | 'hobby23'
+  | 'no_plan'
+  | 'pro'
+  | 'scale'
+  | 'partner_csp'
+  | 'partner_csp_unit';
 
 export type OrganizationInvitation = {
   id: string;
