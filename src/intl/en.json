@@ -2180,8 +2180,14 @@
           }
         },
         "instanceAvailability": {
-          "title": "The {instance} instance is in high demand",
-          "description": "This might prevent service wake up. Update your service with another instance or disable scale to zero to ensure service wake up."
+          "sleeping": {
+            "title": "The {instance} instance is in high demand",
+            "description": "This might prevent service wake up. Update your service with another instance or disable scale to zero to ensure service wake up."
+          },
+          "maxScale": {
+            "title": "The {instance} instance is in high demand",
+            "description": "This might prevent service scale up. Update your service with another Instance to ensure service scale up."
+          }
         },
         "navigation": {
           "overview": "Overview",

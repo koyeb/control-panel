@@ -1,16 +1,13 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { FormattedDate } from 'react-intl';
 
 import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
-import { ApiEndpointParams } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
-import { mapReplica } from 'src/api/mappers/deployment';
+import { useDeploymentScalingQuery } from 'src/api/hooks/service';
 import type { CatalogRegion, ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
@@ -37,12 +34,6 @@ type Filters = {
   status: InstanceStatus | null;
 };
 
-function getApiFilters(filters: Filters): ApiEndpointParams<'getDeploymentScaling'>['query'] {
-  return {
-    region: filters.region === null ? undefined : filters.region,
-  };
-}
-
 export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
   const regions = useRegions(deployment.definition.regions);
 
@@ -53,13 +44,8 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
     },
   });
 
-  const query = useQuery({
-    ...useApiQueryFn('getDeploymentScaling', {
-      path: { id: deployment.id },
-      query: getApiFilters(filters.watch()),
-    }),
-    placeholderData: keepPreviousData,
-    select: ({ replicas }) => replicas!.map(mapReplica),
+  const query = useDeploymentScalingQuery(deployment.id, {
+    region: filters.watch('region') ?? undefined,
   });
 
   return (

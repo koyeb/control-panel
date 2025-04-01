@@ -9,6 +9,7 @@ import {
   mapDeployment,
   mapInstance,
   mapRegionalDeployment,
+  mapReplica,
 } from '../mappers/deployment';
 import { mapApp, mapApps, mapService, mapServices } from '../mappers/service';
 import { InstanceStatus } from '../model';
@@ -96,6 +97,24 @@ export function useRegionalDeployments(deploymentId: string | undefined) {
 
 export function useRegionalDeployment(deploymentId: string | undefined, region: string) {
   return useRegionalDeployments(deploymentId)?.find(hasProperty('region', region));
+}
+
+export function useDeploymentScalingQuery(deploymentId: string | undefined, filters?: { region?: string }) {
+  return useQuery({
+    ...useApiQueryFn('getDeploymentScaling', {
+      path: { id: deploymentId! },
+      query: { ...filters },
+    }),
+    enabled: deploymentId !== undefined,
+    placeholderData: keepPreviousData,
+    select: ({ replicas }) => replicas!.map(mapReplica),
+  });
+}
+
+export function useDeploymentScaling(deploymentId: string | undefined, filters?: { region?: string }) {
+  const { data } = useDeploymentScalingQuery(deploymentId, filters);
+
+  return data;
 }
 
 type InstancesQueryOptions = {
