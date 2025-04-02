@@ -68,22 +68,20 @@ export function AutoScalingConfiguration() {
 }
 
 function ScalingValues() {
-  const { watch, setValue } = useFormContext<ServiceForm>();
+  const form = useFormContext<ServiceForm>();
 
-  const hasVolumes = watch('volumes').filter((volume) => volume.name !== '').length > 0;
-  const instance = useInstance(watch('instance'));
+  const min = useMinScaling();
+  const max = useMaxScaling();
+
+  const instance = useInstance(form.watch('instance'));
   const canChangeScaling = instance?.id !== 'free';
-  const scaleToZero = useFeatureFlag('scale-to-zero');
-
-  const setScalingValue = (field: 'min' | 'max') => {
-    return (value: number) => setValue(`scaling.${field}`, value, { shouldValidate: true });
-  };
-
-  const min = scaleToZero && watch('serviceType') === 'web' && !isTenstorrentGpu(instance) ? 0 : 1;
-  const max = hasVolumes ? 1 : 20;
 
   const { field: minField } = useController<ServiceForm, 'scaling.min'>({ name: 'scaling.min' });
   const { field: maxField } = useController<ServiceForm, 'scaling.max'>({ name: 'scaling.max' });
+
+  const setScalingValue = (field: 'min' | 'max') => {
+    return (value: number) => form.setValue(`scaling.${field}`, value, { shouldValidate: true });
+  };
 
   return (
     <div className="row gap-8">
@@ -104,15 +102,8 @@ function ScalingValues() {
         min={min}
         max={max}
         tickSize={2}
-        disabled={watch('instance') === 'free'}
-        renderTick={(value) => {
-          if (value === 0) {
-            return <IconMoon className="mt-0.5 size-4" />;
-          } else {
-            // eslint-disable-next-line tailwindcss/no-arbitrary-value
-            return <span className="text-[0.5rem] font-medium">|</span>;
-          }
-        }}
+        disabled={instance?.id === 'free'}
+        renderTick={(value) => <Tick value={value} />}
         value={[minField.value, maxField.value]}
         onChange={([min, max]) => {
           if (max === 0) {
@@ -143,6 +134,42 @@ function ScalingValues() {
         className="w-24"
       />
     </div>
+  );
+}
+
+function useMinScaling() {
+  const { watch } = useFormContext<ServiceForm>();
+
+  const instance = useInstance(watch('instance'));
+  const scaleToZero = useFeatureFlag('scale-to-zero');
+
+  if (scaleToZero && watch('serviceType') === 'web' && !isTenstorrentGpu(instance)) {
+    return 0;
+  }
+
+  return 1;
+}
+
+function useMaxScaling() {
+  const { watch } = useFormContext<ServiceForm>();
+  const hasVolumes = watch('volumes').filter((volume) => volume.name !== '').length > 0;
+
+  if (hasVolumes) {
+    return 1;
+  }
+
+  return 20;
+}
+
+function Tick({ value }: { value: number }) {
+  if (value === 0) {
+    return <IconMoon className="mt-0.5 size-4" />;
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" className="mt-1 size-3">
+      <line x1="12" y1="0" x2="12" y2="24" />
+    </svg>
   );
 }
 
