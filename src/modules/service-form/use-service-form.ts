@@ -147,7 +147,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         }
       });
 
-      const { meta, serviceType, scaling } = values;
+      const { meta, serviceType, scaling, ports } = values;
       const instance = instances.find(hasProperty('id', values.instance));
 
       if (scaleToZero && instance?.id === 'free') {
@@ -172,6 +172,10 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
       }
 
       if (scaling.min === 0 && serviceType !== 'web') {
+        scaling.min = 1;
+      }
+
+      if (scaling.min === 0 && !ports.some((port) => port.public)) {
         scaling.min = 1;
       }
 
