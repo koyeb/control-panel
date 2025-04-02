@@ -144,6 +144,10 @@ function useMinScaling() {
   const scaleToZero = useFeatureFlag('scale-to-zero');
   const hasPublicPort = watch('ports').some((port) => port.public);
 
+  if (instance?.id === 'free') {
+    return 0;
+  }
+
   if (scaleToZero && watch('serviceType') === 'web' && hasPublicPort && !isTenstorrentGpu(instance)) {
     return 0;
   }

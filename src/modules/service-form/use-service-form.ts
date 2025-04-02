@@ -175,7 +175,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         scaling.min = 1;
       }
 
-      if (scaling.min === 0 && !ports.some((port) => port.public)) {
+      if (scaling.min === 0 && instance?.id !== 'free' && !ports.some((port) => port.public)) {
         scaling.min = 1;
       }
 
