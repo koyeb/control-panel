@@ -34,9 +34,7 @@ export function VolumesSection() {
 
 function SectionContent() {
   const { fields, append, remove } = useFieldArray<ServiceForm, 'volumes'>({ name: 'volumes' });
-
   const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
 
   const documentationLink = (children: React.ReactNode) => (
     <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
@@ -70,7 +68,7 @@ function SectionContent() {
             <VolumeFields
               key={variable.id}
               index={index}
-              onCreate={() => openDialog('CreateVolume')}
+              onCreate={() => openDialog('CreateVolume', { index })}
               onRemove={() => remove(index)}
             />
           ))}
@@ -88,12 +86,7 @@ function SectionContent() {
         </Button>
       </div>
 
-      <CreateVolumeDialog
-        onCreated={(volume, mountPath) => {
-          append({ volumeId: volume.id, name: volume.name, size: volume.size, mountPath, mounted: false });
-          closeDialog();
-        }}
-      />
+      <CreateVolumeDialog />
     </>
   );
 }

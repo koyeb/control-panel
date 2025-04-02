@@ -1,10 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { useForm, useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button, InputEnd } from '@koyeb/design-system';
 import { mapVolume } from 'src/api/mappers/volume';
-import { Volume } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { ControlledInput } from 'src/components/controlled';
@@ -12,7 +11,9 @@ import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/compo
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
+import { assert } from 'src/utils/assert';
 
+import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 const T = createTranslate('modules.serviceForm.volumes.createDialog');
@@ -20,23 +21,20 @@ const T = createTranslate('modules.serviceForm.volumes.createDialog');
 const schema = z.object({
   name: z.string().min(2).max(63),
   size: z.number(),
-  mountPath: z.string().startsWith('/'),
 });
 
-type CreateVolumeDialogProps = {
-  onCreated: (volume: Volume, mountPath: string) => void;
-};
-
-export function CreateVolumeDialog({ onCreated }: CreateVolumeDialogProps) {
+export function CreateVolumeDialog() {
   const regions = useWatchServiceForm('regions');
   const invalidate = useInvalidateApiQuery();
+  const { setValue } = useFormContext<ServiceForm>();
+  const closeDialog = Dialog.useClose();
+  const { index } = Dialog.useContext<{ index: number }>();
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       name: '',
       size: NaN,
-      mountPath: '',
     },
     resolver: useZodResolver(schema, {
       name: t('nameLabel'),
@@ -54,9 +52,18 @@ export function CreateVolumeDialog({ onCreated }: CreateVolumeDialogProps) {
         region: regions[0],
       },
     })),
-    async onSuccess({ volume }, { mountPath }) {
+    async onSuccess({ volume }) {
+      const { id: volumeId, name, size } = mapVolume(volume!);
+
       await invalidate('listVolumes');
-      onCreated(mapVolume(volume!), mountPath);
+
+      assert(index !== undefined);
+      setValue(`volumes.${index}.volumeId`, volumeId);
+      setValue(`volumes.${index}.name`, name);
+      setValue(`volumes.${index}.size`, size);
+      setValue(`volumes.${index}.mounted`, false);
+
+      closeDialog();
     },
     onError: useFormErrorHandler(form, (error) => ({
       name: error.name,
@@ -66,7 +73,12 @@ export function CreateVolumeDialog({ onCreated }: CreateVolumeDialogProps) {
   });
 
   return (
-    <Dialog id="CreateVolume" onClosed={() => form.reset()} className="col w-full max-w-xl gap-4">
+    <Dialog
+      id="CreateVolume"
+      context={{ index }}
+      onClosed={() => form.reset()}
+      className="col w-full max-w-xl gap-4"
+    >
       <DialogHeader title={<T id="title" />} />
 
       <p className="text-dim">
@@ -94,8 +106,6 @@ export function CreateVolumeDialog({ onCreated }: CreateVolumeDialogProps) {
             </InputEnd>
           }
         />
-
-        <ControlledInput control={form.control} name="mountPath" label={<T id="mountPathLabel" />} />
 
         <DialogFooter>
           <CloseDialogButton>

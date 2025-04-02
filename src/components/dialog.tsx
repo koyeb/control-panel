@@ -31,6 +31,10 @@ Dialog.useClose = function useCloseDialog() {
   return useDialogContext().closeDialog;
 };
 
+Dialog.useContext = function useCloseDialog<T>(): Partial<T> {
+  return (useDialogContext().context as T) ?? {};
+};
+
 export function DialogHeader(props: Omit<React.ComponentProps<typeof BaseDialogHeader>, 'onClose'>) {
   const closeDialog = Dialog.useClose();
 
