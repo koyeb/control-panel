@@ -262,22 +262,28 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
     return new Date(deployment.terminatedAt ?? now);
   }, [now, deployment.terminatedAt]);
 
-  const filters = useForm<LogsFilters>({
-    defaultValues: {
-      deploymentId: deployment.id,
-      regionalDeploymentId: null,
-      instanceId: null,
-      type: 'runtime',
-      period: logsFilters ? '1h' : '30d',
-      start,
-      end,
-      search: '',
-      logs: true,
-      events: true,
-    },
+  const filters: LogsFilters = {
+    deploymentId: deployment.id,
+    regionalDeploymentId: null,
+    instanceId: null,
+    type: 'runtime',
+    period: logsFilters ? '1h' : '30d',
+    start,
+    end,
+    search: '',
+    logs: true,
+    events: true,
+  };
+
+  const filtersForm = useForm<LogsFilters>({
+    defaultValues: filters,
   });
 
-  const logs = useLogs(isDeploymentRunning(deployment), filters.watch());
+  const logs = useLogs(isDeploymentRunning(deployment), filtersForm.watch());
+
+  useObserve(deployment, () => {
+    filtersForm.reset(filters);
+  });
 
   return (
     <AccordionSection
@@ -298,7 +304,7 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
           service={service}
           deployment={deployment}
           instances={instances}
-          filters={filters}
+          filters={filtersForm}
           logs={logs}
         />
 
