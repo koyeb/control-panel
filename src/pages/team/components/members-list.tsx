@@ -175,7 +175,9 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
               <>
                 {item.member.id === user.id && (
                   <ButtonMenuItem
-                    onClick={withClose(() => openDialog(`ConfirmLeaveOrganization-${item.member.id}`))}
+                    onClick={withClose(() =>
+                      openDialog('ConfirmLeaveOrganization', { resourceId: item.member.id }),
+                    )}
                   >
                     <T id="actions.leave" />
                   </ButtonMenuItem>
@@ -183,7 +185,9 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
 
                 {item.member.id !== user.id && (
                   <ButtonMenuItem
-                    onClick={withClose(() => openDialog(`ConfirmRemoveMember-${item.member.id}`))}
+                    onClick={withClose(() =>
+                      openDialog('ConfirmRemoveMember', { resourceId: item.member.id }),
+                    )}
                   >
                     <T id="actions.removeMember" />
                   </ButtonMenuItem>
@@ -197,7 +201,8 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
       {!isInvitation(item) && (
         <>
           <ConfirmationDialog
-            id={`ConfirmRemoveMember-${item.member.id}`}
+            id="ConfirmRemoveMember"
+            resourceId={item.member.id}
             title={<T id="removeMember.title" />}
             description={
               <T id="removeMember.description" values={{ name: item.member.name, organizationName }} />
@@ -208,7 +213,8 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
           />
 
           <ConfirmationDialog
-            id={`ConfirmLeaveOrganization-${item.member.id}`}
+            id="ConfirmLeaveOrganization"
+            resourceId={item.member.id}
             title={<T id="leaveOrganization.title" />}
             description={<T id="leaveOrganization.description" values={{ organizationName }} />}
             confirmationText={organizationName}

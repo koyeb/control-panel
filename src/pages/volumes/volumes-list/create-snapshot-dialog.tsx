@@ -54,7 +54,8 @@ export function CreateSnapshotDialog({ volume }: { volume: Volume }) {
 
   return (
     <Dialog
-      id={`CreateSnapshotFromVolume-${volume.id}`}
+      id="CreateSnapshotFromVolume"
+      context={{ volumeId: volume.id }}
       onClosed={() => form.reset()}
       className="col w-full max-w-xl gap-4"
     >

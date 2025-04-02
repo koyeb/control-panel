@@ -32,7 +32,7 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         const plan = instance.plans[0] as OrganizationPlan;
 
         setRequiredPlan(plan);
-        openDialog(`Upgrade-${plan}`);
+        openDialog('Upgrade', { plan });
         return false;
       } else if (!hasQuotas) {
         if (isTenstorrentGpu(instance)) {

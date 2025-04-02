@@ -218,7 +218,13 @@ function Replica({ deployment, replica }: { deployment: ComputeDeployment; repli
 
           <button
             type="button"
-            onClick={() => openDialog(`replica-history-${deployment.id}-${replica.region}-${replica.index}`)}
+            onClick={() =>
+              openDialog('ReplicaHistory', {
+                deploymentId: deployment.id,
+                regionId: replica.region,
+                replicaIndex: replica.index,
+              })
+            }
             className="text-link ms-auto text-xs"
           >
             <T id="viewDetails" />

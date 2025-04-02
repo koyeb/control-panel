@@ -28,7 +28,8 @@ export function DeleteRegistrySecretDialog({ secret }: { secret: RegistrySecret 
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteRegistrySecret-${secret.id}`}
+      id="ConfirmDeleteRegistrySecret"
+      resourceId={secret.id}
       title={<T id="title" />}
       description={
         <T

@@ -32,7 +32,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
     if (organization.hasPaymentMethod) {
       mutation.mutate(plan);
     } else {
-      openDialog(`Upgrade-${plan}`);
+      openDialog('Upgrade', { plan });
     }
   };
 

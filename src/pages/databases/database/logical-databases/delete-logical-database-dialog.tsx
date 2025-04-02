@@ -57,7 +57,8 @@ export function DeleteLogicalDatabaseDialog({
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteLogicalDatabase-${database.name}`}
+      id="ConfirmDeleteLogicalDatabase"
+      resourceId={database.name}
       title={<T id="title" />}
       description={<T id="description" />}
       destructiveAction

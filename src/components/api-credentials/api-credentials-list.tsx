@@ -67,7 +67,7 @@ function CredentialActions({ type, credential }: { type: ApiCredentialType; cred
       <ActionsMenu>
         {(withClose) => (
           <ButtonMenuItem
-            onClick={withClose(() => openDialog(`ConfirmDeleteApiCredential-${credential.id}`))}
+            onClick={withClose(() => openDialog('ConfirmDeleteApiCredential', { resourceId: credential.id }))}
           >
             <T id="actions.delete" />
           </ButtonMenuItem>

@@ -42,7 +42,8 @@ export function DeleteDatabaseRoleDialog({ service, role }: DeleteDatabaseRoleDi
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteDatabaseRole-${role.name}`}
+      id="ConfirmDeleteDatabaseRole"
+      resourceId={role.name}
       title={<T id="title" />}
       description={<T id="description" />}
       destructiveAction

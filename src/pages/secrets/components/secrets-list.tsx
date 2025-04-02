@@ -134,10 +134,12 @@ function SecretActions({ secret }: { secret: Secret }) {
       <ActionsMenu>
         {(withClose) => (
           <>
-            <ButtonMenuItem onClick={withClose(() => openDialog(`EditSecret-${secret.id}`))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog('EditSecret', { secretId: secret.id }))}>
               <T id="actions.edit" />
             </ButtonMenuItem>
-            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteSecret-${secret.id}`))}>
+            <ButtonMenuItem
+              onClick={withClose(() => openDialog('ConfirmDeleteSecret', { resourceId: secret.id }))}
+            >
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>

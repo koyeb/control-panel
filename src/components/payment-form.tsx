@@ -216,7 +216,7 @@ export function UpgradeDialog({ id, plan, onPlanChanged, title, description, sub
   const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog id={id ?? `Upgrade-${plan}`} className="col w-full max-w-xl gap-4">
+    <Dialog id={id ?? 'Upgrade'} context={{ plan }} className="col w-full max-w-xl gap-4">
       <DialogHeader title={title} />
 
       {description && <p className="text-dim">{description}</p>}

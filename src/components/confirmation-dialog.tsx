@@ -9,6 +9,7 @@ import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog'
 
 type ConfirmationDialogProps = {
   id: string;
+  resourceId?: string;
   title: React.ReactNode;
   description: React.ReactNode;
   destructiveAction?: boolean;
@@ -21,6 +22,7 @@ type ConfirmationDialogProps = {
 
 export function ConfirmationDialog({
   id,
+  resourceId,
   title,
   description,
   destructiveAction,
@@ -37,7 +39,12 @@ export function ConfirmationDialog({
   });
 
   return (
-    <Dialog id={id} onClosed={form.reset} className="col w-full max-w-xl gap-4">
+    <Dialog
+      id={id}
+      context={resourceId ? { resourceId } : undefined}
+      onClosed={form.reset}
+      className="col w-full max-w-xl gap-4"
+    >
       <DialogHeader title={title} />
 
       <p className="text-dim">{description}</p>

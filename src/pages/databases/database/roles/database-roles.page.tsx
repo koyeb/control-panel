@@ -156,7 +156,9 @@ function DatabaseRoleActions({ service, role }: DatabaseRoleActionsProps) {
     <>
       <ActionsMenu>
         {(withClose) => (
-          <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteDatabaseRole-${role.name}`))}>
+          <ButtonMenuItem
+            onClick={withClose(() => openDialog('ConfirmDeleteDatabaseRole', { resourceId: role.name }))}
+          >
             <T id="actions.delete" />
           </ButtonMenuItem>
         )}

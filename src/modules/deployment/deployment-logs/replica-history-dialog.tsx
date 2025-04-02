@@ -27,7 +27,8 @@ export function ReplicaHistoryDialog(props: ReplicaHistoryDialogProps) {
 
   return (
     <Dialog
-      id={`replica-history-${deployment.id}-${regionId}-${replicaIndex}`}
+      id="ReplicaHistory"
+      context={{ deploymentId: deployment.id, regionId: regionId, replicaIndex }}
       className="col w-full max-w-3xl gap-4"
     >
       <DialogHeader title={<T id="title" />} />

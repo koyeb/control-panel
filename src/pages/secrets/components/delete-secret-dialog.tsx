@@ -28,7 +28,8 @@ export function DeleteSecretDialog({ secret }: { secret: Secret }) {
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteSecret-${secret.id}`}
+      id="ConfirmDeleteSecret"
+      resourceId={secret.id}
       title={<T id="title" />}
       description={
         <T

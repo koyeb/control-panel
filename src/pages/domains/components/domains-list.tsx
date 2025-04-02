@@ -131,7 +131,7 @@ function DomainActions({ domain }: { domain: Domain }) {
         {(withClose) => (
           <ButtonMenuItem
             disabled={domain.status === 'deleting'}
-            onClick={withClose(() => openDialog(`ConfirmDeleteDomain-${domain.id}`))}
+            onClick={withClose(() => openDialog('ConfirmDeleteDomain', { resourceId: domain.id }))}
           >
             <T id="actions.delete" />
           </ButtonMenuItem>

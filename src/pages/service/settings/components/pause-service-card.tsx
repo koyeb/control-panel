@@ -68,7 +68,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
 
         <Button
           color="orange"
-          onClick={() => openDialog(`ConfirmPauseService-${service.id}`)}
+          onClick={() => openDialog('ConfirmPauseService', { resourceId: service.id })}
           disabled={service.status === 'pausing' || service.status === 'paused'}
         >
           <T id="pause" />
@@ -76,7 +76,8 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
       </div>
 
       <ConfirmationDialog
-        id={`ConfirmPauseService-${service.id}`}
+        id="ConfirmPauseService"
+        resourceId={service.id}
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
         confirmationText={service.name}

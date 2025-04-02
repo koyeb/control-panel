@@ -44,15 +44,15 @@ export function AppActions({ app }: { app: App }) {
               <T id="appActions.addDomain" />
             </MenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`EditApp-${app.id}`))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog('EditApp', { appId: app.id }))}>
               <T id="appActions.edit" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmPauseApp-${app.id}`))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmPauseApp', { resourceId: app.id }))}>
               <T id="appActions.pauseServices" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteApp-${app.id}`))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteApp', { resourceId: app.id }))}>
               <T id="appActions.deleteApp" />
             </ButtonMenuItem>
           </>
@@ -139,7 +139,12 @@ function EditAppDialog({ app }: { app: App }) {
   });
 
   return (
-    <Dialog id={`EditApp-${app.id}`} onClosed={form.reset} className="col w-full max-w-xl gap-4">
+    <Dialog
+      id="EditApp"
+      context={{ appId: app.id }}
+      onClosed={form.reset}
+      className="col w-full max-w-xl gap-4"
+    >
       <DialogHeader title={<T id="editAppDialog.title" />} />
 
       <form className="col gap-4" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
@@ -202,7 +207,8 @@ function PauseAppConfirmationDialog({ app }: { app: App }) {
 
   return (
     <ConfirmationDialog
-      id={`ConfirmPauseApp-${app.id}`}
+      id="ConfirmPauseApp"
+      resourceId={app.id}
       title={<T id="pauseAppConfirmationDialog.title" />}
       description={<T id="pauseAppConfirmationDialog.description" />}
       confirmationText={app.name}
@@ -230,7 +236,8 @@ function DeleteAppConfirmationDialog({ app }: { app: App }) {
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteApp-${app.id}`}
+      id="ConfirmDeleteApp"
+      resourceId={app.id}
       title={<T id="deleteAppConfirmationDialog.title" />}
       description={<T id="deleteAppConfirmationDialog.description" />}
       destructiveAction

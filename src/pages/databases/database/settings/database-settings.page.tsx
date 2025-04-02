@@ -96,14 +96,15 @@ function DeleteDatabaseService({ service }: { service: Service }) {
         <Button
           color="red"
           loading={mutation.isPending}
-          onClick={() => openDialog(`ConfirmDeleteDatabaseService-${service.id}`)}
+          onClick={() => openDialog('ConfirmDeleteDatabaseService', { resourceId: service.id })}
         >
           <T id="delete.delete" />
         </Button>
       </div>
 
       <ConfirmationDialog
-        id={`ConfirmDeleteDatabaseService-${service.id}`}
+        id="ConfirmDeleteDatabaseService"
+        resourceId={service.id}
         title={<T id="delete.confirmationDialog.title" />}
         description={<T id="delete.confirmationDialog.description" />}
         destructiveAction

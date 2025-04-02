@@ -133,15 +133,19 @@ function Actions({ volume }: { volume: Volume }) {
       <ActionsMenu>
         {(withClose) => (
           <>
-            <ButtonMenuItem onClick={withClose(() => openDialog(`EditVolume-${volume.id}`))}>
+            <ButtonMenuItem onClick={withClose(() => openDialog('EditVolume', { volumeId: volume.id }))}>
               <T id="actions.edit" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`CreateSnapshotFromVolume-${volume.id}`))}>
+            <ButtonMenuItem
+              onClick={withClose(() => openDialog('CreateSnapshotFromVolume', { volumeId: volume.id }))}
+            >
               <T id="actions.createSnapshot" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteVolume-${volume.id}`))}>
+            <ButtonMenuItem
+              onClick={withClose(() => openDialog('ConfirmDeleteVolume', { resourceId: volume.id }))}
+            >
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>

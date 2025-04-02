@@ -104,7 +104,9 @@ function DatabaseActions({ service, deployment, database }: DatabaseActionsProps
       <ActionsMenu>
         {(withClose) => (
           <ButtonMenuItem
-            onClick={withClose(() => openDialog(`ConfirmDeleteLogicalDatabase-${database.name}`))}
+            onClick={withClose(() =>
+              openDialog('ConfirmDeleteLogicalDatabase', { resourceId: database.name }),
+            )}
           >
             <T id="actions.delete" />
           </ButtonMenuItem>

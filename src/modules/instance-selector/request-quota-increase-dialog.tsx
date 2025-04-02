@@ -10,7 +10,11 @@ export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInst
   const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (
-    <Dialog id={`RequestQuotaIncrease-${instance.id}`} className="col w-full max-w-xl gap-4">
+    <Dialog
+      id="RequestQuotaIncrease"
+      context={{ instanceId: instance.id }}
+      className="col w-full max-w-xl gap-4"
+    >
       <DialogHeader title={<T id="title" />} />
 
       <p>

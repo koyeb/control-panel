@@ -27,7 +27,8 @@ export function DeleteDomainDialog({ domain }: { domain: Domain }) {
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteDomain-${domain.id}`}
+      id="ConfirmDeleteDomain"
+      resourceId={domain.id}
       title={<T id="title" />}
       description={
         <T

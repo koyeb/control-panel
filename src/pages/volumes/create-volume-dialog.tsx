@@ -15,7 +15,8 @@ export function CreateVolumeDialog({ snapshot }: { snapshot?: VolumeSnapshot }) 
 
   return (
     <Dialog
-      id={snapshot ? `CreateVolume-${snapshot.id}` : 'CreateVolume'}
+      id={snapshot ? 'CreateVolume' : 'CreateVolume'}
+      context={snapshot ? { snapshotId: snapshot.id } : undefined}
       className="col w-full max-w-xl gap-4"
     >
       <DialogHeader title={<T id="title" />} />

@@ -28,7 +28,8 @@ export function DeleteVolumeDialog({ volume }: { volume: Volume }) {
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteVolume-${volume.id}`}
+      id="ConfirmDeleteVolume"
+      resourceId={volume.id}
       title={<T id="title" />}
       description={
         <T

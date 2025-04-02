@@ -93,18 +93,22 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
                 <ButtonMenuItem
                   {...props}
                   disabled={!canCreate}
-                  onClick={withClose(() => openDialog(`CreateVolume-${snapshot.id}`))}
+                  onClick={withClose(() => openDialog('CreateVolume', { snapshotId: snapshot.id }))}
                 >
                   <T id="actions.createVolume" />
                 </ButtonMenuItem>
               )}
             </Tooltip>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`UpdateSnapshot-${snapshot.id}`))}>
+            <ButtonMenuItem
+              onClick={withClose(() => openDialog('UpdateSnapshot', { snapshotId: snapshot.id }))}
+            >
               <T id="actions.update" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteSnapshot-${snapshot.id}`))}>
+            <ButtonMenuItem
+              onClick={withClose(() => openDialog('ConfirmDeleteSnapshot', { resourceId: snapshot.id }))}
+            >
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>

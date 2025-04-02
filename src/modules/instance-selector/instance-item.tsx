@@ -224,8 +224,6 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
   const organization = useOrganization();
   const isHobby = organization.plan === 'hobby';
 
-  const dialog = isHobby ? 'UpgradeInstanceSelector' : `RequestQuotaIncrease-${instance.id}`;
-
   if (instance.id === 'free') {
     return null;
   }
@@ -233,8 +231,10 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
   const handleClick = () => {
     if (!isHobby && isTenstorrentGpu(instance)) {
       tally.openPopup();
+    } else if (isHobby) {
+      openDialog('UpgradeInstanceSelector');
     } else {
-      openDialog(dialog);
+      openDialog('RequestQuotaIncrease', { instanceId: instance.id });
     }
   };
 

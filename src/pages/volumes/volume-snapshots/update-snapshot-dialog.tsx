@@ -57,7 +57,8 @@ export function UpdateSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
 
   return (
     <Dialog
-      id={`UpdateSnapshot-${snapshot.id}`}
+      id="UpdateSnapshot"
+      context={{ snapshotId: snapshot.id }}
       onClosed={() => form.reset()}
       className="col w-full max-w-xl gap-4"
     >

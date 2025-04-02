@@ -66,7 +66,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       <div className="row ml-auto gap-4">
         <Button
           color="red"
-          onClick={() => openDialog(`ConfirmDeleteService-${service.id}`)}
+          onClick={() => openDialog('ConfirmDeleteService', { resourceId: service.id })}
           disabled={service.status === 'pausing' || service.status === 'deleted'}
         >
           <T id="delete" />
@@ -74,7 +74,8 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       </div>
 
       <ConfirmationDialog
-        id={`ConfirmDeleteService-${service.id}`}
+        id="ConfirmDeleteService"
+        resourceId={service.id}
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
         destructiveAction

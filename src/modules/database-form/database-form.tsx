@@ -45,7 +45,7 @@ function DatabaseForm_({ deployment, onCostChanged }: DatabaseFormProps) {
 
   const onSubmit = useSubmitDatabaseServiceForm(form, (plan) => {
     setRequiredPlan(plan);
-    openDialog(`Upgrade-${plan}`);
+    openDialog('Upgrade', { plan });
   });
 
   return (

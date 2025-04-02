@@ -28,7 +28,8 @@ export function DeleteSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
 
   return (
     <ConfirmationDialog
-      id={`ConfirmDeleteSnapshot-${snapshot.id}`}
+      id="ConfirmDeleteSnapshot"
+      resourceId={snapshot.id}
       title={<T id="title" />}
       description={
         <T

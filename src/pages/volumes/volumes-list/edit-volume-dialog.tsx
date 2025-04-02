@@ -11,7 +11,7 @@ export function EditVolumeDialog({ volume }: { volume: Volume }) {
   const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog id={`EditVolume-${volume.id}`} className="col w-full max-w-xl gap-4">
+    <Dialog id="EditVolume" context={{ volumeId: volume.id }} className="col w-full max-w-xl gap-4">
       <DialogHeader title={<T id="title" />} />
 
       <p className="text-dim">

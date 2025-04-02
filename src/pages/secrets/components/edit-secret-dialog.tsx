@@ -16,7 +16,7 @@ export function EditSecretDialog({ secret }: EditSecretDialogProps) {
   const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog id={`EditSecret-${secret.id}`} className="col w-full max-w-xl gap-4">
+    <Dialog id="EditSecret" context={{ secretId: secret.id }} className="col w-full max-w-xl gap-4">
       <DialogHeader title={<T id="title" />} />
 
       <p className="text-dim">

@@ -97,11 +97,15 @@ function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
       <ActionsMenu>
         {(withClose) => (
           <>
-            <ButtonMenuItem onClick={withClose(() => openDialog(`EditRegistrySecret-${secret.id}`))}>
+            <ButtonMenuItem
+              onClick={withClose(() => openDialog('EditRegistrySecret', { secretId: secret.id }))}
+            >
               <T id="actions.edit" />
             </ButtonMenuItem>
 
-            <ButtonMenuItem onClick={withClose(() => openDialog(`ConfirmDeleteRegistrySecret-${secret.id}`))}>
+            <ButtonMenuItem
+              onClick={withClose(() => openDialog('ConfirmDeleteRegistrySecret', { resourceId: secret.id }))}
+            >
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>
