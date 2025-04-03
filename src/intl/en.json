@@ -2411,7 +2411,8 @@
         "spendingLimit": {
           "title": "Spending alerts",
           "description": "Receive email notifications when your monthly usage gets close to the spending limit",
-          "currentLimit": "Your monthly spend limit is set to {value}",
+          "noCurrentLimit": "Your did not set a spending limit yet",
+          "currentLimit": "Your monthly spending limit is set to {value}",
           "inputStart": "$",
           "spendingLimitRemovedNotification": "You removed the spending limit"
         }

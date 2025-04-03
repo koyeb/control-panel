@@ -57,6 +57,12 @@ export const api = {
   getUsageCsv: endpoint('get', '/v1/usages/details'),
   redeemCoupon: endpoint('post', '/v1/coupons'),
 
+  // budget
+  getBudget: endpoint('get', '/v1/organizations/{organization_id}/budget'),
+  createBudget: endpoint('post', '/v1/organizations/{organization_id}/budget'),
+  updateBudget: endpoint('put', '/v1/organizations/{organization_id}/budget'),
+  deleteBudget: endpoint('delete', '/v1/organizations/{organization_id}/budget'),
+
   // invitations
   listInvitations: endpoint('get', '/v1/organization_invitations'),
   getInvitation: endpoint('get', '/v1/organization_invitations/{id}'),
