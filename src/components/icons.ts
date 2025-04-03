@@ -1,5 +1,4 @@
 export { default as IconActivity } from 'lucide-static/icons/activity.svg?react';
-export { default as IconCircleGauge } from 'lucide-static/icons/circle-gauge.svg?react';
 export { default as IconAlarmClockCheck } from 'lucide-static/icons/alarm-clock-check.svg?react';
 export { default as IconAlert } from 'lucide-static/icons/circle-alert.svg?react';
 export { default as IconAlertCircle } from 'lucide-static/icons/circle-alert.svg?react';
@@ -28,6 +27,7 @@ export { default as IconCircleAlert } from 'lucide-static/icons/circle-alert.svg
 export { default as IconCircleCheck } from 'lucide-static/icons/circle-check.svg?react';
 export { default as IconCircleDashed } from 'lucide-static/icons/circle-dashed.svg?react';
 export { default as IconCircleDot } from 'lucide-static/icons/circle-dot.svg?react';
+export { default as IconCircleGauge } from 'lucide-static/icons/circle-gauge.svg?react';
 export { default as IconCircleOff } from 'lucide-static/icons/circle-off.svg?react';
 export { default as IconCirclePause } from 'lucide-static/icons/circle-pause.svg?react';
 export { default as IconCirclePlus } from 'lucide-static/icons/circle-plus.svg?react';
@@ -93,6 +93,9 @@ export { default as IconSearch } from 'lucide-static/icons/search.svg?react';
 export { default as IconSendHorizontal } from 'lucide-static/icons/send-horizontal.svg?react';
 export { default as IconSettings } from 'lucide-static/icons/settings.svg?react';
 export { default as IconSignal } from 'lucide-static/icons/signal.svg?react';
+export { default as IconSignalHigh } from 'lucide-static/icons/signal-high.svg?react';
+export { default as IconSignalLow } from 'lucide-static/icons/signal-low.svg?react';
+export { default as IconSignalMedium } from 'lucide-static/icons/signal-medium.svg?react';
 export { default as IconSlash } from 'lucide-static/icons/slash.svg?react';
 export { default as IconSparkles } from 'lucide-static/icons/sparkles.svg?react';
 export { default as IconSquareArrowOutUpRight } from 'lucide-static/icons/square-arrow-out-up-right.svg?react';
