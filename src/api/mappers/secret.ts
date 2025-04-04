@@ -1,3 +1,4 @@
+import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
@@ -6,11 +7,8 @@ import { RegistryType, Secret } from '../model';
 
 export function mapSecretsList({ secrets }: ApiEndpointResult<'listSecrets'>): Secret[] {
   return secrets!.map((secret) => ({
-    id: secret.id!,
+    ...snakeToCamelDeep(requiredDeep(secret)),
     type: lowerCase(secret.type!),
-    name: secret.name!,
-    createdAt: secret.created_at!,
-    updatedAt: secret.updated_at!,
     registry: getRegistryType(secret),
   }));
 }

@@ -1,8 +1,9 @@
+import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
-import { App, Service, ServiceType } from '../model';
+import { App, Service } from '../model';
 
 export function mapApps({ apps }: ApiEndpointResult<'listApps'>): App[] {
   return apps!.map(transformApp);
@@ -35,15 +36,11 @@ function transformApp(app: Api.App) {
 
 function transformService(service: Api.Service): Service {
   return {
-    id: service.id!,
-    appId: service.app_id!,
-    latestDeploymentId: service.latest_deployment_id!,
+    ...snakeToCamelDeep(requiredDeep(service)),
     activeDeploymentId: service.active_deployment_id || undefined,
     lastProvisionedDeploymentId: service.last_provisioned_deployment_id || undefined,
-    type: lowerCase(service.type!) as ServiceType,
-    name: service.name!,
+    type: lowerCase(service.type as 'WEB' | 'WORKER' | 'DATABASE'),
     status: lowerCase(service.status!),
     upcomingDeploymentIds: service.state?.desired_deployment?.groups?.[0]?.deployment_ids,
-    createdAt: service.created_at!,
   };
 }

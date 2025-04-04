@@ -39,7 +39,7 @@ export function ActivityItem({ activity, isLast }: { activity: Activity; isLast:
 
           <div className="row items-center gap-1 text-xs text-dim">
             <IconClock className="size-4" />
-            <FormattedDistanceToNow value={activity.date} style="narrow" />
+            <FormattedDistanceToNow value={activity.createdAt} style="narrow" />
           </div>
         </div>
 

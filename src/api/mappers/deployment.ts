@@ -2,7 +2,7 @@ import { parseBytes } from 'src/application/memory';
 import { inArray, last } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { round } from 'src/utils/math';
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
@@ -30,10 +30,7 @@ export function mapDeployment({ deployment }: ApiEndpointResult<'getDeployment'>
 }
 
 export function mapRegionalDeployment(deployment: Api.RegionalDeployment): RegionalDeployment {
-  return {
-    id: deployment.id!,
-    region: deployment.region!,
-  };
+  return snakeToCamelDeep(requiredDeep(deployment));
 }
 
 export function isComputeDeployment(deployment: Deployment | undefined): deployment is ComputeDeployment {
@@ -46,14 +43,9 @@ export function isDatabaseDeployment(deployment: Deployment | undefined): deploy
 
 export function mapInstance(instance: Api.Instance): Instance {
   return {
-    id: instance.id!,
+    ...snakeToCamelDeep(requiredDeep(instance)),
     name: shortId(instance.id)!,
     status: lowerCase(instance.status!),
-    type: instance.type!,
-    region: instance.region!,
-    replicaIndex: instance.replica_index ?? 0,
-    messages: instance.messages!,
-    createdAt: instance.created_at!,
   };
 }
 

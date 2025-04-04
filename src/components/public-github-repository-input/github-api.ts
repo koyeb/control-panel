@@ -35,7 +35,7 @@ export async function fetchGithubRepository(
     url: body.html_url,
     isPrivate: body.visibility !== 'public',
     defaultBranch: body.default_branch,
-    lastPush: body.pushed_at,
+    lastPushDate: body.pushed_at,
     branches: await fetchBranches(repository),
   };
 }

@@ -60,7 +60,7 @@ const quotas = createFactory<OrganizationQuotas>(() => ({
 
 const activity = createFactory<Activity>(() => ({
   id: createId(),
-  date: createDate(),
+  createdAt: createDate(),
   verb: '',
   actor: {
     name: '',
@@ -147,7 +147,7 @@ const repository = createFactory<GitRepository>(() => ({
   url: '',
   isPrivate: false,
   defaultBranch: '',
-  lastPush: '',
+  lastPushDate: '',
   branches: [],
 }));
 

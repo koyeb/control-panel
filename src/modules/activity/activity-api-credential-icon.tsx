@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
+import { z } from 'zod';
 
 import { InfoTooltip } from '@koyeb/design-system';
 import { useApiCredentialsQuery } from 'src/api/hooks/api-credential';
 import { Activity, ApiCredential } from 'src/api/model';
+import { createValidationGuard } from 'src/application/create-validation-guard';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
@@ -32,10 +34,23 @@ function useApiCredential(activity: Activity): ApiCredential | undefined {
   const query = useApiCredentialsQuery();
 
   return useMemo(() => {
-    if (activity.tokenId === undefined || !query.isSuccess) {
+    const tokenId = isCredentialActivity(activity)
+      ? activity.metadata.authTokenRef.replace(/^credential:/, '')
+      : undefined;
+    console.log(activity);
+
+    if (tokenId === undefined || !query.isSuccess) {
       return;
     }
 
-    return query.data.find(hasProperty('id', activity.tokenId));
+    return query.data.find(hasProperty('id', tokenId));
   }, [activity, query]);
 }
+
+const isCredentialActivity = createValidationGuard(
+  z.object({
+    metadata: z.object({
+      authTokenRef: z.string().startsWith('credential:'),
+    }),
+  }),
+);

@@ -34,7 +34,7 @@ export function ActivityItem({ activity, className }: { activity: Activity; clas
               <div>
                 <IconClock className="size-4" />
               </div>
-              <FormattedDistanceToNow value={activity.date} style="narrow" />
+              <FormattedDistanceToNow value={activity.createdAt} style="narrow" />
             </div>
           </div>
 

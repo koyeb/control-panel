@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { parseBytes } from 'src/application/memory';
-import { entries, toObject } from 'src/utils/object';
+import { entries, requiredDeep, snakeToCamelDeep, toObject } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
@@ -17,29 +17,18 @@ import {
 } from '../model';
 
 export function mapUser({ user }: ApiEndpointResult<'getCurrentUser'>): User {
-  return {
-    id: user!.id!,
-    name: user!.name!,
-    email: user!.email!,
-    emailValidated: user!.email_validated!,
-    avatarUrl: user!.avatar_url!,
-    githubUser: user!.github_user,
-    flags: user!.flags!,
-  };
+  return snakeToCamelDeep(requiredDeep(user!));
 }
 
 export function mapOrganization({ organization }: ApiEndpointResult<'getCurrentOrganization'>): Organization {
   return {
-    id: organization!.id!,
-    name: organization!.name!,
+    ...snakeToCamelDeep(requiredDeep(organization!)),
     status: lowerCase(organization!.status!),
     statusMessage: lowerCase(organization!.status_message!),
     plan: organization!.plan! === 'hobby23' ? 'hobby' : organization!.plan!,
     hasSignupQualification: organization?.signup_qualification !== null,
-    signupQualification: organization?.signup_qualification,
     currentSubscriptionId: organization?.current_subscription_id || undefined,
     latestSubscriptionId: organization?.latest_subscription_id || undefined,
-    hasPaymentMethod: organization!.has_payment_method!,
     billing: mapOrganizationBilling(organization!),
     trial: organization!.trialing ? { endsAt: organization!.trial_ends_at! } : undefined,
   };
@@ -87,20 +76,8 @@ export function mapInvitations({
 
 function transformInvitation(invitation: Api.OrganizationInvitation): OrganizationInvitation {
   return {
-    id: invitation.id!,
+    ...snakeToCamelDeep(requiredDeep(invitation)),
     status: lowerCase(invitation.status!),
-    organization: {
-      id: invitation.organization!.id!,
-      name: invitation.organization!.name!,
-    },
-    invitee: {
-      email: invitation.email!,
-    },
-    inviter: {
-      name: invitation.inviter!.name!,
-      email: invitation.inviter!.email!,
-      avatarUrl: invitation.inviter!.avatar_url!,
-    },
   };
 }
 
@@ -108,19 +85,11 @@ export function mapOrganizationMembers({
   members,
 }: ApiEndpointResult<'listOrganizationMembers'>): OrganizationMember[] {
   return members!.map((membership) => ({
-    id: membership.id!,
-    member: {
-      id: membership.user!.id!,
-      name: membership.user!.name!,
-      email: membership.user!.email!,
-      avatarUrl: membership.user!.avatar_url!,
-    },
+    ...snakeToCamelDeep(requiredDeep(membership)),
     organization: {
-      id: membership.organization!.id!,
-      name: membership.organization!.name!,
+      ...snakeToCamelDeep(requiredDeep(membership.organization!)),
       status: lowerCase(membership.organization!.status!),
     },
-    joinedAt: membership.joined_at!,
   }));
 }
 

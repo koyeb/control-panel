@@ -2,9 +2,8 @@
 
 export type Activity = {
   id: string;
-  date: string;
+  createdAt: string;
   verb: string;
-  tokenId?: string;
   actor: ActivityActor;
   object: ActivityObject;
   metadata: unknown;
@@ -30,8 +29,7 @@ export type ApiCredential = {
   id: string;
   type: ApiCredentialType;
   name: string;
-  description?: string;
-  token?: string;
+  description: string;
   createdAt: string;
 };
 
@@ -413,7 +411,7 @@ export type GitRepository = {
   url: string;
   isPrivate: boolean;
   defaultBranch: string;
-  lastPush: string;
+  lastPushDate: string;
   branches: string[];
 };
 
@@ -629,7 +627,7 @@ export type InvitationStatus = 'invalid' | 'pending' | 'accepted' | 'refused' | 
 
 export type OrganizationMember = {
   id: string;
-  member: {
+  user: {
     id: string;
     name: string;
     email: string;

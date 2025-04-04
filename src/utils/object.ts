@@ -1,5 +1,9 @@
 import { snakeToCamelCase } from './strings';
-import { SnakeToCamelCaseDeep } from './types';
+import { RequiredDeep, SnakeToCamelCaseDeep } from './types';
+
+export function requiredDeep<T>(value: T): RequiredDeep<T> {
+  return value as RequiredDeep<T>;
+}
 
 export function hasProperty<T, K extends keyof T>(property: K, value: T[K] | null | undefined) {
   return (obj: T) => obj[property] === value;

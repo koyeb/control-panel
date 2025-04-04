@@ -1,3 +1,4 @@
+import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { ApiEndpointResult } from '../api';
@@ -14,15 +15,10 @@ export function mapDomain({ domain }: ApiEndpointResult<'createDomain'>): Domain
 
 function transformDomain(domain: Api.Domain): Domain {
   return {
-    id: domain.id!,
+    ...snakeToCamelDeep(requiredDeep(domain)),
     appId: domain.app_id === '' ? null : domain.app_id!,
-    name: domain.name!,
-    intendedCname: domain.intended_cname!,
     type: lowerCase(domain.type!),
     status: lowerCase(domain.status!),
-    messages: domain.messages!,
-    verifiedAt: domain.verified_at ?? null,
-    createdAt: domain.created_at!,
-    updatedAt: domain.updated_at!,
+    verifiedAt: domain.verified_at as string | null,
   };
 }

@@ -132,11 +132,11 @@ function InvitationMember({ invitation }: { invitation: OrganizationInvitation }
 function OrganizationMember({ membership }: { membership: OrganizationMember }) {
   return (
     <div className="row items-center gap-4">
-      <img src={membership.member.avatarUrl} className="size-8 rounded-full" />
+      <img src={membership.user.avatarUrl} className="size-8 rounded-full" />
 
       <div>
-        <div className="font-medium">{membership.member.name}</div>
-        <div className="text-dim">{membership.member.email}</div>
+        <div className="font-medium">{membership.user.name}</div>
+        <div className="text-dim">{membership.user.email}</div>
       </div>
     </div>
   );
@@ -173,21 +173,19 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
 
             {!isInvitation(item) && (
               <>
-                {item.member.id === user.id && (
+                {item.user.id === user.id && (
                   <ButtonMenuItem
                     onClick={withClose(() =>
-                      openDialog('ConfirmLeaveOrganization', { resourceId: item.member.id }),
+                      openDialog('ConfirmLeaveOrganization', { resourceId: item.user.id }),
                     )}
                   >
                     <T id="actions.leave" />
                   </ButtonMenuItem>
                 )}
 
-                {item.member.id !== user.id && (
+                {item.user.id !== user.id && (
                   <ButtonMenuItem
-                    onClick={withClose(() =>
-                      openDialog('ConfirmRemoveMember', { resourceId: item.member.id }),
-                    )}
+                    onClick={withClose(() => openDialog('ConfirmRemoveMember', { resourceId: item.user.id }))}
                   >
                     <T id="actions.removeMember" />
                   </ButtonMenuItem>
@@ -202,10 +200,10 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
         <>
           <ConfirmationDialog
             id="ConfirmRemoveMember"
-            resourceId={item.member.id}
+            resourceId={item.user.id}
             title={<T id="removeMember.title" />}
             description={
-              <T id="removeMember.description" values={{ name: item.member.name, organizationName }} />
+              <T id="removeMember.description" values={{ name: item.user.name, organizationName }} />
             }
             confirmationText={organizationName}
             submitText={<T id="removeMember.submitButton" />}
@@ -214,7 +212,7 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
 
           <ConfirmationDialog
             id="ConfirmLeaveOrganization"
-            resourceId={item.member.id}
+            resourceId={item.user.id}
             title={<T id="leaveOrganization.title" />}
             description={<T id="leaveOrganization.description" values={{ organizationName }} />}
             confirmationText={organizationName}
@@ -263,12 +261,12 @@ function useRemoveOrganizationMember() {
     ...useApiMutationFn('deleteOrganizationMember', (membership: OrganizationMember) => ({
       path: { id: membership.id },
     })),
-    async onSuccess(_, { member, organization }) {
+    async onSuccess(_, { user, organization }) {
       await invalidate('listOrganizationMembers');
 
       notify.info(
         t('actions.removeMemberSuccessNotification', {
-          memberName: member.name,
+          memberName: user.name,
           organizationName: organization.name,
         }),
       );
