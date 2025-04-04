@@ -47,7 +47,7 @@ function InstanceItem({ instance }: { instance: Instance }) {
     <div className="row items-center gap-4">
       {instance.name}
       <div className="row ml-auto items-center gap-2 text-xs">
-        {instanceType?.displayName} - {region?.displayName}
+        {instanceType?.displayName} - {region?.name}
       </div>
     </div>
   );

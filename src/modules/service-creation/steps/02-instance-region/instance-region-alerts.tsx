@@ -16,8 +16,8 @@ export function InstanceRegionAlerts({
   selectedInstance: instance,
   selectedRegions: regions,
 }: InstanceRegionAlertsProps) {
-  const fra = useRegion('fra')?.displayName;
-  const was = useRegion('was')?.displayName;
+  const fra = useRegion('fra')?.name;
+  const was = useRegion('was')?.name;
 
   const organization = useOrganization();
   const requireUpgrade = instance?.plans !== undefined && !instance.plans.includes(organization.plan);

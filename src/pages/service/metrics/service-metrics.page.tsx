@@ -84,7 +84,7 @@ function ServiceMetrics({ serviceId, timeFrame }: { serviceId: string; timeFrame
             loading={queries.isPending}
             error={queries.error['MEM_RSS']}
             data={queries.data['MEM_RSS']}
-            max={parseBytes(instance?.ram)}
+            max={parseBytes(instance?.memory)}
           />
         </GraphCard>
       </div>

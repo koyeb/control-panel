@@ -105,7 +105,7 @@ function RegionItem({ type, region, selected, onSelected, instance }: RegionItem
       <RegionFlag regionId={region.id} className="size-6" />
 
       <div className="col flex-1 gap-1.5">
-        <div className="leading-none">{region.displayName}</div>
+        <div className="leading-none">{region.name}</div>
 
         <FeatureFlag feature="region-availability" fallback={<RegionLatency region={region} />}>
           <div className="row gap-2 text-xs text-dim">

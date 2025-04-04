@@ -7,5 +7,5 @@ type RegionNameProps = React.HTMLAttributes<HTMLDivElement> & {
 export function RegionName({ regionId, ...props }: RegionNameProps) {
   const region = useRegion(regionId);
 
-  return <div {...props}>{region?.displayName}</div>;
+  return <div {...props}>{region?.name}</div>;
 }

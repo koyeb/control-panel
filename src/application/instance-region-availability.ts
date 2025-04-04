@@ -102,7 +102,7 @@ function checkInstanceAvailability(
     return [false, 'unavailableInCatalog'];
   }
 
-  if (hasVolumes && !instance.hasVolumes) {
+  if (hasVolumes && !instance.volumesEnabled) {
     return [false, 'volumesNotEnabled'];
   }
 

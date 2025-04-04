@@ -153,7 +153,7 @@ function useGeneralQuotaItems(): QuotaItem[] {
       {
         key: 'regions',
         label: <T id="regions" />,
-        value: <FormattedList value={allowedRegions.map((region) => region.displayName)} style="narrow" />,
+        value: <FormattedList value={allowedRegions.map((region) => region.name)} style="narrow" />,
       },
       {
         key: 'maximumMemory',
@@ -207,7 +207,7 @@ function useVolumesQuotaItems(): QuotaItem[] {
 
   return regions.map((region) => ({
     key: region.id,
-    label: region.displayName,
+    label: region.name,
     value: (
       <T
         id="volumeQuota"

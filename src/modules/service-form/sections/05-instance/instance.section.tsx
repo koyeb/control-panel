@@ -38,7 +38,7 @@ function SectionTitle() {
   const spec = (
     <Translate
       id="common.instanceSpec"
-      values={{ cpu: instance.cpu, ram: instance.ram, disk: instance.disk }}
+      values={{ cpu: instance.vcpuShares, ram: instance.memory, disk: instance.disk }}
     />
   );
 

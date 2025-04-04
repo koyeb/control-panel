@@ -252,7 +252,7 @@ function Instances({ definition }: { definition: DeploymentDefinition }) {
         <div className="text-dim">
           <Translate
             id="common.instanceSpec"
-            values={{ cpu: instance?.cpu, ram: instance?.ram, disk: instance?.disk }}
+            values={{ cpu: instance?.vcpuShares, ram: instance?.memory, disk: instance?.disk }}
           />
         </div>
       </Data>

@@ -20,7 +20,7 @@ export function DeploymentRegions({ regions }: DeploymentRegionsProps) {
     <div className="row items-center gap-2">
       <RegionFlag regionId={firstRegion} className="size-4" />
 
-      {region?.displayName}
+      {region?.name}
 
       {regions.length >= 2 && (
         <Tooltip content={<RegionsList regionIds={regions} />}>

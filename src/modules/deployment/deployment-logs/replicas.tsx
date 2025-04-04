@@ -117,7 +117,7 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
       name="region"
       items={regions}
       getKey={getId}
-      itemToString={(region) => region.displayName}
+      itemToString={(region) => region.name}
       itemToValue={getId}
       placeholder={t('filters.allRegions')}
       renderItem={(item) => {
@@ -318,7 +318,7 @@ function InstanceDetails({ instance }: { instance: Instance }) {
           loading={metricsQuery.isPending}
           error={metricsQuery.error.MEM_RSS}
           data={metricsQuery.data.MEM_RSS}
-          max={instanceType ? parseBytes(instanceType.ram) : null}
+          max={instanceType ? parseBytes(instanceType.memory) : null}
         />
       )}
     </div>

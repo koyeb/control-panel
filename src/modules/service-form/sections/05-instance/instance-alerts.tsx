@@ -130,9 +130,9 @@ function HobbyPlanAlerts({ instance }: { instance?: CatalogInstance }) {
 }
 
 function PaidPlanAlerts({ instance }: { instance?: CatalogInstance }) {
-  const fra = useRegion('fra')?.displayName;
-  const sin = useRegion('sin')?.displayName;
-  const was = useRegion('was')?.displayName;
+  const fra = useRegion('fra')?.name;
+  const sin = useRegion('sin')?.name;
+  const was = useRegion('was')?.name;
 
   const free = useInstance('free')?.displayName;
 

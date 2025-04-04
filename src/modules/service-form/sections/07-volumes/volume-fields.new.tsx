@@ -85,7 +85,7 @@ function VolumeField({ index, onCreate }: VolumeFieldProps) {
       itemToString={(item) => (item === 'create' ? 'create' : getName(item))}
       itemToValue={(item) => (item === 'create' ? 'create' : getName(item))}
       renderItem={(item) => (item === 'create' ? <T id="volumeSelector.createVolume" /> : getName(item))}
-      renderNoItems={() => <T id="volumeSelector.noVolumes" values={{ region: region?.displayName }} />}
+      renderNoItems={() => <T id="volumeSelector.noVolumes" values={{ region: region?.name }} />}
       onItemClick={(item) => item === 'create' && onCreate()}
       onChangeEffect={(item) => {
         if (item !== 'create' && 'id' in item) {

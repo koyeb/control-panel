@@ -45,7 +45,7 @@ export function RegionsMetadata({ regions }: { regions: string[] }) {
         <div className="row items-center gap-2">
           <RegionFlag regionId={firstRegion} className="size-4" />
 
-          {catalogRegion?.displayName}
+          {catalogRegion?.name}
 
           {otherRegions.length > 0 && (
             <Tooltip content={<RegionsList regionIds={otherRegions} />}>

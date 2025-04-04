@@ -95,7 +95,7 @@ function RegionItem({ selectedInstance, region, selected, onSelected }: RegionIt
       type="checkbox"
       disabled={!isAvailable}
       icon={<RegionFlag regionId={region.id} className="size-5" />}
-      title={region.displayName}
+      title={region.name}
       description={<RegionLatency region={region} />}
       checked={selected}
       onChange={() => onSelected(region)}

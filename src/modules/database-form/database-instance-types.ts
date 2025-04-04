@@ -11,9 +11,9 @@ export const databaseInstances = Object.freeze([
 function createDatabaseInstanceType(
   catalogInstanceId: string,
   displayName: string,
-  [cpu, ram, disk]: [cpu: number, ram: number, disk: number | null],
-  pricePerMonth: number,
-  pricePerHour: number,
+  [vcpuShares, memory, disk]: [cpu: number, ram: number, disk: number | null],
+  priceMonthly: number,
+  priceHourly: number,
   pricePerSecond: number,
 ): CatalogInstance {
   return {
@@ -22,16 +22,16 @@ function createDatabaseInstanceType(
     category: 'standard',
     regionCategory: 'koyeb',
     displayName,
-    cpu,
-    ram: ram + ' GB',
+    vcpuShares,
+    memory: memory + ' GB',
     disk: disk === null ? '∞' : disk + ' GB',
-    pricePerMonth,
-    pricePerHour,
+    priceMonthly,
+    priceHourly,
     pricePerSecond,
     plans:
       catalogInstanceId !== 'free'
         ? ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise', 'internal']
         : undefined,
-    hasVolumes: false,
+    volumesEnabled: false,
   };
 }

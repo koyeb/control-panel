@@ -244,7 +244,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
           items={regionalDeployments ?? []}
           placeholder={<T id="header.allRegions" />}
           getKey={getId}
-          itemToString={({ id }) => regions.find(hasProperty('id', id))?.displayName ?? ''}
+          itemToString={({ id }) => regions.find(hasProperty('id', id))?.name ?? ''}
           itemToValue={getId}
           onItemClick={({ id }) =>
             id === filters.watch('regionalDeploymentId') && filters.setValue('regionalDeploymentId', null)

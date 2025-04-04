@@ -87,10 +87,10 @@ const datacenter = createFactory<CatalogDatacenter>(() => ({
 
 const region = createFactory<CatalogRegion>(() => ({
   id: '',
-  displayName: '',
+  name: '',
   status: 'available',
   datacenters: [],
-  hasVolumes: false,
+  volumesEnabled: false,
   category: 'koyeb',
   scope: 'metropolitan',
 }));
@@ -101,13 +101,13 @@ const instance = createFactory<CatalogInstance>(() => ({
   status: 'available',
   category: 'standard',
   regionCategory: 'koyeb',
-  cpu: 0,
-  ram: '',
+  vcpuShares: 0,
+  memory: '',
   disk: '',
-  pricePerMonth: 0,
-  pricePerHour: 0,
+  priceMonthly: 0,
+  priceHourly: 0,
   pricePerSecond: 0,
-  hasVolumes: false,
+  volumesEnabled: false,
 }));
 
 const environmentVariable = createFactory<EnvironmentVariable>(() => ({

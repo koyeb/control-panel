@@ -97,13 +97,13 @@ export type CatalogInstance = {
   regions?: string[];
   regionCategory: RegionCategory;
   category: InstanceCategory;
-  cpu: number;
-  ram: string;
+  vcpuShares: number;
+  memory: string;
   vram?: number;
   disk: string;
-  hasVolumes: boolean;
-  pricePerMonth: number;
-  pricePerHour: number;
+  volumesEnabled: boolean;
+  priceMonthly: number;
+  priceHourly: number;
   pricePerSecond: number;
 };
 
@@ -119,12 +119,11 @@ export type RegionScope = 'continental' | 'metropolitan';
 
 export type CatalogRegion = {
   id: string;
-  displayName: string;
+  name: string;
   status: RegionStatus;
   datacenters: string[];
   instances?: string[];
-  hasVolumes: boolean;
-  category: RegionCategory;
+  volumesEnabled: boolean;
   scope: RegionScope;
 };
 
