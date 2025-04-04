@@ -5,7 +5,7 @@ import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/desi
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { mapOrganizationMembers } from 'src/api/mappers/session';
+import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -32,7 +32,7 @@ export function MembersList() {
 
   const membersQuery = useQuery({
     ...useApiQueryFn('listOrganizationMembers', { query: { organization_id: organization.id } }),
-    select: mapOrganizationMembers,
+    select: ({ members }) => members!.map(mapOrganizationMember),
   });
 
   if (invitationsQuery.isError) {

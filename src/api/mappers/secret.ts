@@ -1,16 +1,15 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
-import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
-import { RegistryType, Secret } from '../model';
+import { RegistrySecret, RegistryType, Secret } from '../model';
 
-export function mapSecretsList({ secrets }: ApiEndpointResult<'listSecrets'>): Secret[] {
-  return secrets!.map((secret) => ({
+export function mapSecret(secret: Api.Secret): Secret | RegistrySecret {
+  return {
     ...snakeToCamelDeep(requiredDeep(secret)),
     type: lowerCase(secret.type!),
     registry: getRegistryType(secret),
-  }));
+  };
 }
 
 function getRegistryType(secret: Api.Secret): RegistryType | undefined {

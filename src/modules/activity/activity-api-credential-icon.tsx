@@ -37,7 +37,6 @@ function useApiCredential(activity: Activity): ApiCredential | undefined {
     const tokenId = isCredentialActivity(activity)
       ? activity.metadata.authTokenRef.replace(/^credential:/, '')
       : undefined;
-    console.log(activity);
 
     if (tokenId === undefined || !query.isSuccess) {
       return;

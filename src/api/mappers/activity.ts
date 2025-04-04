@@ -1,8 +1,8 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
-import { ApiEndpointResult } from '../api';
+import { Api } from '../api-types';
 import { Activity } from '../model';
 
-export function mapActivities({ activities }: ApiEndpointResult<'listActivities'>): Activity[] {
-  return activities!.map((activity) => snakeToCamelDeep(requiredDeep(activity)));
+export function mapActivity(activity: Api.Activity): Activity {
+  return snakeToCamelDeep(requiredDeep(activity));
 }

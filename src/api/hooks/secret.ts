@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
 
-import { mapSecretsList } from '../mappers/secret';
+import { mapSecret } from '../mappers/secret';
 import { useApiQueryFn } from '../use-api';
 
 export function useSecretsQuery(type?: 'simple' | 'registry') {
@@ -13,7 +13,7 @@ export function useSecretsQuery(type?: 'simple' | 'registry') {
         limit: '100',
       },
     }),
-    select: mapSecretsList,
+    select: ({ secrets }) => secrets!.map(mapSecret),
   });
 }
 

@@ -2,7 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 
 import { api } from 'src/api/api';
-import { mapRepositoriesList } from 'src/api/mappers/git';
+import { mapRepository } from 'src/api/mappers/git';
 import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
@@ -119,7 +119,7 @@ export async function initializeServiceForm(
       if (repositoryName) {
         const repository = await api
           .listRepositories({ token, query: { name: repositoryName, name_search_op: 'equality' } })
-          .then(mapRepositoriesList)
+          .then(({ repositories }) => repositories!.map(mapRepository))
           .then(([repository]) => repository);
 
         if (repository) {

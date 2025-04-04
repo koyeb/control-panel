@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 
 import { Alert, Button, DialogFooter } from '@koyeb/design-system';
 import { useDeployment } from 'src/api/hooks/service';
-import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
+import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { ComputeDeployment, Service } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/posthog';
@@ -85,7 +85,7 @@ function useLatestNonStashedDeployment(service: Service) {
         statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
       },
     }),
-    select: (result) => mapDeployments(result)[0],
+    select: (result) => mapDeployment(result.deployments![0]!),
   });
 
   return latestNonStashedDeployment;

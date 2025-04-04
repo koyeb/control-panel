@@ -20,7 +20,7 @@ export function useSubscriptionQuery(subscriptionId: string | undefined) {
   return useQuery({
     ...useApiQueryFn('getSubscription', { path: { id: subscriptionId! } }),
     enabled: subscriptionId !== undefined,
-    select: mapSubscription,
+    select: ({ subscription }) => mapSubscription(subscription!),
   });
 }
 

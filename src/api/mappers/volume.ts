@@ -2,13 +2,8 @@ import { parseBytes } from 'src/application/memory';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
-import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
 import { Volume, VolumeSnapshot, VolumeSnapshotStatus, VolumeSnapshotType, VolumeStatus } from '../model';
-
-export function mapVolumesList({ volumes }: ApiEndpointResult<'listVolumes'>): Volume[] {
-  return volumes!.map(mapVolume);
-}
 
 export function mapVolume(volume: Api.PersistentVolume): Volume {
   return {

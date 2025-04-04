@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
-import { mapActivities } from 'src/api/mappers/activity';
+import { mapActivity } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
 import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
@@ -39,7 +39,7 @@ export function ActivityPage() {
             limit: String(pageSize),
           },
         })
-        .then(mapActivities);
+        .then(({ activities }) => activities!.map(mapActivity));
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage: Activity[], pages, lastPageParam) => {

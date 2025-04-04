@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
 
-import { mapInvitations } from '../mappers/session';
+import { mapInvitation } from '../mappers/session';
 import { InvitationStatus } from '../model';
 import { useApiQueryFn } from '../use-api';
 
@@ -14,6 +14,6 @@ export function useInvitationsQuery({ userId, status }: { userId?: string; statu
         statuses: status ? [upperCase(status)] : undefined,
       },
     }),
-    select: mapInvitations,
+    select: ({ invitations }) => invitations!.map(mapInvitation),
   });
 }

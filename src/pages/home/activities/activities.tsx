@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { mapActivities } from 'src/api/mappers/activity';
+import { mapActivity } from 'src/api/mappers/activity';
 import { useApiQueryFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
@@ -53,7 +53,7 @@ function ActivityList() {
         ],
       },
     }),
-    select: mapActivities,
+    select: ({ activities }) => activities!.map(mapActivity),
   });
 
   if (query.isPending) {

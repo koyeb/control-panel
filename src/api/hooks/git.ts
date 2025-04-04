@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isApiFailedPrecondition } from '../api-errors';
-import { mapGithubApp, mapRepositoriesList } from '../mappers/git';
+import { mapGithubApp, mapRepository } from '../mappers/git';
 import { GitRepository } from '../model';
 import { useApiQueryFn } from '../use-api';
 
@@ -39,7 +39,7 @@ export function useRepositoriesQuery(search: string) {
       },
     }),
     placeholderData: keepPreviousData,
-    select: mapRepositoriesList,
+    select: ({ repositories }) => repositories!.map(mapRepository),
   });
 }
 

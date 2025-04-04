@@ -13,6 +13,6 @@ export function useApiCredentialsQuery(type?: 'user' | 'organization') {
         type: type !== undefined ? upperCase(type) : undefined,
       },
     }),
-    select: mapApiCredential,
+    select: ({ credentials }) => credentials!.map(mapApiCredential),
   });
 }

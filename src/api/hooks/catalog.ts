@@ -6,9 +6,9 @@ import { parseBytes } from 'src/application/memory';
 import { hasProperty } from 'src/utils/object';
 
 import {
-  mapCatalogDatacentersList,
-  mapCatalogInstancesList,
-  mapCatalogRegionsList,
+  mapCatalogDatacenter,
+  mapCatalogInstance,
+  mapCatalogRegion,
   mapCatalogUsage,
 } from '../mappers/catalog';
 import { AiModel, CatalogAvailability, OneClickApp } from '../model';
@@ -20,7 +20,9 @@ export function useInstancesQuery() {
       query: { limit: '100' },
     }),
     refetchInterval: false,
-    select: mapCatalogInstancesList,
+    select: ({ instances }) => {
+      return instances!.map(mapCatalogInstance).sort((a, b) => (a.vram ?? 0) - (b.vram ?? 0));
+    },
   });
 }
 
@@ -44,7 +46,7 @@ export function useRegionsQuery() {
       query: { limit: '100' },
     }),
     refetchInterval: false,
-    select: mapCatalogRegionsList,
+    select: ({ regions }) => regions!.map(mapCatalogRegion),
   });
 }
 
@@ -66,7 +68,7 @@ export function useDatacentersQuery() {
   return useQuery({
     ...useApiQueryFn('listCatalogDatacenters'),
     refetchInterval: false,
-    select: mapCatalogDatacentersList,
+    select: ({ datacenters }) => datacenters!.map(mapCatalogDatacenter),
   });
 }
 

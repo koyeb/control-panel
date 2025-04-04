@@ -2,7 +2,6 @@ import { parseBytes } from 'src/application/memory';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
-import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
 import {
   CatalogDatacenter,
@@ -13,10 +12,6 @@ import {
   RegionScope,
 } from '../model';
 
-export function mapCatalogRegionsList({ regions }: ApiEndpointResult<'listCatalogRegions'>): CatalogRegion[] {
-  return regions!.map(mapCatalogRegion);
-}
-
 export function mapCatalogRegion(region: Api.Region): CatalogRegion {
   return {
     ...snakeToCamelDeep(requiredDeep(region)),
@@ -25,16 +20,8 @@ export function mapCatalogRegion(region: Api.Region): CatalogRegion {
   };
 }
 
-export function mapCatalogDatacentersList({
-  datacenters,
-}: ApiEndpointResult<'listCatalogDatacenters'>): CatalogDatacenter[] {
-  return datacenters!.map((datacenter) => snakeToCamelDeep(requiredDeep(datacenter)));
-}
-
-export function mapCatalogInstancesList({
-  instances,
-}: ApiEndpointResult<'listCatalogInstances'>): CatalogInstance[] {
-  return instances!.map(mapCatalogInstance).sort((a, b) => (a.vram ?? 0) - (b.vram ?? 0));
+export function mapCatalogDatacenter(datacenter: Api.DatacenterListItem): CatalogDatacenter {
+  return snakeToCamelDeep(requiredDeep(datacenter));
 }
 
 export function mapCatalogInstance(instance: Api.CatalogInstance): CatalogInstance {

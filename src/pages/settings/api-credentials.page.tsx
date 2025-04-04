@@ -17,7 +17,7 @@ export function BaseApiCredentialsPage({ type }: { type: ApiCredentialType }) {
 
   const query = useQuery({
     ...useApiQueryFn('listApiCredentials', { query: { limit: '100', type: upperCase(type) } }),
-    select: mapApiCredential,
+    select: ({ credentials }) => credentials!.map(mapApiCredential),
   });
 
   const credentials = query.data;

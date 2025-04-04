@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useBreakpoint } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
-import { isComputeDeployment, mapDeployments } from 'src/api/mappers/deployment';
+import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
 import { useToken } from 'src/application/token';
@@ -180,7 +180,7 @@ function useDeployments(service: Service) {
 
       return {
         count: count!,
-        deployments: mapDeployments({ deployments }),
+        deployments: deployments!.map(mapDeployment),
       };
     },
     getNextPageParam: (lastPage, pages, lastPageParam) => {

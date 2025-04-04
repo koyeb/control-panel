@@ -7,11 +7,11 @@ import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
 import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from '../model';
 
-export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscription'>): Subscription {
+export function mapSubscription(subscription: Api.Subscription): Subscription {
   return {
-    id: subscription!.id!,
-    hasPaymentFailure: subscription!.payment_failure !== null,
-    hasPendingUpdate: subscription!.has_pending_update!,
+    id: subscription.id!,
+    hasPaymentFailure: subscription.payment_failure !== null,
+    hasPendingUpdate: subscription.has_pending_update!,
     trial: subscription?.trialing
       ? {
           currentSpend: Number(subscription.current_spend),

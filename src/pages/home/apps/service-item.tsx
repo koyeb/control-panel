@@ -1,8 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-
-import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
+import { useDeployment } from 'src/api/hooks/service';
+import { isComputeDeployment } from 'src/api/mappers/deployment';
 import { App, Service } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 
 import { DeploymentInfo } from './components/deployment-info';
 import { DeploymentTrigger } from './components/deployment-trigger';
@@ -15,12 +13,7 @@ type ServiceItemProps = {
 };
 
 export function ServiceItem({ app, service }: ServiceItemProps) {
-  const { data: deployment } = useQuery({
-    ...useApiQueryFn('getDeployment', {
-      path: { id: service.latestDeploymentId },
-    }),
-    select: mapDeployment,
-  });
+  const deployment = useDeployment(service.latestDeploymentId);
 
   return (
     <div className="card">

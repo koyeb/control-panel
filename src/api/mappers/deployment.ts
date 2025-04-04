@@ -5,7 +5,6 @@ import { round } from 'src/utils/math';
 import { hasProperty, requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
 
-import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
 import {
   ComputeDeployment,
@@ -21,12 +20,12 @@ import {
   Replica,
 } from '../model';
 
-export function mapDeployments({ deployments }: ApiEndpointResult<'listDeployments'>): Deployment[] {
-  return deployments!.map(transformDeployment);
-}
+export function mapDeployment(deployment: Api.Deployment): Deployment {
+  if (deployment.definition!.type! === 'DATABASE') {
+    return mapDatabaseDeployment(deployment);
+  }
 
-export function mapDeployment({ deployment }: ApiEndpointResult<'getDeployment'>): Deployment {
-  return transformDeployment(deployment!);
+  return mapComputeDeployment(deployment);
 }
 
 export function mapRegionalDeployment(deployment: Api.RegionalDeployment): RegionalDeployment {
@@ -63,15 +62,7 @@ export function mapReplica(replica: Api.GetDeploymentScalingReplyItem): Replica 
   };
 }
 
-function transformDeployment(deployment: Api.Deployment): Deployment {
-  if (deployment.definition!.type! === 'DATABASE') {
-    return transformDatabaseDeployment(deployment);
-  }
-
-  return transformComputeDeployment(deployment);
-}
-
-function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
+function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
   const definition = deployment.definition!;
 
   const type = (): ComputeDeploymentType => {
@@ -300,7 +291,7 @@ function getStringArray(value?: string[]) {
   return value?.length === 0 ? undefined : value;
 }
 
-function transformDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
+function mapDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
   const definition = deployment.definition!.database!.neon_postgres!;
   const info = deployment.database_info?.neon_postgres;
 
