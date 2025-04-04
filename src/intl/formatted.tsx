@@ -5,12 +5,15 @@ import { Tooltip } from '@koyeb/design-system';
 import { identity } from 'src/utils/generic';
 
 type FormattedPriceProps = {
+  /** value in cents */
   value: number;
   digits?: number;
 };
 
 export function FormattedPrice({ value, digits }: FormattedPriceProps) {
-  return <FormattedNumber style="currency" currency="USD" maximumFractionDigits={digits} value={value} />;
+  return (
+    <FormattedNumber style="currency" currency="USD" maximumFractionDigits={digits} value={value / 100} />
+  );
 }
 
 type RelativeTimeFormatSingularUnit = React.ComponentProps<typeof FormattedRelativeTime>['unit'];

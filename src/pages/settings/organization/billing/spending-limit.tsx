@@ -22,7 +22,7 @@ export function SpendingAlerts() {
   const { currentAmount, query, updateMutation, deleteMutation } = useSpendingLimit(form);
 
   useEffect(() => {
-    form.reset({ amount: currentAmount ?? Number.NaN });
+    form.reset({ amount: currentAmount !== null ? currentAmount / 100 : Number.NaN });
   }, [currentAmount, form]);
 
   const onSubmit = async ({ amount }: FormValues<typeof form>) => {
@@ -73,7 +73,9 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
   const invalidate = useInvalidateApiQuery();
 
   const query = useQuery({
-    ...useApiQueryFn('getBudget', { path: { organization_id: organization.id } }),
+    ...useApiQueryFn('getBudget', {
+      path: { organization_id: organization.id },
+    }),
     select({ budget }) {
       return Number(budget!.amount!);
     },
@@ -82,7 +84,7 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
   const updateMutation = useMutation({
     ...useApiMutationFn('updateBudget', (amount: number) => ({
       path: { organization_id: organization.id },
-      query: { amount: String(amount) },
+      query: { amount: String(amount * 100) },
     })),
     onError: useFormErrorHandler(form),
     async onSuccess() {

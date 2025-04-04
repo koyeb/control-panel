@@ -42,8 +42,8 @@ export type ServiceCost = FixedCost | VariableCost;
 
 function calculateCost(instanceCount: number, regionCount: number, instance: CatalogInstance) {
   const instancesPrice = {
-    perHour: instanceCount * instance.pricePerSecond * 60 * 60,
-    perMonth: instanceCount * instance.pricePerMonth,
+    perHour: instanceCount * instance.pricePerSecond * 60 * 60 * 100,
+    perMonth: instanceCount * instance.pricePerMonth * 100,
   };
 
   const totalPrice = {

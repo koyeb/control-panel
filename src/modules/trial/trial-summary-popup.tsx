@@ -34,7 +34,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
             <T id="usage" />
           </div>
           <div>
-            <FormattedPrice value={trial.credits.currentSpend / 100} />
+            <FormattedPrice value={trial.credits.currentSpend} />
           </div>
         </div>
 
@@ -45,7 +45,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
             <T id="creditLeft" />
           </div>
           <div className="text-green">
-            <FormattedPrice value={Math.max(0, trial.credits.maxSpend - trial.credits.currentSpend) / 100} />
+            <FormattedPrice value={Math.max(0, trial.credits.maxSpend - trial.credits.currentSpend)} />
           </div>
         </div>
 

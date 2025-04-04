@@ -103,7 +103,7 @@ function mapDiscount(discount: Api.NextInvoiceDiscount): InvoiceDiscount {
   return {
     label: discount.name!,
     type,
-    value: type === 'amountOff' ? Number(discount.amount) : Number(discount.amount) / 100,
+    value: type === 'amountOff' ? Number(discount.amount) : Number(discount.amount) / (100 * 100),
   };
 }
 

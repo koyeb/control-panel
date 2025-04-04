@@ -11,8 +11,8 @@ const T = createTranslate('modules.trial.ended.planItem');
 
 const prices = {
   starter: 0,
-  pro: 29,
-  scale: 299,
+  pro: 29 * 100,
+  scale: 299 * 100,
 };
 
 const features = {
