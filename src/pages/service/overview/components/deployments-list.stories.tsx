@@ -17,7 +17,7 @@ const service = create.service({
 
 const active = create.computeDeployment({
   id: 'activeDeploymentId',
-  status: 'healthy',
+  status: 'HEALTHY',
   name: '0194e575',
   date: createDate('2024-06-01'),
   trigger: {
@@ -38,12 +38,12 @@ const active = create.computeDeployment({
 
 const upcoming = [
   create.computeDeployment({
-    status: 'provisioning',
+    status: 'PROVISIONING',
     name: '7dd1e079',
     date: createDate('2024-02-01'),
   }),
   create.computeDeployment({
-    status: 'pending',
+    status: 'PENDING',
     name: '0252761c',
     date: createDate('2024-01-01'),
     trigger: { type: 'resume' },
@@ -52,13 +52,13 @@ const upcoming = [
 
 const past = [
   create.computeDeployment({
-    status: 'error',
+    status: 'ERROR',
     name: '923fe52f',
     date: createDate('2024-01-01'),
     trigger: { type: 'redeploy' },
   }),
   create.computeDeployment({
-    status: 'stopped',
+    status: 'STOPPED',
     name: 'ac9fb79f',
     date: createDate('2024-01-01'),
     trigger: { type: 'initial' },

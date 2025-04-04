@@ -78,7 +78,7 @@ function RepositoryItem({ repository }: OrganizationRepositoryItemProps) {
         <span className="mx-1">&bull;</span>
 
         <span className="text-dim">
-          <FormattedDistanceToNow value={repository.lastPush} />
+          <FormattedDistanceToNow value={repository.lastPushDate} />
         </span>
       </span>
 

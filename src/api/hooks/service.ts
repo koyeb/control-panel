@@ -11,14 +11,14 @@ import {
   mapRegionalDeployment,
   mapReplica,
 } from '../mappers/deployment';
-import { mapApp, mapApps, mapService, mapServices } from '../mappers/service';
+import { mapApp, mapService } from '../mappers/service';
 import { InstanceStatus } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useAppsQuery() {
   return useQuery({
     ...useApiQueryFn('listApps', { query: { limit: '100' } }),
-    select: mapApps,
+    select: ({ apps }) => apps!.map(mapApp),
   });
 }
 
@@ -30,7 +30,7 @@ export function useAppQuery(appId?: string) {
   return useQuery({
     ...useApiQueryFn('getApp', { path: { id: appId! } }),
     enabled: appId !== undefined,
-    select: mapApp,
+    select: ({ app }) => mapApp(app!),
   });
 }
 
@@ -41,7 +41,7 @@ export function useApp(appId?: string) {
 export function useServicesQuery(appId?: string) {
   return useQuery({
     ...useApiQueryFn('listServices', { query: { limit: '100', app_id: appId } }),
-    select: mapServices,
+    select: ({ services }) => services!.map(mapService),
   });
 }
 
@@ -53,7 +53,7 @@ export function useServiceQuery(serviceId?: string) {
   return useQuery({
     ...useApiQueryFn('getService', { path: { id: serviceId! } }),
     enabled: serviceId !== undefined,
-    select: mapService,
+    select: ({ service }) => mapService(service!),
   });
 }
 
@@ -65,7 +65,7 @@ export function useDeploymentQuery(deploymentId: string | undefined) {
   return useQuery({
     ...useApiQueryFn('getDeployment', { path: { id: deploymentId as string } }),
     enabled: deploymentId !== undefined,
-    select: mapDeployment,
+    select: ({ deployment }) => mapDeployment(deployment!),
   });
 }
 

@@ -250,7 +250,7 @@ function DeploymentItem({ service, deployment, selected, onClick }: DeploymentIt
       {upcoming && (
         <footer className="p-2">
           <div className="text-xs text-dim">
-            {deployment.status === 'pending' && <T id="upcoming.inQueue" />}
+            {deployment.status === 'PENDING' && <T id="upcoming.inQueue" />}
           </div>
 
           <Button

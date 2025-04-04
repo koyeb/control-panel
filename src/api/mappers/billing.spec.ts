@@ -17,7 +17,7 @@ const createStripeInvoice = createFactory<StripeInvoice>(() => ({
 
 const date = createDate();
 
-const createStripeInvoiceLine = createFactory<Api.NextInvoiceLine>(() => ({
+const createStripeInvoiceLine = createFactory<Api.NextInvoiceReplyLine>(() => ({
   amount_excluding_tax: 0,
   period: { end: date, start: date },
   plan_nickname: '',
@@ -28,8 +28,8 @@ const createStripeInvoiceLine = createFactory<Api.NextInvoiceLine>(() => ({
 describe('mapInvoice', () => {
   const transform = (
     invoice: StripeInvoice,
-    lines: Api.NextInvoiceLine[],
-    discounts: Api.NextInvoiceDiscount[] = [],
+    lines: Api.NextInvoiceReplyLine[],
+    discounts: Api.NextInvoiceReplyDiscount[] = [],
   ) => {
     return mapInvoice({ stripe_invoice: invoice as never, lines, discounts });
   };
@@ -98,7 +98,7 @@ describe('mapInvoice', () => {
       subtotal_excluding_tax: 123,
     });
 
-    const discount: Api.NextInvoiceDiscount = {
+    const discount: Api.NextInvoiceReplyDiscount = {
       type: 'AMOUNT_OFF',
       name: 'Koyeb free tier',
       amount: '550',
@@ -120,7 +120,7 @@ describe('mapInvoice', () => {
       subtotal_excluding_tax: 123,
     });
 
-    const discount: Api.NextInvoiceDiscount = {
+    const discount: Api.NextInvoiceReplyDiscount = {
       type: 'PERCENT_OFF',
       name: 'Preview for instance usage',
       amount: '5432',

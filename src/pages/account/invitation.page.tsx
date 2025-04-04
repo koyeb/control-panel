@@ -18,7 +18,7 @@ export function InvitationPage() {
 
   const invitationQuery = useQuery({
     ...useApiQueryFn('getInvitation', { path: { id: invitationId } }),
-    select: mapInvitation,
+    select: ({ invitation }) => mapInvitation(invitation!),
   });
 
   if (user === undefined) {

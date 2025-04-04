@@ -110,11 +110,11 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
     );
   };
 
-  const firstUnavailableRegion = regions.find((region) => !region.hasVolumes);
+  const firstUnavailableRegion = regions.find((region) => !region.volumesEnabled);
 
   const values = {
     instanceName: instance?.displayName,
-    regionName: firstUnavailableRegion?.displayName,
+    regionName: firstUnavailableRegion?.name,
     instancesLink: sectionLink('instance'),
     scalingLink: sectionLink('scaling'),
     documentationLink: (children: React.ReactNode) => (
@@ -124,7 +124,7 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
     ),
   };
 
-  if (instance && !instance.hasVolumes) {
+  if (instance && !instance.volumesEnabled) {
     return {
       title: <T id="volumesUnavailable.unavailableForInstanceTitle" values={values} />,
       description: <T id="volumesUnavailable.unavailableForInstanceDescription" values={values} />,

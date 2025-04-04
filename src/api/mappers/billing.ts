@@ -3,15 +3,14 @@ import { sub } from 'date-fns';
 import { inArray } from 'src/utils/arrays';
 import { isDefined } from 'src/utils/generic';
 
-import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
 import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from '../model';
 
-export function mapSubscription({ subscription }: ApiEndpointResult<'getSubscription'>): Subscription {
+export function mapSubscription(subscription: Api.Subscription): Subscription {
   return {
-    id: subscription!.id!,
-    hasPaymentFailure: subscription!.payment_failure !== null,
-    hasPendingUpdate: subscription!.has_pending_update!,
+    id: subscription.id!,
+    hasPaymentFailure: subscription.payment_failure !== null,
+    hasPendingUpdate: subscription.has_pending_update!,
     trial: subscription?.trialing
       ? {
           currentSpend: Number(subscription.current_spend),
@@ -26,11 +25,7 @@ export type StripeInvoice = {
   total_excluding_tax: number;
 };
 
-export function mapInvoice({
-  lines,
-  stripe_invoice,
-  discounts,
-}: ApiEndpointResult<'getNextInvoice'>): Invoice {
+export function mapInvoice({ lines, stripe_invoice, discounts }: Api.NextInvoiceReply): Invoice {
   const stripeInvoice = stripe_invoice as unknown as StripeInvoice;
 
   return {
@@ -47,7 +42,7 @@ export function mapInvoice({
   };
 }
 
-function getLines(lines: Api.NextInvoiceLine[]): InvoiceLine[] {
+function getLines(lines: Api.NextInvoiceReplyLine[]): InvoiceLine[] {
   return lines
     .map(transformLine)
     .filter(isDefined)
@@ -60,7 +55,7 @@ function getLines(lines: Api.NextInvoiceLine[]): InvoiceLine[] {
     });
 }
 
-function transformLine(line: Api.NextInvoiceLine): InvoiceLine | undefined {
+function transformLine(line: Api.NextInvoiceReplyLine): InvoiceLine | undefined {
   if (inArray(line.plan_nickname, ['Starter', 'Startup', 'Pro', 'Scale', 'Business', 'Enterprise'])) {
     return {
       type: 'plan',
@@ -79,9 +74,9 @@ function transformLine(line: Api.NextInvoiceLine): InvoiceLine | undefined {
 }
 
 function groupLinesByPeriod(
-  lines: Api.NextInvoiceLine[],
-): Array<{ start: string; end: string; lines: Api.NextInvoiceLine[] }> {
-  const periods = new Map<string, { start: string; end: string; lines: Api.NextInvoiceLine[] }>();
+  lines: Api.NextInvoiceReplyLine[],
+): Array<{ start: string; end: string; lines: Api.NextInvoiceReplyLine[] }> {
+  const periods = new Map<string, { start: string; end: string; lines: Api.NextInvoiceReplyLine[] }>();
 
   for (const line of lines) {
     const { start, end } = line.period as { start: string; end: string };
@@ -97,7 +92,7 @@ function groupLinesByPeriod(
   return Array.from(periods.values()).sort(({ start: a }, { start: b }) => a.localeCompare(b));
 }
 
-function mapDiscount(discount: Api.NextInvoiceDiscount): InvoiceDiscount {
+function mapDiscount(discount: Api.NextInvoiceReplyDiscount): InvoiceDiscount {
   const type = discountTypeMap[discount.type!]!;
 
   return {

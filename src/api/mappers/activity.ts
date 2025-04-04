@@ -1,38 +1,8 @@
-import { z } from 'zod';
+import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
-import { createValidationGuard } from 'src/application/create-validation-guard';
-
-import { ApiEndpointResult } from '../api';
+import { Api } from '../api-types';
 import { Activity } from '../model';
 
-export function mapActivities({ activities }: ApiEndpointResult<'listActivities'>): Activity[] {
-  return activities!.map((activity) => ({
-    id: activity.id!,
-    date: activity.created_at!,
-    verb: activity.verb!,
-    tokenId: isCredentialActivity(activity)
-      ? activity.metadata.auth_token_ref.replace(/^credential:/, '')
-      : undefined,
-    actor: {
-      name: activity.actor!.name!,
-      type: activity.actor!.type!,
-      metadata: activity.actor!.metadata!,
-    },
-    object: {
-      id: activity.object!.id!,
-      name: activity.object!.name!,
-      type: activity.object!.type!,
-      deleted: activity.object!.deleted!,
-      metadata: activity.object!.metadata!,
-    },
-    metadata: activity.metadata!,
-  }));
+export function mapActivity(activity: Api.Activity): Activity {
+  return snakeToCamelDeep(requiredDeep(activity));
 }
-
-const isCredentialActivity = createValidationGuard(
-  z.object({
-    metadata: z.object({
-      auth_token_ref: z.string().startsWith('credential:'),
-    }),
-  }),
-);

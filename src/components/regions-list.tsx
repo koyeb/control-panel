@@ -15,7 +15,7 @@ export function RegionsList({ regionIds }: { regionIds: string[] }) {
         .map((region) => (
           <li key={region.id} className="row items-center gap-2">
             <RegionFlag regionId={region.id} className="size-4" />
-            {region.displayName}
+            {region.name}
           </li>
         ))}
     </ul>

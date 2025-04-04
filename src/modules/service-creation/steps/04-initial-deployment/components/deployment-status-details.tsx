@@ -49,7 +49,7 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
     );
   }
 
-  if (deployment.status === 'pending' || deployment.status === 'scheduled') {
+  if (deployment.status === 'PENDING' || deployment.status === 'SCHEDULED') {
     return (
       <TimeoutUi
         timeout={30 * 1000}
@@ -74,7 +74,7 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
     );
   }
 
-  if (deployment.status === 'healthy') {
+  if (deployment.status === 'HEALTHY') {
     const [url] = getServiceUrls(app, service, deployment).filter((url) => url.externalUrl !== undefined);
 
     return (

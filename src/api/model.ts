@@ -2,9 +2,8 @@
 
 export type Activity = {
   id: string;
-  date: string;
+  createdAt: string;
   verb: string;
-  tokenId?: string;
   actor: ActivityActor;
   object: ActivityObject;
   metadata: unknown;
@@ -30,8 +29,7 @@ export type ApiCredential = {
   id: string;
   type: ApiCredentialType;
   name: string;
-  description?: string;
-  token?: string;
+  description: string;
   createdAt: string;
 };
 
@@ -99,13 +97,13 @@ export type CatalogInstance = {
   regions?: string[];
   regionCategory: RegionCategory;
   category: InstanceCategory;
-  cpu: number;
-  ram: string;
+  vcpuShares: number;
+  memory: string;
   vram?: number;
   disk: string;
-  hasVolumes: boolean;
-  pricePerMonth: number;
-  pricePerHour: number;
+  volumesEnabled: boolean;
+  priceMonthly: number;
+  priceHourly: number;
   pricePerSecond: number;
 };
 
@@ -121,12 +119,11 @@ export type RegionScope = 'continental' | 'metropolitan';
 
 export type CatalogRegion = {
   id: string;
-  displayName: string;
+  name: string;
   status: RegionStatus;
   datacenters: string[];
   instances?: string[];
-  hasVolumes: boolean;
-  category: RegionCategory;
+  volumesEnabled: boolean;
   scope: RegionScope;
 };
 
@@ -190,22 +187,22 @@ export type RegionalDeployment = {
 };
 
 export type DeploymentStatus =
-  | 'pending'
-  | 'provisioning'
-  | 'scheduled'
-  | 'canceling'
-  | 'canceled'
-  | 'allocating'
-  | 'starting'
-  | 'healthy'
-  | 'degraded'
-  | 'unhealthy'
-  | 'stopping'
-  | 'stopped'
-  | 'erroring'
-  | 'error'
-  | 'stashed'
-  | 'sleeping';
+  | 'PENDING'
+  | 'PROVISIONING'
+  | 'SCHEDULED'
+  | 'CANCELING'
+  | 'CANCELED'
+  | 'ALLOCATING'
+  | 'STARTING'
+  | 'HEALTHY'
+  | 'DEGRADED'
+  | 'UNHEALTHY'
+  | 'STOPPING'
+  | 'STOPPED'
+  | 'ERRORING'
+  | 'ERROR'
+  | 'STASHED'
+  | 'SLEEPING';
 
 export type DeploymentBuild = {
   status: DeploymentBuildStatus;
@@ -215,7 +212,7 @@ export type DeploymentBuild = {
   finishedAt: string | null;
 };
 
-export type DeploymentBuildStatus = 'unknown' | 'pending' | 'running' | 'failed' | 'completed' | 'aborted';
+export type DeploymentBuildStatus = 'UNKNOWN' | 'PENDING' | 'RUNNING' | 'FAILED' | 'COMPLETED' | 'ABORTED';
 
 export type DeploymentBuildStep = {
   name: DeploymentBuildStepName;
@@ -270,8 +267,6 @@ export type Port = {
 };
 
 export type PortProtocol = 'http' | 'http2' | 'tcp';
-
-export type HealthCheckProtocol = 'tcp' | 'http';
 
 export type HealthCheckHeader = {
   name: string;
@@ -387,7 +382,7 @@ export type Domain = {
   appId: string | null;
   name: string;
   intendedCname: string;
-  type: 'autoassigned' | 'custom';
+  type: DomainType;
   status: DomainStatus;
   messages: string[];
   verifiedAt: string | null;
@@ -395,7 +390,8 @@ export type Domain = {
   updatedAt: string;
 };
 
-export type DomainStatus = 'pending' | 'active' | 'error' | 'deleting' | 'deleted';
+export type DomainType = 'AUTOASSIGNED' | 'CUSTOM';
+export type DomainStatus = 'PENDING' | 'ACTIVE' | 'ERROR' | 'DELETING' | 'DELETED';
 
 // git
 
@@ -413,7 +409,7 @@ export type GitRepository = {
   url: string;
   isPrivate: boolean;
   defaultBranch: string;
-  lastPush: string;
+  lastPushDate: string;
   branches: string[];
 };
 
@@ -431,14 +427,14 @@ export type Instance = {
 };
 
 export type InstanceStatus =
-  | 'allocating'
-  | 'starting'
-  | 'healthy'
-  | 'unhealthy'
-  | 'stopping'
-  | 'stopped'
-  | 'error'
-  | 'sleeping';
+  | 'ALLOCATING'
+  | 'STARTING'
+  | 'HEALTHY'
+  | 'UNHEALTHY'
+  | 'STOPPING'
+  | 'STOPPED'
+  | 'ERROR'
+  | 'SLEEPING';
 
 export type Replica = {
   region: string;
@@ -470,12 +466,11 @@ export type Secret = {
 };
 
 export type RegistrySecret = Secret & {
-  type: 'registry';
+  type: 'REGISTRY';
   registry: RegistryType;
 };
 
-export type SecretType = 'simple' | 'registry' | 'managed';
-
+export type SecretType = 'SIMPLE' | 'REGISTRY' | 'MANAGED';
 export type RegistryType = 'docker-hub' | 'digital-ocean' | 'github' | 'gitlab' | 'azure' | 'gcp' | 'private';
 
 // service
@@ -488,20 +483,20 @@ export type App = {
 };
 
 export type AppStatus =
-  | 'starting'
-  | 'healthy'
-  | 'degraded'
-  | 'unhealthy'
-  | 'deleting'
-  | 'deleted'
-  | 'pausing'
-  | 'paused'
-  | 'resuming';
+  | 'STARTING'
+  | 'HEALTHY'
+  | 'DEGRADED'
+  | 'UNHEALTHY'
+  | 'DELETING'
+  | 'DELETED'
+  | 'PAUSING'
+  | 'PAUSED'
+  | 'RESUMING';
 
 export type AppDomain = {
   id: string;
   name: string;
-  type: 'autoassigned' | 'custom';
+  type: 'AUTOASSIGNED' | 'CUSTOM';
 };
 
 export type Service = {
@@ -520,15 +515,15 @@ export type Service = {
 export type ServiceType = 'web' | 'worker' | 'database';
 
 export type ServiceStatus =
-  | 'starting'
-  | 'healthy'
-  | 'degraded'
-  | 'unhealthy'
-  | 'deleting'
-  | 'deleted'
-  | 'pausing'
-  | 'paused'
-  | 'resuming';
+  | 'STARTING'
+  | 'HEALTHY'
+  | 'DEGRADED'
+  | 'UNHEALTHY'
+  | 'DELETING'
+  | 'DELETED'
+  | 'PAUSING'
+  | 'PAUSED'
+  | 'RESUMING';
 
 // session
 
@@ -574,25 +569,25 @@ export type Organization = {
 };
 
 export type OrganizationStatus =
-  | 'warning'
-  | 'locked'
-  | 'active'
-  | 'deactivating'
-  | 'deactivated'
-  | 'deleting'
-  | 'deleted';
+  | 'WARNING'
+  | 'LOCKED'
+  | 'ACTIVE'
+  | 'DEACTIVATING'
+  | 'DEACTIVATED'
+  | 'DELETING'
+  | 'DELETED';
 
 export type OrganizationStatusMessage =
-  | 'new'
-  | 'email_not_validated'
-  | 'billing_info_missing'
-  | 'locked'
-  | 'payment_failure'
-  | 'valid'
-  | 'pending_verification'
-  | 'verification_failed'
-  | 'reviewing_account'
-  | 'plan_upgrade_required';
+  | 'NEW'
+  | 'EMAIL_NOT_VALIDATED'
+  | 'BILLING_INFO_MISSING'
+  | 'LOCKED'
+  | 'PAYMENT_FAILURE'
+  | 'VALID'
+  | 'PENDING_VERIFICATION'
+  | 'VERIFICATION_FAILED'
+  | 'REVIEWING_ACCOUNT'
+  | 'PLAN_UPGRADE_REQUIRED';
 
 export type OrganizationPlan =
   | 'hobby'
@@ -625,11 +620,11 @@ export type OrganizationInvitation = {
   };
 };
 
-export type InvitationStatus = 'invalid' | 'pending' | 'accepted' | 'refused' | 'expired';
+export type InvitationStatus = 'INVALID' | 'PENDING' | 'ACCEPTED' | 'REFUSED' | 'EXPIRED';
 
 export type OrganizationMember = {
   id: string;
-  member: {
+  user: {
     id: string;
     name: string;
     email: string;
@@ -684,7 +679,7 @@ export type Volume = {
   createdAt: string;
 };
 
-export type VolumeStatus = 'invalid' | 'attached' | 'detached' | 'deleting' | 'deleted';
+export type VolumeStatus = 'INVALID' | 'ATTACHED' | 'DETACHED' | 'DELETING' | 'DELETED';
 
 export type VolumeSnapshot = {
   id: string;
@@ -698,11 +693,11 @@ export type VolumeSnapshot = {
 };
 
 export type VolumeSnapshotStatus =
-  | 'invalid'
-  | 'creating'
-  | 'available'
-  | 'migrating'
-  | 'deleting'
-  | 'deleted';
+  | 'INVALID'
+  | 'CREATING'
+  | 'AVAILABLE'
+  | 'MIGRATING'
+  | 'DELETING'
+  | 'DELETED';
 
-export type VolumeSnapshotType = 'invalid' | 'local' | 'remote';
+export type VolumeSnapshotType = 'INVALID' | 'LOCAL' | 'REMOTE';

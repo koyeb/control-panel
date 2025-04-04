@@ -151,7 +151,7 @@ function OrganizationRepositorySelector({ onImport }: RepositorySelectorProps) {
             <span className="text-xs text-dim">{bullet}</span>
 
             <span className="text-xs text-dim">
-              <FormattedDistanceToNow value={repository.lastPush} />
+              <FormattedDistanceToNow value={repository.lastPushDate} />
             </span>
           </ActionsListButton>
         ))}

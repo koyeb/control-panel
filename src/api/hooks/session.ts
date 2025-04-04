@@ -6,7 +6,7 @@ import { AssertionError, defined } from 'src/utils/assert';
 import { isApiError } from '../api-errors';
 import {
   mapOrganization,
-  mapOrganizationMembers,
+  mapOrganizationMember,
   mapOrganizationQuotas,
   mapOrganizationSummary,
   mapUser,
@@ -16,7 +16,7 @@ import { useApiQueryFn } from '../use-api';
 export function useUserQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentUser'),
-    select: mapUser,
+    select: ({ user }) => mapUser(user!),
     throwOnError: (error) => {
       if (!isApiError(error)) {
         return true;
@@ -38,7 +38,7 @@ export function useUser() {
 export function useOrganizationQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentOrganization'),
-    select: mapOrganization,
+    select: ({ organization }) => mapOrganization(organization!),
     throwOnError: (error) => {
       if (!isApiError(error)) {
         return true;
@@ -64,7 +64,7 @@ export function useOrganizationSummaryQuery() {
   return useQuery({
     ...useApiQueryFn('organizationSummary', { path: { organization_id: organizationId! } }),
     enabled: organizationId !== undefined,
-    select: mapOrganizationSummary,
+    select: ({ summary }) => mapOrganizationSummary(summary!),
   });
 }
 
@@ -80,7 +80,7 @@ export function useOrganizationQuotasQuery() {
     ...useApiQueryFn('organizationQuotas', { path: { organization_id: organizationId! } }),
     enabled: organizationId !== undefined,
     refetchInterval: false,
-    select: mapOrganizationQuotas,
+    select: ({ quotas }) => mapOrganizationQuotas(quotas!),
   });
 }
 
@@ -94,6 +94,6 @@ export function useUserOrganizationMemberships() {
   return useQuery({
     ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
     enabled: user !== undefined,
-    select: mapOrganizationMembers,
+    select: ({ members }) => members!.map(mapOrganizationMember),
   });
 }

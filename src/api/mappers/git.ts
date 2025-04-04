@@ -1,32 +1,25 @@
-import { ApiEndpointResult } from '../api';
+import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
+
+import { Api } from '../api-types';
 import { GitRepository, GithubApp } from '../model';
 
-export function mapGithubApp(installation: ApiEndpointResult<'getGithubApp'>): GithubApp {
+export function mapGithubApp(installation: Api.GetGithubInstallationReply): GithubApp {
+  const { indexing_status, indexed_repositories, total_repositories } = installation;
+
+  const indexing = indexing_status === 'NOT_STARTED' || indexing_status === 'IN_PROGRESS';
+  const indexingPercent = (indexed_repositories ?? 0) / (total_repositories ?? 1) || null;
+
   return {
-    installationId: installation.installation_id!,
-    installationUrl: installation.installation_url!,
+    ...snakeToCamelDeep(requiredDeep(installation)),
     organizationName: installation.name!,
-    indexing:
-      installation.indexing_status === 'NOT_STARTED' || installation.indexing_status === 'IN_PROGRESS',
-    indexingPercent:
-      (installation.indexed_repositories ?? 0) / (installation.total_repositories ?? 1) || null,
+    indexing,
+    indexingPercent,
   };
 }
 
-export function mapRepositoriesList({
-  repositories,
-}: ApiEndpointResult<'listRepositories'>): GitRepository[] {
-  return repositories!.map((repository) => ({
-    id: repository.id!,
-    name: repository.name!,
-    url: repository.url!,
-    isPrivate: repository.is_private!,
-    defaultBranch: repository.default_branch!,
-    lastPush: repository.last_push_date!,
+export function mapRepository(repository: Api.Repository): GitRepository {
+  return {
+    ...snakeToCamelDeep(requiredDeep(repository)),
     branches: [],
-  }));
-}
-
-export function mapRepositoryBranchesList({ branches }: ApiEndpointResult<'listRepositoryBranches'>) {
-  return branches!.map((branch) => branch.name!);
+  };
 }

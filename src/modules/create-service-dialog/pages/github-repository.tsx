@@ -89,7 +89,7 @@ export function OrganizationRepositoriesList() {
               <span className="mx-1">&bull;</span>
 
               <span className="font-normal text-dim">
-                <FormattedDistanceToNow value={repository.lastPush} />
+                <FormattedDistanceToNow value={repository.lastPushDate} />
               </span>
             </div>
           </ListItem>

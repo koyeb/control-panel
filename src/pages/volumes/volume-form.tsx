@@ -40,7 +40,7 @@ type VolumeFormProps = {
 export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: VolumeFormProps) {
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
-  const regions = useRegions().filter(hasProperty('hasVolumes', true));
+  const regions = useRegions().filter(hasProperty('volumesEnabled', true));
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -117,9 +117,9 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
         placeholder={t('regionPlaceholder')}
         items={regions}
         getKey={(region) => region.id}
-        itemToString={(region) => region.displayName}
+        itemToString={(region) => region.name}
         itemToValue={(region) => region.id}
-        renderItem={(region) => region.displayName}
+        renderItem={(region) => region.name}
         helperText={snapshot !== undefined && <T id="regionBoundedToSnapshot" />}
       />
 

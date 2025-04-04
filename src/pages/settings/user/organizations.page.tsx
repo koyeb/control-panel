@@ -1,13 +1,12 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
-import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
-import { mapOrganizationMembers } from 'src/api/mappers/session';
+import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
-import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
@@ -125,22 +124,17 @@ function CreateOrganizationDialog() {
 }
 
 function OrganizationList() {
-  const user = useUser();
+  const query = useUserOrganizationMemberships();
 
-  const membersQuery = useQuery({
-    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user.id } }),
-    select: mapOrganizationMembers,
-  });
-
-  if (membersQuery.isPending) {
+  if (query.isPending) {
     return <Spinner className="size-4" />;
   }
 
-  if (membersQuery.isError) {
-    return <QueryError error={membersQuery.error} />;
+  if (query.isError) {
+    return <QueryError error={query.error} />;
   }
 
-  const memberships = membersQuery.data;
+  const memberships = query.data;
 
   if (memberships.length === 0) {
     return <>No organizations</>;

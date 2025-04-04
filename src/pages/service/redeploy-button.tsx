@@ -21,7 +21,7 @@ const T = createTranslate('pages.service.layout');
 
 export function RedeployButton({ app, service }: { app: App; service: Service }) {
   const latestDeployment = useComputeDeployment(service.latestDeploymentId);
-  const latestStashed = latestDeployment?.status === 'stashed';
+  const latestStashed = latestDeployment?.status === 'STASHED';
 
   const availability = useCatalogInstanceRegionsAvailability(
     latestDeployment?.definition.instanceType,
@@ -62,7 +62,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
     },
   });
 
-  if (pathname === routes.service.settings(service.id) || service.status === 'paused') {
+  if (pathname === routes.service.settings(service.id) || service.status === 'PAUSED') {
     return null;
   }
 

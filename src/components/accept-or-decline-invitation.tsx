@@ -55,7 +55,7 @@ export function AcceptOrDeclineInvitation({ invitation }: AcceptOrDeclineInvitat
     },
   });
 
-  if (invitation.status !== 'pending') {
+  if (invitation.status !== 'PENDING') {
     return (
       <div className="col items-center gap-6 text-base">
         <InvalidInvitationStatus invitation={invitation} />
@@ -106,15 +106,15 @@ export function AcceptOrDeclineInvitation({ invitation }: AcceptOrDeclineInvitat
 }
 
 function InvalidInvitationStatus({ invitation }: { invitation: OrganizationInvitation }) {
-  if (invitation.status === 'accepted') {
+  if (invitation.status === 'ACCEPTED') {
     return <T id="alreadyAccepted" />;
   }
 
-  if (invitation.status === 'refused') {
+  if (invitation.status === 'REFUSED') {
     return <T id="alreadyDeclined" />;
   }
 
-  if (invitation.status === 'expired') {
+  if (invitation.status === 'EXPIRED') {
     return <T id="expired" />;
   }
 

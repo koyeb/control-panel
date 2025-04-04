@@ -13,7 +13,7 @@ export const createApiRepository = createFactory<Api.Repository>(() => ({
   last_push_date: createDate(),
 }));
 
-export const createApiGithubApp = createFactory<Api.GithubInstallation>(() => ({
+export const createApiGithubApp = createFactory<Api.GetGithubInstallationReply>(() => ({
   installation_id: createId(),
   installation_url: '',
   name: '',
@@ -34,14 +34,14 @@ export const createApiSecret = createFactory<Api.Secret>(() => ({
   type: 'SIMPLE',
 }));
 
-export const createApiRegion = createFactory<Api.CatalogRegion>(() => ({
+export const createApiRegion = createFactory<Api.Region>(() => ({
   id: createId(),
   name: '',
   status: 'AVAILABLE',
   datacenters: [],
 }));
 
-export const createApiDatacenter = createFactory<Api.CatalogDatacenters>(() => ({
+export const createApiDatacenter = createFactory<Api.DatacenterListItem>(() => ({
   id: createId(),
   name: '',
   domain: '',

@@ -17,7 +17,7 @@ type DatabaseAlertsProps = {
 };
 
 export function DatabaseAlerts({ service, deployment }: DatabaseAlertsProps) {
-  if (service.status === 'paused') {
+  if (service.status === 'PAUSED') {
     return <DatabasePausedAlert service={service} />;
   }
 

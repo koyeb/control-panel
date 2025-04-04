@@ -1,3 +1,5 @@
+import { SnakeToCamelCase } from './types';
+
 export function lowerCase(str: undefined): undefined;
 export function lowerCase<S extends string>(str: S): Lowercase<S>;
 export function lowerCase(str?: string): string | undefined {
@@ -51,4 +53,11 @@ export function shortId(uuid: string | undefined): string | undefined;
 export function shortId(uuid: string): string;
 export function shortId(uuid?: string) {
   return uuid?.slice(0, 8);
+}
+
+export function snakeToCamelCase<Str extends string>(str: Str): SnakeToCamelCase<Str> {
+  return str
+    .split('_')
+    .map((str, i) => (i === 0 ? str : capitalize(str)))
+    .join('') as SnakeToCamelCase<Str>;
 }

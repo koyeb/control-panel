@@ -1,7 +1,7 @@
 import { describe, expect, expectTypeOf, it, vi } from 'vitest';
 
 import { identity } from './generic';
-import { entries, keys, toObject, trackChanges } from './object';
+import { entries, keys, snakeToCamelDeep, toObject, trackChanges } from './object';
 
 describe('object', () => {
   describe('keys', () => {
@@ -92,6 +92,20 @@ describe('object', () => {
       proxy.foo = 1;
 
       expect(onChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('snakeToCamelCaseDeep', () => {
+    it('empty object', () => {
+      expect(snakeToCamelDeep({})).toEqual({});
+    });
+
+    it('one level object', () => {
+      expect(snakeToCamelDeep({ foo_bar: '' })).toEqual({ fooBar: '' });
+    });
+
+    it('nested objects', () => {
+      expect(snakeToCamelDeep({ foo_bar: { baz_qux: '' } })).toEqual({ fooBar: { bazQux: '' } });
     });
   });
 });

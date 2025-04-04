@@ -89,7 +89,7 @@ function InstancePrice({ instance }: { instance: CatalogInstance }) {
       <div>
         <T
           id="costs.pricePerHour"
-          values={{ price: <FormattedPrice value={instance.pricePerHour * 100} digits={6} /> }}
+          values={{ price: <FormattedPrice value={instance.priceHourly * 100} digits={6} /> }}
         />
       </div>
 
@@ -98,7 +98,7 @@ function InstancePrice({ instance }: { instance: CatalogInstance }) {
       <div className="mt-1 text-xs text-dim">
         <T
           id="costs.pricePerMonth"
-          values={{ price: <FormattedPrice value={instance.pricePerMonth * 100} /> }}
+          values={{ price: <FormattedPrice value={instance.priceMonthly * 100} /> }}
         />
       </div>
     </div>
@@ -140,7 +140,7 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
     <div className="row flex-wrap gap-3 text-sm text-dim">
       <div className="row items-center gap-1">
         <IconCpu className="size-4 stroke-1" />
-        <T id="instanceSpec.cpu" values={{ value: instance.cpu }} />
+        <T id="instanceSpec.cpu" values={{ value: instance.vcpuShares }} />
       </div>
 
       {instance.vram && (
@@ -155,12 +155,12 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
 
       <div className="row items-center gap-1">
         <IconMemoryStick className="size-4 stroke-1" />
-        <T id="instanceSpec.ram" values={{ value: instance.ram }} />
+        <T id="instanceSpec.ram" values={{ value: instance.memory }} />
       </div>
 
       <div className="row items-center gap-1">
         <IconRadioReceiver className="size-4 stroke-1" />
-        <T id="instanceSpec.disk" values={{ value: instance.ram }} />
+        <T id="instanceSpec.disk" values={{ value: instance.memory }} />
       </div>
 
       <FeatureFlag feature="region-availability">

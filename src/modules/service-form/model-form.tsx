@@ -240,7 +240,7 @@ function OverviewSection({ model, form }: { model?: AiModel; form: ModelForm }) 
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
           <Metadata label={<T id="overview.instanceTypeLabel" />} value={instance?.displayName} />
           <Metadata label={<T id="overview.scalingLabel" />} value={<T id="overview.scalingValue" />} />
-          <Metadata label={<T id="overview.regionLabel" />} value={regions[0]?.displayName} />
+          <Metadata label={<T id="overview.regionLabel" />} value={regions[0]?.name} />
         </div>
       </div>
     </Section>

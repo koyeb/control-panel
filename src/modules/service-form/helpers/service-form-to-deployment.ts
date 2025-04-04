@@ -188,11 +188,11 @@ function healthChecks(ports: Array<Port>): Array<Api.DeploymentHealthCheck> {
     const portNumber = Number(port.portNumber);
     const healthCheck = port.healthCheck;
 
-    const tcp = (): Api.TcpHealthCheck => ({
+    const tcp = (): Api.TCPHealthCheck => ({
       port: portNumber,
     });
 
-    const http = (): Api.HttpHealthCheck => ({
+    const http = (): Api.HTTPHealthCheck => ({
       port: portNumber,
       path: healthCheck.path,
       method: healthCheck.method.toUpperCase(),

@@ -18,7 +18,7 @@ import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { InstanceStatusBadge } from 'src/components/status-badges';
-import { createTranslate } from 'src/intl/translate';
+import { createTranslate, TranslateStatus } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
@@ -77,14 +77,14 @@ function StatusFilter({ filters }: StatusFilterProps) {
   const t = T.useTranslate();
 
   const statuses: InstanceStatus[] = [
-    'allocating',
-    'starting',
-    'healthy',
-    'unhealthy',
-    'stopping',
-    'stopped',
-    'error',
-    'sleeping',
+    'ALLOCATING',
+    'STARTING',
+    'HEALTHY',
+    'UNHEALTHY',
+    'STOPPING',
+    'STOPPED',
+    'ERROR',
+    'SLEEPING',
   ];
 
   return (
@@ -96,7 +96,7 @@ function StatusFilter({ filters }: StatusFilterProps) {
       itemToString={identity}
       itemToValue={identity}
       placeholder={t('filters.allStatuses')}
-      renderItem={(status) => <div className="capitalize">{status}</div>}
+      renderItem={(status) => <TranslateStatus status={status} />}
       onItemClick={(status) => status === filters.watch('status') && filters.setValue('status', null)}
       className="min-w-52"
     />
@@ -117,7 +117,7 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
       name="region"
       items={regions}
       getKey={getId}
-      itemToString={(region) => region.displayName}
+      itemToString={(region) => region.name}
       itemToValue={getId}
       placeholder={t('filters.allRegions')}
       renderItem={(item) => {
@@ -241,14 +241,14 @@ const blue = clsx('bg-blue');
 const neutral = clsx('bg-gray/50');
 
 const instanceStatusClasses: Record<InstanceStatus, string> = {
-  allocating: blue,
-  starting: blue,
-  healthy: green,
-  unhealthy: red,
-  stopping: neutral,
-  stopped: neutral,
-  error: red,
-  sleeping: neutral,
+  ALLOCATING: blue,
+  STARTING: blue,
+  HEALTHY: green,
+  UNHEALTHY: red,
+  STOPPING: neutral,
+  STOPPED: neutral,
+  ERROR: red,
+  SLEEPING: neutral,
 };
 
 const metrics: Api.MetricName[] = ['CPU_TOTAL_PERCENT', 'MEM_RSS'] as const;
@@ -318,7 +318,7 @@ function InstanceDetails({ instance }: { instance: Instance }) {
           loading={metricsQuery.isPending}
           error={metricsQuery.error.MEM_RSS}
           data={metricsQuery.data.MEM_RSS}
-          max={instanceType ? parseBytes(instanceType.ram) : null}
+          max={instanceType ? parseBytes(instanceType.memory) : null}
         />
       )}
     </div>

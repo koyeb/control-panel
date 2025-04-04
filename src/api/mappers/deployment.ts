@@ -2,10 +2,9 @@ import { parseBytes } from 'src/application/memory';
 import { inArray, last } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { round } from 'src/utils/math';
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
 
-import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
 import {
   ComputeDeployment,
@@ -21,19 +20,16 @@ import {
   Replica,
 } from '../model';
 
-export function mapDeployments({ deployments }: ApiEndpointResult<'listDeployments'>): Deployment[] {
-  return deployments!.map(transformDeployment);
-}
+export function mapDeployment(deployment: Api.Deployment): Deployment {
+  if (deployment.definition!.type === 'DATABASE') {
+    return mapDatabaseDeployment(deployment);
+  }
 
-export function mapDeployment({ deployment }: ApiEndpointResult<'getDeployment'>): Deployment {
-  return transformDeployment(deployment!);
+  return mapComputeDeployment(deployment);
 }
 
 export function mapRegionalDeployment(deployment: Api.RegionalDeployment): RegionalDeployment {
-  return {
-    id: deployment.id!,
-    region: deployment.region!,
-  };
+  return snakeToCamelDeep(requiredDeep(deployment));
 }
 
 export function isComputeDeployment(deployment: Deployment | undefined): deployment is ComputeDeployment {
@@ -46,18 +42,12 @@ export function isDatabaseDeployment(deployment: Deployment | undefined): deploy
 
 export function mapInstance(instance: Api.Instance): Instance {
   return {
-    id: instance.id!,
+    ...snakeToCamelDeep(requiredDeep(instance)),
     name: shortId(instance.id)!,
-    status: lowerCase(instance.status!),
-    type: instance.type!,
-    region: instance.region!,
-    replicaIndex: instance.replica_index ?? 0,
-    messages: instance.messages!,
-    createdAt: instance.created_at!,
   };
 }
 
-export function mapReplica(replica: Api.DeploymentReplica): Replica {
+export function mapReplica(replica: Api.GetDeploymentScalingReplyItem): Replica {
   const instance = replica.instances?.find(hasProperty('status', 'HEALTHY')) ?? replica.instances?.[0];
 
   return {
@@ -65,21 +55,13 @@ export function mapReplica(replica: Api.DeploymentReplica): Replica {
     region: replica.region!,
     instances: replica.instances!.map(mapInstance),
     ...(instance && {
-      status: lowerCase(instance.status!),
+      status: instance.status!,
       messages: instance.messages!,
     }),
   };
 }
 
-function transformDeployment(deployment: Api.Deployment): Deployment {
-  if (deployment.definition!.type! === 'DATABASE') {
-    return transformDatabaseDeployment(deployment);
-  }
-
-  return transformComputeDeployment(deployment);
-}
-
-function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
+function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
   const definition = deployment.definition!;
 
   const type = (): ComputeDeploymentType => {
@@ -109,7 +91,7 @@ function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployme
 
       return steps.map((step) => ({
         name: step.name! as DeploymentBuildStepName,
-        status: lowerCase(step.status!),
+        status: step.status!,
         messages: step.messages!,
         startedAt: step.started_at!,
         finishedAt: step.finished_at!,
@@ -117,7 +99,7 @@ function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployme
     };
 
     return {
-      status: lowerCase(stage.status!),
+      status: stage.status!,
       sha: deployment.provisioning_info?.sha,
       steps: steps(),
       // the API actually returns null
@@ -276,7 +258,7 @@ function transformComputeDeployment(deployment: Api.Deployment): ComputeDeployme
     name: shortId(deployment.id)!,
     date: deployment.created_at!,
     terminatedAt: deployment.terminated_at!,
-    status: lowerCase(deployment.status!),
+    status: deployment.status!,
     messages: deployment.messages!,
     buildSkipped: deployment.skip_build,
     build: build(),
@@ -308,7 +290,7 @@ function getStringArray(value?: string[]) {
   return value?.length === 0 ? undefined : value;
 }
 
-function transformDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
+function mapDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
   const definition = deployment.definition!.database!.neon_postgres!;
   const info = deployment.database_info?.neon_postgres;
 
@@ -321,7 +303,7 @@ function transformDatabaseDeployment(deployment: Api.Deployment): DatabaseDeploy
     appId: deployment.app_id!,
     serviceId: deployment.service_id!,
     name: deployment.definition!.name!,
-    status: lowerCase(deployment.status!),
+    status: deployment.status!,
     postgresVersion: definition.pg_version as PostgresVersion,
     region: definition.region!,
     host: info?.server_host,

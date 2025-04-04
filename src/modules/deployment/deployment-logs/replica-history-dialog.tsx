@@ -34,7 +34,7 @@ export function ReplicaHistoryDialog(props: ReplicaHistoryDialogProps) {
       <DialogHeader title={<T id="title" />} />
 
       <p className="text-dim">
-        <T id="subtitle" values={{ replicaIndex, region: region?.displayName }} />
+        <T id="subtitle" values={{ replicaIndex, region: region?.name }} />
       </p>
 
       <ReplicaHistory {...props} />

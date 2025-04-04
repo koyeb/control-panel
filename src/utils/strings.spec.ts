@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest';
 
 import { createArray } from './arrays';
-import { capitalize, isSlug, slugify } from './strings';
+import { capitalize, isSlug, slugify, snakeToCamelCase } from './strings';
 
 describe('slugify', () => {
   test('empty string', () => {
@@ -78,5 +78,23 @@ describe('isSlug', () => {
 
   test('string not matching slug format', () => {
     expect(isSlug('hello world 01')).toBe(false);
+  });
+
+  describe('snakeToCamelCase', () => {
+    test('empty string', () => {
+      expect(snakeToCamelCase('')).toEqual('');
+    });
+
+    test('single word', () => {
+      expect(snakeToCamelCase('string')).toEqual('string');
+    });
+
+    test('two words', () => {
+      expect(snakeToCamelCase('my_string')).toEqual('myString');
+    });
+
+    test('many words', () => {
+      expect(snakeToCamelCase('ab_cd_e_fg')).toEqual('abCdEFg');
+    });
   });
 });

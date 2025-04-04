@@ -21,8 +21,8 @@ function DangerZone() {
 
   return (
     <>
-      {organization.status !== 'deactivated' && <DeactivateOrganization />}
-      {organization.status === 'deactivated' && <ReactivateOrganization />}
+      {organization.status !== 'DEACTIVATED' && <DeactivateOrganization />}
+      {organization.status === 'DEACTIVATED' && <ReactivateOrganization />}
       <DeleteOrganization />
     </>
   );

@@ -1,7 +1,6 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
-import { mapRepositoryBranchesList } from 'src/api/mappers/git';
 import { useApiQueryFn } from 'src/api/use-api';
 import { ControlledAutocomplete } from 'src/components/controlled';
 import { IconBranch } from 'src/components/icons';
@@ -33,7 +32,7 @@ export function OrganizationRepositoryBranchSelector() {
     }),
     enabled: repositoryId !== null,
     refetchOnMount: true,
-    select: mapRepositoryBranchesList,
+    select: ({ branches }) => branches!.map((branch) => branch.name!),
   });
 
   const queryClient = useQueryClient();

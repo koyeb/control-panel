@@ -103,7 +103,7 @@ function useWatchEstimatedCost(form: UseFormReturn<DatabaseServiceForm>, onChang
     const instance = databaseInstances.find(hasProperty('id', catalogInstanceId));
 
     if (instance) {
-      onChange(instance.pricePerMonth * 100);
+      onChange(instance.priceMonthly * 100);
     }
   }, [catalogInstanceId, onChange]);
 }

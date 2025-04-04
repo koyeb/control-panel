@@ -33,7 +33,7 @@ export function RegionsScope({ index, label, className }: RegionsScopeProps) {
       onItemsSelected={(region) => field.onChange([...field.value, region.id])}
       onItemsUnselected={(region) => field.onChange(field.value.filter((value) => value !== region.id))}
       getKey={(region) => region.id}
-      itemToString={(region) => region.displayName}
+      itemToString={(region) => region.name}
       renderItem={(region, selected) => (
         <div className="row items-center gap-2">
           <Checkbox checked={selected} readOnly className="pointer-events-none" />
