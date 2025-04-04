@@ -71,7 +71,7 @@ export function DeleteOrganization() {
     },
   });
 
-  const isDeactivated = organization.status === 'deactivated';
+  const isDeactivated = organization.status === 'DEACTIVATED';
   const hasUnpaidInvoices = unpaidInvoicesQuery.data;
   const canDeleteOrganization = isDeactivated && !hasUnpaidInvoices;
 

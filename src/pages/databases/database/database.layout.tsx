@@ -23,7 +23,7 @@ export function DatabaseLayout({ children }: { children: React.ReactNode }) {
   const serviceQuery = useServiceQuery(databaseServiceId);
   const deploymentQuery = useDeploymentQuery(serviceQuery.data?.latestDeploymentId);
 
-  const isStarting = serviceQuery.data?.status === 'starting';
+  const isStarting = serviceQuery.data?.status === 'STARTING';
   const [starting, setStarting] = useState(isStarting);
 
   if (serviceQuery.isPending || deploymentQuery.isPending) {
@@ -62,9 +62,9 @@ export function DatabaseLayout({ children }: { children: React.ReactNode }) {
         <DatabaseStarting isStarting={isStarting} onCompleted={() => setStarting(false)} />
       ) : (
         <>
-          {service.status === 'unhealthy' && <DatabaseNotHealth service={service} />}
+          {service.status === 'UNHEALTHY' && <DatabaseNotHealth service={service} />}
 
-          {service.status === 'healthy' && (
+          {service.status === 'HEALTHY' && (
             <>
               <Navigation />
               {children}

@@ -19,7 +19,7 @@ import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
-import { createTranslate } from 'src/intl/translate';
+import { createTranslate, TranslateStatus } from 'src/intl/translate';
 
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
@@ -84,7 +84,7 @@ function canToggleBuild(deployment: ComputeDeployment) {
 }
 
 function canToggleRuntime(deployment: ComputeDeployment) {
-  return !hasBuild(deployment) || deployment.buildSkipped || deployment.build?.status === 'completed';
+  return !hasBuild(deployment) || deployment.buildSkipped || deployment.build?.status === 'COMPLETED';
 }
 
 function useAutoExpandSection(set: (values: DeploymentPhase | null) => void, deployment: ComputeDeployment) {
@@ -117,7 +117,7 @@ type BuildSectionProps = {
 function BuildSection({ app, service, deployment, expanded, setExpanded }: BuildSectionProps) {
   const now = useRef(new Date());
 
-  const logs = useLogs(deployment.build?.status === 'running', {
+  const logs = useLogs(deployment.build?.status === 'RUNNING', {
     deploymentId: deployment.id,
     regionalDeploymentId: null,
     instanceId: null,
@@ -172,7 +172,7 @@ function BuildSectionHeader({ disabled, expanded, setExpanded, deployment, lines
       status={status}
       StatusIcon={StatusIcon}
       statusColorClassName={statusColorClassName}
-      lastLogLine={status === 'running' ? lines[lines.length - 1] : undefined}
+      lastLogLine={status === 'RUNNING' ? lines[lines.length - 1] : undefined}
       end={<BuildSectionHeaderEnd expanded={expanded} deployment={deployment} />}
     />
   );
@@ -192,7 +192,7 @@ function BuildSectionHeaderEnd({ expanded, deployment }: BuildSectionHeaderEndPr
     return;
   }
 
-  if (status === 'running' && expanded && build.startedAt !== null) {
+  if (status === 'RUNNING' && expanded && build.startedAt !== null) {
     const duration = Math.floor((now.getTime() - new Date(build.startedAt).getTime()) / 1000);
 
     return (
@@ -202,7 +202,7 @@ function BuildSectionHeaderEnd({ expanded, deployment }: BuildSectionHeaderEndPr
     );
   }
 
-  if (status === 'completed') {
+  if (status === 'COMPLETED') {
     return (
       <div>
         <T id="build.completed" values={{ elapsed: elapsed(build) }} />
@@ -216,18 +216,18 @@ function getBuildStatus(deployment: ComputeDeployment): DeploymentBuildStatus {
 
   if (build === undefined) {
     if (deployment.buildSkipped) {
-      return 'completed';
+      return 'COMPLETED';
     }
 
-    if (deployment.status == 'pending') {
-      return 'pending';
+    if (deployment.status == 'PENDING') {
+      return 'PENDING';
     }
 
-    if (deployment.status == 'canceled') {
-      return 'aborted';
+    if (deployment.status == 'CANCELED') {
+      return 'ABORTED';
     }
 
-    return 'unknown';
+    return 'UNKNOWN';
   }
 
   return build.status;
@@ -330,7 +330,7 @@ function RuntimeSectionHeader({
   lines,
 }: RuntimeSectionHeaderProps) {
   const notStarted =
-    hasBuild(deployment) && !deployment.buildSkipped && deployment.build?.status !== 'completed';
+    hasBuild(deployment) && !deployment.buildSkipped && deployment.build?.status !== 'COMPLETED';
 
   const [StatusIcon, statusColorClassName] = notStarted
     ? [IconCircleDashed, clsx('text-dim')]
@@ -342,10 +342,10 @@ function RuntimeSectionHeader({
       expanded={expanded}
       setExpanded={setExpanded}
       title={<T id="runtime.title" />}
-      status={notStarted ? <T id="runtime.notStarted" /> : deployment.status}
+      status={notStarted ? <T id="runtime.notStarted" /> : <TranslateStatus status={deployment.status} />}
       StatusIcon={StatusIcon}
       statusColorClassName={statusColorClassName}
-      lastLogLine={deployment.status === 'starting' ? lines[lines.length - 1] : undefined}
+      lastLogLine={deployment.status === 'STARTING' ? lines[lines.length - 1] : undefined}
     />
   );
 }
@@ -385,7 +385,7 @@ function SectionHeader({
         )}
 
         <div className="row items-center gap-2">
-          <div className={clsx('text-xs first-letter:capitalize', statusColorClassName)}>{status}</div>
+          <div className={clsx('text-xs', statusColorClassName)}>{status}</div>
           <StatusIcon className={clsx('size-5', statusColorClassName)} />
         </div>
       </div>

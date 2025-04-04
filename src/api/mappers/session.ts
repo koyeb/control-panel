@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { parseBytes } from 'src/application/memory';
 import { entries, requiredDeep, snakeToCamelDeep, toObject } from 'src/utils/object';
-import { lowerCase } from 'src/utils/strings';
 
 import type { Api } from '../api-types';
 import {
@@ -22,8 +21,6 @@ export function mapUser(user: Api.User): User {
 export function mapOrganization(organization: Api.Organization): Organization {
   return {
     ...snakeToCamelDeep(requiredDeep(organization)),
-    status: lowerCase(organization.status!),
-    statusMessage: lowerCase(organization.status_message!),
     plan: organization.plan! === 'hobby23' ? 'hobby' : organization.plan!,
     hasSignupQualification: organization?.signup_qualification !== null,
     currentSubscriptionId: organization?.current_subscription_id || undefined,
@@ -64,20 +61,11 @@ function mapOrganizationBilling(organization: Api.Organization): Organization['b
 }
 
 export function mapInvitation(invitation: Api.OrganizationInvitation): OrganizationInvitation {
-  return {
-    ...snakeToCamelDeep(requiredDeep(invitation)),
-    status: lowerCase(invitation.status!),
-  };
+  return snakeToCamelDeep(requiredDeep(invitation));
 }
 
 export function mapOrganizationMember(membership: Api.OrganizationMember): OrganizationMember {
-  return {
-    ...snakeToCamelDeep(requiredDeep(membership)),
-    organization: {
-      ...snakeToCamelDeep(requiredDeep(membership.organization!)),
-      status: lowerCase(membership.organization!.status!),
-    },
-  };
+  return snakeToCamelDeep(requiredDeep(membership));
 }
 
 export function mapOrganizationSummary(summary: Api.OrganizationSummary): OrganizationSummary {

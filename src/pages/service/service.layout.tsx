@@ -134,7 +134,7 @@ function ServiceCommands({ service }: { service: Service }) {
         },
       });
 
-      if (service.status === 'paused') {
+      if (service.status === 'PAUSED') {
         register({
           label: `Resume service ${name}`,
           description: `Resume ${name}`,
@@ -244,7 +244,7 @@ function ServicePausedAlert({ service }: { service: Service }) {
     },
   });
 
-  if (service.status !== 'paused') {
+  if (service.status !== 'PAUSED') {
     return null;
   }
 

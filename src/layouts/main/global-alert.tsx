@@ -12,7 +12,7 @@ export function GlobalAlert() {
   const organization = useOrganizationUnsafe();
   const subscriptionQuery = useSubscriptionQuery(organization?.latestSubscriptionId);
 
-  if (organization?.statusMessage === 'reviewing_account') {
+  if (organization?.statusMessage === 'REVIEWING_ACCOUNT') {
     return <AccountUnderReviewAlert />;
   }
 

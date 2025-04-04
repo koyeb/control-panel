@@ -12,6 +12,7 @@ import { VolumeSnapshotStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
+import { lowerCase } from 'src/utils/strings';
 
 import { CreateVolumeDialog } from '../create-volume-dialog';
 
@@ -58,7 +59,7 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
         },
         type: {
           header: <T id="type" />,
-          render: (snapshot) => <T id={`snapshotType.${snapshot.type}`} />,
+          render: (snapshot) => <T id={`snapshotType.${lowerCase(snapshot.type)}`} />,
         },
         volumeName: {
           header: <T id="volumeName" />,
@@ -80,7 +81,7 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
 }
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
-  const canCreate = snapshot.status === 'available' && snapshot.type === 'remote';
+  const canCreate = snapshot.status === 'AVAILABLE' && snapshot.type === 'REMOTE';
   const openDialog = Dialog.useOpen();
 
   return (

@@ -26,11 +26,11 @@ export function ServiceErrorAlert({ service }: ServiceErrorAlertProps) {
     return null;
   }
 
-  if (service.status === 'unhealthy') {
+  if (service.status === 'UNHEALTHY') {
     return <ServiceUnhealthyAlert serviceId={service.id} latestDeploymentId={latestDeploymentId} />;
   }
 
-  if (service.status === 'degraded' && activeDeploymentId !== undefined) {
+  if (service.status === 'DEGRADED' && activeDeploymentId !== undefined) {
     return (
       <ServiceDegradedAlert
         serviceId={service.id}

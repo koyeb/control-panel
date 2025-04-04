@@ -21,7 +21,7 @@ import {
 } from '../model';
 
 export function mapDeployment(deployment: Api.Deployment): Deployment {
-  if (deployment.definition!.type! === 'DATABASE') {
+  if (deployment.definition!.type === 'DATABASE') {
     return mapDatabaseDeployment(deployment);
   }
 
@@ -44,7 +44,6 @@ export function mapInstance(instance: Api.Instance): Instance {
   return {
     ...snakeToCamelDeep(requiredDeep(instance)),
     name: shortId(instance.id)!,
-    status: lowerCase(instance.status!),
   };
 }
 
@@ -56,7 +55,7 @@ export function mapReplica(replica: Api.GetDeploymentScalingReplyItem): Replica 
     region: replica.region!,
     instances: replica.instances!.map(mapInstance),
     ...(instance && {
-      status: lowerCase(instance.status!),
+      status: instance.status!,
       messages: instance.messages!,
     }),
   };
@@ -92,7 +91,7 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
 
       return steps.map((step) => ({
         name: step.name! as DeploymentBuildStepName,
-        status: lowerCase(step.status!),
+        status: step.status!,
         messages: step.messages!,
         startedAt: step.started_at!,
         finishedAt: step.finished_at!,
@@ -100,7 +99,7 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
     };
 
     return {
-      status: lowerCase(stage.status!),
+      status: stage.status!,
       sha: deployment.provisioning_info?.sha,
       steps: steps(),
       // the API actually returns null
@@ -259,7 +258,7 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
     name: shortId(deployment.id)!,
     date: deployment.created_at!,
     terminatedAt: deployment.terminated_at!,
-    status: lowerCase(deployment.status!),
+    status: deployment.status!,
     messages: deployment.messages!,
     buildSkipped: deployment.skip_build,
     build: build(),
@@ -304,7 +303,7 @@ function mapDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
     appId: deployment.app_id!,
     serviceId: deployment.service_id!,
     name: deployment.definition!.name!,
-    status: lowerCase(deployment.status!),
+    status: deployment.status!,
     postgresVersion: definition.pg_version as PostgresVersion,
     region: definition.region!,
     host: info?.server_host,

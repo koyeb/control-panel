@@ -33,8 +33,8 @@ export function createFactory<T>(getDefaults: () => T): Factory<T> {
 const organization = createFactory<Organization>(() => ({
   id: createId(),
   name: '',
-  status: 'active',
-  statusMessage: 'valid',
+  status: 'ACTIVE',
+  statusMessage: 'VALID',
   plan: 'no_plan',
   hasSignupQualification: false,
   hasPaymentMethod: false,
@@ -118,7 +118,7 @@ const environmentVariable = createFactory<EnvironmentVariable>(() => ({
 
 const volume = createFactory<Volume>(() => ({
   id: createId(),
-  status: 'attached',
+  status: 'ATTACHED',
   name: '',
   region: '',
   size: 0,
@@ -128,7 +128,7 @@ const volume = createFactory<Volume>(() => ({
 const simpleSecret = createFactory<Secret>(() => ({
   id: createId(),
   name: '',
-  type: 'simple',
+  type: 'SIMPLE',
   createdAt: createDate(),
   updatedAt: createDate(),
 }));
@@ -154,14 +154,14 @@ const repository = createFactory<GitRepository>(() => ({
 const app = createFactory<App>(() => ({
   id: createId(),
   name: '',
-  status: 'healthy',
+  status: 'HEALTHY',
   domains: [],
 }));
 
 const appDomain = createFactory<AppDomain>(() => ({
   id: createId(),
   name: '',
-  type: 'autoassigned',
+  type: 'AUTOASSIGNED',
 }));
 
 const service = createFactory<Service>(() => ({
@@ -170,7 +170,7 @@ const service = createFactory<Service>(() => ({
   latestDeploymentId: '',
   type: 'web',
   name: '',
-  status: 'healthy',
+  status: 'HEALTHY',
   createdAt: createDate(),
 }));
 
@@ -180,7 +180,7 @@ const computeDeployment = createFactory<ComputeDeployment>(() => ({
   serviceId: '',
   name: '',
   date: createDate(),
-  status: 'healthy',
+  status: 'HEALTHY',
   messages: [],
   definition: deploymentDefinition(),
   definitionApi: {},
@@ -203,7 +203,7 @@ const deploymentDefinition = createFactory<DeploymentDefinition>(() => ({
 
 const deploymentInstance = createFactory<Instance>(() => ({
   id: createId(),
-  status: 'healthy',
+  status: 'HEALTHY',
   name: '',
   region: '',
   type: '',
@@ -217,7 +217,7 @@ const databaseDeployment = createFactory<DatabaseDeployment>(() => ({
   appId: '',
   serviceId: '',
   name: '',
-  status: 'healthy',
+  status: 'HEALTHY',
   postgresVersion: 16,
   region: '',
   instance: '',

@@ -88,7 +88,7 @@ function EditAppDialog({ app }: { app: App }) {
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
-  const koyebDomain = app.domains.find(hasProperty('type', 'autoassigned'));
+  const koyebDomain = app.domains.find(hasProperty('type', 'AUTOASSIGNED'));
   const [subdomain = '', domainSuffix] = splitDomain(koyebDomain);
 
   const form = useForm<z.infer<typeof editAppSchema>>({

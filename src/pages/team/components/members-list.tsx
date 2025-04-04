@@ -28,7 +28,7 @@ export function MembersList() {
   const isMobile = !useBreakpoint('sm');
 
   const organization = useOrganization();
-  const invitationsQuery = useInvitationsQuery({ status: 'pending' });
+  const invitationsQuery = useInvitationsQuery({ status: 'PENDING' });
 
   const membersQuery = useQuery({
     ...useApiQueryFn('listOrganizationMembers', { query: { organization_id: organization.id } }),

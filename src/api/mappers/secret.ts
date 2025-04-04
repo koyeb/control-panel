@@ -1,5 +1,4 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
-import { lowerCase } from 'src/utils/strings';
 
 import type { Api } from '../api-types';
 import { RegistrySecret, RegistryType, Secret } from '../model';
@@ -7,7 +6,6 @@ import { RegistrySecret, RegistryType, Secret } from '../model';
 export function mapSecret(secret: Api.Secret): Secret | RegistrySecret {
   return {
     ...snakeToCamelDeep(requiredDeep(secret)),
-    type: lowerCase(secret.type!),
     registry: getRegistryType(secret),
   };
 }
