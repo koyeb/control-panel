@@ -57,7 +57,7 @@ export function mapInstance(instance: Api.Instance): Instance {
   };
 }
 
-export function mapReplica(replica: Api.DeploymentReplica): Replica {
+export function mapReplica(replica: Api.GetDeploymentScalingReplyItem): Replica {
   const instance = replica.instances?.find(hasProperty('status', 'HEALTHY')) ?? replica.instances?.[0];
 
   return {

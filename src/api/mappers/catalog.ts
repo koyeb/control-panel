@@ -17,7 +17,7 @@ export function mapCatalogRegionsList({ regions }: ApiEndpointResult<'listCatalo
   return regions!.map(mapCatalogRegion);
 }
 
-export function mapCatalogRegion(region: Api.CatalogRegion): CatalogRegion {
+export function mapCatalogRegion(region: Api.Region): CatalogRegion {
   return {
     id: region.id!,
     displayName: region.name!,
