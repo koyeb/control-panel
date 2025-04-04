@@ -1,3 +1,6 @@
+import { snakeToCamelCase } from './strings';
+import { SnakeToCamelCaseDeep } from './types';
+
 export function hasProperty<T, K extends keyof T>(property: K, value: T[K] | null | undefined) {
   return (obj: T) => obj[property] === value;
 }
@@ -50,4 +53,19 @@ export function trackChanges<T extends object>(object: T, onChange: (path: strin
       return Reflect.set(target, property, value, receiver);
     },
   });
+}
+
+export function snakeToCamelDeep<T>(obj: T): SnakeToCamelCaseDeep<T> {
+  if (typeof obj !== 'object' || obj === null) {
+    return obj as SnakeToCamelCaseDeep<T>;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.map(snakeToCamelDeep) as SnakeToCamelCaseDeep<T>;
+  }
+
+  return Object.entries(obj).reduce(
+    (obj, [key, value]) => ({ ...obj, [snakeToCamelCase(key)]: snakeToCamelDeep(value) }),
+    {} as SnakeToCamelCaseDeep<T>,
+  );
 }

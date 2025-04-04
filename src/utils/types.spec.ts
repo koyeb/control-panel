@@ -1,7 +1,7 @@
 import { Simplify } from 'type-fest';
 import { describe, expectTypeOf, it } from 'vitest';
 
-import { Flatten, Trim, TrimObjectKeys } from './types';
+import { Flatten, SnakeToCamelCase, SnakeToCamelCaseDeep, Trim, TrimObjectKeys } from './types';
 
 describe('types', () => {
   describe('trim', () => {
@@ -29,6 +29,24 @@ describe('types', () => {
       };
 
       expectTypeOf<Simplify<Flatten<Obj>>>().toEqualTypeOf<{ foo: ''; 'bar.foo': 42; 'bar.baz': '' }>();
+    });
+  });
+
+  describe('snakeToCamelCase', () => {
+    it('transforms a snake cased string to camel case', () => {
+      expectTypeOf<SnakeToCamelCase<'my_string'>>().toEqualTypeOf<'myString'>();
+      expectTypeOf<SnakeToCamelCase<'my_other_string'>>().toEqualTypeOf<'myOtherString'>();
+    });
+
+    it('one level object', () => {
+      expectTypeOf<SnakeToCamelCaseDeep<{ foo: '' }>>().toEqualTypeOf<{ foo: '' }>();
+      expectTypeOf<SnakeToCamelCaseDeep<{ my_key: '' }>>().toEqualTypeOf<{ myKey: '' }>();
+    });
+
+    it('nested object', () => {
+      expectTypeOf<SnakeToCamelCaseDeep<{ first_level: { second_level: '' } }>>().toEqualTypeOf<{
+        firstLevel: { secondLevel: '' };
+      }>();
     });
   });
 });

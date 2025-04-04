@@ -30,3 +30,18 @@ export type Flatten<T> = {
 };
 
 export type Extend<T, U> = Omit<T, keyof U> & U;
+
+export type As<A, B> = A extends B ? A : never;
+
+export type SnakeToCamelCase<Str extends string> = Str extends `${infer Before}_${infer After}`
+  ? SnakeToCamelCase<`${Before}${Capitalize<After>}`>
+  : Str;
+
+export type SnakeToCamelCaseDeep<T> =
+  T extends Array<infer U>
+    ? Array<SnakeToCamelCaseDeep<U>>
+    : { [K in keyof T as SnakeToCamelCase<As<K, string>>]: SnakeToCamelCaseDeep<T[K]> };
+
+export type RequiredDeep<T> = {
+  [K in keyof T]-?: RequiredDeep<T[K]>;
+};
