@@ -2407,6 +2407,14 @@
           "companyLabel": "For business",
           "vatNumberLabel": "VAT Number",
           "successNotification": "Your organization's billing information were updated"
+        },
+        "spendingLimit": {
+          "title": "Spending alerts",
+          "description": "Receive email notifications when your monthly usage gets close to the spending limit",
+          "noCurrentLimit": "Your did not set a spending limit yet",
+          "currentLimit": "Your monthly spending limit is set to {value}",
+          "inputStart": "$",
+          "spendingLimitRemovedNotification": "You removed the spending limit"
         }
       },
       "plans": {

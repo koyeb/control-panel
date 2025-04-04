@@ -39,7 +39,7 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
           <T id="plan" />
         </div>
         <div>
-          <FormattedPrice value={costs.plan ? costs.plan.total / 100 : 0} />
+          <FormattedPrice value={costs.plan ? costs.plan.total : 0} />
         </div>
       </div>
 
@@ -50,7 +50,7 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
           <T id="usage" />
         </div>
         <div>
-          <FormattedPrice value={costs.usage / 100} />
+          <FormattedPrice value={costs.usage} />
         </div>
       </div>
 
@@ -61,10 +61,8 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
           <div className="row items-center justify-between text-green">
             <div>{discount.label}</div>
             <div>
-              {discount.type === 'amountOff' && <FormattedPrice value={-discount.value / 100} />}
-              {discount.type === 'percentOff' && (
-                <FormattedNumber value={-discount.value / 100} style="percent" />
-              )}
+              {discount.type === 'amountOff' && <FormattedPrice value={-discount.value} />}
+              {discount.type === 'percentOff' && <FormattedNumber value={-discount.value} style="percent" />}
             </div>
           </div>
 
@@ -77,7 +75,7 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
           <T id="estimatedCost" />
         </div>
         <div>
-          <FormattedPrice value={costs.total / 100} />
+          <FormattedPrice value={costs.total} />
         </div>
       </div>
 

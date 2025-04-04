@@ -87,7 +87,7 @@ function UsageDetails({ periods, discounts, totalWithoutDiscount, total }: Usage
       <div className="divide-y">
         {totalWithoutDiscount !== undefined && (
           <UsageTotalRow label={<T id="subtotal" />}>
-            <Price value={totalWithoutDiscount / 100} />
+            <Price value={totalWithoutDiscount} />
           </UsageTotalRow>
         )}
 
@@ -98,7 +98,7 @@ function UsageDetails({ periods, discounts, totalWithoutDiscount, total }: Usage
         ))}
 
         <UsageTotalRow label={<T id="total" />}>
-          <Price value={total / 100} />
+          <Price value={total} />
         </UsageTotalRow>
       </div>
     </div>
@@ -197,9 +197,7 @@ function UsageRowPrice({ price }: UsageRowPriceProps) {
     return null;
   }
 
-  return (
-    <T id="pricePerHour" values={{ price: <FormattedPrice value={(price * 60 * 60) / 100} digits={6} /> }} />
-  );
+  return <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />;
 }
 
 type UsageRowTotalProps = {
@@ -207,7 +205,7 @@ type UsageRowTotalProps = {
 };
 
 function UsageRowTotal({ total }: UsageRowTotalProps) {
-  return <Price value={total / 100} />;
+  return <Price value={total} />;
 }
 
 type UsageTotalRowProps = {
@@ -231,13 +229,13 @@ type DiscountValueProps = {
 
 function DiscountValue({ discount }: DiscountValueProps) {
   if (discount.type === 'amountOff') {
-    return <Price value={-discount.value / 100} />;
+    return <Price value={-discount.value} />;
   }
 
   if (discount.type === 'percentOff') {
     return (
       <span className="font-medium">
-        <FormattedNumber style="percent" value={-discount.value / 100} />
+        <FormattedNumber style="percent" value={-discount.value} />
       </span>
     );
   }

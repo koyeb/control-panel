@@ -132,7 +132,7 @@ describe('mapInvoice', () => {
       {
         type: 'percentOff',
         label: 'Preview for instance usage',
-        value: 54.32,
+        value: 0.5432,
       },
     ]);
   });

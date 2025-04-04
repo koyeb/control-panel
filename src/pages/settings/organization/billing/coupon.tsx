@@ -38,13 +38,13 @@ export function Coupon() {
     <section className="col gap-6">
       <SectionHeader title={<T id="title" />} description={<T id="description" />} />
 
-      <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="row max-w-md items-center gap-4">
+      <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="row items-center gap-4">
         <ControlledInput
           control={form.control}
           disabled={organization.plan === 'hobby'}
           name="code"
           placeholder={t('placeholder')}
-          className="w-full"
+          className="w-full max-w-xs"
         />
 
         <Button type="submit" disabled={organization.plan === 'hobby'} loading={form.formState.isSubmitting}>

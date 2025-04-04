@@ -43,6 +43,7 @@ export namespace Api {
   export type OrganizationSummary = schemas['OrganizationSummary'];
   export type PersistentVolume = schemas['PersistentVolume'];
   export type Port = schemas['Port'];
+  export type Plan = schemas['Plan'];
   export type Quotas = schemas['Quotas'];
   export type RegionalDeployment = schemas['RegionalDeployment'];
   export type Repository = schemas['kgitproxy.Repository'];
