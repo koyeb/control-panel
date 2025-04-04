@@ -7,7 +7,7 @@ import { ServiceUrl, getServiceUrls } from './service-functions';
 describe('getServiceUrls', () => {
   it('web service urls', () => {
     const urls = getServiceUrls(
-      create.app({ name: 'app', domains: [{ id: '', name: 'test.com', type: 'custom' }] }),
+      create.app({ name: 'app', domains: [{ id: '', name: 'test.com', type: 'CUSTOM' }] }),
       create.service({ name: 'svc', type: 'web' }),
       create.computeDeployment({
         definition: create.deploymentDefinition({
@@ -27,7 +27,7 @@ describe('getServiceUrls', () => {
 
   it('free instance has no private address', () => {
     const urls = getServiceUrls(
-      create.app({ name: 'app', domains: [{ id: '', name: 'test.com', type: 'custom' }] }),
+      create.app({ name: 'app', domains: [{ id: '', name: 'test.com', type: 'CUSTOM' }] }),
       create.service({ name: 'svc', type: 'web' }),
       create.computeDeployment({
         definition: create.deploymentDefinition({
@@ -42,7 +42,7 @@ describe('getServiceUrls', () => {
 
   it('private port', () => {
     const urls = getServiceUrls(
-      create.app({ name: 'app', domains: [{ id: '', name: 'app.koyeb.app', type: 'autoassigned' }] }),
+      create.app({ name: 'app', domains: [{ id: '', name: 'app.koyeb.app', type: 'AUTOASSIGNED' }] }),
       create.service({ name: 'svc', type: 'web' }),
       create.computeDeployment({
         definition: create.deploymentDefinition({

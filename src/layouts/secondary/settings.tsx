@@ -33,7 +33,7 @@ export function SecondarySettings() {
           <div className="font-medium">
             <T id="organizationSettings" />
           </div>
-          {organization.status === 'deactivated' ? <ReactivateOrganization /> : <DeactivateOrganization />}
+          {organization.status === 'DEACTIVATED' ? <ReactivateOrganization /> : <DeactivateOrganization />}
           <DeleteOrganization />
         </div>
       )}

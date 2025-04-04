@@ -2,6 +2,7 @@ import { IntlShape, useIntl } from 'react-intl';
 
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
+import { capitalize, lowerCase } from 'src/utils/strings';
 import { Flatten } from 'src/utils/types';
 
 import type translations from './en.json';
@@ -54,4 +55,8 @@ type EnumValue<E extends Enum> =
 
 export function TranslateEnum<E extends Enum>({ enum: enumName, value }: { enum: E; value: EnumValue<E> }) {
   return <Translate id={`enums.${enumName}.${value}` as TranslationKeys} />;
+}
+
+export function TranslateStatus({ status }: { status: string }) {
+  return <>{capitalize(lowerCase(status))}</>;
 }

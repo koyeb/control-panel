@@ -40,14 +40,14 @@ export function DeactivateOrganization() {
           disabled={
             requestDeactivation.isPending ||
             requestDeactivation.isSuccess ||
-            organization.status === 'deactivating'
+            organization.status === 'DEACTIVATING'
           }
         >
           <T id="deactivate" />
         </Button>
       </div>
 
-      {organization.status === 'deactivating' && (
+      {organization.status === 'DEACTIVATING' && (
         <footer className="text-xs text-dim">
           <T id="deactivating" />
         </footer>

@@ -1,15 +1,15 @@
 import { parseBytes } from 'src/application/memory';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
-import { lowerCase } from 'src/utils/strings';
+import { removePrefix } from 'src/utils/strings';
 
 import type { Api } from '../api-types';
-import { Volume, VolumeSnapshot, VolumeSnapshotStatus, VolumeSnapshotType, VolumeStatus } from '../model';
+import { Volume, VolumeSnapshot } from '../model';
 
 export function mapVolume(volume: Api.PersistentVolume): Volume {
   return {
     ...snakeToCamelDeep(requiredDeep(volume)),
     size: parseBytes(`${volume.max_size}GB`),
-    status: lowerCase(volume.status!.replace('PERSISTENT_VOLUME_STATUS_', '')) as VolumeStatus,
+    status: removePrefix('PERSISTENT_VOLUME_STATUS_', volume.status!),
   };
 }
 
@@ -22,7 +22,7 @@ export function mapSnapshot(snapshot: Api.Snapshot): VolumeSnapshot {
     ...snakeToCamelDeep(requiredDeep(snapshot)),
     volumeId: snapshot.parent_volume_id!,
     size: parseBytes(`${snapshot.size}GB`),
-    status: lowerCase(snapshot.status!.replace('SNAPSHOT_STATUS_', '')) as VolumeSnapshotStatus,
-    type: lowerCase(snapshot.type!.replace('SNAPSHOT_TYPE_', '')) as VolumeSnapshotType,
+    status: removePrefix('SNAPSHOT_STATUS_', snapshot.status!),
+    type: removePrefix('SNAPSHOT_TYPE_', snapshot.type!),
   };
 }

@@ -3,7 +3,6 @@ import { sub } from 'date-fns';
 import { inArray } from 'src/utils/arrays';
 import { isDefined } from 'src/utils/generic';
 
-import { ApiEndpointResult } from '../api';
 import type { Api } from '../api-types';
 import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from '../model';
 
@@ -26,11 +25,7 @@ export type StripeInvoice = {
   total_excluding_tax: number;
 };
 
-export function mapInvoice({
-  lines,
-  stripe_invoice,
-  discounts,
-}: ApiEndpointResult<'getNextInvoice'>): Invoice {
+export function mapInvoice({ lines, stripe_invoice, discounts }: Api.NextInvoiceReply): Invoice {
   const stripeInvoice = stripe_invoice as unknown as StripeInvoice;
 
   return {

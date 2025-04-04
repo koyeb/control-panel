@@ -16,7 +16,7 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/components/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { createTranslate, Translate, TranslateStatus } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { ChangeAppForm } from './change-app-form';
@@ -99,17 +99,17 @@ function DomainStatus({ status }: { status: DomainStatus }) {
       <span>
         <Icon className={clsx('size-4', className)} />
       </span>
-      <span className="capitalize">{status}</span>
+      <TranslateStatus status={status} />
     </div>
   );
 }
 
 const domainStatusIconMap: Record<DomainStatus, { Icon: SvgComponent; className?: string }> = {
-  pending: { Icon: Spinner },
-  active: { Icon: IconCircleCheck, className: 'text-green' },
-  error: { Icon: IconCircleAlert, className: 'text-red' },
-  deleting: { Icon: Spinner },
-  deleted: { Icon: IconCircleCheck },
+  PENDING: { Icon: Spinner },
+  ACTIVE: { Icon: IconCircleCheck, className: 'text-green' },
+  ERROR: { Icon: IconCircleAlert, className: 'text-red' },
+  DELETING: { Icon: Spinner },
+  DELETED: { Icon: IconCircleCheck },
 };
 
 function AppName({ appId }: { appId: string | null }) {
@@ -130,7 +130,7 @@ function DomainActions({ domain }: { domain: Domain }) {
       <ActionsMenu>
         {(withClose) => (
           <ButtonMenuItem
-            disabled={domain.status === 'deleting'}
+            disabled={domain.status === 'DELETING'}
             onClick={withClose(() => openDialog('ConfirmDeleteDomain', { resourceId: domain.id }))}
           >
             <T id="actions.delete" />
@@ -144,7 +144,7 @@ function DomainActions({ domain }: { domain: Domain }) {
 }
 
 function DomainError({ domain }: { domain: Domain }) {
-  if (domain.status !== 'error') {
+  if (domain.status !== 'ERROR') {
     return null;
   }
 

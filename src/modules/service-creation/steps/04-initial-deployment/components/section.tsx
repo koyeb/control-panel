@@ -24,7 +24,7 @@ export function Section({ title, description, children }: SectionProps) {
 }
 
 type SubSectionProps = {
-  status: 'created' | DeploymentBuildStatus | DeploymentStatus;
+  status: 'CREATED' | DeploymentBuildStatus | DeploymentStatus;
   title: React.ReactNode;
   header?: React.ReactNode;
   expanded: boolean;
@@ -87,26 +87,26 @@ const error = { Icon: IconCircleX, className: 'text-red' };
 const canceled = { Icon: IconCircleX, className: 'text-gray' };
 
 const statusMap = {
-  created: success,
-  pending: pending,
-  running: running,
-  completed: success,
-  failed: error,
-  aborted: canceled,
-  unknown: canceled,
-  provisioning: pending,
-  scheduled: running,
-  canceling: canceled,
-  canceled: canceled,
-  allocating: running,
-  starting: running,
-  healthy: success,
-  degraded: error,
-  unhealthy: error,
-  stopping: canceled,
-  stopped: canceled,
-  erroring: error,
-  error: error,
-  stashed: pending,
-  sleeping: success,
+  CREATED: success,
+  PENDING: pending,
+  RUNNING: running,
+  COMPLETED: success,
+  FAILED: error,
+  ABORTED: canceled,
+  UNKNOWN: canceled,
+  PROVISIONING: pending,
+  SCHEDULED: running,
+  CANCELING: canceled,
+  CANCELED: canceled,
+  ALLOCATING: running,
+  STARTING: running,
+  HEALTHY: success,
+  DEGRADED: error,
+  UNHEALTHY: error,
+  STOPPING: canceled,
+  STOPPED: canceled,
+  ERRORING: error,
+  ERROR: error,
+  STASHED: pending,
+  SLEEPING: success,
 };

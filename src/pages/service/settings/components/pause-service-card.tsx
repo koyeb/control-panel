@@ -60,7 +60,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
         <Button
           color="gray"
           onClick={() => resume()}
-          disabled={service.status !== 'paused'}
+          disabled={service.status !== 'PAUSED'}
           loading={isResuming}
         >
           <T id="resume" />
@@ -69,7 +69,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
         <Button
           color="orange"
           onClick={() => openDialog('ConfirmPauseService', { resourceId: service.id })}
-          disabled={service.status === 'pausing' || service.status === 'paused'}
+          disabled={service.status === 'PAUSING' || service.status === 'PAUSED'}
         >
           <T id="pause" />
         </Button>

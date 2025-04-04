@@ -17,7 +17,7 @@ const T = createTranslate('pages.service.console');
 
 export function ServiceConsolePage() {
   const serviceId = useRouteParam('serviceId');
-  const instancesQuery = useInstancesQuery({ serviceId, status: 'healthy' });
+  const instancesQuery = useInstancesQuery({ serviceId, status: 'HEALTHY' });
   const [instance, setInstance] = useState<Instance | null>(null);
 
   useEffect(() => {

@@ -67,7 +67,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
         <Button
           color="red"
           onClick={() => openDialog('ConfirmDeleteService', { resourceId: service.id })}
-          disabled={service.status === 'pausing' || service.status === 'deleted'}
+          disabled={service.status === 'PAUSING' || service.status === 'DELETED'}
         >
           <T id="delete" />
         </Button>

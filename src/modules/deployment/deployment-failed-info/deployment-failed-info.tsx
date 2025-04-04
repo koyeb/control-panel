@@ -21,7 +21,7 @@ export function DeploymentFailedInfo({ deployment, layout, className, after }: D
     <DocumentationLink path="/docs/build-and-deploy/troubleshooting-tips">{children}</DocumentationLink>
   );
 
-  if (deployment.build?.status === 'failed') {
+  if (deployment.build?.status === 'FAILED') {
     return (
       <DeploymentFailedCard
         title={<T id="buildFailed.title" />}
@@ -42,7 +42,7 @@ export function DeploymentFailedInfo({ deployment, layout, className, after }: D
     );
   }
 
-  if (deployment.status === 'error') {
+  if (deployment.status === 'ERROR') {
     return (
       <DeploymentFailedCard
         title={<T id="runtimeFailed.title" />}

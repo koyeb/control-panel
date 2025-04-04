@@ -65,6 +65,10 @@ describe('capitalize', () => {
   test('capitalized string', () => {
     expect(capitalize('Hello')).toBe('Hello');
   });
+
+  test('multiple words', () => {
+    expect(capitalize('hello world')).toBe('Hello world');
+  });
 });
 
 describe('isSlug', () => {

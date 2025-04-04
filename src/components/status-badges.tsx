@@ -18,6 +18,7 @@ import {
   IconMoon,
   IconTrash,
 } from 'src/components/icons';
+import { TranslateStatus } from 'src/intl/translate';
 
 type ResourceStatusProps<Status> = {
   ref?: React.Ref<React.ComponentRef<typeof Badge>>;
@@ -39,7 +40,7 @@ function createResourceStatus<Status extends string>(
         className={clsx('inline-flex flex-row items-center gap-1', className)}
       >
         <Icon className="size-4" />
-        <span className="capitalize">{status}</span>
+        <TranslateStatus status={status} />
       </Badge>
     );
   };
@@ -48,60 +49,60 @@ function createResourceStatus<Status extends string>(
 const unknownStatusBadge = [IconCircleDot, 'blue'] as const;
 
 export const ServiceStatusBadge = createResourceStatus<ServiceStatus>({
-  starting: [Spinner, 'gray'],
-  healthy: [IconCircleCheck, 'green'],
-  degraded: [IconCircleAlert, 'orange'],
-  unhealthy: [IconCircleAlert, 'red'],
-  deleting: [Spinner, 'gray'],
-  deleted: [IconCircleOff, 'gray'],
-  pausing: [Spinner, 'gray'],
-  paused: [IconCircleOff, 'gray'],
-  resuming: [Spinner, 'gray'],
+  STARTING: [Spinner, 'gray'],
+  HEALTHY: [IconCircleCheck, 'green'],
+  DEGRADED: [IconCircleAlert, 'orange'],
+  UNHEALTHY: [IconCircleAlert, 'red'],
+  DELETING: [Spinner, 'gray'],
+  DELETED: [IconCircleOff, 'gray'],
+  PAUSING: [Spinner, 'gray'],
+  PAUSED: [IconCircleOff, 'gray'],
+  RESUMING: [Spinner, 'gray'],
 });
 
 export const DeploymentStatusBadge = createResourceStatus<DeploymentStatus>({
-  pending: [IconCircleDashed, 'gray'],
-  provisioning: [Spinner, 'blue'],
-  scheduled: [IconCircleCheck, 'blue'],
-  canceling: [Spinner, 'gray'],
-  canceled: [IconCircleOff, 'gray'],
-  allocating: [Spinner, 'blue'],
-  starting: [Spinner, 'blue'],
-  healthy: [IconCircleCheck, 'green'],
-  degraded: [IconCircleAlert, 'orange'],
-  unhealthy: [IconCircleAlert, 'red'],
-  stopping: [Spinner, 'gray'],
-  stopped: [IconCircleOff, 'gray'],
-  erroring: [Spinner, 'red'],
-  error: [IconCircleAlert, 'red'],
-  stashed: [IconCircleOff, 'gray'],
-  sleeping: [IconMoon, 'gray'],
+  PENDING: [IconCircleDashed, 'gray'],
+  PROVISIONING: [Spinner, 'blue'],
+  SCHEDULED: [IconCircleCheck, 'blue'],
+  CANCELING: [Spinner, 'gray'],
+  CANCELED: [IconCircleOff, 'gray'],
+  ALLOCATING: [Spinner, 'blue'],
+  STARTING: [Spinner, 'blue'],
+  HEALTHY: [IconCircleCheck, 'green'],
+  DEGRADED: [IconCircleAlert, 'orange'],
+  UNHEALTHY: [IconCircleAlert, 'red'],
+  STOPPING: [Spinner, 'gray'],
+  STOPPED: [IconCircleOff, 'gray'],
+  ERRORING: [Spinner, 'red'],
+  ERROR: [IconCircleAlert, 'red'],
+  STASHED: [IconCircleOff, 'gray'],
+  SLEEPING: [IconMoon, 'gray'],
 });
 
 export const InstanceStatusBadge = createResourceStatus<InstanceStatus>({
-  allocating: [Spinner, 'blue'],
-  starting: [Spinner, 'blue'],
-  healthy: [IconCircleCheck, 'green'],
-  unhealthy: [IconCircleAlert, 'red'],
-  stopping: [Spinner, 'gray'],
-  stopped: [IconCircleOff, 'gray'],
-  error: [IconCircleAlert, 'red'],
-  sleeping: [IconMoon, 'gray'],
+  ALLOCATING: [Spinner, 'blue'],
+  STARTING: [Spinner, 'blue'],
+  HEALTHY: [IconCircleCheck, 'green'],
+  UNHEALTHY: [IconCircleAlert, 'red'],
+  STOPPING: [Spinner, 'gray'],
+  STOPPED: [IconCircleOff, 'gray'],
+  ERROR: [IconCircleAlert, 'red'],
+  SLEEPING: [IconMoon, 'gray'],
 });
 
 export const VolumeStatusBadge = createResourceStatus<VolumeStatus>({
-  invalid: [IconCircleX, 'red'],
-  attached: [IconCircleCheck, 'green'],
-  detached: [IconCircleCheck, 'blue'],
-  deleting: [Spinner, 'orange'],
-  deleted: [IconTrash, 'red'],
+  INVALID: [IconCircleX, 'red'],
+  ATTACHED: [IconCircleCheck, 'green'],
+  DETACHED: [IconCircleCheck, 'blue'],
+  DELETING: [Spinner, 'orange'],
+  DELETED: [IconTrash, 'red'],
 });
 
 export const VolumeSnapshotStatusBadge = createResourceStatus<VolumeSnapshotStatus>({
-  invalid: [IconCircleX, 'red'],
-  creating: [Spinner, 'gray'],
-  available: [IconCircleCheck, 'green'],
-  migrating: [Spinner, 'blue'],
-  deleting: [Spinner, 'orange'],
-  deleted: [IconTrash, 'red'],
+  INVALID: [IconCircleX, 'red'],
+  CREATING: [Spinner, 'gray'],
+  AVAILABLE: [IconCircleCheck, 'green'],
+  MIGRATING: [Spinner, 'blue'],
+  DELETING: [Spinner, 'orange'],
+  DELETED: [IconTrash, 'red'],
 });

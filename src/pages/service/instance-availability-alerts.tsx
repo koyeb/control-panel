@@ -25,7 +25,7 @@ export function InstanceAvailabilityAlerts({ service }: InstanceAvailabilityAler
     deployment?.definition.regions,
   );
 
-  if (deployment?.status === 'sleeping' && availability === 'low') {
+  if (deployment?.status === 'SLEEPING' && availability === 'low') {
     return (
       <Alert
         variant="info"

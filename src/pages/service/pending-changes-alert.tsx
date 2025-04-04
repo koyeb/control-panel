@@ -40,7 +40,7 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
   assert(isComputeDeployment(latestNonStashedDeployment));
   assert(isComputeDeployment(latestDeployment));
 
-  const isLatestStashed = latestDeployment.status === 'stashed';
+  const isLatestStashed = latestDeployment.status === 'STASHED';
 
   const hasDiffWithLatestNonStashed = !dequal(
     latestDeployment.definitionApi,

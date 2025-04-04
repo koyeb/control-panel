@@ -41,7 +41,7 @@ const deployment = create.computeDeployment({
     ],
   }),
   build: {
-    status: 'completed',
+    status: 'COMPLETED',
     sha: 'a9b839512a1aecbb6c82c1c3e67fdf559b15eea8',
     startedAt: createDate(),
     finishedAt: createDate(),
