@@ -265,9 +265,7 @@ function ResynchronizeButton() {
 }
 
 const schema = z.object({
-  url: z.string().refine((url) => url.match(/.+\/.+/), {
-    params: { refinement: 'githubRepositoryNameFormat' },
-  }),
+  url: z.string().refine((url) => url.match(/.+\/.+/)),
   repositoryName: z.string().min(1),
 });
 
@@ -280,8 +278,8 @@ function PublicRepositorySelector({ onImport }: RepositorySelectorProps) {
       repositoryName: '',
     },
     mode: 'onChange',
-    resolver: useZodResolver(schema, {}, (refinement) => {
-      if (refinement === 'githubRepositoryNameFormat') {
+    resolver: useZodResolver(schema, {}, (error) => {
+      if (error.code === 'custom' && error.path[0] === 'url') {
         return t('publicRepository.invalidGithubRepositoryUrl');
       }
     }),

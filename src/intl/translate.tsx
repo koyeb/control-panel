@@ -25,22 +25,22 @@ export const createTranslate = createTranslationHelper<TranslationKeys>({
   ),
 });
 
-type Values = Parameters<IntlShape['formatMessage']>[1];
+export type TranslateValues = Parameters<IntlShape['formatMessage']>[1];
 
 export function useTranslate() {
   const intl = useIntl();
 
   function translate(id: TranslationKeys): string;
-  function translate(id: TranslationKeys, values: Values): React.ReactNode[];
+  function translate(id: TranslationKeys, values: TranslateValues): React.ReactNode[];
 
-  function translate(id: TranslationKeys, values?: Values): string | React.ReactNode[] {
+  function translate(id: TranslationKeys, values?: TranslateValues): string | React.ReactNode[] {
     return intl.formatMessage({ id }, values);
   }
 
   return translate;
 }
 
-export function Translate({ id, values }: { id: TranslationKeys; values?: Values }) {
+export function Translate({ id, values }: { id: TranslationKeys; values?: TranslateValues }) {
   const translate = useTranslate();
 
   return <>{translate(id, values)}</>;

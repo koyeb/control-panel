@@ -1,17 +1,20 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { FieldPath, UseFormReturn, useForm, useWatch } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
+import { createValidationGuard } from 'src/application/create-validation-guard';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParams } from 'src/hooks/router';
-import { useTranslate } from 'src/intl/translate';
+import { useZodResolver } from 'src/hooks/validation';
+import { TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
 import { hasProperty, trackChanges } from 'src/utils/object';
+import { Trim } from 'src/utils/types';
 
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
@@ -19,8 +22,6 @@ import { serviceFormSchema } from './helpers/service-form.schema';
 import { Scaling, ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
-  const translate = useTranslate();
-
   const params = useSearchParams();
   const datacenters = useDatacenters();
   const regions = useRegions();
@@ -43,7 +44,7 @@ export function useServiceForm(serviceId?: string) {
         queryClient,
       );
     },
-    resolver: zodResolver(serviceFormSchema(translate)),
+    resolver: useZodResolver(serviceFormSchema, {}, useErrorMessageHandler()),
   });
 
   const sections = !form.formState.isLoading ? getServiceFormSections(form.watch()) : [];
@@ -59,6 +60,57 @@ export function useServiceForm(serviceId?: string) {
 export function useWatchServiceForm<Path extends FieldPath<ServiceForm>>(name: Path) {
   return useWatch<ServiceForm, Path>({ name });
 }
+
+function useErrorMessageHandler() {
+  const translate = useTranslate();
+
+  const t = (key: Trim<TranslationKeys, `modules.serviceForm.errors.`>, values?: TranslateValues) => {
+    return translate(`modules.serviceForm.errors.${key}`, values);
+  };
+
+  return (error: z.ZodIssueOptionalMessage) => {
+    const path = error.path.join('.') as FieldPath<ServiceForm>;
+
+    if (isStartsWithSlash(error)) {
+      return t('startWithSlash');
+    }
+
+    if (path === 'source.git.organizationRepository.repositoryName' && error.code === 'invalid_type') {
+      return t('noRepositorySelected');
+    }
+
+    if (path === 'source.git.publicRepository.url' && error.code === 'custom') {
+      return t('invalidGithubRepositoryUrl');
+    }
+
+    if (path === 'source.docker.image' && error.code === 'too_small') {
+      return t('noDockerImageSelected');
+    }
+
+    if (path.match(/^scaling.targets.\w+.value$/)) {
+      if (error.code === 'invalid_type') return t('scalingTargetEmpty');
+      if (error.code === 'too_small') return t('scalingTargetTooSmall', { min: error.minimum });
+      if (error.code === 'too_big') return t('scalingTargetTooBig', { max: error.maximum });
+    }
+
+    if (path.match(/^ports.\d+.portNumber$/)) {
+      if (error.code === 'invalid_type') return t('portNumberTooSmall');
+      if (error.code === 'too_small') return t('portNumberTooSmall');
+      if (error.code === 'too_big') return t('portNumberTooBig', { max: error.maximum });
+    }
+
+    if (path.match(/^ports.\d+.path$/) && error.code === 'custom' && error.params?.noWhiteSpace) {
+      return t('portPathHasWhiteSpaces');
+    }
+  };
+}
+
+const isStartsWithSlash = createValidationGuard(
+  z.object({
+    code: z.literal('invalid_string'),
+    validation: z.object({ startsWith: z.literal('/') }),
+  }),
+);
 
 function useTriggerInstanceValidationOnLoad(form: UseFormReturn<ServiceForm>) {
   const { trigger, formState } = form;

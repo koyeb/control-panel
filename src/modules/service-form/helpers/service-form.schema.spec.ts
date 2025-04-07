@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
 
-import { identity } from 'src/utils/generic';
-
 import { ServiceForm } from '../service-form.types';
 
 import { defaultHealthCheck, defaultServiceForm } from './initialize-service-form';
@@ -20,7 +18,7 @@ describe('serviceFormSchema', () => {
   };
 
   const parse = (form: ServiceForm) => {
-    const result = serviceFormSchema(identity).safeParse(form);
+    const result = serviceFormSchema.safeParse(form);
 
     if ('error' in result) {
       // eslint-disable-next-line no-console
@@ -170,7 +168,7 @@ describe('serviceFormSchema', () => {
     form.appName = ' app ';
     form.serviceName = ' service ';
 
-    expect(serviceFormSchema(identity).parse(form)).toMatchObject({
+    expect(serviceFormSchema.parse(form)).toMatchObject({
       appName: 'app',
       serviceName: 'service',
     });

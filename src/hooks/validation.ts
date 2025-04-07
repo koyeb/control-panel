@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
 import { z } from 'zod';
 
 import { createValidationGuard } from 'src/application/create-validation-guard';
@@ -15,27 +16,33 @@ export function useZodResolver<Schema extends z.Schema>(
   });
 }
 
+type CustomMessage = string | React.ReactNode[];
+
 function useZodErrorMap(
   labels: Record<string, string> = {},
-  custom?: (refinement: string | undefined, error: z.ZodCustomIssue) => string | void,
+  getCustomMessage?: (error: z.ZodIssueOptionalMessage) => CustomMessage | void,
 ): z.ZodErrorMap {
-  const translate = T.useTranslate();
+  const t = T.useTranslate();
 
-  const t = (...params: Parameters<typeof translate>): string => {
-    // @ts-expect-error using React.Element instead of string works
-    return translate(...params);
-  };
-
-  return (error, ctx) => {
+  // @ts-expect-error using ReactElement instead of string works
+  return (error, ctx): { message: CustomMessage | undefined } => {
     const path = error.path.join('.');
     const label = labels[path] ?? t('fallbackLabel', {});
 
-    return { message: getMessage(error) ?? ctx.defaultError };
+    return {
+      message: getMessage(error) ?? ctx.defaultError,
+    };
 
-    function getMessage(error: z.ZodIssueOptionalMessage): string | void {
+    function getMessage(error: z.ZodIssueOptionalMessage) {
+      const custom = getCustomMessage?.(error);
+
+      if (custom) {
+        return custom;
+      }
+
       switch (error.code) {
         case z.ZodIssueCode.invalid_type:
-          if (error.received === 'undefined') {
+          if (error.received === 'undefined' || error.received === 'nan') {
             return t('required', { label });
           }
           break;
@@ -56,20 +63,7 @@ function useZodErrorMap(
           }
 
           break;
-
-        case z.ZodIssueCode.custom:
-          return getCustomMessage(error);
       }
-    }
-
-    function getCustomMessage(error: z.ZodCustomIssue): string | void {
-      const { refinement } = (error.params ?? {}) as { refinement?: string };
-
-      if (refinement === 'isSlug') {
-        return t('slug', { label });
-      }
-
-      return custom?.(refinement, error);
     }
   };
 }
