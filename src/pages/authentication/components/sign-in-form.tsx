@@ -88,7 +88,6 @@ export function SignInForm() {
       <AuthInput
         control={form.control}
         name="password"
-        autoFocus
         autoComplete="current-password"
         type="password"
         required
