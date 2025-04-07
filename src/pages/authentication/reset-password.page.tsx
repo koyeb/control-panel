@@ -52,9 +52,7 @@ export function ResetPasswordForm() {
       email: '',
       password: '',
     },
-    resolver: useZodResolver(schema, {
-      email: t('emailLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({

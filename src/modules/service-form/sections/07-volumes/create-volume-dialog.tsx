@@ -36,11 +36,7 @@ export function CreateVolumeDialog() {
       name: '',
       size: NaN,
     },
-    resolver: useZodResolver(schema, {
-      name: t('nameLabel'),
-      size: t('sizeLabel'),
-      mountPath: t('mountPathLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({

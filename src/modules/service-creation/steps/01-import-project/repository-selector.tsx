@@ -278,7 +278,7 @@ function PublicRepositorySelector({ onImport }: RepositorySelectorProps) {
       repositoryName: '',
     },
     mode: 'onChange',
-    resolver: useZodResolver(schema, {}, (error) => {
+    resolver: useZodResolver(schema, (error) => {
       if (error.code === 'custom' && error.path[0] === 'url') {
         return t('publicRepository.invalidGithubRepositoryUrl');
       }

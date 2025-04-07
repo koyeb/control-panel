@@ -59,9 +59,7 @@ function CreateOrganizationDialog() {
     defaultValues: {
       organizationName: '',
     },
-    resolver: useZodResolver(schema, {
-      organizationName: t('createOrganizationDialog.organizationNameLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({

@@ -12,7 +12,7 @@ import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
+import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
 import { hasProperty, trackChanges } from 'src/utils/object';
 import { Trim } from 'src/utils/types';
 
@@ -22,6 +22,8 @@ import { serviceFormSchema } from './helpers/service-form.schema';
 import { Scaling, ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
+  const translate = useTranslate();
+
   const params = useSearchParams();
   const datacenters = useDatacenters();
   const regions = useRegions();
@@ -44,7 +46,7 @@ export function useServiceForm(serviceId?: string) {
         queryClient,
       );
     },
-    resolver: useZodResolver(serviceFormSchema, {}, useErrorMessageHandler()),
+    resolver: useZodResolver(serviceFormSchema, errorMessageHandler(translate)),
   });
 
   const sections = !form.formState.isLoading ? getServiceFormSections(form.watch()) : [];
@@ -61,9 +63,7 @@ export function useWatchServiceForm<Path extends FieldPath<ServiceForm>>(name: P
   return useWatch<ServiceForm, Path>({ name });
 }
 
-function useErrorMessageHandler() {
-  const translate = useTranslate();
-
+function errorMessageHandler(translate: TranslateFn) {
   const t = (key: Trim<TranslationKeys, `modules.serviceForm.errors.`>, values?: TranslateValues) => {
     return translate(`modules.serviceForm.errors.${key}`, values);
   };

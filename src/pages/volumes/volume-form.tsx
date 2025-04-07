@@ -49,11 +49,7 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
       region: snapshot?.region ?? volume?.region ?? '',
       size: toGigaBytes(snapshot?.size ?? volume?.size) ?? NaN,
     },
-    resolver: useZodResolver(schema, {
-      name: t('nameLabel'),
-      region: t('regionLabel'),
-      size: t('sizeLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({

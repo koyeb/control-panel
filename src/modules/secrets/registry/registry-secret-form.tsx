@@ -22,15 +22,7 @@ const T = createTranslate('modules.secrets.registrySecretForm');
 
 const schema = z.object({
   name: z.string().min(2),
-  type: z.union([
-    z.literal('docker-hub'),
-    z.literal('digital-ocean'),
-    z.literal('github'),
-    z.literal('gitlab'),
-    z.literal('azure'),
-    z.literal('gcp'),
-    z.literal('private'),
-  ]),
+  type: z.string(),
   username: z.string(),
   password: z.string(),
   registryName: z.string(),
@@ -67,14 +59,7 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
       registryUrl: '',
       keyFile: '',
     },
-    resolver: useZodResolver(schema, {
-      name: t('nameLabel'),
-      username: t('usernameLabel'),
-      password: t('passwordLabel'),
-      type: t('typeLabel'),
-      registryName: t('registryNameLabel'),
-      registryUrl: t('registryUrlLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   useUpdateEffect(() => {

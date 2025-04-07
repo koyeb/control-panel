@@ -41,10 +41,7 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
       value: '',
       multiline: false,
     },
-    resolver: useZodResolver(schema, {
-      name: t('nameLabel'),
-      value: t('valueLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   useUpdateEffect(() => {

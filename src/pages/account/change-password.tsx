@@ -52,9 +52,7 @@ export function ChangePasswordForm() {
     defaultValues: {
       password: '',
     },
-    resolver: useZodResolver(schema, {
-      password: t('passwordLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({

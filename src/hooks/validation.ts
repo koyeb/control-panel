@@ -16,19 +16,15 @@ export function useZodResolver<Schema extends z.Schema>(
   });
 }
 
-type CustomMessage = string | React.ReactNode[];
+type CustomMessage = string | React.ReactNode | React.ReactNode[];
 
 function useZodErrorMap(
-  labels: Record<string, string> = {},
   getCustomMessage?: (error: z.ZodIssueOptionalMessage) => CustomMessage | void,
 ): z.ZodErrorMap {
   const t = T.useTranslate();
 
   // @ts-expect-error using ReactElement instead of string works
   return (error, ctx): { message: CustomMessage | undefined } => {
-    const path = error.path.join('.');
-    const label = labels[path] ?? t('fallbackLabel', {});
-
     return {
       message: getMessage(error) ?? ctx.defaultError,
     };
@@ -43,23 +39,23 @@ function useZodErrorMap(
       switch (error.code) {
         case z.ZodIssueCode.invalid_type:
           if (error.received === 'undefined' || error.received === 'nan') {
-            return t('required', { label });
+            return t('required');
           }
           break;
 
         case z.ZodIssueCode.too_small:
-          return t(error.type === 'string' ? 'minLength' : 'min', { label, min: error.minimum as number });
+          return t(error.type === 'string' ? 'minLength' : 'min', { min: error.minimum });
 
         case z.ZodIssueCode.too_big:
-          return t(error.type === 'string' ? 'maxLength' : 'max', { label, max: error.maximum as number });
+          return t(error.type === 'string' ? 'maxLength' : 'max', { max: error.maximum });
 
         case z.ZodIssueCode.invalid_string:
           if (error.validation === 'email') {
-            return t('email', { label });
+            return t('email');
           }
 
           if (isStartsWith(error.validation)) {
-            return t('startsWith', { label, startsWith: error.validation.startsWith });
+            return t('startsWith', { startsWith: error.validation.startsWith });
           }
 
           break;

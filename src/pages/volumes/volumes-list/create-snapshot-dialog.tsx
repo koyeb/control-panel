@@ -31,9 +31,7 @@ export function CreateSnapshotDialog({ volume }: { volume: Volume }) {
     defaultValues: {
       name: '',
     },
-    resolver: useZodResolver(schema, {
-      name: t('nameLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({

@@ -33,9 +33,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
     defaultValues: {
       organizationName: '',
     },
-    resolver: useZodResolver(schema, {
-      organizationName: t('organizationNameField.label'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({
@@ -77,7 +75,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
         <ControlledInput
           control={form.control}
           name="organizationName"
-          placeholder={t('organizationNameField.placeholder')}
+          placeholder={t('organizationNamePlaceholder')}
           className="max-w-md"
         />
 

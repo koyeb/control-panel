@@ -32,9 +32,7 @@ export function UpdateSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
     defaultValues: {
       name: snapshot.name,
     },
-    resolver: useZodResolver(schema, {
-      name: t('nameLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({

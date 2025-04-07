@@ -40,11 +40,7 @@ export function SignUpForm() {
       email: searchParams.get('email') ?? '',
       password: '',
     },
-    resolver: useZodResolver(schema, {
-      name: t('nameLabel'),
-      email: t('emailLabel'),
-      password: t('passwordLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const { mutateAsync: signUp } = useMutation({

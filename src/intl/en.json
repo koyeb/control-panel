@@ -54,15 +54,14 @@
       "export": "Export docker image"
     },
     "validation": {
-      "fallbackLabel": "This field",
-      "required": "{label} is required",
-      "min": "{label} must be greater than {min}",
-      "max": "{label} must be lower than {max}",
-      "minLength": "{label} must be at least {min} {min, plural, =1 {character} other {characters}}",
-      "maxLength": "{label} must be at most {max} {max, plural, =1 {character} other {characters}}",
-      "email": "{label} must be a valid email address",
-      "startsWith": "{label} must start with \"{startsWith}\"",
-      "slug": "{label} must only contain lowercase letters, numbers, dashes and dots"
+      "required": "Required",
+      "min": "Must be greater than {min}",
+      "max": "Must be lower than {max}",
+      "minLength": "Must be at least {min} {min, plural, =1 {character} other {characters}}",
+      "maxLength": "Must be at most {max} {max, plural, =1 {character} other {characters}}",
+      "email": "Must be a valid email address",
+      "startsWith": "Must start with \"{startsWith}\"",
+      "slug": "Must only contain lowercase letters, numbers, dashes and dots"
     }
   },
   "enums": {
@@ -874,8 +873,7 @@
           "regionLabel": "Region"
         },
         "model": {
-          "title": "Choose a model",
-          "label": "Model name"
+          "title": "Choose a model"
         },
         "instance": {
           "title": "Choose instance",
@@ -1288,8 +1286,7 @@
           "namePlaceholder": "my-volume",
           "sizeLabel": "Size",
           "sizePlaceholder": "Select a size",
-          "sizeUnit": "GB",
-          "mountPathLabel": "Mount path"
+          "sizeUnit": "GB"
         },
         "volumesUnavailable": {
           "unavailableForInstanceTitle": "Volumes are not supported on the {instanceName} instance type",
@@ -1385,10 +1382,7 @@
           "title": "Downgrade to Free Plan",
           "description": "To downgrade your account to free plan you need to create a new organization",
           "dataLossWarning": "All your current services and data will be automatically and permanently removed",
-          "organizationNameField": {
-            "label": "Organization name",
-            "placeholder": "Name your new org..."
-          },
+          "organizationNamePlaceholder": "Name your new org...",
           "footer": {
             "message": "If you don't want to keep your account, you can <delete>delete it</delete>",
             "cancel": "Do it later",
@@ -1560,7 +1554,6 @@
     "account": {
       "changePassword": {
         "title": "Reset password",
-        "passwordLabel": "Password",
         "passwordPlaceholder": "New password",
         "submit": "Set new password",
         "successNotification": "Your password was updated successfully"
@@ -1597,9 +1590,7 @@
         "title": "Sign in to Koyeb",
         "subtitle": "Welcome back! To continue, sign in to your account",
         "githubSignIn": "Sign in with GitHub",
-        "emailLabel": "Email",
         "emailPlaceholder": "Email",
-        "passwordLabel": "Password",
         "passwordPlaceholder": "Password",
         "submit": "Sign in",
         "invalidCredential": "Incorrect email or password",
@@ -1611,11 +1602,8 @@
         "subtitle": "Get started deploying for free",
         "githubSignUp": "Continue with GitHub",
         "emailSignUp": "Continue with email",
-        "nameLabel": "Name",
         "namePlaceholder": "Full name",
-        "emailLabel": "Email",
         "emailPlaceholder": "Email",
-        "passwordLabel": "Password",
         "passwordPlaceholder": "Password",
         "submit": "Continue",
         "reCAPTCHA": "Protected by reCAPTCHA, <terms>Terms of Services</terms> and <privacy>Privacy Policy</privacy>",
@@ -1625,7 +1613,6 @@
       "resetPassword": {
         "title": "Reset password",
         "subtitle": "Enter the email associated with your account, and we will send you a password reset link",
-        "emailLabel": "Email",
         "emailPlaceholder": "Email",
         "submit": "Send password reset email",
         "successNotification": "We've sent you an email with a password reset link",

@@ -96,9 +96,7 @@ function EditAppDialog({ app }: { app: App }) {
       name: app.name,
       subdomain,
     },
-    resolver: useZodResolver(editAppSchema, {
-      name: t('editAppDialog.appNameLabel'),
-    }),
+    resolver: useZodResolver(editAppSchema),
   });
 
   const mutation = useMutation({

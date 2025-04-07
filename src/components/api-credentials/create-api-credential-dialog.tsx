@@ -101,10 +101,7 @@ function CreateApiCredentialForm({ type, onCreated }: CreateApiCredentialFormPro
       name: '',
       description: '',
     },
-    resolver: useZodResolver(schema, {
-      name: t('createDialog.nameLabel'),
-      description: t('createDialog.descriptionLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const invalidate = useInvalidateApiQuery();

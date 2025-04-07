@@ -40,10 +40,7 @@ export function SignInForm() {
       email: '',
       password: '',
     },
-    resolver: useZodResolver(schema, {
-      email: t('emailLabel'),
-      password: t('passwordLabel'),
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const { mutateAsync: signIn } = useMutation({
