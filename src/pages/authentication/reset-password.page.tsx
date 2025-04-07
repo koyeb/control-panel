@@ -47,11 +47,8 @@ export function ResetPasswordForm() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
-  const form = useForm({
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+  const form = useForm<z.infer<typeof schema>>({
+    defaultValues: { email: '' },
     resolver: useZodResolver(schema),
   });
 

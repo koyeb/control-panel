@@ -272,7 +272,7 @@ const schema = z.object({
 function PublicRepositorySelector({ onImport }: RepositorySelectorProps) {
   const t = T.useTranslate();
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       url: '',
       repositoryName: '',

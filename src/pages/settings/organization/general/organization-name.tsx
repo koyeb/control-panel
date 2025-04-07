@@ -21,10 +21,8 @@ const schema = z.object({
 export function OrganizationName() {
   const organization = useOrganization();
 
-  const form = useForm({
-    defaultValues: {
-      organizationName: organization.name,
-    },
+  const form = useForm<z.infer<typeof schema>>({
+    defaultValues: { organizationName: organization.name },
     resolver: useZodResolver(schema),
   });
 

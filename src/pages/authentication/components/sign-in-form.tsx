@@ -35,7 +35,7 @@ export function SignInForm() {
 
   const [next] = useSearchParam('next');
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       email: '',
       password: '',

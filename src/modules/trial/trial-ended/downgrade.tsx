@@ -29,7 +29,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const invalidate = useInvalidateApiQuery();
   const { token, setToken } = useToken();
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       organizationName: '',
     },
