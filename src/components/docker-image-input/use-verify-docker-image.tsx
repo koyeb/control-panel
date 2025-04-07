@@ -26,7 +26,7 @@ export function useVerifyDockerImage(image: string, registrySecretName: string |
     queryKey: ['verifyDockerImage', { token, image, secretId }] as const,
     async queryFn({ signal }) {
       if (!(await wait(500, signal))) {
-        return;
+        return null;
       }
 
       return api.verifyDockerImage({
