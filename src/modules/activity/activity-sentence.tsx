@@ -19,7 +19,7 @@ const T = createTranslate('components.activity.sentences');
 
 export function ActivitySentence({ activity }: { activity: Activity }) {
   if (isAutoscalingActivity(activity)) {
-    const { count, previous_count: previousCount } = activity.metadata;
+    const { count, previousCount } = activity.metadata;
     const direction = previousCount < count ? 'up' : 'down';
 
     if (count === 0) {

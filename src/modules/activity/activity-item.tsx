@@ -60,7 +60,7 @@ function getDetailsLine(activity: Activity) {
     return <T id="serviceScaledToZeroDetails" />;
   }
 
-  if (isAutoscalingActivity(activity) && activity.metadata.previous_count === 0) {
+  if (isAutoscalingActivity(activity) && activity.metadata.previousCount === 0) {
     return <T id="serviceScaledFromZeroDetails" />;
   }
 }

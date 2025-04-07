@@ -18,9 +18,9 @@ export const isServiceObject = createValidationGuard(
   z.object({
     type: z.literal('service'),
     metadata: z.object({
-      app_id: z.string(),
-      app_name: z.string(),
-      service_type: z.union([z.literal('web'), z.literal('worker'), z.literal('database')]),
+      appId: z.string(),
+      appName: z.string(),
+      serviceType: z.union([z.literal('web'), z.literal('worker'), z.literal('database')]),
     }),
   }),
 );
@@ -29,10 +29,10 @@ export const isDeploymentObject = createValidationGuard(
   z.object({
     type: z.literal('deployment'),
     metadata: z.object({
-      app_id: z.string(),
-      app_name: z.string(),
-      service_id: z.string(),
-      service_name: z.string(),
+      appId: z.string(),
+      appName: z.string(),
+      serviceId: z.string(),
+      serviceName: z.string(),
     }),
   }),
 );
@@ -42,15 +42,15 @@ export const isAutoscalingActivity = createValidationGuard(
     verb: z.literal('autoscaled'),
     metadata: z.object({
       count: z.number(),
-      previous_count: z.number(),
+      previousCount: z.number(),
       region: z.string(),
     }),
     object: z.object({
       metadata: z.object({
-        app_id: z.string(),
-        app_name: z.string(),
-        service_id: z.string(),
-        service_name: z.string(),
+        appId: z.string(),
+        appName: z.string(),
+        serviceId: z.string(),
+        serviceName: z.string(),
       }),
     }),
   }),
@@ -88,9 +88,9 @@ export const isVolumeActivity = createValidationGuard(
   z.object({
     metadata: z
       .object({
-        app_name: z.string(),
-        service_id: z.string(),
-        service_name: z.string(),
+        appName: z.string(),
+        serviceId: z.string(),
+        serviceName: z.string(),
       })
       .partial(),
     object: z.object({

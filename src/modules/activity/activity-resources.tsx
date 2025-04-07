@@ -31,7 +31,7 @@ export function ActivityResources({ activity }: { activity: Activity }) {
   if (isAutoscalingActivity(activity)) {
     const { deleted } = activity.object;
     const { region } = activity.metadata;
-    const { app_name: appName, service_id: serviceId, service_name: serviceName } = activity.object.metadata;
+    const { appName, serviceId, serviceName } = activity.object.metadata;
 
     return (
       <div className="row max-w-full flex-wrap gap-x-4 gap-y-2">
@@ -49,14 +49,14 @@ export function ActivityResources({ activity }: { activity: Activity }) {
 
   if (isServiceObject(object)) {
     const { id: serviceId, name: serviceName, deleted } = object;
-    const { app_name: appName, service_type: type } = object.metadata;
+    const { appName, serviceType } = object.metadata;
 
     return (
       <ServiceResource
         appName={appName}
         serviceName={serviceName}
         serviceId={serviceId}
-        serviceType={type}
+        serviceType={serviceType}
         deleted={deleted}
       />
     );
@@ -64,8 +64,8 @@ export function ActivityResources({ activity }: { activity: Activity }) {
 
   if (isDeploymentObject(object)) {
     const { id: deploymentId, deleted } = object;
-    const { app_name: appName } = object.metadata;
-    const { service_id: serviceId, service_name: serviceName } = object.metadata;
+    const { appName } = object.metadata;
+    const { serviceId, serviceName } = object.metadata;
 
     return (
       <ServiceResource
@@ -79,7 +79,7 @@ export function ActivityResources({ activity }: { activity: Activity }) {
   }
 
   if (isVolumeActivity(activity)) {
-    const { app_name: appName, service_id: serviceId, service_name: serviceName } = activity.metadata;
+    const { appName, serviceId, serviceName } = activity.metadata;
     const { deleted } = object;
 
     return (
