@@ -26,7 +26,7 @@ export function ChangePasswordPage() {
     <AuthenticationLayout slides={false}>
       <DocumentTitle title={t('title')} />
 
-      <div className="mx-auto w-full max-w-72 text-center">
+      <div className="col mx-auto w-full max-w-72 flex-1 justify-center py-8 text-center">
         <h1 className="text-3xl font-semibold">
           <T id="title" />
         </h1>
