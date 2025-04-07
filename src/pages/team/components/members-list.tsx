@@ -108,18 +108,18 @@ export function MembersList() {
 }
 
 function isInvitation(item: OrganizationInvitation | OrganizationMember): item is OrganizationInvitation {
-  return 'status' in item;
+  return 'email' in item;
 }
 
 function InvitationMember({ invitation }: { invitation: OrganizationInvitation }) {
-  const emailHash = useSha256(invitation.invitee.email);
+  const emailHash = useSha256(invitation.email);
 
   return (
     <div className="row items-center gap-4">
       <img src={`https://gravatar.com/avatar/${emailHash ?? ''}`} className="size-8 rounded-full" />
 
       <div>
-        <div className="font-medium">{invitation.invitee.email}</div>
+        <div className="font-medium">{invitation.email}</div>
 
         <Badge color="blue" size={1}>
           <T id="invited" />
@@ -232,8 +232,8 @@ function useResendInvitation() {
     ...useApiMutationFn('resendInvitation', (invitation: OrganizationInvitation) => ({
       path: { id: invitation.id },
     })),
-    onSuccess(_, { invitee }) {
-      notify.success(t('actions.resendInvitationSuccessNotification', { email: invitee.email }));
+    onSuccess(_, { email }) {
+      notify.success(t('actions.resendInvitationSuccessNotification', { email }));
     },
   });
 }
@@ -246,9 +246,9 @@ function useDeleteInvitation() {
     ...useApiMutationFn('deleteInvitation', (invitation: OrganizationInvitation) => ({
       path: { id: invitation.id },
     })),
-    async onSuccess(_, { invitee }) {
+    async onSuccess(_, { email }) {
       await invalidate('listInvitations');
-      notify.info(t('actions.deleteInvitationSuccessNotification', { email: invitee.email }));
+      notify.info(t('actions.deleteInvitationSuccessNotification', { email }));
     },
   });
 }

@@ -610,9 +610,7 @@ export type OrganizationInvitation = {
     id: string;
     name: string;
   };
-  invitee: {
-    email: string;
-  };
+  email: string;
   inviter: {
     name: string;
     email: string;
