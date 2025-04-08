@@ -59,7 +59,7 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
       {costs.discounts.map((discount, index) => (
         <Fragment key={index}>
           <div className="row items-center justify-between text-green">
-            <div>{discount.label}</div>
+            <div className="truncate">{discount.label}</div>
             <div>
               {discount.type === 'amountOff' && <FormattedPrice value={-discount.value} />}
               {discount.type === 'percentOff' && <FormattedNumber value={-discount.value} style="percent" />}
