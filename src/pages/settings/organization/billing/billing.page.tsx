@@ -2,7 +2,7 @@ import { FeatureFlag } from 'src/hooks/feature-flag';
 
 import { BillingInformation } from './billing-information';
 import { Coupon } from './coupon';
-import { SpendingAlerts } from './spending-limit';
+import { SpendingLimit } from './spending-limit';
 import { StripePortal } from './stripe-portal';
 import { Usage } from './usage';
 
@@ -14,7 +14,7 @@ export function BillingPage() {
       <StripePortal />
 
       <FeatureFlag feature="spending-limit">
-        <SpendingAlerts />
+        <SpendingLimit />
       </FeatureFlag>
 
       <FeatureFlag feature="coupons">

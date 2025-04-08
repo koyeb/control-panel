@@ -14,7 +14,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.spendingLimit');
 
-export function SpendingAlerts() {
+export function SpendingLimit() {
   const form = useForm<{ amount: number }>({
     defaultValues: { amount: NaN },
   });
@@ -47,7 +47,7 @@ export function SpendingAlerts() {
 
       {query.isError && query.error.message}
 
-      <form onSubmit={handleSubmit(form, onSubmit)} className="row gap-4">
+      <form onSubmit={handleSubmit(form, onSubmit)} className="row items-start gap-4">
         <ControlledInput
           control={form.control}
           name="amount"
@@ -84,7 +84,7 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
   const updateMutation = useMutation({
     ...useApiMutationFn('updateBudget', (amount: number) => ({
       path: { organization_id: organization.id },
-      query: { amount: String(amount * 100) },
+      body: { amount: String(amount * 100) },
     })),
     onError: useFormErrorHandler(form),
     async onSuccess() {

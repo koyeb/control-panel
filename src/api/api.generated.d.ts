@@ -626,6 +626,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** This API allows to redeem a coupon. Pass the code you received in the body. */
         post: operations["RedeemCoupon"];
         delete?: never;
         options?: never;
@@ -12484,17 +12485,24 @@ export interface operations {
     };
     UpdateBudget: {
         parameters: {
-            query?: {
-                /** @description In cents. */
-                amount?: string;
-            };
+            query?: never;
             header?: never;
             path: {
                 organization_id: string;
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "*/*": {
+                    /**
+                     * Format: int64
+                     * @description In cents.
+                     */
+                    amount?: string;
+                };
+            };
+        };
         responses: {
             /** @description A successful response. */
             200: {
@@ -12572,17 +12580,24 @@ export interface operations {
     };
     CreateBudget: {
         parameters: {
-            query?: {
-                /** @description In cents. */
-                amount?: string;
-            };
+            query?: never;
             header?: never;
             path: {
                 organization_id: string;
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "*/*": {
+                    /**
+                     * Format: int64
+                     * @description In cents.
+                     */
+                    amount?: string;
+                };
+            };
+        };
         responses: {
             /** @description A successful response. */
             200: {
