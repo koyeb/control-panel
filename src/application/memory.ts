@@ -1,4 +1,5 @@
 export function parseBytes(input: string | undefined) {
+  // cSpell:disable-next-line
   const result = /^([0-9.]+) ?([KMGT]?i?B)$/.exec(input ?? '');
 
   if (!result) {

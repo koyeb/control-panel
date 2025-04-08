@@ -1,5 +1,3 @@
-// cspell:word instatus hasissues undermaintenance allundermaintenance alldegradedperformance allpartialoutage allminoroutage allmajoroutage someundermaintenance somedegradedperformance somepartialoutage someminoroutage somemajoroutage oneundermaintenance onedegradedperformance onepartialoutage oneminoroutage onemajoroutage
-
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect } from 'react';
@@ -10,6 +8,8 @@ import { reportError } from 'src/application/report-error';
 import { IconSquareArrowOutUpRight } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
+
+// cSpell:ignore hasissues undermaintenance degradedperformance partialoutage majoroutage
 
 const T = createTranslate('components.platformStatus');
 

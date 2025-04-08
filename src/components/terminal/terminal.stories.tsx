@@ -78,7 +78,7 @@ class Shell {
         return `${blue('node_modules')}  package.json  tsconfig.json  ${blue('public')}  ${blue('src')}  vite.config.ts\r\n`;
 
       case 'cat':
-        return 'Miiaaaaow\r\n';
+        return 'Miaow\r\n';
 
       default:
         return `${command}: command not found\r\n`;

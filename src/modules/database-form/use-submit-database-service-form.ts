@@ -16,6 +16,8 @@ import { randomString } from 'src/utils/random';
 import { databaseInstances } from './database-instance-types';
 import { DatabaseServiceForm } from './database-service-form.types';
 
+// cSpell:ignore koyebdb
+
 export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,

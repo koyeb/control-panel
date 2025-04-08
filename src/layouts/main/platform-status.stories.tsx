@@ -4,6 +4,8 @@ import { controls } from 'src/storybook';
 
 import { PlatformStatus } from './platform-status';
 
+// cSpell:ignore hasissues allundermaintenance alldegradedperformance allpartialoutage allminoroutage allmajoroutage
+
 type Args = {
   status: string;
 };

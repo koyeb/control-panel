@@ -6,6 +6,8 @@ import { getCookie, setCookie } from 'src/application/cookies';
 
 import { useMount } from './lifecycle';
 
+// cSpell:ignore seontechnologies deviceinfresolver
+
 const cookieName = 'SSID';
 
 const options: SDKOptions = {

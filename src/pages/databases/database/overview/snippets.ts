@@ -1,5 +1,7 @@
 import { CodeLang } from '@koyeb/design-system';
 
+// cSpell:words dbname jdbc pgbouncer psql psql sqlalchemy sslmode symfony
+
 export enum DatabaseClient {
   psql = 'psql',
   dotenv = 'dotenv',

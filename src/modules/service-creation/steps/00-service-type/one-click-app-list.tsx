@@ -7,6 +7,8 @@ import { hasProperty } from 'src/utils/object';
 
 import { ServiceTypeItem } from './components/service-type-item';
 
+// cSpell:words bun calcom ollama
+
 const T = createTranslate('modules.serviceCreation.serviceType');
 
 export function OneClickAppList() {

@@ -5,6 +5,16 @@ on:
   push:
 
 jobs:
+  spellcheck:
+    name: Spell check
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm add -g cspell
+      - run: pnpm exec cspell
+
   format:
     name: Format
     runs-on: ubuntu-latest

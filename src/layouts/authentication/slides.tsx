@@ -24,6 +24,8 @@ import LogoSimplismart from './logos/simplismart.svg?react';
 import LogoUltralytics from './logos/ultralytics.svg?react';
 import LogoZilliz from './logos/zilliz.svg?react';
 
+// cSpell:ignore etoro huggingface mirakl ollama photoroom simplismart ultralytics zilliz populum
+
 const T = createTranslate('layouts.authentication');
 
 export default function Slides() {

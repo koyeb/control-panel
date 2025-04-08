@@ -10,6 +10,8 @@ import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { getConfig } from './config';
 import { identifyUserInSentry } from './report-error';
 
+// cSpell:ignore pageleave autocapture
+
 type PostHogProviderProps = {
   children: React.ReactNode;
 };

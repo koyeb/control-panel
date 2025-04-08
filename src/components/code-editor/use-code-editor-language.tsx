@@ -22,6 +22,7 @@ function detectLanguage(fileName?: string): CodeEditorLanguage | undefined {
   }
 }
 
+/* cSpell: disable */
 const extensionMap: Record<string, CodeEditorLanguage> = {
   apl: 'apl',
   asc: 'asciiArmor',

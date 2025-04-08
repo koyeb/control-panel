@@ -13,7 +13,7 @@ const meta = {
   args: {
     className: 'max-w-sm',
     title: 'Notification title',
-    children: 'Description, lorem ipsum dolor sit amet...',
+    children: 'Description, lorem ipsum dolor sit...',
   },
 } satisfies Meta<typeof Notification>;
 

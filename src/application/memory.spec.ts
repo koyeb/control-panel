@@ -2,6 +2,8 @@ import { describe, expect, test } from 'vitest';
 
 import { formatBytes, parseBytes } from './memory';
 
+// cSpell: words kibibyte mebibyte gibibyte tebibyte
+
 describe('parseBytes', () => {
   test('empty string', () => {
     expect(parseBytes('')).toBeNaN();
