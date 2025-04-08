@@ -2117,7 +2117,7 @@
           "descriptionWithBuild": "Before redeploying service, chose between those two options",
           "lowCapacity": {
             "title": "Limited availability for {instance} instances",
-            "description": "This instance type is in high demand, which may affect redeployment. To increase reliability, consider selecting a different instance type before redeploying."
+            "description": "The capacity for this instance type is currently limited, which may affect service redeployment. To guarantee a successful redeploy, consider switching to a different instance type or region."
           },
           "skipBuild": {
             "title": "Use previous build",
@@ -2153,11 +2153,11 @@
         "instanceAvailability": {
           "sleeping": {
             "title": "Limited availability for {instance} instances",
-            "description": "This instance type is in high demand, which may delay service wake-up. To ensure uninterrupted availability, consider switching to a different instance type or disabling scale to zero."
+            "description": "The capacity for this instance type is currently limited, which may delay service wake-up. To guarantee service wake-up, consider switching to a different instance type or region, or disabling scale to zero."
           },
           "maxScale": {
             "title": "Scaling may be limited for {instance} instances",
-            "description": "This instance type is in high demand, which may impact scaling. To ensure smooth scaling, consider updating your service with a different instance type."
+            "description": "The capacity for this instance type is currently limited, which may prevent service scale-up. To guarantee service scalability, consider switching to a different instance type or region."
           }
         },
         "navigation": {
