@@ -79,14 +79,14 @@ export function hasBuild(deployment?: Deployment) {
 
 export function isDeploymentRunning({ status }: Deployment) {
   return inArray(status, [
-    'canceling',
-    'allocating',
-    'starting',
-    'healthy',
-    'degraded',
-    'unhealthy',
-    'stopping',
-    'erroring',
+    'CANCELING',
+    'ALLOCATING',
+    'STARTING',
+    'HEALTHY',
+    'DEGRADED',
+    'UNHEALTHY',
+    'STOPPING',
+    'ERRORING',
   ]);
 }
 

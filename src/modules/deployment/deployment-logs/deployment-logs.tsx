@@ -169,7 +169,7 @@ function BuildSectionHeader({ disabled, expanded, setExpanded, deployment, lines
       expanded={expanded}
       setExpanded={setExpanded}
       title={<T id="build.title" />}
-      status={status}
+      status={<TranslateStatus status={status} />}
       StatusIcon={StatusIcon}
       statusColorClassName={statusColorClassName}
       lastLogLine={status === 'RUNNING' ? lines[lines.length - 1] : undefined}
