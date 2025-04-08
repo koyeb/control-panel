@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -55,18 +55,18 @@ export function SignInForm() {
     },
     onError(error) {
       if (isApiError(error) && error.message === invalidCredentialApiMessage) {
-        setInvalidCredential(true);
+        form.setError('root', { message: 'invalidCredential' });
       } else {
         notify.error(error.message);
       }
     },
   });
 
-  const [invalidCredential, setInvalidCredential] = useState(false);
-
   useEffect(() => {
-    const { unsubscribe } = form.watch(() => {
-      setInvalidCredential(false);
+    const { unsubscribe } = form.watch((values, { type }) => {
+      if (type === 'change') {
+        form.clearErrors('root');
+      }
     });
 
     return () => {
@@ -94,7 +94,7 @@ export function SignInForm() {
         placeholder={t('passwordPlaceholder')}
       />
 
-      {invalidCredential && (
+      {form.formState.errors.root?.message === 'invalidCredential' && (
         <div className="text-red">
           <T id="invalidCredential" />
         </div>

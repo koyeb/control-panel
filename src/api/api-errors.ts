@@ -12,8 +12,8 @@ export const isApiResponse = createValidationGuard(apiResponseSchema);
 
 const apiErrorSchema = z.object({
   code: z.string(),
-  message: z.string({}),
-  status: z.number({}),
+  message: z.string(),
+  status: z.number(),
 });
 
 type ApiErrorType = z.infer<typeof apiErrorSchema>;
