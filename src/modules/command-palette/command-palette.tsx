@@ -218,7 +218,7 @@ type OptionProps = {
   children: React.ReactNode;
 };
 
-export function Option({ ref, onClick, isHighlighted, setHighlighted, children }: OptionProps) {
+function Option({ ref, onClick, isHighlighted, setHighlighted, children }: OptionProps) {
   return (
     <button
       ref={ref}

@@ -43,7 +43,7 @@ const schema = z.object({
   email: z.string().email(),
 });
 
-export function ResetPasswordForm() {
+function ResetPasswordForm() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 

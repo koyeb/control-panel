@@ -29,7 +29,7 @@ export function DeployPage() {
   return <DeployServiceForm />;
 }
 
-export function DeployServiceForm() {
+function DeployServiceForm() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 

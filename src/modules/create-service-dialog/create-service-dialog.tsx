@@ -160,7 +160,7 @@ export function CreateServiceDialog() {
   );
 }
 
-export function CreateServiceDialogDialog() {
+function CreateServiceDialogDialog() {
   const { dialogOpened, reset } = useCreateServiceDialog();
 
   useShortcut(['meta', 'k'], useFeatureFlag('new-command-palette') ? undefined : dialogOpened);

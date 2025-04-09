@@ -7,7 +7,7 @@ type NotifyOptions = {
   autoClose?: number | false;
 };
 
-export interface NotifierPort {
+interface NotifierPort {
   success(text: React.ReactNode, options?: NotifyOptions): void;
   info(text: React.ReactNode, options?: NotifyOptions): void;
   warning(text: React.ReactNode, options?: NotifyOptions): void;

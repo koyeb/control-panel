@@ -15,7 +15,7 @@ import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
 import { TokenProvider, useToken } from './token';
 
-export type ProvidersProps = {
+type ProvidersProps = {
   children: React.ReactNode;
 };
 
@@ -45,7 +45,7 @@ export function Providers({ children }: ProvidersProps) {
   );
 }
 
-export class RootErrorBoundary extends Component<{ children: React.ReactNode }> {
+class RootErrorBoundary extends Component<{ children: React.ReactNode }> {
   state: { error: Error | null } = { error: null };
 
   componentDidCatch(error: Error): void {

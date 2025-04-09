@@ -41,7 +41,7 @@ const schema = z.object({
   password: z.string().min(8).max(128),
 });
 
-export function ChangePasswordForm() {
+function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
   const { clearToken } = useToken();

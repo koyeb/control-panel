@@ -24,7 +24,7 @@ import {
 import { createDate } from './date';
 import { createId } from './strings';
 
-export type Factory<T> = (overrides?: Partial<T>) => T;
+type Factory<T> = (overrides?: Partial<T>) => T;
 
 export function createFactory<T>(getDefaults: () => T): Factory<T> {
   return (overrides) => ({ ...getDefaults(), ...overrides });

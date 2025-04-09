@@ -3,7 +3,7 @@ import { useReducer, useEffect, createContext, createElement, useContext, useCal
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 
-export type CreateServiceDialogPage = {
+type CreateServiceDialogPage = {
   label: string;
   icon?: React.ReactNode;
   shortcut?: string;
@@ -25,8 +25,8 @@ type CreateServiceDialogState = {
   navigationRefs: Map<CreateServiceDialogPage, HTMLElement | null>;
 };
 
-export type ServiceType = 'web' | 'worker';
-export type DeploymentMethod = 'github' | 'docker';
+type ServiceType = 'web' | 'worker';
+type DeploymentMethod = 'github' | 'docker';
 
 type GetSections = (
   serviceType: ServiceType | undefined,

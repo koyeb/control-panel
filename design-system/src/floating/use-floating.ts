@@ -21,7 +21,7 @@ import {
   useTransitionStyles,
 } from '@floating-ui/react';
 
-export type UseFloatingProps = {
+type UseFloatingProps = {
   open?: boolean;
   setOpen?: (open: boolean) => void;
   referenceElement?: HTMLElement | null;

@@ -112,13 +112,7 @@ type InstanceDescriptionProps = {
   badges: React.ReactNode;
 };
 
-export function InstanceDescription({
-  instance,
-  disabled,
-  selected,
-  onSelected,
-  badges,
-}: InstanceDescriptionProps) {
+function InstanceDescription({ instance, disabled, selected, onSelected, badges }: InstanceDescriptionProps) {
   return (
     <div className="col flex-1 gap-2">
       <div className="row items-center gap-2 font-medium">

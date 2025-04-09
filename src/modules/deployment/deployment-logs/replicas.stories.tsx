@@ -1,8 +1,9 @@
 import { Meta } from '@storybook/react';
 
 import { api } from 'src/api/api';
-import { createApiInstance } from 'src/api/mock/api-factories';
-import { create } from 'src/utils/factories';
+import { Api } from 'src/api/api-types';
+import { create, createFactory } from 'src/utils/factories';
+import { createId } from 'src/utils/strings';
 
 import { Replicas } from './replicas';
 
@@ -10,6 +11,12 @@ export default {
   title: 'Components/Replicas',
   parameters: { className: 'max-w-main' },
 } satisfies Meta;
+
+export const createApiInstance = createFactory<Api.Instance>(() => ({
+  id: createId(),
+  status: 'HEALTHY',
+  messages: [],
+}));
 
 api.getServiceMetrics = async () => ({ metrics: [] });
 

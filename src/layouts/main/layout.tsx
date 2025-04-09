@@ -163,7 +163,7 @@ function MobileMenu({ state, setState, children }: MobileMenuProps) {
   );
 }
 
-export function Aside({ className, ...props }: React.ComponentProps<'aside'>) {
+function Aside({ className, ...props }: React.ComponentProps<'aside'>) {
   return (
     <aside
       // eslint-disable-next-line tailwindcss/no-arbitrary-value

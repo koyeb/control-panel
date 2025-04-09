@@ -58,7 +58,7 @@ function BuildStep({ step }: { step: DeploymentBuildStep }) {
   );
 }
 
-export function Elapsed({ start, finish }: { start: string; finish?: string | null }) {
+function Elapsed({ start, finish }: { start: string; finish?: string | null }) {
   const now = useNow();
   const end = finish ? new Date(finish) : now;
 

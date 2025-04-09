@@ -26,7 +26,7 @@ export function useRegionLatency(region: CatalogRegion | undefined): undefined |
   }, [region, latenciesQuery]);
 }
 
-export function useDatacenterLatencies() {
+function useDatacenterLatencies() {
   const datacenters = useDatacenters().filter(({ id }) => !id.includes('aws'));
 
   return useQueries({

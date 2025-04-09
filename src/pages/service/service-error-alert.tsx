@@ -48,7 +48,7 @@ type ServiceUnhealthyAlertProps = {
   latestDeploymentId: string;
 };
 
-export function ServiceUnhealthyAlert({ serviceId, latestDeploymentId }: ServiceUnhealthyAlertProps) {
+function ServiceUnhealthyAlert({ serviceId, latestDeploymentId }: ServiceUnhealthyAlertProps) {
   return (
     <Alert
       variant="error"
@@ -78,7 +78,7 @@ type ServiceDegradedAlertProps = {
   latestDeploymentId: string;
 };
 
-export function ServiceDegradedAlert({
+function ServiceDegradedAlert({
   serviceId,
   activeDeploymentId,
   latestDeploymentId,

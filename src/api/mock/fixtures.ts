@@ -1,4 +1,35 @@
-import { createApiCatalogInstance, createApiDatacenter, createApiRegion } from './api-factories';
+import { createFactory } from 'src/utils/factories';
+import { createId } from 'src/utils/strings';
+
+import { Api } from '../api-types';
+
+export const createApiRegion = createFactory<Api.Region>(() => ({
+  id: createId(),
+  name: '',
+  status: 'AVAILABLE',
+  datacenters: [],
+}));
+
+export const createApiDatacenter = createFactory<Api.DatacenterListItem>(() => ({
+  id: createId(),
+  name: '',
+  domain: '',
+}));
+
+export const createApiCatalogInstance = createFactory<Api.CatalogInstance>(() => ({
+  id: createId(),
+  display_name: '',
+  status: 'AVAILABLE',
+  type: 'standard',
+  require_plan: [],
+  regions: [],
+  vcpu_shares: 0,
+  memory: '',
+  disk: '',
+  price_monthly: '',
+  price_hourly: '',
+  price_per_second: '',
+}));
 
 const ecoInstanceIds = [
   'eco-2xlarge',

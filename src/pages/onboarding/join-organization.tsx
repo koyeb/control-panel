@@ -48,7 +48,7 @@ export function JoinOrganization() {
   return <CreateOrganization />;
 }
 
-export function CreateOrganization() {
+function CreateOrganization() {
   const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
 

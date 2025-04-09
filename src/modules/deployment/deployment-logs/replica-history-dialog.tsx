@@ -46,7 +46,7 @@ export function ReplicaHistoryDialog(props: ReplicaHistoryDialogProps) {
   );
 }
 
-export function ReplicaHistory({ deployment, region, replicaIndex }: ReplicaHistoryDialogProps) {
+function ReplicaHistory({ deployment, region, replicaIndex }: ReplicaHistoryDialogProps) {
   const regionalDeployment = useRegionalDeployment(deployment.id, region);
 
   const [page, setPage] = useState(0);
