@@ -10,17 +10,11 @@ export function BillingPage() {
   return (
     <>
       <Usage />
-
       <StripePortal />
-
       <FeatureFlag feature="spending-limit">
         <SpendingLimit />
       </FeatureFlag>
-
-      <FeatureFlag feature="coupons">
-        <Coupon />
-      </FeatureFlag>
-
+      <Coupon />
       <BillingInformation />
     </>
   );
