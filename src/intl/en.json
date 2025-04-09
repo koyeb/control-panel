@@ -184,8 +184,7 @@
       "availabilityTooltip": "{availability} availability",
       "regions": {
         "label": "Deploy in regions",
-        "latency": "{value, number, :: precision-integer}ms latency",
-        "latencyNew": "{value, number, :: precision-integer}ms",
+        "latency": "{value, number, :: precision-integer}ms",
         "checkingLatency": "Checking latency...",
         "noRegionSelected": "Please select at least one region"
       },

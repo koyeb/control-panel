@@ -11,7 +11,6 @@ import { useCatalogRegionAvailability } from 'src/api/hooks/catalog';
 import { CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
 import { IconCircleGauge } from 'src/components/icons';
 import { RegionFlag } from 'src/components/region-flag';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { createTranslate } from 'src/intl/translate';
 
@@ -107,12 +106,10 @@ function RegionItem({ type, region, selected, onSelected, instance }: RegionItem
       <div className="col flex-1 gap-1.5">
         <div className="leading-none">{region.name}</div>
 
-        <FeatureFlag feature="region-availability" fallback={<RegionLatency region={region} />}>
-          <div className="row gap-2 text-xs text-dim">
-            <RegionLatencyNew region={region} />
-            {availability && <CatalogAvailabilityComponent availability={availability} />}
-          </div>
-        </FeatureFlag>
+        <div className="row gap-2 text-xs text-dim">
+          <RegionLatency region={region} />
+          {availability && <CatalogAvailabilityComponent availability={availability} />}
+        </div>
       </div>
 
       {type === 'radio' && <RadioInput checked={selected} onChange={onSelected} />}
@@ -124,21 +121,6 @@ function RegionItem({ type, region, selected, onSelected, instance }: RegionItem
 function RegionLatency({ region }: { region: CatalogRegion }) {
   const latency = useRegionLatency(region);
 
-  if (region === null) {
-    return null;
-  }
-
-  return (
-    <div className="mt-1 text-xs leading-none text-dim">
-      {latency === undefined && <T id="regions.checkingLatency" />}
-      {latency !== undefined && <T id="regions.latency" values={{ value: latency }} />}
-    </div>
-  );
-}
-
-function RegionLatencyNew({ region }: { region: CatalogRegion }) {
-  const latency = useRegionLatency(region);
-
   if (!latency) {
     return null;
   }
@@ -148,7 +130,7 @@ function RegionLatencyNew({ region }: { region: CatalogRegion }) {
       {(props) => (
         <div {...props} className="row items-center gap-1">
           <IconCircleGauge className="size-4" />
-          <T id="regions.latencyNew" values={{ value: latency }} />
+          <T id="regions.latency" values={{ value: latency }} />
         </div>
       )}
     </Tooltip>

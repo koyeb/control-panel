@@ -9,7 +9,6 @@ import { formatBytes } from 'src/application/memory';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/components/icons';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { tallyForms, useTallyDialog } from 'src/hooks/tally';
 import { FormattedPrice } from 'src/intl/formatted';
@@ -163,11 +162,9 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
         <T id="instanceSpec.disk" values={{ value: instance.memory }} />
       </div>
 
-      <FeatureFlag feature="region-availability">
-        {instanceAvailability?.availability !== undefined && (
-          <CatalogAvailability availability={instanceAvailability.availability} />
-        )}
-      </FeatureFlag>
+      {instanceAvailability?.availability !== undefined && (
+        <CatalogAvailability availability={instanceAvailability.availability} />
+      )}
     </div>
   );
 }
