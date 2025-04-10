@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
+import { z } from 'zod';
 
 import { Button, InputStart } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
@@ -9,14 +10,20 @@ import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { TextSkeleton } from 'src/components/skeleton';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { useZodResolver } from 'src/hooks/validation';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.spendingLimit');
 
+const schema = z.object({
+  amount: z.number().min(5),
+});
+
 export function SpendingLimit() {
-  const form = useForm<{ amount: number }>({
+  const form = useForm<z.infer<typeof schema>>({
     defaultValues: { amount: NaN },
+    resolver: useZodResolver(schema),
   });
 
   const { currentAmount, query, updateMutation, deleteMutation } = useSpendingLimit(form);
@@ -60,7 +67,11 @@ export function SpendingLimit() {
           }
         />
 
-        <Button type="submit" loading={updateMutation.isPending || deleteMutation.isPending}>
+        <Button
+          type="submit"
+          disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+          loading={updateMutation.isPending || deleteMutation.isPending}
+        >
           <Translate id="common.save" />
         </Button>
       </form>
