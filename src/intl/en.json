@@ -2377,7 +2377,7 @@
           "title": "Spending alerts",
           "description": "Receive email notifications when your monthly usage gets close to the spending limit",
           "noCurrentLimit": "Your did not set a spending limit yet",
-          "currentLimit": "Your spending limit is set to {value} per month",
+          "currentLimit": "Your spending limit is set to {value} per month (VAT included)",
           "inputStart": "$/mo",
           "spendingLimitRemovedNotification": "You removed the spending limit"
         }
