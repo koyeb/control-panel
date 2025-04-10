@@ -6,6 +6,7 @@ import { capitalize, shortId } from 'src/utils/strings';
 import {
   isAppActivity,
   isAutoscalingActivity,
+  isBudgetThresholdReachedActivity,
   isDeploymentActivity,
   isOrganizationActivity,
   isOrganizationInvitationActivity,
@@ -99,10 +100,35 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
     }
   }
 
-  if (isOrganizationActivity(activity)) {
-    if (activity.verb === 'updated' && activity.metadata?.event === 'plan_updated') {
+  if (isOrganizationActivity(activity) && activity.verb === 'updated') {
+    const organizationName = activity.object.name;
+
+    if (activity.metadata?.event === 'plan_updated') {
       return <T id="organizationPlanUpdated" />;
     }
+
+    if (activity.metadata?.event === 'create_budget') {
+      return <T id="organizationBudgetCreated" values={{ organizationName }} />;
+    }
+
+    if (activity.metadata?.event === 'update_budget') {
+      return <T id="organizationBudgetUpdated" values={{ organizationName }} />;
+    }
+
+    if (activity.metadata?.event === 'delete_budget') {
+      return <T id="organizationBudgetDeleted" values={{ organizationName }} />;
+    }
+  }
+
+  if (isBudgetThresholdReachedActivity(activity)) {
+    const { organizationName, amountSpent, threshold } = activity.metadata;
+
+    return (
+      <T
+        id={`organizationBudgetThresholdReached${threshold}`}
+        values={{ organizationName, amount: Number(amountSpent) / 100 }}
+      />
+    );
   }
 
   if (isOrganizationInvitationActivity(activity)) {

@@ -128,16 +128,31 @@ export const isSubscriptionActivity = createValidationGuard(
   }),
 );
 
+export const isBudgetThresholdReachedActivity = createValidationGuard(
+  z.object({
+    object: z.object({ type: z.literal('subscription') }),
+    verb: z.literal('budget_threshold_reached'),
+    metadata: z.object({
+      organizationName: z.string(),
+      amountSpent: z.string(),
+      threshold: z.union([z.literal('80'), z.literal('100')]),
+    }),
+  }),
+);
+
 export const isOrganizationActivity = createValidationGuard(
   z.object({
     object: z.object({
       type: z.literal('organization'),
     }),
-    metadata: z
-      .object({
-        event: z.literal('plan_updated'),
-      })
-      .optional(),
+    metadata: z.object({
+      event: z.union([
+        z.literal('plan_updated'),
+        z.literal('create_budget'),
+        z.literal('update_budget'),
+        z.literal('delete_budget'),
+      ]),
+    }),
   }),
 );
 
