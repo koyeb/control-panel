@@ -70,7 +70,7 @@ function UsageDetails({ periods, discounts, totalWithoutDiscount, total }: Usage
   return (
     <div className="col rounded-md border">
       {periods.map(({ start, end, lines }, index) => (
-        <Fragment key={start}>
+        <Fragment key={`${start}-${end}`}>
           <div className={clsx('row bg-muted px-3 py-2 text-xs text-dim', index === 0 && 'rounded-t-md')}>
             <Period start={start} end={end} />
           </div>
