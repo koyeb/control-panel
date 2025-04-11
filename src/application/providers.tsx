@@ -4,6 +4,7 @@ import { Component, Suspense, useMemo } from 'react';
 
 import { useMount } from 'src/hooks/lifecycle';
 import { useSearchParam } from 'src/hooks/router';
+import { CommandPaletteProvider } from 'src/modules/command-palette/command-palette.provider';
 
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
@@ -32,9 +33,11 @@ export function Providers({ children }: ProvidersProps) {
             <QueryClientProvider>
               <PostHogProvider>
                 <DialogProvider>
-                  <ReactQueryDevtools />
-                  <NotificationContainer />
-                  <ErrorBoundary>{children}</ErrorBoundary>
+                  <CommandPaletteProvider>
+                    <ReactQueryDevtools />
+                    <NotificationContainer />
+                    <ErrorBoundary>{children}</ErrorBoundary>
+                  </CommandPaletteProvider>
                 </DialogProvider>
               </PostHogProvider>
             </QueryClientProvider>

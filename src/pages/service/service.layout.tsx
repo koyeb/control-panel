@@ -1,14 +1,13 @@
 import { useMutation } from '@tanstack/react-query';
+import { useCallback, useEffect } from 'react';
 
 import { Alert, Button, TabButtons } from '@koyeb/design-system';
-import { api } from 'src/api/api';
 import { useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { App, Deployment, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
-import { useToken } from 'src/application/token';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink, TabButtonLink } from 'src/components/link';
@@ -18,7 +17,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useNavigate, usePathname, useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { useRegisterCommand } from 'src/modules/command-palette/command-palette-context';
+import { PaletteItem, useCommandPaletteContext } from 'src/modules/command-palette/command-palette.provider';
 import { inArray } from 'src/utils/arrays';
 
 import { InstanceAvailabilityAlerts } from './instance-availability-alerts';
@@ -63,7 +62,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   return (
     <div className="col gap-8">
       <DocumentTitle title={serviceName ?? undefined} />
-      <ServiceCommands service={service} />
+      <RegisterServiceCommands service={service} />
 
       <div className="col sm:row items-start justify-between gap-4">
         <Header app={app} service={service} deployment={activeDeployment} />
@@ -82,84 +81,121 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   );
 }
 
-function ServiceCommands({ service }: { service: Service }) {
+function RegisterServiceCommands({ service }: { service: Service }) {
+  const { defaultItems, mutationEffects } = useCommandPaletteContext();
   const invalidate = useInvalidateApiQuery();
-  const { token } = useToken();
-  const { id: serviceId, name } = service;
   const navigate = useNavigate();
 
-  useRegisterCommand(
-    (register) => {
-      const invalidateService = async () => {
-        await invalidate('listServices');
-        await invalidate('getService', { path: { id: service.id } });
-      };
+  const invalidateService = useCallback(async () => {
+    await invalidate('listServices');
+    await invalidate('getService', { path: { id: service.id } });
+  }, [invalidate, service.id]);
 
-      register({
+  const { mutate: redeploy } = useMutation({
+    ...useApiMutationFn('redeployService', { path: { id: service.id }, body: {} }),
+    ...mutationEffects,
+    onSuccess: async () => {
+      await invalidateService();
+      notify.success(`Service ${service.name} is being redeployed`);
+    },
+  });
+
+  const { mutate: resume } = useMutation({
+    ...useApiMutationFn('resumeService', { path: { id: service.id } }),
+    ...mutationEffects,
+    onSuccess: async () => {
+      await invalidateService();
+      notify.success(`Service ${service.name} is being resumed`);
+    },
+  });
+
+  const { mutate: pause } = useMutation({
+    ...useApiMutationFn('pauseService', { path: { id: service.id } }),
+    ...mutationEffects,
+    onSuccess: async () => {
+      await invalidateService();
+      notify.success(`Service ${service.name} is being paused`);
+    },
+  });
+
+  useEffect(() => {
+    const name = service.name;
+
+    const commands: PaletteItem[] = [
+      {
         label: `Go to dashboard`,
         description: `Navigate to the ${name} service's dashboard page`,
         keywords: ['overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
         execute: () => navigate(routes.service.overview(service.id)),
-      });
+      },
 
-      register({
+      {
         label: `Go to metrics`,
         description: `Navigate to the ${name} service's metrics page`,
         keywords: ['metrics', 'monitoring', 'graphs', 'charts'],
         execute: () => navigate(routes.service.metrics(service.id)),
-      });
+      },
 
-      register({
+      {
         label: `Go to console`,
         description: `Navigate to the ${name} service's console page`,
         keywords: ['console', 'shell', 'terminal', 'command', 'execute', 'run', 'ssh'],
         execute: () => navigate(routes.service.console(service.id)),
-      });
+      },
 
-      register({
+      {
         label: `Go to settings`,
         description: `Navigate to the ${name} service's settings page`,
         keywords: ['settings', 'update'],
         execute: () => navigate(routes.service.settings(service.id)),
-      });
+      },
 
-      register({
+      {
         label: `Redeploy service`,
         description: `Redeploy ${name}'s latest deployment`,
         keywords: ['redeploy', 'restart'],
-        async execute() {
-          await api.redeployService({ token, path: { id: service.id }, body: {} });
-          await invalidateService();
-          notify.success(`Service ${name} is being redeployed`);
-        },
-      });
+        weight: 4,
+        execute: redeploy,
+      },
+    ];
 
-      if (service.status === 'PAUSED') {
-        register({
-          label: `Resume service ${name}`,
-          description: `Resume ${name}`,
-          keywords: ['resume', 'start'],
-          execute: async () => {
-            await api.resumeService({ token, path: { id: service.id } });
-            await invalidateService();
-            notify.success(`Service ${name} is being resumed`);
-          },
-        });
-      } else if (inArray(service.status, ['healthy', 'degraded'])) {
-        register({
-          label: `Pause service ${name}`,
-          description: `Pause ${name}`,
-          keywords: ['pause', 'stop'],
-          execute: async () => {
-            await api.pauseService({ token, path: { id: service.id } });
-            await invalidateService();
-            notify.success(`Service ${name} is being paused`);
-          },
-        });
-      }
-    },
-    [serviceId, name],
-  );
+    commands.forEach((command) => defaultItems.add(command));
+
+    return () => {
+      commands.forEach((command) => defaultItems.delete(command));
+    };
+  }, [defaultItems, navigate, service.id, service.name, redeploy]);
+
+  useEffect(() => {
+    const name = service.name;
+    let command: PaletteItem | undefined = undefined;
+
+    if (service.status === 'PAUSED') {
+      command = {
+        label: `Resume service ${name}`,
+        description: `Resume ${name}`,
+        keywords: ['resume', 'start'],
+        weight: 4,
+        execute: resume,
+      };
+    } else if (inArray(service.status, ['HEALTHY', 'DEGRADED'])) {
+      command = {
+        label: `Pause service ${name}`,
+        description: `Pause ${name}`,
+        keywords: ['pause', 'stop'],
+        weight: 4,
+        execute: pause,
+      };
+    }
+
+    if (command !== undefined) {
+      defaultItems.add(command);
+
+      return () => {
+        defaultItems.delete(command);
+      };
+    }
+  }, [defaultItems, service.name, service.status, resume, pause]);
 
   return null;
 }

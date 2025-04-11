@@ -49,9 +49,10 @@ export function MainLayout({ children }: LayoutProps) {
   const banner = useBanner();
 
   return (
-    <CommandPalette>
+    <>
       <DocumentTitle />
       <PreloadDatacenterLatencies />
+      <CommandPalette />
 
       <CreateServiceDialog />
       <FeatureFlagsDialog />
@@ -67,7 +68,7 @@ export function MainLayout({ children }: LayoutProps) {
         context={pageContext.enabled ? <PageContext {...pageContext} /> : null}
         contextExpanded={pageContext.expanded}
       />
-    </CommandPalette>
+    </>
   );
 }
 
