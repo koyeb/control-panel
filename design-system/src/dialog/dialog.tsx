@@ -21,7 +21,7 @@ type DialogProps = {
   onClosed?: () => void;
   overlayClassName?: string;
   className?: string;
-  children: React.ReactNode;
+  children: React.ReactNode | ((props: Record<string, unknown>) => React.ReactElement);
 };
 
 export function Dialog({ open, onClose, onClosed, overlayClassName, className, children }: DialogProps) {
@@ -39,6 +39,25 @@ export function Dialog({ open, onClose, onClosed, overlayClassName, className, c
 
   const { getFloatingProps } = useInteractions([dismiss, role]);
 
+  const content = () => {
+    if (typeof children === 'function') {
+      return children({ ref: refs.setFloating, ...getFloatingProps() });
+    }
+
+    return (
+      <div
+        ref={refs.setFloating}
+        className={clsx(
+          'max-h-full overflow-y-auto rounded-lg bg-popover p-8 text-contrast-popover shadow-lg dark:border',
+          className,
+        )}
+        {...getFloatingProps()}
+      >
+        {children}
+      </div>
+    );
+  };
+
   return (
     <AnimatePresence onExitComplete={onClosed}>
       {open && (
@@ -55,16 +74,7 @@ export function Dialog({ open, onClose, onClosed, overlayClassName, className, c
             )}
           >
             <FloatingFocusManager context={context} initialFocus={-1}>
-              <div
-                ref={refs.setFloating}
-                className={clsx(
-                  'max-h-full overflow-y-auto rounded-lg bg-popover p-8 text-contrast-popover shadow-lg dark:border',
-                  className,
-                )}
-                {...getFloatingProps()}
-              >
-                {children}
-              </div>
+              {content()}
             </FloatingFocusManager>
           </MotionFloatingOverlay>
         </FloatingPortal>
