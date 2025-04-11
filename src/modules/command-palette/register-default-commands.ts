@@ -343,6 +343,8 @@ function useRegisterServiceNavigationCommands() {
   const services = useServices();
 
   useEffect(() => {
+    const commands: PaletteItem[] = [];
+
     for (const service of services ?? []) {
       const app = apps?.find(hasProperty('id', service.appId));
 
@@ -353,20 +355,20 @@ function useRegisterServiceNavigationCommands() {
       const name = `${app.name}/${service.name}`;
       const keywords = [name, service.id, 'service'];
 
-      const command: PaletteItem = {
+      commands.push({
         label: `Go to service ${name}`,
         description: `Navigate to the ${name} service's dashboard`,
         keywords: [...keywords, 'overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
         weight: 3,
         execute: () => navigate(routes.service.overview(service.id)),
-      };
-
-      defaultItems.add(command);
-
-      return () => {
-        defaultItems.delete(command);
-      };
+      });
     }
+
+    commands.forEach((command) => defaultItems.add(command));
+
+    return () => {
+      commands.forEach((command) => defaultItems.delete(command));
+    };
   }, [navigate, defaultItems, apps, services]);
 }
 
