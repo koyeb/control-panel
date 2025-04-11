@@ -2379,11 +2379,10 @@
           "successNotification": "Your organization's billing information were updated"
         },
         "spendingLimit": {
-          "title": "Spending alerts",
+          "title": "Billing alerts",
           "description": "Receive email notifications when your monthly usage reaches 80% and 100% of the budget threshold across your organization",
-          "noCurrentLimit": "Your did not set a spending limit yet",
-          "currentLimit": "Your spending limit is set to {value} per month (VAT included)",
-          "inputStart": "$/mo",
+          "inputStart": "$",
+          "inputEnd": "/ month",
           "spendingLimitRemovedNotification": "You removed the spending limit"
         }
       },

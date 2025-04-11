@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, InputStart } from '@koyeb/design-system';
+import { Button, InputEnd, InputStart } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { ControlledInput } from 'src/components/controlled';
@@ -11,7 +11,6 @@ import { SectionHeader } from 'src/components/section-header';
 import { TextSkeleton } from 'src/components/skeleton';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.spendingLimit');
@@ -46,12 +45,6 @@ export function SpendingLimit() {
 
       {query.isPending && <TextSkeleton width={30} />}
 
-      {currentAmount === null && <T id="noCurrentLimit" />}
-
-      {currentAmount !== null && (
-        <T id="currentLimit" values={{ value: <FormattedPrice value={currentAmount} digits={0} /> }} />
-      )}
-
       {query.isError && query.error.message}
 
       <form onSubmit={handleSubmit(form, onSubmit)} className="row items-start gap-4">
@@ -64,6 +57,11 @@ export function SpendingLimit() {
             <InputStart>
               <T id="inputStart" />
             </InputStart>
+          }
+          end={
+            <InputEnd>
+              <T id="inputEnd" />
+            </InputEnd>
           }
         />
 
