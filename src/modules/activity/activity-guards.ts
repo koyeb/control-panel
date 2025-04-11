@@ -134,8 +134,8 @@ export const isBudgetThresholdReachedActivity = createValidationGuard(
     verb: z.literal('budget_threshold_reached'),
     metadata: z.object({
       organizationName: z.string(),
-      amountSpent: z.string(),
-      threshold: z.union([z.literal('80'), z.literal('100')]),
+      budgetAmount: z.string(),
+      threshold: z.string(),
     }),
   }),
 );

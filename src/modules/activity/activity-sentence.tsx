@@ -1,4 +1,5 @@
 import { Activity } from 'src/api/model';
+import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, TranslateEnum } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { capitalize, shortId } from 'src/utils/strings';
@@ -121,12 +122,16 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
   }
 
   if (isBudgetThresholdReachedActivity(activity)) {
-    const { organizationName, amountSpent, threshold } = activity.metadata;
+    const { organizationName, budgetAmount, threshold } = activity.metadata;
 
     return (
       <T
-        id={`organizationBudgetThresholdReached${threshold}`}
-        values={{ organizationName, amount: Number(amountSpent) / 100 }}
+        id={`organizationBudgetThresholdReached${threshold === '100' ? '100' : ''}`}
+        values={{
+          organizationName,
+          threshold: Number(threshold) / 100,
+          amount: <FormattedPrice value={Number(budgetAmount)} />,
+        }}
       />
     );
   }
