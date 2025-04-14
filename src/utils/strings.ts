@@ -36,12 +36,12 @@ export function createId(): string {
   return Math.random().toString(36).slice(-6);
 }
 
-export function slugify(str: string): string {
+export function slugify(str: string, max = Infinity): string {
   return str
     .replace(/[^a-zA-Z0-9]/g, '-')
     .replace(/--+/g, '-')
     .toLowerCase()
-    .slice(0, 63)
+    .slice(0, max)
     .replace(/(^-|-$)/g, '');
 }
 

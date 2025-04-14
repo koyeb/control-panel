@@ -6,6 +6,7 @@ import { Button, InfoTooltip, Stepper } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
+import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useToken } from 'src/application/token';
 import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
@@ -16,6 +17,7 @@ import { QueryError } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
+import { slugify } from 'src/utils/strings';
 
 const T = createTranslate('pages.onboarding.joinOrganization');
 
@@ -49,12 +51,13 @@ export function JoinOrganization() {
 }
 
 function CreateOrganization() {
+  const user = useUser();
   const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      organizationName: '',
+      organizationName: defaultOrganizationName(user),
     },
     resolver: useZodResolver(schema),
   });
@@ -114,4 +117,12 @@ function CreateOrganization() {
       </form>
     </section>
   );
+}
+
+function defaultOrganizationName(user: User): string {
+  if (user.githubUser) {
+    return slugify(user.githubUser, 39);
+  }
+
+  return slugify(user.email.replace(/@.*/, ''), 39);
 }

@@ -38,6 +38,6 @@ export function generateServiceName(values: ServiceForm) {
   }
 
   if (name !== undefined) {
-    return slugify(name.replace(/.*\//, ''));
+    return slugify(name.replace(/.*\//, ''), 63);
   }
 }

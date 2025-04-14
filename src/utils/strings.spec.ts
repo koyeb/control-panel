@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest';
 
-import { createArray } from './arrays';
 import { capitalize, isSlug, slugify, snakeToCamelCase } from './strings';
 
 describe('slugify', () => {
@@ -36,16 +35,12 @@ describe('slugify', () => {
     expect(slugify('hello the !? world')).toEqual('hello-the-world');
   });
 
-  test('string of more than 63 characters', () => {
-    const string = createArray(6, '1234567890').join('');
-
-    expect(slugify(`${string}12345`)).toEqual(`${string}123`);
+  test('string of more than max characters', () => {
+    expect(slugify('12345', 4)).toEqual('1234');
   });
 
-  test('string of more than 63 characters and leading dash', () => {
-    const string = createArray(6, '1234567890').join('');
-
-    expect(slugify(`${string}12-4`)).toEqual(`${string}12`);
+  test('string of more than max characters and leading dash', () => {
+    expect(slugify('123.5', 4)).toEqual('123');
   });
 });
 
