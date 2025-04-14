@@ -18,7 +18,6 @@ import { ServiceForm } from '../../service-form.types';
 import { BulkEnvironmentVariablesEditionDialog } from './bulk-environment-variables-edition';
 import { EnvironmentVariableFields } from './environment-variable-fields';
 import { Files } from './files';
-import { UnknownInterpolationAlert } from './unknown-interpolation-alert';
 
 const T = createTranslate('modules.serviceForm.environmentVariables');
 
@@ -49,8 +48,6 @@ export function EnvironmentVariablesSection() {
           <T id="tabs.files" />
         </TabButton>
       </TabButtons>
-
-      <UnknownInterpolationAlert />
 
       {tab === 'environmentVariables' && <EnvironmentVariables />}
       {tab === 'files' && <Files />}

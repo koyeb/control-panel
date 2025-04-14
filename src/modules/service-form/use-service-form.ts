@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { FieldPath, UseFormReturn, useForm, useWatch } from 'react-hook-form';
+import { FieldPath, useForm, UseFormReturn, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
@@ -9,6 +9,7 @@ import { useOrganization } from 'src/api/hooks/session';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { useResolvers } from 'src/hooks/form';
 import { usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
@@ -19,6 +20,7 @@ import { Trim } from 'src/utils/types';
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
 import { serviceFormSchema } from './helpers/service-form.schema';
+import { useUnknownInterpolationResolver } from './sections/04-environment-variables/unknown-interpolations';
 import { Scaling, ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
@@ -46,7 +48,10 @@ export function useServiceForm(serviceId?: string) {
         queryClient,
       );
     },
-    resolver: useZodResolver(serviceFormSchema, errorMessageHandler(translate)),
+    resolver: useResolvers(
+      useZodResolver(serviceFormSchema, errorMessageHandler(translate)),
+      useUnknownInterpolationResolver(),
+    ),
   });
 
   const sections = !form.formState.isLoading ? getServiceFormSections(form.watch()) : [];

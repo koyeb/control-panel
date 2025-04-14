@@ -10,17 +10,17 @@ import { ServiceForm } from '../../service-form.types';
 export function useServiceVariables() {
   const values = useFormContext<ServiceForm>().getValues();
 
-  const { data } = useQuery({
+  const query = useQuery({
     ...useApiQueryFn('getServiceVariables', {
       body: { definition: serviceFormToDeploymentDefinition(values) },
       delay: 500,
     }),
-    placeholderData: keepPreviousData as never,
     refetchInterval: false,
+    placeholderData: keepPreviousData,
     select: mapServiceVariables,
   });
 
-  return data;
+  return query.data;
 }
 
 export type ServiceVariables = {
@@ -29,7 +29,11 @@ export type ServiceVariables = {
   systemEnv: string[];
 };
 
-function mapServiceVariables({ secrets, system_env, user_env }: Record<string, string[]>): ServiceVariables {
+export function mapServiceVariables({
+  secrets,
+  system_env,
+  user_env,
+}: Record<string, string[]>): ServiceVariables {
   return {
     secrets: secrets!.map((name) => `secret.${name}`),
     userEnv: sort(user_env).filter((value) => value !== ''),

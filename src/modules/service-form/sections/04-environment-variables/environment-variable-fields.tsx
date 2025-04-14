@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { useFormContext } from 'react-hook-form';
 
 import { IconButton, useBreakpoint } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
@@ -24,6 +25,8 @@ export function EnvironmentVariableFields({
   onRemove,
   onCreateSecret,
 }: EnvironmentVariableFieldsProps) {
+  const { trigger } = useFormContext<ServiceForm>();
+
   const isMobile = !useBreakpoint('md');
   const showLabel = isMobile || index === 0;
 
@@ -43,6 +46,7 @@ export function EnvironmentVariableFields({
         name={`environmentVariables.${index}.name`}
         type="text"
         label={showLabel && <T id="nameLabel" />}
+        onChangeEffect={() => void trigger(`environmentVariables.${index}.value`)}
         className="w-full"
       />
 

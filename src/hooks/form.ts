@@ -4,6 +4,7 @@ import {
   FieldErrors,
   FieldPath,
   FieldValues,
+  Resolver,
   UseFormReturn,
   useFormContext,
   useWatch,
@@ -90,3 +91,21 @@ export const useFormValues = <Values extends FieldValues>(form?: UseFormReturn<V
 
   return useDeepCompareMemo(values);
 };
+
+export function useResolvers<TFieldValues extends FieldValues, TContext, TTransformedValues>(
+  ...resolvers: Array<Resolver<TFieldValues, TContext, TTransformedValues>>
+) {
+  return useCallback<Resolver<TFieldValues, TContext, TTransformedValues>>(async (...params) => {
+    const result: ReturnType<Resolver<TFieldValues, TContext, TTransformedValues>> = {
+      values: {},
+      errors: {},
+    };
+
+    for (const resolver of resolvers) {
+      Object.assign(result, await resolver(...params));
+    }
+
+    return result;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, resolvers);
+}

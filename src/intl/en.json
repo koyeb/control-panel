@@ -1167,6 +1167,7 @@
           "files": "Files"
         },
         "info": "Configure manually or drag and drop file with multiple variables",
+        "unknownInterpolation": "The reference \"{value}\" does not exist",
         "nameLabel": "Name",
         "valueLabel": "Value",
         "valueTooltip": "You can reference secrets or environment variables (including Koyeb variables) using <documentationLink>interpolation</documentationLink>",
@@ -1188,11 +1189,7 @@
           "notPlainText": "You must provide a text file",
           "noEnvVars": "No environment variables were identified in the provided file"
         },
-        "createSecret": "Create new secret",
-        "unknownInterpolation": {
-          "title": "Missing interpolation reference",
-          "description": "The reference \"<code>{value}</code>\" used in the {type, select, variable {environment variable} file {file} other {type}} <code>{name}</code> does not exist"
-        }
+        "createSecret": "Create new secret"
       },
       "files": {
         "title": "Files",
