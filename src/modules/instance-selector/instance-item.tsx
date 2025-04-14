@@ -185,7 +185,7 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
       )}
 
       {badges.includes('preview') && (
-        <Badge size={1} color="orange">
+        <Badge size={1} color="green">
           <T id="badge.preview" />
         </Badge>
       )}
