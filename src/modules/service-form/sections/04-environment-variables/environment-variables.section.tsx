@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import { useFieldArray, useFormContext, useFormState } from 'react-hook-form';
 
 import { Button, TabButton, TabButtons } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
@@ -8,6 +8,7 @@ import { readFile } from 'src/application/read-file';
 import { Dialog } from 'src/components/dialog';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { IconPlus } from 'src/components/icons';
+import { useMount } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
@@ -49,10 +50,24 @@ export function EnvironmentVariablesSection() {
         </TabButton>
       </TabButtons>
 
+      <WatchFilesErrors onError={() => setTab('files')} />
+
       {tab === 'environmentVariables' && <EnvironmentVariables />}
       {tab === 'files' && <Files />}
     </ServiceFormSection>
   );
+}
+
+function WatchFilesErrors({ onError }: { onError: () => void }) {
+  const { errors } = useFormState<ServiceForm>();
+
+  useMount(() => {
+    if (errors.files !== undefined) {
+      onError();
+    }
+  });
+
+  return null;
 }
 
 function EnvironmentVariables() {
