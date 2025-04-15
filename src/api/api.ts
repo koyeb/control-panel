@@ -143,6 +143,7 @@ export const api = {
 
   // instances
   listInstances: endpoint('get', '/v1/instances'),
+  getInstance: endpoint('get', '/v1/instances/{id}'),
 
   // logs
   logsQuery: endpoint('get', '/v1/streams/logs/query'),

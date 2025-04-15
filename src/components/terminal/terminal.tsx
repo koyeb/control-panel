@@ -45,7 +45,7 @@ export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
     return () => {
       disposable.dispose();
     };
-  });
+  }, [xterm, onData]);
 
   useWatchElementSize(container, () => fitAddon.fit());
   useTerminalTheme(xterm);

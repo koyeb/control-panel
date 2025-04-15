@@ -157,3 +157,11 @@ export function useInstancesQuery({
     }),
   });
 }
+
+export function useInstanceQuery(instanceId: string) {
+  return useQuery({
+    ...useApiQueryFn('getInstance', { path: { id: instanceId } }),
+    placeholderData: keepPreviousData,
+    select: ({ instance }) => mapInstance(instance!),
+  });
+}
