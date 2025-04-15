@@ -18,6 +18,7 @@ type ConfirmationDialogProps = {
   submitText: React.ReactNode;
   submitColor?: ButtonColor;
   onConfirm: () => Promise<unknown>;
+  onAutofill?: () => void;
 };
 
 export function ConfirmationDialog({
@@ -31,6 +32,7 @@ export function ConfirmationDialog({
   submitText,
   submitColor = 'red',
   onConfirm,
+  onAutofill,
 }: ConfirmationDialogProps) {
   const form = useForm({
     defaultValues: {
@@ -72,6 +74,7 @@ export function ConfirmationDialog({
           onDoubleClick={(event) => {
             if (event.ctrlKey || event.metaKey) {
               form.setValue('confirmationText', confirmationText);
+              onAutofill?.();
             }
           }}
         />

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
@@ -18,10 +19,12 @@ export function DeactivateOrganization() {
   const openDialog = Dialog.useOpen();
   const closeDialog = Dialog.useClose();
 
+  const [skipConfirmation, setSkipConfirmation] = useState(false);
+
   const requestDeactivation = useMutation({
     ...useApiMutationFn('deactivateOrganization', {
       path: { id: organization.id },
-      body: {},
+      body: { skip_confirmation: skipConfirmation },
     }),
     onSuccess() {
       closeDialog();
@@ -61,6 +64,7 @@ export function DeactivateOrganization() {
         submitText={<T id="deactivate" />}
         submitColor="orange"
         onConfirm={requestDeactivation.mutateAsync}
+        onAutofill={() => setSkipConfirmation(true)}
       />
     </section>
   );
