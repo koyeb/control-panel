@@ -2358,12 +2358,12 @@
           "cta": "Manage billing"
         },
         "coupon": {
-          "title": "Coupon code",
-          "description": "Redeem a coupon code",
-          "placeholder": "COUPON_CODE",
+          "title": "Promo codes",
+          "description": "Redeem a promo code",
+          "placeholder": "PROMOCODE",
           "submit": "Redeem",
-          "couponSent": "The coupon code has been applied to your organization",
-          "hobbyPlanUpgrade": "Do you have a coupon? <upgrade>Upgrade to the Starter plan</upgrade> to apply it."
+          "couponSent": "The promo code has been applied to your organization",
+          "hobbyPlanUpgrade": "Do you have a promo code? <upgrade>Upgrade to the Starter plan</upgrade> to apply it."
         },
         "billingInformation": {
           "title": "Billing information",
@@ -2377,10 +2377,10 @@
         },
         "spendingLimit": {
           "title": "Billing alerts",
-          "description": "Receive email notifications when your monthly usage reaches 80% and 100% of the budget threshold across your organization",
+          "description": "Receive email notifications when your monthly usage reaches 80% and 100% of the budget threshold set for your organization",
           "inputStart": "$",
           "inputEnd": "/ month",
-          "spendingLimitRemovedNotification": "You removed the spending limit"
+          "spendingLimitRemovedNotification": "You removed the budget threshold for your organization"
         }
       },
       "plans": {
