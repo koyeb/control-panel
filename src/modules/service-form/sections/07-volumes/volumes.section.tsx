@@ -95,6 +95,7 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
   const { setValue } = useFormContext<ServiceForm>();
 
   const instance = useInstance(useWatchServiceForm('instance'));
+  const hasScaleToZero = useWatchServiceForm('scaling.min') === 0;
   const hasMultipleInstances = useWatchServiceForm('scaling.max') > 1;
 
   const regions = useRegions(useWatchServiceForm('regions'));
@@ -130,7 +131,7 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
     };
   }
 
-  if (hasMultipleInstances) {
+  if (hasScaleToZero || hasMultipleInstances) {
     return {
       title: <T id="volumesUnavailable.multipleInstancesTitle" />,
       description: <T id="volumesUnavailable.multipleInstancesDescription" values={values} />,

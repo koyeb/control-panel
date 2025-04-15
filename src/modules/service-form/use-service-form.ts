@@ -204,7 +204,9 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         }
       });
 
-      const { meta, serviceType, scaling, ports } = values;
+      const { meta, serviceType, scaling, ports, volumes } = values;
+
+      const hasVolumes = volumes.filter((volume) => volume.name !== '').length > 0;
       const instance = instances.find(hasProperty('id', values.instance));
 
       if (scaleToZero && instance?.id === 'free') {
@@ -233,6 +235,10 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
       }
 
       if (scaling.min === 0 && instance?.id !== 'free' && !ports.some((port) => port.public)) {
+        scaling.min = 1;
+      }
+
+      if (scaling.min === 0 && hasVolumes) {
         scaling.min = 1;
       }
 
