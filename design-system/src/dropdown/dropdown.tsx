@@ -47,6 +47,10 @@ export function Dropdown<Item>(props: DropdownProps<Item>) {
           <Item key={props.getKey(item)} item={item} index={index} {...props} />
         ))}
 
+      {'items' in props && props.items.length === 0 && props.renderNoItems && (
+        <li>{props.renderNoItems()}</li>
+      )}
+
       {'groups' in props && <Groups {...props} />}
     </ul>
   );
