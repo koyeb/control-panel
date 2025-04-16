@@ -67,8 +67,12 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
       }
     },
     async onSuccess({ secret }) {
-      await invalidate('listSecrets');
-      await invalidate('revealSecret', { path: { id: secret!.id! } });
+      await Promise.all([
+        invalidate('listSecrets'),
+        invalidate('revealSecret', { path: { id: secret!.id! } }),
+        invalidate('getServiceVariables', { body: { definition: {} } }),
+      ]);
+
       form.reset();
       onSubmitted(secret!.name!);
     },
