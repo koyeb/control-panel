@@ -1,83 +1,57 @@
-import { useMutation } from '@tanstack/react-query';
-import { useCallback, useRef } from 'react';
-import { FieldErrors, Resolver } from 'react-hook-form';
+import { useEffect, useMemo } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import { EnvironmentVariable } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
+import { useFormValues } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
-import { wait } from 'src/utils/promises';
 
-import { serviceFormToDeploymentDefinition } from '../../helpers/service-form-to-deployment';
 import { File, ServiceForm } from '../../service-form.types';
 
-import { mapServiceVariables, ServiceVariables } from './service-variables';
+import { ServiceVariables, useServiceVariables } from './service-variables';
 
 const T = createTranslate('modules.serviceForm.environmentVariables');
 
-export function useUnknownInterpolationResolver() {
+export function useUnknownInterpolationErrors() {
   const t = T.useTranslate();
 
-  const { mutateAsync } = useMutation({
-    ...useApiMutationFn('getServiceVariables', (values: ServiceForm) => ({
-      body: { definition: serviceFormToDeploymentDefinition(values) },
-    })),
-  });
+  const { setError } = useFormContext<ServiceForm>();
 
-  const abort = useRef<AbortController>(null);
+  const values = useFormValues<ServiceForm>();
+  const { environmentVariables, files } = values;
+  const variables = useServiceVariables(values);
 
-  return useCallback<Resolver<ServiceForm>>(
-    async (values) => {
-      abort.current?.abort();
-      abort.current = new AbortController();
+  const unknownInterpolations = useMemo(() => {
+    if (variables === undefined) {
+      return [];
+    }
 
-      if (!(await wait(500, abort.current.signal))) {
-        return { values, errors: {} };
+    return findUnknownInterpolations(variables, environmentVariables, files);
+  }, [variables, environmentVariables, files]);
+
+  useEffect(() => {
+    for (const unknownInterpolation of unknownInterpolations) {
+      if ('variable' in unknownInterpolation) {
+        const index = environmentVariables.indexOf(unknownInterpolation.variable);
+
+        setTimeout(() => {
+          setError(`environmentVariables.${index}.value`, {
+            message: t('unknownInterpolation', { value: unknownInterpolation.value }) as string,
+          });
+        }, 0);
       }
 
-      const { environmentVariables, files } = values;
+      if ('file' in unknownInterpolation) {
+        const index = files.indexOf(unknownInterpolation.file);
 
-      const unknownInterpolations = findUnknownInterpolations(
-        mapServiceVariables(await mutateAsync(values)),
-        environmentVariables,
-        files,
-      );
-
-      const errors: FieldErrors<ServiceForm> = {};
-
-      for (const unknownInterpolation of unknownInterpolations) {
-        if ('variable' in unknownInterpolation) {
-          const index = environmentVariables.indexOf(unknownInterpolation.variable);
-
-          errors.environmentVariables ??= {};
-          errors.environmentVariables[index] ??= {};
-
-          errors.environmentVariables[index].value = {
-            type: 'validation',
+        setTimeout(() => {
+          setError(`files.${index}.content`, {
             message: t('unknownInterpolation', { value: unknownInterpolation.value }) as string,
-          };
-        }
-
-        if ('file' in unknownInterpolation) {
-          const index = files.indexOf(unknownInterpolation.file);
-
-          errors.files ??= {};
-          errors.files[index] ??= {};
-
-          errors.files[index].content = {
-            type: 'validation',
-            message: t('unknownInterpolation', { value: unknownInterpolation.value }) as string,
-          };
-        }
+          });
+        }, 0);
       }
-
-      return {
-        values,
-        errors,
-      };
-    },
-    [mutateAsync, t],
-  );
+    }
+  }, [t, setError, environmentVariables, files, unknownInterpolations]);
 }
 
 function findUnknownInterpolations(

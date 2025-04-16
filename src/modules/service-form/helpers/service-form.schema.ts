@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-import { createValidationGuard } from 'src/application/create-validation-guard';
-import { assert } from 'src/utils/assert';
+import { EnvironmentVariable } from 'src/api/model';
 import { isSlug } from 'src/utils/strings';
 
 import { File } from '../service-form.types';
@@ -63,6 +62,10 @@ const dockerDeployment = z.object({
   args: z.array(z.string()).nullable(),
   privileged: z.boolean(),
 });
+
+function preprocessEnvironmentVariable(value: unknown) {
+  return (value as EnvironmentVariable[]).filter((value) => value.name !== '');
+}
 
 const environmentVariable = z.object({
   name: z.string().trim(),
@@ -178,12 +181,8 @@ const volumes = z.object({
   mountPath: z.string().startsWith('/'),
 });
 
-const isVolumeArray = createValidationGuard(z.array(z.object({ name: z.string() })));
-
 function preprocessVolumes(value: unknown) {
-  assert(isVolumeArray(value));
-
-  return value.filter((value) => value.name !== '');
+  return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
 export const serviceFormSchema = z.object({
@@ -208,9 +207,7 @@ export const serviceFormSchema = z.object({
   ]),
   builder,
   dockerDeployment,
-  environmentVariables: z
-    .array(environmentVariable)
-    .transform((variables) => variables.filter((variable) => variable.name !== '')),
+  environmentVariables: z.preprocess(preprocessEnvironmentVariable, z.array(environmentVariable)),
   files: z.preprocess(preprocessFiles, z.array(file)),
   regions,
   instance,

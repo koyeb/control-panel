@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import { useRef, useState } from 'react';
-import { useController } from 'react-hook-form';
+import { useController, useFormContext } from 'react-hook-form';
 
 import {
   Dropdown,
@@ -43,7 +43,8 @@ export function EnvironmentVariableValueField({
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
-  const variables = useServiceVariables();
+  const values = useFormContext<ServiceForm>().getValues();
+  const variables = useServiceVariables(values);
 
   const [isOpen, setIsOpen] = useState(false);
 

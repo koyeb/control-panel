@@ -1,20 +1,18 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import sort from 'lodash-es/sortBy';
-import { useFormContext } from 'react-hook-form';
 
 import { useApiQueryFn } from 'src/api/use-api';
 
 import { serviceFormToDeploymentDefinition } from '../../helpers/service-form-to-deployment';
 import { ServiceForm } from '../../service-form.types';
 
-export function useServiceVariables() {
-  const values = useFormContext<ServiceForm>().getValues();
-
+export function useServiceVariables(values: ServiceForm | undefined) {
   const query = useQuery({
     ...useApiQueryFn('getServiceVariables', {
-      body: { definition: serviceFormToDeploymentDefinition(values) },
+      body: values ? { definition: serviceFormToDeploymentDefinition(values) } : {},
       delay: 500,
     }),
+    enabled: values !== undefined,
     refetchInterval: false,
     placeholderData: keepPreviousData,
     select: mapServiceVariables,
