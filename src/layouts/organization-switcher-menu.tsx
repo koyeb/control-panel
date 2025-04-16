@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 import { ButtonMenuItem, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
-import { OrganizationMember } from 'src/api/model';
+import { OrganizationMember, OrganizationStatus } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
@@ -89,7 +89,7 @@ export function OrganizationSwitcherMenu({
 }
 
 function isNotDeleting({ organization }: OrganizationMember) {
-  return !inArray(organization.status, ['deleting', 'deleted']);
+  return !inArray<OrganizationStatus>(organization.status, ['DELETING', 'DELETED']);
 }
 
 function useSwitchOrganization(onSuccess: () => void) {

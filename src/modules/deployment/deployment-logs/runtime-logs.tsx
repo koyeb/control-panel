@@ -62,7 +62,7 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
 
   if (
     logs.lines.length === 0 &&
-    inArray(deployment.status, ['pending', 'provisioning', 'scheduled', 'allocating'])
+    inArray(deployment.status, ['PENDING', 'PROVISIONING', 'SCHEDULED', 'ALLOCATING'])
   ) {
     return <WaitingForLogs />;
   }

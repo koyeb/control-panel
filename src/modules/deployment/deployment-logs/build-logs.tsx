@@ -53,7 +53,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
     return <QueryError error={logs.error} className="m-4" />;
   }
 
-  if (logs.lines.length === 0 && inArray(deployment.status, ['pending', 'provisioning'])) {
+  if (logs.lines.length === 0 && inArray(deployment.status, ['PENDING', 'PROVISIONING'])) {
     return <WaitingForLogs />;
   }
 

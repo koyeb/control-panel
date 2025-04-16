@@ -74,7 +74,7 @@ export function MainLayout({ children }: LayoutProps) {
 
 function Menu({ collapsed = false }: { collapsed?: boolean }) {
   const organization = useOrganizationUnsafe();
-  const isDeactivated = inArray(organization?.status, ['deactivating', 'deactivated']);
+  const isDeactivated = inArray(organization?.status, ['DEACTIVATING', 'DEACTIVATED']);
 
   return (
     <div className="col min-h-full gap-4 py-4 sm:gap-6 sm:py-6">
