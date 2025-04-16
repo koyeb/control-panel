@@ -2137,6 +2137,7 @@
         "servicePaused": {
           "title": "Service paused",
           "description": "Your service is currently paused, deployments are stopped, and no traffic will be handled by the service",
+          "descriptionWorker": "Your service is currently paused, deployments are stopped",
           "resume": "Resume",
           "resuming": "Your service is being resumed"
         },

@@ -288,7 +288,9 @@ function ServicePausedAlert({ service }: { service: Service }) {
     <Alert
       variant="info"
       title={<T id="servicePaused.title" />}
-      description={<T id="servicePaused.description" />}
+      description={
+        <T id={service.type === 'worker' ? 'servicePaused.descriptionWorker' : 'servicePaused.description'} />
+      }
     >
       <Button color="blue" loading={isPending} onClick={() => resume()} className="ml-auto self-center">
         <T id="servicePaused.resume" />
