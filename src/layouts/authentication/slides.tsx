@@ -1,5 +1,6 @@
 import clsx from 'clsx';
-import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence, motion, wrap } from 'motion/react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
 import { Stepper } from '@koyeb/design-system';
@@ -29,11 +30,56 @@ import LogoZilliz from './logos/zilliz.svg?react';
 const T = createTranslate('layouts.authentication');
 
 export default function Slides() {
+  const slides = useMemo<[SlideProps, SlideProps, SlideProps]>(
+    () => [
+      {
+        illustration: zeroConfig,
+        line1: <T id="zeroConfig.line1" />,
+        line2: <T id="zeroConfig.line2" />,
+        features: [
+          <T key={1} id="zeroConfig.feature1" />,
+          <T key={2} id="zeroConfig.feature2" />,
+          <T key={3} id="zeroConfig.feature3" />,
+        ],
+        images: [Dots, Progress, Lines],
+        logos: [LogoNeon, LogoEtoro, LogoSimplismart],
+      },
+      {
+        illustration: seamlessDeployment,
+        line1: <T id="seamlessDeployment.line1" />,
+        line2: <T id="seamlessDeployment.line2" />,
+        features: [
+          <T key={1} id="seamlessDeployment.feature1" />,
+          <T key={2} id="seamlessDeployment.feature2" />,
+          <T key={3} id="seamlessDeployment.feature3" />,
+        ],
+        images: [Progress, Lines, Dots],
+        logos: [LogoHuggingface, LogoOllama, LogoPhotoroom],
+      },
+      {
+        illustration: anyHardware,
+        line1: <T id="anyHardware.line1" />,
+        line2: <T id="anyHardware.line2" />,
+        features: [
+          <T key={1} id="anyHardware.feature1" />,
+          <T key={2} id="anyHardware.feature2" />,
+          <T key={3} id="anyHardware.feature3" />,
+        ],
+        images: [Lines, Dots, Progress],
+        logos: [LogoUltralytics, LogoZilliz, LogoMirakl],
+      },
+    ],
+    [],
+  );
+
   const [index, setIndex] = useState<0 | 1 | 2>(0);
+  const key = useRef(0);
+  const slide = slides[index];
 
   const next = useCallback(() => {
-    setIndex(((index + 1) % 3) as typeof index);
-  }, [index]);
+    setIndex(wrap(0, slides.length, index + 1) as 0 | 1 | 2);
+    key.current = Math.random();
+  }, [slides, index]);
 
   useEffect(() => {
     const interval = setInterval(next, 6 * 1000);
@@ -43,51 +89,15 @@ export default function Slides() {
     };
   }, [next]);
 
-  const props: Record<0 | 1 | 2, SlideProps> = [
-    {
-      illustration: zeroConfig,
-      line1: <T id="zeroConfig.line1" />,
-      line2: <T id="zeroConfig.line2" />,
-      features: [
-        <T key={1} id="zeroConfig.feature1" />,
-        <T key={2} id="zeroConfig.feature2" />,
-        <T key={3} id="zeroConfig.feature3" />,
-      ],
-      images: [Dots, Progress, Lines],
-      logos: [LogoNeon, LogoEtoro, LogoSimplismart],
-    },
-    {
-      illustration: seamlessDeployment,
-      line1: <T id="seamlessDeployment.line1" />,
-      line2: <T id="seamlessDeployment.line2" />,
-      features: [
-        <T key={1} id="seamlessDeployment.feature1" />,
-        <T key={2} id="seamlessDeployment.feature2" />,
-        <T key={3} id="seamlessDeployment.feature3" />,
-      ],
-      images: [Progress, Lines, Dots],
-      logos: [LogoHuggingface, LogoOllama, LogoPhotoroom],
-    },
-    {
-      illustration: anyHardware,
-      line1: <T id="anyHardware.line1" />,
-      line2: <T id="anyHardware.line2" />,
-      features: [
-        <T key={1} id="anyHardware.feature1" />,
-        <T key={2} id="anyHardware.feature2" />,
-        <T key={3} id="anyHardware.feature3" />,
-      ],
-      images: [Lines, Dots, Progress],
-      logos: [LogoUltralytics, LogoZilliz, LogoMirakl],
-    },
-  ];
-
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
-    <div className="col dark h-full rounded-2xl bg-[#111111] [&_*]:border-default/70" onClick={next}>
+    <div
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
+      className="col dark h-full rounded-2xl bg-[#111111] [&_*]:border-default/70"
+      onClick={next}
+    >
       <Helmet>
         {createArray(3, (i) => (
-          <link rel="preload" href={props[i as 0 | 1 | 2].illustration} as="image" />
+          <link rel="preload" href={slides[i as 0 | 1 | 2].illustration} as="image" />
         ))}
       </Helmet>
 
@@ -95,7 +105,11 @@ export default function Slides() {
         <Stepper totalSteps={3} activeStep={index} onClick={(i) => setIndex(i as typeof index)} />
       </div>
 
-      <Slide {...props[index]} />
+      <div className="relative flex-1 overflow-hidden">
+        <AnimatePresence initial={false}>
+          <Slide key={key.current} {...slide} />
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
@@ -118,7 +132,13 @@ type SlideProps = {
 
 function Slide({ illustration, line1, line2, features, images, logos }: SlideProps) {
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, x: 50 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ type: 'spring', visualDuration: 0.4, bounce: 0.4 }}
+      exit={{ opacity: 0, x: -50 }}
+      className="col absolute inset-0"
+    >
       <img src={illustration} className="mx-auto" style={{ maxHeight: '40vh' }} />
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
@@ -143,7 +163,7 @@ function Slide({ illustration, line1, line2, features, images, logos }: SlidePro
           <CustomerLogos logos={logos} />
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }
 
