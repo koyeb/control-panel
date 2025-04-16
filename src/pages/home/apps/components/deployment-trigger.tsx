@@ -32,7 +32,7 @@ type GitDeploymentTriggerProps = {
 };
 
 function GitDeploymentTrigger({ trigger }: GitDeploymentTriggerProps) {
-  const commit = (
+  const commit = trigger.commit.sha ? (
     <ExternalLink
       openInNewTab
       href={`https://${trigger.repository}/commit/${trigger.commit.sha}`}
@@ -44,7 +44,7 @@ function GitDeploymentTrigger({ trigger }: GitDeploymentTriggerProps) {
       <span>#{shortId(trigger.commit.sha)}</span>
       <span className="truncate text-dim">{trigger.commit.message}</span>
     </ExternalLink>
-  );
+  ) : undefined;
 
   const branch = (
     <ExternalLink

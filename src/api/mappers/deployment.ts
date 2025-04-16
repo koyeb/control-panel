@@ -237,7 +237,8 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
         repository: trigger.git!.repository!,
         branch: trigger.git!.branch!,
         commit: {
-          sha: trigger.git!.sha!,
+          sha:
+            trigger.git!.sha! === '0000000000000000000000000000000000000000' ? undefined : trigger.git!.sha!,
           message: trigger.git!.message!,
           author: {
             name: trigger.git!.sender_username!,

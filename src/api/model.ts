@@ -330,7 +330,7 @@ export type GitDeploymentTrigger = {
   repository: string;
   branch: string;
   commit: {
-    sha: string;
+    sha?: string;
     message: string;
     author: {
       name: string;
