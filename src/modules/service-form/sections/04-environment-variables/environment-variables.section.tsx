@@ -19,7 +19,6 @@ import { ServiceForm } from '../../service-form.types';
 import { BulkEnvironmentVariablesEditionDialog } from './bulk-environment-variables-edition';
 import { EnvironmentVariableFields } from './environment-variable-fields';
 import { Files } from './files';
-import { useUnknownInterpolationErrors } from './unknown-interpolations';
 
 const T = createTranslate('modules.serviceForm.environmentVariables');
 
@@ -33,8 +32,6 @@ export function EnvironmentVariablesSection() {
     .filter((file) => file.mountPath !== '' || file.content !== '');
 
   const [tab, setTab] = useState<'environmentVariables' | 'files'>('environmentVariables');
-
-  useUnknownInterpolationErrors();
 
   return (
     <ServiceFormSection

@@ -20,10 +20,9 @@ import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
 
+import { useServiceVariables } from '../../helpers/service-variables';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
-
-import { useServiceVariables } from './service-variables';
 
 const T = createTranslate('modules.serviceForm.environmentVariables');
 
@@ -43,8 +42,8 @@ export function EnvironmentVariableValueField({
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
-  const values = useFormContext<ServiceForm>().getValues();
-  const variables = useServiceVariables(values);
+  const form = useFormContext<ServiceForm>();
+  const variables = useServiceVariables()(form.watch());
 
   const [isOpen, setIsOpen] = useState(false);
 

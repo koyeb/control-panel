@@ -929,6 +929,7 @@
         "invalidGithubRepositoryUrl": "Please provide a GitHub repository URL",
         "noDockerImageSelected": "Docker image URL is required",
         "startWithSlash": "Must start with /",
+        "unknownInterpolation": "The reference \"{value}\" does not exist",
         "scalingTargetEmpty": "When enabled, the target cannot be empty",
         "scalingTargetTooSmall": "When enabled, the target must be at least {min}",
         "scalingTargetTooBig": "When enabled, the target cannot be higher than {max}",
@@ -1167,7 +1168,6 @@
           "files": "Files"
         },
         "info": "Configure manually or drag and drop file with multiple variables",
-        "unknownInterpolation": "The reference \"{value}\" does not exist",
         "nameLabel": "Name",
         "valueLabel": "Value",
         "valueTooltip": "You can reference secrets or environment variables (including Koyeb variables) using <documentationLink>interpolation</documentationLink>",

@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { FieldPath, useForm, UseFormReturn, useWatch } from 'react-hook-form';
+import { useCallback, useEffect } from 'react';
+import { FieldPath, Resolver, useForm, UseFormReturn, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
@@ -19,11 +19,10 @@ import { Trim } from 'src/utils/types';
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
 import { serviceFormSchema } from './helpers/service-form.schema';
+import { useUnknownInterpolationErrors } from './helpers/unknown-interpolations';
 import { Scaling, ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
-  const translate = useTranslate();
-
   const params = useSearchParams();
   const datacenters = useDatacenters();
   const regions = useRegions();
@@ -46,7 +45,7 @@ export function useServiceForm(serviceId?: string) {
         queryClient,
       );
     },
-    resolver: useZodResolver(serviceFormSchema, errorMessageHandler(translate)),
+    resolver: useServiceFormResolver(),
   });
 
   const sections = !form.formState.isLoading ? getServiceFormSections(form.watch()) : [];
@@ -61,6 +60,25 @@ export function useServiceForm(serviceId?: string) {
 
 export function useWatchServiceForm<Path extends FieldPath<ServiceForm>>(name: Path) {
   return useWatch<ServiceForm, Path>({ name });
+}
+
+function useServiceFormResolver() {
+  const translate = useTranslate();
+  const getUnknownInterpolationErrors = useUnknownInterpolationErrors();
+  const schemaResolver = useZodResolver(serviceFormSchema, errorMessageHandler(translate));
+
+  return useCallback<Resolver<ServiceForm>>(
+    (values, context, options) => {
+      const errors = getUnknownInterpolationErrors(values);
+
+      if (Object.keys(errors).length > 0) {
+        return { values: {}, errors };
+      }
+
+      return schemaResolver(values, context, options);
+    },
+    [schemaResolver, getUnknownInterpolationErrors],
+  );
 }
 
 function errorMessageHandler(translate: TranslateFn) {
