@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { IntlShape, useIntl } from 'react-intl';
 
 type Prefixes<Key extends string> = Key extends `${infer P}.${infer S}` ? P | `${P}.${Prefixes<S>}` : never;
@@ -10,19 +11,25 @@ export interface TranslateFunction<Key extends string> {
 
 export function createTranslationHelper<Key extends string>(commonValues: Values = {}) {
   function useTranslate<Prefix extends Prefixes<Key>>(prefix: Prefix) {
-    type Suffix = Key extends `${Prefix}.${infer S}` ? S : never;
-
     const intl = useIntl();
 
-    function translate(suffix: Suffix): string;
-    function translate(suffix: Suffix, values: Values): string | React.ReactNode[];
+    type Suffix = Key extends `${Prefix}.${infer S}` ? S : never;
 
-    function translate(suffix: string, values?: Values): string | React.ReactNode[] {
-      const id = prefix === '' ? suffix : `${prefix}.${suffix}`;
-      return intl.formatMessage({ id }, { ...commonValues, ...values });
+    interface Translate {
+      (suffix: Suffix): string;
+      (suffix: Suffix, values: Values): string | React.ReactNode[];
     }
 
-    return translate;
+    return useCallback<Translate>(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (suffix: string, values?: Values): any => {
+        return intl.formatMessage(
+          { id: prefix === '' ? suffix : `${prefix}.${suffix}` },
+          { ...commonValues, ...values },
+        );
+      },
+      [intl, prefix],
+    );
   }
 
   return function <Prefix extends Prefixes<Key>>(prefix: Prefix) {
