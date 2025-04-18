@@ -61,7 +61,7 @@ function externalUrl(domain: AppDomain, port: Port) {
   }
 }
 
-const upcomingDeploymentStatuses: DeploymentStatus[] = [
+export const upcomingDeploymentStatuses: DeploymentStatus[] = [
   'PENDING',
   'PROVISIONING',
   'SCHEDULED',

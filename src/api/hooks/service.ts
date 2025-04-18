@@ -12,7 +12,7 @@ import {
   mapReplica,
 } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
-import { InstanceStatus } from '../model';
+import { DeploymentStatus, InstanceStatus } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useAppsQuery() {
@@ -59,6 +59,17 @@ export function useServiceQuery(serviceId?: string) {
 
 export function useService(serviceId?: string) {
   return useServiceQuery(serviceId).data;
+}
+
+export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStatus[]) {
+  return useQuery({
+    ...useApiQueryFn('listDeployments', { query: { service_id: serviceId, statuses } }),
+    select: ({ deployments }) => deployments!.map(mapDeployment),
+  });
+}
+
+export function useDeployments(serviceId: string, statuses?: DeploymentStatus[]) {
+  return useDeploymentsQuery(serviceId, statuses).data;
 }
 
 export function useDeploymentQuery(deploymentId: string | undefined) {

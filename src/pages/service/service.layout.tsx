@@ -20,6 +20,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 import { PaletteItem, useCommandPaletteContext } from 'src/modules/command-palette/command-palette.provider';
 import { inArray } from 'src/utils/arrays';
 
+import { DeploymentThrottledAlert } from './deployment-throttled-alert';
 import { InstanceAvailabilityAlerts } from './instance-availability-alerts';
 import { PendingChangesAlert } from './pending-changes-alert';
 import { RedeployButton } from './redeploy-button';
@@ -73,6 +74,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
       <ServicePausedAlert service={service} />
       <PendingChangesAlert service={service} />
       <InstanceAvailabilityAlerts service={service} />
+      <DeploymentThrottledAlert service={service} />
 
       <Navigation />
 

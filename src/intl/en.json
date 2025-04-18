@@ -2162,6 +2162,9 @@
             "description": "The capacity for this instance type is currently limited, which may prevent service scale-up. To guarantee service scalability, consider switching to a different instance type or region."
           }
         },
+        "deploymentThrottled": {
+          "description": "Your deployment is currently being throttled due to the limits of your current plan. <upgrade>Upgrade</upgrade> to a higher plan to increase these limits."
+        },
         "navigation": {
           "overview": "Overview",
           "metrics": "Metrics",
