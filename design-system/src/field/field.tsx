@@ -3,15 +3,16 @@ import clsx from 'clsx';
 import { HelpTooltip } from '../help-tooltip/help-tooltip';
 
 type FieldProps = {
+  ref?: React.Ref<HTMLDivElement>;
   label?: React.ReactNode;
   helperText?: React.ReactNode;
   className?: string;
   children: React.ReactNode;
 };
 
-export function Field({ label, helperText, className, children }: FieldProps) {
+export function Field({ ref, label, helperText, className, children }: FieldProps) {
   return (
-    <div className={clsx('col items-start gap-1.5', className)}>
+    <div ref={ref} className={clsx('col items-start gap-1.5', className)}>
       {label}
       {children}
       {helperText}

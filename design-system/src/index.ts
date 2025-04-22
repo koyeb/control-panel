@@ -6,6 +6,7 @@ export * from './button/button';
 export * from './button-group/button-group';
 export * from './checkbox/checkbox';
 export * from './collapse/collapse';
+export * from './combobox/combobox';
 export * from './dialog/dialog';
 export * from './dropdown/dropdown';
 export * from './dropdown/use-dropdown';
