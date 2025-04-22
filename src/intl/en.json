@@ -929,7 +929,7 @@
         "invalidGithubRepositoryUrl": "Please provide a GitHub repository URL",
         "noDockerImageSelected": "Docker image URL is required",
         "startWithSlash": "Must start with /",
-        "unknownInterpolation": "The reference \"{value}\" does not exist",
+        "unknownInterpolation": "The referenced value \"{value}\" does not exist",
         "scalingTargetEmpty": "When enabled, the target cannot be empty",
         "scalingTargetTooSmall": "When enabled, the target must be at least {min}",
         "scalingTargetTooBig": "When enabled, the target cannot be higher than {max}",
