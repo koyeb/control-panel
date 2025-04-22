@@ -186,7 +186,7 @@
         "disk": "{value} Disk"
       },
       "latencyTooltip": "{latency, number, :: precision-integer}ms latency",
-      "availabilityTooltip": "{availability} availability",
+      "availability": "{availability} supply",
       "regions": {
         "label": "Deploy in regions",
         "latency": "{value, number, :: precision-integer}ms",

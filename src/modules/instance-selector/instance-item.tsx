@@ -83,23 +83,35 @@ export function InstanceItem({
 const bullet = '•';
 
 function InstancePrice({ instance }: { instance: CatalogInstance }) {
+  const instanceAvailability = useCatalogInstanceAvailability(instance.id);
+
   return (
-    <div className="row items-center gap-2 sm:block sm:text-right">
-      <div>
+    <div className="row sm:col items-center gap-2 sm:items-end sm:gap-0">
+      <div className="order-2">
         <T
           id="costs.pricePerHour"
           values={{ price: <FormattedPrice value={instance.priceHourly * 100} digits={6} /> }}
         />
       </div>
 
-      <div className="sm:hidden">{bullet}</div>
+      <div className="order-3 text-dim sm:hidden">{bullet}</div>
 
-      <div className="mt-1 text-xs text-dim">
+      <div className="order-4 mt-1 text-xs text-dim">
         <T
           id="costs.pricePerMonth"
           values={{ price: <FormattedPrice value={instance.priceMonthly * 100} /> }}
         />
       </div>
+
+      {instanceAvailability?.availability !== undefined && (
+        <>
+          <div className="order-5 text-dim sm:hidden">{bullet}</div>
+
+          <div className="order-6 text-xs text-dim sm:order-1 sm:mb-1.5">
+            <CatalogAvailability availability={instanceAvailability.availability} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -127,8 +139,6 @@ function InstanceDescription({ instance, disabled, selected, onSelected, badges 
 }
 
 function InstanceSpec({ instance }: { instance: CatalogInstance }) {
-  const instanceAvailability = useCatalogInstanceAvailability(instance.id);
-
   return (
     <div className="row flex-wrap gap-3 text-sm text-dim">
       <div className="row items-center gap-1">
@@ -155,10 +165,6 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
         <IconRadioReceiver className="size-4 stroke-1" />
         <T id="instanceSpec.disk" values={{ value: instance.memory }} />
       </div>
-
-      {instanceAvailability?.availability !== undefined && (
-        <CatalogAvailability availability={instanceAvailability.availability} />
-      )}
     </div>
   );
 }

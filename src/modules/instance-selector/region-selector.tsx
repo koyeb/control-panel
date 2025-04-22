@@ -106,9 +106,15 @@ function RegionItem({ type, region, selected, onSelected, instance }: RegionItem
       <div className="col flex-1 gap-1.5">
         <div className="leading-none">{region.name}</div>
 
-        <div className="row gap-2 text-xs text-dim">
+        <div className="row gap-1 text-xs text-dim">
           <RegionLatency region={region} />
-          {availability && <CatalogAvailabilityComponent availability={availability} />}
+
+          {availability && (
+            <>
+              <div className="text-dim">{bullet}</div>
+              <CatalogAvailabilityComponent availability={availability} />
+            </>
+          )}
         </div>
       </div>
 
@@ -117,6 +123,8 @@ function RegionItem({ type, region, selected, onSelected, instance }: RegionItem
     </label>
   );
 }
+
+const bullet = '•';
 
 function RegionLatency({ region }: { region: CatalogRegion }) {
   const latency = useRegionLatency(region);
