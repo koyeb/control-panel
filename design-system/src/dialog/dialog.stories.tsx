@@ -11,10 +11,7 @@ const meta = {
     controls: controls.exclude(['width', 'children']),
   },
   args: {
-    isOpen: true,
-    title: 'Title',
-    description: 'Description',
-    width: 'md',
+    open: true,
     children: <ComponentPlaceholder />,
   },
 } satisfies Meta<typeof Dialog>;
