@@ -16,7 +16,7 @@ export function useServiceVariables() {
     (values?: ServiceForm) => {
       return mapServiceVariables({
         secrets: query.data?.secrets,
-        system_env: query.data?.system_env,
+        system_env: [...(query.data?.system_env ?? []), 'KOYEB_GPU_COUNT'],
         user_env: values?.environmentVariables.map(({ name }) => name),
       });
     },
