@@ -1,20 +1,17 @@
 import clsx from 'clsx';
-import { useState } from 'react';
 
-import { Floating } from '@koyeb/design-system';
 import { isApiError } from 'src/api/api-errors';
-import { useOrganizationUnsafe, useUserQuery } from 'src/api/hooks/session';
+import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
-import { IconChevronUpDown } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
-import { OrganizationAvatar } from 'src/components/organization-avatar';
 
-import { OrganizationSwitcherMenu } from '../organization-switcher-menu';
+import { OrganizationSwitcher } from '../organization-switcher';
 
 import { UserMenu } from './user-menu';
 
 export function SecondaryLayoutHeader({ background }: { background?: boolean }) {
+  const organizationQuery = useOrganizationQuery();
   const userQuery = useUserQuery();
 
   const accountLocked = userQuery.isError && isApiError(userQuery.error) && userQuery.error.status === 403;
@@ -33,45 +30,10 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
 
       {isAuthenticated && (
         <>
-          <OrganizationSwitcher />
+          {organizationQuery.isSuccess && <OrganizationSwitcher className="w-full max-w-48" />}
           <UserMenu />
         </>
       )}
     </header>
-  );
-}
-
-function OrganizationSwitcher() {
-  const currentOrganization = useOrganizationUnsafe();
-  const [open, setOpen] = useState(false);
-
-  if (currentOrganization === undefined) {
-    return null;
-  }
-
-  return (
-    <Floating
-      open={open}
-      setOpen={setOpen}
-      strategy="fixed"
-      placement="bottom-start"
-      offset={8}
-      renderReference={(props) => (
-        <button
-          type="button"
-          data-testid="organization-switcher"
-          className="row items-center gap-2 rounded-lg text-start"
-          onClick={() => setOpen(!open)}
-          {...props}
-        >
-          <OrganizationAvatar className="size-6 rounded-full" />
-          <span className="flex-1 font-medium">{currentOrganization.name}</span>
-          <IconChevronUpDown className="size-4 text-dim" />
-        </button>
-      )}
-      renderFloating={(props) => (
-        <OrganizationSwitcherMenu onClose={() => setOpen(false)} showCreateOrganization={false} {...props} />
-      )}
-    />
   );
 }

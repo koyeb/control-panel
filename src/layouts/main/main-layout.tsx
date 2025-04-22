@@ -26,6 +26,8 @@ import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { useTrial } from 'src/modules/trial/use-trial';
 import { inArray } from 'src/utils/arrays';
 
+import { OrganizationSwitcher } from '../organization-switcher';
+
 import { AppBreadcrumbs } from './app-breadcrumbs';
 import { FeatureFlagsDialog } from './feature-flags-dialog';
 import { GlobalAlert } from './global-alert';
@@ -33,7 +35,6 @@ import { HelpLinks } from './help-links';
 import { Layout } from './layout';
 import { Navigation } from './navigation';
 import { OrganizationPlan } from './organization-plan';
-import { OrganizationSwitcher } from './organization-switcher';
 import { PlatformStatus } from './platform-status';
 import { PreloadDatacenterLatencies } from './preload-datacenter-latencies';
 import { UserMenu } from './user-menu';
@@ -91,7 +92,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
       {!collapsed && (
         <div className="col px-3">
-          <OrganizationSwitcher />
+          <OrganizationSwitcher showCreateOrganization />
         </div>
       )}
 

@@ -17,7 +17,7 @@ export { default as IconChevronDown } from 'lucide-static/icons/chevron-down.svg
 export { default as IconChevronLeft } from 'lucide-static/icons/chevron-left.svg?react';
 export { default as IconChevronRight } from 'lucide-static/icons/chevron-right.svg?react';
 export { default as IconChevronsLeft } from 'lucide-static/icons/chevrons-left.svg?react';
-export { default as IconChevronUpDown } from 'lucide-static/icons/chevrons-up-down.svg?react';
+export { default as IconChevronsUpDown } from 'lucide-static/icons/chevrons-up-down.svg?react';
 export { default as IconCircleAlert } from 'lucide-static/icons/circle-alert.svg?react';
 export { default as IconCircleCheck } from 'lucide-static/icons/circle-check.svg?react';
 export { default as IconCircleDashed } from 'lucide-static/icons/circle-dashed.svg?react';

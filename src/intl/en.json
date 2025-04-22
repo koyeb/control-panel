@@ -1395,7 +1395,11 @@
     }
   },
   "layouts": {
-    "createOrganization": "Create organization",
+    "organizationSwitcher": {
+      "placeholder": "Search by organization name or ID",
+      "filtered": "Showing {count} of {total}",
+      "createOrganization": "Create organization"
+    },
     "main": {
       "accountUnderReview": "We need more information to approve your account. Please <link>verify your identity</link> to prevent account suspension.",
       "sessionTokenWarning": "You are currently seeing the organization {organizationName}",
