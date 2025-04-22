@@ -2163,7 +2163,7 @@
           }
         },
         "deploymentThrottled": {
-          "description": "Your deployment is currently being throttled due to the limits of your current plan. <upgrade>Upgrade</upgrade> to a higher plan to increase these limits."
+          "description": "Your deployment is being throttled due to the limits of your plan. <upgrade>Upgrade</upgrade> to a higher plan to lift these limits."
         },
         "navigation": {
           "overview": "Overview",
