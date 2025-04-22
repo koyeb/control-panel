@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import { useRef, useState } from 'react';
-import { useController, useFormContext } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 
 import {
   Dropdown,
@@ -16,6 +16,7 @@ import {
 } from '@koyeb/design-system';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconChevronDown } from 'src/components/icons';
+import { useFormValues } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
@@ -42,8 +43,7 @@ export function EnvironmentVariableValueField({
   const id = useId();
   const helperTextId = `${id}-helper-text`;
 
-  const form = useFormContext<ServiceForm>();
-  const variables = useServiceVariables()(form.watch());
+  const variables = useServiceVariables(useFormValues<ServiceForm>());
 
   const [isOpen, setIsOpen] = useState(false);
 

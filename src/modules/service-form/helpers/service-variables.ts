@@ -1,27 +1,25 @@
 import { useQuery } from '@tanstack/react-query';
 import sort from 'lodash-es/sortBy';
-import { useCallback } from 'react';
 
 import { useApiQueryFn } from 'src/api/use-api';
+import { useDebouncedValue } from 'src/hooks/timers';
 
 import { ServiceForm } from '../service-form.types';
 
-export function useServiceVariables() {
+import { serviceFormToDeploymentDefinition } from './service-form-to-deployment';
+
+export function useServiceVariables(values: ServiceForm) {
+  const valuesDebounced = useDebouncedValue(values, 1000);
+
   const query = useQuery({
-    ...useApiQueryFn('getServiceVariables', { body: { definition: {} } }),
+    ...useApiQueryFn('getServiceVariables', {
+      body: { definition: serviceFormToDeploymentDefinition(valuesDebounced) },
+    }),
     refetchInterval: false,
+    select: mapServiceVariables,
   });
 
-  return useCallback(
-    (values?: ServiceForm) => {
-      return mapServiceVariables({
-        secrets: query.data?.secrets,
-        system_env: [...(query.data?.system_env ?? []), 'KOYEB_GPU_COUNT'],
-        user_env: values?.environmentVariables.map(({ name }) => name),
-      });
-    },
-    [query.data],
-  );
+  return query.data;
 }
 
 export type ServiceVariables = {
@@ -30,7 +28,7 @@ export type ServiceVariables = {
   systemEnv: string[];
 };
 
-function mapServiceVariables({
+export function mapServiceVariables({
   secrets = [],
   system_env = [],
   user_env = [],

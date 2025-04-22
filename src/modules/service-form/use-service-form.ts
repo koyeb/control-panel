@@ -68,8 +68,8 @@ function useServiceFormResolver() {
   const schemaResolver = useZodResolver(serviceFormSchema, errorMessageHandler(translate));
 
   return useCallback<Resolver<ServiceForm>>(
-    (values, context, options) => {
-      const errors = getUnknownInterpolationErrors(values);
+    async (values, context, options) => {
+      const errors = await getUnknownInterpolationErrors(values);
 
       if (Object.keys(errors).length > 0) {
         return { values: {}, errors };

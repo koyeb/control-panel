@@ -1,23 +1,41 @@
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
+import { api } from 'src/api/api';
 import { EnvironmentVariable } from 'src/api/model';
+import { useToken } from 'src/application/token';
 import { createTranslate } from 'src/intl/translate';
 import { assert, defined } from 'src/utils/assert';
+import { wait } from 'src/utils/promises';
 
 import { File, ServiceForm } from '../service-form.types';
 
-import { ServiceVariables, useServiceVariables } from './service-variables';
+import { serviceFormToDeploymentDefinition } from './service-form-to-deployment';
+import { mapServiceVariables, ServiceVariables } from './service-variables';
 
 const T = createTranslate('modules.serviceForm.errors');
 
 export function useUnknownInterpolationErrors() {
   const t = T.useTranslate();
-  const getVariables = useServiceVariables();
+  const { token } = useToken();
+
+  const ctrl = useRef<AbortController>(null);
 
   return useCallback(
-    (values: ServiceForm) => {
-      const variables = getVariables(values);
+    async (values: ServiceForm) => {
+      ctrl.current?.abort();
+      ctrl.current = new AbortController();
+
+      if (!(await wait(1000, ctrl.current.signal))) {
+        return {};
+      }
+
+      const variables = mapServiceVariables(
+        await api.getServiceVariables({
+          token,
+          body: { definition: serviceFormToDeploymentDefinition(values) },
+        }),
+      );
 
       const unknownInterpolations = findUnknownInterpolations(
         variables,
@@ -52,7 +70,7 @@ export function useUnknownInterpolationErrors() {
 
       return errors;
     },
-    [t, getVariables],
+    [t, token],
   );
 }
 
