@@ -1,6 +1,6 @@
 import { OnboardingStep } from 'src/api/model';
 import { EmailValidationLayout } from 'src/layouts/onboarding/email-validation-layout';
-import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
+import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 
 import { AiOnboarding } from './ai-onboarding';
 import { AutomaticReview } from './automatic-review';
@@ -19,12 +19,12 @@ export function OnboardingPage({ step }: { step: OnboardingStep }) {
   }
 
   return (
-    <SecondaryLayout>
+    <OnboardingLayout>
       {step === 'joinOrganization' && <JoinOrganization />}
       {step === 'qualification' && <Qualification />}
       {step === 'ai' && <AiOnboarding />}
       {step === 'paymentMethod' && <PaymentMethod />}
       {step === 'automaticReview' && <AutomaticReview />}
-    </SecondaryLayout>
+    </OnboardingLayout>
   );
 }
