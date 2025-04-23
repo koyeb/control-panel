@@ -143,6 +143,7 @@ export function Qualification() {
         </AuthButton>
       </section>
 
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
       <form onSubmit={form.handleSubmit(handleSubmit)} className="col flex-1 justify-center gap-8">
         <FormProvider {...form}>
           <QualificationStep />
@@ -243,8 +244,8 @@ function OccupationStep() {
 
   // prettier-ignore
   const options: Record<Usage, Occupation[]> = {
-    personal: ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'hobbyist', 'other'],
-    education: ['student', 'teacher', 'other'],
+    personal:     ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'hobbyist', 'other'],
+    education:    ['student', 'teacher', 'other'],
     professional: ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'other'],
   };
 
@@ -279,25 +280,12 @@ function PrimaryUseCaseStep() {
   const t = T.useTranslate();
   const usage = useWatch<QualificationFormType, 'usage'>({ name: 'usage' });
 
-  const options: Array<PrimaryUseCase> = [
-    'ai',
-    'training',
-    'inference',
-    'video',
-    'web',
-    'api',
-    'blog',
-    'personal',
-    'school',
-    'bot',
-    'other',
-  ];
-
-  if (usage === 'professional') {
-    delete options[options.indexOf('personal')];
-    delete options[options.indexOf('school')];
-    options.splice(7, 0, 'company');
-  }
+  // prettier-ignore
+  const options: Record<Usage, PrimaryUseCase[]> = {
+    personal:     ['ai', 'training', 'inference', 'video', 'web', 'api', 'blog', 'personal', 'school', 'bot', 'other'],
+    education:    ['ai', 'training', 'inference', 'video', 'web', 'api', 'blog', 'personal', 'school', 'bot', 'other'],
+    professional: ['ai', 'training', 'inference', 'video', 'web', 'api', 'blog', 'company', 'bot', 'other'],
+  };
 
   return (
     <section className="col gap-8">
@@ -312,7 +300,7 @@ function PrimaryUseCaseStep() {
       </header>
 
       <TagList>
-        {options.map((useCase) => (
+        {options[defined(usage)].map((useCase) => (
           <Tag
             key={useCase}
             name="primaryUseCase"
