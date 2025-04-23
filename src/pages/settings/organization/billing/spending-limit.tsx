@@ -16,7 +16,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 const T = createTranslate('pages.organizationSettings.billing.spendingLimit');
 
 const schema = z.object({
-  amount: z.number().min(5),
+  amount: z.union([z.nan(), z.literal(0), z.number().min(5)]),
 });
 
 export function SpendingLimit() {
@@ -52,7 +52,6 @@ export function SpendingLimit() {
           control={form.control}
           name="amount"
           type="number"
-          className="w-full max-w-xs"
           start={
             <InputStart>
               <T id="inputStart" />
@@ -63,6 +62,7 @@ export function SpendingLimit() {
               <T id="inputEnd" />
             </InputEnd>
           }
+          className="w-full max-w-xs"
         />
 
         <Button
