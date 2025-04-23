@@ -1,4 +1,5 @@
 import { OnboardingStep } from 'src/api/model';
+import { EmailValidationLayout } from 'src/layouts/onboarding/email-validation-layout';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 
 import { AiOnboarding } from './ai-onboarding';
@@ -9,9 +10,16 @@ import { PaymentMethod } from './payment-method';
 import { Qualification } from './qualification';
 
 export function OnboardingPage({ step }: { step: OnboardingStep }) {
+  if (step === 'emailValidation') {
+    return (
+      <EmailValidationLayout>
+        <EmailValidation />
+      </EmailValidationLayout>
+    );
+  }
+
   return (
     <SecondaryLayout>
-      {step === 'emailValidation' && <EmailValidation />}
       {step === 'joinOrganization' && <JoinOrganization />}
       {step === 'qualification' && <Qualification />}
       {step === 'ai' && <AiOnboarding />}
