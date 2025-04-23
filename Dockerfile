@@ -14,7 +14,6 @@ ENV GITHUB_TOKEN $GITHUB_TOKEN
 
 COPY . .
 RUN pnpm install --frozen-lockfile
-RUN cd design-system && pnpm install --frozen-lockfile
 
 ARG ENVIRONMENT
 ENV VITE_ENVIRONMENT $ENVIRONMENT

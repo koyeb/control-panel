@@ -1,0 +1,3 @@
+packages:
+  - .
+  - ./design-system

@@ -20,16 +20,7 @@ export default defineConfig({
       fileName: 'main',
     },
     rollupOptions: {
-      external: [
-        '@floating-ui/react',
-        '@tanstack/react-ranger',
-        'clsx',
-        'downshift',
-        'framer-motion',
-        'react',
-        'react/jsx-runtime',
-        'react-dom',
-      ],
+      external: [/node_modules/],
     },
   },
 });
