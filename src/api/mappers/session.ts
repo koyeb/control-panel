@@ -22,7 +22,7 @@ export function mapOrganization(organization: Api.Organization): Organization {
   return {
     ...snakeToCamelDeep(requiredDeep(organization)),
     plan: organization.plan! === 'hobby23' ? 'hobby' : organization.plan!,
-    hasSignupQualification: organization?.signup_qualification !== null,
+    hasSignupQualification: Object.keys(organization.signup_qualification ?? {}).length > 0,
     currentSubscriptionId: organization?.current_subscription_id || undefined,
     latestSubscriptionId: organization?.latest_subscription_id || undefined,
     billing: mapOrganizationBilling(organization),
