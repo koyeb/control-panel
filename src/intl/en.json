@@ -2008,82 +2008,56 @@
         "organizationNameLabel": "Organization's name"
       },
       "qualification": {
-        "title": "Tell us a bit about you",
-        "line1": "Your answers will help us improve your experience",
+        "skip": "Skip",
+        "continue": "Continue",
         "fullName": {
-          "label": "What is your full name?"
+          "title": "What is your full name?",
+          "description": "Tell us a little about yourself to personalize your experience"
         },
         "usage": {
-          "label": "I'm using Koyeb for",
+          "title": "How do you plan to use Koyeb?",
+          "description": "Tell us a little about yourself to personalize your experience",
           "personal": "Myself",
           "education": "School",
-          "professional": "Work",
-          "required": "This information is required"
-        },
-        "companyName": {
-          "label": "What is your company name?"
+          "professional": "Work"
         },
         "occupation": {
-          "label": "What is your role?",
+          "title": "What's your role?",
+          "description": "Tell us a little about yourself to personalize your experience",
           "founder": "Founder",
           "cto": "CTO/VP Engineering",
           "devops": "DevOps Engineer",
-          "software": "Software Engineer",
-          "engineering": "Engineering Manager",
-          "freelancer": "Freelancer or Consultant",
+          "softwareEngineer": "Software Engineer",
+          "engineeringManager": "Engineering Manager",
+          "freelancer": "Freelancer Consultant",
           "hobbyist": "Hobbyist",
           "student": "Student",
           "teacher": "Teacher",
           "other": "Other"
         },
-        "currentSpending": {
-          "label": "How much do you spend on cloud infrastructure monthly?",
-          "lessThan500": "< $500",
-          "500To2000": "$500 - $2,000",
-          "2000To10000": "$2,001 - $10,000",
-          "moreThan10000": "> $10,000"
-        },
         "primaryUseCase": {
-          "label": "What do you plan to build on Koyeb?",
+          "title": "What do you want to build?",
+          "description": "Tell us a little about yourself to personalize your experience",
           "ai": "AI agents",
-          "training": "Training and fine-tuning",
+          "training": "Training and fine-tuning models",
           "inference": "Inference workloads",
           "video": "Video or live-streaming platform",
-          "web": "Web & mobile applications",
+          "web": "Web and mobile applications",
           "api": "APIs",
           "company": "Company website",
           "blog": "Blog",
           "personal": "Personal project",
           "school": "School project",
-          "bot": "Bot (Discord/Telegram)",
+          "bot": "Bot for Discord or Telegram",
           "other": "Other"
         },
-        "primaryLanguage": {
-          "label": "Which language do you use for the project you intend to deploy?",
-          "ruby": "Ruby",
-          "php": "PHP",
-          "python": "Python",
-          "golang": "Golang",
-          "node": "Node.js",
-          "java": "Java",
-          "rust": "Rust",
-          "elixir": "Elixir",
-          "scala": "Scala",
-          "clojure": "Clojure",
-          "docker": "Docker",
-          "other": "I use another language",
-          "notDeveloper": "I'm not a developer"
-        },
-        "referralSource": {
-          "label": "How did you hear about Koyeb?",
-          "searchEngine": "Search engine",
-          "recommendation": "Recommendation from a friend or colleague",
-          "socialMedia": "Social Media",
-          "hackerNews": "Hacker News",
-          "reddit": "Reddit",
-          "podcast": "Podcast",
-          "meetup": "Conferences and meetups",
-          "other": "Other"
+        "currentSpending": {
+          "title": "What is your monthly spend on could infrastructure?",
+          "description": "Tell us a little about yourself to personalize your experience",
+          "lessThan500": "< $500",
+          "500To2000": "$500 - $2,000",
+          "2000To10000": "$2,001 - $10,000",
+          "moreThan10000": "> $10,000"
         }
       },
       "ai": {
