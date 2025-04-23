@@ -20,6 +20,9 @@ const schema = z.object({
 });
 
 export function SpendingLimit() {
+  const organization = useOrganization();
+  const isHobby = organization.plan === 'hobby';
+
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: { amount: NaN },
     resolver: useZodResolver(schema),
@@ -50,6 +53,7 @@ export function SpendingLimit() {
       <form onSubmit={handleSubmit(form, onSubmit)} className="row items-start gap-4">
         <ControlledInput
           control={form.control}
+          disabled={isHobby}
           name="amount"
           type="number"
           start={
@@ -67,12 +71,18 @@ export function SpendingLimit() {
 
         <Button
           type="submit"
-          disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+          disabled={isHobby || (form.formState.submitCount > 0 && !form.formState.isValid)}
           loading={updateMutation.isPending || deleteMutation.isPending}
         >
           <Translate id="common.save" />
         </Button>
       </form>
+
+      {isHobby && (
+        <p className="border-l-4 border-green/50 pl-3 text-xs">
+          <T id="hobbyPlanUpgrade" />
+        </p>
+      )}
     </section>
   );
 }
