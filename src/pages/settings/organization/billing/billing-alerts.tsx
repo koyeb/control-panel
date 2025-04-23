@@ -6,11 +6,13 @@ import { z } from 'zod';
 import { Button, InputEnd, InputStart } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { TextSkeleton } from 'src/components/skeleton';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
+import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.billingAlerts');
@@ -88,6 +90,7 @@ export function BillingAlerts() {
 }
 
 function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
+  const t = T.useTranslate();
   const organization = useOrganization();
   const invalidate = useInvalidateApiQuery();
 
@@ -106,8 +109,9 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
       body: { amount: String(amount * 100) },
     })),
     onError: useFormErrorHandler(form),
-    async onSuccess() {
+    async onSuccess({ budget }) {
       await invalidate('getBudget');
+      notify.success(t('alertSetNotification', { value: <FormattedPrice value={Number(budget?.amount)} /> }));
     },
   });
 
@@ -118,6 +122,7 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
     onError: useFormErrorHandler(form),
     async onSuccess() {
       await invalidate('getBudget');
+      notify.success(t('alertRemovedNotification'));
     },
   });
 

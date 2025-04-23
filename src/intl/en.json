@@ -2388,7 +2388,8 @@
           "description": "Receive email notifications when your monthly usage reaches 80% and 100% of the budget threshold set for your organization",
           "inputStart": "$",
           "inputEnd": "/ month",
-          "spendingLimitRemovedNotification": "You removed the budget threshold for your organization",
+          "alertSetNotification": "You've set your budget threshold to {value}",
+          "alertRemovedNotification": "You removed the budget threshold for your organization",
           "hobbyPlanUpgrade": "Billing alerts are only available on <upgrade>paid plans</upgrade>"
         }
       },
