@@ -2058,6 +2058,12 @@
           "500To2000": "$500 - $2,000",
           "2000To10000": "$2,001 - $10,000",
           "moreThan10000": "> $10,000"
+        },
+        "sendInvites": {
+          "title": "Invite your teammates",
+          "description": "Add multiple emails with space or comma",
+          "placeholder": "email@server.com,",
+          "submit": "Send invites"
         }
       },
       "paymentMethod": {
