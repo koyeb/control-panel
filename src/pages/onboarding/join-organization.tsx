@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, InfoTooltip, Stepper } from '@koyeb/design-system';
+import { Button, InfoTooltip } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
@@ -89,11 +89,9 @@ function CreateOrganization() {
   });
 
   return (
-    <section className="col w-full max-w-xl gap-6">
-      <Stepper totalSteps={3} activeStep={2} />
-
+    <section className="col flex-1 justify-center gap-8">
       <div>
-        <h1 className="typo-heading mb-1">
+        <h1 className="mb-1 text-3xl font-semibold">
           <T id="title" />
           <InfoTooltip content={<T id="tooltip" />} className="max-w-lg" iconClassName="inline-block ms-2" />
         </h1>
