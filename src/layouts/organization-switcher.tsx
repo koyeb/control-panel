@@ -1,15 +1,12 @@
-import { useMutation } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { Combobox, Spinner } from '@koyeb/design-system';
-import {
-  useOrganization,
-  useOrganizationUnsafe,
-  useUserOrganizationMemberships,
-} from 'src/api/hooks/session';
+import { useOrganization, useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
+import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationMember } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
+import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { SvgComponent } from 'src/application/types';
@@ -20,6 +17,7 @@ import { TextSkeleton } from 'src/components/skeleton';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
+import { isUuid } from 'src/utils/strings';
 
 const T = createTranslate('layouts.organizationSwitcher');
 
@@ -44,38 +42,25 @@ function OrganizationSelectorCombobox({
 }: OrganizationSelectorComboboxProps) {
   const t = T.useTranslate();
   const currentOrganization = useOrganization();
-  const { data: organizationMembers = [] } = useUserOrganizationMemberships();
-  const [filteredItems, setFilteredItems] = useState(organizationMembers);
 
-  useEffect(() => {
-    setFilteredItems(organizationMembers);
-  }, [organizationMembers]);
+  const [inputValue, setInputValue] = useState('');
+  const memberships = useOrganizationList(inputValue);
+  const count = useOrganizationCount();
 
   const switchOrganizationMutation = useSwitchOrganization(() => {
     combobox.closeMenu();
-    // todo: add onClosed prop to combobox
-    setTimeout(() => setFilteredItems(organizationMembers), 120);
   });
-
-  const currentMembership = organizationMembers.find(
-    (membership) => membership.organization.id === currentOrganization?.id,
-  );
 
   const combobox = Combobox.useCombobox(
     {
-      items: filteredItems,
+      items: memberships,
 
-      isItemDisabled: (item) => item === currentMembership,
+      isItemDisabled: (item) => item.organization.id === currentOrganization.id,
       itemToString: (item) => item?.organization.name ?? '',
 
-      onInputValueChange: ({ type, inputValue }) => {
-        const filter = ({ organization }: OrganizationMember) => {
-          return organization.name.toLowerCase().includes(inputValue.toLowerCase());
-        };
-
-        if (type === Combobox.stateChangeTypes.InputChange) {
-          setFilteredItems(organizationMembers.filter(filter));
-        }
+      inputValue,
+      onInputValueChange: ({ inputValue }) => {
+        setInputValue(inputValue);
       },
 
       selectedItem: null,
@@ -124,26 +109,24 @@ function OrganizationSelectorCombobox({
         <OrganizationItem organization={currentOrganization} Icon={IconChevronsUpDown} />
       </button>
 
-      <Combobox.Dropdown>
+      <Combobox.Dropdown onTransitionCancel={() => setInputValue('')}>
         <input
           {...combobox.getInputProps()}
           type="search"
           placeholder={t('placeholder')}
-          className={clsx('max-w-full border-b bg-transparent px-3 py-1.5', {
-            hidden: organizationMembers.length <= 2,
-          })}
+          className={clsx('max-w-full border-b bg-transparent px-3 py-1.5', { hidden: count <= 10 })}
         />
 
         <Combobox.Menu>
-          {filteredItems.map((membership) => (
+          {memberships.map((membership) => (
             <Combobox.MenuItem key={membership.id} item={membership} className="py-1.5">
               <OrganizationItem organization={membership.organization} Icon={getItemIcon(membership)} />
             </Combobox.MenuItem>
           ))}
         </Combobox.Menu>
 
-        <div className={clsx('px-3 py-1.5 text-xs text-dim', { hidden: organizationMembers.length <= 2 })}>
-          <T id="filtered" values={{ count: filteredItems.length, total: organizationMembers.length }} />
+        <div className={clsx('px-3 py-1.5 text-xs text-dim', { hidden: count <= 10 })}>
+          <T id="filtered" values={{ count: memberships.length, total: count }} />
         </div>
 
         {showCreateOrganization && (
@@ -163,6 +146,51 @@ function OrganizationSelectorCombobox({
       </Combobox.Dropdown>
     </Combobox.Provider>
   );
+}
+
+function useOrganizationCount() {
+  const user = useUser();
+
+  const { data } = useQuery({
+    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user.id } }),
+    refetchInterval: false,
+    placeholderData: keepPreviousData,
+    select: ({ count }) => count,
+  });
+
+  return data ?? 0;
+}
+
+function useOrganizationList(search: string) {
+  const user = useUser();
+
+  const organizationId = () => {
+    if (search === '') {
+      return undefined;
+    }
+
+    if (!isUuid(search)) {
+      // send a random uuid to avoid API validation error
+      return '0d5a1f5e-3473-483e-8bcf-50ca20c5f739';
+    }
+
+    return search;
+  };
+
+  const { data } = useQuery({
+    ...useApiQueryFn('listOrganizationMembers', {
+      query: {
+        user_id: user.id,
+        organization_id: organizationId(),
+        limit: '10',
+      },
+    }),
+    refetchInterval: false,
+    placeholderData: keepPreviousData,
+    select: ({ members }) => members!.map(mapOrganizationMember),
+  });
+
+  return data ?? [];
 }
 
 function useSwitchOrganization(onSuccess?: () => void) {

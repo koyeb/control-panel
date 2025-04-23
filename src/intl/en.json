@@ -1396,7 +1396,7 @@
   },
   "layouts": {
     "organizationSwitcher": {
-      "placeholder": "Search by organization name or ID",
+      "placeholder": "Search by organization ID",
       "filtered": "Showing {count} of {total}",
       "createOrganization": "Create organization"
     },

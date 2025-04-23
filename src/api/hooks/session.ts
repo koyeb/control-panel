@@ -93,6 +93,7 @@ export function useUserOrganizationMemberships() {
 
   return useQuery({
     ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
+    refetchInterval: false,
     enabled: user !== undefined,
     select: ({ members }) => members!.map(mapOrganizationMember),
   });
