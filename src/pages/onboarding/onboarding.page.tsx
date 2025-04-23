@@ -2,7 +2,6 @@ import { OnboardingStep } from 'src/api/model';
 import { EmailValidationLayout } from 'src/layouts/onboarding/email-validation-layout';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 
-import { AiOnboarding } from './ai-onboarding';
 import { AutomaticReview } from './automatic-review';
 import { EmailValidation } from './email-validation';
 import { JoinOrganization } from './join-organization';
@@ -22,7 +21,6 @@ export function OnboardingPage({ step }: { step: OnboardingStep }) {
     <OnboardingLayout>
       {step === 'joinOrganization' && <JoinOrganization />}
       {step === 'qualification' && <Qualification />}
-      {step === 'ai' && <AiOnboarding />}
       {step === 'paymentMethod' && <PaymentMethod />}
       {step === 'automaticReview' && <AutomaticReview />}
     </OnboardingLayout>
