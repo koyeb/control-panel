@@ -2,7 +2,7 @@ import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 
 export function OnboardingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="row h-screen p-3">
+    <div className="row h-screen bg-muted p-3">
       <Slides />
       <main className="col mx-auto max-w-xl flex-1 py-8">{children}</main>
     </div>

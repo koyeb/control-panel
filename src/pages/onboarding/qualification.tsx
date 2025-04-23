@@ -4,11 +4,13 @@ import { FormProvider, useController, useForm, useFormContext, useWatch } from '
 
 import { Stepper } from '@koyeb/design-system';
 import { api } from 'src/api/api';
+import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
@@ -18,7 +20,7 @@ import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.qualification');
 
-type Step = 'fullName' | 'usage' | 'primaryUseCase' | 'currentSpending';
+type Step = 'fullName' | 'usage' | 'primaryUseCase' | 'currentSpending' | 'sendInvites';
 type Usage = 'personal' | 'education' | 'professional';
 // prettier-ignore
 type Occupation = 'founder' | 'cto' | 'devops'  | 'softwareEngineer' | 'engineeringManager' | 'freelancer' | 'hobbyist' | 'student' | 'teacher' | 'other';
@@ -33,6 +35,7 @@ type QualificationFormType = {
   occupation?: Occupation;
   primaryUseCase?: PrimaryUseCase;
   currentSpending?: CurrentSpending;
+  invites?: string;
 };
 
 export function Qualification() {
@@ -75,6 +78,20 @@ export function Qualification() {
         path: { id: organization.id },
         body: { signup_qualification: values as Record<string, never> },
       });
+
+      try {
+        for (const str of form.invites?.split(',') ?? []) {
+          const email = str.trim();
+
+          if (email !== '') {
+            await api.sendInvitation({ token, body: { email } });
+          }
+        }
+      } catch (error) {
+        if (hasMessage(error)) {
+          notify.error(error.message);
+        }
+      }
     },
     async onSuccess(_, values) {
       await invalidate('getCurrentUser');
@@ -98,24 +115,16 @@ export function Qualification() {
     steps.push('currentSpending');
   }
 
+  if (['pro', 'scale', 'enterprise'].includes(organization.plan)) {
+    steps.push('sendInvites');
+  }
+
   const handleSubmit = (values: QualificationFormType) => {
-    if (step === 'fullName') {
-      form.setValue('step', 'usage');
-    }
+    const nextStep = steps.at(steps.indexOf(values.step) + 1);
 
-    if (step === 'usage') {
-      form.setValue('step', 'primaryUseCase');
-    }
-
-    if (step === 'primaryUseCase') {
-      if (form.getValues().usage === 'professional') {
-        form.setValue('step', 'currentSpending');
-      } else {
-        mutation.mutate(values);
-      }
-    }
-
-    if (step === 'currentSpending') {
+    if (nextStep) {
+      form.setValue('step', nextStep);
+    } else {
       mutation.mutate(values);
     }
   };
@@ -123,7 +132,7 @@ export function Qualification() {
   return (
     <>
       <section className="row justify-between">
-        <Stepper activeStep={steps.indexOf(step) + 1} totalSteps={steps.length + 2} />
+        <Stepper activeStep={steps.indexOf(step) + 1} totalSteps={steps.length + 1} />
         <AuthButton
           onClick={() => handleSubmit(form.getValues())}
           className={clsx('border border-strong bg-neutral !text-default hover:bg-neutral', {
@@ -134,16 +143,15 @@ export function Qualification() {
         </AuthButton>
       </section>
 
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="col flex-1 items-start justify-center gap-8"
-      >
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="col flex-1 justify-center gap-8">
         <FormProvider {...form}>
           <QualificationStep />
 
           <AuthButton
             type="submit"
-            className={clsx({ invisible: step === 'usage' && form.watch('occupation') === undefined })}
+            className={clsx('self-start', {
+              invisible: step === 'usage' && form.watch('occupation') === undefined,
+            })}
           >
             <T id="continue" />
           </AuthButton>
@@ -178,6 +186,10 @@ function QualificationStep() {
 
   if (step === 'currentSpending') {
     return <CurrentSpendingStep />;
+  }
+
+  if (step === 'sendInvites') {
+    return <SendInvitesStep />;
   }
 
   return null;
@@ -341,6 +353,31 @@ function CurrentSpendingStep() {
           />
         ))}
       </TagList>
+    </section>
+  );
+}
+
+function SendInvitesStep() {
+  const t = T.useTranslate();
+
+  return (
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="sendInvites.title" />
+        </h1>
+
+        <p className="text-dim">
+          <T id="sendInvites.description" />
+        </p>
+      </header>
+
+      <ControlledTextArea
+        name="invites"
+        rows={5}
+        placeholder={t('sendInvites.placeholder')}
+        className="bg-neutral"
+      />
     </section>
   );
 }
