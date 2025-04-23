@@ -1994,9 +1994,10 @@
     "onboarding": {
       "emailValidation": {
         "title": "Confirm your email address",
-        "line1": "We sent an email to <green>{email}</green>",
-        "line2": "Please confirm your email address by clicking the link we just sent to your inbox",
-        "resendValidationEmail": "Resend verification email",
+        "line1": "We've sent a confirmation email to <strong>{email}</strong>. Please check your inbox and click the link to verify your email to continue setting up your account.",
+        "line2": "If you don't see the email,<br></br>check your spam folder or resend it below.",
+        "resendValidationEmail": "Resend email",
+        "wrongEmail": "Used wrong email? <logout>Go back to sign up</logout>",
         "resendEmailSuccessNotification": "A verification email was sent again to <strong>{email}</strong>",
         "emailAddressValidated": "Your email address was validated"
       },
