@@ -13,13 +13,13 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
 
-const T = createTranslate('pages.organizationSettings.billing.spendingLimit');
+const T = createTranslate('pages.organizationSettings.billing.billingAlerts');
 
 const schema = z.object({
   amount: z.union([z.nan(), z.literal(0), z.number().min(5)]),
 });
 
-export function SpendingLimit() {
+export function BillingAlerts() {
   const organization = useOrganization();
   const isHobby = organization.plan === 'hobby';
 
