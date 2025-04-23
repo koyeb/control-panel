@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { Combobox, Spinner } from '@koyeb/design-system';
-import { useOrganization, useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
+import { useOrganization, useOrganizationUnsafe, useUser, useUserUnsafe } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
@@ -22,9 +22,10 @@ import { isUuid } from 'src/utils/strings';
 const T = createTranslate('layouts.organizationSwitcher');
 
 export function OrganizationSwitcher(props: React.ComponentProps<typeof OrganizationSelectorCombobox>) {
+  const currentUser = useUserUnsafe();
   const currentOrganization = useOrganizationUnsafe();
 
-  if (currentOrganization === undefined) {
+  if (currentUser === undefined || currentOrganization === undefined) {
     return <Skeleton />;
   }
 
@@ -152,7 +153,7 @@ function useOrganizationCount() {
   const user = useUser();
 
   const { data } = useQuery({
-    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user.id } }),
+    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
     refetchInterval: false,
     placeholderData: keepPreviousData,
     select: ({ count }) => count,
@@ -180,7 +181,7 @@ function useOrganizationList(search: string) {
   const { data } = useQuery({
     ...useApiQueryFn('listOrganizationMembers', {
       query: {
-        user_id: user.id,
+        user_id: user?.id,
         organization_id: organizationId(),
         limit: '10',
       },
