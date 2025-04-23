@@ -1,5 +1,3 @@
-import { FeatureFlag } from 'src/hooks/feature-flag';
-
 import { BillingAlerts } from './billing-alerts';
 import { BillingInformation } from './billing-information';
 import { Coupon } from './coupon';
@@ -11,9 +9,7 @@ export function BillingPage() {
     <>
       <Usage />
       <StripePortal />
-      <FeatureFlag feature="spending-limit">
-        <BillingAlerts />
-      </FeatureFlag>
+      <BillingAlerts />
       <Coupon />
       <BillingInformation />
     </>
