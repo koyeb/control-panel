@@ -2060,21 +2060,6 @@
           "moreThan10000": "> $10,000"
         }
       },
-      "ai": {
-        "title": "What do you want to deploy?",
-        "github": {
-          "title": "GitHub",
-          "description": "Connect, build and deploy your code from a GitHub repository"
-        },
-        "docker": {
-          "title": "Docker",
-          "description": "Deploy docker images from any public or private registries"
-        },
-        "model": {
-          "title": "Model",
-          "description": "Run inference model on high performance GPU"
-        }
-      },
       "paymentMethod": {
         "title": "Get started for free",
         "line1": "To prevent abuse, we need additional credit card verification",

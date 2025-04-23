@@ -542,7 +542,6 @@ export type OnboardingStep =
   | 'emailValidation'
   | 'joinOrganization'
   | 'qualification'
-  | 'ai'
   | 'paymentMethod'
   | 'automaticReview';
 

@@ -1,20 +1,14 @@
 import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { OnboardingStep, Organization, User } from 'src/api/model';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 
 export function useOnboardingStep() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
-  const hasAiOnboarding = useFeatureFlag('ai-onboarding');
 
-  return getOnboardingStep(userQuery.data ?? null, organizationQuery.data ?? null, hasAiOnboarding);
+  return getOnboardingStep(userQuery.data ?? null, organizationQuery.data ?? null);
 }
 
-function getOnboardingStep(
-  user: User | null,
-  organization: Organization | null,
-  hasAiOnboarding?: boolean,
-): OnboardingStep | null {
+function getOnboardingStep(user: User | null, organization: Organization | null): OnboardingStep | null {
   if (user && !user.emailValidated) {
     return 'emailValidation';
   }
@@ -35,10 +29,6 @@ function getOnboardingStep(
     return 'automaticReview';
   }
 
-  if (hasAiOnboarding && showAiStep(organization)) {
-    return 'ai';
-  }
-
   if (organization.status === 'WARNING') {
     // transient state after creating another organization
     if (organization.statusMessage === 'REVIEWING_ACCOUNT') {
@@ -47,14 +37,4 @@ function getOnboardingStep(
   }
 
   return null;
-}
-
-function showAiStep(organization: Organization) {
-  const { primaryUseCase, aiDeploymentSource } = organization.signupQualification ?? {};
-
-  const isAiUseCase = ['Inference workloads', 'Training and fine-tuning', 'AI agents'].includes(
-    primaryUseCase as string,
-  );
-
-  return isAiUseCase && aiDeploymentSource === undefined;
 }
