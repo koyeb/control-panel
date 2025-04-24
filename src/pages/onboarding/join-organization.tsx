@@ -2,12 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, InfoTooltip } from '@koyeb/design-system';
+import { Button, InfoTooltip, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
 import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
 import { IconArrowRight } from 'src/components/icons';
@@ -15,6 +16,8 @@ import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { useMount } from 'src/hooks/lifecycle';
+import { useHistoryState, useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { slugify } from 'src/utils/strings';
@@ -54,6 +57,7 @@ function CreateOrganization() {
   const user = useUser();
   const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -85,8 +89,31 @@ function CreateOrganization() {
       setToken(token);
       await invalidate('getCurrentOrganization');
     },
-    onError,
+    onError(error) {
+      if (state.createOrganization) {
+        navigate(routes.home(), { state: {} });
+      } else {
+        onError(error);
+      }
+    },
   });
+
+  const state = useHistoryState<{ createOrganization: boolean }>();
+
+  useMount(() => {
+    if (state.createOrganization) {
+      mutation.mutate(form.getValues());
+    }
+  });
+
+  if (state.createOrganization) {
+    return (
+      <section className="row flex-1 items-center justify-center gap-2">
+        <Spinner className="size-4" />
+        <T id="creatingOrganization" />
+      </section>
+    );
+  }
 
   return (
     <section className="col flex-1 justify-center gap-8">
