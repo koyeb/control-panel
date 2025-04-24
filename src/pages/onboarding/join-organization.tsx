@@ -58,12 +58,19 @@ function CreateOrganization() {
   const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
+  const state = useHistoryState<{ createOrganization: boolean }>();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      organizationName: defaultOrganizationName(user),
+      organizationName: state.createOrganization ? defaultOrganizationName(user) : '',
     },
     resolver: useZodResolver(schema),
+  });
+
+  useMount(() => {
+    if (state.createOrganization) {
+      mutation.mutate(form.getValues());
+    }
   });
 
   const onError = useFormErrorHandler(form, (error) => ({
@@ -96,14 +103,6 @@ function CreateOrganization() {
         onError(error);
       }
     },
-  });
-
-  const state = useHistoryState<{ createOrganization: boolean }>();
-
-  useMount(() => {
-    if (state.createOrganization) {
-      mutation.mutate(form.getValues());
-    }
   });
 
   if (state.createOrganization) {
