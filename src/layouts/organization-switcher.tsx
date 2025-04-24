@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { Combobox, Spinner } from '@koyeb/design-system';
-import { useOrganization, useOrganizationUnsafe, useUser, useUserUnsafe } from 'src/api/hooks/session';
+import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
@@ -12,34 +12,19 @@ import { useToken } from 'src/application/token';
 import { SvgComponent } from 'src/application/types';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
-import { GeneratedAvatar, OrganizationAvatar } from 'src/components/organization-avatar';
-import { TextSkeleton } from 'src/components/skeleton';
+import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.organizationSwitcher');
 
-export function OrganizationSwitcher(props: React.ComponentProps<typeof OrganizationSelectorCombobox>) {
-  const currentUser = useUserUnsafe();
-  const currentOrganization = useOrganizationUnsafe();
-
-  if (currentUser === undefined || currentOrganization === undefined) {
-    return <Skeleton />;
-  }
-
-  return <OrganizationSelectorCombobox {...props} />;
-}
-
-type OrganizationSelectorComboboxProps = {
+type OrganizationSwitcherProps = {
   showCreateOrganization?: boolean;
   className?: string;
 };
 
-function OrganizationSelectorCombobox({
-  showCreateOrganization,
-  className,
-}: OrganizationSelectorComboboxProps) {
+export function OrganizationSwitcher({ showCreateOrganization, className }: OrganizationSwitcherProps) {
   const t = T.useTranslate();
   const currentOrganization = useOrganization();
 
@@ -152,7 +137,7 @@ function useOrganizationCount() {
   const user = useUser();
 
   const { data } = useQuery({
-    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
+    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user.id } }),
     refetchInterval: false,
     placeholderData: keepPreviousData,
     select: ({ count }) => count,
@@ -210,15 +195,5 @@ function OrganizationItem({ organization, Icon }: OrganizationItemProps) {
         </span>
       )}
     </div>
-  );
-}
-
-function Skeleton() {
-  return (
-    <button disabled type="button" className="row items-center gap-2 rounded-lg border px-3 py-1 text-start">
-      <GeneratedAvatar seed="" className="size-6 rounded-full" />
-      <TextSkeleton width={6} />
-      <IconChevronsUpDown className="ml-auto size-4 text-dim" />
-    </button>
   );
 }

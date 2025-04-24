@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { Button } from '@koyeb/design-system';
-import { useOrganizationQuery, useUserUnsafe } from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useResetIdentifyUser } from 'src/application/posthog';
@@ -18,8 +18,8 @@ export function DeleteAccount() {
   const t = T.useTranslate();
   const openDialog = Dialog.useOpen();
 
-  const user = useUserUnsafe();
-  const { data: organization } = useOrganizationQuery();
+  const user = useUser();
+  const organization = useOrganizationUnsafe();
   const canDelete = organization === undefined;
 
   const { clearToken } = useToken();
@@ -28,7 +28,7 @@ export function DeleteAccount() {
 
   const { mutateAsync: deleteAccount } = useMutation({
     ...useApiMutationFn('deleteUser', {
-      path: { id: user?.id as string },
+      path: { id: user.id },
     }),
     onSuccess() {
       clearToken();
