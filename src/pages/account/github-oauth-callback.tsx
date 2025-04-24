@@ -64,12 +64,12 @@ export function GithubOauthCallbackPage() {
       const state = searchParams.get('state');
 
       const statePayload = state ? schema.parse(jwtDecode(state)) : {};
-      const { metadata = routes.home(), organization_id = undefined } = statePayload;
+      const { metadata = routes.home(), organization_id = undefined, action } = statePayload;
 
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
         setToken(result.token.id);
-        navigate(metadata, { replace: true });
+        navigate(metadata, { replace: true, state: { createOrganization: action === 'signup' } });
         return;
       }
 
