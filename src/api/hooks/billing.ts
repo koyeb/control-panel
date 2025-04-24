@@ -5,7 +5,7 @@ import { inArray } from 'src/utils/arrays';
 import { mapInvoice, mapSubscription } from '../mappers/billing';
 import { useApiQueryFn } from '../use-api';
 
-import { useOrganization, useOrganizationQuery } from './session';
+import { useOrganization } from './session';
 
 export function useManageBillingQuery() {
   const organization = useOrganization();
@@ -25,12 +25,11 @@ export function useSubscriptionQuery(subscriptionId: string | undefined) {
 }
 
 export function useNextInvoiceQuery() {
-  const { data: organization } = useOrganizationQuery();
+  const organization = useOrganization();
 
   return useQuery({
     ...useApiQueryFn('getNextInvoice'),
     enabled:
-      organization &&
       !organization.trial &&
       inArray(organization.plan, ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise']),
     select: mapInvoice,

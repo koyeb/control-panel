@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { useOrganization, useOrganizationUnsafe, useUserQuery, useUserUnsafe } from 'src/api/hooks/session';
+import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
@@ -74,8 +74,8 @@ export function MainLayout({ children }: LayoutProps) {
 }
 
 function Menu({ collapsed = false }: { collapsed?: boolean }) {
-  const organization = useOrganizationUnsafe();
-  const isDeactivated = inArray(organization?.status, ['DEACTIVATING', 'DEACTIVATED']);
+  const organization = useOrganization();
+  const isDeactivated = inArray(organization.status, ['DEACTIVATING', 'DEACTIVATED']);
 
   return (
     <div className="col min-h-full gap-4 py-4 sm:gap-6 sm:py-6">
@@ -125,14 +125,6 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 }
 
 function Main({ children }: { children: React.ReactNode }) {
-  const user = useUserUnsafe();
-  const organization = useOrganizationUnsafe();
-  const isAuthenticated = user !== undefined && organization !== undefined;
-
-  if (!isAuthenticated) {
-    return null;
-  }
-
   return (
     <main className="overflow-x-auto px-2 py-4 sm:px-4">
       <Suspense>
@@ -145,12 +137,7 @@ function Main({ children }: { children: React.ReactNode }) {
 
 function useBanner(): 'session' | 'trial' | void {
   const { session } = useToken();
-  const organization = useOrganizationUnsafe();
   const trial = useTrial();
-
-  if (organization === undefined) {
-    return;
-  }
 
   if (session) {
     return 'session';
@@ -236,7 +223,7 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }));
 
 function usePageContext() {
-  const { data: user } = useUserQuery();
+  const user = useUser();
   const { pageContextBaseUrl } = getConfig();
 
   const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));

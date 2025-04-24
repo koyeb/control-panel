@@ -1,19 +1,26 @@
-import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { OnboardingStep, Organization, User } from 'src/api/model';
 
 export function useOnboardingStep() {
-  const userQuery = useUserQuery();
-  const organizationQuery = useOrganizationQuery();
+  const user = useUserUnsafe();
+  const organization = useOrganizationUnsafe();
 
-  return getOnboardingStep(userQuery.data ?? null, organizationQuery.data ?? null);
+  return getOnboardingStep(user, organization);
 }
 
-function getOnboardingStep(user: User | null, organization: Organization | null): OnboardingStep | null {
-  if (user && !user.emailValidated) {
+function getOnboardingStep(
+  user: User | undefined,
+  organization: Organization | undefined,
+): OnboardingStep | null {
+  if (user === undefined) {
+    return null;
+  }
+
+  if (!user?.emailValidated) {
     return 'emailValidation';
   }
 
-  if (organization === null) {
+  if (organization === undefined) {
     return 'joinOrganization';
   }
 

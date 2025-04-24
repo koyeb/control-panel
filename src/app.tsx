@@ -2,14 +2,14 @@ import { useMutation } from '@tanstack/react-query';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
-import { isAccountLockedError } from './api/api-errors';
+import { isAccountLockedError, isApiError, isApiNotFoundError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from './api/use-api';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { useRefreshToken, useToken } from './application/token';
 import { LinkButton } from './components/link';
-import { Loading } from './components/loading';
+import { LogoLoading } from './components/logo-loading';
 import { useMount } from './hooks/lifecycle';
 import { useSearchParam } from './hooks/router';
 import { useSeon } from './hooks/seon';
@@ -48,10 +48,15 @@ export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
-  useRefreshToken();
+  const loading = [
+    //
+    userQuery.isPending,
+    organizationQuery.isPending,
+    useOrganizationContextParam(),
+  ].some(Boolean);
 
-  if (useOrganizationContextParam()) {
-    return null;
+  if (loading) {
+    return <LogoLoading />;
   }
 
   if (
@@ -82,12 +87,29 @@ function AuthenticatedRoutes() {
     '/organization/deactivate/confirm/:confirmationId',
   );
 
-  if (!userQuery.isSuccess || organizationQuery.isPending) {
-    return (
-      <Loading>
-        <MainLayout />
-      </Loading>
-    );
+  useRefreshToken();
+
+  if (userQuery.isError) {
+    const { error } = userQuery;
+
+    if (isApiError(error) && [401, 404].includes(error.status)) {
+      // queryClient will redirect to the authentication page
+      return <LogoLoading />;
+    }
+
+    throw error;
+  }
+
+  if (organizationQuery.isError) {
+    const { error } = organizationQuery;
+
+    if (isApiError(error) && [401].includes(error.status)) {
+      return <LogoLoading />;
+    }
+
+    if (!isApiNotFoundError(error)) {
+      throw error;
+    }
   }
 
   if (confirmDeactivateOrganization) {

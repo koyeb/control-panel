@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
-import { useUserUnsafe } from 'src/api/hooks/session';
+import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
@@ -27,7 +27,7 @@ const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const { clearToken } = useToken();
-  const user = useUserUnsafe();
+  const user = useUser();
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 
@@ -54,7 +54,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
         <div className="row items-center gap-2 py-2 pl-3 pr-2 transition-colors hover:bg-muted/50" {...props}>
           <UserAvatar user={user} />
 
-          {!collapsed && <span className="flex-1 truncate font-medium">{user?.name}</span>}
+          {!collapsed && <span className="flex-1 truncate font-medium">{user.name}</span>}
 
           {!collapsed && (
             <span>
