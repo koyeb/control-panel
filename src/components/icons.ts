@@ -2,6 +2,7 @@ export { default as IconActivity } from 'lucide-static/icons/activity.svg?react'
 export { default as IconAlarmClockCheck } from 'lucide-static/icons/alarm-clock-check.svg?react';
 export { default as IconArchive } from 'lucide-static/icons/archive.svg?react';
 export { default as IconArrowDown } from 'lucide-static/icons/arrow-down.svg?react';
+export { default as IconArrowLeftRight } from 'lucide-static/icons/arrow-left-right.svg?react';
 export { default as IconArrowLeft } from 'lucide-static/icons/arrow-left.svg?react';
 export { default as IconArrowRight } from 'lucide-static/icons/arrow-right.svg?react';
 export { default as IconArrowUpRight } from 'lucide-static/icons/arrow-up-right.svg?react';
