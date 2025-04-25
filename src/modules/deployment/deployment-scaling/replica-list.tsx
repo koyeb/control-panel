@@ -7,6 +7,7 @@ import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate } from 'src/intl/translate';
 
 import { ReplicaDrawer } from './replica-drawer';
+import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling');
 
@@ -47,16 +48,9 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
         <>
           <InstanceStatusBadge status={replica.status} />
 
-          <div className="row ms-4 items-center gap-2">
-            <div className="text-xs text-dim">CPU</div>
-            <ProgressBar progress={0.4} />
-            <div>40%</div>
-          </div>
-
-          <div className="row ms-2 items-center gap-2">
-            <span className="text-xs text-dim">Memory</span>
-            <ProgressBar progress={0.65} />
-            <div>65%</div>
+          <div className="row ms-4 items-center gap-4">
+            <ReplicaCpu value={0.5} />
+            <ReplicaMemory value={0.65} />
           </div>
 
           <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
@@ -66,20 +60,6 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
       )}
 
       <ReplicaDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} replica={replica} />
-    </div>
-  );
-}
-
-export function ProgressBar({ progress }: { progress: number }) {
-  const percent = Math.round(progress * 100);
-
-  return (
-    <div className="relative h-1.5 w-10 rounded-full bg-gray/30">
-      <div
-        // eslint-disable-next-line tailwindcss/no-arbitrary-value
-        className="absolute inset-y-0 left-0 rounded-full bg-green transition-[width] will-change-[width]"
-        style={{ width: `${percent}%` }}
-      />
     </div>
   );
 }

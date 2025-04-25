@@ -55,6 +55,7 @@ export function mapReplica(replica: Api.GetDeploymentScalingReplyItem): Replica 
     region: replica.region!,
     instances: replica.instances!.map(mapInstance),
     ...(instance && {
+      instanceId: instance.id,
       status: instance.status!,
       messages: instance.messages!,
     }),

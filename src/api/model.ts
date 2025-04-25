@@ -440,6 +440,7 @@ export type Replica = {
   region: string;
   index: number;
   instances: Instance[];
+  instanceId?: string;
   status?: InstanceStatus;
   messages?: string[];
 };

@@ -616,8 +616,16 @@
             "allRegions": "All regions",
             "allStatuses": "All statuses"
           },
+          "metadata": {
+            "cpu": "CPU",
+            "memory": "Memory"
+          },
           "drawer": {
-            "title": "Replica #{index}"
+            "title": "Replica #{index}",
+            "activeInstance": "Active instance",
+            "status": "Status",
+            "cpu": "Average CPU",
+            "memory": "Average Memory"
           }
         },
         "replicas": {
