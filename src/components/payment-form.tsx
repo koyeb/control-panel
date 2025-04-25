@@ -8,7 +8,7 @@ import {
 import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Controller, FormState, useForm } from 'react-hook-form';
+import { Controller, FormState, useForm, UseFormReturn } from 'react-hook-form';
 
 import { Button, Field, FieldLabel } from '@koyeb/design-system';
 import { api, ApiEndpointParams } from 'src/api/api';
@@ -43,7 +43,10 @@ class StripeError extends Error {
 class TimeoutError extends Error {}
 
 const classes = {
-  base: clsx('col h-10 w-full justify-center rounded border px-2 -outline-offset-1'),
+  base: clsx(
+    'col h-10 w-full justify-center rounded border px-2 -outline-offset-1 ',
+    'bg-neutral', // todo: make sure it works with all instances of the payment form
+  ),
   focus: clsx('focused'),
 };
 
@@ -65,14 +68,8 @@ const stylesDark = {
   },
 };
 
-type PaymentFormProps = {
-  plan?: OrganizationPlan;
-  onPlanChanged?: () => void;
-  renderFooter: (formState: FormState<{ address: Address }>) => React.ReactNode;
-};
-
-export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormProps) {
-  const t = T.useTranslate();
+// eslint-disable-next-line react-refresh/only-export-components
+export function usePaymentForm(plan?: OrganizationPlan, onSuccess?: () => void) {
   const organization = useOrganization();
 
   const form = useForm<{ address: Address }>({
@@ -132,9 +129,42 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
     },
     async onSuccess() {
       await invalidate('getCurrentOrganization');
-      onPlanChanged?.();
+      onSuccess?.();
     },
   });
+
+  return {
+    form,
+    mutation,
+  };
+}
+
+type PaymentFormProps = {
+  plan?: OrganizationPlan;
+  onPlanChanged?: () => void;
+  renderFooter: (formState: FormState<{ address: Address }>) => React.ReactNode;
+};
+
+export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormProps) {
+  const { form, mutation } = usePaymentForm(plan, onPlanChanged);
+
+  return (
+    <form onSubmit={withStopPropagation(handleSubmit(form, mutation.mutateAsync))} className="col gap-6">
+      <PaymentFormFields form={form} />
+
+      <p className="text-dim">
+        {plan === 'starter' && <T id="temporaryHoldMessage" />}
+        {plan !== 'starter' && <T id="proratedChargeMessage" />}
+      </p>
+
+      {renderFooter(form.formState)}
+    </form>
+  );
+}
+
+export function PaymentFormFields({ form }: { form: UseFormReturn<{ address: Address }> }) {
+  const t = T.useTranslate();
+  const stripe = useStripe();
 
   const theme = useThemeModeOrPreferred();
   const style = theme === ThemeMode.light ? stylesLight : stylesDark;
@@ -144,62 +174,53 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
   }
 
   return (
-    <form onSubmit={withStopPropagation(handleSubmit(form, mutation.mutateAsync))} className="col gap-6">
-      <div className="grid grid-cols-2 gap-4">
-        <Field className="col-span-2">
-          <FieldLabel>
-            <T id="cardNumberLabel" />
-          </FieldLabel>
-          <CardNumberElement options={{ classes, style }} />
-        </Field>
+    <div className="grid grid-cols-2 gap-4">
+      <Field className="col-span-2">
+        <FieldLabel>
+          <T id="cardNumberLabel" />
+        </FieldLabel>
+        <CardNumberElement options={{ classes, style }} />
+      </Field>
 
-        <Field className="flex-1">
-          <FieldLabel>
-            <T id="expirationLabel" />
-          </FieldLabel>
-          <CardExpiryElement options={{ classes, style }} />
-        </Field>
+      <Field className="flex-1">
+        <FieldLabel>
+          <T id="expirationLabel" />
+        </FieldLabel>
+        <CardExpiryElement options={{ classes, style }} />
+      </Field>
 
-        <Field className="flex-1">
-          <FieldLabel>
-            <T id="cvcLabel" />
-          </FieldLabel>
-          <CardCvcElement options={{ classes, style }} />
-        </Field>
+      <Field className="flex-1">
+        <FieldLabel>
+          <T id="cvcLabel" />
+        </FieldLabel>
+        <CardCvcElement options={{ classes, style }} />
+      </Field>
 
-        <div className="col-span-2">
-          <Controller
-            control={form.control}
-            name="address"
-            render={({ field }) => (
-              <AddressField
-                required
-                size={3}
-                label={<T id="addressLabel" />}
-                placeholder={t('addressPlaceholder')}
-                value={field.value}
-                onChange={field.onChange}
-                errors={{
-                  line1: form.formState.errors.address?.line1?.message,
-                  line2: form.formState.errors.address?.line2?.message,
-                  city: form.formState.errors.address?.city?.message,
-                  postalCode: form.formState.errors.address?.postalCode?.message,
-                  state: form.formState.errors.address?.state?.message,
-                  country: form.formState.errors.address?.country?.message,
-                }}
-              />
-            )}
-          />
-        </div>
+      <div className="col-span-2">
+        <Controller
+          control={form.control}
+          name="address"
+          render={({ field }) => (
+            <AddressField
+              required
+              size={3}
+              label={<T id="addressLabel" />}
+              placeholder={t('addressPlaceholder')}
+              value={field.value}
+              onChange={field.onChange}
+              errors={{
+                line1: form.formState.errors.address?.line1?.message,
+                line2: form.formState.errors.address?.line2?.message,
+                city: form.formState.errors.address?.city?.message,
+                postalCode: form.formState.errors.address?.postalCode?.message,
+                state: form.formState.errors.address?.state?.message,
+                country: form.formState.errors.address?.country?.message,
+              }}
+            />
+          )}
+        />
       </div>
-
-      <p className="text-dim">
-        {plan === 'starter' && <T id="temporaryHoldMessage" />}
-        {plan !== 'starter' && <T id="proratedChargeMessage" />}
-      </p>
-
-      {renderFooter(form.formState)}
-    </form>
+    </div>
   );
 }
 
