@@ -1,6 +1,9 @@
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
+import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
 
 export function OnboardingLayout({ children }: { children: React.ReactNode }) {
+  useForceThemeMode(ThemeMode.light);
+
   return (
     <div className="row h-screen bg-muted p-3">
       <Slides />
