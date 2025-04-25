@@ -615,6 +615,9 @@
           "filters": {
             "allRegions": "All regions",
             "allStatuses": "All statuses"
+          },
+          "drawer": {
+            "title": "Replica #{index}"
           }
         },
         "replicas": {

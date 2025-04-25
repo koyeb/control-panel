@@ -1,8 +1,12 @@
+import { useState } from 'react';
+
 import { Button } from '@koyeb/design-system';
 import { ComputeDeployment, Replica } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate } from 'src/intl/translate';
+
+import { ReplicaDrawer } from './replica-drawer';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling');
 
@@ -23,6 +27,8 @@ export function ReplicaList({ replicas }: { deployment: ComputeDeployment; repli
 }
 
 export function ReplicaItem({ replica }: { replica: Replica }) {
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   return (
     <div className="row items-center gap-2 rounded-lg border bg-white/80 p-3">
       <RegionFlag regionId={replica.region} className="size-4" />
@@ -53,11 +59,13 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
             <div>65%</div>
           </div>
 
-          <Button color="gray" size={1} className="ms-auto">
+          <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
             Details
           </Button>
         </>
       )}
+
+      <ReplicaDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} replica={replica} />
     </div>
   );
 }
