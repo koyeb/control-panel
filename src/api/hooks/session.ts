@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
@@ -16,6 +16,7 @@ import { useApiQueryFn } from '../use-api';
 export function useUserQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentUser'),
+    placeholderData: keepPreviousData,
     select: ({ user }) => mapUser(user!),
     throwOnError: (error) => {
       if (!isApiError(error)) {
@@ -38,6 +39,7 @@ export function useUser() {
 export function useOrganizationQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentOrganization'),
+    placeholderData: keepPreviousData,
     select: ({ organization }) => mapOrganization(organization!),
     throwOnError: (error) => {
       if (!isApiError(error)) {
