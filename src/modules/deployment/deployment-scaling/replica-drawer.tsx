@@ -70,8 +70,12 @@ function ReplicaStats({ replica }: { replica: Replica }) {
     <div className="row gap-12 rounded-md border px-3 py-2">
       <Metadata label={<T id="activeInstance" />} value={instanceId} />
       <Metadata label={<T id="status" />} value={<InstanceStatusBadge status={replica.status} />} />
-      <Metadata label={<T id="cpu" />} value={<ReplicaCpu value={0.4} />} />
-      <Metadata label={<T id="memory" />} value={<ReplicaMemory value={0.65} />} />
+      {(false as boolean) && (
+        <>
+          <Metadata label={<T id="cpu" />} value={<ReplicaCpu value={0.4} />} />
+          <Metadata label={<T id="memory" />} value={<ReplicaMemory value={0.65} />} />
+        </>
+      )}
     </div>
   );
 }

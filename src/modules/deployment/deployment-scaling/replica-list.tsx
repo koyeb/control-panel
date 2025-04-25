@@ -48,10 +48,12 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
         <>
           <InstanceStatusBadge status={replica.status} />
 
-          <div className="row ms-4 items-center gap-4">
-            <ReplicaCpu value={0.5} />
-            <ReplicaMemory value={0.65} />
-          </div>
+          {(false as boolean) && (
+            <div className="row ms-4 items-center gap-4">
+              <ReplicaCpu value={0.5} />
+              <ReplicaMemory value={0.65} />
+            </div>
+          )}
 
           <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
             Details
