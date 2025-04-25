@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
-import { ComputeDeployment, Replica } from 'src/api/model';
+import { Replica } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate } from 'src/intl/translate';
@@ -11,7 +11,7 @@ import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling');
 
-export function ReplicaList({ replicas }: { deployment: ComputeDeployment; replicas: Replica[] }) {
+export function ReplicaList({ replicas }: { replicas: Replica[] }) {
   if (replicas.length === 0) {
     return null;
   }
@@ -59,7 +59,7 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
         </>
       )}
 
-      <ReplicaDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} replica={replica} />
+      <ReplicaDrawer replica={replica} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </div>
   );
 }

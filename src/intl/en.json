@@ -239,7 +239,14 @@
     "logs": {
       "download": "Download",
       "copy": "Copy",
-      "copySuccess": "Logs copied to clipboard"
+      "copySuccess": "Logs copied to clipboard",
+      "options": {
+        "tail": "Tail logs",
+        "stream": "Show stream",
+        "instance": "Show instance",
+        "date": "Show timestamp",
+        "wordWrap": "Word wrap"
+      }
     },
     "organizationNameField": {
       "maxLength": "Maximum 39 characters",
@@ -553,13 +560,6 @@
             "title": "Logs",
             "fullScreen": "Toggle full screen"
           },
-          "options": {
-            "tail": "Tail logs",
-            "stream": "Show stream",
-            "instance": "Show instance",
-            "date": "Show timestamp",
-            "wordWrap": "Word wrap"
-          },
           "waitingForLogs": {
             "title": "Getting ready to build your service",
             "description": "Hang tight while we get everything ready to start building your service"
@@ -590,13 +590,6 @@
             "logs": "Logs",
             "events": "Events"
           },
-          "options": {
-            "tail": "Tail logs",
-            "stream": "Show stream",
-            "instance": "Show instance",
-            "date": "Show timestamp",
-            "wordWrap": "Word wrap"
-          },
           "waitingForLogs": {
             "title": "Booting up the magic",
             "description": "We're juicing up the servers and provisioning the resources to deploy your service"
@@ -625,7 +618,19 @@
             "activeInstance": "Active instance",
             "status": "Status",
             "cpu": "Average CPU",
-            "memory": "Average Memory"
+            "memory": "Average Memory",
+            "instanceHistory": {
+              "title": "Instance history",
+              "activeBadge": "Active",
+              "logs": {
+                "title": "Logs",
+                "fullScreen": "Toggle full screen",
+                "filters": {
+                  "logs": "Logs",
+                  "events": "Events"
+                }
+              }
+            }
           }
         },
         "replicas": {

@@ -22,7 +22,7 @@ import {
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { QueryError } from 'src/components/query-error';
 import { LogsApi } from 'src/hooks/logs';
-import { createTranslate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { assert, AssertionError } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
@@ -84,7 +84,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
                 <ControlledCheckbox
                   control={optionsForm.control}
                   name={option}
-                  label={<T id={`options.${option}`} />}
+                  label={<Translate id={`components.logs.options.${option}`} />}
                   className="flex-1"
                 />
               </MenuItem>

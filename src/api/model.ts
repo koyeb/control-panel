@@ -424,6 +424,7 @@ export type Instance = {
   replicaIndex: number;
   messages: string[];
   createdAt: string;
+  terminatedAt: string | null;
 };
 
 export type InstanceStatus =

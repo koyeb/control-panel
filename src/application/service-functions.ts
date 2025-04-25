@@ -1,7 +1,16 @@
 import { api } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
-import { App, AppDomain, Deployment, DeploymentStatus, Port, Service } from 'src/api/model';
+import {
+  App,
+  AppDomain,
+  Deployment,
+  DeploymentStatus,
+  Instance,
+  InstanceStatus,
+  Port,
+  Service,
+} from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { inArray } from 'src/utils/arrays';
 
@@ -78,7 +87,7 @@ export function hasBuild(deployment?: Deployment) {
 }
 
 export function isDeploymentRunning({ status }: Deployment) {
-  return inArray(status, [
+  return inArray<DeploymentStatus>(status, [
     'CANCELING',
     'ALLOCATING',
     'STARTING',
@@ -88,6 +97,10 @@ export function isDeploymentRunning({ status }: Deployment) {
     'STOPPING',
     'ERRORING',
   ]);
+}
+
+export function isInstanceRunning({ status }: Instance) {
+  return inArray<InstanceStatus>(status, ['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY', 'STOPPING']);
 }
 
 export async function updateDatabaseService(

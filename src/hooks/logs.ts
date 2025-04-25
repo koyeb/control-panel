@@ -5,7 +5,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import { api, apiStreams } from 'src/api/api';
-import { useComputeDeployment } from 'src/api/hooks/service';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
 import { useToken } from 'src/application/token';
@@ -79,11 +78,10 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
 
 function useLogsHistory(filters: LogsFilters) {
   const quotas = useOrganizationQuotas();
-  const deployment = useComputeDeployment(filters.deploymentId);
   const { token } = useToken();
 
   const initialPageParam = useMemo(() => {
-    if (!quotas || !deployment) {
+    if (!quotas) {
       return {};
     }
 
@@ -94,10 +92,10 @@ function useLogsHistory(filters: LogsFilters) {
       start: start.toISOString(),
       end: end.toISOString(),
     };
-  }, [quotas, deployment, filters.start, filters.end]);
+  }, [quotas, filters.start, filters.end]);
 
   return useInfiniteQuery({
-    enabled: quotas !== undefined && deployment !== undefined,
+    enabled: quotas !== undefined,
     queryKey: ['logsQuery', { filters }, token],
     queryFn: ({ pageParam: { start, end } }) => {
       if (start === end) {

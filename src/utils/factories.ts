@@ -209,6 +209,7 @@ const deploymentInstance = createFactory<Instance>(() => ({
   type: '',
   replicaIndex: 0,
   createdAt: createDate(),
+  terminatedAt: null,
   messages: [],
 }));
 

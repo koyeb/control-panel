@@ -9,9 +9,11 @@ import {
 } from '@floating-ui/react';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
+import { useState } from 'react';
 
-import { Button } from '@koyeb/design-system';
-import { Replica } from 'src/api/model';
+import { AccordionSection, Badge, Button } from '@koyeb/design-system';
+import { Instance, Replica } from 'src/api/model';
+import { IconChevronRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
@@ -19,6 +21,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
+import { InstanceLogs } from './instance-logs';
 import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling.drawer');
@@ -26,9 +29,9 @@ const T = createTranslate('modules.deployment.deploymentLogs.scaling.drawer');
 const MotionFloatingOverlay = motion.create(FloatingOverlay);
 
 type ReplicaDrawerProps = {
+  replica: Replica;
   open: boolean;
   onClose: () => void;
-  replica: Replica;
 };
 
 export function ReplicaDrawer({ open, onClose, replica }: ReplicaDrawerProps) {
@@ -36,6 +39,7 @@ export function ReplicaDrawer({ open, onClose, replica }: ReplicaDrawerProps) {
     <Drawer open={open} onClose={onClose} className="col gap-6 p-6">
       <Header replica={replica} onClose={onClose} />
       <ReplicaStats replica={replica} />
+      <InstanceHistory instances={replica.instances} />
     </Drawer>
   );
 }
@@ -69,6 +73,79 @@ function ReplicaStats({ replica }: { replica: Replica }) {
       <Metadata label={<T id="cpu" />} value={<ReplicaCpu value={0.4} />} />
       <Metadata label={<T id="memory" />} value={<ReplicaMemory value={0.65} />} />
     </div>
+  );
+}
+
+type InstanceHistoryProps = {
+  instances: Instance[];
+};
+
+function InstanceHistory({ instances }: InstanceHistoryProps) {
+  const [expanded, setExpanded] = useState(instances[0]);
+
+  return (
+    <div className="col gap-4">
+      <div className="text-lg font-medium">
+        <T id="instanceHistory.title" />
+      </div>
+
+      <div className="rounded-lg border">
+        {instances.map((instance) => (
+          <InstanceItem
+            key={instance.id}
+            instance={instance}
+            expanded={instance === expanded}
+            toggleExpanded={() => setExpanded(instance === expanded ? undefined : instance)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+type InstanceItemProps = {
+  instance: Instance;
+  expanded: boolean;
+  toggleExpanded: () => void;
+};
+
+function InstanceItem({ instance, expanded, toggleExpanded }: InstanceItemProps) {
+  return (
+    <AccordionSection
+      key={instance.id}
+      isExpanded={expanded}
+      header={<InstanceItemHeader expanded={expanded} toggleExpanded={toggleExpanded} instance={instance} />}
+    >
+      <InstanceLogs instance={instance} />
+    </AccordionSection>
+  );
+}
+
+type InstanceItemHeaderProps = {
+  instance: Instance;
+  expanded: boolean;
+  toggleExpanded: () => void;
+};
+
+function InstanceItemHeader({ expanded, toggleExpanded, instance }: InstanceItemHeaderProps) {
+  return (
+    <header onClick={toggleExpanded} className="col cursor-pointer items-start gap-2 p-4">
+      <div className="row items-center gap-2">
+        <IconChevronRight className={clsx('size-4 transition-transform', expanded && 'rotate-90')} />
+
+        <InstanceStatusBadge status={instance.status} />
+
+        {instance.status !== 'STOPPED' && (
+          <Badge color="blue" size={1}>
+            <T id="instanceHistory.activeBadge" />
+          </Badge>
+        )}
+
+        <div className="font-medium">{shortId(instance.id)}</div>
+      </div>
+
+      <div className="text-dim">{instance.messages.join(' ')}</div>
+    </header>
   );
 }
 

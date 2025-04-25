@@ -7,7 +7,7 @@ import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
 import { useRegionalDeployments } from 'src/api/hooks/service';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { App, ComputeDeployment, Instance, LogLine as LogLineType, Service } from 'src/api/model';
+import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Service } from 'src/api/model';
 import { isDeploymentRunning } from 'src/application/service-functions';
 import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
@@ -29,7 +29,7 @@ import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { LogsApi, LogsFilters, LogsPeriod } from 'src/hooks/logs';
-import { createTranslate } from 'src/intl/translate';
+import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
@@ -53,7 +53,7 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
   const filterLine = useFilterLine(filters.watch());
 
   const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
-    return <LogLine options={options} line={line} />;
+    return <RuntimeLogLine options={options} line={line} />;
   }, []);
 
   if (logs.error) {
@@ -81,7 +81,9 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
         logs={logs}
         filterLine={filterLine}
         renderLine={renderLine}
-        renderNoLogs={() => <NoLogs deployment={deployment} loading={logs.loading} filters={filters} />}
+        renderNoLogs={() => (
+          <NoRuntimeLogs running={isDeploymentRunning(deployment)} loading={logs.loading} filters={filters} />
+        )}
       />
 
       <LogsFooter
@@ -95,7 +97,7 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
                 <ControlledCheckbox
                   control={optionsForm.control}
                   name={option}
-                  label={<T id={`options.${option}`} />}
+                  label={<Translate id={`components.logs.options.${option}`} />}
                   className="flex-1"
                 />
               </MenuItem>
@@ -125,12 +127,12 @@ function useFilterLine({ logs, events }: LogsFilters) {
 }
 
 type NoLogsProps = {
-  deployment: ComputeDeployment;
+  running: boolean;
   loading: boolean;
   filters: UseFormReturn<LogsFilters>;
 };
 
-function NoLogs({ deployment, loading, filters }: NoLogsProps) {
+export function NoRuntimeLogs({ running, loading, filters }: NoLogsProps) {
   const { plan } = useOrganization();
   const periods = useRetentionPeriods();
   const period = filters.watch('period');
@@ -155,7 +157,7 @@ function NoLogs({ deployment, loading, filters }: NoLogsProps) {
         </p>
       )}
 
-      {isDeploymentRunning(deployment) && (
+      {running && (
         <p>
           <T id="noLogs.tailing" />
         </p>
@@ -327,7 +329,7 @@ function useRetentionPeriods() {
   }, [quotas]);
 }
 
-function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) {
+export function RuntimeLogLine({ options, line }: { options: LogOptions; line: LogLine }) {
   const dateProps: Partial<React.ComponentProps<typeof LogLineDate>> = {
     year: 'numeric',
     month: '2-digit',
