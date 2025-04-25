@@ -21,7 +21,7 @@ const T = createTranslate('pages.volumes.volumeForm');
 const schema = z.object({
   name: z.string().min(2).max(63),
   region: z.string().min(1),
-  size: z.number(),
+  size: z.number().int().min(1),
 });
 
 function toGigaBytes(bytes: number | undefined) {

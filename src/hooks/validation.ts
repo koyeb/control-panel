@@ -41,6 +41,11 @@ function useZodErrorMap(
           if (error.received === 'undefined' || error.received === 'nan') {
             return t('required');
           }
+
+          if (error.expected === 'integer') {
+            return t('integer');
+          }
+
           break;
 
         case z.ZodIssueCode.too_small:

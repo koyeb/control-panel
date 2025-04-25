@@ -55,6 +55,7 @@
     },
     "validation": {
       "required": "Required",
+      "integer": "Must be an integer",
       "min": "Must be at least {min}",
       "max": "Must be lower than {max}",
       "minLength": "Must be at least {min} {min, plural, =1 {character} other {characters}}",
