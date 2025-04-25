@@ -9,6 +9,7 @@ import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Controller, FormState, useForm, UseFormReturn } from 'react-hook-form';
+import { z } from 'zod';
 
 import { Button, Field, FieldLabel } from '@koyeb/design-system';
 import { api, ApiEndpointParams } from 'src/api/api';
@@ -23,6 +24,7 @@ import { getToken, useToken } from 'src/application/token';
 import { AddressField } from 'src/components/address-field/address-field';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
+import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
@@ -68,11 +70,15 @@ const stylesDark = {
   },
 };
 
+const schema = z.object({
+  billingAlertAmount: z.union([z.nan(), z.literal(0), z.number().min(5)]).optional(),
+});
+
 // eslint-disable-next-line react-refresh/only-export-components
 export function usePaymentForm(plan?: OrganizationPlan, onSuccess?: () => void) {
   const organization = useOrganization();
 
-  const form = useForm<{ address: Address }>({
+  const form = useForm<{ address: Address; billingAlertAmount?: number }>({
     defaultValues: {
       address: organization.billing.address ?? {
         line1: '',
@@ -81,6 +87,7 @@ export function usePaymentForm(plan?: OrganizationPlan, onSuccess?: () => void) 
         country: '',
       },
     },
+    resolver: useZodResolver(schema),
   });
 
   const { token } = useToken();
@@ -99,7 +106,7 @@ export function usePaymentForm(plan?: OrganizationPlan, onSuccess?: () => void) 
   }));
 
   const mutation = useMutation({
-    async mutationFn({ address }: FormValues<typeof form>) {
+    async mutationFn({ address, billingAlertAmount }: FormValues<typeof form>) {
       await updateBillingInformation(address);
 
       assert(stripe !== null);
@@ -113,6 +120,14 @@ export function usePaymentForm(plan?: OrganizationPlan, onSuccess?: () => void) 
         path: { id: organization.id },
         body: { plan },
       });
+
+      if (billingAlertAmount !== undefined) {
+        await api.updateBudget({
+          token,
+          path: { organization_id: organization.id },
+          body: { amount: String(billingAlertAmount * 100) },
+        });
+      }
     },
     onError(error) {
       if (error instanceof StripeError) {
