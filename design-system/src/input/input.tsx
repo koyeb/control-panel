@@ -91,7 +91,7 @@ export function InputBox({
     <div
       ref={boxRef}
       className={clsx(
-        'row w-full justify-stretch rounded border -outline-offset-1',
+        'row w-full justify-stretch rounded border bg-neutral -outline-offset-1',
         props.disabled || props.readOnly ? 'bg-muted dark:bg-muted' : 'focusable-within',
         props.disabled && 'opacity-50',
         props['aria-invalid'] && 'border-red outline-red',

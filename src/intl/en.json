@@ -2068,10 +2068,18 @@
         }
       },
       "paymentMethod": {
-        "title": "Verify your credit card",
-        "description": "Starter plan is $0 per month and pay as you go with flexible spending limits",
-        "submit": "Verify my card and account",
-        "temporaryHoldMessage": "A temporary hold will be placed on the card of $1 and refunded immediately"
+        "creditCard": {
+          "title": "Verify your credit card",
+          "description": "Starter plan is $0 per month and pay as you go with flexible spending limits",
+          "temporaryHoldMessage": "A temporary hold will be placed on the card of $1 and refunded immediately"
+        },
+        "billingAlert": {
+          "title": "Set billing alert",
+          "description": "Receive email notifications when your monthly usage gets close to the spending limit",
+          "inputStart": "$",
+          "inputEnd": "/month"
+        },
+        "submit": "Verify my card and account"
       },
       "automaticReview": {
         "pending": "Your account is being validated"
