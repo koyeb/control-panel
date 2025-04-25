@@ -130,7 +130,7 @@
     "addressAutocomplete": {
       "searchAddress": "Type to search",
       "addressNotFound": "No address found",
-      "cantFindAddress": "Can't find your address?",
+      "cantFindAddress": "Can't find your address? <link>Try here</link>",
       "line1": "Address 1",
       "line2": "Address 2",
       "city": "City",
@@ -263,7 +263,7 @@
       "cvcLabel": "CVC",
       "addressLabel": "Address",
       "addressPlaceholder": "Street address",
-      "temporaryHoldMessage": "A temporary hold of USD $1 will be placed on the card and then refunded immediately",
+      "temporaryHoldMessage": "A temporary hold will be placed on the card of $1 and refunded immediately",
       "proratedChargeMessage": "Your card will be charged a prorated amount for the remaining days of the month",
       "paymentMethodTimeoutTitle": "We could not register your payment method",
       "paymentMethodTimeoutDescription": "Please try again later or {contactUs} if the problem persists"
@@ -2068,9 +2068,10 @@
         }
       },
       "paymentMethod": {
-        "title": "Get started for free",
-        "line1": "To prevent abuse, we need additional credit card verification",
-        "submit": "Get started"
+        "title": "Verify your credit card",
+        "description": "Starter plan is $0 per month and pay as you go with flexible spending limits",
+        "submit": "Verify my card and account",
+        "temporaryHoldMessage": "A temporary hold will be placed on the card of $1 and refunded immediately"
       },
       "automaticReview": {
         "pending": "Your account is being validated"
