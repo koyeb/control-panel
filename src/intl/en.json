@@ -608,6 +608,15 @@
             "tailing": "New logs will show up here"
           }
         },
+        "scaling": {
+          "title": "Scaling",
+          "replicaIndex": "#{index}",
+          "noInstances": "There have been no running instances in this replica yet",
+          "filters": {
+            "allRegions": "All regions",
+            "allStatuses": "All statuses"
+          }
+        },
         "replicas": {
           "title": "Scaling",
           "helpTooltip": "Instances scaling",
