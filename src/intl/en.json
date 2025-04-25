@@ -2071,6 +2071,8 @@
         "creditCard": {
           "title": "Verify your credit card",
           "description": "Starter plan is $0 per month and pay as you go with flexible spending limits",
+          "addressLabel": "Address",
+          "addressPlaceholder": "Street address",
           "temporaryHoldMessage": "A temporary hold will be placed on the card of $1 and refunded immediately"
         },
         "billingAlert": {

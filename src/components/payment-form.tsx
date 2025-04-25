@@ -1,48 +1,24 @@
-import {
-  CardCvcElement,
-  CardExpiryElement,
-  CardNumberElement,
-  useElements,
-  useStripe,
-} from '@stripe/react-stripe-js';
-import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
+import { CardCvcElement, CardExpiryElement, CardNumberElement, useStripe } from '@stripe/react-stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { Controller, FormState, useForm, UseFormReturn } from 'react-hook-form';
-import { z } from 'zod';
+import { FormState, useForm } from 'react-hook-form';
 
 import { Button, Field, FieldLabel } from '@koyeb/design-system';
-import { api, ApiEndpointParams } from 'src/api/api';
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganization, useUser } from 'src/api/hooks/session';
 import { Address, OrganizationPlan } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
-import { reportError } from 'src/application/report-error';
 import { StripeProvider } from 'src/application/stripe';
-import { getToken, useToken } from 'src/application/token';
-import { AddressField } from 'src/components/address-field/address-field';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { usePaymentMethodMutation } from 'src/hooks/stripe';
 import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { inArray } from 'src/utils/arrays';
-import { assert } from 'src/utils/assert';
-import { wait } from 'src/utils/promises';
 
+import { ControlledAddressField } from './address-field/address-field';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
 
 const T = createTranslate('components.upgradeDialog');
-
-const waitForPaymentMethodTimeout = 12 * 1000;
-
-class StripeError extends Error {
-  constructor(public readonly error: BaseStripeError) {
-    super(error.message);
-  }
-}
-
-class TimeoutError extends Error {}
 
 const classes = {
   base: clsx(
@@ -70,15 +46,21 @@ const stylesDark = {
   },
 };
 
-const schema = z.object({
-  billingAlertAmount: z.union([z.nan(), z.literal(0), z.number().min(5)]).optional(),
-});
+type PaymentFormProps = {
+  plan?: OrganizationPlan;
+  onPlanChanged?: () => void;
+  renderFooter: (formState: FormState<{ address: Address }>) => React.ReactNode;
+};
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function usePaymentForm(plan?: OrganizationPlan, onSuccess?: () => void) {
+export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormProps) {
+  const t = T.useTranslate();
+
+  const user = useUser();
   const organization = useOrganization();
 
-  const form = useForm<{ address: Address; billingAlertAmount?: number }>({
+  const invalidate = useInvalidateApiQuery();
+
+  const form = useForm<{ address: Address }>({
     defaultValues: {
       address: organization.billing.address ?? {
         line1: '',
@@ -87,85 +69,66 @@ export function usePaymentForm(plan?: OrganizationPlan, onSuccess?: () => void) 
         country: '',
       },
     },
-    resolver: useZodResolver(schema),
   });
 
-  const { token } = useToken();
-  const invalidate = useInvalidateApiQuery();
+  const billingInfoMutation = useMutation({
+    ...useApiMutationFn('updateOrganization', (address: Address) => ({
+      path: { id: organization.id },
+      query: {},
+      body: {
+        address1: address.line1,
+        address2: address.line2,
+        city: address.city,
+        postal_code: address.postalCode,
+        state: address.state,
+        country: address.country,
+        billing_name: organization.billing.name === undefined ? user.name : undefined,
+        billing_email: organization.billing.email === undefined ? user.email : undefined,
+      },
+    })),
+    onError: useFormErrorHandler(form, (error) => ({
+      'address.line1': error.address1,
+      'address.line2': error.address2,
+      'address.city': error.city,
+      'address.postalCode': error.postal_code,
+      'address.state': error.state,
+      'address.country': error.country,
+    })),
+  });
 
-  const stripe = useStripe();
-  const elements = useElements();
-
-  const handleFormError = useFormErrorHandler(form, (error) => ({
-    'address.line1': error.address1,
-    'address.line2': error.address2,
-    'address.city': error.city,
-    'address.postalCode': error.postal_code,
-    'address.state': error.state,
-    'address.country': error.country,
-  }));
-
-  const mutation = useMutation({
-    async mutationFn({ address, billingAlertAmount }: FormValues<typeof form>) {
-      await updateBillingInformation(address);
-
-      assert(stripe !== null);
-      assert(elements !== null);
-      await submitPaymentMethod(stripe, elements);
-
-      await waitForPaymentMethod();
-
-      await api.changePlan({
-        token,
-        path: { id: organization.id },
-        body: { plan },
-      });
-
-      if (billingAlertAmount !== undefined) {
-        await api.updateBudget({
-          token,
-          path: { organization_id: organization.id },
-          body: { amount: String(billingAlertAmount * 100) },
-        });
-      }
-    },
-    onError(error) {
-      if (error instanceof StripeError) {
-        notify.error(error.message);
-
-        if (!inArray(error.error.type, ['validation_error', 'card_error'])) {
-          reportError(error, { type: error.error.type, code: error.error.code });
-        }
-      } else if (error instanceof TimeoutError) {
-        notify.error(<PaymentMethodTimeout />);
-      } else {
-        handleFormError(error);
-      }
-    },
+  const changePlanMutation = useMutation({
+    ...useApiMutationFn('changePlan', (plan: OrganizationPlan) => ({
+      path: { id: organization.id },
+      body: { plan },
+    })),
     async onSuccess() {
       await invalidate('getCurrentOrganization');
-      onSuccess?.();
+      onPlanChanged?.();
     },
   });
 
-  return {
-    form,
-    mutation,
+  const paymentMethodMutation = usePaymentMethodMutation({
+    onTimeout: () => notify.error(<PaymentMethodTimeout />),
+  });
+
+  const onSubmit = async ({ address }: FormValues<typeof form>) => {
+    await billingInfoMutation.mutateAsync(address);
+    await paymentMethodMutation.mutateAsync();
+    await changePlanMutation.mutateAsync('starter');
   };
-}
-
-type PaymentFormProps = {
-  plan?: OrganizationPlan;
-  onPlanChanged?: () => void;
-  renderFooter: (formState: FormState<{ address: Address }>) => React.ReactNode;
-};
-
-export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormProps) {
-  const { form, mutation } = usePaymentForm(plan, onPlanChanged);
 
   return (
-    <form onSubmit={withStopPropagation(handleSubmit(form, mutation.mutateAsync))} className="col gap-6">
-      <PaymentFormFields form={form} />
+    <form onSubmit={withStopPropagation(handleSubmit(form, onSubmit))} className="col gap-4">
+      <PaymentFormFields />
+
+      <ControlledAddressField
+        control={form.control}
+        name="address"
+        required
+        size={3}
+        label={<T id="addressLabel" />}
+        placeholder={t('addressPlaceholder')}
+      />
 
       <p className="text-dim">
         {plan === 'starter' && <T id="temporaryHoldMessage" />}
@@ -177,8 +140,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
   );
 }
 
-export function PaymentFormFields({ form }: { form: UseFormReturn<{ address: Address }> }) {
-  const t = T.useTranslate();
+export function PaymentFormFields() {
   const stripe = useStripe();
 
   const theme = useThemeModeOrPreferred();
@@ -210,31 +172,6 @@ export function PaymentFormFields({ form }: { form: UseFormReturn<{ address: Add
         </FieldLabel>
         <CardCvcElement options={{ classes, style }} />
       </Field>
-
-      <div className="col-span-2">
-        <Controller
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <AddressField
-              required
-              size={3}
-              label={<T id="addressLabel" />}
-              placeholder={t('addressPlaceholder')}
-              value={field.value}
-              onChange={field.onChange}
-              errors={{
-                line1: form.formState.errors.address?.line1?.message,
-                line2: form.formState.errors.address?.line2?.message,
-                city: form.formState.errors.address?.city?.message,
-                postalCode: form.formState.errors.address?.postalCode?.message,
-                state: form.formState.errors.address?.state?.message,
-                country: form.formState.errors.address?.country?.message,
-              }}
-            />
-          )}
-        />
-      </div>
     </div>
   );
 }
@@ -281,7 +218,7 @@ export function UpgradeDialog({ id, plan, onPlanChanged, title, description, sub
   );
 }
 
-function PaymentMethodTimeout() {
+export function PaymentMethodTimeout() {
   return (
     <div className="col gap-1">
       <strong>
@@ -300,78 +237,4 @@ function PaymentMethodTimeout() {
       </p>
     </div>
   );
-}
-
-async function updateBillingInformation(address: Address) {
-  const token = getToken();
-  const { user } = await api.getCurrentUser({ token });
-  const { organization } = await api.getCurrentOrganization({ token });
-
-  const body: ApiEndpointParams<'updateOrganization'>['body'] = {
-    address1: address.line1,
-    address2: address.line2,
-    city: address.city,
-    postal_code: address.postalCode,
-    state: address.state,
-    country: address.country,
-  };
-
-  if (organization?.billing_name === '') {
-    body.billing_name = user?.name;
-  }
-
-  if (organization?.billing_email === '') {
-    body.billing_email = user?.email;
-  }
-
-  await api.updateOrganization({
-    token,
-    path: { id: organization!.id! },
-    query: {},
-    body,
-  });
-}
-
-async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
-  const token = getToken();
-  const { payment_method } = await api.createPaymentAuthorization({ token });
-
-  try {
-    const card = elements.getElement(CardNumberElement);
-    assert(card !== null);
-
-    const result = await stripe.confirmCardPayment(
-      payment_method!.authorization_stripe_payment_intent_client_secret!,
-      { payment_method: { card } },
-    );
-
-    if (result.error) {
-      throw new StripeError(result.error);
-    }
-  } finally {
-    await api.confirmPaymentAuthorization({
-      token,
-      path: { id: payment_method!.id! },
-    });
-  }
-}
-
-async function waitForPaymentMethod() {
-  const token = getToken();
-  let hasPaymentMethod = false;
-
-  const start = new Date().getTime();
-  const elapsed = () => new Date().getTime() - start;
-
-  while (!hasPaymentMethod && elapsed() <= waitForPaymentMethodTimeout) {
-    const organization = await api.getCurrentOrganization({ token });
-
-    hasPaymentMethod = Boolean(organization.organization?.has_payment_method);
-
-    await wait(1000);
-  }
-
-  if (elapsed() > waitForPaymentMethodTimeout) {
-    throw new TimeoutError();
-  }
 }

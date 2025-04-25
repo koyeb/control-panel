@@ -5,12 +5,14 @@ import {
   SearchSession,
 } from '@mapbox/search-js-core';
 import { useEffect, useMemo, useState } from 'react';
+import { Control, useController } from 'react-hook-form';
 
 import { Autocomplete } from '@koyeb/design-system';
 import { Address } from 'src/api/model';
 import { getConfig } from 'src/application/config';
 import { createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
+import { Extend } from 'src/utils/types';
 
 import { FallbackAddressFields } from './fallback-address-fields';
 
@@ -117,3 +119,35 @@ const formatAddress = (address: Address): string => {
     .filter(Boolean)
     .join(', ');
 };
+
+type ControlledAddressFieldProps = Extend<
+  React.ComponentProps<typeof AddressField>,
+  {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    control?: Control<any>;
+    name: string;
+  }
+>;
+
+export function ControlledAddressField({ control, name, ...props }: ControlledAddressFieldProps) {
+  const { field, fieldState } = useController({ control, name });
+
+  // @ts-expect-error this works
+  const error = fieldState.error as Record<string, { message: string }>;
+
+  return (
+    <AddressField
+      {...props}
+      value={field.value}
+      onChange={field.onChange}
+      errors={{
+        line1: error?.line1?.message,
+        line2: error?.line2?.message,
+        city: error?.city?.message,
+        postalCode: error?.postalCode?.message,
+        state: error?.state?.message,
+        country: error?.country?.message,
+      }}
+    />
+  );
+}
