@@ -13,11 +13,9 @@ export function AutomaticReview() {
   });
 
   return (
-    <div className="row justify-center gap-4">
-      <Spinner className="size-6" />
-      <p className="text-base">
-        <T id="pending" />
-      </p>
-    </div>
+    <section className="row flex-1 items-center justify-center gap-2">
+      <Spinner className="size-5" />
+      <T id="pending" />
+    </section>
   );
 }

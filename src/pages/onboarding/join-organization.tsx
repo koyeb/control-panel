@@ -108,7 +108,7 @@ function CreateOrganization() {
   if (state.createOrganization) {
     return (
       <section className="row flex-1 items-center justify-center gap-2">
-        <Spinner className="size-4" />
+        <Spinner className="size-5" />
         <T id="creatingOrganization" />
       </section>
     );
