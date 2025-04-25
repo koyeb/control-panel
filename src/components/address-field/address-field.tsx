@@ -72,6 +72,12 @@ export const AddressField = ({ value, onChange, errors, ...props }: AddressField
     void session.suggest(query);
   };
 
+  const disableAutofillButton = (children: React.ReactNode) => (
+    <button type="button" className="text-default underline" onClick={() => setAutofillDisabled(true)}>
+      {children}
+    </button>
+  );
+
   return (
     <Autocomplete
       {...props}
@@ -84,11 +90,7 @@ export const AddressField = ({ value, onChange, errors, ...props }: AddressField
       inputValue={inputValue}
       onInputValueChange={onInputValueChange}
       onSelectedItemChange={(suggestion) => onChange?.(suggestionToAddress(suggestion))}
-      helperText={
-        <button type="button" className="text-link" onClick={() => setAutofillDisabled(true)}>
-          <T id="cantFindAddress" />
-        </button>
-      }
+      helperText={<T id="cantFindAddress" values={{ link: disableAutofillButton }} />}
     />
   );
 };
