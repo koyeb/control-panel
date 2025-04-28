@@ -5,7 +5,7 @@ export function OnboardingLayout({ children }: { children: React.ReactNode }) {
   useForceThemeMode(ThemeMode.light);
 
   return (
-    <div className="row h-screen bg-muted p-3">
+    <div className="row h-screen overflow-auto bg-muted p-3">
       <Slides />
       <main className="col mx-auto max-w-xl flex-1 py-8">{children}</main>
     </div>
@@ -14,7 +14,7 @@ export function OnboardingLayout({ children }: { children: React.ReactNode }) {
 
 function Slides() {
   return (
-    <aside className="col dark w-full max-w-sm rounded-2xl bg-neutral/95 px-12 py-16">
+    <aside className="dark hidden w-full max-w-sm flex-col rounded-2xl bg-neutral/95 px-12 py-16 lg:flex">
       <LogoKoyeb className="h-8 self-start" />
 
       <div className="col flex-1 gap-6 pt-24">
