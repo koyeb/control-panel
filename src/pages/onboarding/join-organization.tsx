@@ -10,17 +10,20 @@ import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
-import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
+import { HandleInvitation } from 'src/components/handle-invitations';
 import { IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
-import { QueryError } from 'src/components/query-error';
+import { QueryError, QueryGuard } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useMount } from 'src/hooks/lifecycle';
 import { useHistoryState, useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
+import { defined } from 'src/utils/assert';
 import { slugify } from 'src/utils/strings';
+
+import Background from './images/join-organization.svg?react';
 
 const T = createTranslate('pages.onboarding.joinOrganization');
 
@@ -44,13 +47,20 @@ export function JoinOrganization() {
     return <QueryError error={invitationsQuery.error} />;
   }
 
-  const invitation = invitationsQuery.data[0];
+  return (
+    <>
+      <Background className="absolute bottom-0 hidden md:block" />
 
-  if (invitation !== undefined) {
-    return <AcceptOrDeclineInvitation invitation={invitation} />;
-  }
-
-  return <CreateOrganization />;
+      <QueryGuard query={invitationsQuery}>
+        {(invitations) => (
+          <>
+            {invitations.length === 0 && <CreateOrganization />}
+            {invitations.length > 0 && <HandleInvitation invitation={defined(invitations[0])} />}
+          </>
+        )}
+      </QueryGuard>
+    </>
+  );
 }
 
 function CreateOrganization() {
