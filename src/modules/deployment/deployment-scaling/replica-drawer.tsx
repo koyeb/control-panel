@@ -32,13 +32,14 @@ type ReplicaDrawerProps = {
   replica: Replica;
   open: boolean;
   onClose: () => void;
+  metrics?: { cpu?: number; memory?: number };
 };
 
-export function ReplicaDrawer({ open, onClose, replica }: ReplicaDrawerProps) {
+export function ReplicaDrawer({ open, onClose, replica, metrics }: ReplicaDrawerProps) {
   return (
     <Drawer open={open} onClose={onClose} className="col gap-6 p-6">
       <Header replica={replica} onClose={onClose} />
-      <ReplicaStats replica={replica} />
+      <ReplicaStats replica={replica} metrics={metrics} />
       <InstanceHistory instances={replica.instances} />
     </Drawer>
   );
@@ -60,7 +61,12 @@ function Header({ replica, onClose }: { replica: Replica; onClose: () => void })
   );
 }
 
-function ReplicaStats({ replica }: { replica: Replica }) {
+type ReplicaStatsProps = {
+  replica: Replica;
+  metrics?: { cpu?: number; memory?: number };
+};
+
+function ReplicaStats({ replica, metrics }: ReplicaStatsProps) {
   assert(replica.instanceId !== undefined);
   assert(replica.status !== undefined);
 
@@ -69,12 +75,15 @@ function ReplicaStats({ replica }: { replica: Replica }) {
   return (
     <div className="row gap-12 rounded-md border px-3 py-2">
       <Metadata label={<T id="activeInstance" />} value={instanceId} />
+
       <Metadata label={<T id="status" />} value={<InstanceStatusBadge status={replica.status} />} />
-      {(false as boolean) && (
-        <>
-          <Metadata label={<T id="cpu" />} value={<ReplicaCpu value={0.4} />} />
-          <Metadata label={<T id="memory" />} value={<ReplicaMemory value={0.65} />} />
-        </>
+
+      {metrics?.cpu !== undefined && (
+        <Metadata label={<T id="cpu" />} value={<ReplicaCpu value={metrics.cpu} />} />
+      )}
+
+      {metrics?.memory !== undefined && (
+        <Metadata label={<T id="memory" />} value={<ReplicaMemory value={metrics.memory} />} />
       )}
     </div>
   );

@@ -1,18 +1,26 @@
 import { useState } from 'react';
 
 import { Button } from '@koyeb/design-system';
-import { Replica } from 'src/api/model';
+import { ComputeDeployment, Replica } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate } from 'src/intl/translate';
 
 import { ReplicaDrawer } from './replica-drawer';
 import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
+import { useReplicaMetricsQuery } from './replica-metrics';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling');
 
-export function ReplicaList({ replicas }: { replicas: Replica[] }) {
-  if (replicas.length === 0) {
+type ReplicaListProps = {
+  deployment: ComputeDeployment;
+  replicas: Replica[];
+};
+
+export function ReplicaList({ deployment, replicas }: ReplicaListProps) {
+  const metrics = useReplicaMetricsQuery(deployment);
+
+  if (replicas.length === 0 || metrics.isPending) {
     return null;
   }
 
@@ -20,14 +28,22 @@ export function ReplicaList({ replicas }: { replicas: Replica[] }) {
     <ul className="col gap-3">
       {replicas.map((replica) => (
         <li key={`${replica.region}-${replica.index}`}>
-          <ReplicaItem replica={replica} />
+          <ReplicaItem
+            replica={replica}
+            metrics={replica.instanceId ? metrics.data[replica.instanceId] : undefined}
+          />
         </li>
       ))}
     </ul>
   );
 }
 
-export function ReplicaItem({ replica }: { replica: Replica }) {
+type ReplicaItemProps = {
+  replica: Replica;
+  metrics?: { cpu?: number; memory?: number };
+};
+
+export function ReplicaItem({ replica, metrics }: ReplicaItemProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -48,12 +64,10 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
         <>
           <InstanceStatusBadge status={replica.status} />
 
-          {(false as boolean) && (
-            <div className="row ms-4 items-center gap-4">
-              <ReplicaCpu value={0.5} />
-              <ReplicaMemory value={0.65} />
-            </div>
-          )}
+          <div className="row ms-4 items-center gap-4">
+            {metrics?.cpu !== undefined && <ReplicaCpu value={metrics.cpu} />}
+            {metrics?.memory !== undefined && <ReplicaMemory value={metrics.memory} />}
+          </div>
 
           <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
             Details
@@ -61,7 +75,12 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
         </>
       )}
 
-      <ReplicaDrawer replica={replica} open={drawerOpen} onClose={() => setDrawerOpen(false)} />
+      <ReplicaDrawer
+        replica={replica}
+        open={drawerOpen}
+        metrics={metrics}
+        onClose={() => setDrawerOpen(false)}
+      />
     </div>
   );
 }

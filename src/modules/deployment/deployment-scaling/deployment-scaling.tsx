@@ -53,7 +53,7 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
 
       <div className="p-3">
         <QueryGuard query={query}>
-          {(replicas) => <ReplicaList replicas={filterReplicas(replicas)} />}
+          {(replicas) => <ReplicaList deployment={deployment} replicas={filterReplicas(replicas)} />}
         </QueryGuard>
       </div>
     </div>
