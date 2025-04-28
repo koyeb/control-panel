@@ -1,8 +1,17 @@
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
+import { useSearchParams } from 'src/hooks/router';
 import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
 
+import { SecondarySettings } from '../secondary/settings';
+
 export function OnboardingLayout({ children }: { children: React.ReactNode }) {
+  const params = useSearchParams();
+
   useForceThemeMode(ThemeMode.light);
+
+  if (params.has('settings')) {
+    return <SecondarySettings />;
+  }
 
   return (
     <div className="row h-screen overflow-auto bg-muted p-3">
