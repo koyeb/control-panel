@@ -16,10 +16,10 @@ import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service'
 import { ComputeDeployment, Instance, Replica } from 'src/api/model';
 import { IconChevronRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
+import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate, Translate } from 'src/intl/translate';
-import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
 import { InstanceLogs } from './instance-logs';
@@ -69,8 +69,9 @@ type ReplicaStatsProps = {
 };
 
 function ReplicaStats({ replica, metrics }: ReplicaStatsProps) {
-  assert(replica.instanceId !== undefined);
-  assert(replica.status !== undefined);
+  if (!replica.instanceId || !replica.status) {
+    return null;
+  }
 
   const instanceId = <span className="font-medium">{shortId(replica.instanceId)}</span>;
 
@@ -105,8 +106,6 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
     regionalDeploymentId: regionalDeployment?.id,
   });
 
-  const instances = query.data?.instances;
-
   const [expanded, setExpanded] = useState<Instance>();
 
   return (
@@ -115,16 +114,40 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
         <T id="instanceHistory.title" />
       </div>
 
-      <div className="rounded-lg border">
-        {instances?.map((instance) => (
-          <InstanceItem
-            key={instance.id}
-            instance={instance}
-            expanded={instance === expanded}
-            toggleExpanded={() => setExpanded(instance === expanded ? undefined : instance)}
-          />
-        ))}
+      <QueryGuard query={query}>
+        {({ instances }) => (
+          <InstanceList instances={instances} expanded={expanded} setExpanded={setExpanded} />
+        )}
+      </QueryGuard>
+    </div>
+  );
+}
+
+type InstanceListProps = {
+  instances: Instance[];
+  expanded: Instance | undefined;
+  setExpanded: (instance: Instance | undefined) => void;
+};
+
+function InstanceList({ instances, expanded, setExpanded }: InstanceListProps) {
+  if (instances.length === 0) {
+    return (
+      <div className="text-dim">
+        <T id="instanceHistory.noInstances" />
       </div>
+    );
+  }
+
+  return (
+    <div className="rounded-lg border">
+      {instances.map((instance) => (
+        <InstanceItem
+          key={instance.id}
+          instance={instance}
+          expanded={instance === expanded}
+          toggleExpanded={() => setExpanded(instance === expanded ? undefined : instance)}
+        />
+      ))}
     </div>
   );
 }

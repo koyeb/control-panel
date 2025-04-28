@@ -70,12 +70,12 @@ export function ReplicaItem({ deployment, replica, metrics }: ReplicaItemProps) 
             {metrics?.cpu !== undefined && <ReplicaCpu value={metrics.cpu} />}
             {metrics?.memory !== undefined && <ReplicaMemory value={metrics.memory} />}
           </div>
-
-          <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
-            <T id="details" />
-          </Button>
         </>
       )}
+
+      <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
+        <T id="details" />
+      </Button>
 
       <ReplicaDrawer
         deployment={deployment}

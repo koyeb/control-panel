@@ -605,7 +605,7 @@
           "title": "Scaling",
           "replicaIndex": "#{index}",
           "details": "Details",
-          "noInstances": "There have been no running instances in this replica yet",
+          "noInstances": "There are no instances currently running in this replica",
           "filters": {
             "allRegions": "All regions",
             "allStatuses": "All statuses"
@@ -623,6 +623,7 @@
             "instanceHistory": {
               "title": "Instance history",
               "activeBadge": "Active",
+              "noInstances": "There have been no running instances in this replica yet",
               "logs": {
                 "title": "Logs",
                 "fullScreen": "Toggle full screen",
