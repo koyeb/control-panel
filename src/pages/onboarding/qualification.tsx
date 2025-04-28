@@ -132,7 +132,8 @@ export function Qualification() {
   return (
     <>
       <section className="row justify-between">
-        <Stepper activeStep={steps.indexOf(step) + 1} totalSteps={steps.length + 1} />
+        <Stepper activeStep={steps.indexOf(step)} totalSteps={steps.length + 1} />
+
         <AuthButton
           onClick={() => handleSubmit(form.getValues())}
           className={clsx('border border-strong bg-neutral !text-default hover:bg-neutral', {
@@ -147,15 +148,6 @@ export function Qualification() {
       <form onSubmit={form.handleSubmit(handleSubmit)} className="col flex-1 justify-center gap-8">
         <FormProvider {...form}>
           <QualificationStep />
-
-          <AuthButton
-            type="submit"
-            className={clsx('self-start', {
-              invisible: step === 'usage' && form.watch('occupation') === undefined,
-            })}
-          >
-            <T id="continue" />
-          </AuthButton>
         </FormProvider>
       </form>
 
@@ -210,6 +202,10 @@ function FullNameStep() {
       </header>
 
       <ControlledInput name="fullName" />
+
+      <AuthButton type="submit" className="self-start">
+        <T id="continue" />
+      </AuthButton>
     </section>
   );
 }
@@ -269,6 +265,7 @@ function OccupationStep() {
             type="radio"
             value={t(`occupation.${occupation}`)}
             label={<T id={`occupation.${occupation}`} />}
+            onClick={(event) => event.currentTarget.form?.requestSubmit()}
           />
         ))}
       </TagList>
@@ -310,6 +307,10 @@ function PrimaryUseCaseStep() {
           />
         ))}
       </TagList>
+
+      <AuthButton type="submit" className="self-start">
+        <T id="continue" />
+      </AuthButton>
     </section>
   );
 }
@@ -338,6 +339,7 @@ function CurrentSpendingStep() {
             type="radio"
             value={t(`currentSpending.${useCase}`)}
             label={<T id={`currentSpending.${useCase}`} />}
+            onClick={(event) => event.currentTarget.form?.requestSubmit()}
           />
         ))}
       </TagList>
