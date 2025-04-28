@@ -11,7 +11,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from '../authentication/components/auth-button';
 
-import Globe from './images/globe.svg?react';
+import Background from './images/email-validation.svg?react';
 
 const T = createTranslate('pages.onboarding.emailValidation');
 
@@ -37,7 +37,7 @@ export function EmailValidation() {
 
   return (
     <section className="col w-full max-w-md flex-1 items-center justify-center gap-12">
-      <Globe className="absolute bottom-0" />
+      <Background className="absolute bottom-0" />
 
       <div className="col gap-6 text-center">
         <h1 className="text-3xl font-semibold">

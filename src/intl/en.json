@@ -226,13 +226,13 @@
       }
     },
     "invitation": {
-      "title": "You have been invited to join the <organization>{organizationName} organization</organization>",
-      "description": "You were invited by {name} ({email})",
-      "accept": "Join organization",
-      "decline": "Decline",
+      "title": "You've been invited by",
+      "description": "{email} to join:",
+      "accept": "Join",
+      "decline": "<dim>Unknown invite?</dim> <link>Decline</link>",
       "alreadyAccepted": "This invitation was already accepted",
-      "alreadyDeclined": "this invitation was declined",
-      "expired": "this invitation has expired",
+      "alreadyDeclined": "This invitation was declined",
+      "expired": "This invitation has expired",
       "acceptSuccess": "The invitation was accepted",
       "declineSuccess": "The invitation was declined"
     },

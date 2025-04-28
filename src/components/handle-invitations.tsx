@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { Button } from '@koyeb/design-system';
+import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { OrganizationInvitation } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -9,24 +9,25 @@ import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { AuthButton } from 'src/pages/authentication/components/auth-button';
+
+import { IconArrowRight } from './icons';
 
 const T = createTranslate('components.invitation');
 
-type AcceptOrDeclineInvitationProps = {
+type HandleInvitationsProps = {
   invitation: OrganizationInvitation;
 };
 
-export function AcceptOrDeclineInvitation({ invitation }: AcceptOrDeclineInvitationProps) {
+export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
-  const invitationId = invitation.id;
-
   const acceptMutation = useMutation({
-    async mutationFn() {
-      await api.acceptInvitation({ token, path: { id: invitationId } });
+    async mutationFn(invitation: OrganizationInvitation) {
+      await api.acceptInvitation({ token, path: { id: invitation.id } });
 
       const { token: newToken } = await api.switchOrganization({
         token,
@@ -45,9 +46,9 @@ export function AcceptOrDeclineInvitation({ invitation }: AcceptOrDeclineInvitat
   });
 
   const declineMutation = useMutation({
-    ...useApiMutationFn('declineInvitation', {
-      path: { id: invitationId },
-    }),
+    ...useApiMutationFn('declineInvitation', (invitation: OrganizationInvitation) => ({
+      path: { id: invitation.id },
+    })),
     async onSuccess() {
       await invalidate('listInvitations');
       navigate(routes.home());
@@ -56,50 +57,42 @@ export function AcceptOrDeclineInvitation({ invitation }: AcceptOrDeclineInvitat
   });
 
   if (invitation.status !== 'PENDING') {
-    return (
-      <div className="col items-center gap-6 text-base">
-        <InvalidInvitationStatus invitation={invitation} />
-      </div>
-    );
+    return <InvalidInvitationStatus invitation={invitation} />;
   }
 
   return (
-    <div className="col w-full max-w-xl items-center gap-6 text-center">
-      <h1 className="typo-heading">
+    // eslint-disable-next-line tailwindcss/no-arbitrary-value
+    <div className="col w-full max-w-md items-center gap-12 pt-[15vh] text-center">
+      <div className="col gap-2">
+        <h1 className="text-4xl font-semibold text-dim">
+          <T id="title" />
+        </h1>
+
+        <div className="text-xl font-semibold">
+          <T id="description" values={{ email: invitation.inviter.email }} />
+        </div>
+      </div>
+
+      <div className="row w-full items-center justify-between rounded-lg border p-4">
+        <div className="text-xl font-semibold">{invitation.organization.name}</div>
+
+        <AuthButton onClick={() => acceptMutation.mutate(invitation)}>
+          <T id="accept" />
+          {acceptMutation.isPending ? <Spinner className="size-4" /> : <IconArrowRight className="size-4" />}
+        </AuthButton>
+      </div>
+
+      <div className="text-xs">
         <T
-          id="title"
+          id="decline"
           values={{
-            organization: (children) => <div className="mt-1 text-4xl">{children}</div>,
-            organizationName: invitation.organization.name,
+            link: (children) => (
+              <button type="button" onClick={() => declineMutation.mutate(invitation)} className="underline">
+                {children}
+              </button>
+            ),
           }}
         />
-      </h1>
-
-      <div className="col gap-4">
-        <div className="font-medium text-dim">
-          <T
-            id="description"
-            values={{
-              name: invitation.inviter.name,
-              email: <span className="text-green">{invitation.inviter.email}</span>,
-            }}
-          />
-        </div>
-
-        <div className="row justify-center gap-4">
-          <Button
-            size={3}
-            color="gray"
-            onClick={() => declineMutation.mutate()}
-            loading={declineMutation.isPending}
-          >
-            <T id="decline" />
-          </Button>
-
-          <Button size={3} onClick={() => acceptMutation.mutate()} loading={acceptMutation.isPending}>
-            <T id="accept" />
-          </Button>
-        </div>
       </div>
     </div>
   );
