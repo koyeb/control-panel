@@ -604,6 +604,7 @@
         "scaling": {
           "title": "Scaling",
           "replicaIndex": "#{index}",
+          "details": "Details",
           "noInstances": "There have been no running instances in this replica yet",
           "filters": {
             "allRegions": "All regions",

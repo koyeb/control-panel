@@ -29,6 +29,7 @@ export function ReplicaList({ deployment, replicas }: ReplicaListProps) {
       {replicas.map((replica) => (
         <li key={`${replica.region}-${replica.index}`}>
           <ReplicaItem
+            deployment={deployment}
             replica={replica}
             metrics={replica.instanceId ? metrics.data[replica.instanceId] : undefined}
           />
@@ -39,11 +40,12 @@ export function ReplicaList({ deployment, replicas }: ReplicaListProps) {
 }
 
 type ReplicaItemProps = {
+  deployment: ComputeDeployment;
   replica: Replica;
   metrics?: { cpu?: number; memory?: number };
 };
 
-export function ReplicaItem({ replica, metrics }: ReplicaItemProps) {
+export function ReplicaItem({ deployment, replica, metrics }: ReplicaItemProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
@@ -70,12 +72,13 @@ export function ReplicaItem({ replica, metrics }: ReplicaItemProps) {
           </div>
 
           <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
-            Details
+            <T id="details" />
           </Button>
         </>
       )}
 
       <ReplicaDrawer
+        deployment={deployment}
         replica={replica}
         open={drawerOpen}
         metrics={metrics}

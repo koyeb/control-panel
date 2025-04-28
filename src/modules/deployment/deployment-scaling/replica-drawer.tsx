@@ -12,7 +12,8 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 
 import { AccordionSection, Badge, Button } from '@koyeb/design-system';
-import { Instance, Replica } from 'src/api/model';
+import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
+import { ComputeDeployment, Instance, Replica } from 'src/api/model';
 import { IconChevronRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
@@ -29,18 +30,19 @@ const T = createTranslate('modules.deployment.deploymentLogs.scaling.drawer');
 const MotionFloatingOverlay = motion.create(FloatingOverlay);
 
 type ReplicaDrawerProps = {
+  deployment: ComputeDeployment;
   replica: Replica;
+  metrics?: { cpu?: number; memory?: number };
   open: boolean;
   onClose: () => void;
-  metrics?: { cpu?: number; memory?: number };
 };
 
-export function ReplicaDrawer({ open, onClose, replica, metrics }: ReplicaDrawerProps) {
+export function ReplicaDrawer({ deployment, replica, metrics, open, onClose }: ReplicaDrawerProps) {
   return (
     <Drawer open={open} onClose={onClose} className="col gap-6 p-6">
       <Header replica={replica} onClose={onClose} />
       <ReplicaStats replica={replica} metrics={metrics} />
-      <InstanceHistory instances={replica.instances} />
+      <InstanceHistory deployment={deployment} replica={replica} />
     </Drawer>
   );
 }
@@ -90,11 +92,22 @@ function ReplicaStats({ replica, metrics }: ReplicaStatsProps) {
 }
 
 type InstanceHistoryProps = {
-  instances: Instance[];
+  deployment: ComputeDeployment;
+  replica: Replica;
 };
 
-function InstanceHistory({ instances }: InstanceHistoryProps) {
-  const [expanded, setExpanded] = useState(instances[0]);
+function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
+  const regionalDeployment = useRegionalDeployment(deployment.id, replica.region);
+
+  const query = useInstancesQuery({
+    deploymentId: deployment.id,
+    replicaIndex: replica.index,
+    regionalDeploymentId: regionalDeployment?.id,
+  });
+
+  const instances = query.data?.instances;
+
+  const [expanded, setExpanded] = useState<Instance>();
 
   return (
     <div className="col gap-4">
@@ -103,7 +116,7 @@ function InstanceHistory({ instances }: InstanceHistoryProps) {
       </div>
 
       <div className="rounded-lg border">
-        {instances.map((instance) => (
+        {instances?.map((instance) => (
           <InstanceItem
             key={instance.id}
             instance={instance}
@@ -166,6 +179,7 @@ function useDrawer(open: boolean, onClose: () => void) {
   const floating = useFloating({
     open,
     onOpenChange: (open) => !open && onClose(),
+    transform: true,
   });
 
   const dismiss = useDismiss(floating.context, { outsidePressEvent: 'mousedown' });
@@ -199,6 +213,7 @@ function Drawer({ open, onClose, className, children }: DrawerProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: duration / 1000 }}
+            style={{ overflow: 'hidden' }}
             className="col z-40 items-center justify-center bg-neutral/50 backdrop-blur"
             lockScroll
           >
@@ -206,11 +221,11 @@ function Drawer({ open, onClose, className, children }: DrawerProps) {
               <motion.div
                 {...drawer.getFloatingProps()}
                 ref={drawer.floating.refs.setFloating}
-                initial={{ right: -160 }}
-                animate={{ right: 0 }}
-                exit={{ right: -160 }}
-                transition={{ ease: 'easeOut' }}
-                className={clsx('fixed inset-y-0 right-0 w-full max-w-4xl bg-neutral shadow-lg', className)}
+                initial={{ x: 50 }}
+                animate={{ x: 0 }}
+                exit={{ x: 50 }}
+                transition={{ ease: 'easeOut', duration: duration / 1000 }}
+                className={clsx('fixed inset-y-0 right-0 w-full max-w-4xl bg-popover shadow-lg', className)}
               >
                 {children}
               </motion.div>
