@@ -30,7 +30,7 @@ export function useReplicaMetricsQuery(deployment: ComputeDeployment) {
       return {
         isPending: cpu.isPending || memory.isPending,
         data: toObject(instanceIds, identity, (instanceId) =>
-          getMetrics(instance, instanceId, cpu.data!.metrics!, memory.data!.metrics!),
+          getMetrics(instance, instanceId, cpu.data?.metrics, memory.data?.metrics),
         ),
       };
     },
@@ -40,13 +40,13 @@ export function useReplicaMetricsQuery(deployment: ComputeDeployment) {
 function getMetrics(
   instance: CatalogInstance | undefined,
   instanceId: string,
-  cpu: Api.GetMetricsReplyMetric[],
-  memory: Api.GetMetricsReplyMetric[],
+  cpu: Api.GetMetricsReplyMetric[] | undefined,
+  memory: Api.GetMetricsReplyMetric[] | undefined,
 ) {
-  const getSamples = (metric: Api.GetMetricsReplyMetric[]): number[] => {
+  const getSamples = (metric?: Api.GetMetricsReplyMetric[]): number[] => {
     return (
       metric
-        .find((metric) => metric.labels!.instance_id === instanceId)
+        ?.find((metric) => metric.labels!.instance_id === instanceId)
         ?.samples?.map((sample) => sample.value)
         .filter(isDefined) ?? []
     );
