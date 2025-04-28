@@ -204,7 +204,7 @@ function FullNameStep() {
         </p>
       </header>
 
-      <ControlledInput name="fullName" />
+      <ControlledInput name="fullName" required />
 
       <AuthButton type="submit" className="self-start">
         <T id="continue" />
