@@ -12,6 +12,7 @@ import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
+import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 import { Extend } from 'src/utils/types';
@@ -131,7 +132,9 @@ export function Qualification() {
 
   return (
     <>
-      <section className="row justify-between">
+      <section className="row mb-8 flex-wrap gap-6 lg:justify-between">
+        <LogoKoyeb className="me-auto h-8 lg:hidden" />
+
         <Stepper activeStep={steps.indexOf(step)} totalSteps={steps.length + 1} />
 
         <AuthButton
@@ -151,7 +154,7 @@ export function Qualification() {
         </FormProvider>
       </form>
 
-      <div className="min-h-8" />
+      <div className="min-h-12" />
     </>
   );
 }
