@@ -31,7 +31,7 @@ export function ReplicaItem({ replica }: { replica: Replica }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="row items-center gap-2 rounded-lg border bg-white/80 p-3">
+    <div className="row items-center gap-2 rounded-lg border p-3">
       <RegionFlag regionId={replica.region} className="size-4" />
 
       <div className="min-w-8">
