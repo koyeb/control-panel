@@ -10,10 +10,12 @@ import {
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
+import { FormattedDate } from 'react-intl';
 
 import { AccordionSection, Badge, Button } from '@koyeb/design-system';
 import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
 import { ComputeDeployment, Instance, Replica } from 'src/api/model';
+import { isInstanceRunning } from 'src/application/service-functions';
 import { IconChevronRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
@@ -184,13 +186,17 @@ function InstanceItemHeader({ expanded, toggleExpanded, instance }: InstanceItem
 
         <InstanceStatusBadge status={instance.status} />
 
-        {instance.status !== 'STOPPED' && (
+        {(isInstanceRunning(instance) || instance.status === 'SLEEPING') && (
           <Badge color="blue" size={1}>
             <T id="instanceHistory.activeBadge" />
           </Badge>
         )}
 
         <div className="font-medium">{shortId(instance.id)}</div>
+
+        <div className="text-dim">
+          <FormattedDate value={instance.createdAt} dateStyle="medium" timeStyle="medium" />
+        </div>
       </div>
 
       <div className="text-dim">{instance.messages.join(' ')}</div>
