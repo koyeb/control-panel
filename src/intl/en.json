@@ -626,7 +626,6 @@
               "noInstances": "There have been no running instances in this replica yet",
               "logs": {
                 "title": "Logs",
-                "fullScreen": "Toggle full screen",
                 "filters": {
                   "logs": "Logs",
                   "events": "Events"

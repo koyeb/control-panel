@@ -139,9 +139,7 @@ function LogsHeader({ filtersForm, optionsForm }: LogsHeaderProps) {
         variant="solid"
         Icon={IconFullscreen}
         onClick={() => optionsForm.setValue('fullScreen', !optionsForm.getValues('fullScreen'))}
-      >
-        <T id="fullScreen" />
-      </IconButton>
+      />
     </div>
   );
 }

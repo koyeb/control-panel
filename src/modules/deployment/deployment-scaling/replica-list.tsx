@@ -49,33 +49,34 @@ export function ReplicaItem({ deployment, replica, metrics }: ReplicaItemProps) 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="row items-center gap-2 rounded-lg border p-3">
-      <RegionFlag regionId={replica.region} className="size-4" />
+    // eslint-disable-next-line tailwindcss/no-arbitrary-value
+    <div className="grid grid-cols-[1fr_auto] items-center gap-x-2 gap-y-3 rounded-lg border p-3 sm:grid-cols-[auto_1fr_auto]">
+      <div className="row items-center gap-2 sm:order-1">
+        <RegionFlag regionId={replica.region} className="size-4" />
 
-      <div className="min-w-8">
-        <T id="replicaIndex" values={{ index: replica.index }} />
+        <div className="min-w-8">
+          <T id="replicaIndex" values={{ index: replica.index }} />
+        </div>
+
+        {replica.status && <InstanceStatusBadge status={replica.status} />}
       </div>
 
+      <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto sm:order-3">
+        <T id="details" />
+      </Button>
+
       {!replica.status && (
-        <div className="text-xs text-dim">
+        <div className="text-xs text-dim sm:order-2">
           <T id="noInstances" />
         </div>
       )}
 
       {replica.status && (
-        <>
-          <InstanceStatusBadge status={replica.status} />
-
-          <div className="row ms-4 items-center gap-4">
-            {metrics?.cpu !== undefined && <ReplicaCpu value={metrics.cpu} />}
-            {metrics?.memory !== undefined && <ReplicaMemory value={metrics.memory} />}
-          </div>
-        </>
+        <div className="row col-span-full items-center gap-4 sm:order-2 sm:col-span-1">
+          {metrics?.cpu !== undefined && <ReplicaCpu value={metrics.cpu} />}
+          {metrics?.memory !== undefined && <ReplicaMemory value={metrics.memory} />}
+        </div>
       )}
-
-      <Button color="gray" size={1} onClick={() => setDrawerOpen(true)} className="ms-auto">
-        <T id="details" />
-      </Button>
 
       <ReplicaDrawer
         deployment={deployment}

@@ -10,7 +10,6 @@ import {
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
-import { FormattedDate } from 'react-intl';
 
 import { AccordionSection, Badge, Button } from '@koyeb/design-system';
 import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
@@ -21,6 +20,7 @@ import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
+import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 
@@ -78,7 +78,7 @@ function ReplicaStats({ replica, metrics }: ReplicaStatsProps) {
   const instanceId = <span className="font-medium">{shortId(replica.instanceId)}</span>;
 
   return (
-    <div className="row gap-12 rounded-md border px-3 py-2">
+    <div className="row flex-wrap gap-x-12 gap-y-3 rounded-md border px-3 py-2">
       <Metadata label={<T id="activeInstance" />} value={instanceId} />
 
       <Metadata label={<T id="status" />} value={<InstanceStatusBadge status={replica.status} />} />
@@ -180,9 +180,11 @@ type InstanceItemHeaderProps = {
 
 function InstanceItemHeader({ expanded, toggleExpanded, instance }: InstanceItemHeaderProps) {
   return (
-    <header onClick={toggleExpanded} className="col cursor-pointer items-start gap-2 p-4">
+    <header onClick={toggleExpanded} className="col cursor-pointer gap-2 p-4">
       <div className="row items-center gap-2">
-        <IconChevronRight className={clsx('size-4 transition-transform', expanded && 'rotate-90')} />
+        <div>
+          <IconChevronRight className={clsx('size-4 transition-transform', expanded && 'rotate-90')} />
+        </div>
 
         <InstanceStatusBadge status={instance.status} />
 
@@ -194,8 +196,8 @@ function InstanceItemHeader({ expanded, toggleExpanded, instance }: InstanceItem
 
         <div className="font-medium">{shortId(instance.id)}</div>
 
-        <div className="text-dim">
-          <FormattedDate value={instance.createdAt} dateStyle="medium" timeStyle="medium" />
+        <div className="ms-auto text-xs text-dim">
+          <FormattedDistanceToNow value={instance.createdAt} />
         </div>
       </div>
 
@@ -254,7 +256,10 @@ function Drawer({ open, onClose, className, children }: DrawerProps) {
                 animate={{ x: 0 }}
                 exit={{ x: 50 }}
                 transition={{ ease: 'easeOut', duration: duration / 1000 }}
-                className={clsx('fixed inset-y-0 right-0 w-full max-w-4xl bg-popover shadow-lg', className)}
+                className={clsx(
+                  'fixed inset-y-0 right-0 w-full max-w-4xl overflow-auto bg-popover shadow-lg',
+                  className,
+                )}
               >
                 {children}
               </motion.div>
