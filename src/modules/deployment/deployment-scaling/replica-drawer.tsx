@@ -10,18 +10,21 @@ import {
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { AccordionSection, Badge, Button } from '@koyeb/design-system';
 import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
-import { ComputeDeployment, Instance, Replica } from 'src/api/model';
+import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
 import { isInstanceRunning } from 'src/application/service-functions';
+import { ControlledSelect } from 'src/components/controlled';
 import { IconChevronRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { createTranslate, Translate, translateStatus, TranslateStatus } from 'src/intl/translate';
+import { identity } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
 
 import { InstanceLogs } from './instance-logs';
@@ -100,15 +103,35 @@ type InstanceHistoryProps = {
 };
 
 function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
+  const t = T.useTranslate();
+
+  const [expanded, setExpanded] = useState<Instance>();
+
+  const filters = useForm<{ status: InstanceStatus | null }>({
+    defaultValues: {
+      status: null,
+    },
+  });
+
+  const statuses: InstanceStatus[] = [
+    'ALLOCATING',
+    'STARTING',
+    'HEALTHY',
+    'UNHEALTHY',
+    'STOPPING',
+    'STOPPED',
+    'ERROR',
+    'SLEEPING',
+  ];
+
   const regionalDeployment = useRegionalDeployment(deployment.id, replica.region);
 
   const query = useInstancesQuery({
     deploymentId: deployment.id,
     replicaIndex: replica.index,
     regionalDeploymentId: regionalDeployment?.id,
+    status: filters.watch('status') ?? undefined,
   });
-
-  const [expanded, setExpanded] = useState<Instance>();
 
   return (
     <div className="col gap-4">
@@ -116,9 +139,29 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
         <T id="instanceHistory.title" />
       </div>
 
+      <form>
+        <ControlledSelect
+          control={filters.control}
+          name="status"
+          placeholder={t('instanceHistory.filters.status.placeholder')}
+          items={statuses}
+          getKey={identity}
+          itemToValue={identity}
+          itemToString={translateStatus}
+          renderItem={(status) => <TranslateStatus status={status} />}
+          onItemClick={(status) => status === filters.watch('status') && filters.setValue('status', null)}
+          className="max-w-xs"
+        />
+      </form>
+
       <QueryGuard query={query}>
         {({ instances }) => (
-          <InstanceList instances={instances} expanded={expanded} setExpanded={setExpanded} />
+          <InstanceList
+            instances={instances}
+            expanded={expanded}
+            setExpanded={setExpanded}
+            hasFilters={filters.formState.isDirty}
+          />
         )}
       </QueryGuard>
     </div>
@@ -129,13 +172,14 @@ type InstanceListProps = {
   instances: Instance[];
   expanded: Instance | undefined;
   setExpanded: (instance: Instance | undefined) => void;
+  hasFilters: boolean;
 };
 
-function InstanceList({ instances, expanded, setExpanded }: InstanceListProps) {
+function InstanceList({ instances, expanded, setExpanded, hasFilters }: InstanceListProps) {
   if (instances.length === 0) {
     return (
       <div className="text-dim">
-        <T id="instanceHistory.noInstances" />
+        <T id={hasFilters ? 'instanceHistory.noInstancesFiltered' : 'instanceHistory.noInstances'} />
       </div>
     );
   }

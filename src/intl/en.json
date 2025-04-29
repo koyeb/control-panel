@@ -621,9 +621,15 @@
             "cpu": "Average CPU",
             "memory": "Average Memory",
             "instanceHistory": {
+              "filters": {
+                "status": {
+                  "placeholder": "Status"
+                }
+              },
               "title": "Instance history",
               "activeBadge": "Active",
               "noInstances": "There have been no running instances in this replica yet",
+              "noInstancesFiltered": "No instances match this filter",
               "logs": {
                 "title": "Logs",
                 "filters": {

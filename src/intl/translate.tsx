@@ -58,5 +58,9 @@ export function TranslateEnum<E extends Enum>({ enum: enumName, value }: { enum:
 }
 
 export function TranslateStatus({ status }: { status: string }) {
-  return <>{capitalize(lowerCase(status))}</>;
+  return translateStatus(status);
+}
+
+export function translateStatus(status: string): string {
+  return capitalize(lowerCase(status));
 }
