@@ -21,7 +21,7 @@ class StripeError extends Error {
 class TimeoutError extends Error {}
 
 type PaymentMutationProps = {
-  onSuccess?: () => unknown | Promise<unknown>;
+  onSuccess?: () => unknown;
   onTimeout?: () => unknown;
 };
 

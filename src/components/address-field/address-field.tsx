@@ -138,7 +138,7 @@ export function ControlledAddressField({ control, name, ...props }: ControlledAd
   return (
     <AddressField
       {...props}
-      value={field.value}
+      value={field.value as Address | undefined}
       onChange={field.onChange}
       errors={{
         line1: error?.line1?.message,
