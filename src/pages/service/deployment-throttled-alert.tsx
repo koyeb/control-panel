@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 
-import { Alert } from '@koyeb/design-system';
 import { useDeployments } from 'src/api/hooks/service';
 import { Service } from 'src/api/model';
 import { upcomingDeploymentStatuses } from 'src/application/service-functions';
+import { IconRocket } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 import { last } from 'src/utils/arrays';
 
@@ -37,5 +37,15 @@ export function DeploymentThrottledAlert({ service }: DeploymentThrottledAlertPr
     return null;
   }
 
-  return <Alert variant="warning" description={<T id="description" />} />;
+  return (
+    <div className="row items-center gap-3 rounded-md border px-4 py-3">
+      <div>
+        <IconRocket className="size-5 stroke-1" />
+      </div>
+
+      <p>
+        <T id="description" />
+      </p>
+    </div>
+  );
 }
