@@ -5,6 +5,8 @@ import { createContext, createElement, useCallback, useContext, useEffect, useMe
 import { usePathname } from 'wouter/use-browser-location';
 
 import { useApiMutationFn } from 'src/api/use-api';
+import { useMount } from 'src/hooks/lifecycle';
+import { useSearchParam } from 'src/hooks/router';
 
 interface TokenApi {
   read(this: void): string | undefined;
@@ -61,6 +63,8 @@ type TokenProviderProps = {
 };
 
 export function TokenProvider({ children }: TokenProviderProps) {
+  const [tokenParam, setTokenParam] = useSearchParam('session-token');
+
   const accessToken = useTokenContext(accessTokenApi);
   const sessionToken = useTokenContext(sessionTokenApi, true);
 
@@ -71,6 +75,17 @@ export function TokenProvider({ children }: TokenProviderProps) {
 
     return accessToken;
   }, [accessToken, sessionToken]);
+
+  useMount(() => {
+    if (tokenParam !== null) {
+      sessionToken.setToken(tokenParam.replace(/^Bearer /, ''));
+      setTokenParam(null);
+    }
+  });
+
+  if (tokenParam !== null) {
+    return null;
+  }
 
   return createElement(tokenContext.Provider, { value }, children);
 }
@@ -115,9 +130,7 @@ export function useRefreshToken() {
 
   const { mutate } = useMutation({
     ...useApiMutationFn('refreshToken', {}),
-    onSuccess({ token }) {
-      setToken(token!.id!);
-    },
+    onSuccess: ({ token }) => setToken(token!.id!),
   });
 
   useEffect(() => {

@@ -2,8 +2,6 @@ import { QueryClientProvider as TanstackQueryClientProvider } from '@tanstack/re
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Component, Suspense, useMemo } from 'react';
 
-import { useMount } from 'src/hooks/lifecycle';
-import { useSearchParam } from 'src/hooks/router';
 import { CommandPaletteProvider } from 'src/modules/command-palette/command-palette.provider';
 
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
@@ -21,10 +19,6 @@ type ProvidersProps = {
 };
 
 export function Providers({ children }: ProvidersProps) {
-  if (useStoreSessionToken()) {
-    return null;
-  }
-
   return (
     <RootErrorBoundary>
       <IntlProvider>
@@ -75,17 +69,4 @@ function QueryClientProvider({ children }: { children: React.ReactNode }) {
   }, [session]);
 
   return <TanstackQueryClientProvider client={queryClient}>{children}</TanstackQueryClientProvider>;
-}
-
-function useStoreSessionToken() {
-  const [token, setToken] = useSearchParam('session-token');
-
-  useMount(() => {
-    if (token !== null) {
-      sessionStorage.setItem('session-token', token.replace(/^Bearer /, ''));
-      setToken(null);
-    }
-  });
-
-  return token !== null;
 }
