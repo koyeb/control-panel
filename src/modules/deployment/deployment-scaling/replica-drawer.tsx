@@ -47,6 +47,7 @@ export function ReplicaDrawer({ deployment, replica, metrics, open, onClose }: R
     <Drawer open={open} onClose={onClose} className="col gap-6 p-6">
       <Header replica={replica} onClose={onClose} />
       <ReplicaStats replica={replica} metrics={metrics} />
+      <NoActiveInstance replica={replica} />
       <InstanceHistory deployment={deployment} replica={replica} />
     </Drawer>
   );
@@ -95,6 +96,18 @@ function ReplicaStats({ replica, metrics }: ReplicaStatsProps) {
       )}
     </div>
   );
+}
+
+function NoActiveInstance({ replica }: { replica: Replica }) {
+  if (replica.instanceId === undefined) {
+    return (
+      <div className="rounded-lg border p-3 text-xs text-dim">
+        <T id="noActiveInstance" />
+      </div>
+    );
+  }
+
+  return null;
 }
 
 type InstanceHistoryProps = {
@@ -160,7 +173,7 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
             instances={instances}
             expanded={expanded}
             setExpanded={setExpanded}
-            hasFilters={filters.formState.isDirty}
+            hasFilters={filters.watch('status') !== null}
           />
         )}
       </QueryGuard>
@@ -176,13 +189,7 @@ type InstanceListProps = {
 };
 
 function InstanceList({ instances, expanded, setExpanded, hasFilters }: InstanceListProps) {
-  if (instances.length === 0) {
-    return (
-      <div className="text-dim">
-        <T id={hasFilters ? 'instanceHistory.noInstancesFiltered' : 'instanceHistory.noInstances'} />
-      </div>
-    );
-  }
+  const key = hasFilters ? 'instanceHistory.noInstancesFiltered' : 'instanceHistory.noInstances';
 
   return (
     <div className="rounded-lg border">
@@ -194,6 +201,17 @@ function InstanceList({ instances, expanded, setExpanded, hasFilters }: Instance
           toggleExpanded={() => setExpanded(instance === expanded ? undefined : instance)}
         />
       ))}
+
+      {instances.length === 0 && (
+        <div className="col items-center gap-2 p-6">
+          <div className="text-base">
+            <T id={`${key}.title`} />
+          </div>
+          <div className="text-dim">
+            <T id={`${key}.description`} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

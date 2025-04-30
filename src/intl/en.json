@@ -605,7 +605,7 @@
           "title": "Scaling",
           "replicaIndex": "#{index}",
           "details": "Details",
-          "noInstances": "There are no instances currently running in this replica",
+          "noInstances": "There is no instance currently running in this replica",
           "filters": {
             "allRegions": "All regions",
             "allStatuses": "All statuses"
@@ -617,6 +617,7 @@
           "drawer": {
             "title": "Replica #{index}",
             "activeInstance": "Active instance",
+            "noActiveInstance": "There is currently no active instance running in this replica",
             "status": "Status",
             "cpu": "Average CPU",
             "memory": "Average Memory",
@@ -628,8 +629,14 @@
               },
               "title": "Instance history",
               "activeBadge": "Active",
-              "noInstances": "There have been no running instances in this replica yet",
-              "noInstancesFiltered": "No instances match this filter",
+              "noInstances": {
+                "title": "This replica doesn't have any instances yet",
+                "description": "When available, instance history for this replica will appear here"
+              },
+              "noInstancesFiltered": {
+                "title": "No results",
+                "description": "No instances match the current filters"
+              },
               "logs": {
                 "title": "Logs",
                 "filters": {
