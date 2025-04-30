@@ -1,13 +1,18 @@
+import { useMutation } from '@tanstack/react-query';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
+import { useApiMutationFn, useInvalidateApiQuery } from './api/use-api';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
-import { useRefreshToken } from './application/token';
+import { useRefreshToken, useToken } from './application/token';
 import { LinkButton } from './components/link';
 import { Loading } from './components/loading';
+import { useMount } from './hooks/lifecycle';
+import { useSearchParam } from './hooks/router';
+import { useSeon } from './hooks/seon';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
 import { AccountLocked } from './modules/account/account-locked';
@@ -44,6 +49,10 @@ export function App() {
   const organizationQuery = useOrganizationQuery();
 
   useRefreshToken();
+
+  if (useOrganizationContextParam()) {
+    return null;
+  }
 
   if (
     isAccountLockedError(userQuery.error) ||
@@ -160,4 +169,33 @@ function PageNotFound() {
       </LinkButton>
     </div>
   );
+}
+
+function useOrganizationContextParam() {
+  const [organizationIdParam, setOrganizationIdParam] = useSearchParam('organization-id');
+  const { setToken } = useToken();
+  const invalidate = useInvalidateApiQuery();
+  const getSeonFingerprint = useSeon();
+
+  const mutation = useMutation({
+    ...useApiMutationFn('switchOrganization', async (organizationId: string) => ({
+      path: { id: organizationId },
+      header: { 'seon-fp': await getSeonFingerprint() },
+    })),
+    async onSuccess({ token }) {
+      setToken(token!.id!);
+      await invalidate('getCurrentOrganization');
+    },
+    onSettled() {
+      setOrganizationIdParam(null);
+    },
+  });
+
+  useMount(() => {
+    if (organizationIdParam !== null) {
+      mutation.mutate(organizationIdParam);
+    }
+  });
+
+  return organizationIdParam !== null;
 }
