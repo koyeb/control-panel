@@ -61,7 +61,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         label={<T id="intervalLabel" />}
         helpTooltip={<T id="intervalTooltip" />}
         onKeyDown={onKeyDownPositiveInteger}
-        min={30}
+        min={3}
         max={5 * 60}
         end={
           <InputEnd>

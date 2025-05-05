@@ -131,7 +131,7 @@ const healthCheckCommon = z.object({
     .max(15 * 60),
   interval: z
     .number()
-    .min(30)
+    .min(3)
     .max(5 * 60),
   restartLimit: z.number().min(1).max(10),
   timeout: z
