@@ -7,6 +7,7 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { parseBytes } from 'src/application/memory';
 import { last, unique } from 'src/utils/arrays';
 import { identity, isDefined } from 'src/utils/generic';
+import { clamp } from 'src/utils/math';
 import { toObject } from 'src/utils/object';
 
 export function useReplicaMetricsQuery(deployment: ComputeDeployment) {
@@ -53,10 +54,11 @@ function getMetrics(
   };
 
   const getCpuPercent = (): number | undefined => {
+    const vCpu = instance?.vcpuShares ?? 1;
     const lastDataPoint = last(getSamples(cpu));
 
     if (lastDataPoint !== undefined) {
-      return lastDataPoint / 100;
+      return clamp(0, lastDataPoint / (100 * vCpu), 1);
     }
   };
 
@@ -65,7 +67,7 @@ function getMetrics(
     const maxMemory = parseBytes(instance?.memory);
 
     if (lastDataPoint !== undefined && !Number.isNaN(maxMemory)) {
-      return lastDataPoint / maxMemory;
+      return clamp(0, lastDataPoint / maxMemory, 1);
     }
   };
 
