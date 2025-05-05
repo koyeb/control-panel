@@ -1,4 +1,5 @@
 import {
+  autoUpdate,
   flip,
   FloatingPortal,
   offset,
@@ -51,6 +52,7 @@ function useCombobox<T>(
   const combobox = downshift.useCombobox(comboboxProps);
 
   const floating = useFloating({
+    whileElementsMounted: autoUpdate,
     open: combobox.isOpen,
     placement: 'bottom-start',
     middleware: [
