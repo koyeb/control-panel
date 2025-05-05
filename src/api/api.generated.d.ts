@@ -95,6 +95,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get Current Organization */
         get: operations["GetCurrentOrganization"];
         put?: never;
         post?: never;
@@ -111,6 +112,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List User Organization Invitations */
         get: operations["ListUserOrganizationInvitations"];
         put?: never;
         post?: never;
@@ -127,6 +129,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get User Organization Invitation */
         get: operations["GetUserOrganizationInvitation"];
         put?: never;
         post?: never;
@@ -145,6 +148,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Accept Organization Invitation */
         post: operations["AcceptOrganizationInvitation"];
         delete?: never;
         options?: never;
@@ -161,7 +165,28 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Decline Organization Invitation */
         post: operations["DeclineOrganizationInvitation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/account/organizations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List User Organizations
+         * @description List all organizations that the current user is a member of.
+         */
+        get: operations["ListUserOrganizations"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -175,12 +200,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get Current User */
         get: operations["GetCurrentUser"];
+        /** Update User */
         put: operations["UpdateUser"];
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
+        /** Update User */
         patch: operations["UpdateUser2"];
         trace?: never;
     };
@@ -210,6 +238,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Resend Email Verification */
         post: operations["ResendEmailValidation"];
         delete?: never;
         options?: never;
@@ -226,6 +255,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Reset Password */
         post: operations["ResetPassword"];
         delete?: never;
         options?: never;
@@ -263,6 +293,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Signup */
         post: operations["Signup"];
         delete?: never;
         options?: never;
@@ -279,6 +310,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Update Password */
         post: operations["UpdatePassword"];
         delete?: never;
         options?: never;
@@ -295,6 +327,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Validate */
         post: operations["Validate"];
         delete?: never;
         options?: never;
@@ -309,6 +342,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List Activities */
         get: operations["ListActivities"];
         put?: never;
         post?: never;
@@ -431,7 +465,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create a signed URL to upload an archive. */
+        /**
+         * Create Archive
+         * @description Create a signed URL to upload an archive.
+         */
         post: operations["CreateArchive"];
         delete?: never;
         options?: never;
@@ -523,7 +560,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** List Instance */
+        /** List Instances */
         get: operations["ListCatalogInstances"];
         put?: never;
         post?: never;
@@ -626,7 +663,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** This API allows to redeem a coupon. Pass the code you received in the body. */
+        /**
+         * Redeem Coupon
+         * @description This API allows to redeem a coupon. Pass the code you received in the body.
+         */
         post: operations["RedeemCoupon"];
         delete?: never;
         options?: never;
@@ -770,7 +810,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Verify if a docker image is reachable */
+        /**
+         * Verify Docker Image
+         * @description Verify if a docker image is reachable
+         */
         get: operations["VerifyDockerImage"];
         put?: never;
         post?: never;
@@ -787,8 +830,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List Domains */
         get: operations["ListDomains"];
         put?: never;
+        /** Create Domain */
         post: operations["CreateDomain"];
         delete?: never;
         options?: never;
@@ -803,12 +848,15 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get Domain */
         get: operations["GetDomain"];
         put?: never;
         post?: never;
+        /** Delete Domain */
         delete: operations["DeleteDomain"];
         options?: never;
         head?: never;
+        /** Update Domain */
         patch: operations["UpdateDomain"];
         trace?: never;
     };
@@ -821,6 +869,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Refresh Domain Status */
         post: operations["RefreshDomainStatus"];
         delete?: never;
         options?: never;
@@ -835,6 +884,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List Branches */
         get: operations["ListBranches"];
         put?: never;
         post?: never;
@@ -851,6 +901,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List Repositories */
         get: operations["ListRepositories"];
         put?: never;
         post?: never;
@@ -869,6 +920,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Resync Organization */
         post: operations["ResyncOrganization"];
         delete?: never;
         options?: never;
@@ -883,10 +935,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Fetch github installation configuration */
+        /** Fetch Github Installation configuration */
         get: operations["GetGithubInstallation"];
         put?: never;
-        /** Start github installation */
+        /** Start Github Installation */
         post: operations["GithubInstallation"];
         delete?: never;
         options?: never;
@@ -969,6 +1021,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List Notifications */
         get: operations["ListNotifications"];
         put?: never;
         post?: never;
@@ -1002,8 +1055,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List Organization Invitations */
         get: operations["ListOrganizationInvitations"];
         put?: never;
+        /** Create Organization Invitation */
         post: operations["CreateOrganizationInvitation"];
         delete?: never;
         options?: never;
@@ -1018,9 +1073,11 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get Organization Invitation */
         get: operations["GetOrganizationInvitation"];
         put?: never;
         post?: never;
+        /** Delete Organization Invitation */
         delete: operations["DeleteOrganizationInvitation"];
         options?: never;
         head?: never;
@@ -1036,6 +1093,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Resend Organization Invitation */
         post: operations["ResendOrganizationInvitation"];
         delete?: never;
         options?: never;
@@ -1086,7 +1144,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Create organization */
+        /** Create Organization */
         post: operations["CreateOrganization"];
         delete?: never;
         options?: never;
@@ -1101,16 +1159,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get organization */
+        /** Get Organization */
         get: operations["GetOrganization"];
-        /** Update organization */
+        /** Update Organization */
         put: operations["UpdateOrganization"];
         post?: never;
-        /** Delete an organization */
+        /** Delete an Organization */
         delete: operations["DeleteOrganization"];
         options?: never;
         head?: never;
-        /** Update organization */
+        /** Update Organization */
         patch: operations["UpdateOrganization2"];
         trace?: never;
     };
@@ -1123,7 +1181,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Deactivate an organization */
+        /** Deactivate an Organization */
         post: operations["DeactivateOrganization"];
         delete?: never;
         options?: never;
@@ -1140,7 +1198,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Update organization plan */
+        /** Update Organization plan */
         post: operations["UpdateOrganizationPlan"];
         delete?: never;
         options?: never;
@@ -1157,7 +1215,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Reactivate an organization */
+        /** Reactivate an Organization */
         post: operations["ReactivateOrganization"];
         delete?: never;
         options?: never;
@@ -1174,7 +1232,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Upsert organization's signup qualification */
+        /** Upsert Organization's signup qualification */
         post: operations["UpsertSignupQualification"];
         delete?: never;
         options?: never;
@@ -1191,7 +1249,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Switch organization context */
+        /** Switch Organization context */
         post: operations["SwitchOrganization"];
         delete?: never;
         options?: never;
@@ -1206,9 +1264,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get Budget */
         get: operations["GetBudget"];
+        /** Update Budget */
         put: operations["UpdateBudget"];
+        /** Create Budget */
         post: operations["CreateBudget"];
+        /** Delete Budget */
         delete: operations["DeleteBudget"];
         options?: never;
         head?: never;
@@ -1377,8 +1439,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Experimental: List regional deployments
-         *     Use at your own risk */
+        /**
+         * List Regional Deployments
+         * @description Experimental: use at your own risk
+         */
         get: operations["ListRegionalDeployments"];
         put?: never;
         post?: never;
@@ -1395,8 +1459,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Experimental: Get regional deployment
-         *     Use at your own risk */
+        /**
+         * Get Regional Deployment
+         * @description Experimental: use at your own risk
+         */
         get: operations["GetRegionalDeployment"];
         put?: never;
         post?: never;
@@ -1430,8 +1496,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** List Secrets */
         get: operations["ListSecrets"];
         put?: never;
+        /** Create Secret */
         post: operations["CreateSecret"];
         delete?: never;
         options?: never;
@@ -1446,12 +1514,16 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get Secret */
         get: operations["GetSecret"];
+        /** Update Secret */
         put: operations["UpdateSecret"];
         post?: never;
+        /** Delete Secret */
         delete: operations["DeleteSecret"];
         options?: never;
         head?: never;
+        /** Update Secret */
         patch: operations["UpdateSecret2"];
         trace?: never;
     };
@@ -1464,6 +1536,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Reveal Secret */
         post: operations["RevealSecret"];
         delete?: never;
         options?: never;
@@ -1515,7 +1588,10 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Generate autocomplete definition for a service */
+        /**
+         * Autocomplete definition
+         * @description Generate autocomplete definition for a service
+         */
         post: operations["Autocomplete"];
         delete?: never;
         options?: never;
@@ -1739,6 +1815,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
+        /** Get Metrics */
         get: operations["GetMetrics"];
         put?: never;
         post?: never;
@@ -1774,10 +1851,13 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** UnscopeOrganizationToken removes the organization scope from a token. This
+        /**
+         * Unscope Organization Token
+         * @description UnscopeOrganizationToken removes the organization scope from a token. This
          *     endpoint is useful when a user wants to remove an organization: by
          *     unscoping the token first, the user can then delete the organization
-         *     without invalidating his token. */
+         *     without invalidating his token.
+         */
         post: operations["UnscopeOrganizationToken"];
         delete?: never;
         options?: never;
@@ -3706,6 +3786,22 @@ export interface components {
              * Format: int64
              */
             offset?: number;
+        };
+        ListUserOrganizationsReply: {
+            /** If there is more items after in the collection */
+            has_next?: boolean;
+            /**
+             * The limit in the request
+             * Format: int64
+             */
+            limit?: number;
+            /**
+             * The offset in the request
+             * Format: int64
+             */
+            offset?: number;
+            /** The collection of organizations */
+            organizations?: components["schemas"]["Organization"][];
         };
         LogEntry: {
             /** Format: date-time */
@@ -5761,6 +5857,98 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["DeclineOrganizationInvitationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ListUserOrganizations: {
+        parameters: {
+            query?: {
+                /** @description (Optional) Define pagination limit */
+                limit?: string;
+                /** @description (Optional) Define pagination offset */
+                offset?: string;
+                /** @description (Optional) Sorts the list in the ascending or the descending order */
+                order?: string;
+                /** @description (Optional) Fuzzy case-insensitive search based on organization name or organization id */
+                search?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ListUserOrganizationsReply"];
                 };
             };
             /** @description Validation error */
