@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 
 import { useDeployments } from 'src/api/hooks/service';
-import { Service } from 'src/api/model';
+import { useOrganization } from 'src/api/hooks/session';
+import { OrganizationPlan, Service } from 'src/api/model';
 import { upcomingDeploymentStatuses } from 'src/application/service-functions';
 import { IconRocket } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
-import { last } from 'src/utils/arrays';
+import { inArray, last } from 'src/utils/arrays';
 
 const T = createTranslate('pages.service.layout.deploymentThrottled');
 
@@ -14,6 +15,7 @@ type DeploymentThrottledAlertProps = {
 };
 
 export function DeploymentThrottledAlert({ service }: DeploymentThrottledAlertProps) {
+  const organization = useOrganization();
   const upcomingDeployments = useDeployments(service.id, upcomingDeploymentStatuses);
   const lastUpcoming = last(upcomingDeployments ?? []);
 
@@ -33,7 +35,7 @@ export function DeploymentThrottledAlert({ service }: DeploymentThrottledAlertPr
     }
   }, [lastUpcoming]);
 
-  if (!throttled) {
+  if (!throttled || !inArray<OrganizationPlan>(organization.plan, ['hobby', 'starter'])) {
     return null;
   }
 
