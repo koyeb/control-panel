@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import { Combobox, Spinner } from '@koyeb/design-system';
 import { useOrganization, useOrganizationUnsafe, useUser, useUserUnsafe } from 'src/api/hooks/session';
-import { mapOrganizationMember } from 'src/api/mappers/session';
-import { OrganizationMember } from 'src/api/model';
+import { mapOrganization } from 'src/api/mappers/session';
+import { Organization } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
@@ -17,7 +17,6 @@ import { TextSkeleton } from 'src/components/skeleton';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
-import { isUuid } from 'src/utils/strings';
 
 const T = createTranslate('layouts.organizationSwitcher');
 
@@ -45,7 +44,7 @@ function OrganizationSelectorCombobox({
   const currentOrganization = useOrganization();
 
   const [inputValue, setInputValue] = useState('');
-  const memberships = useOrganizationList(inputValue);
+  const organizations = useOrganizationList(inputValue);
   const count = useOrganizationCount();
 
   const switchOrganizationMutation = useSwitchOrganization(() => {
@@ -54,10 +53,10 @@ function OrganizationSelectorCombobox({
 
   const combobox = Combobox.useCombobox(
     {
-      items: memberships,
+      items: organizations,
 
-      isItemDisabled: (item) => item.organization.id === currentOrganization.id,
-      itemToString: (item) => item?.organization.name ?? '',
+      isItemDisabled: (item) => item.id === currentOrganization.id,
+      itemToString: (item) => item?.name ?? '',
 
       inputValue,
       onInputValueChange: ({ inputValue }) => {
@@ -67,7 +66,7 @@ function OrganizationSelectorCombobox({
       selectedItem: null,
       onSelectedItemChange: ({ selectedItem }) => {
         if (selectedItem !== null) {
-          switchOrganizationMutation.mutate(selectedItem.organization.id);
+          switchOrganizationMutation.mutate(selectedItem.id);
         }
       },
 
@@ -90,7 +89,7 @@ function OrganizationSelectorCombobox({
     },
   );
 
-  const getItemIcon = ({ organization }: OrganizationMember) => {
+  const getItemIcon = (organization: Organization) => {
     if (organization.id === currentOrganization.id) {
       return IconCheck;
     }
@@ -119,15 +118,15 @@ function OrganizationSelectorCombobox({
         />
 
         <Combobox.Menu>
-          {memberships.map((membership) => (
-            <Combobox.MenuItem key={membership.id} item={membership} className="py-1.5">
-              <OrganizationItem organization={membership.organization} Icon={getItemIcon(membership)} />
+          {organizations.map((organization) => (
+            <Combobox.MenuItem key={organization.id} item={organization} className="py-1.5">
+              <OrganizationItem organization={organization} Icon={getItemIcon(organization)} />
             </Combobox.MenuItem>
           ))}
         </Combobox.Menu>
 
         <div className={clsx('px-3 py-1.5 text-xs text-dim', { hidden: count <= 10 })}>
-          <T id="filtered" values={{ count: memberships.length, total: count }} />
+          <T id="filtered" values={{ count: organizations.length, total: count }} />
         </div>
 
         {showCreateOrganization && (
@@ -163,32 +162,13 @@ function useOrganizationCount() {
 }
 
 function useOrganizationList(search: string) {
-  const user = useUser();
-
-  const organizationId = () => {
-    if (search === '') {
-      return undefined;
-    }
-
-    if (!isUuid(search)) {
-      // send a random uuid to avoid API validation error
-      return '0d5a1f5e-3473-483e-8bcf-50ca20c5f739';
-    }
-
-    return search;
-  };
-
   const { data } = useQuery({
-    ...useApiQueryFn('listOrganizationMembers', {
-      query: {
-        user_id: user?.id,
-        organization_id: organizationId(),
-        limit: '10',
-      },
+    ...useApiQueryFn('listUserOrganizations', {
+      query: { search, limit: '10' },
     }),
     refetchInterval: false,
     placeholderData: keepPreviousData,
-    select: ({ members }) => members!.map(mapOrganizationMember),
+    select: ({ organizations }) => organizations!.map(mapOrganization),
   });
 
   return data ?? [];

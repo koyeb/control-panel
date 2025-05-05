@@ -32,6 +32,7 @@ export const api = {
 
   // organization
   getCurrentOrganization: endpoint('get', '/v1/account/organization'),
+  listUserOrganizations: endpoint('get', '/v1/account/organizations'),
   switchOrganization: endpoint('post', '/v1/organizations/{id}/switch'),
   listOrganizationMembers: endpoint('get', '/v1/organization_members'),
   deleteOrganizationMember: endpoint('delete', '/v1/organization_members/{id}'),
