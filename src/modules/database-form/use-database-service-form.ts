@@ -48,7 +48,7 @@ function defaultDatabaseServiceForm(): DatabaseServiceForm {
       allowFreeInstanceIfAlreadyUsed: false,
     },
     engine: {
-      version: 16,
+      version: 17,
     },
     region: 'fra',
     instance: 'small',
