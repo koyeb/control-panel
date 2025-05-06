@@ -2,7 +2,7 @@ export type DatabaseServiceFormSection = 'engine' | 'region' | 'instance' | 'def
 
 export type DatabaseServiceForm = {
   meta: ServiceFormMeta;
-  engine: { version: 14 | 15 | 16 };
+  engine: { version: 14 | 15 | 16 | 17 };
   region: string;
   instance: string;
   defaultRole: string;
