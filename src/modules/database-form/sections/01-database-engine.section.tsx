@@ -30,7 +30,7 @@ export function DatabaseEngineSection() {
       <ControlledSelect<DatabaseServiceForm, 'engine.version'>
         name="engine.version"
         label={<T id="engineLabel" />}
-        items={[14, 15, 16]}
+        items={[14, 15, 16, 17]}
         getKey={identity}
         itemToValue={identity}
         itemToString={String}
