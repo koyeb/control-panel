@@ -363,7 +363,7 @@ export type DatabaseDeployment = {
   };
 };
 
-export type PostgresVersion = 14 | 15 | 16;
+export type PostgresVersion = 14 | 15 | 16 | 17;
 
 export type DatabaseRole = {
   name: string;
