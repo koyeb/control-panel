@@ -9,7 +9,7 @@ export const databaseInstances = Object.freeze([
   createDatabaseInstanceType('large',   'Large',    [    1,    4,  null],    119.04,     0.16),
   createDatabaseInstanceType('xlarge',  'XLarge',   [    2,    8,  null],    238.08,     0.32),
   createDatabaseInstanceType('2xlarge', '2XLarge',  [    4,   16,  null],    476.16,     0.64),
-  createDatabaseInstanceType('3xlarge', '3XLarge',  [    8,   32,  null],    952.32,    0.128),
+  createDatabaseInstanceType('3xlarge', '3XLarge',  [    8,   32,  null],    952.32,     1.28),
 ])
 
 function createDatabaseInstanceType(
