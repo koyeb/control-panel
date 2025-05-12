@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import { TabButtons } from '@koyeb/design-system';
+import { Alert, TabButtons } from '@koyeb/design-system';
 import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { routes } from 'src/application/routes';
-import { TabButtonLink } from 'src/components/link';
+import { ExternalLink, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
@@ -62,6 +62,8 @@ export function DatabaseLayout({ children }: { children: React.ReactNode }) {
         <DatabaseStarting isStarting={isStarting} onCompleted={() => setStarting(false)} />
       ) : (
         <>
+          <Banner />
+
           {service.status === 'UNHEALTHY' && <DatabaseNotHealth service={service} />}
 
           {service.status === 'HEALTHY' && (
@@ -73,6 +75,30 @@ export function DatabaseLayout({ children }: { children: React.ReactNode }) {
         </>
       )}
     </div>
+  );
+}
+
+function Banner() {
+  const link =
+    'https://www.koyeb.com/blog/serverless-postgres-ga-production-ready-databases-for-large-scale-and-ai-apps';
+
+  return (
+    <Alert
+      variant="info"
+      title={<T id="banner.title" />}
+      description={
+        <T
+          id="banner.description"
+          values={{
+            link: (children) => (
+              <ExternalLink href={link} openInNewTab className="underline">
+                {children}
+              </ExternalLink>
+            ),
+          }}
+        />
+      }
+    />
   );
 }
 

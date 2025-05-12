@@ -1682,6 +1682,10 @@
     },
     "database": {
       "layout": {
+        "banner": {
+          "title": "Database billing starts on July 1st",
+          "description": "Starting <strong>July 1st</strong>, we will begin billing for your June usage. <link>Learn more</link> about the Database General Availability and the new pricing."
+        },
         "alerts": {
           "databasePaused": {
             "description": "Your database is currently paused. Resume it to list your connection details, databases, and roles.",
