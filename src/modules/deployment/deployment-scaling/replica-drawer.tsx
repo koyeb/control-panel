@@ -10,13 +10,12 @@ import {
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
-import { AccordionSection, Badge, Button } from '@koyeb/design-system';
+import { AccordionSection, Badge, Button, Checkbox, MultiSelect } from '@koyeb/design-system';
 import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
 import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
 import { isInstanceRunning } from 'src/application/service-functions';
-import { ControlledSelect } from 'src/components/controlled';
 import { IconChevronRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
@@ -116,16 +115,57 @@ type InstanceHistoryProps = {
 };
 
 function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
-  const t = T.useTranslate();
-
   const [expanded, setExpanded] = useState<Instance>();
 
-  const filters = useForm<{ status: InstanceStatus | null }>({
+  const filters = useForm<{ statuses: InstanceStatus[] }>({
     defaultValues: {
-      status: null,
+      statuses: [],
     },
   });
 
+  const regionalDeployment = useRegionalDeployment(deployment.id, replica.region);
+
+  const query = useInstancesQuery({
+    deploymentId: deployment.id,
+    replicaIndex: replica.index,
+    regionalDeploymentId: regionalDeployment?.id,
+    statuses: filters.watch('statuses'),
+  });
+
+  return (
+    <div className="col gap-4">
+      <div className="text-lg font-medium">
+        <T id="instanceHistory.title" />
+      </div>
+
+      <form>
+        <Controller
+          control={filters.control}
+          name="statuses"
+          render={({ field }) => <InstanceStatusMultiSelect {...field} />}
+        />
+      </form>
+
+      <QueryGuard query={query}>
+        {({ instances }) => (
+          <InstanceList
+            instances={instances}
+            expanded={expanded}
+            setExpanded={setExpanded}
+            hasFilters={filters.watch('statuses').length > 0}
+          />
+        )}
+      </QueryGuard>
+    </div>
+  );
+}
+
+type InstanceStatusMultiSelectProps = {
+  value: InstanceStatus[];
+  onChange: (status: InstanceStatus[]) => void;
+};
+
+function InstanceStatusMultiSelect({ value, onChange }: InstanceStatusMultiSelectProps) {
   const statuses: InstanceStatus[] = [
     'ALLOCATING',
     'STARTING',
@@ -137,47 +177,31 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
     'SLEEPING',
   ];
 
-  const regionalDeployment = useRegionalDeployment(deployment.id, replica.region);
-
-  const query = useInstancesQuery({
-    deploymentId: deployment.id,
-    replicaIndex: replica.index,
-    regionalDeploymentId: regionalDeployment?.id,
-    status: filters.watch('status') ?? undefined,
-  });
+  const placeholder = (
+    <span className="text-placeholder">
+      <T id="instanceHistory.filters.status.placeholder" />
+    </span>
+  );
 
   return (
-    <div className="col gap-4">
-      <div className="text-lg font-medium">
-        <T id="instanceHistory.title" />
-      </div>
-
-      <form>
-        <ControlledSelect
-          control={filters.control}
-          name="status"
-          placeholder={t('instanceHistory.filters.status.placeholder')}
-          items={statuses}
-          getKey={identity}
-          itemToValue={identity}
-          itemToString={translateStatus}
-          renderItem={(status) => <TranslateStatus status={status} />}
-          onItemClick={(status) => status === filters.watch('status') && filters.setValue('status', null)}
-          className="max-w-xs"
-        />
-      </form>
-
-      <QueryGuard query={query}>
-        {({ instances }) => (
-          <InstanceList
-            instances={instances}
-            expanded={expanded}
-            setExpanded={setExpanded}
-            hasFilters={filters.watch('status') !== null}
-          />
-        )}
-      </QueryGuard>
-    </div>
+    <MultiSelect
+      items={statuses}
+      getKey={identity}
+      itemToString={translateStatus}
+      renderItem={(status, selected) => (
+        <div className="row items-center gap-2">
+          <Checkbox checked={selected} onChange={() => {}} />
+          <TranslateStatus status={status} />
+        </div>
+      )}
+      renderSelectedItems={(statuses) =>
+        statuses.length === 0 ? placeholder : <>{statuses.map(translateStatus).join(', ')}</>
+      }
+      selectedItems={value}
+      onItemsSelected={(status) => onChange([...value, status])}
+      onItemsUnselected={(status) => onChange(value.filter((s) => s !== status))}
+      className="max-w-xs"
+    />
   );
 }
 

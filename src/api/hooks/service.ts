@@ -2,7 +2,6 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
-import { upperCase } from 'src/utils/strings';
 
 import {
   isComputeDeployment,
@@ -132,7 +131,7 @@ type InstancesQueryOptions = {
   serviceId?: string;
   deploymentId?: string;
   regionalDeploymentId?: string;
-  status?: InstanceStatus;
+  statuses?: InstanceStatus[];
   replicaIndex?: number;
   limit?: number;
   offset?: number;
@@ -142,7 +141,7 @@ export function useInstancesQuery({
   serviceId,
   deploymentId,
   regionalDeploymentId,
-  status,
+  statuses,
   replicaIndex,
   limit = 100,
   offset,
@@ -157,7 +156,7 @@ export function useInstancesQuery({
         limit: String(limit),
         offset: offset !== undefined ? String(offset) : undefined,
         order: 'desc',
-        statuses: status ? [upperCase(status)] : undefined,
+        statuses,
       },
     }),
     placeholderData: keepPreviousData,
