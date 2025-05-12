@@ -22,13 +22,13 @@ export function DatabaseInfo({ service, deployment }: { service: Service; deploy
         <Metadata label={<T id="status" />} value={<ServiceStatusBadge status={service.status} />} />
 
         <Metadata
-          label={<T id="activeTime" />}
+          label={<T id="computeTime" />}
           value={
             <T
-              id="activeTimeValue"
+              id="computeTimeValue"
               values={{
-                used: deployment.activeTime.used,
-                max: secondsToHours(deployment.activeTime.max ?? null),
+                used: deployment.computeTime.used,
+                max: secondsToHours(deployment.computeTime.max ?? null),
               }}
             />
           }
