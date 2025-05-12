@@ -56,10 +56,7 @@ export function DatabaseInfo({ service, deployment }: { service: Service; deploy
           />
         )}
 
-        <Metadata
-          label={<T id="instance" />}
-          value={<span className="capitalize">{deployment.instance}</span>}
-        />
+        <Metadata label={<T id="instance" />} value={instance?.displayName} />
 
         <Metadata label={<T id="disk" />} value={formatBytes(deployment.disk.used ?? 0, { round: true })} />
 
