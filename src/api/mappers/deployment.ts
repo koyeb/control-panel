@@ -1,4 +1,5 @@
 import { isBefore } from 'date-fns';
+import posthog from 'posthog-js';
 
 import { parseBytes } from 'src/application/memory';
 import { inArray, last } from 'src/utils/arrays';
@@ -312,6 +313,7 @@ function mapDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
     serviceId: deployment.service_id!,
     name: deployment.definition!.name!,
     status: deployment.status!,
+    created_at: deployment.created_at!,
     postgresVersion: definition.pg_version as PostgresVersion,
     region: definition.region!,
     host: info?.server_host,
@@ -339,6 +341,8 @@ function quotaReached(
   info: Api.DeploymentNeonPostgresDatabaseInfo,
   neon: Api.NeonPostgresDatabase,
 ): DatabaseDeployment['reachedQuota'] {
+  const hasDatabaseActiveTime = posthog.featureFlags.isFeatureEnabled('database-active-time');
+
   if (neon.instance_type !== 'free') {
     return undefined;
   }
@@ -351,7 +355,7 @@ function quotaReached(
     return 'written-data';
   }
 
-  if (isBefore(createdAt, '2025-05-09T16:00:00Z')) {
+  if (isBefore(createdAt, '2025-05-09T16:00:00Z') && hasDatabaseActiveTime) {
     if (Number(info.active_time_seconds) >= maxDatabaseActiveTime) {
       return 'active-time';
     }

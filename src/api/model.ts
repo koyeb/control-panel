@@ -346,6 +346,7 @@ export type DatabaseDeployment = {
   serviceId: string;
   name: string;
   status: DeploymentStatus;
+  created_at: string;
   postgresVersion: PostgresVersion;
   region: string;
   host?: string;
