@@ -33,6 +33,7 @@ export const isDeploymentObject = createValidationGuard(
       appName: z.string(),
       serviceId: z.string(),
       serviceName: z.string(),
+      serviceType: z.literal('database').optional(),
     }),
   }),
 );

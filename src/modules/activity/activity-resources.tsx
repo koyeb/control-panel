@@ -65,14 +65,15 @@ export function ActivityResources({ activity }: { activity: Activity }) {
   if (isDeploymentObject(object)) {
     const { id: deploymentId, deleted } = object;
     const { appName } = object.metadata;
-    const { serviceId, serviceName } = object.metadata;
+    const { serviceId, serviceName, serviceType } = object.metadata;
 
     return (
       <ServiceResource
         appName={appName}
         serviceName={serviceName}
+        serviceType={serviceType}
         serviceId={serviceId}
-        link={routes.service.overview(serviceId, deploymentId)}
+        deploymentId={deploymentId}
         deleted={deleted}
       />
     );
@@ -90,7 +91,6 @@ export function ActivityResources({ activity }: { activity: Activity }) {
             appName={appName}
             serviceName={serviceName}
             serviceId={serviceId}
-            link={routes.service.overview(serviceId)}
             deleted={deleted}
           />
         )}
@@ -110,7 +110,7 @@ type ServiceResourceProps = {
   serviceName: string;
   serviceId: string;
   serviceType?: ServiceType;
-  link?: string;
+  deploymentId?: string;
   deleted?: boolean;
   className?: string;
 };
@@ -120,7 +120,7 @@ function ServiceResource({
   serviceName,
   serviceId,
   serviceType,
-  link,
+  deploymentId,
   deleted,
 }: ServiceResourceProps) {
   const props: Record<string, unknown> = {};
@@ -129,12 +129,10 @@ function ServiceResource({
     props.component = Link;
     props.className = 'hover:bg-muted/50';
 
-    if (link) {
-      props.href = link;
-    } else if (serviceType === 'database') {
+    if (serviceType === 'database') {
       props.href = routes.database.overview(serviceId);
     } else {
-      props.href = routes.service.overview(serviceId);
+      props.href = routes.service.overview(serviceId, deploymentId);
     }
   }
 
