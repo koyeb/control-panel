@@ -352,8 +352,12 @@ export type DatabaseDeployment = {
   roles?: Array<DatabaseRole>;
   databases?: Array<LogicalDatabase>;
   instance: string;
-  reachedQuota?: 'data-transfer' | 'written-data' | 'active-time' | 'storage-size';
+  reachedQuota?: 'data-transfer' | 'written-data' | 'active-time' | 'compute-time' | 'storage-size';
   activeTime: {
+    used?: number;
+    max?: number;
+  };
+  computeTime: {
     used?: number;
     max?: number;
   };

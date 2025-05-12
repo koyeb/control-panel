@@ -223,6 +223,7 @@ const databaseDeployment = createFactory<DatabaseDeployment>(() => ({
   region: '',
   instance: '',
   activeTime: {},
+  computeTime: {},
   disk: {},
 }));
 

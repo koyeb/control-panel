@@ -1699,12 +1699,14 @@
               "data-transfer": "You have reached the outbound data transfer limit for the free database Instance this month. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited data transfer.",
               "written-data": "You have reached the data write limit for the free database Instance this month. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited written data.",
               "active-time": "You have reached the active time limit for the free database Instance this month. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited active time.",
+              "compute-time": "You have reached the compute time limit for the free database Instance this month. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited compute time.",
               "storage-size": "You have reached the storage size limit for the free database Instance. Upgrade to the Starter plan to unlock <link>larger database Instances</link> with unlimited storage."
             },
             "paidPlan": {
               "data-transfer": "You have reached the outbound data transfer limit for the free database Instance this month. Select a larger database Instance with unlimited data transfer.",
               "written-data": "You have reached the data write limit for the free database Instance this month. Select a larger database Instance with unlimited written data.",
               "active-time": "You have reached the active time limit for the free database Instance this month. Select a larger database Instance with unlimited active time.",
+              "compute-time": "You have reached the compute time limit for the free database Instance this month. Select a larger database Instance with unlimited compute time.",
               "storage-size": "You have reached the storage size limit for the free database Instance. Select a larger database Instance with unlimited storage."
             }
           }

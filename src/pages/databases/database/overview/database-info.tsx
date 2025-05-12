@@ -26,7 +26,10 @@ export function DatabaseInfo({ service, deployment }: { service: Service; deploy
           value={
             <T
               id="activeTimeValue"
-              values={{ used: deployment.activeTime.used, max: deployment.activeTime.max ?? null }}
+              values={{
+                used: deployment.activeTime.used,
+                max: secondsToHours(deployment.activeTime.max ?? null),
+              }}
             />
           }
         />
@@ -57,4 +60,12 @@ export function DatabaseInfo({ service, deployment }: { service: Service; deploy
       </div>
     </section>
   );
+}
+
+function secondsToHours(value: number | null) {
+  if (value === null) {
+    return null;
+  }
+
+  return value / (60 * 60);
 }
