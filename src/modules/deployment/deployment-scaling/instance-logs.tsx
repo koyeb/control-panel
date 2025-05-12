@@ -13,7 +13,6 @@ import { IconFullscreen } from 'src/components/icons';
 import { getInitialLogOptions, LogOptions } from 'src/components/logs/log-options';
 import { LogLines, LogsFooter } from 'src/components/logs/logs';
 import { QueryError } from 'src/components/query-error';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useRouteParam } from 'src/hooks/router';
 import { createTranslate, Translate } from 'src/intl/translate';
@@ -31,12 +30,11 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   const app = useApp(useRouteParam('appId'));
   const service = useService(useRouteParam('serviceId'));
 
-  const logsFilters = useFeatureFlag('logs-filters');
   const now = useMemo(() => new Date(), []);
 
   const start = useMemo(() => {
-    return max([sub(now, logsFilters ? { hours: 1 } : { days: 30 }), instance.createdAt]);
-  }, [now, logsFilters, instance.createdAt]);
+    return max([sub(now, { days: 30 }), instance.createdAt]);
+  }, [now, instance.createdAt]);
 
   const end = useMemo(() => {
     return new Date(instance.terminatedAt ?? now);
@@ -46,7 +44,7 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
     defaultValues: {
       instanceId: instance.id,
       type: 'runtime',
-      period: logsFilters ? '1h' : '30d',
+      period: '30d',
       start,
       end,
       search: '',
