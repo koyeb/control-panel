@@ -223,6 +223,7 @@ const databaseDeployment = createFactory<DatabaseDeployment>(() => ({
   postgresVersion: 16,
   region: '',
   instance: '',
+  neonPostgres: {},
   activeTime: {},
   computeTime: {},
   disk: {},

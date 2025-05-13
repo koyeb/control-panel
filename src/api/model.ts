@@ -346,14 +346,18 @@ export type DatabaseDeployment = {
   serviceId: string;
   name: string;
   status: DeploymentStatus;
-  created_at: string;
   postgresVersion: PostgresVersion;
   region: string;
   host?: string;
   roles?: Array<DatabaseRole>;
   databases?: Array<LogicalDatabase>;
   instance: string;
-  reachedQuota?: 'data-transfer' | 'written-data' | 'active-time' | 'compute-time' | 'storage-size';
+  neonPostgres: {
+    activeTimeSeconds?: string;
+    computeTimeSeconds?: string;
+    dataTransferBytes?: string;
+    writtenDataBytes?: string;
+  };
   activeTime: {
     used?: number;
     max?: number;

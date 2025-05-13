@@ -28,7 +28,7 @@ export function DatabaseInfo({ service, deployment }: { service: Service; deploy
       <div className="row flex-wrap gap-x-8 gap-y-4 self-start rounded-md border px-3 py-2">
         <Metadata label={<T id="status" />} value={<ServiceStatusBadge status={service.status} />} />
 
-        {isBefore(deployment.created_at, '2025-05-09T16:00:00Z') && hasDatabaseActiveTime ? (
+        {isBefore(service.createdAt, '2025-05-09T16:00:00Z') && hasDatabaseActiveTime ? (
           <Metadata
             label={<T id="activeTime" />}
             value={

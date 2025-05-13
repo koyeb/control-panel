@@ -1,6 +1,3 @@
-import { isBefore } from 'date-fns';
-import posthog from 'posthog-js';
-
 import { parseBytes } from 'src/application/memory';
 import { inArray, last } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
@@ -295,9 +292,13 @@ function getStringArray(value?: string[]) {
   return value?.length === 0 ? undefined : value;
 }
 
-const maxDatabaseActiveTime = 50 * 60 * 60; // 50 hours
-const maxDatabaseComputeTime = 5 * 60 * 60; // 5 hours
-const maxDatabaseStorageSize = parseBytes('1GB'); // 1 GB
+export const databaseQuotas = {
+  maxActiveTime: 50 * 60 * 60, // 50 hours
+  maxComputeTime: 5 * 60 * 60, // 5 hours
+  maxDataTransfer: parseBytes('1GB'), // 1 GB
+  maxWrittenData: parseBytes('1GB'), // 1 GB
+  maxStorageSize: parseBytes('1GB'), // 1 GB
+};
 
 function mapDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
   const definition = deployment.definition!.database!.neon_postgres!;
@@ -313,60 +314,24 @@ function mapDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
     serviceId: deployment.service_id!,
     name: deployment.definition!.name!,
     status: deployment.status!,
-    created_at: deployment.created_at!,
     postgresVersion: definition.pg_version as PostgresVersion,
     region: definition.region!,
     host: info?.server_host,
     instance: definition.instance_type!,
-    reachedQuota: info ? quotaReached(deployment.created_at!, info, definition) : undefined,
     roles: definition?.roles?.map((role) => ({ name: role.name!, secretId: getSecretId(role.name!) })),
     databases: definition.databases?.map((database) => ({ name: database.name!, owner: database.owner! })),
+    neonPostgres: info ? snakeToCamelDeep(info) : {},
     activeTime: {
       used: info ? round(Number(info.active_time_seconds!) / (60 * 60), 1) : undefined,
-      max: definition.instance_type === 'free' ? maxDatabaseActiveTime : undefined,
+      max: definition.instance_type === 'free' ? databaseQuotas.maxActiveTime : undefined,
     },
     computeTime: {
       used: info ? round(Number(info.compute_time_seconds!) / (60 * 60), 1) : undefined,
-      max: definition.instance_type === 'free' ? maxDatabaseComputeTime : undefined,
+      max: definition.instance_type === 'free' ? databaseQuotas.maxComputeTime : undefined,
     },
     disk: {
       used: info ? round(Number(info.default_branch_logical_size)) : undefined,
-      max: definition.instance_type === 'free' ? maxDatabaseStorageSize : undefined,
+      max: definition.instance_type === 'free' ? databaseQuotas.maxStorageSize : undefined,
     },
   };
-}
-
-function quotaReached(
-  createdAt: string,
-  info: Api.DeploymentNeonPostgresDatabaseInfo,
-  neon: Api.NeonPostgresDatabase,
-): DatabaseDeployment['reachedQuota'] {
-  const hasDatabaseActiveTime = posthog.featureFlags.isFeatureEnabled('database-active-time');
-
-  if (neon.instance_type !== 'free') {
-    return undefined;
-  }
-
-  if (Number(info.data_transfer_bytes) >= parseBytes('1GB')) {
-    return 'data-transfer';
-  }
-
-  if (Number(info.written_data_bytes) >= parseBytes('1GB')) {
-    return 'written-data';
-  }
-
-  if (isBefore(createdAt, '2025-05-09T16:00:00Z') && hasDatabaseActiveTime) {
-    if (Number(info.active_time_seconds) >= maxDatabaseActiveTime) {
-      return 'active-time';
-    }
-  } else {
-    if (Number(info.compute_time_seconds) >= maxDatabaseComputeTime) {
-      return 'compute-time';
-    }
-  }
-
-  // we don't know how to check this quota (yet)
-  if (false as boolean) {
-    return 'storage-size';
-  }
 }

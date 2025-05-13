@@ -6,7 +6,9 @@ import { DatabaseDeployment, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
+import { getDatabaseServiceReachedQuota } from 'src/application/service-functions';
 import { ExternalLink, LinkButton } from 'src/components/link';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.database.layout.alerts');
@@ -17,12 +19,15 @@ type DatabaseAlertsProps = {
 };
 
 export function DatabaseAlerts({ service, deployment }: DatabaseAlertsProps) {
+  const hasDatabaseActiveTime = useFeatureFlag('database-active-time');
+  const reachedQuota = getDatabaseServiceReachedQuota(Boolean(hasDatabaseActiveTime), service, deployment);
+
   if (service.status === 'PAUSED') {
     return <DatabasePausedAlert service={service} />;
   }
 
-  if (deployment.reachedQuota !== undefined) {
-    return <QuotaReachedAlert service={service} quota={deployment.reachedQuota} />;
+  if (reachedQuota !== undefined) {
+    return <QuotaReachedAlert service={service} quota={reachedQuota} />;
   }
 
   return null;
@@ -53,7 +58,7 @@ function DatabasePausedAlert({ service }: { service: Service }) {
 
 type QuotaReachedAlertProps = {
   service: Service;
-  quota: Exclude<DatabaseDeployment['reachedQuota'], undefined>;
+  quota: NonNullable<ReturnType<typeof getDatabaseServiceReachedQuota>>;
 };
 
 function QuotaReachedAlert({ service, quota }: QuotaReachedAlertProps) {
