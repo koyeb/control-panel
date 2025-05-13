@@ -15,10 +15,10 @@ export function AuthButton({
       className={clsx(
         'inline-flex flex-row items-center justify-center gap-2',
         'rounded-md px-4 py-2 transition-colors',
-        'font-medium text-white',
-        'bg-black',
-        'hover:bg-black/85',
-        'disabled:bg-gray/70',
+        'font-medium text-white dark:text-black',
+        'bg-black dark:bg-white',
+        'hover:bg-black/85 dark:hover:bg-white/85',
+        'disabled:bg-gray/70 dark:disabled:bg-white/70',
         'outline-offset-2 outline-blue focus-visible:outline-2',
         className,
       )}

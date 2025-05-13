@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@koyeb/design-system';
@@ -7,7 +7,7 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { addressSchema } from 'src/api/mappers/session';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { AddressField } from 'src/components/address-field/address-field';
+import { ControlledAddressField } from 'src/components/address-field/address-field';
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -92,27 +92,7 @@ function BillingInformationForm() {
     <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col max-w-lg gap-4">
       <ControlledInput control={form.control} name="name" label={<T id="nameLabel" />} />
       <ControlledInput control={form.control} name="email" type="email" label={<T id="emailLabel" />} />
-
-      <Controller
-        control={form.control}
-        name="address"
-        render={({ field }) => (
-          <AddressField
-            label={<T id="addressLabel" />}
-            value={field.value}
-            onChange={field.onChange}
-            errors={{
-              line1: form.formState.errors.address?.line1?.message,
-              line2: form.formState.errors.address?.line2?.message,
-              city: form.formState.errors.address?.city?.message,
-              postalCode: form.formState.errors.address?.postalCode?.message,
-              state: form.formState.errors.address?.state?.message,
-              country: form.formState.errors.address?.country?.message,
-            }}
-          />
-        )}
-      />
-
+      <ControlledAddressField control={form.control} name="address" label={<T id="addressLabel" />} />
       <ControlledCheckbox control={form.control} name="company" label={<T id="companyLabel" />} />
 
       {form.watch('company') && (

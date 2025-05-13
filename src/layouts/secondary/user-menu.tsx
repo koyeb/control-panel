@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
-import { useUserQuery } from 'src/api/hooks/session';
+import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
@@ -17,7 +17,7 @@ const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
   const { clearToken } = useToken();
-  const { data: user } = useUserQuery();
+  const user = useUserUnsafe();
 
   const [open, setOpen] = useState(false);
   const resetIdentify = useResetIdentifyUser();
