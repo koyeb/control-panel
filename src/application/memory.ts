@@ -1,3 +1,5 @@
+import { round } from 'src/utils/math';
+
 export function parseBytes(input: string | undefined) {
   // cSpell:disable-next-line
   const result = /^([0-9.]+) ?([KMGT]?i?B)$/.exec(input ?? '');
@@ -46,10 +48,11 @@ export function parseBytes(input: string | undefined) {
 
 type FormatBytesOptions = {
   round?: boolean;
+  precision?: number;
   decimal?: boolean;
 };
 
-function formatBytesToUnit(bytes: number, units: string[], factor: number, round = false) {
+function formatBytesToUnit(bytes: number, units: string[], factor: number, precision: number | null) {
   let result = bytes;
   let unitIndex = 0;
 
@@ -58,7 +61,7 @@ function formatBytesToUnit(bytes: number, units: string[], factor: number, round
     unitIndex++;
   }
 
-  return [round ? Math.round(result) : result, units[unitIndex]] as const;
+  return [precision !== null ? round(result, precision) : result, units[unitIndex]] as const;
 }
 
 export function formatBytes(bytes: number, opts: FormatBytesOptions = {}) {
@@ -66,6 +69,6 @@ export function formatBytes(bytes: number, opts: FormatBytesOptions = {}) {
     bytes,
     opts.decimal ? ['B', 'KB', 'MB', 'GB', 'TB'] : ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
     opts.decimal ? 1000 : 1024,
-    opts.round,
+    opts.round ? (opts.precision ?? 0) : null,
   ).join(' ');
 }

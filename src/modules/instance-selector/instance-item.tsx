@@ -5,7 +5,7 @@ import { Badge, Button, RadioInput } from '@koyeb/design-system';
 import { useCatalogInstanceAvailability } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
-import { formatBytes } from 'src/application/memory';
+import { formatBytes, parseBytes } from 'src/application/memory';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/components/icons';
@@ -158,15 +158,19 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
 
       <div className="row items-center gap-1">
         <IconMemoryStick className="size-4 stroke-1" />
-        <T id="instanceSpec.ram" values={{ value: instance.memory }} />
+        <T id="instanceSpec.ram" values={{ value: formatMemory(instance.memory) }} />
       </div>
 
       <div className="row items-center gap-1">
         <IconRadioReceiver className="size-4 stroke-1" />
-        <T id="instanceSpec.disk" values={{ value: instance.disk }} />
+        <T id="instanceSpec.disk" values={{ value: formatMemory(instance.disk) }} />
       </div>
     </div>
   );
+}
+
+function formatMemory(value: string) {
+  return formatBytes(parseBytes(value), { round: true, precision: 2, decimal: true });
 }
 
 function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
