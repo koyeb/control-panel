@@ -81,4 +81,8 @@ describe('formatBytes', () => {
   test('rounded kilobyte value', () => {
     expect(formatBytes(12012, { decimal: true, round: true })).toBe('12 KB');
   });
+
+  test('rounded value with precision', () => {
+    expect(formatBytes(12012, { decimal: true, round: true, precision: 2 })).toBe('12.01 KB');
+  });
 });
