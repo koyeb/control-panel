@@ -163,7 +163,7 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
 
       <div className="row items-center gap-1">
         <IconRadioReceiver className="size-4 stroke-1" />
-        <T id="instanceSpec.disk" values={{ value: instance.memory }} />
+        <T id="instanceSpec.disk" values={{ value: instance.disk }} />
       </div>
     </div>
   );
