@@ -4,7 +4,6 @@ import { InputEnd, Slider, Tooltip } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
-import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
 import {
   IconAlarmClockCheck,
@@ -148,7 +147,7 @@ function useMinScaling() {
     return 0;
   }
 
-  if (scaleToZero && watch('serviceType') === 'web' && hasPublicPort && !isTenstorrentGpu(instance)) {
+  if (scaleToZero && watch('serviceType') === 'web' && hasPublicPort) {
     return 0;
   }
 

@@ -75,7 +75,9 @@ export async function initializeServiceForm(
   }
 
   if (!serviceId) {
-    values = merge(values, parseDeployParams(params, instances, regions, githubApp?.organizationName));
+    const deploy_params = parseDeployParams(params, instances, regions, githubApp?.organizationName);
+
+    values = merge(values, deploy_params);
 
     if (!values.appName) {
       values.appName = generateAppName();
@@ -99,8 +101,12 @@ export async function initializeServiceForm(
 
     const instance = instances.find(hasProperty('id', values.instance));
 
-    if (values.serviceType === 'web' && instance?.category === 'gpu') {
+    if (values.serviceType === 'web' && instance?.category === 'gpu' && !deploy_params.scaling?.min) {
       values.scaling.min = 0;
+    }
+
+    if (values.scaling.min > values.scaling.max) {
+      values.scaling.max = values.scaling.min;
     }
 
     if (!params.has('regions')) {

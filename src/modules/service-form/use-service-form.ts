@@ -255,7 +255,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         scaling.min = 1;
       }
 
-      if (scaling.min === 0 && isTenstorrentGpu(instance)) {
+      if (isTenstorrentGpu(instance) && !isTenstorrentGpu(previousInstance)) {
         scaling.min = 1;
       }
 
