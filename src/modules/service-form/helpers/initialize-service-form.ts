@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
+import { DeepPartial } from 'react-hook-form';
 
 import { api } from 'src/api/api';
 import { mapRepository } from 'src/api/mappers/git';
@@ -75,47 +76,19 @@ export async function initializeServiceForm(
   }
 
   if (!serviceId) {
-    const deploy_params = parseDeployParams(params, instances, regions, githubApp?.organizationName);
+    const parsedParams = parseDeployParams(params, instances, regions, githubApp?.organizationName);
 
-    values = merge(values, deploy_params);
+    values = merge(values, parsedParams);
 
-    if (!values.appName) {
-      values.appName = generateAppName();
-    }
-
-    if (organization.plan === 'hobby' && !params.has('instance_type')) {
-      values.instance = 'free';
-    }
-
-    if (values.instance === 'free') {
-      values.scaling.min = 0;
-    }
-
-    // todo: remove
-    // eslint-disable-next-line
-    const registrySecret: string | undefined = (window as any).__KOYEB_REGISTRY_SECRET_HACK;
-
-    if (registrySecret) {
-      values.source.docker.registrySecret = registrySecret;
-    }
-
-    const instance = instances.find(hasProperty('id', values.instance));
-
-    if (values.serviceType === 'web' && instance?.category === 'gpu' && !deploy_params.scaling?.min) {
-      values.scaling.min = 0;
-    }
-
-    if (values.scaling.min > values.scaling.max) {
-      values.scaling.max = values.scaling.min;
-    }
-
-    if (!params.has('regions')) {
-      const defaultRegion = getDefaultRegion(queryClient, datacenters, regions, instance);
-
-      if (defaultRegion !== undefined) {
-        values.regions = [defaultRegion.id];
-      }
-    }
+    ensureServiceCreationBusinessRules(
+      values,
+      datacenters,
+      regions,
+      instances,
+      organization,
+      parsedParams,
+      queryClient,
+    );
   }
 
   if (values.source.type === 'git') {
@@ -289,4 +262,58 @@ export function defaultServiceForm(): ServiceForm {
     ],
     volumes: [],
   };
+}
+
+function ensureServiceCreationBusinessRules(
+  values: ServiceForm,
+  datacenters: CatalogDatacenter[],
+  regions: CatalogRegion[],
+  instances: CatalogInstance[],
+  organization: Organization,
+  parsedParams: DeepPartial<ServiceForm>,
+  queryClient: QueryClient,
+) {
+  if (!values.appName) {
+    values.appName = generateAppName();
+  }
+
+  if (organization.plan === 'hobby' && !parsedParams.instance) {
+    values.instance = 'free';
+  }
+
+  const { serviceType } = values;
+  const instance = instances.find(hasProperty('id', values.instance));
+
+  if (instance?.id === 'free') {
+    values.scaling.min = 0;
+  }
+
+  if (serviceType === 'web' && instance?.category === 'gpu' && parsedParams.scaling?.min === undefined) {
+    values.scaling.min = 0;
+  }
+
+  if (values.scaling.max < values.scaling.min) {
+    values.scaling.max = values.scaling.min;
+  }
+
+  if (values.scaling.min > 0 && values.scaling.min < values.scaling.max) {
+    const target = serviceType === 'worker' ? 'cpu' : 'requests';
+    values.scaling.targets[target].enabled = true;
+  }
+
+  // todo: remove
+  // eslint-disable-next-line
+  const registrySecret: string | undefined = (window as any).__KOYEB_REGISTRY_SECRET_HACK;
+
+  if (registrySecret) {
+    values.source.docker.registrySecret = registrySecret;
+  }
+
+  if (parsedParams.regions === undefined) {
+    const defaultRegion = getDefaultRegion(queryClient, datacenters, regions, instance);
+
+    if (defaultRegion !== undefined) {
+      values.regions = [defaultRegion.id];
+    }
+  }
 }

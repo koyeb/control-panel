@@ -235,25 +235,9 @@ describe('parseDeployParams', () => {
       expect(test.getValues()).toHaveProperty('scaling.max', 2);
     });
 
-    it('both with min < max', () => {
+    it('both', () => {
       test.params.set('instances_min', '1');
       test.params.set('instances_max', '2');
-
-      expect(test.getValues()).toHaveProperty('scaling.min', 1);
-      expect(test.getValues()).toHaveProperty('scaling.max', 2);
-    });
-
-    it('both with min = max', () => {
-      test.params.set('instances_min', '2');
-      test.params.set('instances_max', '2');
-
-      expect(test.getValues()).toHaveProperty('scaling.min', 2);
-      expect(test.getValues()).toHaveProperty('scaling.max', 2);
-    });
-
-    it('both with min > max', () => {
-      test.params.set('instances_min', '2');
-      test.params.set('instances_max', '1');
 
       expect(test.getValues()).toHaveProperty('scaling.min', 1);
       expect(test.getValues()).toHaveProperty('scaling.max', 2);
@@ -277,13 +261,13 @@ describe('parseDeployParams', () => {
       expect(test.getValues()).not.toHaveProperty('scaling');
     });
 
-    it('min >= 20', () => {
-      test.params.set('instances_min', '20');
+    it('min > 20', () => {
+      test.params.set('instances_min', '21');
 
       expect(test.getValues()).not.toHaveProperty('scaling');
     });
 
-    it('max >= 20', () => {
+    it('max > 20', () => {
       test.params.set('instances_max', '21');
 
       expect(test.getValues()).not.toHaveProperty('scaling');
@@ -343,19 +327,6 @@ describe('parseDeployParams', () => {
         enabled: true,
         value: 1,
       });
-    });
-
-    it('enables the requests per second target when and max > 1 and type = web', () => {
-      test.params.set('instances_max', '2');
-
-      expect(test.getValues()).toHaveProperty('scaling.targets', { requests: { enabled: true } });
-    });
-
-    it('enables the cpu target when max > 1 and type = worker', () => {
-      test.params.set('service_type', 'worker');
-      test.params.set('instances_max', '2');
-
-      expect(test.getValues()).toHaveProperty('scaling.targets', { cpu: { enabled: true } });
     });
   });
 
