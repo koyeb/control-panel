@@ -2,14 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, MockedObject, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { api } from 'src/api/api';
-import {
-  CatalogDatacenter,
-  CatalogInstance,
-  CatalogRegion,
-  GithubApp,
-  Organization,
-  OrganizationSummary,
-} from 'src/api/model';
+import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { create } from 'src/utils/factories';
 
@@ -40,26 +33,41 @@ vi.mock('./generate-app-name.ts', () => ({
 }));
 
 describe('initializeServiceForm', () => {
-  async function initialize(
-    options: Partial<{
-      params: URLSearchParams;
-      datacenters: CatalogDatacenter[];
-      regions: CatalogRegion[];
-      instances: CatalogInstance[];
-      organization: Organization;
-      summary: OrganizationSummary;
-      githubApp: GithubApp;
-      serviceId: string;
-    }> = {},
-  ) {
+  let params: URLSearchParams;
+  let datacenters: CatalogDatacenter[];
+  let regions: CatalogRegion[];
+  let instances: CatalogInstance[];
+  let organization: Organization;
+  let githubApp: GithubApp | undefined;
+  let serviceId: string | undefined;
+
+  beforeEach(() => {
+    params = new URLSearchParams();
+
+    datacenters = [];
+    regions = [];
+
+    instances = [
+      create.instance({ id: 'free' }),
+      create.instance({ id: 'nano' }),
+      create.instance({ id: 'gpu', category: 'gpu' }),
+    ];
+
+    organization = create.organization();
+
+    githubApp = undefined;
+    serviceId = undefined;
+  });
+
+  async function initialize() {
     return initializeServiceForm(
-      options.params ?? new URLSearchParams(),
-      options.datacenters ?? [],
-      options.regions ?? [],
-      options.instances ?? [],
-      options.organization ?? create.organization(),
-      options.githubApp,
-      options.serviceId,
+      params,
+      datacenters,
+      regions,
+      instances,
+      organization,
+      githubApp,
+      serviceId,
       new QueryClient(),
     );
   }
@@ -76,45 +84,11 @@ describe('initializeServiceForm', () => {
   });
 
   test('from a hobby organization', async () => {
-    const organization = create.organization({ plan: 'hobby' });
+    organization.plan = 'hobby';
 
-    expect(await initialize({ organization })).toEqual({
+    expect(await initialize()).toEqual({
       ...serviceForm,
       instance: 'free',
-      scaling: {
-        ...serviceForm.scaling,
-        min: 0,
-      },
-    });
-  });
-
-  test('with the free instance', async () => {
-    const params = new URLSearchParams({
-      instance_type: 'free',
-    });
-
-    const instances = [create.instance({ id: 'free' })];
-
-    expect(await initialize({ params, instances })).toEqual({
-      ...serviceForm,
-      instance: 'free',
-      scaling: {
-        ...serviceForm.scaling,
-        min: 0,
-      },
-    });
-  });
-
-  test('with a GPU instance', async () => {
-    const params = new URLSearchParams({
-      instance_type: 'gpu',
-    });
-
-    const instances = [create.instance({ id: 'gpu', category: 'gpu' })];
-
-    expect(await initialize({ params, instances })).toEqual({
-      ...serviceForm,
-      instance: 'gpu',
       scaling: {
         ...serviceForm.scaling,
         min: 0,
@@ -123,28 +97,119 @@ describe('initializeServiceForm', () => {
   });
 
   test('organization repository not found', async () => {
-    const params = new URLSearchParams({
-      type: 'git',
-      repository: 'org/repo',
-    });
+    params.set('type', 'git');
+    params.set('repository', 'org/repo');
 
-    const githubApp = create.githubApp({ organizationName: 'org' });
+    githubApp = create.githubApp({ organizationName: 'org' });
 
     mockApi.listRepositories.mockResolvedValue({ repositories: [] });
 
-    expect(await initialize({ params, githubApp })).toEqual(serviceForm);
+    expect(await initialize()).toEqual(serviceForm);
   });
 
   test('public repository not found', async () => {
-    const params = new URLSearchParams({
-      type: 'git',
-      repository: 'org/repo',
-    });
+    params.set('type', 'git');
+    params.set('repository', 'org/repo');
 
     mockFetchGithubRepository.mockRejectedValue(new Error());
 
     serviceForm.source.git.repositoryType = 'public';
 
-    expect(await initialize({ params })).toEqual(serviceForm);
+    expect(await initialize()).toEqual(serviceForm);
+  });
+
+  describe('service creation business rules', () => {
+    test('app name generation', async () => {
+      expect(await initialize()).toHaveProperty('appName', 'generated');
+    });
+
+    test('scaling min and max set when instances_min is set', async () => {
+      params.set('instances_min', '2');
+
+      const values = await initialize();
+
+      expect(values).toHaveProperty('scaling.min', 2);
+      expect(values).toHaveProperty('scaling.max', 2);
+    });
+
+    describe('default instance', () => {
+      test('hobby plan and instance not set', async () => {
+        organization.plan = 'hobby';
+
+        const values = await initialize();
+
+        expect(values).toHaveProperty('instance', 'free');
+        expect(values).toHaveProperty('scaling.min', 0);
+      });
+
+      test('hobby plan and instance set', async () => {
+        organization.plan = 'hobby';
+        params.set('instance_type', 'nano');
+
+        const values = await initialize();
+
+        expect(values).toHaveProperty('instance', 'nano');
+      });
+    });
+
+    describe('scale to zero', () => {
+      test('with the free instance', async () => {
+        params.set('instance_type', 'free');
+
+        const values = await initialize();
+
+        expect(values).toHaveProperty('scaling.min', 0);
+      });
+
+      test('with a GPU', async () => {
+        params.set('instance_type', 'gpu');
+
+        const values = await initialize();
+
+        expect(values).toHaveProperty('scaling.min', 0);
+      });
+
+      test('with a GPU and type = worker', async () => {
+        params.set('service_type', 'worker');
+        params.set('instance_type', 'gpu');
+
+        const values = await initialize();
+
+        expect(values).toHaveProperty('scaling.min', 1);
+      });
+
+      test('with a GPU and instances_min is set', async () => {
+        params.set('instance_type', 'gpu');
+        params.set('instances_min', '1');
+
+        const values = await initialize();
+
+        expect(values).toHaveProperty('scaling.min', 1);
+      });
+    });
+
+    describe('default autoscaling target', () => {
+      test('no target enabled when min = max', async () => {
+        params.set('instances_min', '2');
+        params.set('instances_max', '2');
+
+        const values = await initialize();
+
+        expect(values).toHaveProperty('scaling.targets', serviceForm.scaling.targets);
+      });
+
+      test('requests per second when type = web', async () => {
+        params.set('instances_max', '2');
+
+        expect(await initialize()).toHaveProperty('scaling.targets.requests.enabled', true);
+      });
+
+      test('cpu when type = worker', async () => {
+        params.set('instances_max', '2');
+        params.set('service_type', 'worker');
+
+        expect(await initialize()).toHaveProperty('scaling.targets.cpu.enabled', true);
+      });
+    });
   });
 });
