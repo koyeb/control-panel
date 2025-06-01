@@ -89,13 +89,6 @@ class ServiceFormBuilder {
   ) {}
 
   get() {
-    const max = this.values.scaling?.max;
-
-    if (max !== undefined && max > 1) {
-      const target = this.values.serviceType === 'worker' ? 'cpu' : 'requests';
-      this.set('scaling', { targets: { [target]: { enabled: true } } });
-    }
-
     return this.values;
   }
 
@@ -253,43 +246,21 @@ class ServiceFormBuilder {
 
   set instances_min(value: string | null) {
     if (value !== null) {
-      this.setScaling(Number(value), this.values.scaling?.max);
+      const min = Number(value);
+
+      if (!Number.isNaN(min) && min >= 0 && min <= 20) {
+        this.set('scaling', { min });
+      }
     }
   }
 
   set instances_max(value: string | null) {
     if (value !== null) {
-      this.setScaling(this.values.scaling?.min, Number(value));
-    }
-  }
+      const max = Number(value);
 
-  private setScaling(min: number | undefined, max: number | undefined) {
-    if (Number.isNaN(min) || Number.isNaN(max)) {
-      return;
-    }
-
-    if (min !== undefined && (min < 0 || min >= 20)) {
-      return;
-    }
-
-    if (max !== undefined && (max <= 0 || max >= 20)) {
-      return;
-    }
-
-    if (min !== undefined && max !== undefined) {
-      if (min > max) {
-        this.setScaling(max, min);
-      } else {
-        this.set('scaling', { min, max });
+      if (!Number.isNaN(max) && max > 0 && max <= 20) {
+        this.set('scaling', { max });
       }
-    }
-
-    if (max === undefined) {
-      this.set('scaling', { min });
-    }
-
-    if (min === undefined) {
-      this.set('scaling', { max });
     }
   }
 
