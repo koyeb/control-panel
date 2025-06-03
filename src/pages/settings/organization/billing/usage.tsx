@@ -139,7 +139,7 @@ function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowP
       </div>
 
       <div className="px-4 text-dim">
-        <UsageRowPrice price={price} />
+        <UsageRowPrice price={price} unit={(label == "Database storage") ? PriceUnit.byGBHour : PriceUnit.byHour} />
       </div>
 
       <div className="ml-auto justify-end">
@@ -162,7 +162,7 @@ function UsageDetailsRowMobile({ label, usage, price, total }: UsageDetailsRowPr
       </div>
 
       <div className="text-dim">
-        <UsageRowPrice price={price} />
+        <UsageRowPrice price={price} unit={(label == "Database storage") ? PriceUnit.byGBHour : PriceUnit.byHour} />
       </div>
     </div>
   );
@@ -188,16 +188,32 @@ function UsageRowTime({ time }: UsageRowTimeProps) {
   );
 }
 
+enum PriceUnit {
+    bySecond = 'by the second',
+    byHour = 'by the hour',
+    byGBHour = 'per gigabyte by the hour',
+}
+
 type UsageRowPriceProps = {
   price?: number;
+  unit?: PriceUnit;
 };
 
-function UsageRowPrice({ price }: UsageRowPriceProps) {
+function UsageRowPrice({ price, unit }: UsageRowPriceProps) {
   if (!price) {
     return null;
   }
 
-  return <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />;
+  switch (unit) {
+  case PriceUnit.bySecond:
+      return <T id="pricePerSecond" values={{ price: <FormattedPrice value={price} digits={6} /> }} />;
+  case PriceUnit.byHour:
+      return <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />;
+  case PriceUnit.byGBHour:
+      return <T id="pricePerHourPerGB" values={{ price: <FormattedPrice value={price} digits={9} /> }} />;
+  case undefined:
+      return <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />;
+  }
 }
 
 type UsageRowTotalProps = {
