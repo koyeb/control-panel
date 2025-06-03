@@ -130,16 +130,18 @@ type UsageDetailsRowProps = {
 };
 
 function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowProps) {
+  let isDatabase = label == "Database storage usage";
+
   return (
     <div className="sm:row hidden items-center border-b px-3 py-2">
       <div className="w-64">{label}</div>
 
       <div className="w-48 justify-end px-4 text-right">
-        <UsageRowTime time={usage} />
+        <UsageRowAmount amount={usage} unit={(isDatabase) ? UsageUnit.byHourPerGB : UsageUnit.bySecond} />
       </div>
 
       <div className="px-4 text-dim">
-        <UsageRowPrice price={price} unit={(label == "Database storage") ? PriceUnit.byGBHour : PriceUnit.byHour} />
+        <UsageRowPrice price={price} unit={(isDatabase) ? PriceUnit.byGBHour : PriceUnit.byHour} />
       </div>
 
       <div className="ml-auto justify-end">
@@ -150,38 +152,51 @@ function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowP
 }
 
 function UsageDetailsRowMobile({ label, usage, price, total }: UsageDetailsRowProps) {
+  let isDatabase = label == "Database storage usage";
+
   return (
     <div className="col gap-2 border-b p-4 sm:hidden">
       <div>{label}</div>
 
       <div className="row">
-        <UsageRowTime time={usage} />
+        <UsageRowAmount amount={usage} unit={(isDatabase) ? UsageUnit.byHourPerGB : UsageUnit.bySecond} />
         <div className="ml-auto">
           <UsageRowTotal total={total} />
         </div>
       </div>
 
       <div className="text-dim">
-        <UsageRowPrice price={price} unit={(label == "Database storage") ? PriceUnit.byGBHour : PriceUnit.byHour} />
+        <UsageRowPrice price={price} unit={(isDatabase) ? PriceUnit.byGBHour : PriceUnit.byHour} />
       </div>
     </div>
   );
 }
 
-type UsageRowTimeProps = {
-  time?: number;
+enum UsageUnit {
+    bySecond = 'by the second',
+    byHourPerGB = 'per GB by the hour',
+}
+
+type UsageRowAmountProps = {
+  amount?: number;
+  unit?: UsageUnit;
 };
 
-function UsageRowTime({ time }: UsageRowTimeProps) {
-  if (!time) {
+function UsageRowAmount({ amount, unit }: UsageRowAmountProps) {
+  if (!amount) {
     return null;
   }
 
+  let isDatabase = unit === UsageUnit.byHourPerGB;
+
   return (
-    <Tooltip allowHover content={<T id="usageSeconds" values={{ seconds: time }} />}>
+      <Tooltip allowHover content={<T id={(isDatabase) ? "usageHourGB" : "usageSeconds"} values={{ seconds: amount/1000 }} />}>
       {(props) => (
         <span {...props}>
-          <FormattedDuration seconds={time} />
+        {(isDatabase) ?
+          <FormattedDataUsage usage={amount/1000} /> :
+          <FormattedDuration seconds={amount} />
+        }
         </span>
       )}
     </Tooltip>
@@ -273,6 +288,14 @@ type FormattedDurationProps = {
 
 function FormattedDuration({ seconds: value }: FormattedDurationProps) {
   return <T id="hoursMinutesSeconds" values={secondsToHMS(value)} />;
+}
+
+type FormattedDataUsageProps = {
+    usage: number;
+};
+
+function FormattedDataUsage({ usage: value }: FormattedDataUsageProps) {
+    return <T id="dataUsage" values={{ usage: value }} />;
 }
 
 function secondsToHMS(seconds: number) {
