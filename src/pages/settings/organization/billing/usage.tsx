@@ -130,18 +130,18 @@ type UsageDetailsRowProps = {
 };
 
 function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowProps) {
-  let isDatabase = label.startsWith("Database storage");
+  let isDatabase = label.startsWith('Database storage');
 
   return (
     <div className="sm:row hidden items-center border-b px-3 py-2">
       <div className="w-64">{label}</div>
 
       <div className="w-48 justify-end px-4 text-right">
-        <UsageRowAmount amount={usage} unit={(isDatabase) ? UsageUnit.byHourPerGB : UsageUnit.bySecond} />
+        <UsageRowAmount amount={usage} unit={isDatabase ? UsageUnit.byHourPerGB : UsageUnit.bySecond} />
       </div>
 
       <div className="px-4 text-dim">
-        <UsageRowPrice price={price} unit={(isDatabase) ? PriceUnit.byGBHour : PriceUnit.byHour} />
+        <UsageRowPrice price={price} unit={isDatabase ? PriceUnit.byGBHour : PriceUnit.byHour} />
       </div>
 
       <div className="ml-auto justify-end">
@@ -152,29 +152,29 @@ function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowP
 }
 
 function UsageDetailsRowMobile({ label, usage, price, total }: UsageDetailsRowProps) {
-  let isDatabase = label.startsWith("Database storage");
+  let isDatabase = label.startsWith('Database storage');
 
   return (
     <div className="col gap-2 border-b p-4 sm:hidden">
       <div>{label}</div>
 
       <div className="row">
-        <UsageRowAmount amount={usage} unit={(isDatabase) ? UsageUnit.byHourPerGB : UsageUnit.bySecond} />
+        <UsageRowAmount amount={usage} unit={isDatabase ? UsageUnit.byHourPerGB : UsageUnit.bySecond} />
         <div className="ml-auto">
           <UsageRowTotal total={total} />
         </div>
       </div>
 
       <div className="text-dim">
-        <UsageRowPrice price={price} unit={(isDatabase) ? PriceUnit.byGBHour : PriceUnit.byHour} />
+        <UsageRowPrice price={price} unit={isDatabase ? PriceUnit.byGBHour : PriceUnit.byHour} />
       </div>
     </div>
   );
 }
 
 enum UsageUnit {
-    bySecond = 'by the second',
-    byHourPerGB = 'per GB by the hour',
+  bySecond = 'by the second',
+  byHourPerGB = 'per GB by the hour',
 }
 
 type UsageRowAmountProps = {
@@ -190,13 +190,13 @@ function UsageRowAmount({ amount, unit }: UsageRowAmountProps) {
   let isDatabase = unit === UsageUnit.byHourPerGB;
 
   return (
-      <Tooltip allowHover content={<T id={(isDatabase) ? "usageHourGB" : "usageSeconds"} values={{ seconds: amount/1000 }} />}>
+    <Tooltip
+      allowHover
+      content={<T id={isDatabase ? 'usageHourGB' : 'usageSeconds'} values={{ seconds: amount / 1000 }} />}
+    >
       {(props) => (
         <span {...props}>
-        {(isDatabase) ?
-          <FormattedDataUsage usage={amount/1000} /> :
-          <FormattedDuration seconds={amount} />
-        }
+          {isDatabase ? <FormattedDataUsage usage={amount / 1000} /> : <FormattedDuration seconds={amount} />}
         </span>
       )}
     </Tooltip>
@@ -204,9 +204,9 @@ function UsageRowAmount({ amount, unit }: UsageRowAmountProps) {
 }
 
 enum PriceUnit {
-    bySecond = 'by the second',
-    byHour = 'by the hour',
-    byGBHour = 'per gigabyte by the hour',
+  bySecond = 'by the second',
+  byHour = 'by the hour',
+  byGBHour = 'per gigabyte by the hour',
 }
 
 type UsageRowPriceProps = {
@@ -220,14 +220,18 @@ function UsageRowPrice({ price, unit }: UsageRowPriceProps) {
   }
 
   switch (unit) {
-  case PriceUnit.bySecond:
+    case PriceUnit.bySecond:
       return <T id="pricePerSecond" values={{ price: <FormattedPrice value={price} digits={6} /> }} />;
-  case PriceUnit.byHour:
-      return <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />;
-  case PriceUnit.byGBHour:
+    case PriceUnit.byHour:
+      return (
+        <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />
+      );
+    case PriceUnit.byGBHour:
       return <T id="pricePerHourPerGB" values={{ price: <FormattedPrice value={price} digits={9} /> }} />;
-  case undefined:
-      return <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />;
+    case undefined:
+      return (
+        <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />
+      );
   }
 }
 
@@ -291,11 +295,11 @@ function FormattedDuration({ seconds: value }: FormattedDurationProps) {
 }
 
 type FormattedDataUsageProps = {
-    usage: number;
+  usage: number;
 };
 
 function FormattedDataUsage({ usage: value }: FormattedDataUsageProps) {
-    return <T id="dataUsage" values={{ usage: value }} />;
+  return <T id="dataUsage" values={{ usage: value }} />;
 }
 
 function secondsToHMS(seconds: number) {
