@@ -130,7 +130,7 @@ type UsageDetailsRowProps = {
 };
 
 function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowProps) {
-  let isDatabaseDataUsage = label.startsWith('Database storage');
+  const isDatabaseDataUsage = label.startsWith('Database storage');
 
   return (
     <div className="sm:row hidden items-center border-b px-3 py-2">
@@ -155,7 +155,7 @@ function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowP
 }
 
 function UsageDetailsRowMobile({ label, usage, price, total }: UsageDetailsRowProps) {
-  let isDatabaseDataUsage = label.startsWith('Database storage');
+  const isDatabaseDataUsage = label.startsWith('Database storage');
 
   return (
     <div className="col gap-2 border-b p-4 sm:hidden">
