@@ -21,7 +21,7 @@ export function computeEstimatedCost(
   regions?: string[],
   scaling?: Scaling,
 ): ServiceCost | undefined {
-  if (!instance || !scaling || !regions) {
+  if (!instance || !scaling || !regions || !Number.isFinite(scaling.min) || !Number.isFinite(scaling.max)) {
     return;
   }
 
