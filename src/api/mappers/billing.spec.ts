@@ -4,7 +4,7 @@ import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 
 import type { Api } from '../api-types';
-import { Invoice, InvoicePlanLine, InvoiceUsageLine, InvoiceDiscount } from '../model';
+import { Invoice, InvoiceDiscount, InvoicePlanLine, InvoiceUsageLine } from '../model';
 
 import { mapInvoice, StripeInvoice } from './billing';
 
@@ -81,15 +81,20 @@ describe('mapInvoice', () => {
     ]);
   });
 
-  it('returns the invoice lines sorted by price', () => {
+  it('returns the invoice lines sorted by price, database lines last', () => {
     const invoice = transform(createStripeInvoice(), [
-      createStripeInvoiceLine({ price: { unit_amount_decimal: 2 } }),
-      createStripeInvoiceLine({ price: { unit_amount_decimal: 1 } }),
+      createStripeInvoiceLine({ plan_nickname: 'Usage 2', price: { unit_amount_decimal: 2 } }),
+      createStripeInvoiceLine({ plan_nickname: 'Database stuff' }),
+      createStripeInvoiceLine({ plan_nickname: 'Usage 1', price: { unit_amount_decimal: 1 } }),
     ]);
 
     const lines = invoice.periods[0]?.lines as InvoiceUsageLine[];
 
-    expect(lines.map((line) => line.price)).toEqual([1, 2]);
+    expect(lines).toEqual([
+      expect.objectContaining<Partial<InvoiceUsageLine>>({ label: 'Usage 1' }),
+      expect.objectContaining<Partial<InvoiceUsageLine>>({ label: 'Usage 2' }),
+      expect.objectContaining<Partial<InvoiceUsageLine>>({ label: 'Database stuff' }),
+    ]);
   });
 
   it('transforms an amount off discount', () => {

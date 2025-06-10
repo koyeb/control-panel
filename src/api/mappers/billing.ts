@@ -47,6 +47,14 @@ function getLines(lines: Api.NextInvoiceReplyLine[]): InvoiceLine[] {
     .map(transformLine)
     .filter(isDefined)
     .sort((a: InvoiceLine, b: InvoiceLine) => {
+      if (a.label.startsWith('Database')) {
+        return 1;
+      }
+
+      if (b.label.startsWith('Database')) {
+        return -1;
+      }
+
       if ('price' in a && 'price' in b) {
         return a.price - b.price;
       }
