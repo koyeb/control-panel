@@ -341,7 +341,7 @@ export function RuntimeLogLine({ options, line }: { options: LogOptions; line: L
 
   return (
     <div className={clsx('row px-4', line.stream === 'koyeb' && 'bg-blue/10')}>
-      {options.date && <LogLineDate line={line} {...dateProps} />}
+      {options.date && <LogLineDate line={line} timeZone="UTC" {...dateProps} />}
       {options.stream && <LogLineStream line={line} />}
       {options.instance && <LogLineInstanceId line={line} />}
       <LogLineContent line={line} options={options} />

@@ -186,8 +186,12 @@ function LogsHeader({ options }: LogsHeaderProps) {
 function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) {
   return (
     <div className="row px-4">
-      {options.date && <LogLineDate line={line} hour="2-digit" minute="2-digit" second="2-digit" />}
+      {options.date && (
+        <LogLineDate line={line} timeZone="UTC" hour="2-digit" minute="2-digit" second="2-digit" />
+      )}
+
       {options.stream && <LogLineStream line={line} />}
+
       <LogLineContent line={line} options={options} />
     </div>
   );
