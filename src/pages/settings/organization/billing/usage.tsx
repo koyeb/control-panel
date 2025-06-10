@@ -11,6 +11,7 @@ import { useOrganization } from 'src/api/hooks/session';
 import { InvoiceDiscount, InvoicePeriod } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
+import { formatBytes, parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
 import { Dialog, DialogHeader } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
@@ -130,16 +131,21 @@ type UsageDetailsRowProps = {
 };
 
 function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowProps) {
+  const isDatabase = label === 'Database storage';
+
   return (
     <div className="sm:row hidden items-center border-b px-3 py-2">
       <div className="w-64">{label}</div>
 
       <div className="w-48 justify-end px-4 text-right">
-        <UsageRowTime time={usage} />
+        {isDatabase ? <UsageRowBytes data={usage} unit="MB" /> : <UsageRowTime time={usage} />}
       </div>
 
       <div className="px-4 text-dim">
-        <UsageRowPrice price={price} />
+        <UsageRowPrice
+          price={isDatabase && price !== undefined ? price * 1000 : price}
+          unit={isDatabase ? 'gbPerHour' : 'hour'}
+        />
       </div>
 
       <div className="ml-auto justify-end">
@@ -150,21 +156,45 @@ function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowP
 }
 
 function UsageDetailsRowMobile({ label, usage, price, total }: UsageDetailsRowProps) {
+  const isDatabase = label === 'Database storage';
+
   return (
     <div className="col gap-2 border-b p-4 sm:hidden">
       <div>{label}</div>
 
       <div className="row">
-        <UsageRowTime time={usage} />
+        {isDatabase ? <UsageRowBytes data={usage} unit="MB" /> : <UsageRowTime time={usage} />}
+
         <div className="ml-auto">
           <UsageRowTotal total={total} />
         </div>
       </div>
 
       <div className="text-dim">
-        <UsageRowPrice price={price} />
+        <UsageRowPrice
+          price={isDatabase && price !== undefined ? price * 1000 : price}
+          unit={isDatabase ? 'gbPerHour' : 'hour'}
+        />
       </div>
     </div>
+  );
+}
+
+type UsageRowBytesProps = {
+  data?: number;
+  unit: 'MB';
+};
+
+function UsageRowBytes({ data, unit }: UsageRowBytesProps) {
+  if (!data) {
+    return null;
+  }
+
+  return (
+    <T
+      id="usageData"
+      values={{ data: formatBytes(parseBytes(`${data}${unit}`), { decimal: true, round: true }) }}
+    />
   );
 }
 
@@ -190,11 +220,16 @@ function UsageRowTime({ time }: UsageRowTimeProps) {
 
 type UsageRowPriceProps = {
   price?: number;
+  unit: 'hour' | 'gbPerHour';
 };
 
-function UsageRowPrice({ price }: UsageRowPriceProps) {
+function UsageRowPrice({ price, unit }: UsageRowPriceProps) {
   if (!price) {
     return null;
+  }
+
+  if (unit == 'gbPerHour') {
+    return <T id="pricePerGbPerHour" values={{ price: <FormattedPrice value={price} digits={6} /> }} />;
   }
 
   return <T id="pricePerHour" values={{ price: <FormattedPrice value={price * 60 * 60} digits={6} /> }} />;
