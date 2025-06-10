@@ -8,7 +8,6 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { getDatabaseServiceReachedQuota } from 'src/application/service-functions';
 import { ExternalLink, LinkButton } from 'src/components/link';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.database.layout.alerts');
@@ -19,8 +18,7 @@ type DatabaseAlertsProps = {
 };
 
 export function DatabaseAlerts({ service, deployment }: DatabaseAlertsProps) {
-  const hasDatabaseActiveTime = useFeatureFlag('database-active-time');
-  const reachedQuota = getDatabaseServiceReachedQuota(Boolean(hasDatabaseActiveTime), service, deployment);
+  const reachedQuota = getDatabaseServiceReachedQuota(service, deployment);
 
   if (service.status === 'PAUSED') {
     return <DatabasePausedAlert service={service} />;

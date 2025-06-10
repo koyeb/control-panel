@@ -1,5 +1,3 @@
-import { isBefore } from 'date-fns';
-
 import { api } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
 import { databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
@@ -126,11 +124,7 @@ export async function updateDatabaseService(
   });
 }
 
-export function getDatabaseServiceReachedQuota(
-  hasDatabaseActiveTime: boolean,
-  service: Service,
-  deployment: DatabaseDeployment,
-) {
+export function getDatabaseServiceReachedQuota(service: Service, deployment: DatabaseDeployment) {
   const { instance, neonPostgres } = deployment;
 
   if (instance !== 'free') {
@@ -145,14 +139,8 @@ export function getDatabaseServiceReachedQuota(
     return 'written-data';
   }
 
-  if (isBefore(service.createdAt, '2025-05-09T16:00:00Z') && hasDatabaseActiveTime) {
-    if (Number(neonPostgres.activeTimeSeconds) >= databaseQuotas.maxActiveTime) {
-      return 'active-time';
-    }
-  } else {
-    if (Number(neonPostgres.computeTimeSeconds) >= databaseQuotas.maxComputeTime) {
-      return 'compute-time';
-    }
+  if (Number(neonPostgres.computeTimeSeconds) >= databaseQuotas.maxComputeTime) {
+    return 'compute-time';
   }
 
   // we don't know how to check this quota (yet)

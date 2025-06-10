@@ -1738,8 +1738,6 @@
         "info": {
           "title": "Database information",
           "status": "Status",
-          "activeTime": "Active time",
-          "activeTimeValue": "{used} h {max, select, null {} other {/ {max} h}}",
           "computeTime": "Compute time",
           "computeTimeValue": "{used} h {max, select, null {} other {/ {max} h}}",
           "instance": "Instance type",
