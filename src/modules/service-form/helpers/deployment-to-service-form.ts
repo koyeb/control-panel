@@ -1,4 +1,5 @@
 import merge from 'lodash-es/merge';
+import pick from 'lodash-es/pick';
 
 import { Api } from 'src/api/api-types';
 import { EnvironmentVariable, ServiceType } from 'src/api/model';
@@ -27,14 +28,10 @@ export function deploymentDefinitionToServiceForm(
   githubOrganization: string | undefined,
   apiVolumes: Api.PersistentVolume[],
 ): DeepPartial<ServiceForm> {
-  const serviceType = (): ServiceType | undefined => {
-    if (definition.type === 'WEB') return 'web';
-    if (definition.type === 'WORKER') return 'worker';
-  };
-
   return {
+    meta: { proxyFields: pick(definition, 'proxy_ports') },
     serviceName: definition.name,
-    serviceType: serviceType(),
+    serviceType: serviceType(definition),
     source: source(definition, githubOrganization),
     builder: builder(definition),
     dockerDeployment: dockerDeployment(definition),
@@ -46,6 +43,11 @@ export function deploymentDefinitionToServiceForm(
     volumes: volumes(definition, apiVolumes),
     files: files(definition),
   };
+}
+
+function serviceType(definition: Api.DeploymentDefinition): ServiceType | undefined {
+  if (definition.type === 'WEB') return 'web';
+  if (definition.type === 'WORKER') return 'worker';
 }
 
 function source(

@@ -36,6 +36,7 @@ export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.Deploy
       routes: routes(form.ports),
       health_checks: healthChecks(form.ports),
     }),
+    ...form.meta.proxyFields,
   };
 }
 

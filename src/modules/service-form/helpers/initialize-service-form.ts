@@ -178,6 +178,7 @@ export function defaultServiceForm(): ServiceForm {
       hasPreviousBuild: false,
       skipBuild: false,
       saveOnly: false,
+      proxyFields: {},
     },
     appName: '',
     serviceName: '',

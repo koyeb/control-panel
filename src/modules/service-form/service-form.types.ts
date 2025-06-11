@@ -38,6 +38,7 @@ type ServiceFormMeta = {
   hasPreviousBuild: boolean;
   skipBuild: boolean;
   saveOnly: boolean;
+  proxyFields: Record<string, unknown>;
 };
 
 type Source = {
