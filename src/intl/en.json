@@ -266,7 +266,13 @@
       "temporaryHoldMessage": "A temporary hold will be placed on the card of $1 and refunded immediately",
       "proratedChargeMessage": "Your card will be charged a prorated amount for the remaining days of the month",
       "paymentMethodTimeoutTitle": "We could not register your payment method",
-      "paymentMethodTimeoutDescription": "Please try again later or {contactUs} if the problem persists"
+      "paymentMethodTimeoutDescription": "Please try again later or {contactUs} if the problem persists",
+      "billingAlert": {
+        "label": "Billing alert",
+        "description": "Receive email notifications when your monthly usage gets close to the spending limit",
+        "inputStart": "$",
+        "inputEnd": "/month"
+      }
     },
     "platformStatus": {
       "up": "All systems operational",

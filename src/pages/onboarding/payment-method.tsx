@@ -97,7 +97,7 @@ function Form() {
     await paymentMethodMutation.mutateAsync();
     await changePlanMutation.mutateAsync('starter');
 
-    if (billingAlertAmount) {
+    if (!Number.isNaN(billingAlertAmount)) {
       await updateBudgetMutation.mutateAsync(billingAlertAmount);
     }
 

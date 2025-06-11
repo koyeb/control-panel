@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { FormState, useForm } from 'react-hook-form';
 
-import { Button, Field, FieldLabel } from '@koyeb/design-system';
+import { Button, Field, FieldLabel, InputEnd, InputStart } from '@koyeb/design-system';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { Address, OrganizationPlan } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -16,6 +16,7 @@ import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
 import { createTranslate, Translate } from 'src/intl/translate';
 
 import { ControlledAddressField } from './address-field/address-field';
+import { ControlledInput } from './controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
 
 const T = createTranslate('components.upgradeDialog');
@@ -60,8 +61,9 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
 
   const invalidate = useInvalidateApiQuery();
 
-  const form = useForm<{ address: Address }>({
+  const form = useForm<{ billingAlertAmount: number; address: Address }>({
     defaultValues: {
+      billingAlertAmount: 20,
       address: organization.billing.address ?? {
         line1: '',
         postalCode: '',
@@ -111,10 +113,21 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
     onTimeout: () => notify.error(<PaymentMethodTimeout />),
   });
 
-  const onSubmit = async ({ address }: FormValues<typeof form>) => {
+  const updateBudgetMutation = useMutation({
+    ...useApiMutationFn('updateBudget', (amount: number) => ({
+      path: { organization_id: organization.id },
+      body: { amount: String(100 * amount) },
+    })),
+  });
+
+  const onSubmit = async ({ billingAlertAmount, address }: FormValues<typeof form>) => {
     await billingInfoMutation.mutateAsync(address);
     await paymentMethodMutation.mutateAsync();
     await changePlanMutation.mutateAsync('starter');
+
+    if (!Number.isNaN(billingAlertAmount)) {
+      await updateBudgetMutation.mutateAsync(billingAlertAmount);
+    }
   };
 
   return (
@@ -133,6 +146,28 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
       <p className="text-dim">
         {plan === 'starter' && <T id="temporaryHoldMessage" />}
         {plan !== 'starter' && <T id="proratedChargeMessage" />}
+      </p>
+
+      <ControlledInput
+        control={form.control}
+        name="billingAlertAmount"
+        type="number"
+        label={<T id="billingAlert.label" />}
+        start={
+          <InputStart>
+            <T id="billingAlert.inputStart" />
+          </InputStart>
+        }
+        end={
+          <InputEnd>
+            <T id="billingAlert.inputEnd" />
+          </InputEnd>
+        }
+        className="max-w-48"
+      />
+
+      <p className="text-dim">
+        <T id="billingAlert.description" />
       </p>
 
       {renderFooter(form.formState)}
