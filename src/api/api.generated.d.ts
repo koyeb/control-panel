@@ -2064,6 +2064,7 @@ export interface components {
         AppUsage: {
             app_id?: string;
             app_name?: string;
+            databases?: components["schemas"]["DatabaseUsage"][];
             services?: components["schemas"]["ServiceUsage"][];
         };
         Archive: {
@@ -2427,6 +2428,29 @@ export interface components {
         DatabaseSource: {
             neon_postgres?: components["schemas"]["NeonPostgresDatabase"];
         };
+        DatabaseUsage: {
+            /** Format: int64 */
+            compute_time_seconds?: number;
+            /** Format: int64 */
+            data_storage_megabytes_hours?: number;
+            service_id?: string;
+            service_name?: string;
+        };
+        DatabaseUsageDetails: {
+            app_id?: string;
+            app_name?: string;
+            /** Format: int64 */
+            compute_time_seconds?: number;
+            /** Format: int64 */
+            data_storage_megabytes_hour?: number;
+            organization_id?: string;
+            service_id?: string;
+            service_name?: string;
+            /** Format: date-time */
+            started_at?: string;
+            /** Format: date-time */
+            terminated_at?: string;
+        };
         DatacenterListItem: {
             /** e.g. "8.856614" ,"2.352221"? */
             coordinates?: string[];
@@ -2524,6 +2548,7 @@ export interface components {
             instance_types?: components["schemas"]["DeploymentInstanceType"][];
             name?: string;
             ports?: components["schemas"]["DeploymentPort"][];
+            proxy_ports?: components["schemas"]["DeploymentProxyPort"][];
             regions?: string[];
             routes?: components["schemas"]["DeploymentRoute"][];
             scalings?: components["schemas"]["DeploymentScaling"][];
@@ -2614,6 +2639,7 @@ export interface components {
             archive?: components["schemas"]["ArchiveDeploymentMetadata"];
             database?: components["schemas"]["DatabaseDeploymentMetadata"];
             git?: components["schemas"]["GitDeploymentMetadata"];
+            proxy_ports?: components["schemas"]["DeploymentProxyPortMetadata"][];
             trigger?: components["schemas"]["TriggerDeploymentMetadata"];
         };
         DeploymentNeonPostgresDatabaseInfo: {
@@ -2698,6 +2724,19 @@ export interface components {
          * @enum {string}
          */
         "DeploymentProvisioningInfo.Stage.Status": "UNKNOWN" | "PENDING" | "RUNNING" | "FAILED" | "COMPLETED" | "ABORTED";
+        DeploymentProxyPort: {
+            /** Format: int64 */
+            port?: number;
+            protocol?: components["schemas"]["ProxyPortProtocol"];
+        };
+        DeploymentProxyPortMetadata: {
+            host?: string;
+            /** Format: int64 */
+            port?: number;
+            protocol?: components["schemas"]["ProxyPortProtocol"];
+            /** Format: int64 */
+            public_port?: number;
+        };
         DeploymentRoute: {
             path?: string;
             /** Format: int64 */
@@ -3028,6 +3067,8 @@ export interface components {
              * Format: int64
              */
             count?: number;
+            /** The collection of database deployments used during the month */
+            database_details?: components["schemas"]["DatabaseUsageDetails"][];
             /**
              * The limit in the request
              * Format: int64
@@ -4207,6 +4248,11 @@ export interface components {
             url?: string;
             username?: string;
         };
+        /**
+         * @default tcp
+         * @enum {string}
+         */
+        ProxyPortProtocol: "tcp";
         PublicOrganization: {
             id?: string;
             name?: string;
