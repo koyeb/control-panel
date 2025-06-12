@@ -131,6 +131,7 @@ export type Port = {
   protocol: PortProtocol;
   path: string;
   public: boolean;
+  proxy: boolean;
   healthCheck: HealthCheck;
 };
 

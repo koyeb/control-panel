@@ -198,9 +198,9 @@ describe('parseDeployParams', () => {
       test.params.append('ports', '3;tcp');
 
       expect(test.getValues()).toHaveProperty('ports', [
-        { portNumber: 1, public: true, protocol: 'http', path: '/1', healthCheck },
-        { portNumber: 2, public: true, protocol: 'http2', path: '/2', healthCheck },
-        { portNumber: 3, public: false, protocol: 'tcp', path: '', healthCheck },
+        { portNumber: 1, public: true, proxy: false, protocol: 'http', path: '/1', healthCheck },
+        { portNumber: 2, public: true, proxy: false, protocol: 'http2', path: '/2', healthCheck },
+        { portNumber: 3, public: false, proxy: false, protocol: 'tcp', path: '', healthCheck },
       ]);
     });
 
@@ -216,8 +216,8 @@ describe('parseDeployParams', () => {
       test.params.append('ports', '1;tcp');
 
       expect(test.getValues()).toHaveProperty('ports', [
-        { portNumber: 1, public: true, protocol: 'http', path: '/', healthCheck },
-        { portNumber: 1, public: false, protocol: 'tcp', path: '', healthCheck },
+        { portNumber: 1, public: true, proxy: false, protocol: 'http', path: '/', healthCheck },
+        { portNumber: 1, public: false, proxy: false, protocol: 'tcp', path: '', healthCheck },
       ]);
     });
   });

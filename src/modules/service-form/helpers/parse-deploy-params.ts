@@ -210,6 +210,7 @@ class ServiceFormBuilder {
         portNumber: Number(match[1]),
         protocol: match[2] as PortProtocol,
         public: true,
+        proxy: false,
         path: match[3] as string,
         healthCheck: defaultHealthCheck(),
       };
@@ -222,6 +223,7 @@ class ServiceFormBuilder {
         portNumber: Number(match[1]),
         protocol: 'tcp',
         public: false,
+        proxy: false,
         path: '',
         healthCheck: defaultHealthCheck(),
       };

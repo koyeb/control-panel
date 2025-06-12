@@ -115,6 +115,7 @@ describe('serviceFormSchema', () => {
       path: '/',
       protocol: 'http',
       public: true,
+      proxy: false,
       healthCheck: defaultHealthCheck(),
     });
 
@@ -123,6 +124,7 @@ describe('serviceFormSchema', () => {
       path: '/',
       protocol: 'http',
       public: true,
+      proxy: false,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       healthCheck: expect.any(Object),
     });

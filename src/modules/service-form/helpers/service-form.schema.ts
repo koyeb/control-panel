@@ -164,6 +164,7 @@ const portCommon = z.object({
 const ports = z.discriminatedUnion('public', [
   portCommon.extend({
     public: z.literal(true),
+    proxy: z.literal(false),
     path: z
       .string()
       .startsWith('/')
@@ -171,6 +172,7 @@ const ports = z.discriminatedUnion('public', [
   }),
   portCommon.extend({
     public: z.literal(false),
+    proxy: z.boolean(),
   }),
 ]);
 
