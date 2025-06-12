@@ -52,6 +52,7 @@ export function Switch({ label, labelPosition = 'top', helpTooltip, className, .
             'box-content rounded-full bg-gray/25 p-0.5 transition-all',
             'after:size-4 after:rounded-full after:bg-neutral after:transition-all',
             'peer-checked:bg-green peer-checked:after:translate-x-full peer-checked:after:bg-neutral',
+            'peer-disabled:opacity-50',
           )}
         />
       </div>
