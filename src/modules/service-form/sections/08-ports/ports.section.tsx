@@ -55,7 +55,7 @@ export function PortsSection() {
               protocol: 'http',
               path: '/',
               public: true,
-              proxy: true,
+              proxy: false,
               healthCheck: defaultHealthCheck(),
             })
           }
