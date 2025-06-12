@@ -1,6 +1,7 @@
 import { useDeployment } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
 import { App, Service } from 'src/api/model';
+import { FormattedDistanceToNow } from 'src/intl/formatted';
 
 import { DeploymentInfo } from './components/deployment-info';
 import { DeploymentTrigger } from './components/deployment-trigger';
@@ -24,8 +25,15 @@ export function ServiceItem({ app, service }: ServiceItemProps) {
         <DeploymentInfo deployment={deployment} />
       </div>
 
-      <footer className="row h-6 min-w-0 items-center !py-0">
-        {isComputeDeployment(deployment) && <DeploymentTrigger trigger={deployment.trigger} />}
+      <footer className="row h-6 min-w-0 items-center gap-4 !py-0">
+        {isComputeDeployment(deployment) && (
+          <>
+            <DeploymentTrigger trigger={deployment.trigger} />
+            <span className="text-nowrap text-xs text-dim">
+              <FormattedDistanceToNow value={deployment.date} />
+            </span>
+          </>
+        )}
       </footer>
     </div>
   );
