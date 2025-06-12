@@ -1265,6 +1265,8 @@
         "pathTooltip": "Your service will be publicly accessible at https://[subdomain].koyeb.app{path}. Requests will be sent to the port you selected and load-balanced between your instances.",
         "publicLabel": "Public",
         "publicTooltip": "If public, the port will be accessible from the Internet. If private, the port will only be accessible to other services running on Koyeb's service mesh.",
+        "proxyLabel": "Proxy",
+        "proxyTooltip": "If enabled, the port will be accessible from the Internet through TCP",
         "addPort": "Add another",
         "deletePort": "Delete port"
       },

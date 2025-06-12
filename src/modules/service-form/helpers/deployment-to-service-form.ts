@@ -1,5 +1,4 @@
 import merge from 'lodash-es/merge';
-import pick from 'lodash-es/pick';
 
 import { Api } from 'src/api/api-types';
 import { EnvironmentVariable, ServiceType } from 'src/api/model';
@@ -8,17 +7,17 @@ import { hasProperty, keys } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import {
-  Scaling,
   Builder,
   DockerDeploymentOptions,
   DockerSource,
+  File,
   GitSource,
   HealthCheck,
   Port,
   PortProtocol,
+  Scaling,
   ServiceForm,
   ServiceVolume,
-  File,
 } from '../service-form.types';
 
 import { defaultHealthCheck } from './initialize-service-form';
@@ -29,7 +28,6 @@ export function deploymentDefinitionToServiceForm(
   apiVolumes: Api.PersistentVolume[],
 ): DeepPartial<ServiceForm> {
   return {
-    meta: { proxyFields: pick(definition, 'proxy_ports') },
     serviceName: definition.name,
     serviceType: serviceType(definition),
     source: source(definition, githubOrganization),
@@ -240,6 +238,7 @@ function ports(definition: Api.DeploymentDefinition): Array<DeepPartial<Port>> |
     portNumber: port.port,
     protocol: port.protocol as PortProtocol,
     public: port.protocol !== 'tcp',
+    proxy: definition.proxy_ports?.find((proxyPort) => proxyPort.port === port.port) !== undefined,
     path: definition.routes?.find((route) => route.port === port.port)?.path,
     healthCheck: healthCheck(definition, port),
   }));

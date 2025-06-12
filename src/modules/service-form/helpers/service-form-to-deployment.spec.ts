@@ -38,6 +38,7 @@ describe('serviceFormToDeploymentDefinition', () => {
           protocol: 'http',
         },
       ],
+      proxy_ports: [],
       routes: [
         {
           port: 8000,

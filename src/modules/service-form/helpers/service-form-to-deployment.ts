@@ -33,6 +33,7 @@ export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.Deploy
     volumes: volumes(form.volumes),
     ...(form.serviceType === 'web' && {
       ports: ports(form.ports),
+      proxy_ports: proxyPorts(form.ports),
       routes: routes(form.ports),
       health_checks: healthChecks(form.ports),
     }),
@@ -167,6 +168,15 @@ function ports(ports: Array<Port>): Array<Api.Port> {
       protocol: isPublic ? protocol : 'tcp',
     };
   });
+}
+
+function proxyPorts(ports: Array<Port>): Array<Api.DeploymentProxyPort> {
+  return ports
+    .filter((port) => port.proxy)
+    .map((port) => ({
+      port: port.portNumber,
+      protocol: 'tcp',
+    }));
 }
 
 function routes(ports: Array<Port>): Array<Api.Route> {

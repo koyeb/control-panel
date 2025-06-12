@@ -45,6 +45,7 @@ export namespace Api {
   export type PersistentVolume = schemas['PersistentVolume'];
   export type Plan = schemas['Plan'];
   export type Port = schemas['Port'];
+  export type DeploymentProxyPort = schemas['DeploymentProxyPort'];
   export type Quotas = schemas['Quotas'];
   export type Region = schemas['Region'];
   export type RegionalDeployment = schemas['RegionalDeployment'];

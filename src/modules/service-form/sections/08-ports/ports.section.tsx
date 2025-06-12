@@ -6,6 +6,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { defaultHealthCheck } from '../../helpers/initialize-service-form';
+import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { PortFields } from './port-fields';
@@ -13,7 +14,7 @@ import { PortFields } from './port-fields';
 const T = createTranslate('modules.serviceForm.ports');
 
 export function PortsSection() {
-  const { fields, append, remove } = useFieldArray({ name: 'ports' });
+  const { fields, append, remove } = useFieldArray<ServiceForm>({ name: 'ports' });
 
   return (
     <ServiceFormSection
@@ -50,10 +51,11 @@ export function PortsSection() {
           color="gray"
           onClick={() =>
             append({
-              portNumber: '',
+              portNumber: NaN,
               protocol: 'http',
               path: '/',
               public: true,
+              proxy: true,
               healthCheck: defaultHealthCheck(),
             })
           }

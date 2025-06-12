@@ -6,6 +6,7 @@ import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
 import { IconTrash } from 'src/components/icons';
+import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
@@ -27,9 +28,16 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
   const isMobile = !useBreakpoint('md');
   const showLabel = isMobile || index === 0;
 
+  const hasProxyPorts = useFeatureFlag('proxy-ports');
+
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
-    <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_4rem_auto] md:border-none md:p-0">
+    <div
+      // eslint-disable-next-line tailwindcss/no-arbitrary-value
+      className={clsx(
+        'grid grid-cols-1 gap-4 rounded border px-6 py-5 md:border-none md:p-0',
+        hasProxyPorts ? 'md:grid-cols-[1fr_1fr_1fr_4rem_4rem_auto]' : 'md:grid-cols-[1fr_1fr_1fr_4rem_auto]',
+      )}
+    >
       <ControlledInput<ServiceForm, `ports.${number}.portNumber`>
         ref={(ref) => ref?.addEventListener('wheel', preventDefault, { passive: false })}
         name={`ports.${index}.portNumber`}
@@ -75,12 +83,22 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
           if (event.target.checked) {
             setValue(`ports.${index}.protocol`, 'http', { shouldValidate: true });
             setValue(`ports.${index}.path`, '/', { shouldValidate: true });
+            setValue(`ports.${index}.proxy`, false, { shouldValidate: true });
           } else {
             setValue(`ports.${index}.protocol`, 'tcp', { shouldValidate: true });
             setValue(`ports.${index}.path`, '', { shouldValidate: true });
           }
         }}
       />
+
+      <FeatureFlag feature="proxy-ports">
+        <ControlledSwitch
+          name={`ports.${index}.proxy`}
+          label={showLabel && <T id="proxyLabel" />}
+          helpTooltip={<T id="proxyTooltip" />}
+          disabled={port.public}
+        />
+      </FeatureFlag>
 
       {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
