@@ -2,22 +2,28 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, InfoTooltip, Stepper } from '@koyeb/design-system';
+import { Button, InfoTooltip, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
 import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
-import { AcceptOrDeclineInvitation } from 'src/components/accept-or-decline-invitation';
+import { HandleInvitation } from 'src/components/handle-invitations';
 import { IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
-import { QueryError } from 'src/components/query-error';
+import { QueryError, QueryGuard } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { useMount } from 'src/hooks/lifecycle';
+import { useHistoryState, useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate, Translate } from 'src/intl/translate';
+import { defined } from 'src/utils/assert';
 import { slugify } from 'src/utils/strings';
+
+import Background from './images/join-organization.svg?react';
 
 const T = createTranslate('pages.onboarding.joinOrganization');
 
@@ -41,25 +47,40 @@ export function JoinOrganization() {
     return <QueryError error={invitationsQuery.error} />;
   }
 
-  const invitation = invitationsQuery.data[0];
+  return (
+    <>
+      <Background className="absolute bottom-0 hidden md:block" />
 
-  if (invitation !== undefined) {
-    return <AcceptOrDeclineInvitation invitation={invitation} />;
-  }
-
-  return <CreateOrganization />;
+      <QueryGuard query={invitationsQuery}>
+        {(invitations) => (
+          <>
+            {invitations.length === 0 && <CreateOrganization />}
+            {invitations.length > 0 && <HandleInvitation invitation={defined(invitations[0])} />}
+          </>
+        )}
+      </QueryGuard>
+    </>
+  );
 }
 
 function CreateOrganization() {
   const user = useUser();
   const { token, setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
+  const navigate = useNavigate();
+  const state = useHistoryState<{ createOrganization: boolean }>();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      organizationName: defaultOrganizationName(user),
+      organizationName: state.createOrganization ? defaultOrganizationName(user) : '',
     },
     resolver: useZodResolver(schema),
+  });
+
+  useMount(() => {
+    if (state.createOrganization) {
+      mutation.mutate(form.getValues());
+    }
   });
 
   const onError = useFormErrorHandler(form, (error) => ({
@@ -85,15 +106,28 @@ function CreateOrganization() {
       setToken(token);
       await invalidate('getCurrentOrganization');
     },
-    onError,
+    onError(error) {
+      if (state.createOrganization) {
+        navigate(routes.home(), { state: {} });
+      } else {
+        onError(error);
+      }
+    },
   });
 
-  return (
-    <section className="col w-full max-w-xl gap-6">
-      <Stepper totalSteps={3} activeStep={2} />
+  if (state.createOrganization) {
+    return (
+      <section className="row flex-1 items-center justify-center gap-2">
+        <Spinner className="size-5" />
+        <T id="creatingOrganization" />
+      </section>
+    );
+  }
 
+  return (
+    <section className="col flex-1 justify-center gap-8">
       <div>
-        <h1 className="typo-heading mb-1">
+        <h1 className="mb-1 text-3xl font-semibold">
           <T id="title" />
           <InfoTooltip content={<T id="tooltip" />} className="max-w-lg" iconClassName="inline-block ms-2" />
         </h1>

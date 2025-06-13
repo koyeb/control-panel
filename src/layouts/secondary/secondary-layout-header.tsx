@@ -11,8 +11,8 @@ import { OrganizationSwitcher } from '../organization-switcher';
 import { UserMenu } from './user-menu';
 
 export function SecondaryLayoutHeader({ background }: { background?: boolean }) {
-  const organizationQuery = useOrganizationQuery();
   const userQuery = useUserQuery();
+  const organizationQuery = useOrganizationQuery();
 
   const accountLocked = userQuery.isError && isApiError(userQuery.error) && userQuery.error.status === 403;
   const isAuthenticated = userQuery.isSuccess || accountLocked;
