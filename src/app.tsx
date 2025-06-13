@@ -28,6 +28,7 @@ import { ErrorTestPage } from './pages/error-test.page';
 import { HomePage } from './pages/home/home.page';
 import { ServicesPage } from './pages/home/services.page';
 import { OnboardingPage } from './pages/onboarding/onboarding.page';
+import { OneClickAppsPage } from './pages/one-click-apps/one-click-apps.page';
 import { SecretsPage } from './pages/secrets/secrets.page';
 import { ServiceConsolePage } from './pages/service/console/service-console.page';
 import { CreateServicePage } from './pages/service/create-service.page';
@@ -137,6 +138,8 @@ function AuthenticatedRoutes() {
 
         <Route path="/settings/*?" component={OrganizationSettingsPages} />
         <Route path="/user/settings/*?" component={UserSettingsPages} />
+
+        <Route path="/one-click-apps" component={OneClickAppsPage} />
 
         <Route path="__error" component={ErrorTestPage} />
 

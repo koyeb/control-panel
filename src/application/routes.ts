@@ -1,5 +1,6 @@
 export const routes = {
   home: () => '/',
+  oneClickApps: () => '/one-click-apps',
   volumes: {
     index: () => '/volumes',
     snapshots: () => '/volumes/snapshots',

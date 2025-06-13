@@ -165,6 +165,8 @@ function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
     description: app.description,
     logo: app.logos[0],
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
+    category: app.category,
+    repository: app.repository,
   };
 }
 

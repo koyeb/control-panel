@@ -1580,7 +1580,8 @@
           "databases": "Databases",
           "roles": "Roles",
           "settings": "Settings"
-        }
+        },
+        "oneClickApps": "One click apps"
       }
     },
     "secondary": {
