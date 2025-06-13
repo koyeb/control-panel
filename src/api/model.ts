@@ -143,6 +143,8 @@ export type OneClickApp = {
   description: string;
   logo: string;
   deployUrl: string;
+  category: string;
+  repository: string;
 };
 
 export type AiModel = {

@@ -79,6 +79,8 @@ export function AppBreadcrumbs() {
         <Route path="/user/settings/*?">
           <UserSettingsCrumbs />
         </Route>
+
+        <CrumbRoute path="/one-click-apps" label={<T id="oneClickApps" />} link={routes.services()} />
       </Switch>
     </Breadcrumbs>
   );
