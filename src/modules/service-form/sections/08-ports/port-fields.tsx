@@ -83,7 +83,6 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
           if (event.target.checked) {
             setValue(`ports.${index}.protocol`, 'http', { shouldValidate: true });
             setValue(`ports.${index}.path`, '/', { shouldValidate: true });
-            setValue(`ports.${index}.proxy`, false, { shouldValidate: true });
           } else {
             setValue(`ports.${index}.protocol`, 'tcp', { shouldValidate: true });
             setValue(`ports.${index}.path`, '', { shouldValidate: true });
@@ -96,7 +95,6 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
           name={`ports.${index}.proxy`}
           label={showLabel && <T id="proxyLabel" />}
           helpTooltip={<T id="proxyTooltip" />}
-          disabled={port.public}
         />
       </FeatureFlag>
 

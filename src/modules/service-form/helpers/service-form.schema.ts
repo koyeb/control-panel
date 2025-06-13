@@ -156,15 +156,15 @@ const healthCheck = z.discriminatedUnion('protocol', [
 ]);
 
 const portCommon = z.object({
-  protocol: z.string(),
   portNumber: z.number().min(1).lt(65000),
+  protocol: z.string(),
+  proxy: z.boolean(),
   healthCheck,
 });
 
 const ports = z.discriminatedUnion('public', [
   portCommon.extend({
     public: z.literal(true),
-    proxy: z.literal(false),
     path: z
       .string()
       .startsWith('/')
@@ -172,7 +172,6 @@ const ports = z.discriminatedUnion('public', [
   }),
   portCommon.extend({
     public: z.literal(false),
-    proxy: z.boolean(),
   }),
 ]);
 
