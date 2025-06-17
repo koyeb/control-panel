@@ -14,6 +14,12 @@ export function getDefaultRegion(
     .filter((region) => region.status === 'available')
     .filter((region) => !region.instances || inArray(instance?.id, region.instances));
 
+  const northAmerica = availableRegions.find(hasProperty('id', 'na'));
+
+  if (instance?.category === 'gpu' && northAmerica !== undefined) {
+    return northAmerica;
+  }
+
   const regionLatencies = getRegionLatencies(queryClient, datacenters, availableRegions);
 
   availableRegions.sort(
