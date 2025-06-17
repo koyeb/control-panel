@@ -66,7 +66,7 @@ export function RegionSelector({
 
       <ul className="row flex-wrap justify-start gap-2">
         {regions.map((region) => (
-          <li key={region.id} className="w-full sm:w-56">
+          <li key={region.id} className="w-full sm:w-64">
             <RegionItem
               type={type}
               instance={instance}

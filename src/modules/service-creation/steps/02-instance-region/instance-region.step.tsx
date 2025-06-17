@@ -107,7 +107,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
   });
 
   return (
-    <div className="col max-w-3xl gap-4">
+    <div className="col max-w-4xl gap-4">
       <InstanceRegionAlerts selectedInstance={selectedInstance} selectedRegions={selectedRegions} />
 
       <InstanceCategoryTabs
