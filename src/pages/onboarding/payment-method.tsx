@@ -45,7 +45,7 @@ function Form() {
         city: '',
         country: '',
       },
-      billingAlertAmount: NaN,
+      billingAlertAmount: 20,
     },
   });
 

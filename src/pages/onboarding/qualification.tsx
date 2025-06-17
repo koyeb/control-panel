@@ -21,21 +21,24 @@ import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.qualification');
 
-type Step = 'fullName' | 'usage' | 'primaryUseCase' | 'currentSpending' | 'sendInvites';
+type Step = 'fullName' | 'usage' | 'primaryUseCase' | 'currentSpending' | 'referralSource' | 'sendInvites';
 type Usage = 'personal' | 'education' | 'professional';
 // prettier-ignore
 type Occupation = 'founder' | 'cto' | 'devops'  | 'softwareEngineer' | 'engineeringManager' | 'freelancer' | 'hobbyist' | 'student' | 'teacher' | 'other';
 // prettier-ignore
 type PrimaryUseCase = 'ai' | 'training' | 'inference' | 'video' | 'web' | 'api' | 'company' | 'blog' | 'personal' | 'school' | 'bot' | 'other';
 type CurrentSpending = 'lessThan500' | '500To2000' | '2000To10000' | 'moreThan10000';
+// prettier-ignore
+type ReferralSource = 'searchEngine' | 'recommendation' | 'socialMedia' | 'hackerNews' | 'reddit' | 'podcast' | 'meetup' | 'other';
 
 type QualificationFormType = {
   fullName?: string;
   step: Step;
   usage?: Usage;
   occupation?: Occupation;
-  primaryUseCase?: PrimaryUseCase;
+  primaryUseCase?: PrimaryUseCase[];
   currentSpending?: CurrentSpending;
+  referralSource?: ReferralSource;
   invites?: string;
 };
 
@@ -71,6 +74,7 @@ export function Qualification() {
         occupation: form.occupation,
         currentSpending: form.currentSpending,
         primaryUseCase: form.primaryUseCase,
+        referralSource: form.referralSource,
         submittedAt: new Date().toISOString(),
       };
 
@@ -115,6 +119,8 @@ export function Qualification() {
   if (form.watch('usage') === 'professional') {
     steps.push('currentSpending');
   }
+
+  steps.push('referralSource');
 
   if (['pro', 'scale', 'enterprise'].includes(organization.plan)) {
     steps.push('sendInvites');
@@ -182,6 +188,10 @@ function QualificationStep() {
 
   if (step === 'currentSpending') {
     return <CurrentSpendingStep />;
+  }
+
+  if (step === 'referralSource') {
+    return <ReferralSourceStep />;
   }
 
   if (step === 'sendInvites') {
@@ -304,7 +314,7 @@ function PrimaryUseCaseStep() {
           <Tag
             key={useCase}
             name="primaryUseCase"
-            type="radio"
+            type="checkbox"
             value={t(`primaryUseCase.${useCase}`)}
             label={<T id={`primaryUseCase.${useCase}`} />}
           />
@@ -328,20 +338,54 @@ function CurrentSpendingStep() {
         <h1 className="text-3xl font-semibold">
           <T id="currentSpending.title" />
         </h1>
-
-        <p className="text-dim">
-          <T id="currentSpending.description" />
-        </p>
       </header>
 
       <TagList>
-        {options.map((useCase) => (
+        {options.map((option) => (
           <Tag
-            key={useCase}
+            key={option}
             name="currentSpending"
             type="radio"
-            value={t(`currentSpending.${useCase}`)}
-            label={<T id={`currentSpending.${useCase}`} />}
+            value={t(`currentSpending.${option}`)}
+            label={<T id={`currentSpending.${option}`} />}
+            onClick={(event) => event.currentTarget.form?.requestSubmit()}
+          />
+        ))}
+      </TagList>
+    </section>
+  );
+}
+
+function ReferralSourceStep() {
+  const t = T.useTranslate();
+
+  const options = [
+    'searchEngine',
+    'recommendation',
+    'socialMedia',
+    'hackerNews',
+    'reddit',
+    'podcast',
+    'meetup',
+    'other',
+  ] as const;
+
+  return (
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="referralSource.title" />
+        </h1>
+      </header>
+
+      <TagList>
+        {options.map((option) => (
+          <Tag
+            key={option}
+            name="referralSource"
+            type="radio"
+            value={t(`referralSource.${option}`)}
+            label={<T id={`referralSource.${option}`} />}
             onClick={(event) => event.currentTarget.form?.requestSubmit()}
           />
         ))}
