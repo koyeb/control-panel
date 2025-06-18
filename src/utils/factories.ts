@@ -184,6 +184,7 @@ const computeDeployment = createFactory<ComputeDeployment>(() => ({
   messages: [],
   definition: deploymentDefinition(),
   definitionApi: {},
+  proxyPorts: [],
   trigger: null,
 }));
 

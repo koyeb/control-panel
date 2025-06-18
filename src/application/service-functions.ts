@@ -6,6 +6,7 @@ import {
   AppDomain,
   DatabaseDeployment,
   Deployment,
+  DeploymentProxyPort,
   DeploymentStatus,
   Instance,
   InstanceStatus,
@@ -14,7 +15,9 @@ import {
 } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { inArray } from 'src/utils/arrays';
+import { hasProperty } from 'src/utils/object';
 
+import { getConfig } from './config';
 import { getToken } from './token';
 
 export function getServiceLink(service: Service) {
@@ -29,6 +32,7 @@ export type ServiceUrl = {
   portNumber: number;
   internalUrl?: string;
   externalUrl?: string;
+  tcpProxyUrl?: string;
 };
 
 export function getServiceUrls(app: App, service: Service, deployment?: Deployment): Array<ServiceUrl> {
@@ -41,13 +45,14 @@ export function getServiceUrls(app: App, service: Service, deployment?: Deployme
       return [];
     }
 
-    return ports.map((port): ServiceUrl => {
-      return {
+    return ports.map(
+      (port): ServiceUrl => ({
         portNumber: port.portNumber,
         internalUrl: internalUrl(service, app, instanceType, port),
         externalUrl: externalUrl(firstDomain, port),
-      };
-    });
+        tcpProxyUrl: tcpProxyUrl(deployment.proxyPorts.find(hasProperty('port', port.portNumber))),
+      }),
+    );
   }
 
   if (isDatabaseDeployment(deployment) && deployment.host) {
@@ -68,6 +73,15 @@ function internalUrl(service: Service, app: App, instanceType: string, port: Por
 function externalUrl(domain: AppDomain, port: Port) {
   if (port.path !== undefined) {
     return domain.name + port.path;
+  }
+}
+
+function tcpProxyUrl(proxyPort?: DeploymentProxyPort) {
+  const { environment } = getConfig();
+  const env = environment === 'production' ? 'prod' : 'staging';
+
+  if (proxyPort !== undefined) {
+    return `${env}-glb-all-regions-direct.koyeb.app:${proxyPort.publicPort}`;
   }
 }
 

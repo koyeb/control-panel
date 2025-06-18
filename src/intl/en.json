@@ -478,6 +478,8 @@
         "externalUrlLabel": "Public URL",
         "externalUrlValueForwardedPort": "(forwarded to port {portNumber})",
         "internalUrlLabel": "Private Address",
+        "tcpProxyUrlLabel": "TCP proxy",
+        "tcpProxyUrlValueForwardedPort": "(forwarded to port {portNumber})",
         "repositoryLabel": "Repository",
         "branchLabel": "Branch",
         "commitLabel": "Commit",

@@ -1,8 +1,15 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { getConfig } from './config';
 import { setCookie } from './cookies';
 
+vi.mock('./config');
+
 describe('cookies', () => {
+  beforeEach(() => {
+    vi.mocked(getConfig).mockReturnValue({});
+  });
+
   describe('setCookie', () => {
     const cookie = vi.fn();
 
@@ -28,7 +35,7 @@ describe('cookies', () => {
     });
 
     test('domain', () => {
-      vi.stubEnv('VITE_ENVIRONMENT', 'production');
+      vi.mocked(getConfig).mockReturnValue({ environment: 'production' });
       setCookie('name', 'value');
       expect(cookie).toHaveBeenCalledWith('name=value;Domain=app.koyeb.com');
     });

@@ -1,10 +1,17 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { create } from 'src/utils/factories';
 
+import { getConfig } from './config';
 import { ServiceUrl, getServiceUrls } from './service-functions';
 
+vi.mock('./config');
+
 describe('getServiceUrls', () => {
+  beforeEach(() => {
+    vi.mocked(getConfig).mockReturnValue({});
+  });
+
   it('web service urls', () => {
     const urls = getServiceUrls(
       create.app({ name: 'app', domains: [{ id: '', name: 'test.com', type: 'CUSTOM' }] }),
@@ -52,6 +59,29 @@ describe('getServiceUrls', () => {
     );
 
     expect(urls).toEqual<ServiceUrl[]>([{ portNumber: 8000, internalUrl: 'svc.app.internal:8000' }]);
+  });
+
+  it('tcp proxy', () => {
+    vi.mocked(getConfig).mockReturnValue({ environment: 'production' });
+
+    const urls = getServiceUrls(
+      create.app({ domains: [{ id: '', name: 'app.koyeb.app', type: 'AUTOASSIGNED' }] }),
+      create.service(),
+      create.computeDeployment({
+        definition: create.deploymentDefinition({
+          ports: [{ portNumber: 8000, protocol: 'tcp', tcpProxy: true }],
+        }),
+        proxyPorts: [{ port: 8000, publicPort: 12345 }],
+      }),
+    );
+
+    expect(urls).toEqual<ServiceUrl[]>([
+      {
+        portNumber: 8000,
+        internalUrl: expect.anything() as string,
+        tcpProxyUrl: 'prod-glb-all-regions-direct.koyeb.app:12345',
+      },
+    ]);
   });
 
   it('database host', () => {

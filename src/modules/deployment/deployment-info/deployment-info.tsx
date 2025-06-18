@@ -22,6 +22,7 @@ import {
 import { DeploymentDefinitionDialog } from './deployment-definition-dialog';
 import { ExternalUrl } from './external-url';
 import { InternalUrl } from './internal-url';
+import { TcpProxyUrl } from './tcp-proxy-url';
 
 const T = createTranslate('modules.deployment.deploymentInfo');
 
@@ -55,6 +56,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
           <div className="row flex-wrap gap-x-16 gap-y-4">
             <ExternalUrl app={app} service={service} deployment={deployment} />
             <InternalUrl app={app} service={service} deployment={deployment} />
+            <TcpProxyUrl app={app} service={service} deployment={deployment} />
           </div>
         )}
       </header>

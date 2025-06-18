@@ -173,6 +173,7 @@ export type ComputeDeployment = {
   definitionApi: object;
   build?: DeploymentBuild;
   buildSkipped?: boolean;
+  proxyPorts: DeploymentProxyPort[];
   trigger:
     | InitialDeploymentTrigger
     | RedeployDeploymentTrigger
@@ -264,6 +265,7 @@ export type Port = {
   portNumber: number;
   protocol: PortProtocol;
   path?: string;
+  tcpProxy?: boolean;
 };
 
 export type PortProtocol = 'http' | 'http2' | 'tcp';
@@ -311,6 +313,11 @@ export type DockerfileBuilder = {
   command?: string;
   arguments?: string[];
   target?: string;
+};
+
+export type DeploymentProxyPort = {
+  port: number;
+  publicPort: number;
 };
 
 export type InitialDeploymentTrigger = {
