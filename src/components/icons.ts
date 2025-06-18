@@ -31,6 +31,7 @@ export { default as IconClock } from 'lucide-static/icons/clock-4.svg?react';
 export { default as IconCodeSnippet } from 'lucide-static/icons/code.svg?react';
 export { default as IconCopy } from 'lucide-static/icons/copy.svg?react';
 export { default as IconCornerDownLeft } from 'lucide-static/icons/corner-down-left.svg?react';
+export { default as IconNetwork } from 'lucide-static/icons/network.svg?react';
 export { default as IconCpu } from 'lucide-static/icons/cpu.svg?react';
 export { default as IconCreditCard } from 'lucide-static/icons/credit-card.svg?react';
 export { default as IconCrown } from 'lucide-static/icons/crown.svg?react';
