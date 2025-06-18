@@ -1,17 +1,14 @@
-import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 
-import { IconButton, useBreakpoint } from '@koyeb/design-system';
+import { IconButton } from '@koyeb/design-system';
 import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
-import { IconTrash } from 'src/components/icons';
-import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
+import { IconGlobe, IconNetwork, IconTrash } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { ServiceForm } from '../../service-form.types';
-import { useWatchServiceForm } from '../../use-service-form';
 
 const T = createTranslate('modules.serviceForm.ports');
 
@@ -23,86 +20,149 @@ type PortFieldsProps = {
 
 export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
   const { setValue } = useFormContext<ServiceForm>();
-  const port = useWatchServiceForm(`ports.${index}`);
-
-  const isMobile = !useBreakpoint('md');
-  const showLabel = isMobile || index === 0;
-
-  const hasProxyPorts = useFeatureFlag('proxy-ports');
+  const prefix = `ports.${index}` as const;
 
   return (
-    <div
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className={clsx(
-        'grid grid-cols-1 gap-4 rounded border px-6 py-5 md:border-none md:p-0',
-        hasProxyPorts ? 'md:grid-cols-[1fr_1fr_1fr_4rem_4rem_auto]' : 'md:grid-cols-[1fr_1fr_1fr_4rem_auto]',
-      )}
-    >
-      <ControlledInput<ServiceForm, `ports.${number}.portNumber`>
-        ref={(ref) => ref?.addEventListener('wheel', preventDefault, { passive: false })}
-        name={`ports.${index}.portNumber`}
-        type="number"
-        label={showLabel && <T id="portLabel" />}
-        onKeyDown={onKeyDownPositiveInteger}
-        min={1}
-        max={64999}
-        step={1}
-      />
-
-      <ControlledSelect<ServiceForm, `ports.${number}.protocol`>
-        name={`ports.${index}.protocol`}
-        label={showLabel && <T id="protocolLabel" />}
-        items={port.public ? ['http', 'http2'] : ['tcp']}
-        getKey={identity}
-        itemToString={identity}
-        itemToValue={identity}
-        renderItem={(type) =>
-          ({
-            tcp: <T id="tcp" />,
-            http: <T id="http" />,
-            http2: <T id="http2" />,
-          })[type]
-        }
-      />
-
-      {!port.public && <div />}
-
-      {port.public && (
-        <ControlledInput<ServiceForm>
-          name={`ports.${index}.path`}
-          label={showLabel && <T id="pathLabel" />}
-          helpTooltip={<T id="pathTooltip" values={{ path: port.path }} />}
+    <div className="col gap-4 rounded border px-2 py-3">
+      <div className="row items-start gap-2 sm:gap-4">
+        <ControlledInput<ServiceForm, `ports.${number}.portNumber`>
+          ref={(ref) => ref?.addEventListener('wheel', preventDefault, { passive: false })}
+          name={`${prefix}.portNumber`}
+          label={<T id="port.label" />}
+          type="number"
+          onKeyDown={onKeyDownPositiveInteger}
+          min={1}
+          max={64999}
+          step={1}
+          className="flex-1"
         />
-      )}
 
-      <ControlledSwitch
-        name={`ports.${index}.public`}
-        label={showLabel && <T id="publicLabel" />}
-        helpTooltip={<T id="publicTooltip" />}
-        onChangeEffect={(event) => {
-          if (event.target.checked) {
-            setValue(`ports.${index}.protocol`, 'http', { shouldValidate: true });
-            setValue(`ports.${index}.path`, '/', { shouldValidate: true });
-          } else {
-            setValue(`ports.${index}.protocol`, 'tcp', { shouldValidate: true });
-            setValue(`ports.${index}.path`, '', { shouldValidate: true });
+        <ControlledSelect<ServiceForm, `ports.${number}.protocol`>
+          name={`${prefix}.protocol`}
+          label={<T id="protocol.label" />}
+          items={['http', 'http2', 'tcp']}
+          getKey={identity}
+          itemToString={identity}
+          itemToValue={identity}
+          renderItem={(type) =>
+            ({
+              http: <T id="protocol.values.http" />,
+              http2: <T id="protocol.values.http2" />,
+              tcp: <T id="protocol.values.tcp" />,
+            })[type]
           }
-        }}
-      />
-
-      <FeatureFlag feature="proxy-ports">
-        <ControlledSwitch
-          name={`ports.${index}.proxy`}
-          label={showLabel && <T id="proxyLabel" />}
-          helpTooltip={<T id="proxyTooltip" />}
+          onChangeEffect={(protocol) => {
+            if (protocol === 'tcp') {
+              setValue(`${prefix}.public`, false);
+            }
+          }}
+          className="flex-1"
         />
-      </FeatureFlag>
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
-        <IconButton color="gray" Icon={IconTrash} disabled={!canRemove} onClick={onRemove}>
+        <IconButton color="gray" Icon={IconTrash} disabled={!canRemove} onClick={onRemove} className="mt-6">
           <T id="deletePort" />
         </IconButton>
+      </div>
+
+      <div className="col gap-4 sm:gap-2">
+        <PublicConfiguration index={index} />
+        <TcpProxyConfiguration index={index} />
+      </div>
+    </div>
+  );
+}
+
+function PublicConfiguration({ index }: { index: number }) {
+  const { watch } = useFormContext<ServiceForm>();
+  const prefix = `ports.${index}` as const;
+
+  return (
+    <div className="col gap-2 border-l-2 pl-3">
+      <div className="row items-center gap-2">
+        <div>
+          <IconGlobe className="size-4" />
+        </div>
+
+        <div className="col md:row gap-1 md:items-center md:gap-2">
+          <div className="whitespace-nowrap">
+            <T id="public.title" />
+          </div>
+
+          <div className="text-xs text-dim">
+            <T id="public.description" />
+          </div>
+        </div>
+
+        <div className="ml-auto">
+          <ControlledSwitch
+            name={`${prefix}.public`}
+            labelPosition="left"
+            label={<T id="public.label" />}
+            disabled={watch(`${prefix}.protocol`) === 'tcp'}
+          />
+        </div>
+      </div>
+
+      <div>
+        {watch(`${prefix}.protocol`) !== 'tcp' && (
+          <ControlledInput
+            name={`${prefix}.path`}
+            label="Path"
+            disabled={!watch(`${prefix}.public`)}
+            helperText={
+              watch(`${prefix}.public`) ? (
+                <T
+                  id="public.helperText"
+                  values={{
+                    url: (
+                      <span className="text-default">
+                        https://[subdomain].koyeb.app{watch(`${prefix}.path`)}
+                      </span>
+                    ),
+                  }}
+                />
+              ) : undefined
+            }
+          />
+        )}
+
+        {watch(`${prefix}.protocol`) === 'tcp' && (
+          <div className="rounded bg-orange/10 px-2 py-1 text-orange">
+            <T id="public.disabledTcp" />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TcpProxyConfiguration({ index }: { index: number }) {
+  const prefix = `ports.${index}` as const;
+
+  return (
+    <div className="col gap-2 border-l-2 pl-4">
+      <div className="row items-center gap-2">
+        <div>
+          <IconNetwork className="size-4" />
+        </div>
+
+        <div className="col md:row gap-1 md:items-center md:gap-2">
+          <div className="whitespace-nowrap">
+            <T id="tcpProxy.title" />
+          </div>
+
+          <div className="text-xs text-dim">
+            <T id="tcpProxy.description" />
+          </div>
+        </div>
+
+        <div className="ml-auto">
+          <ControlledSwitch name={`${prefix}.proxy`} labelPosition="left" label={<T id="tcpProxy.label" />} />
+        </div>
+      </div>
+
+      <div className="text-xs text-dim">
+        <T id="tcpProxy.helperText" />
       </div>
     </div>
   );
