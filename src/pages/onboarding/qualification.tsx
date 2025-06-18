@@ -1,6 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
+import omit from 'lodash-es/omit';
+import { useMemo } from 'react';
+import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
 import { Stepper } from '@koyeb/design-system';
 import { api } from 'src/api/api';
@@ -54,6 +56,7 @@ export function Qualification() {
 
   const form = useForm<QualificationFormType>({
     defaultValues: {
+      primaryUseCase: [],
       step: user.githubUser ? 'fullName' : 'usage',
     },
   });
@@ -84,24 +87,29 @@ export function Qualification() {
         body: { signup_qualification: values as Record<string, never> },
       });
 
-      try {
-        for (const str of form.invites?.split(',') ?? []) {
-          const email = str.trim();
-
-          if (email !== '') {
-            await api.sendInvitation({ token, body: { email } });
-          }
+      for (const email of form.invites?.split(/[ ,]/) ?? []) {
+        if (email === '') {
+          continue;
         }
-      } catch (error) {
-        if (hasMessage(error)) {
-          notify.error(error.message);
+
+        try {
+          await api.sendInvitation({ token, body: { email } });
+        } catch (error) {
+          if (hasMessage(error)) {
+            notify.error(error.message);
+          }
         }
       }
     },
     async onSuccess(_, values) {
       await invalidate('getCurrentUser');
       await invalidate('getCurrentOrganization');
-      track('Form Submitted', { category: 'User Qualification', action: 'Clicked', ...values });
+
+      track('Form Submitted', {
+        category: 'User Qualification',
+        action: 'Clicked',
+        ...omit(values, 'step', 'invites'),
+      });
 
       if (organization.trial) {
         openDialog('TrialWelcome');
@@ -415,6 +423,10 @@ function SendInvitesStep() {
         placeholder={t('sendInvites.placeholder')}
         className="bg-neutral"
       />
+
+      <AuthButton type="submit" className="self-start">
+        <T id="sendInvites.submit" />
+      </AuthButton>
     </section>
   );
 }
@@ -423,11 +435,34 @@ function TagList({ children }: { children: React.ReactNode }) {
   return <div className="row flex-wrap gap-2">{children}</div>;
 }
 
-function Tag({
-  label,
-  ...props
-}: Extend<React.ComponentProps<'input'>, { name: string; label: React.ReactNode }>) {
-  const { field } = useController({ name: props.name });
+type TagProps = Extend<
+  React.ComponentProps<'input'>,
+  { name: FieldPath<QualificationFormType>; label: React.ReactNode }
+>;
+
+function Tag({ name, label, ...props }: TagProps) {
+  const { field } = useController({ name });
+
+  const checked = useMemo(() => {
+    if (props.type === 'checkbox') return field.value.includes(props.value);
+    if (props.type === 'radio') return field.value === props.value;
+  }, [props.type, props.value, field.value]);
+
+  const handleChange = () => {
+    const { type, value } = props;
+
+    if (type === 'radio') {
+      field.onChange(value);
+    }
+
+    if (type === 'checkbox') {
+      if (field.value?.includes(value)) {
+        field.onChange(field.value?.filter((v: unknown) => v !== value));
+      } else {
+        field.onChange([...(field.value ?? []), value]);
+      }
+    }
+  };
 
   return (
     <label
@@ -436,7 +471,7 @@ function Tag({
         'has-[:checked]:border-green has-[:checked]:bg-green/10 has-[:checked]:text-green',
       )}
     >
-      <input {...field} {...props} className="sr-only" />
+      <input {...props} {...field} checked={checked} onChange={handleChange} className="sr-only" />
       {label}
     </label>
   );
