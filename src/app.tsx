@@ -48,17 +48,6 @@ export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
-  const loading = [
-    //
-    userQuery.isPending,
-    organizationQuery.isPending,
-    useOrganizationContextParam(),
-  ].some(Boolean);
-
-  if (loading) {
-    return <LogoLoading />;
-  }
-
   if (
     isAccountLockedError(userQuery.error) ||
     isAccountLockedError(organizationQuery.error) ||
@@ -80,6 +69,7 @@ function AuthenticatedRoutes() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
+  const switchingOrganization = useOrganizationContextParam();
   const onboardingStep = useOnboardingStep();
   const trial = useTrial();
 
@@ -110,6 +100,10 @@ function AuthenticatedRoutes() {
     if (!isApiNotFoundError(error)) {
       throw error;
     }
+  }
+
+  if (userQuery.isPending || organizationQuery.isPending || switchingOrganization) {
+    return <LogoLoading />;
   }
 
   if (confirmDeactivateOrganization) {
@@ -204,9 +198,15 @@ function useOrganizationContextParam() {
       path: { id: organizationId },
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
-    async onSuccess({ token }) {
-      setToken(token!.id!);
-      await invalidate('getCurrentOrganization');
+    async onSuccess(result) {
+      const token = result.token!.id!;
+
+      setToken(token);
+
+      await Promise.all([
+        invalidate('getCurrentUser', { token }),
+        invalidate('getCurrentOrganization', { token }),
+      ]);
     },
     onSettled() {
       setOrganizationIdParam(null);

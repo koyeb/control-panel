@@ -136,11 +136,7 @@ export function useRefreshToken() {
   useEffect(() => {
     const expires = token ? jwtExpires(token) : undefined;
 
-    if (expires === undefined) {
-      return;
-    }
-
-    if (isAfter(new Date(), sub(expires, { hours: 12 }))) {
+    if (expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
       mutate();
     }
   }, [pathname, token, mutate]);
@@ -149,9 +145,7 @@ export function useRefreshToken() {
 function jwtExpires(jwt: string) {
   const { exp } = jwtDecode(jwt);
 
-  if (exp === undefined) {
-    return;
+  if (exp !== undefined) {
+    return new Date(exp * 1000);
   }
-
-  return new Date(exp * 1000);
 }

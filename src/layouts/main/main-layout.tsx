@@ -226,7 +226,7 @@ function usePageContext() {
   const user = useUser();
   const { pageContextBaseUrl } = getConfig();
 
-  const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
+  const enabled = Boolean(pageContextBaseUrl !== undefined && user.flags.includes('ADMIN'));
   const [expanded = false, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
 
   return {
