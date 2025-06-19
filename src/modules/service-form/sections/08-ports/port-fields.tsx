@@ -34,6 +34,7 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
           ref={(ref) => ref?.addEventListener('wheel', preventDefault, { passive: false })}
           name={`${prefix}.portNumber`}
           label={<T id="port.label" />}
+          labelPosition="left"
           type="number"
           onKeyDown={onKeyDownPositiveInteger}
           min={1}
@@ -45,6 +46,7 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
         <ControlledSelect<ServiceForm, `ports.${number}.protocol`>
           name={`${prefix}.protocol`}
           label={<T id="protocol.label" />}
+          labelPosition="left"
           items={['http', 'http2', 'tcp']}
           getKey={identity}
           itemToString={identity}
@@ -64,12 +66,12 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
           className="flex-1"
         />
 
-        <IconButton color="gray" Icon={IconTrash} disabled={!canRemove} onClick={onRemove} className="mt-6">
+        <IconButton color="gray" Icon={IconTrash} disabled={!canRemove} onClick={onRemove}>
           <T id="deletePort" />
         </IconButton>
       </div>
 
-      <footer className="row items-center gap-4 bg-muted px-3 py-2">
+      <footer className={clsx('row items-center gap-4 bg-muted px-3 py-2', !configure && 'rounded-b')}>
         <ProtocolEnabled protocol="tcp" enabled={watch(`ports.${index}.proxy`)} />
         <ProtocolEnabled protocol="http" enabled={watch(`ports.${index}.public`)} />
 
@@ -142,6 +144,7 @@ function PublicConfiguration({ index }: { index: number }) {
           <ControlledInput
             name={`${prefix}.path`}
             label="Path"
+            labelPosition="left"
             disabled={!watch(`${prefix}.public`)}
             helperText={watch(`${prefix}.public`) ? <T id="public.helperText" values={{ url }} /> : undefined}
           />
