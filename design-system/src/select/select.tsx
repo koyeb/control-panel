@@ -14,6 +14,7 @@ type SelectProps<Item> = {
   open?: boolean;
   size?: 1 | 2 | 3;
   label?: React.ReactNode;
+  labelPosition?: 'top' | 'left';
   helpTooltip?: React.ReactNode;
   helperText?: React.ReactNode;
   error?: React.ReactNode;
@@ -43,6 +44,7 @@ export function Select<Item>({
   open,
   size = 2,
   label,
+  labelPosition,
   helpTooltip,
   helperText,
   error,
@@ -126,6 +128,7 @@ export function Select<Item>({
           {label}
         </FieldLabel>
       }
+      labelPosition={labelPosition}
       helperText={
         <FieldHelperText id={helperTextId} invalid={invalid}>
           {error ?? helperText}
