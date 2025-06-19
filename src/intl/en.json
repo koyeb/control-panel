@@ -1264,6 +1264,16 @@
         "expandedTitle": "Configure ports",
         "info": "Configure the ports and protocols required by your services",
         "noPorts": "No ports configured",
+        "configure": "Configure",
+        "close": "Close",
+        "publicTcp": {
+          "enabled": "Public TCP access enabled",
+          "disabled": "Public TCP access disabled"
+        },
+        "publicHttp": {
+          "enabled": "Public HTTP path enabled",
+          "disabled": "Public HTTP path disabled"
+        },
         "port": {
           "label": "Port"
         },
@@ -1280,15 +1290,15 @@
           "tooltip": "Your service will be publicly accessible at https://[subdomain].koyeb.app{path}. Requests will be sent to the port you selected and load-balanced between your instances."
         },
         "public": {
-          "title": "Public access",
-          "description": "Expose the HTTP port to the Internet on a specific path",
+          "title": "HTTP path",
+          "description": "Expose the HTTP port to the internet on a specific path",
           "label": "Enable",
           "helperText": "Will be publicly accessible at: {url}",
           "disabledTcp": "Public access HTTP blabla needs protocol HTTP"
         },
         "tcpProxy": {
           "title": "Public TCP access",
-          "description": "Allow connections over the Internet using a proxy domain and TCP port",
+          "description": "Expose the TCP port through proxy domain and port",
           "label": "Enable",
           "helperText": "Helper text tcp use case"
         },

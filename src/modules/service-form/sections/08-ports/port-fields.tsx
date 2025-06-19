@@ -1,12 +1,15 @@
+import clsx from 'clsx';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { IconButton } from '@koyeb/design-system';
+import { Button, Collapse, IconButton } from '@koyeb/design-system';
 import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
-import { IconGlobe, IconNetwork, IconTrash } from 'src/components/icons';
+import { IconCircleCheck, IconCircleOff, IconGlobe, IconNetwork, IconTrash } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
+import { capitalize } from 'src/utils/strings';
 
 import { ServiceForm } from '../../service-form.types';
 
@@ -19,12 +22,14 @@ type PortFieldsProps = {
 };
 
 export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
-  const { setValue } = useFormContext<ServiceForm>();
+  const [configure, setConfigure] = useState(false);
+  const { watch, setValue } = useFormContext<ServiceForm>();
+
   const prefix = `ports.${index}` as const;
 
   return (
-    <div className="col gap-4 rounded border px-2 py-3">
-      <div className="row items-start gap-2 sm:gap-4">
+    <div className="rounded border">
+      <div className="row items-start gap-4 p-3">
         <ControlledInput<ServiceForm, `ports.${number}.portNumber`>
           ref={(ref) => ref?.addEventListener('wheel', preventDefault, { passive: false })}
           name={`${prefix}.portNumber`}
@@ -64,10 +69,37 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
         </IconButton>
       </div>
 
-      <div className="col gap-4 sm:gap-2">
-        <PublicConfiguration index={index} />
-        <TcpProxyConfiguration index={index} />
-      </div>
+      <footer className="row items-center gap-4 bg-muted px-3 py-2">
+        <ProtocolEnabled protocol="tcp" enabled={watch(`ports.${index}.proxy`)} />
+        <ProtocolEnabled protocol="http" enabled={watch(`ports.${index}.public`)} />
+
+        <Button
+          color="gray"
+          variant="outline"
+          onClick={() => setConfigure(!configure)}
+          className="ml-auto bg-neutral hover:bg-neutral"
+        >
+          <T id={configure ? 'close' : 'configure'} />
+        </Button>
+      </footer>
+
+      <Collapse open={configure}>
+        <div className="col gap-4 p-3">
+          <PublicConfiguration index={index} />
+          <TcpProxyConfiguration index={index} />
+        </div>
+      </Collapse>
+    </div>
+  );
+}
+
+function ProtocolEnabled({ protocol, enabled }: { protocol: 'http' | 'tcp'; enabled: boolean }) {
+  const Icon = enabled ? IconCircleCheck : IconCircleOff;
+
+  return (
+    <div className={clsx('row items-center gap-1', enabled ? 'text-green' : 'text-dim')}>
+      <Icon className="size-4" />
+      <T id={`public${capitalize(protocol)}.${enabled ? 'enabled' : 'disabled'}`} />
     </div>
   );
 }
@@ -76,8 +108,10 @@ function PublicConfiguration({ index }: { index: number }) {
   const { watch } = useFormContext<ServiceForm>();
   const prefix = `ports.${index}` as const;
 
+  const url = <span className="text-default">https://[subdomain].koyeb.app{watch(`${prefix}.path`)}</span>;
+
   return (
-    <div className="col gap-2 border-l-2 pl-3">
+    <div className="col gap-2">
       <div className="row items-center gap-2">
         <div>
           <IconGlobe className="size-4" />
@@ -109,20 +143,7 @@ function PublicConfiguration({ index }: { index: number }) {
             name={`${prefix}.path`}
             label="Path"
             disabled={!watch(`${prefix}.public`)}
-            helperText={
-              watch(`${prefix}.public`) ? (
-                <T
-                  id="public.helperText"
-                  values={{
-                    url: (
-                      <span className="text-default">
-                        https://[subdomain].koyeb.app{watch(`${prefix}.path`)}
-                      </span>
-                    ),
-                  }}
-                />
-              ) : undefined
-            }
+            helperText={watch(`${prefix}.public`) ? <T id="public.helperText" values={{ url }} /> : undefined}
           />
         )}
 
@@ -140,7 +161,7 @@ function TcpProxyConfiguration({ index }: { index: number }) {
   const prefix = `ports.${index}` as const;
 
   return (
-    <div className="col gap-2 border-l-2 pl-4">
+    <div className="col gap-2">
       <div className="row items-center gap-2">
         <div>
           <IconNetwork className="size-4" />
