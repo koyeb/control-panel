@@ -26,9 +26,9 @@ const T = createTranslate('pages.onboarding.qualification');
 type Step = 'fullName' | 'usage' | 'primaryUseCase' | 'currentSpending' | 'referralSource' | 'sendInvites';
 type Usage = 'personal' | 'education' | 'professional';
 // prettier-ignore
-type Occupation = 'founder' | 'cto' | 'devops'  | 'softwareEngineer' | 'engineeringManager' | 'freelancer' | 'hobbyist' | 'student' | 'teacher' | 'other';
+type Occupation = 'founder' | 'cto' | 'devops'  | 'softwareEngineer' | 'engineeringManager' | 'freelancer' | 'hobbyist' | 'student' | 'teacher' | 'aiEngineer' | 'mlEngineer' | 'dataEngineer' | 'dataScientist' | 'researchEngineer' | 'other';
 // prettier-ignore
-type PrimaryUseCase = 'ai' | 'training' | 'inference' | 'video' | 'web' | 'api' | 'company' | 'blog' | 'personal' | 'school' | 'bot' | 'other';
+type PrimaryUseCase = 'ai' | 'rag' | 'embeddingService' | 'computerVision' | 'audioProcessing' | 'deployCustomModel' | 'training' | 'llmInference' | 'diffusion' | 'video' | 'web' | 'api' | 'nlp' | 'company' | 'blog' | 'personal' | 'school' | 'bot' | 'other';
 type CurrentSpending = 'lessThan500' | '500To2000' | '2000To10000' | 'moreThan10000';
 // prettier-ignore
 type ReferralSource = 'searchEngine' | 'recommendation' | 'socialMedia' | 'hackerNews' | 'reddit' | 'podcast' | 'meetup' | 'other';
@@ -240,10 +240,6 @@ function UsageStep() {
         <h1 className="text-3xl font-semibold">
           <T id="usage.title" />
         </h1>
-
-        <p className="text-dim">
-          <T id="usage.description" />
-        </p>
       </header>
 
       <TagList>
@@ -261,9 +257,9 @@ function OccupationStep() {
 
   // prettier-ignore
   const options: Record<Usage, Occupation[]> = {
-    personal:     ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'hobbyist', 'other'],
+    personal:     ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'aiEngineer', 'mlEngineer', 'dataEngineer', 'dataScientist', 'researchEngineer', 'student', 'teacher', 'hobbyist', 'other'],
     education:    ['student', 'teacher', 'other'],
-    professional: ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'other'],
+    professional: ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'aiEngineer', 'mlEngineer', 'dataEngineer', 'dataScientist', 'researchEngineer', 'other'],
   };
 
   return (
@@ -300,9 +296,9 @@ function PrimaryUseCaseStep() {
 
   // prettier-ignore
   const options: Record<Usage, PrimaryUseCase[]> = {
-    personal:     ['ai', 'training', 'inference', 'video', 'web', 'api', 'blog', 'personal', 'school', 'bot', 'other'],
-    education:    ['ai', 'training', 'inference', 'video', 'web', 'api', 'blog', 'personal', 'school', 'bot', 'other'],
-    professional: ['ai', 'training', 'inference', 'video', 'web', 'api', 'blog', 'company', 'bot', 'other'],
+    personal:     ['ai', 'rag', 'embeddingService', 'computerVision', 'audioProcessing', 'deployCustomModel', 'training', 'llmInference', 'diffusion', 'video', 'web', 'api', 'nlp', 'company', 'blog', 'personal', 'school', 'bot', 'other'],
+    education:    ['ai', 'rag', 'embeddingService', 'computerVision', 'audioProcessing', 'deployCustomModel', 'training', 'llmInference', 'diffusion', 'video', 'web', 'api', 'nlp', 'company', 'blog', 'personal', 'school', 'bot', 'other'],
+    professional: ['ai', 'rag', 'embeddingService', 'computerVision', 'audioProcessing', 'deployCustomModel', 'training', 'llmInference', 'diffusion', 'video', 'web', 'api', 'nlp', 'company', 'blog', 'personal', 'school', 'bot', 'other'],
   };
 
   return (
