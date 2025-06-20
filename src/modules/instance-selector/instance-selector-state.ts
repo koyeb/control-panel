@@ -142,7 +142,10 @@ export function instanceSelector(
       filteredRegions.includes(region),
     );
 
-    if (updates.selectedInstance !== undefined || nextState.selectedRegions.length === 0) {
+    if (
+      updates.selectedInstance !== undefined ||
+      (nextState.selectedRegions.length === 0 && !updates.selectedRegions)
+    ) {
       const selectDefaultRegion = (scope: RegionScope) => {
         const regions = filterRegions(scope, nextState.selectedInstance);
         let defaultRegion = getDefaultRegion(regions, nextState.selectedInstance ?? undefined);
