@@ -25,6 +25,7 @@ export const api = {
   getIntercomUserHash: endpoint('get', '/v1/intercom/profile'),
   resendValidationEmail: endpoint('post', '/v1/account/resend_validation'),
   validateAccount: endpoint('post', '/v1/account/validate/{id}'),
+  getIdenfyToken: endpoint('get', '/v1/account/idenfy'),
   resetPassword: endpoint('post', '/v1/account/reset_password'),
   updatePassword: endpoint('post', '/v1/account/update_password'),
   updateUser: endpoint('patch', '/v1/account/profile'),
