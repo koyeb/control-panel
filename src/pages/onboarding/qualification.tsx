@@ -1,106 +1,115 @@
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
+import omit from 'lodash-es/omit';
+import { useMemo } from 'react';
+import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { Button, Stepper } from '@koyeb/design-system';
+import { Stepper } from '@koyeb/design-system';
 import { api } from 'src/api/api';
+import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { useToken } from 'src/application/token';
-import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
-import { IconArrowRight } from 'src/components/icons';
-import { handleSubmit } from 'src/hooks/form';
-import { createTranslate, Translate } from 'src/intl/translate';
-import { identity } from 'src/utils/generic';
+import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
+import { createTranslate } from 'src/intl/translate';
+import { defined } from 'src/utils/assert';
+import { Extend } from 'src/utils/types';
+
+import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.qualification');
 
-export function Qualification() {
-  const user = useUser();
-
-  return (
-    <section className="col w-full max-w-xl gap-6">
-      <Stepper totalSteps={3} activeStep={3} />
-
-      <div>
-        <h1 className="typo-heading mb-1">
-          <T id="title" />
-        </h1>
-        <p className="text-dim">
-          <T id="line1" values={{ email: user.email }} />
-        </p>
-      </div>
-
-      <QualificationForm />
-    </section>
-  );
-}
+type Step = 'fullName' | 'usage' | 'primaryUseCase' | 'currentSpending' | 'referralSource' | 'sendInvites';
+type Usage = 'personal' | 'education' | 'professional';
+// prettier-ignore
+type Occupation = 'founder' | 'cto' | 'devops'  | 'softwareEngineer' | 'engineeringManager' | 'freelancer' | 'hobbyist' | 'student' | 'teacher' | 'aiEngineer' | 'mlEngineer' | 'dataEngineer' | 'dataScientist' | 'researchEngineer' | 'other';
+// prettier-ignore
+type PrimaryUseCase = 'ai' | 'rag' | 'embeddingService' | 'computerVision' | 'audioProcessing' | 'deployCustomModel' | 'training' | 'llmInference' | 'diffusion' | 'video' | 'web' | 'api' | 'nlp' | 'company' | 'blog' | 'personal' | 'school' | 'bot' | 'other';
+type CurrentSpending = 'lessThan500' | '500To2000' | '2000To10000' | 'moreThan10000';
+// prettier-ignore
+type ReferralSource = 'searchEngine' | 'recommendation' | 'socialMedia' | 'hackerNews' | 'reddit' | 'podcast' | 'meetup' | 'other';
 
 type QualificationFormType = {
-  version: number;
   fullName?: string;
-  usage?: 'personal' | 'education' | 'professional';
-  companyName?: string;
-  occupation?: string;
-  currentSpending?: string;
-  primaryUseCase?: string;
-  primaryLanguage?: string;
-  referralSource?: string;
+  step: Step;
+  usage?: Usage;
+  occupation?: Occupation;
+  primaryUseCase?: PrimaryUseCase[];
+  currentSpending?: CurrentSpending;
+  referralSource?: ReferralSource;
+  invites?: string;
 };
 
-function QualificationForm() {
+export function Qualification() {
+  const user = useUser();
   const organization = useOrganization();
+
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
+
   const track = useTrackEvent();
   const openDialog = Dialog.useOpen();
 
   const form = useForm<QualificationFormType>({
     defaultValues: {
-      version: 2,
-      fullName: '',
-      companyName: '',
-      occupation: '',
-      currentSpending: '',
-      primaryUseCase: '',
-      primaryLanguage: '',
-      referralSource: '',
+      primaryUseCase: [],
+      step: user.githubUser ? 'fullName' : 'usage',
     },
   });
 
   const mutation = useMutation({
-    async mutationFn({ fullName, ...rest }: QualificationFormType) {
-      if (fullName !== '') {
+    async mutationFn(form: QualificationFormType) {
+      if (form.fullName !== '') {
         await api.updateUser({
           token,
-          body: { name: fullName },
+          body: { name: form.fullName },
           query: {},
         });
       }
 
       const values: Record<string, unknown> = {
-        ...rest,
+        version: 3,
+        usage: form.usage,
+        occupation: form.occupation,
+        currentSpending: form.currentSpending,
+        primaryUseCase: form.primaryUseCase,
+        referralSource: form.referralSource,
         submittedAt: new Date().toISOString(),
       };
-
-      for (const key in values) {
-        if (values[key] === '') {
-          delete values[key];
-        }
-      }
 
       await api.updateSignupQualification({
         token,
         path: { id: organization.id },
         body: { signup_qualification: values as Record<string, never> },
       });
+
+      for (const email of form.invites?.split(/[ ,]/) ?? []) {
+        if (email === '') {
+          continue;
+        }
+
+        try {
+          await api.sendInvitation({ token, body: { email } });
+        } catch (error) {
+          if (hasMessage(error)) {
+            notify.error(error.message);
+          }
+        }
+      }
     },
     async onSuccess(_, values) {
       await invalidate('getCurrentUser');
       await invalidate('getCurrentOrganization');
-      track('Form Submitted', { category: 'User Qualification', action: 'Clicked', ...values });
+
+      track('Form Submitted', {
+        category: 'User Qualification',
+        action: 'Clicked',
+        ...omit(values, 'step', 'invites'),
+      });
 
       if (organization.trial) {
         openDialog('TrialWelcome');
@@ -108,278 +117,358 @@ function QualificationForm() {
     },
   });
 
+  const steps: Step[] = ['usage', 'primaryUseCase'];
+  const step = form.watch('step');
+
+  if (user.githubUser) {
+    steps.unshift('fullName');
+  }
+
+  if (form.watch('usage') === 'professional') {
+    steps.push('currentSpending');
+  }
+
+  steps.push('referralSource');
+
+  if (['pro', 'scale', 'enterprise'].includes(organization.plan)) {
+    steps.push('sendInvites');
+  }
+
+  const handleSubmit = (values: QualificationFormType) => {
+    const nextStep = steps.at(steps.indexOf(values.step) + 1);
+
+    if (nextStep) {
+      form.setValue('step', nextStep);
+    } else {
+      mutation.mutate(values);
+    }
+  };
+
   return (
-    <FormProvider {...form}>
-      <form className="col gap-6" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
-        <FullNameField />
-        <UsageField />
-        <CompanyNameField />
-        <OccupationField />
-        <CurrentSpendingField />
-        <PrimaryUseCaseField />
-        <PrimaryLanguageField />
-        <ReferralSourceField />
-        <Button
-          type="submit"
-          disabled={!form.formState.isValid}
-          loading={form.formState.isSubmitting}
-          className="self-end"
+    <>
+      <section className="row mb-8 flex-wrap gap-6 lg:justify-between">
+        <LogoKoyeb className="me-auto h-8 lg:hidden" />
+
+        <Stepper activeStep={steps.indexOf(step)} totalSteps={steps.length + 1} />
+
+        <AuthButton
+          onClick={() => handleSubmit(form.getValues())}
+          className={clsx('border border-strong bg-neutral !text-default hover:bg-neutral', {
+            invisible: step === 'fullName' || step === 'usage',
+          })}
         >
-          <Translate id="common.next" />
-          <IconArrowRight />
-        </Button>
+          <T id="skip" />
+        </AuthButton>
+      </section>
+
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="col flex-1 justify-center gap-8">
+        <FormProvider {...form}>
+          <QualificationStep />
+        </FormProvider>
       </form>
-    </FormProvider>
+
+      <div className="min-h-12" />
+    </>
   );
 }
 
-function FullNameField() {
-  const user = useUser();
+function QualificationStep() {
+  const form = useFormContext<QualificationFormType>();
+  const step = form.watch('step');
 
-  if (user.githubUser === '') {
-    return null;
+  if (step === 'fullName') {
+    return <FullNameStep />;
   }
 
-  return <ControlledInput required name="fullName" label={<T id="fullName.label" />} />;
+  if (step === 'usage') {
+    return (
+      <>
+        <UsageStep />
+        {form.watch('usage') !== undefined && <OccupationStep />}
+      </>
+    );
+  }
+
+  if (step === 'primaryUseCase') {
+    return <PrimaryUseCaseStep />;
+  }
+
+  if (step === 'currentSpending') {
+    return <CurrentSpendingStep />;
+  }
+
+  if (step === 'referralSource') {
+    return <ReferralSourceStep />;
+  }
+
+  if (step === 'sendInvites') {
+    return <SendInvitesStep />;
+  }
+
+  return null;
 }
 
-function UsageField() {
-  const t = T.useTranslate();
-  const { resetField } = useFormContext<QualificationFormType>();
+function FullNameStep() {
+  return (
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="fullName.title" />
+        </h1>
 
-  const options = {
-    personal: t('usage.personal'),
-    education: t('usage.education'),
-    professional: t('usage.professional'),
-  };
+        <p className="text-dim">
+          <T id="fullName.description" />
+        </p>
+      </header>
 
-  const { field, fieldState } = useController<QualificationFormType, 'usage'>({
-    name: 'usage',
-    rules: { required: true },
-  });
+      <ControlledInput name="fullName" required />
 
-  const handleChange = (option: string) => {
-    field.onChange(option);
-    resetField('companyName');
-    resetField('occupation');
-    resetField('primaryUseCase');
-  };
+      <AuthButton type="submit" className="self-start">
+        <T id="continue" />
+      </AuthButton>
+    </section>
+  );
+}
+
+function UsageStep() {
+  const usages: Usage[] = ['personal', 'education', 'professional'];
 
   return (
-    <div className="col gap-2">
-      <div>
-        <T id="usage.label" />
-      </div>
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="usage.title" />
+        </h1>
+      </header>
 
-      <div role="radiogroup" className="row gap-2">
-        {Object.entries(options).map(([option, label]) => (
-          <div
-            key={option}
-            role="radio"
-            className={clsx(
-              'cursor-pointer rounded-md border px-3 py-2',
-              field.value === option && 'border-green',
-            )}
-            onClick={() => handleChange(option)}
-          >
-            {label}
-          </div>
+      <TagList>
+        {usages.map((usage) => (
+          <Tag key={usage} name="usage" type="radio" value={usage} label={<T id={`usage.${usage}`} />} />
         ))}
-      </div>
-
-      {fieldState.error?.type === 'required' && (
-        <div className="text-xs text-red">
-          <T id="usage.required" />
-        </div>
-      )}
-    </div>
+      </TagList>
+    </section>
   );
 }
 
-function CompanyNameField() {
-  const usage = useWatch<QualificationFormType, 'usage'>({ name: 'usage' });
-
-  if (usage !== 'professional') {
-    return null;
-  }
-
-  return <ControlledInput required name="companyName" label={<T id="companyName.label" />} />;
-}
-
-function OccupationField() {
+function OccupationStep() {
   const t = T.useTranslate();
-
   const usage = useWatch<QualificationFormType, 'usage'>({ name: 'usage' });
 
-  const options = {
-    personal: [
-      t('occupation.founder'),
-      t('occupation.cto'),
-      t('occupation.devops'),
-      t('occupation.software'),
-      t('occupation.engineering'),
-      t('occupation.freelancer'),
-      t('occupation.hobbyist'),
-      t('occupation.other'),
-    ],
-    education: [
-      //
-      t('occupation.student'),
-      t('occupation.teacher'),
-      t('occupation.other'),
-    ],
-    professional: [
-      t('occupation.founder'),
-      t('occupation.cto'),
-      t('occupation.devops'),
-      t('occupation.software'),
-      t('occupation.engineering'),
-      t('occupation.freelancer'),
-      t('occupation.other'),
-    ],
+  // prettier-ignore
+  const options: Record<Usage, Occupation[]> = {
+    personal:     ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'aiEngineer', 'mlEngineer', 'dataEngineer', 'dataScientist', 'researchEngineer', 'student', 'teacher', 'hobbyist', 'other'],
+    education:    ['student', 'teacher', 'other'],
+    professional: ['founder', 'cto', 'devops', 'softwareEngineer', 'engineeringManager', 'freelancer', 'aiEngineer', 'mlEngineer', 'dataEngineer', 'dataScientist', 'researchEngineer', 'other'],
   };
 
   return (
-    <ControlledSelect
-      name="occupation"
-      label={<T id="occupation.label" />}
-      items={usage ? options[usage] : []}
-      getKey={identity}
-      itemToString={identity}
-      itemToValue={identity}
-      renderItem={identity}
-    />
+    <section className="col mt-20 gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="occupation.title" />
+        </h1>
+
+        <p className="text-dim">
+          <T id="occupation.description" />
+        </p>
+      </header>
+
+      <TagList>
+        {options[defined(usage)].map((occupation) => (
+          <Tag
+            key={occupation}
+            name="occupation"
+            type="radio"
+            value={t(`occupation.${occupation}`)}
+            label={<T id={`occupation.${occupation}`} />}
+            onClick={(event) => event.currentTarget.form?.requestSubmit()}
+          />
+        ))}
+      </TagList>
+    </section>
   );
 }
 
-function CurrentSpendingField() {
+function PrimaryUseCaseStep() {
   const t = T.useTranslate();
-
   const usage = useWatch<QualificationFormType, 'usage'>({ name: 'usage' });
 
-  if (usage !== 'professional') {
-    return null;
-  }
-
-  const options = [
-    t('currentSpending.lessThan500'),
-    t('currentSpending.500To2000'),
-    t('currentSpending.2000To10000'),
-    t('currentSpending.moreThan10000'),
-  ];
+  // prettier-ignore
+  const options: Record<Usage, PrimaryUseCase[]> = {
+    personal:     ['ai', 'rag', 'embeddingService', 'computerVision', 'audioProcessing', 'deployCustomModel', 'training', 'llmInference', 'diffusion', 'video', 'web', 'api', 'nlp', 'company', 'blog', 'personal', 'school', 'bot', 'other'],
+    education:    ['ai', 'rag', 'embeddingService', 'computerVision', 'audioProcessing', 'deployCustomModel', 'training', 'llmInference', 'diffusion', 'video', 'web', 'api', 'nlp', 'company', 'blog', 'personal', 'school', 'bot', 'other'],
+    professional: ['ai', 'rag', 'embeddingService', 'computerVision', 'audioProcessing', 'deployCustomModel', 'training', 'llmInference', 'diffusion', 'video', 'web', 'api', 'nlp', 'company', 'blog', 'personal', 'school', 'bot', 'other'],
+  };
 
   return (
-    <ControlledSelect
-      name="currentSpending"
-      label={<T id="currentSpending.label" />}
-      items={options}
-      getKey={identity}
-      itemToString={identity}
-      itemToValue={identity}
-      renderItem={identity}
-    />
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="primaryUseCase.title" />
+        </h1>
+
+        <p className="text-dim">
+          <T id="primaryUseCase.description" />
+        </p>
+      </header>
+
+      <TagList>
+        {options[defined(usage)].map((useCase) => (
+          <Tag
+            key={useCase}
+            name="primaryUseCase"
+            type="checkbox"
+            value={t(`primaryUseCase.${useCase}`)}
+            label={<T id={`primaryUseCase.${useCase}`} />}
+          />
+        ))}
+      </TagList>
+
+      <AuthButton type="submit" className="self-start">
+        <T id="continue" />
+      </AuthButton>
+    </section>
   );
 }
 
-function PrimaryUseCaseField() {
+function CurrentSpendingStep() {
   const t = T.useTranslate();
-
-  const usage = useWatch<QualificationFormType, 'usage'>({ name: 'usage' });
-
-  const nonProfessionalUsageOptions = [
-    t('primaryUseCase.ai'),
-    t('primaryUseCase.training'),
-    t('primaryUseCase.inference'),
-    t('primaryUseCase.video'),
-    t('primaryUseCase.web'),
-    t('primaryUseCase.api'),
-    t('primaryUseCase.blog'),
-    t('primaryUseCase.personal'),
-    t('primaryUseCase.school'),
-    t('primaryUseCase.bot'),
-    t('primaryUseCase.other'),
-  ];
-
-  const professionalUsageOptions = [
-    t('primaryUseCase.ai'),
-    t('primaryUseCase.training'),
-    t('primaryUseCase.inference'),
-    t('primaryUseCase.video'),
-    t('primaryUseCase.web'),
-    t('primaryUseCase.api'),
-    t('primaryUseCase.company'),
-    t('primaryUseCase.blog'),
-    t('primaryUseCase.other'),
-  ];
+  const options = ['lessThan500', '500To2000', '2000To10000', 'moreThan10000'] as const;
 
   return (
-    <ControlledSelect
-      name="primaryUseCase"
-      label={<T id="primaryUseCase.label" />}
-      items={usage === 'professional' ? professionalUsageOptions : nonProfessionalUsageOptions}
-      getKey={identity}
-      itemToString={identity}
-      itemToValue={identity}
-      renderItem={identity}
-    />
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="currentSpending.title" />
+        </h1>
+      </header>
+
+      <TagList>
+        {options.map((option) => (
+          <Tag
+            key={option}
+            name="currentSpending"
+            type="radio"
+            value={t(`currentSpending.${option}`)}
+            label={<T id={`currentSpending.${option}`} />}
+            onClick={(event) => event.currentTarget.form?.requestSubmit()}
+          />
+        ))}
+      </TagList>
+    </section>
   );
 }
 
-function PrimaryLanguageField() {
+function ReferralSourceStep() {
   const t = T.useTranslate();
 
   const options = [
-    t('primaryLanguage.ruby'),
-    t('primaryLanguage.php'),
-    t('primaryLanguage.python'),
-    t('primaryLanguage.golang'),
-    t('primaryLanguage.node'),
-    t('primaryLanguage.java'),
-    t('primaryLanguage.rust'),
-    t('primaryLanguage.elixir'),
-    t('primaryLanguage.scala'),
-    t('primaryLanguage.clojure'),
-    t('primaryLanguage.docker'),
-    t('primaryLanguage.other'),
-    t('primaryLanguage.notDeveloper'),
-  ];
+    'searchEngine',
+    'recommendation',
+    'socialMedia',
+    'hackerNews',
+    'reddit',
+    'podcast',
+    'meetup',
+    'other',
+  ] as const;
 
   return (
-    <ControlledSelect
-      name="primaryLanguage"
-      label={<T id="primaryLanguage.label" />}
-      items={options}
-      getKey={identity}
-      itemToString={identity}
-      itemToValue={identity}
-      renderItem={identity}
-    />
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="referralSource.title" />
+        </h1>
+      </header>
+
+      <TagList>
+        {options.map((option) => (
+          <Tag
+            key={option}
+            name="referralSource"
+            type="radio"
+            value={t(`referralSource.${option}`)}
+            label={<T id={`referralSource.${option}`} />}
+            onClick={(event) => event.currentTarget.form?.requestSubmit()}
+          />
+        ))}
+      </TagList>
+    </section>
   );
 }
 
-function ReferralSourceField() {
+function SendInvitesStep() {
   const t = T.useTranslate();
 
-  const options = [
-    t('referralSource.searchEngine'),
-    t('referralSource.recommendation'),
-    t('referralSource.socialMedia'),
-    t('referralSource.hackerNews'),
-    t('referralSource.reddit'),
-    t('referralSource.podcast'),
-    t('referralSource.meetup'),
-    t('referralSource.other'),
-  ];
+  return (
+    <section className="col gap-8">
+      <header className="col gap-1">
+        <h1 className="text-3xl font-semibold">
+          <T id="sendInvites.title" />
+        </h1>
+
+        <p className="text-dim">
+          <T id="sendInvites.description" />
+        </p>
+      </header>
+
+      <ControlledTextArea
+        name="invites"
+        rows={5}
+        placeholder={t('sendInvites.placeholder')}
+        className="bg-neutral"
+      />
+
+      <AuthButton type="submit" className="self-start">
+        <T id="sendInvites.submit" />
+      </AuthButton>
+    </section>
+  );
+}
+
+function TagList({ children }: { children: React.ReactNode }) {
+  return <div className="row flex-wrap gap-2">{children}</div>;
+}
+
+type TagProps = Extend<
+  React.ComponentProps<'input'>,
+  { name: FieldPath<QualificationFormType>; label: React.ReactNode }
+>;
+
+function Tag({ name, label, ...props }: TagProps) {
+  const { field } = useController({ name });
+
+  const checked = useMemo(() => {
+    if (props.type === 'checkbox') return field.value.includes(props.value);
+    if (props.type === 'radio') return field.value === props.value;
+  }, [props.type, props.value, field.value]);
+
+  const handleChange = () => {
+    const { type, value } = props;
+
+    if (type === 'radio') {
+      field.onChange(value);
+    }
+
+    if (type === 'checkbox') {
+      if (field.value?.includes(value)) {
+        field.onChange(field.value?.filter((v: unknown) => v !== value));
+      } else {
+        field.onChange([...(field.value ?? []), value]);
+      }
+    }
+  };
 
   return (
-    <ControlledSelect
-      name="referralSource"
-      label={<T id="referralSource.label" />}
-      items={options}
-      getKey={identity}
-      itemToString={identity}
-      itemToValue={identity}
-      renderItem={identity}
-    />
+    <label
+      className={clsx(
+        'inline-block cursor-pointer rounded-lg border px-4 py-2 font-semibold transition-colors',
+        'has-[:checked]:border-green has-[:checked]:bg-green/10 has-[:checked]:text-green',
+      )}
+    >
+      <input {...props} {...field} checked={checked} onChange={handleChange} className="sr-only" />
+      {label}
+    </label>
   );
 }

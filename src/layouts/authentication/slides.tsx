@@ -90,11 +90,7 @@ export default function Slides() {
   }, [next]);
 
   return (
-    <div
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
-      className="col dark h-full rounded-2xl bg-[#111111] [&_*]:border-default/70"
-      onClick={next}
-    >
+    <div className="col dark h-full rounded-2xl bg-neutral/95 [&_*]:border-default/70" onClick={next}>
       <Helmet>
         {createArray(3, (i) => (
           <link rel="preload" href={slides[i as 0 | 1 | 2].illustration} as="image" />

@@ -12,7 +12,8 @@ WORKDIR /app
 ARG GITHUB_TOKEN
 ENV GITHUB_TOKEN $GITHUB_TOKEN
 
-COPY . .
+COPY package.json pnpm-lock.yaml ./
+COPY design-system/.npmrc design-system/package.json pnpm-lock.yaml ./design-system/
 RUN pnpm install --frozen-lockfile
 
 ARG ENVIRONMENT
@@ -52,6 +53,7 @@ ENV VITE_INTERCOM_APP_ID $INTERCOM_APP_ID
 ARG SENTRY_AUTH_TOKEN
 ENV SENTRY_AUTH_TOKEN $SENTRY_AUTH_TOKEN
 
+COPY . .
 RUN pnpm run build
 
 FROM nginx:latest
