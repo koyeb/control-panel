@@ -2,14 +2,14 @@ import { useMutation } from '@tanstack/react-query';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
-import { isAccountLockedError, isApiError, isApiNotFoundError } from './api/api-errors';
+import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from './api/use-api';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { useRefreshToken, useToken } from './application/token';
 import { LinkButton } from './components/link';
-import { LogoLoading } from './components/logo-loading';
+import { Loading } from './components/loading';
 import { useMount } from './hooks/lifecycle';
 import { useSearchParam } from './hooks/router';
 import { useSeon } from './hooks/seon';
@@ -48,6 +48,12 @@ export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
+  useRefreshToken();
+
+  if (useOrganizationContextParam()) {
+    return null;
+  }
+
   if (
     isAccountLockedError(userQuery.error) ||
     isAccountLockedError(organizationQuery.error) ||
@@ -69,7 +75,6 @@ function AuthenticatedRoutes() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
-  const switchingOrganization = useOrganizationContextParam();
   const onboardingStep = useOnboardingStep();
   const trial = useTrial();
 
@@ -77,33 +82,12 @@ function AuthenticatedRoutes() {
     '/organization/deactivate/confirm/:confirmationId',
   );
 
-  useRefreshToken();
-
-  if (userQuery.isError) {
-    const { error } = userQuery;
-
-    if (isApiError(error) && [401, 404].includes(error.status)) {
-      // queryClient will redirect to the authentication page
-      return <LogoLoading />;
-    }
-
-    throw error;
-  }
-
-  if (organizationQuery.isError) {
-    const { error } = organizationQuery;
-
-    if (isApiError(error) && [401].includes(error.status)) {
-      return <LogoLoading />;
-    }
-
-    if (!isApiNotFoundError(error)) {
-      throw error;
-    }
-  }
-
-  if (userQuery.isPending || organizationQuery.isPending || switchingOrganization) {
-    return <LogoLoading />;
+  if (!userQuery.isSuccess || organizationQuery.isPending) {
+    return (
+      <Loading>
+        <MainLayout />
+      </Loading>
+    );
   }
 
   if (confirmDeactivateOrganization) {
@@ -198,15 +182,9 @@ function useOrganizationContextParam() {
       path: { id: organizationId },
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
-    async onSuccess(result) {
-      const token = result.token!.id!;
-
-      setToken(token);
-
-      await Promise.all([
-        invalidate('getCurrentUser', { token }),
-        invalidate('getCurrentOrganization', { token }),
-      ]);
+    async onSuccess({ token }) {
+      setToken(token!.id!);
+      await invalidate('getCurrentOrganization');
     },
     onSettled() {
       setOrganizationIdParam(null);
