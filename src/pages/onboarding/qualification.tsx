@@ -16,7 +16,7 @@ import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { createTranslate } from 'src/intl/translate';
-import { defined } from 'src/utils/assert';
+import { assert, defined } from 'src/utils/assert';
 import { Extend } from 'src/utils/types';
 
 import { AuthButton } from '../authentication/components/auth-button';
@@ -440,8 +440,14 @@ function Tag({ name, label, ...props }: TagProps) {
   const { field } = useController({ name });
 
   const checked = useMemo(() => {
-    if (props.type === 'checkbox') return field.value.includes(props.value);
-    if (props.type === 'radio') return field.value === props.value;
+    if (props.type === 'checkbox') {
+      assert(Array.isArray(field.value));
+      return field.value.includes(props.value);
+    }
+
+    if (props.type === 'radio') {
+      return field.value === props.value;
+    }
   }, [props.type, props.value, field.value]);
 
   const handleChange = () => {
@@ -452,9 +458,12 @@ function Tag({ name, label, ...props }: TagProps) {
     }
 
     if (type === 'checkbox') {
+      assert(Array.isArray(field.value));
+
       if (field.value?.includes(value)) {
         field.onChange(field.value?.filter((v: unknown) => v !== value));
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         field.onChange([...(field.value ?? []), value]);
       }
     }
