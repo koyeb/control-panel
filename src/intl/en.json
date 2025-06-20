@@ -1271,8 +1271,8 @@
           "disabled": "Public TCP access disabled"
         },
         "publicHttp": {
-          "enabled": "Public HTTP path enabled",
-          "disabled": "Public HTTP path disabled"
+          "enabled": "Public HTTPS enabled",
+          "disabled": "Public HTTPS disabled"
         },
         "port": {
           "label": "Port"
@@ -1290,17 +1290,17 @@
           "tooltip": "Your service will be publicly accessible at https://[subdomain].koyeb.app{path}. Requests will be sent to the port you selected and load-balanced between your instances."
         },
         "public": {
-          "title": "HTTP path",
-          "description": "Expose the HTTP port to the internet on a specific path",
+          "title": "HTTPS",
+          "description": "Expose the HTTP port to the Internet with TLS, anti-DDoS protection, and custom domain support",
           "label": "Enable",
           "helperText": "Will be publicly accessible at: {url}",
-          "disabledTcp": "Public access HTTP blabla needs protocol HTTP"
+          "disabledTcp": "Public HTTPS can only be enabled for HTTP ports"
         },
         "tcpProxy": {
           "title": "Public TCP access",
-          "description": "Expose the TCP port through proxy domain and port",
+          "description": "Expose the TCP port through proxy",
           "label": "Enable",
-          "helperText": "Helper text tcp use case"
+          "helperText": "Koyeb will create a proxy domain and port (domain:port) to forward traffic to your service’s TCP port"
         },
         "addPort": "Add another",
         "deletePort": "Delete port"
