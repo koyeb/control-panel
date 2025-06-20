@@ -7,7 +7,6 @@ type AppConfig = Partial<{
   aiAssistantApiUrl: string;
   websiteUrl: string;
   pageContextBaseUrl: string;
-  idenfyServiceBaseUrl: string;
   recaptchaClientKey: string;
   posthogApiHost: string;
   posthogKey: string;
@@ -29,7 +28,6 @@ export function getConfig(): AppConfig {
     aiAssistantApiUrl: import.meta.env.VITE_AI_ASSISTANT_API_URL,
     websiteUrl: import.meta.env.VITE_WEBSITE_URL,
     pageContextBaseUrl: import.meta.env.VITE_PAGE_CONTEXT_BASE_URL,
-    idenfyServiceBaseUrl: import.meta.env.VITE_IDENFY_SERVICE_BASE_URL,
     recaptchaClientKey: import.meta.env.VITE_RECAPTCHA_CLIENT_KEY,
     posthogApiHost: import.meta.env.VITE_POSTHOG_API_HOST,
     posthogKey: import.meta.env.VITE_POSTHOG_KEY,
@@ -61,7 +59,6 @@ export function getConfig(): AppConfig {
     posthogKey: getValue('posthogKey'),
     stripePublicKey: getValue('stripePublicKey'),
     mapboxToken: getValue('mapboxToken'),
-    idenfyServiceBaseUrl: getValue('idenfyServiceBaseUrl'),
     intercomAppId: getValue('intercomAppId'),
     disablePolling: getValue('disablePolling') === 'true',
   };

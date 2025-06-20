@@ -39,7 +39,6 @@ jobs:
             --build-arg AI_ASSISTANT_API_URL \
             --build-arg WEBSITE_URL \
             --build-arg PAGE_CONTEXT_BASE_URL \
-            --build-arg IDENFY_SERVICE_BASE_URL \
             --build-arg RECAPTCHA_CLIENT_KEY \
             --build-arg POSTHOG_API_HOST \
             --build-arg POSTHOG_KEY \
@@ -55,7 +54,6 @@ jobs:
           AI_ASSISTANT_API_URL: ${{ secrets.AI_ASSISTANT_API_URL }}
           WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
           PAGE_CONTEXT_BASE_URL: ${{ secrets.PAGE_CONTEXT_BASE_URL }}
-          IDENFY_SERVICE_BASE_URL: ${{ secrets.IDENFY_SERVICE_BASE_URL }}
           RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}
           POSTHOG_API_HOST: ${{ secrets.POSTHOG_API_HOST }}
           POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
