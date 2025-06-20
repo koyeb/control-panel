@@ -5,14 +5,25 @@ import { HelpTooltip } from '../help-tooltip/help-tooltip';
 type FieldProps = {
   ref?: React.Ref<HTMLDivElement>;
   label?: React.ReactNode;
+  labelPosition?: 'top' | 'left';
   helperText?: React.ReactNode;
   className?: string;
   children: React.ReactNode;
 };
 
-export function Field({ ref, label, helperText, className, children }: FieldProps) {
+export function Field({ ref, label, labelPosition = 'top', helperText, className, children }: FieldProps) {
   return (
-    <div ref={ref} className={clsx('col items-start gap-1.5', className)}>
+    <div
+      ref={ref}
+      className={clsx(
+        'gap-x-2 gap-y-1.5',
+        {
+          'col items-start': labelPosition === 'top',
+          'grid grid-cols-[auto_1fr] items-center': labelPosition === 'left',
+        },
+        className,
+      )}
+    >
       {label}
       {children}
       {helperText}
@@ -57,7 +68,7 @@ export function FieldHelperText({ className, children, invalid, ...props }: Fiel
   }
 
   return (
-    <span className={clsx('text-xs text-dim', invalid && 'text-red', className)} {...props}>
+    <span className={clsx('col-span-2 text-xs text-dim', invalid && 'text-red', className)} {...props}>
       {children}
     </span>
   );

@@ -205,6 +205,7 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
       portNumber: port.port!,
       protocol: port.protocol! as PortProtocol,
       path: definition.routes!.find(hasProperty('port', port.port))?.path,
+      tcpProxy: definition.proxy_ports!.find(hasProperty('port', port.port)) !== undefined,
     }));
   };
 
@@ -215,6 +216,17 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
       min: scaling.min!,
       max: scaling.max!,
     };
+  };
+
+  const proxyPorts = (): ComputeDeployment['proxyPorts'] => {
+    if (deployment.metadata?.proxy_ports !== undefined) {
+      return deployment.metadata.proxy_ports.map((proxyPort) => ({
+        port: proxyPort.port!,
+        publicPort: proxyPort.public_port!,
+      }));
+    }
+
+    return [];
   };
 
   const trigger = (): ComputeDeployment['trigger'] => {
@@ -280,6 +292,7 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
       scaling: scaling(),
     },
     definitionApi: definition,
+    proxyPorts: proxyPorts(),
     trigger: trigger(),
   };
 }

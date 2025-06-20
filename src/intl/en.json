@@ -472,6 +472,8 @@
         "externalUrlLabel": "Public URL",
         "externalUrlValueForwardedPort": "(forwarded to port {portNumber})",
         "internalUrlLabel": "Private Address",
+        "tcpProxyUrlLabel": "TCP proxy",
+        "tcpProxyUrlValueForwardedPort": "(forwarded to port {portNumber})",
         "repositoryLabel": "Repository",
         "branchLabel": "Branch",
         "commitLabel": "Commit",
@@ -1256,17 +1258,44 @@
         "expandedTitle": "Configure ports",
         "info": "Configure the ports and protocols required by your services",
         "noPorts": "No ports configured",
-        "portLabel": "Port",
-        "protocolLabel": "Protocol",
-        "tcp": "TCP",
-        "http": "HTTP",
-        "http2": "HTTP/2",
-        "pathLabel": "Path",
-        "pathTooltip": "Your service will be publicly accessible at https://[subdomain].koyeb.app{path}. Requests will be sent to the port you selected and load-balanced between your instances.",
-        "publicLabel": "Public",
-        "publicTooltip": "If public, the port will be accessible from the Internet. If private, the port will only be accessible to other services running on Koyeb's service mesh.",
-        "proxyLabel": "Proxy",
-        "proxyTooltip": "If enabled, the port will be accessible from the Internet through TCP",
+        "configure": "Configure",
+        "close": "Close",
+        "publicTcp": {
+          "enabled": "Public TCP access enabled",
+          "disabled": "Public TCP access disabled"
+        },
+        "publicHttp": {
+          "enabled": "Public HTTPS enabled",
+          "disabled": "Public HTTPS disabled"
+        },
+        "port": {
+          "label": "Port"
+        },
+        "protocol": {
+          "label": "Protocol",
+          "values": {
+            "http": "HTTP",
+            "http2": "HTTP/2",
+            "tcp": "TCP"
+          }
+        },
+        "path": {
+          "label": "Path",
+          "tooltip": "Your service will be publicly accessible at https://[subdomain].koyeb.app{path}. Requests will be sent to the port you selected and load-balanced between your instances."
+        },
+        "public": {
+          "title": "HTTPS",
+          "description": "Expose the HTTP port to the Internet with TLS, anti-DDoS protection, and custom domain support",
+          "label": "Enable",
+          "helperText": "Will be publicly accessible at: {url}",
+          "disabledTcp": "Public HTTPS can only be enabled for HTTP ports"
+        },
+        "tcpProxy": {
+          "title": "Public TCP access",
+          "description": "Expose the TCP port through proxy",
+          "label": "Enable",
+          "helperText": "Koyeb will create a proxy domain and port (domain:port) to forward traffic to your service’s TCP port"
+        },
         "addPort": "Add another",
         "deletePort": "Delete port"
       },
