@@ -72,8 +72,8 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
       </div>
 
       <footer className={clsx('row items-center gap-4 bg-muted px-3 py-2', !configure && 'rounded-b')}>
-        <ProtocolEnabled protocol="tcp" enabled={watch(`ports.${index}.proxy`)} />
         <ProtocolEnabled protocol="http" enabled={watch(`ports.${index}.public`)} />
+        <ProtocolEnabled protocol="tcp" enabled={watch(`ports.${index}.proxy`)} />
 
         <Button
           color="gray"
