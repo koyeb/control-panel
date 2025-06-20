@@ -9,6 +9,8 @@ export function useIdenfyLink() {
   const query = useQuery({
     enabled: user !== undefined,
     meta: { showError: false },
+    refetchOnMount: false,
+    refetchInterval: false,
     ...useApiQueryFn('getIdenfyToken'),
     select: (result) => result.auth_token!,
   });
