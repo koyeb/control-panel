@@ -4,7 +4,6 @@ type AppConfig = Partial<{
   environment: string;
   version: string;
   apiBaseUrl: string;
-  aiAssistantApiUrl: string;
   websiteUrl: string;
   pageContextBaseUrl: string;
   recaptchaClientKey: string;
@@ -25,7 +24,6 @@ export function getConfig(): AppConfig {
     environment: import.meta.env.VITE_ENVIRONMENT,
     version: import.meta.env.VITE_APP_VERSION,
     apiBaseUrl: import.meta.env.VITE_API_URL,
-    aiAssistantApiUrl: import.meta.env.VITE_AI_ASSISTANT_API_URL,
     websiteUrl: import.meta.env.VITE_WEBSITE_URL,
     pageContextBaseUrl: import.meta.env.VITE_PAGE_CONTEXT_BASE_URL,
     recaptchaClientKey: import.meta.env.VITE_RECAPTCHA_CLIENT_KEY,
@@ -51,7 +49,6 @@ export function getConfig(): AppConfig {
     environment: getValue('environment'),
     version: getValue('version'),
     apiBaseUrl: getValue('apiBaseUrl'),
-    aiAssistantApiUrl: getValue('aiAssistantApiUrl'),
     websiteUrl: getValue('websiteUrl'),
     pageContextBaseUrl: getValue('pageContextBaseUrl'),
     recaptchaClientKey: getValue('recaptchaClientKey'),

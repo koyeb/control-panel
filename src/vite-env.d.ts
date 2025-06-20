@@ -7,7 +7,6 @@ interface ImportMetaEnv {
   readonly VITE_ENVIRONMENT: EnvVar;
   readonly VITE_APP_VERSION: EnvVar;
   readonly VITE_API_URL: EnvVar;
-  readonly VITE_AI_ASSISTANT_API_URL: EnvVar;
   readonly VITE_WEBSITE_URL: EnvVar;
   readonly VITE_PAGE_CONTEXT_BASE_URL: EnvVar;
   readonly VITE_RECAPTCHA_CLIENT_KEY: EnvVar;
