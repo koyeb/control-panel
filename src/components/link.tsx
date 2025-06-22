@@ -3,14 +3,7 @@ import { createElement } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Link } from 'wouter';
 
-import {
-  buttonClassName,
-  ButtonColor,
-  ButtonSize,
-  ButtonVariant,
-  Spinner,
-  TabButton,
-} from '@koyeb/design-system';
+import { Button, ButtonColor, ButtonSize, ButtonVariant, Spinner, TabButton } from '@koyeb/design-system';
 import { Extend } from 'src/utils/types';
 
 export { Link };
@@ -42,7 +35,7 @@ export function LinkButton({
   const props: React.ComponentProps<typeof Link> & { state?: unknown } = {
     href,
     'aria-disabled': disabled,
-    className: buttonClassName(rest, clsx(disabled && 'pointer-events-none opacity-50', className)),
+    className: Button.className(rest, clsx(disabled && 'pointer-events-none opacity-50', className)),
     ...rest,
   };
 
@@ -81,7 +74,7 @@ export function TabButtonLink({ href, selected, panelId, className, children }: 
     <Link
       href={href}
       role="tab"
-      className={clsx(TabButton.class({ selected, className }))}
+      className={clsx(TabButton.className({ selected, className }))}
       aria-selected={selected}
       aria-controls={panelId}
     >

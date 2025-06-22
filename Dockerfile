@@ -9,11 +9,7 @@ RUN npm install -g corepack@latest && corepack enable
 
 WORKDIR /app
 
-ARG GITHUB_TOKEN
-ENV GITHUB_TOKEN $GITHUB_TOKEN
-
-COPY package.json pnpm-lock.yaml ./
-COPY design-system/.npmrc design-system/package.json pnpm-lock.yaml ./design-system/
+COPY package.json pnpm-lock.yaml .
 RUN pnpm install --frozen-lockfile
 
 ARG ENVIRONMENT

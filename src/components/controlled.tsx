@@ -14,8 +14,7 @@ import {
   mergeRefs,
 } from '@koyeb/design-system';
 import { usePureFunction } from 'src/hooks/lifecycle';
-
-import { Extend } from '../../design-system/src/utils/types';
+import { Extend } from 'src/utils/types';
 
 type ControlledProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

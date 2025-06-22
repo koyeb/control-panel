@@ -20,6 +20,9 @@ importers:
       '@intercom/messenger-js-sdk':
         specifier: ^0.0.14
         version: 0.0.14
+      '@koyeb/design-system':
+        specifier: ^0.6.13
+        version: 0.6.13(@floating-ui/react@0.27.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tanstack/react-ranger@0.0.4(react@19.1.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.9(react@19.1.0))(framer-motion@12.17.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(lucide-react@0.518.0(react@19.1.0))(react@19.1.0)(shiki@2.5.0)
       '@mapbox/search-js-core':
         specifier: 1.1.0
         version: 1.1.0
@@ -1205,6 +1208,19 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@koyeb/design-system@0.6.13':
+    resolution: {integrity: sha512-3PVJUjsNOb/lyNSSxTa7FDZEbYMZvPmkNaqkZkb49joPsX7FC4VJ9tb5zRc/9TcAPPwjrCDe61AD4ADzKQB3/g==}
+    peerDependencies:
+      '@floating-ui/react': ^0.27.0
+      '@tanstack/react-ranger': ^0.0.4
+      class-variance-authority: ^0.7.0
+      clsx: ^2.0.0
+      downshift: ^9.0.0
+      framer-motion: ^12.0.0
+      lucide-react: ^0.518.0
+      react: ^19.0.0
+      shiki: ^2.0.0
 
   '@lezer/common@1.2.3':
     resolution: {integrity: sha512-w7ojc8ejBqr2REPsWxJjrMFsA/ysDCFICn8zEOR9mrqzOu2amhITYuLD8ag6XZf0CFXDrhKqw7+tW8cX66NaDA==}
@@ -3802,6 +3818,11 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
+  lucide-react@0.518.0:
+    resolution: {integrity: sha512-kFg34uQqnVl/7HwAiigxPSpj//43VIVHQbMygQPtS1yT4btMXHCWUipHcgcXHD2pm1Z2nUBA/M+Vnh/YmWXQUw==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   lucide-static@0.514.0:
     resolution: {integrity: sha512-agEEaXa/nFnzw/zZU+V9KD45YA6+ke4uhB3HRBHUd0tr2kw+Ej7sY+jeaAKTmsg3Lis1a4iAjZGfffa8pMwlpw==}
 
@@ -6106,6 +6127,18 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@koyeb/design-system@0.6.13(@floating-ui/react@0.27.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(@tanstack/react-ranger@0.0.4(react@19.1.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.9(react@19.1.0))(framer-motion@12.17.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(lucide-react@0.518.0(react@19.1.0))(react@19.1.0)(shiki@2.5.0)':
+    dependencies:
+      '@floating-ui/react': 0.27.12(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@tanstack/react-ranger': 0.0.4(react@19.1.0)
+      class-variance-authority: 0.7.1
+      clsx: 2.1.1
+      downshift: 9.0.9(react@19.1.0)
+      framer-motion: 12.17.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      lucide-react: 0.518.0(react@19.1.0)
+      react: 19.1.0
+      shiki: 2.5.0
 
   '@lezer/common@1.2.3': {}
 
@@ -9265,6 +9298,10 @@ snapshots:
   lru-cache@6.0.0:
     dependencies:
       yallist: 4.0.0
+
+  lucide-react@0.518.0(react@19.1.0):
+    dependencies:
+      react: 19.1.0
 
   lucide-static@0.514.0: {}
 

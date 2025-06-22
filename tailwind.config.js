@@ -1,8 +1,8 @@
-import designSystemPreset from './design-system/tailwind-preset';
+import designSystemPreset from '@koyeb/design-system/tailwind-preset';
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['design-system/src/**/*.{ts,tsx}', 'src/**/*.{ts,tsx}', 'index.html'],
+  content: ['node_modules/@koyeb/design-system/lib/*.js', 'src/**/*.{ts,tsx}', 'index.html'],
   darkMode: 'selector',
   presets: [designSystemPreset],
   theme: {

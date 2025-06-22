@@ -1,4 +1,4 @@
-@import '../design-system/src/styles.css';
+@import '@koyeb/design-system/styles.css';
 
 @layer base {
   body {
