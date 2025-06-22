@@ -21,7 +21,7 @@ export function redirectToSignIn(location: ParsedLocation): never {
     to: '/auth/signin',
     replace: true,
     search: {
-      redirect: location.href !== '/' ? location.href : undefined,
+      next: location.href !== '/' ? location.href : undefined,
     },
   });
 }
