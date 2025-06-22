@@ -1,85 +1,53 @@
 import { Button } from '@koyeb/design-system';
-import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
-import {
-  useOrganization,
-  useOrganizationQuotasQuery,
-  useOrganizationSummaryQuery,
-} from 'src/api/hooks/session';
+import { Link, useSearch, useNavigate } from '@tanstack/react-router';
+
+import { useInstances, useRegions } from 'src/api/hooks/catalog';
+import { useOrganization } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
-import { Loading } from 'src/components/loading';
-import { QueryError } from 'src/components/query-error';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
 import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
 import { InstanceRegionAlerts } from './instance-region-alerts';
 
-type InstanceRegionStepProps = {
-  onNext: () => void;
-};
-
-export function InstanceRegionStep(props: InstanceRegionStepProps) {
-  const instancesQuery = useInstancesQuery();
-  const regionsQuery = useRegionsQuery();
-  const organizationSummaryQuery = useOrganizationSummaryQuery();
-  const organizationQuotasQuery = useOrganizationQuotasQuery();
-
-  if (
-    instancesQuery.isPending ||
-    regionsQuery.isPending ||
-    organizationSummaryQuery.isPending ||
-    organizationQuotasQuery.isPending
-  ) {
-    return <Loading />;
-  }
-
-  if (organizationSummaryQuery.isError) {
-    return <QueryError error={organizationSummaryQuery.error} />;
-  }
-
-  if (organizationQuotasQuery.isError) {
-    return <QueryError error={organizationQuotasQuery.error} />;
-  }
-
-  return <InstanceRegionStep_ {...props} />;
-}
-
-function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
-  const searchParams = useSearchParams();
-  const navigate = useNavigate();
+export function InstanceRegionStep() {
+  const search = snakeToCamelDeep(useSearch({ from: '/_main/services/new' }));
+  const navigate = useNavigate({ from: '/services/new' });
 
   const organization = useOrganization();
 
   const instances = useInstances();
   const regions = useRegions();
 
-  const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
-  const availabilities = useInstanceAvailabilities({ serviceType });
+  const { serviceType } = snakeToCamelDeep(useSearch({ from: '/_main/services/new' }));
+  const availabilities = useInstanceAvailabilities({ serviceType: serviceType as ServiceType });
 
-  const instanceParam = searchParams.get('instance_type');
+  const instanceParam = search.instanceType;
   const selectedInstance = instances.find(hasProperty('id', instanceParam)) ?? null;
 
-  const regionsParam = searchParams.getAll('regions');
-  const selectedRegions = regions.filter((region) => regionsParam.includes(region.id));
+  const regionsParam = search.regions;
+  const selectedRegions = regions.filter((region) => regionsParam?.includes(region.id));
 
   const setInstanceParam = (instance: string) => {
-    navigate((url) => url.searchParams.set('instance_type', instance), { replace: true });
+    navigate({
+      replace: true,
+      search: (prev) => ({
+        ...prev,
+        instance_type: instance,
+      }),
+    });
   };
 
   const setRegionsParam = (regions: string[]) => {
-    navigate(
-      (url) => {
-        url.searchParams.delete('regions');
-        regions.forEach((region) => url.searchParams.append('regions', region));
-      },
-      { replace: true },
-    );
+    navigate({
+      replace: true,
+      search: (prev) => ({ ...prev, regions }),
+    });
   };
 
   const selector = useInstanceSelector({
@@ -120,9 +88,15 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 
-      <Button onClick={onNext} disabled={selectedRegions.length === 0} className="self-start">
+      <Link
+        from="/services/new"
+        search={(prev) => ({ ...prev, step: 'review' })}
+        // todo: disabled state
+        disabled={selectedRegions.length === 0}
+        className={Button.className({}, 'self-start')}
+      >
         <Translate id="common.next" />
-      </Button>
+      </Link>
     </div>
   );
 }

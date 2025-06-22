@@ -1,13 +1,10 @@
-import { useEffect } from 'react';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 
-import { useInstances, useRegions } from 'src/api/hooks/catalog';
-import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
-import { useSearchParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
-import { enumIndex, isEnumValue } from 'src/utils/enums';
+import { snakeToCamelDeep } from 'src/utils/object';
 
 import { Stepper, Step as StepperStep } from './stepper';
 import { ServiceTypeStep } from './steps/00-service-type/service-type.step';
@@ -18,45 +15,29 @@ import { InitialDeploymentStep } from './steps/04-initial-deployment/initial-dep
 
 const T = createTranslate('modules.serviceCreation');
 
-enum Step {
-  serviceType = 'serviceType',
-  importProject = 'importProject',
-  instanceRegions = 'instanceRegions',
-  review = 'review',
-  initialDeployment = 'initialDeployment',
-}
+type Step = (typeof steps)[number];
+const steps = ['serviceType', 'importProject', 'instanceRegions', 'review', 'initialDeployment'] as const;
 
-const isStep = isEnumValue(Step);
-const stepIndex = enumIndex(Step);
+function stepIndex(step: Step) {
+  return steps.indexOf(step);
+}
 
 function isBefore(left: Step, right: Step) {
   return stepIndex(left) < stepIndex(right);
 }
 
-const stepperSteps = [Step.importProject, Step.instanceRegions, Step.review] as const;
+const stepperSteps = ['importProject', 'instanceRegions', 'review'] as const;
 
 export function ServiceCreation() {
-  const initialStep = useInitialStep();
-  const [currentStepParam, setCurrentStep] = useSearchParam('step');
-  const currentStep = isStep(currentStepParam) ? currentStepParam : Step.serviceType;
-  const [serviceId, setServiceId] = useSearchParam('serviceId');
-
-  useEffect(() => {
-    if (!isStep(currentStepParam)) {
-      setCurrentStep(initialStep);
-    }
-  }, [currentStepParam, initialStep, setCurrentStep]);
+  const { step: currentStep, serviceId } = snakeToCamelDeep(useSearch({ from: '/_main/services/new' }));
+  const navigate = useNavigate({ from: '/services/new' });
 
   const onNext = (serviceId?: string) => {
-    if (serviceId) {
-      setServiceId(serviceId);
-    }
-
     const index = stepIndex(currentStep);
-    const nextStep = Object.values(Step).at(index + 1);
+    const nextStep = steps.at(index + 1);
 
     if (nextStep) {
-      setCurrentStep(nextStep);
+      navigate({ search: { step: nextStep, service_id: serviceId } });
     }
   };
 
@@ -72,14 +53,12 @@ export function ServiceCreation() {
 
   return (
     <div className="col gap-8">
-      <PrefetchResources />
-
       <div className="col gap-2">
         <h1 className="typo-heading">
           <T id={`${currentStep}.title`} />
         </h1>
 
-        {currentStep !== Step.serviceType && (
+        {currentStep !== 'serviceType' && (
           <p className="text-dim">
             <T id={`${currentStep}.description`} values={{ link: serviceLink }} />
           </p>
@@ -92,7 +71,11 @@ export function ServiceCreation() {
             <StepperStep
               key={step}
               active={step === currentStep}
-              onClick={isBefore(step, currentStep) ? () => setCurrentStep(step) : undefined}
+              onClick={
+                isBefore(step, currentStep)
+                  ? () => navigate({ search: (prev) => ({ ...prev, step }) })
+                  : undefined
+              }
             >
               <span className="font-medium">{<T id={`stepper.${step}`} />}</span>
               <span className="text-xs text-dim">
@@ -103,48 +86,11 @@ export function ServiceCreation() {
         </Stepper>
       )}
 
-      {currentStep === Step.serviceType && <ServiceTypeStep onNext={onNext} />}
-      {currentStep === Step.importProject && <ImportProjectStep onNext={onNext} />}
-      {currentStep === Step.instanceRegions && <InstanceRegionStep onNext={onNext} />}
-      {currentStep === Step.review && <ReviewStep onNext={onNext} />}
-      {currentStep === Step.initialDeployment && <InitialDeploymentStep serviceId={serviceId as string} />}
+      {currentStep === 'serviceType' && <ServiceTypeStep />}
+      {currentStep === 'importProject' && <ImportProjectStep />}
+      {currentStep === 'instanceRegions' && <InstanceRegionStep />}
+      {currentStep === 'review' && <ReviewStep onNext={onNext} />}
+      {currentStep === 'initialDeployment' && <InitialDeploymentStep serviceId={serviceId as string} />}
     </div>
   );
-}
-
-// avoid the parent component to unmount and remount several times
-function PrefetchResources() {
-  useGithubApp();
-  useRepositories('');
-  useInstances();
-  useRegions();
-
-  return null;
-}
-
-function useInitialStep(): Step {
-  const [serviceType] = useSearchParam('service_type');
-  const [type] = useSearchParam('type');
-  const [repository] = useSearchParam('repository');
-  const [image] = useSearchParam('image');
-  const [instanceType] = useSearchParam('instance_type');
-  const [regions] = useSearchParam('regions');
-
-  if (serviceType !== 'web' && serviceType !== 'worker') {
-    return Step.serviceType;
-  }
-
-  if (type !== 'git' && type !== 'docker') {
-    return Step.serviceType;
-  }
-
-  if ((type === 'git' && repository === null) || (type === 'docker' && image === null)) {
-    return Step.importProject;
-  }
-
-  if (instanceType === null || regions === null) {
-    return Step.instanceRegions;
-  }
-
-  return Step.review;
 }

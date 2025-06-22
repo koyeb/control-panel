@@ -5,7 +5,7 @@ import { createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
-import { ServiceTypeItem } from './components/service-type-item';
+import { ServiceTypeItem } from './service-type-item';
 
 // cSpell:words bun calcom ollama
 
@@ -28,16 +28,18 @@ export function OneClickAppList() {
 
       <ul>
         {apps.map((app) => (
-          <Link key={app.slug} href={app.deployUrl}>
-            <ServiceTypeItem
-              icon={
-                <div className="rounded-md bg-black/60 p-1.5">
-                  <img src={app.logo} className="size-6 rounded-md grayscale" />
-                </div>
-              }
-              label={app.name}
-            />
-          </Link>
+          <li key={app.slug}>
+            <Link href={app.deployUrl}>
+              <ServiceTypeItem
+                icon={
+                  <div className="rounded-md bg-black/60 p-1.5">
+                    <img src={app.logo} className="size-6 rounded-md grayscale" />
+                  </div>
+                }
+                label={app.name}
+              />
+            </Link>
+          </li>
         ))}
       </ul>
 

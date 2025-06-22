@@ -1,20 +1,17 @@
+import { Link } from '@tanstack/react-router';
+
 import { ServiceType } from 'src/api/model';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
-import { ServiceTypeItem } from './components/service-type-item';
+import { ServiceTypeItem } from './service-type-item';
 
 const T = createTranslate('modules.serviceCreation.serviceType');
 
 export type ExtendedServiceType = ServiceType | 'private' | 'model';
 
-type ServiceTypeListProps = {
-  serviceType: string | null;
-  setServiceType: (type: string) => void;
-};
-
-export function ServiceTypeList({ serviceType, setServiceType }: ServiceTypeListProps) {
+export function ServiceTypeList() {
   const serviceTypes: ExtendedServiceType[] = ['web', 'private', 'worker', 'database'];
 
   if (useFeatureFlag('ai-onboarding')) {
@@ -28,14 +25,19 @@ export function ServiceTypeList({ serviceType, setServiceType }: ServiceTypeList
       </span>
 
       <ul className="col gap-2">
-        {serviceTypes.map((type) => (
-          <ServiceTypeItem
-            key={type}
-            icon={<ServiceTypeIcon type={type} />}
-            label={<Translate id={`common.serviceType.${type}`} />}
-            active={type === serviceType}
-            onClick={() => setServiceType(type)}
-          />
+        {serviceTypes.map((serviceType) => (
+          <li key={serviceType}>
+            <Link
+              from="/services/new"
+              search={(prev) => ({ ...prev, service_type: serviceType })}
+              className="group"
+            >
+              <ServiceTypeItem
+                icon={<ServiceTypeIcon type={serviceType} />}
+                label={<Translate id={`common.serviceType.${serviceType}`} />}
+              />
+            </Link>
+          </li>
         ))}
       </ul>
     </>
