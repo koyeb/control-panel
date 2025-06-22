@@ -8,6 +8,7 @@ import { NotificationContainer } from 'src/components/notification';
 
 type RouterContext = {
   queryClient: QueryClient;
+  breadcrumb?: { label: () => React.ReactNode; link?: string };
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({

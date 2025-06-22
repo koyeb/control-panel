@@ -1,9 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { getBreadcrumb } from 'src/layouts/main/app-breadcrumbs';
+import { ServiceConsolePage } from 'src/pages/service/console/service-console.page';
 
 export const Route = createFileRoute('/_main/services/$serviceId/console')({
-  component: RouteComponent,
-})
+  component: ServiceConsolePage,
 
-function RouteComponent() {
-  return <div>Hello "/_app/service/console"!</div>
-}
+  loader: ({ context, location }) => {
+    context.breadcrumb = getBreadcrumb(location, 'service.console');
+  },
+});

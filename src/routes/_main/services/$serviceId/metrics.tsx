@@ -1,9 +1,11 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { getBreadcrumb } from 'src/layouts/main/app-breadcrumbs';
+import { ServiceMetricsPage } from 'src/pages/service/metrics/service-metrics.page';
 
 export const Route = createFileRoute('/_main/services/$serviceId/metrics')({
-  component: RouteComponent,
-})
+  component: ServiceMetricsPage,
 
-function RouteComponent() {
-  return <div>Hello "/_app/service/metrics"!</div>
-}
+  loader: ({ context, location }) => {
+    context.breadcrumb = getBreadcrumb(location, 'service.metrics');
+  },
+});
