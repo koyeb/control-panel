@@ -1,7 +1,6 @@
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { Mutation, MutationCache, Query, QueryCache, QueryClient, QueryKey } from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
-import { navigate } from 'wouter/use-browser-location';
 
 import { inArray } from 'src/utils/arrays';
 

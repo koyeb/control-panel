@@ -5,22 +5,15 @@ import {
 } from '@tanstack/react-router';
 import { useCallback, useEffect, useMemo } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { useSearch } from 'wouter';
-import { usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
 
 import { usePureFunction } from './lifecycle';
 
-export { usePathname } from 'wouter/use-browser-location';
-
 export function useLocation() {
-  const pathname = usePathname();
-  const search = useSearch();
+  return useTanstackLocation().href;
+}
 
-  if (search.length === 0) {
-    return pathname;
-  }
-
-  return `${pathname}?${search}`;
+export function usePathname() {
+  return useTanstackLocation().pathname;
 }
 
 export function useRouteParam(name: string) {
@@ -30,7 +23,7 @@ export function useRouteParam(name: string) {
 type HistoryState = Record<string, unknown>;
 
 export function useHistoryState<T extends HistoryState>(): Partial<T> {
-  return useWouterHistoryState() ?? {};
+  return useTanstackLocation().state;
 }
 
 type NavigateOptions = {
