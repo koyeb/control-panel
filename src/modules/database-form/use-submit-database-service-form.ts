@@ -9,10 +9,11 @@ import { routes } from 'src/application/routes';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useToken } from 'src/application/token';
 import { useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
-import { hasProperty } from 'src/utils/object';
+import { useNavigate } from 'src/hooks/router';
+import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
 import { randomString } from 'src/utils/random';
 
+import { useSearch } from '@tanstack/react-router';
 import { databaseInstances } from './database-instance-types';
 import { DatabaseServiceForm } from './database-service-form.types';
 
@@ -22,7 +23,7 @@ export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
-  const [appId] = useSearchParam('app_id');
+  const { appId } = snakeToCamelDeep(useSearch({ from: '/_main/database-services/new' }));
   const organization = useOrganization();
   const { token } = useToken();
   const invalidate = useInvalidateApiQuery();

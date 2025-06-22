@@ -1274,7 +1274,7 @@ packages:
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
 
   '@koyeb/design-system@file:../design-system/koyeb-design-system-0.6.13.tgz':
-    resolution: {integrity: sha512-eizTzM8PT47ds3t9k0lfTuFnHtvsMt0tbD+L6YOWQL7rMOXpeQhtX+MhYOII3kBml3bHxFqxeEzQodD8n0NynQ==, tarball: file:../design-system/koyeb-design-system-0.6.13.tgz}
+    resolution: {integrity: sha512-p47e7cfLS4HCbJA4B+Lgz53OFGh8xvCnUOLWTvlyVFb5Q6OIbUvTdsrSArEK00dXVHxuUMXXXr6eJXTv7zbKVQ==, tarball: file:../design-system/koyeb-design-system-0.6.13.tgz}
     version: 0.6.13
     peerDependencies:
       '@floating-ui/react': ^0.27.0

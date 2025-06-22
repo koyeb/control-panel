@@ -3,11 +3,11 @@ import {
   useLocation as useTanstackLocation,
   useNavigate as useTanstackNavigate,
 } from '@tanstack/react-router';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 
-import { usePureFunction } from './lifecycle';
 import { assert } from 'src/utils/assert';
+import { usePureFunction } from './lifecycle';
 
 declare module '@tanstack/react-router' {
   // ...
@@ -71,57 +71,7 @@ export function useNavigate() {
 }
 
 export function useSearchParams() {
-  const location = useTanstackLocation();
-
-  return useMemo(() => {
-    return new URLSearchParams(location.searchStr);
-  }, [location.searchStr]);
-}
-
-export function useSearchParam(
-  name: string,
-): [value: string | null, setValue: (string: string | null, options?: NavigateOptions) => void];
-
-export function useSearchParam(
-  name: string,
-  options: { array: true },
-): [value: string[], setValue: (value: string[], options?: NavigateOptions) => void];
-
-export function useSearchParam(name: string, options?: { array: true }) {
-  const searchParams = useSearchParams();
-  const value = options?.array ? searchParams.getAll(name) : searchParams.get(name);
-
-  const navigate = useTanstackNavigate();
-
-  const setValue = useCallback(
-    (value: string | string[] | null, options?: NavigateOptions) => {
-      const url = new URL('http://localhost');
-
-      url.search = new URLSearchParams(searchParams).toString();
-
-      if (value === null) {
-        url.searchParams.delete(name);
-      }
-
-      if (Array.isArray(value)) {
-        url.searchParams.delete(name);
-        value.forEach((value) => url.searchParams.append(name, value));
-      }
-
-      if (typeof value === 'string') {
-        url.searchParams.set(name, value);
-      }
-
-      navigate({
-        ...options,
-        to: window.location.pathname,
-        search: Object.fromEntries(url.searchParams.entries()),
-      });
-    },
-    [name, searchParams, navigate],
-  );
-
-  return [value, setValue as unknown] as const;
+  return new URLSearchParams(useTanstackLocation({ select: (s) => s.searchStr }));
 }
 
 export function useOnRouteStateCreate(cb: () => void) {

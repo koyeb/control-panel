@@ -9,13 +9,14 @@ import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { useToken } from 'src/application/token';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from './auth-button';
 import { AuthInput } from './auth-input';
+import { useSearch } from '@tanstack/react-router';
 
 const T = createTranslate('pages.authentication.signIn');
 
@@ -33,7 +34,7 @@ export function SignInForm() {
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
-  const [next] = useSearchParam('next');
+  const { next } = useSearch({ from: '/auth/signin' });
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {

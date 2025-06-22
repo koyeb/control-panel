@@ -1,21 +1,21 @@
 import clsx from 'clsx';
-import { useEffect } from 'react';
 
 import { Button, ButtonGroup, InfoTooltip } from '@koyeb/design-system';
+import { Link, useSearch } from '@tanstack/react-router';
 import type { Api } from 'src/api/api-types';
 import { useInstance } from 'src/api/hooks/catalog';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
 import { parseBytes } from 'src/application/memory';
 import { Title } from 'src/components/title';
-import { useRouteParam, useSearchParam } from 'src/hooks/router';
+import { useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { HttpThroughputGraph } from 'src/modules/metrics/graphs/http-throughput-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { PublicDataTransferGraph } from 'src/modules/metrics/graphs/public-data-transfer-graph';
 import { ResponseTimeGraph } from 'src/modules/metrics/graphs/response-time-graph';
-import { MetricsTimeFrame, isMetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
+import { MetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
 import { assert, defined } from 'src/utils/assert';
 
@@ -23,8 +23,7 @@ const T = createTranslate('pages.service.metrics');
 
 export function ServiceMetricsPage() {
   const serviceId = useRouteParam('serviceId');
-
-  const [timeFrame, setTimeFrame] = useTimeFrame();
+  const { timeFrame } = useSearch({ from: '/_main/services/$serviceId/metrics' });
 
   return (
     <>
@@ -33,20 +32,20 @@ export function ServiceMetricsPage() {
         end={
           <ButtonGroup>
             {metricsTimeFrames.map((s) => (
-              <Button
+              <Link
                 key={s}
-                type="button"
-                variant={s === timeFrame ? 'solid' : 'outline'}
-                onClick={() => setTimeFrame(s)}
+                from="/services/$serviceId/metrics"
+                search={{ timeFrame: s }}
+                className={Button.className({ variant: s === timeFrame ? 'solid' : 'outline' })}
               >
                 {s.toUpperCase()}
-              </Button>
+              </Link>
             ))}
           </ButtonGroup>
         }
       />
 
-      {isMetricsTimeFrame(timeFrame) && <ServiceMetrics serviceId={serviceId} timeFrame={timeFrame} />}
+      <ServiceMetrics serviceId={serviceId} timeFrame={timeFrame} />
     </>
   );
 }
@@ -154,18 +153,6 @@ function GraphCard({ label, tooltip, className, children }: GraphCardProps) {
       {children}
     </div>
   );
-}
-
-function useTimeFrame() {
-  const [timeFrame, setTimeFrame] = useSearchParam('time-frame');
-
-  useEffect(() => {
-    if (!isMetricsTimeFrame(timeFrame)) {
-      setTimeFrame('5m');
-    }
-  }, [timeFrame, setTimeFrame]);
-
-  return [timeFrame, setTimeFrame] as const;
 }
 
 function useServiceInstanceType(serviceId: string) {
