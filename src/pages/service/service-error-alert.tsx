@@ -119,7 +119,7 @@ type LatestDeploymentButtonProps = {
 };
 
 function LatestDeploymentButton({ color, serviceId, deploymentId }: LatestDeploymentButtonProps) {
-  const { deploymentId: currentDeploymentId } = useSearch({ from: '/_main/services/$serviceId/' });
+  const { deploymentId: currentDeploymentId } = useSearch({ strict: false });
 
   if (deploymentId === currentDeploymentId) {
     return null;

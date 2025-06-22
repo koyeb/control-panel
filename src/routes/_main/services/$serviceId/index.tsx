@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
+import z from 'zod';
+
 import { mapService } from 'src/api/mappers/service';
 import { useApiQueryFn } from 'src/api/use-api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
-import { z } from 'zod';
 
 export const Route = createFileRoute('/_main/services/$serviceId/')({
   component: ServiceOverviewPage,

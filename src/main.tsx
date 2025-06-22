@@ -25,6 +25,8 @@ import { routeTree } from './route-tree.generated';
 
 import './api/api.intercept';
 
+Error.stackTraceLimit = 2 << 16;
+
 // https://vitejs.dev/guide/build#load-error-handling
 window.addEventListener('vite:preloadError', (event) => {
   event.preventDefault();

@@ -241,7 +241,7 @@ function useSelectedDeployment(deployments: ComputeDeployment[], noDefaultSelect
 
   const setSelectedDeployment = useCallback(
     (deployment: ComputeDeployment) => {
-      navigate({ search: { deploymentId: deployment.id }, replace: true });
+      navigate({ to: '.', search: { deploymentId: deployment.id }, replace: true });
     },
     [navigate],
   );
