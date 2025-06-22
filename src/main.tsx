@@ -1,8 +1,11 @@
-import './intercom';
+// todo
 import './polyfills';
-import './sentry';
+// import './intercom';
+// import './sentry';
 
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 
@@ -12,6 +15,7 @@ import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
 
 import { hasMessage } from './api/api-errors';
+import { getConfig } from './application/config';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { TokenProvider } from './application/token';
@@ -49,9 +53,20 @@ export const queryClient = new QueryClient({
   },
 });
 
+void persistQueryClient({
+  queryClient,
+  buster: getConfig().version,
+  persister: createSyncStoragePersister({
+    key: 'query-cache',
+    storage: window.localStorage,
+  }),
+});
+
 const router = createRouter({
   routeTree,
-  context: {},
+  context: {
+    queryClient,
+  },
 });
 
 declare module '@tanstack/react-router' {

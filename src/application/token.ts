@@ -120,7 +120,13 @@ function useTokenContext({ read, write, listen }: TokenApi, session?: true) {
   );
 }
 
-export function useToken() {
+export function useToken(): TokenContext {
+  return {
+    token: accessTokenApi.read(),
+    setToken: (token) => accessTokenApi.write(token),
+    clearToken: () => accessTokenApi.write(undefined),
+  };
+
   return useContext(tokenContext);
 }
 

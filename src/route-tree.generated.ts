@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
+import { Route as MainRouteRouteImport } from './routes/_main/route'
 import { Route as MainIndexRouteImport } from './routes/_main/index'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthSigninRouteImport } from './routes/auth/signin'
@@ -46,10 +47,14 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MainIndexRoute = MainIndexRouteImport.update({
-  id: '/_main/',
-  path: '/',
+const MainRouteRoute = MainRouteRouteImport.update({
+  id: '/_main',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MainIndexRoute = MainIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const AuthSignupRoute = AuthSignupRouteImport.update({
   id: '/signup',
@@ -67,144 +72,144 @@ const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const MainTeamRoute = MainTeamRouteImport.update({
-  id: '/_main/team',
+  id: '/team',
   path: '/team',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainSecretsRoute = MainSecretsRouteImport.update({
-  id: '/_main/secrets',
+  id: '/secrets',
   path: '/secrets',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainDomainsRoute = MainDomainsRouteImport.update({
-  id: '/_main/domains',
+  id: '/domains',
   path: '/domains',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainActivityRoute = MainActivityRouteImport.update({
-  id: '/_main/activity',
+  id: '/activity',
   path: '/activity',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainVolumesIndexRoute = MainVolumesIndexRouteImport.update({
-  id: '/_main/volumes/',
+  id: '/volumes/',
   path: '/volumes/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainSettingsIndexRoute = MainSettingsIndexRouteImport.update({
-  id: '/_main/settings/',
+  id: '/settings/',
   path: '/settings/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainServicesIndexRoute = MainServicesIndexRouteImport.update({
-  id: '/_main/services/',
+  id: '/services/',
   path: '/services/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainVolumesSnapshotsRoute = MainVolumesSnapshotsRouteImport.update({
-  id: '/_main/volumes/snapshots',
+  id: '/volumes/snapshots',
   path: '/volumes/snapshots',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainSettingsRegistryConfigurationRoute =
   MainSettingsRegistryConfigurationRouteImport.update({
-    id: '/_main/settings/registry-configuration',
+    id: '/settings/registry-configuration',
     path: '/settings/registry-configuration',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainSettingsPlansRoute = MainSettingsPlansRouteImport.update({
-  id: '/_main/settings/plans',
+  id: '/settings/plans',
   path: '/settings/plans',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainSettingsBillingRoute = MainSettingsBillingRouteImport.update({
-  id: '/_main/settings/billing',
+  id: '/settings/billing',
   path: '/settings/billing',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainSettingsApiRoute = MainSettingsApiRouteImport.update({
-  id: '/_main/settings/api',
+  id: '/settings/api',
   path: '/settings/api',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainServicesNewRoute = MainServicesNewRouteImport.update({
-  id: '/_main/services/new',
+  id: '/services/new',
   path: '/services/new',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainServicesDeployRoute = MainServicesDeployRouteImport.update({
-  id: '/_main/services/deploy',
+  id: '/services/deploy',
   path: '/services/deploy',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainDatabaseServicesNewRoute = MainDatabaseServicesNewRouteImport.update({
-  id: '/_main/database-services/new',
+  id: '/database-services/new',
   path: '/database-services/new',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainUserSettingsIndexRoute = MainUserSettingsIndexRouteImport.update({
-  id: '/_main/user/settings/',
+  id: '/user/settings/',
   path: '/user/settings/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainServicesServiceIdIndexRoute =
   MainServicesServiceIdIndexRouteImport.update({
-    id: '/_main/services/$serviceId/',
+    id: '/services/$serviceId/',
     path: '/services/$serviceId/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainDatabaseServicesServiceIdIndexRoute =
   MainDatabaseServicesServiceIdIndexRouteImport.update({
-    id: '/_main/database-services/$serviceId/',
+    id: '/database-services/$serviceId/',
     path: '/database-services/$serviceId/',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainUserSettingsOrganizationsRoute =
   MainUserSettingsOrganizationsRouteImport.update({
-    id: '/_main/user/settings/organizations',
+    id: '/user/settings/organizations',
     path: '/user/settings/organizations',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainUserSettingsApiRoute = MainUserSettingsApiRouteImport.update({
-  id: '/_main/user/settings/api',
+  id: '/user/settings/api',
   path: '/user/settings/api',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => MainRouteRoute,
 } as any)
 const MainServicesServiceIdSettingsRoute =
   MainServicesServiceIdSettingsRouteImport.update({
-    id: '/_main/services/$serviceId/settings',
+    id: '/services/$serviceId/settings',
     path: '/services/$serviceId/settings',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainServicesServiceIdMetricsRoute =
   MainServicesServiceIdMetricsRouteImport.update({
-    id: '/_main/services/$serviceId/metrics',
+    id: '/services/$serviceId/metrics',
     path: '/services/$serviceId/metrics',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainServicesServiceIdConsoleRoute =
   MainServicesServiceIdConsoleRouteImport.update({
-    id: '/_main/services/$serviceId/console',
+    id: '/services/$serviceId/console',
     path: '/services/$serviceId/console',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainDatabaseServicesServiceIdSettingsRoute =
   MainDatabaseServicesServiceIdSettingsRouteImport.update({
-    id: '/_main/database-services/$serviceId/settings',
+    id: '/database-services/$serviceId/settings',
     path: '/database-services/$serviceId/settings',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainDatabaseServicesServiceIdRolesRoute =
   MainDatabaseServicesServiceIdRolesRouteImport.update({
-    id: '/_main/database-services/$serviceId/roles',
+    id: '/database-services/$serviceId/roles',
     path: '/database-services/$serviceId/roles',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 const MainDatabaseServicesServiceIdDatabasesRoute =
   MainDatabaseServicesServiceIdDatabasesRouteImport.update({
-    id: '/_main/database-services/$serviceId/databases',
+    id: '/database-services/$serviceId/databases',
     path: '/database-services/$serviceId/databases',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => MainRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -275,6 +280,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_main': typeof MainRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/_main/activity': typeof MainActivityRoute
   '/_main/domains': typeof MainDomainsRoute
@@ -376,6 +382,7 @@ export interface FileRouteTypes {
     | '/user/settings'
   id:
     | '__root__'
+    | '/_main'
     | '/auth'
     | '/_main/activity'
     | '/_main/domains'
@@ -410,7 +417,240 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  MainRouteRoute: typeof MainRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+}
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main/': {
+      id: '/_main/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof MainIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/signin': {
+      id: '/auth/signin'
+      path: '/signin'
+      fullPath: '/auth/signin'
+      preLoaderRoute: typeof AuthSigninRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_main/team': {
+      id: '/_main/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof MainTeamRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/secrets': {
+      id: '/_main/secrets'
+      path: '/secrets'
+      fullPath: '/secrets'
+      preLoaderRoute: typeof MainSecretsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/domains': {
+      id: '/_main/domains'
+      path: '/domains'
+      fullPath: '/domains'
+      preLoaderRoute: typeof MainDomainsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/activity': {
+      id: '/_main/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof MainActivityRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/volumes/': {
+      id: '/_main/volumes/'
+      path: '/volumes'
+      fullPath: '/volumes'
+      preLoaderRoute: typeof MainVolumesIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/settings/': {
+      id: '/_main/settings/'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof MainSettingsIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/': {
+      id: '/_main/services/'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof MainServicesIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/volumes/snapshots': {
+      id: '/_main/volumes/snapshots'
+      path: '/volumes/snapshots'
+      fullPath: '/volumes/snapshots'
+      preLoaderRoute: typeof MainVolumesSnapshotsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/settings/registry-configuration': {
+      id: '/_main/settings/registry-configuration'
+      path: '/settings/registry-configuration'
+      fullPath: '/settings/registry-configuration'
+      preLoaderRoute: typeof MainSettingsRegistryConfigurationRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/settings/plans': {
+      id: '/_main/settings/plans'
+      path: '/settings/plans'
+      fullPath: '/settings/plans'
+      preLoaderRoute: typeof MainSettingsPlansRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/settings/billing': {
+      id: '/_main/settings/billing'
+      path: '/settings/billing'
+      fullPath: '/settings/billing'
+      preLoaderRoute: typeof MainSettingsBillingRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/settings/api': {
+      id: '/_main/settings/api'
+      path: '/settings/api'
+      fullPath: '/settings/api'
+      preLoaderRoute: typeof MainSettingsApiRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/new': {
+      id: '/_main/services/new'
+      path: '/services/new'
+      fullPath: '/services/new'
+      preLoaderRoute: typeof MainServicesNewRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/deploy': {
+      id: '/_main/services/deploy'
+      path: '/services/deploy'
+      fullPath: '/services/deploy'
+      preLoaderRoute: typeof MainServicesDeployRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/new': {
+      id: '/_main/database-services/new'
+      path: '/database-services/new'
+      fullPath: '/database-services/new'
+      preLoaderRoute: typeof MainDatabaseServicesNewRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/user/settings/': {
+      id: '/_main/user/settings/'
+      path: '/user/settings'
+      fullPath: '/user/settings'
+      preLoaderRoute: typeof MainUserSettingsIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/$serviceId/': {
+      id: '/_main/services/$serviceId/'
+      path: '/services/$serviceId'
+      fullPath: '/services/$serviceId'
+      preLoaderRoute: typeof MainServicesServiceIdIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/$serviceId/': {
+      id: '/_main/database-services/$serviceId/'
+      path: '/database-services/$serviceId'
+      fullPath: '/database-services/$serviceId'
+      preLoaderRoute: typeof MainDatabaseServicesServiceIdIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/user/settings/organizations': {
+      id: '/_main/user/settings/organizations'
+      path: '/user/settings/organizations'
+      fullPath: '/user/settings/organizations'
+      preLoaderRoute: typeof MainUserSettingsOrganizationsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/user/settings/api': {
+      id: '/_main/user/settings/api'
+      path: '/user/settings/api'
+      fullPath: '/user/settings/api'
+      preLoaderRoute: typeof MainUserSettingsApiRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/$serviceId/settings': {
+      id: '/_main/services/$serviceId/settings'
+      path: '/services/$serviceId/settings'
+      fullPath: '/services/$serviceId/settings'
+      preLoaderRoute: typeof MainServicesServiceIdSettingsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/$serviceId/metrics': {
+      id: '/_main/services/$serviceId/metrics'
+      path: '/services/$serviceId/metrics'
+      fullPath: '/services/$serviceId/metrics'
+      preLoaderRoute: typeof MainServicesServiceIdMetricsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/$serviceId/console': {
+      id: '/_main/services/$serviceId/console'
+      path: '/services/$serviceId/console'
+      fullPath: '/services/$serviceId/console'
+      preLoaderRoute: typeof MainServicesServiceIdConsoleRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/$serviceId/settings': {
+      id: '/_main/database-services/$serviceId/settings'
+      path: '/database-services/$serviceId/settings'
+      fullPath: '/database-services/$serviceId/settings'
+      preLoaderRoute: typeof MainDatabaseServicesServiceIdSettingsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/$serviceId/roles': {
+      id: '/_main/database-services/$serviceId/roles'
+      path: '/database-services/$serviceId/roles'
+      fullPath: '/database-services/$serviceId/roles'
+      preLoaderRoute: typeof MainDatabaseServicesServiceIdRolesRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/$serviceId/databases': {
+      id: '/_main/database-services/$serviceId/databases'
+      path: '/database-services/$serviceId/databases'
+      fullPath: '/database-services/$serviceId/databases'
+      preLoaderRoute: typeof MainDatabaseServicesServiceIdDatabasesRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+  }
+}
+
+interface MainRouteRouteChildren {
   MainActivityRoute: typeof MainActivityRoute
   MainDomainsRoute: typeof MainDomainsRoute
   MainSecretsRoute: typeof MainSecretsRoute
@@ -440,246 +680,7 @@ export interface RootRouteChildren {
   MainUserSettingsIndexRoute: typeof MainUserSettingsIndexRoute
 }
 
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/': {
-      id: '/_main/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof MainIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/signup': {
-      id: '/auth/signup'
-      path: '/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/signin': {
-      id: '/auth/signin'
-      path: '/signin'
-      fullPath: '/auth/signin'
-      preLoaderRoute: typeof AuthSigninRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/_main/team': {
-      id: '/_main/team'
-      path: '/team'
-      fullPath: '/team'
-      preLoaderRoute: typeof MainTeamRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/secrets': {
-      id: '/_main/secrets'
-      path: '/secrets'
-      fullPath: '/secrets'
-      preLoaderRoute: typeof MainSecretsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/domains': {
-      id: '/_main/domains'
-      path: '/domains'
-      fullPath: '/domains'
-      preLoaderRoute: typeof MainDomainsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/activity': {
-      id: '/_main/activity'
-      path: '/activity'
-      fullPath: '/activity'
-      preLoaderRoute: typeof MainActivityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/volumes/': {
-      id: '/_main/volumes/'
-      path: '/volumes'
-      fullPath: '/volumes'
-      preLoaderRoute: typeof MainVolumesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/settings/': {
-      id: '/_main/settings/'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof MainSettingsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/services/': {
-      id: '/_main/services/'
-      path: '/services'
-      fullPath: '/services'
-      preLoaderRoute: typeof MainServicesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/volumes/snapshots': {
-      id: '/_main/volumes/snapshots'
-      path: '/volumes/snapshots'
-      fullPath: '/volumes/snapshots'
-      preLoaderRoute: typeof MainVolumesSnapshotsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/settings/registry-configuration': {
-      id: '/_main/settings/registry-configuration'
-      path: '/settings/registry-configuration'
-      fullPath: '/settings/registry-configuration'
-      preLoaderRoute: typeof MainSettingsRegistryConfigurationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/settings/plans': {
-      id: '/_main/settings/plans'
-      path: '/settings/plans'
-      fullPath: '/settings/plans'
-      preLoaderRoute: typeof MainSettingsPlansRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/settings/billing': {
-      id: '/_main/settings/billing'
-      path: '/settings/billing'
-      fullPath: '/settings/billing'
-      preLoaderRoute: typeof MainSettingsBillingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/settings/api': {
-      id: '/_main/settings/api'
-      path: '/settings/api'
-      fullPath: '/settings/api'
-      preLoaderRoute: typeof MainSettingsApiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/services/new': {
-      id: '/_main/services/new'
-      path: '/services/new'
-      fullPath: '/services/new'
-      preLoaderRoute: typeof MainServicesNewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/services/deploy': {
-      id: '/_main/services/deploy'
-      path: '/services/deploy'
-      fullPath: '/services/deploy'
-      preLoaderRoute: typeof MainServicesDeployRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/database-services/new': {
-      id: '/_main/database-services/new'
-      path: '/database-services/new'
-      fullPath: '/database-services/new'
-      preLoaderRoute: typeof MainDatabaseServicesNewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/user/settings/': {
-      id: '/_main/user/settings/'
-      path: '/user/settings'
-      fullPath: '/user/settings'
-      preLoaderRoute: typeof MainUserSettingsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/services/$serviceId/': {
-      id: '/_main/services/$serviceId/'
-      path: '/services/$serviceId'
-      fullPath: '/services/$serviceId'
-      preLoaderRoute: typeof MainServicesServiceIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/database-services/$serviceId/': {
-      id: '/_main/database-services/$serviceId/'
-      path: '/database-services/$serviceId'
-      fullPath: '/database-services/$serviceId'
-      preLoaderRoute: typeof MainDatabaseServicesServiceIdIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/user/settings/organizations': {
-      id: '/_main/user/settings/organizations'
-      path: '/user/settings/organizations'
-      fullPath: '/user/settings/organizations'
-      preLoaderRoute: typeof MainUserSettingsOrganizationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/user/settings/api': {
-      id: '/_main/user/settings/api'
-      path: '/user/settings/api'
-      fullPath: '/user/settings/api'
-      preLoaderRoute: typeof MainUserSettingsApiRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/services/$serviceId/settings': {
-      id: '/_main/services/$serviceId/settings'
-      path: '/services/$serviceId/settings'
-      fullPath: '/services/$serviceId/settings'
-      preLoaderRoute: typeof MainServicesServiceIdSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/services/$serviceId/metrics': {
-      id: '/_main/services/$serviceId/metrics'
-      path: '/services/$serviceId/metrics'
-      fullPath: '/services/$serviceId/metrics'
-      preLoaderRoute: typeof MainServicesServiceIdMetricsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/services/$serviceId/console': {
-      id: '/_main/services/$serviceId/console'
-      path: '/services/$serviceId/console'
-      fullPath: '/services/$serviceId/console'
-      preLoaderRoute: typeof MainServicesServiceIdConsoleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/database-services/$serviceId/settings': {
-      id: '/_main/database-services/$serviceId/settings'
-      path: '/database-services/$serviceId/settings'
-      fullPath: '/database-services/$serviceId/settings'
-      preLoaderRoute: typeof MainDatabaseServicesServiceIdSettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/database-services/$serviceId/roles': {
-      id: '/_main/database-services/$serviceId/roles'
-      path: '/database-services/$serviceId/roles'
-      fullPath: '/database-services/$serviceId/roles'
-      preLoaderRoute: typeof MainDatabaseServicesServiceIdRolesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_main/database-services/$serviceId/databases': {
-      id: '/_main/database-services/$serviceId/databases'
-      path: '/database-services/$serviceId/databases'
-      fullPath: '/database-services/$serviceId/databases'
-      preLoaderRoute: typeof MainDatabaseServicesServiceIdDatabasesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
-}
-
-interface AuthRouteRouteChildren {
-  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
-  AuthSigninRoute: typeof AuthSigninRoute
-  AuthSignupRoute: typeof AuthSignupRoute
-}
-
-const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthResetPasswordRoute: AuthResetPasswordRoute,
-  AuthSigninRoute: AuthSigninRoute,
-  AuthSignupRoute: AuthSignupRoute,
-}
-
-const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
-  AuthRouteRouteChildren,
-)
-
-const rootRouteChildren: RootRouteChildren = {
-  AuthRouteRoute: AuthRouteRouteWithChildren,
+const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainActivityRoute: MainActivityRoute,
   MainDomainsRoute: MainDomainsRoute,
   MainSecretsRoute: MainSecretsRoute,
@@ -712,6 +713,31 @@ const rootRouteChildren: RootRouteChildren = {
     MainDatabaseServicesServiceIdIndexRoute,
   MainServicesServiceIdIndexRoute: MainServicesServiceIdIndexRoute,
   MainUserSettingsIndexRoute: MainUserSettingsIndexRoute,
+}
+
+const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
+  MainRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthSigninRoute: typeof AuthSigninRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthSigninRoute: AuthSigninRoute,
+  AuthSignupRoute: AuthSignupRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  MainRouteRoute: MainRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
