@@ -64,6 +64,7 @@ void persistQueryClient({
 
 const router = createRouter({
   routeTree,
+  defaultPreload: 'intent',
   context: {
     queryClient,
   },
