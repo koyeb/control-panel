@@ -63,7 +63,7 @@ type TokenProviderProps = {
 };
 
 export function TokenProvider({ children }: TokenProviderProps) {
-  const [tokenParam, setTokenParam] = useSearchParam('session-token');
+  // const [tokenParam, setTokenParam] = useSearchParam('session-token');
 
   const accessToken = useTokenContext(accessTokenApi);
   const sessionToken = useTokenContext(sessionTokenApi, true);
@@ -76,16 +76,16 @@ export function TokenProvider({ children }: TokenProviderProps) {
     return accessToken;
   }, [accessToken, sessionToken]);
 
-  useMount(() => {
-    if (tokenParam !== null) {
-      sessionToken.setToken(tokenParam.replace(/^Bearer /, ''));
-      setTokenParam(null);
-    }
-  });
+  // useMount(() => {
+  //   if (tokenParam !== null) {
+  //     sessionToken.setToken(tokenParam.replace(/^Bearer /, ''));
+  //     setTokenParam(null);
+  //   }
+  // });
 
-  if (tokenParam !== null) {
-    return null;
-  }
+  // if (tokenParam !== null) {
+  //   return null;
+  // }
 
   return createElement(tokenContext.Provider, { value }, children);
 }

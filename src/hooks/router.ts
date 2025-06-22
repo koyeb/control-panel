@@ -1,10 +1,14 @@
+import {
+  useParams,
+  useLocation as useTanstackLocation,
+  useNavigate as useTanstackNavigate,
+} from '@tanstack/react-router';
 import { useCallback, useEffect, useMemo } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useSearch } from 'wouter';
-import { navigate, usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
+import { usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
 
 import { usePureFunction } from './lifecycle';
-import { useParams } from '@tanstack/react-router';
 
 export { usePathname } from 'wouter/use-browser-location';
 
@@ -40,24 +44,29 @@ type Navigate = (
 ) => void;
 
 export function useNavigate() {
-  return useCallback<Navigate>((param, options) => {
-    if (typeof param === 'string' || param instanceof URL) {
-      navigate(param, options);
-    } else {
-      const url = new URL(window.location.href);
-      const result = param(url);
+  const navigate = useTanstackNavigate();
 
-      navigate(result ?? url, options);
-    }
-  }, []);
+  return useCallback<Navigate>(
+    (param, options) => {
+      if (typeof param === 'string' || param instanceof URL) {
+        navigate({ to: String(param), ...options });
+      } else {
+        const url = new URL(window.location.href);
+        const result = param(url);
+
+        navigate({ to: String(result), ...options });
+      }
+    },
+    [navigate],
+  );
 }
 
 export function useSearchParams() {
-  const search = useSearch();
+  const location = useTanstackLocation();
 
   return useMemo(() => {
-    return new URLSearchParams(search);
-  }, [search]);
+    return new URLSearchParams(location.searchStr);
+  }, [location.searchStr]);
 }
 
 export function useSearchParam(
@@ -73,26 +82,34 @@ export function useSearchParam(name: string, options?: { array: true }) {
   const searchParams = useSearchParams();
   const value = options?.array ? searchParams.getAll(name) : searchParams.get(name);
 
-  const navigate = useNavigate();
+  const navigate = useTanstackNavigate();
 
   const setValue = useCallback(
     (value: string | string[] | null, options?: NavigateOptions) => {
-      navigate((url) => {
-        if (value === null) {
-          url.searchParams.delete(name);
-        }
+      const url = new URL('http://localhost');
 
-        if (Array.isArray(value)) {
-          url.searchParams.delete(name);
-          value.forEach((value) => url.searchParams.append(name, value));
-        }
+      url.search = new URLSearchParams(searchParams).toString();
 
-        if (typeof value === 'string') {
-          url.searchParams.set(name, value);
-        }
-      }, options);
+      if (value === null) {
+        url.searchParams.delete(name);
+      }
+
+      if (Array.isArray(value)) {
+        url.searchParams.delete(name);
+        value.forEach((value) => url.searchParams.append(name, value));
+      }
+
+      if (typeof value === 'string') {
+        url.searchParams.set(name, value);
+      }
+
+      navigate({
+        ...options,
+        to: window.location.pathname,
+        search: Object.fromEntries(url.searchParams.entries()),
+      });
     },
-    [name, navigate],
+    [name, searchParams, navigate],
   );
 
   return [value, setValue as unknown] as const;
