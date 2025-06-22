@@ -64,7 +64,7 @@ function RepositoriesIndexing() {
 }
 
 function InstallGithubApp() {
-  const { githubAppInstallationRequested } = useHistoryState<{ githubAppInstallationRequested: boolean }>();
+  const { githubAppInstallationRequested } = useHistoryState();
   const location = useLocation();
 
   const { mutate: installGithubApp } = useMutation({

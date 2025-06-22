@@ -7,6 +7,17 @@ import { useCallback, useEffect, useMemo } from 'react';
 // eslint-disable-next-line no-restricted-imports
 
 import { usePureFunction } from './lifecycle';
+import { assert } from 'src/utils/assert';
+
+declare module '@tanstack/react-router' {
+  // ...
+
+  interface HistoryState {
+    githubAppInstallationRequested?: boolean;
+    createOrganization?: boolean;
+    create?: boolean;
+  }
+}
 
 export function useLocation() {
   return useTanstackLocation().href;
@@ -17,13 +28,18 @@ export function usePathname() {
 }
 
 export function useRouteParam(name: string) {
-  return useParams({})[name] as string;
+  const params = useParams({ strict: false });
+  const value = params[name as keyof typeof params];
+
+  assert(value !== undefined);
+
+  return value;
 }
 
 type HistoryState = Record<string, unknown>;
 
-export function useHistoryState<T extends HistoryState>(): Partial<T> {
-  return useTanstackLocation().state;
+export function useHistoryState() {
+  return useTanstackLocation({ select: (s) => s.state });
 }
 
 type NavigateOptions = {
@@ -109,7 +125,7 @@ export function useSearchParam(name: string, options?: { array: true }) {
 }
 
 export function useOnRouteStateCreate(cb: () => void) {
-  const historyState = useHistoryState<{ create: boolean }>();
+  const historyState = useHistoryState();
   const navigate = useNavigate();
   const cbMemo = usePureFunction(cb);
 
