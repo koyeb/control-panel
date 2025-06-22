@@ -1,12 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useUser } from 'src/api/hooks/session';
+import { useLogoutMutation, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { IconSend } from 'src/components/icons';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from '../authentication/components/auth-button';
@@ -26,14 +23,7 @@ export function EmailValidation() {
     },
   });
 
-  const { clearToken } = useToken();
-  const navigate = useNavigate();
-
-  const logoutMutation = useMutation({
-    ...useApiMutationFn('logout', {}),
-    onMutate: clearToken,
-    onSuccess: () => navigate(routes.home()),
-  });
+  const logoutMutation = useLogoutMutation();
 
   return (
     <section className="col w-full max-w-md flex-1 items-center justify-center gap-12">

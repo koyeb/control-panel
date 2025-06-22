@@ -1,4 +1,4 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
@@ -11,7 +11,9 @@ import {
   mapOrganizationSummary,
   mapUser,
 } from '../mappers/session';
-import { useApiQueryFn } from '../use-api';
+import { useApiMutationFn, useApiQueryFn } from '../use-api';
+import { useNavigate } from '@tanstack/react-router';
+import { setToken } from 'src/application/authentication';
 
 export function useUserQuery() {
   return useQuery({
@@ -98,5 +100,20 @@ export function useUserOrganizationMemberships() {
     refetchInterval: false,
     enabled: user !== undefined,
     select: ({ members }) => members!.map(mapOrganizationMember),
+  });
+}
+
+export function useLogoutMutation() {
+  const navigate = useNavigate();
+  // todo
+  // const resetIdentify = useResetIdentifyUser();
+
+  return useMutation({
+    ...useApiMutationFn('logout', {}),
+    onSettled: () => {
+      setToken(null);
+      // resetIdentify();
+      navigate({ to: '/auth/signin' });
+    },
   });
 }
