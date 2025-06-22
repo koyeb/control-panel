@@ -4,20 +4,9 @@ import {
   useNavigate as useTanstackNavigate,
 } from '@tanstack/react-router';
 import { useCallback, useEffect } from 'react';
-// eslint-disable-next-line no-restricted-imports
 
 import { assert } from 'src/utils/assert';
 import { usePureFunction } from './lifecycle';
-
-declare module '@tanstack/react-router' {
-  // ...
-
-  interface HistoryState {
-    githubAppInstallationRequested?: boolean;
-    createOrganization?: boolean;
-    create?: boolean;
-  }
-}
 
 export function useLocation() {
   return useTanstackLocation().href;
@@ -47,24 +36,14 @@ type NavigateOptions = {
   state?: HistoryState;
 };
 
-type Navigate = (
-  param: string | URL | ((url: URL) => string | URL | void),
-  options?: NavigateOptions,
-) => void;
+type Navigate = (to: string, options?: NavigateOptions) => void;
 
 export function useNavigate() {
   const navigate = useTanstackNavigate();
 
   return useCallback<Navigate>(
-    (param, options) => {
-      if (typeof param === 'string' || param instanceof URL) {
-        navigate({ to: String(param), ...options });
-      } else {
-        const url = new URL(window.location.href);
-        const result = param(url);
-
-        navigate({ to: String(result), ...options });
-      }
+    (to, options) => {
+      navigate({ to, ...options });
     },
     [navigate],
   );
