@@ -1,9 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
 
 export const Route = createFileRoute('/_main/services/$serviceId/')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  return <div>Hello "/_app/service/"!</div>
-}
+  component: ServiceOverviewPage,
+});

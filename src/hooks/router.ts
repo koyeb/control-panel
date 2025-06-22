@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useMemo } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { useParams, useSearch } from 'wouter';
+import { useSearch } from 'wouter';
 import { navigate, usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
 
 import { usePureFunction } from './lifecycle';
+import { useParams } from '@tanstack/react-router';
 
 export { usePathname } from 'wouter/use-browser-location';
 
@@ -19,7 +20,7 @@ export function useLocation() {
 }
 
 export function useRouteParam(name: string) {
-  return useParams()[name] as string;
+  return useParams({})[name] as string;
 }
 
 type HistoryState = Record<string, unknown>;
