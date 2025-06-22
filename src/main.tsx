@@ -1,7 +1,9 @@
+import './intercom';
 import './polyfills';
 import './sentry';
-import './intercom';
 
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createRouter, RouterProvider } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 
 import '@fontsource-variable/inter';
@@ -10,9 +12,12 @@ import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
 
 import { hasMessage } from './api/api-errors';
-import { App } from './app';
+import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
-import { Providers } from './application/providers';
+import { TokenProvider } from './application/token';
+import { IntlProvider } from './intl/translation-provider';
+import { CommandPaletteProvider } from './modules/command-palette/command-palette.provider';
+import { routeTree } from './route-tree.generated';
 
 import './api/api.intercept';
 
@@ -36,8 +41,35 @@ window.addEventListener('error', function (event) {
   }
 });
 
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+    },
+  },
+});
+
+const router = createRouter({
+  routeTree,
+  context: {},
+});
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+}
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <Providers>
-    <App />
-  </Providers>,
+  <IntlProvider>
+    <TokenProvider>
+      <QueryClientProvider client={queryClient}>
+        <DialogProvider>
+          <CommandPaletteProvider>
+            <RouterProvider router={router} />
+          </CommandPaletteProvider>
+        </DialogProvider>
+      </QueryClientProvider>
+    </TokenProvider>
+  </IntlProvider>,
 );
