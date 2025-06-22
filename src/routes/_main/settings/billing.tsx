@@ -1,9 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { BillingPage } from 'src/pages/settings/organization/billing/billing.page';
 
 export const Route = createFileRoute('/_main/settings/billing')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  return <div>Hello "/_app/settings/billing"!</div>
-}
+  component: BillingPage,
+});

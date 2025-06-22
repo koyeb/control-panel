@@ -1,9 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { DeployPage } from 'src/pages/service/deploy/deploy.page';
 
 export const Route = createFileRoute('/_main/services/deploy')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  return <div>Hello "/_app/services/deploy"!</div>
-}
+  component: DeployPage,
+});

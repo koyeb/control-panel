@@ -1,9 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router';
+import { BaseApiCredentialsPage } from 'src/pages/settings/api-credentials.page';
 
 export const Route = createFileRoute('/_main/settings/api')({
-  component: RouteComponent,
-})
-
-function RouteComponent() {
-  return <div>Hello "/_app/settings/api"!</div>
-}
+  component: () => <BaseApiCredentialsPage type="organization" />,
+});
