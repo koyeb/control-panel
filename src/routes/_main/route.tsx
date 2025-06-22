@@ -38,25 +38,21 @@ async function fetchCurrentSession(queryClient: QueryClient, location: ParsedLoc
       queryClient.ensureQueryData(useApiQueryFn('getCurrentUser')),
       queryClient
         .ensureQueryData(useApiQueryFn('getCurrentOrganization'))
-        .then((organization) => mapOrganization(organization.organization!)),
+        .then(({ organization }) => mapOrganization(organization!)),
     ]);
 
-    const promises = new Array<Promise<unknown>>();
-
-    const query = (...params: Parameters<typeof useApiQueryFn>) => {
-      promises.push(queryClient.ensureQueryData(useApiQueryFn(...params)));
-    };
+    const queries = new Array<ReturnType<typeof useApiQueryFn>>();
 
     if (organization.latestSubscriptionId) {
-      query('getSubscription', { path: { id: organization.latestSubscriptionId } });
+      queries.push(useApiQueryFn('getSubscription', { path: { id: organization.latestSubscriptionId } }));
     }
 
     if (organization) {
-      query('organizationSummary', { path: { organization_id: organization.id } });
-      query('organizationQuotas', { path: { organization_id: organization.id } });
+      queries.push(useApiQueryFn('organizationSummary', { path: { organization_id: organization.id } }));
+      queries.push(useApiQueryFn('organizationQuotas', { path: { organization_id: organization.id } }));
     }
 
-    await Promise.all(promises);
+    await Promise.all(queries.map((query) => queryClient.ensureQueryData(query)));
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
       setToken(null);
@@ -76,10 +72,11 @@ async function fetchCatalog(queryClient: QueryClient) {
 }
 
 async function preloadDatacenterLatencies(queryClient: QueryClient) {
-  const datacenters = await queryClient.ensureQueryData(useApiQueryFn('listCatalogDatacenters'));
+  const datacenters = await queryClient
+    .ensureQueryData(useApiQueryFn('listCatalogDatacenters'))
+    .then(({ datacenters }) => datacenters!.map(mapCatalogDatacenter));
 
   const urls = datacenters
-    .datacenters!.map(mapCatalogDatacenter)
     .filter(({ id }) => !id.includes('aws'))
     .map((datacenter) => `https://${datacenter.domain}/health`);
 
