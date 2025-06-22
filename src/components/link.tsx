@@ -1,12 +1,14 @@
 import clsx from 'clsx';
+import { Link as BaseLink } from '@tanstack/react-router';
 import { createElement } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { Link } from 'wouter';
 
 import { Button, ButtonColor, ButtonSize, ButtonVariant, Spinner, TabButton } from '@koyeb/design-system';
 import { Extend } from 'src/utils/types';
 
-export { Link };
+export function Link({ href, ...props }: React.ComponentProps<'a'> & { state?: object }) {
+  return <BaseLink to={href} {...props} />;
+}
 
 type LinkButtonOwnProps = {
   variant?: ButtonVariant;
@@ -19,7 +21,7 @@ type LinkButtonOwnProps = {
   state?: unknown;
 };
 
-type LinkButtonProps = Extend<React.ComponentProps<'a'>, LinkButtonOwnProps>;
+type LinkButtonProps = Extend<React.ComponentProps<'a'>, LinkButtonOwnProps> & { state?: object };
 
 export function LinkButton({
   component = Link,

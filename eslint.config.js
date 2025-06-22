@@ -57,7 +57,7 @@ export default [
       'import-x/first': 'error',
       'import-x/newline-after-import': 'error',
       'import-x/order': [
-        'warn',
+        'off',
         {
           'newlines-between': 'always',
           alphabetize: { order: 'asc' },

@@ -11,7 +11,7 @@ export function TrialBanner() {
   const trial = defined(useTrial());
 
   const upgrade = (children: React.ReactNode) => (
-    <Link to={routes.organizationSettings.plans()} className="underline">
+    <Link href={routes.organizationSettings.plans()} className="underline">
       {children}
     </Link>
   );
