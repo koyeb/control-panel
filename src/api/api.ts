@@ -265,17 +265,16 @@ function createApi({ baseUrl, getToken }: { baseUrl?: string; getToken: () => st
 
   type StreamPath = Extract<keyof Api.paths, `/v1/streams/${string}`>;
 
-  type StreamParams<Path extends StreamPath> = InferParams<Api.paths[Path]['get']> & {
-    token?: string;
-  };
+  type StreamParams<Path extends StreamPath> = InferParams<Api.paths[Path]['get']>;
 
   function stream<Path extends StreamPath>(path: Path) {
     return function (params: StreamParams<Path>): ApiStream {
       const url = String(buildUrl(path, params)).replace(/^http/, 'ws');
+      const token = getToken();
       const protocols: string[] = [];
 
-      if (params.token) {
-        protocols.push('Bearer', params.token);
+      if (token) {
+        protocols.push('Bearer', token);
       }
 
       const socket = new WebSocket(url, protocols);
