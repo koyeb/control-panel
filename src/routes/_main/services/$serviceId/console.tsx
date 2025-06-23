@@ -5,7 +5,7 @@ import { ServiceConsolePage } from 'src/pages/service/console/service-console.pa
 export const Route = createFileRoute('/_main/services/$serviceId/console')({
   component: ServiceConsolePage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'service.console'),
     };

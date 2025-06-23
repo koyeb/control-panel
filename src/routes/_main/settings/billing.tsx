@@ -5,7 +5,7 @@ import { BillingPage } from 'src/pages/settings/organization/billing/billing.pag
 export const Route = createFileRoute('/_main/settings/billing')({
   component: BillingPage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'organizationSettings.billing'),
     };

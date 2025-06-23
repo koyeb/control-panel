@@ -9,7 +9,7 @@ export const Route = createFileRoute('/_main/volumes')({
     </VolumesLayout>
   ),
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'volumes'),
     };

@@ -5,7 +5,7 @@ import { SecretsPage } from 'src/pages/secrets/secrets.page';
 export const Route = createFileRoute('/_main/secrets')({
   component: SecretsPage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'secrets'),
     };

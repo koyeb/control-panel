@@ -5,7 +5,7 @@ import { DatabaseSettingsPage } from 'src/pages/databases/database/settings/data
 export const Route = createFileRoute('/_main/database-services/$databaseServiceId/settings')({
   component: DatabaseSettingsPage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'service.settings'),
     };

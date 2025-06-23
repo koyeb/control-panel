@@ -14,7 +14,7 @@ import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useLocation, useNavigate } from 'src/hooks/router';
+import { useLocation } from 'src/hooks/router';
 import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
@@ -37,7 +37,8 @@ import { OrganizationPlan } from './organization-plan';
 import { PlatformStatus } from './platform-status';
 import { PreloadDatacenterLatencies } from './preload-datacenter-latencies';
 import { UserMenu } from './user-menu';
-import { setToken } from 'src/application/authentication';
+import { isSessionToken, setToken } from 'src/application/authentication';
+import { useNavigate } from '@tanstack/react-router';
 
 const T = createTranslate('layouts.main');
 
@@ -140,7 +141,7 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
-  const session = false; // todo
+  const session = isSessionToken();
   const trial = useTrial();
 
   if (session) {
@@ -158,8 +159,8 @@ function SessionTokenBanner() {
 
   const mutation = useMutation({
     ...useApiMutationFn('logout', {}),
-    onSettled: () => setToken(null),
-    onSuccess: () => navigate(routes.home()),
+    onSettled: () => setToken(null, true),
+    onSuccess: () => void navigate({ to: '/', reloadDocument: true }),
   });
 
   return (

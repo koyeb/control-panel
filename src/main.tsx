@@ -3,9 +3,7 @@ import './polyfills';
 // import './intercom';
 // import './sentry';
 
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 
@@ -15,14 +13,26 @@ import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
 
 import { hasMessage } from './api/api-errors';
-import { getConfig } from './application/config';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { IntlProvider } from './intl/translation-provider';
 import { CommandPaletteProvider } from './modules/command-palette/command-palette.provider';
 import { routeTree } from './route-tree.generated';
+import { LogoLoading } from './components/logo-loading';
 
 import './api/api.intercept';
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+
+  interface HistoryState {
+    githubAppInstallationRequested?: boolean;
+    createOrganization?: boolean;
+    create?: boolean;
+  }
+}
 
 Error.stackTraceLimit = 2 << 16;
 
@@ -55,34 +65,18 @@ export const queryClient = new QueryClient({
   },
 });
 
-void persistQueryClient({
-  queryClient,
-  buster: getConfig().version,
-  persister: createSyncStoragePersister({
-    key: 'query-cache',
-    storage: window.localStorage,
-  }),
-});
-
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
+  defaultPendingComponent: LogoLoading,
+  // defaultPendingMs: 0,
+  // defaultPendingMinMs: 0,
+  defaultPreloadStaleTime: 0,
+  scrollRestoration: true,
   context: {
     queryClient,
   },
 });
-
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-
-  interface HistoryState {
-    githubAppInstallationRequested?: boolean;
-    createOrganization?: boolean;
-    create?: boolean;
-  }
-}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <IntlProvider>

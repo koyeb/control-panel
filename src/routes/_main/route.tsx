@@ -1,13 +1,11 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, Outlet, ParsedLocation, useMatches } from '@tanstack/react-router';
-import { use } from 'react';
 
 import { ApiError, isAccountLockedError } from 'src/api/api-errors';
-import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { apiQueryFn } from 'src/api/use-api';
-import { getToken, redirectToSignIn, setToken } from 'src/application/authentication';
+import { isAuthenticated, redirectToSignIn, setToken } from 'src/application/authentication';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { IdentifyUser } from 'src/application/posthog';
 import { getUrlLatency } from 'src/application/url-latency';
@@ -18,9 +16,6 @@ import { OnboardingPage } from 'src/pages/onboarding/onboarding.page';
 export const Route = createFileRoute('/_main')({
   component: function Component() {
     const { locked, onboardingStep } = Route.useLoaderData();
-
-    use(useUserQuery().promise);
-    use(useOrganizationQuery().promise);
 
     const matchConfirmDeactivateOrganization = useMatches().find(
       (route) => route.routeId === '/_main/organization/deactivate/confirm/$confirmationId',
@@ -46,18 +41,18 @@ export const Route = createFileRoute('/_main')({
     );
   },
 
-  beforeLoad: ({ location }) => {
-    if (!getToken()) {
+  beforeLoad: async ({ context, location }) => {
+    if (!isAuthenticated()) {
       redirectToSignIn(location);
     }
+
+    return fetchCurrentSession(context.queryClient, location);
   },
 
-  loader: async ({ context, location }) => {
-    const { queryClient } = context;
+  loader: async ({ context }) => {
+    const { user, organization, queryClient } = context;
 
     try {
-      const { user, organization } = await fetchCurrentSession(queryClient, location);
-
       await Promise.all([fetchCatalog(queryClient), preloadDatacenterLatencies(queryClient)]);
 
       return {

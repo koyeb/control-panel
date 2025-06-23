@@ -5,7 +5,7 @@ import { PlansPage } from 'src/pages/settings/organization/plans/plans.page';
 export const Route = createFileRoute('/_main/settings/plans')({
   component: PlansPage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'organizationSettings.plans'),
     };

@@ -10,12 +10,16 @@ export function getToken() {
   return sessionToken.read() ?? accessToken.read();
 }
 
-export function setToken(token: string | null) {
-  if (token !== null) {
-    localStorage.setItem('access-token', token);
+export function setToken(token: string | null, session = false) {
+  if (session) {
+    sessionToken.write(token);
   } else {
-    localStorage.removeItem('access-token');
+    accessToken.write(token);
   }
+}
+
+export function isSessionToken() {
+  return sessionToken.read() !== null;
 }
 
 export function useSetToken() {

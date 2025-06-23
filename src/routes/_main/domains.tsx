@@ -6,7 +6,7 @@ import { DomainsPage } from 'src/pages/domains/domains.page';
 export const Route = createFileRoute('/_main/domains')({
   component: DomainsPage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'domains'),
     };

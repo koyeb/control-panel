@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_main/database-services/new')({
     app_id: z.string().optional(),
   }),
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'createService'),
     };

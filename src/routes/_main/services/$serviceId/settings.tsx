@@ -5,7 +5,7 @@ import { ServiceSettingsPage } from 'src/pages/service/settings/service-settings
 export const Route = createFileRoute('/_main/services/$serviceId/settings')({
   component: ServiceSettingsPage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'service.settings'),
     };

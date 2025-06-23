@@ -1,17 +1,25 @@
 import { Button } from '@koyeb/design-system';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { setToken } from 'src/application/authentication';
+import { api } from 'src/api/api';
+import { Organization, User } from 'src/api/model';
+import { isSessionToken, setToken } from 'src/application/authentication';
+import { getConfig } from 'src/application/config';
 
 import { PostHogProvider } from 'src/application/posthog';
 import { NotificationContainer } from 'src/components/notification';
 import { Translate } from 'src/intl/translate';
+import { queryClient } from 'src/main';
 import { z } from 'zod';
 
 type RouterContext = {
   queryClient: QueryClient;
+  user?: User;
+  organization?: Organization | null;
   breadcrumb?: { label: () => React.ReactNode; link?: string };
 };
 
@@ -21,12 +29,49 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
   validateSearch: z.object({
     token: z.string().optional(),
+    'session-token': z.string().optional(),
+    'organization-id': z.string().optional(),
   }),
 
-  beforeLoad: ({ search }) => {
-    if (search.token) {
-      setToken(search.token.replace(/^Bearer /, ''));
-      throw redirect({ search: (prev) => ({ ...prev, token: undefined }) });
+  beforeLoad: async ({ context, search }) => {
+    const { token, 'session-token': sessionToken, 'organization-id': organizationId } = search;
+
+    const clearSearchParam = (param: 'token' | 'session-token' | 'organization-id') => {
+      throw redirect({ search: (prev) => ({ ...prev, [param]: undefined }) });
+    };
+
+    if (token) {
+      setToken(token.replace(/^Bearer /, ''));
+      context.queryClient.clear();
+
+      clearSearchParam('token');
+    }
+
+    if (sessionToken) {
+      setToken(sessionToken.replace(/^Bearer /, ''), true);
+      context.queryClient.clear();
+
+      clearSearchParam('session-token');
+    }
+
+    if (organizationId) {
+      const { token } = await api.switchOrganization({ path: { id: organizationId }, header: {} });
+
+      setToken(token!.id!);
+      context.queryClient.clear();
+
+      clearSearchParam('organization-id');
+    }
+
+    if (!isSessionToken()) {
+      void persistQueryClient({
+        queryClient,
+        buster: getConfig().version,
+        persister: createSyncStoragePersister({
+          key: 'query-cache',
+          storage: window.localStorage,
+        }),
+      });
     }
   },
 });

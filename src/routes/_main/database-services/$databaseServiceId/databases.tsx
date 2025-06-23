@@ -5,7 +5,7 @@ import { LogicalDatabasesPage } from 'src/pages/databases/database/logical-datab
 export const Route = createFileRoute('/_main/database-services/$databaseServiceId/databases')({
   component: LogicalDatabasesPage,
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'database.databases'),
     };

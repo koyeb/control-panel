@@ -9,7 +9,7 @@ export const Route = createFileRoute('/_main/settings')({
     </OrganizationSettingsLayout>
   ),
 
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     return {
       breadcrumb: getBreadcrumb(location, 'organizationSettings.index'),
     };

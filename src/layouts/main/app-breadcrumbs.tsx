@@ -55,7 +55,7 @@ export function AppServiceCrumb({ serviceId }: { serviceId: string }) {
   const appQuery = useAppQuery(serviceQuery.data?.appId);
 
   if (!appQuery.isSuccess || !serviceQuery.isSuccess) {
-    return <Crumb label={<TextSkeleton width={8} />} />;
+    return <TextSkeleton width={8} />;
   }
 
   const app = appQuery.data;
