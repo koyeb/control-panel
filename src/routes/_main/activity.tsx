@@ -5,7 +5,9 @@ import { ActivityPage } from 'src/pages/activity/activity.page';
 export const Route = createFileRoute('/_main/activity')({
   component: ActivityPage,
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'activity');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'activity'),
+    };
   },
 });

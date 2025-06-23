@@ -12,6 +12,7 @@ import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { Translate, TranslationKeys } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
+import { unique } from 'src/utils/arrays';
 
 type Prefix = `layouts.main.breadcrumbs`;
 type BreadcrumbKey =
@@ -27,7 +28,7 @@ export function getBreadcrumb(location: ParsedLocation, key: BreadcrumbKey) {
 
 export function AppBreadcrumbs() {
   const matches = useRouterState({ select: (s) => s.matches });
-  const crumbs = matches.map((match) => match.context.breadcrumb).filter(isDefined);
+  const crumbs = unique(matches.map((match) => match.context.breadcrumb).filter(isDefined));
 
   if (crumbs.length > 0) {
     crumbs.unshift({

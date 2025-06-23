@@ -9,7 +9,9 @@ export const Route = createFileRoute('/_main/volumes')({
     </VolumesLayout>
   ),
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'volumes');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'volumes'),
+    };
   },
 });

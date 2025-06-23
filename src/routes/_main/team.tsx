@@ -5,7 +5,9 @@ import { TeamPage } from 'src/pages/team/team.page';
 export const Route = createFileRoute('/_main/team')({
   component: TeamPage,
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'team');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'team'),
+    };
   },
 });

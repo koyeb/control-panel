@@ -5,7 +5,9 @@ import { BaseApiCredentialsPage } from 'src/pages/settings/api-credentials.page'
 export const Route = createFileRoute('/_main/settings/api')({
   component: () => <BaseApiCredentialsPage type="organization" />,
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'organizationSettings.billing');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'organizationSettings.billing'),
+    };
   },
 });

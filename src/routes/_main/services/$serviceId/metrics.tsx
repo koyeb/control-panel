@@ -20,7 +20,9 @@ export const Route = createFileRoute('/_main/services/$serviceId/metrics')({
       .default('5m'),
   }),
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'service.metrics');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'service.metrics'),
+    };
   },
 });

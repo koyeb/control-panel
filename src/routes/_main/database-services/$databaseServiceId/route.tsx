@@ -9,10 +9,12 @@ export const Route = createFileRoute('/_main/database-services/$databaseServiceI
     </DatabaseLayout>
   ),
 
-  loader: ({ context, params }) => {
-    context.breadcrumb = {
-      label: () => <AppServiceCrumb serviceId={params.databaseServiceId} />,
-      link: `/database-services/${params.databaseServiceId}`,
+  beforeLoad: ({ params }) => {
+    return {
+      breadcrumb: {
+        label: () => <AppServiceCrumb serviceId={params.databaseServiceId} />,
+        link: `/database-services/${params.databaseServiceId}`,
+      },
     };
   },
 });

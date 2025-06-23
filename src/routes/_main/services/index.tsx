@@ -5,7 +5,9 @@ import { ServicesPage } from 'src/pages/home/services.page';
 export const Route = createFileRoute('/_main/services/')({
   component: ServicesPage,
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'services');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'services'),
+    };
   },
 });

@@ -12,7 +12,9 @@ export const Route = createFileRoute('/_main/services/deploy')({
     model: z.string().optional(),
   }),
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'deploy');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'deploy'),
+    };
   },
 });

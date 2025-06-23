@@ -9,10 +9,12 @@ export const Route = createFileRoute('/_main/services/$serviceId')({
     </ServiceLayout>
   ),
 
-  loader: ({ context, params }) => {
-    context.breadcrumb = {
-      label: () => <AppServiceCrumb serviceId={params.serviceId} />,
-      link: `/services/${params.serviceId}`,
+  beforeLoad: ({ params }) => {
+    return {
+      breadcrumb: {
+        label: () => <AppServiceCrumb serviceId={params.serviceId} />,
+        link: `/services/${params.serviceId}`,
+      },
     };
   },
 });

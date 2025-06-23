@@ -19,9 +19,13 @@ export const Route = createFileRoute('/_main/services/new')({
       .default('serviceType'),
   }),
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'createService');
+  beforeLoad: ({ location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'createService'),
+    };
+  },
 
+  loader: ({ location }) => {
     if (!('service_type' in location.search)) {
       throw redirect({ from: Route.fullPath, search: { ...location.search, service_type: 'web' } });
     }

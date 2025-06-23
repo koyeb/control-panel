@@ -5,7 +5,9 @@ import { VolumeSnapshotsPage } from 'src/pages/volumes/volume-snapshots/volume-s
 export const Route = createFileRoute('/_main/volumes/snapshots')({
   component: VolumeSnapshotsPage,
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'volumeSnapshots');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'volumeSnapshots'),
+    };
   },
 });

@@ -5,7 +5,9 @@ import { DatabaseRolesPage } from 'src/pages/databases/database/roles/database-r
 export const Route = createFileRoute('/_main/database-services/$databaseServiceId/roles')({
   component: DatabaseRolesPage,
 
-  loader: ({ context, location }) => {
-    context.breadcrumb = getBreadcrumb(location, 'database.roles');
+  beforeLoad: ({ context, location }) => {
+    return {
+      breadcrumb: getBreadcrumb(location, 'database.roles'),
+    };
   },
 });
