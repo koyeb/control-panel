@@ -1,6 +1,6 @@
 // todo
-import './polyfills';
 import './intercom';
+import './polyfills';
 import './sentry';
 
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,7 +15,6 @@ import './styles.css';
 import { ApiError, hasMessage } from './api/api-errors';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
-import { LogoLoading } from './components/logo-loading';
 import { IntlProvider } from './intl/translation-provider';
 import { CommandPaletteProvider } from './modules/command-palette/command-palette.provider';
 import { routeTree } from './route-tree.generated';
@@ -82,7 +81,6 @@ export const queryClient = new QueryClient({
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
-  defaultPendingComponent: LogoLoading,
   defaultPendingMs: 0,
   defaultPendingMinMs: 0,
   defaultPreloadStaleTime: 0,

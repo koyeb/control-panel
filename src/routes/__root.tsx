@@ -3,14 +3,17 @@ import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persist
 import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { persistQueryClient } from '@tanstack/react-query-persist-client';
-import { Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-router';
+import { ErrorComponentProps, Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { api } from 'src/api/api';
+import { isApiError } from 'src/api/api-errors';
 import { Organization, User } from 'src/api/model';
 import { isSessionToken, setToken } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 
 import { PostHogProvider } from 'src/application/posthog';
+import { ErrorLayout, ErrorView } from 'src/components/error-boundary/error-view';
+import { LogoLoading } from 'src/components/logo-loading';
 import { NotificationContainer } from 'src/components/notification';
 import { Translate } from 'src/intl/translate';
 import { queryClient } from 'src/main';
@@ -26,6 +29,9 @@ type RouterContext = {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
   notFoundComponent: PageNotFound,
+  pendingComponent: LogoLoading,
+  errorComponent: ErrorComponent,
+  onCatch: reportError,
 
   validateSearch: z.object({
     token: z.string().optional(),
@@ -89,11 +95,8 @@ function RootComponent() {
 
 function PageNotFound() {
   return (
-    <div
-      className="col absolute inset-0 items-center justify-center gap-8 bg-black/95 bg-cover bg-center bg-no-repeat px-4 py-8 text-center text-white"
-      style={{ backgroundImage: 'url("/public/black-hole.svg")' }}
-    >
-      <div className="text-4xl md:text-6xl">
+    <ErrorLayout>
+      <div className="text-4xl font-bold md:text-6xl">
         <Translate id="pages.notFound.title" />
       </div>
 
@@ -104,6 +107,12 @@ function PageNotFound() {
       <Route.Link href="/" className={Button.className({ variant: 'ghost' }, 'mt-4')}>
         <Translate id="pages.notFound.back" />
       </Route.Link>
-    </div>
+    </ErrorLayout>
   );
+}
+
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
+  const { status, code } = isApiError(error) ? error : {};
+
+  return <ErrorView httpStatus={status} message={error.message} code={code} onReset={reset} />;
 }
