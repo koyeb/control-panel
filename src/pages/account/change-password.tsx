@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -14,6 +13,7 @@ import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { AuthenticationLayout } from 'src/layouts/authentication/authentication.layout';
 
+import { useSetToken } from 'src/application/authentication';
 import { AuthButton } from '../authentication/components/auth-button';
 import { AuthInput } from '../authentication/components/auth-input';
 
@@ -44,7 +44,7 @@ const schema = z.object({
 function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
-  const { clearToken } = useToken();
+  const setToken = useSetToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -61,9 +61,9 @@ function ChangePasswordForm() {
       body: { id: token, password },
     })),
     onSuccess() {
-      notify.success(t('successNotification'));
-      clearToken();
+      setToken(null);
       navigate(routes.signIn());
+      notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),
   });

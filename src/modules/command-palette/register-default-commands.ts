@@ -12,7 +12,6 @@ import {
 import { ServiceType } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
@@ -21,6 +20,7 @@ import { defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { capitalize } from 'src/utils/strings';
 
+import { useSetToken } from 'src/application/authentication';
 import { PaletteItem, useCommandPaletteContext } from './command-palette.provider';
 
 export function useRegisterDefaultItems() {
@@ -395,7 +395,7 @@ function useRegisterOneClickAppsCommands() {
 function useRegisterAccountCommands() {
   const { defaultItems, setItems, mutationEffects } = useCommandPaletteContext();
 
-  const { setToken } = useToken();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const { mutate: logout } = useLogoutMutation();

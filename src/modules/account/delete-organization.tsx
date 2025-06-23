@@ -4,9 +4,9 @@ import { Button } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
+import { setToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
@@ -15,7 +15,6 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('modules.account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const { setToken } = useToken();
   const user = useUser();
   const organization = useOrganization();
 

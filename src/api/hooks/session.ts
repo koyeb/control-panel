@@ -4,7 +4,7 @@ import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
 
 import { useNavigate } from '@tanstack/react-router';
-import { setToken } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { isApiError } from '../api-errors';
 import {
   mapOrganization,
@@ -104,6 +104,7 @@ export function useUserOrganizationMemberships() {
 }
 
 export function useLogoutMutation() {
+  const setToken = useSetToken();
   const navigate = useNavigate();
   // todo
   // const resetIdentify = useResetIdentifyUser();

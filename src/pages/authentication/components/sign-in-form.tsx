@@ -7,16 +7,15 @@ import { isApiError } from 'src/api/api-errors';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
+import { useNavigate, useSearch } from '@tanstack/react-router';
+import { useSetToken } from 'src/application/authentication';
 import { AuthButton } from './auth-button';
 import { AuthInput } from './auth-input';
-import { useSearch } from '@tanstack/react-router';
 
 const T = createTranslate('pages.authentication.signIn');
 
@@ -30,8 +29,8 @@ const invalidCredentialApiMessage =
 
 export function SignInForm() {
   const t = T.useTranslate();
-  const { setToken } = useToken();
-  const navigate = useNavigate();
+  const setToken = useSetToken();
+  const navigate = useNavigate({ from: '/auth/signin' });
   const getSeonFingerprint = useSeon();
 
   const { next } = useSearch({ from: '/auth/signin' });
@@ -52,7 +51,7 @@ export function SignInForm() {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!);
-      navigate(next ?? routes.home());
+      await navigate({ to: next ?? routes.home() });
     },
     onError(error) {
       if (isApiError(error) && error.message === invalidCredentialApiMessage) {

@@ -18,7 +18,6 @@ import { hasMessage } from './api/api-errors';
 import { getConfig } from './application/config';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
-import { TokenProvider } from './application/token';
 import { IntlProvider } from './intl/translation-provider';
 import { CommandPaletteProvider } from './modules/command-palette/command-palette.provider';
 import { routeTree } from './route-tree.generated';
@@ -87,14 +86,12 @@ declare module '@tanstack/react-router' {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <IntlProvider>
-    <TokenProvider>
-      <QueryClientProvider client={queryClient}>
-        <DialogProvider>
-          <CommandPaletteProvider>
-            <RouterProvider router={router} />
-          </CommandPaletteProvider>
-        </DialogProvider>
-      </QueryClientProvider>
-    </TokenProvider>
+    <QueryClientProvider client={queryClient}>
+      <DialogProvider>
+        <CommandPaletteProvider>
+          <RouterProvider router={router} />
+        </CommandPaletteProvider>
+      </DialogProvider>
+    </QueryClientProvider>
   </IntlProvider>,
 );

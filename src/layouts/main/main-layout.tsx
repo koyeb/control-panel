@@ -8,7 +8,6 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
@@ -38,6 +37,7 @@ import { OrganizationPlan } from './organization-plan';
 import { PlatformStatus } from './platform-status';
 import { PreloadDatacenterLatencies } from './preload-datacenter-latencies';
 import { UserMenu } from './user-menu';
+import { setToken } from 'src/application/authentication';
 
 const T = createTranslate('layouts.main');
 
@@ -140,7 +140,7 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
-  const { session } = useToken();
+  const session = false; // todo
   const trial = useTrial();
 
   if (session) {
@@ -154,12 +154,11 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const { clearToken } = useToken();
   const navigate = useNavigate();
 
   const mutation = useMutation({
     ...useApiMutationFn('logout', {}),
-    onMutate: clearToken,
+    onSettled: () => setToken(null),
     onSuccess: () => navigate(routes.home()),
   });
 

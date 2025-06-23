@@ -9,7 +9,6 @@ import { useUser } from 'src/api/hooks/session';
 import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
@@ -23,6 +22,7 @@ import { createTranslate, Translate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 import { slugify } from 'src/utils/strings';
 
+import { useSetToken } from 'src/application/authentication';
 import Background from './images/join-organization.svg?react';
 
 const T = createTranslate('pages.onboarding.joinOrganization');
@@ -65,7 +65,7 @@ export function JoinOrganization() {
 
 function CreateOrganization() {
   const user = useUser();
-  const { setToken } = useToken();
+  const setToken = useSetToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const state = useHistoryState();

@@ -1,7 +1,13 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { type ParsedLocation, redirect } from '@tanstack/react-router';
+import { useCallback } from 'react';
+import { createStoredData } from './storage';
+
+const accessToken = createStoredData(localStorage, 'access-token');
+const sessionToken = createStoredData(sessionStorage, 'session-token');
 
 export function getToken() {
-  return localStorage.getItem('access-token');
+  return sessionToken.read() ?? accessToken.read();
 }
 
 export function setToken(token: string | null) {
@@ -10,6 +16,18 @@ export function setToken(token: string | null) {
   } else {
     localStorage.removeItem('access-token');
   }
+}
+
+export function useSetToken() {
+  const queryClient = useQueryClient();
+
+  return useCallback(
+    (token: string | null) => {
+      setToken(token);
+      queryClient.clear();
+    },
+    [queryClient],
+  );
 }
 
 export function isAuthenticated() {
