@@ -68,7 +68,6 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchInterval: 5_000,
-      refetchOnMount: false,
       retry: (retryCount, error) => {
         if (error instanceof ApiError && error.status >= 500) {
           return retryCount < 5;
@@ -84,8 +83,8 @@ const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
   defaultPendingComponent: LogoLoading,
-  // defaultPendingMs: 0,
-  // defaultPendingMinMs: 0,
+  defaultPendingMs: 0,
+  defaultPendingMinMs: 0,
   defaultPreloadStaleTime: 0,
   scrollRestoration: true,
   context: {
