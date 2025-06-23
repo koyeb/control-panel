@@ -38,7 +38,7 @@ export function SignUpPage() {
 
         {method === 'email' && <SignUpForm />}
 
-        {method === null && (
+        {method === undefined && (
           <button
             type="button"
             className="row mx-auto items-center gap-1"

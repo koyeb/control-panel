@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { useOnboardingStep } from 'src/application/onboarding';
 import { routes } from 'src/application/routes';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useNavigate } from 'src/hooks/router';
@@ -11,12 +10,18 @@ import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.account.deactivateOrganization');
 
-export function ConfirmDeactivateOrganization({ confirmationId }: { confirmationId: string }) {
+type ConfirmDeactivateOrganizationProps = {
+  confirmationId: string;
+  redirect?: string;
+};
+
+export function ConfirmDeactivateOrganization({
+  confirmationId,
+  redirect,
+}: ConfirmDeactivateOrganizationProps) {
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();
-
-  const onboardingStep = useOnboardingStep();
 
   const { isIdle, mutate } = useMutation({
     ...useApiMutationFn('organizationConfirmation', (confirmationId: string) => ({
@@ -27,7 +32,7 @@ export function ConfirmDeactivateOrganization({ confirmationId }: { confirmation
       notify.info(t('deactivationSuccessNotification'));
     },
     onSettled() {
-      navigate(onboardingStep ? '/?settings' : routes.organizationSettings.index());
+      navigate(redirect ?? routes.organizationSettings.index());
     },
   });
 

@@ -24,6 +24,7 @@ import { Route as MainSettingsRouteRouteImport } from './routes/_main/settings/r
 import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/index'
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
 import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
+import { Route as AccountValidateTokenRouteImport } from './routes/account.validate.$token'
 import { Route as AccountResetPasswordTokenRouteImport } from './routes/account.reset-password.$token'
 import { Route as MainVolumesSnapshotsRouteImport } from './routes/_main/volumes/snapshots'
 import { Route as MainSettingsRegistryConfigurationRouteImport } from './routes/_main/settings/registry-configuration'
@@ -47,7 +48,6 @@ import { Route as MainServicesServiceIdConsoleRouteImport } from './routes/_main
 import { Route as MainDatabaseServicesDatabaseServiceIdSettingsRouteImport } from './routes/_main/database-services/$databaseServiceId/settings'
 import { Route as MainDatabaseServicesDatabaseServiceIdRolesRouteImport } from './routes/_main/database-services/$databaseServiceId/roles'
 import { Route as MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport } from './routes/_main/database-services/$databaseServiceId/databases'
-import { Route as MainAccountValidateTokenRouteImport } from './routes/_main/account/validate.$token'
 import { Route as MainAccountOrganization_invitationsInvitationIdRouteImport } from './routes/_main/account/organization_invitations.$invitationId'
 import { Route as MainOrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/_main/organization.deactivate.confirm.$confirmationId'
 import { Route as MainAccountOauthGithubCallbackRouteImport } from './routes/_main/account/oauth.github.callback'
@@ -125,6 +125,11 @@ const MainServicesIndexRoute = MainServicesIndexRouteImport.update({
   id: '/services/',
   path: '/services/',
   getParentRoute: () => MainRouteRoute,
+} as any)
+const AccountValidateTokenRoute = AccountValidateTokenRouteImport.update({
+  id: '/account/validate/$token',
+  path: '/account/validate/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AccountResetPasswordTokenRoute =
   AccountResetPasswordTokenRouteImport.update({
@@ -254,12 +259,6 @@ const MainDatabaseServicesDatabaseServiceIdDatabasesRoute =
     path: '/databases',
     getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
   } as any)
-const MainAccountValidateTokenRoute =
-  MainAccountValidateTokenRouteImport.update({
-    id: '/account/validate/$token',
-    path: '/account/validate/$token',
-    getParentRoute: () => MainRouteRoute,
-  } as any)
 const MainAccountOrganization_invitationsInvitationIdRoute =
   MainAccountOrganization_invitationsInvitationIdRouteImport.update({
     id: '/account/organization_invitations/$invitationId',
@@ -303,11 +302,11 @@ export interface FileRoutesByFullPath {
   '/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
+  '/account/validate/$token': typeof AccountValidateTokenRoute
   '/services': typeof MainServicesIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/volumes/': typeof MainVolumesIndexRoute
   '/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
-  '/account/validate/$token': typeof MainAccountValidateTokenRoute
   '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
@@ -341,11 +340,11 @@ export interface FileRoutesByTo {
   '/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
+  '/account/validate/$token': typeof AccountValidateTokenRoute
   '/services': typeof MainServicesIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/volumes': typeof MainVolumesIndexRoute
   '/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
-  '/account/validate/$token': typeof MainAccountValidateTokenRoute
   '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
@@ -386,11 +385,11 @@ export interface FileRoutesById {
   '/_main/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
   '/_main/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
+  '/account/validate/$token': typeof AccountValidateTokenRoute
   '/_main/services/': typeof MainServicesIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/volumes/': typeof MainVolumesIndexRoute
   '/_main/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
-  '/_main/account/validate/$token': typeof MainAccountValidateTokenRoute
   '/_main/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/_main/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/_main/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
@@ -431,11 +430,11 @@ export interface FileRouteTypes {
     | '/settings/registry-configuration'
     | '/volumes/snapshots'
     | '/account/reset-password/$token'
+    | '/account/validate/$token'
     | '/services'
     | '/settings/'
     | '/volumes/'
     | '/account/organization_invitations/$invitationId'
-    | '/account/validate/$token'
     | '/database-services/$databaseServiceId/databases'
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
@@ -469,11 +468,11 @@ export interface FileRouteTypes {
     | '/settings/registry-configuration'
     | '/volumes/snapshots'
     | '/account/reset-password/$token'
+    | '/account/validate/$token'
     | '/services'
     | '/settings'
     | '/volumes'
     | '/account/organization_invitations/$invitationId'
-    | '/account/validate/$token'
     | '/database-services/$databaseServiceId/databases'
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
@@ -513,11 +512,11 @@ export interface FileRouteTypes {
     | '/_main/settings/registry-configuration'
     | '/_main/volumes/snapshots'
     | '/account/reset-password/$token'
+    | '/account/validate/$token'
     | '/_main/services/'
     | '/_main/settings/'
     | '/_main/volumes/'
     | '/_main/account/organization_invitations/$invitationId'
-    | '/_main/account/validate/$token'
     | '/_main/database-services/$databaseServiceId/databases'
     | '/_main/database-services/$databaseServiceId/roles'
     | '/_main/database-services/$databaseServiceId/settings'
@@ -537,6 +536,7 @@ export interface RootRouteChildren {
   MainRouteRoute: typeof MainRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AccountResetPasswordTokenRoute: typeof AccountResetPasswordTokenRoute
+  AccountValidateTokenRoute: typeof AccountValidateTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -645,6 +645,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/services'
       preLoaderRoute: typeof MainServicesIndexRouteImport
       parentRoute: typeof MainRouteRoute
+    }
+    '/account/validate/$token': {
+      id: '/account/validate/$token'
+      path: '/account/validate/$token'
+      fullPath: '/account/validate/$token'
+      preLoaderRoute: typeof AccountValidateTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/account/reset-password/$token': {
       id: '/account/reset-password/$token'
@@ -807,13 +814,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport
       parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
     }
-    '/_main/account/validate/$token': {
-      id: '/_main/account/validate/$token'
-      path: '/account/validate/$token'
-      fullPath: '/account/validate/$token'
-      preLoaderRoute: typeof MainAccountValidateTokenRouteImport
-      parentRoute: typeof MainRouteRoute
-    }
     '/_main/account/organization_invitations/$invitationId': {
       id: '/_main/account/organization_invitations/$invitationId'
       path: '/account/organization_invitations/$invitationId'
@@ -948,7 +948,6 @@ interface MainRouteRouteChildren {
   MainServicesNewRoute: typeof MainServicesNewRoute
   MainServicesIndexRoute: typeof MainServicesIndexRoute
   MainAccountOrganization_invitationsInvitationIdRoute: typeof MainAccountOrganization_invitationsInvitationIdRoute
-  MainAccountValidateTokenRoute: typeof MainAccountValidateTokenRoute
   MainAccountOauthGithubCallbackRoute: typeof MainAccountOauthGithubCallbackRoute
   MainOrganizationDeactivateConfirmConfirmationIdRoute: typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
@@ -971,7 +970,6 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainServicesIndexRoute: MainServicesIndexRoute,
   MainAccountOrganization_invitationsInvitationIdRoute:
     MainAccountOrganization_invitationsInvitationIdRoute,
-  MainAccountValidateTokenRoute: MainAccountValidateTokenRoute,
   MainAccountOauthGithubCallbackRoute: MainAccountOauthGithubCallbackRoute,
   MainOrganizationDeactivateConfirmConfirmationIdRoute:
     MainOrganizationDeactivateConfirmConfirmationIdRoute,
@@ -1001,6 +999,7 @@ const rootRouteChildren: RootRouteChildren = {
   MainRouteRoute: MainRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
   AccountResetPasswordTokenRoute: AccountResetPasswordTokenRoute,
+  AccountValidateTokenRoute: AccountValidateTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

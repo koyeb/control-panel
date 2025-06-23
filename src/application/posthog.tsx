@@ -34,7 +34,7 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
       }}
     >
       <TrackPageViews />
-      <IdentifyUser />
+
       {children}
     </PostHogJsProvider>
   );
@@ -57,7 +57,7 @@ function TrackPageViews() {
   return null;
 }
 
-function IdentifyUser() {
+export function IdentifyUser() {
   const posthog = usePostHog();
 
   const user = useUserUnsafe();
