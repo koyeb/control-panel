@@ -58,7 +58,7 @@ window.addEventListener('error', function (event) {
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: async (error) => {
+    onError: (error) => {
       if (error instanceof ApiError && error.status === 401) {
         queryClient.clear();
         window.location.reload();

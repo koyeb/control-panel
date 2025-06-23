@@ -1,4 +1,5 @@
 {
+  "include": ["src"],
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
@@ -21,9 +22,7 @@
     "noUncheckedIndexedAccess": true,
 
     "paths": {
-      "@koyeb/design-system": ["./design-system/src"],
       "src/*": ["./src/*"]
     }
-  },
-  "include": ["src"]
+  }
 }
