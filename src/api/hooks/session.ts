@@ -18,6 +18,7 @@ import { useApiMutationFn, useApiQueryFn } from '../use-api';
 export function useUserQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentUser'),
+    experimental_prefetchInRender: true,
     placeholderData: keepPreviousData,
     select: ({ user }) => mapUser(user!),
     throwOnError: (error) => {
@@ -41,6 +42,7 @@ export function useUser() {
 export function useOrganizationQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentOrganization'),
+    experimental_prefetchInRender: true,
     placeholderData: keepPreviousData,
     select: ({ organization }) => mapOrganization(organization!),
     throwOnError: (error) => {

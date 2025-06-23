@@ -1,7 +1,9 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, Outlet, ParsedLocation, useMatches } from '@tanstack/react-router';
+import { use } from 'react';
 
 import { ApiError, isAccountLockedError } from 'src/api/api-errors';
+import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { apiQueryFn } from 'src/api/use-api';
@@ -16,6 +18,9 @@ import { OnboardingPage } from 'src/pages/onboarding/onboarding.page';
 export const Route = createFileRoute('/_main')({
   component: function Component() {
     const { locked, onboardingStep } = Route.useLoaderData();
+
+    use(useUserQuery().promise);
+    use(useOrganizationQuery().promise);
 
     const matchConfirmDeactivateOrganization = useMatches().find(
       (route) => route.routeId === '/_main/organization/deactivate/confirm/$confirmationId',
