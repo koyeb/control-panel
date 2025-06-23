@@ -1,11 +1,14 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, Outlet, ParsedLocation, useMatches } from '@tanstack/react-router';
+import { isAfter, sub } from 'date-fns';
+import { jwtDecode } from 'jwt-decode';
+import { api } from 'src/api/api';
 
 import { ApiError, isAccountLockedError } from 'src/api/api-errors';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { apiQueryFn } from 'src/api/use-api';
-import { isAuthenticated, redirectToSignIn, setToken } from 'src/application/authentication';
+import { getToken, isAuthenticated, redirectToSignIn, setToken } from 'src/application/authentication';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { IdentifyUser } from 'src/application/posthog';
 import { getUrlLatency } from 'src/application/url-latency';
@@ -53,7 +56,7 @@ export const Route = createFileRoute('/_main')({
     const { user, organization, queryClient } = context;
 
     try {
-      await Promise.all([fetchCatalog(queryClient), preloadDatacenterLatencies(queryClient)]);
+      await Promise.all([refreshToken(), fetchCatalog(queryClient), preloadDatacenterLatencies(queryClient)]);
 
       return {
         locked: false,
@@ -68,6 +71,17 @@ export const Route = createFileRoute('/_main')({
     }
   },
 });
+
+async function refreshToken() {
+  const token = getToken();
+  const exp = token ? jwtDecode(token).exp : null;
+  const expires = exp ? new Date(exp * 1000) : null;
+
+  if (expires && isAfter(new Date(), sub(expires, { hours: 12 }))) {
+    const { token } = await api.refreshToken({});
+    setToken(token!.id!);
+  }
+}
 
 async function fetchCurrentSession(queryClient: QueryClient, location: ParsedLocation) {
   try {
