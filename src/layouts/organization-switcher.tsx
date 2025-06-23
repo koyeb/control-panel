@@ -1,4 +1,4 @@
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
@@ -13,9 +13,9 @@ import { SvgComponent } from 'src/application/types';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
+import { useNavigate } from '@tanstack/react-router';
 
 const T = createTranslate('layouts.organizationSwitcher');
 
@@ -161,6 +161,7 @@ function useOrganizationList(search: string) {
 
 function useSwitchOrganization(onSuccess?: () => void) {
   const { setToken } = useToken();
+  const queryClient = useQueryClient();
   const getSeonFingerprint = useSeon();
   const navigate = useNavigate();
 
@@ -171,7 +172,8 @@ function useSwitchOrganization(onSuccess?: () => void) {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!);
-      navigate(routes.home());
+      queryClient.clear();
+      await navigate({ to: '/' });
       onSuccess?.();
     },
   });

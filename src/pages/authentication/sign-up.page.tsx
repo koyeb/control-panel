@@ -42,7 +42,7 @@ export function SignUpPage() {
           <button
             type="button"
             className="row mx-auto items-center gap-1"
-            onClick={() => navigate({ search: { method: 'email' } })}
+            onClick={() => void navigate({ to: '.', search: { method: 'email' } })}
           >
             <IconMail className="size-4" /> <T id="emailSignUp" />
           </button>

@@ -65,7 +65,7 @@ export function JoinOrganization() {
 
 function CreateOrganization() {
   const user = useUser();
-  const { token, setToken } = useToken();
+  const { setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const state = useHistoryState();
@@ -90,12 +90,10 @@ function CreateOrganization() {
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
       const { organization } = await api.createOrganization({
-        token,
         body: { name: organizationName },
       });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: organization!.id! },
         header: {},
       });

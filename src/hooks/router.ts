@@ -43,7 +43,7 @@ export function useNavigate() {
 
   return useCallback<Navigate>(
     (to, options) => {
-      navigate({ to, ...options });
+      void navigate({ to, ...options });
     },
     [navigate],
   );

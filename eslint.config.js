@@ -71,6 +71,7 @@ export default [
         },
       ],
       '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
+      '@typescript-eslint/only-throw-error': 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',

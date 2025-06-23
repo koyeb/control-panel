@@ -8,7 +8,6 @@ import { api, ApiEndpointParams } from 'src/api/api';
 import { RegistrySecret, type RegistryType } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { readFile } from 'src/application/read-file';
-import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
@@ -69,20 +68,17 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
   }, [form, secret]);
 
   const invalidate = useInvalidateApiQuery();
-  const { token } = useToken();
 
   const { mutateAsync: createSecret } = useMutation({
     async mutationFn(values: z.infer<typeof schema>) {
       if (secret) {
         return api.updateSecret({
-          token,
           path: { id: secret.id },
           query: {},
           body: getSecretPayload(values),
         });
       } else {
         return api.createSecret({
-          token,
           body: getSecretPayload(values),
         });
       }

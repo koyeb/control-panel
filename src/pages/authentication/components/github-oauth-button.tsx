@@ -19,7 +19,6 @@ export function GithubOAuthButton({ action, className, children }: GithubOAuthBu
 
   const mutation = useMutation({
     ...useApiMutationFn('setUpOAuth', {
-      token: undefined,
       query: { action, metadata: next ?? undefined },
     }),
     onSuccess({ oauth_providers }) {

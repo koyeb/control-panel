@@ -34,7 +34,8 @@ export function InstanceRegionStep() {
   const selectedRegions = regions.filter((region) => regionsParam?.includes(region.id));
 
   const setInstanceParam = (instance: string) => {
-    navigate({
+    void navigate({
+      to: '.',
       replace: true,
       search: (prev) => ({
         ...prev,
@@ -44,7 +45,8 @@ export function InstanceRegionStep() {
   };
 
   const setRegionsParam = (regions: string[]) => {
-    navigate({
+    void navigate({
+      to: '.',
       replace: true,
       search: (prev) => ({ ...prev, regions }),
     });

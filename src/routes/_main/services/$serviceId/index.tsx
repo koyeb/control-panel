@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
 import { mapService } from 'src/api/mappers/service';
-import { useApiQueryFn } from 'src/api/use-api';
+import { apiQueryFn } from 'src/api/use-api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
 
@@ -17,16 +17,16 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
     const { queryClient } = context;
 
     const service = await queryClient
-      .ensureQueryData(useApiQueryFn('getService', { path: { id: params.serviceId } }))
+      .ensureQueryData(apiQueryFn('getService', { path: { id: params.serviceId } }))
       .then(({ service }) => mapService(service!));
 
-    const queries = new Array<ReturnType<typeof useApiQueryFn>>();
+    const queries = new Array<ReturnType<typeof apiQueryFn>>();
 
-    queries.push(useApiQueryFn('getApp', { path: { id: service.appId } }));
-    queries.push(useApiQueryFn('getDeployment', { path: { id: service.latestDeploymentId } }));
+    queries.push(apiQueryFn('getApp', { path: { id: service.appId } }));
+    queries.push(apiQueryFn('getDeployment', { path: { id: service.latestDeploymentId } }));
 
     queries.push(
-      useApiQueryFn('listDeployments', {
+      apiQueryFn('listDeployments', {
         query: {
           service_id: service.id,
           limit: String(10),
@@ -37,7 +37,7 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
     );
 
     if (service.activeDeploymentId) {
-      queries.push(useApiQueryFn('getDeployment', { path: { id: service.activeDeploymentId } }));
+      queries.push(apiQueryFn('getDeployment', { path: { id: service.activeDeploymentId } }));
     }
 
     await Promise.all(queries.map((query) => queryClient.ensureQueryData(query)));

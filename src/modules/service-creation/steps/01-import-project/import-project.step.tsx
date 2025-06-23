@@ -12,7 +12,8 @@ export function ImportProjectStep() {
       {type === 'git' && (
         <RepositorySelector
           onImport={(repository) => {
-            navigate({
+            void navigate({
+              to: '.',
               search: (prev) => ({
                 ...prev,
                 step: 'instanceRegions',
@@ -26,7 +27,8 @@ export function ImportProjectStep() {
       {type === 'docker' && (
         <DockerImageSelector
           onSelected={(image, secretName) => {
-            navigate({
+            void navigate({
+              to: '.',
               search: (prev) => ({
                 ...prev,
                 step: 'instanceRegions',

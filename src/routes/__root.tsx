@@ -1,12 +1,14 @@
 import { Button } from '@koyeb/design-system';
 import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
+import { Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { setToken } from 'src/application/authentication';
 
 import { PostHogProvider } from 'src/application/posthog';
 import { NotificationContainer } from 'src/components/notification';
 import { Translate } from 'src/intl/translate';
+import { z } from 'zod';
 
 type RouterContext = {
   queryClient: QueryClient;
@@ -16,6 +18,17 @@ type RouterContext = {
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
   notFoundComponent: PageNotFound,
+
+  validateSearch: z.object({
+    token: z.string().optional(),
+  }),
+
+  beforeLoad: ({ search }) => {
+    if (search.token) {
+      setToken(search.token.replace(/^Bearer /, ''));
+      throw redirect({ search: (prev) => ({ ...prev, token: undefined }) });
+    }
+  },
 });
 
 function RootComponent() {

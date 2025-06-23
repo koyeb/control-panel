@@ -48,7 +48,7 @@ const sessionTokenApi = createTokenApi(sessionStorage, 'session-token');
 export const getToken = () => sessionTokenApi.read() ?? accessTokenApi.read();
 
 type TokenContext = {
-  token: string | undefined;
+  // token: string | undefined;
   session?: true;
   setToken: (token: string) => void;
   clearToken: () => void;
@@ -64,15 +64,11 @@ export function TokenProvider({ children }: TokenProviderProps) {
   // const [tokenParam, setTokenParam] = useSearchParam('session-token');
 
   const accessToken = useTokenContext(accessTokenApi);
-  const sessionToken = useTokenContext(sessionTokenApi, true);
+  // const sessionToken = useTokenContext(sessionTokenApi, true);
 
   const value = useMemo(() => {
-    if (sessionToken.token !== undefined) {
-      return sessionToken;
-    }
-
     return accessToken;
-  }, [accessToken, sessionToken]);
+  }, [accessToken]);
 
   // useMount(() => {
   //   if (tokenParam !== null) {
@@ -120,7 +116,7 @@ function useTokenContext({ read, write, listen }: TokenApi, session?: true) {
 
 export function useToken(): TokenContext {
   return {
-    token: accessTokenApi.read(),
+    // token: accessTokenApi.read(),
     setToken: (token) => accessTokenApi.write(token),
     clearToken: () => accessTokenApi.write(undefined),
   };
@@ -129,7 +125,7 @@ export function useToken(): TokenContext {
 }
 
 export function useRefreshToken() {
-  const { token, setToken } = useToken();
+  const { setToken } = useToken();
   const pathname = usePathname();
 
   const { mutate } = useMutation({
@@ -138,12 +134,13 @@ export function useRefreshToken() {
   });
 
   useEffect(() => {
+    const token = getToken();
     const expires = token ? jwtExpires(token) : undefined;
 
     if (expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
       mutate();
     }
-  }, [pathname, token, mutate]);
+  }, [pathname, mutate]);
 }
 
 function jwtExpires(jwt: string) {

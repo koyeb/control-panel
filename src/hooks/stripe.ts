@@ -5,7 +5,6 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
-import { getToken } from 'src/application/token';
 import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
@@ -55,8 +54,7 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
 }
 
 async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
-  const token = getToken();
-  const { payment_method } = await api.createPaymentAuthorization({ token });
+  const { payment_method } = await api.createPaymentAuthorization({});
 
   try {
     const card = elements.getElement(CardNumberElement);
@@ -72,21 +70,19 @@ async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
     }
   } finally {
     await api.confirmPaymentAuthorization({
-      token,
       path: { id: payment_method!.id! },
     });
   }
 }
 
 async function waitForPaymentMethod() {
-  const token = getToken();
   let hasPaymentMethod = false;
 
   const start = new Date().getTime();
   const elapsed = () => new Date().getTime() - start;
 
   while (!hasPaymentMethod && elapsed() <= waitForPaymentMethodTimeout) {
-    const organization = await api.getCurrentOrganization({ token });
+    const organization = await api.getCurrentOrganization({});
 
     hasPaymentMethod = Boolean(organization.organization?.has_payment_method);
 

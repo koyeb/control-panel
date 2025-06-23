@@ -37,7 +37,7 @@ export function ServiceCreation() {
     const nextStep = steps.at(index + 1);
 
     if (nextStep) {
-      navigate({ search: { step: nextStep, service_id: serviceId } });
+      void navigate({ to: '.', search: { step: nextStep, service_id: serviceId } });
     }
   };
 
@@ -73,7 +73,7 @@ export function ServiceCreation() {
               active={step === currentStep}
               onClick={
                 isBefore(step, currentStep)
-                  ? () => navigate({ search: (prev) => ({ ...prev, step }) })
+                  ? () => void navigate({ to: '.', search: (prev) => ({ ...prev, step }) })
                   : undefined
               }
             >

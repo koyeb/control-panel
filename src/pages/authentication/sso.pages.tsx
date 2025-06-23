@@ -4,7 +4,6 @@ import { api } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -14,7 +13,6 @@ import { AssertionError, assert } from 'src/utils/assert';
 const T = createTranslate('pages.authentication.sso');
 
 export function CannySso() {
-  const { token } = useToken();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
@@ -26,9 +24,7 @@ export function CannySso() {
       assert(companyID !== null, new AssertionError('Missing companyID query parameter'));
       assert(redirect !== null, new AssertionError('Missing redirect query parameter'));
 
-      const { token: cannyToken } = await api.cannySso({
-        token,
-      });
+      const { token: cannyToken } = await api.cannySso({});
 
       return {
         companyID,
@@ -60,7 +56,6 @@ export function CannySso() {
 }
 
 export function DiscourseSsoPage() {
-  const { token } = useToken();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
@@ -73,7 +68,6 @@ export function DiscourseSsoPage() {
       assert(sig !== null, new AssertionError('Missing sig query parameter'));
 
       const result = await api.discourseSso({
-        token,
         body: { payload: sso, sig },
       });
 

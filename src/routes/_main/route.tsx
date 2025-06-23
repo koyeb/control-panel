@@ -4,11 +4,10 @@ import { createFileRoute, Outlet, ParsedLocation, useMatches } from '@tanstack/r
 import { ApiError, isAccountLockedError } from 'src/api/api-errors';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
-import { useApiQueryFn } from 'src/api/use-api';
-import { redirectToSignIn, setToken } from 'src/application/authentication';
+import { apiQueryFn } from 'src/api/use-api';
+import { getToken, redirectToSignIn, setToken } from 'src/application/authentication';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { IdentifyUser } from 'src/application/posthog';
-import { useToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -43,7 +42,7 @@ export const Route = createFileRoute('/_main')({
   },
 
   beforeLoad: ({ location }) => {
-    if (!useToken().token) {
+    if (!getToken()) {
       redirectToSignIn(location);
     }
   },
@@ -73,9 +72,9 @@ export const Route = createFileRoute('/_main')({
 async function fetchCurrentSession(queryClient: QueryClient, location: ParsedLocation) {
   try {
     const [user, organization] = await Promise.all([
-      queryClient.ensureQueryData(useApiQueryFn('getCurrentUser')).then(({ user }) => mapUser(user!)),
+      queryClient.ensureQueryData(apiQueryFn('getCurrentUser')).then(({ user }) => mapUser(user!)),
       queryClient
-        .ensureQueryData(useApiQueryFn('getCurrentOrganization'))
+        .ensureQueryData(apiQueryFn('getCurrentOrganization'))
         .then(({ organization }) => mapOrganization(organization!))
         .catch((error) => {
           if (error instanceof ApiError && error.status === 404) {
@@ -91,15 +90,15 @@ async function fetchCurrentSession(queryClient: QueryClient, location: ParsedLoc
         throw { status: 403, message: 'Account is locked' };
       }
 
-      const queries = new Array<ReturnType<typeof useApiQueryFn>>();
+      const queries = new Array<ReturnType<typeof apiQueryFn>>();
 
       if (organization.latestSubscriptionId) {
-        queries.push(useApiQueryFn('getSubscription', { path: { id: organization.latestSubscriptionId } }));
+        queries.push(apiQueryFn('getSubscription', { path: { id: organization.latestSubscriptionId } }));
       }
 
       if (organization) {
-        queries.push(useApiQueryFn('organizationSummary', { path: { organization_id: organization.id } }));
-        queries.push(useApiQueryFn('organizationQuotas', { path: { organization_id: organization.id } }));
+        queries.push(apiQueryFn('organizationSummary', { path: { organization_id: organization.id } }));
+        queries.push(apiQueryFn('organizationQuotas', { path: { organization_id: organization.id } }));
       }
 
       await Promise.all(queries.map((query) => queryClient.ensureQueryData(query)));
@@ -121,15 +120,15 @@ async function fetchCurrentSession(queryClient: QueryClient, location: ParsedLoc
 
 async function fetchCatalog(queryClient: QueryClient) {
   await Promise.all([
-    queryClient.ensureQueryData(useApiQueryFn('listCatalogDatacenters')),
-    queryClient.ensureQueryData(useApiQueryFn('listCatalogRegions')),
-    queryClient.ensureQueryData(useApiQueryFn('listCatalogInstances')),
+    queryClient.ensureQueryData(apiQueryFn('listCatalogDatacenters')),
+    queryClient.ensureQueryData(apiQueryFn('listCatalogRegions')),
+    queryClient.ensureQueryData(apiQueryFn('listCatalogInstances')),
   ]);
 }
 
 async function preloadDatacenterLatencies(queryClient: QueryClient) {
   const datacenters = await queryClient
-    .ensureQueryData(useApiQueryFn('listCatalogDatacenters'))
+    .ensureQueryData(apiQueryFn('listCatalogDatacenters'))
     .then(({ datacenters }) => datacenters!.map(mapCatalogDatacenter));
 
   const urls = datacenters

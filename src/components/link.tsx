@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { Link as BaseLink } from '@tanstack/react-router';
 import { createElement } from 'react';
-// eslint-disable-next-line no-restricted-imports
 
 import { Button, ButtonColor, ButtonSize, ButtonVariant, Spinner, TabButton } from '@koyeb/design-system';
 import { Extend } from 'src/utils/types';

@@ -181,7 +181,6 @@ type PageContextProps = {
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
-  const { token } = useToken();
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
@@ -201,9 +200,9 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
   useEffect(() => {
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+      iFrameRef.current?.contentWindow?.postMessage({ location }, pageContextBaseUrl);
     }
-  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
+  }, [pageContextBaseUrl, iFrameRef, ready, location]);
 
   return (
     <>

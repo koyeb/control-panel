@@ -18,7 +18,6 @@ import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
 import { getConfig } from './config';
-import { getToken } from './token';
 
 export function getServiceLink(service: Service) {
   if (service.type === 'database') {
@@ -122,16 +121,13 @@ export async function updateDatabaseService(
   serviceId: string,
   updater: (deployment: Api.DeploymentDefinition) => void,
 ) {
-  const token = getToken();
-
-  const { service } = await api.getService({ token, path: { id: serviceId } });
-  const { deployment } = await api.getDeployment({ token, path: { id: service!.latest_deployment_id! } });
+  const { service } = await api.getService({ path: { id: serviceId } });
+  const { deployment } = await api.getDeployment({ path: { id: service!.latest_deployment_id! } });
   const definition = deployment!.definition!;
 
   updater(definition);
 
   await api.updateService({
-    token,
     path: { id: serviceId },
     query: {},
     body: { definition },

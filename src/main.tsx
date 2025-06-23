@@ -50,6 +50,7 @@ window.addEventListener('error', function (event) {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      refetchInterval: 5_000,
       refetchOnMount: false,
     },
   },

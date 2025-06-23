@@ -20,17 +20,16 @@ type HandleInvitationsProps = {
 };
 
 export function HandleInvitation({ invitation }: HandleInvitationsProps) {
-  const { token, setToken } = useToken();
+  const { setToken } = useToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
   const acceptMutation = useMutation({
     async mutationFn(invitation: OrganizationInvitation) {
-      await api.acceptInvitation({ token, path: { id: invitation.id } });
+      await api.acceptInvitation({ path: { id: invitation.id } });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: invitation.organization.id },
         header: {},
       });

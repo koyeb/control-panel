@@ -8,7 +8,6 @@ import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/ho
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
-import { useToken } from 'src/application/token';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useShortcut } from 'src/hooks/shortcut';
 import { AssertionError, assert, defined } from 'src/utils/assert';
@@ -162,14 +161,11 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
 }
 
 function useDeployments(service: Service) {
-  const { token } = useToken();
-
   const deploymentsQuery = useInfiniteQuery({
-    queryKey: ['listDeployments', { token, serviceId: service.id }],
+    queryKey: ['listDeployments', { serviceId: service.id }],
     initialPageParam: 0,
     async queryFn({ pageParam }) {
       const { count, deployments } = await api.listDeployments({
-        token,
         query: {
           service_id: service.id,
           limit: String(10),
@@ -241,7 +237,7 @@ function useSelectedDeployment(deployments: ComputeDeployment[], noDefaultSelect
 
   const setSelectedDeployment = useCallback(
     (deployment: ComputeDeployment) => {
-      navigate({ to: '.', search: { deploymentId: deployment.id }, replace: true });
+      void navigate({ to: '.', search: { deploymentId: deployment.id }, replace: true });
     },
     [navigate],
   );

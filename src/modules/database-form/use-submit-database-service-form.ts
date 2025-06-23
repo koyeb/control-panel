@@ -7,7 +7,6 @@ import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { updateDatabaseService } from 'src/application/service-functions';
-import { useToken } from 'src/application/token';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
@@ -25,7 +24,6 @@ export function useSubmitDatabaseServiceForm(
 ) {
   const { appId } = snakeToCamelDeep(useSearch({ from: '/_main/database-services/new' }));
   const organization = useOrganization();
-  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const prefetch = usePrefetchApiQuery();
   const navigate = useNavigate();
@@ -43,9 +41,8 @@ export function useSubmitDatabaseServiceForm(
         return databaseServiceId;
       } else {
         const { service } = await api.createService({
-          token,
           query: { dry_run: false },
-          body: createApiService(appId ?? (await getDatabaseAppId(token, values.serviceName)), values),
+          body: createApiService(appId ?? (await getDatabaseAppId(values.serviceName)), values),
         });
 
         return service!.id!;
@@ -75,9 +72,8 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(token: string | undefined, appName: string): Promise<string> {
+async function getDatabaseAppId(appName: string): Promise<string> {
   const { apps } = await api.listApps({
-    token,
     query: { name: appName },
   });
 
@@ -88,7 +84,6 @@ async function getDatabaseAppId(token: string | undefined, appName: string): Pro
   }
 
   const { app } = await api.createApp({
-    token,
     body: { name: appName },
   });
 

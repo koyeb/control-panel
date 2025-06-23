@@ -25,11 +25,12 @@ export function DeployOneClickApp() {
   useEffect(() => {
     if (oneClickAppsQuery.isSuccess) {
       if (app === undefined) {
-        navigate({ search: (prev) => ({ ...prev, one_click_app: undefined }), replace: true });
+        void navigate({ to: '.', search: (prev) => ({ ...prev, one_click_app: undefined }), replace: true });
       } else {
         const { searchParams } = new URL(app.deployUrl);
 
-        navigate({
+        void navigate({
+          to: '.',
           search: {
             ...Object.fromEntries(searchParams.entries()),
             one_click_app: app.slug,
