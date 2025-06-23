@@ -18,6 +18,7 @@ import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-passw
 import { Route as MainTeamRouteImport } from './routes/_main/team'
 import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
 import { Route as MainDomainsRouteImport } from './routes/_main/domains'
+import { Route as MainDeployRouteImport } from './routes/_main/deploy'
 import { Route as MainActivityRouteImport } from './routes/_main/activity'
 import { Route as MainVolumesRouteRouteImport } from './routes/_main/volumes/route'
 import { Route as MainSettingsRouteRouteImport } from './routes/_main/settings/route'
@@ -94,6 +95,11 @@ const MainSecretsRoute = MainSecretsRouteImport.update({
 const MainDomainsRoute = MainDomainsRouteImport.update({
   id: '/domains',
   path: '/domains',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainDeployRoute = MainDeployRouteImport.update({
+  id: '/deploy',
+  path: '/deploy',
   getParentRoute: () => MainRouteRoute,
 } as any)
 const MainActivityRoute = MainActivityRouteImport.update({
@@ -283,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof MainSettingsRouteRouteWithChildren
   '/volumes': typeof MainVolumesRouteRouteWithChildren
   '/activity': typeof MainActivityRoute
+  '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
@@ -324,6 +331,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
   '/activity': typeof MainActivityRoute
+  '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
@@ -366,6 +374,7 @@ export interface FileRoutesById {
   '/_main/settings': typeof MainSettingsRouteRouteWithChildren
   '/_main/volumes': typeof MainVolumesRouteRouteWithChildren
   '/_main/activity': typeof MainActivityRoute
+  '/_main/deploy': typeof MainDeployRoute
   '/_main/domains': typeof MainDomainsRoute
   '/_main/secrets': typeof MainSecretsRoute
   '/_main/team': typeof MainTeamRoute
@@ -411,6 +420,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/volumes'
     | '/activity'
+    | '/deploy'
     | '/domains'
     | '/secrets'
     | '/team'
@@ -452,6 +462,7 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/activity'
+    | '/deploy'
     | '/domains'
     | '/secrets'
     | '/team'
@@ -493,6 +504,7 @@ export interface FileRouteTypes {
     | '/_main/settings'
     | '/_main/volumes'
     | '/_main/activity'
+    | '/_main/deploy'
     | '/_main/domains'
     | '/_main/secrets'
     | '/_main/team'
@@ -602,6 +614,13 @@ declare module '@tanstack/react-router' {
       path: '/domains'
       fullPath: '/domains'
       preLoaderRoute: typeof MainDomainsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/deploy': {
+      id: '/_main/deploy'
+      path: '/deploy'
+      fullPath: '/deploy'
+      preLoaderRoute: typeof MainDeployRouteImport
       parentRoute: typeof MainRouteRoute
     }
     '/_main/activity': {
@@ -936,6 +955,7 @@ interface MainRouteRouteChildren {
   MainSettingsRouteRoute: typeof MainSettingsRouteRouteWithChildren
   MainVolumesRouteRoute: typeof MainVolumesRouteRouteWithChildren
   MainActivityRoute: typeof MainActivityRoute
+  MainDeployRoute: typeof MainDeployRoute
   MainDomainsRoute: typeof MainDomainsRoute
   MainSecretsRoute: typeof MainSecretsRoute
   MainTeamRoute: typeof MainTeamRoute
@@ -956,6 +976,7 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainSettingsRouteRoute: MainSettingsRouteRouteWithChildren,
   MainVolumesRouteRoute: MainVolumesRouteRouteWithChildren,
   MainActivityRoute: MainActivityRoute,
+  MainDeployRoute: MainDeployRoute,
   MainDomainsRoute: MainDomainsRoute,
   MainSecretsRoute: MainSecretsRoute,
   MainTeamRoute: MainTeamRoute,

@@ -3,7 +3,7 @@ import './polyfills';
 // import './intercom';
 // import './sentry';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 
@@ -12,13 +12,13 @@ import '@fontsource-variable/jetbrains-mono';
 
 import './styles.css';
 
-import { hasMessage } from './api/api-errors';
+import { ApiError, hasMessage } from './api/api-errors';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
+import { LogoLoading } from './components/logo-loading';
 import { IntlProvider } from './intl/translation-provider';
 import { CommandPaletteProvider } from './modules/command-palette/command-palette.provider';
 import { routeTree } from './route-tree.generated';
-import { LogoLoading } from './components/logo-loading';
 
 import './api/api.intercept';
 
@@ -57,10 +57,25 @@ window.addEventListener('error', function (event) {
 });
 
 export const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: async (error) => {
+      if (error instanceof ApiError && error.status === 401) {
+        queryClient.clear();
+        window.location.reload();
+      }
+    },
+  }),
   defaultOptions: {
     queries: {
       refetchInterval: 5_000,
       refetchOnMount: false,
+      retry: (retryCount, error) => {
+        if (error instanceof ApiError && error.status >= 500) {
+          return retryCount < 5;
+        }
+
+        return false;
+      },
     },
   },
 });
