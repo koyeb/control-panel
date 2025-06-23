@@ -1,7 +1,8 @@
+import { Button } from '@koyeb/design-system';
 import { useFieldArray } from 'react-hook-form';
 
-import { Button } from '@koyeb/design-system';
 import { IconPlus } from 'src/components/icons';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
@@ -10,6 +11,7 @@ import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { PortFields } from './port-fields';
+import { PortFields as PortFieldsOld } from './port-fields.old';
 
 const T = createTranslate('modules.serviceForm.ports');
 
@@ -29,14 +31,26 @@ export function PortsSection() {
       </p>
 
       <div className="col gap-4">
-        {fields.map((port, index) => (
-          <PortFields
-            key={port.id}
-            index={index}
-            canRemove={fields.length > 1}
-            onRemove={() => remove(index)}
-          />
-        ))}
+        <FeatureFlag
+          feature="proxy-ports"
+          fallback={fields.map((port, index) => (
+            <PortFieldsOld
+              key={port.id}
+              index={index}
+              canRemove={fields.length > 1}
+              onRemove={() => remove(index)}
+            />
+          ))}
+        >
+          {fields.map((port, index) => (
+            <PortFields
+              key={port.id}
+              index={index}
+              canRemove={fields.length > 1}
+              onRemove={() => remove(index)}
+            />
+          ))}
+        </FeatureFlag>
 
         {fields.length === 0 && (
           <div className="rounded border px-3 py-4">
