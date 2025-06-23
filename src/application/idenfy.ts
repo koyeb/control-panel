@@ -2,12 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 
 import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 
 export function useIdenfyLink() {
   const user = useUserUnsafe();
+  const hasIdenfy = useFeatureFlag('idenfy');
 
   const query = useQuery({
-    enabled: user !== undefined,
+    enabled: hasIdenfy && user !== undefined,
     meta: { showError: false },
     refetchOnMount: false,
     refetchInterval: false,
