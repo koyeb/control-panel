@@ -25,6 +25,8 @@ import { Route as MainSettingsRouteRouteImport } from './routes/_main/settings/r
 import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/index'
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
 import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
+import { Route as AuthSsoDiscourseRouteImport } from './routes/auth/sso.discourse'
+import { Route as AuthSsoCannyRouteImport } from './routes/auth/sso.canny'
 import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
 import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
 import { Route as MainVolumesSnapshotsRouteImport } from './routes/_main/volumes/snapshots'
@@ -131,6 +133,16 @@ const MainServicesIndexRoute = MainServicesIndexRouteImport.update({
   id: '/services/',
   path: '/services/',
   getParentRoute: () => MainRouteRoute,
+} as any)
+const AuthSsoDiscourseRoute = AuthSsoDiscourseRouteImport.update({
+  id: '/sso/discourse',
+  path: '/sso/discourse',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSsoCannyRoute = AuthSsoCannyRouteImport.update({
+  id: '/sso/canny',
+  path: '/sso/canny',
+  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AccountValidateTokenRoute = AccountValidateTokenRouteImport.update({
   id: '/account/validate/$token',
@@ -310,6 +322,8 @@ export interface FileRoutesByFullPath {
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/auth/sso/canny': typeof AuthSsoCannyRoute
+  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
   '/services': typeof MainServicesIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/volumes/': typeof MainVolumesIndexRoute
@@ -349,6 +363,8 @@ export interface FileRoutesByTo {
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/auth/sso/canny': typeof AuthSsoCannyRoute
+  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
   '/services': typeof MainServicesIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/volumes': typeof MainVolumesIndexRoute
@@ -395,6 +411,8 @@ export interface FileRoutesById {
   '/_main/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/auth/sso/canny': typeof AuthSsoCannyRoute
+  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
   '/_main/services/': typeof MainServicesIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/volumes/': typeof MainVolumesIndexRoute
@@ -441,6 +459,8 @@ export interface FileRouteTypes {
     | '/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
     | '/services'
     | '/settings/'
     | '/volumes/'
@@ -480,6 +500,8 @@ export interface FileRouteTypes {
     | '/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
     | '/services'
     | '/settings'
     | '/volumes'
@@ -525,6 +547,8 @@ export interface FileRouteTypes {
     | '/_main/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
     | '/_main/services/'
     | '/_main/settings/'
     | '/_main/volumes/'
@@ -665,6 +689,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/services'
       preLoaderRoute: typeof MainServicesIndexRouteImport
       parentRoute: typeof MainRouteRoute
+    }
+    '/auth/sso/discourse': {
+      id: '/auth/sso/discourse'
+      path: '/sso/discourse'
+      fullPath: '/auth/sso/discourse'
+      preLoaderRoute: typeof AuthSsoDiscourseRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/sso/canny': {
+      id: '/auth/sso/canny'
+      path: '/sso/canny'
+      fullPath: '/auth/sso/canny'
+      preLoaderRoute: typeof AuthSsoCannyRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
     '/account/validate/$token': {
       id: '/account/validate/$token'
@@ -1003,12 +1041,16 @@ interface AuthRouteRouteChildren {
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   AuthSigninRoute: typeof AuthSigninRoute
   AuthSignupRoute: typeof AuthSignupRoute
+  AuthSsoCannyRoute: typeof AuthSsoCannyRoute
+  AuthSsoDiscourseRoute: typeof AuthSsoDiscourseRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthSigninRoute: AuthSigninRoute,
   AuthSignupRoute: AuthSignupRoute,
+  AuthSsoCannyRoute: AuthSsoCannyRoute,
+  AuthSsoDiscourseRoute: AuthSsoDiscourseRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
