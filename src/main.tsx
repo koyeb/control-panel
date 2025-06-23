@@ -13,6 +13,7 @@ import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
 
 import { ApiError, hasMessage } from './api/api-errors';
+import { setToken } from './application/authentication';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { IntlProvider } from './intl/translation-provider';
@@ -59,7 +60,7 @@ export const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error) => {
       if (error instanceof ApiError && error.status === 401) {
-        queryClient.clear();
+        setToken(null);
         window.location.reload();
       }
     },

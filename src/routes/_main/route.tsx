@@ -131,7 +131,7 @@ async function fetchCurrentSession(queryClient: QueryClient, location: ParsedLoc
   } catch (error) {
     if (error instanceof ApiError && error.status === 401) {
       setToken(null);
-      queryClient.clear();
+      void queryClient.clear();
       redirectToSignIn(location);
     }
 

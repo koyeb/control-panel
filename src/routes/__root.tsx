@@ -48,14 +48,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
     if (token) {
       setToken(token.replace(/^Bearer /, ''));
-      context.queryClient.clear();
+      void context.queryClient.invalidateQueries();
 
       clearSearchParam('token');
     }
 
     if (sessionToken) {
       setToken(sessionToken.replace(/^Bearer /, ''), true);
-      context.queryClient.clear();
+      void context.queryClient.invalidateQueries();
 
       clearSearchParam('session-token');
     }
@@ -64,7 +64,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       const { token } = await api.switchOrganization({ path: { id: organizationId }, header: {} });
 
       setToken(token!.id!);
-      context.queryClient.clear();
+      void context.queryClient.invalidateQueries();
 
       clearSearchParam('organization-id');
     }

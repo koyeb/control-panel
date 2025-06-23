@@ -28,7 +28,12 @@ export function useSetToken() {
   return useCallback(
     (token: string | null) => {
       setToken(token);
-      queryClient.clear();
+
+      if (token === null) {
+        void queryClient.clear();
+      } else {
+        void queryClient.invalidateQueries();
+      }
     },
     [queryClient],
   );
