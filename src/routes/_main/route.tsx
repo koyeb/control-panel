@@ -8,7 +8,13 @@ import { ApiError, isAccountLockedError } from 'src/api/api-errors';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { apiQueryFn } from 'src/api/use-api';
-import { getToken, isAuthenticated, redirectToSignIn, setToken } from 'src/application/authentication';
+import {
+  getToken,
+  isAuthenticated,
+  isSessionToken,
+  redirectToSignIn,
+  setToken,
+} from 'src/application/authentication';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { IdentifyUser } from 'src/application/posthog';
 import { getUrlLatency } from 'src/application/url-latency';
@@ -77,7 +83,7 @@ async function refreshToken() {
   const exp = token ? jwtDecode(token).exp : null;
   const expires = exp ? new Date(exp * 1000) : null;
 
-  if (expires && isAfter(new Date(), sub(expires, { hours: 12 }))) {
+  if (expires && isAfter(new Date(), sub(expires, { hours: 12 })) && !isSessionToken()) {
     const { token } = await api.refreshToken({});
     setToken(token!.id!);
   }
