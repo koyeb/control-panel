@@ -4,6 +4,7 @@
   body {
     @apply bg-neutral;
     @apply text-sm text-default;
+    overflow-y: scroll;
   }
 
   .dark {
