@@ -25,8 +25,8 @@ import { Route as MainSettingsRouteRouteImport } from './routes/_main/settings/r
 import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/index'
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
 import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
-import { Route as AccountValidateTokenRouteImport } from './routes/account.validate.$token'
-import { Route as AccountResetPasswordTokenRouteImport } from './routes/account.reset-password.$token'
+import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
+import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
 import { Route as MainVolumesSnapshotsRouteImport } from './routes/_main/volumes/snapshots'
 import { Route as MainSettingsRegistryConfigurationRouteImport } from './routes/_main/settings/registry-configuration'
 import { Route as MainSettingsPlansRouteImport } from './routes/_main/settings/plans'
@@ -41,6 +41,7 @@ import { Route as MainDatabaseServicesDatabaseServiceIdRouteRouteImport } from '
 import { Route as MainUserSettingsIndexRouteImport } from './routes/_main/user.settings/index'
 import { Route as MainServicesServiceIdIndexRouteImport } from './routes/_main/services/$serviceId/index'
 import { Route as MainDatabaseServicesDatabaseServiceIdIndexRouteImport } from './routes/_main/database-services/$databaseServiceId/index'
+import { Route as AccountOauthGithubCallbackRouteImport } from './routes/account/oauth.github.callback'
 import { Route as MainUserSettingsOrganizationsRouteImport } from './routes/_main/user.settings/organizations'
 import { Route as MainUserSettingsApiRouteImport } from './routes/_main/user.settings/api'
 import { Route as MainServicesServiceIdSettingsRouteImport } from './routes/_main/services/$serviceId/settings'
@@ -51,7 +52,6 @@ import { Route as MainDatabaseServicesDatabaseServiceIdRolesRouteImport } from '
 import { Route as MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport } from './routes/_main/database-services/$databaseServiceId/databases'
 import { Route as MainAccountOrganization_invitationsInvitationIdRouteImport } from './routes/_main/account/organization_invitations.$invitationId'
 import { Route as MainOrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/_main/organization.deactivate.confirm.$confirmationId'
-import { Route as MainAccountOauthGithubCallbackRouteImport } from './routes/_main/account/oauth.github.callback'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
@@ -218,6 +218,12 @@ const MainDatabaseServicesDatabaseServiceIdIndexRoute =
     path: '/',
     getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
   } as any)
+const AccountOauthGithubCallbackRoute =
+  AccountOauthGithubCallbackRouteImport.update({
+    id: '/account/oauth/github/callback',
+    path: '/account/oauth/github/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const MainUserSettingsOrganizationsRoute =
   MainUserSettingsOrganizationsRouteImport.update({
     id: '/organizations',
@@ -277,12 +283,6 @@ const MainOrganizationDeactivateConfirmConfirmationIdRoute =
     path: '/organization/deactivate/confirm/$confirmationId',
     getParentRoute: () => MainRouteRoute,
   } as any)
-const MainAccountOauthGithubCallbackRoute =
-  MainAccountOauthGithubCallbackRouteImport.update({
-    id: '/account/oauth/github/callback',
-    path: '/account/oauth/github/callback',
-    getParentRoute: () => MainRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -322,10 +322,10 @@ export interface FileRoutesByFullPath {
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
   '/user/settings/api': typeof MainUserSettingsApiRoute
   '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
+  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/user/settings/': typeof MainUserSettingsIndexRoute
-  '/account/oauth/github/callback': typeof MainAccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRoutesByTo {
@@ -361,10 +361,10 @@ export interface FileRoutesByTo {
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
   '/user/settings/api': typeof MainUserSettingsApiRoute
   '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
+  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/services/$serviceId': typeof MainServicesServiceIdIndexRoute
   '/user/settings': typeof MainUserSettingsIndexRoute
-  '/account/oauth/github/callback': typeof MainAccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRoutesById {
@@ -407,10 +407,10 @@ export interface FileRoutesById {
   '/_main/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
   '/_main/user/settings/api': typeof MainUserSettingsApiRoute
   '/_main/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
+  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/_main/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/_main/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/_main/user/settings/': typeof MainUserSettingsIndexRoute
-  '/_main/account/oauth/github/callback': typeof MainAccountOauthGithubCallbackRoute
   '/_main/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRouteTypes {
@@ -453,10 +453,10 @@ export interface FileRouteTypes {
     | '/services/$serviceId/settings'
     | '/user/settings/api'
     | '/user/settings/organizations'
+    | '/account/oauth/github/callback'
     | '/database-services/$databaseServiceId/'
     | '/services/$serviceId/'
     | '/user/settings/'
-    | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -492,10 +492,10 @@ export interface FileRouteTypes {
     | '/services/$serviceId/settings'
     | '/user/settings/api'
     | '/user/settings/organizations'
+    | '/account/oauth/github/callback'
     | '/database-services/$databaseServiceId'
     | '/services/$serviceId'
     | '/user/settings'
-    | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
   id:
     | '__root__'
@@ -537,10 +537,10 @@ export interface FileRouteTypes {
     | '/_main/services/$serviceId/settings'
     | '/_main/user/settings/api'
     | '/_main/user/settings/organizations'
+    | '/account/oauth/github/callback'
     | '/_main/database-services/$databaseServiceId/'
     | '/_main/services/$serviceId/'
     | '/_main/user/settings/'
-    | '/_main/account/oauth/github/callback'
     | '/_main/organization/deactivate/confirm/$confirmationId'
   fileRoutesById: FileRoutesById
 }
@@ -549,6 +549,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AccountResetPasswordTokenRoute: typeof AccountResetPasswordTokenRoute
   AccountValidateTokenRoute: typeof AccountValidateTokenRoute
+  AccountOauthGithubCallbackRoute: typeof AccountOauthGithubCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -777,6 +778,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdIndexRouteImport
       parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
     }
+    '/account/oauth/github/callback': {
+      id: '/account/oauth/github/callback'
+      path: '/account/oauth/github/callback'
+      fullPath: '/account/oauth/github/callback'
+      preLoaderRoute: typeof AccountOauthGithubCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_main/user/settings/organizations': {
       id: '/_main/user/settings/organizations'
       path: '/organizations'
@@ -845,13 +853,6 @@ declare module '@tanstack/react-router' {
       path: '/organization/deactivate/confirm/$confirmationId'
       fullPath: '/organization/deactivate/confirm/$confirmationId'
       preLoaderRoute: typeof MainOrganizationDeactivateConfirmConfirmationIdRouteImport
-      parentRoute: typeof MainRouteRoute
-    }
-    '/_main/account/oauth/github/callback': {
-      id: '/_main/account/oauth/github/callback'
-      path: '/account/oauth/github/callback'
-      fullPath: '/account/oauth/github/callback'
-      preLoaderRoute: typeof MainAccountOauthGithubCallbackRouteImport
       parentRoute: typeof MainRouteRoute
     }
   }
@@ -968,7 +969,6 @@ interface MainRouteRouteChildren {
   MainServicesNewRoute: typeof MainServicesNewRoute
   MainServicesIndexRoute: typeof MainServicesIndexRoute
   MainAccountOrganization_invitationsInvitationIdRoute: typeof MainAccountOrganization_invitationsInvitationIdRoute
-  MainAccountOauthGithubCallbackRoute: typeof MainAccountOauthGithubCallbackRoute
   MainOrganizationDeactivateConfirmConfirmationIdRoute: typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 
@@ -991,7 +991,6 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainServicesIndexRoute: MainServicesIndexRoute,
   MainAccountOrganization_invitationsInvitationIdRoute:
     MainAccountOrganization_invitationsInvitationIdRoute,
-  MainAccountOauthGithubCallbackRoute: MainAccountOauthGithubCallbackRoute,
   MainOrganizationDeactivateConfirmConfirmationIdRoute:
     MainOrganizationDeactivateConfirmConfirmationIdRoute,
 }
@@ -1021,6 +1020,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   AccountResetPasswordTokenRoute: AccountResetPasswordTokenRoute,
   AccountValidateTokenRoute: AccountValidateTokenRoute,
+  AccountOauthGithubCallbackRoute: AccountOauthGithubCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
