@@ -12,8 +12,11 @@ import '@fontsource-variable/jetbrains-mono';
 
 import './styles.css';
 
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { ApiError, hasMessage } from './api/api-errors';
-import { setToken } from './application/authentication';
+import { isSessionToken, setToken } from './application/authentication';
+import { getConfig } from './application/config';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { IntlProvider } from './intl/translation-provider';
@@ -80,6 +83,7 @@ export const queryClient = new QueryClient({
   }),
   defaultOptions: {
     queries: {
+      gcTime: 1000 * 60 * 60 * 24,
       refetchInterval: 5_000,
       retry: (retryCount, error) => {
         if (error instanceof ApiError && error.status >= 500) {
@@ -99,6 +103,15 @@ const next = () => {
     return href;
   }
 };
+
+void persistQueryClient({
+  queryClient,
+  buster: getConfig().version,
+  persister: createSyncStoragePersister({
+    key: 'query-cache',
+    storage: isSessionToken() ? window.sessionStorage : window.localStorage,
+  }),
+});
 
 const router = createRouter({
   routeTree,

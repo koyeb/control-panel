@@ -2,9 +2,11 @@ import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
+import { use } from 'react';
 import { api } from 'src/api/api';
 
 import { ApiError, isAccountLockedError } from 'src/api/api-errors';
+import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { apiQueryFn } from 'src/api/use-api';
@@ -23,6 +25,9 @@ export const Route = createFileRoute('/_main')({
     const matchConfirmDeactivateOrganization = useMatches().find(
       (route) => route.routeId === '/_main/organization/deactivate/confirm/$confirmationId',
     );
+
+    use(useUserQuery().promise);
+    use(useOrganizationQuery().promise);
 
     if (locked) {
       return <AccountLocked />;
@@ -44,7 +49,7 @@ export const Route = createFileRoute('/_main')({
     );
   },
 
-  beforeLoad: async ({ context, location }) => {
+  beforeLoad: ({ location }) => {
     if (!isAuthenticated()) {
       throw redirect({
         to: '/auth/signin',
@@ -54,14 +59,14 @@ export const Route = createFileRoute('/_main')({
         },
       });
     }
-
-    return fetchCurrentSession(context.queryClient);
   },
 
   loader: async ({ context }) => {
-    const { user, organization, queryClient } = context;
+    const { queryClient } = context;
 
     try {
+      const { user, organization } = await fetchCurrentSession(context.queryClient);
+
       await Promise.all([refreshToken(), fetchCatalog(queryClient), preloadDatacenterLatencies(queryClient)]);
 
       return {

@@ -1,28 +1,21 @@
 import { Button } from '@koyeb/design-system';
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { ErrorComponentProps, Outlet, createRootRouteWithContext, redirect } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { api } from 'src/api/api';
 import { isApiError } from 'src/api/api-errors';
-import { Organization, User } from 'src/api/model';
-import { isSessionToken, setToken } from 'src/application/authentication';
-import { getConfig } from 'src/application/config';
+import { setToken } from 'src/application/authentication';
 
 import { PostHogProvider } from 'src/application/posthog';
 import { ErrorLayout, ErrorView } from 'src/components/error-boundary/error-view';
 import { LogoLoading } from 'src/components/logo-loading';
 import { NotificationContainer } from 'src/components/notification';
 import { Translate } from 'src/intl/translate';
-import { queryClient } from 'src/main';
 import { z } from 'zod';
 
 type RouterContext = {
   queryClient: QueryClient;
-  user?: User;
-  organization?: Organization | null;
   breadcrumb?: { label: () => React.ReactNode; link?: string };
 };
 
@@ -42,22 +35,18 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   beforeLoad: async ({ context, search }) => {
     const { token, 'session-token': sessionToken, 'organization-id': organizationId } = search;
 
-    const clearSearchParam = (param: 'token' | 'session-token' | 'organization-id') => {
-      throw redirect({ search: (prev) => ({ ...prev, [param]: undefined }) });
-    };
-
     if (token) {
       setToken(token.replace(/^Bearer /, ''));
       void context.queryClient.invalidateQueries();
 
-      clearSearchParam('token');
+      throw redirect({ search: (prev) => ({ ...prev, token: undefined }) });
     }
 
     if (sessionToken) {
       setToken(sessionToken.replace(/^Bearer /, ''), true);
       void context.queryClient.invalidateQueries();
 
-      clearSearchParam('session-token');
+      throw redirect({ reloadDocument: true, search: (prev) => ({ ...prev, 'session-token': undefined }) });
     }
 
     if (organizationId) {
@@ -66,18 +55,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       setToken(token!.id!);
       void context.queryClient.invalidateQueries();
 
-      clearSearchParam('organization-id');
-    }
-
-    if (!isSessionToken()) {
-      void persistQueryClient({
-        queryClient,
-        buster: getConfig().version,
-        persister: createSyncStoragePersister({
-          key: 'query-cache',
-          storage: window.localStorage,
-        }),
-      });
+      throw redirect({ search: (prev) => ({ ...prev, 'organization-id': undefined }) });
     }
   },
 });
