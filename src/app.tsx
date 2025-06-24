@@ -9,7 +9,6 @@ import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { useRefreshToken, useToken } from './application/token';
 import { LinkButton } from './components/link';
-import { Loading } from './components/loading';
 import { useMount } from './hooks/lifecycle';
 import { useSearchParam } from './hooks/router';
 import { useSeon } from './hooks/seon';
@@ -83,11 +82,7 @@ function AuthenticatedRoutes() {
   );
 
   if (!userQuery.isSuccess || organizationQuery.isPending) {
-    return (
-      <Loading>
-        <MainLayout />
-      </Loading>
-    );
+    return null;
   }
 
   if (confirmDeactivateOrganization) {

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { useOrganization, useUser } from 'src/api/hooks/session';
+import { useOrganization, useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
@@ -48,6 +48,10 @@ type LayoutProps = {
 export function MainLayout({ children }: LayoutProps) {
   const pageContext = usePageContext();
   const banner = useBanner();
+
+  if (!useOrganizationUnsafe()) {
+    return null;
+  }
 
   return (
     <>
@@ -223,10 +227,10 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }));
 
 function usePageContext() {
-  const user = useUser();
+  const user = useUserUnsafe();
   const { pageContextBaseUrl } = getConfig();
 
-  const enabled = Boolean(pageContextBaseUrl !== undefined && user.flags.includes('ADMIN'));
+  const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
   const [expanded = false, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
 
   return {
