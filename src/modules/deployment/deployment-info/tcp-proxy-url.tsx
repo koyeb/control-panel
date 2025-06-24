@@ -4,6 +4,7 @@ import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { IconArrowRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
+import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
@@ -18,11 +19,16 @@ type TcpProxyUrlProps = {
 export function TcpProxyUrl({ app, service, deployment }: TcpProxyUrlProps) {
   const urls = getServiceUrls(app, service, deployment).filter((url) => url.tcpProxyUrl !== undefined);
 
-  if (urls.length === 0) {
+  if (!deployment.definition.ports.some((port) => port.tcpProxy)) {
     return null;
   }
 
-  return <Metadata label={<T id="tcpProxyUrlLabel" />} value={<TcpProxyUrlValue urls={urls} />} />;
+  return (
+    <Metadata
+      label={<T id="tcpProxyUrlLabel" />}
+      value={urls.length === 0 ? <TextSkeleton width={28} /> : <TcpProxyUrlValue urls={urls} />}
+    />
+  );
 }
 
 function TcpProxyUrlValue({ urls: [firstUrl, ...urls] }: { urls: ServiceUrl[] }) {
