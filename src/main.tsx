@@ -3,8 +3,11 @@ import './intercom';
 import './polyfills';
 import './sentry';
 
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { AnyRouter, createRouter, RouterProvider } from '@tanstack/react-router';
+import qs from 'query-string';
 import ReactDOM from 'react-dom/client';
 
 import '@fontsource-variable/inter';
@@ -12,8 +15,6 @@ import '@fontsource-variable/jetbrains-mono';
 
 import './styles.css';
 
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { ApiError, hasMessage } from './api/api-errors';
 import { isSessionToken, setToken } from './application/authentication';
 import { getConfig } from './application/config';
@@ -120,6 +121,11 @@ const router = createRouter({
   defaultPendingMinMs: 0,
   defaultPreloadStaleTime: 0,
   scrollRestoration: true,
+  parseSearch: qs.parse,
+  stringifySearch: (value) => {
+    const result = qs.stringify(value);
+    return result !== '' ? `?${result}` : '';
+  },
   context: {
     queryClient,
   },
