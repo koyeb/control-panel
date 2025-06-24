@@ -1,5 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
-import { createFileRoute, Outlet, ParsedLocation, useMatches } from '@tanstack/react-router';
+import { createFileRoute, Outlet, redirect, useMatches } from '@tanstack/react-router';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
 import { api } from 'src/api/api';
@@ -8,13 +8,7 @@ import { ApiError, isAccountLockedError } from 'src/api/api-errors';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { apiQueryFn } from 'src/api/use-api';
-import {
-  getToken,
-  isAuthenticated,
-  isSessionToken,
-  redirectToSignIn,
-  setToken,
-} from 'src/application/authentication';
+import { getToken, isAuthenticated, isSessionToken, setToken } from 'src/application/authentication';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { IdentifyUser } from 'src/application/posthog';
 import { getUrlLatency } from 'src/application/url-latency';
@@ -52,10 +46,16 @@ export const Route = createFileRoute('/_main')({
 
   beforeLoad: async ({ context, location }) => {
     if (!isAuthenticated()) {
-      redirectToSignIn(location);
+      throw redirect({
+        to: '/auth/signin',
+        replace: true,
+        search: {
+          next: location.href !== '/' ? location.href : undefined,
+        },
+      });
     }
 
-    return fetchCurrentSession(context.queryClient, location);
+    return fetchCurrentSession(context.queryClient);
   },
 
   loader: async ({ context }) => {
@@ -89,54 +89,44 @@ async function refreshToken() {
   }
 }
 
-async function fetchCurrentSession(queryClient: QueryClient, location: ParsedLocation) {
-  try {
-    const [user, organization] = await Promise.all([
-      queryClient.ensureQueryData(apiQueryFn('getCurrentUser')).then(({ user }) => mapUser(user!)),
-      queryClient
-        .ensureQueryData(apiQueryFn('getCurrentOrganization'))
-        .then(({ organization }) => mapOrganization(organization!))
-        .catch((error) => {
-          if (error instanceof ApiError && error.status === 404) {
-            return null;
-          }
+async function fetchCurrentSession(queryClient: QueryClient) {
+  const [user, organization] = await Promise.all([
+    queryClient.ensureQueryData(apiQueryFn('getCurrentUser')).then(({ user }) => mapUser(user!)),
+    queryClient
+      .ensureQueryData(apiQueryFn('getCurrentOrganization'))
+      .then(({ organization }) => mapOrganization(organization!))
+      .catch((error) => {
+        if (error instanceof ApiError && error.status === 404) {
+          return null;
+        }
 
-          throw error;
-        }),
-    ]);
+        throw error;
+      }),
+  ]);
+
+  if (organization) {
+    if (organization.statusMessage === 'VERIFICATION_FAILED') {
+      throw { status: 403, message: 'Account is locked' };
+    }
+
+    const queries = new Array<ReturnType<typeof apiQueryFn>>();
+
+    if (organization.latestSubscriptionId) {
+      queries.push(apiQueryFn('getSubscription', { path: { id: organization.latestSubscriptionId } }));
+    }
 
     if (organization) {
-      if (organization.statusMessage === 'VERIFICATION_FAILED') {
-        throw { status: 403, message: 'Account is locked' };
-      }
-
-      const queries = new Array<ReturnType<typeof apiQueryFn>>();
-
-      if (organization.latestSubscriptionId) {
-        queries.push(apiQueryFn('getSubscription', { path: { id: organization.latestSubscriptionId } }));
-      }
-
-      if (organization) {
-        queries.push(apiQueryFn('organizationSummary', { path: { organization_id: organization.id } }));
-        queries.push(apiQueryFn('organizationQuotas', { path: { organization_id: organization.id } }));
-      }
-
-      await Promise.all(queries.map((query) => queryClient.ensureQueryData(query)));
+      queries.push(apiQueryFn('organizationSummary', { path: { organization_id: organization.id } }));
+      queries.push(apiQueryFn('organizationQuotas', { path: { organization_id: organization.id } }));
     }
 
-    return {
-      user,
-      organization,
-    };
-  } catch (error) {
-    if (error instanceof ApiError && error.status === 401) {
-      setToken(null);
-      void queryClient.clear();
-      redirectToSignIn(location);
-    }
-
-    throw error;
+    await Promise.all(queries.map((query) => queryClient.ensureQueryData(query)));
   }
+
+  return {
+    user,
+    organization,
+  };
 }
 
 async function fetchCatalog(queryClient: QueryClient) {

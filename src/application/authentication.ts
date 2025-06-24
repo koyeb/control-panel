@@ -1,5 +1,4 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { type ParsedLocation, redirect } from '@tanstack/react-router';
 import { useCallback } from 'react';
 import { createStoredData } from './storage';
 
@@ -41,14 +40,4 @@ export function useSetToken() {
 
 export function isAuthenticated() {
   return getToken() !== null;
-}
-
-export function redirectToSignIn(location: ParsedLocation): never {
-  throw redirect({
-    to: '/auth/signin',
-    replace: true,
-    search: {
-      next: location.href !== '/' ? location.href : undefined,
-    },
-  });
 }

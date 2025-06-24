@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, redirect } from '@tanstack/react-router';
+import { createFileRoute, Navigate, Outlet, redirect } from '@tanstack/react-router';
 import { isAuthenticated } from 'src/application/authentication';
 
 import { AuthenticationLayout } from 'src/layouts/authentication/authentication.layout';
@@ -11,13 +11,17 @@ export const Route = createFileRoute('/auth')({
     </AuthenticationLayout>
   ),
 
+  notFoundComponent: () => <Navigate from={Route.fullPath} to="/auth/signin" />,
+
   validateSearch: z.object({
     next: z.string().optional(),
   }),
 
-  beforeLoad: ({ search }) => {
+  beforeLoad: ({ context, search }) => {
     if (isAuthenticated()) {
       throw redirect({ to: search.next ?? '/', replace: true });
     }
+
+    context.queryClient.clear();
   },
 });

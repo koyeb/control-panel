@@ -4,7 +4,7 @@ import './polyfills';
 import './sentry';
 
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { AnyRouter, createRouter, RouterProvider } from '@tanstack/react-router';
 import ReactDOM from 'react-dom/client';
 
 import '@fontsource-variable/inter';
@@ -34,6 +34,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
+declare global {
+  interface Window {
+    router: AnyRouter;
+    queryClient: QueryClient;
+  }
+}
+
 Error.stackTraceLimit = 2 << 16;
 
 // https://vitejs.dev/guide/build#load-error-handling
@@ -58,10 +65,16 @@ window.addEventListener('error', function (event) {
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error) => {
+    onError: async (error) => {
       if (error instanceof ApiError && error.status === 401) {
         setToken(null);
-        window.location.reload();
+
+        await router.navigate({
+          to: '/auth/signin',
+          search: {
+            next: next(),
+          },
+        });
       }
     },
   }),
@@ -79,6 +92,14 @@ export const queryClient = new QueryClient({
   },
 });
 
+const next = () => {
+  const { href } = router.history.location;
+
+  if (href !== '/' && !href.startsWith('/auth')) {
+    return href;
+  }
+};
+
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
@@ -90,6 +111,9 @@ const router = createRouter({
     queryClient,
   },
 });
+
+window.router = router;
+window.queryClient = queryClient;
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <IntlProvider>
