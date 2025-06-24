@@ -13,9 +13,11 @@ export function AutomaticReview() {
   });
 
   return (
-    <section className="row flex-1 items-center justify-center gap-2">
+    <div className="row h-screen flex-1 items-center justify-center gap-2 overflow-auto p-3">
       <Spinner className="size-5" />
-      <T id="pending" />
-    </section>
+      <p className="text-base">
+        <T id="pending" />
+      </p>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
+import { Fragment } from 'react/jsx-runtime';
+
 import { OnboardingStep } from 'src/api/model';
 import { FullScreenLayout } from 'src/layouts/onboarding/full-screen-layout';
-import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 
 import { AutomaticReview } from './automatic-review';
 import { EmailValidation } from './email-validation';
@@ -9,20 +10,18 @@ import { PaymentMethod } from './payment-method';
 import { Qualification } from './qualification';
 
 export function OnboardingPage({ step }: { step: OnboardingStep }) {
-  if (step === 'emailValidation' || step === 'joinOrganization') {
-    return (
-      <FullScreenLayout>
-        {step === 'emailValidation' && <EmailValidation />}
-        {step === 'joinOrganization' && <JoinOrganization />}
-      </FullScreenLayout>
-    );
-  }
+  const Wrapper =
+    step === 'emailValidation' || step === 'joinOrganization' || step === 'automaticReview'
+      ? FullScreenLayout
+      : Fragment;
 
   return (
-    <OnboardingLayout>
+    <Wrapper>
+      {step === 'emailValidation' && <EmailValidation />}
+      {step === 'joinOrganization' && <JoinOrganization />}
       {step === 'qualification' && <Qualification />}
-      {step === 'paymentMethod' && <PaymentMethod />}
       {step === 'automaticReview' && <AutomaticReview />}
-    </OnboardingLayout>
+      {step === 'paymentMethod' && <PaymentMethod />}
+    </Wrapper>
   );
 }

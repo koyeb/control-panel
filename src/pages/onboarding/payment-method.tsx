@@ -14,6 +14,7 @@ import { PaymentFormFields, PaymentMethodTimeout } from 'src/components/payment-
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { usePaymentMethodMutation } from 'src/hooks/stripe';
 import { createTranslate } from 'src/intl/translate';
+import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 
 import { AuthButton } from '../authentication/components/auth-button';
 
@@ -21,11 +22,13 @@ const T = createTranslate('pages.onboarding.paymentMethod');
 
 export function PaymentMethod() {
   return (
-    <div className="col flex-1 justify-center gap-8">
-      <StripeProvider>
-        <Form />
-      </StripeProvider>
-    </div>
+    <OnboardingLayout sentence={<T id="sidebar" />}>
+      <div className="col flex-1 justify-center gap-8">
+        <StripeProvider>
+          <Form />
+        </StripeProvider>
+      </div>
+    </OnboardingLayout>
   );
 }
 

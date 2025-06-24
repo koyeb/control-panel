@@ -16,6 +16,7 @@ import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { createTranslate } from 'src/intl/translate';
+import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { assert, defined } from 'src/utils/assert';
 import { Extend } from 'src/utils/types';
 
@@ -145,7 +146,7 @@ export function Qualification() {
   };
 
   return (
-    <>
+    <OnboardingLayout sentence={<T id={`${step}.sidebar`} />}>
       <section className="row mb-8 flex-wrap gap-6 lg:justify-between">
         <LogoKoyeb className="me-auto h-8 lg:hidden" />
 
@@ -169,7 +170,7 @@ export function Qualification() {
       </form>
 
       <div className="min-h-12" />
-    </>
+    </OnboardingLayout>
   );
 }
 

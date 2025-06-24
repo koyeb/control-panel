@@ -1630,9 +1630,6 @@
         "feature3": "Ultra-fast NVME storage"
       },
       "argumentumAdPopulum": "Trusted by the most ambitious teams"
-    },
-    "onboarding": {
-      "description": "With <strong>Koyeb</strong>, run all your models and apps on high-performance <strong>CPUs</strong>, <strong>GPUs</strong>, and <strong>accelerators</strong> from AMD, Intel, and Nvidia"
     }
   },
   "pages": {
@@ -2050,16 +2047,19 @@
         "skip": "Skip",
         "continue": "Continue",
         "fullName": {
+          "sidebar": "With <strong>Koyeb</strong>, run all your models and apps on high-performance <strong>CPUs</strong>, <strong>GPUs</strong>, and <strong>accelerators</strong> from AMD, Intel, and Nvidia",
           "title": "What is your full name?",
           "description": "Tell us a little about yourself to personalize your experience"
         },
         "usage": {
+          "sidebar": "With <strong>Koyeb</strong>, run all your models and apps on high-performance <strong>CPUs</strong>, <strong>GPUs</strong>, and <strong>accelerators</strong> from AMD, Intel, and Nvidia",
           "title": "How do you plan to use Koyeb?",
           "personal": "Myself",
           "education": "School",
           "professional": "Work"
         },
         "occupation": {
+          "sidebar": "With <strong>Koyeb</strong>, run all your models and apps on high-performance <strong>CPUs</strong>, <strong>GPUs</strong>, and <strong>accelerators</strong> from AMD, Intel, and Nvidia",
           "title": "What best describes your role?",
           "description": "Chose one that best applies",
           "founder": "Founder",
@@ -2079,6 +2079,7 @@
           "other": "Other"
         },
         "primaryUseCase": {
+          "sidebar": "Koyeb lets you deploy production-grade containers with zero configuration — scale to hundreds of servers and back to zero in seconds",
           "title": "What's your primary use case?",
           "description": "Choose all that may apply",
           "ai": "AI agents",
@@ -2102,6 +2103,7 @@
           "other": "Other"
         },
         "currentSpending": {
+          "sidebar": "Use Koyeb to improve availability and get sub-100ms latency worldwide with over 50 locations. Pick between one and all locations.",
           "title": "What is your monthly spend on could infrastructure?",
           "lessThan500": "< $500",
           "500To2000": "$500 - $2,000",
@@ -2109,6 +2111,7 @@
           "moreThan10000": "> $10,000"
         },
         "referralSource": {
+          "sidebar": "With Koyeb, Build APIs, distributed systems, or blazing-fast inference endpoints. Deploy your code, containers, or models with a Git push or CLI call",
           "title": "How did you hear about Koyeb?",
           "searchEngine": "Search engine",
           "recommendation": "Recommendation",
@@ -2120,6 +2123,7 @@
           "other": "Other"
         },
         "sendInvites": {
+          "sidebar": "Experience collaborative development on high-performance cloud infrastructure with Koyeb",
           "title": "Invite your teammates",
           "description": "Add multiple emails with space or comma",
           "placeholder": "email@server.com,",
@@ -2127,6 +2131,7 @@
         }
       },
       "paymentMethod": {
+        "sidebar": "Start for free. Only pay for what you use, by the second. Scale with your team and stay in control with autoscaling limits.",
         "creditCard": {
           "title": "Verify your credit card",
           "description": "Starter plan is $0 per month and pay as you go with flexible spending limits",
