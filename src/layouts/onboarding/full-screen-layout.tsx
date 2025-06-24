@@ -1,18 +1,18 @@
-import { isApiError } from 'src/api/api-errors';
-import { useUserQuery } from 'src/api/hooks/session';
+import { useUserUnsafe } from 'src/api/hooks/session';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useSearchParams } from 'src/hooks/router';
 import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
 
+import { useLoaderData } from '@tanstack/react-router';
 import { SecondarySettings } from '../secondary/settings';
 import { UserMenu } from '../secondary/user-menu';
 
 export function FullScreenLayout({ children }: { children: React.ReactNode }) {
+  const { locked } = useLoaderData({ from: '/_main' });
   const params = useSearchParams();
-  const userQuery = useUserQuery();
+  const user = useUserUnsafe();
 
-  const accountLocked = userQuery.isError && isApiError(userQuery.error) && userQuery.error.status === 403;
-  const isAuthenticated = userQuery.isSuccess || accountLocked;
+  const isAuthenticated = user !== undefined || locked;
 
   useForceThemeMode(ThemeMode.light);
 

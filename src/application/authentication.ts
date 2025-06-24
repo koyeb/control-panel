@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { createStoredData } from './storage';
+import { useRouter } from '@tanstack/react-router';
 
 const accessToken = createStoredData(localStorage, 'access-token');
 const sessionToken = createStoredData(sessionStorage, 'session-token');
@@ -22,6 +23,7 @@ export function isSessionToken() {
 }
 
 export function useSetToken() {
+  const router = useRouter();
   const queryClient = useQueryClient();
 
   return useCallback(
@@ -33,8 +35,10 @@ export function useSetToken() {
       } else {
         void queryClient.invalidateQueries();
       }
+
+      void router.invalidate();
     },
-    [queryClient],
+    [router, queryClient],
   );
 }
 

@@ -20,7 +20,7 @@ export function DeleteAccount() {
 
   const user = useUser();
   const organization = useOrganizationUnsafe();
-  const canDelete = organization === undefined;
+  const canDelete = organization === null;
 
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();

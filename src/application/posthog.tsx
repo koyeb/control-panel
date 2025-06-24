@@ -72,7 +72,7 @@ export function IdentifyUser() {
   }, [posthog, user]);
 
   useEffect(() => {
-    if (organization !== undefined) {
+    if (organization !== null) {
       posthog?.group('segment_group', organization.id);
     }
   }, [posthog, organization]);

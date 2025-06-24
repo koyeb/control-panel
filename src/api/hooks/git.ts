@@ -16,7 +16,7 @@ export function useGithubAppQuery(refetchInterval?: number) {
 
   return useQuery({
     ...useApiQueryFn('getGithubApp'),
-    enabled: organization !== undefined,
+    enabled: organization !== null,
     refetchInterval,
     select: mapGithubApp,
     refetchOnWindowFocus: () => false,

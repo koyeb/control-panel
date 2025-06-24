@@ -69,16 +69,10 @@ window.addEventListener('error', function (event) {
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: async (error) => {
+    onError: (error) => {
       if (error instanceof ApiError && error.status === 401) {
         setToken(null);
-
-        await router.navigate({
-          to: '/auth/signin',
-          search: {
-            next: next(),
-          },
-        });
+        void router.invalidate();
       }
     },
   }),
@@ -96,14 +90,6 @@ export const queryClient = new QueryClient({
     },
   },
 });
-
-const next = () => {
-  const { href } = router.history.location;
-
-  if (href !== '/' && !href.startsWith('/auth')) {
-    return href;
-  }
-};
 
 void persistQueryClient({
   queryClient,
