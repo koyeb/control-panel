@@ -8,9 +8,9 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { setToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -275,7 +275,6 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const { token, setToken, clearToken } = useToken();
   const user = useUser();
   const navigate = useNavigate();
   const t = T.useTranslate();
@@ -283,7 +282,6 @@ function useLeaveOrganization() {
   return useMutation({
     async mutationFn(membership: OrganizationMember) {
       const { members } = await api.listOrganizationMembers({
-        token,
         query: { user_id: user.id },
       });
 
@@ -295,7 +293,6 @@ function useLeaveOrganization() {
 
       if (otherOrganizationId) {
         const { token: newToken } = await api.switchOrganization({
-          token,
           path: { id: otherOrganizationId },
           header: {},
         });
@@ -304,19 +301,13 @@ function useLeaveOrganization() {
       }
 
       await api.deleteOrganizationMember({
-        token,
         path: { id: membership.id },
       });
 
       return result;
     },
     async onSuccess(token, { organization }) {
-      if (token !== undefined) {
-        setToken(token);
-      } else {
-        clearToken();
-      }
-
+      setToken(token ?? null);
       navigate(routes.home());
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },

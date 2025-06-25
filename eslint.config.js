@@ -57,7 +57,7 @@ export default [
       'import-x/first': 'error',
       'import-x/newline-after-import': 'error',
       'import-x/order': [
-        'warn',
+        'off',
         {
           'newlines-between': 'always',
           alphabetize: { order: 'asc' },
@@ -71,6 +71,7 @@ export default [
         },
       ],
       '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
+      '@typescript-eslint/only-throw-error': 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',

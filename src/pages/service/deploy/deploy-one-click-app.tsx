@@ -1,22 +1,22 @@
+import { useSearch, useNavigate } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
 import { useOneClickAppsQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { OneClickAppForm } from 'src/modules/service-form/one-click-app-form';
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
 const T = createTranslate('pages.deploy.oneClickApp');
 
 export function DeployOneClickApp() {
   const t = T.useTranslate();
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/deploy' });
 
-  const [oneClickAppParam, setOneClickAppParam] = useSearchParam('one_click_app');
+  const { oneClickApp: oneClickAppParam } = snakeToCamelDeep(useSearch({ from: '/_main/services/deploy' }));
   const oneClickAppsQuery = useOneClickAppsQuery();
   const app = oneClickAppsQuery.data?.find(hasProperty('slug', oneClickAppParam));
 
@@ -25,17 +25,20 @@ export function DeployOneClickApp() {
   useEffect(() => {
     if (oneClickAppsQuery.isSuccess) {
       if (app === undefined) {
-        setOneClickAppParam(null, { replace: true });
+        void navigate({ to: '.', search: (prev) => ({ ...prev, one_click_app: undefined }), replace: true });
       } else {
-        const { search } = new URL(app.deployUrl);
+        const { searchParams } = new URL(app.deployUrl);
 
-        navigate((url) => {
-          url.search = search;
-          url.searchParams.set('one_click_app', app.slug);
+        void navigate({
+          to: '.',
+          search: {
+            ...Object.fromEntries(searchParams.entries()),
+            one_click_app: app.slug,
+          },
         });
       }
     }
-  }, [oneClickAppsQuery, app, setOneClickAppParam, navigate]);
+  }, [oneClickAppsQuery, app, navigate]);
 
   if (app === undefined) {
     return null;

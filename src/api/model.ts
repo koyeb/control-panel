@@ -433,6 +433,8 @@ export type GitRepository = {
 
 export type Instance = {
   id: string;
+  appId: string;
+  serviceId: string;
   name: string;
   status: InstanceStatus;
   type: string;

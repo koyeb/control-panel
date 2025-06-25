@@ -8,14 +8,13 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useLocation, useNavigate } from 'src/hooks/router';
+import { useLocation } from 'src/hooks/router';
 import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
@@ -38,6 +37,8 @@ import { OrganizationPlan } from './organization-plan';
 import { PlatformStatus } from './platform-status';
 import { PreloadDatacenterLatencies } from './preload-datacenter-latencies';
 import { UserMenu } from './user-menu';
+import { isSessionToken, setToken } from 'src/application/authentication';
+import { useNavigate } from '@tanstack/react-router';
 
 const T = createTranslate('layouts.main');
 
@@ -140,7 +141,7 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
-  const { session } = useToken();
+  const session = isSessionToken();
   const trial = useTrial();
 
   if (session) {
@@ -154,13 +155,12 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const { clearToken } = useToken();
   const navigate = useNavigate();
 
   const mutation = useMutation({
     ...useApiMutationFn('logout', {}),
-    onMutate: clearToken,
-    onSuccess: () => navigate(routes.home()),
+    onSettled: () => setToken(null, true),
+    onSuccess: () => void navigate({ to: '/', reloadDocument: true }),
   });
 
   return (
@@ -181,7 +181,6 @@ type PageContextProps = {
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
-  const { token } = useToken();
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
@@ -201,9 +200,9 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
   useEffect(() => {
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+      iFrameRef.current?.contentWindow?.postMessage({ location }, pageContextBaseUrl);
     }
-  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
+  }, [pageContextBaseUrl, iFrameRef, ready, location]);
 
   return (
     <>

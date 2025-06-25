@@ -5,7 +5,7 @@ import { create } from 'src/utils/factories';
 import { getConfig } from './config';
 import { ServiceUrl, getServiceUrls } from './service-functions';
 
-vi.mock('./config');
+vi.mock('./config', () => ({ getConfig: vi.fn(() => ({})) }));
 
 describe('getServiceUrls', () => {
   beforeEach(() => {

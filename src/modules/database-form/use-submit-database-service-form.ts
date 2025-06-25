@@ -7,12 +7,12 @@ import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
 import { routes } from 'src/application/routes';
 import { updateDatabaseService } from 'src/application/service-functions';
-import { useToken } from 'src/application/token';
 import { useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
-import { hasProperty } from 'src/utils/object';
+import { useNavigate } from 'src/hooks/router';
+import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
 import { randomString } from 'src/utils/random';
 
+import { useSearch } from '@tanstack/react-router';
 import { databaseInstances } from './database-instance-types';
 import { DatabaseServiceForm } from './database-service-form.types';
 
@@ -22,9 +22,8 @@ export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
-  const [appId] = useSearchParam('app_id');
+  const { appId } = snakeToCamelDeep(useSearch({ from: '/_main/database-services/new' }));
   const organization = useOrganization();
-  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
   const prefetch = usePrefetchApiQuery();
   const navigate = useNavigate();
@@ -42,9 +41,8 @@ export function useSubmitDatabaseServiceForm(
         return databaseServiceId;
       } else {
         const { service } = await api.createService({
-          token,
           query: { dry_run: false },
-          body: createApiService(appId ?? (await getDatabaseAppId(token, values.serviceName)), values),
+          body: createApiService(appId ?? (await getDatabaseAppId(values.serviceName)), values),
         });
 
         return service!.id!;
@@ -74,9 +72,8 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(token: string | undefined, appName: string): Promise<string> {
+async function getDatabaseAppId(appName: string): Promise<string> {
   const { apps } = await api.listApps({
-    token,
     query: { name: appName },
   });
 
@@ -87,7 +84,6 @@ async function getDatabaseAppId(token: string | undefined, appName: string): Pro
   }
 
   const { app } = await api.createApp({
-    token,
     body: { name: appName },
   });
 

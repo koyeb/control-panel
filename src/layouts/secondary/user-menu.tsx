@@ -1,36 +1,19 @@
-import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
-import { useUserUnsafe } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
-import { useResetIdentifyUser } from 'src/application/posthog';
-import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
+import { useLogoutMutation, useUserUnsafe } from 'src/api/hooks/session';
 import { IconLogOut, IconSettings } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
-  const { clearToken } = useToken();
   const user = useUserUnsafe();
+  const { mutate: logout } = useLogoutMutation();
 
   const [open, setOpen] = useState(false);
-  const resetIdentify = useResetIdentifyUser();
-  const navigate = useNavigate();
-
-  const { mutate: logout } = useMutation({
-    ...useApiMutationFn('logout', {}),
-    onSuccess() {
-      clearToken();
-      resetIdentify();
-      navigate(routes.signIn());
-    },
-  });
 
   return (
     <Floating

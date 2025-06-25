@@ -1,16 +1,16 @@
+import { Button, Spinner } from '@koyeb/design-system';
 import { useIsMutating, useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Spinner } from '@koyeb/design-system';
 import { useGithubApp, useGithubAppQuery, useRepositoriesQuery } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
 import { ControlledInput } from 'src/components/controlled';
-import { IconRefreshCcw, IconLock, IconGithub } from 'src/components/icons';
+import { IconGithub, IconLock, IconRefreshCcw } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
@@ -64,7 +64,7 @@ function RepositoriesIndexing() {
 }
 
 function InstallGithubApp() {
-  const { githubAppInstallationRequested } = useHistoryState<{ githubAppInstallationRequested: boolean }>();
+  const { githubAppInstallationRequested } = useHistoryState();
   const location = useLocation();
 
   const { mutate: installGithubApp } = useMutation({

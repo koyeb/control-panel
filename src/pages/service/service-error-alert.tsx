@@ -1,10 +1,10 @@
 import { Alert, ButtonColor } from '@koyeb/design-system';
+import { useSearch } from '@tanstack/react-router';
 import { useDeployment } from 'src/api/hooks/service';
 import { Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { isUpcomingDeployment } from 'src/application/service-functions';
 import { Link, LinkButton } from 'src/components/link';
-import { useSearchParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 
@@ -119,7 +119,7 @@ type LatestDeploymentButtonProps = {
 };
 
 function LatestDeploymentButton({ color, serviceId, deploymentId }: LatestDeploymentButtonProps) {
-  const [currentDeploymentId] = useSearchParam('deploymentId');
+  const { deploymentId: currentDeploymentId } = useSearch({ strict: false });
 
   if (deploymentId === currentDeploymentId) {
     return null;

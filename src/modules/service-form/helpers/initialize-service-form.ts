@@ -7,7 +7,6 @@ import { mapRepository } from 'src/api/mappers/git';
 import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
-import { getToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { hasProperty } from 'src/utils/object';
 
@@ -28,25 +27,24 @@ export async function initializeServiceForm(
   serviceId: string | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {
-  const token = getToken();
   let values = defaultServiceForm();
 
   const getApp = async (appId: string) => {
-    return api.getApp({ token, path: { id: appId } });
+    return api.getApp({ path: { id: appId } });
   };
 
   const getService = async (serviceId: string) => {
-    return api.getService({ token, path: { id: serviceId } });
+    return api.getService({ path: { id: serviceId } });
   };
 
   const getDeployment = async (deploymentId: string) => {
-    return api.getDeployment({ token, path: { id: deploymentId } });
+    return api.getDeployment({ path: { id: deploymentId } });
   };
 
   if (serviceId) {
     const { service } = await getService(serviceId);
     const { app } = await getApp(service!.app_id!);
-    const { volumes } = await api.listVolumes({ token, query: { limit: '100' } });
+    const { volumes } = await api.listVolumes({ query: { limit: '100' } });
     const deployment = await getDeployment(service!.latest_deployment_id!);
     const definition = deployment.deployment!.definition!;
 
@@ -97,7 +95,7 @@ export async function initializeServiceForm(
 
       if (repositoryName) {
         const repository = await api
-          .listRepositories({ token, query: { name: repositoryName, name_search_op: 'equality' } })
+          .listRepositories({ query: { name: repositoryName, name_search_op: 'equality' } })
           .then(({ repositories }) => repositories!.map(mapRepository))
           .then(([repository]) => repository);
 

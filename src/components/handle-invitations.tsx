@@ -6,11 +6,11 @@ import { OrganizationInvitation } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { AuthButton } from 'src/pages/authentication/components/auth-button';
 
+import { useSetToken } from 'src/application/authentication';
 import { IconArrowRight } from './icons';
 
 const T = createTranslate('components.invitation');
@@ -20,17 +20,16 @@ type HandleInvitationsProps = {
 };
 
 export function HandleInvitation({ invitation }: HandleInvitationsProps) {
-  const { token, setToken } = useToken();
+  const setToken = useSetToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
   const acceptMutation = useMutation({
     async mutationFn(invitation: OrganizationInvitation) {
-      await api.acceptInvitation({ token, path: { id: invitation.id } });
+      await api.acceptInvitation({ path: { id: invitation.id } });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: invitation.organization.id },
         header: {},
       });

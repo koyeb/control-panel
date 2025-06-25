@@ -4,7 +4,6 @@ import { api } from 'src/api/api';
 import { Secret } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
@@ -20,14 +19,11 @@ export function BulkDeleteSecretsDialog({ secrets, onDeleted }: BulkDeleteSecret
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
 
-  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     async mutationFn(secrets: Secret[]) {
-      return Promise.allSettled(
-        secrets.map((secret) => api.deleteSecret({ token, path: { id: secret.id } })),
-      );
+      return Promise.allSettled(secrets.map((secret) => api.deleteSecret({ path: { id: secret.id } })));
     },
     async onSuccess(result) {
       await invalidate('listSecrets');

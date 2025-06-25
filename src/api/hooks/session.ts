@@ -1,9 +1,11 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
-import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
 
-import { isApiError } from '../api-errors';
+import { useNavigate } from '@tanstack/react-router';
+import { useSetToken } from 'src/application/authentication';
+import { api } from '../api';
+import { ApiError } from '../api-errors';
 import {
   mapOrganization,
   mapOrganizationMember,
@@ -11,20 +13,12 @@ import {
   mapOrganizationSummary,
   mapUser,
 } from '../mappers/session';
-import { useApiQueryFn } from '../use-api';
+import { useApiMutationFn, useApiQueryFn } from '../use-api';
 
 export function useUserQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     ...useApiQueryFn('getCurrentUser'),
-    placeholderData: keepPreviousData,
     select: ({ user }) => mapUser(user!),
-    throwOnError: (error) => {
-      if (!isApiError(error)) {
-        return true;
-      }
-
-      return !inArray(error.code, ['authentication_error', 'authorization_error']);
-    },
   });
 }
 
@@ -36,17 +30,26 @@ export function useUser() {
   return defined(useUserUnsafe(), new AssertionError('User is not set'));
 }
 
+export function getCurrentOrganization() {
+  return api.getCurrentOrganization({}).catch((error) => {
+    if (error instanceof ApiError && error.status === 404) {
+      return { organization: null };
+    }
+
+    throw error;
+  });
+}
+
 export function useOrganizationQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     ...useApiQueryFn('getCurrentOrganization'),
-    placeholderData: keepPreviousData,
-    select: ({ organization }) => mapOrganization(organization!),
-    throwOnError: (error) => {
-      if (!isApiError(error)) {
-        return true;
+    queryFn: getCurrentOrganization,
+    select: ({ organization }) => {
+      if (organization === null) {
+        return null;
       }
 
-      return !inArray(error.code, ['authentication_error', 'authorization_error', 'not_found']);
+      return mapOrganization(organization!);
     },
   });
 }
@@ -98,5 +101,21 @@ export function useUserOrganizationMemberships() {
     refetchInterval: false,
     enabled: user !== undefined,
     select: ({ members }) => members!.map(mapOrganizationMember),
+  });
+}
+
+export function useLogoutMutation() {
+  const setToken = useSetToken();
+  const navigate = useNavigate();
+  // todo
+  // const resetIdentify = useResetIdentifyUser();
+
+  return useMutation({
+    ...useApiMutationFn('logout', {}),
+    onSettled: async () => {
+      setToken(null);
+      // resetIdentify();
+      await navigate({ to: '/auth/signin' });
+    },
   });
 }

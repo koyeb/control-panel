@@ -2,13 +2,12 @@ import * as intercom from '@intercom/messenger-js-sdk';
 // eslint-disable-next-line no-restricted-imports
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation } from 'wouter';
 
 import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 
 import { getConfig } from './config';
 import { identifyUserInSentry } from './report-error';
+import { useLocation } from 'src/hooks/router';
 
 // cSpell:ignore pageleave autocapture
 
@@ -35,7 +34,7 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
       }}
     >
       <TrackPageViews />
-      <IdentifyUser />
+
       {children}
     </PostHogJsProvider>
   );
@@ -46,7 +45,7 @@ function usePostHog(): PostHog | undefined {
 }
 
 function TrackPageViews() {
-  const [location] = useLocation();
+  const location = useLocation();
   const posthog = usePostHog();
 
   useEffect(() => {
@@ -58,7 +57,7 @@ function TrackPageViews() {
   return null;
 }
 
-function IdentifyUser() {
+export function IdentifyUser() {
   const posthog = usePostHog();
 
   const user = useUserUnsafe();
@@ -73,7 +72,7 @@ function IdentifyUser() {
   }, [posthog, user]);
 
   useEffect(() => {
-    if (organization !== undefined) {
+    if (organization !== null) {
       posthog?.group('segment_group', organization.id);
     }
   }, [posthog, organization]);

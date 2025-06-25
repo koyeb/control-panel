@@ -4,7 +4,6 @@ import { api } from 'src/api/api';
 import { Domain } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
@@ -20,14 +19,11 @@ export function BulkDeleteDomainsDialog({ domains, onDeleted }: BulkDeleteDomain
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
 
-  const { token } = useToken();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     async mutationFn(domains: Domain[]) {
-      return Promise.allSettled(
-        domains.map((domain) => api.deleteDomain({ token, path: { id: domain.id } })),
-      );
+      return Promise.allSettled(domains.map((domain) => api.deleteDomain({ path: { id: domain.id } })));
     },
     async onSuccess(result) {
       await invalidate('listDomains');

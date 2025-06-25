@@ -1,5 +1,8 @@
 {
   "eslint.useFlatConfig": true,
   "eslint.workingDirectories": [{ "mode": "auto" }],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "files.watcherExclude": { "src/route-tree.generated.ts": true },
+  "search.exclude": { "src/route-tree.generated.ts": true },
+  "files.readonlyInclude": { "src/route-tree.generadet.ts": true }
 }

@@ -29,7 +29,7 @@ export function OrganizationPlan() {
     setOpen(false);
   });
 
-  if (organization === undefined) {
+  if (organization === null) {
     return null;
   }
 

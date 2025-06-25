@@ -5,7 +5,6 @@ import { api } from 'src/api/api';
 import { Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -23,23 +22,18 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   const closeDialog = Dialog.useClose();
   const navigate = useNavigate();
 
-  const { token } = useToken();
-
   const { mutateAsync: deleteService } = useMutation({
     mutationFn: async () => {
       await api.deleteService({
-        token,
         path: { id: service.id },
       });
 
       const { services } = await api.listServices({
-        token,
         query: { app_id: service.appId },
       });
 
       if (services?.length === 1) {
         await api.deleteApp({
-          token,
           path: { id: service.appId },
         });
       }

@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from '@tanstack/react-router';
 
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -13,6 +14,7 @@ const T = createTranslate('pages.onboarding.emailValidation');
 export function ValidateAccountPage() {
   const navigate = useNavigate();
   const invalidate = useInvalidateApiQuery();
+  const router = useRouter();
   const validationToken = useRouteParam('token');
   const t = T.useTranslate();
 
@@ -23,6 +25,7 @@ export function ValidateAccountPage() {
     }),
     async onSuccess() {
       await invalidate('getCurrentUser');
+      await router.invalidate();
       notify.success(t('emailAddressValidated'));
     },
     onError(error) {

@@ -5,7 +5,6 @@ import '@fontsource-variable/inter';
 import { api } from '../src/api/api';
 import { catalogInstanceFixtures, catalogRegionFixtures } from '../src/api/mock/fixtures';
 import { DialogProvider } from '../src/application/dialog-context';
-import { TokenProvider } from '../src/application/token';
 import { IntlProvider } from '../src/intl/translation-provider';
 import '../src/styles.css';
 
@@ -40,11 +39,6 @@ export default {
         <Story />
       );
     },
-    (Story) => (
-      <TokenProvider>
-        <Story />
-      </TokenProvider>
-    ),
     (Story) => (
       <QueryClientProvider client={new QueryClient()}>
         <Story />

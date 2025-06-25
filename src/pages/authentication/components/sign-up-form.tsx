@@ -8,7 +8,6 @@ import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -17,6 +16,7 @@ import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from './auth-button';
 import { AuthInput } from './auth-input';
+import { useSetToken } from 'src/application/authentication';
 
 const T = createTranslate('pages.authentication.signUp');
 
@@ -28,7 +28,7 @@ const schema = z.object({
 
 export function SignUpForm() {
   const t = T.useTranslate();
-  const { setToken } = useToken();
+  const setToken = useSetToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 

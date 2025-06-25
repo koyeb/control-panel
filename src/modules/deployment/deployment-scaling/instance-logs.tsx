@@ -14,7 +14,6 @@ import { getInitialLogOptions, LogOptions } from 'src/components/logs/log-option
 import { LogLines, LogsFooter } from 'src/components/logs/logs';
 import { QueryError } from 'src/components/query-error';
 import { LogsFilters, useLogs } from 'src/hooks/logs';
-import { useRouteParam } from 'src/hooks/router';
 import { createTranslate, Translate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
@@ -27,8 +26,8 @@ type InstanceLogsProps = {
 };
 
 export function InstanceLogs({ instance }: InstanceLogsProps) {
-  const app = useApp(useRouteParam('appId'));
-  const service = useService(useRouteParam('serviceId'));
+  const app = useApp(instance.appId);
+  const service = useService(instance.serviceId);
 
   const now = useMemo(() => new Date(), []);
 

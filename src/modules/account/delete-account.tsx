@@ -6,11 +6,11 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { setToken } from 'src/application/authentication';
 
 const T = createTranslate('modules.account.deleteAccount');
 
@@ -20,9 +20,8 @@ export function DeleteAccount() {
 
   const user = useUser();
   const organization = useOrganizationUnsafe();
-  const canDelete = organization === undefined;
+  const canDelete = organization === null;
 
-  const { clearToken } = useToken();
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 
@@ -31,7 +30,7 @@ export function DeleteAccount() {
       path: { id: user.id },
     }),
     onSuccess() {
-      clearToken();
+      setToken(null);
       resetIdentify();
       navigate(routes.signIn());
       notify.success(t('successNotification'));

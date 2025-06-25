@@ -24,7 +24,7 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
   const organization = useOrganizationUnsafe();
 
   const disableComputeLinks =
-    organization === undefined || inArray(organization.status, ['WARNING', 'DEACTIVATING', 'DEACTIVATED']);
+    organization === null || inArray(organization.status, ['WARNING', 'DEACTIVATING', 'DEACTIVATED']);
 
   return (
     <nav className="flex-1">

@@ -204,6 +204,8 @@ const deploymentDefinition = createFactory<DeploymentDefinition>(() => ({
 
 const deploymentInstance = createFactory<Instance>(() => ({
   id: createId(),
+  appId: '',
+  serviceId: '',
   status: 'HEALTHY',
   name: '',
   region: '',
