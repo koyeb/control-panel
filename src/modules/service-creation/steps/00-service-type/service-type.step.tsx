@@ -1,13 +1,14 @@
+import clsx from 'clsx';
 import { useEffect } from 'react';
 
 import { routes } from 'src/application/routes';
-import { IconGithub } from 'src/components/icons';
+import { IconGithub, IconPackage } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate } from 'src/intl/translate';
-import { SourceType } from 'src/modules/service-form/service-form.types';
+import { BuilderType, SourceType } from 'src/modules/service-form/service-form.types';
 import { inArray } from 'src/utils/arrays';
 
 import { OneClickAppList } from './one-click-app-list';
@@ -20,7 +21,7 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 }
 
 export function ServiceTypeStep() {
-  const [appId] = useSearchParam('app_id');
+  const searchParams = useSearchParams();
   const [serviceType, setServiceType] = useSearchParam('service_type');
   const navigate = useNavigate();
 
@@ -46,40 +47,51 @@ export function ServiceTypeStep() {
         <OneClickAppList />
       </nav>
 
-      <div className="p-3 md:p-6 md:pl-12">
-        {isServiceType(serviceType) && serviceType !== 'database' && serviceType !== 'model' && (
-          <div className="col gap-4">
-            <div className="col gap-2">
-              <div className="text-base font-medium">
-                <T id={`${serviceType}.title`} />
-              </div>
-              <div className="text-dim">
-                <T id={`${serviceType}.description`} />
-              </div>
-            </div>
+      <div className="col gap-8 p-3 md:p-6 md:pl-12">
+        {isServiceType(serviceType) && (
+          <Section
+            title={<T id={`${serviceType}.title`} />}
+            description={<T id={`${serviceType}.description`} />}
+          >
+            {(serviceType === 'database' || serviceType === 'model') && (
+              <LinkButton
+                className="self-start"
+                href={getCreateServiceUrl(serviceType, searchParams.get('app_id'))}
+              >
+                <T id={`${serviceType}.button`} />
+              </LinkButton>
+            )}
 
-            <DeploymentSource />
-          </div>
+            {serviceType !== 'database' && serviceType !== 'model' && <DeploymentSource />}
+          </Section>
         )}
 
-        {(serviceType === 'database' || serviceType === 'model') && (
-          <div className="col gap-6">
-            <div className="col gap-2">
-              <div className="text-base font-medium">
-                <T id={`${serviceType}.title`} />
-              </div>
-              <div className="text-dim">
-                <T id={`${serviceType}.description`} />
-              </div>
-            </div>
-
-            <LinkButton className="self-start" href={getCreateServiceUrl(serviceType, appId)}>
-              <T id={`${serviceType}.button`} />
-            </LinkButton>
-          </div>
+        {searchParams.get('type') === 'git' && (
+          <Section title={<T id="builder.title" />} description={<T id="builder.description" />}>
+            <Builder />
+          </Section>
         )}
       </div>
     </div>
+  );
+}
+
+type SectionProps = {
+  title: React.ReactNode;
+  description: React.ReactNode;
+  children: React.ReactNode;
+};
+
+function Section({ title, description, children }: SectionProps) {
+  return (
+    <section className="col gap-4">
+      <header className="col gap-2">
+        <div className="text-base font-medium">{title}</div>
+        <div className="text-dim">{description}</div>
+      </header>
+
+      {children}
+    </section>
   );
 }
 
@@ -103,32 +115,36 @@ function getCreateServiceUrl(serviceType: ExtendedServiceType, appId: string | n
 }
 
 function DeploymentSource() {
-  const search = useSearchParams();
+  const searchParams = useSearchParams();
 
   const href = (source: SourceType) => {
-    const params = new URLSearchParams(search);
+    const result = new URLSearchParams(searchParams);
 
-    params.set('type', source);
-    params.set('step', 'importProject');
+    result.set('type', source);
 
-    if (params.get('service_type') === 'private') {
-      params.set('service_type', 'web');
-      params.set('ports', '8000;tcp');
+    if (source === 'docker') {
+      result.set('step', 'importProject');
+
+      if (result.get('service_type') === 'private') {
+        result.set('service_type', 'web');
+        result.set('ports', '8000;tcp');
+      }
     }
 
-    return '?' + params.toString();
+    return '?' + result.toString();
   };
 
   return (
-    <div className="col gap-4 lg:row">
-      <DeploymentSourceOption
+    <div className="col lg:row gap-4">
+      <Option
         Icon={IconGithub}
         title={<T id="deploymentSource.github.title" />}
         description={<T id="deploymentSource.github.description" />}
+        selected={searchParams.get('type') === 'git'}
         href={href('git')}
       />
 
-      <DeploymentSourceOption
+      <Option
         Icon={IconDocker}
         title={<T id="deploymentSource.docker.title" />}
         description={<T id="deploymentSource.docker.description" />}
@@ -138,16 +154,59 @@ function DeploymentSource() {
   );
 }
 
-type DeploymentSourceOptionProps = {
+function Builder() {
+  const searchParams = useSearchParams();
+
+  const href = (builder: BuilderType) => {
+    const result = new URLSearchParams(searchParams);
+
+    result.set('builder', builder);
+    result.set('step', 'importProject');
+
+    if (result.get('service_type') === 'private') {
+      result.set('service_type', 'web');
+      result.set('ports', '8000;tcp');
+    }
+
+    return '?' + result.toString();
+  };
+
+  return (
+    <div className="col lg:row gap-4">
+      <Option
+        Icon={IconPackage}
+        title={<T id="builder.buildpack.title" />}
+        description={<T id="builder.buildpack.description" />}
+        href={href('buildpack')}
+      />
+
+      <Option
+        Icon={IconDocker}
+        title={<T id="builder.dockerfile.title" />}
+        description={<T id="builder.dockerfile.description" />}
+        href={href('dockerfile')}
+      />
+    </div>
+  );
+}
+
+type OptionProps = {
   Icon: React.ComponentType<{ className?: string }>;
   title: React.ReactNode;
   description: React.ReactNode;
   href: string;
+  selected?: boolean;
 };
 
-function DeploymentSourceOption({ Icon, title, description, href }: DeploymentSourceOptionProps) {
+function Option({ Icon, title, description, href, selected }: OptionProps) {
   return (
-    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" href={href}>
+    <Link
+      className={clsx(
+        'row max-w-80 items-start gap-3 rounded-xl border p-3 text-start',
+        selected && 'border-green',
+      )}
+      href={href}
+    >
       <div className="rounded-lg bg-muted p-3">
         <Icon className="size-10" />
       </div>
