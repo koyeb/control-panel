@@ -1,6 +1,6 @@
+import { Alert } from '@koyeb/design-system';
 import { useEffect, useState } from 'react';
 
-import { Alert } from '@koyeb/design-system';
 import { useInstanceQuery, useInstancesQuery } from 'src/api/hooks/service';
 import { Instance } from 'src/api/model';
 import { Loading } from 'src/components/loading';

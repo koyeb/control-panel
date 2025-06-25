@@ -46,7 +46,7 @@ function DeployServiceForm() {
         <T id="title" />
       </h1>
 
-      <div className="col xl:row gap-8">
+      <div className="col gap-8 xl:row">
         <ServiceForm
           serviceId={serviceId ?? undefined}
           className="grow"

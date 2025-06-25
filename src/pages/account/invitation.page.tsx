@@ -1,6 +1,6 @@
+import { Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 
-import { Spinner } from '@koyeb/design-system';
 import { isApiError } from 'src/api/api-errors';
 import { mapInvitation } from 'src/api/mappers/session';
 import { useApiQueryFn } from 'src/api/use-api';

@@ -1,4 +1,5 @@
 import { Input } from '@koyeb/design-system';
+
 import { Address } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
 
@@ -44,7 +45,7 @@ export const FallbackAddressFields = ({ value, onChange, errors }: FallbackAddre
         error={errors?.city}
       />
 
-      <div className="col sm:row gap-4">
+      <div className="col gap-4 sm:row">
         <Input
           required
           label={<T id="postalCode" />}

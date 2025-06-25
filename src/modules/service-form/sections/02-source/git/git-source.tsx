@@ -1,7 +1,7 @@
+import { TabButton, TabButtons } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { Controller } from 'react-hook-form';
 
-import { TabButton, TabButtons } from '@koyeb/design-system';
 import { useGithubApp } from 'src/api/hooks/git';
 import { ControlledSelect } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';

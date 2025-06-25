@@ -1,6 +1,3 @@
-import React, { useMemo } from 'react';
-import { Control, FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
-
 import {
   Autocomplete,
   Checkbox,
@@ -13,6 +10,9 @@ import {
   TextArea,
   mergeRefs,
 } from '@koyeb/design-system';
+import React, { useMemo } from 'react';
+import { Control, FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
+
 import { usePureFunction } from 'src/hooks/lifecycle';
 import { Extend } from 'src/utils/types';
 

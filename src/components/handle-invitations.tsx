@@ -1,6 +1,6 @@
+import { Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { OrganizationInvitation } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -61,7 +61,6 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   }
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="col w-full max-w-md items-center gap-12 pt-[15vh] text-center">
       <div className="col gap-2">
         <h1 className="text-4xl font-semibold text-dim">

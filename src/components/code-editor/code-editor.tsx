@@ -1,10 +1,10 @@
+import { Autocomplete } from '@koyeb/design-system';
 import { langNames, langs, LanguageName } from '@uiw/codemirror-extensions-langs';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import CodeMirror from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { Autocomplete } from '@koyeb/design-system';
 import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
 import { identity } from 'src/utils/generic';
 

@@ -5,16 +5,16 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
-import tailwind from 'eslint-plugin-tailwindcss';
+import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import { ignore } from 'eslint-plugin-import-x/utils';
 
 const ci = process.env.CI === 'true';
 
 export default [
   js.configs.recommended,
   ...(ci ? tseslint.configs.recommendedTypeChecked : tseslint.configs.recommended),
-  ...tailwind.configs['flat/recommended'],
   {
     files: ['src/**/*.{ts,tsx}'],
     linterOptions: {
@@ -32,6 +32,7 @@ export default [
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       '@tanstack/query': reactQuery,
+      'better-tailwindcss': eslintPluginBetterTailwindcss,
     },
     settings: {
       'import-x/resolver': {
@@ -40,9 +41,8 @@ export default [
       react: {
         version: 'detect',
       },
-      tailwindcss: {
-        classRegex: '^class(Name|Names|es)?$',
-        whitelist: ['intercom-contact-us'],
+      'better-tailwindcss': {
+        entryPoint: 'src/styles.css',
       },
     },
     rules: {
@@ -81,7 +81,10 @@ export default [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react-refresh/only-export-components': 'error',
-      'tailwindcss/no-arbitrary-value': 'warn',
+      ...eslintPluginBetterTailwindcss.configs['recommended'].rules,
+      'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
+      'better-tailwindcss/no-conflicting-classes': 'warn',
+      'better-tailwindcss/no-unregistered-classes': ['warn', { ignore: ['dark', 'intercom-contact-us'] }],
     },
   },
   {

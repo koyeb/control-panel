@@ -25,7 +25,7 @@ export function ActivityItem({ activity, isLast }: { activity: Activity; isLast:
 
       <div
         className={clsx(
-          'col mr-6 flex-1 items-start justify-center gap-2 overflow-hidden py-6',
+          'mr-6 col flex-1 items-start justify-center gap-2 overflow-hidden py-6',
           !isLast && 'border-b',
         )}
       >

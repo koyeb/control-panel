@@ -1,7 +1,7 @@
+import { useBreakpoint } from '@koyeb/design-system';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useBreakpoint } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';

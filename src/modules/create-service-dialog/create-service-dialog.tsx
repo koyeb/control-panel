@@ -234,7 +234,6 @@ function Content() {
   const { page } = useCreateServiceDialog();
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid flex-1 grid-cols-[18rem,1fr] overflow-hidden">
       <Navigation />
       {page?.render()}
@@ -259,7 +258,7 @@ function Footer() {
       <div className="row items-center gap-2 text-dim">
         <Shortcut
           keystrokes={['Escape']}
-          icon={<span className="icon p-1 font-medium leading-5">esc</span>}
+          icon={<span className="icon p-1 leading-5 font-medium">esc</span>}
         />
         <T id="shortcuts.close" />
       </div>

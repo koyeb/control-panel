@@ -1,9 +1,9 @@
+import { Alert, Button } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { useController, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Alert, Button } from '@koyeb/design-system';
 import {
   useDatacenters,
   useInstance,
@@ -301,7 +301,7 @@ function InstanceSection({ model, form }: { model?: AiModel; form: ModelForm }) 
 
   return (
     <Section title={<T id="instance.title" />}>
-      <div className="col scrollbar-green scrollbar-thin max-h-96 gap-3 overflow-auto rounded-md border p-2">
+      <div className="col max-h-96 scrollbar-thin gap-3 overflow-auto rounded-md border p-2 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 

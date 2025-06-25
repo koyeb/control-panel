@@ -1,6 +1,6 @@
+import { Button, ButtonColor } from '@koyeb/design-system';
 import { useForm } from 'react-hook-form';
 
-import { Button, ButtonColor } from '@koyeb/design-system';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 

@@ -1,9 +1,9 @@
+import { Code, CodeLang, Tab, Tabs } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Code, CodeLang, Tab, Tabs } from '@koyeb/design-system';
 import { DatabaseDeployment, DatabaseRole, LogicalDatabase } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
@@ -47,12 +47,12 @@ export function ConnectionDetails({ deployment }: ConnectionDetailsProps) {
 
   return (
     <section className="divide-y rounded-md border">
-      <header className="col md:row justify-between gap-4 px-3 py-4 md:items-center">
+      <header className="col justify-between gap-4 px-3 py-4 md:row md:items-center">
         <div className="font-medium">
           <T id="title" />
         </div>
 
-        <form className="col md:row gap-4">
+        <form className="col gap-4 md:row">
           <ControlledSelect
             control={form.control}
             name="role"
@@ -147,7 +147,7 @@ function SnippetFile({ deployment, role, database, filename, lang, snippet }: Sn
         lang={lang}
         theme="dark"
         value={snippet(details(passwordVisible))}
-        className="scrollbar-green overflow-x-auto whitespace-pre-wrap rounded-b-md bg-black p-3 dark:bg-muted"
+        className="overflow-x-auto rounded-b-md bg-black p-3 whitespace-pre-wrap scrollbar-green dark:bg-muted"
       />
     </div>
   );

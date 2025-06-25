@@ -12,7 +12,7 @@ export function Intro({ icon, title, description, cta, className }: IntroProps) 
   return (
     <div className={clsx('col h-full items-start justify-center gap-4', className)}>
       <div>
-        <p className="row mb-2 items-center gap-2 text-lg font-semibold">
+        <p className="mb-2 row items-center gap-2 text-lg font-semibold">
           {icon}
           {title}
         </p>

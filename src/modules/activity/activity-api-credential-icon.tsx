@@ -1,7 +1,7 @@
+import { InfoTooltip } from '@koyeb/design-system';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-import { InfoTooltip } from '@koyeb/design-system';
 import { useApiCredentialsQuery } from 'src/api/hooks/api-credential';
 import { Activity, ApiCredential } from 'src/api/model';
 import { createValidationGuard } from 'src/application/create-validation-guard';

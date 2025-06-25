@@ -1,7 +1,7 @@
+import { Json, TabButton, TabButtons } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
-import { Json, TabButton, TabButtons } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
 import type {
   BuildpackBuilder,
@@ -61,18 +61,17 @@ function DeploymentJson({ definition }: { definition: object }) {
       <Json
         theme={theme}
         value={definition}
-        // eslint-disable-next-line tailwindcss/no-arbitrary-value
-        className="scrollbar-green max-h-[32rem] overflow-auto rounded-md bg-muted p-2 dark:bg-neutral"
+        className="max-h-[32rem] overflow-auto rounded-md bg-muted p-2 scrollbar-green dark:bg-neutral"
       />
 
-      <CopyIconButton text={JSON.stringify(definition)} className="text-icon absolute end-6 top-4 size-4" />
+      <CopyIconButton text={JSON.stringify(definition)} className="absolute end-6 top-4 size-4 text-icon" />
     </div>
   );
 }
 
 function DeploymentParsed({ deployment: { definition } }: { deployment: ComputeDeployment }) {
   return (
-    <div className="col md:row gap-6">
+    <div className="col gap-6 md:row">
       <div className="col min-w-0 flex-1 gap-6">
         <General definition={definition} />
         <Source definition={definition} />
@@ -319,7 +318,7 @@ function EnvironmentVariables({ definition }: { definition: DeploymentDefinition
       title={
         <>
           <T id="environmentVariables.title" />
-          <CopyIconButton text={envString} className="text-icon ml-2 size-em align-middle" />
+          <CopyIconButton text={envString} className="ml-2 size-em align-middle text-icon" />
         </>
       }
     >

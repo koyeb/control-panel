@@ -1,6 +1,6 @@
+import { Button } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { Button } from '@koyeb/design-system';
 import { ComputeDeployment, Replica } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
@@ -49,7 +49,6 @@ export function ReplicaItem({ deployment, replica, metrics }: ReplicaItemProps) 
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid grid-cols-[1fr_auto] items-center gap-x-2 gap-y-3 rounded-lg border p-3 sm:grid-cols-[auto_1fr_auto]">
       <div className="row items-center gap-2 sm:order-1">
         <RegionFlag regionId={replica.region} className="size-4" />
@@ -72,7 +71,7 @@ export function ReplicaItem({ deployment, replica, metrics }: ReplicaItemProps) 
       )}
 
       {replica.status && (
-        <div className="row col-span-full items-center gap-4 sm:order-2 sm:col-span-1">
+        <div className="col-span-full row items-center gap-4 sm:order-2 sm:col-span-1">
           {metrics?.cpu !== undefined && <ReplicaCpu value={metrics.cpu} />}
           {metrics?.memory !== undefined && <ReplicaMemory value={metrics.memory} />}
         </div>

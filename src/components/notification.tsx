@@ -1,6 +1,6 @@
+import { Notification } from '@koyeb/design-system';
 import { ToastContainer, ToastContentProps, cssTransition } from 'react-toastify';
 
-import { Notification } from '@koyeb/design-system';
 
 export function NotificationContainer() {
   return (

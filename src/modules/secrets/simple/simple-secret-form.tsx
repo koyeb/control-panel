@@ -1,10 +1,10 @@
+import { IconButton } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { IconButton } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { Secret } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
@@ -119,7 +119,7 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
           rows={3}
           label={valueLabel}
           spellCheck="false"
-          textAreaClassName={clsx('scrollbar-green scrollbar-thin', !showValue && 'text-security-disc')}
+          textAreaClassName={clsx('scrollbar-thin scrollbar-green', !showValue && 'text-security-disc')}
         />
       ) : (
         <ControlledInput

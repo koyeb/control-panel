@@ -1,6 +1,6 @@
+import { AccordionSection } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { AccordionSection } from '@koyeb/design-system';
 import { IconChevronDown } from 'src/components/icons';
 import { TextSkeleton } from 'src/components/skeleton';
 import { createArray } from 'src/utils/arrays';
@@ -18,7 +18,7 @@ export function ServiceFormSkeleton({ className }: ServiceFormSkeletonProps) {
           isExpanded={false}
           header={
             <header className="row items-center gap-6 px-5 py-2.5">
-              <IconChevronDown className="text-icon size-5" />
+              <IconChevronDown className="size-5 text-icon" />
 
               <div className="col gap-1">
                 <span className="text-xs text-dim">

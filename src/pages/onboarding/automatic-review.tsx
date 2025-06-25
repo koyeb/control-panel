@@ -1,6 +1,6 @@
+import { Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 
-import { Spinner } from '@koyeb/design-system';
 import { useApiQueryFn } from 'src/api/use-api';
 import { createTranslate } from 'src/intl/translate';
 

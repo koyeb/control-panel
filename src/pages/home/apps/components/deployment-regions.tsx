@@ -1,4 +1,5 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
+
 import { useRegion } from 'src/api/hooks/catalog';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';

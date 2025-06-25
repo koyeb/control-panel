@@ -1,7 +1,7 @@
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { Button } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
@@ -35,7 +35,6 @@ export function DatabaseSettingsPage() {
   assert(isDatabaseDeployment(deployment));
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_20rem]">
       <DatabaseForm deployment={deployment} onCostChanged={setCost} />
 

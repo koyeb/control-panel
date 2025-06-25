@@ -50,7 +50,7 @@ export function News() {
   };
 
   return (
-    <div className="xl:col hidden gap-3">
+    <div className="hidden gap-3 xl:col">
       <div className="row items-center justify-between gap-4">
         <span className="text-lg font-medium">
           <T id="title" />

@@ -26,7 +26,7 @@ export function ServiceTypeSection() {
     >
       <ServiceTypeAlerts />
 
-      <div className="gaps grid grid-cols-1 md:grid-cols-2">
+      <div className="grid grid-cols-1 gaps md:grid-cols-2">
         <ServiceTypeOption
           type="web"
           Icon={IconGlobe}
@@ -55,7 +55,7 @@ function SectionTitle() {
 
   return (
     <div className="row items-center gap-2">
-      <Icon className="text-icon size-5" />
+      <Icon className="size-5 text-icon" />
       {title}
     </div>
   );

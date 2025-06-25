@@ -1,8 +1,8 @@
+import { useElementSize } from '@koyeb/design-system';
 import { ResponsiveBar } from '@nivo/bar';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { useElementSize } from '@koyeb/design-system';
 import { createTranslate } from 'src/intl/translate';
 
 import { dateTickValues } from '../metrics-helpers';
@@ -52,7 +52,7 @@ export function BarGraph({ loading, error, noData, labels, ...props }: BarGraphP
               label: labels[key],
               color: (props.colors as string[])[index]!,
               value: data[key] ?? (
-                <span className="font-normal text-inverted/60">
+                <span className="font-normal text-neutral/60">
                   <T id="noValue" />
                 </span>
               ),

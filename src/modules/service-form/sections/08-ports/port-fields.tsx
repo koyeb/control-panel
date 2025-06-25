@@ -1,8 +1,8 @@
+import { Button, Collapse, IconButton } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { Button, Collapse, IconButton } from '@koyeb/design-system';
 import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
@@ -119,7 +119,7 @@ function PublicConfiguration({ index }: { index: number }) {
           <IconGlobe className="size-4" />
         </div>
 
-        <div className="col md:row gap-1 md:items-center md:gap-2">
+        <div className="col gap-1 md:row md:items-center md:gap-2">
           <div className="whitespace-nowrap">
             <T id="public.title" />
           </div>
@@ -170,7 +170,7 @@ function TcpProxyConfiguration({ index }: { index: number }) {
           <IconNetwork className="size-4" />
         </div>
 
-        <div className="col md:row gap-1 md:items-center md:gap-2">
+        <div className="col gap-1 md:row md:items-center md:gap-2">
           <div className="whitespace-nowrap">
             <T id="tcpProxy.title" />
           </div>

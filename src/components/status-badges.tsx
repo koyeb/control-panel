@@ -1,6 +1,6 @@
+import { Badge, BadgeColor, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Badge, BadgeColor, Spinner } from '@koyeb/design-system';
 import {
   DeploymentStatus,
   InstanceStatus,

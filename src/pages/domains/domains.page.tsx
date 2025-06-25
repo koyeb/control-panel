@@ -1,7 +1,7 @@
+import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Button } from '@koyeb/design-system';
 import { useDomainsQuery } from 'src/api/hooks/domain';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { Domain } from 'src/api/model';

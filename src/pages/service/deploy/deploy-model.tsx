@@ -27,7 +27,7 @@ export function DeployModel() {
 
       <Header model={model} />
 
-      <div className="col xl:row gap-8">
+      <div className="col gap-8 xl:row">
         <div className="flex-1">
           <ModelForm model={model} onCostChanged={setCost} />
         </div>
@@ -47,7 +47,7 @@ export function DeployModel() {
 
 function Header({ model }: { model?: AiModel }) {
   return (
-    <header className="col mb-10 items-center gap-4 text-center">
+    <header className="mb-10 col items-center gap-4 text-center">
       <div>{model ? <img src={model.logo} className="size-14" /> : <IconPackage className="size-14" />}</div>
 
       <div className="col gap-1">

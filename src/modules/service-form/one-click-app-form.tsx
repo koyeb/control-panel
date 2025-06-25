@@ -1,9 +1,9 @@
+import { Button } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Fragment, useEffect, useRef, useState } from 'react';
 import { useController, useFieldArray, useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@koyeb/design-system';
 import {
   useDatacenters,
   useDatacentersQuery,
@@ -283,7 +283,7 @@ function InstanceSection({ serviceForm, form }: { serviceForm: ServiceForm; form
         setCategory={selector.onInstanceCategorySelected}
       />
 
-      <div className="col scrollbar-green scrollbar-thin mt-4 max-h-96 gap-3 overflow-auto rounded-md border p-2">
+      <div className="mt-4 col max-h-96 scrollbar-thin gap-3 overflow-auto rounded-md border p-2 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
     </Section>

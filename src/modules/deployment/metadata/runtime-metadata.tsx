@@ -1,4 +1,5 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
+
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { useVolumes } from 'src/api/hooks/volume';
 import { DeploymentDefinition, EnvironmentVariable, type Scaling } from 'src/api/model';

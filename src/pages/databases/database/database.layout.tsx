@@ -1,6 +1,6 @@
+import { Alert, TabButtons } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { Alert, TabButtons } from '@koyeb/design-system';
 import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { routes } from 'src/application/routes';
@@ -45,7 +45,7 @@ export function DatabaseLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="col gap-6">
-      <div className="row min-w-0 max-w-full items-center gap-2">
+      <div className="row max-w-full min-w-0 items-center gap-2">
         <ServiceTypeIcon type="database" size="big" />
 
         <div className="col min-w-0 gap-1">

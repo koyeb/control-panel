@@ -1,4 +1,5 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
+
 import { App, ComputeDeployment, Service } from 'src/api/model';
 import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
@@ -32,7 +33,7 @@ function ExternalUrlValue({ urls: [firstUrl, ...urls] }: { urls: ServiceUrl[] })
 
   return (
     <div className="row min-w-0 items-center gap-2">
-      <ExternalLink href={`https://${url}`} className="text-link max-w-64 truncate">
+      <ExternalLink href={`https://${url}`} className="max-w-64 truncate text-link">
         {url}
       </ExternalLink>
 

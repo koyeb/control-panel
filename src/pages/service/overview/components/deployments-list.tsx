@@ -1,7 +1,7 @@
+import { Badge, Button, Collapse, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { Badge, Button, Collapse, Tooltip } from '@koyeb/design-system';
 import { ComputeDeployment, GitDeploymentTrigger, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';

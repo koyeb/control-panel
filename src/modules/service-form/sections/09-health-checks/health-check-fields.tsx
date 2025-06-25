@@ -1,7 +1,7 @@
+import { Button, Input, InputEnd } from '@koyeb/design-system';
 import isEqual from 'lodash-es/isEqual';
 import { useFormContext } from 'react-hook-form';
 
-import { Button, Input, InputEnd } from '@koyeb/design-system';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconRefresh } from 'src/components/icons';

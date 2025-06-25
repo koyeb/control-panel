@@ -18,7 +18,6 @@ export function ServiceItem({ app, service }: ServiceItemProps) {
 
   return (
     <div className="card">
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className="grid grid-cols-1 items-center gap-4 p-4 sm:grid-cols-[10rem_1fr_10rem] lg:grid-cols-[14rem_1fr_12rem]">
         <ServiceName service={service} />
         <ServiceUrl app={app} service={service} deployment={deployment} />
@@ -29,7 +28,7 @@ export function ServiceItem({ app, service }: ServiceItemProps) {
         {isComputeDeployment(deployment) && (
           <>
             <DeploymentTrigger trigger={deployment.trigger} />
-            <span className="text-nowrap text-xs text-dim">
+            <span className="text-xs text-nowrap text-dim">
               <FormattedDistanceToNow value={deployment.date} />
             </span>
           </>

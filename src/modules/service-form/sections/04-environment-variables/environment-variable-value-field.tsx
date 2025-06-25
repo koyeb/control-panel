@@ -1,8 +1,3 @@
-import clsx from 'clsx';
-import { useCombobox } from 'downshift';
-import { useRef, useState } from 'react';
-import { useController } from 'react-hook-form';
-
 import {
   Dropdown,
   DropdownGroup,
@@ -14,6 +9,11 @@ import {
   useDropdown,
   useId,
 } from '@koyeb/design-system';
+import clsx from 'clsx';
+import { useCombobox } from 'downshift';
+import { useRef, useState } from 'react';
+import { useController } from 'react-hook-form';
+
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconChevronDown } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';

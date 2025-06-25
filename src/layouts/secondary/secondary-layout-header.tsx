@@ -20,7 +20,7 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
   return (
     <header
       className={clsx(
-        'row sticky top-0 z-10 flex-wrap items-center gap-6 px-6 py-4',
+        'sticky top-0 z-10 row flex-wrap items-center gap-6 px-6 py-4',
         background && 'bg-gradient-to-b from-neutral from-75% to-transparent',
       )}
     >

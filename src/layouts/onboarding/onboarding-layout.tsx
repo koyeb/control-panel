@@ -21,7 +21,7 @@ export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) 
   return (
     <div className="row h-screen overflow-auto bg-muted p-3">
       <Slides sentence={sentence} />
-      <main className="col mx-auto max-w-xl flex-1 py-8">{children}</main>
+      <main className="mx-auto col max-w-xl flex-1 py-8">{children}</main>
     </div>
   );
 }

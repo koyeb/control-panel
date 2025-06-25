@@ -1,9 +1,9 @@
+import { IconButton, Menu, MenuItem } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { max, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 
-import { IconButton, Menu, MenuItem } from '@koyeb/design-system';
 import { useApp, useService } from 'src/api/hooks/service';
 import { Instance, LogLine } from 'src/api/model';
 import { isInstanceRunning } from 'src/application/service-functions';

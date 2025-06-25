@@ -1,6 +1,6 @@
+import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { DatabaseDeployment, LogicalDatabase, Service } from 'src/api/model';

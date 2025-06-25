@@ -1,9 +1,9 @@
+import { Button, ButtonColor, ButtonSize, ButtonVariant, Spinner, TabButton } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { createElement } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Link } from 'wouter';
 
-import { Button, ButtonColor, ButtonSize, ButtonVariant, Spinner, TabButton } from '@koyeb/design-system';
 import { Extend } from 'src/utils/types';
 
 export { Link };

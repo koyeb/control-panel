@@ -30,7 +30,7 @@ export function ActivityItem({ activity, className }: { activity: Activity; clas
               <ActivityApiCredentialIcon activity={activity} />
             </div>
 
-            <div className="row items-center gap-1 whitespace-nowrap text-xs text-dim">
+            <div className="row items-center gap-1 text-xs whitespace-nowrap text-dim">
               <div>
                 <IconClock className="size-4" />
               </div>

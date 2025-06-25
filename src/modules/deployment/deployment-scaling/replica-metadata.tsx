@@ -42,7 +42,6 @@ function ProgressBar({ progress }: { progress: number }) {
   return (
     <div className="relative h-1.5 w-10 rounded-full bg-gray/30">
       <div
-        // eslint-disable-next-line tailwindcss/no-arbitrary-value
         className="absolute inset-y-0 left-0 rounded-l-full bg-green transition-[width] will-change-[width]"
         style={{ width: `${percent}%` }}
       />

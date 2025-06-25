@@ -140,7 +140,7 @@ function ServiceResource({
     <ActivityResource {...props}>
       {serviceType && <ServiceTypeIcon size="small" type={serviceType} />}
 
-      <span className="direction-rtl truncate">
+      <span className="truncate direction-rtl">
         <Translate id="common.appServiceName" values={{ appName, serviceName }} />
       </span>
 
@@ -175,7 +175,7 @@ function VolumeResource({ name, deleted }: { name: string; deleted: boolean }) {
 
       {name}
 
-      <div className="font-normal capitalize text-dim">
+      <div className="font-normal text-dim capitalize">
         <T id="volume" />
       </div>
     </ActivityResource>
@@ -195,7 +195,7 @@ function ActivityResource({ component = 'div', className, children, ...props }: 
     component,
     {
       className: clsx(
-        'row min-w-0 max-w-full items-center gap-2 whitespace-nowrap rounded border px-2 py-1 text-xs font-medium',
+        'row max-w-full min-w-0 items-center gap-2 rounded border px-2 py-1 text-xs font-medium whitespace-nowrap',
         className,
       ),
       ...props,

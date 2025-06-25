@@ -1,7 +1,7 @@
+import { Button, TabButton, TabButtons } from '@koyeb/design-system';
 import { useState } from 'react';
 import { useFieldArray, useFormContext, useFormState } from 'react-hook-form';
 
-import { Button, TabButton, TabButtons } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
@@ -131,7 +131,7 @@ function EnvironmentVariables() {
             ))}
           </div>
 
-          <div className="col sm:row items-start gap-4">
+          <div className="col items-start gap-4 sm:row">
             <Button variant="ghost" color="gray" onClick={() => append({ name: '', value: '', regions: [] })}>
               <IconPlus className="size-4" />
               <T id="addVariable" />

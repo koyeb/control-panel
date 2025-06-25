@@ -11,7 +11,7 @@ type DuplicateServiceCardProps = {
 
 export function DuplicateServiceCard({ service }: DuplicateServiceCardProps) {
   return (
-    <div className="card row col-start-1 items-center gap-4 p-3">
+    <div className="col-start-1 card row items-center gap-4 p-3">
       <div className="col flex-1 gap-2">
         <strong>
           <T id="title" />

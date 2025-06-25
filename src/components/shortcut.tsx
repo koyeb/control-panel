@@ -26,7 +26,7 @@ export function Shortcut({
   return (
     <span
       className={clsx(
-        'hidden whitespace-nowrap rounded-md bg-neutral px-1 py-0.5 text-xs text-dim shadow sm:inline dark:bg-muted',
+        'hidden rounded-md bg-neutral px-1 py-0.5 text-xs whitespace-nowrap text-dim shadow sm:inline dark:bg-muted',
         className,
       )}
     >

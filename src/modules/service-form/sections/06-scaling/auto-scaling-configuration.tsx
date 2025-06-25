@@ -1,6 +1,6 @@
+import { InputEnd, Slider, Tooltip } from '@koyeb/design-system';
 import { useController, useFormContext, useFormState } from 'react-hook-form';
 
-import { InputEnd, Slider, Tooltip } from '@koyeb/design-system';
 import { useInstance } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
@@ -218,8 +218,8 @@ type ScalingTargetProps = {
 
 function ScaleToZeroIdleDelay({ target, Icon, min, max }: ScalingTargetProps) {
   return (
-    <div className="row relative rounded-lg border">
-      <div className="col sm:row flex-1 gap-4 p-3 sm:items-center">
+    <div className="relative row rounded-lg border">
+      <div className="col flex-1 gap-4 p-3 sm:row sm:items-center">
         <div className="col flex-1 gap-1">
           <div className="row items-center gap-1 font-semibold">
             <Icon className="icon" />
@@ -273,7 +273,7 @@ function ScalingTarget({ target: targetName, Icon, min, max }: ScalingTargetProp
               }
             }}
           >
-            <div className="col sm:row flex-1 gap-4 p-3 sm:items-center">
+            <div className="col flex-1 gap-4 p-3 sm:row sm:items-center">
               <div className="col flex-1 gap-1">
                 <div className="row items-center gap-1 font-semibold">
                   <Icon className="icon" />

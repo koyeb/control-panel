@@ -1,6 +1,6 @@
+import { Autocomplete } from '@koyeb/design-system';
 import { useEffect, useState } from 'react';
 
-import { Autocomplete } from '@koyeb/design-system';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';

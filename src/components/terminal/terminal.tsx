@@ -1,8 +1,8 @@
+import { useWatchElementSize } from '@koyeb/design-system';
 import { FitAddon } from '@xterm/addon-fit';
 import { ITerminalOptions, Terminal as XTerm } from '@xterm/xterm';
 import { useEffect, useImperativeHandle, useMemo, useState } from 'react';
 
-import { useWatchElementSize } from '@koyeb/design-system';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 
 import '@xterm/xterm/css/xterm.css';

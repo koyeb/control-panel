@@ -1,5 +1,3 @@
-import clsx from 'clsx';
-
 import {
   Alert,
   ButtonMenuItem,
@@ -8,6 +6,8 @@ import {
   TableColumnSelection,
   useBreakpoint,
 } from '@koyeb/design-system';
+import clsx from 'clsx';
+
 import { useApps } from 'src/api/hooks/service';
 import { Domain, type DomainStatus } from 'src/api/model';
 import { stopPropagation } from 'src/application/dom-events';
@@ -48,7 +48,7 @@ export function DomainsList({ domains, expanded, toggleExpanded, onCreate, selec
         expand: {
           className: clsx('lg:w-12'),
           render: (domain) => (
-            <IconChevronDown className={clsx('text-icon size-4', expanded === domain.id && 'rotate-180')} />
+            <IconChevronDown className={clsx('size-4 text-icon', expanded === domain.id && 'rotate-180')} />
           ),
         },
         name: {
@@ -77,7 +77,7 @@ export function DomainsList({ domains, expanded, toggleExpanded, onCreate, selec
       onRowClick={toggleExpanded}
       isExpanded={(domain) => expanded === domain.id}
       renderExpanded={(domain) => (
-        <div className="col gap-6 px-3 pb-4 pt-2">
+        <div className="col gap-6 px-3 pt-2 pb-4">
           <DomainError domain={domain} />
           <DnsConfiguration domain={domain} />
           <ChangeAppForm domain={domain} />

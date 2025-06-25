@@ -7,7 +7,7 @@ export function Tips() {
   const isPending = false;
 
   return (
-    <div className="card xl:col hidden gap-2 p-4">
+    <div className="card hidden gap-2 p-4 xl:col">
       <span className="font-medium">
         <T id="tips.title" />
       </span>

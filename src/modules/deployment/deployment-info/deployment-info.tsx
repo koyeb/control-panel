@@ -46,7 +46,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
             <T id="overview" />
           </div>
 
-          <div className="row ml-auto items-center gap-2 font-medium">
+          <div className="ml-auto row items-center gap-2 font-medium">
             <Translate id={`common.serviceType.${type}`} />
             <ServiceTypeIcon type={type} size="medium" />
           </div>
@@ -90,7 +90,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
         </div>
       </div>
 
-      <div className="row mb-4 justify-center">
+      <div className="mb-4 row justify-center">
         <button className="text-link" onClick={() => openDialog('DeploymentDefinition')}>
           <T id="viewMore" />
         </button>

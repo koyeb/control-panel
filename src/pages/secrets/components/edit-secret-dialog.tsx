@@ -1,4 +1,5 @@
 import { Button } from '@koyeb/design-system';
+
 import { Secret } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';

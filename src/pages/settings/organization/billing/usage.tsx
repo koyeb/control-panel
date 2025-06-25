@@ -1,3 +1,4 @@
+import { Button, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { add, endOfMonth, format, isBefore, isEqual, startOfMonth, sub } from 'date-fns';
@@ -5,7 +6,6 @@ import { Fragment } from 'react/jsx-runtime';
 import { useForm } from 'react-hook-form';
 import { FormattedDate, FormattedNumber } from 'react-intl';
 
-import { Button, Tooltip } from '@koyeb/design-system';
 import { useNextInvoiceQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
 import { InvoiceDiscount, InvoicePeriod } from 'src/api/model';
@@ -134,7 +134,7 @@ function UsageDetailsRowDesktop({ label, usage, price, total }: UsageDetailsRowP
   const isDatabase = label === 'Database storage';
 
   return (
-    <div className="sm:row hidden items-center border-b px-3 py-2">
+    <div className="hidden items-center border-b px-3 py-2 sm:row">
       <div className="w-64">{label}</div>
 
       <div className="w-48 justify-end px-4 text-right">

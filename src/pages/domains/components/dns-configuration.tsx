@@ -1,8 +1,8 @@
+import { Button, Table, useBreakpoint } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { parse } from 'tldts';
 
-import { Button, Table, useBreakpoint } from '@koyeb/design-system';
 import { Domain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';

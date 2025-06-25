@@ -1,8 +1,8 @@
+import { useElementSize } from '@koyeb/design-system';
 import { ResponsiveLine } from '@nivo/line';
 import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
-import { useElementSize } from '@koyeb/design-system';
 import { toObject } from 'src/utils/object';
 
 import { dateTickValues } from '../metrics-helpers';

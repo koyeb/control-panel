@@ -1,9 +1,9 @@
+import { Stepper } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { AnimatePresence, motion, wrap } from 'motion/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 
-import { Stepper } from '@koyeb/design-system';
 import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { createTranslate } from 'src/intl/translate';
@@ -90,7 +90,7 @@ export default function Slides() {
   }, [next]);
 
   return (
-    <div className="col dark h-full rounded-2xl bg-neutral/95 [&_*]:border-default/70" onClick={next}>
+    <div className="dark col h-full rounded-2xl bg-neutral/95 [&_*]:border-default/70" onClick={next}>
       <Helmet>
         {createArray(3, (i) => (
           <link rel="preload" href={slides[i as 0 | 1 | 2].illustration} as="image" />
@@ -110,7 +110,6 @@ export default function Slides() {
   );
 }
 
-// eslint-disable-next-line tailwindcss/no-arbitrary-value
 const gradientText = clsx([
   'bg-gradient-to-tr from-[#D1D8DC] via-[#B0A6B6] to-[#E2E7E9] bg-clip-text text-transparent',
   'text-5xl font-semibold',
@@ -133,12 +132,11 @@ function Slide({ illustration, line1, line2, features, images, logos }: SlidePro
       animate={{ opacity: 1, x: 0 }}
       transition={{ type: 'spring', visualDuration: 0.4, bounce: 0.4 }}
       exit={{ opacity: 0, x: -50 }}
-      className="col absolute inset-0"
+      className="absolute inset-0 col"
     >
       <img src={illustration} className="mx-auto" style={{ maxHeight: '40vh' }} />
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] [&>*]:border-l [&>*]:border-t">
+      <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] [&>*]:border-t [&>*]:border-l">
         <div className={clsx(gradientText, 'col-span-2 inline-block')}>{line1}</div>
 
         <div className="row-span-2 p-6">
@@ -165,7 +163,7 @@ function Slide({ illustration, line1, line2, features, images, logos }: SlidePro
 
 function CustomerLogos({ logos }: { logos: SvgComponent[] }) {
   return (
-    <div className="col mt-auto gap-3 py-6 text-gray/70">
+    <div className="mt-auto col gap-3 py-6 text-gray/70">
       <div className="text-xs font-medium">
         <T id="argumentumAdPopulum" />
       </div>

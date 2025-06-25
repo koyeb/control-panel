@@ -25,8 +25,7 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
       </div>
 
       {slides && (
-        // eslint-disable-next-line tailwindcss/no-arbitrary-value
-        <div className="m-2 hidden min-w-[36rem] max-w-3xl flex-1 lg:block">
+        <div className="m-2 hidden max-w-3xl min-w-[36rem] flex-1 lg:block">
           <Slides />
         </div>
       )}

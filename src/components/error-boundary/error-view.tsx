@@ -25,7 +25,7 @@ export function ErrorView({ httpStatus, message, code, expected, onReset }: Erro
     >
       <LogoKoyeb className="absolute m-6 h-8" />
 
-      <main className="col mx-auto h-full max-w-4xl items-center justify-center gap-4 px-4 text-center leading-tight">
+      <main className="mx-auto col h-full max-w-4xl items-center justify-center gap-4 px-4 text-center leading-tight">
         {httpStatus && (
           <div className="font-semibold">
             <T id="httpStatus" values={{ httpStatus }} />

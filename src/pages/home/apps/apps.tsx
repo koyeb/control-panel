@@ -1,6 +1,6 @@
+import { Select } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { Select } from '@koyeb/design-system';
 import { useApps, useServices } from 'src/api/hooks/service';
 import { Service, ServiceType } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
@@ -56,7 +56,7 @@ function Header({ showFilters, services, serviceType, setServiceType }: HeaderPr
   const databaseServices = services.filter(hasProperty('type', 'database'));
 
   return (
-    <header className="col sm:row gap-2 sm:items-center sm:gap-4">
+    <header className="col gap-2 sm:row sm:items-center sm:gap-4">
       <span className="text-lg font-medium">
         <T id="services" />
       </span>

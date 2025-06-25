@@ -1,6 +1,6 @@
+import { Alert, IconButton, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Alert, IconButton, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { routes } from 'src/application/routes';
 import { IconChevronLeft, IconChevronsLeft } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
@@ -50,7 +50,6 @@ function ServiceOverview(props: ServiceOverview) {
   return (
     <div className="row">
       <div
-        // eslint-disable-next-line tailwindcss/no-arbitrary-value
         className="row overflow-hidden transition-[max-width] will-change-[max-width]"
         style={{ maxWidth: listExpanded ? 600 : 0 }}
       >
@@ -122,7 +121,7 @@ function DeploymentsListActions({
           onClick={() => setListExpanded(!listExpanded)}
           className={clsx(
             'relative',
-            !listExpanded && hasUpcoming && 'after:ping after:absolute after:right-1 after:top-1',
+            !listExpanded && hasUpcoming && 'after:absolute after:top-1 after:right-1 after:ping',
           )}
         />
       </div>

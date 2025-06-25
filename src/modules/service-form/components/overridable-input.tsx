@@ -1,6 +1,6 @@
+import { Switch } from '@koyeb/design-system';
 import { FieldPath, useFormContext } from 'react-hook-form';
 
-import { Switch } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { Translate } from 'src/intl/translate';
 

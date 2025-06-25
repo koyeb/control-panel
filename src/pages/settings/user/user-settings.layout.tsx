@@ -1,6 +1,6 @@
+import { TabButtons } from '@koyeb/design-system';
 import { usePathname } from 'wouter/use-browser-location';
 
-import { TabButtons } from '@koyeb/design-system';
 import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { TabButtonLink } from 'src/components/link';

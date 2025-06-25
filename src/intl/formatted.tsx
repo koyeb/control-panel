@@ -1,7 +1,7 @@
+import { Tooltip } from '@koyeb/design-system';
 import { useMemo } from 'react';
 import { FormattedDate, FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
-import { Tooltip } from '@koyeb/design-system';
 import { identity } from 'src/utils/generic';
 
 type FormattedPriceProps = {

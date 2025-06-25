@@ -1,6 +1,6 @@
+import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Spinner } from '@koyeb/design-system';
 import { DeploymentBuildStatus, DeploymentStatus } from 'src/api/model';
 import { IconCircleAlert, IconCircleCheck, IconCircleDashed, IconCircleX } from 'src/components/icons';
 import { ValueOf } from 'src/utils/types';

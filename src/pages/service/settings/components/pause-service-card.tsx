@@ -1,6 +1,6 @@
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { Button } from '@koyeb/design-system';
 import { Service } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -45,7 +45,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
   });
 
   return (
-    <div className="card row col-start-1 items-center gap-4 p-3">
+    <div className="col-start-1 card row items-center gap-4 p-3">
       <div className="col flex-1 gap-2">
         <strong>
           <T id="title" />
@@ -56,7 +56,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
         </p>
       </div>
 
-      <div className="row ml-auto gap-4">
+      <div className="ml-auto row gap-4">
         <Button
           color="gray"
           onClick={() => resume()}

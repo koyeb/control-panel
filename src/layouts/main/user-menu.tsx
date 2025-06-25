@@ -1,8 +1,8 @@
+import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useResetIdentifyUser } from 'src/application/posthog';
@@ -51,7 +51,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       placement={isMobile ? 'top-end' : 'left-end'}
       offset={8}
       renderReference={(props) => (
-        <div className="row items-center gap-2 py-2 pl-3 pr-2 transition-colors hover:bg-muted/50" {...props}>
+        <div className="row items-center gap-2 py-2 pr-2 pl-3 transition-colors hover:bg-muted/50" {...props}>
           <UserAvatar user={user} />
 
           {!collapsed && <span className="flex-1 truncate font-medium">{user.name}</span>}
@@ -96,7 +96,7 @@ function ThemeMenuItem() {
       <ButtonMenuItem onClick={() => setOpen(!open)}>
         <IconSunDim className="icon" />
         <T id="theme" />
-        <IconChevronRight className={clsx('icon ms-auto', open && 'rotate-90')} />
+        <IconChevronRight className={clsx('ms-auto icon', open && 'rotate-90')} />
       </ButtonMenuItem>
 
       <Collapse open={open}>
@@ -104,19 +104,19 @@ function ThemeMenuItem() {
           <ButtonMenuItem className="pl-4" onClick={() => setThemeMode(ThemeMode.light)}>
             <IconSunDim className="icon" />
             <T id="light" />
-            {themeMode === ThemeMode.light && <IconCheck className="icon ms-auto" />}
+            {themeMode === ThemeMode.light && <IconCheck className="ms-auto icon" />}
           </ButtonMenuItem>
 
           <ButtonMenuItem className="pl-4" onClick={() => setThemeMode(ThemeMode.dark)}>
             <IconMoon className="icon" />
             <T id="dark" />
-            {themeMode === ThemeMode.dark && <IconCheck className="icon ms-auto" />}
+            {themeMode === ThemeMode.dark && <IconCheck className="ms-auto icon" />}
           </ButtonMenuItem>
 
           <ButtonMenuItem className="pl-4" onClick={() => setThemeMode(ThemeMode.system)}>
             <IconLaptop className="icon" />
             <T id="system" />
-            {themeMode === ThemeMode.system && <IconCheck className="icon ms-auto" />}
+            {themeMode === ThemeMode.system && <IconCheck className="ms-auto icon" />}
           </ButtonMenuItem>
         </div>
       </Collapse>

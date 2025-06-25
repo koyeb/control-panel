@@ -24,7 +24,6 @@ export function CreateDatabasePage() {
         </p>
       </div>
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_20rem]">
         <DatabaseForm onCostChanged={setCost} />
 

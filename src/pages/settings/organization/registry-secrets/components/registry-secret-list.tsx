@@ -1,6 +1,6 @@
+import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
 import { RegistrySecret } from 'src/api/model';
 import { ActionsMenu } from 'src/components/actions-menu';

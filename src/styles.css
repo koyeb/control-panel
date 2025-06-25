@@ -1,27 +1,13 @@
+@import 'tailwindcss';
 @import '@koyeb/design-system/styles.css';
 
+@source "../node_modules/@koyeb/design-system";
+
+@theme {
+  --breakpoint-3xl: 1920px;
+}
+
 @layer base {
-  body {
-    @apply bg-neutral;
-    @apply text-sm text-default;
-  }
-
-  .dark {
-    @apply bg-neutral text-default;
-  }
-
-  .secondary-layout,
-  .secondary-layout .dark {
-    --color-background-green: theme(colors.rgb.emerald.300);
-    --color-text-green: theme(colors.rgb.emerald.200);
-    --color-background-red: theme(colors.rgb.red.400);
-    --color-text-red: theme(colors.rgb.red.400);
-  }
-
-  .secondary-layout .dark {
-    --color-background-neutral: 18 18 18;
-  }
-
   a:focus-visible {
     outline-width: 1px;
     outline-offset: 2px;
@@ -39,14 +25,13 @@
   }
 }
 
-@layer utilities {
-  .text-security-disc {
-    -webkit-text-security: disc;
-  }
+@utility text-security-disc {
+  -webkit-text-security: disc;
 }
 
 /* react-toastify */
 
+/*
 :root {
   --toastify-color-light: theme(colors.transparent);
   --toastify-text-color-light: theme(textColor.default);
@@ -55,7 +40,7 @@
   --toastify-toast-shadow: none;
   --toastify-toast-padding: 0;
   --toastify-z-index: 70;
-}
+} */
 
 @keyframes notification {
   0% {

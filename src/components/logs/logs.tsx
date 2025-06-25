@@ -1,8 +1,8 @@
+import { Floating, IconButton, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedTime } from 'react-intl';
 
-import { Floating, IconButton, Spinner } from '@koyeb/design-system';
 import { LogLine } from 'src/api/model';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { notify } from 'src/application/notify';
@@ -34,12 +34,12 @@ export function LogsFooter({ appName, serviceName, lines, renderMenu }: LogsFoot
 
   return (
     <footer className="row flex-wrap items-center justify-end gap-4">
-      <button type="button" className="text-link row items-center gap-2" onClick={downloadLogs}>
+      <button type="button" className="row items-center gap-2 text-link" onClick={downloadLogs}>
         <IconDownload className="size-em" />
         <T id="download" />
       </button>
 
-      <button type="button" className="text-link row items-center gap-2" onClick={copyLogs}>
+      <button type="button" className="row items-center gap-2 text-link" onClick={copyLogs}>
         <IconCopy className="size-em" />
         <T id="copy" />
       </button>
@@ -135,9 +135,8 @@ export function LogLines({ options, setOption, logs, filterLine, renderLine, ren
   return (
     <div
       ref={container}
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
-        'scrollbar-green scrollbar-thin overflow-auto rounded border py-2',
+        'scrollbar-thin overflow-auto rounded border py-2 scrollbar-green',
         !options.fullScreen && 'h-[32rem] resize-y',
         options.fullScreen && 'flex-1',
       )}
@@ -156,7 +155,7 @@ export function LogLines({ options, setOption, logs, filterLine, renderLine, ren
             </div>
           )}
 
-          <div className="min-w-min break-all font-mono">
+          <div className="min-w-min font-mono break-all">
             {lines.map((line) => (
               <Fragment key={line.id}>{renderLine(line, options)}</Fragment>
             ))}
@@ -202,7 +201,7 @@ export function LogLineContent({ line, options }: { line: LogLine; options: LogO
 
 function LogLineMeta({ className, children, ...props }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span className={clsx('select-none whitespace-pre', className)} {...props}>
+    <span className={clsx('whitespace-pre select-none', className)} {...props}>
       {children}
       {'  '}
     </span>

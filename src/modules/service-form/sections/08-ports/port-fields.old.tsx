@@ -29,7 +29,6 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
 
   return (
     <div
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
         'grid grid-cols-1 gap-4 rounded border px-6 py-5 md:border-none md:p-0',
         'md:grid-cols-[1fr_1fr_1fr_4rem_auto]',
@@ -86,7 +85,6 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
         }}
       />
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
         <IconButton color="gray" Icon={IconTrash} disabled={!canRemove} onClick={onRemove}>
           <T id="deletePort" />

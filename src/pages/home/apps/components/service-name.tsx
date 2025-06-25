@@ -1,6 +1,6 @@
+import { Spinner, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Spinner, Tooltip } from '@koyeb/design-system';
 import { Service, ServiceStatus } from 'src/api/model';
 import { getServiceLink } from 'src/application/service-functions';
 import { SvgComponent } from 'src/application/types';

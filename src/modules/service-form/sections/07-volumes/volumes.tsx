@@ -1,7 +1,7 @@
+import { Alert, Button, InfoTooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useFieldArray, UseFieldArrayReturn, useFormContext } from 'react-hook-form';
 
-import { Alert, Button, InfoTooltip } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';

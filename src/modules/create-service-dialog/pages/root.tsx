@@ -1,4 +1,5 @@
 import { Button } from '@koyeb/design-system';
+
 import { type OneClickApp } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { IconArrowRight, IconDatabase, IconGlobe, IconSettings } from 'src/components/icons';

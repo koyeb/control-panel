@@ -1,9 +1,9 @@
+import { Button, Field, FieldLabel, InputEnd, InputStart } from '@koyeb/design-system';
 import { CardCvcElement, CardExpiryElement, CardNumberElement, useStripe } from '@stripe/react-stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { FormState, useForm } from 'react-hook-form';
 
-import { Button, Field, FieldLabel, InputEnd, InputStart } from '@koyeb/design-system';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { Address, OrganizationPlan } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -23,7 +23,7 @@ const T = createTranslate('components.upgradeDialog');
 
 const classes = {
   base: clsx(
-    'col h-10 w-full justify-center rounded border px-2 -outline-offset-1 ',
+    'col h-10 w-full justify-center rounded border px-2 -outline-offset-1',
     'bg-neutral', // todo: make sure it works with all instances of the payment form
   ),
   focus: clsx('focused'),

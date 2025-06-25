@@ -7,12 +7,12 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
+import { AccordionSection, Badge, Button, Checkbox, MultiSelect } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { AccordionSection, Badge, Button, Checkbox, MultiSelect } from '@koyeb/design-system';
 import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
 import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
 import { isInstanceRunning } from 'src/application/service-functions';
@@ -331,7 +331,7 @@ function Drawer({ open, onClose, className, children }: DrawerProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: duration / 1000 }}
             style={{ overflow: 'hidden' }}
-            className="col z-40 items-center justify-center bg-neutral/50 backdrop-blur"
+            className="z-40 col items-center justify-center bg-neutral/50 backdrop-blur"
             lockScroll
           >
             <FloatingFocusManager context={drawer.floating.context}>

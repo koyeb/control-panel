@@ -58,7 +58,7 @@ export function InitialDeploymentStep({ serviceId }: { serviceId: string }) {
   assert(isComputeDeployment(deployment));
 
   return (
-    <div className="col xl:row gap-8">
+    <div className="col gap-8 xl:row">
       <div className="col min-w-0 flex-1 gap-8">
         <DeploymentInfo app={app} service={service} deployment={deployment} />
         <DeploymentLogs app={app} service={service} deployment={deployment} instances={instances} />

@@ -1,7 +1,6 @@
+import { useId } from '@koyeb/design-system';
 import { cva } from 'class-variance-authority';
 import { Control, FieldPath, FieldValues, useController } from 'react-hook-form';
-
-import { useId } from '@koyeb/design-system';
 
 type AuthInputProps<
   Form extends FieldValues = FieldValues,
@@ -42,7 +41,7 @@ export function AuthInput<
   );
 }
 
-AuthInput.class = cva(['w-full rounded-md border border-strong bg-white/40 px-3 py-2 transition-colors'], {
+AuthInput.class = cva(['w-full rounded-md border border-zinc-400 bg-white/40 px-3 py-2 transition-colors'], {
   variants: {
     invalid: {
       true: 'border-red',

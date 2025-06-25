@@ -1,6 +1,6 @@
+import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { Dialog } from 'src/components/dialog';
 import { Title } from 'src/components/title';

@@ -36,7 +36,7 @@ function GitDeploymentTrigger({ trigger }: GitDeploymentTriggerProps) {
     <ExternalLink
       openInNewTab
       href={`https://${trigger.repository}/commit/${trigger.commit.sha}`}
-      className="row text-link min-w-0 items-center gap-2 !text-default"
+      className="row min-w-0 items-center gap-2"
     >
       <span>
         <IconGitCommitHorizontal className="size-4" />
@@ -50,7 +50,7 @@ function GitDeploymentTrigger({ trigger }: GitDeploymentTriggerProps) {
     <ExternalLink
       openInNewTab
       href={`https://${trigger.repository}/tree/${trigger.branch}`}
-      className="sm:row text-link hidden items-center gap-2 !text-default"
+      className="hidden items-center gap-2 sm:row"
     >
       <IconGitBranch className="size-4" />
       <span className="line-clamp-1">{trigger.branch}</span>
@@ -60,11 +60,7 @@ function GitDeploymentTrigger({ trigger }: GitDeploymentTriggerProps) {
   const by = (children: React.ReactNode) => <span className="text-dim">{children}</span>;
 
   const author = (
-    <ExternalLink
-      openInNewTab
-      href={trigger.commit.author.url}
-      className="row text-link items-center gap-2 !text-default"
-    >
+    <ExternalLink openInNewTab href={trigger.commit.author.url} className="row items-center gap-2">
       <img src={trigger.commit.author.avatar} className="size-4 rounded-full" />
       <span>{trigger.commit.author.name}</span>
     </ExternalLink>
