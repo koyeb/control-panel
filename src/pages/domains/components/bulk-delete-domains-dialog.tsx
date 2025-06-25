@@ -12,7 +12,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('pages.domains.bulkDelete');
 
 type BulkDeleteDomainsDialogProps = {
-  domains: Domain[];
+  domains: Set<Domain>;
   onDeleted: () => void;
 };
 
@@ -44,10 +44,10 @@ export function BulkDeleteDomainsDialog({ domains, onDeleted }: BulkDeleteDomain
     <ConfirmationDialog
       id="ConfirmBulkDeleteDomains"
       title={<T id="title" />}
-      description={<T id="description" values={{ count: domains.length }} />}
+      description={<T id="description" values={{ count: domains.size }} />}
       confirmationText={t('confirmationText')}
       submitText={<T id="cta" />}
-      onConfirm={() => mutation.mutateAsync(domains)}
+      onConfirm={() => mutation.mutateAsync(Array.from(domains.values()))}
     />
   );
 }

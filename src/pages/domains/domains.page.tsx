@@ -78,7 +78,7 @@ export function DomainsPage() {
         )}
       </QueryGuard>
 
-      <BulkDeleteDomainsDialog domains={domains ?? []} onDeleted={clear} />
+      <BulkDeleteDomainsDialog domains={selected} onDeleted={clear} />
 
       <CreateDomainDialog
         onCreated={(domainId) => {
