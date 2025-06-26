@@ -1,5 +1,5 @@
-import { action } from '@storybook/addon-actions';
-import { Meta } from '@storybook/react';
+import { action } from 'storybook/actions';
+import { Meta } from '@storybook/react-vite';
 import { useRef } from 'react';
 
 import Terminal, { TerminalRef } from './terminal';

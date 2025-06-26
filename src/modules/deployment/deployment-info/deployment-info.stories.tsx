@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react-vite';
 
 import { createDate } from 'src/utils/date';
 import { create } from 'src/utils/factories';
