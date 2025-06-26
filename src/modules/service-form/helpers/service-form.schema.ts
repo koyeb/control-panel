@@ -79,6 +79,7 @@ function preprocessFiles(value: unknown) {
 
 const file = z.object({
   mountPath: z.string().startsWith('/'),
+  permissions: z.string(),
   content: z.string(),
 });
 

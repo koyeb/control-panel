@@ -229,6 +229,7 @@ function environmentVariables(
 function files(definition: Api.DeploymentDefinition): Array<Partial<File>> | undefined {
   return definition.config_files?.map((file) => ({
     mountPath: file.path,
+    permissions: file.permissions,
     content: file.content,
   }));
 }

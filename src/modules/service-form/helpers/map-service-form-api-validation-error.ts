@@ -75,6 +75,7 @@ const regexpMapping = Object.entries({
   'env.(\\d+).secret': 'environmentVariables.$1.value',
   'config_files.(\\d+).path': 'files.$1.mountPath',
   'config_files.(\\d+).content': 'files.$1.content',
+  'config_files.(\\d+).permissions': 'files.$1.permissions',
   'routes.(\\d+).port': 'ports.$1.portNumber',
   'routes.(\\d+).path': 'ports.$1.path',
   'ports.(\\d+).port': 'ports.$1.portNumber',

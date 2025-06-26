@@ -109,6 +109,7 @@ export type DockerDeploymentOptions = {
 
 export type File = {
   mountPath: string;
+  permissions: string;
   content: string;
 };
 

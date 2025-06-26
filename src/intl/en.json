@@ -1246,6 +1246,10 @@
           "label": "Path",
           "placeholder": "/path/to/file.conf"
         },
+        "permissions": {
+          "label": "Permissions",
+          "placeholder": "0644"
+        },
         "content": {
           "label": "File content",
           "placeholder": "Add content, like secrets and variables",

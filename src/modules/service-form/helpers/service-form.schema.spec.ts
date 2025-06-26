@@ -102,7 +102,7 @@ describe('serviceFormSchema', () => {
   it('removes empty files', () => {
     const form = createServiceForm();
 
-    form.files = [{ mountPath: '', content: '' }];
+    form.files = [{ mountPath: '', permissions: '', content: '' }];
 
     expect(parse(form)).toHaveProperty('files', []);
   });

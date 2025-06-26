@@ -5,6 +5,7 @@ import { useFieldArray } from 'react-hook-form';
 import { Button, IconButton } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconPlus, IconTrash } from 'src/components/icons';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -31,7 +32,7 @@ export function Files() {
           <Button
             variant="outline"
             color="gray"
-            onClick={() => append({ mountPath: '', content: '' })}
+            onClick={() => append({ mountPath: '', permissions: '', content: '' })}
             className="self-center"
           >
             <IconPlus className="size-4" />
@@ -45,13 +46,22 @@ export function Files() {
           <div key={file.id} className="col gap-4 rounded-md border p-4">
             <FileContentEditor index={index} />
 
-            <div className="row items-end gap-4">
+            <div className="col sm:row gap-4">
               <ControlledInput<ServiceForm, `files.${number}.mountPath`>
                 name={`files.${index}.mountPath`}
                 label={<T id="mountPath.label" />}
                 placeholder={t('mountPath.placeholder')}
                 className="w-full"
               />
+
+              <FeatureFlag feature="config-file-permissions">
+                <ControlledInput<ServiceForm, `files.${number}.permissions`>
+                  name={`files.${index}.permissions`}
+                  label={<T id="permissions.label" />}
+                  placeholder={t('permissions.placeholder')}
+                  className="min-w-32"
+                />
+              </FeatureFlag>
             </div>
 
             <Button variant="outline" color="gray" onClick={() => remove(index)} className="self-start">
@@ -88,7 +98,7 @@ export function Files() {
         <Button
           variant="ghost"
           color="gray"
-          onClick={() => append({ mountPath: '', content: '' })}
+          onClick={() => append({ mountPath: '', permissions: '', content: '' })}
           className={clsx({ hidden: fields.length === 0 })}
         >
           <IconPlus className="size-4" />
