@@ -1,7 +1,6 @@
 import { Notification } from '@koyeb/design-system';
 import { ToastContainer, ToastContentProps, cssTransition } from 'react-toastify';
 
-
 export function NotificationContainer() {
   return (
     <ToastContainer transition={transition} autoClose={5 * 1000} closeButton={false} hideProgressBar={true} />
