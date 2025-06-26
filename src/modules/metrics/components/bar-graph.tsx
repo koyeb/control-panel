@@ -8,7 +8,7 @@ import { createTranslate } from 'src/intl/translate';
 import { dateTickValues } from '../metrics-helpers';
 
 import { GraphTooltip } from './graph-tooltip';
-import { nivoTheme } from './nivo-theme';
+import { nivoTheme } from './nivo';
 import { NoMetrics } from './no-metrics';
 
 const T = createTranslate('modules.metrics');

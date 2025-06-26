@@ -1,5 +1,3 @@
-import { Serie } from '@nivo/line';
-
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
@@ -7,6 +5,7 @@ import { isDefined } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
 
 import { LineGraph } from '../components/line-graph';
+import { LabelledLineSeries } from '../components/nivo';
 import { toGraph } from '../metrics-helpers';
 import { Metric } from '../metrics-types';
 
@@ -99,7 +98,7 @@ function memoryTickValues(max: number | null) {
   }
 }
 
-function getSeries(data?: Array<Metric>): Serie[] {
+function getSeries(data?: Array<Metric>): LabelledLineSeries[] {
   if (data === undefined) {
     return [];
   }

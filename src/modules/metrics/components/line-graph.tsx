@@ -4,14 +4,16 @@ import { useState } from 'react';
 import { useIntl } from 'react-intl';
 
 import { toObject } from 'src/utils/object';
+import { Extend } from 'src/utils/types';
 
 import { dateTickValues } from '../metrics-helpers';
 
 import { GraphTooltip } from './graph-tooltip';
-import { nivoTheme } from './nivo-theme';
+import { LabelledLineSeries, nivoTheme } from './nivo';
 import { NoMetrics } from './no-metrics';
 
-type LineGraphProps = React.ComponentProps<typeof NoMetrics> & React.ComponentProps<typeof ResponsiveLine>;
+type LineGraphProps = React.ComponentProps<typeof NoMetrics> &
+  Extend<React.ComponentProps<typeof ResponsiveLine>, { data: LabelledLineSeries[] }>;
 
 export function LineGraph({ loading, error, noData, ...props }: LineGraphProps) {
   const intl = useIntl();
@@ -27,8 +29,8 @@ export function LineGraph({ loading, error, noData, ...props }: LineGraphProps) 
 
   const labels = toObject(
     props.data,
-    (data) => data.id as string,
-    (data) => data.label as React.ReactNode,
+    (data) => data.id,
+    (data) => data.label,
   );
 
   return (
@@ -53,7 +55,7 @@ export function LineGraph({ loading, error, noData, ...props }: LineGraphProps) 
             data={props.slice.points.map((point) => ({
               id: point.id,
               date: point.data.x as string,
-              label: labels[point.serieId],
+              label: labels[point.seriesId],
               color: point.color,
               value: point.data.yFormatted,
             }))}
