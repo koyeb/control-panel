@@ -8,6 +8,11 @@
 }
 
 @layer base {
+  body .dark {
+    background-color: var(--color-neutral);
+    color: var(--color-default);
+  }
+
   a:focus-visible {
     outline-width: 1px;
     outline-offset: 2px;
@@ -31,16 +36,14 @@
 
 /* react-toastify */
 
-/*
 :root {
-  --toastify-color-light: theme(colors.transparent);
-  --toastify-text-color-light: theme(textColor.default);
-  --toastify-toast-width: theme(maxWidth.md);
-  --toastify-font-family: theme(fontFamily.sans);
+  --toastify-color-light: var(--color-transparent);
+  --toastify-toast-width: var(--container-md);
+  --toastify-font-family: var(--font-sans);
   --toastify-toast-shadow: none;
   --toastify-toast-padding: 0;
   --toastify-z-index: 70;
-} */
+}
 
 @keyframes notification {
   0% {

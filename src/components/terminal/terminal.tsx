@@ -60,25 +60,25 @@ export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
 function useTerminalTheme(xterm: XTerm) {
   const themeMode = useThemeModeOrPreferred();
 
-  const theme = useMemo<ITerminalOptions['theme']>(() => {
+  const styles = useMemo(() => {
     void themeMode;
-
-    const styles = getComputedStyle(document.body);
-
-    const body = styles.getPropertyValue('--color-background-neutral');
-    const text = styles.getPropertyValue('--color-text-default');
-    const muted = styles.getPropertyValue('--color-background-muted');
-
-    return {
-      background: `rgb(${body})`,
-      foreground: `rgb(${text})`,
-      cursor: `rgb(${text})`,
-      selectionBackground: `rgb(${muted})`,
-    };
+    return getComputedStyle(document.body);
   }, [themeMode]);
 
+  const theme = useMemo<ITerminalOptions['theme']>(
+    () => ({
+      background: styles.getPropertyValue('--color-neutral'),
+      foreground: styles.getPropertyValue('--color-default'),
+      cursor: styles.getPropertyValue('--color-default'),
+      selectionBackground: styles.getPropertyValue('--color-muted'),
+    }),
+    [styles],
+  );
+
   useEffect(() => {
-    xterm.options.fontFamily = '"JetBrains Mono Variable", monospace';
+    const styles = getComputedStyle(document.body);
+
+    xterm.options.fontFamily = styles.getPropertyValue('--font-mono');
     xterm.options.fontSize = 12;
     xterm.options.theme = theme;
   }, [xterm, theme]);

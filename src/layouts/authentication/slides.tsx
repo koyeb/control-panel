@@ -90,7 +90,7 @@ export default function Slides() {
   }, [next]);
 
   return (
-    <div className="dark col h-full rounded-2xl bg-neutral/95 [&_*]:border-default/70" onClick={next}>
+    <div className="dark col h-full rounded-2xl bg-neutral/95 [&_*]:border-border" onClick={next}>
       <Helmet>
         {createArray(3, (i) => (
           <link rel="preload" href={slides[i as 0 | 1 | 2].illustration} as="image" />
@@ -163,7 +163,7 @@ function Slide({ illustration, line1, line2, features, images, logos }: SlidePro
 
 function CustomerLogos({ logos }: { logos: SvgComponent[] }) {
   return (
-    <div className="mt-auto col gap-3 py-6 text-gray/70">
+    <div className="mt-auto col gap-3 py-6 text-gray">
       <div className="text-xs font-medium">
         <T id="argumentumAdPopulum" />
       </div>
