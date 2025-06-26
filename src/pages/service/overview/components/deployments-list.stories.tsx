@@ -1,6 +1,6 @@
-import { action } from 'storybook/actions';
 import { Meta, StoryFn } from '@storybook/react-vite';
 import { useState } from 'react';
+import { action } from 'storybook/actions';
 
 import { createDate } from 'src/utils/date';
 import { create } from 'src/utils/factories';

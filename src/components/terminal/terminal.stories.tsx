@@ -1,6 +1,6 @@
-import { action } from 'storybook/actions';
 import { Meta } from '@storybook/react-vite';
 import { useRef } from 'react';
+import { action } from 'storybook/actions';
 
 import Terminal, { TerminalRef } from './terminal';
 
