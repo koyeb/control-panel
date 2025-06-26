@@ -2,7 +2,6 @@ import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-
 const debounce = 300;
 
 export function Loading({ className, children, ...props }: React.ComponentProps<'div'>) {
