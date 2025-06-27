@@ -223,6 +223,7 @@ function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
       return deployment.metadata.proxy_ports.map((proxyPort) => ({
         port: proxyPort.port!,
         publicPort: proxyPort.public_port!,
+        host: proxyPort.host!,
       }));
     }
 

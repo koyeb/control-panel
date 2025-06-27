@@ -17,7 +17,6 @@ import { routes } from 'src/application/routes';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-import { getConfig } from './config';
 import { getToken } from './token';
 
 export function getServiceLink(service: Service) {
@@ -77,11 +76,8 @@ function externalUrl(domain: AppDomain, port: Port) {
 }
 
 function tcpProxyUrl(proxyPort?: DeploymentProxyPort) {
-  const { environment } = getConfig();
-  const env = environment === 'production' ? 'prod' : 'staging';
-
   if (proxyPort !== undefined) {
-    return `${env}-glb-all-regions-direct.koyeb.app:${proxyPort.publicPort}`;
+    return `${proxyPort.host}:${proxyPort.publicPort}`;
   }
 }
 

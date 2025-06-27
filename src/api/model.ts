@@ -318,6 +318,7 @@ export type DockerfileBuilder = {
 export type DeploymentProxyPort = {
   port: number;
   publicPort: number;
+  host: string;
 };
 
 export type InitialDeploymentTrigger = {

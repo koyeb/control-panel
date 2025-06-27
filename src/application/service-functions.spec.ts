@@ -71,7 +71,7 @@ describe('getServiceUrls', () => {
         definition: create.deploymentDefinition({
           ports: [{ portNumber: 8000, protocol: 'tcp', tcpProxy: true }],
         }),
-        proxyPorts: [{ port: 8000, publicPort: 12345 }],
+        proxyPorts: [{ port: 8000, publicPort: 12345, host: 'some-domain.koyeb.app' }],
       }),
     );
 
@@ -79,7 +79,7 @@ describe('getServiceUrls', () => {
       {
         portNumber: 8000,
         internalUrl: expect.anything() as string,
-        tcpProxyUrl: 'prod-glb-all-regions-direct.koyeb.app:12345',
+        tcpProxyUrl: 'some-domain.koyeb.app:12345',
       },
     ]);
   });
