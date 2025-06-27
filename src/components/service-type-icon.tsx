@@ -17,12 +17,12 @@ type ServiceTypeIconProps = {
 
 export function ServiceTypeIcon({ type, size = 'big' }: ServiceTypeIconProps) {
   const { Icon, className } = {
-    web: { Icon: IconSquareCode, className: clsx('bg-green text-contrast-green') },
-    private: { Icon: IconGlobeLock, className: clsx('bg-red text-contrast-red') },
-    worker: { Icon: IconCpu, className: clsx('bg-orange text-contrast-orange') },
-    database: { Icon: IconDatabase, className: clsx('bg-blue text-contrast-blue') },
-    batch: { Icon: IconWorkflow, className: clsx('bg-inverted text-inverted') },
-    model: { Icon: IconPackage, className: clsx('bg-inverted text-inverted') },
+    web: { Icon: IconSquareCode, className: clsx('bg-green text-zinc-50') },
+    private: { Icon: IconGlobeLock, className: clsx('bg-red text-zinc-50') },
+    worker: { Icon: IconCpu, className: clsx('bg-orange text-zinc-50') },
+    database: { Icon: IconDatabase, className: clsx('bg-blue text-zinc-50') },
+    batch: { Icon: IconWorkflow, className: clsx('bg-inverted text-neutral') },
+    model: { Icon: IconPackage, className: clsx('bg-inverted text-neutral') },
   }[type];
 
   return (

@@ -801,6 +801,18 @@
             "title": "Docker",
             "description": "Deploy docker images from any public or private registries"
           }
+        },
+        "builder": {
+          "title": "Choose your builder",
+          "description": "Description",
+          "buildpack": {
+            "title": "Buildpack",
+            "description": "Uses buildpacks to detect your project's language, install dependencies, and package the environment into a runnable image"
+          },
+          "dockerfile": {
+            "title": "Dockerfile",
+            "description": "If your repository contains a Dockerfile, Koyeb can use it to build a runnable container image for your project"
+          }
         }
       },
       "importProject": {

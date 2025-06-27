@@ -1,7 +1,7 @@
 import * as intercom from '@intercom/messenger-js-sdk';
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { Button } from '@koyeb/design-system';
 import { Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -28,7 +28,7 @@ export function DatabaseNotHealth({ service }: { service: Service }) {
   });
 
   return (
-    <div className="col my-6 justify-center gap-2">
+    <div className="my-6 col justify-center gap-2">
       <p className="text-lg font-medium">
         <T id="title" />
       </p>
@@ -37,7 +37,7 @@ export function DatabaseNotHealth({ service }: { service: Service }) {
         <T id="description" />
       </p>
 
-      <div className="row mt-4 gap-4">
+      <div className="mt-4 row gap-4">
         <Button onClick={() => intercom.showNewMessage(prefillMessage(service.id))}>
           <T id="contactUs" />
         </Button>

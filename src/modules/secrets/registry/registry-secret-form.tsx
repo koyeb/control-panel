@@ -1,9 +1,9 @@
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { FieldValues, FormState, Path, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@koyeb/design-system';
 import { api, ApiEndpointParams } from 'src/api/api';
 import { RegistrySecret, type RegistryType } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';

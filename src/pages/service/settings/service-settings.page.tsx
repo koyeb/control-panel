@@ -28,7 +28,6 @@ export function ServiceSettingsPage() {
   const [deployUrl, setDeployUrl] = useState<string>();
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid auto-rows-min grid-cols-1 items-start gap-8 xl:grid-cols-[1fr_20rem]">
       <ServiceForm
         serviceId={serviceId}

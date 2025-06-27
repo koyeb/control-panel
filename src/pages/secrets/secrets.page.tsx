@@ -1,6 +1,6 @@
+import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Button } from '@koyeb/design-system';
 import { useSecretsQuery } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { Dialog } from 'src/components/dialog';
@@ -51,7 +51,7 @@ export function SecretsPage() {
             </Button>
 
             <Button
-              className={clsx(secrets && secrets.length === 0 && 'hidden')}
+              className={clsx(secrets && secrets.length === 0 && '!hidden')}
               onClick={() => openDialog('CreateSecret')}
             >
               <IconPlus className="size-4" />

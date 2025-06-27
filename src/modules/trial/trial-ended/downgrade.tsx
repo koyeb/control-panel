@@ -1,8 +1,8 @@
+import { Alert, Button, DialogFooter, DialogHeader } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Alert, Button, DialogFooter, DialogHeader } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';

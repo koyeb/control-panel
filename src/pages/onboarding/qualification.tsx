@@ -1,10 +1,10 @@
+import { Stepper } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import omit from 'lodash-es/omit';
 import { useMemo } from 'react';
 import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { Stepper } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
@@ -147,14 +147,14 @@ export function Qualification() {
 
   return (
     <OnboardingLayout sentence={<T id={`${step}.sidebar`} />}>
-      <section className="row mb-8 flex-wrap gap-6 lg:justify-between">
+      <section className="mb-8 row flex-wrap gap-6 lg:justify-between">
         <LogoKoyeb className="me-auto h-8 lg:hidden" />
 
         <Stepper activeStep={steps.indexOf(step)} totalSteps={steps.length + 1} />
 
         <AuthButton
           onClick={() => handleSubmit(form.getValues())}
-          className={clsx('border border-strong bg-neutral !text-default hover:bg-neutral', {
+          className={clsx('border border-zinc-400 bg-neutral !text-default hover:bg-neutral', {
             invisible: step === 'fullName' || step === 'usage',
           })}
         >
@@ -264,7 +264,7 @@ function OccupationStep() {
   };
 
   return (
-    <section className="col mt-20 gap-8">
+    <section className="mt-20 col gap-8">
       <header className="col gap-1">
         <h1 className="text-3xl font-semibold">
           <T id="occupation.title" />

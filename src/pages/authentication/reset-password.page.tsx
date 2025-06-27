@@ -21,7 +21,7 @@ export function ResetPasswordPage() {
   const t = T.useTranslate();
 
   return (
-    <div className="col mx-auto w-full max-w-80 flex-1 justify-center py-8 text-center">
+    <div className="mx-auto col w-full max-w-80 flex-1 justify-center py-8 text-center">
       <DocumentTitle title={t('title')} />
 
       <h1 className="text-3xl font-semibold">
@@ -64,7 +64,7 @@ function ResetPasswordForm() {
   });
 
   return (
-    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col mt-12 gap-6">
+    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="mt-12 col gap-6">
       <AuthInput
         control={form.control}
         autoFocus

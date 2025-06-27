@@ -1,9 +1,9 @@
+import { Button, Spinner } from '@koyeb/design-system';
 import { useIsMutating, useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Spinner } from '@koyeb/design-system';
 import { useGithubApp, useGithubAppQuery, useRepositoriesQuery } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
@@ -142,7 +142,7 @@ function OrganizationRepositorySelector({ onImport }: RepositorySelectorProps) {
             onClick={() => onImport(repository.name)}
             className="row w-full items-center gap-1"
           >
-            <IconGithub className="size-icon me-1" />
+            <IconGithub className="me-1 size-icon" />
 
             <span>{repository.name}</span>
 
@@ -220,7 +220,7 @@ function EditAppPermissions() {
 
 function NoRepository({ search }: { search?: string }) {
   return (
-    <div className="col mx-auto min-h-44 max-w-md items-center justify-center gap-2 text-center">
+    <div className="mx-auto col min-h-44 max-w-md items-center justify-center gap-2 text-center">
       <strong>
         <T id="noRepository.title" />
       </strong>
@@ -258,7 +258,7 @@ function ResynchronizeButton() {
   return (
     <Button size={2} color="gray" disabled={loading} onClick={() => resync()}>
       {loading && <Spinner className="size-4" />}
-      {!loading && <IconRefreshCcw className="text-icon size-4" />}
+      {!loading && <IconRefreshCcw className="size-4 text-icon" />}
       <T id="refresh" />
     </Button>
   );

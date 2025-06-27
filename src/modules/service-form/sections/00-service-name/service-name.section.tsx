@@ -1,6 +1,6 @@
+import { Alert } from '@koyeb/design-system';
 import { useFormState } from 'react-hook-form';
 
-import { Alert } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';
 import { capitalize } from 'src/utils/strings';

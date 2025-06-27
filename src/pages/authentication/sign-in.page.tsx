@@ -13,7 +13,7 @@ export function SignInPage() {
   const t = T.useTranslate();
 
   return (
-    <div className="col mx-auto w-full max-w-72 flex-1 justify-center py-8 text-center">
+    <div className="mx-auto col w-full max-w-72 flex-1 justify-center py-8 text-center">
       <DocumentTitle title={t('title')} />
 
       <h1 className="text-3xl font-semibold">

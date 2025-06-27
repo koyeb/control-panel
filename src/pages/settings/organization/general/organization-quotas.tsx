@@ -1,7 +1,7 @@
+import { Alert, Button } from '@koyeb/design-system';
 import { Fragment, useMemo } from 'react';
 import { FormattedList } from 'react-intl';
 
-import { Alert, Button } from '@koyeb/design-system';
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
@@ -34,7 +34,6 @@ export function OrganizationQuotas() {
 
       {organization.plan === 'hobby' && <HobbyPlanAlert />}
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className="grid w-full grid-cols-2 rounded-md border md:grid-cols-[24rem,1fr]">
         <QuotasSection
           resourceLabel={<T id="resource" />}

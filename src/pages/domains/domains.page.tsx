@@ -1,7 +1,7 @@
+import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Button } from '@koyeb/design-system';
 import { useDomainsQuery } from 'src/api/hooks/domain';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { Domain } from 'src/api/model';
@@ -54,12 +54,12 @@ export function DomainsPage() {
             <Button
               variant="outline"
               onClick={() => openDialog('ConfirmBulkDeleteDomains')}
-              className={clsx(selected.size === 0 && 'hidden')}
+              className={clsx(selected.size === 0 && '!hidden')}
             >
               <T id="deleteDomains" values={{ count: selected.size }} />
             </Button>
 
-            <Button className={clsx(!hasDomains && 'hidden')} onClick={() => openDialog('CreateDomain')}>
+            <Button className={clsx(!hasDomains && '!hidden')} onClick={() => openDialog('CreateDomain')}>
               <T id="createDomain" />
             </Button>
           </div>

@@ -1,7 +1,7 @@
+import { Button } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { Button } from '@koyeb/design-system';
 import { mapApiCredential } from 'src/api/mappers/api-credential';
 import { ApiCredentialType } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';

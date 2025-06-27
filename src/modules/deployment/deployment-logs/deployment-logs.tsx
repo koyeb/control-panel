@@ -1,9 +1,9 @@
+import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { max, sub } from 'date-fns';
 import React, { useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import {
   App,
   ComputeDeployment,
@@ -381,7 +381,7 @@ function SectionHeader({
     <AccordionHeader expanded={expanded} setExpanded={setExpanded} className={clsx(disabled && 'opacity-50')}>
       <div className="font-medium">{title}</div>
 
-      <div className="row ms-auto min-w-0 items-center gap-2 ps-4 text-xs">
+      <div className="ms-auto row min-w-0 items-center gap-2 ps-4 text-xs">
         {end}
 
         {!expanded && lastLogLine !== undefined && (

@@ -1,8 +1,8 @@
+import { Button, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
@@ -181,7 +181,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
         </div>
       </div>
 
-      <div className="row ml-auto gap-2">
+      <div className="ml-auto row gap-2">
         {organization.id !== currentOrganization?.id && (
           <Button variant="outline" color="gray" onClick={() => switchOrganization(routes.home())}>
             <T id="switch" />

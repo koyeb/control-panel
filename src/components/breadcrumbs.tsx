@@ -26,7 +26,7 @@ export function Crumb({ isFirst, label, link }: CrumbProps) {
     <>
       {!isFirst && (
         <div>
-          <IconChevronRight className="text-icon size-em text-dim" />
+          <IconChevronRight className="size-em text-dim" />
         </div>
       )}
 

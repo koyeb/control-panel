@@ -1,6 +1,6 @@
+import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { useVolumes } from 'src/api/hooks/volume';
 import { VolumeSnapshot } from 'src/api/model';
 import { ActionsMenu } from 'src/components/actions-menu';

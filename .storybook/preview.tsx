@@ -1,6 +1,6 @@
-import type { Preview } from '@storybook/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@fontsource-variable/inter';
+import type { Preview } from '@storybook/react-vite';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { api } from '../src/api/api';
 import { catalogInstanceFixtures, catalogRegionFixtures } from '../src/api/mock/fixtures';
@@ -14,17 +14,6 @@ api.listCatalogRegions = async () => ({ regions: catalogRegionFixtures });
 
 export default {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
-    controls: {
-      matchers: {
-        color: /color$/i,
-      },
-    },
-    options: {
-      storySort: {
-        order: ['DesignSystem', ['Theme'], 'Components', 'Modules'],
-      },
-    },
     darkMode: {
       stylePreview: true,
       classTarget: 'html',

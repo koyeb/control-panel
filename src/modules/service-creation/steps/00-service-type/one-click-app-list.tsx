@@ -41,7 +41,7 @@ export function OneClickAppList() {
         ))}
       </ul>
 
-      <ExternalLink href="https://koyeb.com/deploy" className="row text-link ms-4 items-center gap-1">
+      <ExternalLink href="https://koyeb.com/deploy" className="ms-4 row items-center gap-1 text-link">
         <T id="navigation.moreOneClickApps" />
         <IconArrowRight className="size-4" />
       </ExternalLink>

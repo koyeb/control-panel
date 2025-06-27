@@ -1,4 +1,5 @@
 import { Button } from '@koyeb/design-system';
+
 import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
 import {
   useOrganization,
@@ -20,11 +21,7 @@ import { hasProperty } from 'src/utils/object';
 
 import { InstanceRegionAlerts } from './instance-region-alerts';
 
-type InstanceRegionStepProps = {
-  onNext: () => void;
-};
-
-export function InstanceRegionStep(props: InstanceRegionStepProps) {
+export function InstanceRegionStep() {
   const instancesQuery = useInstancesQuery();
   const regionsQuery = useRegionsQuery();
   const organizationSummaryQuery = useOrganizationSummaryQuery();
@@ -47,10 +44,10 @@ export function InstanceRegionStep(props: InstanceRegionStepProps) {
     return <QueryError error={organizationQuotasQuery.error} />;
   }
 
-  return <InstanceRegionStep_ {...props} />;
+  return <InstanceRegionStep_ />;
 }
 
-function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
+function InstanceRegionStep_() {
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
@@ -115,12 +112,15 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         setCategory={selector.onInstanceCategorySelected}
       />
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="col scrollbar-green scrollbar-thin max-h-[32rem] gap-3 overflow-auto rounded-md border p-2">
+      <div className="col max-h-[32rem] scrollbar-thin gap-3 overflow-auto rounded-md border p-2 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 
-      <Button onClick={onNext} disabled={selectedRegions.length === 0} className="self-start">
+      <Button
+        onClick={() => navigate((url) => url.searchParams.set('step', 'review'))}
+        disabled={selectedRegions.length === 0}
+        className="self-start"
+      >
         <Translate id="common.next" />
       </Button>
     </div>

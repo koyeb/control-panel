@@ -1,7 +1,7 @@
+import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
 import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useResetIdentifyUser } from 'src/application/posthog';

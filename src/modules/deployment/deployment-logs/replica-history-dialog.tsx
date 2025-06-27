@@ -1,8 +1,8 @@
+import { DialogHeader, Table, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { FormattedDate } from 'react-intl';
 
-import { DialogHeader, Table, Tooltip } from '@koyeb/design-system';
 import { useRegion } from 'src/api/hooks/catalog';
 import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
 import { ComputeDeployment, Instance } from 'src/api/model';

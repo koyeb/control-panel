@@ -1,8 +1,8 @@
+import { Badge, Floating, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
-import { Badge, Floating, useBreakpoint } from '@koyeb/design-system';
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { IconChevronRight } from 'src/components/icons';
@@ -47,7 +47,7 @@ export function OrganizationPlan() {
       offset={8}
       renderReference={(props) => (
         <div
-          className={clsx('col gap-4 py-2 pl-3 pr-2 text-start transition-colors', open && 'bg-muted/50')}
+          className={clsx('col gap-4 py-2 pr-2 pl-3 text-start transition-colors', open && 'bg-muted/50')}
           {...props}
         >
           <div className="row items-center gap-2">

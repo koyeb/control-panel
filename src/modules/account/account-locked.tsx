@@ -11,7 +11,7 @@ export function AccountLocked() {
   const tally = useTallyDialog('wQRgBY');
 
   return (
-    <SecondaryLayout className="col mx-auto max-w-xl gap-4 text-center">
+    <SecondaryLayout className="mx-auto col max-w-xl gap-4 text-center">
       <div className="typo-heading">
         <T id="title" />
       </div>

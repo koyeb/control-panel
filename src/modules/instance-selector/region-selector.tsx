@@ -7,6 +7,7 @@ import {
   TabButtons,
   Tooltip,
 } from '@koyeb/design-system';
+
 import { useCatalogRegionAvailability } from 'src/api/hooks/catalog';
 import { CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
 import { IconCircleGauge } from 'src/components/icons';
@@ -43,7 +44,7 @@ export function RegionSelector({
 }: RegionSelectorProps) {
   return (
     <Collapse open={expanded}>
-      <div className="col sm:row mb-3 mt-4 items-start justify-between gap-2 sm:items-center">
+      <div className="mt-4 mb-3 col items-start justify-between gap-2 sm:row sm:items-center">
         <div className="text-dim">
           <T id="regions.label" />
         </div>

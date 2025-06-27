@@ -1,6 +1,6 @@
+import { usePrefersDarkMode } from '@koyeb/design-system';
 import { useCallback, useEffect } from 'react';
 
-import { usePrefersDarkMode } from '@koyeb/design-system';
 import { isEnumValue } from 'src/utils/enums';
 
 import { useLocalStorage } from './storage';

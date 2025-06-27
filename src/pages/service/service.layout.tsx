@@ -1,7 +1,7 @@
+import { Alert, Button, TabButtons } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 
-import { Alert, Button, TabButtons } from '@koyeb/design-system';
 import { useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { App, Deployment, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
@@ -65,7 +65,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
       <DocumentTitle title={serviceName ?? undefined} />
       <RegisterServiceCommands service={service} />
 
-      <div className="col sm:row items-start justify-between gap-4">
+      <div className="col items-start justify-between gap-4 sm:row">
         <Header app={app} service={service} deployment={activeDeployment} />
         <RedeployButton app={app} service={service} />
       </div>
@@ -212,12 +212,12 @@ function Header({ app, service, deployment }: HeaderProps) {
   const url = getServiceUrls(app, service, deployment).find((url) => url.externalUrl !== undefined);
 
   return (
-    <div className="row min-w-0 max-w-full items-center gap-2">
+    <div className="row max-w-full min-w-0 items-center gap-2">
       <ServiceTypeIcon type={service.type} size="big" />
 
       <div className="col min-w-0 gap-1">
         <div className="row items-center gap-2">
-          <div className="typo-heading truncate">{service.name}</div>
+          <div className="truncate typo-heading">{service.name}</div>
           <CopyIconButton text={`${app.name}/${service.name}`} className="size-4" />
         </div>
 
@@ -229,7 +229,7 @@ function Header({ app, service, deployment }: HeaderProps) {
           {url !== undefined && (
             <>
               <div className="border-l" />
-              <ExternalLink openInNewTab href={`https://${url.externalUrl}`} className="text-link truncate">
+              <ExternalLink openInNewTab href={`https://${url.externalUrl}`} className="truncate text-link">
                 {url.externalUrl}
               </ExternalLink>
             </>

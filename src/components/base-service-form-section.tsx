@@ -1,6 +1,6 @@
+import { AccordionSection } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { AccordionSection } from '@koyeb/design-system';
 import { IconChevronDown } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
 
@@ -75,7 +75,7 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
         <IconChevronDown
           tabIndex={0}
           onKeyDown={(event) => event.key === ' ' && expand('keydown')}
-          className={clsx('focusable text-icon size-5 rounded', expanded && 'rotate-180')}
+          className={clsx('size-5 rounded text-icon focusable', expanded && 'rotate-180')}
         />
       </div>
 

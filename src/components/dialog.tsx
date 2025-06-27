@@ -1,11 +1,11 @@
-import { dequal } from 'dequal';
-
 import {
   Dialog as BaseDialog,
   DialogFooter as BaseDialogFooter,
   DialogHeader as BaseDialogHeader,
   Button,
 } from '@koyeb/design-system';
+import { dequal } from 'dequal';
+
 import { useDialogContext } from 'src/application/dialog-context';
 import { Translate } from 'src/intl/translate';
 

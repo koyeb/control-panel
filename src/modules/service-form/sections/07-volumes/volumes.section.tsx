@@ -1,6 +1,6 @@
+import { Alert, Button } from '@koyeb/design-system';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { Alert, Button } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
@@ -75,7 +75,7 @@ function SectionContent() {
         </div>
       )}
 
-      <div className="col sm:row items-start gap-4">
+      <div className="col items-start gap-4 sm:row">
         <Button
           variant="ghost"
           color="gray"

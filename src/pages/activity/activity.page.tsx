@@ -1,8 +1,8 @@
+import { Spinner } from '@koyeb/design-system';
 import { useInfiniteQuery, UseInfiniteQueryResult, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { mapActivity } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
@@ -121,7 +121,7 @@ function ActivitySkeleton() {
             <div className={clsx('flex-1', index < 10 - 1 && 'border-l')} />
           </div>
 
-          <span className="col my-3 flex-1 gap-2 rounded-lg border p-3">
+          <span className="my-3 col flex-1 gap-2 rounded-lg border p-3">
             <TextSkeleton width={20} />
             <TextSkeleton width={12} />
           </span>

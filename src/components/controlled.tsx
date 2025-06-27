@@ -1,6 +1,3 @@
-import React, { useMemo } from 'react';
-import { Control, FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
-
 import {
   Autocomplete,
   Checkbox,
@@ -13,9 +10,11 @@ import {
   TextArea,
   mergeRefs,
 } from '@koyeb/design-system';
-import { usePureFunction } from 'src/hooks/lifecycle';
+import React, { useMemo } from 'react';
+import { Control, FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
 
-import { Extend } from '../../design-system/src/utils/types';
+import { usePureFunction } from 'src/hooks/lifecycle';
+import { Extend } from 'src/utils/types';
 
 type ControlledProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

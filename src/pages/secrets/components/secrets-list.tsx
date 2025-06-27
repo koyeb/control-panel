@@ -1,7 +1,3 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import clsx from 'clsx';
-import { useState } from 'react';
-
 import {
   Button,
   ButtonMenuItem,
@@ -11,6 +7,10 @@ import {
   Tooltip,
   useBreakpoint,
 } from '@koyeb/design-system';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { useState } from 'react';
+
 import { Secret } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -112,7 +112,7 @@ function Value({ secret }: { secret: Secret }) {
           {(props) => (
             <button
               {...props}
-              className="whitespace-pre-line break-all text-start font-mono"
+              className="text-start font-mono break-all whitespace-pre-line"
               onClick={copyValue}
             >
               {query.data}

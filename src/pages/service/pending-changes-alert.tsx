@@ -1,10 +1,10 @@
+import { Alert, Button, DialogFooter } from '@koyeb/design-system';
 import { useMutation, UseMutationResult, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { dequal } from 'dequal';
 import { diffJson } from 'diff';
 import { useMemo } from 'react';
 
-import { Alert, Button, DialogFooter } from '@koyeb/design-system';
 import { useDeployment } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { ComputeDeployment, Service } from 'src/api/model';
@@ -159,8 +159,7 @@ function DeploymentsDiffDialog({ deploy, discard, deployment1, deployment2 }: De
         <T id="diffDialog.description" />
       </p>
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <pre className="scrollbar-green max-h-[32rem] overflow-auto rounded bg-muted p-2 dark:bg-neutral">
+      <pre className="max-h-[32rem] overflow-auto rounded bg-muted p-2 scrollbar-green dark:bg-neutral">
         {diff.map(({ added, removed, value }, index) => (
           <span key={index} className={clsx(added && 'text-green', removed && 'text-red')}>
             {value}

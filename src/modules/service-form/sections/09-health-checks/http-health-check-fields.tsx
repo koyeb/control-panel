@@ -1,7 +1,7 @@
+import { Button, IconButton, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useFieldArray } from 'react-hook-form';
 
-import { Button, IconButton, useBreakpoint } from '@koyeb/design-system';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconTrash, IconPlus } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -72,7 +72,6 @@ function HttpHeaders({ portIndex }: HttpHeadersProps) {
   }
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid grid-cols-1 gap-4 rounded border px-3 py-2 md:col-span-6 md:grid-cols-[1fr_1fr_auto]">
       {fields.map((header, headerIndex) => (
         <HeaderFields key={header.id} portIndex={portIndex} index={headerIndex} onRemove={remove} />
@@ -109,7 +108,6 @@ function HeaderFields({ portIndex, index, onRemove }: HeaderFieldsProps) {
       <ControlledInput name={`${name}.name`} label={showLabel && <T id="httpHeaderNameLabel" />} />
       <ControlledInput name={`${name}.value`} label={showLabel && <T id="httpHeaderValueLabel" />} />
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
         <IconButton color="gray" Icon={IconTrash} onClick={onRemove}>
           <T id="removeHeader" />

@@ -2,6 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 import { sentryVitePlugin } from '@sentry/vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { Plugin } from 'vite';
@@ -16,6 +17,7 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     react(),
+    tailwindcss(),
     svgr({
       svgrOptions: {
         ref: true,

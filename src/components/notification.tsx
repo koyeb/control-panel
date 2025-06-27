@@ -1,6 +1,5 @@
-import { ToastContainer, ToastContentProps, cssTransition } from 'react-toastify';
-
 import { Notification } from '@koyeb/design-system';
+import { ToastContainer, ToastContentProps, cssTransition } from 'react-toastify';
 
 export function NotificationContainer() {
   return (
@@ -15,5 +14,5 @@ const transition = cssTransition({
 });
 
 export function Toast({ closeToast, data }: ToastContentProps<React.ComponentProps<typeof Notification>>) {
-  return <Notification {...data} className="flex-1" onClose={closeToast} />;
+  return <Notification {...data} className="flex-1 !text-default" onClose={closeToast} />;
 }

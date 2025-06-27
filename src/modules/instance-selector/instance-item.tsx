@@ -1,7 +1,7 @@
+import { Badge, Button, RadioInput } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useRef } from 'react';
 
-import { Badge, Button, RadioInput } from '@koyeb/design-system';
 import { useCatalogInstanceAvailability } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
@@ -61,7 +61,7 @@ export function InstanceItem({
       )}
     >
       <div className="rounded-t-lg p-4">
-        <div className="col sm:row gap-4">
+        <div className="col gap-4 sm:row">
           <InstanceDescription
             instance={instance}
             disabled={disabled}
@@ -86,7 +86,7 @@ function InstancePrice({ instance }: { instance: CatalogInstance }) {
   const instanceAvailability = useCatalogInstanceAvailability(instance.id);
 
   return (
-    <div className="row sm:col items-center gap-2 sm:items-end sm:gap-0">
+    <div className="row items-center gap-2 sm:col sm:items-end sm:gap-0">
       <div className="order-2">
         <T
           id="costs.pricePerHour"

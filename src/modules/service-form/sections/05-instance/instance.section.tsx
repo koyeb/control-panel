@@ -1,6 +1,6 @@
+import { Badge } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
-import { Badge } from '@koyeb/design-system';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';

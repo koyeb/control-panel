@@ -1,7 +1,6 @@
+import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-
-import { Spinner } from '@koyeb/design-system';
 
 const debounce = 300;
 

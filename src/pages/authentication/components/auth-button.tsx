@@ -1,6 +1,6 @@
+import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Spinner } from '@koyeb/design-system';
 import { Extend } from 'src/utils/types';
 
 export function AuthButton({

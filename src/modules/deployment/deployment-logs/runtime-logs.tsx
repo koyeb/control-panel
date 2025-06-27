@@ -1,9 +1,9 @@
+import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { Controller, useForm, UseFormReturn } from 'react-hook-form';
 
-import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import { useRegions } from 'src/api/hooks/catalog';
 import { useRegionalDeployments } from 'src/api/hooks/service';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
@@ -286,7 +286,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
           />
         </FeatureFlag>
 
-        <div className="row ml-auto gap-4">
+        <div className="ml-auto row gap-4">
           <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
           <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
 

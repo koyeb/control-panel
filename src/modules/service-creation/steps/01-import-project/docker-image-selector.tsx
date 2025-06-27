@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@koyeb/design-system';
 import { useEffect } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
@@ -59,7 +59,7 @@ export function DockerImageSelector({ onSelected }: DockerImageSelectorProps) {
       </div>
 
       <div className="col gap-6">
-        <div className="col sm:row gap-2 sm:gap-8">
+        <div className="col gap-2 sm:row sm:gap-8">
           <div className="col w-full max-w-96 gap-2">
             <div className="font-medium">
               <T id="imageFieldLabel" />
@@ -86,7 +86,7 @@ export function DockerImageSelector({ onSelected }: DockerImageSelectorProps) {
           />
         </div>
 
-        <div className="col sm:row gap-2 sm:gap-8">
+        <div className="col gap-2 sm:row sm:gap-8">
           <div className="col w-full max-w-96 gap-2">
             <div className="font-medium">
               <T id="registryFieldLabel" />
