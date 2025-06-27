@@ -184,10 +184,10 @@ function StatusDetailsCard({ variant, title, children }: StatusDetailsCardProps)
     <div className="sticky top-4 rounded-lg border">
       <div
         className={clsx('row items-center gap-2 rounded-t-lg px-3 py-2', {
-          'text-blue bg-blue/10 ': variant === 'info',
-          'text-orange bg-orange/10 ': variant === 'warning',
-          'text-red bg-red/10 ': variant === 'error',
-          'text-green bg-green/10 ': variant === 'success',
+          'bg-blue/10 text-blue': variant === 'info',
+          'bg-orange/10 text-orange': variant === 'warning',
+          'bg-red/10 text-red': variant === 'error',
+          'bg-green/10 text-green': variant === 'success',
         })}
       >
         <IconInfo className="size-4" />

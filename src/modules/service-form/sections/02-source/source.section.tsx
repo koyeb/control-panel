@@ -32,7 +32,7 @@ export function SourceSection() {
       description={<T id="description" />}
       className="col gaps"
     >
-      <div className="col sm:row gap-6">
+      <div className="col gap-6 sm:row">
         {showArchive && (
           <ControlledRadio
             name="source.type"

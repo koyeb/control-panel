@@ -1,4 +1,5 @@
 import { Alert } from '@koyeb/design-system';
+
 import { useManageBillingQuery, useSubscriptionQuery } from 'src/api/hooks/billing';
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { useIdenfyLink } from 'src/application/idenfy';
@@ -91,7 +92,7 @@ function StripePortal({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ExternalLink openInNewTab href={manageBillingQuery.data.url} className="focusable rounded font-semibold">
+    <ExternalLink openInNewTab href={manageBillingQuery.data.url} className="rounded font-semibold focusable">
       {children}
     </ExternalLink>
   );

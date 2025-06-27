@@ -1,7 +1,7 @@
+import { Badge, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import sortBy from 'lodash-es/sortBy';
 
-import { Badge, Tooltip } from '@koyeb/design-system';
 import { App, Deployment, Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { IconLink, IconCopy } from 'src/components/icons';

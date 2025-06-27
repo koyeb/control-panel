@@ -1,4 +1,5 @@
 import { Tooltip } from '@koyeb/design-system';
+
 import { ComputeDeployment } from 'src/api/model';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DeploymentStatusBadge } from 'src/components/status-badges';

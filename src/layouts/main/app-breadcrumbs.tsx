@@ -1,9 +1,9 @@
+import { Floating, Menu, MenuItem } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
 
-import { Floating, Menu, MenuItem } from '@koyeb/design-system';
 import { useAppQuery, useServiceQuery, useServices } from 'src/api/hooks/service';
 import { routes } from 'src/application/routes';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
@@ -223,7 +223,7 @@ function AppServiceCrumb({ serviceId }: { serviceId: string }) {
               <ServiceStatusDot status={service.status} className="size-2" />
             </div>
 
-            <div className="direction-rtl truncate">
+            <div className="truncate direction-rtl">
               <Translate
                 id="common.appServiceName"
                 values={{ appName: app.name, serviceName: service.name }}
@@ -255,7 +255,7 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
           className={clsx({ hidden: !appServices || appServices.length <= 1 })}
           {...props}
         >
-          <IconChevronDown className="text-icon size-4" />
+          <IconChevronDown className="size-4 text-icon" />
         </button>
       )}
       renderFloating={(props) => (
@@ -277,7 +277,7 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
 
               {service.name}
 
-              {service.id === serviceId && <IconCheck className="text-icon ml-auto size-4" />}
+              {service.id === serviceId && <IconCheck className="ml-auto size-4 text-icon" />}
             </MenuItem>
           ))}
         </Menu>

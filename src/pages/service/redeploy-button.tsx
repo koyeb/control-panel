@@ -1,7 +1,7 @@
+import { Alert, Button, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
-import { Alert, Button, Tooltip } from '@koyeb/design-system';
 import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
 import { useComputeDeployment } from 'src/api/hooks/service';
 import { App, Service } from 'src/api/model';

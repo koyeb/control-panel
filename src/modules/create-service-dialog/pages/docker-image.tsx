@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from '@koyeb/design-system';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { routes } from 'src/application/routes';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';

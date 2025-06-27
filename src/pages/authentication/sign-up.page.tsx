@@ -19,7 +19,7 @@ export function SignUpPage() {
     <div className="col flex-1">
       <DocumentTitle title={t('title')} />
 
-      <div className="col mx-auto w-full max-w-72 flex-1 justify-center py-8 text-center">
+      <div className="mx-auto col w-full max-w-72 flex-1 justify-center py-8 text-center">
         <h1 className="text-3xl font-semibold">
           <T id="title" />
         </h1>
@@ -37,7 +37,7 @@ export function SignUpPage() {
         {method === 'email' && <SignUpForm />}
 
         {method === null && (
-          <button type="button" className="row mx-auto items-center gap-1" onClick={() => setMethod('email')}>
+          <button type="button" className="mx-auto row items-center gap-1" onClick={() => setMethod('email')}>
             <IconMail className="size-4" /> <T id="emailSignUp" />
           </button>
         )}

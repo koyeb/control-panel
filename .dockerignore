@@ -1,18 +1,7 @@
 *
 
-!design-system/src
-!design-system/.npmrc
-!design-system/package.json
-!design-system/pnpm-lock.yaml
-!design-system/postcss.config.js
-!design-system/tailwind-preset.ts
-!design-system/tailwind.config.ts
-!design-system/tsconfig.json
-!design-system/vite.config.ts
-
 !src
 !public
-!entrypoint.sh
 !index.html
 !nginx.conf
 !package.json

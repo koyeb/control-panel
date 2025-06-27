@@ -1,6 +1,6 @@
+import { ProgressBar } from '@koyeb/design-system';
 import { useEffect, useRef, useState } from 'react';
 
-import { ProgressBar } from '@koyeb/design-system';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.database.layout.databaseStarting');
@@ -14,7 +14,7 @@ export function DatabaseStarting(props: DatabaseStartingProps) {
   const progress = useProgress(props);
 
   return (
-    <div className="col mx-auto w-full max-w-lg justify-center gap-2 py-6 text-center">
+    <div className="mx-auto col w-full max-w-lg justify-center gap-2 py-6 text-center">
       <p className="text-lg font-medium">
         <T id="title" />
       </p>

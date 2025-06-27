@@ -1,6 +1,6 @@
+import { Input } from '@koyeb/design-system';
 import { useRef } from 'react';
 
-import { Input } from '@koyeb/design-system';
 import { formatCommand, parseCommand } from 'src/application/parse-command';
 import { Extend } from 'src/utils/types';
 

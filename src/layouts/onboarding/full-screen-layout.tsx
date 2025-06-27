@@ -22,7 +22,7 @@ export function FullScreenLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="col h-screen p-3">
-      <div className="col dark relative flex-1 items-center rounded-2xl bg-neutral/95 p-16">
+      <div className="dark relative col flex-1 items-center rounded-2xl bg-neutral/95 p-16">
         <div className="row justify-between self-stretch">
           <LogoKoyeb className="h-8 self-start" />
           {isAuthenticated && <UserMenu />}

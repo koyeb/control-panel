@@ -1,3 +1,4 @@
+import { Autocomplete } from '@koyeb/design-system';
 import {
   AutofillSuggestion,
   AutofillSuggestionResponse,
@@ -7,7 +8,6 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { Control, useController } from 'react-hook-form';
 
-import { Autocomplete } from '@koyeb/design-system';
 import { Address } from 'src/api/model';
 import { getConfig } from 'src/application/config';
 import { createTranslate } from 'src/intl/translate';

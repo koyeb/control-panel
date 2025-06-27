@@ -1,9 +1,9 @@
+import { Tooltip } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 import { z } from 'zod';
 
-import { Tooltip } from '@koyeb/design-system';
 import { reportError } from 'src/application/report-error';
 import { IconSquareArrowOutUpRight } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
@@ -110,7 +110,7 @@ export function PlatformStatus({ collapsed }: { collapsed: boolean }) {
       openInNewTab
       href={statusPageUrl}
       className={clsx(
-        'row mx-4 items-center gap-1',
+        'mx-4 row items-center gap-1',
         'rounded-md border px-2 py-1',
         'transition-colors hover:bg-muted/50',
         'text-start text-xs font-medium text-dim',

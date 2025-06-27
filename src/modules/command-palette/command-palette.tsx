@@ -1,7 +1,7 @@
+import { Spinner } from '@koyeb/design-system';
 import { useCombobox } from 'downshift';
 import { useEffect, useMemo } from 'react';
 
-import { Spinner } from '@koyeb/design-system';
 import { stopPropagation } from 'src/application/dom-events';
 import { Dialog } from 'src/components/dialog';
 import { IconChevronRight } from 'src/components/icons';
@@ -120,7 +120,7 @@ function CommandPaletteContent() {
 
       <ul
         {...combobox.getMenuProps()}
-        className="scrollbar-thin scrollbar-green max-h-96 scroll-my-2 overflow-auto p-2"
+        className="max-h-96 scrollbar-thin scroll-my-2 overflow-auto p-2 scrollbar-green"
       >
         {filteredItems.map((item) => (
           <li

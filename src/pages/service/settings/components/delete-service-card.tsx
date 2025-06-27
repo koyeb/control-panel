@@ -1,6 +1,6 @@
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { Button } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
@@ -52,7 +52,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   });
 
   return (
-    <div className="card row col-start-1 items-center gap-4 p-3">
+    <div className="col-start-1 card row items-center gap-4 p-3">
       <div className="col flex-1 gap-2">
         <strong>
           <T id="title" />
@@ -63,7 +63,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
         </p>
       </div>
 
-      <div className="row ml-auto gap-4">
+      <div className="ml-auto row gap-4">
         <Button
           color="red"
           onClick={() => openDialog('ConfirmDeleteService', { resourceId: service.id })}

@@ -8,10 +8,10 @@ import {
   useTransitionStatus,
   useTransitionStyles,
 } from '@floating-ui/react';
+import { Button, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { Button, useBreakpoint } from '@koyeb/design-system';
 import { IconMenu } from 'src/components/icons';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
@@ -73,9 +73,8 @@ function LayoutTablet({
         </Aside>
       </div>
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className={clsx('pl-16 xl:pl-64', hasBanner && 'pt-8', contextExpanded && '3xl:pr-[32rem]')}>
-        <div className="mx-auto max-w-main">
+        <div className="@container/main mx-auto max-w-[75rem]">
           <header className="px-4">{header}</header>
           {main}
         </div>
@@ -96,7 +95,7 @@ function LayoutMobile({ banner, header, menu, main }: LayoutProps) {
 
   return (
     <>
-      <header className="row sticky top-0 z-10 items-center gap-1 border-b bg-neutral px-2 shadow-sm">
+      <header className="sticky top-0 z-10 row items-center gap-1 border-b bg-neutral px-2 shadow-sm">
         <Button size={1} color="gray" variant="ghost" onClick={() => setState('opened')} className="!px-1">
           <IconMenu className="size-5 text-dim" />
         </Button>
@@ -166,7 +165,6 @@ function MobileMenu({ state, setState, children }: MobileMenuProps) {
 function Aside({ className, ...props }: React.ComponentProps<'aside'>) {
   return (
     <aside
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx('h-full overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', className)}
       {...props}
     />

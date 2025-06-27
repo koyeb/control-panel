@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/react';
+import { Meta } from '@storybook/react-vite';
 
 import { api } from 'src/api/api';
 import { Api } from 'src/api/api-types';

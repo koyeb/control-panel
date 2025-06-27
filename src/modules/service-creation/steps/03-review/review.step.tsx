@@ -12,7 +12,7 @@ export function ReviewStep({ onNext }: { onNext: (serviceId: string) => void }) 
   const [deployUrl, setDeployUrl] = useState<string>();
 
   return (
-    <div className="col xl:row gap-8">
+    <div className="col gap-8 xl:row">
       <ServiceForm
         className="grow"
         onDeployed={(appId, serviceId) => onNext(serviceId)}

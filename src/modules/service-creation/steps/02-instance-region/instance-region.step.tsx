@@ -1,4 +1,5 @@
 import { Button } from '@koyeb/design-system';
+
 import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
 import {
   useOrganization,
@@ -115,8 +116,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         setCategory={selector.onInstanceCategorySelected}
       />
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="col scrollbar-green scrollbar-thin max-h-[32rem] gap-3 overflow-auto rounded-md border p-2">
+      <div className="col max-h-[32rem] scrollbar-thin gap-3 overflow-auto rounded-md border p-2 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 

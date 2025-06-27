@@ -1,8 +1,8 @@
+import { Combobox, Spinner } from '@koyeb/design-system';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Combobox, Spinner } from '@koyeb/design-system';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
@@ -121,7 +121,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
             <Link
               href={routes.userSettings.organizations()}
               state={{ create: true }}
-              className="row mb-1 w-full gap-2 px-2 py-1.5"
+              className="mb-1 row w-full gap-2 px-2 py-1.5"
             >
               <IconCirclePlus className="size-5" />
               <T id="createOrganization" />

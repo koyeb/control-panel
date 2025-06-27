@@ -1,6 +1,6 @@
+import { Dialog } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { Dialog } from '@koyeb/design-system';
 import { StripeProvider } from 'src/application/stripe';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 import { defined } from 'src/utils/assert';

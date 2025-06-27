@@ -1,9 +1,9 @@
+import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { FormattedDate } from 'react-intl';
 
-import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
 import type { Api } from 'src/api/api-types';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { useDeploymentScalingQuery } from 'src/api/hooks/service';
@@ -50,8 +50,8 @@ export function Replicas({ deployment }: { deployment: ComputeDeployment }) {
 
   return (
     <div className="m-4 mt-0 rounded-md border">
-      <div className="col md:row gap-4 px-3 py-4 md:items-center">
-        <div className="row me-auto items-center gap-2 font-medium">
+      <div className="col gap-4 px-3 py-4 md:row md:items-center">
+        <div className="me-auto row items-center gap-2 font-medium">
           <T id="title" />
           <HelpTooltip>
             <T id="helpTooltip" />
@@ -225,7 +225,7 @@ function Replica({ deployment, replica }: { deployment: ComputeDeployment; repli
                 replicaIndex: replica.index,
               })
             }
-            className="text-link ms-auto text-xs"
+            className="ms-auto text-link text-xs"
           >
             <T id="viewDetails" />
           </button>
@@ -268,7 +268,7 @@ function InstanceDetails({ instance }: { instance: Instance }) {
       <div className="row items-center gap-2">
         <div className="text-sm font-medium">{instance.name}</div>
 
-        <CopyIconButton text={instance.id} className="text-icon size-em" />
+        <CopyIconButton text={instance.id} className="size-em text-icon" />
 
         <InstanceStatusBadge status={instance.status} className="ms-auto" />
       </div>

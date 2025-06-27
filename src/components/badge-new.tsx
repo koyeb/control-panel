@@ -1,6 +1,6 @@
+import { Badge } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Badge } from '@koyeb/design-system';
 import { IconSparkles } from 'src/components/icons';
 import { Translate } from 'src/intl/translate';
 

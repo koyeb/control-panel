@@ -1,8 +1,8 @@
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
@@ -43,7 +43,7 @@ export function OrganizationName() {
   });
 
   return (
-    <section className="col sm:row items-start gap-4 sm:gap-8">
+    <section className="col items-start gap-4 sm:row sm:gap-8">
       <SectionHeader title={<T id="title" />} description={<T id="description" />} />
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="row gap-4">

@@ -1,8 +1,8 @@
+import { Button, InfoTooltip, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { Button, InfoTooltip, Spinner } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';

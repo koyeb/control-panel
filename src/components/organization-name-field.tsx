@@ -1,8 +1,8 @@
+import { Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState, useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { Tooltip } from '@koyeb/design-system';
 import { createTranslate } from 'src/intl/translate';
 import { entries } from 'src/utils/object';
 

@@ -7,7 +7,7 @@ export function Navigation() {
   const { sections, page: activePage, onNavigationItemRef, pageChanged } = useCreateServiceDialog();
 
   return (
-    <aside className="scrollbar-green scrollbar-thin max-h-full overflow-y-auto border-r p-2">
+    <aside className="max-h-full scrollbar-thin overflow-y-auto border-r p-2 scrollbar-green">
       <ListSections
         sections={sections}
         renderItem={(page) => (

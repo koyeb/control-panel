@@ -1,7 +1,7 @@
+import { IconButton } from '@koyeb/design-system';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { IconButton } from '@koyeb/design-system';
 import { useRegion } from 'src/api/hooks/catalog';
 import { useVolumes } from 'src/api/hooks/volume';
 import { Volume } from 'src/api/model';
@@ -28,7 +28,6 @@ export function VolumeFields({ index, onCreate, onRemove }: VolumeFieldsProps) {
   const form = useFormContext<ServiceForm>();
 
   return (
-    // eslint-disable-next-line tailwindcss/no-arbitrary-value
     <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[16rem_1fr_auto]">
       <VolumeField index={index} onCreate={onCreate} />
 
@@ -37,7 +36,6 @@ export function VolumeFields({ index, onCreate, onRemove }: VolumeFieldsProps) {
         label={<T id="mountPathLabel" />}
       />
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
       <div className="mt-[1.625rem]">
         <IconButton
           color="gray"

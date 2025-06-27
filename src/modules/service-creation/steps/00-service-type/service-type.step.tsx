@@ -56,7 +56,7 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
   };
 
   return (
-    <div className="col sm:row divide-y rounded-md border sm:divide-x md:divide-y-0">
+    <div className="col divide-y rounded-md border sm:row sm:divide-x md:divide-y-0">
       <nav className="col gap-3 p-3 md:min-w-72 md:p-6">
         <ServiceTypeList serviceType={serviceType} setServiceType={setServiceType} />
         <hr />
@@ -121,7 +121,7 @@ function getCreateServiceUrl(serviceType: ExtendedServiceType, appId: string | n
 
 function DeploymentSource({ onNext }: { onNext: (source: SourceType) => void }) {
   return (
-    <div className="col lg:row gap-4">
+    <div className="col gap-4 lg:row">
       <DeploymentSourceOption
         Icon={IconGithub}
         title={<T id="deploymentSource.github.title" />}

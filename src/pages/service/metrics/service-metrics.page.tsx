@@ -1,7 +1,7 @@
+import { Button, ButtonGroup, InfoTooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 
-import { Button, ButtonGroup, InfoTooltip } from '@koyeb/design-system';
 import type { Api } from 'src/api/api-types';
 import { useInstance } from 'src/api/hooks/catalog';
 import { useDeployment, useService } from 'src/api/hooks/service';
@@ -70,7 +70,7 @@ function ServiceMetrics({ serviceId, timeFrame }: { serviceId: string; timeFrame
 
   return (
     <>
-      <div className="col lg:row gap-4">
+      <div className="col gap-4 lg:row">
         <GraphCard label={<T id="cpu.label" />} tooltip={<T id="cpu.tooltip" />} className="flex-1">
           <CpuGraph
             loading={queries.isPending}

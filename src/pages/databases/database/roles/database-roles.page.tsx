@@ -1,8 +1,8 @@
+import { Button, ButtonMenuItem, Spinner, Table, Tooltip } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { Button, ButtonMenuItem, Spinner, Table, Tooltip } from '@koyeb/design-system';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { DatabaseRole, Service } from 'src/api/model';

@@ -1,4 +1,5 @@
 import { Button } from '@koyeb/design-system';
+
 import { SvgComponent } from 'src/application/types';
 import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { IconCpu, IconGlobe, IconTrendingUp } from 'src/components/icons';

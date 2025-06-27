@@ -1,6 +1,6 @@
+import { Badge, Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Badge, Button } from '@koyeb/design-system';
 import { IconCheck } from 'src/components/icons';
 import { PlanIcon } from 'src/components/plan-icon';
 import { FormattedPrice } from 'src/intl/formatted';
@@ -31,7 +31,6 @@ type PlanItemProps = {
 export function PlanItem({ plan, popular, onUpgrade, className }: PlanItemProps) {
   return (
     <div
-      // eslint-disable-next-line tailwindcss/no-arbitrary-value
       className={clsx(
         'col gap-6 rounded-lg border p-4 shadow-lg',
         popular ? 'h-[31rem]' : 'h-[28rem]',

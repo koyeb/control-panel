@@ -52,15 +52,7 @@ To start the app's development server, simply run `pnpm run dev`.
 
 ## Design System
 
-To accelerate the development of features and ensure that the look and feel of the control panel stays consistent, we use a set of building blocks: a theme, a set of base react components and some styling guidelines.
-
-The code of this design system is in the [design-system](./design-system) folder. The theme is defined in the [tailwind preset](./design-system/tailwind-preset.ts) file, and the components are all exported in [a barrel export](./design-system/src/index.ts).
-
-To run commands within this package, make sure to install the dependencies first.
-
-```
-cd design-system && pnpm install
-```
+To accelerate the development of features and ensure that the look and feel of the control panel stays consistent, we use a set of building blocks: a theme, a set of base react components and some styling guidelines. The code of this design system is in the @koyeb/design-system package in npmjs.
 
 ## Code style / formatting
 

@@ -1,6 +1,6 @@
+import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Button } from '@koyeb/design-system';
 import { useSecrets } from 'src/api/hooks/secret';
 import { Dialog } from 'src/components/dialog';
 import { Title } from 'src/components/title';
@@ -22,7 +22,7 @@ export function RegistrySecretsPage() {
         end={
           <Button
             onClick={() => openDialog('CreateRegistrySecret')}
-            className={clsx(secrets?.length === 0 && 'hidden')}
+            className={clsx(secrets?.length === 0 && '!hidden')}
           >
             <T id="createRegistrySecret" />
           </Button>

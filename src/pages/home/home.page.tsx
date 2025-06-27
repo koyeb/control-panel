@@ -36,8 +36,7 @@ export function HomePage() {
         <T id="title" />
       </h1>
 
-      {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
-      <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[1fr,24rem]">
+      <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[1fr_24rem]">
         <div className="row-span-2 min-w-0">
           <Apps />
         </div>

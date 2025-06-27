@@ -31,11 +31,11 @@ export function FeatureUnavailable({
 
       <Title title={title} />
 
-      <p className="mb-4 mt-2 font-medium">{subTitle}</p>
+      <p className="mt-2 mb-4 font-medium">{subTitle}</p>
 
       <p className="max-w-xl">{description}</p>
 
-      <div className="row mt-6 items-center gap-4">
+      <div className="mt-6 row items-center gap-4">
         {cta}
         {documentationLink}
       </div>

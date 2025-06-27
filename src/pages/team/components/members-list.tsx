@@ -1,7 +1,7 @@
+import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/design-system';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';

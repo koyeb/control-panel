@@ -47,7 +47,7 @@ export function DeployOneClickApp() {
 
       <Header app={app} />
 
-      <div className="col xl:row gap-8">
+      <div className="col gap-8 xl:row">
         <div className="flex-1">
           <OneClickAppForm onCostChanged={setCost} />
         </div>
@@ -67,7 +67,7 @@ export function DeployOneClickApp() {
 
 function Header({ app }: { app: OneClickApp }) {
   return (
-    <header className="col mb-10 items-center gap-4 text-center">
+    <header className="mb-10 col items-center gap-4 text-center">
       <div className="rounded-md bg-black/80 p-2 dark:bg-transparent">
         <img src={app.logo} className="h-14 grayscale" />
       </div>

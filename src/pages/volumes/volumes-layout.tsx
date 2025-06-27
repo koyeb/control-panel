@@ -1,6 +1,6 @@
+import { TabButtons } from '@koyeb/design-system';
 import React from 'react';
 
-import { TabButtons } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { DocumentationLink } from 'src/components/documentation-link';

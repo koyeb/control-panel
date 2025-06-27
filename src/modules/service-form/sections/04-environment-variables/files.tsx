@@ -1,8 +1,8 @@
+import { Button, IconButton } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 
-import { Button, IconButton } from '@koyeb/design-system';
 import { ControlledInput } from 'src/components/controlled';
 import { IconPlus, IconTrash } from 'src/components/icons';
 import { FeatureFlag } from 'src/hooks/feature-flag';
@@ -86,7 +86,6 @@ export function Files() {
               className="flex-1"
             />
 
-            {/* eslint-disable-next-line tailwindcss/no-arbitrary-value */}
             <IconButton color="gray" Icon={IconTrash} onClick={() => remove(index)} className="mt-[1.625rem]">
               <T id="remove" />
             </IconButton>

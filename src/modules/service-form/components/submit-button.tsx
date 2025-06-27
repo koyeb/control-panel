@@ -1,8 +1,8 @@
+import { Button, Floating, ButtonMenuItem, Menu, Tooltip } from '@koyeb/design-system';
 import { useIsFetching } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useFormContext, useFormState } from 'react-hook-form';
 
-import { Button, Floating, ButtonMenuItem, Menu, Tooltip } from '@koyeb/design-system';
 import { IconChevronDown } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
 import { useShortcut } from 'src/hooks/shortcut';

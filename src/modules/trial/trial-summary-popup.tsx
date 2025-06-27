@@ -1,6 +1,6 @@
+import { Badge, ProgressBar } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Badge, ProgressBar } from '@koyeb/design-system';
 import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';

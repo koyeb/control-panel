@@ -1,7 +1,7 @@
+import { Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import {
   IconBookMarked,
   IconBookOpen,
@@ -36,8 +36,8 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
       renderReference={(props) => (
         <div
           className={clsx(
-            'row mx-4 items-center gap-1',
-            'rounded-md border py-1 pl-3 pr-2',
+            'mx-4 row items-center gap-1',
+            'rounded-md border py-1 pr-2 pl-3',
             'transition-colors hover:bg-muted/50',
             'text-xs font-medium text-dim',
           )}
