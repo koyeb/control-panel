@@ -8,7 +8,7 @@ import { DatabaseDeployment, OrganizationPlan } from 'src/api/model';
 import { Dialog } from 'src/components/dialog';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { handleSubmit } from 'src/hooks/form';
-import { createTranslate, Translate, TranslateEnum } from 'src/intl/translate';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 
 import { DatabaseEngineSection } from './sections/01-database-engine.section';
 import { InstanceSection } from './sections/02-instance.section';

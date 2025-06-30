@@ -7,7 +7,7 @@ import { useTrackEvent } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
 import { ActionsList, ActionsListButton, ActionsListLink } from 'src/components/actions-list';
-import { IconSendHorizontal, IconInfo, IconExternalLink, IconArrowRight } from 'src/components/icons';
+import { IconArrowRight, IconExternalLink, IconInfo, IconSendHorizontal } from 'src/components/icons';
 import { TimeoutUi } from 'src/components/timeout-ui';
 import { createTranslate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';

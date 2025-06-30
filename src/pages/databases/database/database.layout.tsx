@@ -9,7 +9,7 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { usePathname, useRouteParam } from 'src/hooks/router';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 import { DatabaseAlerts } from './database-alerts';

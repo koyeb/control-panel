@@ -10,7 +10,7 @@ import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
 
 const T = createTranslate('pages.domains.createDialog');

@@ -11,7 +11,7 @@ import { GitRepository } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { IconLock, IconGithub, IconArrowRight } from 'src/components/icons';
+import { IconArrowRight, IconGithub, IconLock } from 'src/components/icons';
 import { ListItem, ListSections } from 'src/components/list';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { handleSubmit } from 'src/hooks/form';

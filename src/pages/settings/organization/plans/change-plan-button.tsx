@@ -9,7 +9,7 @@ import { Dialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { tallyForms, useTallyLink } from 'src/hooks/tally';
-import { createTranslate, TranslateEnum } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 
 type Plan = Extract<OrganizationPlan, 'starter' | 'pro' | 'scale' | 'enterprise'>;
 

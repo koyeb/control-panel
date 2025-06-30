@@ -1,7 +1,7 @@
 import { Alert, IconButton, Menu, MenuItem } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useCallback } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/api/model';
@@ -14,17 +14,17 @@ import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {
   LogLineContent,
   LogLineDate,
-  LogLines,
   LogLineStream,
+  LogLines,
   LogOptions,
   LogsFooter,
 } from 'src/components/logs/logs';
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { QueryError } from 'src/components/query-error';
 import { LogsApi } from 'src/hooks/logs';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
-import { assert, AssertionError } from 'src/utils/assert';
+import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
 const T = createTranslate('modules.deployment.deploymentLogs.build');

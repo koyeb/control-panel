@@ -4,10 +4,10 @@ import sortBy from 'lodash-es/sortBy';
 
 import { App, Deployment, Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
-import { IconLink, IconCopy } from 'src/components/icons';
+import { IconCopy, IconLink } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { useClipboard } from 'src/hooks/clipboard';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 import { getServiceUrls } from '../../../../application/service-functions';
 

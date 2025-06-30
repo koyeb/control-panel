@@ -5,15 +5,15 @@ import { useFormContext } from 'react-hook-form';
 import { useRepositories } from 'src/api/hooks/git';
 import { GitRepository } from 'src/api/model';
 import { ControlledAutocomplete } from 'src/components/controlled';
-import { IconLock, IconGithub } from 'src/components/icons';
+import { IconGithub, IconLock } from 'src/components/icons';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
 
-import { ServiceForm } from '../../../service-form.types';
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
+import { ServiceForm } from '../../../service-form.types';
 
 const T = createTranslate('modules.serviceForm.source.git');
 

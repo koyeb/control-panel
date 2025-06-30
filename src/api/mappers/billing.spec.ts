@@ -6,7 +6,7 @@ import { createFactory } from 'src/utils/factories';
 import type { Api } from '../api-types';
 import { Invoice, InvoiceDiscount, InvoicePlanLine, InvoiceUsageLine } from '../model';
 
-import { mapInvoice, StripeInvoice } from './billing';
+import { StripeInvoice, mapInvoice } from './billing';
 
 const createStripeInvoice = createFactory<StripeInvoice>(() => ({
   lines: [],

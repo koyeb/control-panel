@@ -10,7 +10,7 @@ import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 import { ServiceForm } from '../../service-form.types';

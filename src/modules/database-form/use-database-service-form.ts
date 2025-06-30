@@ -1,6 +1,6 @@
 import merge from 'lodash-es/merge';
 import { useEffect } from 'react';
-import { DeepPartial, useForm, UseFormReturn, useWatch } from 'react-hook-form';
+import { DeepPartial, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { DatabaseDeployment } from 'src/api/model';

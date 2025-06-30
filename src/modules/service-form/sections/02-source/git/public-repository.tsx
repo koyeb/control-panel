@@ -6,8 +6,8 @@ import { GitRepository } from 'src/api/model';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { createTranslate } from 'src/intl/translate';
 
-import { ServiceForm } from '../../../service-form.types';
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
+import { ServiceForm } from '../../../service-form.types';
 
 import { PublicRepositoryBranchSelector } from './public-repository-branch-selector';
 

@@ -16,7 +16,7 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/components/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate, Translate, TranslateStatus } from 'src/intl/translate';
+import { Translate, TranslateStatus, createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { ChangeAppForm } from './change-app-form';

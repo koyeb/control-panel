@@ -22,7 +22,7 @@ import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import IconDocker from 'src/icons/docker.svg?react';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 const T = createTranslate('modules.deployment.deploymentInfo.definitionDialog');

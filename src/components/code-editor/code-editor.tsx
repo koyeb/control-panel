@@ -1,5 +1,5 @@
 import { Autocomplete } from '@koyeb/design-system';
-import { langNames, langs, LanguageName } from '@uiw/codemirror-extensions-langs';
+import { LanguageName, langNames, langs } from '@uiw/codemirror-extensions-langs';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import CodeMirror from '@uiw/react-codemirror';
 import clsx from 'clsx';

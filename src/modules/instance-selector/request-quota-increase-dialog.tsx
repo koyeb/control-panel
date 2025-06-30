@@ -1,7 +1,7 @@
 import { CatalogInstance } from 'src/api/model';
 import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
-import { useTallyLink, tallyForms } from 'src/hooks/tally';
+import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('components.instanceSelector.actions.requestQuotaIncreaseDialog');

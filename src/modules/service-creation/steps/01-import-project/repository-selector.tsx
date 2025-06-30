@@ -10,7 +10,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
 import { ControlledInput } from 'src/components/controlled';
-import { IconRefreshCcw, IconLock, IconGithub } from 'src/components/icons';
+import { IconGithub, IconLock, IconRefreshCcw } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';

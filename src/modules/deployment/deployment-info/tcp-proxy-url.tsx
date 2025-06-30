@@ -6,7 +6,7 @@ import { CopyIconButton } from 'src/components/copy-icon-button';
 import { IconArrowRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
 import { TextSkeleton } from 'src/components/skeleton';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 const T = createTranslate('modules.deployment.deploymentInfo');

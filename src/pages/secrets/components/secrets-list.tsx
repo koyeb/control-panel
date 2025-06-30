@@ -19,7 +19,7 @@ import { Dialog } from 'src/components/dialog';
 import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 import { DeleteSecretDialog } from './delete-secret-dialog';
 import { EditSecretDialog } from './edit-secret-dialog';

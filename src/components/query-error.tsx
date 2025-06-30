@@ -1,7 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { isApiValidationError, isApiError } from 'src/api/api-errors';
+import { isApiError, isApiValidationError } from 'src/api/api-errors';
 import { Translate } from 'src/intl/translate';
 
 import { Loading } from './loading';

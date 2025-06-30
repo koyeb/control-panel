@@ -4,7 +4,7 @@ import { useInstance } from 'src/api/hooks/catalog';
 import { ServiceType } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
 import { ControlledSelectBox } from 'src/components/controlled';
-import { IconSettings, IconGlobe } from 'src/components/icons';
+import { IconGlobe, IconSettings } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

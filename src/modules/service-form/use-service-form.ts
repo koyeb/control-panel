@@ -1,6 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
-import { FieldPath, Resolver, useForm, UseFormReturn, useWatch } from 'react-hook-form';
+import { FieldPath, Resolver, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';

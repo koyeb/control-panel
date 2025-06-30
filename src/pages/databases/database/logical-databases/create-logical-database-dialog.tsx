@@ -11,7 +11,7 @@ import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { getName } from 'src/utils/object';
 
 const T = createTranslate('pages.database.logicalDatabases.createDialog');

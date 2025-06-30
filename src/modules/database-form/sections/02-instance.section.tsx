@@ -1,6 +1,6 @@
 import { useWatch } from 'react-hook-form';
 
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 import { DatabaseInstanceSelector } from '../components/database-instance-selector';

@@ -12,7 +12,7 @@ import { ControlledInput } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { upperCase } from 'src/utils/strings';
 
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from '../dialog';

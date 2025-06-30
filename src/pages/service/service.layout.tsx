@@ -16,7 +16,7 @@ import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useNavigate, usePathname, useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { PaletteItem, useCommandPaletteContext } from 'src/modules/command-palette/command-palette.provider';
 import { inArray } from 'src/utils/arrays';
 

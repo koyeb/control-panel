@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 export function useSet<T>(initial?: Iterable<T>) {
   const [set, setSet] = useState(new Set(initial));

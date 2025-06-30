@@ -17,7 +17,7 @@ import { IconEllipsis } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { isSlug } from 'src/utils/strings';

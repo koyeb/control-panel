@@ -4,7 +4,7 @@ import { VolumeSnapshot } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 import { VolumeForm } from './volume-form';
 

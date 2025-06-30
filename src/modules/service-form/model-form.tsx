@@ -1,7 +1,7 @@
 import { Alert, Button } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
-import { useController, useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useController, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import {
@@ -30,7 +30,7 @@ import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { inArray } from 'src/utils/arrays';
 import { assert, defined } from 'src/utils/assert';
@@ -42,7 +42,7 @@ import { useInstanceSelector } from '../instance-selector/instance-selector-stat
 
 import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
-import { computeEstimatedCost, ServiceCost } from './helpers/estimated-cost';
+import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';

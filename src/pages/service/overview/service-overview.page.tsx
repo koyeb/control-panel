@@ -15,7 +15,7 @@ import { assert } from 'src/utils/assert';
 
 import { DeploymentHeader } from './components/deployment-header';
 import { DeploymentsList } from './components/deployments-list';
-import { useServiceOverview, type ServiceOverview } from './service-overview';
+import { type ServiceOverview, useServiceOverview } from './service-overview';
 
 const T = createTranslate('pages.service.overview');
 

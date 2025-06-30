@@ -1,7 +1,7 @@
 import { Button, InputEnd, InputStart } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useOrganization } from 'src/api/hooks/session';
@@ -13,7 +13,7 @@ import { TextSkeleton } from 'src/components/skeleton';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { FormattedPrice } from 'src/intl/formatted';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.billingAlerts');
 

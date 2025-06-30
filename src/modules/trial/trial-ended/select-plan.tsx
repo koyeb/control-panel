@@ -1,7 +1,7 @@
 import { DialogFooter, DialogHeader } from '@koyeb/design-system';
 
 import { ExternalLink, Link } from 'src/components/link';
-import { useTallyLink, tallyForms } from 'src/hooks/tally';
+import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
 import { PlanItem } from './plan-item';

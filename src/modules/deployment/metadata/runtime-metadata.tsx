@@ -6,7 +6,7 @@ import { DeploymentDefinition, EnvironmentVariable, type Scaling } from 'src/api
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentInfo');

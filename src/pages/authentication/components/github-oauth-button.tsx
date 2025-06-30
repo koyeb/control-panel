@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useApiMutationFn } from 'src/api/use-api';
 import { IconGithub } from 'src/components/icons';
 import { useSearchParam } from 'src/hooks/router';
-import { assert, AssertionError } from 'src/utils/assert';
+import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 import { AuthButton } from './auth-button';

@@ -2,7 +2,7 @@ import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
-import { Controller, useForm, UseFormReturn } from 'react-hook-form';
+import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 
 import { useRegions } from 'src/api/hooks/catalog';
 import { useRegionalDeployments } from 'src/api/hooks/service';
@@ -17,8 +17,8 @@ import {
   LogLineContent,
   LogLineDate,
   LogLineInstanceId,
-  LogLines,
   LogLineStream,
+  LogLines,
   LogOptions,
   LogsFooter,
 } from 'src/components/logs/logs';
@@ -29,7 +29,7 @@ import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { LogsApi, LogsFilters, LogsPeriod } from 'src/hooks/logs';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';

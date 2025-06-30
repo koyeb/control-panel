@@ -1,7 +1,7 @@
 import {
-  autoUpdate,
   FloatingOverlay,
   FloatingPortal,
+  autoUpdate,
   useDismiss,
   useFloating,
   useInteractions,

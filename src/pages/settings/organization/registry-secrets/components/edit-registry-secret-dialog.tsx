@@ -3,7 +3,7 @@ import { Button } from '@koyeb/design-system';
 import { RegistrySecret } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
 const T = createTranslate('pages.organizationSettings.registrySecrets.editDialog');

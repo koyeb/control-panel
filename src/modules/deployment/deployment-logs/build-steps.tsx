@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { ComputeDeployment, DeploymentBuildStep } from 'src/api/model';
 import { useNow } from 'src/hooks/timers';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 import { buildStatusMap } from './deployment-status-icons';
 

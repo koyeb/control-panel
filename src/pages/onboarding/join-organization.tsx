@@ -19,7 +19,7 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useMount } from 'src/hooks/lifecycle';
 import { useHistoryState, useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 import { slugify } from 'src/utils/strings';
 

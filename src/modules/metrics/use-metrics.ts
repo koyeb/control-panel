@@ -1,7 +1,7 @@
 import { useQueries } from '@tanstack/react-query';
 import { Duration, sub } from 'date-fns';
 
-import { api, ApiEndpointResult } from 'src/api/api';
+import { ApiEndpointResult, api } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
 import { useToken } from 'src/application/token';
 import { identity } from 'src/utils/generic';

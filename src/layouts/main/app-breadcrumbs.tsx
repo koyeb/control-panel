@@ -12,7 +12,7 @@ import { Link } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { usePathname } from 'src/hooks/router';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.breadcrumbs');
 

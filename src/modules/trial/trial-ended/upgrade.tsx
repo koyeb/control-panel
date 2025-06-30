@@ -2,7 +2,7 @@ import { Button, DialogFooter, DialogHeader } from '@koyeb/design-system';
 
 import { notify } from 'src/application/notify';
 import { PaymentForm } from 'src/components/payment-form';
-import { createTranslate, Translate, TranslateEnum } from 'src/intl/translate';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 
 import { PlanItem } from './plan-item';
 

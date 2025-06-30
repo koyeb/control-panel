@@ -9,7 +9,7 @@ import { formatBytes } from 'src/application/memory';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 

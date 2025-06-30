@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useEffect } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useSecrets } from 'src/api/hooks/secret';
@@ -11,7 +11,7 @@ import { Dialog } from 'src/components/dialog';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
 import { handleSubmit } from 'src/hooks/form';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
 
 const T = createTranslate('modules.serviceCreation.importProject.docker');

@@ -15,7 +15,7 @@ import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useRouteParam } from 'src/hooks/router';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
 

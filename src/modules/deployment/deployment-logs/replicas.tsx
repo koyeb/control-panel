@@ -1,7 +1,7 @@
 import { HelpTooltip, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 import { FormattedDate } from 'react-intl';
 
 import type { Api } from 'src/api/api-types';
@@ -18,7 +18,7 @@ import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { InstanceStatusBadge } from 'src/components/status-badges';
-import { createTranslate, TranslateStatus } from 'src/intl/translate';
+import { TranslateStatus, createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';

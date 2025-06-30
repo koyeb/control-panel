@@ -12,7 +12,7 @@ import { useToken } from 'src/application/token';
 import { ControlledTextArea } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { dotenvParse } from 'src/utils/dotenv';
 import { hasProperty } from 'src/utils/object';
 

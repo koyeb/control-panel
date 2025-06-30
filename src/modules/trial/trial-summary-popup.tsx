@@ -5,7 +5,7 @@ import { useOrganization } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { FormattedPrice } from 'src/intl/formatted';
-import { createTranslate, TranslateEnum } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 
 import { useTrial } from './use-trial';

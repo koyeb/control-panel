@@ -1,7 +1,7 @@
 import { Button } from '@koyeb/design-system';
 
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
 const T = createTranslate('modules.secrets.registrySecretForm');

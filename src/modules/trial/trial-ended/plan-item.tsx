@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { IconCheck } from 'src/components/icons';
 import { PlanIcon } from 'src/components/plan-icon';
 import { FormattedPrice } from 'src/intl/formatted';
-import { createTranslate, TranslateEnum } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
 const T = createTranslate('modules.trial.ended.planItem');

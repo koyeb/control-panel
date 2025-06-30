@@ -13,7 +13,7 @@ import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/compo
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.volumeSnapshots.updateSnapshot');
 

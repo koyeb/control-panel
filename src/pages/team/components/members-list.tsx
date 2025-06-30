@@ -19,7 +19,7 @@ import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
 import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 const T = createTranslate('pages.team.membersList');

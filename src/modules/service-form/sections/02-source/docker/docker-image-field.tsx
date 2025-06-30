@@ -8,8 +8,8 @@ import { useFormValues } from 'src/hooks/form';
 import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate } from 'src/intl/translate';
 
-import { ServiceForm } from '../../../service-form.types';
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
+import { ServiceForm } from '../../../service-form.types';
 
 const T = createTranslate('modules.serviceForm.source.docker');
 

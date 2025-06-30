@@ -9,7 +9,7 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.userSettings.general.email');
 

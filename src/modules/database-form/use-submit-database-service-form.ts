@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 
-import { api, ApiEndpointParams } from 'src/api/api';
+import { ApiEndpointParams, api } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';

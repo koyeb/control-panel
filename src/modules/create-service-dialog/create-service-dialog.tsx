@@ -10,8 +10,8 @@ import {
   IconCodeSnippet,
   IconCornerDownLeft,
   IconDatabase,
-  IconGlobe,
   IconGithub,
+  IconGlobe,
   IconSearch,
   IconSettings,
 } from 'src/components/icons';

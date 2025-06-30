@@ -1,8 +1,8 @@
-import { useWatch, useFormContext, useFormState } from 'react-hook-form';
+import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 
 import { BaseServiceFormSection } from 'src/components/base-service-form-section';
 
-import { type DatabaseServiceFormSection, DatabaseServiceForm } from '../database-service-form.types';
+import { DatabaseServiceForm, type DatabaseServiceFormSection } from '../database-service-form.types';
 
 type DatabaseServiceFormSectionProps = {
   section: DatabaseServiceFormSection;

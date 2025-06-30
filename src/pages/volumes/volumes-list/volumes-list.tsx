@@ -17,7 +17,7 @@ import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 import { CreateSnapshotDialog } from './create-snapshot-dialog';
 import { DeleteVolumeDialog } from './delete-volume-dialog';

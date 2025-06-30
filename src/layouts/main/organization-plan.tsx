@@ -10,7 +10,7 @@ import { LinkButton } from 'src/components/link';
 import { PlanIcon } from 'src/components/plan-icon';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
-import { createTranslate, TranslateEnum } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { TrialSummaryPopup } from 'src/modules/trial/trial-summary-popup';
 import { useTrial } from 'src/modules/trial/use-trial';
 

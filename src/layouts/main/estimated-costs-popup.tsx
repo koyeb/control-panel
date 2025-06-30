@@ -1,6 +1,6 @@
 import clsx from 'clsx';
-import { Fragment } from 'react/jsx-runtime';
 import { FormattedNumber } from 'react-intl';
+import { Fragment } from 'react/jsx-runtime';
 
 import { useNextInvoiceQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
@@ -9,7 +9,7 @@ import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { FormattedPrice } from 'src/intl/formatted';
-import { createTranslate, TranslateEnum } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.organizationPlan.estimatedCost');
 

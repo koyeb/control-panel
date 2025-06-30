@@ -1,5 +1,5 @@
 import { identity } from 'lodash-es';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useRegions } from 'src/api/hooks/catalog';
 import { useDeploymentScalingQuery } from 'src/api/hooks/service';
@@ -8,7 +8,7 @@ import { ControlledSelect } from 'src/components/controlled';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
-import { createTranslate, TranslateStatus } from 'src/intl/translate';
+import { TranslateStatus, createTranslate } from 'src/intl/translate';
 import { getId } from 'src/utils/object';
 
 import { ReplicaList } from './replica-list';

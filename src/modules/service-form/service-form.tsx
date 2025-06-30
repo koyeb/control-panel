@@ -33,7 +33,7 @@ import { ScalingSection } from './sections/06-scaling/scaling.section';
 import { VolumesSection } from './sections/07-volumes/volumes.section';
 import { PortsSection } from './sections/08-ports/ports.section';
 import { HealthChecksSection } from './sections/09-health-checks/health-checks.section';
-import { ServiceFormSection, type ServiceForm } from './service-form.types';
+import { type ServiceForm, ServiceFormSection } from './service-form.types';
 import { useServiceForm } from './use-service-form';
 
 type ServiceFormProps = {

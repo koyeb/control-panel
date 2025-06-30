@@ -11,7 +11,7 @@ import { wait } from 'src/utils/promises';
 import { File, ServiceForm } from '../service-form.types';
 
 import { serviceFormToDeploymentDefinition } from './service-form-to-deployment';
-import { mapServiceVariables, ServiceVariables } from './service-variables';
+import { ServiceVariables, mapServiceVariables } from './service-variables';
 
 const T = createTranslate('modules.serviceForm.errors');
 

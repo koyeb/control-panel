@@ -22,7 +22,7 @@ import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate, Translate, translateStatus, TranslateStatus } from 'src/intl/translate';
+import { Translate, TranslateStatus, createTranslate, translateStatus } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
 

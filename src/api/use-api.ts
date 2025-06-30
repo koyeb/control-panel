@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 
 import { useToken } from 'src/application/token';
 
-import { api, ApiEndpointParams, ApiEndpointResult } from './api';
+import { ApiEndpointParams, ApiEndpointResult, api } from './api';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyFunction = (...params: any[]) => any;

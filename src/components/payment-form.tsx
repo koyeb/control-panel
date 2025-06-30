@@ -13,7 +13,7 @@ import { StripeProvider } from 'src/application/stripe';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { usePaymentMethodMutation } from 'src/hooks/stripe';
 import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 
 import { ControlledAddressField } from './address-field/address-field';
 import { ControlledInput } from './controlled';

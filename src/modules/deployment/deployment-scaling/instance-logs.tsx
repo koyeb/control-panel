@@ -2,7 +2,7 @@ import { IconButton, Menu, MenuItem } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { max, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useApp, useService } from 'src/api/hooks/service';
 import { Instance, LogLine } from 'src/api/model';
@@ -10,12 +10,12 @@ import { isInstanceRunning } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
 import { IconFullscreen } from 'src/components/icons';
-import { getInitialLogOptions, LogOptions } from 'src/components/logs/log-options';
+import { LogOptions, getInitialLogOptions } from 'src/components/logs/log-options';
 import { LogLines, LogsFooter } from 'src/components/logs/logs';
 import { QueryError } from 'src/components/query-error';
 import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useRouteParam } from 'src/hooks/router';
-import { createTranslate, Translate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
 import { NoRuntimeLogs, RuntimeLogLine } from '../deployment-logs/runtime-logs';

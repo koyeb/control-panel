@@ -1,4 +1,4 @@
-import { Button, Floating, ButtonMenuItem, Menu, Tooltip } from '@koyeb/design-system';
+import { Button, ButtonMenuItem, Floating, Menu, Tooltip } from '@koyeb/design-system';
 import { useIsFetching } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useFormContext, useFormState } from 'react-hook-form';

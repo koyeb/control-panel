@@ -3,7 +3,7 @@ import { SectionHeader } from 'src/components/section-header';
 import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
-import { ChangePlanEnterpriseButton, ChangePlanButton } from './change-plan-button';
+import { ChangePlanButton, ChangePlanEnterpriseButton } from './change-plan-button';
 import { PlanCard } from './plan-card';
 
 type Plan = 'starter' | 'pro' | 'scale' | 'enterprise';
