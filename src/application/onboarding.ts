@@ -24,7 +24,7 @@ function getOnboardingStep(
     return 'joinOrganization';
   }
 
-  if (!organization.hasSignupQualification) {
+  if (!organization.hasSignupQualification && organization.plan !== 'partner_csp_unit') {
     return 'qualification';
   }
 
