@@ -1,7 +1,12 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
 
 import { App, ComputeDeployment, Service } from 'src/api/model';
-import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
+import {
+  ServiceUrl,
+  getServiceUrls,
+  isDeploymentRunning,
+  isUpcomingDeployment,
+} from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { IconArrowRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
@@ -19,6 +24,10 @@ type TcpProxyUrlProps = {
 
 export function TcpProxyUrl({ app, service, deployment }: TcpProxyUrlProps) {
   const urls = getServiceUrls(app, service, deployment).filter((url) => url.tcpProxyUrl !== undefined);
+
+  if (!isUpcomingDeployment(deployment) && !isDeploymentRunning(deployment)) {
+    return null;
+  }
 
   if (!deployment.definition.ports.some((port) => port.tcpProxy)) {
     return null;
