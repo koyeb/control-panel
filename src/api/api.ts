@@ -190,6 +190,7 @@ export type ApiEndpointResult<E extends Endpoint> = ApiEndpoints[E]['result'];
 
 type CommonApiRequestParams = {
   token?: string | null;
+  signal?: AbortSignal;
   delay?: number;
 };
 
@@ -243,6 +244,7 @@ function endpoint<Method extends keyof Api.paths[Path], Path extends keyof Api.p
     const headers = new Headers();
 
     const init: RequestInit = {
+      signal: params.signal,
       method: upperCase(method as string),
       headers,
     };

@@ -1,4 +1,8 @@
-import { InvalidateQueryFilters, QueryKey, useQueryClient } from '@tanstack/react-query';
+import {
+  InvalidateQueryFilters,
+  UseQueryOptions,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 import { useAuth } from 'src/application/authentication';
@@ -14,10 +18,10 @@ export function getApiQueryKey<E extends Endpoint>(endpoint: E, params: ApiEndpo
   return [endpoint, params];
 }
 
-type UseApiQueryResult<E extends Endpoint> = {
-  queryKey: QueryKey;
-  queryFn: () => Promise<ApiEndpointResult<E>>;
-};
+type UseApiQueryResult<E extends Endpoint> = Pick<
+  UseQueryOptions<ApiEndpointResult<E>>,
+  'queryKey' | 'queryFn'
+>;
 
 export function useApiQueryFn<E extends Endpoint>(
   endpoint: E,
@@ -28,11 +32,12 @@ export function useApiQueryFn<E extends Endpoint>(
   return {
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: getApiQueryKey(endpoint, params),
-    queryFn() {
+    queryFn({ signal }) {
       const fn = api[endpoint] as AnyFunction;
 
       return fn({
         token,
+        signal,
         ...params,
       }) as Promise<ApiEndpointResult<E>>;
     },
