@@ -14,7 +14,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('pages.team.inviteMember');
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.string().email().trim().toLowerCase(),
 });
 
 export function InviteMemberForm() {
