@@ -5,7 +5,7 @@ import CodeMirror from '@uiw/react-codemirror';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
+import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { identity } from 'src/utils/generic';
 
 export type CodeEditorLanguage = LanguageName | 'plaintext';
@@ -25,7 +25,7 @@ export function CodeEditor({ language, className, ...props }: CodeEditorProps) {
     <CodeMirror
       {...props}
       height="200px"
-      theme={theme === ThemeMode.light ? githubLight : githubDark}
+      theme={theme === 'light' ? githubLight : githubDark}
       extensions={language && language !== 'plaintext' ? [langs[language]()] : []}
       className={clsx('overflow-hidden rounded border', className)}
       minHeight="100%"

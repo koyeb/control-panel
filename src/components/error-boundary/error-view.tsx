@@ -1,6 +1,6 @@
 import { routes } from 'src/application/routes';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
-import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
+import { useForceThemeMode } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 
 import { ExternalLink, Link } from '../link';
@@ -16,7 +16,7 @@ type ErrorViewProps = {
 };
 
 export function ErrorView({ httpStatus, message, code, expected, onReset }: ErrorViewProps) {
-  useForceThemeMode(ThemeMode.dark);
+  useForceThemeMode('dark');
 
   return (
     <div

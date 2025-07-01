@@ -12,7 +12,7 @@ import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { usePaymentMethodMutation } from 'src/hooks/stripe';
-import { ThemeMode, useThemeModeOrPreferred } from 'src/hooks/theme';
+import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 import { ControlledAddressField } from './address-field/address-field';
@@ -179,7 +179,7 @@ export function PaymentFormFields() {
   const stripe = useStripe();
 
   const theme = useThemeModeOrPreferred();
-  const style = theme === ThemeMode.light ? stylesLight : stylesDark;
+  const style = theme === 'light' ? stylesLight : stylesDark;
 
   if (stripe === null) {
     return <T id="loadingStripe" />;

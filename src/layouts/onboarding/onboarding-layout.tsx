@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useApiQueryFn } from 'src/api/use-api';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useSearchParams } from 'src/hooks/router';
-import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
+import { useForceThemeMode } from 'src/hooks/theme';
 
 import { OrganizationSwitcher } from '../organization-switcher';
 import { SecondarySettings } from '../secondary/settings';
@@ -16,7 +16,7 @@ type OnboardingLayoutProps = {
 export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) {
   const params = useSearchParams();
 
-  useForceThemeMode(ThemeMode.light);
+  useForceThemeMode('light');
 
   if (params.has('settings')) {
     return <SecondarySettings />;

@@ -12,7 +12,7 @@ import { routes } from 'src/application/routes';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
-import { ThemeMode, useThemeMode } from 'src/hooks/theme';
+import { ThemeMode, useSetThemeMode } from 'src/hooks/theme';
 import { defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { capitalize } from 'src/utils/strings';
@@ -470,7 +470,7 @@ function useRegisterAccountCommands() {
 function useRegisterMiscCommands() {
   const { defaultItems, setItems } = useCommandPaletteContext();
   const organization = useOrganizationUnsafe();
-  const [, setThemeMode] = useThemeMode();
+  const setThemeMode = useSetThemeMode();
 
   useMount(() => {
     defaultItems.add({
@@ -480,7 +480,7 @@ function useRegisterMiscCommands() {
       weight: 1,
       keepOpen: true,
       execute: () => {
-        const modes: ThemeMode[] = [ThemeMode.light, ThemeMode.dark, ThemeMode.system];
+        const modes: ThemeMode[] = ['light', 'dark', 'system'];
 
         setItems(
           modes.map((mode) => ({

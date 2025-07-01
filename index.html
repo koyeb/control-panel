@@ -41,22 +41,28 @@
   </head>
   <body>
     <div id="root"></div>
+
     <script type="module" src="/src/main.tsx"></script>
+
     <script defer>
-      document.documentElement.classList.add(getTheme());
+      const theme = getTheme();
+      const themeStrict = getThemeStrict(theme);
+
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.classList.add(themeStrict);
 
       function getTheme() {
         const theme = localStorage.getItem('koyeb.theme');
 
-        if (theme === 'dark' || theme === 'light') {
-          return theme;
+        return ['dark', 'light', 'system'].includes(theme) ? theme : 'light';
+      }
+
+      function getThemeStrict(theme) {
+        if (theme === 'system') {
+          return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
 
-        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-          return 'dark';
-        }
-
-        return 'light';
+        return theme;
       }
     </script>
   </body>

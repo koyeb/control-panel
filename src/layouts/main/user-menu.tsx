@@ -15,7 +15,7 @@ import {
 } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
-import { ThemeMode, useThemeMode } from 'src/hooks/theme';
+import { useSetThemeMode, useThemeMode } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.userMenu');
@@ -73,7 +73,8 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
 
 function ThemeMenuItem() {
   const [open, setOpen] = useState(false);
-  const [themeMode, setThemeMode] = useThemeMode();
+  const themeMode = useThemeMode();
+  const setThemeMode = useSetThemeMode();
 
   return (
     <>
@@ -85,22 +86,22 @@ function ThemeMenuItem() {
 
       <Collapse open={open}>
         <div className="col items-stretch border-y">
-          <ButtonMenuItem className="pl-4" onClick={() => setThemeMode(ThemeMode.light)}>
+          <ButtonMenuItem className="pl-4" onClick={() => setThemeMode('light')}>
             <IconSunDim className="icon" />
             <T id="light" />
-            {themeMode === ThemeMode.light && <IconCheck className="ms-auto icon" />}
+            {themeMode === 'light' && <IconCheck className="ms-auto icon" />}
           </ButtonMenuItem>
 
-          <ButtonMenuItem className="pl-4" onClick={() => setThemeMode(ThemeMode.dark)}>
+          <ButtonMenuItem className="pl-4" onClick={() => setThemeMode('dark')}>
             <IconMoon className="icon" />
             <T id="dark" />
-            {themeMode === ThemeMode.dark && <IconCheck className="ms-auto icon" />}
+            {themeMode === 'dark' && <IconCheck className="ms-auto icon" />}
           </ButtonMenuItem>
 
-          <ButtonMenuItem className="pl-4" onClick={() => setThemeMode(ThemeMode.system)}>
+          <ButtonMenuItem className="pl-4" onClick={() => setThemeMode('system')}>
             <IconLaptop className="icon" />
             <T id="system" />
-            {themeMode === ThemeMode.system && <IconCheck className="ms-auto icon" />}
+            {themeMode === 'system' && <IconCheck className="ms-auto icon" />}
           </ButtonMenuItem>
         </div>
       </Collapse>

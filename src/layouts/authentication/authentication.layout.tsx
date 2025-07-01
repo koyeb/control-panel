@@ -1,8 +1,9 @@
-import { lazy, useEffect } from 'react';
+import { lazy } from 'react';
 
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
+import { useForceThemeMode } from 'src/hooks/theme';
 
 type AuthenticationLayoutProps = {
   slides?: boolean;
@@ -12,7 +13,7 @@ type AuthenticationLayoutProps = {
 const Slides = lazy(() => import('./slides'));
 
 export function AuthenticationLayout({ slides = true, children }: AuthenticationLayoutProps) {
-  useForceLightMode();
+  useForceThemeMode('light');
 
   return (
     <div className="row min-h-screen bg-muted">
@@ -31,15 +32,4 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
       )}
     </div>
   );
-}
-
-function useForceLightMode() {
-  useEffect(() => {
-    const html = document.documentElement;
-
-    if (html.classList.contains('dark')) {
-      html.classList.remove('dark');
-      return () => html.classList.add('dark');
-    }
-  }, []);
 }

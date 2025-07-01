@@ -1,89 +1,90 @@
-import { usePrefersDarkMode } from '@koyeb/design-system';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { isEnumValue } from 'src/utils/enums';
+import { inArray } from 'src/utils/arrays';
 
-import { useLocalStorage } from './storage';
+import { useMediaQuery } from './media-query';
+import { useStorage } from './storage.new';
 
-export enum ThemeMode {
-  light = 'light',
-  dark = 'dark',
-  system = 'system',
+export type ThemeMode = 'light' | 'dark' | 'system';
+type ThemeModeStrict = Exclude<ThemeMode, 'system'>;
+
+const isThemeMode = (value: unknown): value is ThemeMode => {
+  return inArray(value, ['light', 'dark', 'system']);
+};
+
+function getThemeMode(): ThemeMode {
+  const theme = document.documentElement.getAttribute('data-theme');
+
+  return isThemeMode(theme) ? theme : 'system';
 }
 
-const isThemeMode = isEnumValue(ThemeMode);
+function setThemeMode(theme: ThemeMode): void {
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const classList = document.documentElement.classList;
 
-function parseThemeMode(value: string) {
-  return isThemeMode(value) ? value : ThemeMode.light;
+  classList.remove('light');
+  classList.remove('dark');
+  classList.add(theme !== 'system' ? theme : prefersDark ? 'dark' : 'light');
+
+  document.documentElement.setAttribute('data-theme', theme);
 }
-
-type ThemeModeStrict = Exclude<ThemeMode, ThemeMode.system>;
 
 export function useThemeMode() {
-  const systemTheme = useSystemThemeMode();
-
-  const [storedTheme, setStoredTheme] = useLocalStorage('koyeb.theme', {
-    parse: parseThemeMode,
-    stringify: String,
-  });
-
-  const setTheme = useCallback(
-    (theme: ThemeMode) => {
-      const themeStrict = theme === ThemeMode.system ? systemTheme : theme;
-
-      setStoredTheme(theme);
-      setThemeMode(themeStrict);
-    },
-    [setStoredTheme, systemTheme],
-  );
+  const [theme, setTheme] = useState(getThemeMode());
 
   useEffect(() => {
-    if (!isThemeMode(storedTheme)) {
-      setTheme(ThemeMode.system);
-    }
-  }, [storedTheme, setTheme]);
+    const observer = new MutationObserver(() => {
+      setTheme(getThemeMode());
+    });
 
-  return [storedTheme ?? ThemeMode.system, setTheme] as const;
-}
+    observer.observe(document.documentElement, { attributes: true });
 
-function useSystemThemeMode(): ThemeModeStrict {
-  return usePrefersDarkMode() ? ThemeMode.dark : ThemeMode.light;
-}
-
-export function useThemeModeOrPreferred(): ThemeModeStrict {
-  const [theme] = useThemeMode();
-  const systemTheme = useSystemThemeMode();
-
-  if (theme === ThemeMode.system) {
-    return systemTheme;
-  }
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return theme;
 }
 
-export function useForceThemeMode(mode: ThemeModeStrict) {
-  useEffect(() => {
-    const currentTheme = getThemeMode();
+export function useThemeModeOrPreferred(): ThemeModeStrict {
+  const themeMode = useThemeMode();
+  const prefersDark = useMediaQuery('(prefers-color-scheme: dark)');
 
-    setThemeMode(mode);
-    document.documentElement.setAttribute('data-theme', mode);
-
-    return () => {
-      document.documentElement.removeAttribute('data-theme');
-      setThemeMode(currentTheme);
-    };
-  }, [mode]);
-}
-
-function getThemeMode(): ThemeModeStrict {
-  return document.documentElement.classList.contains('dark') ? ThemeMode.dark : ThemeMode.light;
-}
-
-function setThemeMode(theme: ThemeModeStrict) {
-  if (document.documentElement.hasAttribute('data-theme')) {
-    return;
+  if (themeMode === 'system') {
+    return prefersDark ? 'dark' : 'light';
   }
 
-  document.documentElement.classList.remove('dark', 'light');
-  document.documentElement.classList.add(theme);
+  return themeMode;
+}
+
+export function useSetThemeMode() {
+  const storedTheme = useStorage('koyeb.theme', {
+    parse: (value) => (isThemeMode(value) ? value : 'system'),
+    stringify: String,
+  });
+
+  return useCallback(
+    (theme: ThemeMode) => {
+      setThemeMode(theme);
+      storedTheme.write(theme);
+    },
+    [storedTheme],
+  );
+}
+
+export function useForceThemeMode(theme: ThemeModeStrict) {
+  useEffect(() => {
+    const initialValue = getThemeMode();
+
+    if (theme === initialValue) {
+      return;
+    }
+
+    setThemeMode(theme);
+
+    return () => {
+      setThemeMode(initialValue);
+    };
+  }, [theme]);
 }

@@ -2,7 +2,7 @@ import { isApiError } from 'src/api/api-errors';
 import { useUserQuery } from 'src/api/hooks/session';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useSearchParams } from 'src/hooks/router';
-import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
+import { useForceThemeMode } from 'src/hooks/theme';
 
 import { SecondarySettings } from '../secondary/settings';
 import { UserMenu } from '../secondary/user-menu';
@@ -14,7 +14,7 @@ export function FullScreenLayout({ children }: { children: React.ReactNode }) {
   const accountLocked = userQuery.isError && isApiError(userQuery.error) && userQuery.error.status === 403;
   const isAuthenticated = userQuery.isSuccess || accountLocked;
 
-  useForceThemeMode(ThemeMode.light);
+  useForceThemeMode('light');
 
   if (params.has('settings')) {
     return <SecondarySettings />;
