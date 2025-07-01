@@ -156,7 +156,7 @@ function files(files: Array<File>): Array<Api.DeploymentConfigFile> {
     (file): Api.DeploymentConfigFile => ({
       path: file.mountPath,
       content: file.content,
-      permissions: file.permissions || '0777',
+      permissions: file.permissions,
     }),
   );
 }

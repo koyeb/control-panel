@@ -32,7 +32,7 @@ export function Files() {
           <Button
             variant="outline"
             color="gray"
-            onClick={() => append({ mountPath: '', permissions: '', content: '' })}
+            onClick={() => append({ mountPath: '', permissions: '0644', content: '' })}
             className="self-center"
           >
             <IconPlus className="size-4" />
@@ -97,7 +97,7 @@ export function Files() {
         <Button
           variant="ghost"
           color="gray"
-          onClick={() => append({ mountPath: '', permissions: '', content: '' })}
+          onClick={() => append({ mountPath: '', permissions: '0644', content: '' })}
           className={clsx({ hidden: fields.length === 0 })}
         >
           <IconPlus className="size-4" />
