@@ -10,12 +10,8 @@ type AnyFunction = (...params: any[]) => any;
 
 type Endpoint = keyof typeof api;
 
-export function getApiQueryKey<E extends Endpoint>(
-  endpoint: E,
-  params: ApiEndpointParams<E>,
-  token: string | null,
-) {
-  return [endpoint, params, token];
+export function getApiQueryKey<E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E>) {
+  return [endpoint, params];
 }
 
 type UseApiQueryResult<E extends Endpoint> = {
@@ -30,7 +26,8 @@ export function useApiQueryFn<E extends Endpoint>(
   const { token } = useAuth();
 
   return {
-    queryKey: getApiQueryKey(endpoint, params, token),
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
+    queryKey: getApiQueryKey(endpoint, params),
     queryFn() {
       const fn = api[endpoint] as AnyFunction;
 
@@ -81,7 +78,6 @@ export function useApiMutationFn<E extends Endpoint, Variables>(
 
 export function useInvalidateApiQuery() {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
 
   return useCallback(
     <E extends Endpoint>(
@@ -90,11 +86,11 @@ export function useInvalidateApiQuery() {
       filters: InvalidateQueryFilters = {},
     ) => {
       return queryClient.invalidateQueries({
-        queryKey: getApiQueryKey(endpoint, params, token),
+        queryKey: getApiQueryKey(endpoint, params),
         ...filters,
       });
     },
-    [queryClient, token],
+    [queryClient],
   );
 }
 
@@ -105,7 +101,8 @@ export function usePrefetchApiQuery() {
   return useCallback(
     <E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) => {
       return queryClient.prefetchQuery({
-        queryKey: getApiQueryKey(endpoint, params, token),
+        // eslint-disable-next-line @tanstack/query/exhaustive-deps
+        queryKey: getApiQueryKey(endpoint, params),
         queryFn() {
           const fn = api[endpoint] as AnyFunction;
 
