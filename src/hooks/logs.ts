@@ -211,7 +211,7 @@ type LogStreamListeners = {
   onLogLine: (line: Omit<LogLine, 'html'>) => void;
 };
 
-function tailLogs(token: string | undefined, filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
+function tailLogs(token: string | null, filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
   const stream = apiStreams.logs({
     token,
     query: {

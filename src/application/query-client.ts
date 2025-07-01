@@ -1,6 +1,4 @@
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import { Mutation, MutationCache, Query, QueryCache, QueryClient, QueryKey } from '@tanstack/react-query';
-import { persistQueryClient } from '@tanstack/react-query-persist-client';
 import { navigate } from 'wouter/use-browser-location';
 
 import { inArray } from 'src/utils/arrays';
@@ -15,9 +13,7 @@ import { routes } from './routes';
 type UnknownQuery = Query<unknown, unknown, unknown, QueryKey>;
 type UnknownMutation = Mutation<unknown, unknown, unknown, unknown>;
 
-export function createQueryClient(storage: Storage) {
-  const { version } = getConfig();
-
+export function createQueryClient() {
   const queryCache = new QueryCache({
     onSuccess: onQuerySuccess,
     onError: onQueryError,
@@ -40,15 +36,6 @@ export function createQueryClient(storage: Storage) {
     },
     queryCache,
     mutationCache,
-  });
-
-  void persistQueryClient({
-    queryClient,
-    buster: version,
-    persister: createSyncStoragePersister({
-      key: 'query-cache',
-      storage,
-    }),
   });
 
   window.queryClient = queryClient;

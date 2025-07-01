@@ -74,7 +74,7 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(token: string | undefined, appName: string): Promise<string> {
+async function getDatabaseAppId(token: string | null, appName: string): Promise<string> {
   const { apps } = await api.listApps({
     token,
     query: { name: appName },

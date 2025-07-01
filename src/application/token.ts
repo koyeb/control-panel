@@ -1,58 +1,20 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
-import { createContext, createElement, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, createElement, useContext, useEffect, useState } from 'react';
 import { usePathname } from 'wouter/use-browser-location';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { useMount } from 'src/hooks/lifecycle';
-import { useSearchParam } from 'src/hooks/router';
+import { useStorage } from 'src/hooks/storage.new';
 
-interface TokenApi {
-  read(this: void): string | undefined;
-  write(this: void, value: string | undefined): void;
-  listen(this: void, onChange: (value: string | undefined) => void): () => void;
+export function getToken() {
+  return sessionStorage.getItem('session-token') ?? localStorage.getItem('access-token');
 }
-
-function createTokenApi(storage: Storage, key: string): TokenApi {
-  return {
-    read() {
-      return storage.getItem(key) ?? undefined;
-    },
-
-    write(token: string | undefined) {
-      if (token === undefined) {
-        storage.removeItem(key);
-      } else {
-        storage.setItem(key, token);
-      }
-    },
-
-    listen(onChange: (value: string | undefined) => void) {
-      const listener = (event: StorageEvent) => {
-        if (event.key === key) {
-          onChange(event.newValue ?? undefined);
-        }
-      };
-
-      window.addEventListener('storage', listener);
-
-      return () => {
-        window.removeEventListener('storage', listener);
-      };
-    },
-  };
-}
-
-const accessTokenApi = createTokenApi(localStorage, 'access-token');
-const sessionTokenApi = createTokenApi(sessionStorage, 'session-token');
-
-export const getToken = () => sessionTokenApi.read() ?? accessTokenApi.read();
 
 type TokenContext = {
-  token: string | undefined;
-  session?: true;
-  setToken: (token: string) => void;
+  token: string | null;
+  session: boolean;
+  setToken: (token: string | null, session?: boolean) => void;
   clearToken: () => void;
 };
 
@@ -63,61 +25,53 @@ type TokenProviderProps = {
 };
 
 export function TokenProvider({ children }: TokenProviderProps) {
-  const [tokenParam, setTokenParam] = useSearchParam('session-token');
+  const opts = { parse: String, stringify: String };
+  const accessToken = useStorage('access-token', { storage: localStorage, ...opts });
+  const sessionToken = useStorage('session-token', { storage: sessionStorage, ...opts });
 
-  const accessToken = useTokenContext(accessTokenApi);
-  const sessionToken = useTokenContext(sessionTokenApi, true);
+  const [session, setSession] = useState(sessionToken.read() !== null);
+  const [token, setToken] = useState(session ? sessionToken.read() : accessToken.read());
 
-  const value = useMemo(() => {
-    if (sessionToken.token !== undefined) {
-      return sessionToken;
-    }
+  const queryClient = useQueryClient();
 
-    return accessToken;
-  }, [accessToken, sessionToken]);
+  const value: TokenContext = {
+    token,
+    session,
+    setToken(token, session) {
+      if (session && token === null) {
+        setToken(accessToken.read());
+      } else {
+        setToken(token);
+      }
 
-  useMount(() => {
-    if (tokenParam !== null) {
-      sessionToken.setToken(tokenParam.replace(/^Bearer /, ''));
-      setTokenParam(null);
-    }
-  });
+      if (session !== undefined) {
+        setSession(token !== null);
+      }
 
-  if (tokenParam !== null) {
-    return null;
-  }
+      queryClient.cancelQueries();
+      queryClient.clear();
+
+      if (session) {
+        sessionToken.write(token);
+      } else {
+        accessToken.write(token);
+      }
+    },
+    clearToken() {
+      setToken(null);
+
+      queryClient.cancelQueries();
+      queryClient.clear();
+
+      if (session) {
+        sessionToken.write(null);
+      } else {
+        accessToken.write(null);
+      }
+    },
+  };
 
   return createElement(tokenContext.Provider, { value }, children);
-}
-
-function useTokenContext({ read, write, listen }: TokenApi, session?: true) {
-  const [token, setTokenState] = useState(read);
-
-  const setToken = useCallback(
-    (token: string | undefined) => {
-      setTokenState(token);
-      write(token);
-    },
-    [write],
-  );
-
-  const clearToken = useCallback(() => {
-    setToken(undefined);
-  }, [setToken]);
-
-  useEffect(() => {
-    return listen(setTokenState);
-  }, [listen]);
-
-  return useMemo<TokenContext>(
-    () => ({
-      token,
-      session,
-      setToken,
-      clearToken,
-    }),
-    [token, session, setToken, clearToken],
-  );
 }
 
 export function useToken() {

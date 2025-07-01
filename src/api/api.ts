@@ -189,7 +189,7 @@ export type ApiEndpointParams<E extends Endpoint> = ApiEndpoints[E]['params'];
 export type ApiEndpointResult<E extends Endpoint> = ApiEndpoints[E]['result'];
 
 type CommonApiRequestParams = {
-  token?: string;
+  token?: string | null;
   delay?: number;
 };
 
@@ -247,7 +247,7 @@ function endpoint<Method extends keyof Api.paths[Path], Path extends keyof Api.p
       headers,
     };
 
-    if (params.token !== undefined && path !== '/v1/account/login') {
+    if (params.token && path !== '/v1/account/login') {
       headers.set('Authorization', `Bearer ${params.token}`);
     }
 
@@ -340,7 +340,7 @@ export type ApiStream = Pick<
 type StreamPath = Extract<keyof Api.paths, `/v1/streams/${string}`>;
 
 type StreamParams<Path extends StreamPath> = InferParams<Api.paths[Path]['get']> & {
-  token?: string;
+  token?: string | null;
 };
 
 function stream<Path extends StreamPath>(path: Path) {

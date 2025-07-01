@@ -13,7 +13,7 @@ type Endpoint = keyof typeof api;
 export function getApiQueryKey<E extends Endpoint>(
   endpoint: E,
   params: ApiEndpointParams<E>,
-  token: string | undefined,
+  token: string | null,
 ) {
   return [endpoint, params, token];
 }

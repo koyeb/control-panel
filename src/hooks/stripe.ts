@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
-import { getToken } from 'src/application/token';
+import { useToken } from 'src/application/token';
 import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
@@ -26,6 +26,7 @@ type PaymentMutationProps = {
 };
 
 export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutationProps = {}) {
+  const { token } = useToken();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -34,8 +35,8 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
       assert(stripe !== null);
       assert(elements !== null);
 
-      await submitPaymentMethod(stripe, elements);
-      await waitForPaymentMethod();
+      await submitPaymentMethod(token, stripe, elements);
+      await waitForPaymentMethod(token);
     },
     onError(error) {
       if (error instanceof StripeError) {
@@ -54,8 +55,7 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
   });
 }
 
-async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
-  const token = getToken();
+async function submitPaymentMethod(token: string | null, stripe: Stripe, elements: StripeElements) {
   const { payment_method } = await api.createPaymentAuthorization({ token });
 
   try {
@@ -78,8 +78,7 @@ async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
   }
 }
 
-async function waitForPaymentMethod() {
-  const token = getToken();
+async function waitForPaymentMethod(token: string | null) {
   let hasPaymentMethod = false;
 
   const start = new Date().getTime();

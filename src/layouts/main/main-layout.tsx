@@ -154,13 +154,15 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const { clearToken } = useToken();
+  const { setToken } = useToken();
   const navigate = useNavigate();
 
   const mutation = useMutation({
     ...useApiMutationFn('logout', {}),
-    onMutate: clearToken,
-    onSuccess: () => navigate(routes.home()),
+    onSuccess: () => {
+      setToken(null, true);
+      navigate(routes.home());
+    },
   });
 
   return (
