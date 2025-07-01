@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setSession(session ? token !== null : false);
         }
 
-        queryClient.cancelQueries();
+        void queryClient.cancelQueries();
         queryClient.clear();
 
         if (session) {

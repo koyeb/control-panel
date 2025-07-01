@@ -20,7 +20,7 @@ const defaultOptions: UseStorageOptions<any> = {
 };
 
 export function useStorage<T>(key: string, opts?: Partial<UseStorageOptions<T>>): UseStorageReturn<T> {
-  const { storage, parse, stringify } = { ...defaultOptions, ...opts };
+  const { storage, parse, stringify }: UseStorageOptions<T> = { ...defaultOptions, ...opts };
 
   return useMemo<UseStorageReturn<T>>(
     () => ({

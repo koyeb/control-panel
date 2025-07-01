@@ -46,7 +46,7 @@ export function Files() {
           <div key={file.id} className="col gap-4 rounded-md border p-4">
             <FileContentEditor index={index} />
 
-            <div className="col sm:row gap-4">
+            <div className="col gap-4 sm:row">
               <ControlledInput<ServiceForm, `files.${number}.mountPath`>
                 name={`files.${index}.mountPath`}
                 label={<T id="mountPath.label" />}

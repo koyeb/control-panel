@@ -1,8 +1,4 @@
-import {
-  InvalidateQueryFilters,
-  UseQueryOptions,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { InvalidateQueryFilters, UseQueryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 import { useAuth } from 'src/application/authentication';
