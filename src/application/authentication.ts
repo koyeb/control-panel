@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
-import { createContext, createElement, useContext, useEffect, useState } from 'react';
+import { createContext, createElement, useContext, useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'wouter/use-browser-location';
 
 import { useApiMutationFn } from 'src/api/use-api';
@@ -29,30 +29,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const queryClient = useQueryClient();
 
-  const value: AuthContext = {
-    token,
-    session,
-    setToken(token, session) {
-      if (session && token === null) {
-        setToken(accessToken.read());
-      } else {
-        setToken(token);
-      }
+  const value = useMemo<AuthContext>(
+    () => ({
+      token,
+      session,
+      setToken(token, session) {
+        if (session && token === null) {
+          setToken(accessToken.read());
+        } else {
+          setToken(token);
+        }
 
-      if (session !== undefined) {
-        setSession(token !== null);
-      }
+        if (session !== undefined) {
+          setSession(token !== null);
+        }
 
-      queryClient.cancelQueries();
-      queryClient.clear();
+        queryClient.cancelQueries();
+        queryClient.clear();
 
-      if (session) {
-        sessionToken.write(token);
-      } else {
-        accessToken.write(token);
-      }
-    },
-  };
+        if (session) {
+          sessionToken.write(token);
+        } else {
+          accessToken.write(token);
+        }
+      },
+    }),
+    [token, session, accessToken, sessionToken, queryClient],
+  );
+
+  useEffect(() => {
+    return (session ? sessionToken : accessToken).listen(value.setToken);
+  }, [session, sessionToken, accessToken, value]);
 
   return createElement(authContext.Provider, { value }, children);
 }
