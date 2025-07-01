@@ -1,4 +1,4 @@
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useAuth } from 'src/application/authentication';
 import { useNavigate } from 'src/hooks/router';
@@ -18,7 +18,6 @@ import { useApiMutationFn, useApiQueryFn } from '../use-api';
 export function useUserQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentUser'),
-    placeholderData: keepPreviousData,
     select: ({ user }) => mapUser(user!),
     throwOnError: (error) => {
       if (!isApiError(error)) {
@@ -41,7 +40,6 @@ export function useUser() {
 export function useOrganizationQuery() {
   return useQuery({
     ...useApiQueryFn('getCurrentOrganization'),
-    placeholderData: keepPreviousData,
     select: ({ organization }) => mapOrganization(organization!),
     throwOnError: (error) => {
       if (!isApiError(error)) {
