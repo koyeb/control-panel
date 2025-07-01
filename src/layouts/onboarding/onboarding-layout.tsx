@@ -1,7 +1,11 @@
+import { useQuery } from '@tanstack/react-query';
+
+import { useApiQueryFn } from 'src/api/use-api';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useSearchParams } from 'src/hooks/router';
 import { ThemeMode, useForceThemeMode } from 'src/hooks/theme';
 
+import { OrganizationSwitcher } from '../organization-switcher';
 import { SecondarySettings } from '../secondary/settings';
 
 type OnboardingLayoutProps = {
@@ -27,9 +31,16 @@ export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) 
 }
 
 function Slides({ sentence }: { sentence: React.ReactNode }) {
+  const { data: hasMultipleOrganizations } = useQuery({
+    ...useApiQueryFn('listUserOrganizations', { query: {} }),
+    select: ({ organizations }) => organizations!.length > 1,
+  });
+
   return (
-    <aside className="dark hidden w-full max-w-sm flex-col rounded-2xl bg-neutral/95 px-12 py-16 lg:flex">
+    <aside className="dark hidden w-full max-w-sm flex-col gap-8 rounded-2xl bg-neutral/95 px-12 py-16 lg:flex">
       <LogoKoyeb className="h-8 self-start" />
+
+      {hasMultipleOrganizations && <OrganizationSwitcher />}
 
       <div className="col flex-1 justify-center gap-6">
         <div className="text-base leading-relaxed text-dim">{sentence}</div>

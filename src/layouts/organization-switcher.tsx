@@ -153,7 +153,8 @@ function useOrganizationList(search: string) {
     }),
     refetchInterval: false,
     placeholderData: keepPreviousData,
-    select: ({ organizations }) => organizations!.map(mapOrganization),
+    select: ({ organizations }) =>
+      organizations!.map(mapOrganization).filter((organization) => organization.status !== 'DELETING'),
   });
 
   return data ?? [];
