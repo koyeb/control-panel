@@ -3,9 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 
 import { api } from 'src/api/api';
 import { Service } from 'src/api/model';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -23,7 +23,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   const closeDialog = Dialog.useClose();
   const navigate = useNavigate();
 
-  const { token } = useToken();
+  const { token } = useAuth();
 
   const { mutateAsync: deleteService } = useMutation({
     mutationFn: async () => {

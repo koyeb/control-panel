@@ -8,8 +8,8 @@ import { useRegions } from 'src/api/hooks/catalog';
 import { mapVolume } from 'src/api/mappers/volume';
 import { Volume, VolumeSnapshot } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FormValues, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
@@ -38,7 +38,7 @@ type VolumeFormProps = {
 };
 
 export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: VolumeFormProps) {
-  const { token } = useToken();
+  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
   const regions = useRegions().filter(hasProperty('volumesEnabled', true));
   const t = T.useTranslate();

@@ -3,12 +3,12 @@ import { useMemo } from 'react';
 
 import { api } from 'src/api/api';
 import { useSecrets } from 'src/api/hooks/secret';
-import { useToken } from 'src/application/token';
+import { useAuth } from 'src/application/authentication';
 import { hasProperty } from 'src/utils/object';
 import { wait } from 'src/utils/promises';
 
 export function useVerifyDockerImage(image: string, registrySecretName: string | undefined) {
-  const { token } = useToken();
+  const { token } = useAuth();
 
   const secrets = useSecrets('registry');
   const secretId = secrets?.find(hasProperty('name', registrySecretName))?.id;

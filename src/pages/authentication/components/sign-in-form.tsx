@@ -5,9 +5,9 @@ import { z } from 'zod';
 
 import { isApiError } from 'src/api/api-errors';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -29,7 +29,7 @@ const invalidCredentialApiMessage =
 
 export function SignInForm() {
   const t = T.useTranslate();
-  const { setToken } = useToken();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 

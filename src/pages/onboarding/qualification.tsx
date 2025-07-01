@@ -9,9 +9,9 @@ import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
-import { useToken } from 'src/application/token';
 import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
@@ -49,7 +49,7 @@ export function Qualification() {
   const user = useUser();
   const organization = useOrganization();
 
-  const { token } = useToken();
+  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
 
   const track = useTrackEvent();

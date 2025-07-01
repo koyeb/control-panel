@@ -5,9 +5,9 @@ import { Redirect, Route, Switch, useRoute } from 'wouter';
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from './api/use-api';
+import { useAuth, useRefreshToken } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
-import { useRefreshToken, useToken } from './application/token';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
 import { useSearchParam } from './hooks/router';
@@ -171,7 +171,7 @@ function PageNotFound() {
 
 function useOrganizationContextParam() {
   const [organizationIdParam, setOrganizationIdParam] = useSearchParam('organization-id');
-  const { setToken } = useToken();
+  const { setToken } = useAuth();
   const invalidate = useInvalidateApiQuery();
   const getSeonFingerprint = useSeon();
 

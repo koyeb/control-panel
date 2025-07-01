@@ -3,10 +3,10 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -22,7 +22,7 @@ export function DeleteAccount() {
   const organization = useOrganizationUnsafe();
   const canDelete = organization === undefined;
 
-  const { clearToken } = useToken();
+  const { clearToken } = useAuth();
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 

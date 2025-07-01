@@ -11,12 +11,12 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
+import { AuthProvider, useAuth } from './authentication';
 import { getConfig } from './config';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
 import { createQueryClient } from './query-client';
 import { reportError } from './report-error';
-import { TokenProvider, useToken } from './token';
 
 const queryClient = createQueryClient();
 
@@ -30,7 +30,7 @@ export function Providers({ children }: ProvidersProps) {
       <IntlProvider>
         <Suspense>
           <QueryClientProvider client={queryClient}>
-            <TokenProvider>
+            <AuthProvider>
               <PersistQueryClientProvider>
                 <TokenParamsProvider>
                   <PostHogProvider>
@@ -44,7 +44,7 @@ export function Providers({ children }: ProvidersProps) {
                   </PostHogProvider>
                 </TokenParamsProvider>
               </PersistQueryClientProvider>
-            </TokenProvider>
+            </AuthProvider>
           </QueryClientProvider>
         </Suspense>
       </IntlProvider>
@@ -73,7 +73,7 @@ class RootErrorBoundary extends Component<{ children: React.ReactNode }> {
 
 function PersistQueryClientProvider({ children }: { children: React.ReactNode }) {
   const { version } = getConfig();
-  const { session } = useToken();
+  const { session } = useAuth();
 
   const persister = useMemo(() => {
     const storage = session ? window.sessionStorage : window.localStorage;
@@ -94,7 +94,7 @@ function PersistQueryClientProvider({ children }: { children: React.ReactNode })
 function TokenParamsProvider({ children }: { children: React.ReactNode }) {
   const [sessionTokenParam, setSessionTokenParam] = useSearchParam('session-token');
   const [accessTokenParam, setAccessTokenParam] = useSearchParam('token');
-  const { setToken } = useToken();
+  const { setToken } = useAuth();
 
   useEffect(() => {
     if (sessionTokenParam) {

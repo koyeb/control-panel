@@ -8,9 +8,9 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -275,7 +275,7 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const { token, setToken, clearToken } = useToken();
+  const { token, setToken, clearToken } = useAuth();
   const user = useUser();
   const navigate = useNavigate();
   const t = T.useTranslate();

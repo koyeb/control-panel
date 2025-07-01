@@ -1,9 +1,9 @@
 import Intercom from '@intercom/messenger-js-sdk';
 
 import { api } from './api/api';
+import { getToken } from './application/authentication';
 import { getConfig } from './application/config';
 import { reportError } from './application/report-error';
-import { getToken } from './application/token';
 
 loadIntercom().catch(reportError);
 

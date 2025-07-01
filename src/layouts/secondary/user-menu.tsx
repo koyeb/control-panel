@@ -4,9 +4,9 @@ import { useState } from 'react';
 
 import { useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { IconLogOut, IconSettings } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
@@ -16,7 +16,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
-  const { clearToken } = useToken();
+  const { clearToken } = useAuth();
   const user = useUserUnsafe();
 
   const [open, setOpen] = useState(false);

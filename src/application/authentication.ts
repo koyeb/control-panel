@@ -11,20 +11,16 @@ export function getToken() {
   return sessionStorage.getItem('session-token') ?? localStorage.getItem('access-token');
 }
 
-type TokenContext = {
+type AuthContext = {
   token: string | null;
   session: boolean;
   setToken: (token: string | null, session?: boolean) => void;
   clearToken: () => void;
 };
 
-const tokenContext = createContext<TokenContext>(null as never);
+const authContext = createContext<AuthContext>(null as never);
 
-type TokenProviderProps = {
-  children: React.ReactNode;
-};
-
-export function TokenProvider({ children }: TokenProviderProps) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const opts = { parse: String, stringify: String };
   const accessToken = useStorage('access-token', { storage: localStorage, ...opts });
   const sessionToken = useStorage('session-token', { storage: sessionStorage, ...opts });
@@ -34,7 +30,7 @@ export function TokenProvider({ children }: TokenProviderProps) {
 
   const queryClient = useQueryClient();
 
-  const value: TokenContext = {
+  const value: AuthContext = {
     token,
     session,
     setToken(token, session) {
@@ -71,15 +67,15 @@ export function TokenProvider({ children }: TokenProviderProps) {
     },
   };
 
-  return createElement(tokenContext.Provider, { value }, children);
+  return createElement(authContext.Provider, { value }, children);
 }
 
-export function useToken() {
-  return useContext(tokenContext);
+export function useAuth() {
+  return useContext(authContext);
 }
 
 export function useRefreshToken() {
-  const { token, setToken } = useToken();
+  const { token, setToken } = useAuth();
   const pathname = usePathname();
 
   const { mutate } = useMutation({

@@ -4,11 +4,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -28,7 +28,7 @@ const schema = z.object({
 
 export function SignUpForm() {
   const t = T.useTranslate();
-  const { setToken } = useToken();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 

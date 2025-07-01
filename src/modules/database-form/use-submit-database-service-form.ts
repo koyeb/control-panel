@@ -5,9 +5,9 @@ import { ApiEndpointParams, api } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { routes } from 'src/application/routes';
 import { updateDatabaseService } from 'src/application/service-functions';
-import { useToken } from 'src/application/token';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParam } from 'src/hooks/router';
 import { hasProperty } from 'src/utils/object';
@@ -24,7 +24,7 @@ export function useSubmitDatabaseServiceForm(
 ) {
   const [appId] = useSearchParam('app_id');
   const organization = useOrganization();
-  const { token } = useToken();
+  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
   const prefetch = usePrefetchApiQuery();
   const navigate = useNavigate();

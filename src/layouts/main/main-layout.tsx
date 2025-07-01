@@ -5,10 +5,10 @@ import { z } from 'zod';
 
 import { useOrganization, useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
@@ -140,7 +140,7 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
-  const { session } = useToken();
+  const { session } = useAuth();
   const trial = useTrial();
 
   if (session) {
@@ -154,7 +154,7 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const { setToken } = useToken();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -183,7 +183,7 @@ type PageContextProps = {
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
-  const { token } = useToken();
+  const { token } = useAuth();
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 

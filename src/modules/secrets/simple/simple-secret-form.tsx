@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { Secret } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useToken } from 'src/application/token';
+import { useAuth } from 'src/application/authentication';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
 import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useFormErrorHandler } from 'src/hooks/form';
@@ -32,7 +32,7 @@ type SecretFormProps = {
 
 export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProps) {
   const t = T.useTranslate();
-  const { token } = useToken();
+  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({

@@ -2,9 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { IconSend } from 'src/components/icons';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -26,7 +26,7 @@ export function EmailValidation() {
     },
   });
 
-  const { clearToken } = useToken();
+  const { clearToken } = useAuth();
   const navigate = useNavigate();
 
   const logoutMutation = useMutation({

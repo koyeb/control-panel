@@ -1,6 +1,6 @@
 import { api } from 'src/api/api';
 import { isApiValidationError } from 'src/api/api-errors';
-import { getToken } from 'src/application/token';
+import { getToken } from 'src/application/authentication';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../service-form.types';

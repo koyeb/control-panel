@@ -3,7 +3,7 @@ import { FieldErrors } from 'react-hook-form';
 
 import { api } from 'src/api/api';
 import { EnvironmentVariable } from 'src/api/model';
-import { useToken } from 'src/application/token';
+import { useAuth } from 'src/application/authentication';
 import { createTranslate } from 'src/intl/translate';
 import { assert, defined } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
@@ -17,7 +17,7 @@ const T = createTranslate('modules.serviceForm.errors');
 
 export function useUnknownInterpolationErrors() {
   const t = T.useTranslate();
-  const { token } = useToken();
+  const { token } = useAuth();
 
   const ctrl = useRef<AbortController>(null);
 

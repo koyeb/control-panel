@@ -17,7 +17,7 @@ import { routes } from 'src/application/routes';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-import { getToken } from './token';
+import { getToken } from './authentication';
 
 export function getServiceLink(service: Service) {
   if (service.type === 'database') {

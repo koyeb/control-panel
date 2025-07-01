@@ -6,9 +6,9 @@ import { z } from 'zod';
 
 import { api } from 'src/api/api';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
-import { useToken } from 'src/application/token';
 import { ControlledTextArea } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -36,7 +36,7 @@ export function BulkCreateSecretsDialog() {
     ),
   });
 
-  const { token } = useToken();
+  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({

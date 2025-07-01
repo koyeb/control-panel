@@ -5,8 +5,8 @@ import { z } from 'zod';
 
 import { api } from 'src/api/api';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { useToken } from 'src/application/token';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -27,7 +27,7 @@ const schema = z.object({
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
-  const { token, setToken } = useToken();
+  const { token, setToken } = useAuth();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {

@@ -8,8 +8,8 @@ import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
 import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
@@ -65,7 +65,7 @@ export function JoinOrganization() {
 
 function CreateOrganization() {
   const user = useUser();
-  const { token, setToken } = useToken();
+  const { token, setToken } = useAuth();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const state = useHistoryState<{ createOrganization: boolean }>();

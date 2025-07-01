@@ -5,9 +5,9 @@ import { DeepPartial } from 'react-hook-form';
 import { api } from 'src/api/api';
 import { mapRepository } from 'src/api/mappers/git';
 import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
+import { getToken } from 'src/application/authentication';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
-import { getToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { hasProperty } from 'src/utils/object';
 

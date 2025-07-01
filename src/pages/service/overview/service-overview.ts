@@ -6,8 +6,8 @@ import { api } from 'src/api/api';
 import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
+import { useAuth } from 'src/application/authentication';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
-import { useToken } from 'src/application/token';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParam } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
@@ -162,7 +162,7 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
 }
 
 function useDeployments(service: Service) {
-  const { token } = useToken();
+  const { token } = useAuth();
 
   const deploymentsQuery = useInfiniteQuery({
     queryKey: ['listDeployments', { token, serviceId: service.id }],

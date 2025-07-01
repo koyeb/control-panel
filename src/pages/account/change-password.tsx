@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -44,7 +44,7 @@ const schema = z.object({
 function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
-  const { clearToken } = useToken();
+  const { clearToken } = useAuth();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 

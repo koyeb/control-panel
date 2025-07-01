@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import { ApiStream, apiStreams } from 'src/api/api';
+import { useAuth } from 'src/application/authentication';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/report-error';
-import { useToken } from 'src/application/token';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useMount } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';
@@ -19,7 +19,7 @@ const T = createTranslate('pages.service.console');
 const { brightBlack, brightRed } = terminalColors;
 
 export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boolean } = {}) {
-  const { token } = useToken();
+  const { token } = useAuth();
   const t = T.useTranslate();
 
   const [terminal, setTerminal] = useState<TerminalRef | null>(null);

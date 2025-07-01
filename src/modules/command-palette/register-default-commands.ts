@@ -7,9 +7,9 @@ import { useApps, useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
@@ -392,7 +392,7 @@ function useRegisterOneClickAppsCommands() {
 function useRegisterAccountCommands() {
   const { defaultItems, setItems, mutationEffects } = useCommandPaletteContext();
 
-  const { setToken, clearToken } = useToken();
+  const { setToken, clearToken } = useAuth();
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 

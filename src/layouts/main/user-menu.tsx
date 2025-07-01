@@ -5,9 +5,9 @@ import { useState } from 'react';
 
 import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useAuth } from 'src/application/authentication';
 import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
-import { useToken } from 'src/application/token';
 import {
   IconCheck,
   IconChevronRight,
@@ -26,7 +26,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
-  const { clearToken } = useToken();
+  const { clearToken } = useAuth();
   const user = useUser();
   const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();

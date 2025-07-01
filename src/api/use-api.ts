@@ -1,7 +1,7 @@
 import { InvalidateQueryFilters, QueryKey, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { useToken } from 'src/application/token';
+import { useAuth } from 'src/application/authentication';
 
 import { ApiEndpointParams, ApiEndpointResult, api } from './api';
 
@@ -27,7 +27,7 @@ export function useApiQueryFn<E extends Endpoint>(
   endpoint: E,
   params: ApiEndpointParams<E> = {},
 ): UseApiQueryResult<E> {
-  const { token } = useToken();
+  const { token } = useAuth();
 
   return {
     queryKey: getApiQueryKey(endpoint, params, token),
@@ -64,7 +64,7 @@ export function useApiMutationFn<E extends Endpoint, Variables>(
   endpoint: E,
   options: ApiEndpointParams<E> | ApiEndpointParamsFn<E, Variables>,
 ): UseApiMutationResult<E, Variables> {
-  const { token } = useToken();
+  const { token } = useAuth();
 
   return {
     async mutationFn(param) {
@@ -81,7 +81,7 @@ export function useApiMutationFn<E extends Endpoint, Variables>(
 
 export function useInvalidateApiQuery() {
   const queryClient = useQueryClient();
-  const { token } = useToken();
+  const { token } = useAuth();
 
   return useCallback(
     <E extends Endpoint>(
@@ -100,7 +100,7 @@ export function useInvalidateApiQuery() {
 
 export function usePrefetchApiQuery() {
   const queryClient = useQueryClient();
-  const { token } = useToken();
+  const { token } = useAuth();
 
   return useCallback(
     <E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) => {

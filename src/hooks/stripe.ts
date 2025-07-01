@@ -3,9 +3,9 @@ import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/
 import { useMutation } from '@tanstack/react-query';
 
 import { api } from 'src/api/api';
+import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
-import { useToken } from 'src/application/token';
 import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
@@ -26,7 +26,7 @@ type PaymentMutationProps = {
 };
 
 export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutationProps = {}) {
-  const { token } = useToken();
+  const { token } = useAuth();
   const stripe = useStripe();
   const elements = useElements();
 

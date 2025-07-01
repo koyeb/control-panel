@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { api, apiStreams } from 'src/api/api';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
-import { useToken } from 'src/application/token';
+import { useAuth } from 'src/application/authentication';
 import { createId } from 'src/utils/strings';
 
 import { useDeepCompareMemo } from './lifecycle';
@@ -78,7 +78,7 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
 
 function useLogsHistory(filters: LogsFilters) {
   const quotas = useOrganizationQuotas();
-  const { token } = useToken();
+  const { token } = useAuth();
 
   const initialPageParam = useMemo(() => {
     if (!quotas) {
@@ -146,7 +146,7 @@ function useLogsHistory(filters: LogsFilters) {
 const reconnectTimeout = [0, 1_000, 5_000, 60_000];
 
 function useLogsStream(connect: boolean, filters: LogsFilters) {
-  const { token } = useToken();
+  const { token } = useAuth();
   const filtersMemo = useDeepCompareMemo(filters);
 
   const stream = useRef<ReturnType<typeof tailLogs>>(null);
