@@ -5,7 +5,6 @@ import { useFieldArray } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/controlled';
 import { IconPlus, IconTrash } from 'src/components/icons';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -54,14 +53,12 @@ export function Files() {
                 className="w-full"
               />
 
-              <FeatureFlag feature="config-file-permissions">
-                <ControlledInput<ServiceForm, `files.${number}.permissions`>
-                  name={`files.${index}.permissions`}
-                  label={<T id="permissions.label" />}
-                  placeholder={t('permissions.placeholder')}
-                  className="min-w-32"
-                />
-              </FeatureFlag>
+              <ControlledInput<ServiceForm, `files.${number}.permissions`>
+                name={`files.${index}.permissions`}
+                label={<T id="permissions.label" />}
+                placeholder={t('permissions.placeholder')}
+                className="min-w-32"
+              />
             </div>
 
             <Button variant="outline" color="gray" onClick={() => remove(index)} className="self-start">
