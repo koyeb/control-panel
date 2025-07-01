@@ -75,7 +75,7 @@ export function useAuth() {
 }
 
 export function useRefreshToken() {
-  const { token, setToken } = useAuth();
+  const { session, token, setToken } = useAuth();
   const pathname = usePathname();
 
   const { mutate } = useMutation({
@@ -86,10 +86,10 @@ export function useRefreshToken() {
   useEffect(() => {
     const expires = token ? jwtExpires(token) : undefined;
 
-    if (expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
+    if (!session && expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
       mutate();
     }
-  }, [pathname, token, mutate]);
+  }, [session, pathname, token, mutate]);
 }
 
 function jwtExpires(jwt: string) {
