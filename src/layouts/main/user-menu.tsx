@@ -1,12 +1,8 @@
 import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useUser } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
-import { useResetIdentifyUser } from 'src/application/posthog';
+import { useLogoutMutation, useUser } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import {
   IconCheck,
@@ -19,29 +15,17 @@ import {
 } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
-import { useNavigate } from 'src/hooks/router';
 import { ThemeMode, useThemeMode } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
-  const { clearToken } = useAuth();
   const user = useUser();
-  const resetIdentify = useResetIdentifyUser();
-  const navigate = useNavigate();
+  const logout = useLogoutMutation(routes.signIn());
 
   const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);
-
-  const { mutate: logout } = useMutation({
-    ...useApiMutationFn('logout', {}),
-    onSuccess() {
-      clearToken();
-      resetIdentify();
-      navigate(routes.signIn());
-    },
-  });
 
   return (
     <Floating
@@ -77,7 +61,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
 
           <ThemeMenuItem />
 
-          <ButtonMenuItem onClick={() => logout()}>
+          <ButtonMenuItem onClick={() => logout.mutate()}>
             <IconLogOut className="icon" />
             <T id="logout" />
           </ButtonMenuItem>

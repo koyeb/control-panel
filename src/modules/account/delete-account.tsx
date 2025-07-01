@@ -5,7 +5,6 @@ import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -23,7 +22,6 @@ export function DeleteAccount() {
   const canDelete = organization === undefined;
 
   const { clearToken } = useAuth();
-  const resetIdentify = useResetIdentifyUser();
   const navigate = useNavigate();
 
   const { mutateAsync: deleteAccount } = useMutation({
@@ -32,7 +30,6 @@ export function DeleteAccount() {
     }),
     onSuccess() {
       clearToken();
-      resetIdentify();
       navigate(routes.signIn());
       notify.success(t('successNotification'));
     },

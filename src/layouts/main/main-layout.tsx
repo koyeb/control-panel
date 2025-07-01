@@ -1,10 +1,13 @@
-import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { useOrganization, useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
+import {
+  useLogoutMutation,
+  useOrganization,
+  useOrganizationUnsafe,
+  useUserUnsafe,
+} from 'src/api/hooks/session';
 import { useAuth } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
@@ -15,7 +18,7 @@ import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useLocation, useNavigate } from 'src/hooks/router';
+import { useLocation } from 'src/hooks/router';
 import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
@@ -154,21 +157,12 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const { setToken } = useAuth();
-  const navigate = useNavigate();
-
-  const mutation = useMutation({
-    ...useApiMutationFn('logout', {}),
-    onSuccess: () => {
-      setToken(null, true);
-      navigate(routes.home());
-    },
-  });
+  const logout = useLogoutMutation(routes.home(), true);
 
   return (
     <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">
       <T id="sessionTokenWarning" values={{ organizationName: organization.name }} />
-      <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => mutation.mutate()}>
+      <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => logout.mutate()}>
         <IconX className="size-5" />
       </button>
     </div>

@@ -8,7 +8,6 @@ import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/h
 import { ServiceType } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
-import { useResetIdentifyUser } from 'src/application/posthog';
 import { routes } from 'src/application/routes';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
@@ -392,16 +391,14 @@ function useRegisterOneClickAppsCommands() {
 function useRegisterAccountCommands() {
   const { defaultItems, setItems, mutationEffects } = useCommandPaletteContext();
 
-  const { setToken, clearToken } = useAuth();
-  const resetIdentify = useResetIdentifyUser();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
 
   const { mutate: logout } = useMutation({
     ...useApiMutationFn('logout', {}),
     ...mutationEffects,
     onSuccess: () => {
-      clearToken();
-      resetIdentify();
+      setToken(null);
       navigate(routes.signIn());
     },
   });

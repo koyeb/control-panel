@@ -1,36 +1,20 @@
 import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { useUserUnsafe } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
-import { useResetIdentifyUser } from 'src/application/posthog';
+import { useLogoutMutation, useUserUnsafe } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { IconLogOut, IconSettings } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
-  const { clearToken } = useAuth();
   const user = useUserUnsafe();
+  const logout = useLogoutMutation(routes.signIn());
 
   const [open, setOpen] = useState(false);
-  const resetIdentify = useResetIdentifyUser();
-  const navigate = useNavigate();
-
-  const { mutate: logout } = useMutation({
-    ...useApiMutationFn('logout', {}),
-    onSuccess() {
-      clearToken();
-      resetIdentify();
-      navigate(routes.signIn());
-    },
-  });
 
   return (
     <Floating
@@ -50,7 +34,7 @@ export function UserMenu() {
             <T id="settings" />
           </MenuItem>
 
-          <ButtonMenuItem onClick={() => logout()} className="row gap-2">
+          <ButtonMenuItem onClick={() => logout.mutate()} className="row gap-2">
             <IconLogOut className="icon" />
             <T id="logOut" />
           </ButtonMenuItem>

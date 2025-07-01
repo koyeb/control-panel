@@ -1,7 +1,7 @@
 import * as intercom from '@intercom/messenger-js-sdk';
 // eslint-disable-next-line no-restricted-imports
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { useLocation } from 'wouter';
 
@@ -60,6 +60,7 @@ function TrackPageViews() {
 
 function IdentifyUser() {
   const posthog = usePostHog();
+  const identified = useRef(false);
 
   const user = useUserUnsafe();
   const organization = useOrganizationUnsafe();
@@ -69,6 +70,12 @@ function IdentifyUser() {
 
     if (user !== undefined) {
       posthog?.identify(user.id);
+      identified.current = true;
+    }
+
+    if (identified.current && !user) {
+      intercom.shutdown();
+      posthog?.reset(true);
     }
   }, [posthog, user]);
 
@@ -79,16 +86,6 @@ function IdentifyUser() {
   }, [posthog, organization]);
 
   return null;
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function useResetIdentifyUser() {
-  const posthog = usePostHog();
-
-  return useCallback(() => {
-    intercom.shutdown();
-    posthog?.reset(true);
-  }, [posthog]);
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
