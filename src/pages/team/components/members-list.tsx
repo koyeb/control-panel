@@ -275,7 +275,7 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const { token, setToken, clearToken } = useAuth();
+  const { token, setToken } = useAuth();
   const user = useUser();
   const navigate = useNavigate();
   const t = T.useTranslate();
@@ -291,7 +291,7 @@ function useLeaveOrganization() {
         .map((member) => member.organization_id!)
         .filter((organizationId) => organizationId !== membership.organization.id);
 
-      let result: string | undefined = undefined;
+      let result: string | null = null;
 
       if (otherOrganizationId) {
         const { token: newToken } = await api.switchOrganization({
@@ -311,12 +311,7 @@ function useLeaveOrganization() {
       return result;
     },
     async onSuccess(token, { organization }) {
-      if (token !== undefined) {
-        setToken(token);
-      } else {
-        clearToken();
-      }
-
+      setToken(token);
       navigate(routes.home());
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },

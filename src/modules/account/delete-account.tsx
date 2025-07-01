@@ -21,7 +21,7 @@ export function DeleteAccount() {
   const organization = useOrganizationUnsafe();
   const canDelete = organization === undefined;
 
-  const { clearToken } = useAuth();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
 
   const { mutateAsync: deleteAccount } = useMutation({
@@ -29,7 +29,7 @@ export function DeleteAccount() {
       path: { id: user.id },
     }),
     onSuccess() {
-      clearToken();
+      setToken(null);
       navigate(routes.signIn());
       notify.success(t('successNotification'));
     },

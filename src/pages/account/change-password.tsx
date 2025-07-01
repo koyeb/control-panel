@@ -44,7 +44,7 @@ const schema = z.object({
 function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
-  const { clearToken } = useAuth();
+  const { setToken } = useAuth();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -60,10 +60,10 @@ function ChangePasswordForm() {
       header: { 'seon-fp': await getSeonFingerprint() },
       body: { id: token, password },
     })),
-    onSuccess() {
-      notify.success(t('successNotification'));
-      clearToken();
+    onSuccess({ token }) {
+      setToken(token!.id!);
       navigate(routes.signIn());
+      notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),
   });

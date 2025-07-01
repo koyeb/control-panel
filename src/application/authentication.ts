@@ -15,7 +15,6 @@ type AuthContext = {
   token: string | null;
   session: boolean;
   setToken: (token: string | null, session?: boolean) => void;
-  clearToken: () => void;
 };
 
 const authContext = createContext<AuthContext>(null as never);
@@ -51,18 +50,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         sessionToken.write(token);
       } else {
         accessToken.write(token);
-      }
-    },
-    clearToken() {
-      setToken(null);
-
-      queryClient.cancelQueries();
-      queryClient.clear();
-
-      if (session) {
-        sessionToken.write(null);
-      } else {
-        accessToken.write(null);
       }
     },
   };
