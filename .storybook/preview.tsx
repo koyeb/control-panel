@@ -1,12 +1,14 @@
 import '@fontsource-variable/inter';
+
 import type { Preview } from '@storybook/react-vite';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { api } from '../src/api/api';
 import { catalogInstanceFixtures, catalogRegionFixtures } from '../src/api/mock/fixtures';
+import { AuthProvider } from '../src/application/authentication';
 import { DialogProvider } from '../src/application/dialog-context';
-import { TokenProvider } from '../src/application/token';
 import { IntlProvider } from '../src/intl/translation-provider';
+
 import '../src/styles.css';
 
 api.listCatalogInstances = async () => ({ instances: catalogInstanceFixtures });
@@ -30,9 +32,9 @@ export default {
       );
     },
     (Story) => (
-      <TokenProvider>
+      <AuthProvider>
         <Story />
-      </TokenProvider>
+      </AuthProvider>
     ),
     (Story) => (
       <QueryClientProvider client={new QueryClient()}>
