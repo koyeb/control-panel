@@ -39,7 +39,7 @@ export function DeleteOrganization() {
         .map((member) => member.organization_id!)
         .filter((organizationId) => organizationId !== organization.id);
 
-      let result: string | undefined = undefined;
+      let result: string;
 
       if (otherOrganizationId) {
         const { token: newToken } = await api.switchOrganization({
@@ -65,9 +65,9 @@ export function DeleteOrganization() {
       return result;
     },
     onSuccess(token) {
-      notify.info(t('successNotification', { organizationName: organization.name }));
       setToken(token);
       navigate(routes.home());
+      notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });
 

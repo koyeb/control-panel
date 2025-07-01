@@ -98,6 +98,10 @@ function AuthenticatedRoutes() {
     return <OnboardingPage step={onboardingStep} />;
   }
 
+  if (!organizationQuery.data) {
+    return null;
+  }
+
   return (
     <MainLayout>
       <Switch>
