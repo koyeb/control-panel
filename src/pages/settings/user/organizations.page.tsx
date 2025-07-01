@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
@@ -152,7 +152,6 @@ function OrganizationList() {
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
   const currentOrganization = useOrganizationUnsafe();
   const { setToken } = useAuth();
-  const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
@@ -161,11 +160,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
       header: {},
     })),
     onSuccess(token, redirect) {
-      setToken(token.token!.id!);
-
-      void invalidate('getCurrentOrganization');
-      void invalidate('listOrganizationMembers');
-
+      setToken(token.token!.id!, false);
       navigate(redirect);
     },
   });
