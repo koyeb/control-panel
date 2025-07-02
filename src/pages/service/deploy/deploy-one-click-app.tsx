@@ -16,28 +16,36 @@ export function DeployOneClickApp() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
-  const [oneClickAppParam, setOneClickAppParam] = useSearchParam('one_click_app');
+  const [oneClickAppParam] = useSearchParam('one_click_app');
   const oneClickAppsQuery = useOneClickAppsQuery();
   const app = oneClickAppsQuery.data?.find(hasProperty('slug', oneClickAppParam));
+  const [ready, setReady] = useState(false);
 
   const [cost, setCost] = useState<ServiceCost>();
 
   useEffect(() => {
     if (oneClickAppsQuery.isSuccess) {
       if (app === undefined) {
-        setOneClickAppParam(null, { replace: true });
-      } else {
         navigate({
-          search: () => ({
-            ...Object.fromEntries(new URLSearchParams(app.deployUrl)),
+          search: (prev) => ({ ...prev, one_click_app: null }),
+          replace: true,
+        });
+      } else {
+        const url = new URL(app.deployUrl);
+
+        navigate({
+          search: {
+            ...Object.fromEntries(url.searchParams),
             one_click_app: app.slug,
-          }),
+          },
         });
       }
-    }
-  }, [oneClickAppsQuery, app, setOneClickAppParam, navigate]);
 
-  if (app === undefined) {
+      setReady(true);
+    }
+  }, [oneClickAppsQuery, app, navigate]);
+
+  if (!app || !ready) {
     return null;
   }
 
