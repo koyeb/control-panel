@@ -29,10 +29,12 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
   const navigate = useNavigate();
 
   useMount(() => {
-    navigate((url) => {
-      url.searchParams.delete('type');
-      url.searchParams.delete('service_type');
-      url.searchParams.delete('ports');
+    navigate({
+      to: (url) => {
+        url.searchParams.delete('type');
+        url.searchParams.delete('service_type');
+        url.searchParams.delete('ports');
+      },
     });
   });
 
@@ -43,13 +45,15 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
   }, [serviceType, setServiceType]);
 
   const handleNext = (source: SourceType) => {
-    navigate((url) => {
-      url.searchParams.set('type', source);
+    navigate({
+      to: (url) => {
+        url.searchParams.set('type', source);
 
-      if (serviceType === 'private') {
-        url.searchParams.set('service_type', 'web');
-        url.searchParams.set('ports', '8000;tcp');
-      }
+        if (serviceType === 'private') {
+          url.searchParams.set('service_type', 'web');
+          url.searchParams.set('ports', '8000;tcp');
+        }
+      },
     });
 
     onNext();

@@ -78,7 +78,7 @@ function DeleteDatabaseService({ service }: { service: Service }) {
     async onSuccess() {
       await invalidate('listApps');
       await invalidate('listServices');
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.info(t('delete.successNotification', { serviceName: service.name }));
     },
   });

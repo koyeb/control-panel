@@ -32,7 +32,7 @@ export function ServiceSettingsPage() {
       <ServiceForm
         serviceId={serviceId}
         onDeployed={(appId, serviceId, deploymentId) =>
-          navigate(routes.service.overview(serviceId, deploymentId))
+          navigate({ to: routes.service.overview(serviceId, deploymentId) })
         }
         onSaved={() => notify.info(t('saved'))}
         onCostChanged={setCost}

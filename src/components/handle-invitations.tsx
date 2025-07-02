@@ -40,7 +40,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     async onSuccess(token) {
       await invalidate('listInvitations');
       setToken(token);
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.info(t('acceptSuccess'));
     },
   });
@@ -51,7 +51,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     })),
     async onSuccess() {
       await invalidate('listInvitations');
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.info(t('declineSuccess'));
     },
   });

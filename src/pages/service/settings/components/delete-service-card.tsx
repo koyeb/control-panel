@@ -46,7 +46,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
     },
     onSuccess: () => {
       closeDialog();
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.info(t('deleting'));
     },
   });

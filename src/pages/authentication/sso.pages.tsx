@@ -48,7 +48,7 @@ export function CannySso() {
     onError(error) {
       reportError(error);
       notify.error(<SsoError provider="canny" error={error} />);
-      navigate(routes.home(), { replace: true });
+      navigate({ to: routes.home(), replace: true });
     },
   });
 
@@ -89,7 +89,7 @@ export function DiscourseSsoPage() {
     onError(error) {
       reportError(error);
       notify.error(<SsoError provider="discourse" error={error} />);
-      navigate(routes.home(), { replace: true });
+      navigate({ to: routes.home(), replace: true });
     },
   });
 

@@ -22,7 +22,7 @@ export function DatabaseNotHealth({ service }: { service: Service }) {
     }),
     async onSuccess() {
       await invalidate('getService', { path: { id: service.id } });
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.info(t('deleteSuccessNotification'));
     },
   });

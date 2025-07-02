@@ -15,13 +15,13 @@ export function ImportProjectStep({ onNext }: ImportProjectStepProps) {
   const navigate = useNavigate();
 
   useMount(() => {
-    navigate(
-      (url) => {
+    navigate({
+      to: (url) => {
         url.searchParams.delete('repository');
         url.searchParams.delete('image');
       },
-      { replace: true },
-    );
+      replace: true,
+    });
   });
 
   return (

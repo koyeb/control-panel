@@ -108,7 +108,7 @@ function CreateOrganization() {
     },
     onError(error) {
       if (state.createOrganization) {
-        navigate(routes.home(), { state: {} });
+        navigate({ to: routes.home(), state: {} });
       } else {
         onError(error);
       }

@@ -29,9 +29,11 @@ export function DeployOneClickApp() {
       } else {
         const { search } = new URL(app.deployUrl);
 
-        navigate((url) => {
-          url.search = search;
-          url.searchParams.set('one_click_app', app.slug);
+        navigate({
+          to: (url) => {
+            url.search = search;
+            url.searchParams.set('one_click_app', app.slug);
+          },
         });
       }
     }

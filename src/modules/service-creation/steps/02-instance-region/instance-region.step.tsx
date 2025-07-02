@@ -70,17 +70,20 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
   const selectedRegions = regions.filter((region) => regionsParam.includes(region.id));
 
   const setInstanceParam = (instance: string) => {
-    navigate((url) => url.searchParams.set('instance_type', instance), { replace: true });
+    navigate({
+      to: (url) => url.searchParams.set('instance_type', instance),
+      replace: true,
+    });
   };
 
   const setRegionsParam = (regions: string[]) => {
-    navigate(
-      (url) => {
+    navigate({
+      to: (url) => {
         url.searchParams.delete('regions');
         regions.forEach((region) => url.searchParams.append('regions', region));
       },
-      { replace: true },
-    );
+      replace: true,
+    });
   };
 
   const selector = useInstanceSelector({

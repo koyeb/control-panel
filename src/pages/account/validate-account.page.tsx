@@ -29,7 +29,10 @@ export function ValidateAccountPage() {
       notify.error(error.message);
     },
     onSettled() {
-      navigate(routes.home(), { state: { createOrganization: true } });
+      navigate({
+        to: routes.home(),
+        state: { createOrganization: true },
+      });
     },
   });
 

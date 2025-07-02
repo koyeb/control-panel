@@ -51,7 +51,7 @@ export function SignInForm() {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!);
-      navigate(next ?? routes.home());
+      navigate({ to: next ?? routes.home() });
     },
     onError(error) {
       if (isApiError(error) && error.message === invalidCredentialApiMessage) {

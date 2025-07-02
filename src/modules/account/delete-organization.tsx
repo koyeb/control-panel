@@ -66,7 +66,7 @@ export function DeleteOrganization() {
     },
     onSuccess(token) {
       setToken(token);
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });

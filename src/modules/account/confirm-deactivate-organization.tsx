@@ -27,7 +27,7 @@ export function ConfirmDeactivateOrganization({ confirmationId }: { confirmation
       notify.info(t('deactivationSuccessNotification'));
     },
     onSettled() {
-      navigate(onboardingStep ? '/?settings' : routes.organizationSettings.index());
+      navigate({ to: onboardingStep ? '/?settings' : routes.organizationSettings.index() });
     },
   });
 

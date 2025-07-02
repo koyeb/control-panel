@@ -65,7 +65,7 @@ export function Database() {
   const { navigate } = useCreateServiceDialog();
 
   const onCreate = () => {
-    navigate(routes.createDatabaseService());
+    navigate({ to: routes.createDatabaseService() });
   };
 
   useShortcut(['Enter'], onCreate);
@@ -95,7 +95,7 @@ export function OneClickApp({ app }: OneClickAppProps) {
 
   const deploy = () => {
     if (app) {
-      navigate(app?.deployUrl);
+      navigate({ to: app?.deployUrl });
     }
   };
 

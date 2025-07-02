@@ -69,7 +69,11 @@ export function GithubOauthCallbackPage() {
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
         setToken(result.token.id);
-        navigate(metadata, { replace: true, state: { createOrganization: action === 'signup' } });
+        navigate({
+          to: metadata,
+          replace: true,
+          state: { createOrganization: action === 'signup' },
+        });
         return;
       }
 
@@ -85,7 +89,8 @@ export function GithubOauthCallbackPage() {
       }
 
       if (currentOrganization?.id === organization_id) {
-        navigate(metadata, {
+        navigate({
+          to: metadata,
           replace: true,
           state: { githubAppInstallationRequested: setupAction === 'request' },
         });
@@ -115,7 +120,7 @@ export function GithubOauthCallbackPage() {
         notify.error(error.message);
       }
 
-      navigate(redirect, { replace: true });
+      navigate({ to: redirect, replace: true });
     },
   });
 

@@ -110,7 +110,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
     },
     onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {
-      navigate(routes.initialDeployment(serviceId));
+      navigate({ to: routes.initialDeployment(serviceId) });
     },
   });
 

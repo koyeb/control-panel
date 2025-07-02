@@ -83,7 +83,7 @@ function CreateOrganizationDialog() {
     onSuccess(token, { organizationName }) {
       form.reset();
       setToken(token);
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
   });
@@ -161,7 +161,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
     })),
     onSuccess(token, redirect) {
       setToken(token.token!.id!, false);
-      navigate(redirect);
+      navigate({ to: redirect });
     },
   });
 

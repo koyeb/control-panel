@@ -28,7 +28,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
     }),
     onSuccess: () => {
       closeDialog();
-      navigate(routes.service.overview(service.id));
+      navigate({ to: routes.service.overview(service.id) });
       notify.info(t('pausing'));
     },
   });
@@ -39,7 +39,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
     }),
     onSuccess: () => {
       closeDialog();
-      navigate(routes.service.overview(service.id));
+      navigate({ to: routes.service.overview(service.id) });
       notify.info(t('resuming'));
     },
   });

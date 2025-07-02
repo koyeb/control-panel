@@ -109,7 +109,7 @@ export function useLogoutMutation(redirect: string, session?: boolean) {
     ...useApiMutationFn('logout', {}),
     onSettled: () => {
       setToken(null, session);
-      navigate(redirect);
+      navigate({ to: redirect });
     },
   });
 }

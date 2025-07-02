@@ -30,7 +30,7 @@ export function DeleteAccount() {
     }),
     onSuccess() {
       setToken(null);
-      navigate(routes.signIn());
+      navigate({ to: routes.signIn() });
       notify.success(t('successNotification'));
     },
   });

@@ -312,7 +312,7 @@ function useLeaveOrganization() {
     },
     async onSuccess(token, { organization }) {
       setToken(token);
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });

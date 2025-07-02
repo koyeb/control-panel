@@ -57,7 +57,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
     async onSuccess({ deployment }) {
       await invalidate('listDeployments');
       closeDialog();
-      navigate(routes.service.overview(service.id, deployment!.id));
+      navigate({ to: routes.service.overview(service.id, deployment!.id) });
       notify.info(t('redeploying'));
     },
   });

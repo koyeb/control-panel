@@ -93,9 +93,9 @@ function useCreateCreateServiceDialog(getSections: GetSections) {
     onNavigationItemRef: navigationRefs.set.bind(navigationRefs),
 
     navigate: useCallback(
-      (to: string) => {
+      (...params: Parameters<typeof navigate>) => {
         closeDialog();
-        navigate(to);
+        navigate(...params);
       },
       [closeDialog, navigate],
     ),

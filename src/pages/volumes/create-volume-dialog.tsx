@@ -28,7 +28,7 @@ export function CreateVolumeDialog({ snapshot }: { snapshot?: VolumeSnapshot }) 
         snapshot={snapshot}
         onSubmitted={() => {
           closeDialog();
-          navigate(routes.volumes.index());
+          navigate({ to: routes.volumes.index() });
         }}
         renderFooter={(formState) => (
           <DialogFooter>

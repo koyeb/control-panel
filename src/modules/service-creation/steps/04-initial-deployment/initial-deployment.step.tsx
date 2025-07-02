@@ -24,8 +24,10 @@ export function InitialDeploymentStep({ serviceId }: { serviceId: string }) {
   useEffect(() => {
     if (pathname === routes.home()) {
       // the home page will be replaced with the list of services
-      navigate((url) => {
-        url.pathname = routes.createService();
+      navigate({
+        to: (url) => {
+          url.pathname = routes.createService();
+        },
       });
     }
   }, [pathname, navigate]);

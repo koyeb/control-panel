@@ -133,7 +133,7 @@ function useApplyChanges(service: Service, onSuccess: () => void) {
       ]);
 
       onSuccess();
-      navigate(routes.service.overview(service.id, deployment?.id));
+      navigate({ to: routes.service.overview(service.id, deployment?.id) });
     },
   });
 }

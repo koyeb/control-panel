@@ -50,7 +50,7 @@ function DeployServiceForm() {
         <ServiceForm
           serviceId={serviceId ?? undefined}
           className="grow"
-          onDeployed={(appId, serviceId) => navigate(routes.initialDeployment(serviceId))}
+          onDeployed={(appId, serviceId) => navigate({ to: routes.initialDeployment(serviceId) })}
           onCostChanged={setCost}
           onDeployUrlChanged={setDeployUrl}
         />

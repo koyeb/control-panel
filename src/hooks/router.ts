@@ -29,24 +29,20 @@ export function useHistoryState<T extends HistoryState>(): Partial<T> {
 }
 
 type NavigateOptions = {
+  to?: string | ((url: URL) => void);
   replace?: boolean;
   state?: HistoryState;
 };
 
-type Navigate = (
-  param: string | URL | ((url: URL) => string | URL | void),
-  options?: NavigateOptions,
-) => void;
-
 export function useNavigate() {
-  return useCallback<Navigate>((param, options) => {
-    if (typeof param === 'string' || param instanceof URL) {
-      navigate(param, options);
-    } else {
+  return useCallback(({ to, replace, state }: NavigateOptions) => {
+    if (typeof to === 'string') {
+      navigate(to, { replace, state });
+    } else if (typeof to === 'function') {
       const url = new URL(window.location.href);
-      const result = param(url);
 
-      navigate(result ?? url, options);
+      to(url);
+      navigate(url, { replace, state });
     }
   }, []);
 }
@@ -76,20 +72,23 @@ export function useSearchParam(name: string, options?: { array: true }) {
 
   const setValue = useCallback(
     (value: string | string[] | null, options?: NavigateOptions) => {
-      navigate((url) => {
-        if (value === null) {
-          url.searchParams.delete(name);
-        }
+      navigate({
+        to: (url) => {
+          if (value === null) {
+            url.searchParams.delete(name);
+          }
 
-        if (Array.isArray(value)) {
-          url.searchParams.delete(name);
-          value.forEach((value) => url.searchParams.append(name, value));
-        }
+          if (Array.isArray(value)) {
+            url.searchParams.delete(name);
+            value.forEach((value) => url.searchParams.append(name, value));
+          }
 
-        if (typeof value === 'string') {
-          url.searchParams.set(name, value);
-        }
-      }, options);
+          if (typeof value === 'string') {
+            url.searchParams.set(name, value);
+          }
+        },
+        ...options,
+      });
     },
     [name, navigate],
   );
@@ -104,7 +103,7 @@ export function useOnRouteStateCreate(cb: () => void) {
 
   useEffect(() => {
     if (historyState.create) {
-      navigate('#', { replace: true, state: { create: false } });
+      navigate({ to: '#', replace: true, state: { create: false } });
       cbMemo();
     }
   }, [historyState, navigate, cbMemo]);

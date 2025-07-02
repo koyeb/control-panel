@@ -48,7 +48,7 @@ export function OrganizationRepositoriesList() {
       ['repository', repository.name],
     ]);
 
-    navigate(`${routes.deploy()}?${params.toString()}`);
+    navigate({ to: `${routes.deploy()}?${params.toString()}` });
   };
 
   useShortcut(['ArrowUp'], () => {
@@ -165,7 +165,7 @@ export function PublicRepository() {
       repository: repositoryName,
     });
 
-    navigate(`${routes.deploy()}?${params.toString()}`);
+    navigate({ to: `${routes.deploy()}?${params.toString()}` });
   };
 
   return (

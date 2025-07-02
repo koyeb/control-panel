@@ -56,7 +56,7 @@ export function SignUpForm() {
     })),
     onSuccess(result) {
       setToken(result.token!.id!);
-      navigate(routes.home());
+      navigate({ to: routes.home() });
     },
     onError: useFormErrorHandler(form, (error) => {
       if ('captcha' in error) {

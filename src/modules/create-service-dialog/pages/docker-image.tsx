@@ -49,7 +49,7 @@ export function DockerImageSelection() {
       (window as any).__KOYEB_REGISTRY_SECRET_HACK = secretName;
     }
 
-    navigate(`${routes.deploy()}?${params.toString()}`);
+    navigate({ to: `${routes.deploy()}?${params.toString()}` });
   };
 
   const { verifying, verified, error, retry } = useVerifyDockerImage(
@@ -122,7 +122,7 @@ export function DockerImageSelection() {
           id="createRegistrySecret"
           values={{
             link: (children) => (
-              <button role="link" className="text-link" onClick={() => navigate('/secrets/registry')}>
+              <button role="link" className="text-link" onClick={() => navigate({ to: '/secrets/registry' })}>
                 {children}
               </button>
             ),

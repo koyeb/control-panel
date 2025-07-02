@@ -130,7 +130,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
     },
     onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {
-      navigate(routes.initialDeployment(serviceId));
+      navigate({ to: routes.initialDeployment(serviceId) });
     },
   });
 

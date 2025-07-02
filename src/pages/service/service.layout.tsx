@@ -128,28 +128,28 @@ function RegisterServiceCommands({ service }: { service: Service }) {
         label: `Go to dashboard`,
         description: `Navigate to the ${name} service's dashboard page`,
         keywords: ['overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
-        execute: () => navigate(routes.service.overview(service.id)),
+        execute: () => navigate({ to: routes.service.overview(service.id) }),
       },
 
       {
         label: `Go to metrics`,
         description: `Navigate to the ${name} service's metrics page`,
         keywords: ['metrics', 'monitoring', 'graphs', 'charts'],
-        execute: () => navigate(routes.service.metrics(service.id)),
+        execute: () => navigate({ to: routes.service.metrics(service.id) }),
       },
 
       {
         label: `Go to console`,
         description: `Navigate to the ${name} service's console page`,
         keywords: ['console', 'shell', 'terminal', 'command', 'execute', 'run', 'ssh'],
-        execute: () => navigate(routes.service.console(service.id)),
+        execute: () => navigate({ to: routes.service.console(service.id) }),
       },
 
       {
         label: `Go to settings`,
         description: `Navigate to the ${name} service's settings page`,
         keywords: ['settings', 'update'],
-        execute: () => navigate(routes.service.settings(service.id)),
+        execute: () => navigate({ to: routes.service.settings(service.id) }),
       },
 
       {

@@ -62,7 +62,7 @@ function ChangePasswordForm() {
     })),
     onSuccess({ token }) {
       setToken(token!.id!);
-      navigate(routes.signIn());
+      navigate({ to: routes.signIn() });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),

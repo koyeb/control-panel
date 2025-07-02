@@ -58,7 +58,7 @@ function ResetPasswordForm() {
     })),
     onSuccess() {
       notify.success(t('successNotification'));
-      navigate(routes.signIn());
+      navigate({ to: routes.signIn() });
     },
     onError: useFormErrorHandler(form),
   });

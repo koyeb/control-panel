@@ -44,7 +44,7 @@ export function UpdateSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
       await invalidate('listSnapshots');
       notify.success(t('successNotification', { name: snapshot!.name! }));
       closeDialog();
-      navigate(routes.volumes.snapshots());
+      navigate({ to: routes.volumes.snapshots() });
     },
     onError: useFormErrorHandler(form),
   });

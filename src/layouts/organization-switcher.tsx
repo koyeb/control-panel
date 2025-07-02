@@ -172,7 +172,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!, false);
-      navigate(routes.home());
+      navigate({ to: routes.home() });
       onSuccess?.();
     },
   });

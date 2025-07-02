@@ -56,7 +56,7 @@ export function useSubmitDatabaseServiceForm(
         prefetch('getService', { path: { id: databaseServiceId } }),
       ]);
 
-      navigate(routes.database.overview(databaseServiceId));
+      navigate({ to: routes.database.overview(databaseServiceId) });
     },
     onError: useFormErrorHandler(form, (error) => ({
       serviceName: error.name ?? error['definition.name'],
