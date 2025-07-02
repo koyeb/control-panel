@@ -27,13 +27,11 @@ export function DeployOneClickApp() {
       if (app === undefined) {
         setOneClickAppParam(null, { replace: true });
       } else {
-        const { search } = new URL(app.deployUrl);
-
         navigate({
-          to: (url) => {
-            url.search = search;
-            url.searchParams.set('one_click_app', app.slug);
-          },
+          search: () => ({
+            ...Object.fromEntries(new URLSearchParams(app.deployUrl)),
+            one_click_app: app.slug,
+          }),
         });
       }
     }

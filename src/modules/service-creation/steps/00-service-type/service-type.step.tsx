@@ -30,11 +30,12 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
 
   useMount(() => {
     navigate({
-      to: (url) => {
-        url.searchParams.delete('type');
-        url.searchParams.delete('service_type');
-        url.searchParams.delete('ports');
-      },
+      search: (prev) => ({
+        ...prev,
+        type: null,
+        service_type: null,
+        ports: null,
+      }),
     });
   });
 
@@ -46,14 +47,14 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
 
   const handleNext = (source: SourceType) => {
     navigate({
-      to: (url) => {
-        url.searchParams.set('type', source);
-
-        if (serviceType === 'private') {
-          url.searchParams.set('service_type', 'web');
-          url.searchParams.set('ports', '8000;tcp');
-        }
-      },
+      search: (prev) => ({
+        ...prev,
+        type: source,
+        ...(serviceType === 'private' && {
+          service_type: 'web',
+          ports: '8000;tcp',
+        }),
+      }),
     });
 
     onNext();

@@ -71,17 +71,14 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
 
   const setInstanceParam = (instance: string) => {
     navigate({
-      to: (url) => url.searchParams.set('instance_type', instance),
+      search: (prev) => ({ ...prev, instance_type: instance }),
       replace: true,
     });
   };
 
   const setRegionsParam = (regions: string[]) => {
     navigate({
-      to: (url) => {
-        url.searchParams.delete('regions');
-        regions.forEach((region) => url.searchParams.append('regions', region));
-      },
+      search: (prev) => ({ ...prev, regions }),
       replace: true,
     });
   };
@@ -123,7 +120,7 @@ function InstanceRegionStep_({ onNext }: InstanceRegionStepProps) {
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 
-      <Button onClick={onNext} disabled={selectedRegions.length === 0} className="self-start">
+      <Button onClick={() => onNext()} disabled={selectedRegions.length === 0} className="self-start">
         <Translate id="common.next" />
       </Button>
     </div>

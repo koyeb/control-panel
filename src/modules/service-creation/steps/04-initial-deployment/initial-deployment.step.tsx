@@ -23,11 +23,10 @@ export function InitialDeploymentStep({ serviceId }: { serviceId: string }) {
 
   useEffect(() => {
     if (pathname === routes.home()) {
-      // the home page will be replaced with the list of services
       navigate({
-        to: (url) => {
-          url.pathname = routes.createService();
-        },
+        // the home page will be replaced with the list of services
+        to: routes.createService(),
+        search: (prev) => prev,
       });
     }
   }, [pathname, navigate]);

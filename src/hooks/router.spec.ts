@@ -6,10 +6,6 @@ import { useLocation, useNavigate, useSearchParam } from './router';
 describe('router', () => {
   const pushState = vi.fn();
 
-  function url(url: string) {
-    return new URL(url, 'http://localhost:3000');
-  }
-
   beforeEach(() => {
     window.location.href = '/';
 
@@ -35,7 +31,7 @@ describe('router', () => {
   });
 
   describe('useNavigate', () => {
-    it('navigates to a given URL string', () => {
+    it('navigates to a given URL', () => {
       const { result } = renderHook(() => useNavigate());
 
       result.current({ to: '/some/route' });
@@ -43,16 +39,43 @@ describe('router', () => {
       expect(pushState).toHaveBeenCalledWith(null, '', '/some/route');
     });
 
-    it('navigates by mutating an URL object', () => {
+    it('navigates to a given set of search params', () => {
+      window.location.search = 'some=param';
       const { result } = renderHook(() => useNavigate());
 
       result.current({
-        to: (url) => {
-          url.pathname = '/some/route';
+        search: {
+          foo: 'bar',
         },
       });
 
-      expect(pushState).toHaveBeenCalledWith(null, '', url('/some/route'));
+      expect(pushState).toHaveBeenCalledWith(null, '', '/?foo=bar');
+    });
+
+    it('navigates by mutating the search params', () => {
+      window.location.search = 'some=param';
+      const { result } = renderHook(() => useNavigate());
+
+      result.current({
+        search: () => ({
+          foo: 'bar',
+        }),
+      });
+
+      expect(pushState).toHaveBeenCalledWith(null, '', '/?foo=bar');
+    });
+
+    it('removes a search param', () => {
+      window.location.search = 'some=param';
+      const { result } = renderHook(() => useNavigate());
+
+      result.current({
+        search: () => ({
+          some: null,
+        }),
+      });
+
+      expect(pushState).toHaveBeenCalledWith(null, '', '/');
     });
   });
 
@@ -83,7 +106,7 @@ describe('router', () => {
 
       result.current[1]('updated');
 
-      expect(pushState).toHaveBeenCalledWith(null, '', url('/?name=updated'));
+      expect(pushState).toHaveBeenCalledWith(null, '', '/?name=updated');
     });
 
     it("updates a search param's value as string array", () => {
@@ -93,7 +116,7 @@ describe('router', () => {
 
       result.current[1](['value1', 'value2']);
 
-      expect(pushState).toHaveBeenCalledWith(null, '', url('/?name=value1&name=value2'));
+      expect(pushState).toHaveBeenCalledWith(null, '', '/?name=value1&name=value2');
     });
 
     it('removes a search param', () => {
@@ -103,7 +126,7 @@ describe('router', () => {
 
       result.current[1](null);
 
-      expect(pushState).toHaveBeenCalledWith(null, '', url('/'));
+      expect(pushState).toHaveBeenCalledWith(null, '', '/');
     });
   });
 });

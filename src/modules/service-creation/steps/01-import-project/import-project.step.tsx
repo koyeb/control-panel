@@ -16,10 +16,7 @@ export function ImportProjectStep({ onNext }: ImportProjectStepProps) {
 
   useMount(() => {
     navigate({
-      to: (url) => {
-        url.searchParams.delete('repository');
-        url.searchParams.delete('image');
-      },
+      search: (prev) => ({ ...prev, repository: null, image: null }),
       replace: true,
     });
   });

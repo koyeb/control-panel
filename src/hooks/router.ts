@@ -28,22 +28,54 @@ export function useHistoryState<T extends HistoryState>(): Partial<T> {
   return useWouterHistoryState() ?? {};
 }
 
+type SearchParam = string | number | boolean | null;
+type SearchParams = Record<string, SearchParam | SearchParam[]>;
+
 type NavigateOptions = {
-  to?: string | ((url: URL) => void);
+  to?: string;
+  search?: SearchParams | ((search: SearchParams) => SearchParams);
   replace?: boolean;
   state?: HistoryState;
 };
 
 export function useNavigate() {
-  return useCallback(({ to, replace, state }: NavigateOptions) => {
-    if (typeof to === 'string') {
-      navigate(to, { replace, state });
-    } else if (typeof to === 'function') {
-      const url = new URL(window.location.href);
+  return useCallback(({ to, search, replace, state }: NavigateOptions) => {
+    const url = new URL(to ?? window.location.pathname, window.location.origin);
+    const searchParams = new URLSearchParams();
 
-      to(url);
-      navigate(url, { replace, state });
+    const setParam = (key: string, value: SearchParam, set: 'set' | 'append' = 'set') => {
+      if (value === null) {
+        searchParams.delete(key);
+      } else {
+        searchParams[set](key, String(value));
+      }
+    };
+
+    const updateSearchParams = (params: SearchParams) => {
+      for (const [key, value] of Object.entries(params)) {
+        if (Array.isArray(value)) {
+          value.forEach((value) => setParam(key, value, 'append'));
+        } else {
+          setParam(key, value);
+        }
+      }
+    };
+
+    if (typeof search === 'object') {
+      updateSearchParams(search);
     }
+
+    if (typeof search === 'function') {
+      updateSearchParams(search(Object.fromEntries(new URLSearchParams(window.location.search))));
+    }
+
+    let result = url.pathname;
+
+    if (searchParams.size > 0) {
+      result += `?${searchParams.toString()}`;
+    }
+
+    navigate(result, { replace, state });
   }, []);
 }
 
@@ -73,20 +105,7 @@ export function useSearchParam(name: string, options?: { array: true }) {
   const setValue = useCallback(
     (value: string | string[] | null, options?: NavigateOptions) => {
       navigate({
-        to: (url) => {
-          if (value === null) {
-            url.searchParams.delete(name);
-          }
-
-          if (Array.isArray(value)) {
-            url.searchParams.delete(name);
-            value.forEach((value) => url.searchParams.append(name, value));
-          }
-
-          if (typeof value === 'string') {
-            url.searchParams.set(name, value);
-          }
-        },
+        search: (prev) => ({ ...prev, [name]: value }),
         ...options,
       });
     },
