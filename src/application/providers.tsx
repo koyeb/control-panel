@@ -1,4 +1,4 @@
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistQueryClientProvider as BasePersistQueryClientProvider } from '@tanstack/react-query-persist-client';
@@ -78,7 +78,7 @@ function PersistQueryClientProvider({ children }: { children: React.ReactNode })
   const persister = useMemo(() => {
     const storage = session ? window.sessionStorage : window.localStorage;
 
-    return createSyncStoragePersister({
+    return createAsyncStoragePersister({
       key: 'query-cache',
       storage,
     });
