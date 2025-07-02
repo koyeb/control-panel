@@ -34,7 +34,7 @@ export function OrganizationQuotas() {
 
       {organization.plan === 'hobby' && <HobbyPlanAlert />}
 
-      <div className="grid w-full grid-cols-2 rounded-md border md:grid-cols-[24rem,1fr]">
+      <div className="grid w-full grid-cols-2 rounded-md border md:grid-cols-[24rem_1fr]">
         <QuotasSection
           resourceLabel={<T id="resource" />}
           quotaLabel={<T id="quota" />}

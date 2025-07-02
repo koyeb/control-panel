@@ -234,7 +234,7 @@ function Content() {
   const { page } = useCreateServiceDialog();
 
   return (
-    <div className="grid flex-1 grid-cols-[18rem,1fr] overflow-hidden">
+    <div className="grid flex-1 grid-cols-[18rem_1fr] overflow-hidden">
       <Navigation />
       {page?.render()}
     </div>
