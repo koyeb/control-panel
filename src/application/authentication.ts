@@ -2,9 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
 import { createContext, createElement, useContext, useEffect, useMemo, useState } from 'react';
-import { usePathname } from 'wouter/use-browser-location';
 
 import { useApiMutationFn } from 'src/api/use-api';
+import { usePathname } from 'src/hooks/router';
 import { useStorage } from 'src/hooks/storage.new';
 
 export function getToken() {

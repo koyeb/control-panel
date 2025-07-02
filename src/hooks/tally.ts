@@ -1,7 +1,8 @@
 import { useCallback, useEffect } from 'react';
-import { usePathname } from 'wouter/use-browser-location';
 
 import { useUserUnsafe } from 'src/api/hooks/session';
+
+import { usePathname } from './router';
 
 type OpenPopupOptions = {
   layout: 'modal';

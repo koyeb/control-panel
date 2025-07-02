@@ -1,10 +1,10 @@
 import { TabButtons } from '@koyeb/design-system';
-import { usePathname } from 'wouter/use-browser-location';
 
 import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { TabButtonLink } from 'src/components/link';
 import { Title } from 'src/components/title';
+import { usePathname } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.layout');
