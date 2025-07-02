@@ -1,42 +1,32 @@
-import './polyfills';
-import './sentry';
-import './intercom';
-
-import ReactDOM from 'react-dom/client';
-
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
+import './intercom';
+import './polyfills';
+import './sentry';
 import './styles.css';
 
-import { hasMessage } from './api/api-errors';
-import { App } from './app';
-import { notify } from './application/notify';
-import { Providers } from './application/providers';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
 
-import './api/api.intercept';
+import { routeTree } from './route-tree.generated';
 
-// https://vitejs.dev/guide/build#load-error-handling
-window.addEventListener('vite:preloadError', (event) => {
-  event.preventDefault();
-  window.location.reload();
-});
+const router = createRouter({ routeTree });
 
-// https://github.com/facebook/react/issues/10474
-function isGuardedCallbackDev() {
-  const index = new Error().stack?.indexOf('invokeGuardedCallbackDev');
-  return index && index >= 0;
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
 }
 
-window.addEventListener('error', function (event) {
-  const error: unknown = event.error;
+const rootElement = document.getElementById('root')!;
 
-  if (hasMessage(error) && !isGuardedCallbackDev()) {
-    notify.error(error.message);
-  }
-});
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <Providers>
-    <App />
-  </Providers>,
-);
+  root.render(
+    <StrictMode>
+      <RouterProvider router={router} />
+    </StrictMode>,
+  );
+}
