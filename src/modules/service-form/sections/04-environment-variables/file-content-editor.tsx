@@ -9,7 +9,7 @@ import { CodeEditor, CodeEditorLanguageSelect } from 'src/components/code-editor
 import { useCodeEditorLanguage } from 'src/components/code-editor/use-code-editor-language';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { FullScreen } from 'src/components/full-screen';
-import { IconClose, IconFullscreen } from 'src/components/icons';
+import { IconFullscreen, IconX } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
@@ -81,12 +81,7 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
                 <T id="fullScreenTitle" values={{ mountPath }} />
               </div>
 
-              <IconButton
-                variant="ghost"
-                color="gray"
-                Icon={IconClose}
-                onClick={() => setFullScreen(false)}
-              />
+              <IconButton variant="ghost" color="gray" Icon={IconX} onClick={() => setFullScreen(false)} />
             </div>
           )}
 

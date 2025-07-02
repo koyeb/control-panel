@@ -51,7 +51,7 @@
     "framer-motion": "^12.23.0",
     "jwt-decode": "^4.0.0",
     "lodash-es": "^4.17.21",
-    "lucide-static": "^0.525.0",
+    "lucide-react": "^0.525.0",
     "motion": "^12.23.0",
     "posthog-js": "^1.256.1",
     "react": "^19.1.0",

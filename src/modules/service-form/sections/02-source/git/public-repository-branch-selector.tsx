@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { ControlledAutocomplete } from 'src/components/controlled';
-import { IconBranch } from 'src/components/icons';
+import { IconGitBranch } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
@@ -46,7 +46,7 @@ function BranchItem({ branch }: BranchItemProps) {
   return (
     <div className="row gap-2">
       <div>
-        <IconBranch className="icon" />
+        <IconGitBranch className="icon" />
       </div>
       <div className="truncate">{branch}</div>
     </div>

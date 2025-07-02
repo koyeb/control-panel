@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { ControlledRadio } from 'src/components/controlled';
-import { IconArchive, IconBranch, IconGithub } from 'src/components/icons';
+import { IconArchive, IconGitBranch, IconGithub } from 'src/components/icons';
 import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate } from 'src/intl/translate';
 
@@ -88,7 +88,7 @@ function GitSectionTitle() {
       </div>
 
       <div className="row items-center gap-2">
-        <IconBranch className="icon" /> {repository.branch}
+        <IconGitBranch className="icon" /> {repository.branch}
       </div>
     </div>
   );

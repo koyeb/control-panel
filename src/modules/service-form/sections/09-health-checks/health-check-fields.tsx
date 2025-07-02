@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { IconRefresh } from 'src/components/icons';
+import { IconRefreshCcw } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
@@ -106,7 +106,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
             setValue(`ports.${index}.healthCheck`, defaultHealthCheck(), { shouldValidate: true })
           }
         >
-          <IconRefresh className="size-4" />
+          <IconRefreshCcw className="size-4" />
           <T id="defaultValues" />
         </Button>
       </div>

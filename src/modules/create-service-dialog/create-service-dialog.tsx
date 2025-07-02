@@ -7,13 +7,13 @@ import {
   IconArrowDown,
   IconArrowLeft,
   IconArrowUp,
-  IconCodeSnippet,
   IconCornerDownLeft,
   IconDatabase,
   IconGithub,
   IconGlobe,
   IconSearch,
   IconSettings,
+  IconSquareCode,
 } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
@@ -119,7 +119,7 @@ function useGetSections() {
               },
               {
                 label: t('navigation.publicRepository'),
-                icon: <IconCodeSnippet className="icon" />,
+                icon: <IconSquareCode className="icon" />,
                 shortcut: '2',
                 render: () => <PublicRepository />,
               },

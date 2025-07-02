@@ -7,7 +7,7 @@ import {
   IconBookOpen,
   IconChevronRight,
   IconLightbulb,
-  IconMessageMoreCircle,
+  IconMessageCircleMore,
   IconNewspaper,
   IconSignal,
 } from 'src/components/icons';
@@ -58,7 +58,7 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
           </LinkMenuItem>
 
           <LinkMenuItem href="https://community.koyeb.com" onClick={onClose}>
-            <IconMessageMoreCircle className="icon" />
+            <IconMessageCircleMore className="icon" />
             <T id="community" />
           </LinkMenuItem>
 
