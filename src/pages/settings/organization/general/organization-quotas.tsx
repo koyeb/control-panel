@@ -78,7 +78,7 @@ export function OrganizationQuotas() {
 function HobbyPlanAlert() {
   return (
     <Alert variant="info" description={<T id="hobbyPlanAlert.description" />} className="w-full">
-      <LinkButton color="blue" href={routes.organizationSettings.plans()} className="ml-auto self-center">
+      <LinkButton color="blue" to={routes.organizationSettings.plans()} className="ml-auto self-center">
         <T id="hobbyPlanAlert.cta" />
       </LinkButton>
     </Alert>

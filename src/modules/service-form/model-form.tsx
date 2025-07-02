@@ -139,7 +139,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
         <InstanceSection model={model} form={form} />
 
         <div className="row justify-end gap-2">
-          <LinkButton color="gray" href={routes.home()}>
+          <LinkButton color="gray" to={routes.home()}>
             <Translate id="common.cancel" />
           </LinkButton>
 

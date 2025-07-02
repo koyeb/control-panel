@@ -29,7 +29,7 @@ export function UserMenu() {
       )}
       renderFloating={(props) => (
         <Menu className="min-w-48" {...props}>
-          <MenuItem element={Link} href={'?settings'} onClick={() => setOpen(false)} className="row gap-2">
+          <MenuItem element={Link} to={'?settings'} onClick={() => setOpen(false)} className="row gap-2">
             <IconSettings className="icon" />
             <T id="settings" />
           </MenuItem>

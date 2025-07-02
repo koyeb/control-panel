@@ -19,7 +19,7 @@ export function Activities() {
         <span className="text-lg font-medium">
           <T id="title" />
         </span>
-        <Link className="text-link" href={routes.activity()}>
+        <Link className="text-link" to={routes.activity()}>
           <T id="viewAll" />
         </Link>
       </div>

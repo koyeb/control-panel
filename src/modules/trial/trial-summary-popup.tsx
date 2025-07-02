@@ -55,7 +55,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
           <T id="timeLeft" values={{ days: trial.daysLeft }} />
         </div>
 
-        <LinkButton color="gray" size={1} href={routes.organizationSettings.billing()}>
+        <LinkButton color="gray" size={1} to={routes.organizationSettings.billing()}>
           <T id="cta" />
         </LinkButton>
       </div>

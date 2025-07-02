@@ -86,7 +86,7 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
             <ActionsListLink
               key="inspect"
               Icon={IconArrowRight}
-              href={routes.service.overview(service.id)}
+              to={routes.service.overview(service.id)}
               className="row justify-between text-xs font-medium"
             >
               <T id="serviceReady.inspectService" />
@@ -95,10 +95,9 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
             url?.externalUrl && (
               <ActionsListLink
                 key="access"
-                component="a"
                 Icon={IconExternalLink}
                 openInNewTab
-                href={`https://${url.externalUrl}`}
+                to={`https://${url.externalUrl}`}
                 className="row justify-between text-xs font-medium"
               >
                 <T id="serviceReady.accessService" />
@@ -120,7 +119,7 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
             <ActionsListLink
               key="inspect"
               Icon={IconArrowRight}
-              href={routes.service.overview(service.id)}
+              to={routes.service.overview(service.id)}
               className="row justify-between text-xs font-medium"
             >
               <T id="inspectService" />

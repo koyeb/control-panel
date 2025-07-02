@@ -20,7 +20,7 @@ export function SelectPlan({ onDowngrade, onSelected }: SelectPlanProps) {
     <>
       <div className="row justify-between gap-4">
         <DialogHeader title={<T id="title" />} />
-        <Link href={`?settings`} className="text-dim hover:underline">
+        <Link to={`?settings`} className="text-dim hover:underline">
           <T id="manageAccount" />
         </Link>
       </div>

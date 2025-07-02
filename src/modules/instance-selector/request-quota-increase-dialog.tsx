@@ -35,7 +35,7 @@ export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInst
       </p>
 
       <DialogFooter>
-        <ExternalLinkButton openInNewTab href={tallyLink}>
+        <ExternalLinkButton openInNewTab to={tallyLink}>
           <T id="cta" />
         </ExternalLinkButton>
       </DialogFooter>

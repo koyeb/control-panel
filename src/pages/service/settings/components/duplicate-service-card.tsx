@@ -24,7 +24,7 @@ export function DuplicateServiceCard({ service }: DuplicateServiceCardProps) {
 
       <LinkButton
         color="gray"
-        href={routes.deploy() + `?duplicate-service-id=${service.id}`}
+        to={routes.deploy() + `?duplicate-service-id=${service.id}`}
         className="ml-auto"
       >
         <T id="duplicate" />

@@ -25,7 +25,7 @@ export function VolumesLayout({ children }: { children: React.ReactNode }) {
         subTitle={<T id="unavailable.subTitle" />}
         description={<T id="unavailable.description" />}
         cta={
-          <LinkButton href={routes.organizationSettings.plans()}>
+          <LinkButton to={routes.organizationSettings.plans()}>
             <T id="unavailable.cta" />
             <IconArrowRight className="size-icon" />
           </LinkButton>
@@ -42,10 +42,10 @@ export function VolumesLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <TabButtons className="mb-6">
-        <TabButtonLink href={routes.volumes.index()} selected={pathname === routes.volumes.index()}>
+        <TabButtonLink to={routes.volumes.index()} selected={pathname === routes.volumes.index()}>
           Volumes
         </TabButtonLink>
-        <TabButtonLink href={routes.volumes.snapshots()} selected={pathname === routes.volumes.snapshots()}>
+        <TabButtonLink to={routes.volumes.snapshots()} selected={pathname === routes.volumes.snapshots()}>
           Snapshots
         </TabButtonLink>
       </TabButtons>

@@ -136,7 +136,7 @@ function DeploymentsListActions({
               color="gray"
               size={1}
               disabled={isActive() || activeDeploymentId === undefined}
-              href={routes.service.overview(service.id, activeDeploymentId)}
+              to={routes.service.overview(service.id, activeDeploymentId)}
             >
               <T id="deployments.actions.activeDeployment" />
             </LinkButton>
@@ -150,7 +150,7 @@ function DeploymentsListActions({
           color="gray"
           size={1}
           disabled={isLatest()}
-          href={routes.service.overview(service.id, latestNonStashedDeployment?.id)}
+          to={routes.service.overview(service.id, latestNonStashedDeployment?.id)}
         >
           <T id="deployments.actions.latestDeployment" />
         </LinkButton>

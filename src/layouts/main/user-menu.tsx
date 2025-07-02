@@ -51,7 +51,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
         <Menu {...props}>
           <MenuItem
             element={Link}
-            href={routes.userSettings.index()}
+            to={routes.userSettings.index()}
             onClick={() => setOpen(false)}
             className="row gap-2"
           >

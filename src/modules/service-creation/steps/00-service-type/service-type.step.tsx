@@ -76,7 +76,7 @@ export function ServiceTypeStep() {
               </div>
             </div>
 
-            <LinkButton className="self-start" href={getCreateServiceUrl(serviceType, appId)}>
+            <LinkButton className="self-start" to={getCreateServiceUrl(serviceType, appId)}>
               <T id={`${serviceType}.button`} />
             </LinkButton>
           </div>
@@ -149,7 +149,7 @@ type DeploymentSourceOptionProps = {
 
 function DeploymentSourceOption({ Icon, title, description, href }: DeploymentSourceOptionProps) {
   return (
-    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" href={href}>
+    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" to={href}>
       <div className="rounded-lg bg-muted p-3">
         <Icon className="size-10" />
       </div>

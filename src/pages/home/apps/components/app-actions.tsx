@@ -36,11 +36,11 @@ export function AppActions({ app }: { app: App }) {
               <T id="appActions.label" />
             </MenuItem>
 
-            <MenuItem element={Link} href={`${routes.createService()}?app_id=${app.id}`} onClick={onClose}>
+            <MenuItem element={Link} to={`${routes.createService()}?app_id=${app.id}`} onClick={onClose}>
               <T id="appActions.addService" />
             </MenuItem>
 
-            <MenuItem element={Link} href={routes.domains()} onClick={onClose}>
+            <MenuItem element={Link} to={routes.domains()} onClick={onClose}>
               <T id="appActions.addDomain" />
             </MenuItem>
 

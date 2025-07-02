@@ -266,7 +266,7 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
             <MenuItem
               key={service.id}
               element={Link}
-              href={
+              to={
                 service.type === 'database'
                   ? routes.database.overview(service.id)
                   : routes.service.overview(service.id)

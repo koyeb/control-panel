@@ -162,7 +162,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         <EnvironmentVariablesSection form={form} />
 
         <div className="row justify-end gap-2">
-          <LinkButton color="gray" href={routes.home()}>
+          <LinkButton color="gray" to={routes.home()}>
             <Translate id="common.cancel" />
           </LinkButton>
 

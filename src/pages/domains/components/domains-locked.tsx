@@ -14,7 +14,7 @@ export function DomainsLocked() {
       subTitle={<T id="subTitle" />}
       description={<T id="description" values={{ br: () => <br /> }} />}
       cta={
-        <LinkButton href={routes.organizationSettings.plans()}>
+        <LinkButton to={routes.organizationSettings.plans()}>
           <T id="upgrade" />
           <IconArrowRight className="size-icon" />
         </LinkButton>

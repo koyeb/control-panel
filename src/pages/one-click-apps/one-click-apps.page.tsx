@@ -36,7 +36,7 @@ export function OneClickAppsPage() {
               <p className="line-clamp-3 text-dim">{app.description}</p>
 
               <div className="mt-auto row justify-end">
-                <LinkButton variant="ghost" color="gray" href={app.deployUrl}>
+                <LinkButton variant="ghost" color="gray" to={app.deployUrl}>
                   Deploy
                 </LinkButton>
               </div>

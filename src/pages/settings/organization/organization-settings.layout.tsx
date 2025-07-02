@@ -25,27 +25,27 @@ export function OrganizationSettingsLayout({ children }: { children: React.React
 function Navigation() {
   return (
     <TabButtons className="self-start">
-      <Tab href={routes.organizationSettings.index()}>
+      <Tab to={routes.organizationSettings.index()}>
         <T id="navigation.general" />
       </Tab>
-      <Tab href={routes.organizationSettings.billing()}>
+      <Tab to={routes.organizationSettings.billing()}>
         <T id="navigation.billing" />
       </Tab>
-      <Tab href={routes.organizationSettings.plans()}>
+      <Tab to={routes.organizationSettings.plans()}>
         <T id="navigation.plans" />
       </Tab>
-      <Tab href={routes.organizationSettings.api()}>
+      <Tab to={routes.organizationSettings.api()}>
         <T id="navigation.api" />
       </Tab>
-      <Tab href={routes.organizationSettings.registrySecrets()}>
+      <Tab to={routes.organizationSettings.registrySecrets()}>
         <T id="navigation.registrySecrets" />
       </Tab>
     </TabButtons>
   );
 }
 
-function Tab(props: { href: string; children: React.ReactNode }) {
+function Tab(props: { to: string; children: React.ReactNode }) {
   const pathname = usePathname();
 
-  return <TabButtonLink selected={pathname === props.href} className="whitespace-nowrap" {...props} />;
+  return <TabButtonLink selected={pathname === props.to} className="whitespace-nowrap" {...props} />;
 }

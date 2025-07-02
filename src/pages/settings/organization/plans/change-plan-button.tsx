@@ -94,7 +94,7 @@ export function ChangePlanEnterpriseButton() {
   return (
     <ExternalLinkButton
       openInNewTab
-      href={tallyLink}
+      to={tallyLink}
       disabled={organization.plan === 'enterprise'}
       className="w-full"
     >

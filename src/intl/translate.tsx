@@ -19,7 +19,7 @@ export const createTranslate = createTranslationHelper<TranslationKeys>({
   code: (children) => <code>{children}</code>,
   dim: (children) => <span className="text-dim">{children}</span>,
   upgrade: (children) => (
-    <Link href={routes.organizationSettings.plans()} className="text-link">
+    <Link to={routes.organizationSettings.plans()} className="text-link">
       {children}
     </Link>
   ),

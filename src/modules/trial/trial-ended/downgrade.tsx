@@ -85,7 +85,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
               id="footer.message"
               values={{
                 delete: (children) => (
-                  <Link href={`?settings`} className="underline">
+                  <Link to={`?settings`} className="underline">
                     {children}
                   </Link>
                 ),

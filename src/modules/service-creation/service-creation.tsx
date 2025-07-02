@@ -50,7 +50,7 @@ export function ServiceCreation() {
   const serviceLink = (children: React.ReactNode) => {
     if (serviceId) {
       return (
-        <Link className="text-link" href={routes.service.overview(serviceId)}>
+        <Link className="text-link" to={routes.service.overview(serviceId)}>
           {children}
         </Link>
       );

@@ -2,13 +2,24 @@ import { Button, ButtonColor, ButtonSize, ButtonVariant, Spinner, TabButton } fr
 import clsx from 'clsx';
 import { createElement } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { Link } from 'wouter';
+import { Link as BaseLink } from 'wouter';
 
 import { Extend } from 'src/utils/types';
 
-export { Link };
+type LinkProps = Extend<
+  React.ComponentProps<'a'>,
+  {
+    to?: string;
+    state?: unknown;
+  }
+>;
+
+export function Link({ to, ...props }: LinkProps) {
+  return <BaseLink href={to ?? ''} {...props} />;
+}
 
 type LinkButtonOwnProps = {
+  to?: string;
   variant?: ButtonVariant;
   size?: ButtonSize;
   color?: ButtonColor;
@@ -26,14 +37,14 @@ export function LinkButton({
   disabled,
   openInNewTab,
   state,
-  href = '',
+  to = '',
   loading,
   className,
   children,
   ...rest
 }: LinkButtonProps) {
   const props: React.ComponentProps<typeof Link> & { state?: unknown } = {
-    href,
+    to,
     'aria-disabled': disabled,
     className: Button.className(rest, clsx(disabled && 'pointer-events-none opacity-50', className)),
     ...rest,
@@ -62,17 +73,17 @@ export function LinkButton({
 }
 
 type TabButtonLinkProps = {
-  href: string;
+  to: string;
   selected: boolean;
   panelId?: string;
   className?: string;
   children?: React.ReactNode;
 };
 
-export function TabButtonLink({ href, selected, panelId, className, children }: TabButtonLinkProps) {
+export function TabButtonLink({ to, selected, panelId, className, children }: TabButtonLinkProps) {
   return (
     <Link
-      href={href}
+      to={to}
       role="tab"
       className={clsx(TabButton.className({ selected, className }))}
       aria-selected={selected}

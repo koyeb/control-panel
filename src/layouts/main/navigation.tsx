@@ -111,7 +111,7 @@ function NavigationItem({ collapsed, disabled, Icon, label, href, isActive, newB
   return (
     <li className={clsx('mx-3 rounded', active && 'bg-muted', !active && 'text-dim')}>
       <Link
-        href={href}
+        to={href}
         aria-disabled={disabled}
         className={clsx('row items-center gap-2 p-2 hover:text-default', disabled && 'pointer-events-none')}
       >

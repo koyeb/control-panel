@@ -40,7 +40,7 @@ export function SignInPage() {
 
 function SignUpLink() {
   const link = (children: React.ReactNode[]) => (
-    <Link href={routes.signUp()} className="text-default underline">
+    <Link to={routes.signUp()} className="text-default underline">
       {children}
     </Link>
   );
@@ -54,7 +54,7 @@ function SignUpLink() {
 
 function PasswordResetLink() {
   const link = (children: React.ReactNode[]) => (
-    <Link href={routes.resetPassword()} className="text-default underline">
+    <Link to={routes.resetPassword()} className="text-default underline">
       {children}
     </Link>
   );

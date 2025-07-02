@@ -89,7 +89,7 @@ function NewsItem({ news }: { news: News }) {
           variant="ghost"
           size={1}
           component="a"
-          href={news.link}
+          to={news.link}
           target="_blank"
           rel="noopener noreferrer"
         >

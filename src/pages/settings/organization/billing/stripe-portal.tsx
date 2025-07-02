@@ -22,7 +22,7 @@ export function StripePortal() {
 
       <LinkButton
         disabled={query.isPending || query.data === undefined}
-        href={query.data?.url}
+        to={query.data?.url}
         component="a"
         color="gray"
         target="_blank"

@@ -119,7 +119,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
             <hr className="my-1" />
 
             <Link
-              href={routes.userSettings.organizations()}
+              to={routes.userSettings.organizations()}
               state={{ create: true }}
               className="mb-1 row w-full gap-2 px-2 py-1.5"
             >

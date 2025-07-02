@@ -68,7 +68,7 @@ export function QuotaAlert(props: QuotaAlertProps) {
       <LinkButton
         color="blue"
         component="a"
-        href={routes.organizationSettings.plans()}
+        to={routes.organizationSettings.plans()}
         target="_blank"
         className="ml-auto"
       >

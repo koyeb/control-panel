@@ -245,29 +245,29 @@ function Navigation() {
 
   return (
     <TabButtons className="self-start">
-      <Tab href={routes.service.overview(serviceId)}>
+      <Tab to={routes.service.overview(serviceId)}>
         <T id="navigation.overview" />
       </Tab>
 
-      <Tab href={routes.service.metrics(serviceId)}>
+      <Tab to={routes.service.metrics(serviceId)}>
         <T id="navigation.metrics" />
       </Tab>
 
-      <Tab href={routes.service.console(serviceId)}>
+      <Tab to={routes.service.console(serviceId)}>
         <T id="navigation.console" />
       </Tab>
 
-      <Tab href={routes.service.settings(serviceId)}>
+      <Tab to={routes.service.settings(serviceId)}>
         <T id="navigation.settings" />
       </Tab>
     </TabButtons>
   );
 }
 
-function Tab(props: { href: string; children: React.ReactNode }) {
+function Tab(props: { to: string; children: React.ReactNode }) {
   const pathname = usePathname();
 
-  return <TabButtonLink selected={pathname === props.href} className="whitespace-nowrap" {...props} />;
+  return <TabButtonLink selected={pathname === props.to} className="whitespace-nowrap" {...props} />;
 }
 
 function ServicePausedAlert({ service }: { service: Service }) {

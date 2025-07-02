@@ -29,7 +29,7 @@ export function OverviewPage() {
         title={<T id="noDatabase.title" />}
         description={<T id="noDatabase.description" />}
         cta={
-          <LinkButton href={routes.database.logicalDatabases(service.id)} state={{ create: true }}>
+          <LinkButton to={routes.database.logicalDatabases(service.id)} state={{ create: true }}>
             <T id="noDatabase.cta" />
           </LinkButton>
         }

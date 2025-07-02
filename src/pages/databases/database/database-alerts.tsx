@@ -84,7 +84,7 @@ function QuotaReachedAlert({ service, quota }: QuotaReachedAlertProps) {
     <Alert variant="warning" description={message()}>
       {organization.plan === 'hobby' ? (
         <LinkButton
-          href={routes.organizationSettings.plans()}
+          to={routes.organizationSettings.plans()}
           color="orange"
           className="self-center whitespace-nowrap"
         >
@@ -92,7 +92,7 @@ function QuotaReachedAlert({ service, quota }: QuotaReachedAlertProps) {
         </LinkButton>
       ) : (
         <LinkButton
-          href={routes.database.settings(service.id)}
+          to={routes.database.settings(service.id)}
           color="orange"
           className="self-center whitespace-nowrap"
         >

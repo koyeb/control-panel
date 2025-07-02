@@ -162,7 +162,7 @@ function PageNotFound() {
         <Translate id="pages.notFound.line1" />
       </div>
 
-      <LinkButton href={routes.home()} className="mt-4">
+      <LinkButton to={routes.home()} className="mt-4">
         <Translate id="pages.notFound.back" />
       </LinkButton>
     </div>

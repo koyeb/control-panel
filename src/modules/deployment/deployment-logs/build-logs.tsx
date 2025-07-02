@@ -144,7 +144,7 @@ function BuiltInPreviousDeployment({ service }: { service: Service }) {
           values={{
             link: (children) => (
               <Link
-                href={routes.service.overview(service.id, service.lastProvisionedDeploymentId)}
+                to={routes.service.overview(service.id, service.lastProvisionedDeploymentId)}
                 className="underline"
               >
                 {children}

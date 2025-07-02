@@ -28,7 +28,7 @@ export function OneClickAppList() {
 
       <ul>
         {apps.map((app) => (
-          <Link key={app.slug} href={app.deployUrl}>
+          <Link key={app.slug} to={app.deployUrl}>
             <ServiceTypeItem
               icon={
                 <div className="rounded-md bg-black/60 p-1.5">

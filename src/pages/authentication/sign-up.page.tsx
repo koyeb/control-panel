@@ -53,7 +53,7 @@ export function SignUpPage() {
 
 function SignInLink() {
   const link = (children: React.ReactNode) => (
-    <Link href={routes.signIn()} className="text-default underline">
+    <Link to={routes.signIn()} className="text-default underline">
       {children}
     </Link>
   );

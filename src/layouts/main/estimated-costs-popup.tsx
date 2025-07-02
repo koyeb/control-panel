@@ -79,7 +79,7 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
         </div>
       </div>
 
-      <LinkButton color="gray" size={1} href={routes.organizationSettings.billing()} className="mt-1">
+      <LinkButton color="gray" size={1} to={routes.organizationSettings.billing()} className="mt-1">
         <T id="cta" />
       </LinkButton>
     </div>

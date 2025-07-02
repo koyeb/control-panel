@@ -86,7 +86,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
   return (
     <div className="col min-h-full gap-4 py-4 sm:gap-6 sm:py-6">
-      <Link href={isDeactivated ? routes.organizationSettings.index() : routes.home()} className="mx-2 px-3">
+      <Link to={isDeactivated ? routes.organizationSettings.index() : routes.home()} className="mx-2 px-3">
         {collapsed && <Logo className="h-6" />}
         {!collapsed && <LogoKoyeb className="h-6" />}
       </Link>
@@ -103,7 +103,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
         </div>
       )}
 
-      <LinkButton size={2} href={routes.createService()} disabled={isDeactivated} className="mx-3 capitalize">
+      <LinkButton size={2} to={routes.createService()} disabled={isDeactivated} className="mx-3 capitalize">
         {collapsed && (
           <div>
             <IconPlus className="size-5" />

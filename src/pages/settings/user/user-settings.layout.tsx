@@ -25,21 +25,21 @@ export function UserSettingsLayout({ children }: { children: React.ReactNode }) 
 function Navigation() {
   return (
     <TabButtons className="self-start">
-      <Tab href={routes.userSettings.index()}>
+      <Tab to={routes.userSettings.index()}>
         <T id="navigation.general" />
       </Tab>
-      <Tab href={routes.userSettings.organizations()}>
+      <Tab to={routes.userSettings.organizations()}>
         <T id="navigation.organizations" />
       </Tab>
-      <Tab href={routes.userSettings.api()}>
+      <Tab to={routes.userSettings.api()}>
         <T id="navigation.apiCredential" />
       </Tab>
     </TabButtons>
   );
 }
 
-function Tab(props: { href: string; children: React.ReactNode }) {
+function Tab(props: { to: string; children: React.ReactNode }) {
   const pathname = usePathname();
 
-  return <TabButtonLink selected={pathname === props.href} className="whitespace-nowrap" {...props} />;
+  return <TabButtonLink selected={pathname === props.to} className="whitespace-nowrap" {...props} />;
 }

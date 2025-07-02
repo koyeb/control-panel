@@ -61,7 +61,7 @@ export function ErrorView({ httpStatus, message, code, expected, onReset }: Erro
 
         <div className="mt-6 self-center">
           <Link
-            href={routes.home()}
+            to={routes.home()}
             className="rounded-full bg-green px-6 py-3 font-medium hover:no-underline"
             onClick={onReset}
           >

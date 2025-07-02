@@ -60,7 +60,7 @@ function ServiceUnhealthyAlert({ serviceId, latestDeploymentId }: ServiceUnhealt
           values={{
             latestDeploymentName: shortId(latestDeploymentId),
             latestDeploymentLink: (children) => (
-              <Link href={deploymentLink(serviceId, latestDeploymentId)} className="underline">
+              <Link to={deploymentLink(serviceId, latestDeploymentId)} className="underline">
                 {children}
               </Link>
             ),
@@ -94,13 +94,13 @@ function ServiceDegradedAlert({
           values={{
             activeDeploymentName: shortId(activeDeploymentId),
             activeDeploymentLink: (children) => (
-              <Link href={deploymentLink(serviceId, activeDeploymentId)} className="underline">
+              <Link to={deploymentLink(serviceId, activeDeploymentId)} className="underline">
                 {children}
               </Link>
             ),
             latestDeploymentName: shortId(latestDeploymentId),
             latestDeploymentLink: (children) => (
-              <Link href={deploymentLink(serviceId, latestDeploymentId)} className="underline">
+              <Link to={deploymentLink(serviceId, latestDeploymentId)} className="underline">
                 {children}
               </Link>
             ),
@@ -127,7 +127,7 @@ function LatestDeploymentButton({ color, serviceId, deploymentId }: LatestDeploy
   }
 
   return (
-    <LinkButton color={color} href={deploymentLink(serviceId, deploymentId)} className="sm:self-center">
+    <LinkButton color={color} to={deploymentLink(serviceId, deploymentId)} className="sm:self-center">
       <T id="cta" />
     </LinkButton>
   );

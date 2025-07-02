@@ -55,7 +55,7 @@ export function DnsConfiguration({ domain }: { domain: Domain }) {
           component="a"
           variant="outline"
           color="gray"
-          href={getDocumentationLink(subdomain === '')}
+          to={getDocumentationLink(subdomain === '')}
           target="_blank"
           rel="noopener noreferrer"
         >

@@ -185,7 +185,7 @@ function AccountNotFound() {
           id="accountNotFound.link"
           values={{
             link: (children) => (
-              <Link href={routes.signUp()} className="underline">
+              <Link to={routes.signUp()} className="underline">
                 {children}
               </Link>
             ),
@@ -208,7 +208,7 @@ function AccountAlreadyExists() {
           id="accountAlreadyExists.link"
           values={{
             link: (children) => (
-              <Link href={routes.signIn()} className="underline">
+              <Link to={routes.signIn()} className="underline">
                 {children}
               </Link>
             ),

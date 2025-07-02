@@ -77,7 +77,7 @@ export function OrganizationPlan() {
             <LinkButton
               variant="outline"
               size={1}
-              href={routes.organizationSettings.plans()}
+              to={routes.organizationSettings.plans()}
               className="w-full"
             >
               <T id="upgrade" />
@@ -119,7 +119,7 @@ function HobbyPlan() {
         </div>
       </div>
 
-      <LinkButton color="gray" size={1} href={routes.organizationSettings.plans()} className="w-full">
+      <LinkButton color="gray" size={1} to={routes.organizationSettings.plans()} className="w-full">
         <T id="upsell.cta" />
       </LinkButton>
     </div>

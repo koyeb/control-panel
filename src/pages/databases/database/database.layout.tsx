@@ -107,24 +107,24 @@ function Navigation() {
 
   return (
     <TabButtons className="self-start">
-      <Tab href={routes.database.overview(databaseServiceId)}>
+      <Tab to={routes.database.overview(databaseServiceId)}>
         <T id="navigation.overview" />
       </Tab>
-      <Tab href={routes.database.logicalDatabases(databaseServiceId)}>
+      <Tab to={routes.database.logicalDatabases(databaseServiceId)}>
         <T id="navigation.logicalDatabases" />
       </Tab>
-      <Tab href={routes.database.roles(databaseServiceId)}>
+      <Tab to={routes.database.roles(databaseServiceId)}>
         <T id="navigation.roles" />
       </Tab>
-      <Tab href={routes.database.settings(databaseServiceId)}>
+      <Tab to={routes.database.settings(databaseServiceId)}>
         <T id="navigation.settings" />
       </Tab>
     </TabButtons>
   );
 }
 
-function Tab(props: { href: string; children: React.ReactNode }) {
+function Tab(props: { to: string; children: React.ReactNode }) {
   const pathname = usePathname();
 
-  return <TabButtonLink selected={pathname === props.href} className="whitespace-nowrap" {...props} />;
+  return <TabButtonLink selected={pathname === props.to} className="whitespace-nowrap" {...props} />;
 }

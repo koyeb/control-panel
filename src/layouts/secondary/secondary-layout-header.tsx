@@ -24,7 +24,7 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
         background && 'bg-gradient-to-b from-neutral from-75% to-transparent',
       )}
     >
-      <Link href={routes.home()}>
+      <Link to={routes.home()}>
         <LogoKoyeb className={clsx('h-8 self-start', !background && 'text-white')} />
       </Link>
 
