@@ -87,7 +87,7 @@
     "@types/react-helmet": "^6.1.11",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react": "^4.6.0",
-    "@vueless/storybook-dark-mode": "^9.0.5",
+    "@vueless/storybook-dark-mode": "^9.0.6",
     "dotenv": "^17.0.1",
     "eslint": "^9.30.1",
     "eslint-plugin-better-tailwindcss": "^3.4.3",
