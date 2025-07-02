@@ -9,7 +9,7 @@ import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
 import { useAuth } from 'src/application/authentication';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
-import { useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
 import { AssertionError, assert, defined } from 'src/utils/assert';
 import { isDefined } from 'src/utils/generic';
@@ -234,8 +234,17 @@ function useDeploymentGroups(service: Service, deployments: ComputeDeployment[])
 }
 
 function useSelectedDeployment(deployments: ComputeDeployment[], noDefaultSelected: boolean) {
-  const [selectedDeploymentId, setSelectedDeploymentId] = useSearchParam('deploymentId');
+  const selectedDeploymentId = useSearchParams().get('deploymentId');
+  const navigate = useNavigate();
+
   const selectedDeployment = useDeployment(selectedDeploymentId ?? undefined);
+
+  const setSelectedDeployment = useCallback(
+    (deployment: ComputeDeployment) => {
+      navigate({ search: (prev) => ({ ...prev, deploymentId: deployment.id }), replace: true });
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     if (noDefaultSelected) {
@@ -243,14 +252,9 @@ function useSelectedDeployment(deployments: ComputeDeployment[], noDefaultSelect
     }
 
     if (selectedDeploymentId === null && deployments[0] !== undefined) {
-      setSelectedDeploymentId(deployments[0].id, { replace: true });
+      setSelectedDeployment(deployments[0]);
     }
-  }, [noDefaultSelected, deployments, selectedDeploymentId, setSelectedDeploymentId]);
-
-  const setSelectedDeployment = useCallback(
-    (deployment: ComputeDeployment) => setSelectedDeploymentId(deployment.id),
-    [setSelectedDeploymentId],
-  );
+  }, [noDefaultSelected, deployments, selectedDeploymentId, setSelectedDeployment]);
 
   assert(selectedDeployment === undefined || isComputeDeployment(selectedDeployment));
 

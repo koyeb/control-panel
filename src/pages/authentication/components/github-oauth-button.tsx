@@ -2,7 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { IconGithub } from 'src/components/icons';
-import { useSearchParam } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
@@ -15,7 +15,7 @@ type GithubOAuthButtonProps = {
 };
 
 export function GithubOAuthButton({ action, className, children }: GithubOAuthButtonProps) {
-  const [next] = useSearchParam('next');
+  const next = useSearchParams().get('next');
 
   const mutation = useMutation({
     ...useApiMutationFn('setUpOAuth', {

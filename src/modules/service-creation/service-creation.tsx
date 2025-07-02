@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
-import { useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { enumIndex, isEnumValue } from 'src/utils/enums';
@@ -37,9 +37,17 @@ const stepperSteps = [Step.importProject, Step.instanceRegions, Step.review] as 
 
 export function ServiceCreation() {
   const initialStep = useInitialStep();
-  const [currentStepParam, setCurrentStep] = useSearchParam('step');
+  const currentStepParam = useSearchParams().get('step');
   const currentStep = isStep(currentStepParam) ? currentStepParam : Step.serviceType;
-  const [serviceId] = useSearchParam('serviceId');
+  const serviceId = useSearchParams().get('serviceId');
+  const navigate = useNavigate();
+
+  const setCurrentStep = useCallback(
+    (step: Step) => {
+      navigate({ search: (prev) => ({ ...prev, step }) });
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     if (!isStep(currentStepParam)) {
@@ -110,12 +118,14 @@ function PrefetchResources() {
 }
 
 function useInitialStep(): Step {
-  const [serviceType] = useSearchParam('service_type');
-  const [type] = useSearchParam('type');
-  const [repository] = useSearchParam('repository');
-  const [image] = useSearchParam('image');
-  const [instanceType] = useSearchParam('instance_type');
-  const [regions] = useSearchParam('regions');
+  const search = useSearchParams();
+
+  const serviceType = search.get('service_type');
+  const type = search.get('type');
+  const repository = search.get('repository');
+  const image = search.get('image');
+  const instanceType = search.get('instance_type');
+  const regions = search.get('regions');
 
   if (serviceType !== 'web' && serviceType !== 'worker') {
     return Step.serviceType;

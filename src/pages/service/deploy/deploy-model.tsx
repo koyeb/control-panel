@@ -5,7 +5,7 @@ import { AiModel } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconPackage } from 'src/components/icons';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
-import { useSearchParam } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ModelForm } from 'src/modules/service-form/model-form';
@@ -13,7 +13,7 @@ import { ModelForm } from 'src/modules/service-form/model-form';
 const T = createTranslate('pages.deploy.model');
 
 export function DeployModel() {
-  const [modelParam] = useSearchParam('model');
+  const modelParam = useSearchParams().get('model');
   const [cost, setCost] = useState<ServiceCost>();
   const t = T.useTranslate();
 

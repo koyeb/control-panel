@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, InfoTooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import type { Api } from 'src/api/api-types';
 import { useInstance } from 'src/api/hooks/catalog';
@@ -8,7 +8,7 @@ import { useDeployment, useService } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
 import { parseBytes } from 'src/application/memory';
 import { Title } from 'src/components/title';
-import { useRouteParam, useSearchParam } from 'src/hooks/router';
+import { useNavigate, useRouteParam, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { HttpThroughputGraph } from 'src/modules/metrics/graphs/http-throughput-graph';
@@ -157,7 +157,15 @@ function GraphCard({ label, tooltip, className, children }: GraphCardProps) {
 }
 
 function useTimeFrame() {
-  const [timeFrame, setTimeFrame] = useSearchParam('time-frame');
+  const timeFrame = useSearchParams().get('time-frame');
+  const navigate = useNavigate();
+
+  const setTimeFrame = useCallback(
+    (timeFrame: MetricsTimeFrame) => {
+      navigate({ search: (prev) => ({ ...prev, 'time-frame': timeFrame }) });
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     if (!isMetricsTimeFrame(timeFrame)) {

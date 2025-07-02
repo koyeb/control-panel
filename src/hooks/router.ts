@@ -88,34 +88,6 @@ export function useSearchParams() {
   }, [search]);
 }
 
-export function useSearchParam(
-  name: string,
-): [value: string | null, setValue: (string: string | null, options?: NavigateOptions) => void];
-
-export function useSearchParam(
-  name: string,
-  options: { array: true },
-): [value: string[], setValue: (value: string[], options?: NavigateOptions) => void];
-
-export function useSearchParam(name: string, options?: { array: true }) {
-  const searchParams = useSearchParams();
-  const value = options?.array ? searchParams.getAll(name) : searchParams.get(name);
-
-  const navigate = useNavigate();
-
-  const setValue = useCallback(
-    (value: string | string[] | null, options?: NavigateOptions) => {
-      navigate({
-        search: (prev) => ({ ...prev, [name]: value }),
-        ...options,
-      });
-    },
-    [name, navigate],
-  );
-
-  return [value, setValue as unknown] as const;
-}
-
 export function useOnRouteStateCreate(cb: () => void) {
   const historyState = useHistoryState();
   const navigate = useNavigate();

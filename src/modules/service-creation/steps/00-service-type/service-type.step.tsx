@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { routes } from 'src/application/routes';
 import { IconGithub } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate } from 'src/intl/translate';
 import { SourceType } from 'src/modules/service-form/service-form.types';
@@ -20,8 +20,8 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 }
 
 export function ServiceTypeStep() {
-  const [appId] = useSearchParam('app_id');
-  const [serviceType, setServiceType] = useSearchParam('service_type');
+  const appId = useSearchParams().get('app_id');
+  const serviceType = useSearchParams().get('service_type');
   const navigate = useNavigate();
 
   useMount(() => {
@@ -34,6 +34,10 @@ export function ServiceTypeStep() {
       }),
     });
   });
+
+  const setServiceType = useCallback((type: string) => {
+    navigate({ search: (prev) => ({ ...prev, service_type: type }) });
+  }, []);
 
   useEffect(() => {
     if (!isServiceType(serviceType)) {

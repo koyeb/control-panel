@@ -9,7 +9,7 @@ import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { routes } from 'src/application/routes';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -33,7 +33,7 @@ export function SignInForm() {
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
-  const [next] = useSearchParam('next');
+  const next = useSearchParams().get('next');
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {

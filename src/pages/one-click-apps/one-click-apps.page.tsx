@@ -3,18 +3,21 @@ import { Input, InputStart } from '@koyeb/design-system';
 import { useOneClickApps } from 'src/api/hooks/catalog';
 import { IconSearch } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
-import { useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 
 export function OneClickAppsPage() {
   const apps = useOneClickApps();
-  const [searchParam, setSearch] = useSearchParam('search');
-  const search = searchParam?.toLowerCase() ?? '';
+
+  const search = useSearchParams().get('search')?.toLowerCase() ?? '';
+  const navigate = useNavigate();
 
   return (
     <div className="col gap-6">
       <Input
         value={search}
-        onChange={(event) => setSearch(event.target.value || null)}
+        onChange={(event) =>
+          navigate({ search: (prev) => ({ ...prev, search: event.target.value || null }) })
+        }
         placeholder="Search..."
         start={
           <InputStart>

@@ -2,7 +2,7 @@ import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconMail } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
-import { useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 import { GithubOAuthButton } from './components/github-oauth-button';
@@ -13,7 +13,9 @@ const T = createTranslate('pages.authentication.signUp');
 
 export function SignUpPage() {
   const t = T.useTranslate();
-  const [method, setMethod] = useSearchParam('method');
+
+  const method = useSearchParams().get('method');
+  const navigate = useNavigate();
 
   return (
     <div className="col flex-1">
@@ -37,7 +39,11 @@ export function SignUpPage() {
         {method === 'email' && <SignUpForm />}
 
         {method === null && (
-          <button type="button" className="mx-auto row items-center gap-1" onClick={() => setMethod('email')}>
+          <button
+            type="button"
+            className="mx-auto row items-center gap-1"
+            onClick={() => navigate({ search: { method: 'email' } })}
+          >
             <IconMail className="size-4" /> <T id="emailSignUp" />
           </button>
         )}

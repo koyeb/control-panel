@@ -11,7 +11,7 @@ import { useInstanceAvailabilities } from 'src/application/instance-region-avail
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
 import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
 import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
@@ -56,7 +56,7 @@ function InstanceRegionStep_() {
   const instances = useInstances();
   const regions = useRegions();
 
-  const [serviceType] = useSearchParam('service_type') as [ServiceType, unknown];
+  const serviceType = useSearchParams().get('service_type') as ServiceType;
   const availabilities = useInstanceAvailabilities({ serviceType });
 
   const instanceParam = searchParams.get('instance_type');

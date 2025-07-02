@@ -9,7 +9,7 @@ import { useAuth } from 'src/application/authentication';
 import { routes } from 'src/application/routes';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { hasProperty } from 'src/utils/object';
 import { randomString } from 'src/utils/random';
 
@@ -22,7 +22,7 @@ export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
-  const [appId] = useSearchParam('app_id');
+  const appId = useSearchParams().get('app_id');
   const organization = useOrganization();
   const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();

@@ -4,7 +4,7 @@ import { useOneClickAppsQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { OneClickAppForm } from 'src/modules/service-form/one-click-app-form';
@@ -16,7 +16,7 @@ export function DeployOneClickApp() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
-  const [oneClickAppParam] = useSearchParam('one_click_app');
+  const oneClickAppParam = useSearchParams().get('one_click_app');
   const oneClickAppsQuery = useOneClickAppsQuery();
   const app = oneClickAppsQuery.data?.find(hasProperty('slug', oneClickAppParam));
   const [ready, setReady] = useState(false);

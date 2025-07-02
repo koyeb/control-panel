@@ -10,7 +10,7 @@ import { useOnboardingStep } from './application/onboarding';
 import { routes } from './application/routes';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
-import { useSearchParam } from './hooks/router';
+import { useNavigate, useSearchParams } from './hooks/router';
 import { useSeon } from './hooks/seon';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
@@ -170,9 +170,12 @@ function PageNotFound() {
 }
 
 function useOrganizationContextParam() {
-  const [organizationIdParam, setOrganizationIdParam] = useSearchParam('organization-id');
+  const organizationIdParam = useSearchParams().get('organization-id');
+  const navigate = useNavigate();
+
   const { setToken } = useAuth();
   const invalidate = useInvalidateApiQuery();
+
   const getSeonFingerprint = useSeon();
 
   const mutation = useMutation({
@@ -185,7 +188,7 @@ function useOrganizationContextParam() {
       await invalidate('getCurrentOrganization');
     },
     onSettled() {
-      setOrganizationIdParam(null);
+      navigate({ search: (prev) => ({ ...prev, 'organization-id': null }) });
     },
   });
 

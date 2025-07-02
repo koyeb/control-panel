@@ -4,7 +4,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistQueryClientProvider as BasePersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Component, Suspense, useEffect, useMemo } from 'react';
 
-import { useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { CommandPaletteProvider } from 'src/modules/command-palette/command-palette.provider';
 
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
@@ -92,23 +92,26 @@ function PersistQueryClientProvider({ children }: { children: React.ReactNode })
 }
 
 function TokenParamsProvider({ children }: { children: React.ReactNode }) {
-  const [sessionTokenParam, setSessionTokenParam] = useSearchParam('session-token');
-  const [accessTokenParam, setAccessTokenParam] = useSearchParam('token');
+  const navigate = useNavigate();
   const { setToken } = useAuth();
+
+  const search = useSearchParams();
+  const sessionTokenParam = search.get('session-token');
+  const accessTokenParam = search.get('token');
 
   useEffect(() => {
     if (sessionTokenParam) {
       setToken(sessionTokenParam.replace(/^Bearer /, ''), true);
-      setSessionTokenParam(null);
+      navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
     }
-  }, [sessionTokenParam, setSessionTokenParam, setToken]);
+  }, [sessionTokenParam, setToken, navigate]);
 
   useEffect(() => {
     if (accessTokenParam) {
       setToken(accessTokenParam.replace(/^Bearer /, ''));
-      setAccessTokenParam(null);
+      navigate({ search: (prev) => ({ ...prev, token: null }) });
     }
-  }, [accessTokenParam, setAccessTokenParam, setToken]);
+  }, [accessTokenParam, setToken, navigate]);
 
   if (sessionTokenParam || accessTokenParam) {
     return null;

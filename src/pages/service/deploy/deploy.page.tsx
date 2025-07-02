@@ -4,7 +4,7 @@ import { routes } from 'src/application/routes';
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ServiceForm } from 'src/modules/service-form/service-form';
@@ -15,8 +15,9 @@ import { DeployOneClickApp } from './deploy-one-click-app';
 const T = createTranslate('pages.deploy');
 
 export function DeployPage() {
-  const [oneClickApp] = useSearchParam('one_click_app');
-  const [type] = useSearchParam('type');
+  const params = useSearchParams();
+  const oneClickApp = params.get('one_click_app');
+  const type = params.get('type');
 
   if (oneClickApp) {
     return <DeployOneClickApp />;
@@ -31,9 +32,9 @@ export function DeployPage() {
 
 function DeployServiceForm() {
   const t = T.useTranslate();
-  const navigate = useNavigate();
 
-  const [serviceId] = useSearchParam('serviceId');
+  const serviceId = useSearchParams().get('serviceId');
+  const navigate = useNavigate();
 
   const [cost, setCost] = useState<ServiceCost>();
   const [deployUrl, setDeployUrl] = useState<string>();

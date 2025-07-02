@@ -5,7 +5,7 @@ import { Service } from 'src/api/model';
 import { routes } from 'src/application/routes';
 import { isUpcomingDeployment } from 'src/application/service-functions';
 import { Link, LinkButton } from 'src/components/link';
-import { useSearchParam } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 
@@ -120,7 +120,7 @@ type LatestDeploymentButtonProps = {
 };
 
 function LatestDeploymentButton({ color, serviceId, deploymentId }: LatestDeploymentButtonProps) {
-  const [currentDeploymentId] = useSearchParam('deploymentId');
+  const currentDeploymentId = useSearchParams().get('deploymentId');
 
   if (deploymentId === currentDeploymentId) {
     return null;

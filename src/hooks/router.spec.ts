@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useLocation, useNavigate, useSearchParam } from './router';
+import { useLocation, useNavigate } from './router';
 
 describe('router', () => {
   const pushState = vi.fn();
@@ -74,57 +74,6 @@ describe('router', () => {
           some: null,
         }),
       });
-
-      expect(pushState).toHaveBeenCalledWith(null, '', '/');
-    });
-  });
-
-  describe('useSearchParam', () => {
-    it("retrieves a search param's value", () => {
-      const { result, rerender } = renderHook(() => useSearchParam('name'));
-
-      expect(result.current[0]).toBeNull();
-
-      window.location.search = 'name=value';
-      rerender();
-
-      expect(result.current[0]).toEqual('value');
-    });
-
-    it("retrieves a search param's value as an array", () => {
-      window.location.search = 'name=value1&name=value2';
-
-      const { result } = renderHook(() => useSearchParam('name', { array: true }));
-
-      expect(result.current[0]).toEqual(['value1', 'value2']);
-    });
-
-    it("updates a search param's value as string", () => {
-      window.location.search = 'name=value';
-
-      const { result } = renderHook(() => useSearchParam('name'));
-
-      result.current[1]('updated');
-
-      expect(pushState).toHaveBeenCalledWith(null, '', '/?name=updated');
-    });
-
-    it("updates a search param's value as string array", () => {
-      window.location.search = 'name=value';
-
-      const { result } = renderHook(() => useSearchParam('name', { array: true }));
-
-      result.current[1](['value1', 'value2']);
-
-      expect(pushState).toHaveBeenCalledWith(null, '', '/?name=value1&name=value2');
-    });
-
-    it('removes a search param', () => {
-      window.location.search = 'name=value';
-
-      const { result } = renderHook(() => useSearchParam('name'));
-
-      result.current[1](null);
 
       expect(pushState).toHaveBeenCalledWith(null, '', '/');
     });
