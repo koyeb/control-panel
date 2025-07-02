@@ -1,118 +1,42 @@
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { PersistQueryClientProvider as BasePersistQueryClientProvider } from '@tanstack/react-query-persist-client';
-import { Component, Suspense, useEffect, useMemo } from 'react';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { NotificationContainer } from 'src/components/notification';
+import { IntlProvider } from 'src/intl/translation-provider';
 import { CommandPaletteProvider } from 'src/modules/command-palette/command-palette.provider';
 import { getConfig } from 'src/utils/config';
 
-import { ErrorBoundary } from '../components/error-boundary/error-boundary';
-import { NotificationContainer } from '../components/notification';
-import { IntlProvider } from '../intl/translation-provider';
-
-import { auth, useSetToken } from './authentication';
+import { auth } from './authentication';
 import { DialogProvider } from './dialog-context';
-import { PostHogProvider } from './posthog';
-import { createQueryClient } from './query-client';
-import { reportError } from './report-error';
 
-const queryClient = createQueryClient();
+const version = getConfig('version');
 
-type ProvidersProps = {
+const persister = createAsyncStoragePersister({
+  key: 'query-cache',
+  storage: auth.session ? window.sessionStorage : window.localStorage,
+});
+
+type ProviderProps = {
+  queryClient: QueryClient;
   children: React.ReactNode;
 };
 
-export function Providers({ children }: ProvidersProps) {
+export function Providers({ queryClient, children }: ProviderProps) {
   return (
-    <RootErrorBoundary>
-      <IntlProvider>
-        <Suspense>
-          <QueryClientProvider client={queryClient}>
-            <PersistQueryClientProvider>
-              <TokenParamsProvider>
-                <PostHogProvider>
-                  <DialogProvider>
-                    <CommandPaletteProvider>
-                      <ReactQueryDevtools />
-                      <NotificationContainer />
-                      <ErrorBoundary>{children}</ErrorBoundary>
-                    </CommandPaletteProvider>
-                  </DialogProvider>
-                </PostHogProvider>
-              </TokenParamsProvider>
-            </PersistQueryClientProvider>
-          </QueryClientProvider>
-        </Suspense>
-      </IntlProvider>
-    </RootErrorBoundary>
+    <IntlProvider>
+      <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider client={queryClient} persistOptions={{ persister, buster: version }}>
+          <DialogProvider>
+            <CommandPaletteProvider>
+              <ReactQueryDevtools />
+              <NotificationContainer />
+              {children}
+            </CommandPaletteProvider>
+          </DialogProvider>
+        </PersistQueryClientProvider>
+      </QueryClientProvider>
+    </IntlProvider>
   );
-}
-
-class RootErrorBoundary extends Component<{ children: React.ReactNode }> {
-  state: { error: Error | null } = { error: null };
-
-  componentDidCatch(error: Error): void {
-    reportError(error);
-    this.setState({ error });
-  }
-
-  render(): React.ReactNode {
-    const { error } = this.state;
-
-    if (error) {
-      return error.message;
-    }
-
-    return this.props.children;
-  }
-}
-
-function PersistQueryClientProvider({ children }: { children: React.ReactNode }) {
-  const version = getConfig('version');
-
-  const persister = useMemo(() => {
-    const storage = auth.session ? window.sessionStorage : window.localStorage;
-
-    return createAsyncStoragePersister({
-      key: 'query-cache',
-      storage,
-    });
-  }, []);
-
-  return (
-    <BasePersistQueryClientProvider client={queryClient} persistOptions={{ persister, buster: version }}>
-      {children}
-    </BasePersistQueryClientProvider>
-  );
-}
-
-function TokenParamsProvider({ children }: { children: React.ReactNode }) {
-  const setToken = useSetToken();
-  const navigate = useNavigate();
-
-  const search = useSearchParams();
-  const sessionTokenParam = search.get('session-token');
-  const accessTokenParam = search.get('token');
-
-  useEffect(() => {
-    if (sessionTokenParam) {
-      setToken(sessionTokenParam.replace(/^Bearer /, ''), true);
-      navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
-    }
-  }, [sessionTokenParam, setToken, navigate]);
-
-  useEffect(() => {
-    if (accessTokenParam) {
-      setToken(accessTokenParam.replace(/^Bearer /, ''));
-      navigate({ search: (prev) => ({ ...prev, token: null }) });
-    }
-  }, [accessTokenParam, setToken, navigate]);
-
-  if (sessionTokenParam || accessTokenParam) {
-    return null;
-  }
-
-  return children;
 }
