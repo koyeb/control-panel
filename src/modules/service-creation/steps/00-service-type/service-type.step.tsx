@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 
 import { routes } from 'src/application/routes';
 import { IconGithub } from 'src/components/icons';
-import { LinkButton } from 'src/components/link';
+import { Link, LinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParam } from 'src/hooks/router';
+import { useNavigate, useSearchParam, useSearchParams } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate } from 'src/intl/translate';
 import { SourceType } from 'src/modules/service-form/service-form.types';
@@ -19,11 +19,7 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
   return inArray(value, ['web', 'private', 'worker', 'database', 'model']);
 }
 
-type ServiceTypeStepProps = {
-  onNext: () => void;
-};
-
-export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
+export function ServiceTypeStep() {
   const [appId] = useSearchParam('app_id');
   const [serviceType, setServiceType] = useSearchParam('service_type');
   const navigate = useNavigate();
@@ -45,21 +41,6 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
     }
   }, [serviceType, setServiceType]);
 
-  const handleNext = (source: SourceType) => {
-    navigate({
-      search: (prev) => ({
-        ...prev,
-        type: source,
-        ...(serviceType === 'private' && {
-          service_type: 'web',
-          ports: '8000;tcp',
-        }),
-      }),
-    });
-
-    onNext();
-  };
-
   return (
     <div className="col divide-y rounded-md border sm:row sm:divide-x md:divide-y-0">
       <nav className="col gap-3 p-3 md:min-w-72 md:p-6">
@@ -80,7 +61,7 @@ export function ServiceTypeStep({ onNext }: ServiceTypeStepProps) {
               </div>
             </div>
 
-            <DeploymentSource onNext={handleNext} />
+            <DeploymentSource />
           </div>
         )}
 
@@ -124,21 +105,36 @@ function getCreateServiceUrl(serviceType: ExtendedServiceType, appId: string | n
   return url;
 }
 
-function DeploymentSource({ onNext }: { onNext: (source: SourceType) => void }) {
+function DeploymentSource() {
+  const search = useSearchParams();
+
+  const href = (source: SourceType) => {
+    const params = new URLSearchParams(search);
+
+    params.set('type', source);
+    params.set('step', 'importProject');
+
+    if (params.get('service_type') === 'private') {
+      params.set('service_type', 'web');
+      params.set('ports', '8000;tcp');
+    }
+
+    return '?' + params.toString();
+  };
   return (
     <div className="col gap-4 lg:row">
       <DeploymentSourceOption
         Icon={IconGithub}
         title={<T id="deploymentSource.github.title" />}
         description={<T id="deploymentSource.github.description" />}
-        onClick={() => onNext('git')}
+        href={href('git')}
       />
 
       <DeploymentSourceOption
         Icon={IconDocker}
         title={<T id="deploymentSource.docker.title" />}
         description={<T id="deploymentSource.docker.description" />}
-        onClick={() => onNext('docker')}
+        href={href('docker')}
       />
     </div>
   );
@@ -148,16 +144,12 @@ type DeploymentSourceOptionProps = {
   Icon: React.ComponentType<{ className?: string }>;
   title: React.ReactNode;
   description: React.ReactNode;
-  onClick: () => void;
+  href: string;
 };
 
-function DeploymentSourceOption({ Icon, title, description, onClick }: DeploymentSourceOptionProps) {
+function DeploymentSourceOption({ Icon, title, description, href }: DeploymentSourceOptionProps) {
   return (
-    <button
-      type="button"
-      className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start"
-      onClick={onClick}
-    >
+    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" href={href}>
       <div className="rounded-lg bg-muted p-3">
         <Icon className="size-10" />
       </div>
@@ -165,6 +157,6 @@ function DeploymentSourceOption({ Icon, title, description, onClick }: Deploymen
         <div className="mb-1 font-medium">{title}</div>
         <div className="text-dim">{description}</div>
       </div>
-    </button>
+    </Link>
   );
 }

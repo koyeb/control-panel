@@ -39,26 +39,13 @@ export function ServiceCreation() {
   const initialStep = useInitialStep();
   const [currentStepParam, setCurrentStep] = useSearchParam('step');
   const currentStep = isStep(currentStepParam) ? currentStepParam : Step.serviceType;
-  const [serviceId, setServiceId] = useSearchParam('serviceId');
+  const [serviceId] = useSearchParam('serviceId');
 
   useEffect(() => {
     if (!isStep(currentStepParam)) {
       setCurrentStep(initialStep);
     }
   }, [currentStepParam, initialStep, setCurrentStep]);
-
-  const onNext = (serviceId?: string) => {
-    if (serviceId) {
-      setServiceId(serviceId);
-    }
-
-    const index = stepIndex(currentStep);
-    const nextStep = Object.values(Step).at(index + 1);
-
-    if (nextStep) {
-      setCurrentStep(nextStep);
-    }
-  };
 
   const serviceLink = (children: React.ReactNode) => {
     if (serviceId) {
@@ -103,11 +90,11 @@ export function ServiceCreation() {
         </Stepper>
       )}
 
-      {currentStep === Step.serviceType && <ServiceTypeStep onNext={onNext} />}
-      {currentStep === Step.importProject && <ImportProjectStep onNext={onNext} />}
-      {currentStep === Step.instanceRegions && <InstanceRegionStep onNext={onNext} />}
-      {currentStep === Step.review && <ReviewStep onNext={onNext} />}
-      {currentStep === Step.initialDeployment && <InitialDeploymentStep serviceId={serviceId as string} />}
+      {currentStep === Step.serviceType && <ServiceTypeStep />}
+      {currentStep === Step.importProject && <ImportProjectStep />}
+      {currentStep === Step.instanceRegions && <InstanceRegionStep />}
+      {currentStep === Step.review && <ReviewStep />}
+      {currentStep === Step.initialDeployment && serviceId && <InitialDeploymentStep serviceId={serviceId} />}
     </div>
   );
 }
