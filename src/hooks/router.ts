@@ -24,7 +24,8 @@ export function useRouteParam(name: string) {
 
 type HistoryState = Record<string, unknown>;
 
-export function useHistoryState<T extends HistoryState>(): Partial<T> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function useHistoryState(): Record<string, any> {
   return useWouterHistoryState() ?? {};
 }
 
@@ -116,7 +117,7 @@ export function useSearchParam(name: string, options?: { array: true }) {
 }
 
 export function useOnRouteStateCreate(cb: () => void) {
-  const historyState = useHistoryState<{ create: boolean }>();
+  const historyState = useHistoryState();
   const navigate = useNavigate();
   const cbMemo = usePureFunction(cb);
 

@@ -68,7 +68,7 @@ function CreateOrganization() {
   const { token, setToken } = useAuth();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
-  const state = useHistoryState<{ createOrganization: boolean }>();
+  const state = useHistoryState();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
