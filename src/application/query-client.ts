@@ -3,7 +3,7 @@ import { navigate } from 'wouter/use-browser-location';
 
 import { inArray } from 'src/utils/arrays';
 
-import { isApiError, isApiNotFoundError } from '../api/api-errors';
+import { ApiError, isApiNotFoundError } from '../api/api-errors';
 
 import { getConfig } from './config';
 import { notify } from './notify';
@@ -60,7 +60,7 @@ function refetchInterval(query: Query) {
 }
 
 function retry(failureCount: number, error: Error) {
-  if (isApiError(error) && inArray(error.status, [401, 403, 404])) {
+  if (ApiError.is(error) && inArray(error.status, [401, 403, 404])) {
     return false;
   }
 
@@ -68,7 +68,7 @@ function retry(failureCount: number, error: Error) {
 }
 
 function throwOnError(error: Error) {
-  return isApiError(error) && error.status >= 500;
+  return ApiError.is(error) && error.status >= 500;
 }
 
 function onQuerySuccess(data: unknown, query: UnknownQuery) {
@@ -84,7 +84,7 @@ function onQueryError(error: Error, query: UnknownQuery) {
   const { showError } = { showError: true, ...query.meta };
   const pathname = window.location.pathname;
 
-  if (isApiError(error)) {
+  if (ApiError.is(error)) {
     if (error.status === 401) {
       // organization is deactivated
       if (error.message === 'Token rejected') {
@@ -125,7 +125,7 @@ function onQueryError(error: Error, query: UnknownQuery) {
 }
 
 function onMutationError(error: Error, variables: unknown, context: unknown, mutation: UnknownMutation) {
-  if (isApiError(error) && error.status === 401) {
+  if (ApiError.is(error, 401)) {
     handleAuthenticationError();
   } else if (mutation.options.onError === undefined) {
     notify.error(error.message);

@@ -74,6 +74,14 @@ export class ApiError extends Error {
   get status() {
     return this.body.status;
   }
+
+  static is(value: unknown, status?: number): value is ApiError {
+    if (!(value instanceof this)) {
+      return false;
+    }
+
+    return status === undefined || status !== value.status;
+  }
 }
 
 export class ApiValidationError extends ApiError {

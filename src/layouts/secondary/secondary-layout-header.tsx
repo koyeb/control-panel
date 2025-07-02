@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { isApiError } from 'src/api/api-errors';
+import { ApiError } from 'src/api/api-errors';
 import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
@@ -14,7 +14,7 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
-  const accountLocked = userQuery.isError && isApiError(userQuery.error) && userQuery.error.status === 403;
+  const accountLocked = userQuery.isError && ApiError.is(userQuery.error, 403);
   const isAuthenticated = userQuery.isSuccess || accountLocked;
 
   return (

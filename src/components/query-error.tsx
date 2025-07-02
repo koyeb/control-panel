@@ -1,7 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { isApiError, isApiValidationError } from 'src/api/api-errors';
+import { ApiError, isApiValidationError } from 'src/api/api-errors';
 import { Translate } from 'src/intl/translate';
 
 import { Loading } from './loading';
@@ -29,7 +29,7 @@ export function QueryError({ error, className }: { error: Error; className?: str
       return error.fields[0].description;
     }
 
-    if (isApiError(error)) {
+    if (ApiError.is(error)) {
       return <Translate id="common.apiError" />;
     }
 

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { isApiError } from 'src/api/api-errors';
+import { ApiError } from 'src/api/api-errors';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
@@ -54,7 +54,7 @@ export function SignInForm() {
       navigate({ to: next ?? routes.home() });
     },
     onError(error) {
-      if (isApiError(error) && error.message === invalidCredentialApiMessage) {
+      if (ApiError.is(error) && error.message === invalidCredentialApiMessage) {
         form.setError('root', { message: 'invalidCredential' });
       } else {
         notify.error(error.message);

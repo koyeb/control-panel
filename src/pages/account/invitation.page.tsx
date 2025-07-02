@@ -1,7 +1,7 @@
 import { Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 
-import { isApiError } from 'src/api/api-errors';
+import { isApiNotFoundError } from 'src/api/api-errors';
 import { mapInvitation } from 'src/api/mappers/session';
 import { useApiQueryFn } from 'src/api/use-api';
 import { HandleInvitation } from 'src/components/handle-invitations';
@@ -30,7 +30,7 @@ export function InvitationPage() {
   if (invitationQuery.isError) {
     const error = invitationQuery.error;
 
-    if (isApiError(error) && error.code === 'not_found') {
+    if (isApiNotFoundError(error)) {
       return (
         <div className="col gap-4">
           <h1 className="text-3xl font-semibold">

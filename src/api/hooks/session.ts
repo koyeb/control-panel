@@ -5,7 +5,7 @@ import { useNavigate } from 'src/hooks/router';
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
 
-import { isApiError } from '../api-errors';
+import { ApiError } from '../api-errors';
 import {
   mapOrganization,
   mapOrganizationMember,
@@ -20,7 +20,7 @@ export function useUserQuery() {
     ...useApiQueryFn('getCurrentUser'),
     select: ({ user }) => mapUser(user!),
     throwOnError: (error) => {
-      if (!isApiError(error)) {
+      if (!ApiError.is(error)) {
         return true;
       }
 
@@ -42,7 +42,7 @@ export function useOrganizationQuery() {
     ...useApiQueryFn('getCurrentOrganization'),
     select: ({ organization }) => mapOrganization(organization!),
     throwOnError: (error) => {
-      if (!isApiError(error)) {
+      if (!ApiError.is(error)) {
         return true;
       }
 

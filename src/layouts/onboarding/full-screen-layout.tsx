@@ -1,4 +1,4 @@
-import { isApiError } from 'src/api/api-errors';
+import { ApiError } from 'src/api/api-errors';
 import { useUserQuery } from 'src/api/hooks/session';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useSearchParams } from 'src/hooks/router';
@@ -11,7 +11,7 @@ export function FullScreenLayout({ children }: { children: React.ReactNode }) {
   const params = useSearchParams();
   const userQuery = useUserQuery();
 
-  const accountLocked = userQuery.isError && isApiError(userQuery.error) && userQuery.error.status === 403;
+  const accountLocked = userQuery.isError && ApiError.is(userQuery.error, 403);
   const isAuthenticated = userQuery.isSuccess || accountLocked;
 
   useForceThemeMode('light');

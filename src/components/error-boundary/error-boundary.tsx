@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 
-import { isApiError } from 'src/api/api-errors';
+import { ApiError } from 'src/api/api-errors';
 import { reportError } from 'src/application/report-error';
 
 import { ErrorView } from './error-view';
@@ -45,7 +45,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   private get apiError() {
-    if (isApiError(this.state.error)) {
+    if (ApiError.is(this.state.error)) {
       return this.state.error;
     }
   }
