@@ -26,10 +26,7 @@ export function ConfirmDeactivateOrganization({ confirmationId }: { confirmation
       notify.info(t('deactivationSuccessNotification'));
     },
     onSettled() {
-      navigate({
-        to: onboardingStep ? '/' : '/settings',
-        search: onboardingStep ? { settings: '' } : {},
-      });
+      navigate(onboardingStep ? { to: '/', search: { settings: true } } : { to: '/settings' });
     },
   });
 

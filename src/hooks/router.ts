@@ -1,8 +1,8 @@
 import {
   ValidateLinkOptions,
+  useNavigate,
   useParams,
   useLocation as useTanstackLocation,
-  useNavigate as useTanstackNavigate,
 } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
@@ -11,6 +11,8 @@ import { AssertionError, defined } from 'src/utils/assert';
 import { toObject } from 'src/utils/object';
 
 import { usePureFunction } from './lifecycle';
+
+export { useNavigate };
 
 export function useLocation() {
   return useTanstackLocation().href;
@@ -32,8 +34,6 @@ export function useRouteParam(name: string) {
 export function useHistoryState() {
   return useTanstackLocation({ select: (s) => s.state });
 }
-
-export const useNavigate = useTanstackNavigate;
 
 export function useSearchParams(): URLSearchParams {
   return new URLSearchParams(useTanstackLocation({ select: (s) => s.searchStr }));

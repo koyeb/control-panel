@@ -27,13 +27,15 @@ export function DeployOneClickApp() {
     if (oneClickAppsQuery.isSuccess) {
       if (app === undefined) {
         navigate({
-          search: (prev) => ({ ...prev, one_click_app: null }),
+          to: '/services/deploy',
+          search: (prev) => ({ ...prev, one_click_app: undefined }),
           replace: true,
         });
       } else {
         const url = new URL(app.deployUrl);
 
         navigate({
+          to: '/services/deploy',
           search: {
             ...Object.fromEntries(url.searchParams),
             one_click_app: app.slug,

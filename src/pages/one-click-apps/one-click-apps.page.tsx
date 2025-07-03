@@ -9,7 +9,7 @@ export function OneClickAppsPage() {
   const apps = useOneClickApps();
 
   const search = useSearchParams().get('search')?.toLowerCase() ?? '';
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/one-click-apps' });
 
   return (
     <div className="col gap-6">
