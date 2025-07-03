@@ -45,6 +45,14 @@ declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }
+
+  interface HistoryState {
+    token?: string | null;
+    session?: boolean;
+    githubAppInstallationRequested?: boolean;
+    createOrganization?: boolean;
+    create?: boolean;
+  }
 }
 
 const rootElement = document.getElementById('root')!;
