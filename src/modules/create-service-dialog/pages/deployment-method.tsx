@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useGithubApp } from 'src/api/hooks/git';
 import { useApiMutationFn } from 'src/api/use-api';
-import { routes } from 'src/application/routes';
 import { IconArrowRight, IconGithub } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
 import { useShortcut } from 'src/hooks/shortcut';
@@ -59,13 +58,7 @@ function useInstallGithubApp() {
   });
 
   return () => {
-    const params = new URLSearchParams({
-      service_type: serviceType as string,
-      step: 'importProject',
-      type: 'git',
-    });
-
-    installGithubApp(`${routes.createService()}?${params.toString()}`);
+    installGithubApp(`/services/new?step=importProject&type=git&service_type=${serviceType}`);
   };
 }
 

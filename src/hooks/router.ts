@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { useParams, useSearch } from 'wouter';
 import { navigate, usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
 
+import { AssertionError, defined } from 'src/utils/assert';
+
 import { usePureFunction } from './lifecycle';
 
 export { usePathname } from 'wouter/use-browser-location';
@@ -34,13 +36,14 @@ type SearchParams = Record<string, SearchParam | SearchParam[]>;
 
 type NavigateOptions = {
   to?: string;
+  params?: Record<string, string>;
   search?: SearchParams | ((search: SearchParams) => SearchParams);
   replace?: boolean;
   state?: HistoryState;
 };
 
 export function useNavigate() {
-  return useCallback(({ to, search, replace, state }: NavigateOptions) => {
+  return useCallback(({ to, search, params, replace, state }: NavigateOptions) => {
     const url = new URL(to ?? window.location.pathname, window.location.origin);
     const searchParams = new URLSearchParams();
 
@@ -70,7 +73,7 @@ export function useNavigate() {
       updateSearchParams(search(Object.fromEntries(new URLSearchParams(window.location.search))));
     }
 
-    let result = url.pathname;
+    let result = replacePathParams(url.pathname, params);
 
     if (searchParams.size > 0) {
       result += `?${searchParams.toString()}`;
@@ -99,4 +102,10 @@ export function useOnRouteStateCreate(cb: () => void) {
       cbMemo();
     }
   }, [historyState, navigate, cbMemo]);
+}
+
+export function replacePathParams(to: string, params?: Record<string, string>) {
+  return to.replaceAll(/\$([a-zA-Z]+)/g, (match, key: string) => {
+    return defined(params?.[key], new AssertionError(`Missing link param for ${key}`));
+  });
 }

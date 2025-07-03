@@ -1,7 +1,6 @@
 import { Button } from '@koyeb/design-system';
 
 import { VolumeSnapshot } from 'src/api/model';
-import { routes } from 'src/application/routes';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -28,7 +27,7 @@ export function CreateVolumeDialog({ snapshot }: { snapshot?: VolumeSnapshot }) 
         snapshot={snapshot}
         onSubmitted={() => {
           closeDialog();
-          navigate({ to: routes.volumes.index() });
+          navigate({ to: '/volumes' });
         }}
         renderFooter={(formState) => (
           <DialogFooter>

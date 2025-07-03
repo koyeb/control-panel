@@ -10,11 +10,11 @@ import { useOrganization } from 'src/api/hooks/session';
 import { GitRepository } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { IconArrowRight, IconGithub, IconLock } from 'src/components/icons';
 import { ListItem, ListSections } from 'src/components/list';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { handleSubmit } from 'src/hooks/form';
+import { useNavigate } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
@@ -36,19 +36,21 @@ export function GithubOrganizationImage() {
 }
 
 export function OrganizationRepositoriesList() {
-  const { serviceType, search, navigate } = useCreateServiceDialog();
+  const { serviceType, search } = useCreateServiceDialog();
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const repositories = useRepositories(search);
 
   const onSelect = (repository: GitRepository) => {
-    const params = new URLSearchParams([
-      ['service_type', serviceType as string],
-      ['type', 'git'],
-      ['repository', repository.name],
-    ]);
-
-    navigate({ to: `${routes.deploy()}?${params.toString()}` });
+    navigate({
+      to: '/deploy',
+      search: {
+        service_type: serviceType,
+        type: 'git',
+        repository: repository.name,
+      },
+    });
   };
 
   useShortcut(['ArrowUp'], () => {
@@ -143,7 +145,8 @@ function GithubAppLinks() {
 
 export function PublicRepository() {
   const t = T.useTranslate();
-  const { serviceType, navigate } = useCreateServiceDialog();
+  const { serviceType, closeDialog } = useCreateServiceDialog();
+  const navigate = useNavigate();
 
   const schema = z.object({
     url: z.string().refine((url) => url.match(/.+\/.+/), t('invalidGithubRepositoryUrl')),
@@ -159,13 +162,16 @@ export function PublicRepository() {
   });
 
   const onSubmit = (repositoryName: string) => {
-    const params = new URLSearchParams({
-      service_type: serviceType as string,
-      type: 'git',
-      repository: repositoryName,
-    });
+    closeDialog();
 
-    navigate({ to: `${routes.deploy()}?${params.toString()}` });
+    navigate({
+      to: '/services/deploy',
+      search: {
+        service_type: serviceType,
+        type: 'git',
+        repository: repositoryName,
+      },
+    });
   };
 
   return (

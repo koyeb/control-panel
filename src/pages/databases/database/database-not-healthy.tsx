@@ -5,7 +5,6 @@ import { useMutation } from '@tanstack/react-query';
 import { Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
@@ -22,7 +21,7 @@ export function DatabaseNotHealth({ service }: { service: Service }) {
     }),
     async onSuccess() {
       await invalidate('getService', { path: { id: service.id } });
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.info(t('deleteSuccessNotification'));
     },
   });

@@ -6,7 +6,6 @@ import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
-import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -78,7 +77,7 @@ export function OrganizationQuotas() {
 function HobbyPlanAlert() {
   return (
     <Alert variant="info" description={<T id="hobbyPlanAlert.description" />} className="w-full">
-      <LinkButton color="blue" to={routes.organizationSettings.plans()} className="ml-auto self-center">
+      <LinkButton color="blue" to="/settings/plans" className="ml-auto self-center">
         <T id="hobbyPlanAlert.cta" />
       </LinkButton>
     </Alert>

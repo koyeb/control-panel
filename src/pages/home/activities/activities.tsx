@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 
 import { mapActivity } from 'src/api/mappers/activity';
 import { useApiQueryFn } from 'src/api/use-api';
-import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -19,7 +18,7 @@ export function Activities() {
         <span className="text-lg font-medium">
           <T id="title" />
         </span>
-        <Link className="text-link" to={routes.activity()}>
+        <Link className="text-link" to="/activity">
           <T id="viewAll" />
         </Link>
       </div>

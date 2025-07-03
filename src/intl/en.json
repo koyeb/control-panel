@@ -1566,7 +1566,8 @@
           "index": "Settings",
           "billing": "Usage and billing",
           "plans": "Plans",
-          "api": "API"
+          "api": "API",
+          "registryConfiguration": "Registry configuration"
         },
         "userSettings": {
           "index": "User settings",

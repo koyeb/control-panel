@@ -4,7 +4,6 @@ import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import { IconChevronRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { PlanIcon } from 'src/components/plan-icon';
@@ -74,12 +73,7 @@ export function OrganizationPlan() {
           </div>
 
           {trial && (
-            <LinkButton
-              variant="outline"
-              size={1}
-              to={routes.organizationSettings.plans()}
-              className="w-full"
-            >
+            <LinkButton variant="outline" size={1} to="/settings/plans" className="w-full">
               <T id="upgrade" />
             </LinkButton>
           )}
@@ -119,7 +113,7 @@ function HobbyPlan() {
         </div>
       </div>
 
-      <LinkButton color="gray" size={1} to={routes.organizationSettings.plans()} className="w-full">
+      <LinkButton color="gray" size={1} to="/settings/plans" className="w-full">
         <T id="upsell.cta" />
       </LinkButton>
     </div>

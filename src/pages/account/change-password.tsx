@@ -5,7 +5,6 @@ import { z } from 'zod';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -62,7 +61,7 @@ function ChangePasswordForm() {
     })),
     onSuccess({ token }) {
       setToken(token!.id!);
-      navigate({ to: routes.signIn() });
+      navigate({ to: '/auth/signin' });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),

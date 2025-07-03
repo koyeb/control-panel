@@ -8,7 +8,6 @@ import { useAuth } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
-import { routes } from 'src/application/routes';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -56,7 +55,7 @@ export function SignUpForm() {
     })),
     onSuccess(result) {
       setToken(result.token!.id!);
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
     },
     onError: useFormErrorHandler(form, (error) => {
       if ('captcha' in error) {

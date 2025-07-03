@@ -1,4 +1,3 @@
-import { routes } from 'src/application/routes';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
 import { IconArrowRight } from 'src/components/icons';
@@ -14,7 +13,7 @@ export function DomainsLocked() {
       subTitle={<T id="subTitle" />}
       description={<T id="description" values={{ br: () => <br /> }} />}
       cta={
-        <LinkButton to={routes.organizationSettings.plans()}>
+        <LinkButton to="/settings/plans">
           <T id="upgrade" />
           <IconArrowRight className="size-icon" />
         </LinkButton>

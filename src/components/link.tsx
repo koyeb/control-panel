@@ -1,117 +1,105 @@
-import { Button, ButtonColor, ButtonSize, ButtonVariant, Spinner, TabButton } from '@koyeb/design-system';
+import { Button, ButtonColor, ButtonSize, ButtonVariant, MenuItem, TabButton } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { createElement } from 'react';
 // eslint-disable-next-line no-restricted-imports
-import { Link as BaseLink } from 'wouter';
+import { Link as BaseLink, useRoute } from 'wouter';
 
+import { replacePathParams } from 'src/hooks/router';
 import { Extend } from 'src/utils/types';
 
+export type ValidateLinkOptions = {
+  to: string;
+  params?: Record<string, string>;
+  search?: Record<string, string | undefined>;
+};
+
 type LinkProps = Extend<
-  React.ComponentProps<'a'>,
+  Omit<React.ComponentProps<'a'>, 'href'>,
   {
-    to?: string;
-    search?: Partial<Record<string, string | null>>;
-    state?: unknown;
+    to: string;
+    params?: Record<string, string>;
+    search?: Record<string, string | undefined>;
+    state?: Record<string, unknown>;
   }
 >;
 
-export function Link({ to, search, ...props }: LinkProps) {
-  const params = new URLSearchParams();
+export function Link({ to, params, search, ...props }: LinkProps) {
+  let href = replacePathParams(to, params);
 
-  if (search) {
-    for (const [key, value] of Object.entries(search)) {
-      if (value) {
-        params.set(key, value);
-      }
+  const searchParams = new URLSearchParams();
+
+  for (const [key, value] of Object.entries(search ?? {})) {
+    if (value != null) {
+      searchParams.set(key, String(value));
     }
   }
 
-  let href = to ?? '';
-
-  if (params.size > 0) {
-    href += '?' + params.toString();
+  if (searchParams.size > 0) {
+    href += '?' + searchParams.toString();
   }
 
   return <BaseLink href={href} {...props} />;
 }
 
-type LinkButtonOwnProps = Extend<
-  Pick<LinkProps, 'to' | 'search' | 'state'>,
+type LinkButtonProps = Extend<
+  LinkProps,
   {
     variant?: ButtonVariant;
     size?: ButtonSize;
     color?: ButtonColor;
-    loading?: boolean;
-    component?: 'a' | typeof Link;
     openInNewTab?: boolean;
     disabled?: boolean;
   }
 >;
 
-type LinkButtonProps = Extend<React.ComponentProps<'a'>, LinkButtonOwnProps>;
-
 export function LinkButton({
-  component = Link,
-  disabled,
+  variant,
+  size,
+  color,
   openInNewTab,
-  state,
-  to = '',
-  search,
-  loading,
+  disabled,
   className,
-  children,
-  ...rest
+  ...props
 }: LinkButtonProps) {
-  const props: React.ComponentProps<typeof Link> & { state?: unknown } = {
-    to,
-    'aria-disabled': disabled,
-    className: Button.className(rest, clsx(disabled && 'pointer-events-none opacity-50', className)),
-    ...rest,
-  };
-
-  if (openInNewTab) {
-    props.target = '_blank';
-
-    if (component === 'a') {
-      props.rel = 'noopener noreferrer';
-    }
-  }
-
-  if (component === Link) {
-    props.state = state;
-    props.search = search;
-  }
-
-  return createElement(
-    component,
-    props,
-    <>
-      {loading && <Spinner className="size-4" />}
-      {children}
-    </>,
+  return (
+    <Link
+      role="button"
+      target={openInNewTab ? '_blank' : undefined}
+      aria-disabled={disabled}
+      className={Button.className(
+        { variant, size, color },
+        clsx(className, disabled && 'pointer-events-none opacity-50'),
+      )}
+      {...props}
+    />
   );
 }
 
-type TabButtonLinkProps = {
-  to: string;
-  selected: boolean;
-  panelId?: string;
-  className?: string;
-  children?: React.ReactNode;
-};
+type TabButtonProps = Extend<
+  LinkProps,
+  {
+    size?: 1 | 2;
+    disabled?: boolean;
+  }
+>;
 
-export function TabButtonLink({ to, selected, panelId, className, children }: TabButtonLinkProps) {
+export function TabButtonLink({ size, disabled, className, ...props }: TabButtonProps) {
+  const [isActive] = useRoute(replacePathParams(props.to, props.params));
+
   return (
     <Link
-      to={to}
       role="tab"
-      className={clsx(TabButton.className({ selected, className }))}
-      aria-selected={selected}
-      aria-controls={panelId}
-    >
-      {children}
-    </Link>
+      aria-disabled={disabled}
+      data-status={isActive ? 'active' : 'inactive'}
+      className={clsx(TabButton.className({ size, className }))}
+      {...props}
+    />
   );
+}
+
+type LinkMenuItemProps = LinkProps;
+
+export function LinkMenuItem({ className, ...props }: LinkMenuItemProps) {
+  return <Link className={clsx(MenuItem.className({ className }))} {...props} />;
 }
 
 type ExternalLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -122,6 +110,33 @@ export function ExternalLink({ openInNewTab, ...props }: ExternalLinkProps) {
   return <a target={openInNewTab ? '_blank' : undefined} rel="noopener noreferrer" {...props} />;
 }
 
-export function ExternalLinkButton(props: LinkButtonProps) {
-  return <LinkButton component="a" rel="noopener noreferrer" {...props} />;
+type ExternalLinkButtonProps = Extend<
+  ExternalLinkProps,
+  {
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    color?: ButtonColor;
+    disabled?: boolean;
+  }
+>;
+
+export function ExternalLinkButton({
+  variant,
+  size,
+  color,
+  disabled,
+  className,
+  ...props
+}: ExternalLinkButtonProps) {
+  return (
+    <ExternalLink
+      arias-disabled={disabled}
+      className={Button.className({ variant, size, color }, className)}
+      {...props}
+    />
+  );
+}
+
+export function ExternalLinkMenuItem({ className, ...props }: ExternalLinkProps) {
+  return <ExternalLink className={MenuItem.className({ className })} {...props} />;
 }

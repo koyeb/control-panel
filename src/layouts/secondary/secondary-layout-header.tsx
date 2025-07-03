@@ -2,7 +2,6 @@ import clsx from 'clsx';
 
 import { ApiError } from 'src/api/api-errors';
 import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 
@@ -24,7 +23,7 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
         background && 'bg-gradient-to-b from-neutral from-75% to-transparent',
       )}
     >
-      <Link to={routes.home()}>
+      <Link to="/">
         <LogoKoyeb className={clsx('h-8 self-start', !background && 'text-white')} />
       </Link>
 

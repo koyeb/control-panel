@@ -10,7 +10,6 @@ import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -312,7 +311,7 @@ function useLeaveOrganization() {
     },
     async onSuccess(token, { organization }) {
       setToken(token);
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });

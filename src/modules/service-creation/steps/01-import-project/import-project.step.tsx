@@ -10,6 +10,7 @@ export function ImportProjectStep() {
 
   useMount(() => {
     navigate({
+      to: '/services/new',
       search: (prev) => ({ ...prev, repository: null, image: null }),
       replace: true,
     });
@@ -21,6 +22,7 @@ export function ImportProjectStep() {
         <RepositorySelector
           onImport={(repository) => {
             navigate({
+              to: '/services/new',
               search: (prev) => ({
                 ...prev,
                 step: 'instanceRegions',
@@ -40,6 +42,7 @@ export function ImportProjectStep() {
             }
 
             navigate({
+              to: '/services/new',
               search: (prev) => ({
                 ...prev,
                 step: 'instanceRegions',

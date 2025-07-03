@@ -4,10 +4,10 @@ import { useState } from 'react';
 import { App, ComputeDeployment, Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
-import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
-import { ActionsList, ActionsListButton, ActionsListLink } from 'src/components/actions-list';
+import { ActionsList, ActionsListButton } from 'src/components/actions-list';
 import { IconArrowRight, IconExternalLink, IconInfo, IconSendHorizontal } from 'src/components/icons';
+import { ExternalLink, Link } from 'src/components/link';
 import { TimeoutUi } from 'src/components/timeout-ui';
 import { createTranslate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
@@ -83,25 +83,26 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
 
         <ActionsList
           items={[
-            <ActionsListLink
+            <Link
               key="inspect"
-              Icon={IconArrowRight}
-              to={routes.service.overview(service.id)}
-              className="row justify-between text-xs font-medium"
+              to="/services/$serviceId"
+              params={{ serviceId: service.id }}
+              className="row justify-between px-3 py-2 text-xs font-medium hover:bg-muted/50"
             >
               <T id="serviceReady.inspectService" />
-            </ActionsListLink>,
+              <IconArrowRight className="size-4" />
+            </Link>,
 
             url?.externalUrl && (
-              <ActionsListLink
+              <ExternalLink
                 key="access"
-                Icon={IconExternalLink}
                 openInNewTab
-                to={`https://${url.externalUrl}`}
-                className="row justify-between text-xs font-medium"
+                href={`https://${url.externalUrl}`}
+                className="row justify-between px-3 py-2 text-xs font-medium hover:bg-muted/50"
               >
                 <T id="serviceReady.accessService" />
-              </ActionsListLink>
+                <IconExternalLink className="size-4" />
+              </ExternalLink>
             ),
           ]}
         />
@@ -116,14 +117,15 @@ export function DeploymentStatusDetails({ app, service, deployment }: Deployment
       after={
         <ActionsList
           items={[
-            <ActionsListLink
+            <Link
               key="inspect"
-              Icon={IconArrowRight}
-              to={routes.service.overview(service.id)}
-              className="row justify-between text-xs font-medium"
+              to="/services/$serviceId"
+              params={{ serviceId: service.id }}
+              className="row justify-between px-3 py-2 text-xs font-medium hover:bg-muted/50"
             >
               <T id="inspectService" />
-            </ActionsListLink>,
+              <IconArrowRight className="size-4" />
+            </Link>,
           ]}
         />
       }

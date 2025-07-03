@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { Volume } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -44,7 +43,7 @@ export function CreateSnapshotDialog({ volume }: { volume: Volume }) {
     async onSuccess({ snapshot }) {
       await invalidate('listVolumes');
       notify.success(t('successNotification', { name: snapshot!.name! }));
-      navigate({ to: routes.volumes.snapshots() });
+      navigate({ to: '/volumes/snapshots' });
       closeDialog();
     },
     onError: useFormErrorHandler(form),

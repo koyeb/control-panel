@@ -4,7 +4,7 @@ import { FormattedDate } from 'react-intl';
 import { getConfig } from 'src/application/config';
 import { BadgeNew } from 'src/components/badge-new';
 import { IconArrowUpRight } from 'src/components/icons';
-import { LinkButton } from 'src/components/link';
+import { ExternalLinkButton } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
 import { useLocalStorage } from 'src/hooks/storage';
 import { createTranslate } from 'src/intl/translate';
@@ -85,19 +85,12 @@ function NewsItem({ news }: { news: News }) {
           <div className="text-xs text-dim">{news.description}</div>
         </div>
 
-        <LinkButton
-          variant="ghost"
-          size={1}
-          component="a"
-          to={news.link}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <ExternalLinkButton openInNewTab variant="ghost" size={1} href={news.link}>
           <T id="learnMore" />
           <div>
             <IconArrowUpRight className="size-4" />
           </div>
-        </LinkButton>
+        </ExternalLinkButton>
       </div>
 
       <footer className="text-xs text-dim">

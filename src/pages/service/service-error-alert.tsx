@@ -2,7 +2,6 @@ import { Alert, ButtonColor } from '@koyeb/design-system';
 
 import { useDeployment } from 'src/api/hooks/service';
 import { Service } from 'src/api/model';
-import { routes } from 'src/application/routes';
 import { isUpcomingDeployment } from 'src/application/service-functions';
 import { Link, LinkButton } from 'src/components/link';
 import { useSearchParams } from 'src/hooks/router';
@@ -12,7 +11,11 @@ import { shortId } from 'src/utils/strings';
 const T = createTranslate('pages.service.overview.serviceErrorAlert');
 
 const deploymentLink = (serviceId: string, deploymentId: string) => {
-  return { to: routes.service.overview(serviceId), search: { deploymentId } };
+  return {
+    to: '/services/$serviceId' as const,
+    params: { serviceId },
+    search: { deploymentId },
+  };
 };
 
 type ServiceErrorAlertProps = {

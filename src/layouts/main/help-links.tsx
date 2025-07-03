@@ -1,4 +1,4 @@
-import { Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
+import { Floating, Menu, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
@@ -11,7 +11,7 @@ import {
   IconNewspaper,
   IconSignal,
 } from 'src/components/icons';
-import { ExternalLink } from 'src/components/link';
+import { ExternalLinkMenuItem } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.helpLinks');
@@ -95,8 +95,8 @@ type LinkMenuItemProps = {
 
 function LinkMenuItem({ href, onClick, children }: LinkMenuItemProps) {
   return (
-    <MenuItem element={ExternalLink} openInNewTab href={href} onClick={onClick}>
+    <ExternalLinkMenuItem openInNewTab href={href} onClick={onClick}>
       {children}
-    </MenuItem>
+    </ExternalLinkMenuItem>
   );
 }

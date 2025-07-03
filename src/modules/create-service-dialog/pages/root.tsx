@@ -1,9 +1,9 @@
 import { Button } from '@koyeb/design-system';
 
 import { type OneClickApp } from 'src/api/model';
-import { routes } from 'src/application/routes';
 import { IconArrowRight, IconDatabase, IconGlobe, IconSettings } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
+import { useNavigate } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
 import { createTranslate } from 'src/intl/translate';
 
@@ -62,10 +62,10 @@ export function Worker() {
 }
 
 export function Database() {
-  const { navigate } = useCreateServiceDialog();
+  const navigate = useNavigate();
 
   const onCreate = () => {
-    navigate({ to: routes.createDatabaseService() });
+    navigate({ to: '/database-services/new' });
   };
 
   useShortcut(['Enter'], onCreate);
@@ -91,7 +91,7 @@ type OneClickAppProps = {
 };
 
 export function OneClickApp({ app }: OneClickAppProps) {
-  const { navigate } = useCreateServiceDialog();
+  const navigate = useNavigate();
 
   const deploy = () => {
     if (app) {

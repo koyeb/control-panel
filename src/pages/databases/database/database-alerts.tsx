@@ -5,7 +5,6 @@ import { useOrganization } from 'src/api/hooks/session';
 import { DatabaseDeployment, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { getDatabaseServiceReachedQuota } from 'src/application/service-functions';
 import { ExternalLink, LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
@@ -83,16 +82,13 @@ function QuotaReachedAlert({ service, quota }: QuotaReachedAlertProps) {
   return (
     <Alert variant="warning" description={message()}>
       {organization.plan === 'hobby' ? (
-        <LinkButton
-          to={routes.organizationSettings.plans()}
-          color="orange"
-          className="self-center whitespace-nowrap"
-        >
+        <LinkButton to="/settings/plans" color="orange" className="self-center whitespace-nowrap">
           <T id="quotaReached.upgradePlan" />
         </LinkButton>
       ) : (
         <LinkButton
-          to={routes.database.settings(service.id)}
+          to="/database-services/$databaseServiceId/settings"
+          params={{ databaseServiceId: service.id }}
           color="orange"
           className="self-center whitespace-nowrap"
         >

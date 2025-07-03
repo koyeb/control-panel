@@ -9,8 +9,8 @@ import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { ValidateLinkOptions } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
@@ -83,7 +83,7 @@ function CreateOrganizationDialog() {
     onSuccess(token, { organizationName }) {
       form.reset();
       setToken(token);
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
   });
@@ -155,7 +155,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
-    ...useApiMutationFn('switchOrganization', (_: string) => ({
+    ...useApiMutationFn('switchOrganization', (_: ValidateLinkOptions['to']) => ({
       path: { id: organization.id },
       header: {},
     })),
@@ -178,16 +178,12 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
 
       <div className="ml-auto row gap-2">
         {organization.id !== currentOrganization?.id && (
-          <Button variant="outline" color="gray" onClick={() => switchOrganization(routes.home())}>
+          <Button variant="outline" color="gray" onClick={() => switchOrganization('/')}>
             <T id="switch" />
           </Button>
         )}
 
-        <Button
-          variant="outline"
-          color="gray"
-          onClick={() => switchOrganization(routes.organizationSettings.index())}
-        >
+        <Button variant="outline" color="gray" onClick={() => switchOrganization('/settings')}>
           <T id="manage" />
         </Button>
       </div>

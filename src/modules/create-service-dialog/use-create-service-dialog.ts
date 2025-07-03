@@ -1,7 +1,6 @@
 import { createContext, createElement, useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 
 import { Dialog } from 'src/components/dialog';
-import { useNavigate } from 'src/hooks/router';
 
 type CreateServiceDialogPage = {
   label: string;
@@ -57,7 +56,6 @@ export const CreateServiceDialogProvider = ({ getSections, children }: CreateSer
 function useCreateCreateServiceDialog(getSections: GetSections) {
   const openDialog = Dialog.useOpen();
   const closeDialog = Dialog.useClose();
-  const navigate = useNavigate();
 
   const [state, dispatch] = useReducer(reducer, {
     serviceType: undefined,
@@ -92,13 +90,7 @@ function useCreateCreateServiceDialog(getSections: GetSections) {
 
     onNavigationItemRef: navigationRefs.set.bind(navigationRefs),
 
-    navigate: useCallback(
-      (...params: Parameters<typeof navigate>) => {
-        closeDialog();
-        navigate(...params);
-      },
-      [closeDialog, navigate],
-    ),
+    closeDialog,
 
     dialogOpened: useCallback(() => {
       openDialog('CreateService');

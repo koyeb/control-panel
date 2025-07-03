@@ -1,10 +1,9 @@
-import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
+import { ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useState } from 'react';
 
 import { useLogoutMutation, useUserUnsafe } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import { IconLogOut, IconSettings } from 'src/components/icons';
-import { Link } from 'src/components/link';
+import { LinkMenuItem } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
 import { createTranslate } from 'src/intl/translate';
 
@@ -12,7 +11,7 @@ const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
   const user = useUserUnsafe();
-  const logout = useLogoutMutation(routes.signIn());
+  const logout = useLogoutMutation('/auth/signin');
 
   const [open, setOpen] = useState(false);
 
@@ -29,10 +28,10 @@ export function UserMenu() {
       )}
       renderFloating={(props) => (
         <Menu className="min-w-48" {...props}>
-          <MenuItem element={Link} to={'?settings'} onClick={() => setOpen(false)} className="row gap-2">
+          <LinkMenuItem to="/" search={{ settings: '' }} onClick={() => setOpen(false)} className="row gap-2">
             <IconSettings className="icon" />
             <T id="settings" />
-          </MenuItem>
+          </LinkMenuItem>
 
           <ButtonMenuItem onClick={() => logout.mutate()} className="row gap-2">
             <IconLogOut className="icon" />

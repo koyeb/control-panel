@@ -4,7 +4,6 @@ import { api } from 'src/api/api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
-import { routes } from 'src/application/routes';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -48,7 +47,7 @@ export function CannySso() {
     onError(error) {
       reportError(error);
       notify.error(<SsoError provider="canny" error={error} />);
-      navigate({ to: routes.home(), replace: true });
+      navigate({ to: '/', replace: true });
     },
   });
 
@@ -89,7 +88,7 @@ export function DiscourseSsoPage() {
     onError(error) {
       reportError(error);
       notify.error(<SsoError provider="discourse" error={error} />);
-      navigate({ to: routes.home(), replace: true });
+      navigate({ to: '/', replace: true });
     },
   });
 

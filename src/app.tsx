@@ -7,7 +7,6 @@ import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn, useInvalidateApiQuery } from './api/use-api';
 import { useAuth, useRefreshToken } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
-import { routes } from './application/routes';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
 import { useNavigate, useSearchParams } from './hooks/router';
@@ -162,7 +161,7 @@ function PageNotFound() {
         <Translate id="pages.notFound.line1" />
       </div>
 
-      <LinkButton to={routes.home()} className="mt-4">
+      <LinkButton to="/" className="mt-4">
         <Translate id="pages.notFound.back" />
       </LinkButton>
     </div>

@@ -10,7 +10,6 @@ import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { ComputeDeployment, Service } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/posthog';
-import { routes } from 'src/application/routes';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { Dialog, DialogHeader } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -134,7 +133,8 @@ function useApplyChanges(service: Service, onSuccess: () => void) {
 
       onSuccess();
       navigate({
-        to: routes.service.overview(service.id),
+        to: '/services/$serviceId',
+        params: { serviceId: service.id },
         search: { deploymentId: deployment?.id },
       });
     },

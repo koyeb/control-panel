@@ -1,10 +1,8 @@
 import { TabButtons } from '@koyeb/design-system';
 
-import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { TabButtonLink } from 'src/components/link';
 import { Title } from 'src/components/title';
-import { usePathname } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.layout');
@@ -25,27 +23,21 @@ export function OrganizationSettingsLayout({ children }: { children: React.React
 function Navigation() {
   return (
     <TabButtons className="self-start">
-      <Tab to={routes.organizationSettings.index()}>
+      <TabButtonLink to="/settings">
         <T id="navigation.general" />
-      </Tab>
-      <Tab to={routes.organizationSettings.billing()}>
+      </TabButtonLink>
+      <TabButtonLink to="/settings/billing">
         <T id="navigation.billing" />
-      </Tab>
-      <Tab to={routes.organizationSettings.plans()}>
+      </TabButtonLink>
+      <TabButtonLink to="/settings/plans">
         <T id="navigation.plans" />
-      </Tab>
-      <Tab to={routes.organizationSettings.api()}>
+      </TabButtonLink>
+      <TabButtonLink to="/settings/api">
         <T id="navigation.api" />
-      </Tab>
-      <Tab to={routes.organizationSettings.registrySecrets()}>
+      </TabButtonLink>
+      <TabButtonLink to="/settings/registry-configuration">
         <T id="navigation.registrySecrets" />
-      </Tab>
+      </TabButtonLink>
     </TabButtons>
   );
-}
-
-function Tab(props: { to: string; children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  return <TabButtonLink selected={pathname === props.to} className="whitespace-nowrap" {...props} />;
 }

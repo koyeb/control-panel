@@ -6,7 +6,6 @@ import { useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api/hooks/
 import { App, Deployment, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DocumentTitle } from 'src/components/document-title';
@@ -14,7 +13,7 @@ import { ExternalLink, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { useNavigate, usePathname, useRouteParam } from 'src/hooks/router';
+import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { PaletteItem, useCommandPaletteContext } from 'src/modules/command-palette/command-palette.provider';
@@ -121,6 +120,7 @@ function RegisterServiceCommands({ service }: { service: Service }) {
   });
 
   useEffect(() => {
+    const serviceId = service.id;
     const name = service.name;
 
     const commands: PaletteItem[] = [
@@ -128,28 +128,28 @@ function RegisterServiceCommands({ service }: { service: Service }) {
         label: `Go to dashboard`,
         description: `Navigate to the ${name} service's dashboard page`,
         keywords: ['overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
-        execute: () => navigate({ to: routes.service.overview(service.id) }),
+        execute: () => navigate({ to: '/services/$serviceId', params: { serviceId } }),
       },
 
       {
         label: `Go to metrics`,
         description: `Navigate to the ${name} service's metrics page`,
         keywords: ['metrics', 'monitoring', 'graphs', 'charts'],
-        execute: () => navigate({ to: routes.service.metrics(service.id) }),
+        execute: () => navigate({ to: '/services/$serviceId/metrics', params: { serviceId } }),
       },
 
       {
         label: `Go to console`,
         description: `Navigate to the ${name} service's console page`,
         keywords: ['console', 'shell', 'terminal', 'command', 'execute', 'run', 'ssh'],
-        execute: () => navigate({ to: routes.service.console(service.id) }),
+        execute: () => navigate({ to: '/services/$serviceId/console', params: { serviceId } }),
       },
 
       {
         label: `Go to settings`,
         description: `Navigate to the ${name} service's settings page`,
         keywords: ['settings', 'update'],
-        execute: () => navigate({ to: routes.service.settings(service.id) }),
+        execute: () => navigate({ to: '/services/$serviceId/settings', params: { serviceId } }),
       },
 
       {
@@ -245,29 +245,23 @@ function Navigation() {
 
   return (
     <TabButtons className="self-start">
-      <Tab to={routes.service.overview(serviceId)}>
+      <TabButtonLink to="/services/$serviceId" params={{ serviceId }}>
         <T id="navigation.overview" />
-      </Tab>
+      </TabButtonLink>
 
-      <Tab to={routes.service.metrics(serviceId)}>
+      <TabButtonLink to="/services/$serviceId/metrics" params={{ serviceId }}>
         <T id="navigation.metrics" />
-      </Tab>
+      </TabButtonLink>
 
-      <Tab to={routes.service.console(serviceId)}>
+      <TabButtonLink to="/services/$serviceId/console" params={{ serviceId }}>
         <T id="navigation.console" />
-      </Tab>
+      </TabButtonLink>
 
-      <Tab to={routes.service.settings(serviceId)}>
+      <TabButtonLink to="/services/$serviceId/settings" params={{ serviceId }}>
         <T id="navigation.settings" />
-      </Tab>
+      </TabButtonLink>
     </TabButtons>
   );
-}
-
-function Tab(props: { to: string; children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  return <TabButtonLink selected={pathname === props.to} className="whitespace-nowrap" {...props} />;
 }
 
 function ServicePausedAlert({ service }: { service: Service }) {

@@ -6,7 +6,6 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
@@ -66,7 +65,7 @@ export function DeleteOrganization() {
     },
     onSuccess(token) {
       setToken(token);
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });

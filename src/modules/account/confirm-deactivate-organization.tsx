@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useOnboardingStep } from 'src/application/onboarding';
-import { routes } from 'src/application/routes';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -27,7 +26,10 @@ export function ConfirmDeactivateOrganization({ confirmationId }: { confirmation
       notify.info(t('deactivationSuccessNotification'));
     },
     onSettled() {
-      navigate({ to: onboardingStep ? '/?settings' : routes.organizationSettings.index() });
+      navigate({
+        to: onboardingStep ? '/' : '/settings',
+        search: onboardingStep ? { settings: '' } : {},
+      });
     },
   });
 

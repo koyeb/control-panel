@@ -5,10 +5,8 @@ import { useEffect } from 'react';
 import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useApps, useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
-import { ServiceType } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
-import { routes } from 'src/application/routes';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
@@ -161,56 +159,56 @@ function useRegisterInternalNavigationCommands() {
       label: 'Go to domains',
       description: 'Manage your custom domains',
       keywords: ['domains', 'http', 'url', 'public'],
-      execute: () => navigate({ to: routes.domains() }),
+      execute: () => navigate({ to: '/domains' }),
     });
 
     defaultItems.add({
       label: 'Go to secrets',
       description: "Manage your organization's secrets",
       keywords: ['secrets', 'secure', 'private', 'protected', 'vault', 'token'],
-      execute: () => navigate({ to: routes.secrets() }),
+      execute: () => navigate({ to: '/secrets' }),
     });
 
     defaultItems.add({
       label: 'Go to volumes',
       description: 'Manage your persistent volumes',
       keywords: ['volumes', 'storage', 'persistence', 'disk', 'data'],
-      execute: () => navigate({ to: routes.volumes.index() }),
+      execute: () => navigate({ to: '/volumes' }),
     });
 
     defaultItems.add({
       label: 'Go to volume snapshots',
       description: "Manage your persistent volume's snapshots",
       keywords: ['volumes', 'snapshot', 'storage', 'persistence', 'disk', 'data'],
-      execute: () => navigate({ to: routes.volumes.snapshots() }),
+      execute: () => navigate({ to: '/volumes/snapshots' }),
     });
 
     defaultItems.add({
       label: 'Go to activity',
       description: "View your organization's recent activity",
       keywords: ['activity', 'activities', 'events'],
-      execute: () => navigate({ to: routes.activity() }),
+      execute: () => navigate({ to: '/activity' }),
     });
 
     defaultItems.add({
       label: 'Go to team members',
       description: "View and manage your organization's members",
       keywords: ['team', 'members', 'organization', 'invite', 'invitations'],
-      execute: () => navigate({ to: routes.team() }),
+      execute: () => navigate({ to: '/team' }),
     });
 
     defaultItems.add({
       label: 'Go to organization settings',
       description: "Manage your organization's settings and view your quotas",
       keywords: ['organization', 'settings', 'quotas'],
-      execute: () => navigate({ to: routes.organizationSettings.index() }),
+      execute: () => navigate({ to: '/settings' }),
     });
 
     defaultItems.add({
       label: 'Go to organization usage and billing',
       description: "View and manage your organization's billing information",
       keywords: ['organization', 'usage', 'billing', 'payment', 'invoice', 'cost'],
-      execute: () => navigate({ to: routes.organizationSettings.billing() }),
+      execute: () => navigate({ to: '/settings/billing' }),
     });
 
     defaultItems.add({
@@ -229,63 +227,63 @@ function useRegisterInternalNavigationCommands() {
         'scale',
         'startup',
       ],
-      execute: () => navigate({ to: routes.organizationSettings.plans() }),
+      execute: () => navigate({ to: '/settings/plans' }),
     });
 
     defaultItems.add({
       label: 'Go to organization API credentials',
       description: 'View and manage the API credentials bounded to your organization',
       keywords: ['organization', 'api', 'credentials', 'token'],
-      execute: () => navigate({ to: routes.organizationSettings.api() }),
+      execute: () => navigate({ to: '/settings/api' }),
     });
 
     defaultItems.add({
       label: 'Go to organization registry configuration',
       description: "View and manage your organization's registry configurations",
       keywords: ['organization', 'registry', 'docker', 'secrets'],
-      execute: () => navigate({ to: routes.organizationSettings.registrySecrets() }),
+      execute: () => navigate({ to: '/settings/registry-configuration' }),
     });
 
     defaultItems.add({
       label: 'Go to personal account settings',
       description: "View and manage your account's settings",
       keywords: ['account', 'settings', 'personal', 'user', 'email', 'password'],
-      execute: () => navigate({ to: routes.userSettings.index() }),
+      execute: () => navigate({ to: '/user/settings' }),
     });
 
     defaultItems.add({
       label: 'Go to organizations list',
       description: "View the organizations you're a member of",
       keywords: ['account', 'organizations'],
-      execute: () => navigate({ to: routes.userSettings.organizations() }),
+      execute: () => navigate({ to: '/user/settings/organizations' }),
     });
 
     defaultItems.add({
       label: 'Go to personal access tokens',
       description: 'View and manage the access tokens bounded to your user account',
       keywords: ['account', 'token', 'personal', 'api'],
-      execute: () => navigate({ to: routes.userSettings.api() }),
+      execute: () => navigate({ to: '/user/settings/api' }),
     });
 
     defaultItems.add({
       label: 'Create new domain',
       description: 'Create a new custom domain',
       keywords: ['create', 'domain'],
-      execute: () => navigate({ to: routes.domains(), state: { create: true } }),
+      execute: () => navigate({ to: '/domains', state: { create: true } }),
     });
 
     defaultItems.add({
       label: 'Create new secret',
       description: 'Create a new organization secret',
       keywords: ['create', 'secret'],
-      execute: () => navigate({ to: routes.secrets(), state: { create: true } }),
+      execute: () => navigate({ to: '/secrets', state: { create: true } }),
     });
 
     defaultItems.add({
       label: 'Create new volume',
       description: 'Create a new persistent volume',
       keywords: ['create', 'volume'],
-      execute: () => navigate({ to: routes.volumes.index(), state: { create: true } }),
+      execute: () => navigate({ to: '/volumes', state: { create: true } }),
     });
 
     defaultItems.add({
@@ -295,38 +293,30 @@ function useRegisterInternalNavigationCommands() {
       weight: 2,
       keepOpen: true,
       execute: () => {
-        const getUrl = (type: ServiceType | 'private') => {
-          const url = new URL(routes.createService(), window.origin);
-
-          url.searchParams.set('service_type', type);
-
-          return url.toString();
-        };
-
         setItems([
           {
             label: 'Web service',
             description: 'Can be accessed accessible from the Internet or the private network',
             keywords: ['create', 'deploy', 'service', 'private'],
-            execute: () => navigate({ to: getUrl('private') }),
+            execute: () => navigate({ to: '/services/new', search: { service_type: 'web' } }),
           },
           {
             label: 'Private service',
             description: 'Only exposed to your other services via the internal private network',
             keywords: ['create', 'deploy', 'service', 'private'],
-            execute: () => navigate({ to: getUrl('private') }),
+            execute: () => navigate({ to: '/services/new', search: { service_type: 'private' } }),
           },
           {
             label: 'Worker',
             description: 'For long running processes like background processing and task execution',
             keywords: ['create', 'deploy', 'service', 'worker'],
-            execute: () => navigate({ to: getUrl('worker') }),
+            execute: () => navigate({ to: '/services/new', search: { service_type: 'worker' } }),
           },
           {
             label: 'Database',
             description: 'A fully managed, serverless Postgres database',
             keywords: ['create', 'deploy', 'service', 'database', 'db', 'postgresql', 'neon'],
-            execute: () => navigate({ to: routes.createDatabaseService() }),
+            execute: () => navigate({ to: '/database-services/new' }),
           },
         ]);
       },
@@ -359,7 +349,7 @@ function useRegisterServiceNavigationCommands() {
         description: `Navigate to the ${name} service's dashboard`,
         keywords: [...keywords, 'overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
         weight: 3,
-        execute: () => navigate({ to: routes.service.overview(service.id) }),
+        execute: () => navigate({ to: '/services/$serviceId', params: { serviceId: service.id } }),
       });
     }
 
@@ -399,7 +389,7 @@ function useRegisterAccountCommands() {
     ...mutationEffects,
     onSuccess: () => {
       setToken(null);
-      navigate({ to: routes.signIn() });
+      navigate({ to: '/auth/signin' });
     },
   });
 
@@ -409,7 +399,7 @@ function useRegisterAccountCommands() {
       description: 'Create a new Koyeb organization',
       keywords: ['create', 'organization'],
       weight: 1,
-      execute: () => navigate({ to: routes.userSettings.organizations(), state: { create: true } }),
+      execute: () => navigate({ to: '/user/settings/organizations', state: { create: true } }),
     });
 
     defaultItems.add({
@@ -433,7 +423,7 @@ function useRegisterAccountCommands() {
     async onSuccess(token) {
       setToken(token.token!.id!);
       await Promise.all([invalidate('getCurrentOrganization'), invalidate('listOrganizationMembers')]);
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
     },
   });
 

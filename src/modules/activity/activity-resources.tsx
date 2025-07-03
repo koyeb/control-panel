@@ -2,7 +2,6 @@ import clsx from 'clsx';
 import { createElement } from 'react';
 
 import { Activity, ServiceType } from 'src/api/model';
-import { routes } from 'src/application/routes';
 import { IconFolders } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
@@ -130,9 +129,11 @@ function ServiceResource({
     props.className = 'hover:bg-muted/50';
 
     if (serviceType === 'database') {
-      props.to = routes.database.overview(serviceId);
+      props.to = '/database-services/$databaseServiceId';
+      props.params = { databaseServiceId: serviceId };
     } else {
-      props.to = routes.service.overview(serviceId);
+      props.to = '/services/$serviceId';
+      props.params = { serviceId };
       props.search = { deploymentId };
     }
   }
@@ -166,7 +167,7 @@ function RegionResource({ regionId }: { regionId: string }) {
 function VolumeResource({ name, deleted }: { name: string; deleted: boolean }) {
   const [component, props] = deleted
     ? [undefined, {}]
-    : [Link, { href: routes.volumes.index(), className: 'hover:bg-muted/50' }];
+    : [Link, { to: '/volumes', className: 'hover:bg-muted/50' }];
 
   return (
     <ActivityResource component={component} {...props}>

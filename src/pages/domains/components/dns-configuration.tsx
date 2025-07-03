@@ -6,7 +6,7 @@ import { parse } from 'tldts';
 import { Domain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { LinkButton } from 'src/components/link';
+import { ExternalLinkButton } from 'src/components/link';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
@@ -51,16 +51,14 @@ export function DnsConfiguration({ domain }: { domain: Domain }) {
       <DnsEntryTable domain={domain} />
 
       <div className="row gap-4">
-        <LinkButton
-          component="a"
+        <ExternalLinkButton
+          openInNewTab
           variant="outline"
           color="gray"
-          to={getDocumentationLink(subdomain === '')}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={getDocumentationLink(subdomain === '')}
         >
           <T id="docs" />
-        </LinkButton>
+        </ExternalLinkButton>
 
         <Button color="gray" loading={isPending} onClick={() => mutate()} className="self-start">
           <T id="refresh" />

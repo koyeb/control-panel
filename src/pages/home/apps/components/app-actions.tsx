@@ -8,13 +8,12 @@ import { App, AppDomain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { IconEllipsis } from 'src/components/icons';
-import { Link } from 'src/components/link';
+import { LinkMenuItem } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -36,13 +35,13 @@ export function AppActions({ app }: { app: App }) {
               <T id="appActions.label" />
             </MenuItem>
 
-            <MenuItem element={Link} to={`${routes.createService()}?app_id=${app.id}`} onClick={onClose}>
+            <LinkMenuItem to="/services/new" search={{ app_id: app.id }} onClick={onClose}>
               <T id="appActions.addService" />
-            </MenuItem>
+            </LinkMenuItem>
 
-            <MenuItem element={Link} to={routes.domains()} onClick={onClose}>
+            <LinkMenuItem to="/domains" onClick={onClose}>
               <T id="appActions.addDomain" />
-            </MenuItem>
+            </LinkMenuItem>
 
             <ButtonMenuItem onClick={withClose(() => openDialog('EditApp', { appId: app.id }))}>
               <T id="appActions.edit" />

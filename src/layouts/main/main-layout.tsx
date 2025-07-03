@@ -11,7 +11,6 @@ import {
 import { useAuth } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
-import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
@@ -86,7 +85,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
   return (
     <div className="col min-h-full gap-4 py-4 sm:gap-6 sm:py-6">
-      <Link to={isDeactivated ? routes.organizationSettings.index() : routes.home()} className="mx-2 px-3">
+      <Link to={isDeactivated ? '/settings' : '/'} className="mx-2 px-3">
         {collapsed && <Logo className="h-6" />}
         {!collapsed && <LogoKoyeb className="h-6" />}
       </Link>
@@ -103,7 +102,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
         </div>
       )}
 
-      <LinkButton size={2} to={routes.createService()} disabled={isDeactivated} className="mx-3 capitalize">
+      <LinkButton size={2} to="/services/new" disabled={isDeactivated} className="mx-3 capitalize">
         {collapsed && (
           <div>
             <IconPlus className="size-5" />
@@ -157,7 +156,7 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const logout = useLogoutMutation(routes.home(), true);
+  const logout = useLogoutMutation('/', true);
 
   return (
     <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">

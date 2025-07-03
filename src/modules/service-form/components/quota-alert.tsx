@@ -4,8 +4,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { api } from 'src/api/api';
 import { isApiValidationError } from 'src/api/api-errors';
 import { useAuth } from 'src/application/authentication';
-import { routes } from 'src/application/routes';
-import { LinkButton } from 'src/components/link';
+import { ExternalLinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';
 
@@ -65,15 +64,9 @@ export function QuotaAlert(props: QuotaAlertProps) {
 
   return (
     <Alert variant="info" description={message}>
-      <LinkButton
-        color="blue"
-        component="a"
-        to={routes.organizationSettings.plans()}
-        target="_blank"
-        className="ml-auto"
-      >
+      <ExternalLinkButton openInNewTab color="blue" href="/settings/plans" className="ml-auto">
         <Translate id="common.upgradePlan" />
-      </LinkButton>
+      </ExternalLinkButton>
     </Alert>
   );
 }

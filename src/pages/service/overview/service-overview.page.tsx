@@ -1,7 +1,6 @@
 import { Alert, IconButton, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { routes } from 'src/application/routes';
 import { IconChevronLeft, IconChevronsLeft } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -136,7 +135,8 @@ function DeploymentsListActions({
               color="gray"
               size={1}
               disabled={isActive() || activeDeploymentId === undefined}
-              to={routes.service.overview(service.id)}
+              to="/services/$serviceId"
+              params={{ serviceId: service.id }}
               search={{ deploymentId: activeDeploymentId }}
             >
               <T id="deployments.actions.activeDeployment" />
@@ -151,7 +151,8 @@ function DeploymentsListActions({
           color="gray"
           size={1}
           disabled={isLatest()}
-          to={routes.service.overview(service.id)}
+          to="/services/$serviceId"
+          params={{ serviceId: service.id }}
           search={{ deploymentId: latestNonStashedDeployment?.id }}
         >
           <T id="deployments.actions.latestDeployment" />

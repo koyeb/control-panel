@@ -32,7 +32,7 @@ export function QuotaIncreaseRequestDialog({ catalogInstanceId }: { catalogInsta
       </p>
 
       <DialogFooter>
-        <ExternalLinkButton openInNewTab to={tallyLink}>
+        <ExternalLinkButton openInNewTab href={tallyLink}>
           <T id="quotaIncreaseRequestDialog.cta" />
         </ExternalLinkButton>
       </DialogFooter>

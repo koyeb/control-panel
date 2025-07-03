@@ -1,4 +1,3 @@
-import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
@@ -11,7 +10,7 @@ export function TrialBanner() {
   const trial = defined(useTrial());
 
   const upgrade = (children: React.ReactNode) => (
-    <Link to={routes.organizationSettings.plans()} className="underline">
+    <Link to="/settings/plans" className="underline">
       {children}
     </Link>
   );

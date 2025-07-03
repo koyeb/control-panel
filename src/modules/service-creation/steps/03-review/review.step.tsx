@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-import { routes } from 'src/application/routes';
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate } from 'src/hooks/router';
@@ -19,7 +18,7 @@ export function ReviewStep() {
       <ServiceForm
         className="grow"
         onDeployed={(appId, serviceId) =>
-          navigate({ to: routes.createService(), search: { step: 'initialDeployment', serviceId } })
+          navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
         }
         onCostChanged={setCost}
         onDeployUrlChanged={setDeployUrl}

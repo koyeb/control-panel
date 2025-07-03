@@ -9,7 +9,6 @@ import { Service } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
@@ -78,7 +77,7 @@ function DeleteDatabaseService({ service }: { service: Service }) {
     async onSuccess() {
       await invalidate('listApps');
       await invalidate('listServices');
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.info(t('delete.successNotification', { serviceName: service.name }));
     },
   });

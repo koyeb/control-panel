@@ -2,7 +2,6 @@ import { useCallback, useEffect } from 'react';
 
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useRepositories } from 'src/api/hooks/git';
-import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -58,7 +57,7 @@ export function ServiceCreation() {
   const serviceLink = (children: React.ReactNode) => {
     if (serviceId) {
       return (
-        <Link className="text-link" to={routes.service.overview(serviceId)}>
+        <Link className="text-link" to="/services/$serviceId" params={{ serviceId }}>
           {children}
         </Link>
       );

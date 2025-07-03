@@ -3,12 +3,11 @@ import { useState } from 'react';
 
 import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
-import { routes } from 'src/application/routes';
 import { ExternalLink, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { usePathname, useRouteParam } from 'src/hooks/router';
+import { useRouteParam } from 'src/hooks/router';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
@@ -107,24 +106,18 @@ function Navigation() {
 
   return (
     <TabButtons className="self-start">
-      <Tab to={routes.database.overview(databaseServiceId)}>
+      <TabButtonLink to="/database-services/$databaseServiceId" params={{ databaseServiceId }}>
         <T id="navigation.overview" />
-      </Tab>
-      <Tab to={routes.database.logicalDatabases(databaseServiceId)}>
+      </TabButtonLink>
+      <TabButtonLink to="/database-services/$databaseServiceId/databases" params={{ databaseServiceId }}>
         <T id="navigation.logicalDatabases" />
-      </Tab>
-      <Tab to={routes.database.roles(databaseServiceId)}>
+      </TabButtonLink>
+      <TabButtonLink to="/database-services/$databaseServiceId/roles" params={{ databaseServiceId }}>
         <T id="navigation.roles" />
-      </Tab>
-      <Tab to={routes.database.settings(databaseServiceId)}>
+      </TabButtonLink>
+      <TabButtonLink to="/database-services/$databaseServiceId/settings" params={{ databaseServiceId }}>
         <T id="navigation.settings" />
-      </Tab>
+      </TabButtonLink>
     </TabButtons>
   );
-}
-
-function Tab(props: { to: string; children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  return <TabButtonLink selected={pathname === props.to} className="whitespace-nowrap" {...props} />;
 }

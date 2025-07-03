@@ -5,7 +5,6 @@ import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/api/model';
-import { routes } from 'src/application/routes';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
 import { IconFullscreen } from 'src/components/icons';
@@ -144,7 +143,8 @@ function BuiltInPreviousDeployment({ service }: { service: Service }) {
           values={{
             link: (children) => (
               <Link
-                to={routes.service.overview(service.id)}
+                to="/services/$serviceId"
+                params={{ serviceId: service.id }}
                 search={{ deploymentId: service.lastProvisionedDeploymentId }}
                 className="underline"
               >
