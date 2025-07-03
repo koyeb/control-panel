@@ -95,7 +95,7 @@ export function useOnRouteStateCreate(cb: () => void) {
 
   useEffect(() => {
     if (historyState.create) {
-      navigate({ to: '#', replace: true, state: { create: false } });
+      navigate({ replace: true, state: { create: false } });
       cbMemo();
     }
   }, [historyState, navigate, cbMemo]);
