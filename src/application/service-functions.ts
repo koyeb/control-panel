@@ -1,3 +1,5 @@
+import { RegisteredRouter } from '@tanstack/react-router';
+
 import { api } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
 import { databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
@@ -19,7 +21,10 @@ import { hasProperty } from 'src/utils/object';
 
 import { getToken } from './authentication';
 
-type ServiceLink = ValidateLinkOptions;
+type ServiceLink = ValidateLinkOptions<
+  RegisteredRouter,
+  { to: '/database-services/$databaseServiceId' | '/services/$serviceId' }
+>;
 
 export function getServiceLink(service: Service): ServiceLink {
   if (service.type === 'database') {

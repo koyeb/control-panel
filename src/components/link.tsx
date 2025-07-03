@@ -1,106 +1,82 @@
 import { Button, ButtonColor, ButtonSize, ButtonVariant, MenuItem, TabButton } from '@koyeb/design-system';
+import { Link as BaseLink, LinkComponent, ValidateLinkOptions, createLink } from '@tanstack/react-router';
 import clsx from 'clsx';
-// eslint-disable-next-line no-restricted-imports
-import { Link as BaseLink, useRoute } from 'wouter';
 
-import { replacePathParams } from 'src/hooks/router';
 import { Extend } from 'src/utils/types';
 
-export type ValidateLinkOptions = {
-  to: string;
-  params?: Record<string, string>;
-  search?: Record<string, unknown>;
-};
+export { type ValidateLinkOptions };
 
-type LinkProps = Extend<
-  Omit<React.ComponentProps<'a'>, 'href'>,
-  {
-    to: string;
-    params?: Record<string, string>;
-    search?: Record<string, unknown>;
-    state?: Record<string, unknown>;
-  }
->;
+export const Link = BaseLink;
 
-export function Link({ to, params, search, ...props }: LinkProps) {
-  let href = replacePathParams(to, params);
-
-  const searchParams = new URLSearchParams();
-
-  for (const [key, value] of Object.entries(search ?? {})) {
-    if (value != null) {
-      searchParams.set(key, String(value));
-    }
-  }
-
-  if (searchParams.size > 0) {
-    href += '?' + searchParams.toString();
-  }
-
-  return <BaseLink href={href} {...props} />;
-}
-
-type LinkButtonProps = Extend<
-  LinkProps,
+type LinkButtonNativeProps = Extend<
+  React.ComponentProps<'a'>,
   {
     variant?: ButtonVariant;
     size?: ButtonSize;
     color?: ButtonColor;
     openInNewTab?: boolean;
-    disabled?: boolean;
   }
 >;
 
-export function LinkButton({
+function LinkButtonNative({
   variant,
   size,
   color,
   openInNewTab,
-  disabled,
   className,
   ...props
-}: LinkButtonProps) {
+}: LinkButtonNativeProps) {
   return (
-    <Link
+    <a
       role="button"
       target={openInNewTab ? '_blank' : undefined}
-      aria-disabled={disabled}
-      className={Button.className(
-        { variant, size, color },
-        clsx(className, disabled && 'pointer-events-none opacity-50'),
-      )}
+      aria-disabled={props.href === undefined}
+      className={Button.className({ variant, size, color }, className)}
       {...props}
     />
   );
 }
 
-type TabButtonProps = Extend<
-  LinkProps,
+export const LinkButton = createLink(LinkButtonNative);
+
+type TabButtonNativeProps = Extend<
+  React.ComponentProps<'a'>,
   {
     size?: 1 | 2;
     disabled?: boolean;
   }
 >;
 
-export function TabButtonLink({ size, disabled, className, ...props }: TabButtonProps) {
-  const [isActive] = useRoute(replacePathParams(props.to, props.params));
-
+function TabButtonLinkNative({ size, disabled, className, ...props }: TabButtonNativeProps) {
   return (
-    <Link
+    <a
       role="tab"
       aria-disabled={disabled}
-      data-status={isActive ? 'active' : 'inactive'}
       className={clsx(TabButton.className({ size, className }))}
       {...props}
     />
   );
 }
 
-type LinkMenuItemProps = LinkProps;
+const CreatedTabButtonLink = createLink(TabButtonLinkNative);
 
-export function LinkMenuItem({ className, ...props }: LinkMenuItemProps) {
-  return <Link className={clsx(MenuItem.className({ className }))} {...props} />;
+export const TabButtonLink: LinkComponent<typeof TabButtonLinkNative> = (props) => {
+  return (
+    <CreatedTabButtonLink
+      activeOptions={{ exact: true, includeSearch: false }}
+      inactiveProps={{ 'data-status': 'inactive' }}
+      {...props}
+    />
+  );
+};
+
+type LinkMenuItemNativeProps = React.ComponentProps<'a'>;
+
+export function LinkMenuItemNative({ className, ...props }: LinkMenuItemNativeProps) {
+  return <a className={clsx(MenuItem.className({ className }))} {...props} />;
 }
+
+export const LinkMenuItem = createLink(LinkMenuItemNative);
 
 type ExternalLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   openInNewTab?: boolean;

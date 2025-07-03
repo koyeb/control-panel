@@ -1,7 +1,8 @@
+import { linkOptions } from '@tanstack/react-router';
 import { useCallback, useEffect } from 'react';
 
 import { IconGithub } from 'src/components/icons';
-import { Link, LinkButton, ValidateLinkOptions } from 'src/components/link';
+import { Link, LinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
@@ -92,19 +93,19 @@ export function ServiceTypeStep() {
   );
 }
 
-function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | null): ValidateLinkOptions {
+function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | null) {
   if (serviceType === 'database') {
-    return {
+    return linkOptions({
       to: '/database-services/new',
       search: { app_id: appId ?? undefined },
-    };
+    });
   }
 
   if (serviceType === 'model') {
-    return {
+    return linkOptions({
       to: '/services/deploy',
       search: { type: 'model', app_id: appId ?? undefined },
-    };
+    });
   }
 
   throw new Error('Invalid service type');
