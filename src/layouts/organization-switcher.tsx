@@ -8,7 +8,6 @@ import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
-import { routes } from 'src/application/routes';
 import { SvgComponent } from 'src/application/types';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
@@ -119,7 +118,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
             <hr className="my-1" />
 
             <Link
-              to={routes.userSettings.organizations()}
+              to="/user/settings/organizations"
               state={{ create: true }}
               className="mb-1 row w-full gap-2 px-2 py-1.5"
             >
@@ -172,7 +171,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!, false);
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       onSuccess?.();
     },
   });

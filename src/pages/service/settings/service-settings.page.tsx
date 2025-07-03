@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import { useService } from 'src/api/hooks/service';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -32,7 +31,11 @@ export function ServiceSettingsPage() {
       <ServiceForm
         serviceId={serviceId}
         onDeployed={(appId, serviceId, deploymentId) =>
-          navigate({ to: routes.service.overview(serviceId), search: { deploymentId } })
+          navigate({
+            to: '/services/$serviceId',
+            params: { serviceId },
+            search: { deploymentId },
+          })
         }
         onSaved={() => notify.info(t('saved'))}
         onCostChanged={setCost}

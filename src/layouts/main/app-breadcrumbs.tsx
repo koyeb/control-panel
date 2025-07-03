@@ -1,14 +1,13 @@
-import { Floating, Menu, MenuItem } from '@koyeb/design-system';
+import { Floating, Menu } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
 
 import { useAppQuery, useServiceQuery, useServices } from 'src/api/hooks/service';
-import { routes } from 'src/application/routes';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
 import { IconCheck, IconChevronDown, IconHouse } from 'src/components/icons';
-import { Link } from 'src/components/link';
+import { LinkMenuItem } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { usePathname } from 'src/hooks/router';
@@ -21,7 +20,7 @@ export function AppBreadcrumbs() {
 
   return (
     <Breadcrumbs className="h-14 overflow-x-auto">
-      {pathname !== routes.home() && (
+      {pathname !== '/' && (
         <Crumb
           isFirst
           label={
@@ -29,43 +28,39 @@ export function AppBreadcrumbs() {
               <IconHouse className="icon" />
             </div>
           }
-          link={routes.home()}
+          link="/"
         />
       )}
 
       <Switch>
-        <CrumbRoute path="/services" label={<T id="services" />} link={routes.services()} />
+        <CrumbRoute path="/services" label={<T id="services" />} link="/services" />
 
         <Route path="/volumes">
-          <Crumb label={<T id="volumes" />} link={routes.volumes.index()} />
-          <CrumbRoute
-            path="/snapshots"
-            label={<T id="volumeSnapshots" />}
-            link={routes.volumes.snapshots()}
-          />
+          <Crumb label={<T id="volumes" />} link="/volumes" />
+          <CrumbRoute path="/snapshots" label={<T id="volumeSnapshots" />} link="/volumes/snapshots" />
         </Route>
 
-        <CrumbRoute path="/domains" label={<T id="domains" />} link={routes.domains()} />
-        <CrumbRoute path="/secrets" label={<T id="secrets" />} link={routes.secrets()} />
-        <CrumbRoute path="/activity" label={<T id="activity" />} link={routes.activity()} />
-        <CrumbRoute path="/team" label={<T id="team" />} link={routes.team()} />
+        <CrumbRoute path="/domains" label={<T id="domains" />} link="/domains" />
+        <CrumbRoute path="/secrets" label={<T id="secrets" />} link="/secrets" />
+        <CrumbRoute path="/activity" label={<T id="activity" />} link="/activity" />
+        <CrumbRoute path="/team" label={<T id="team" />} link="/team" />
 
         <CrumbRoute
           path="/database-services/new"
           label={<T id="createService" />}
-          link={routes.createService()}
+          link="/database-services/new"
         />
 
         <CrumbRoute
           path="/services/deploy"
           label={<T id="deploy" />}
-          link={routes.deploy() + window.location.search}
+          link={'/services/deploy' + window.location.search}
         />
 
-        <CrumbRoute path="/services/new" label={<T id="createService" />} link={routes.createService()} />
+        <CrumbRoute path="/services/new" label={<T id="createService" />} link="/services/new" />
 
         <Route path="/database-services/:serviceId/*?">
-          {({ serviceId }) => <DatabaseServiceCrumbs serviceId={serviceId} />}
+          {({ serviceId }) => <DatabaseServiceCrumbs databaseServiceId={serviceId} />}
         </Route>
 
         <Route path="/services/:serviceId/*?">
@@ -80,7 +75,7 @@ export function AppBreadcrumbs() {
           <UserSettingsCrumbs />
         </Route>
 
-        <CrumbRoute path="/one-click-apps" label={<T id="oneClickApps" />} link={routes.services()} />
+        <CrumbRoute path="/one-click-apps" label={<T id="oneClickApps" />} link="/one-click-apps" />
       </Switch>
     </Breadcrumbs>
   );
@@ -89,28 +84,26 @@ export function AppBreadcrumbs() {
 function OrganizationSettingsCrumbs() {
   return (
     <>
-      <CrumbRoute
-        path="/settings/*?"
-        label={<T id="organizationSettings.index" />}
-        link={routes.organizationSettings.index()}
-      />
+      <CrumbRoute path="/settings/*?" label={<T id="organizationSettings.index" />} link="/settings" />
 
       <CrumbRoute
         path="/settings/billing"
         label={<T id="organizationSettings.billing" />}
-        link={routes.organizationSettings.billing()}
+        link="/settings/billing"
       />
 
       <CrumbRoute
         path="/settings/plans"
         label={<T id="organizationSettings.plans" />}
-        link={routes.organizationSettings.plans()}
+        link="/settings/plans"
       />
 
+      <CrumbRoute path="/settings/api" label={<T id="organizationSettings.api" />} link="/settings/api" />
+
       <CrumbRoute
-        path="/settings/api"
-        label={<T id="organizationSettings.api" />}
-        link={routes.organizationSettings.api()}
+        path="/settings/registry-configuration"
+        label={<T id="organizationSettings.registryConfiguration" />}
+        link="/settings/registry-configuration"
       />
     </>
   );
@@ -119,23 +112,15 @@ function OrganizationSettingsCrumbs() {
 function UserSettingsCrumbs() {
   return (
     <>
-      <CrumbRoute
-        path="/user/settings/*?"
-        label={<T id="userSettings.index" />}
-        link={routes.userSettings.index()}
-      />
+      <CrumbRoute path="/user/settings/*?" label={<T id="userSettings.index" />} link="/user/settings" />
 
       <CrumbRoute
         path="/user/settings/organizations"
         label={<T id="userSettings.organizations" />}
-        link={routes.userSettings.organizations()}
+        link="/user/settings/organizations"
       />
 
-      <CrumbRoute
-        path="/user/settings/api"
-        label={<T id="userSettings.api" />}
-        link={routes.userSettings.api()}
-      />
+      <CrumbRoute path="/user/settings/api" label={<T id="userSettings.api" />} link="/user/settings/api" />
     </>
   );
 }
@@ -148,45 +133,51 @@ function ServiceCrumbs({ serviceId }: { serviceId: string }) {
       <CrumbRoute
         path="/services/:serviceId/metrics"
         label={<T id="service.metrics" />}
-        link={routes.service.metrics(serviceId)}
+        link="/services/$serviceId/metrics"
+        params={{ serviceId }}
       />
 
       <CrumbRoute
         path="/services/:serviceId/console"
         label={<T id="service.console" />}
-        link={routes.service.console(serviceId)}
+        link="/services/$serviceId/console"
+        params={{ serviceId }}
       />
 
       <CrumbRoute
         path="/services/:serviceId/settings"
         label={<T id="service.settings" />}
-        link={routes.service.settings(serviceId)}
+        link="/services/$serviceId/settings"
+        params={{ serviceId }}
       />
     </>
   );
 }
 
-function DatabaseServiceCrumbs({ serviceId }: { serviceId: string }) {
+function DatabaseServiceCrumbs({ databaseServiceId }: { databaseServiceId: string }) {
   return (
     <>
-      <AppServiceCrumb serviceId={serviceId} />
+      <AppServiceCrumb serviceId={databaseServiceId} />
 
       <CrumbRoute
         path="/database-services/:serviceId/databases"
         label={<T id="database.databases" />}
-        link={routes.database.logicalDatabases(serviceId)}
+        link="/database-services/$databaseServiceId/databases"
+        params={{ databaseServiceId }}
       />
 
       <CrumbRoute
         path="/database-services/:serviceId/roles"
         label={<T id="database.roles" />}
-        link={routes.database.roles(serviceId)}
+        link="/database-services/$databaseServiceId/roles"
+        params={{ databaseServiceId }}
       />
 
       <CrumbRoute
         path="/database-services/:serviceId/settings"
         label={<T id="database.settings" />}
-        link={routes.database.settings(serviceId)}
+        link="/database-services/$databaseServiceId/settings"
+        params={{ databaseServiceId }}
       />
     </>
   );
@@ -214,11 +205,8 @@ function AppServiceCrumb({ serviceId }: { serviceId: string }) {
   return (
     <div className="row items-center gap-2">
       <Crumb
-        link={
-          service.type === 'database'
-            ? routes.database.overview(service.id)
-            : routes.service.overview(service.id)
-        }
+        link={service.type === 'database' ? '/database-services/$databaseServiceId' : '/services/$serviceId'}
+        params={service.type === 'database' ? { databaseServiceId: serviceId } : { serviceId }}
         label={
           <div className="row max-w-48 items-center gap-2 sm:max-w-96 lg:max-w-none">
             <div>
@@ -263,13 +251,13 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
       renderFloating={(props) => (
         <Menu className="min-w-48" {...props}>
           {appServices?.map((service) => (
-            <MenuItem
+            <LinkMenuItem
               key={service.id}
-              element={Link}
               to={
-                service.type === 'database'
-                  ? routes.database.overview(service.id)
-                  : routes.service.overview(service.id)
+                service.type === 'database' ? '/database-services/$databaseServiceId' : '/services/$serviceId'
+              }
+              params={
+                service.type === 'database' ? { databaseServiceId: service.id } : { serviceId: service.id }
               }
               onClick={() => setMenuOpen(false)}
             >
@@ -280,7 +268,7 @@ function ServiceSwitcherMenu({ appId, serviceId }: { appId?: string; serviceId: 
               {service.name}
 
               {service.id === serviceId && <IconCheck className="ml-auto size-4 text-icon" />}
-            </MenuItem>
+            </LinkMenuItem>
           ))}
         </Menu>
       )}

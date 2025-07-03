@@ -1,6 +1,5 @@
 import { IntlShape, useIntl } from 'react-intl';
 
-import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import { capitalize, lowerCase } from 'src/utils/strings';
 import { Flatten } from 'src/utils/types';
@@ -19,7 +18,7 @@ export const createTranslate = createTranslationHelper<TranslationKeys>({
   code: (children) => <code>{children}</code>,
   dim: (children) => <span className="text-dim">{children}</span>,
   upgrade: (children) => (
-    <Link to={routes.organizationSettings.plans()} className="text-link">
+    <Link to="/settings/plans" className="text-link">
       {children}
     </Link>
   ),

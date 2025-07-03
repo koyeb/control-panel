@@ -1,4 +1,3 @@
-import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconMail } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
@@ -59,7 +58,7 @@ export function SignUpPage() {
 
 function SignInLink() {
   const link = (children: React.ReactNode) => (
-    <Link to={routes.signIn()} className="text-default underline">
+    <Link to="/auth/signin" className="text-default underline">
       {children}
     </Link>
   );

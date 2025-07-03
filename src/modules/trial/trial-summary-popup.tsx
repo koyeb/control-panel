@@ -2,7 +2,6 @@ import { Badge, ProgressBar } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { useOrganization } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { FormattedPrice } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -55,7 +54,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
           <T id="timeLeft" values={{ days: trial.daysLeft }} />
         </div>
 
-        <LinkButton color="gray" size={1} to={routes.organizationSettings.billing()}>
+        <LinkButton color="gray" size={1} to="/settings/billing">
           <T id="cta" />
         </LinkButton>
       </div>

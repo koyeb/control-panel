@@ -21,7 +21,6 @@ import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ControlledSelect } from 'src/components/controlled';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -110,7 +109,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
     },
     onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {
-      navigate({ to: routes.createService(), search: { step: 'initialDeployment', serviceId } });
+      navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
   });
 
@@ -139,7 +138,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
         <InstanceSection model={model} form={form} />
 
         <div className="row justify-end gap-2">
-          <LinkButton color="gray" to={routes.home()}>
+          <LinkButton color="gray" to="/">
             <Translate id="common.cancel" />
           </LinkButton>
 

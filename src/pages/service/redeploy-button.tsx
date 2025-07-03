@@ -1,20 +1,21 @@
 import { Alert, Button, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
+// eslint-disable-next-line no-restricted-imports
+import { useRoute } from 'wouter';
 
 import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
 import { useComputeDeployment } from 'src/api/hooks/service';
 import { App, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { hasBuild } from 'src/application/service-functions';
 import { CliInfoButton, CliInfoTooltip } from 'src/components/cli-info';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { Dialog, DialogHeader } from 'src/components/dialog';
 import { IconArrowRight } from 'src/components/icons';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate, usePathname } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.service.layout');
@@ -32,7 +33,8 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
 
   const openDialog = Dialog.useOpen();
   const closeDialog = Dialog.useClose();
-  const pathname = usePathname();
+
+  const [isServiceSettings] = useRoute(`/services/${service.id}/settings`);
   const navigate = useNavigate();
 
   const t = T.useTranslate();
@@ -56,13 +58,20 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
     ),
     async onSuccess({ deployment }) {
       await invalidate('listDeployments');
+
       closeDialog();
-      navigate({ to: routes.service.overview(service.id), search: { deploymentId: deployment?.id } });
+
+      navigate({
+        to: '/services/$serviceId',
+        params: { serviceId: service.id },
+        search: { deploymentId: deployment?.id },
+      });
+
       notify.info(t('redeploying'));
     },
   });
 
-  if (pathname === routes.service.settings(service.id) || service.status === 'PAUSED') {
+  if (isServiceSettings || service.status === 'PAUSED') {
     return null;
   }
 

@@ -20,7 +20,7 @@ export function ServiceName({ service }: { service: Service }) {
             {(props) => (
               <Link
                 {...props}
-                to={getServiceLink(service)}
+                {...getServiceLink(service)}
                 className="max-w-48 truncate font-medium hover:underline"
               >
                 {service.name}

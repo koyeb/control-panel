@@ -1,6 +1,5 @@
 import { lazy } from 'react';
 
-import { routes } from 'src/application/routes';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useForceThemeMode } from 'src/hooks/theme';
@@ -18,7 +17,7 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
   return (
     <div className="row min-h-screen bg-muted">
       <div className="col flex-1 justify-between p-4 lg:p-16">
-        <Link to={routes.signIn()} className="self-start">
+        <Link to="/auth/signin" className="self-start">
           <LogoKoyeb className="h-8" />
         </Link>
 

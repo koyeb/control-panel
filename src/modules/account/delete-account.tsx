@@ -5,7 +5,6 @@ import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -30,7 +29,7 @@ export function DeleteAccount() {
     }),
     onSuccess() {
       setToken(null);
-      navigate({ to: routes.signIn() });
+      navigate({ to: '/auth/signin' });
       notify.success(t('successNotification'));
     },
   });

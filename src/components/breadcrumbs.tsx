@@ -17,10 +17,11 @@ type CrumbProps = {
   isFirst?: boolean;
   label: React.ReactNode;
   link?: string;
+  params?: Record<string, string>;
 };
 
-export function Crumb({ isFirst, label, link }: CrumbProps) {
-  const [element, props]: [React.ElementType, object] = link ? [Link, { href: link }] : ['span', {}];
+export function Crumb({ isFirst, label, link, params }: CrumbProps) {
+  const [element, props]: [React.ElementType, object] = link ? [Link, { to: link, params }] : ['span', {}];
 
   return (
     <>

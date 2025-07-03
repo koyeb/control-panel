@@ -8,7 +8,6 @@ import { ApiError, isApiNotFoundError } from '../api/api-errors';
 import { getConfig } from './config';
 import { notify } from './notify';
 import { reportError } from './report-error';
-import { routes } from './routes';
 
 type UnknownQuery = Query<unknown, unknown, unknown, QueryKey>;
 type UnknownMutation = Mutation<unknown, unknown, unknown, unknown>;
@@ -76,7 +75,7 @@ function onQuerySuccess(data: unknown, query: UnknownQuery) {
   const searchParams = new URLSearchParams(search);
 
   if (query.queryKey[0] === 'getCurrentUser' && !isAuthenticatedRoute(pathname)) {
-    navigate(searchParams.get('next') ?? routes.home());
+    navigate(searchParams.get('next') ?? '/');
   }
 }
 
@@ -88,7 +87,7 @@ function onQueryError(error: Error, query: UnknownQuery) {
     if (error.status === 401) {
       // organization is deactivated
       if (error.message === 'Token rejected') {
-        navigate(routes.organizationSettings.index());
+        navigate('/settings');
       } else {
         handleAuthenticationError();
       }
@@ -106,10 +105,10 @@ function onQueryError(error: Error, query: UnknownQuery) {
     if (
       isApiNotFoundError(error) &&
       inArray(query.queryKey[0], ['getApp', 'getService', 'getDeployment']) &&
-      pathname !== routes.home()
+      pathname !== '/'
     ) {
       notify.info(error.message);
-      navigate(routes.home());
+      navigate('/');
     }
 
     if (error.status >= 500) {
@@ -158,9 +157,9 @@ function handleAuthenticationError() {
 
   if (!isUnauthenticatedRoute(window.location.pathname)) {
     const next = window.location.href.slice(window.location.origin.length);
-    let location = routes.signIn();
+    let location = '/auth/signin';
 
-    if (next !== routes.home()) {
+    if (next !== '/') {
       location += `?${new URLSearchParams({ next }).toString()}`;
     }
 

@@ -4,7 +4,6 @@ import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -58,7 +57,7 @@ function ResetPasswordForm() {
     })),
     onSuccess() {
       notify.success(t('successNotification'));
-      navigate({ to: routes.signIn() });
+      navigate({ to: '/auth/signin' });
     },
     onError: useFormErrorHandler(form),
   });
@@ -87,7 +86,7 @@ function ResetPasswordForm() {
 
 function SignInLink() {
   const link = (children: React.ReactNode[]) => (
-    <Link to={routes.signIn()} className="text-default underline">
+    <Link to="/auth/signin" className="text-default underline">
       {children}
     </Link>
   );

@@ -1,4 +1,3 @@
-import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
@@ -40,7 +39,7 @@ export function SignInPage() {
 
 function SignUpLink() {
   const link = (children: React.ReactNode[]) => (
-    <Link to={routes.signUp()} className="text-default underline">
+    <Link to="/auth/signup" className="text-default underline">
       {children}
     </Link>
   );
@@ -54,7 +53,7 @@ function SignUpLink() {
 
 function PasswordResetLink() {
   const link = (children: React.ReactNode[]) => (
-    <Link to={routes.resetPassword()} className="text-default underline">
+    <Link to="/auth/reset-password" className="text-default underline">
       {children}
     </Link>
   );

@@ -1,12 +1,11 @@
-import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
+import { ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 
 import { useLogoutMutation, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
-import { routes } from 'src/application/routes';
 import { IconChevronRight, IconLogOut, IconUser } from 'src/components/icons';
-import { Link } from 'src/components/link';
+import { LinkMenuItem } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useSearchParams } from 'src/hooks/router';
@@ -63,7 +62,7 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
 
 function UserMenu() {
   const user = useUser();
-  const logout = useLogoutMutation(routes.signIn());
+  const logout = useLogoutMutation('/auth/signin');
   const [open, setOpen] = useState(false);
 
   return (
@@ -86,10 +85,10 @@ function UserMenu() {
       )}
       renderFloating={(props) => (
         <Menu className="min-w-32" {...props}>
-          <MenuItem element={Link} to="?settings" onClick={() => setOpen(false)} className="row gap-2">
+          <LinkMenuItem to="/" search={{ settings: '' }} onClick={() => setOpen(false)} className="row gap-2">
             <IconUser className="icon" />
             <T id="userSettings" />
-          </MenuItem>
+          </LinkMenuItem>
 
           <ButtonMenuItem onClick={() => logout.mutate()}>
             <IconLogOut className="icon" />

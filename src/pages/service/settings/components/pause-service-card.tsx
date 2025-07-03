@@ -4,7 +4,6 @@ import { useMutation } from '@tanstack/react-query';
 import { Service } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -28,7 +27,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
     }),
     onSuccess: () => {
       closeDialog();
-      navigate({ to: routes.service.overview(service.id) });
+      navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
       notify.info(t('pausing'));
     },
   });
@@ -39,7 +38,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
     }),
     onSuccess: () => {
       closeDialog();
-      navigate({ to: routes.service.overview(service.id) });
+      navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
       notify.info(t('resuming'));
     },
   });
