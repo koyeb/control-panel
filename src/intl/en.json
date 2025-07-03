@@ -1481,6 +1481,10 @@
       "filtered": "Showing {count} of {total}",
       "createOrganization": "Create organization"
     },
+    "onboarding": {
+      "userSettings": "Settings",
+      "logout": "Log out"
+    },
     "main": {
       "accountUnderReview": "We need more information to approve your account. Please <link>verify your identity</link> to prevent account suspension.",
       "sessionTokenWarning": "You are currently seeing the organization {organizationName}",

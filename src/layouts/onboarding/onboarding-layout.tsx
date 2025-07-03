@@ -1,12 +1,22 @@
+import { ButtonMenuItem, Floating, Menu, MenuItem } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
+import { useLogoutMutation, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
+import { routes } from 'src/application/routes';
+import { IconChevronRight, IconLogOut, IconUser } from 'src/components/icons';
+import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
+import { UserAvatar } from 'src/components/user-avatar';
 import { useSearchParams } from 'src/hooks/router';
 import { useForceThemeMode } from 'src/hooks/theme';
+import { createTranslate } from 'src/intl/translate';
 
 import { OrganizationSwitcher } from '../organization-switcher';
 import { SecondarySettings } from '../secondary/settings';
+
+const T = createTranslate('layouts.onboarding');
 
 type OnboardingLayoutProps = {
   sentence: React.ReactNode;
@@ -45,6 +55,48 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
       <div className="col flex-1 justify-center gap-6">
         <div className="text-base leading-relaxed text-dim">{sentence}</div>
       </div>
+
+      <UserMenu />
     </aside>
+  );
+}
+
+function UserMenu() {
+  const user = useUser();
+  const logout = useLogoutMutation(routes.signIn());
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Floating
+      open={open}
+      setOpen={setOpen}
+      hover
+      placement="left-end"
+      offset={8}
+      renderReference={(props) => (
+        <div className="row items-center gap-2 py-2 transition-colors hover:bg-muted/50" {...props}>
+          <UserAvatar user={user} />
+
+          <span className="flex-1 truncate font-medium">{user.name}</span>
+
+          <span>
+            <IconChevronRight className="size-4 text-dim" />
+          </span>
+        </div>
+      )}
+      renderFloating={(props) => (
+        <Menu className="min-w-32" {...props}>
+          <MenuItem element={Link} to="?settings" onClick={() => setOpen(false)} className="row gap-2">
+            <IconUser className="icon" />
+            <T id="userSettings" />
+          </MenuItem>
+
+          <ButtonMenuItem onClick={() => logout.mutate()}>
+            <IconLogOut className="icon" />
+            <T id="logout" />
+          </ButtonMenuItem>
+        </Menu>
+      )}
+    />
   );
 }
