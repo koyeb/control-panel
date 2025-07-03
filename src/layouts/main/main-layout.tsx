@@ -205,7 +205,10 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
     <>
       <button
         onClick={() => setExpanded(!expanded)}
-        className="absolute right-full col h-full justify-center bg-muted/50 opacity-0 transition-opacity hover:opacity-100"
+        className={clsx(
+          'absolute right-full col h-full justify-center bg-muted/50 transition-opacity',
+          !expanded && 'opacity-0 hover:opacity-100',
+        )}
       >
         <IconChevronLeft className={clsx('size-6 text-dim', expanded && '-scale-x-100')} />
       </button>
