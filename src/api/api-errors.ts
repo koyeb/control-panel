@@ -80,7 +80,7 @@ export class ApiError extends Error {
       return false;
     }
 
-    return status === undefined || status !== value.status;
+    return status === undefined || status === value.status;
   }
 }
 
