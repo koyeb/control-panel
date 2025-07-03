@@ -17,6 +17,7 @@ import { Route as AuthSigninRouteImport } from './routes/auth/signin'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as MainTeamRouteImport } from './routes/_main/team'
 import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
+import { Route as MainOneClickAppsRouteImport } from './routes/_main/one-click-apps'
 import { Route as MainDomainsRouteImport } from './routes/_main/domains'
 import { Route as MainDeployRouteImport } from './routes/_main/deploy'
 import { Route as MainActivityRouteImport } from './routes/_main/activity'
@@ -92,6 +93,11 @@ const MainTeamRoute = MainTeamRouteImport.update({
 const MainSecretsRoute = MainSecretsRouteImport.update({
   id: '/secrets',
   path: '/secrets',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainOneClickAppsRoute = MainOneClickAppsRouteImport.update({
+  id: '/one-click-apps',
+  path: '/one-click-apps',
   getParentRoute: () => MainRouteRoute,
 } as any)
 const MainDomainsRoute = MainDomainsRouteImport.update({
@@ -303,6 +309,7 @@ export interface FileRoutesByFullPath {
   '/activity': typeof MainActivityRoute
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
+  '/one-click-apps': typeof MainOneClickAppsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByTo {
   '/activity': typeof MainActivityRoute
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
+  '/one-click-apps': typeof MainOneClickAppsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -392,6 +400,7 @@ export interface FileRoutesById {
   '/_main/activity': typeof MainActivityRoute
   '/_main/deploy': typeof MainDeployRoute
   '/_main/domains': typeof MainDomainsRoute
+  '/_main/one-click-apps': typeof MainOneClickAppsRoute
   '/_main/secrets': typeof MainSecretsRoute
   '/_main/team': typeof MainTeamRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
@@ -440,6 +449,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/deploy'
     | '/domains'
+    | '/one-click-apps'
     | '/secrets'
     | '/team'
     | '/auth/reset-password'
@@ -484,6 +494,7 @@ export interface FileRouteTypes {
     | '/activity'
     | '/deploy'
     | '/domains'
+    | '/one-click-apps'
     | '/secrets'
     | '/team'
     | '/auth/reset-password'
@@ -528,6 +539,7 @@ export interface FileRouteTypes {
     | '/_main/activity'
     | '/_main/deploy'
     | '/_main/domains'
+    | '/_main/one-click-apps'
     | '/_main/secrets'
     | '/_main/team'
     | '/auth/reset-password'
@@ -632,6 +644,13 @@ declare module '@tanstack/react-router' {
       path: '/secrets'
       fullPath: '/secrets'
       preLoaderRoute: typeof MainSecretsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/one-click-apps': {
+      id: '/_main/one-click-apps'
+      path: '/one-click-apps'
+      fullPath: '/one-click-apps'
+      preLoaderRoute: typeof MainOneClickAppsRouteImport
       parentRoute: typeof MainRouteRoute
     }
     '/_main/domains': {
@@ -996,6 +1015,7 @@ interface MainRouteRouteChildren {
   MainActivityRoute: typeof MainActivityRoute
   MainDeployRoute: typeof MainDeployRoute
   MainDomainsRoute: typeof MainDomainsRoute
+  MainOneClickAppsRoute: typeof MainOneClickAppsRoute
   MainSecretsRoute: typeof MainSecretsRoute
   MainTeamRoute: typeof MainTeamRoute
   MainIndexRoute: typeof MainIndexRoute
@@ -1016,6 +1036,7 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainActivityRoute: MainActivityRoute,
   MainDeployRoute: MainDeployRoute,
   MainDomainsRoute: MainDomainsRoute,
+  MainOneClickAppsRoute: MainOneClickAppsRoute,
   MainSecretsRoute: MainSecretsRoute,
   MainTeamRoute: MainTeamRoute,
   MainIndexRoute: MainIndexRoute,

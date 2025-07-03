@@ -39,7 +39,7 @@ export function ServiceCreation() {
   const currentStepParam = useSearchParams().get('step');
   const currentStep = isStep(currentStepParam) ? currentStepParam : Step.serviceType;
   const serviceId = useSearchParams().get('serviceId');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/new' });
 
   const setCurrentStep = useCallback(
     (step: Step) => {

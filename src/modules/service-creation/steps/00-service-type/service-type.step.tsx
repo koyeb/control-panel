@@ -22,7 +22,7 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 export function ServiceTypeStep() {
   const appId = useSearchParams().get('app_id');
   const serviceType = useSearchParams().get('service_type');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/new' });
 
   useMount(() => {
     navigate({
