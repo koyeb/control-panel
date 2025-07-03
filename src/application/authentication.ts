@@ -1,7 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { ValidateNavigateOptions } from '@tanstack/react-router';
 import { useCallback } from 'react';
 
-import { NavigateOptions, useNavigate } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 
 import { createStorage } from './storage';
 
@@ -44,7 +45,7 @@ export function useSetToken() {
   return useCallback(
     async (
       token: string | null,
-      { session, redirect }: { session?: boolean; redirect?: NavigateOptions } = {},
+      { session, redirect }: { session?: boolean; redirect?: ValidateNavigateOptions } = {},
     ) => {
       await queryClient.cancelQueries();
 
