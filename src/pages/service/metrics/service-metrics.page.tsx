@@ -158,7 +158,7 @@ function GraphCard({ label, tooltip, className, children }: GraphCardProps) {
 
 function useTimeFrame() {
   const timeFrame = useSearchParams().get('time-frame');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/$serviceId/metrics' });
 
   const setTimeFrame = useCallback(
     (timeFrame: MetricsTimeFrame) => {

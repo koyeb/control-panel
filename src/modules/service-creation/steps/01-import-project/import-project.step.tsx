@@ -11,7 +11,7 @@ export function ImportProjectStep() {
   useMount(() => {
     navigate({
       to: '/services/new',
-      search: (prev) => ({ ...prev, repository: null, image: null }),
+      search: (prev) => ({ ...prev, repository: undefined, image: undefined }),
       replace: true,
     });
   });

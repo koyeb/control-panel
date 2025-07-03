@@ -21,22 +21,23 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 export function ServiceTypeStep() {
   const appId = useSearchParams().get('app_id');
   const serviceType = useSearchParams().get('service_type');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/new' });
 
   useMount(() => {
     navigate({
+      to: '/services/new',
       search: (prev) => ({
         ...prev,
-        type: null,
-        service_type: null,
-        ports: null,
+        type: undefined,
+        service_type: undefined,
+        ports: undefined,
       }),
     });
   });
 
   const setServiceType = useCallback(
     (type: string) => {
-      navigate({ search: (prev) => ({ ...prev, service_type: type }) });
+      navigate({ to: '/services/new', search: (prev) => ({ ...prev, service_type: type }) });
     },
     [navigate],
   );

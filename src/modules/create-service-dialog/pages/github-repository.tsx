@@ -44,7 +44,7 @@ export function OrganizationRepositoriesList() {
 
   const onSelect = (repository: GitRepository) => {
     navigate({
-      to: '/deploy',
+      to: '/services/deploy',
       search: {
         service_type: serviceType,
         type: 'git',
