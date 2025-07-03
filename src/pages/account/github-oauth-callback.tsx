@@ -65,12 +65,14 @@ export function GithubOauthCallbackPage() {
 
       const statePayload = state ? schema.parse(jwtDecode(state)) : {};
       const { metadata = routes.home(), organization_id = undefined, action } = statePayload;
+      const redirect = new URL(metadata, window.location.origin);
 
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
         setToken(result.token.id);
         navigate({
-          to: metadata,
+          to: redirect.pathname,
+          search: Object.fromEntries(redirect.searchParams),
           replace: true,
           state: { createOrganization: action === 'signup' },
         });
@@ -90,7 +92,8 @@ export function GithubOauthCallbackPage() {
 
       if (currentOrganization?.id === organization_id) {
         navigate({
-          to: metadata,
+          to: redirect.pathname,
+          search: Object.fromEntries(redirect.searchParams),
           replace: true,
           state: { githubAppInstallationRequested: setupAction === 'request' },
         });
