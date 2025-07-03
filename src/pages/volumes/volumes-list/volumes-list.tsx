@@ -7,7 +7,6 @@ import { mapSnapshot } from 'src/api/mappers/volume';
 import { Volume } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { formatBytes } from 'src/application/memory';
-import { routes } from 'src/application/routes';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { LinkButton } from 'src/components/link';
@@ -118,7 +117,7 @@ function AttachedService({ serviceId }: { serviceId?: string }) {
   }
 
   return (
-    <LinkButton to={routes.service.overview(service.id)} variant="outline" color="gray" size={1}>
+    <LinkButton to="/services/$serviceId" params={{ serviceId }} variant="outline" color="gray" size={1}>
       <ServiceTypeIcon type={service.type} size="small" />
       {service.name}
     </LinkButton>

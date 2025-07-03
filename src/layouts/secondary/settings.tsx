@@ -1,5 +1,4 @@
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import { IconArrowLeft } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
@@ -16,7 +15,7 @@ export function SecondarySettings() {
   return (
     <div className="mx-auto col w-full max-w-3xl gap-10 px-4 py-8 lg:py-32">
       <div className="col items-start gap-2">
-        <Link to={routes.home()} className="row items-center gap-1">
+        <Link to="/" className="row items-center gap-1">
           <div>
             <IconArrowLeft className="size-4" />
           </div>

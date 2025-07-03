@@ -1,42 +1,68 @@
-import './polyfills';
-import './sentry';
-import './intercom';
-
-import ReactDOM from 'react-dom/client';
-
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
+import './intercom';
+import './polyfills';
+import './sentry';
 
-import { hasMessage } from './api/api-errors';
-import { App } from './app';
-import { notify } from './application/notify';
+import { QueryClient } from '@tanstack/react-query';
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { StrictMode } from 'react';
+import ReactDOM from 'react-dom/client';
+
+import { ApiError } from './api/api-errors';
 import { Providers } from './application/providers';
+import { routeTree } from './route-tree.generated';
 
-import './api/api.intercept';
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval: 5_000,
+      retry: (retryCount, error) => {
+        if (error instanceof ApiError && error.status >= 500) {
+          return retryCount <= 3;
+        }
 
-// https://vitejs.dev/guide/build#load-error-handling
-window.addEventListener('vite:preloadError', (event) => {
-  event.preventDefault();
-  window.location.reload();
+        return false;
+      },
+    },
+  },
 });
 
-// https://github.com/facebook/react/issues/10474
-function isGuardedCallbackDev() {
-  const index = new Error().stack?.indexOf('invokeGuardedCallbackDev');
-  return index && index >= 0;
+const router = createRouter({
+  routeTree,
+  defaultPreload: 'intent',
+  defaultPendingMs: 0,
+  defaultPendingMinMs: 0,
+  defaultPreloadStaleTime: 0,
+  scrollRestoration: true,
+  context: {
+    queryClient,
+  },
+});
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+
+  interface HistoryState {
+    githubAppInstallationRequested?: boolean;
+    createOrganization?: boolean;
+    create?: boolean;
+  }
 }
 
-window.addEventListener('error', function (event) {
-  const error: unknown = event.error;
+const rootElement = document.getElementById('root')!;
 
-  if (hasMessage(error) && !isGuardedCallbackDev()) {
-    notify.error(error.message);
-  }
-});
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <Providers>
-    <App />
-  </Providers>,
-);
+  root.render(
+    <StrictMode>
+      <Providers queryClient={queryClient}>
+        <RouterProvider router={router} />
+      </Providers>
+    </StrictMode>,
+  );
+}

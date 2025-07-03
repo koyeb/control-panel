@@ -6,7 +6,6 @@ import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
-import { routes } from 'src/application/routes';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -56,7 +55,7 @@ export function useSubmitDatabaseServiceForm(
         prefetch('getService', { path: { id: databaseServiceId } }),
       ]);
 
-      navigate({ to: routes.database.overview(databaseServiceId) });
+      navigate({ to: '/database-services/$databaseServiceId', params: { databaseServiceId } });
     },
     onError: useFormErrorHandler(form, (error) => ({
       serviceName: error.name ?? error['definition.name'],

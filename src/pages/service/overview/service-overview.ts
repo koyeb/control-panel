@@ -235,7 +235,7 @@ function useDeploymentGroups(service: Service, deployments: ComputeDeployment[])
 
 function useSelectedDeployment(deployments: ComputeDeployment[], noDefaultSelected: boolean) {
   const selectedDeploymentId = useSearchParams().get('deploymentId');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/$serviceId' });
 
   const selectedDeployment = useDeployment(selectedDeploymentId ?? undefined);
 

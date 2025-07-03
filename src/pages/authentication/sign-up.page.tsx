@@ -1,8 +1,7 @@
-import { routes } from 'src/application/routes';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconMail } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 import { GithubOAuthButton } from './components/github-oauth-button';
@@ -13,9 +12,7 @@ const T = createTranslate('pages.authentication.signUp');
 
 export function SignUpPage() {
   const t = T.useTranslate();
-
   const method = useSearchParams().get('method');
-  const navigate = useNavigate();
 
   return (
     <div className="col flex-1">
@@ -39,13 +36,9 @@ export function SignUpPage() {
         {method === 'email' && <SignUpForm />}
 
         {method === null && (
-          <button
-            type="button"
-            className="mx-auto row items-center gap-1"
-            onClick={() => navigate({ search: { method: 'email' } })}
-          >
+          <Link to="/auth/signup" search={{ method: 'email' }} className="mx-auto row items-center gap-1">
             <IconMail className="size-4" /> <T id="emailSignUp" />
-          </button>
+          </Link>
         )}
 
         <SignInLink />
@@ -59,7 +52,7 @@ export function SignUpPage() {
 
 function SignInLink() {
   const link = (children: React.ReactNode) => (
-    <Link to={routes.signIn()} className="text-default underline">
+    <Link to="/auth/signin" className="text-default underline">
       {children}
     </Link>
   );

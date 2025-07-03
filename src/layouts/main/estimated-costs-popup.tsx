@@ -5,7 +5,6 @@ import { Fragment } from 'react/jsx-runtime';
 import { useNextInvoiceQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
 import { Invoice, InvoiceLine, InvoicePlanLine, InvoiceUsageLine } from 'src/api/model';
-import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { FormattedPrice } from 'src/intl/formatted';
@@ -79,7 +78,7 @@ function CostsDetails({ costs }: { costs: ReturnType<typeof getCosts> }) {
         </div>
       </div>
 
-      <LinkButton color="gray" size={1} to={routes.organizationSettings.billing()} className="mt-1">
+      <LinkButton color="gray" size={1} to="/settings/billing" className="mt-1">
         <T id="cta" />
       </LinkButton>
     </div>

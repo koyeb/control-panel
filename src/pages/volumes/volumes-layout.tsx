@@ -2,19 +2,15 @@ import { TabButtons } from '@koyeb/design-system';
 import React from 'react';
 
 import { useOrganization } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
 import { IconArrowRight } from 'src/components/icons';
 import { LinkButton, TabButtonLink } from 'src/components/link';
-import { usePathname } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.volumes');
 
 export function VolumesLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
   const organization = useOrganization();
 
   if (organization.plan === 'hobby') {
@@ -25,7 +21,7 @@ export function VolumesLayout({ children }: { children: React.ReactNode }) {
         subTitle={<T id="unavailable.subTitle" />}
         description={<T id="unavailable.description" />}
         cta={
-          <LinkButton to={routes.organizationSettings.plans()}>
+          <LinkButton to="/settings/plans">
             <T id="unavailable.cta" />
             <IconArrowRight className="size-icon" />
           </LinkButton>
@@ -42,12 +38,8 @@ export function VolumesLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <TabButtons className="mb-6">
-        <TabButtonLink to={routes.volumes.index()} selected={pathname === routes.volumes.index()}>
-          Volumes
-        </TabButtonLink>
-        <TabButtonLink to={routes.volumes.snapshots()} selected={pathname === routes.volumes.snapshots()}>
-          Snapshots
-        </TabButtonLink>
+        <TabButtonLink to="/volumes">Volumes</TabButtonLink>
+        <TabButtonLink to="/volumes/snapshots">Snapshots</TabButtonLink>
       </TabButtons>
 
       {children}

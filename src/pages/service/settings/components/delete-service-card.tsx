@@ -5,7 +5,6 @@ import { api } from 'src/api/api';
 import { Service } from 'src/api/model';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -46,7 +45,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
     },
     onSuccess: () => {
       closeDialog();
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.info(t('deleting'));
     },
   });

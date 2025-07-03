@@ -7,7 +7,6 @@ import { ApiError } from 'src/api/api-errors';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -51,7 +50,7 @@ export function SignInForm() {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!);
-      navigate({ to: next ?? routes.home() });
+      navigate({ to: next ?? '/' });
     },
     onError(error) {
       if (ApiError.is(error) && error.message === invalidCredentialApiMessage) {

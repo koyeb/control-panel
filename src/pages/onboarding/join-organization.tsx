@@ -9,7 +9,6 @@ import { useUser } from 'src/api/hooks/session';
 import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
-import { routes } from 'src/application/routes';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
@@ -108,7 +107,7 @@ function CreateOrganization() {
     },
     onError(error) {
       if (state.createOrganization) {
-        navigate({ to: routes.home(), state: {} });
+        navigate({ to: '/', state: {} });
       } else {
         onError(error);
       }

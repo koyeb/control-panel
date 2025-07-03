@@ -27,6 +27,7 @@ export function DeployOneClickApp() {
     if (oneClickAppsQuery.isSuccess) {
       if (app === undefined) {
         navigate({
+          to: '/services/deploy',
           search: (prev) => ({ ...prev, one_click_app: null }),
           replace: true,
         });
@@ -34,6 +35,7 @@ export function DeployOneClickApp() {
         const url = new URL(app.deployUrl);
 
         navigate({
+          to: '/services/deploy',
           search: {
             ...Object.fromEntries(url.searchParams),
             one_click_app: app.slug,

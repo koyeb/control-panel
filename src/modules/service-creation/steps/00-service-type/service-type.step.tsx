@@ -1,6 +1,6 @@
+import { linkOptions } from '@tanstack/react-router';
 import { useCallback, useEffect } from 'react';
 
-import { routes } from 'src/application/routes';
 import { IconGithub } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
@@ -22,7 +22,7 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 export function ServiceTypeStep() {
   const appId = useSearchParams().get('app_id');
   const serviceType = useSearchParams().get('service_type');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/new' });
 
   useMount(() => {
     navigate({
@@ -35,9 +35,12 @@ export function ServiceTypeStep() {
     });
   });
 
-  const setServiceType = useCallback((type: string) => {
-    navigate({ search: (prev) => ({ ...prev, service_type: type }) });
-  }, []);
+  const setServiceType = useCallback(
+    (type: string) => {
+      navigate({ search: (prev) => ({ ...prev, service_type: type }) });
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     if (!isServiceType(serviceType)) {
@@ -80,7 +83,7 @@ export function ServiceTypeStep() {
               </div>
             </div>
 
-            <LinkButton className="self-start" to={getCreateServiceUrl(serviceType, appId)}>
+            <LinkButton className="self-start" {...getCreateServiceUrl(serviceType, appId)}>
               <T id={`${serviceType}.button`} />
             </LinkButton>
           </div>
@@ -90,23 +93,22 @@ export function ServiceTypeStep() {
   );
 }
 
-function getCreateServiceUrl(serviceType: ExtendedServiceType, appId: string | null) {
-  let url = '';
-
+function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | null) {
   if (serviceType === 'database') {
-    url = routes.createDatabaseService();
+    return linkOptions({
+      to: '/database-services/new',
+      search: { app_id: appId ?? undefined },
+    });
   }
 
   if (serviceType === 'model') {
-    url = routes.deploy();
-    url += `?${new URLSearchParams({ type: 'model' }).toString()}`;
+    return linkOptions({
+      to: '/services/deploy',
+      search: { type: 'model', app_id: appId ?? undefined },
+    });
   }
 
-  if (appId !== null) {
-    url += `?${String(new URLSearchParams({ app_id: appId }))}`;
-  }
-
-  return url;
+  throw new Error('Invalid service type');
 }
 
 function DeploymentSource() {

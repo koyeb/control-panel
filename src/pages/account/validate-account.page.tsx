@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { Loading } from 'src/components/loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -30,7 +29,7 @@ export function ValidateAccountPage() {
     },
     onSettled() {
       navigate({
-        to: routes.home(),
+        to: '/',
         state: { createOrganization: true },
       });
     },

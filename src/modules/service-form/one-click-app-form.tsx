@@ -17,7 +17,6 @@ import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { ControlledInput } from 'src/components/controlled';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -130,7 +129,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
     },
     onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {
-      navigate({ to: routes.createService(), search: { step: 'initialDeployment', serviceId } });
+      navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
   });
 
@@ -162,7 +161,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         <EnvironmentVariablesSection form={form} />
 
         <div className="row justify-end gap-2">
-          <LinkButton color="gray" to={routes.home()}>
+          <LinkButton color="gray" to="/">
             <Translate id="common.cancel" />
           </LinkButton>
 

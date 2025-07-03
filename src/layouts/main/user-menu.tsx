@@ -1,9 +1,8 @@
-import { ButtonMenuItem, Collapse, Floating, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
+import { ButtonMenuItem, Collapse, Floating, Menu, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { useLogoutMutation, useUser } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import {
   IconCheck,
   IconChevronRight,
@@ -13,7 +12,7 @@ import {
   IconSunDim,
   IconUser,
 } from 'src/components/icons';
-import { Link } from 'src/components/link';
+import { LinkMenuItem } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useSetThemeMode, useThemeMode } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
@@ -22,7 +21,7 @@ const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const user = useUser();
-  const logout = useLogoutMutation(routes.signIn());
+  const logout = useLogoutMutation('/auth/signin');
 
   const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);
@@ -49,15 +48,10 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       )}
       renderFloating={(props) => (
         <Menu {...props}>
-          <MenuItem
-            element={Link}
-            to={routes.userSettings.index()}
-            onClick={() => setOpen(false)}
-            className="row gap-2"
-          >
+          <LinkMenuItem to="/user/settings" onClick={() => setOpen(false)} className="row gap-2">
             <IconUser className="icon" />
             <T id="userSettings" />
-          </MenuItem>
+          </LinkMenuItem>
 
           <ThemeMenuItem />
 

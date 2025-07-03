@@ -6,7 +6,6 @@ import { OrganizationInvitation } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { AuthButton } from 'src/pages/authentication/components/auth-button';
@@ -40,7 +39,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     async onSuccess(token) {
       await invalidate('listInvitations');
       setToken(token);
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.info(t('acceptSuccess'));
     },
   });
@@ -51,7 +50,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     })),
     async onSuccess() {
       await invalidate('listInvitations');
-      navigate({ to: routes.home() });
+      navigate({ to: '/' });
       notify.info(t('declineSuccess'));
     },
   });

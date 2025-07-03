@@ -3,7 +3,6 @@ import { useFormContext } from 'react-hook-form';
 
 import { useInstances } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
-import { routes } from 'src/application/routes';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -35,7 +34,7 @@ export function GpuAlert() {
           id="gpuAlertHobby"
           values={{
             upgrade: (children) => (
-              <a href={routes.organizationSettings.plans()} className="font-semibold">
+              <a href="/settings/plans" className="font-semibold">
                 {children}
               </a>
             ),

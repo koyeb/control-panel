@@ -1,4 +1,3 @@
-import { routes } from 'src/application/routes';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useForceThemeMode } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
@@ -61,7 +60,7 @@ export function ErrorView({ httpStatus, message, code, expected, onReset }: Erro
 
         <div className="mt-6 self-center">
           <Link
-            to={routes.home()}
+            to="/"
             className="rounded-full bg-green px-6 py-3 font-medium hover:no-underline"
             onClick={onReset}
           >

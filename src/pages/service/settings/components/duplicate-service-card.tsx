@@ -1,5 +1,4 @@
 import { Service } from 'src/api/model';
-import { routes } from 'src/application/routes';
 import { LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
@@ -24,7 +23,8 @@ export function DuplicateServiceCard({ service }: DuplicateServiceCardProps) {
 
       <LinkButton
         color="gray"
-        to={routes.deploy() + `?duplicate-service-id=${service.id}`}
+        to="/deploy"
+        search={{ 'duplicate-service-id': service.id }}
         className="ml-auto"
       >
         <T id="duplicate" />

@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query';
 import { useLogoutMutation, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { routes } from 'src/application/routes';
 import { IconSend } from 'src/components/icons';
 import { createTranslate } from 'src/intl/translate';
 
@@ -24,7 +23,7 @@ export function EmailValidation() {
     },
   });
 
-  const logoutMutation = useLogoutMutation(routes.signUp());
+  const logoutMutation = useLogoutMutation('/auth/signup');
 
   return (
     <section className="col w-full max-w-md flex-1 items-center justify-center gap-12">

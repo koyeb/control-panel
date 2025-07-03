@@ -10,8 +10,7 @@ import { getToken, useAuth } from 'src/application/authentication';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
-import { routes } from 'src/application/routes';
-import { Link } from 'src/components/link';
+import { Link, ValidateLinkOptions } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -64,7 +63,7 @@ export function GithubOauthCallbackPage() {
       const state = searchParams.get('state');
 
       const statePayload = state ? schema.parse(jwtDecode(state)) : {};
-      const { metadata = routes.home(), organization_id = undefined, action } = statePayload;
+      const { metadata = '/', organization_id = undefined, action } = statePayload;
       const redirect = new URL(metadata, window.location.origin);
 
       // authentication
@@ -105,17 +104,17 @@ export function GithubOauthCallbackPage() {
       const state = searchParams.get('state');
       const { action = null } = state ? schema.parse(jwtDecode(state)) : {};
 
-      let redirect = routes.signIn();
+      let redirect: ValidateLinkOptions['to'] = '/auth/signin';
 
       if (action === 'register') {
-        redirect = routes.userSettings.index();
+        redirect = '/user/settings';
       }
 
       if (action === 'signin' && isAccountNotFoundError(error)) {
         notify.error(<AccountNotFound />);
       } else if (action === 'signup' && isAccountAlreadyExistsError(error)) {
         notify.error(<AccountAlreadyExists />);
-        redirect = routes.signUp();
+        redirect = '/auth/signup';
       } else if (isUnauthorizedAccountError(error)) {
         notify.error(error.message);
       } else {
@@ -188,7 +187,7 @@ function AccountNotFound() {
           id="accountNotFound.link"
           values={{
             link: (children) => (
-              <Link to={routes.signUp()} className="underline">
+              <Link to="/auth/signup" className="underline">
                 {children}
               </Link>
             ),
@@ -211,7 +210,7 @@ function AccountAlreadyExists() {
           id="accountAlreadyExists.link"
           values={{
             link: (children) => (
-              <Link to={routes.signIn()} className="underline">
+              <Link to="/auth/signin" className="underline">
                 {children}
               </Link>
             ),
