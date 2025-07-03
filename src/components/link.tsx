@@ -77,8 +77,9 @@ export function LinkButton({
     }
   }
 
-  if (component === Link && state !== undefined) {
+  if (component === Link) {
     props.state = state;
+    props.search = search;
   }
 
   return createElement(
