@@ -18,7 +18,9 @@ export function ReviewStep() {
     <div className="col gap-8 xl:row">
       <ServiceForm
         className="grow"
-        onDeployed={(appId, serviceId) => navigate({ to: routes.initialDeployment(serviceId) })}
+        onDeployed={(appId, serviceId) =>
+          navigate({ to: routes.createService(), search: { step: 'initialDeployment', serviceId } })
+        }
         onCostChanged={setCost}
         onDeployUrlChanged={setDeployUrl}
       />

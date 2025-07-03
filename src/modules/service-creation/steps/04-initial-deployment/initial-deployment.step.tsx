@@ -1,11 +1,7 @@
-import { useEffect } from 'react';
-
 import { useAppQuery, useDeploymentQuery, useInstancesQuery, useServiceQuery } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
-import { routes } from 'src/application/routes';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { useNavigate, usePathname } from 'src/hooks/router';
 import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';
 import { DeploymentLogs } from 'src/modules/deployment/deployment-logs/deployment-logs';
 import { assert } from 'src/utils/assert';
@@ -17,19 +13,6 @@ export function InitialDeploymentStep({ serviceId }: { serviceId: string }) {
   const appQuery = useAppQuery(serviceQuery.data?.appId);
   const deploymentQuery = useDeploymentQuery(serviceQuery.data?.latestDeploymentId);
   const instancesQuery = useInstancesQuery({ deploymentId: serviceQuery.data?.latestDeploymentId });
-
-  const pathname = usePathname();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (pathname === routes.home()) {
-      navigate({
-        // the home page will be replaced with the list of services
-        to: routes.createService(),
-        search: (prev) => prev,
-      });
-    }
-  }, [pathname, navigate]);
 
   if (serviceQuery.isPending || appQuery.isPending || deploymentQuery.isPending || instancesQuery.isPending) {
     return <Loading />;

@@ -136,7 +136,8 @@ function DeploymentsListActions({
               color="gray"
               size={1}
               disabled={isActive() || activeDeploymentId === undefined}
-              to={routes.service.overview(service.id, activeDeploymentId)}
+              to={routes.service.overview(service.id)}
+              search={{ deploymentId: activeDeploymentId }}
             >
               <T id="deployments.actions.activeDeployment" />
             </LinkButton>
@@ -150,7 +151,8 @@ function DeploymentsListActions({
           color="gray"
           size={1}
           disabled={isLatest()}
-          to={routes.service.overview(service.id, latestNonStashedDeployment?.id)}
+          to={routes.service.overview(service.id)}
+          search={{ deploymentId: latestNonStashedDeployment?.id }}
         >
           <T id="deployments.actions.latestDeployment" />
         </LinkButton>

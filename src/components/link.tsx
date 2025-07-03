@@ -10,25 +10,43 @@ type LinkProps = Extend<
   React.ComponentProps<'a'>,
   {
     to?: string;
+    search?: Partial<Record<string, string | null>>;
     state?: unknown;
   }
 >;
 
-export function Link({ to, ...props }: LinkProps) {
-  return <BaseLink href={to ?? ''} {...props} />;
+export function Link({ to, search, ...props }: LinkProps) {
+  const params = new URLSearchParams();
+
+  if (search) {
+    for (const [key, value] of Object.entries(search)) {
+      if (value) {
+        params.set(key, value);
+      }
+    }
+  }
+
+  let href = to ?? '';
+
+  if (params.size > 0) {
+    href += '?' + params.toString();
+  }
+
+  return <BaseLink href={href} {...props} />;
 }
 
-type LinkButtonOwnProps = {
-  to?: string;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  color?: ButtonColor;
-  loading?: boolean;
-  component?: 'a' | typeof Link;
-  openInNewTab?: boolean;
-  disabled?: boolean;
-  state?: unknown;
-};
+type LinkButtonOwnProps = Extend<
+  Pick<LinkProps, 'to' | 'search' | 'state'>,
+  {
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    color?: ButtonColor;
+    loading?: boolean;
+    component?: 'a' | typeof Link;
+    openInNewTab?: boolean;
+    disabled?: boolean;
+  }
+>;
 
 type LinkButtonProps = Extend<React.ComponentProps<'a'>, LinkButtonOwnProps>;
 
@@ -38,6 +56,7 @@ export function LinkButton({
   openInNewTab,
   state,
   to = '',
+  search,
   loading,
   className,
   children,

@@ -12,11 +12,9 @@ export const routes = {
   appsList: () => '/services',
   deploy: () => '/services/deploy',
   createService: () => '/services/new',
-  initialDeployment: (serviceId: string) => `/services/new?step=initialDeployment&serviceId=${serviceId}`,
   services: () => `/services`,
   service: {
-    overview: (serviceId: string, deploymentId?: string) =>
-      `/services/${serviceId}${deploymentId ? `?deploymentId=${deploymentId}` : ''}`,
+    overview: (serviceId: string) => `/services/${serviceId}`,
     metrics: (serviceId: string) => `/services/${serviceId}/metrics`,
     console: (serviceId: string) => `/services/${serviceId}/console`,
     settings: (serviceId: string) => `/services/${serviceId}/settings`,

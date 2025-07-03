@@ -29,7 +29,7 @@ export function useHistoryState(): Record<string, any> {
   return useWouterHistoryState() ?? {};
 }
 
-type SearchParam = string | number | boolean | null;
+type SearchParam = string | number | boolean | null | undefined;
 type SearchParams = Record<string, SearchParam | SearchParam[]>;
 
 type NavigateOptions = {
@@ -47,7 +47,7 @@ export function useNavigate() {
     const setParam = (key: string, value: SearchParam, set: 'set' | 'append' = 'set') => {
       if (value === null) {
         searchParams.delete(key);
-      } else {
+      } else if (value) {
         searchParams[set](key, String(value));
       }
     };

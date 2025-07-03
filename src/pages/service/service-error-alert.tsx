@@ -12,7 +12,7 @@ import { shortId } from 'src/utils/strings';
 const T = createTranslate('pages.service.overview.serviceErrorAlert');
 
 const deploymentLink = (serviceId: string, deploymentId: string) => {
-  return routes.service.overview(serviceId, deploymentId);
+  return { to: routes.service.overview(serviceId), search: { deploymentId } };
 };
 
 type ServiceErrorAlertProps = {
@@ -60,7 +60,7 @@ function ServiceUnhealthyAlert({ serviceId, latestDeploymentId }: ServiceUnhealt
           values={{
             latestDeploymentName: shortId(latestDeploymentId),
             latestDeploymentLink: (children) => (
-              <Link to={deploymentLink(serviceId, latestDeploymentId)} className="underline">
+              <Link {...deploymentLink(serviceId, latestDeploymentId)} className="underline">
                 {children}
               </Link>
             ),
@@ -94,13 +94,13 @@ function ServiceDegradedAlert({
           values={{
             activeDeploymentName: shortId(activeDeploymentId),
             activeDeploymentLink: (children) => (
-              <Link to={deploymentLink(serviceId, activeDeploymentId)} className="underline">
+              <Link {...deploymentLink(serviceId, activeDeploymentId)} className="underline">
                 {children}
               </Link>
             ),
             latestDeploymentName: shortId(latestDeploymentId),
             latestDeploymentLink: (children) => (
-              <Link to={deploymentLink(serviceId, latestDeploymentId)} className="underline">
+              <Link {...deploymentLink(serviceId, latestDeploymentId)} className="underline">
                 {children}
               </Link>
             ),
@@ -127,7 +127,7 @@ function LatestDeploymentButton({ color, serviceId, deploymentId }: LatestDeploy
   }
 
   return (
-    <LinkButton color={color} to={deploymentLink(serviceId, deploymentId)} className="sm:self-center">
+    <LinkButton color={color} {...deploymentLink(serviceId, deploymentId)} className="sm:self-center">
       <T id="cta" />
     </LinkButton>
   );

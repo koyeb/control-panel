@@ -130,9 +130,10 @@ function ServiceResource({
     props.className = 'hover:bg-muted/50';
 
     if (serviceType === 'database') {
-      props.href = routes.database.overview(serviceId);
+      props.to = routes.database.overview(serviceId);
     } else {
-      props.href = routes.service.overview(serviceId, deploymentId);
+      props.to = routes.service.overview(serviceId);
+      props.search = { deploymentId };
     }
   }
 
