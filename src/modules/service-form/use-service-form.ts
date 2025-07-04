@@ -232,7 +232,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
       }
 
       if (name === 'instance' && meta.serviceId === null) {
-        if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu') {
+        if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu' && scaleToZero) {
           scaling.min = 0;
         } else if (previousInstance?.category === 'gpu' && instance?.category === 'standard') {
           scaling.min = 1;
@@ -259,7 +259,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         scaling.min = 1;
       }
 
-      if (isTenstorrentGpu(previousInstance) && !isTenstorrentGpu(instance)) {
+      if (isTenstorrentGpu(previousInstance) && !isTenstorrentGpu(instance) && scaleToZero) {
         scaling.min = 0;
       }
 
