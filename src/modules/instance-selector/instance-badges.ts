@@ -1,4 +1,3 @@
-import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
 import { useGetHasInstanceQuota } from 'src/application/instance-quota';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
@@ -12,7 +11,6 @@ type UseGetInstanceBadgesOptions = {
 };
 
 export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions = {}) {
-  const organization = useOrganization();
   const hasQuotas = useGetHasInstanceQuota(options.previousInstance);
 
   return (instance: CatalogInstance): InstanceSelectorBadge[] => {
@@ -22,12 +20,12 @@ export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions = {}) 
       result.push('new');
     }
 
-    if (organization.plan !== 'hobby' && !hasQuotas(instance)) {
-      if (isTenstorrentGpu(instance)) {
-        result.push('preview');
-      } else {
-        result.push('requiresHigherQuota');
-      }
+    if (!hasQuotas(instance)) {
+      result.push('requiresHigherQuota');
+    }
+
+    if (isTenstorrentGpu(instance)) {
+      result.push('preview');
     }
 
     if (options.insufficientVRam?.(instance)) {

@@ -28,23 +28,22 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.id });
       }
 
+      if (hasQuotas) {
+        return true;
+      }
+
       if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
         const plan = instance.plans[0] as OrganizationPlan;
 
         setRequiredPlan(plan);
         openDialog('Upgrade', { plan });
-        return false;
-      } else if (!hasQuotas) {
-        if (isTenstorrentGpu(instance)) {
-          tally.openPopup();
-        } else {
-          openDialog('QuotaIncreaseRequest');
-        }
-
-        return false;
+      } else if (isTenstorrentGpu(instance)) {
+        tally.openPopup();
+      } else {
+        openDialog('QuotaIncreaseRequest');
       }
 
-      return true;
+      return false;
     },
   ] as const;
 }

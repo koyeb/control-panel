@@ -37,13 +37,7 @@ export function InstanceItem({
   onSelected,
   regionSelector,
 }: InstanceItemProps) {
-  const organization = useOrganization();
-
-  const requiresHigherQuota =
-    organization.plan === 'hobby'
-      ? instance.id !== 'free'
-      : badges.includes('requiresHigherQuota') || badges.includes('preview');
-
+  const requiresHigherQuota = badges.includes('requiresHigherQuota');
   const ref = useRef<HTMLLabelElement>(null);
 
   useMount(() => {
@@ -174,6 +168,8 @@ function formatMemory(value: string) {
 }
 
 function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
+  const organization = useOrganization();
+
   return (
     <>
       {badges.includes('inUse') && (
@@ -212,7 +208,7 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
         </Badge>
       )}
 
-      {badges.includes('requiresHigherQuota') && (
+      {badges.includes('requiresHigherQuota') && organization.plan !== 'hobby' && (
         <Badge key="quotas" size={1} color="orange">
           <T id="badge.requiresHigherQuota" />
         </Badge>
