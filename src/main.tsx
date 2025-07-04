@@ -1,20 +1,104 @@
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
-import './styles.css';
 import './intercom';
 import './polyfills';
 import './sentry';
+import './styles.css';
 
-import { QueryClient } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api/api-errors';
+import { notify } from './application/notify';
 import { Providers } from './application/providers';
 import { routeTree } from './route-tree.generated';
+import { inArray } from './utils/arrays';
+
+declare global {
+  interface Window {
+    router: typeof router;
+    queryClient: typeof queryClient;
+  }
+}
+
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router;
+  }
+
+  interface HistoryState {
+    githubAppInstallationRequested?: boolean;
+    createOrganization?: boolean;
+    create?: boolean;
+  }
+}
+
+const queryCache = new QueryCache({
+  onError(error, query) {
+    const { showError } = { showError: true, ...query.meta };
+    const pathname = window.location.pathname;
+
+    if (ApiError.is(error, 401)) {
+      handleAuthenticationError();
+    }
+
+    if (
+      ApiError.is(error, 404) &&
+      inArray(query.queryKey[0], ['getApp', 'getService', 'getDeployment']) &&
+      pathname !== '/'
+    ) {
+      notify.info(error.message);
+      router.navigate({ to: '/' });
+    }
+
+    if (ApiError.is(error, 429)) {
+      notify.error(error.message);
+    }
+
+    if (ApiError.is(error) && error.status >= 500) {
+      notify.error(error.message);
+      reportError(error);
+    }
+
+    if (!ApiError.is(error) && showError) {
+      reportError(error);
+      notify.error(error.message);
+    }
+  },
+});
+
+const mutationCache = new MutationCache({
+  onError(error, variables, context, mutation) {
+    if (ApiError.is(error, 401)) {
+      handleAuthenticationError();
+    } else if (mutation.options.onError === undefined) {
+      notify.error(error.message);
+    }
+  },
+});
+
+function handleAuthenticationError() {
+  const location = new URL(window.location.href);
+  const search: { next?: string } = {};
+
+  if (location.pathname !== '/' && !location.pathname.startsWith('/auth')) {
+    search.next = location.href.replace(location.origin, '');
+  }
+
+  sessionStorage.removeItem('session-token');
+  localStorage.removeItem('access-token');
+
+  router.navigate({
+    to: '/auth/signin',
+    search,
+  });
+}
 
 const queryClient = new QueryClient({
+  queryCache,
+  mutationCache,
   defaultOptions: {
     queries: {
       refetchInterval: 5_000,
@@ -38,20 +122,13 @@ const router = createRouter({
   scrollRestoration: true,
   context: {
     queryClient,
+    auth: undefined!,
+    ensureQueryData: undefined!,
   },
 });
 
-declare module '@tanstack/react-router' {
-  interface Register {
-    router: typeof router;
-  }
-
-  interface HistoryState {
-    githubAppInstallationRequested?: boolean;
-    createOrganization?: boolean;
-    create?: boolean;
-  }
-}
+window.router = router;
+window.queryClient = queryClient;
 
 const rootElement = document.getElementById('root')!;
 

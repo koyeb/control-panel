@@ -1,10 +1,9 @@
 import { InvalidateQueryFilters, UseQueryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { ApiEndpointParams, ApiEndpointResult, api } from './api';
+import { AnyFunction } from 'src/utils/types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyFunction = (...params: any[]) => any;
+import { ApiEndpointParams, ApiEndpointResult, api } from './api';
 
 type Endpoint = keyof typeof api;
 
