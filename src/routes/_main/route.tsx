@@ -1,6 +1,7 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 import z from 'zod';
 
+import { api } from 'src/api/api';
 import { isAccountLockedError } from 'src/api/api-errors';
 import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { MainLayout } from 'src/layouts/main/main-layout';
@@ -11,10 +12,11 @@ export const Route = createFileRoute('/_main')({
   component: Component,
 
   validateSearch: z.object({
+    'organization-id': z.string().optional(),
     settings: z.boolean().optional(),
   }),
 
-  beforeLoad({ location, context }) {
+  async beforeLoad({ location, search, context }) {
     const { auth } = context;
 
     if (auth.token === null) {
@@ -25,8 +27,27 @@ export const Route = createFileRoute('/_main')({
         search: { next },
       });
     }
+
+    if (search['organization-id']) {
+      await switchOrganization(auth.token, auth.setToken, search['organization-id']);
+    }
   },
 });
+
+async function switchOrganization(token: string, setToken: (token: string) => void, organizationId: string) {
+  const result = await api.switchOrganization({
+    token,
+    path: { id: organizationId },
+    header: {},
+  });
+
+  setToken(result.token!.id!);
+
+  throw redirect({
+    search: (prev) => ({ ...prev, 'organization-id': undefined }),
+    reloadDocument: true,
+  });
+}
 
 function Component() {
   const { settings } = Route.useSearch();
