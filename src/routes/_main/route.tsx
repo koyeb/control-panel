@@ -1,12 +1,18 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import z from 'zod';
 
 import { isAccountLockedError } from 'src/api/api-errors';
 import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { MainLayout } from 'src/layouts/main/main-layout';
+import { SecondarySettings } from 'src/layouts/secondary/settings';
 import { AccountLocked } from 'src/modules/account/account-locked';
 
 export const Route = createFileRoute('/_main')({
   component: Component,
+
+  validateSearch: z.object({
+    settings: z.boolean().optional(),
+  }),
 
   beforeLoad({ location, context }) {
     const { auth } = context;
@@ -23,6 +29,8 @@ export const Route = createFileRoute('/_main')({
 });
 
 function Component() {
+  const { settings } = Route.useSearch();
+
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
@@ -34,6 +42,10 @@ function Component() {
 
   if (locked) {
     return <AccountLocked />;
+  }
+
+  if (settings) {
+    return <SecondarySettings />;
   }
 
   return (
