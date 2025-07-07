@@ -2,11 +2,11 @@ import { useQuery } from '@tanstack/react-query';
 import { FormattedDate } from 'react-intl';
 
 import { getConfig } from 'src/application/config';
+import { createStorage } from 'src/application/storage';
 import { BadgeNew } from 'src/components/badge-new';
 import { IconArrowUpRight } from 'src/components/icons';
 import { ExternalLinkButton } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
-import { useLocalStorage } from 'src/hooks/storage';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
 
@@ -20,11 +20,12 @@ type News = {
   date: string;
 };
 
-export function News() {
-  const [dismissedIds, setDismissedIds] = useLocalStorage<string[]>('dismissed-news');
+const dismissedIds = createStorage<string[]>('dismissed-news');
 
+export function News() {
   const query = useQuery({
     queryKey: ['news'],
+    refetchInterval: false,
     async queryFn(): Promise<News[]> {
       const { websiteUrl } = getConfig();
       const url = new URL('/api/news.json', websiteUrl);
@@ -36,7 +37,7 @@ export function News() {
 
       return response.json() as Promise<News[]>;
     },
-    select: (news) => news.filter((news) => !dismissedIds?.includes(news.id)),
+    select: (news) => news.filter((news) => !dismissedIds.read()?.includes(news.id)),
   });
 
   if (query.error || (query.isSuccess && query.data.length === 0)) {
@@ -45,7 +46,8 @@ export function News() {
 
   const handleDismiss = () => {
     if (query.isSuccess) {
-      setDismissedIds(unique([...(dismissedIds ?? []), ...query.data.map(({ id }) => id)]));
+      dismissedIds.write(unique([...(dismissedIds.read() ?? []), ...query.data.map(({ id }) => id)]));
+      void query.refetch();
     }
   };
 
@@ -76,7 +78,7 @@ export function News() {
 function NewsItem({ news }: { news: News }) {
   return (
     <li className="card">
-      <div className="row items-center gap-4 p-3">
+      <div className="row items-center justify-between gap-4 p-3">
         <div className="col gap-1">
           <div className="row items-center gap-1 font-medium">
             {news.title}

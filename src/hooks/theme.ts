@@ -1,12 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { createStorage } from 'src/application/storage';
 import { inArray } from 'src/utils/arrays';
 
 import { useMediaQuery } from './media-query';
-import { useStorage } from './storage.new';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 type ThemeModeStrict = Exclude<ThemeMode, 'system'>;
+
+const storedTheme = createStorage('koyeb.theme', {
+  parse: (value) => (isThemeMode(value) ? value : 'system'),
+  stringify: String,
+});
 
 const isThemeMode = (value: unknown): value is ThemeMode => {
   return inArray(value, ['light', 'dark', 'system']);
@@ -59,18 +64,10 @@ export function useThemeModeOrPreferred(): ThemeModeStrict {
 }
 
 export function useSetThemeMode() {
-  const storedTheme = useStorage('koyeb.theme', {
-    parse: (value) => (isThemeMode(value) ? value : 'system'),
-    stringify: String,
-  });
-
-  return useCallback(
-    (theme: ThemeMode) => {
-      setThemeMode(theme);
-      storedTheme.write(theme);
-    },
-    [storedTheme],
-  );
+  return useCallback((theme: ThemeMode) => {
+    setThemeMode(theme);
+    storedTheme.write(theme);
+  }, []);
 }
 
 export function useForceThemeMode(theme: ThemeModeStrict) {

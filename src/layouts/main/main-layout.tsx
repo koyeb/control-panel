@@ -11,6 +11,7 @@ import {
 import { useAuth } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
+import { createStorage } from 'src/application/storage';
 import { DocumentTitle } from 'src/components/document-title';
 import { IconChevronLeft, IconPlus, IconX } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
@@ -18,7 +19,6 @@ import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useLocation } from 'src/hooks/router';
-import { useLocalStorage } from 'src/hooks/storage';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 import { CommandPalette } from 'src/modules/command-palette/command-palette';
@@ -224,16 +224,21 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
 const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }));
 
+const pageContextExpanded = createStorage<boolean>('page-context-expanded');
+
 function usePageContext() {
   const user = useUserUnsafe();
   const { pageContextBaseUrl } = getConfig();
 
   const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
-  const [expanded = false, setExpanded] = useLocalStorage<boolean>('page-context-expanded');
+  const [expanded, setExpanded] = useState(pageContextExpanded.read() ?? false);
 
   return {
     enabled,
     expanded: enabled && expanded,
-    setExpanded,
+    setExpanded: (expanded: boolean) => {
+      setExpanded(expanded);
+      pageContextExpanded.write(expanded);
+    },
   };
 }

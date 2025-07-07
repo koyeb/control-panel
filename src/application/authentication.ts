@@ -5,7 +5,8 @@ import { createContext, createElement, useContext, useEffect, useMemo, useState 
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { usePathname } from 'src/hooks/router';
-import { useStorage } from 'src/hooks/storage.new';
+
+import { createStorage } from './storage';
 
 export function getToken() {
   return sessionStorage.getItem('session-token') ?? localStorage.getItem('access-token');
@@ -19,11 +20,11 @@ type AuthContext = {
 
 const authContext = createContext<AuthContext>(null as never);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const opts = { parse: String, stringify: String };
-  const accessToken = useStorage('access-token', { storage: localStorage, ...opts });
-  const sessionToken = useStorage('session-token', { storage: sessionStorage, ...opts });
+const opts = { parse: String, stringify: String };
+const accessToken = createStorage('access-token', { storage: localStorage, ...opts });
+const sessionToken = createStorage('session-token', { storage: sessionStorage, ...opts });
 
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState(sessionToken.read() !== null);
   const [token, setToken] = useState(session ? sessionToken.read() : accessToken.read());
 
@@ -54,12 +55,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       },
     }),
-    [token, session, accessToken, sessionToken, queryClient],
+    [token, session, queryClient],
   );
 
   useEffect(() => {
     return (session ? sessionToken : accessToken).listen(value.setToken);
-  }, [session, sessionToken, accessToken, value]);
+  }, [session, value]);
 
   return createElement(authContext.Provider, { value }, children);
 }
