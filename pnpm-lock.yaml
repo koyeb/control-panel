@@ -149,9 +149,6 @@ importers:
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
-      wouter:
-        specifier: ^3.7.1
-        version: 3.7.1(react@19.1.0)
       zod:
         specifier: ^3.25.67
         version: 3.25.67
@@ -3721,9 +3718,6 @@ packages:
     resolution: {integrity: sha512-oG62iEk+CYt5Xj2YqI5Xi9xWUeZhDI8jjQmC5oThVH5JGCTgIjr7ciJDzC7MBzYd//WvR1OTmP5Q38Q8ShQtVA==}
     engines: {node: '>= 18'}
 
-  mitt@3.0.1:
-    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
-
   mkdirp@3.0.1:
     resolution: {integrity: sha512-+NsyUUAZDmo6YVHzL/stxSu3t9YS1iljliy3BSDrXJ/dkn1KYdmtZODGGjLcc9XLgVVpH4KshHB8XmZgMhaBXg==}
     engines: {node: '>=10'}
@@ -4115,10 +4109,6 @@ packages:
   regexp.prototype.flags@1.5.4:
     resolution: {integrity: sha512-dYqgNSZbDwkaJ2ceRd9ojCGjBq+mOm9LmtXnAnEGyHhN/5R7iDW2TRw3h+o/jCFxus3P2LfWIIiwowAjANm7IA==}
     engines: {node: '>= 0.4'}
-
-  regexparam@3.0.0:
-    resolution: {integrity: sha512-RSYAtP31mvYLkAHrOlh25pCNQ5hWnT106VukGaaFfuJrZFkGRX5GhUAdPqpSDXxOhA2c4akmRuplv1mRqnBn6Q==}
-    engines: {node: '>=8'}
 
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
@@ -4802,11 +4792,6 @@ packages:
   word-wrap@1.2.5:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
-
-  wouter@3.7.1:
-    resolution: {integrity: sha512-od5LGmndSUzntZkE2R5CHhoiJ7YMuTIbiXsa0Anytc2RATekgv4sfWRAxLEULBrp7ADzinWQw8g470lkT8+fOw==}
-    peerDependencies:
-      react: '>=16.8.0'
 
   wrap-ansi@7.0.0:
     resolution: {integrity: sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==}
@@ -8909,8 +8894,6 @@ snapshots:
     dependencies:
       minipass: 7.1.2
 
-  mitt@3.0.1: {}
-
   mkdirp@3.0.1: {}
 
   motion-dom@12.22.0:
@@ -9302,8 +9285,6 @@ snapshots:
       get-proto: 1.0.1
       gopd: 1.2.0
       set-function-name: 2.0.2
-
-  regexparam@3.0.0: {}
 
   require-from-string@2.0.2: {}
 
@@ -10132,13 +10113,6 @@ snapshots:
       stackback: 0.0.2
 
   word-wrap@1.2.5: {}
-
-  wouter@3.7.1(react@19.1.0):
-    dependencies:
-      mitt: 3.0.1
-      react: 19.1.0
-      regexparam: 3.0.0
-      use-sync-external-store: 1.5.0(react@19.1.0)
 
   wrap-ansi@7.0.0:
     dependencies:
