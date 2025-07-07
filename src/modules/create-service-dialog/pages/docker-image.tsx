@@ -125,7 +125,7 @@ export function DockerImageSelection() {
               <button
                 role="link"
                 className="text-link"
-                onClick={() => navigate({ to: '/secrets', search: { create: true } })}
+                onClick={() => navigate({ to: '/secrets', state: { create: true } })}
               >
                 {children}
               </button>

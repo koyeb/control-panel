@@ -23,7 +23,7 @@ export function DuplicateServiceCard({ service }: DuplicateServiceCardProps) {
 
       <LinkButton
         color="gray"
-        to="/deploy"
+        to="/services/deploy"
         search={{ 'duplicate-service-id': service.id }}
         className="ml-auto"
       >

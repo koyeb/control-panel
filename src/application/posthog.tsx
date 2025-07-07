@@ -2,10 +2,9 @@ import * as intercom from '@intercom/messenger-js-sdk';
 // eslint-disable-next-line no-restricted-imports
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect, useRef } from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { useLocation } from 'wouter';
 
 import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
+import { useLocation } from 'src/hooks/router';
 
 import { getConfig } from './config';
 import { identifyUserInSentry } from './report-error';
@@ -46,7 +45,7 @@ function usePostHog(): PostHog | undefined {
 }
 
 function TrackPageViews() {
-  const [location] = useLocation();
+  const location = useLocation();
   const posthog = usePostHog();
 
   useEffect(() => {
