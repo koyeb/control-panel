@@ -8,7 +8,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -26,13 +26,11 @@ const schema = z.object({
 const invalidCredentialApiMessage =
   'There is no Koyeb account associated with this email address or your password is incorrect';
 
-export function SignInForm() {
+export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
   const { setToken } = useAuth();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
-
-  const next = useSearchParams().get('next');
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -50,7 +48,7 @@ export function SignInForm() {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!);
-      navigate({ to: next ?? '/' });
+      navigate({ to: redirect });
     },
     onError(error) {
       if (ApiError.is(error) && error.message === invalidCredentialApiMessage) {

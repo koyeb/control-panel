@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { DocumentTitle } from 'src/components/document-title';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { DatabaseEstimatedCost } from 'src/modules/database-form/database-estimated-cost';
 import { DatabaseForm } from 'src/modules/database-form/database-form';
@@ -9,6 +10,7 @@ const T = createTranslate('pages.createDatabaseService');
 
 export function CreateDatabasePage() {
   const t = T.useTranslate();
+  const params = useSearchParams();
   const [cost, setCost] = useState<number>();
 
   return (
@@ -25,7 +27,7 @@ export function CreateDatabasePage() {
       </div>
 
       <div className="grid grid-cols-1 gap-8 xl:grid-cols-[1fr_20rem]">
-        <DatabaseForm onCostChanged={setCost} />
+        <DatabaseForm appId={params.get('app_id') ?? undefined} onCostChanged={setCost} />
 
         <div className="col max-w-sm gap-8 xl:w-full">
           <Tips />

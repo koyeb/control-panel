@@ -10,6 +10,7 @@ export type DatabaseServiceForm = {
 };
 
 type ServiceFormMeta = {
+  appId: string | null;
   databaseServiceId: string | null;
   expandedSection: DatabaseServiceFormSection | null;
   allowFreeInstanceIfAlreadyUsed: boolean;

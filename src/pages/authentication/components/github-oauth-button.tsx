@@ -2,7 +2,6 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { IconGithub } from 'src/components/icons';
-import { useSearchParams } from 'src/hooks/router';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
@@ -10,17 +9,16 @@ import { AuthButton } from './auth-button';
 
 type GithubOAuthButtonProps = {
   action: 'signin' | 'signup';
+  metadata?: string;
   className?: string;
   children: React.ReactNode;
 };
 
-export function GithubOAuthButton({ action, className, children }: GithubOAuthButtonProps) {
-  const next = useSearchParams().get('next');
-
+export function GithubOAuthButton({ action, metadata, className, children }: GithubOAuthButtonProps) {
   const mutation = useMutation({
     ...useApiMutationFn('setUpOAuth', {
       token: undefined,
-      query: { action, metadata: next ?? undefined },
+      query: { action, metadata },
     }),
     onSuccess({ oauth_providers }) {
       const provider = oauth_providers!.find(hasProperty('id', 'github'));

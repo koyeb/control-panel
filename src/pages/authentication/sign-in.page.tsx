@@ -1,5 +1,6 @@
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 import { GithubOAuthButton } from './components/github-oauth-button';
@@ -10,6 +11,7 @@ const T = createTranslate('pages.authentication.signIn');
 
 export function SignInPage() {
   const t = T.useTranslate();
+  const next = useSearchParams().get('next');
 
   return (
     <div className="mx-auto col w-full max-w-72 flex-1 justify-center py-8 text-center">
@@ -23,13 +25,13 @@ export function SignInPage() {
         <T id="subtitle" />
       </div>
 
-      <GithubOAuthButton action="signin" className="mt-12">
+      <GithubOAuthButton action="signin" metadata={next ?? undefined} className="mt-12">
         <T id="githubSignIn" />
       </GithubOAuthButton>
 
       <Separator />
 
-      <SignInForm />
+      <SignInForm redirect={next ?? '/'} />
 
       <SignUpLink />
       <PasswordResetLink />

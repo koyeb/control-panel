@@ -20,6 +20,7 @@ import { useSubmitDatabaseServiceForm } from './use-submit-database-service-form
 const T = createTranslate('modules.databaseForm');
 
 type DatabaseFormProps = {
+  appId?: string;
   deployment?: DatabaseDeployment;
   onCostChanged: (cost: number) => void;
 };
@@ -36,8 +37,8 @@ export function DatabaseForm(props: DatabaseFormProps) {
   return <DatabaseForm_ {...props} />;
 }
 
-function DatabaseForm_({ deployment, onCostChanged }: DatabaseFormProps) {
-  const form = useDatabaseServiceForm({ deployment, onCostChanged });
+function DatabaseForm_({ appId, deployment, onCostChanged }: DatabaseFormProps) {
+  const form = useDatabaseServiceForm({ appId, deployment, onCostChanged });
   const openDialog = Dialog.useOpen();
 
   const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();

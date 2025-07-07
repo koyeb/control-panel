@@ -13,7 +13,10 @@ const T = createTranslate('pages.authentication.signUp');
 export function SignUpPage() {
   const t = T.useTranslate();
 
-  const method = useSearchParams().get('method');
+  const params = useSearchParams();
+  const next = params.get('next');
+  const method = params.get('method');
+
   const navigate = useNavigate();
 
   return (
@@ -29,13 +32,20 @@ export function SignUpPage() {
           <T id="subtitle" />
         </div>
 
-        <GithubOAuthButton action="signup" className="mt-12">
+        <GithubOAuthButton action="signup" metadata={next ?? undefined} className="mt-12">
           <T id="githubSignUp" />
         </GithubOAuthButton>
 
         <Separator />
 
-        {method === 'email' && <SignUpForm />}
+        {method === 'email' && (
+          <SignUpForm
+            initialValues={{
+              name: params.get('name') ?? undefined,
+              email: params.get('email') ?? undefined,
+            }}
+          />
+        )}
 
         {method === null && (
           <button

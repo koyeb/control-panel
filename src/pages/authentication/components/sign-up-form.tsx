@@ -9,7 +9,7 @@ import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -25,19 +25,18 @@ const schema = z.object({
   password: z.string().min(8).max(128),
 });
 
-export function SignUpForm() {
+export function SignUpForm({ initialValues }: { initialValues: { name?: string; email?: string } }) {
   const t = T.useTranslate();
   const { setToken } = useAuth();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
-  const searchParams = useSearchParams();
-
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      name: searchParams.get('name') ?? '',
-      email: searchParams.get('email') ?? '',
+      name: '',
+      email: '',
       password: '',
+      ...initialValues,
     },
     resolver: useZodResolver(schema),
   });

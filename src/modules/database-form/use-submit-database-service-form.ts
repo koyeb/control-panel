@@ -8,7 +8,7 @@ import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { hasProperty } from 'src/utils/object';
 import { randomString } from 'src/utils/random';
 
@@ -21,7 +21,6 @@ export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
-  const appId = useSearchParams().get('app_id');
   const organization = useOrganization();
   const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
@@ -30,7 +29,7 @@ export function useSubmitDatabaseServiceForm(
 
   const mutation = useMutation({
     async mutationFn(values: DatabaseServiceForm) {
-      const { databaseServiceId } = values.meta;
+      const { appId, databaseServiceId } = values.meta;
 
       if (databaseServiceId) {
         await updateDatabaseService(databaseServiceId, (definition) => {

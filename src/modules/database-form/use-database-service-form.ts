@@ -12,6 +12,7 @@ import { DatabaseServiceForm, DatabaseServiceFormSection } from './database-serv
 
 const schema = z.object({
   meta: z.object({
+    appId: z.string().optional(),
     databaseServiceId: z.string().nullable(),
     expandedSection: z.string().nullable(),
     allowFreeInstanceIfAlreadyUsed: z.boolean(),
@@ -24,13 +25,14 @@ const schema = z.object({
 });
 
 type UseDatabaseServiceFormProps = {
+  appId?: string;
   deployment?: DatabaseDeployment;
   onCostChanged: (cost: number) => void;
 };
 
-export function useDatabaseServiceForm({ deployment, onCostChanged }: UseDatabaseServiceFormProps) {
+export function useDatabaseServiceForm({ appId, deployment, onCostChanged }: UseDatabaseServiceFormProps) {
   const form = useForm<DatabaseServiceForm>({
-    defaultValues: getDefaultValues(deployment),
+    defaultValues: getDefaultValues(appId, deployment),
     resolver: useZodResolver(schema),
   });
 
@@ -43,6 +45,7 @@ export function useDatabaseServiceForm({ deployment, onCostChanged }: UseDatabas
 function defaultDatabaseServiceForm(): DatabaseServiceForm {
   return {
     meta: {
+      appId: null,
       databaseServiceId: null,
       expandedSection: null,
       allowFreeInstanceIfAlreadyUsed: false,
@@ -57,13 +60,14 @@ function defaultDatabaseServiceForm(): DatabaseServiceForm {
   };
 }
 
-function getDefaultValues(deployment?: DatabaseDeployment): DatabaseServiceForm {
+function getDefaultValues(appId?: string, deployment?: DatabaseDeployment): DatabaseServiceForm {
   if (deployment === undefined) {
     return defaultDatabaseServiceForm();
   }
 
   return merge(defaultDatabaseServiceForm(), {
     meta: {
+      appId,
       databaseServiceId: deployment.serviceId,
       allowFreeInstanceIfAlreadyUsed: deployment.instance === 'free',
     },
