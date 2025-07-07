@@ -1,6 +1,5 @@
-import merge from 'lodash-es/merge';
 import { useEffect } from 'react';
-import { DeepPartial, UseFormReturn, useForm, useWatch } from 'react-hook-form';
+import { UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
 import { DatabaseDeployment } from 'src/api/model';
@@ -12,7 +11,7 @@ import { DatabaseServiceForm, DatabaseServiceFormSection } from './database-serv
 
 const schema = z.object({
   meta: z.object({
-    appId: z.string().optional(),
+    appId: z.string().nullable(),
     databaseServiceId: z.string().nullable(),
     expandedSection: z.string().nullable(),
     allowFreeInstanceIfAlreadyUsed: z.boolean(),
@@ -42,38 +41,22 @@ export function useDatabaseServiceForm({ appId, deployment, onCostChanged }: Use
   return form;
 }
 
-function defaultDatabaseServiceForm(): DatabaseServiceForm {
+function getDefaultValues(appId?: string, deployment?: DatabaseDeployment): DatabaseServiceForm {
   return {
     meta: {
-      appId: null,
-      databaseServiceId: null,
+      appId: appId ?? null,
+      databaseServiceId: deployment?.serviceId ?? null,
       expandedSection: null,
-      allowFreeInstanceIfAlreadyUsed: false,
+      allowFreeInstanceIfAlreadyUsed: deployment?.instance === 'free',
     },
     engine: {
       version: 17,
     },
-    region: 'fra',
-    instance: 'small',
+    instance: deployment?.instance ?? 'small',
+    region: deployment?.region ?? 'fra',
     defaultRole: 'koyeb-adm',
-    serviceName: 'database',
+    serviceName: deployment?.name ?? 'database',
   };
-}
-
-function getDefaultValues(appId?: string, deployment?: DatabaseDeployment): DatabaseServiceForm {
-  if (deployment === undefined) {
-    return defaultDatabaseServiceForm();
-  }
-
-  return merge(defaultDatabaseServiceForm(), {
-    meta: {
-      appId,
-      databaseServiceId: deployment.serviceId,
-      allowFreeInstanceIfAlreadyUsed: deployment.instance === 'free',
-    },
-    instance: deployment.instance,
-    serviceName: deployment.name,
-  } satisfies DeepPartial<DatabaseServiceForm>);
 }
 
 function useExpandFirstSectionInError(form: UseFormReturn<DatabaseServiceForm>) {

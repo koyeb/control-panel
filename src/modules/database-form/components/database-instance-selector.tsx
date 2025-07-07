@@ -53,7 +53,7 @@ export function DatabaseInstanceSelector({ allowFreeInstanceIfAlreadyUsed }: Dat
     selectedInstance: instance ?? null,
     setSelectedInstance: (instance) => instance && instanceCtrl.field.onChange(instance.id),
     selectedRegions: region ? [region] : [],
-    setSelectedRegions: (region) => regionCtrl.field.onChange(region[0]?.id),
+    setSelectedRegions: (region) => regionCtrl.field.onChange(region[0]?.id ?? null),
   });
 
   return (

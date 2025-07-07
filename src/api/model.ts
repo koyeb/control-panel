@@ -100,7 +100,7 @@ export type CatalogInstance = {
   vcpuShares: number;
   memory: string;
   vram?: number;
-  disk: string;
+  disk: string | null;
   volumesEnabled: boolean;
   priceMonthly: number;
   priceHourly: number;

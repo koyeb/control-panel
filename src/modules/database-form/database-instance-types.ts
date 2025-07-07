@@ -27,7 +27,7 @@ function createDatabaseInstanceType(
     displayName,
     vcpuShares,
     memory: memory + ' GB',
-    disk: disk === null ? '∞' : disk + ' GB',
+    disk: disk === null ? null : disk + ' GB',
     priceMonthly,
     priceHourly,
     pricePerSecond: priceHourly / (60 * 60),

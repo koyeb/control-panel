@@ -163,7 +163,11 @@ function InstanceSpec({ instance }: { instance: CatalogInstance }) {
   );
 }
 
-function formatMemory(value: string) {
+function formatMemory(value: string | null) {
+  if (value === null) {
+    return '∞';
+  }
+
   return formatBytes(parseBytes(value), { round: true, precision: 2, decimal: true });
 }
 
