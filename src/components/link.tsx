@@ -106,7 +106,8 @@ export function ExternalLinkButton({
 }: ExternalLinkButtonProps) {
   return (
     <ExternalLink
-      arias-disabled={disabled}
+      role="button"
+      aria-disabled={disabled}
       className={Button.className({ variant, size, color }, className)}
       {...props}
     />
