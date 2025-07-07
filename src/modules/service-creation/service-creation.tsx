@@ -1,12 +1,11 @@
-import { useCallback, useEffect } from 'react';
+import { getRouteApi } from '@tanstack/react-router';
+import { useCallback } from 'react';
 
 import { useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { Link } from 'src/components/link';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
-import { enumIndex, isEnumValue } from 'src/utils/enums';
 
 import { Stepper, Step as StepperStep } from './stepper';
 import { ServiceTypeStep } from './steps/00-service-type/service-type.step';
@@ -17,42 +16,25 @@ import { InitialDeploymentStep } from './steps/04-initial-deployment/initial-dep
 
 const T = createTranslate('modules.serviceCreation');
 
-enum Step {
-  serviceType = 'serviceType',
-  importProject = 'importProject',
-  instanceRegions = 'instanceRegions',
-  review = 'review',
-  initialDeployment = 'initialDeployment',
-}
+const steps = ['serviceType', 'importProject', 'instanceRegions', 'review', 'initialDeployment'] as const;
+type Step = (typeof steps)[number];
 
-const isStep = isEnumValue(Step);
-const stepIndex = enumIndex(Step);
+const stepperSteps = ['importProject', 'instanceRegions', 'review'] satisfies Step[];
 
 function isBefore(left: Step, right: Step) {
-  return stepIndex(left) < stepIndex(right);
+  return steps.indexOf(left) < steps.indexOf(right);
 }
 
-const stepperSteps = [Step.importProject, Step.instanceRegions, Step.review] as const;
+const route = getRouteApi('/_main/services/new');
 
 export function ServiceCreation() {
-  const initialStep = useInitialStep();
-  const currentStepParam = useSearchParams().get('step');
-  const currentStep = isStep(currentStepParam) ? currentStepParam : Step.serviceType;
-  const serviceId = useSearchParams().get('serviceId');
-  const navigate = useNavigate();
+  const { step: currentStep, serviceId } = route.useSearch();
+  const navigate = route.useNavigate();
 
   const setCurrentStep = useCallback(
-    (step: Step) => {
-      navigate({ to: '/services/new', search: (prev) => ({ ...prev, step }) });
-    },
+    (step: Step) => navigate({ search: (prev) => ({ ...prev, step }) }),
     [navigate],
   );
-
-  useEffect(() => {
-    if (!isStep(currentStepParam)) {
-      setCurrentStep(initialStep);
-    }
-  }, [currentStepParam, initialStep, setCurrentStep]);
 
   const serviceLink = (children: React.ReactNode) => {
     if (serviceId) {
@@ -73,7 +55,7 @@ export function ServiceCreation() {
           <T id={`${currentStep}.title`} />
         </h1>
 
-        {currentStep !== Step.serviceType && (
+        {currentStep !== 'serviceType' && (
           <p className="text-dim">
             <T id={`${currentStep}.description`} values={{ link: serviceLink }} />
           </p>
@@ -97,11 +79,11 @@ export function ServiceCreation() {
         </Stepper>
       )}
 
-      {currentStep === Step.serviceType && <ServiceTypeStep />}
-      {currentStep === Step.importProject && <ImportProjectStep />}
-      {currentStep === Step.instanceRegions && <InstanceRegionStep />}
-      {currentStep === Step.review && <ReviewStep />}
-      {currentStep === Step.initialDeployment && serviceId && <InitialDeploymentStep serviceId={serviceId} />}
+      {currentStep === 'serviceType' && <ServiceTypeStep />}
+      {currentStep === 'importProject' && <ImportProjectStep />}
+      {currentStep === 'instanceRegions' && <InstanceRegionStep />}
+      {currentStep === 'review' && <ReviewStep />}
+      {currentStep === 'initialDeployment' && serviceId && <InitialDeploymentStep serviceId={serviceId} />}
     </div>
   );
 }
@@ -114,33 +96,4 @@ function PrefetchResources() {
   useRegions();
 
   return null;
-}
-
-function useInitialStep(): Step {
-  const search = useSearchParams();
-
-  const serviceType = search.get('service_type');
-  const type = search.get('type');
-  const repository = search.get('repository');
-  const image = search.get('image');
-  const instanceType = search.get('instance_type');
-  const regions = search.get('regions');
-
-  if (serviceType !== 'web' && serviceType !== 'worker') {
-    return Step.serviceType;
-  }
-
-  if (type !== 'git' && type !== 'docker') {
-    return Step.serviceType;
-  }
-
-  if ((type === 'git' && repository === null) || (type === 'docker' && image === null)) {
-    return Step.importProject;
-  }
-
-  if (instanceType === null || regions === null) {
-    return Step.instanceRegions;
-  }
-
-  return Step.review;
 }

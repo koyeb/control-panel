@@ -1,13 +1,10 @@
-import { linkOptions } from '@tanstack/react-router';
-import { useCallback, useEffect } from 'react';
+import { RegisteredRouter, ValidateLinkOptions, linkOptions } from '@tanstack/react-router';
 
 import { IconGithub } from 'src/components/icons';
 import { Link, LinkButton } from 'src/components/link';
-import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import IconDocker from 'src/icons/docker.svg?react';
 import { createTranslate } from 'src/intl/translate';
-import { SourceType } from 'src/modules/service-form/service-form.types';
 import { inArray } from 'src/utils/arrays';
 
 import { OneClickAppList } from './one-click-app-list';
@@ -22,37 +19,11 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 export function ServiceTypeStep() {
   const appId = useSearchParams().get('app_id');
   const serviceType = useSearchParams().get('service_type');
-  const navigate = useNavigate({ from: '/services/new' });
-
-  useMount(() => {
-    navigate({
-      to: '/services/new',
-      search: (prev) => ({
-        ...prev,
-        type: undefined,
-        service_type: undefined,
-        ports: undefined,
-      }),
-    });
-  });
-
-  const setServiceType = useCallback(
-    (type: string) => {
-      navigate({ to: '/services/new', search: (prev) => ({ ...prev, service_type: type }) });
-    },
-    [navigate],
-  );
-
-  useEffect(() => {
-    if (!isServiceType(serviceType)) {
-      setServiceType('web');
-    }
-  }, [serviceType, setServiceType]);
 
   return (
     <div className="col divide-y rounded-md border sm:row sm:divide-x md:divide-y-0">
       <nav className="col gap-3 p-3 md:min-w-72 md:p-6">
-        <ServiceTypeList serviceType={serviceType} setServiceType={setServiceType} />
+        <ServiceTypeList />
         <hr />
         <OneClickAppList />
       </nav>
@@ -113,50 +84,55 @@ function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | 
 }
 
 function DeploymentSource() {
-  const search = useSearchParams();
-
-  const href = (source: SourceType) => {
-    const params = new URLSearchParams(search);
-
-    params.set('type', source);
-    params.set('step', 'importProject');
-
-    if (params.get('service_type') === 'private') {
-      params.set('service_type', 'web');
-      params.set('ports', '8000;tcp');
-    }
-
-    return '?' + params.toString();
+  const link = (source: 'git' | 'docker') => {
+    return linkOptions({
+      to: '/services/new',
+      search: (prev) => ({
+        ...prev,
+        type: source,
+        step: 'importProject' as const,
+        ...(prev.service_type === 'private' && {
+          service_type: 'web' as const,
+          ports: '8000;tcp',
+        }),
+      }),
+    });
   };
+
   return (
     <div className="col gap-4 lg:row">
       <DeploymentSourceOption
         Icon={IconGithub}
         title={<T id="deploymentSource.github.title" />}
         description={<T id="deploymentSource.github.description" />}
-        href={href('git')}
+        link={link('git')}
       />
 
       <DeploymentSourceOption
         Icon={IconDocker}
         title={<T id="deploymentSource.docker.title" />}
         description={<T id="deploymentSource.docker.description" />}
-        href={href('docker')}
+        link={link('docker')}
       />
     </div>
   );
 }
 
-type DeploymentSourceOptionProps = {
+type DeploymentSourceOptionProps<Router extends RegisteredRouter, Options> = {
   Icon: React.ComponentType<{ className?: string }>;
   title: React.ReactNode;
   description: React.ReactNode;
-  href: string;
+  link: ValidateLinkOptions<Router, Options>;
 };
 
-function DeploymentSourceOption({ Icon, title, description, href }: DeploymentSourceOptionProps) {
+function DeploymentSourceOption<Router extends RegisteredRouter, Options>({
+  Icon,
+  title,
+  description,
+  link,
+}: DeploymentSourceOptionProps<Router, Options>) {
   return (
-    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" to={href}>
+    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" {...link}>
       <div className="rounded-lg bg-muted p-3">
         <Icon className="size-10" />
       </div>
