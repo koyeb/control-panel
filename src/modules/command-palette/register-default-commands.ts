@@ -9,7 +9,7 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate } from 'src/hooks/router';
+import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { ThemeMode, useSetThemeMode } from 'src/hooks/theme';
 import { defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
@@ -372,7 +372,7 @@ function useRegisterOneClickAppsCommands() {
         label: `Deploy ${app.name} one-click application`,
         description: app.description,
         keywords: [...app.slug.split('-'), 'deploy', 'example', 'one-click'],
-        execute: () => navigate({ to: app.deployUrl }),
+        execute: () => navigate(urlToLinkOptions(app.deployUrl)),
       });
     }
   });

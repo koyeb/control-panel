@@ -90,7 +90,10 @@ function useCreateCreateServiceDialog(getSections: GetSections) {
 
     onNavigationItemRef: navigationRefs.set.bind(navigationRefs),
 
-    closeDialog,
+    closeDialog: useCallback(() => {
+      dispatch({ type: 'reset' });
+      closeDialog();
+    }, [closeDialog]),
 
     dialogOpened: useCallback(() => {
       openDialog('CreateService');

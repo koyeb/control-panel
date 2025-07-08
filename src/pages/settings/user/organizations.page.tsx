@@ -16,7 +16,7 @@ import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
+import { urlToLinkOptions, useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
@@ -161,7 +161,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
     })),
     onSuccess(token, redirect) {
       setToken(token.token!.id!, false);
-      navigate({ to: redirect });
+      navigate(urlToLinkOptions(redirect));
     },
   });
 

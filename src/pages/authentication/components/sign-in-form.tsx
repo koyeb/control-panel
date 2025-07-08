@@ -8,7 +8,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate } from 'src/hooks/router';
+import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -48,7 +48,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
     })),
     async onSuccess(result) {
       setToken(result.token!.id!);
-      navigate({ to: redirect });
+      navigate(urlToLinkOptions(redirect));
     },
     onError(error) {
       if (ApiError.is(error) && error.message === invalidCredentialApiMessage) {

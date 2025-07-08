@@ -4,6 +4,7 @@ import { useParams, useSearch } from 'wouter';
 import { navigate, usePathname, useHistoryState as useWouterHistoryState } from 'wouter/use-browser-location';
 
 import { AssertionError, defined } from 'src/utils/assert';
+import { toObject } from 'src/utils/object';
 
 import { usePureFunction } from './lifecycle';
 
@@ -81,6 +82,19 @@ export function useNavigate() {
 
     navigate(result, { replace, state });
   }, []);
+}
+
+export function urlToLinkOptions(url: string) {
+  const { pathname, searchParams } = new URL(url, window.location.origin);
+
+  return {
+    to: pathname,
+    search: toObject(
+      Array.from(searchParams.entries()),
+      ([key]) => key,
+      ([, value]) => value,
+    ),
+  };
 }
 
 export function useSearchParams() {

@@ -13,7 +13,7 @@ import { reportError } from 'src/application/report-error';
 import { Link, ValidateLinkOptions } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { urlToLinkOptions, useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
 import { toObject } from 'src/utils/object';
@@ -122,7 +122,7 @@ export function GithubOauthCallbackPage() {
         notify.error(error.message);
       }
 
-      navigate({ to: redirect, replace: true });
+      navigate({ ...urlToLinkOptions(redirect), replace: true });
     },
   });
 
