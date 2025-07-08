@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
-import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { HandleInvitation } from 'src/components/handle-invitations';
@@ -20,7 +19,6 @@ import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { defined } from 'src/utils/assert';
-import { slugify } from 'src/utils/strings';
 
 import { AuthButton } from '../authentication/components/auth-button';
 
@@ -61,7 +59,6 @@ export function JoinOrganization() {
 }
 
 function CreateOrganization() {
-  const user = useUser();
   const { token, setToken } = useAuth();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
@@ -69,7 +66,7 @@ function CreateOrganization() {
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      organizationName: state.createOrganization ? defaultOrganizationName(user) : '',
+      organizationName: '',
     },
     resolver: useZodResolver(schema),
   });
@@ -147,12 +144,4 @@ function CreateOrganization() {
       </form>
     </section>
   );
-}
-
-function defaultOrganizationName(user: User): string {
-  if (user.githubUser) {
-    return slugify(user.githubUser, 39);
-  }
-
-  return slugify(user.email.replace(/@.*/, ''), 39);
 }
