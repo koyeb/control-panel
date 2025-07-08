@@ -2047,10 +2047,12 @@
         "emailAddressValidated": "Your email address was validated"
       },
       "joinOrganization": {
+        "sidebar": "With Koyeb, run all your models and apps on high-performance CPUs, GPUs, and accelerators from AMD, Intel, and Nvidia",
         "title": "What is your organization's name?",
         "canBeChanged": "You can always change it later if you need to",
         "tooltip": "An organization is a space containing all your Koyeb resources that you can use for your own projects or to collaborate as a team. The organization name must be unique and is used to compose your apps public URL. You can change it at any time.",
         "organizationNameLabel": "Organization's name",
+        "submit": "Continue",
         "creatingOrganization": "Creating organization..."
       },
       "qualification": {

@@ -10,10 +10,7 @@ import { PaymentMethod } from './payment-method';
 import { Qualification } from './qualification';
 
 export function OnboardingPage({ step }: { step: OnboardingStep }) {
-  const Wrapper =
-    step === 'emailValidation' || step === 'joinOrganization' || step === 'automaticReview'
-      ? FullScreenLayout
-      : Fragment;
+  const Wrapper = step === 'emailValidation' || step === 'automaticReview' ? FullScreenLayout : Fragment;
 
   return (
     <Wrapper>

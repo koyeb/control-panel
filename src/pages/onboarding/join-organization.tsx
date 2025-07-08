@@ -1,4 +1,4 @@
-import { Button, InfoTooltip, Spinner } from '@koyeb/design-system';
+import { InfoTooltip, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -10,7 +10,6 @@ import { User } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { HandleInvitation } from 'src/components/handle-invitations';
-import { IconArrowRight } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError, QueryGuard } from 'src/components/query-error';
@@ -18,11 +17,12 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useMount } from 'src/hooks/lifecycle';
 import { useHistoryState, useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
+import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { defined } from 'src/utils/assert';
 import { slugify } from 'src/utils/strings';
 
-import Background from './images/join-organization.svg?react';
+import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.joinOrganization');
 
@@ -47,9 +47,7 @@ export function JoinOrganization() {
   }
 
   return (
-    <>
-      <Background className="absolute bottom-0 hidden md:block" />
-
+    <OnboardingLayout sentence={<T id="sidebar" />}>
       <QueryGuard query={invitationsQuery}>
         {(invitations) => (
           <>
@@ -58,7 +56,7 @@ export function JoinOrganization() {
           </>
         )}
       </QueryGuard>
-    </>
+    </OnboardingLayout>
   );
 }
 
@@ -135,18 +133,17 @@ function CreateOrganization() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
+      <form onSubmit={handleSubmit(form, mutation.mutateAsync)}>
         <OrganizationNameField form={form} label={<T id="organizationNameLabel" />} />
 
-        <Button
+        <AuthButton
           type="submit"
           disabled={!form.formState.isValid}
           loading={form.formState.isSubmitting}
-          className="self-end"
+          className="mt-8 min-w-32 self-start"
         >
-          <Translate id="common.next" />
-          <IconArrowRight />
-        </Button>
+          <T id="submit" />
+        </AuthButton>
       </form>
     </section>
   );
