@@ -58,7 +58,7 @@ describe('deploymentDefinitionToServiceForm', () => {
 
   it('autoscaling min = 0 and max = 1', () => {
     const definition: Api.DeploymentDefinition = {
-      scalings: [{ min: 0, max: 1, targets: [{ sleep_idle_delay: { value: 1 } }] }],
+      scalings: [{ min: 0, max: 1, targets: [{ sleep_idle_delay: { deep_sleep_value: 1 } }] }],
     };
 
     expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.targets', {

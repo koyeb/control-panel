@@ -198,7 +198,7 @@ function scaling(definition: Api.DeploymentDefinition): DeepPartial<Scaling> {
       },
       sleepIdleDelay: {
         enabled: min === 0,
-        value: sleep_idle_delay?.value,
+        value: sleep_idle_delay?.deep_sleep_value,
       },
     },
   } satisfies DeepPartial<Scaling>;

@@ -84,7 +84,7 @@ describe('serviceFormToDeploymentDefinition', () => {
           { requests_per_second: { value: 3 } },
           { concurrent_requests: { value: 4 } },
           { requests_response_time: { value: 5, quantile: 95 } },
-          { sleep_idle_delay: { value: 6 } },
+          { sleep_idle_delay: { deep_sleep_value: 6 } },
         ],
       },
     ]);
