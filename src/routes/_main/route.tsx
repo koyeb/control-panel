@@ -38,14 +38,18 @@ export const Route = createFileRoute('/_main')({
   },
 });
 
-async function switchOrganization(token: string, setToken: (token: string) => void, organizationId: string) {
+async function switchOrganization(
+  token: string,
+  setToken: (token: string) => Promise<void>,
+  organizationId: string,
+) {
   const result = await api.switchOrganization({
     token,
     path: { id: organizationId },
     header: {},
   });
 
-  setToken(result.token!.id!);
+  await setToken(result.token!.id!);
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),

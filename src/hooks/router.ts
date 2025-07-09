@@ -6,8 +6,7 @@ import {
 } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
-import { assert } from 'src/utils/assert';
-import { AssertionError, defined } from 'src/utils/assert';
+import { AssertionError, assert, defined } from 'src/utils/assert';
 import { toObject } from 'src/utils/object';
 
 import { usePureFunction } from './lifecycle';
@@ -59,7 +58,7 @@ export function useOnRouteStateCreate(cb: () => void) {
 
   useEffect(() => {
     if (historyState.create) {
-      navigate({ to: '.', replace: true, state: { create: false } });
+      void navigate({ to: '.', replace: true, state: { create: false } });
       cbMemo();
     }
   }, [historyState, navigate, cbMemo]);

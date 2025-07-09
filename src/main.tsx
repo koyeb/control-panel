@@ -51,7 +51,7 @@ const queryCache = new QueryCache({
       pathname !== '/'
     ) {
       notify.info(error.message);
-      router.navigate({ to: '/' });
+      void router.navigate({ to: '/' });
     }
 
     if (ApiError.is(error, 429)) {
@@ -91,7 +91,7 @@ function handleAuthenticationError() {
   sessionStorage.removeItem('session-token');
   localStorage.removeItem('access-token');
 
-  router.navigate({
+  void router.navigate({
     to: '/auth/signin',
     search,
   });
