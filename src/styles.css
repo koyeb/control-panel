@@ -8,6 +8,10 @@
 }
 
 @layer base {
+  body {
+    overflow-y: scroll;
+  }
+
   body .dark {
     background-color: var(--color-neutral);
     color: var(--color-default);
