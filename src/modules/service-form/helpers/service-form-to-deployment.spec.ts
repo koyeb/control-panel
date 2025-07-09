@@ -65,12 +65,12 @@ describe('serviceFormToDeploymentDefinition', () => {
       min: 1,
       max: 2,
       targets: {
-        requests: { enabled: true, value: 1 },
         cpu: { enabled: true, value: 1 },
-        memory: { enabled: true, value: 1 },
-        concurrentRequests: { enabled: true, value: 1 },
-        responseTime: { enabled: true, value: 1 },
-        sleepIdleDelay: { enabled: true, value: 1 },
+        memory: { enabled: true, value: 2 },
+        requests: { enabled: true, value: 3 },
+        concurrentRequests: { enabled: true, value: 4 },
+        responseTime: { enabled: true, value: 5 },
+        sleepIdleDelay: { enabled: true, value: 6 },
       },
     };
 
@@ -79,12 +79,12 @@ describe('serviceFormToDeploymentDefinition', () => {
         min: 1,
         max: 2,
         targets: [
-          { requests_per_second: { value: 1 } },
           { average_cpu: { value: 1 } },
-          { average_mem: { value: 1 } },
-          { concurrent_requests: { value: 1 } },
-          { requests_response_time: { value: 1, quantile: 95 } },
-          { sleep_idle_delay: { value: 1 } },
+          { average_mem: { value: 2 } },
+          { requests_per_second: { value: 3 } },
+          { concurrent_requests: { value: 4 } },
+          { requests_response_time: { value: 5, quantile: 95 } },
+          { sleep_idle_delay: { deep_sleep_value: 6 } },
         ],
       },
     ]);

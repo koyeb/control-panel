@@ -2,8 +2,6 @@ import posthog from 'posthog-js';
 
 import { Api } from 'src/api/api-types';
 import { EnvironmentVariable } from 'src/api/model';
-import { assert } from 'src/utils/assert';
-import { entries } from 'src/utils/object';
 
 import {
   ArchiveSource,
@@ -109,24 +107,28 @@ function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
 
   const targets = new Array<Api.DeploymentScalingTarget>();
 
-  const keyMap: Record<keyof Scaling['targets'], keyof Api.DeploymentScalingTarget> = {
-    cpu: 'average_cpu',
-    memory: 'average_mem',
-    requests: 'requests_per_second',
-    concurrentRequests: 'concurrent_requests',
-    responseTime: 'requests_response_time',
-    sleepIdleDelay: 'sleep_idle_delay',
-  };
+  if (scaling.targets.cpu.enabled) {
+    targets.push({ average_cpu: { value: scaling.targets.cpu.value } });
+  }
 
-  entries(scaling.targets)
-    .filter(([, { enabled }]) => enabled)
-    .forEach(([target, { value }]) => targets.push({ [keyMap[target]]: { value } }));
+  if (scaling.targets.memory.enabled) {
+    targets.push({ average_mem: { value: scaling.targets.memory.value } });
+  }
+
+  if (scaling.targets.requests.enabled) {
+    targets.push({ requests_per_second: { value: scaling.targets.requests.value } });
+  }
+
+  if (scaling.targets.concurrentRequests.enabled) {
+    targets.push({ concurrent_requests: { value: scaling.targets.concurrentRequests.value } });
+  }
 
   if (scaling.targets.responseTime.enabled) {
-    const target = targets.find((target) => 'requests_response_time' in target);
+    targets.push({ requests_response_time: { value: scaling.targets.responseTime.value, quantile: 95 } });
+  }
 
-    assert(target?.requests_response_time !== undefined);
-    target.requests_response_time.quantile = 95;
+  if (scaling.targets.sleepIdleDelay.enabled) {
+    targets.push({ sleep_idle_delay: { deep_sleep_value: scaling.targets.sleepIdleDelay.value } });
   }
 
   return [
