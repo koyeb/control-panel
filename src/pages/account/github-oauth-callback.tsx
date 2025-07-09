@@ -72,7 +72,7 @@ export function GithubOauthCallbackPage() {
             search: Object.fromEntries(redirect.searchParams),
             replace: true,
             state: { createOrganization: action === 'signup' },
-          },
+          } as unknown as ValidateLinkOptions,
         });
       }
 
@@ -88,7 +88,7 @@ export function GithubOauthCallbackPage() {
       }
 
       if (currentOrganization?.id === organization_id) {
-        navigate({
+        await navigate({
           to: redirect.pathname,
           search: Object.fromEntries(redirect.searchParams),
           replace: true,
@@ -120,7 +120,7 @@ export function GithubOauthCallbackPage() {
         notify.error(error.message);
       }
 
-      navigate({ ...urlToLinkOptions(redirect), replace: true });
+      void navigate({ ...urlToLinkOptions(redirect), replace: true });
     },
   });
 

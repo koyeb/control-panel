@@ -66,7 +66,7 @@ function InstanceRegionStep_() {
   const selectedRegions = regions.filter((region) => regionsParam.includes(region.id));
 
   const setInstanceParam = (instance: string) => {
-    navigate({
+    void navigate({
       to: '/services/new',
       search: (prev) => ({ ...prev, instance_type: instance }),
       replace: true,
@@ -74,7 +74,7 @@ function InstanceRegionStep_() {
   };
 
   const setRegionsParam = (regions: string[]) => {
-    navigate({
+    void navigate({
       to: '/services/new',
       search: (prev) => ({ ...prev, regions }),
       replace: true,
@@ -119,7 +119,9 @@ function InstanceRegionStep_() {
       </div>
 
       <Button
-        onClick={() => navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'review' }) })}
+        onClick={() =>
+          void navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'review' }) })
+        }
         disabled={selectedRegions.length === 0}
         className="self-start"
       >

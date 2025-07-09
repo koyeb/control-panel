@@ -44,7 +44,6 @@ async function switchOrganization(
   organizationId: string,
 ) {
   const result = await api.switchOrganization({
-    token,
     path: { id: organizationId },
     header: {},
   });

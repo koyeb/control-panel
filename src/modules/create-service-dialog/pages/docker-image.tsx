@@ -46,7 +46,7 @@ export function DockerImageSelection() {
 
     closeDialog();
 
-    navigate({
+    void navigate({
       to: '/services/deploy',
       search: { service_type: serviceType, type: 'docker', image },
     });
@@ -125,7 +125,7 @@ export function DockerImageSelection() {
               <button
                 role="link"
                 className="text-link"
-                onClick={() => navigate({ to: '/secrets', state: { create: true } })}
+                onClick={() => void navigate({ to: '/secrets', state: { create: true } })}
               >
                 {children}
               </button>

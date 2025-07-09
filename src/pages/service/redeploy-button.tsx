@@ -60,7 +60,7 @@ export function RedeployButton({ app, service }: { app: App; service: Service })
 
       closeDialog();
 
-      navigate({
+      await navigate({
         to: '/services/$serviceId',
         params: { serviceId: service.id },
         search: { deploymentId: deployment?.id },
