@@ -54,6 +54,7 @@ function ResetPasswordForm() {
   const mutation = useMutation({
     ...useApiMutationFn('resetPassword', ({ email }: FormValues<typeof form>) => ({
       body: { email },
+      token: undefined,
     })),
     onSuccess() {
       notify.success(t('successNotification'));
