@@ -44,7 +44,7 @@ const queryCache = new QueryCache({
     const pathname = window.location.pathname;
 
     if (ApiError.is(error, 401)) {
-      handleAuthenticationError(error);
+      void handleAuthenticationError(error);
     }
 
     if (
@@ -53,7 +53,7 @@ const queryCache = new QueryCache({
       pathname !== '/'
     ) {
       notify.info(error.message);
-      router.navigate({ to: '/' });
+      void router.navigate({ to: '/' });
     }
 
     if (ApiError.is(error, 429)) {
@@ -75,7 +75,7 @@ const queryCache = new QueryCache({
 const mutationCache = new MutationCache({
   onError(error, variables, context, mutation) {
     if (ApiError.is(error, 401)) {
-      handleAuthenticationError(error);
+      void handleAuthenticationError(error);
     } else if (mutation.options.onError === undefined) {
       notify.error(error.message);
     }

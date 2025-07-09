@@ -43,6 +43,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       return queryClient.ensureQueryData({
         // eslint-disable-next-line @tanstack/query/exhaustive-deps
         queryKey: getApiQueryKey(endpoint, param),
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         queryFn: () => fn({ token, signal: abortController.signal, ...param }),
       });
     };
@@ -106,7 +107,7 @@ function getAuth(queryClient: QueryClient, search: { token?: string; 'session-to
   return {
     token: sessionToken ?? accessToken,
     session: sessionToken !== null,
-    async setToken(token: string | null, session?: boolean) {
+    setToken: async (token: string | null, session?: boolean) => {
       await queryClient.cancelQueries();
       queryClient.clear();
 

@@ -18,7 +18,6 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
 
   loader: async ({ context, params, deps }) => {
     const { ensureQueryData } = context;
-    console.log(context);
 
     const [, deployments] = await Promise.all([
       ensureQueryData('getService', { path: { id: params.serviceId } }),

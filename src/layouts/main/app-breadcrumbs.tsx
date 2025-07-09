@@ -43,7 +43,7 @@ export function AppBreadcrumbs() {
 export function Crumb<Router extends RegisteredRouter, Options>(props: ValidateLinkOptions<Router, Options>) {
   return (
     <Link className="font-medium text-dim last-of-type:text-default" {...props}>
-      <Translate id={`layouts.main.breadcrumbs.${props.to}` as TranslationKeys} />
+      <Translate id={`layouts.main.breadcrumbs.${props.to as string}` as TranslationKeys} />
     </Link>
   );
 }

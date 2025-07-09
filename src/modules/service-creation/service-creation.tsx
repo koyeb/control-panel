@@ -32,7 +32,7 @@ export function ServiceCreation() {
   const navigate = route.useNavigate();
 
   const setCurrentStep = useCallback(
-    (step: Step) => navigate({ search: (prev) => ({ ...prev, step }) }),
+    (step: Step) => void navigate({ search: (prev) => ({ ...prev, step }) }),
     [navigate],
   );
 
