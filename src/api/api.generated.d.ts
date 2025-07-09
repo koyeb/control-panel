@@ -2804,9 +2804,18 @@ export interface components {
         DeploymentScalingTargetSleepIdleDelay: {
             /**
              * Format: int64
-             * @description Delay in seconds after which a service which received 0 request is scaled to 0.
-             *     This is not configurable and must be set to 300 (5 minutes). Get in touch to
-             *     tune it.
+             * @description Delay in seconds after which a service which received 0 request is put to deep sleep.
+             */
+            deep_sleep_value?: number;
+            /**
+             * Format: int64
+             * @description Delay in seconds after which a service which received 0 request is put to light sleep.
+             */
+            light_sleep_value?: number;
+            /**
+             * Format: int64
+             * @description DEPRECATED: use deep_sleep_value instead.
+             *     Delay in seconds after which a service which received 0 request is put to deep sleep.
              */
             value?: number;
         };
@@ -4332,6 +4341,8 @@ export interface components {
             persistent_volumes_by_region?: {
                 [key: string]: components["schemas"]["PersistentVolumeQuotas"];
             };
+            /** Format: int64 */
+            proxy_ports?: number;
             regions?: string[];
             /** Format: int64 */
             service_provisioning_concurrency?: string;
