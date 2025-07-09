@@ -128,7 +128,7 @@ function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
   }
 
   if (scaling.targets.sleepIdleDelay.enabled) {
-    targets.push({ sleep_idle_delay: { deep_sleep_value: scaling.targets.sleepIdleDelay.value } });
+    targets.push({ sleep_idle_delay: { value: scaling.targets.sleepIdleDelay.value } });
   }
 
   return [
