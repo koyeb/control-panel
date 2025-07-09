@@ -43,7 +43,7 @@ export function OrganizationRepositoriesList() {
   const repositories = useRepositories(search);
 
   const onSelect = (repository: GitRepository) => {
-    navigate({
+    void navigate({
       to: '/services/deploy',
       search: {
         service_type: serviceType,
@@ -164,7 +164,7 @@ export function PublicRepository() {
   const onSubmit = (repositoryName: string) => {
     closeDialog();
 
-    navigate({
+    void navigate({
       to: '/services/deploy',
       search: {
         service_type: serviceType,

@@ -26,7 +26,7 @@ export function DeployOneClickApp() {
   useEffect(() => {
     if (oneClickAppsQuery.isSuccess) {
       if (app === undefined) {
-        navigate({
+        void navigate({
           to: '/services/deploy',
           search: (prev) => ({ ...prev, one_click_app: undefined }),
           replace: true,
@@ -34,7 +34,7 @@ export function DeployOneClickApp() {
       } else {
         const url = new URL(app.deployUrl);
 
-        navigate({
+        void navigate({
           to: '/services/deploy',
           search: {
             ...Object.fromEntries(url.searchParams),

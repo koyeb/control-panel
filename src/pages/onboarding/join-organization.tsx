@@ -95,9 +95,9 @@ function CreateOrganization() {
     onSuccess(token) {
       setToken(token);
     },
-    onError(error) {
+    async onError(error) {
       if (state.createOrganization) {
-        navigate({ to: '/', state: {} });
+        await navigate({ to: '/', state: {} });
       } else {
         onError(error);
       }

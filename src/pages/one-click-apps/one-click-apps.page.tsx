@@ -16,7 +16,7 @@ export function OneClickAppsPage() {
       <Input
         value={search}
         onChange={(event) =>
-          navigate({ search: (prev) => ({ ...prev, search: event.target.value || null }) })
+          void navigate({ search: (prev) => ({ ...prev, search: event.target.value || null }) })
         }
         placeholder="Search..."
         start={
