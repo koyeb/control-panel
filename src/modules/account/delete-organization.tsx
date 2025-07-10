@@ -14,7 +14,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('modules.account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const { token, setToken } = useAuth();
+  const { setToken } = useAuth();
   const user = useUser();
   const organization = useOrganization();
 
@@ -30,7 +30,6 @@ export function DeleteOrganization() {
   const deleteOrganization = useMutation({
     async mutationFn() {
       const { members } = await api.listOrganizationMembers({
-        token,
         query: { user_id: user.id },
       });
 
@@ -42,22 +41,18 @@ export function DeleteOrganization() {
 
       if (otherOrganizationId) {
         const { token: newToken } = await api.switchOrganization({
-          token,
           path: { id: otherOrganizationId },
           header: {},
         });
 
         result = newToken!.id!;
       } else {
-        const { token: newToken } = await api.newSession({
-          token,
-        });
+        const { token: newToken } = await api.newSession({});
 
         result = newToken!.id!;
       }
 
       await api.deleteOrganization({
-        token,
         path: { id: organization.id },
       });
 

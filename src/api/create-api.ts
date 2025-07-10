@@ -1,20 +1,13 @@
 import { EmptyObject, IfNever, Simplify } from 'type-fest';
 
 import { UnexpectedError } from 'src/application/errors';
-import { wait } from 'src/utils/promises';
 import { upperCase } from 'src/utils/strings';
 
 import { ApiError, ApiValidationError, isApiError, isApiValidationError } from './api-errors';
 import Api from './api.generated';
 
-type CommonApiRequestParams = {
-  token?: string | null;
-  delay?: number;
-};
-
 type ApiRequestParams<Params extends EndpointParams, Body> = Simplify<
-  CommonApiRequestParams &
-    ApiRequestOption<'path', GetParam<Params, 'path'>> &
+  ApiRequestOption<'path', GetParam<Params, 'path'>> &
     ApiRequestOption<'query', GetParam<Params, 'query'>> &
     ApiRequestOption<'header', GetParam<Params, 'header'>> &
     ApiRequestOption<'body', Body extends Record<string, never> ? never : Body>
@@ -246,10 +239,6 @@ function createEndpoint({ baseUrl, getToken }: CreateApiOptions) {
         for (const [name, value] of Object.entries(params.header as Record<string, string>)) {
           headers.set(name, value);
         }
-      }
-
-      if (params.delay !== undefined) {
-        await wait(params.delay);
       }
 
       const response = await fetch(url.toString(), init);

@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { api } from 'src/api/api';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { LogoLoading } from 'src/components/logo-loading';
@@ -13,7 +12,6 @@ import { AssertionError, assert } from 'src/utils/assert';
 const T = createTranslate('pages.authentication.sso');
 
 export function CannySso() {
-  const { token } = useAuth();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
@@ -25,14 +23,12 @@ export function CannySso() {
       assert(companyID !== null, new AssertionError('Missing companyID query parameter'));
       assert(redirect !== null, new AssertionError('Missing redirect query parameter'));
 
-      const { token: cannyToken } = await api.cannySso({
-        token,
-      });
+      const { token } = await api.cannySso({});
 
       return {
         companyID,
         redirect,
-        token: cannyToken!,
+        token: token!,
       };
     },
     onSuccess({ companyID, redirect, token }) {
@@ -59,7 +55,6 @@ export function CannySso() {
 }
 
 export function DiscourseSsoPage() {
-  const { token } = useAuth();
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
@@ -72,7 +67,6 @@ export function DiscourseSsoPage() {
       assert(sig !== null, new AssertionError('Missing sig query parameter'));
 
       const result = await api.discourseSso({
-        token,
         body: { payload: sso, sig },
       });
 

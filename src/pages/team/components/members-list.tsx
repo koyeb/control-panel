@@ -274,7 +274,7 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const { token, setToken } = useAuth();
+  const { setToken } = useAuth();
   const user = useUser();
   const navigate = useNavigate();
   const t = T.useTranslate();
@@ -282,7 +282,6 @@ function useLeaveOrganization() {
   return useMutation({
     async mutationFn(membership: OrganizationMember) {
       const { members } = await api.listOrganizationMembers({
-        token,
         query: { user_id: user.id },
       });
 
@@ -294,7 +293,6 @@ function useLeaveOrganization() {
 
       if (otherOrganizationId) {
         const { token: newToken } = await api.switchOrganization({
-          token,
           path: { id: otherOrganizationId },
           header: {},
         });
@@ -303,7 +301,6 @@ function useLeaveOrganization() {
       }
 
       await api.deleteOrganizationMember({
-        token,
         path: { id: membership.id },
       });
 

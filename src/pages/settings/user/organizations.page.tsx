@@ -52,7 +52,7 @@ const schema = z.object({
 function CreateOrganizationDialog() {
   const t = T.useTranslate();
   const navigate = useNavigate();
-  const { token, setToken } = useAuth();
+  const { setToken } = useAuth();
 
   const form = useForm<z.infer<typeof schema>>({
     mode: 'onChange',
@@ -65,12 +65,10 @@ function CreateOrganizationDialog() {
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
       const { organization } = await api.createOrganization({
-        token,
         body: { name: organizationName },
       });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: organization!.id! },
         header: {},
       });

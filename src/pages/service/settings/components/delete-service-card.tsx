@@ -3,7 +3,6 @@ import { useMutation } from '@tanstack/react-query';
 
 import { api } from 'src/api/api';
 import { Service } from 'src/api/model';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -22,23 +21,18 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   const closeDialog = Dialog.useClose();
   const navigate = useNavigate();
 
-  const { token } = useAuth();
-
   const { mutateAsync: deleteService } = useMutation({
     mutationFn: async () => {
       await api.deleteService({
-        token,
         path: { id: service.id },
       });
 
       const { services } = await api.listServices({
-        token,
         query: { app_id: service.appId },
       });
 
       if (services?.length === 1) {
         await api.deleteApp({
-          token,
           path: { id: service.appId },
         });
       }

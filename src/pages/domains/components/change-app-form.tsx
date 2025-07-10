@@ -7,7 +7,6 @@ import { api } from 'src/api/api';
 import { useApps } from 'src/api/hooks/service';
 import { Domain } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ControlledSelect } from 'src/components/controlled';
 import { handleSubmit } from 'src/hooks/form';
@@ -17,7 +16,6 @@ import { hasProperty } from 'src/utils/object';
 const T = createTranslate('pages.domains.domainsList.changeApp');
 
 export function ChangeAppForm({ domain }: { domain: Domain }) {
-  const { token } = useAuth();
   const t = T.useTranslate();
 
   const apps = useApps();
@@ -38,7 +36,6 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
       }
 
       await api.editDomain({
-        token,
         path: { id: domain.id },
         query: {},
         body: { app_id: appId as string | undefined },

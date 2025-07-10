@@ -5,7 +5,6 @@ import { ApiEndpointParams, api } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
 import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
@@ -22,7 +21,7 @@ export function useSubmitDatabaseServiceForm(
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
   const organization = useOrganization();
-  const { token } = useAuth();
+
   const invalidate = useInvalidateApiQuery();
   const prefetch = usePrefetchApiQuery();
   const navigate = useNavigate();
@@ -40,9 +39,8 @@ export function useSubmitDatabaseServiceForm(
         return databaseServiceId;
       } else {
         const { service } = await api.createService({
-          token,
           query: { dry_run: false },
-          body: createApiService(appId ?? (await getDatabaseAppId(token, values.serviceName)), values),
+          body: createApiService(appId ?? (await getDatabaseAppId(values.serviceName)), values),
         });
 
         return service!.id!;
@@ -72,9 +70,8 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(token: string | null, appName: string): Promise<string> {
+async function getDatabaseAppId(appName: string): Promise<string> {
   const { apps } = await api.listApps({
-    token,
     query: { name: appName },
   });
 
@@ -85,7 +82,6 @@ async function getDatabaseAppId(token: string | null, appName: string): Promise<
   }
 
   const { app } = await api.createApp({
-    token,
     body: { name: appName },
   });
 

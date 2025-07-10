@@ -27,7 +27,7 @@ const schema = z.object({
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
-  const { token, setToken } = useAuth();
+  const { setToken } = useAuth();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -39,12 +39,10 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
       const { organization } = await api.createOrganization({
-        token,
         body: { name: organizationName },
       });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: organization!.id! },
         header: {},
       });
