@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -19,7 +19,7 @@ export function DeleteAccount() {
   const organization = useOrganizationUnsafe();
   const canDelete = organization === undefined;
 
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
 
   const { mutateAsync: deleteAccount } = useMutation({
     ...useApiMutationFn('deleteUser', {

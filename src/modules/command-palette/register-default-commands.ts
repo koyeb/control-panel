@@ -6,7 +6,7 @@ import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useApps, useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
@@ -381,7 +381,7 @@ function useRegisterOneClickAppsCommands() {
 function useRegisterAccountCommands() {
   const { defaultItems, setItems, mutationEffects } = useCommandPaletteContext();
 
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const { mutate: logout } = useMutation({

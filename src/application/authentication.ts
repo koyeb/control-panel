@@ -1,10 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { isAfter, sub } from 'date-fns';
-import { jwtDecode } from 'jwt-decode';
-import { useCallback, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
-import { useApiMutationFn } from 'src/api/use-api';
-import { NavigateOptions, useNavigate, usePathname } from 'src/hooks/router';
+import { NavigateOptions, useNavigate } from 'src/hooks/router';
 
 import { createStorage } from './storage';
 
@@ -19,6 +16,7 @@ export const auth = {
     if (session) {
       sessionToken.write(value);
     } else {
+      sessionToken.write(null);
       accessToken.write(value);
     }
 
@@ -26,6 +24,14 @@ export const auth = {
     auth.session = sessionToken.read() !== null;
   },
 };
+
+window.auth = auth;
+
+declare global {
+  interface Window {
+    auth: typeof auth;
+  }
+}
 
 export function getToken() {
   return auth.token;
@@ -61,39 +67,4 @@ export function useSetToken() {
     },
     [queryClient, navigate],
   );
-}
-
-export function useAuth() {
-  const setToken = useSetToken();
-
-  return {
-    ...auth,
-    setToken,
-  };
-}
-
-export function useRefreshToken() {
-  const { session, token, setToken } = useAuth();
-  const pathname = usePathname();
-
-  const { mutate } = useMutation({
-    ...useApiMutationFn('refreshToken', {}),
-    onSuccess: ({ token }) => setToken(token!.id!),
-  });
-
-  useEffect(() => {
-    const expires = token ? jwtExpires(token) : undefined;
-
-    if (!session && expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
-      mutate();
-    }
-  }, [session, pathname, token, mutate]);
-}
-
-function jwtExpires(jwt: string) {
-  const { exp } = jwtDecode(jwt);
-
-  if (exp !== undefined) {
-    return new Date(exp * 1000);
-  }
 }

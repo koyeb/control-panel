@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { api } from 'src/api/api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
@@ -25,7 +25,7 @@ const schema = z.object({
 
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {

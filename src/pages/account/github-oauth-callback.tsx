@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { ApiValidationError } from 'src/api/api-errors';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { getToken, useAuth } from 'src/application/authentication';
+import { getToken, useSetToken } from 'src/application/authentication';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
@@ -29,7 +29,7 @@ const schema = z.object({
 export function GithubOauthCallbackPage() {
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
