@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { api } from 'src/api/api';
 import { mapActivity } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
-import { useAuth } from 'src/application/authentication';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -24,16 +23,14 @@ const T = createTranslate('pages.activity');
 const pageSize = 20;
 
 export function ActivityPage() {
-  const { token } = useAuth();
   const queryClient = useQueryClient();
   const t = T.useTranslate();
 
   const query = useInfiniteQuery({
-    queryKey: ['listActivities', { token }],
+    queryKey: ['listActivities', {}],
     async queryFn({ pageParam }) {
       return api
         .listActivities({
-          token,
           query: {
             offset: String(pageParam * pageSize),
             limit: String(pageSize),

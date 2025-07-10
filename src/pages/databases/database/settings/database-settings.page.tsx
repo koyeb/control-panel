@@ -7,7 +7,6 @@ import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { Service } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -53,23 +52,19 @@ function DeleteDatabaseService({ service }: { service: Service }) {
   const openDialog = Dialog.useOpen();
 
   const invalidate = useInvalidateApiQuery();
-  const { token } = useAuth();
 
   const mutation = useMutation({
     async mutationFn() {
       await api.deleteService({
-        token,
         path: { id: service.id },
       });
 
       const { services } = await api.listServices({
-        token,
         query: { app_id: service.appId },
       });
 
       if (services?.length === 0) {
         await api.deleteApp({
-          token,
           path: { id: service.appId },
         });
       }

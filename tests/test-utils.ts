@@ -44,15 +44,13 @@ export async function authenticate(page: Page) {
 
 export async function deleteKoyebResources(page: Page) {
   await page.evaluate(async () => {
-    const token = localStorage.getItem('access-token') ?? undefined;
-
     const listAppIds = async () => {
-      const { apps } = await api.listApps({ token, query: { limit: '100' } });
+      const { apps } = await api.listApps({ query: { limit: '100' } });
       return apps!.map((app) => app.id!);
     };
 
     for (const appId of await listAppIds()) {
-      await api.deleteApp({ token, path: { id: appId } });
+      await api.deleteApp({ path: { id: appId } });
     }
 
     while ((await listAppIds()).length > 0) {

@@ -1,6 +1,5 @@
 import { api } from 'src/api/api';
 import { isApiValidationError } from 'src/api/api-errors';
-import { getToken } from 'src/application/authentication';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../service-form.types';
@@ -38,7 +37,6 @@ export async function submitServiceForm(form: ServiceForm): Promise<SubmitServic
 
 async function findOrCreateApp(appName: string): Promise<string> {
   const { apps } = await api.listApps({
-    token: getToken(),
     query: { name: appName, limit: '100' },
   });
 
@@ -49,7 +47,6 @@ async function findOrCreateApp(appName: string): Promise<string> {
   }
 
   const { app: newApp } = await api.createApp({
-    token: getToken(),
     body: { name: appName },
   });
 
@@ -58,7 +55,6 @@ async function findOrCreateApp(appName: string): Promise<string> {
 
 async function createVolumes(form: ServiceForm): Promise<void> {
   const { volumes: existingVolumes } = await api.listVolumes({
-    token: getToken(),
     query: { limit: '100' },
   });
 
@@ -86,7 +82,6 @@ async function createVolumes(form: ServiceForm): Promise<void> {
 async function createVolume(index: number, name: string, size: number, region: string): Promise<string> {
   try {
     const response = await api.createVolume({
-      token: getToken(),
       body: {
         name,
         max_size: size,
@@ -127,7 +122,6 @@ async function createService(
   }
 
   const result = await api.createService({
-    token: getToken(),
     query: { dry_run: dryRun },
     body: {
       app_id: appId,
@@ -148,7 +142,6 @@ async function createService(
 
 async function updateService(serviceId: string, form: ServiceForm): Promise<SubmitServiceFormResult> {
   const result = await api.updateService({
-    token: getToken(),
     path: { id: serviceId },
     query: { dry_run: false },
     body: {

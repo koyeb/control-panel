@@ -9,7 +9,6 @@ import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
@@ -49,7 +48,6 @@ export function Qualification() {
   const user = useUser();
   const organization = useOrganization();
 
-  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
 
   const track = useTrackEvent();
@@ -66,7 +64,6 @@ export function Qualification() {
     async mutationFn(form: QualificationFormType) {
       if (form.fullName !== '') {
         await api.updateUser({
-          token,
           body: { name: form.fullName },
           query: {},
         });
@@ -83,7 +80,6 @@ export function Qualification() {
       };
 
       await api.updateSignupQualification({
-        token,
         path: { id: organization.id },
         body: { signup_qualification: values as Record<string, never> },
       });
@@ -94,7 +90,7 @@ export function Qualification() {
         }
 
         try {
-          await api.sendInvitation({ token, body: { email } });
+          await api.sendInvitation({ body: { email } });
         } catch (error) {
           if (hasMessage(error)) {
             notify.error(error.message);

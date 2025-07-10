@@ -8,7 +8,6 @@ import { useRegions } from 'src/api/hooks/catalog';
 import { mapVolume } from 'src/api/mappers/volume';
 import { Volume, VolumeSnapshot } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FormValues, useFormErrorHandler } from 'src/hooks/form';
@@ -38,7 +37,6 @@ type VolumeFormProps = {
 };
 
 export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: VolumeFormProps) {
-  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
   const regions = useRegions().filter(hasProperty('volumesEnabled', true));
   const t = T.useTranslate();
@@ -57,7 +55,6 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
       if (volume) {
         return api
           .updateVolume({
-            token,
             path: { id: volume.id },
             body: { name },
           })
@@ -65,7 +62,6 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
       } else {
         return api
           .createVolume({
-            token,
             body: {
               volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
               snapshot_id: snapshot?.id,

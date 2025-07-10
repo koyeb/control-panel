@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
-import { useAuth } from 'src/application/authentication';
 import { createId } from 'src/utils/strings';
 
 import { useDeepCompareMemo } from './lifecycle';
@@ -78,7 +77,6 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
 
 function useLogsHistory(filters: LogsFilters) {
   const quotas = useOrganizationQuotas();
-  const { token } = useAuth();
 
   const initialPageParam = useMemo(() => {
     if (!quotas) {
@@ -96,14 +94,13 @@ function useLogsHistory(filters: LogsFilters) {
 
   return useInfiniteQuery({
     enabled: quotas !== undefined,
-    queryKey: ['logsQuery', { filters }, token],
+    queryKey: ['logsQuery', { filters }],
     queryFn: ({ pageParam: { start, end } }) => {
       if (start === end) {
         return { data: [], pagination: { has_more: false } };
       }
 
       return api.logsQuery({
-        token,
         query: {
           type: filters.type,
           deployment_id: filters.deploymentId,
@@ -146,7 +143,6 @@ function useLogsHistory(filters: LogsFilters) {
 const reconnectTimeout = [0, 1_000, 5_000, 60_000];
 
 function useLogsStream(connect: boolean, filters: LogsFilters) {
-  const { token } = useAuth();
   const filtersMemo = useDeepCompareMemo(filters);
 
   const stream = useRef<ReturnType<typeof tailLogs>>(null);
@@ -163,7 +159,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters) {
       start: filtersMemo.end,
     };
 
-    stream.current = tailLogs(token, filters, {
+    stream.current = tailLogs(filters, {
       onOpen: () => {
         setError(undefined);
         setConnected(true);
@@ -181,7 +177,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters) {
       },
       onLogLine: (line) => setLines((lines) => [...lines, line]),
     });
-  }, [token, filtersMemo]);
+  }, [filtersMemo]);
 
   useEffect(() => {
     let timeout: number;
@@ -211,9 +207,8 @@ type LogStreamListeners = {
   onLogLine: (line: Omit<LogLine, 'html'>) => void;
 };
 
-function tailLogs(token: string | null, filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
+function tailLogs(filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
   const stream = api.logs({
-    token,
     query: {
       type: filters.type,
       deployment_id: filters.deploymentId,

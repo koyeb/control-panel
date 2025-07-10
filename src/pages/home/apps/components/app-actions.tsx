@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { App, AppDomain } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -84,7 +83,6 @@ function EditAppDialog({ app }: { app: App }) {
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
 
-  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
 
   const koyebDomain = app.domains.find(hasProperty('type', 'AUTOASSIGNED'));
@@ -105,7 +103,6 @@ function EditAppDialog({ app }: { app: App }) {
       if (values.name !== app.name) {
         promises.push(
           api.renameApp({
-            token,
             path: { id: app.id },
             query: {},
             body: { name: values.name },
@@ -116,7 +113,6 @@ function EditAppDialog({ app }: { app: App }) {
       if (koyebDomain && values.subdomain !== subdomain) {
         promises.push(
           api.editDomain({
-            token,
             path: { id: koyebDomain.id },
             query: {},
             body: { subdomain: values.subdomain },

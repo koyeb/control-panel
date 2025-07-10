@@ -6,7 +6,6 @@ import { z } from 'zod';
 
 import { api } from 'src/api/api';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { ControlledTextArea } from 'src/components/controlled';
@@ -36,7 +35,6 @@ export function BulkCreateSecretsDialog() {
     ),
   });
 
-  const { token } = useAuth();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
@@ -45,7 +43,7 @@ export function BulkCreateSecretsDialog() {
 
       const results = await Promise.allSettled(
         Object.entries(values).map(([name, value]) =>
-          api.createSecret({ token, body: { type: 'SIMPLE', name, value } }),
+          api.createSecret({ body: { type: 'SIMPLE', name, value } }),
         ),
       );
 
