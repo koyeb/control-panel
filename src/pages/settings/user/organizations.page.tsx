@@ -16,7 +16,7 @@ import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { urlToLinkOptions, useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
+import { urlToLinkOptions, useOnRouteStateCreate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
@@ -51,7 +51,6 @@ const schema = z.object({
 
 function CreateOrganizationDialog() {
   const t = T.useTranslate();
-  const navigate = useNavigate();
   const { setToken } = useAuth();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -78,10 +77,9 @@ function CreateOrganizationDialog() {
     onError: useFormErrorHandler(form, (error) => ({
       organizationName: error.name,
     })),
-    onSuccess(token, { organizationName }) {
+    async onSuccess(token, { organizationName }) {
       form.reset();
-      setToken(token);
-      navigate({ to: '/' });
+      await setToken(token, { redirect: { to: '/' } });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
   });
@@ -150,16 +148,17 @@ function OrganizationList() {
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
   const currentOrganization = useOrganizationUnsafe();
   const { setToken } = useAuth();
-  const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
     ...useApiMutationFn('switchOrganization', (_: ValidateLinkOptions['to']) => ({
       path: { id: organization.id },
       header: {},
     })),
-    onSuccess(token, redirect) {
-      setToken(token.token!.id!, false);
-      navigate(urlToLinkOptions(redirect));
+    async onSuccess(token, redirect) {
+      await setToken(token.token!.id!, {
+        session: false,
+        redirect: urlToLinkOptions(redirect),
+      });
     },
   });
 

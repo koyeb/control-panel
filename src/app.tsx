@@ -4,7 +4,7 @@ import { Redirect, Route, Switch, useRoute } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
-import { useApiMutationFn, useInvalidateApiQuery } from './api/use-api';
+import { useApiMutationFn } from './api/use-api';
 import { useAuth, useRefreshToken } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
 import { LinkButton } from './components/link';
@@ -173,8 +173,6 @@ function useOrganizationContextParam() {
   const navigate = useNavigate();
 
   const { setToken } = useAuth();
-  const invalidate = useInvalidateApiQuery();
-
   const getSeonFingerprint = useSeon();
 
   const mutation = useMutation({
@@ -183,8 +181,7 @@ function useOrganizationContextParam() {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess({ token }) {
-      setToken(token!.id!);
-      await invalidate('getCurrentOrganization');
+      await setToken(token!.id!);
     },
     onSettled() {
       navigate({ search: (prev) => ({ ...prev, 'organization-id': null }) });

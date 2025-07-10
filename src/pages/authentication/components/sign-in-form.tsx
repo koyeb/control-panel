@@ -8,7 +8,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
+import { urlToLinkOptions } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -29,7 +29,6 @@ const invalidCredentialApiMessage =
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
   const { setToken } = useAuth();
-  const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -47,8 +46,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
       body: credential,
     })),
     async onSuccess(result) {
-      setToken(result.token!.id!);
-      navigate(urlToLinkOptions(redirect));
+      await setToken(result.token!.id!, { redirect: urlToLinkOptions(redirect) });
     },
     onError(error) {
       if (ApiError.is(error) && error.message === invalidCredentialApiMessage) {

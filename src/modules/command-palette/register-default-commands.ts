@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useApps, useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
@@ -387,9 +387,8 @@ function useRegisterAccountCommands() {
   const { mutate: logout } = useMutation({
     ...useApiMutationFn('logout', {}),
     ...mutationEffects,
-    onSuccess: () => {
-      setToken(null);
-      navigate({ to: '/auth/signin' });
+    onSuccess: async () => {
+      await setToken(null, { redirect: { to: '/auth/signin' } });
     },
   });
 
@@ -412,7 +411,6 @@ function useRegisterAccountCommands() {
   });
 
   const { data: organizationMemberships } = useUserOrganizationMemberships();
-  const invalidate = useInvalidateApiQuery();
 
   const { mutate: switchOrganization } = useMutation({
     ...useApiMutationFn('switchOrganization', (organizationId: string) => ({
@@ -421,9 +419,7 @@ function useRegisterAccountCommands() {
     })),
     ...mutationEffects,
     async onSuccess(token) {
-      setToken(token.token!.id!);
-      await Promise.all([invalidate('getCurrentOrganization'), invalidate('listOrganizationMembers')]);
-      navigate({ to: '/' });
+      await setToken(token.token!.id!, { redirect: { to: '/' } });
     },
   });
 

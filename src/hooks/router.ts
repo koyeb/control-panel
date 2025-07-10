@@ -35,7 +35,7 @@ export function useHistoryState(): Record<string, any> {
 type SearchParam = string | number | boolean | null | undefined;
 type SearchParams = Record<string, SearchParam | SearchParam[]>;
 
-type NavigateOptions = {
+export type NavigateOptions = {
   to?: string;
   params?: Record<string, string>;
   search?: SearchParams | ((search: SearchParams) => SearchParams);

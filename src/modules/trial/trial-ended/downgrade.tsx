@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { api } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
@@ -26,7 +25,6 @@ const schema = z.object({
 
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
   const { setToken } = useAuth();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -50,8 +48,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      await invalidate('getCurrentOrganization');
-      setToken(token);
+      await setToken(token);
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({

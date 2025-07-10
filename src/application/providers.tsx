@@ -99,15 +99,18 @@ function TokenParamsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (sessionTokenParam) {
-      setToken(sessionTokenParam.replace(/^Bearer /, ''), true);
-      navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
+      void setToken(sessionTokenParam.replace(/^Bearer /, ''), {
+        session: true,
+        redirect: { search: (prev) => ({ ...prev, 'session-token': null }) },
+      });
     }
   }, [sessionTokenParam, setToken, navigate]);
 
   useEffect(() => {
     if (accessTokenParam) {
-      setToken(accessTokenParam.replace(/^Bearer /, ''));
-      navigate({ search: (prev) => ({ ...prev, token: null }) });
+      void setToken(accessTokenParam.replace(/^Bearer /, ''), {
+        redirect: { search: (prev) => ({ ...prev, token: null }) },
+      });
     }
   }, [accessTokenParam, setToken, navigate]);
 

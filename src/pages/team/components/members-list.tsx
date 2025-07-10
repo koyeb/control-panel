@@ -16,7 +16,6 @@ import { Dialog } from 'src/components/dialog';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
-import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
@@ -276,7 +275,6 @@ function useRemoveOrganizationMember() {
 function useLeaveOrganization() {
   const { setToken } = useAuth();
   const user = useUser();
-  const navigate = useNavigate();
   const t = T.useTranslate();
 
   return useMutation({
@@ -307,8 +305,7 @@ function useLeaveOrganization() {
       return result;
     },
     async onSuccess(token, { organization }) {
-      setToken(token);
-      navigate({ to: '/' });
+      await setToken(token, { redirect: { to: '/' } });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });

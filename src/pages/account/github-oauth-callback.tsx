@@ -66,14 +66,14 @@ export function GithubOauthCallbackPage() {
 
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
-        setToken(result.token.id);
-        navigate({
-          to: redirect.pathname,
-          search: Object.fromEntries(redirect.searchParams),
-          replace: true,
-          state: { createOrganization: action === 'signup' },
+        return setToken(result.token.id, {
+          redirect: {
+            to: redirect.pathname,
+            search: Object.fromEntries(redirect.searchParams),
+            replace: true,
+            state: { createOrganization: action === 'signup' },
+          },
         });
-        return;
       }
 
       // github app installation done

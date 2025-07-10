@@ -7,7 +7,7 @@ import { useAuth } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate, useRouteParam } from 'src/hooks/router';
+import { useRouteParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -44,7 +44,6 @@ function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
   const { setToken } = useAuth();
-  const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -59,9 +58,8 @@ function ChangePasswordForm() {
       header: { 'seon-fp': await getSeonFingerprint() },
       body: { id: token, password },
     })),
-    onSuccess({ token }) {
-      setToken(token!.id!);
-      navigate({ to: '/auth/signin' });
+    async onSuccess({ token }) {
+      await setToken(token!.id!, { redirect: { to: '/' } });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),

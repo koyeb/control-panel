@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useAuth } from 'src/application/authentication';
 import { ValidateLinkOptions } from 'src/components/link';
-import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
+import { urlToLinkOptions } from 'src/hooks/router';
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
 
@@ -104,13 +104,11 @@ export function useUserOrganizationMemberships() {
 
 export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?: boolean) {
   const { setToken } = useAuth();
-  const navigate = useNavigate();
 
   return useMutation({
     ...useApiMutationFn('logout', {}),
-    onSettled: () => {
-      setToken(null, session);
-      navigate(urlToLinkOptions(redirect));
+    onSettled: async () => {
+      await setToken(null, { session, redirect: urlToLinkOptions(redirect) });
     },
   });
 }

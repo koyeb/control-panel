@@ -36,9 +36,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      await invalidate('listInvitations');
-      setToken(token);
-      navigate({ to: '/' });
+      await setToken(token, { redirect: { to: '/' } });
       notify.info(t('acceptSuccess'));
     },
   });

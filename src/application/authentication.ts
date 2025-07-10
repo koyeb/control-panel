@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useCallback, useEffect } from 'react';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { usePathname } from 'src/hooks/router';
+import { NavigateOptions, useNavigate, usePathname } from 'src/hooks/router';
 
 import { createStorage } from './storage';
 
@@ -33,20 +33,33 @@ export function getToken() {
 
 export function useSetToken() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
-  return useCallback<typeof auth.setToken>(
-    async (token, session) => {
+  return useCallback(
+    async (
+      token: string | null,
+      { session, redirect }: { session?: boolean; redirect?: NavigateOptions } = {},
+    ) => {
       await queryClient.cancelQueries();
 
       auth.setToken(token, session);
 
+      if (redirect) {
+        await navigate(redirect);
+      }
+
       if (getToken()) {
+        queryClient.removeQueries({
+          predicate: ({ queryKey }) =>
+            queryKey[0] !== 'getCurrentUser' && queryKey[0] !== 'getCurrentOrganization',
+        });
+
         await queryClient.invalidateQueries();
       } else {
         queryClient.clear();
       }
     },
-    [queryClient],
+    [queryClient, navigate],
   );
 }
 

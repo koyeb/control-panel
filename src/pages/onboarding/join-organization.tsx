@@ -95,7 +95,7 @@ function CreateOrganization() {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      setToken(token);
+      await setToken(token);
       await invalidate('getCurrentOrganization');
     },
     onError(error) {
