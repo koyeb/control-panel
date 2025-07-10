@@ -11,7 +11,7 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
-import { AuthProvider, useAuth } from './authentication';
+import { useAuth } from './authentication';
 import { getConfig } from './config';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
@@ -30,21 +30,19 @@ export function Providers({ children }: ProvidersProps) {
       <IntlProvider>
         <Suspense>
           <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-              <PersistQueryClientProvider>
-                <TokenParamsProvider>
-                  <PostHogProvider>
-                    <DialogProvider>
-                      <CommandPaletteProvider>
-                        <ReactQueryDevtools />
-                        <NotificationContainer />
-                        <ErrorBoundary>{children}</ErrorBoundary>
-                      </CommandPaletteProvider>
-                    </DialogProvider>
-                  </PostHogProvider>
-                </TokenParamsProvider>
-              </PersistQueryClientProvider>
-            </AuthProvider>
+            <PersistQueryClientProvider>
+              <TokenParamsProvider>
+                <PostHogProvider>
+                  <DialogProvider>
+                    <CommandPaletteProvider>
+                      <ReactQueryDevtools />
+                      <NotificationContainer />
+                      <ErrorBoundary>{children}</ErrorBoundary>
+                    </CommandPaletteProvider>
+                  </DialogProvider>
+                </PostHogProvider>
+              </TokenParamsProvider>
+            </PersistQueryClientProvider>
           </QueryClientProvider>
         </Suspense>
       </IntlProvider>

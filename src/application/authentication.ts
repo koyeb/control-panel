@@ -1,72 +1,69 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
-import { createContext, createElement, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { usePathname } from 'src/hooks/router';
+import { inArray } from 'src/utils/arrays';
 
 import { createStorage } from './storage';
-
-export function getToken() {
-  return sessionStorage.getItem('session-token') ?? localStorage.getItem('access-token');
-}
-
-type AuthContext = {
-  token: string | null;
-  session: boolean;
-  setToken: (token: string | null, session?: boolean) => void;
-};
-
-const authContext = createContext<AuthContext>(null as never);
 
 const opts = { parse: String, stringify: String };
 const accessToken = createStorage('access-token', { storage: localStorage, ...opts });
 const sessionToken = createStorage('session-token', { storage: sessionStorage, ...opts });
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState(sessionToken.read() !== null);
-  const [token, setToken] = useState(session ? sessionToken.read() : accessToken.read());
+export const auth = {
+  token: sessionToken.read() ?? accessToken.read(),
+  session: sessionToken.read() !== null,
+  setToken: (value: string | null, session?: boolean) => {
+    if (session) {
+      sessionToken.write(value);
+    } else {
+      accessToken.write(value);
+    }
 
+    auth.token = sessionToken.read() ?? accessToken.read();
+    auth.session = sessionToken.read() !== null;
+  },
+};
+
+export function getToken() {
+  return auth.token;
+}
+
+function useSetToken() {
   const queryClient = useQueryClient();
 
-  const value = useMemo<AuthContext>(
-    () => ({
-      token,
-      session,
-      setToken(token, session) {
-        if (session && token === null) {
-          setToken(accessToken.read());
-        } else {
-          setToken(token);
-        }
+  return useCallback<typeof auth.setToken>(
+    async (token, session) => {
+      await queryClient.cancelQueries();
 
-        if (session !== undefined) {
-          setSession(session ? token !== null : false);
-        }
+      auth.setToken(token, session);
 
-        void queryClient.cancelQueries();
+      if (getToken()) {
+        const queriesToKeep = ['getCurrentUser', 'getCurrentOrganization', 'getSubscription'];
+
+        queryClient.removeQueries({
+          predicate: ({ queryKey }) => !inArray(queryKey[0], queriesToKeep),
+        });
+
+        await queryClient.invalidateQueries();
+      } else {
         queryClient.clear();
-
-        if (session) {
-          sessionToken.write(token);
-        } else {
-          accessToken.write(token);
-        }
-      },
-    }),
-    [token, session, queryClient],
+      }
+    },
+    [queryClient],
   );
-
-  useEffect(() => {
-    return (session ? sessionToken : accessToken).listen(value.setToken);
-  }, [session, value]);
-
-  return createElement(authContext.Provider, { value }, children);
 }
 
 export function useAuth() {
-  return useContext(authContext);
+  const setToken = useSetToken();
+
+  return {
+    ...auth,
+    setToken,
+  };
 }
 
 export function useRefreshToken() {
