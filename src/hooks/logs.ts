@@ -4,7 +4,7 @@ import { add, max, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { api, apiStreams } from 'src/api/api';
+import { api } from 'src/api/api';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
 import { useAuth } from 'src/application/authentication';
@@ -212,7 +212,7 @@ type LogStreamListeners = {
 };
 
 function tailLogs(token: string | null, filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
-  const stream = apiStreams.logs({
+  const stream = api.logs({
     token,
     query: {
       type: filters.type,

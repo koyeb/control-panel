@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import { ApiStream, apiStreams } from 'src/api/api';
+import { ApiStream, api } from 'src/api/api';
 import { useAuth } from 'src/application/authentication';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
@@ -30,7 +30,7 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
 
   const connect = useCallback(
     (instanceId: string) => {
-      setStream(apiStreams.exec({ token: token ?? undefined, query: { id: instanceId } }));
+      setStream(api.exec({ token: token ?? undefined, query: { id: instanceId } }));
     },
     [token],
   );
