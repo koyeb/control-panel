@@ -40,6 +40,10 @@ declare module '@tanstack/react-router' {
 
 const queryCache = new QueryCache({
   onError(error, query) {
+    if (error.name === 'AbortError') {
+      return;
+    }
+
     const { showError } = { showError: true, ...query.meta };
     const pathname = window.location.pathname;
 
