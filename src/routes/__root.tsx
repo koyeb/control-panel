@@ -8,6 +8,7 @@ import { api } from 'src/api/api';
 import { getApiQueryKey } from 'src/api/use-api';
 import { PostHogProvider } from 'src/application/posthog';
 import { createStorage } from 'src/application/storage';
+import { ErrorComponent } from 'src/components/error-view';
 import { NotificationContainer } from 'src/components/notification';
 import { AnyFunction } from 'src/utils/types';
 
@@ -25,6 +26,7 @@ type RouterContext = {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootComponent,
+  errorComponent: ErrorComponent,
 
   validateSearch: z.object({
     token: z.string().optional(),
