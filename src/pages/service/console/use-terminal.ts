@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import { ApiStream, api } from 'src/api/api';
+import { api } from 'src/api/api';
 import { useAuth } from 'src/application/authentication';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
@@ -23,7 +23,7 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
   const t = T.useTranslate();
 
   const [terminal, setTerminal] = useState<TerminalRef | null>(null);
-  const [stream, setStream] = useState<ApiStream | null>(null);
+  const [stream, setStream] = useState<WebSocket | null>(null);
   const [size, setSize] = useState<{ width: number; height: number }>();
 
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);

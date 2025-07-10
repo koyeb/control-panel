@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { ApiStream } from 'src/api/api';
 import { createStorage } from 'src/application/storage';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { createTranslate } from 'src/intl/translate';
@@ -21,7 +20,7 @@ const initialCommand = createStorage('shellInitialCommand', {
   stringify: String,
 });
 
-export function usePrompt(instanceId: string, stream: ApiStream | null, terminal: TerminalRef | null) {
+export function usePrompt(instanceId: string, stream: WebSocket | null, terminal: TerminalRef | null) {
   const t = T.useTranslate();
 
   const [initialized, setInitialized] = useState(false);
