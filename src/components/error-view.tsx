@@ -1,26 +1,57 @@
+import { ErrorComponentProps } from '@tanstack/react-router';
+
+import { ApiError } from 'src/api/api-errors';
+import { getConfig } from 'src/application/config';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useForceThemeMode } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 
-import { ExternalLink, Link } from '../link';
+import { ExternalLink, Link } from './link';
 
 const T = createTranslate('components.errorBoundary.unhandledError');
+
+export function ErrorComponent({ error, reset, info }: ErrorComponentProps) {
+  const { code, status } = ApiError.is(error) ? error : {};
+
+  return (
+    <ErrorView
+      code={code}
+      httpStatus={status}
+      message={error.message}
+      onReset={reset}
+      stack={error.stack}
+      componentStack={info?.componentStack}
+    />
+  );
+}
 
 type ErrorViewProps = {
   httpStatus?: number;
   message?: React.ReactNode;
   code?: string;
   expected?: boolean;
+  stack?: string;
+  componentStack?: string;
   onReset?: () => void;
 };
 
-export function ErrorView({ httpStatus, message, code, expected, onReset }: ErrorViewProps) {
+export function ErrorView({
+  httpStatus,
+  message,
+  code,
+  expected,
+  stack,
+  componentStack,
+  onReset,
+}: ErrorViewProps) {
+  const { environment } = getConfig();
+
   useForceThemeMode('dark');
 
   return (
     <div
       className="h-screen bg-cover bg-center bg-no-repeat"
-      style={{ backgroundImage: 'url(/static/images/backgrounds/black-hole.svg)' }}
+      style={{ backgroundImage: 'url(/black-hole.svg)' }}
     >
       <LogoKoyeb className="absolute m-6 h-8" />
 
@@ -55,6 +86,13 @@ export function ErrorView({ httpStatus, message, code, expected, onReset }: Erro
         {code && (
           <div className="my-4 font-bold">
             <T id="code" values={{ code }} />
+          </div>
+        )}
+
+        {environment === 'development' && (
+          <div className="col gap-4 text-left">
+            <pre className="text-xs">{stack}</pre>
+            <pre className="text-xs">{componentStack}</pre>
           </div>
         )}
 

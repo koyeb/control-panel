@@ -8,7 +8,7 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -16,7 +16,6 @@ import { Dialog } from 'src/components/dialog';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
-import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
@@ -274,15 +273,13 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const { token, setToken } = useAuth();
+  const setToken = useSetToken();
   const user = useUser();
-  const navigate = useNavigate();
   const t = T.useTranslate();
 
   return useMutation({
     async mutationFn(membership: OrganizationMember) {
       const { members } = await api.listOrganizationMembers({
-        token,
         query: { user_id: user.id },
       });
 
@@ -294,7 +291,6 @@ function useLeaveOrganization() {
 
       if (otherOrganizationId) {
         const { token: newToken } = await api.switchOrganization({
-          token,
           path: { id: otherOrganizationId },
           header: {},
         });
@@ -303,15 +299,13 @@ function useLeaveOrganization() {
       }
 
       await api.deleteOrganizationMember({
-        token,
         path: { id: membership.id },
       });
 
       return result;
     },
     async onSuccess(token, { organization }) {
-      setToken(token);
-      navigate({ to: '/' });
+      await setToken(token, { redirect: { to: '/' } });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });

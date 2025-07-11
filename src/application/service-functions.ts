@@ -1,3 +1,5 @@
+import { RegisteredRouter } from '@tanstack/react-router';
+
 import { api } from 'src/api/api';
 import type { Api } from 'src/api/api-types';
 import { databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
@@ -17,9 +19,10 @@ import { ValidateLinkOptions } from 'src/components/link';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-import { getToken } from './authentication';
-
-type ServiceLink = ValidateLinkOptions;
+type ServiceLink = ValidateLinkOptions<
+  RegisteredRouter,
+  { to: '/database-services/$databaseServiceId' | '/services/$serviceId' }
+>;
 
 export function getServiceLink(service: Service): ServiceLink {
   if (service.type === 'database') {
@@ -126,16 +129,13 @@ export async function updateDatabaseService(
   serviceId: string,
   updater: (deployment: Api.DeploymentDefinition) => void,
 ) {
-  const token = getToken();
-
-  const { service } = await api.getService({ token, path: { id: serviceId } });
-  const { deployment } = await api.getDeployment({ token, path: { id: service!.latest_deployment_id! } });
+  const { service } = await api.getService({ path: { id: serviceId } });
+  const { deployment } = await api.getDeployment({ path: { id: service!.latest_deployment_id! } });
   const definition = deployment!.definition!;
 
   updater(definition);
 
   await api.updateService({
-    token,
     path: { id: serviceId },
     query: {},
     body: { definition },

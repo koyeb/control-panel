@@ -7,7 +7,7 @@ import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -59,7 +59,7 @@ export function JoinOrganization() {
 }
 
 function CreateOrganization() {
-  const { token, setToken } = useAuth();
+  const setToken = useSetToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const state = useHistoryState();
@@ -84,12 +84,10 @@ function CreateOrganization() {
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
       const { organization } = await api.createOrganization({
-        token,
         body: { name: organizationName },
       });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: organization!.id! },
         header: {},
       });
@@ -97,12 +95,12 @@ function CreateOrganization() {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      setToken(token);
+      await setToken(token);
       await invalidate('getCurrentOrganization');
     },
-    onError(error) {
+    async onError(error) {
       if (state.createOrganization) {
-        navigate({ to: '/', state: {} });
+        await navigate({ to: '/', state: {} });
       } else {
         onError(error);
       }

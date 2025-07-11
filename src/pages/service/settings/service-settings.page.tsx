@@ -31,7 +31,7 @@ export function ServiceSettingsPage() {
       <ServiceForm
         serviceId={serviceId}
         onDeployed={(appId, serviceId, deploymentId) =>
-          navigate({
+          void navigate({
             to: '/services/$serviceId',
             params: { serviceId },
             search: { deploymentId },

@@ -7,12 +7,11 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { SvgComponent } from 'src/application/types';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
 
@@ -160,9 +159,8 @@ function useOrganizationList(search: string) {
 }
 
 function useSwitchOrganization(onSuccess?: () => void) {
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
   const getSeonFingerprint = useSeon();
-  const navigate = useNavigate();
 
   return useMutation({
     ...useApiMutationFn('switchOrganization', async (organizationId: string) => ({
@@ -170,8 +168,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess(result) {
-      setToken(result.token!.id!, false);
-      navigate({ to: '/' });
+      await setToken(result.token!.id!, { session: false, redirect: { to: '/' } });
       onSuccess?.();
     },
   });

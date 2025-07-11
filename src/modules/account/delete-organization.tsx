@@ -4,22 +4,20 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const { token, setToken } = useAuth();
+  const t = T.useTranslate();
+
+  const setToken = useSetToken();
   const user = useUser();
   const organization = useOrganization();
-
-  const navigate = useNavigate();
-  const t = T.useTranslate();
 
   const unpaidInvoicesQuery = useQuery({
     ...useApiQueryFn('hasUnpaidInvoices'),
@@ -30,7 +28,6 @@ export function DeleteOrganization() {
   const deleteOrganization = useMutation({
     async mutationFn() {
       const { members } = await api.listOrganizationMembers({
-        token,
         query: { user_id: user.id },
       });
 
@@ -42,30 +39,25 @@ export function DeleteOrganization() {
 
       if (otherOrganizationId) {
         const { token: newToken } = await api.switchOrganization({
-          token,
           path: { id: otherOrganizationId },
           header: {},
         });
 
         result = newToken!.id!;
       } else {
-        const { token: newToken } = await api.newSession({
-          token,
-        });
+        const { token: newToken } = await api.newSession({});
 
         result = newToken!.id!;
       }
 
       await api.deleteOrganization({
-        token,
         path: { id: organization.id },
       });
 
       return result;
     },
-    onSuccess(token) {
-      setToken(token);
-      navigate({ to: '/' });
+    async onSuccess(token) {
+      await setToken(token, { redirect: { to: '/' } });
       notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });

@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { ApiValidationError } from 'src/api/api-errors';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { getToken, useAuth } from 'src/application/authentication';
+import { getToken, useSetToken } from 'src/application/authentication';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
@@ -29,7 +29,7 @@ const schema = z.object({
 export function GithubOauthCallbackPage() {
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
-  const { token, setToken } = useAuth();
+  const setToken = useSetToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
@@ -50,8 +50,6 @@ export function GithubOauthCallbackPage() {
       );
 
       return api.githubOAuthCallback({
-        // send the token for when setup_action=register
-        token,
         header: { 'seon-fp': await getSeonFingerprint() },
         body,
       });
@@ -68,14 +66,14 @@ export function GithubOauthCallbackPage() {
 
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
-        setToken(result.token.id);
-        navigate({
-          to: redirect.pathname,
-          search: Object.fromEntries(redirect.searchParams),
-          replace: true,
-          state: { createOrganization: action === 'signup' },
+        return setToken(result.token.id, {
+          redirect: {
+            to: redirect.pathname,
+            search: Object.fromEntries(redirect.searchParams),
+            replace: true,
+            state: { createOrganization: action === 'signup' },
+          } as unknown as ValidateLinkOptions,
         });
-        return;
       }
 
       // github app installation done
@@ -90,7 +88,7 @@ export function GithubOauthCallbackPage() {
       }
 
       if (currentOrganization?.id === organization_id) {
-        navigate({
+        await navigate({
           to: redirect.pathname,
           search: Object.fromEntries(redirect.searchParams),
           replace: true,
@@ -122,7 +120,7 @@ export function GithubOauthCallbackPage() {
         notify.error(error.message);
       }
 
-      navigate({ ...urlToLinkOptions(redirect), replace: true });
+      void navigate({ ...urlToLinkOptions(redirect), replace: true });
     },
   });
 
@@ -147,13 +145,11 @@ export function GithubOauthCallbackPage() {
 }
 
 async function getCurrentOrganization() {
-  const token = getToken();
-
-  if (token === undefined) {
+  if (!getToken()) {
     return;
   }
 
-  return api.getCurrentOrganization({ token }).then(
+  return api.getCurrentOrganization({}).then(
     ({ organization }) => organization,
     () => undefined,
   );

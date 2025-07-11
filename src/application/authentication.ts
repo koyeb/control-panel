@@ -1,96 +1,71 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { isAfter, sub } from 'date-fns';
-import { jwtDecode } from 'jwt-decode';
-import { createContext, createElement, useContext, useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { ValidateNavigateOptions } from '@tanstack/react-router';
+import { useCallback } from 'react';
 
-import { useApiMutationFn } from 'src/api/use-api';
-import { usePathname } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 
 import { createStorage } from './storage';
-
-export function getToken() {
-  return sessionStorage.getItem('session-token') ?? localStorage.getItem('access-token');
-}
-
-type AuthContext = {
-  token: string | null;
-  session: boolean;
-  setToken: (token: string | null, session?: boolean) => void;
-};
-
-const authContext = createContext<AuthContext>(null as never);
 
 const opts = { parse: String, stringify: String };
 const accessToken = createStorage('access-token', { storage: localStorage, ...opts });
 const sessionToken = createStorage('session-token', { storage: sessionStorage, ...opts });
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [session, setSession] = useState(sessionToken.read() !== null);
-  const [token, setToken] = useState(session ? sessionToken.read() : accessToken.read());
-
-  const queryClient = useQueryClient();
-
-  const value = useMemo<AuthContext>(
-    () => ({
-      token,
-      session,
-      setToken(token, session) {
-        if (session && token === null) {
-          setToken(accessToken.read());
-        } else {
-          setToken(token);
-        }
-
-        if (session !== undefined) {
-          setSession(session ? token !== null : false);
-        }
-
-        void queryClient.cancelQueries();
-        queryClient.clear();
-
-        if (session) {
-          sessionToken.write(token);
-        } else {
-          accessToken.write(token);
-        }
-      },
-    }),
-    [token, session, queryClient],
-  );
-
-  useEffect(() => {
-    return (session ? sessionToken : accessToken).listen(value.setToken);
-  }, [session, value]);
-
-  return createElement(authContext.Provider, { value }, children);
-}
-
-export function useAuth() {
-  return useContext(authContext);
-}
-
-export function useRefreshToken() {
-  const { session, token, setToken } = useAuth();
-  const pathname = usePathname();
-
-  const { mutate } = useMutation({
-    ...useApiMutationFn('refreshToken', {}),
-    onSuccess: ({ token }) => setToken(token!.id!),
-  });
-
-  useEffect(() => {
-    const expires = token ? jwtExpires(token) : undefined;
-
-    if (!session && expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
-      mutate();
+export const auth = {
+  token: sessionToken.read() ?? accessToken.read(),
+  session: sessionToken.read() !== null,
+  setToken: (value: string | null, session?: boolean) => {
+    if (session) {
+      sessionToken.write(value);
+    } else {
+      sessionToken.write(null);
+      accessToken.write(value);
     }
-  }, [session, pathname, token, mutate]);
+
+    auth.token = sessionToken.read() ?? accessToken.read();
+    auth.session = sessionToken.read() !== null;
+  },
+};
+
+window.auth = auth;
+
+declare global {
+  interface Window {
+    auth: typeof auth;
+  }
 }
 
-function jwtExpires(jwt: string) {
-  const { exp } = jwtDecode(jwt);
+export function getToken() {
+  return auth.token;
+}
 
-  if (exp !== undefined) {
-    return new Date(exp * 1000);
-  }
+export function useSetToken() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useCallback(
+    async (
+      token: string | null,
+      { session, redirect }: { session?: boolean; redirect?: ValidateNavigateOptions } = {},
+    ) => {
+      await queryClient.cancelQueries();
+
+      auth.setToken(token, session);
+
+      if (redirect) {
+        await navigate(redirect);
+      }
+
+      if (getToken()) {
+        queryClient.removeQueries({
+          predicate: ({ queryKey }) =>
+            queryKey[0] !== 'getCurrentUser' && queryKey[0] !== 'getCurrentOrganization',
+        });
+
+        await queryClient.invalidateQueries();
+      } else {
+        queryClient.clear();
+      }
+    },
+    [queryClient, navigate],
+  );
 }

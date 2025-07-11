@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import { ApiStream, apiStreams } from 'src/api/api';
-import { useAuth } from 'src/application/authentication';
+import { api } from 'src/api/api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/report-error';
@@ -19,21 +18,17 @@ const T = createTranslate('pages.service.console');
 const { brightBlack, brightRed } = terminalColors;
 
 export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boolean } = {}) {
-  const { token } = useAuth();
   const t = T.useTranslate();
 
   const [terminal, setTerminal] = useState<TerminalRef | null>(null);
-  const [stream, setStream] = useState<ApiStream | null>(null);
+  const [stream, setStream] = useState<WebSocket | null>(null);
   const [size, setSize] = useState<{ width: number; height: number }>();
 
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);
 
-  const connect = useCallback(
-    (instanceId: string) => {
-      setStream(apiStreams.exec({ token: token ?? undefined, query: { id: instanceId } }));
-    },
-    [token],
-  );
+  const connect = useCallback((instanceId: string) => {
+    setStream(api.exec({ query: { id: instanceId } }));
+  }, []);
 
   useMount(() => {
     connect(instanceId);

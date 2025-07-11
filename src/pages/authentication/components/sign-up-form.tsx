@@ -4,12 +4,11 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
@@ -27,8 +26,7 @@ const schema = z.object({
 
 export function SignUpForm({ initialValues }: { initialValues: { name?: string; email?: string } }) {
   const t = T.useTranslate();
-  const { setToken } = useAuth();
-  const navigate = useNavigate();
+  const setToken = useSetToken();
   const getSeonFingerprint = useSeon();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -52,9 +50,8 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
         captcha: await getCaptcha('signup'),
       },
     })),
-    onSuccess(result) {
-      setToken(result.token!.id!);
-      navigate({ to: '/' });
+    async onSuccess(result) {
+      await setToken(result.token!.id!, { redirect: { to: '/' } });
     },
     onError: useFormErrorHandler(form, (error) => {
       if ('captcha' in error) {

@@ -8,7 +8,7 @@ import {
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
-import { useAuth } from 'src/application/authentication';
+import { auth, getToken } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { createStorage } from 'src/application/storage';
@@ -142,10 +142,9 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
-  const { session } = useAuth();
   const trial = useTrial();
 
-  if (session) {
+  if (auth.session) {
     return 'session';
   }
 
@@ -176,7 +175,6 @@ type PageContextProps = {
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const { pageContextBaseUrl } = getConfig();
 
-  const { token } = useAuth();
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
@@ -196,9 +194,9 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
   useEffect(() => {
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+      iFrameRef.current?.contentWindow?.postMessage({ token: getToken(), location }, pageContextBaseUrl);
     }
-  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
+  }, [pageContextBaseUrl, iFrameRef, ready, location]);
 
   return (
     <>

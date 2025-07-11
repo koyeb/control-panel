@@ -1,12 +1,9 @@
 import { InvalidateQueryFilters, UseQueryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { useAuth } from 'src/application/authentication';
+import { AnyFunction } from 'src/utils/types';
 
 import { ApiEndpointParams, ApiEndpointResult, api } from './api';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyFunction = (...params: any[]) => any;
 
 type Endpoint = keyof typeof api;
 
@@ -23,16 +20,12 @@ export function useApiQueryFn<E extends Endpoint>(
   endpoint: E,
   params: ApiEndpointParams<E> = {},
 ): UseApiQueryResult<E> {
-  const { token } = useAuth();
-
   return {
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: getApiQueryKey(endpoint, params),
     queryFn({ signal }) {
       const fn = api[endpoint] as AnyFunction;
 
       return fn({
-        token,
         signal,
         ...params,
       }) as Promise<ApiEndpointResult<E>>;
@@ -62,17 +55,12 @@ export function useApiMutationFn<E extends Endpoint, Variables>(
   endpoint: E,
   options: ApiEndpointParams<E> | ApiEndpointParamsFn<E, Variables>,
 ): UseApiMutationResult<E, Variables> {
-  const { token } = useAuth();
-
   return {
     async mutationFn(param) {
       const opts = typeof options === 'function' ? await options(param) : options;
       const fn = api[endpoint] as AnyFunction;
 
-      return fn({
-        token,
-        ...opts,
-      }) as Promise<ApiEndpointResult<E>>;
+      return fn(opts) as Promise<ApiEndpointResult<E>>;
     },
   };
 }
@@ -97,7 +85,6 @@ export function useInvalidateApiQuery() {
 
 export function usePrefetchApiQuery() {
   const queryClient = useQueryClient();
-  const { token } = useAuth();
 
   return useCallback(
     <E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) => {
@@ -107,13 +94,10 @@ export function usePrefetchApiQuery() {
         queryFn() {
           const fn = api[endpoint] as AnyFunction;
 
-          return fn({
-            token,
-            ...params,
-          }) as Promise<ApiEndpointResult<E>>;
+          return fn(params) as Promise<ApiEndpointResult<E>>;
         },
       });
     },
-    [queryClient, token],
+    [queryClient],
   );
 }

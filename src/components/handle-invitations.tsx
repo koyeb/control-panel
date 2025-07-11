@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from 'src/api/api';
 import { OrganizationInvitation } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -19,17 +19,16 @@ type HandleInvitationsProps = {
 };
 
 export function HandleInvitation({ invitation }: HandleInvitationsProps) {
-  const { token, setToken } = useAuth();
+  const setToken = useSetToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
   const acceptMutation = useMutation({
     async mutationFn(invitation: OrganizationInvitation) {
-      await api.acceptInvitation({ token, path: { id: invitation.id } });
+      await api.acceptInvitation({ path: { id: invitation.id } });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: invitation.organization.id },
         header: {},
       });
@@ -37,9 +36,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      await invalidate('listInvitations');
-      setToken(token);
-      navigate({ to: '/' });
+      await setToken(token, { redirect: { to: '/' } });
       notify.info(t('acceptSuccess'));
     },
   });
@@ -50,7 +47,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     })),
     async onSuccess() {
       await invalidate('listInvitations');
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.info(t('declineSuccess'));
     },
   });

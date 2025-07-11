@@ -4,8 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { api } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
@@ -26,8 +25,7 @@ const schema = z.object({
 
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
-  const { token, setToken } = useAuth();
+  const setToken = useSetToken();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -39,12 +37,10 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
       const { organization } = await api.createOrganization({
-        token,
         body: { name: organizationName },
       });
 
       const { token: newToken } = await api.switchOrganization({
-        token,
         path: { id: organization!.id! },
         header: {},
       });
@@ -52,8 +48,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      await invalidate('getCurrentOrganization');
-      setToken(token);
+      await setToken(token);
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({
@@ -85,7 +80,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
               id="footer.message"
               values={{
                 delete: (children) => (
-                  <Link to={`?settings`} className="underline">
+                  <Link to="." search={{ settings: true }} className="underline">
                     {children}
                   </Link>
                 ),
