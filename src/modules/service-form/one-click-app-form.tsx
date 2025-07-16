@@ -185,11 +185,7 @@ function useOnCostEstimationChanged(form: OneClickAppForm, onChanged: (cost?: Se
     const cost = computeEstimatedCost(
       instance,
       regions.map((region) => region.id),
-      {
-        min: 1,
-        max: 1,
-        targets: null as never,
-      },
+      { min: 1, max: 1 },
     );
 
     onChanged(cost);

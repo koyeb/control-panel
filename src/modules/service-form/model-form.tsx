@@ -162,11 +162,7 @@ function useOnCostEstimationChanged(form: ModelForm, onChanged: (cost?: ServiceC
     const cost = computeEstimatedCost(
       instance,
       regions.map((region) => region.id),
-      {
-        min: 0,
-        max: 1,
-        targets: null as never,
-      },
+      { min: 0, max: 1 },
     );
 
     onChanged(cost);

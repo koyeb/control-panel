@@ -19,7 +19,7 @@ export function useEstimatedCost(
 export function computeEstimatedCost(
   instance?: CatalogInstance,
   regions?: string[],
-  scaling?: Scaling,
+  scaling?: Pick<Scaling, 'min' | 'max'>,
 ): ServiceCost | undefined {
   if (!instance || !scaling || !regions || !Number.isFinite(scaling.min) || !Number.isFinite(scaling.max)) {
     return;
