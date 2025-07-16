@@ -62,7 +62,7 @@ describe('serviceFormToDeploymentDefinition', () => {
     const form = defaultServiceForm();
 
     form.scaling = {
-      min: 1,
+      min: 0,
       max: 2,
       targets: {
         cpu: { enabled: true, value: 1 },
@@ -70,13 +70,13 @@ describe('serviceFormToDeploymentDefinition', () => {
         requests: { enabled: true, value: 3 },
         concurrentRequests: { enabled: true, value: 4 },
         responseTime: { enabled: true, value: 5 },
-        sleepIdleDelay: { enabled: true, value: 6 },
+        sleepIdleDelay: { lightSleepValue: 6, deepSleepValue: 7 },
       },
     };
 
     expect(serviceFormToDeploymentDefinition(form)).toHaveProperty('scalings', [
       {
-        min: 1,
+        min: 0,
         max: 2,
         targets: [
           { average_cpu: { value: 1 } },
@@ -84,7 +84,7 @@ describe('serviceFormToDeploymentDefinition', () => {
           { requests_per_second: { value: 3 } },
           { concurrent_requests: { value: 4 } },
           { requests_response_time: { value: 5, quantile: 95 } },
-          { sleep_idle_delay: { deep_sleep_value: 6 } },
+          { sleep_idle_delay: { light_sleep_value: 6, deep_sleep_value: 7 } },
         ],
       },
     ]);

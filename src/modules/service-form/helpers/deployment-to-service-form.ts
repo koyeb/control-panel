@@ -197,8 +197,8 @@ function scaling(definition: Api.DeploymentDefinition): DeepPartial<Scaling> {
         value: requests_response_time?.value,
       },
       sleepIdleDelay: {
-        enabled: min === 0,
-        value: sleep_idle_delay?.deep_sleep_value || sleep_idle_delay?.value,
+        lightSleepValue: sleep_idle_delay?.light_sleep_value || Number.NaN,
+        deepSleepValue: sleep_idle_delay?.deep_sleep_value || sleep_idle_delay?.value,
       },
     },
   } satisfies DeepPartial<Scaling>;

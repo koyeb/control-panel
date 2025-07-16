@@ -100,7 +100,13 @@ const scaling = z
       requests: target(1, 1e9),
       concurrentRequests: target(1, 1e9),
       responseTime: target(1, 1e9),
-      sleepIdleDelay: target(3 * 60, 60 * 60),
+      sleepIdleDelay: z.object({
+        lightSleepValue: z.union([z.number(), z.nan()]),
+        deepSleepValue: z
+          .number()
+          .min(3 * 60)
+          .max(60 * 60),
+      }),
     }),
   })
   .refine(({ min, max, targets }) => {
@@ -108,7 +114,7 @@ const scaling = z
       return true;
     }
 
-    const enabledTargets = Object.values(targets).filter((target) => target.enabled);
+    const enabledTargets = Object.values(targets).filter((target) => 'enabled' in target && target.enabled);
     return enabledTargets.length > 0;
   }, 'noTargetSelected');
 

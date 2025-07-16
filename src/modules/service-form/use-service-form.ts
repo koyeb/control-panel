@@ -187,13 +187,13 @@ function useTriggerValidationOnChange({ watch, trigger, formState }: UseFormRetu
   }, [watch, trigger, submitCount]);
 }
 
-const scaleAboveZeroTargets: Array<keyof Scaling['targets']> = [
+const scaleAboveZeroTargets = [
   'cpu',
   'memory',
   'requests',
   'concurrentRequests',
   'responseTime',
-];
+] satisfies Array<keyof Scaling['targets']>;
 
 function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
   const scaleToZero = useFeatureFlag('scale-to-zero');
@@ -272,8 +272,6 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
           scaling.min = scaling.max;
         }
       }
-
-      scaling.targets.sleepIdleDelay.enabled = scaling.min === 0;
 
       if (scaling.min === scaling.max || scaling.max === 1) {
         scaleAboveZeroTargets.forEach((target) => {

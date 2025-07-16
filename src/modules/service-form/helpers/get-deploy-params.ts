@@ -1,5 +1,7 @@
 import { dequal } from 'dequal';
 
+import { entries } from 'src/utils/object';
+
 import { Scaling, ServiceForm } from '../service-form.types';
 
 import { defaultServiceForm } from './initialize-service-form';
@@ -75,13 +77,17 @@ export function getDeployParams(form: ServiceForm, removeDefaultValues = true): 
   set('instance_type', form.instance);
   set('regions', form.regions);
 
-  set('instances_min', String(form.scaling.min));
-  set('instances_max', String(form.scaling.max));
+  set('instances_min', form.scaling.min);
+  set('instances_max', form.scaling.max);
 
-  for (const [target, { enabled, value }] of Object.entries(form.scaling.targets)) {
-    if (enabled) {
-      set(`autoscaling_${scalingTargetMap[target as keyof Scaling['targets']]}`, String(value));
+  for (const [target, value] of entries(form.scaling.targets)) {
+    if ('enabled' in value && value.enabled) {
+      set(`autoscaling_${scalingTargetMap[target]}`, value.value);
     }
+  }
+
+  if (form.scaling.min === 0) {
+    set(`autoscaling_sleep_idle_delay`, form.scaling.targets.sleepIdleDelay.deepSleepValue);
   }
 
   for (const { name, value } of form.environmentVariables) {

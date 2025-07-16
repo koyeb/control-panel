@@ -127,8 +127,19 @@ function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
     targets.push({ requests_response_time: { value: scaling.targets.responseTime.value, quantile: 95 } });
   }
 
-  if (scaling.targets.sleepIdleDelay.enabled) {
-    targets.push({ sleep_idle_delay: { deep_sleep_value: scaling.targets.sleepIdleDelay.value } });
+  if (scaling.min === 0) {
+    const { lightSleepValue, deepSleepValue } = scaling.targets.sleepIdleDelay;
+    const target: Api.DeploymentScalingTarget['sleep_idle_delay'] = {};
+
+    targets.push({ sleep_idle_delay: target });
+
+    if (!Number.isNaN(lightSleepValue)) {
+      target.light_sleep_value = lightSleepValue;
+    }
+
+    if (!Number.isNaN(deepSleepValue)) {
+      target.deep_sleep_value = deepSleepValue;
+    }
   }
 
   return [

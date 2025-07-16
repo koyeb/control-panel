@@ -287,7 +287,11 @@ class ServiceFormBuilder {
   }
 
   set autoscaling_sleep_idle_delay(value: string | null) {
-    this.setAutoscalingTarget('sleepIdleDelay', value);
+    if (value !== null) {
+      this.set('scaling', {
+        targets: { sleepIdleDelay: { deepSleepValue: Number(value) } },
+      });
+    }
   }
 
   private setAutoscalingTarget(target: keyof Scaling['targets'], value: string | null) {

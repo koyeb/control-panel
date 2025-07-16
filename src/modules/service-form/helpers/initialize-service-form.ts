@@ -247,7 +247,7 @@ export function defaultServiceForm(): ServiceForm {
         memory: { enabled: false, value: 80 },
         concurrentRequests: { enabled: false, value: 20 },
         responseTime: { enabled: false, value: 300 },
-        sleepIdleDelay: { enabled: false, value: 5 * 60 },
+        sleepIdleDelay: { lightSleepValue: NaN, deepSleepValue: 5 * 60 },
       },
     },
     instance: 'nano',

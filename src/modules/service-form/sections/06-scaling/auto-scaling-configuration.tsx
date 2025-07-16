@@ -48,9 +48,7 @@ export function AutoScalingConfiguration() {
         <ScalingValues />
         <ScaleToZeroPreview />
 
-        {showSleepIdleDelay && (
-          <ScaleToZeroIdleDelay target="sleepIdleDelay" Icon={IconClock} min={3 * 60} max={60 * 60} />
-        )}
+        {showSleepIdleDelay && <SleepIdleDelay Icon={IconClock} min={3 * 60} max={60 * 60} />}
 
         <p>
           <T id="enableAutoscaling" />
@@ -209,36 +207,38 @@ function ScaleToZeroPreview() {
   );
 }
 
-type ScalingTargetProps = {
-  target: keyof Scaling['targets'];
+type SleepIdleDelayProps = {
   Icon: React.ComponentType<{ className?: string }>;
   min?: number;
   max?: number;
 };
 
-function ScaleToZeroIdleDelay({ target, Icon, min, max }: ScalingTargetProps) {
+function SleepIdleDelay({ Icon, min, max }: SleepIdleDelayProps) {
+  const { errors } = useFormState<ServiceForm>();
+  const error = errors.scaling?.targets?.sleepIdleDelay?.deepSleepValue?.message;
+
   return (
     <div className="relative row rounded-lg border">
       <div className="col flex-1 gap-4 p-3 sm:row sm:items-center">
         <div className="col flex-1 gap-1">
           <div className="row items-center gap-1 font-semibold">
             <Icon className="icon" />
-            <T id={`${target}Label`} />
+            <T id={`sleepIdleDelayLabel`} />
           </div>
 
           <div className="text-xs text-dim">
-            <TargetDescription target={target} />
+            {error ? <span className="text-red">{error}</span> : <T id="sleepIdleDelayDescription" />}
           </div>
         </div>
 
         <ControlledInput
-          name={`scaling.targets.${target}.value`}
+          name="scaling.targets.sleepIdleDelay.deepSleepValue"
           error={false}
           type="number"
           onKeyDown={onKeyDownPositiveInteger}
           end={
             <InputEnd>
-              <T id={`${target}Unit`} />
+              <T id="sleepIdleDelayUnit" />
             </InputEnd>
           }
           className="max-w-24 self-center"
@@ -251,6 +251,13 @@ function ScaleToZeroIdleDelay({ target, Icon, min, max }: ScalingTargetProps) {
   );
 }
 
+type ScalingTargetProps = {
+  target: Exclude<keyof Scaling['targets'], 'sleepIdleDelay'>;
+  Icon: React.ComponentType<{ className?: string }>;
+  min?: number;
+  max?: number;
+};
+
 function ScalingTarget({ target: targetName, Icon, min, max }: ScalingTargetProps) {
   const { resetField, trigger } = useFormContext<ServiceForm>();
   const target = useWatchServiceForm(`scaling.targets.${targetName}`);
@@ -260,7 +267,7 @@ function ScalingTarget({ target: targetName, Icon, min, max }: ScalingTargetProp
     <Tooltip content={disabledReason}>
       {(props) => (
         <div {...props}>
-          <ControlledSelectBox<ServiceForm, `scaling.targets.${keyof Scaling['targets']}.enabled`>
+          <ControlledSelectBox<ServiceForm, `scaling.targets.${typeof targetName}.enabled`>
             name={`scaling.targets.${targetName}.enabled`}
             type="checkbox"
             title={null}
@@ -314,10 +321,6 @@ function useTargetDisabledReason(target: keyof Scaling['targets']): React.ReactN
   const min = useWatchServiceForm('scaling.min');
   const max = useWatchServiceForm('scaling.max');
 
-  if (target === 'sleepIdleDelay' && min === 0) {
-    return undefined;
-  }
-
   if (min === 0 && max === 1) {
     return <T id="criteriaNotAvailableWhenMax1" />;
   }
@@ -336,7 +339,7 @@ function isWebTarget(target: keyof Scaling['targets']) {
 }
 
 type TargetDescriptionProps = {
-  target: keyof Scaling['targets'];
+  target: Exclude<keyof Scaling['targets'], 'sleepIdleDelay'>;
 };
 
 function TargetDescription({ target }: TargetDescriptionProps) {

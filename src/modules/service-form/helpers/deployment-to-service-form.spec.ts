@@ -52,34 +52,36 @@ describe('deploymentDefinitionToServiceForm', () => {
       requests: { enabled: false, value: undefined },
       concurrentRequests: { enabled: false, value: undefined },
       responseTime: { enabled: false, value: undefined },
-      sleepIdleDelay: { enabled: false, value: undefined },
+      sleepIdleDelay: { lightSleepValue: Number.NaN, deepSleepValue: undefined },
     });
   });
 
   it('autoscaling min = 0 and max = 1', () => {
     const definition: Api.DeploymentDefinition = {
-      scalings: [{ min: 0, max: 1, targets: [{ sleep_idle_delay: { deep_sleep_value: 1 } }] }],
+      scalings: [
+        {
+          min: 0,
+          max: 1,
+          targets: [
+            { average_mem: { value: 1000 } },
+            { sleep_idle_delay: { light_sleep_value: 1, deep_sleep_value: 2 } },
+          ],
+        },
+      ],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.targets', {
-      cpu: { enabled: false },
-      memory: { enabled: false },
-      requests: { enabled: false },
-      concurrentRequests: { enabled: false },
-      responseTime: { enabled: false },
-      sleepIdleDelay: { enabled: true, value: 1 },
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling', {
+      min: 0,
+      max: 1,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      targets: expect.objectContaining({
+        memory: { enabled: false, value: 1000 },
+        sleepIdleDelay: {
+          lightSleepValue: 1,
+          deepSleepValue: 2,
+        },
+      }),
     });
-  });
-
-  it('sleep idle delay', () => {
-    const definition: Api.DeploymentDefinition = {
-      scalings: [{ min: 0, max: 1, targets: [] }],
-    };
-
-    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-      'scaling.targets.sleepIdleDelay',
-      { enabled: true },
-    );
   });
 
   it('volumes mapping', () => {

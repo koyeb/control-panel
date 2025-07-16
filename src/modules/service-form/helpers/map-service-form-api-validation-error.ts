@@ -69,6 +69,8 @@ const regexpMapping = Object.entries({
   'scalings.0.targets.(\\d+).requests_per_second.value': 'scaling.targets.requests.value',
   'scalings.0.targets.(\\d+).concurrent_requests.value': 'scaling.targets.concurrentRequests.value',
   'scalings.0.targets.(\\d+).requests_response_time.value': 'scaling.targets.responseTime.value',
+  'scalings.0.targets.(\\d+).light_sleep_value': 'scaling.targets.sleepIdleDelay.lightSleepValue',
+  'scalings.0.targets.(\\d+).deep_sleep_value': 'scaling.targets.sleepIdleDelay.deepSleepValue',
   'env.(\\d+).scopes': 'environmentVariables.$1.name',
   'env.(\\d+).key': 'environmentVariables.$1.name',
   'env.(\\d+).value': 'environmentVariables.$1.value',
