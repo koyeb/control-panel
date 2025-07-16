@@ -1,40 +1,51 @@
-import { Button, Collapse, IconButton } from '@koyeb/design-system';
-import clsx from 'clsx';
-import { useState } from 'react';
+import { Badge, IconButton } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
 import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
-import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
-import { IconCircleCheck, IconCircleOff, IconGlobe, IconNetwork, IconTrash } from 'src/components/icons';
-import { createTranslate } from 'src/intl/translate';
+import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { IconTrash } from 'src/components/icons';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
-import { capitalize } from 'src/utils/strings';
 
 import { ServiceForm } from '../../service-form.types';
 
 const T = createTranslate('modules.serviceForm.ports');
 
-type PortFieldsProps = {
-  index: number;
-  canRemove: boolean;
-  onRemove: () => void;
-};
-
-export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
-  const [configure, setConfigure] = useState(false);
-  const { watch, setValue } = useFormContext<ServiceForm>();
-
-  const prefix = `ports.${index}` as const;
+export function PortFields({ index, onRemove }: { index: number; onRemove?: () => void }) {
+  const { setValue, watch } = useFormContext<ServiceForm>();
 
   return (
-    <div className="rounded border">
-      <div className="row items-start gap-4 p-3">
+    <div className="col gap-6 rounded-md bg-muted/50 p-3">
+      <div className="row items-center justify-between gap-4">
+        <div className="row min-w-0 items-center gap-2">
+          <div className="text-base font-medium">{watch(`ports.${index}.portNumber`) || ''}</div>
+
+          <div className="text-dim">
+            <TranslateEnum enum="portProtocol" value={watch(`ports.${index}.protocol`)} />
+          </div>
+
+          {watch(`ports.${index}.public`) && (
+            <Badge size={1} color="blue" className="truncate">
+              <T id="badges.public" />
+            </Badge>
+          )}
+
+          {watch(`ports.${index}.proxy`) && (
+            <Badge size={1} color="blue" className="truncate">
+              <T id="badges.tcpProxy" />
+            </Badge>
+          )}
+        </div>
+
+        {onRemove && <IconButton Icon={IconTrash} variant="ghost" size={1} color="gray" onClick={onRemove} />}
+      </div>
+
+      <div className="row gap-4">
         <ControlledInput<ServiceForm, `ports.${number}.portNumber`>
           ref={(ref) => ref?.addEventListener('wheel', preventDefault, { passive: false })}
-          name={`${prefix}.portNumber`}
-          label={<T id="port.label" />}
-          labelPosition="left"
+          name={`ports.${index}.portNumber`}
+          label={<T id="portNumber.label" />}
           type="number"
           onKeyDown={onKeyDownPositiveInteger}
           min={1}
@@ -44,150 +55,77 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
         />
 
         <ControlledSelect<ServiceForm, `ports.${number}.protocol`>
-          name={`${prefix}.protocol`}
+          name={`ports.${index}.protocol`}
           label={<T id="protocol.label" />}
-          labelPosition="left"
           items={['http', 'http2', 'tcp']}
           getKey={identity}
           itemToString={identity}
           itemToValue={identity}
-          renderItem={(type) =>
-            ({
-              http: <T id="protocol.values.http" />,
-              http2: <T id="protocol.values.http2" />,
-              tcp: <T id="protocol.values.tcp" />,
-            })[type]
-          }
+          renderItem={(value) => <TranslateEnum enum="portProtocol" value={value} />}
           onChangeEffect={(protocol) => {
             if (protocol === 'tcp') {
-              setValue(`${prefix}.public`, false);
+              setValue(`ports.${index}.public`, false);
             }
           }}
           className="flex-1"
         />
-
-        <IconButton color="gray" Icon={IconTrash} disabled={!canRemove} onClick={onRemove}>
-          <T id="deletePort" />
-        </IconButton>
       </div>
 
-      <footer className={clsx('row items-center gap-4 bg-muted px-3 py-2', !configure && 'rounded-b')}>
-        <ProtocolEnabled protocol="http" enabled={watch(`ports.${index}.public`)} />
-        <ProtocolEnabled protocol="tcp" enabled={watch(`ports.${index}.proxy`)} />
-
-        <Button
-          color="gray"
-          variant="outline"
-          onClick={() => setConfigure(!configure)}
-          className="ml-auto bg-neutral hover:bg-neutral"
-        >
-          <T id={configure ? 'close' : 'configure'} />
-        </Button>
-      </footer>
-
-      <Collapse open={configure}>
-        <div className="col gap-4 p-3">
-          <PublicConfiguration index={index} />
-          <TcpProxyConfiguration index={index} />
-        </div>
-      </Collapse>
-    </div>
-  );
-}
-
-function ProtocolEnabled({ protocol, enabled }: { protocol: 'http' | 'tcp'; enabled: boolean }) {
-  const Icon = enabled ? IconCircleCheck : IconCircleOff;
-
-  return (
-    <div className={clsx('row items-center gap-1', enabled ? 'text-green' : 'text-dim')}>
-      <Icon className="size-4" />
-      <T id={`public${capitalize(protocol)}.${enabled ? 'enabled' : 'disabled'}`} />
-    </div>
-  );
-}
-
-function PublicConfiguration({ index }: { index: number }) {
-  const { watch } = useFormContext<ServiceForm>();
-  const prefix = `ports.${index}` as const;
-
-  const url = <span className="text-default">https://[subdomain].koyeb.app{watch(`${prefix}.path`)}</span>;
-
-  return (
-    <div className="col gap-2">
-      <div className="row items-center gap-2">
-        <div>
-          <IconGlobe className="size-4" />
-        </div>
-
-        <div className="col gap-1 md:row md:items-center md:gap-2">
-          <div className="whitespace-nowrap">
-            <T id="public.title" />
-          </div>
+      <div className="col gap-2">
+        <div className="col gap-2 sm:row sm:items-center">
+          <ControlledCheckbox<ServiceForm, `ports.${number}.public`>
+            name={`ports.${index}.public`}
+            label={<T id="http.label" />}
+            disabled={watch(`ports.${index}.protocol`) === 'tcp'}
+            className="whitespace-nowrap"
+          />
 
           <div className="text-xs text-dim">
-            <T id="public.description" />
+            <T id="http.description" />
           </div>
         </div>
 
-        <div className="ml-auto">
-          <ControlledSwitch
-            name={`${prefix}.public`}
-            labelPosition="left"
-            label={<T id="public.label" />}
-            disabled={watch(`${prefix}.protocol`) === 'tcp'}
-          />
-        </div>
-      </div>
+        {watch(`ports.${index}.public`) && (
+          <div className="col gap-4 rounded-lg bg-muted px-3 py-4">
+            <ControlledInput<ServiceForm, `ports.${number}.path`>
+              label={<T id="path.label" />}
+              labelPosition="left"
+              name={`ports.${index}.path`}
+            />
 
-      <div>
-        {watch(`${prefix}.protocol`) !== 'tcp' && (
-          <ControlledInput
-            name={`${prefix}.path`}
-            label="Path"
-            labelPosition="left"
-            disabled={!watch(`${prefix}.public`)}
-            helperText={watch(`${prefix}.public`) ? <T id="public.helperText" values={{ url }} /> : undefined}
-          />
-        )}
-
-        {watch(`${prefix}.protocol`) === 'tcp' && (
-          <div className="rounded bg-orange/10 px-2 py-1 text-orange">
-            <T id="public.disabledTcp" />
+            <div className="text-xs text-dim">
+              <T id="path.helperText" values={{ url: url(watch(`ports.${index}.path`)) }} />
+            </div>
           </div>
         )}
+
+        {watch(`ports.${index}.protocol`) === 'tcp' && (
+          <Badge size={1} color="orange" className="self-start text-start">
+            <T id="http.disabled" />
+          </Badge>
+        )}
       </div>
-    </div>
-  );
-}
 
-function TcpProxyConfiguration({ index }: { index: number }) {
-  const prefix = `ports.${index}` as const;
-
-  return (
-    <div className="col gap-2">
-      <div className="row items-center gap-2">
-        <div>
-          <IconNetwork className="size-4" />
-        </div>
-
-        <div className="col gap-1 md:row md:items-center md:gap-2">
-          <div className="whitespace-nowrap">
-            <T id="tcpProxy.title" />
-          </div>
-
+      <div className="col gap-2">
+        <div className="col gap-2 sm:row sm:items-center">
+          <ControlledCheckbox<ServiceForm, `ports.${number}.proxy`>
+            name={`ports.${index}.proxy`}
+            label={<T id="tcpProxy.label" />}
+            className="whitespace-nowrap"
+          />
           <div className="text-xs text-dim">
             <T id="tcpProxy.description" />
           </div>
         </div>
 
-        <div className="ml-auto">
-          <ControlledSwitch name={`${prefix}.proxy`} labelPosition="left" label={<T id="tcpProxy.label" />} />
+        <div className="text-xs text-dim">
+          <T id="tcpProxy.info" />
         </div>
-      </div>
-
-      <div className="text-xs text-dim">
-        <T id="tcpProxy.helperText" />
       </div>
     </div>
   );
+}
+
+function url(path: string) {
+  return <span className="text-default">https://[subdomain].koyeb.app{path}</span>;
 }

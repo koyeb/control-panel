@@ -85,6 +85,11 @@
       "medium": "Medium",
       "high": "High",
       "unknown": "Unknown"
+    },
+    "portProtocol": {
+      "tcp": "TCP",
+      "http": "HTTP",
+      "http2": "HTTP/2"
     }
   },
   "components": {
@@ -1263,7 +1268,7 @@
         "add": "Add file",
         "remove": "Remove"
       },
-      "ports": {
+      "ports.old": {
         "titleSinglePort": "Port {portNumber} exposed {public, select, true {on {path}} other {to the service mesh}}",
         "titleMultiplePorts": "{count, plural, =0 {No ports exposed} other {{count} ports exposed}}",
         "description": "Exposed ports",
@@ -1306,10 +1311,41 @@
           "title": "Public TCP access",
           "description": "Expose the TCP port through proxy",
           "label": "Enable",
-          "helperText": "Koyeb will create a proxy domain and port (domain:port) to forward traffic to your service’s TCP port"
+          "helperText": "Koyeb will create a proxy domain and port (domain:port) to forward traffic to your service's TCP port"
         },
         "addPort": "Add another",
         "deletePort": "Delete port"
+      },
+      "ports": {
+        "title": "Ports",
+        "titleBadge": "{count} configured",
+        "description": "Ports",
+        "expandedTitle": "Configure ports",
+        "addPort": "Add port",
+        "badges": {
+          "public": "Public HTTPS access",
+          "tcpProxy": "Proxy TCP access"
+        },
+        "portNumber": {
+          "label": "Port"
+        },
+        "protocol": {
+          "label": "Protocol"
+        },
+        "http": {
+          "label": "Public HTTPS access",
+          "description": "Expose the HTTP port to the Internet on a specific path",
+          "disabled": "Public HTTPS can only enabled for HTTP ports"
+        },
+        "tcpProxy": {
+          "label": "Proxy TCP access",
+          "description": "Expose the TCP port through proxy",
+          "info": "Koyeb will create a proxy domain and port (domain:port) to forward traffic to your service's TCP port"
+        },
+        "path": {
+          "label": "Path",
+          "helperText": "Will be publicly accessible at: {url}"
+        }
       },
       "healthChecks": {
         "titleSingleHealthCheck": "{protocol} health check configured on port {portNumber}",

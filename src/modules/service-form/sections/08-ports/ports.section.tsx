@@ -1,4 +1,4 @@
-import { Button } from '@koyeb/design-system';
+import { Badge, Button } from '@koyeb/design-system';
 import { useFieldArray } from 'react-hook-form';
 
 import { IconPlus } from 'src/components/icons';
@@ -24,80 +24,50 @@ export function PortsSection() {
       title={<SectionTitle />}
       description={<T id="description" />}
       expandedTitle={<T id="expandedTitle" />}
-      className="col gaps"
+      className="col gap-6"
     >
-      <p>
-        <T id="info" />
-      </p>
-
-      <div className="col gap-4">
+      {fields.map(({ id }, index) => (
         <FeatureFlag
+          key={id}
           feature="proxy-ports"
-          fallback={fields.map((port, index) => (
-            <PortFieldsOld
-              key={port.id}
-              index={index}
-              canRemove={fields.length > 1}
-              onRemove={() => remove(index)}
-            />
-          ))}
-        >
-          {fields.map((port, index) => (
-            <PortFields
-              key={port.id}
-              index={index}
-              canRemove={fields.length > 1}
-              onRemove={() => remove(index)}
-            />
-          ))}
-        </FeatureFlag>
-
-        {fields.length === 0 && (
-          <div className="rounded border px-3 py-4">
-            <T id="noPorts" />
-          </div>
-        )}
-      </div>
-
-      <div className="row gap-2">
-        <Button
-          variant="ghost"
-          color="gray"
-          onClick={() =>
-            append({
-              portNumber: NaN,
-              protocol: 'http',
-              path: '/',
-              public: true,
-              proxy: false,
-              healthCheck: defaultHealthCheck(),
-            })
+          fallback={
+            <PortFieldsOld index={index} onRemove={fields.length === 1 ? undefined : () => remove(index)} />
           }
         >
-          <IconPlus className="size-4" />
-          <T id="addPort" />
-        </Button>
-      </div>
+          <PortFields index={index} onRemove={fields.length === 1 ? undefined : () => remove(index)} />
+        </FeatureFlag>
+      ))}
+
+      <Button
+        color="gray"
+        onClick={() => {
+          append({
+            portNumber: NaN,
+            protocol: 'http',
+            path: '/',
+            public: true,
+            proxy: false,
+            healthCheck: defaultHealthCheck(),
+          });
+        }}
+        className="self-start"
+      >
+        <IconPlus className="size-4" />
+        <T id="addPort" />
+      </Button>
     </ServiceFormSection>
   );
 }
 
 function SectionTitle() {
   const ports = useWatchServiceForm('ports').filter((port) => !Number.isNaN(port.portNumber));
-  const firstPort = ports[0];
 
-  if (ports.length === 1) {
-    return (
-      <T
-        id="titleSinglePort"
-        values={{
-          portNumber: firstPort?.portNumber,
-          public: firstPort?.public,
-          path: firstPort?.path,
-        }}
-      />
-    );
-  }
-
-  return <T id="titleMultiplePorts" values={{ count: ports.length }} />;
+  return (
+    <div className="row gap-2">
+      <T id="title" />
+      <Badge size={1} color="green">
+        <T id="titleBadge" values={{ count: ports.length }} />
+      </Badge>
+    </div>
+  );
 }

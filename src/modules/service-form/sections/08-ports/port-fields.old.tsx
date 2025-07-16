@@ -12,15 +12,14 @@ import { identity } from 'src/utils/generic';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-const T = createTranslate('modules.serviceForm.ports');
+const T = createTranslate('modules.serviceForm.ports.old');
 
 type PortFieldsProps = {
   index: number;
-  canRemove: boolean;
-  onRemove: () => void;
+  onRemove?: () => void;
 };
 
-export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
+export function PortFields({ index, onRemove }: PortFieldsProps) {
   const { setValue } = useFormContext<ServiceForm>();
   const port = useWatchServiceForm(`ports.${index}`);
 
@@ -86,7 +85,7 @@ export function PortFields({ index, canRemove, onRemove }: PortFieldsProps) {
       />
 
       <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
-        <IconButton color="gray" Icon={IconTrash} disabled={!canRemove} onClick={onRemove}>
+        <IconButton color="gray" Icon={IconTrash} disabled={onRemove === undefined} onClick={onRemove}>
           <T id="deletePort" />
         </IconButton>
       </div>
