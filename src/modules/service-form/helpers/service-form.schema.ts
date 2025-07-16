@@ -101,11 +101,17 @@ const scaling = z
       concurrentRequests: target(1, 1e9),
       responseTime: target(1, 1e9),
       sleepIdleDelay: z.object({
-        lightSleepValue: z.union([z.number(), z.nan()]),
+        lightSleepValue: z.union([
+          z
+            .number()
+            .min(60)
+            .max(60 * 60),
+          z.nan(),
+        ]),
         deepSleepValue: z
           .number()
-          .min(3 * 60)
-          .max(60 * 60),
+          .min(5 * 60)
+          .max(7 * 24 * 60 * 60),
       }),
     }),
   })

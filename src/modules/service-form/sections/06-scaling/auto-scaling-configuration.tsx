@@ -15,7 +15,7 @@ import {
   IconTimer,
 } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 
@@ -48,7 +48,7 @@ export function AutoScalingConfiguration() {
         <ScalingValues />
         <ScaleToZeroPreview />
 
-        {showSleepIdleDelay && <SleepIdleDelay Icon={IconClock} min={3 * 60} max={60 * 60} />}
+        {showSleepIdleDelay && <SleepIdleDelay />}
 
         <p>
           <T id="enableAutoscaling" />
@@ -207,22 +207,18 @@ function ScaleToZeroPreview() {
   );
 }
 
-type SleepIdleDelayProps = {
-  Icon: React.ComponentType<{ className?: string }>;
-  min?: number;
-  max?: number;
-};
-
-function SleepIdleDelay({ Icon, min, max }: SleepIdleDelayProps) {
+function SleepIdleDelay() {
   const { errors } = useFormState<ServiceForm>();
-  const error = errors.scaling?.targets?.sleepIdleDelay?.deepSleepValue?.message;
+  const error =
+    errors.scaling?.targets?.sleepIdleDelay?.deepSleepValue?.message ??
+    errors.scaling?.targets?.sleepIdleDelay?.lightSleepValue?.message;
 
   return (
     <div className="relative row rounded-lg border">
       <div className="col flex-1 gap-4 p-3 sm:row sm:items-center">
         <div className="col flex-1 gap-1">
           <div className="row items-center gap-1 font-semibold">
-            <Icon className="icon" />
+            <IconClock className="icon" />
             <T id={`sleepIdleDelayLabel`} />
           </div>
 
@@ -231,10 +227,34 @@ function SleepIdleDelay({ Icon, min, max }: SleepIdleDelayProps) {
           </div>
         </div>
 
+        <FeatureFlag feature="light-sleep">
+          <ControlledInput
+            name="scaling.targets.sleepIdleDelay.lightSleepValue"
+            error={false}
+            type="number"
+            onKeyDown={onKeyDownPositiveInteger}
+            label={<T id="lightSleepLabel" />}
+            end={
+              <InputEnd>
+                <T id="sleepIdleDelayUnit" />
+              </InputEnd>
+            }
+            className="max-w-24 self-center"
+            min={60}
+            max={60 * 60}
+            step={1}
+          />
+        </FeatureFlag>
+
         <ControlledInput
           name="scaling.targets.sleepIdleDelay.deepSleepValue"
           error={false}
           type="number"
+          label={
+            <FeatureFlag feature="light-sleep">
+              <T id="deepSleepLabel" />
+            </FeatureFlag>
+          }
           onKeyDown={onKeyDownPositiveInteger}
           end={
             <InputEnd>
@@ -242,8 +262,8 @@ function SleepIdleDelay({ Icon, min, max }: SleepIdleDelayProps) {
             </InputEnd>
           }
           className="max-w-24 self-center"
-          min={min}
-          max={max}
+          min={5 * 60}
+          max={7 * 24 * 60 * 60}
           step={1}
         />
       </div>

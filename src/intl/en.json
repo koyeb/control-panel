@@ -1192,6 +1192,8 @@
           "sleepIdleDelayLabel": "Scale to zero idle time",
           "sleepIdleDelayDescription": "Number of seconds to wait before sleeping the instance if it receives no traffic",
           "sleepIdleDelayUnit": "s",
+          "lightSleepLabel": "Light sleep",
+          "deepSleepLabel": "Deep sleep",
           "criteriaNotAvailableWithFixedScaling": "Scaling criteria are not available with fixed scaling",
           "criteriaNotAvailableWhenMax1": "Scaling criteria are not available when the maximum scaling is set to 1",
           "criterionNotAvailableWorker": "This criterion is not available for workers"
