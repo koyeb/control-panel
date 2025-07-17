@@ -6,39 +6,45 @@ import { Link } from 'src/components/link';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
-import { enumIndex, isEnumValue } from 'src/utils/enums';
 
 import { Stepper, Step as StepperStep } from './stepper';
 import { ServiceTypeStep } from './steps/00-service-type/service-type.step';
 import { ImportProjectStep } from './steps/01-import-project/import-project.step';
-import { InstanceRegionStep } from './steps/02-instance-region/instance-region.step';
-import { ReviewStep } from './steps/03-review/review.step';
-import { InitialDeploymentStep } from './steps/04-initial-deployment/initial-deployment.step';
+import { BuilderStep } from './steps/02-builder/builder.step';
+import { InstanceRegionStep } from './steps/03-instance-region/instance-region.step';
+import { ReviewStep } from './steps/04-review/review.step';
+import { InitialDeploymentStep } from './steps/05-initial-deployment/initial-deployment.step';
 
 const T = createTranslate('modules.serviceCreation');
 
-enum Step {
-  serviceType = 'serviceType',
-  importProject = 'importProject',
-  instanceRegions = 'instanceRegions',
-  review = 'review',
-  initialDeployment = 'initialDeployment',
-}
+const steps = [
+  'serviceType',
+  'importProject',
+  'builder',
+  'instanceRegions',
+  'review',
+  'initialDeployment',
+] as const;
 
-const isStep = isEnumValue(Step);
-const stepIndex = enumIndex(Step);
+type Step = (typeof steps)[number];
+
+const isStep = (step: unknown): step is Step => steps.includes(step as Step);
+const stepIndex = (step: Step) => steps.indexOf(step);
 
 function isBefore(left: Step, right: Step) {
   return stepIndex(left) < stepIndex(right);
 }
 
-const stepperSteps = [Step.importProject, Step.instanceRegions, Step.review] as const;
-
 export function ServiceCreation() {
   const initialStep = useInitialStep();
-  const currentStepParam = useSearchParams().get('step');
-  const currentStep = isStep(currentStepParam) ? currentStepParam : Step.serviceType;
-  const serviceId = useSearchParams().get('serviceId');
+  const searchParams = useSearchParams();
+
+  const currentStepParam = searchParams.get('step');
+  const currentStep = isStep(currentStepParam) ? currentStepParam : 'serviceType';
+
+  const serviceId = searchParams.get('serviceId');
+  const type = searchParams.get('type');
+
   const navigate = useNavigate();
 
   const setCurrentStep = useCallback(
@@ -64,6 +70,11 @@ export function ServiceCreation() {
     }
   };
 
+  const stepperSteps =
+    type === 'git'
+      ? (['importProject', 'builder', 'instanceRegions', 'review'] satisfies Step[])
+      : (['importProject', 'instanceRegions', 'review'] satisfies Step[]);
+
   return (
     <div className="col gap-8">
       <PrefetchResources />
@@ -73,7 +84,7 @@ export function ServiceCreation() {
           <T id={`${currentStep}.title`} />
         </h1>
 
-        {currentStep !== Step.serviceType && (
+        {currentStep !== 'serviceType' && (
           <p className="text-dim">
             <T id={`${currentStep}.description`} values={{ link: serviceLink }} />
           </p>
@@ -97,11 +108,12 @@ export function ServiceCreation() {
         </Stepper>
       )}
 
-      {currentStep === Step.serviceType && <ServiceTypeStep />}
-      {currentStep === Step.importProject && <ImportProjectStep />}
-      {currentStep === Step.instanceRegions && <InstanceRegionStep />}
-      {currentStep === Step.review && <ReviewStep />}
-      {currentStep === Step.initialDeployment && serviceId && <InitialDeploymentStep serviceId={serviceId} />}
+      {currentStep === 'serviceType' && <ServiceTypeStep />}
+      {currentStep === 'importProject' && <ImportProjectStep />}
+      {currentStep === 'builder' && <BuilderStep />}
+      {currentStep === 'instanceRegions' && <InstanceRegionStep />}
+      {currentStep === 'review' && <ReviewStep />}
+      {currentStep === 'initialDeployment' && serviceId && <InitialDeploymentStep serviceId={serviceId} />}
     </div>
   );
 }
@@ -123,24 +135,29 @@ function useInitialStep(): Step {
   const type = search.get('type');
   const repository = search.get('repository');
   const image = search.get('image');
+  const builder = search.get('builder');
   const instanceType = search.get('instance_type');
   const regions = search.get('regions');
 
   if (serviceType !== 'web' && serviceType !== 'worker') {
-    return Step.serviceType;
+    return 'serviceType';
   }
 
   if (type !== 'git' && type !== 'docker') {
-    return Step.serviceType;
+    return 'serviceType';
   }
 
   if ((type === 'git' && repository === null) || (type === 'docker' && image === null)) {
-    return Step.importProject;
+    return 'importProject';
+  }
+
+  if (type === 'git' && builder === null) {
+    return 'builder';
   }
 
   if (instanceType === null || regions === null) {
-    return Step.instanceRegions;
+    return 'instanceRegions';
   }
 
-  return Step.review;
+  return 'review';
 }
