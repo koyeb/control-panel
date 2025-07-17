@@ -1,18 +1,12 @@
-import { Badge, Tooltip } from '@koyeb/design-system';
+import { Badge, InfoTooltip, Spinner, Tooltip } from '@koyeb/design-system';
 
-import { App, ComputeDeployment, Service } from 'src/api/model';
-import {
-  ServiceUrl,
-  getServiceUrls,
-  isDeploymentRunning,
-  isUpcomingDeployment,
-} from 'src/application/service-functions';
+import { App, ComputeDeployment, Deployment, Service } from 'src/api/model';
+import { ServiceUrl, getServiceUrls, isUpcomingDeployment } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { IconArrowRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
-import { TextSkeleton } from 'src/components/skeleton';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { assert } from 'src/utils/assert';
+import { defined } from 'src/utils/assert';
 
 const T = createTranslate('modules.deployment.deploymentInfo');
 
@@ -23,11 +17,7 @@ type TcpProxyUrlProps = {
 };
 
 export function TcpProxyUrl({ app, service, deployment }: TcpProxyUrlProps) {
-  const urls = getServiceUrls(app, service, deployment).filter((url) => url.tcpProxyUrl !== undefined);
-
-  if (!isUpcomingDeployment(deployment) && !isDeploymentRunning(deployment)) {
-    return null;
-  }
+  const urls = getServiceUrls(app, service, deployment).filter((url) => url.tcpProxyUrl);
 
   if (!deployment.definition.ports.some((port) => port.tcpProxy)) {
     return null;
@@ -35,31 +25,51 @@ export function TcpProxyUrl({ app, service, deployment }: TcpProxyUrlProps) {
 
   return (
     <Metadata
-      label={<T id="tcpProxyUrlLabel" />}
-      value={urls.length === 0 ? <TextSkeleton width={28} /> : <TcpProxyUrlValue urls={urls} />}
+      label={<T id="tcpProxyUrl.label" />}
+      value={<TcpProxyUrlValue deployment={deployment} urls={urls} />}
     />
   );
 }
 
-function TcpProxyUrlValue({ urls: [firstUrl, ...urls] }: { urls: ServiceUrl[] }) {
-  const url = firstUrl?.tcpProxyUrl;
-  assert(url !== undefined);
+function TcpProxyUrlValue({ deployment, urls }: { deployment: Deployment; urls: ServiceUrl[] }) {
+  if (urls.length === 0) {
+    if (isUpcomingDeployment(deployment)) {
+      return (
+        <Badge size={1} color="blue" className="row gap-2">
+          <Spinner className="size-4" />
+          <T id="tcpProxyUrl.pending" />
+        </Badge>
+      );
+    }
+
+    return (
+      <Badge size={1} color="gray">
+        <T id="tcpProxyUrl.unavailable" />
+      </Badge>
+    );
+  }
+
+  const url = defined(urls[0]);
 
   return (
     <div className="row min-w-0 items-center gap-2">
-      <div className="max-w-64 truncate">{url}</div>
+      <div className="max-w-64 truncate">{url.tcpProxyUrl}</div>
 
       <span className="hidden text-dim sm:inline">
-        <T id="tcpProxyUrlValueForwardedPort" values={{ portNumber: firstUrl?.portNumber }} />
+        <T id="tcpProxyUrl.forwardedPort" values={{ portNumber: url.portNumber }} />
       </span>
 
-      <CopyIconButton text={url} className="size-em" />
+      {deployment.status === 'SLEEPING' && (
+        <InfoTooltip content={<T id="tcpProxyUrl.deploymentSleeping" />} />
+      )}
 
-      {urls.length > 0 && (
-        <Tooltip content={<UrlsList urls={urls} />}>
+      <CopyIconButton text={defined(url.tcpProxyUrl)} className="size-em" />
+
+      {urls.length >= 2 && (
+        <Tooltip content={<UrlsList urls={urls.slice(1)} />}>
           {(props) => (
             <Badge size={1} {...props}>
-              <Translate id="common.plusCount" values={{ count: urls.length }} />
+              <Translate id="common.plusCount" values={{ count: urls.length - 1 }} />
             </Badge>
           )}
         </Tooltip>

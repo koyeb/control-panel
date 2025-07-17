@@ -483,8 +483,13 @@
         "externalUrlLabel": "Public URL",
         "externalUrlValueForwardedPort": "(forwarded to port {portNumber})",
         "internalUrlLabel": "Private Address",
-        "tcpProxyUrlLabel": "TCP proxy",
-        "tcpProxyUrlValueForwardedPort": "(forwarded to port {portNumber})",
+        "tcpProxyUrl": {
+          "label": "TCP proxy",
+          "forwardedPort": "(forwarded to port {portNumber})",
+          "pending": "Initializing TCP proxy. This may take a few seconds...",
+          "unavailable": "TCP proxy is unavailable on inactive deployments",
+          "deploymentSleeping": "TCP proxy is unavailable because this deployment is currently sleeping (scaled to zero)"
+        },
         "repositoryLabel": "Repository",
         "branchLabel": "Branch",
         "commitLabel": "Commit",
