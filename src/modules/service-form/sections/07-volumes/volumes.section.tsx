@@ -22,9 +22,9 @@ export function VolumesSection() {
   return (
     <ServiceFormSection
       section="volumes"
-      title={<T id="title" values={{ count: volumes.length }} />}
-      description={<T id="description" />}
-      expandedTitle={<T id="titleExpanded" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<T id="summary" values={{ count: volumes.length }} />}
       className="col gaps"
     >
       <SectionContent />

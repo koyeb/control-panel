@@ -7,8 +7,8 @@ import { DatabaseServiceForm, type DatabaseServiceFormSection } from '../databas
 type DatabaseServiceFormSectionProps = {
   section: DatabaseServiceFormSection;
   title: React.ReactNode;
-  expandedTitle: React.ReactNode;
-  description: React.ReactNode;
+  action: React.ReactNode;
+  summary: React.ReactNode;
   shortcut: number;
   className?: string;
   children: React.ReactNode;
@@ -24,7 +24,7 @@ export function DatabaseServiceFormSection({ section, ...props }: DatabaseServic
   return (
     <BaseServiceFormSection
       expanded={expanded}
-      expand={() => setValue('meta.expandedSection', expanded ? null : section)}
+      onExpand={() => setValue('meta.expandedSection', expanded ? null : section)}
       hasError={errors[section] !== undefined}
       {...props}
     />

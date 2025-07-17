@@ -19,9 +19,9 @@ export function BuilderSection() {
   return (
     <ServiceFormSection
       section="builder"
-      title={<SectionTitle />}
-      expandedTitle={<T id="expandedTitle" />}
-      description={<T id="description" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<Summary />}
     >
       <div className="mb-5 grid grid-cols-1 gaps md:grid-cols-2">
         <BuilderTypeOption
@@ -45,17 +45,17 @@ export function BuilderSection() {
   );
 }
 
-function SectionTitle() {
+function Summary() {
   const builderType = useWatchServiceForm('builder.type');
 
-  const { Icon, title } =
-    builderType === 'buildpack'
-      ? { Icon: IconPackage, title: <T id="buildpack" /> }
-      : { Icon: IconDocker, title: <T id="dockerfile" /> };
+  const { Icon, title } = {
+    buildpack: { Icon: IconPackage, title: <T id="buildpack" /> },
+    dockerfile: { Icon: IconDocker, title: <T id="dockerfile" /> },
+  }[builderType];
 
   return (
     <div className="row items-center gap-2">
-      <Icon className="size-5 text-icon" />
+      <Icon className="size-4 text-icon" />
       {title}
     </div>
   );

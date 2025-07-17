@@ -36,9 +36,9 @@ export function EnvironmentVariablesSection() {
   return (
     <ServiceFormSection
       section="environmentVariables"
-      title={<T id="title" values={{ variables: variables.length, files: files.length }} />}
-      description={<T id="description" />}
-      expandedTitle={<T id="expandedTitle" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<T id="summary" values={{ variables: variables.length, files: files.length }} />}
       className="col gaps"
     >
       <TabButtons>

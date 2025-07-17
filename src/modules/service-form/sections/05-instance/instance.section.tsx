@@ -17,9 +17,9 @@ export function InstanceSection() {
   return (
     <ServiceFormSection
       section="instance"
-      title={<SectionTitle />}
-      description={<T id="description" />}
-      expandedTitle={<T id="expandedTitle" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<SectionTitle />}
       className="col gap-6 pb-0"
     >
       <InstanceSelector />
@@ -43,7 +43,7 @@ function SectionTitle() {
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 font-normal">
+    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 font-normal">
       <span className="font-medium">{instance.displayName}</span>
 
       <span>

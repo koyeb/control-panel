@@ -408,28 +408,27 @@
     },
     "databaseForm": {
       "engine": {
-        "description": "Engine",
-        "title": "Postgres",
-        "titleVersion": "(v{version})",
-        "expandedTitle": "Select database engine",
+        "title": "Engine",
+        "summary": "Postgres (v{version})",
+        "action": "Select database engine",
         "engineLabel": "Engine",
         "engineItem": "Postgres (v{version})"
       },
       "instance": {
-        "description": "Instance",
-        "expandedTitle": "Select instance",
+        "title": "Instance",
+        "action": "Select instance",
         "instanceSpec": "<dim>({spec})</dim>"
       },
       "defaultRole": {
-        "description": "Default role",
+        "title": "Default role",
+        "action": "Configure default role",
         "defaultRoleMissing": "The default role is missing",
-        "expandedTitle": "Configure default role",
         "defaultRoleLabel": "Default role"
       },
       "serviceName": {
-        "expandedTitle": "Edit service name",
+        "title": "Service name",
+        "action": "Edit service name",
         "serviceNameMissing": "The service name is missing",
-        "description": "Service name",
         "serviceNameLabel": "Service name"
       },
       "estimatedCost": {
@@ -996,8 +995,8 @@
         "portPathHasWhiteSpaces": "Path must not contain any white space"
       },
       "serviceType": {
-        "description": "Service type",
-        "expandedTitle": "Change service type",
+        "title": "Service type",
+        "action": "Change service type",
         "webService": "Web service",
         "webServiceDescription": "A web service accessible from the Internet and the service mesh",
         "worker": "Worker",
@@ -1008,10 +1007,10 @@
         }
       },
       "source": {
-        "description": "Source",
+        "title": "Source",
+        "action": "Configure deployment source",
         "noRepositorySelected": "No repository selected",
         "noDockerImageSelected": "No docker image selected",
-        "expandedTitle": "Configure deployment source",
         "archiveSourceLabel": "Archive",
         "archiveSourceTooltip": "Build and deploy your code using the <code>koyeb deploy</code> or <code>koyeb archive</code> command",
         "githubSourceLabel": "GitHub",
@@ -1066,8 +1065,8 @@
         }
       },
       "builder": {
-        "description": "Builder",
-        "expandedTitle": "Configure builder",
+        "title": "Builder",
+        "action": "Configure builder",
         "buildpack": "Buildpack",
         "buildpackDescription": "Uses buildpacks to detect your project's language, install dependencies, and package the environment into a runnable image",
         "dockerfile": "Dockerfile",
@@ -1105,8 +1104,8 @@
         }
       },
       "deployment": {
-        "description": "Deployment",
-        "expandedTitle": "Configure deployment",
+        "title": "Deployment",
+        "action": "Configure deployment",
         "defaultConfiguration": "Default configuration",
         "customConfiguration": "Custom configuration",
         "entrypointLabel": "Entrypoint",
@@ -1119,10 +1118,10 @@
         "privilegedTooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
       },
       "regions": {
+        "title": "Regions",
+        "action": "Select regions",
         "noRegions": "No region selected",
         "plus": "+{count}",
-        "description": "Regions",
-        "expandedTitle": "Select regions",
         "alerts": {
           "freeInstanceTitle": "The {instanceName} instance can be deployed to either {fra} or {was}",
           "freeInstanceDescription": "Choose a different instance type for other deployment options",
@@ -1135,8 +1134,8 @@
         }
       },
       "instance": {
-        "description": "Instance",
-        "expandedTitle": "Select instances",
+        "title": "Instance",
+        "action": "Select instances",
         "noInstanceSelected": "No instance selected",
         "instanceSpec": "<dim>({spec})</dim>",
         "category": {
@@ -1168,8 +1167,8 @@
         }
       },
       "scaling": {
-        "description": "Scaling",
-        "expandedTitle": "Configure scaling",
+        "title": "Scaling",
+        "action": "Configure scaling",
         "instancePerRegion": "({value} instance/region)",
         "instancesPerRegion": "({min}-{max} instances/region)",
         "fixed": "Fixed",
@@ -1220,9 +1219,9 @@
         }
       },
       "environmentVariables": {
-        "title": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}, {files, plural, =0 {no files} =1 {{files} file} other {{files} files}}",
-        "description": "Environment variables and files",
-        "expandedTitle": "Edit variables and files",
+        "title": "Environment variables and files",
+        "action": "Edit variables and files",
+        "summary": "{variables, plural, =0 {No variables} =1 {{variables} variable} other {{variables} variables}}, {files, plural, =0 {no files} =1 {{files} file} other {{files} files}}",
         "tabs": {
           "environmentVariables": "Environment variables",
           "files": "Files"
@@ -1323,9 +1322,8 @@
       },
       "ports": {
         "title": "Ports",
-        "titleBadge": "{count} configured",
-        "description": "Ports",
-        "expandedTitle": "Configure ports",
+        "action": "Configure ports",
+        "summary": "Ports <badge>{count} configured</badge>",
         "addPort": "Add port",
         "badges": {
           "public": "Public HTTPS access",
@@ -1353,12 +1351,10 @@
         }
       },
       "healthChecks": {
-        "titleSingleHealthCheck": "{protocol} health check configured on port {portNumber}",
-        "titleMultipleHealthChecks": "{count, plural, =0 {No health checks configured} other {{count} health checks configured}}",
-        "description": "Health checks",
-        "expandedTitle": "Configure health checks for exposed ports",
-        "tcp": "TCP",
-        "http": "HTTP",
+        "title": "Health checks",
+        "action": "Configure health checks for exposed ports",
+        "summarySingleHealthCheck": "{protocol} health check configured on port {portNumber}",
+        "summaryMultipleHealthChecks": "{count, plural, =0 {No health checks configured} other {{count} health checks configured}}",
         "healthCheck": {
           "portNumberLabel": "Port",
           "protocolLabel": "Protocol",
@@ -1385,9 +1381,9 @@
         }
       },
       "volumes": {
-        "title": "{count, plural, =0 {No volumes} =1 {{count} volume} other {{count} volumes}} configured",
-        "titleExpanded": "Edit volumes",
-        "description": "Volumes",
+        "action": "Edit volumes",
+        "title": "Volumes",
+        "summary": "{count, plural, =0 {No volumes} =1 {{count} volume} other {{count} volumes}} configured",
         "noDowntimeAlert": "Attaching volumes to your service will prevent zero-downtime deployments. <documentationLink>Learn more</documentationLink>",
         "noVolumesAttached": "Attach and mount a volume to your service to persist data",
         "addVolume": "Add volume",
@@ -1425,9 +1421,9 @@
         }
       },
       "serviceName": {
-        "titleExpanded": "Edit service name",
-        "titleServiceNameMissing": "The service name is missing",
-        "description": "Service name",
+        "title": "Service name",
+        "action": "Edit service name",
+        "summaryServiceNameMissing": "The service name is missing",
         "editServiceNameWarningWeb": "If you change the service name, your service will be assigned a new private address on the service mesh. The public URL will remain identical.",
         "editServiceNameWarningWorker": "If you change the service name, your service will be assigned a new private address on the service mesh.",
         "serviceNameLabel": "Name",

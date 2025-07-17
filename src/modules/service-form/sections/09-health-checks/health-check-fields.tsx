@@ -5,13 +5,12 @@ import { useFormContext } from 'react-hook-form';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconRefreshCcw } from 'src/components/icons';
-import { createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 
 import { defaultHealthCheck } from '../../helpers/initialize-service-form';
 import { HealthCheck, Port, ServiceForm } from '../../service-form.types';
 
-import { HealthCheckProtocol } from './health-check-protocol';
 import { HttpHealthCheckFields } from './http-health-check-fields';
 
 const T = createTranslate('modules.serviceForm.healthChecks.healthCheck');
@@ -36,7 +35,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         getKey={identity}
         itemToString={identity}
         itemToValue={identity}
-        renderItem={(protocol) => <HealthCheckProtocol protocol={protocol} />}
+        renderItem={(protocol) => <TranslateEnum enum="portProtocol" value={protocol} />}
         onChangeEffect={() => void trigger(`ports.${index}.healthCheck.path`)}
       />
 

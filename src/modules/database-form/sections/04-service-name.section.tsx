@@ -18,10 +18,10 @@ export function ServiceNameSection() {
   return (
     <DatabaseServiceFormSection
       section="serviceName"
-      title={serviceName || <T id="serviceNameMissing" />}
-      expandedTitle={<T id="expandedTitle" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={serviceName || <T id="serviceNameMissing" />}
       shortcut={serviceId ? 2 : 4}
-      description={<T id="description" />}
     >
       <ControlledInput<DatabaseServiceForm, 'serviceName'>
         name="serviceName"

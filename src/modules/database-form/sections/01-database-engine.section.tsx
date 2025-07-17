@@ -10,22 +10,13 @@ import { DatabaseServiceForm } from '../database-service-form.types';
 const T = createTranslate('modules.databaseForm.engine');
 
 export function DatabaseEngineSection() {
-  const version = useWatch<DatabaseServiceForm, 'engine.version'>({ name: 'engine.version' });
-
   return (
     <DatabaseServiceFormSection
       section="engine"
-      title={
-        <div className="row gap-1">
-          <T id="title" />
-          <span className="font-normal text-dim">
-            <T id="titleVersion" values={{ version }} />
-          </span>
-        </div>
-      }
-      expandedTitle={<T id="expandedTitle" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<Summary />}
       shortcut={1}
-      description={<T id="description" />}
     >
       <ControlledSelect<DatabaseServiceForm, 'engine.version'>
         name="engine.version"
@@ -38,5 +29,15 @@ export function DatabaseEngineSection() {
         className="max-w-sm"
       />
     </DatabaseServiceFormSection>
+  );
+}
+
+function Summary() {
+  const version = useWatch<DatabaseServiceForm, 'engine.version'>({ name: 'engine.version' });
+
+  return (
+    <div className="row gap-1">
+      <T id="summary" values={{ version }} />
+    </div>
   );
 }

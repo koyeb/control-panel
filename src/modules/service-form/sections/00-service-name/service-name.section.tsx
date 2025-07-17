@@ -19,9 +19,9 @@ export function ServiceNameSection() {
   return (
     <ServiceFormSection
       section="serviceName"
-      description={<T id="description" />}
-      title={<SectionTitle />}
-      expandedTitle={<T id="titleExpanded" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<Summary />}
       className="col gaps"
     >
       {serviceId !== null && (
@@ -39,11 +39,11 @@ export function ServiceNameSection() {
   );
 }
 
-function SectionTitle() {
+function Summary() {
   const serviceName = useWatchServiceForm('serviceName');
 
   if (serviceName === '') {
-    return <T id="titleServiceNameMissing" />;
+    return <T id="summaryServiceNameMissing" />;
   }
 
   return <div className="max-w-full truncate">{serviceName}</div>;

@@ -7,12 +7,12 @@ import { Shortcut } from 'src/components/shortcut';
 type ExpandSource = 'click' | 'keydown' | 'shortcut';
 
 type BaseServiceFormSectionProps = {
-  expanded: boolean;
-  expand: (source: ExpandSource) => void;
-  keepMounted?: boolean;
   title: React.ReactNode;
-  expandedTitle: React.ReactNode;
-  description: React.ReactNode;
+  summary: React.ReactNode;
+  action: React.ReactNode;
+  expanded: boolean;
+  onExpand: (source: ExpandSource) => void;
+  keepMounted?: boolean;
   shortcut?: number;
   hasError?: boolean;
   className?: string;
@@ -20,12 +20,12 @@ type BaseServiceFormSectionProps = {
 };
 
 export function BaseServiceFormSection({
-  expanded,
-  expand,
-  keepMounted,
   title,
-  expandedTitle,
-  description,
+  summary,
+  action,
+  expanded,
+  onExpand: expand,
+  keepMounted,
   shortcut,
   hasError,
   className,
@@ -38,8 +38,8 @@ export function BaseServiceFormSection({
         <Header
           expanded={expanded}
           hasError={hasError}
-          title={expanded ? expandedTitle : title}
-          description={description}
+          title={title}
+          description={expanded ? action : summary}
           shortcut={shortcut?.toString()}
           expand={expand}
         />
@@ -71,17 +71,9 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
       )}
       onClick={() => expand('click')}
     >
-      <div>
-        <IconChevronDown
-          tabIndex={0}
-          onKeyDown={(event) => event.key === ' ' && expand('keydown')}
-          className={clsx('size-5 rounded text-icon focusable', expanded && 'rotate-180')}
-        />
-      </div>
-
       <div className="col min-w-0 gap-1">
-        <span className="text-xs text-dim">{description}</span>
         <span className="font-medium">{title}</span>
+        <span className="text-xs text-dim">{description}</span>
       </div>
 
       {shortcut !== undefined && (
@@ -89,6 +81,14 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
           <Shortcut keystrokes={['meta', shortcut]} onTrigger={() => expand('shortcut')} />
         </div>
       )}
+
+      <div>
+        <IconChevronDown
+          tabIndex={0}
+          onKeyDown={(event) => event.key === ' ' && expand('keydown')}
+          className={clsx('size-5 rounded text-icon focusable', expanded && 'rotate-180')}
+        />
+      </div>
     </header>
   );
 }

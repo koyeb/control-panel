@@ -21,9 +21,9 @@ export function PortsSection() {
   return (
     <ServiceFormSection
       section="ports"
-      title={<SectionTitle />}
-      description={<T id="description" />}
-      expandedTitle={<T id="expandedTitle" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<Summary />}
       className="col gap-6"
     >
       {fields.map(({ id }, index) => (
@@ -59,15 +59,22 @@ export function PortsSection() {
   );
 }
 
-function SectionTitle() {
+function Summary() {
   const ports = useWatchServiceForm('ports').filter((port) => !Number.isNaN(port.portNumber));
 
   return (
-    <div className="row gap-2">
-      <T id="title" />
-      <Badge size={1} color="green">
-        <T id="titleBadge" values={{ count: ports.length }} />
-      </Badge>
+    <div className="row items-center gap-2">
+      <T
+        id="summary"
+        values={{
+          count: ports.length,
+          badge: (children) => (
+            <Badge size={1} color="green">
+              {children}
+            </Badge>
+          ),
+        }}
+      />
     </div>
   );
 }

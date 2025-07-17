@@ -14,9 +14,9 @@ export function DeploymentSection() {
   return (
     <ServiceFormSection
       section="deployment"
-      title={<SectionTitle />}
-      expandedTitle={<T id="expandedTitle" />}
-      description={<T id="description" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<Summary />}
       className="col gaps"
     >
       <EntrypointInput />
@@ -32,7 +32,7 @@ export function DeploymentSection() {
   );
 }
 
-function SectionTitle() {
+function Summary() {
   const options = useWatchServiceForm('dockerDeployment');
 
   return <T id={isDefaultConfiguration(options) ? 'defaultConfiguration' : 'customConfiguration'} />;

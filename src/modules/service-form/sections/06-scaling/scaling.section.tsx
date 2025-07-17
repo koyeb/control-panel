@@ -22,9 +22,9 @@ export function ScalingSection() {
   return (
     <ServiceFormSection
       section="scaling"
-      title={<SectionTitle />}
-      description={<T id="description" />}
-      expandedTitle={<T id="expandedTitle" />}
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={<Summary />}
       className="col gap-6"
     >
       <ScalingAlerts />
@@ -38,7 +38,7 @@ export function ScalingSection() {
   );
 }
 
-const SectionTitle = () => {
+function Summary() {
   const scaling = useWatchServiceForm('scaling');
   const fixedScaling = scaling.min === scaling.max;
 
@@ -54,4 +54,4 @@ const SectionTitle = () => {
       </span>
     </div>
   );
-};
+}

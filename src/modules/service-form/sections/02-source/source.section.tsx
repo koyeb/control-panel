@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { SvgComponent } from 'src/application/types';
 import { ControlledRadio } from 'src/components/controlled';
 import { IconArchive, IconGitBranch, IconGithub } from 'src/components/icons';
 import IconDocker from 'src/icons/docker.svg?react';
@@ -21,15 +22,15 @@ export function SourceSection() {
   return (
     <ServiceFormSection
       section="source"
-      title={
+      title={<T id="title" />}
+      action={<T id="action" />}
+      summary={
         <>
-          {sourceType === 'archive' && <ArchiveSectionTitle />}
-          {sourceType === 'git' && <GitSectionTitle />}
-          {sourceType === 'docker' && <DockerSectionTitle />}
+          {sourceType === 'archive' && <ArchiveSummary />}
+          {sourceType === 'git' && <GitSummary />}
+          {sourceType === 'docker' && <DockerSummary />}
         </>
       }
-      expandedTitle={<T id="expandedTitle" />}
-      description={<T id="description" />}
       className="col gaps"
     >
       <div className="col gap-6 sm:row">
@@ -64,46 +65,41 @@ export function SourceSection() {
   );
 }
 
-function ArchiveSectionTitle() {
-  return (
-    <div className="row items-center gap-2">
-      <IconArchive className="icon" />
-      <T id="archive.title" />
-    </div>
-  );
+function ArchiveSummary() {
+  return <IconLabel Icon={IconArchive} label={<T id="archive.title" />} />;
 }
 
-function GitSectionTitle() {
+function GitSummary() {
   const repositoryType = useWatchServiceForm('source.git.repositoryType');
-  const repository = useWatchServiceForm(`source.git.${repositoryType}Repository`);
+  const repository = useWatchServiceForm(`source.git.${repositoryType}Repository.repositoryName`);
+  const branch = useWatchServiceForm(`source.git.${repositoryType}Repository.branch`);
 
-  if (repository.repositoryName === null) {
-    return <T id="noRepositorySelected" />;
+  if (repository === null) {
+    return <IconLabel Icon={IconGithub} label={<T id="noRepositorySelected" />} />;
   }
 
   return (
     <div className="row gap-4">
-      <div className="row items-center gap-2">
-        <IconGithub className="icon" /> {repository.repositoryName}
-      </div>
-
-      <div className="row items-center gap-2">
-        <IconGitBranch className="icon" /> {repository.branch}
-      </div>
+      <IconLabel Icon={IconGithub} label={repository} />
+      <IconLabel Icon={IconGitBranch} label={branch} />
     </div>
   );
 }
 
-function DockerSectionTitle() {
-  const docker = useWatchServiceForm('source.docker');
+function DockerSummary() {
+  const image = useWatchServiceForm('source.docker.image');
 
-  if (docker.image === '') {
+  if (image === '') {
     return <T id="noDockerImageSelected" />;
   }
 
+  return <IconLabel Icon={IconDocker} label={image} />;
+}
+
+function IconLabel({ Icon, label }: { Icon: SvgComponent; label: React.ReactNode }) {
   return (
     <div className="row items-center gap-2">
-      <IconDocker className="icon" /> {docker.image}
+      <Icon className="size-4 text-dim" /> {label}
     </div>
   );
 }
