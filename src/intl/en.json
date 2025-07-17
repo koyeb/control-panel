@@ -768,6 +768,7 @@
       "stepper": {
         "deploymentSource": "Select deployment source",
         "importProject": "Import project",
+        "builder": "Choose a builder",
         "instanceRegions": "Choose instance and regions",
         "review": "Review and deploy 🚀"
       },
@@ -853,6 +854,18 @@
             "pending": "Validating the provided path",
             "validated": "The image is accessible"
           }
+        }
+      },
+      "builder": {
+        "title": "Create a new service",
+        "description": "Choose a builder",
+        "buildpack": {
+          "title": "Buildpack",
+          "description": "Uses buildpacks to detect your project's language, install dependencies, and package the environment into a runnable image"
+        },
+        "dockerfile": {
+          "title": "Dockerfile",
+          "description": "If your repository contains a Dockerfile, Koyeb can use it to build a runnable container image for your project"
         }
       },
       "instanceRegions": {
