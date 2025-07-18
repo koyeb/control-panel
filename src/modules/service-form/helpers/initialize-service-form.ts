@@ -258,7 +258,7 @@ export function defaultServiceForm(): ServiceForm {
         protocol: 'http',
         path: '/',
         public: true,
-        proxy: false,
+        tcpProxy: false,
         healthCheck: defaultHealthCheck(),
       },
     ],

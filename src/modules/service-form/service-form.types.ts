@@ -141,7 +141,7 @@ export type Port = {
   protocol: PortProtocol;
   path: string;
   public: boolean;
-  proxy: boolean;
+  tcpProxy: boolean;
   healthCheck: HealthCheck;
 };
 

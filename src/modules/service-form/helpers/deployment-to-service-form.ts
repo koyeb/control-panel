@@ -239,7 +239,7 @@ function ports(definition: Api.DeploymentDefinition): Array<DeepPartial<Port>> |
     portNumber: port.port,
     protocol: port.protocol as PortProtocol,
     public: port.protocol !== 'tcp',
-    proxy: definition.proxy_ports?.find((proxyPort) => proxyPort.port === port.port) !== undefined,
+    tcpProxy: definition.proxy_ports?.find((proxyPort) => proxyPort.port === port.port) !== undefined,
     path: definition.routes?.find((route) => route.port === port.port)?.path,
     healthCheck: healthCheck(definition, port),
   }));

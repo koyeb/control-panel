@@ -185,7 +185,7 @@ function ports(ports: Array<Port>): Array<Api.Port> {
 
 function proxyPorts(ports: Array<Port>): Array<Api.DeploymentProxyPort> {
   return ports
-    .filter((port) => port.proxy)
+    .filter((port) => port.tcpProxy)
     .map((port) => ({
       port: port.portNumber,
       protocol: 'tcp',

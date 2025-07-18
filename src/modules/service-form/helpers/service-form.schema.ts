@@ -171,7 +171,7 @@ const healthCheck = z.discriminatedUnion('protocol', [
 const portCommon = z.object({
   portNumber: z.number().min(1).lt(65000),
   protocol: z.string(),
-  proxy: z.boolean(),
+  tcpProxy: z.boolean(),
   healthCheck,
 });
 

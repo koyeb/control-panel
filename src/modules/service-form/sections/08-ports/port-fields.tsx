@@ -31,7 +31,7 @@ export function PortFields({ index, onRemove }: { index: number; onRemove?: () =
             </Badge>
           )}
 
-          {watch(`ports.${index}.proxy`) && (
+          {watch(`ports.${index}.tcpProxy`) && (
             <Badge size={1} color="blue" className="truncate">
               <T id="badges.tcpProxy" />
             </Badge>
@@ -108,8 +108,8 @@ export function PortFields({ index, onRemove }: { index: number; onRemove?: () =
 
       <div className="col gap-2">
         <div className="col gap-2 sm:row sm:items-center">
-          <ControlledCheckbox<ServiceForm, `ports.${number}.proxy`>
-            name={`ports.${index}.proxy`}
+          <ControlledCheckbox<ServiceForm, `ports.${number}.tcpProxy`>
+            name={`ports.${index}.tcpProxy`}
             label={<T id="tcpProxy.label" />}
             className="whitespace-nowrap"
           />

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { ServiceForm } from '../service-form.types';
+import { Port, ServiceForm } from '../service-form.types';
 
 import { defaultHealthCheck, defaultServiceForm } from './initialize-service-form';
 import { serviceFormSchema } from './service-form.schema';
@@ -115,16 +115,16 @@ describe('serviceFormSchema', () => {
       path: '/',
       protocol: 'http',
       public: true,
-      proxy: false,
+      tcpProxy: false,
       healthCheck: defaultHealthCheck(),
     });
 
-    expect(parse(form)).toHaveProperty('ports.1', {
+    expect(parse(form)).toHaveProperty<Port>('ports.1', {
       portNumber: 1,
       path: '/',
       protocol: 'http',
       public: true,
-      proxy: false,
+      tcpProxy: false,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       healthCheck: expect.any(Object),
     });

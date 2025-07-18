@@ -216,7 +216,7 @@ class ServiceFormBuilder {
       portNumber: Number(port),
       protocol: protocol,
       public: protocol !== 'tcp' && path !== '',
-      proxy: tcpProxy === 'true',
+      tcpProxy: tcpProxy === 'true',
       path,
       healthCheck: defaultHealthCheck(),
     };

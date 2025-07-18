@@ -97,8 +97,8 @@ export function getDeployParams(form: ServiceForm, removeDefaultValues = true): 
   }
 
   if (form.serviceType === 'web') {
-    for (const { portNumber, path, public: isPublic, protocol, proxy, healthCheck } of form.ports) {
-      const port = [portNumber, protocol, isPublic ? path : '', proxy ? 'true' : '']
+    for (const { portNumber, path, public: isPublic, protocol, tcpProxy, healthCheck } of form.ports) {
+      const port = [portNumber, protocol, isPublic ? path : '', tcpProxy ? 'true' : '']
         .join(';')
         .replace(/;+$/, '');
 
