@@ -97,8 +97,12 @@ export function getDeployParams(form: ServiceForm, removeDefaultValues = true): 
   }
 
   if (form.serviceType === 'web') {
-    for (const { portNumber, path, public: isPublic, protocol, healthCheck } of form.ports) {
-      params.append('ports', [portNumber, protocol, isPublic ? path : undefined].filter(Boolean).join(';'));
+    for (const { portNumber, path, public: isPublic, protocol, proxy, healthCheck } of form.ports) {
+      const port = [portNumber, protocol, isPublic ? path : '', proxy ? 'true' : '']
+        .join(';')
+        .replace(/;+$/, '');
+
+      params.append('ports', port);
 
       set(`hc_protocol[${portNumber}]`, healthCheck.protocol);
       set(`hc_grace_period[${portNumber}]`, healthCheck.gracePeriod);

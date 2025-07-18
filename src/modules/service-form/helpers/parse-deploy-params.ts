@@ -12,7 +12,6 @@ import {
   HealthCheck,
   HealthCheckProtocol,
   Port,
-  PortProtocol,
   Scaling,
   ServiceForm,
   ServiceVolume,
@@ -203,31 +202,24 @@ class ServiceFormBuilder {
   }
 
   private parsePort(value: string): Port | void {
-    let match = value.match(/(\d+);(http|http2);(.+)/);
+    const [port, protocol, path = '', tcpProxy] = value.split(';');
 
-    if (match) {
-      return {
-        portNumber: Number(match[1]),
-        protocol: match[2] as PortProtocol,
-        public: true,
-        proxy: false,
-        path: match[3] as string,
-        healthCheck: defaultHealthCheck(),
-      };
+    if (Number.isNaN(Number(port))) {
+      return;
     }
 
-    match = value.match(/(\d+);tcp/);
-
-    if (match) {
-      return {
-        portNumber: Number(match[1]),
-        protocol: 'tcp',
-        public: false,
-        proxy: false,
-        path: '',
-        healthCheck: defaultHealthCheck(),
-      };
+    if (!inArray(protocol, ['http', 'http2', 'tcp'] as const)) {
+      return;
     }
+
+    return {
+      portNumber: Number(port),
+      protocol: protocol,
+      public: protocol !== 'tcp' && path !== '',
+      proxy: tcpProxy === 'true',
+      path,
+      healthCheck: defaultHealthCheck(),
+    };
   }
 
   set ports(portsInput: string[]) {

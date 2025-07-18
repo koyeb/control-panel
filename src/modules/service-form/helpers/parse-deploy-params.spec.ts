@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { CatalogInstance, CatalogRegion } from 'src/api/model';
 import { create } from 'src/utils/factories';
 
+import { Port } from '../service-form.types';
+
 import { defaultHealthCheck } from './initialize-service-form';
 import { parseDeployParams } from './parse-deploy-params';
 
@@ -218,6 +220,16 @@ describe('parseDeployParams', () => {
       expect(test.getValues()).toHaveProperty('ports', [
         { portNumber: 1, public: true, proxy: false, protocol: 'http', path: '/', healthCheck },
         { portNumber: 1, public: false, proxy: false, protocol: 'tcp', path: '', healthCheck },
+      ]);
+    });
+
+    it('TCP proxy', () => {
+      test.params.append('ports', '1;tcp;;true');
+      test.params.append('ports', '2;tcp;/;true');
+
+      expect(test.getValues()).toHaveProperty<Port[]>('ports', [
+        { portNumber: 1, public: false, proxy: true, protocol: 'tcp', path: '', healthCheck },
+        { portNumber: 2, public: false, proxy: true, protocol: 'tcp', path: '/', healthCheck },
       ]);
     });
   });
