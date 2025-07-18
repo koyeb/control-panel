@@ -1,15 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
-import { useApiMutationFn, useInvalidateApiQuery } from './api/use-api';
-import { useAuth, useRefreshToken } from './application/authentication';
+import { useApiMutationFn } from './api/use-api';
+import { useRefreshToken, useSetToken } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
-import { useNavigate, useSearchParams } from './hooks/router';
+import { useHistoryState, useNavigate, useSearchParams } from './hooks/router';
 import { useSeon } from './hooks/seon';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
@@ -46,6 +47,17 @@ import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page'
 export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
+
+  const { token, session } = useHistoryState();
+  const setToken = useSetToken();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (token !== undefined) {
+      setToken(token, session);
+      navigate({ state: { token: undefined, session: undefined } });
+    }
+  }, [token, session, setToken, navigate]);
 
   useRefreshToken();
 
@@ -171,10 +183,6 @@ function PageNotFound() {
 function useOrganizationContextParam() {
   const organizationIdParam = useSearchParams().get('organization-id');
   const navigate = useNavigate();
-
-  const { setToken } = useAuth();
-  const invalidate = useInvalidateApiQuery();
-
   const getSeonFingerprint = useSeon();
 
   const mutation = useMutation({
@@ -182,12 +190,8 @@ function useOrganizationContextParam() {
       path: { id: organizationId },
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
-    async onSuccess({ token }) {
-      setToken(token!.id!);
-      await invalidate('getCurrentOrganization');
-    },
-    onSettled() {
-      navigate({ search: (prev) => ({ ...prev, 'organization-id': null }) });
+    onSuccess({ token }) {
+      navigate({ state: { token: token!.id! }, search: (prev) => ({ ...prev, 'organization-id': null }) });
     },
   });
 

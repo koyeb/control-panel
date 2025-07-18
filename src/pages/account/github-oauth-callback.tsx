@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { ApiValidationError } from 'src/api/api-errors';
 import { useInvalidateApiQuery } from 'src/api/use-api';
-import { getToken, useAuth } from 'src/application/authentication';
+import { getToken, useSetToken } from 'src/application/authentication';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
@@ -29,8 +29,8 @@ const schema = z.object({
 export function GithubOauthCallbackPage() {
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
-  const { setToken } = useAuth();
   const invalidate = useInvalidateApiQuery();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const [githubAppInstalled, setGithubAppInstalled] = useState(false);
@@ -67,12 +67,14 @@ export function GithubOauthCallbackPage() {
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
         setToken(result.token.id);
+
         navigate({
           to: redirect.pathname,
           search: Object.fromEntries(redirect.searchParams),
           replace: true,
           state: { createOrganization: action === 'signup' },
         });
+
         return;
       }
 

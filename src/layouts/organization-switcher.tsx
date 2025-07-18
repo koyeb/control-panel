@@ -7,7 +7,7 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { SvgComponent } from 'src/application/types';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
@@ -160,7 +160,7 @@ function useOrganizationList(search: string) {
 }
 
 function useSwitchOrganization(onSuccess?: () => void) {
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
   const getSeonFingerprint = useSeon();
   const navigate = useNavigate();
 

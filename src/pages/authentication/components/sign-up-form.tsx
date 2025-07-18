@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
@@ -27,8 +27,10 @@ const schema = z.object({
 
 export function SignUpForm({ initialValues }: { initialValues: { name?: string; email?: string } }) {
   const t = T.useTranslate();
-  const { setToken } = useAuth();
+
+  const setToken = useSetToken();
   const navigate = useNavigate();
+
   const getSeonFingerprint = useSeon();
 
   const form = useForm<z.infer<typeof schema>>({

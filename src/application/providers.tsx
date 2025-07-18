@@ -11,7 +11,7 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
-import { useAuth } from './authentication';
+import { auth, useSetToken } from './authentication';
 import { getConfig } from './config';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
@@ -71,16 +71,15 @@ class RootErrorBoundary extends Component<{ children: React.ReactNode }> {
 
 function PersistQueryClientProvider({ children }: { children: React.ReactNode }) {
   const { version } = getConfig();
-  const { session } = useAuth();
 
   const persister = useMemo(() => {
-    const storage = session ? window.sessionStorage : window.localStorage;
+    const storage = auth.session ? window.sessionStorage : window.localStorage;
 
     return createAsyncStoragePersister({
       key: 'query-cache',
       storage,
     });
-  }, [session]);
+  }, []);
 
   return (
     <BasePersistQueryClientProvider client={queryClient} persistOptions={{ persister, buster: version }}>
@@ -90,8 +89,8 @@ function PersistQueryClientProvider({ children }: { children: React.ReactNode })
 }
 
 function TokenParamsProvider({ children }: { children: React.ReactNode }) {
+  const setToken = useSetToken();
   const navigate = useNavigate();
-  const { setToken } = useAuth();
 
   const search = useSearchParams();
   const sessionTokenParam = search.get('session-token');

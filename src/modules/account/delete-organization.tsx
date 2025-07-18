@@ -4,7 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { api } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
@@ -14,12 +14,13 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('modules.account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const { setToken } = useAuth();
+  const t = T.useTranslate();
+
   const user = useUser();
   const organization = useOrganization();
 
+  const setToken = useSetToken();
   const navigate = useNavigate();
-  const t = T.useTranslate();
 
   const unpaidInvoicesQuery = useQuery({
     ...useApiQueryFn('hasUnpaidInvoices'),

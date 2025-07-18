@@ -4,12 +4,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { api } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { isSlug } from 'src/utils/strings';
@@ -26,8 +26,8 @@ const schema = z.object({
 
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -49,9 +49,9 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
 
       return newToken!.id!;
     },
-    async onSuccess(token) {
-      await invalidate('getCurrentOrganization');
+    onSuccess(token) {
       setToken(token);
+      navigate({ to: '/' });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({

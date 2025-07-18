@@ -6,8 +6,7 @@ import { z } from 'zod';
 import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
-import { useInvalidateApiQuery } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -59,8 +58,7 @@ export function JoinOrganization() {
 }
 
 function CreateOrganization() {
-  const { setToken } = useAuth();
-  const invalidate = useInvalidateApiQuery();
+  const setToken = useSetToken();
   const navigate = useNavigate();
   const state = useHistoryState();
 
@@ -94,9 +92,8 @@ function CreateOrganization() {
 
       return newToken!.id!;
     },
-    async onSuccess(token) {
+    onSuccess(token) {
       setToken(token);
-      await invalidate('getCurrentOrganization');
     },
     onError(error) {
       if (state.createOrganization) {

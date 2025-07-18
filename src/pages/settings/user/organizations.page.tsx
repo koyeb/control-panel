@@ -7,7 +7,7 @@ import { api } from 'src/api/api';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ValidateLinkOptions } from 'src/components/link';
@@ -51,8 +51,8 @@ const schema = z.object({
 
 function CreateOrganizationDialog() {
   const t = T.useTranslate();
+  const setToken = useSetToken();
   const navigate = useNavigate();
-  const { setToken } = useAuth();
 
   const form = useForm<z.infer<typeof schema>>({
     mode: 'onChange',
@@ -149,7 +149,7 @@ function OrganizationList() {
 
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
   const currentOrganization = useOrganizationUnsafe();
-  const { setToken } = useAuth();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
@@ -158,7 +158,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
       header: {},
     })),
     onSuccess(token, redirect) {
-      setToken(token.token!.id!, false);
+      setToken(token.token!.id!);
       navigate(urlToLinkOptions(redirect));
     },
   });

@@ -8,7 +8,7 @@ import {
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
-import { getToken, useAuth } from 'src/application/authentication';
+import { auth, getToken } from 'src/application/authentication';
 import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { createStorage } from 'src/application/storage';
@@ -142,10 +142,9 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
-  const { session } = useAuth();
   const trial = useTrial();
 
-  if (session) {
+  if (auth.session) {
     return 'session';
   }
 

@@ -21,6 +21,7 @@ export const auth = {
       sessionToken.write(value);
     } else {
       accessToken.write(value);
+      sessionToken.write(null);
     }
 
     auth.token = sessionToken.read() ?? accessToken.read();
@@ -28,18 +29,26 @@ export const auth = {
   },
 };
 
+declare global {
+  interface Window {
+    auth: typeof auth;
+  }
+}
+
+window.auth = auth;
+
 export function getToken() {
   return auth.token;
 }
 
-function useSetToken() {
+export function useSetToken() {
   const queryClient = useQueryClient();
 
-  return useCallback<typeof auth.setToken>(
-    async (token, session) => {
-      await queryClient.cancelQueries();
-
+  return useCallback(
+    (token: string | null, session?: boolean) => {
       auth.setToken(token, session);
+
+      void queryClient.cancelQueries();
 
       if (getToken()) {
         const queriesToKeep = ['getCurrentUser', 'getCurrentOrganization', 'getSubscription'];
@@ -48,7 +57,7 @@ function useSetToken() {
           predicate: ({ queryKey }) => !inArray(queryKey[0], queriesToKeep),
         });
 
-        await queryClient.invalidateQueries();
+        void queryClient.invalidateQueries();
       } else {
         queryClient.clear();
       }
@@ -57,31 +66,25 @@ function useSetToken() {
   );
 }
 
-export function useAuth() {
-  const setToken = useSetToken();
-
-  return {
-    ...auth,
-    setToken,
-  };
-}
-
 export function useRefreshToken() {
-  const { session, token, setToken } = useAuth();
   const pathname = usePathname();
 
   const { mutate } = useMutation({
     ...useApiMutationFn('refreshToken', {}),
-    onSuccess: ({ token }) => setToken(token!.id!),
+    onSuccess: ({ token }) => auth.setToken(token!.id!),
   });
 
   useEffect(() => {
-    const expires = token ? jwtExpires(token) : undefined;
+    if (auth.session) {
+      return;
+    }
 
-    if (!session && expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
+    const expires = auth.token ? jwtExpires(auth.token) : undefined;
+
+    if (expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
       mutate();
     }
-  }, [session, pathname, token, mutate]);
+  }, [pathname, mutate]);
 }
 
 function jwtExpires(jwt: string) {

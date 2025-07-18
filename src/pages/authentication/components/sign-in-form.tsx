@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { ApiError } from 'src/api/api-errors';
 import { useApiMutationFn } from 'src/api/use-api';
-import { useAuth } from 'src/application/authentication';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
@@ -28,8 +28,10 @@ const invalidCredentialApiMessage =
 
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
-  const { setToken } = useAuth();
+
+  const setToken = useSetToken();
   const navigate = useNavigate();
+
   const getSeonFingerprint = useSeon();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -46,7 +48,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
       token: undefined,
       body: credential,
     })),
-    async onSuccess(result) {
+    onSuccess(result) {
       setToken(result.token!.id!);
       navigate(urlToLinkOptions(redirect));
     },
