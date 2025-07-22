@@ -3147,7 +3147,13 @@ export interface components {
             invitation?: components["schemas"]["OrganizationInvitation"];
         };
         GitDeploymentMetadata: {
+            git_env?: components["schemas"]["GitEnvDeploymentMetadata"];
             last_provisioned_deployment_id?: string;
+        };
+        GitEnvDeploymentMetadata: {
+            commit_author?: string;
+            commit_message?: string;
+            sha?: string;
         };
         GithubInstallationReply: {
             /**
@@ -4344,6 +4350,7 @@ export interface components {
             /** Format: int64 */
             proxy_ports?: number;
             regions?: string[];
+            scale_to_zero?: components["schemas"]["ScaleToZeroQuotas"];
             /** Format: int64 */
             service_provisioning_concurrency?: string;
             /** Format: int64 */
@@ -4551,6 +4558,20 @@ export interface components {
             timestamp?: string;
             /** Format: double */
             value?: number;
+        };
+        ScaleToZeroQuotas: {
+            /** Format: int64 */
+            deep_sleep_idle_delay_max?: number;
+            /** Format: int64 */
+            deep_sleep_idle_delay_min?: number;
+            /** deep sleep limits */
+            is_deep_sleep_enabled?: boolean;
+            /** light sleep limits */
+            is_light_sleep_enabled?: boolean;
+            /** Format: int64 */
+            light_sleep_idle_delay_max?: number;
+            /** Format: int64 */
+            light_sleep_idle_delay_min?: number;
         };
         Scaling: {
             /** Format: int64 */
@@ -15971,7 +15992,11 @@ export interface operations {
     };
     ResumeService: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
+                 *     The call fails if no previous successful builds happened. */
+                skip_build?: boolean;
+            };
             header?: never;
             path: {
                 /** @description The id of the service to pause. */

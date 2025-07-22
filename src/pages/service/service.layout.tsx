@@ -8,6 +8,7 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -84,6 +85,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
 
 function RegisterServiceCommands({ service }: { service: Service }) {
   const { defaultItems, mutationEffects } = useCommandPaletteContext();
+  const openDialog = Dialog.useOpen();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
@@ -98,15 +100,6 @@ function RegisterServiceCommands({ service }: { service: Service }) {
     onSuccess: async () => {
       await invalidateService();
       notify.success(`Service ${service.name} is being redeployed`);
-    },
-  });
-
-  const { mutate: resume } = useMutation({
-    ...useApiMutationFn('resumeService', { path: { id: service.id } }),
-    ...mutationEffects,
-    onSuccess: async () => {
-      await invalidateService();
-      notify.success(`Service ${service.name} is being resumed`);
     },
   });
 
@@ -178,7 +171,7 @@ function RegisterServiceCommands({ service }: { service: Service }) {
         description: `Resume ${name}`,
         keywords: ['resume', 'start'],
         weight: 4,
-        execute: resume,
+        execute: () => openDialog('ResumeService', { resourceId: service.id }),
       };
     } else if (inArray(service.status, ['HEALTHY', 'DEGRADED'])) {
       command = {
@@ -197,7 +190,7 @@ function RegisterServiceCommands({ service }: { service: Service }) {
         defaultItems.delete(command);
       };
     }
-  }, [defaultItems, service.name, service.status, resume, pause]);
+  }, [defaultItems, service, pause, openDialog]);
 
   return null;
 }
@@ -265,16 +258,7 @@ function Navigation() {
 }
 
 function ServicePausedAlert({ service }: { service: Service }) {
-  const t = T.useTranslate();
-
-  const { mutate: resume, isPending } = useMutation({
-    ...useApiMutationFn('resumeService', {
-      path: { id: service.id },
-    }),
-    onSuccess() {
-      notify.info(t('servicePaused.resuming'));
-    },
-  });
+  const openDialog = Dialog.useOpen();
 
   if (service.status !== 'PAUSED') {
     return null;
@@ -288,7 +272,11 @@ function ServicePausedAlert({ service }: { service: Service }) {
         <T id={service.type === 'worker' ? 'servicePaused.descriptionWorker' : 'servicePaused.description'} />
       }
     >
-      <Button color="blue" loading={isPending} onClick={() => resume()} className="ml-auto self-center">
+      <Button
+        color="blue"
+        onClick={() => openDialog('ResumeService', { resourceId: service.id })}
+        className="ml-auto self-center"
+      >
         <T id="servicePaused.resume" />
       </Button>
     </Alert>

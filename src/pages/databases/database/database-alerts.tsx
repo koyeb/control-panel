@@ -37,6 +37,7 @@ function DatabasePausedAlert({ service }: { service: Service }) {
   const mutation = useMutation({
     ...useApiMutationFn('resumeService', {
       path: { id: service.id },
+      query: { skip_build: true },
     }),
     async onSuccess() {
       await invalidate('getService', { path: { id: service.id } });
