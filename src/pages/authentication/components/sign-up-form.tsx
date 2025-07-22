@@ -5,7 +5,6 @@ import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
-import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -13,6 +12,7 @@ import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
+import { getConfig } from 'src/utils/config';
 
 import { AuthButton } from './auth-button';
 import { AuthInput } from './auth-input';
@@ -109,7 +109,7 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
 }
 
 function useInjectRecaptchaScript() {
-  const { recaptchaClientKey } = getConfig();
+  const recaptchaClientKey = getConfig('recaptchaClientKey');
 
   useEffect(() => {
     if (document.getElementById('recaptcha') !== null) {

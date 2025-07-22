@@ -9,7 +9,6 @@ import {
   useUserUnsafe,
 } from 'src/api/hooks/session';
 import { auth, getToken } from 'src/application/authentication';
-import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { createStorage } from 'src/application/storage';
 import { DocumentTitle } from 'src/components/document-title';
@@ -27,6 +26,7 @@ import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { useTrial } from 'src/modules/trial/use-trial';
 import { inArray } from 'src/utils/arrays';
+import { getConfig } from 'src/utils/config';
 
 import { OrganizationSwitcher } from '../organization-switcher';
 
@@ -173,7 +173,7 @@ type PageContextProps = {
 };
 
 function PageContext({ expanded, setExpanded }: PageContextProps) {
-  const { pageContextBaseUrl } = getConfig();
+  const pageContextBaseUrl = getConfig('pageContextBaseUrl');
 
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
@@ -226,7 +226,7 @@ const pageContextExpanded = createStorage<boolean>('page-context-expanded');
 
 function usePageContext() {
   const user = useUserUnsafe();
-  const { pageContextBaseUrl } = getConfig();
+  const pageContextBaseUrl = getConfig('pageContextBaseUrl');
 
   const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
   const [expanded, setExpanded] = useState(pageContextExpanded.read() ?? false);

@@ -9,8 +9,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { Control, useController } from 'react-hook-form';
 
 import { Address } from 'src/api/model';
-import { getConfig } from 'src/application/config';
 import { createTranslate } from 'src/intl/translate';
+import { getConfig } from 'src/utils/config';
 import { isDefined } from 'src/utils/generic';
 import { Extend } from 'src/utils/types';
 
@@ -31,7 +31,7 @@ type AddressFieldProps = AddressFieldOwnProps &
   >;
 
 export const AddressField = ({ value, onChange, errors, ...props }: AddressFieldProps) => {
-  const { mapboxToken: accessToken } = getConfig();
+  const accessToken = getConfig('mapboxToken');
 
   const [inputValue, setInputValue] = useState('');
   const [autofillDisabled, setAutofillDisabled] = useState(false);

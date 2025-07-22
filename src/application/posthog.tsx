@@ -5,8 +5,8 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { useLocation } from 'src/hooks/router';
+import { getConfig } from 'src/utils/config';
 
-import { getConfig } from './config';
 import { identifyUserInSentry } from './report-error';
 
 // cSpell:ignore pageleave autocapture
@@ -16,7 +16,8 @@ type PostHogProviderProps = {
 };
 
 export function PostHogProvider({ children }: PostHogProviderProps) {
-  const { posthogApiHost, posthogKey } = getConfig();
+  const posthogApiHost = getConfig('posthogApiHost');
+  const posthogKey = getConfig('posthogKey');
 
   if (posthogApiHost === undefined || posthogKey === undefined) {
     return children;

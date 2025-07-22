@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-type AppConfig = Partial<{
+export type AppConfig = Partial<{
   environment: string;
   version: string;
   apiBaseUrl: string;
@@ -15,56 +15,65 @@ type AppConfig = Partial<{
   disablePolling: boolean;
 }>;
 
-const { data: localStorageConfig = {} } = z
-  .record(z.string(), z.string())
-  .safeParse(JSON.parse(localStorage.getItem('config') ?? '{}'));
+export interface ConfigPort {
+  get<K extends keyof AppConfig>(key: K): AppConfig[K];
+}
 
-export function getConfig(): AppConfig {
-  const envConfig = {
-    environment: import.meta.env.VITE_ENVIRONMENT,
-    version: import.meta.env.VITE_APP_VERSION,
-    apiBaseUrl: import.meta.env.VITE_API_URL,
-    websiteUrl: import.meta.env.VITE_WEBSITE_URL,
-    pageContextBaseUrl: import.meta.env.VITE_PAGE_CONTEXT_BASE_URL,
-    recaptchaClientKey: import.meta.env.VITE_RECAPTCHA_CLIENT_KEY,
-    posthogApiHost: import.meta.env.VITE_POSTHOG_API_HOST,
-    posthogKey: import.meta.env.VITE_POSTHOG_KEY,
-    stripePublicKey: import.meta.env.VITE_STRIPE_PUBLIC_KEY,
-    mapboxToken: import.meta.env.VITE_MAPBOX_TOKEN,
-    intercomAppId: import.meta.env.VITE_INTERCOM_APP_ID,
-    disablePolling: import.meta.env.VITE_DISABLE_POLLING,
-  };
+export class EnvConfigAdapter implements ConfigPort {
+  private envConfig: AppConfig;
+  private localConfig: AppConfig;
 
-  const getValue = (name: keyof AppConfig): string | undefined => {
-    const value = localStorageConfig[name] ?? envConfig[name];
+  constructor() {
+    const string = (value?: string) => value ?? '';
+    const boolean = (value?: string) => value === 'true';
+
+    this.envConfig = {
+      environment: string(import.meta.env.VITE_ENVIRONMENT),
+      version: string(import.meta.env.VITE_APP_VERSION),
+      apiBaseUrl: string(import.meta.env.VITE_API_URL),
+      websiteUrl: string(import.meta.env.VITE_WEBSITE_URL),
+      pageContextBaseUrl: string(import.meta.env.VITE_PAGE_CONTEXT_BASE_URL),
+      recaptchaClientKey: string(import.meta.env.VITE_RECAPTCHA_CLIENT_KEY),
+      posthogApiHost: string(import.meta.env.VITE_POSTHOG_API_HOST),
+      posthogKey: string(import.meta.env.VITE_POSTHOG_KEY),
+      stripePublicKey: string(import.meta.env.VITE_STRIPE_PUBLIC_KEY),
+      mapboxToken: string(import.meta.env.VITE_MAPBOX_TOKEN),
+      intercomAppId: string(import.meta.env.VITE_INTERCOM_APP_ID),
+      disablePolling: boolean(import.meta.env.VITE_DISABLE_POLLING),
+    };
+
+    try {
+      this.localConfig = z
+        .record(z.string(), z.string())
+        .parse(JSON.parse(localStorage.getItem('config') ?? ''));
+    } catch {
+      this.localConfig = {};
+    }
+  }
+
+  get<K extends keyof AppConfig>(key: K): AppConfig[K] {
+    if (key in this.localConfig) {
+      return this.localConfig[key];
+    }
+
+    const value = this.envConfig[key];
 
     if (value === '') {
       return undefined;
     }
 
     return value;
-  };
-
-  return {
-    environment: getValue('environment'),
-    version: getValue('version'),
-    apiBaseUrl: getValue('apiBaseUrl'),
-    websiteUrl: getValue('websiteUrl'),
-    pageContextBaseUrl: getValue('pageContextBaseUrl'),
-    recaptchaClientKey: getValue('recaptchaClientKey'),
-    posthogApiHost: getValue('posthogApiHost'),
-    posthogKey: getValue('posthogKey'),
-    stripePublicKey: getValue('stripePublicKey'),
-    mapboxToken: getValue('mapboxToken'),
-    intercomAppId: getValue('intercomAppId'),
-    disablePolling: getValue('disablePolling') === 'true',
-  };
-}
-
-declare global {
-  interface Window {
-    getConfig: typeof getConfig;
   }
 }
 
-window.getConfig = getConfig;
+export class StubConfigAdapter implements ConfigPort {
+  private config: AppConfig = {};
+
+  get<K extends keyof AppConfig>(key: K): AppConfig[K] {
+    return this.config[key];
+  }
+
+  set<K extends keyof AppConfig>(key: K, value: AppConfig[K]): void {
+    this.config[key] = value;
+  }
+}

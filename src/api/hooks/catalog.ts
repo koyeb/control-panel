@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import sortBy from 'lodash-es/sortBy';
 
-import { getConfig } from 'src/application/config';
 import { parseBytes } from 'src/application/memory';
+import { getConfig } from 'src/utils/config';
 import { hasProperty } from 'src/utils/object';
 
 import {
@@ -139,7 +139,7 @@ type OneClickAppApiResponse = {
 };
 
 async function fetchOneClickApps() {
-  const { websiteUrl } = getConfig();
+  const websiteUrl = getConfig('websiteUrl');
   const response = await fetch(`${websiteUrl}/api/one-click-apps.json`, { mode: 'cors' });
 
   if (!response.ok) {

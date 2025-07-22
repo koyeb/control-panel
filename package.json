@@ -47,6 +47,7 @@
     "date-fns": "^4.1.0",
     "dequal": "^2.0.3",
     "diff": "^8.0.2",
+    "ditox": "^3.0.0",
     "downshift": "^9.0.9",
     "framer-motion": "^12.23.0",
     "jwt-decode": "^4.0.0",

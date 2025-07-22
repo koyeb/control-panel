@@ -1,4 +1,4 @@
-import { getConfig } from './config';
+import { getConfig } from 'src/utils/config';
 
 export function getCookie(name: string): string | null {
   for (const cookie of document.cookie.split(';')) {
@@ -26,7 +26,7 @@ export function setCookie(
 }
 
 function getDomain(): string | undefined {
-  const { environment } = getConfig();
+  const environment = getConfig('environment');
 
   if (environment === 'production') {
     return 'app.koyeb.com';

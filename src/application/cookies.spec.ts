@@ -1,13 +1,16 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { getConfig } from './config';
+import { TOKENS } from 'src/tokens';
+
+import { StubConfigAdapter } from './config';
+import { container } from './container';
 import { setCookie } from './cookies';
 
-vi.mock('./config');
-
 describe('cookies', () => {
+  const config = new StubConfigAdapter();
+
   beforeEach(() => {
-    vi.mocked(getConfig).mockReturnValue({});
+    container.bindValue(TOKENS.config, config);
   });
 
   describe('setCookie', () => {
@@ -35,7 +38,8 @@ describe('cookies', () => {
     });
 
     test('domain', () => {
-      vi.mocked(getConfig).mockReturnValue({ environment: 'production' });
+      config.set('environment', 'production');
+
       setCookie('name', 'value');
       expect(cookie).toHaveBeenCalledWith('name=value;Domain=app.koyeb.com');
     });

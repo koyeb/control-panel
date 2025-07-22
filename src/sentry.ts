@@ -1,12 +1,12 @@
 import * as Sentry from '@sentry/react';
 
 import { ApiError } from './api/api-errors';
-import { getConfig } from './application/config';
 import { UnexpectedError } from './application/errors';
 import { inArray } from './utils/arrays';
+import { getConfig } from './utils/config';
 
 async function initSentry() {
-  const { environment } = getConfig();
+  const environment = getConfig('environment');
 
   if (environment === 'development') {
     return;

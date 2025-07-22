@@ -1,15 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 
+import { TOKENS } from 'src/tokens';
 import { create } from 'src/utils/factories';
 
-import { getConfig } from './config';
+import { StubConfigAdapter } from './config';
+import { container } from './container';
 import { ServiceUrl, getServiceUrls } from './service-functions';
 
-vi.mock('./config');
-
 describe('getServiceUrls', () => {
+  const config = new StubConfigAdapter();
+
   beforeEach(() => {
-    vi.mocked(getConfig).mockReturnValue({});
+    container.bindValue(TOKENS.config, config);
   });
 
   it('web service urls', () => {
@@ -62,7 +64,7 @@ describe('getServiceUrls', () => {
   });
 
   it('tcp proxy', () => {
-    vi.mocked(getConfig).mockReturnValue({ environment: 'production' });
+    config.set('environment', 'production');
 
     const urls = getServiceUrls(
       create.app({ domains: [{ id: '', name: 'app.koyeb.app', type: 'AUTOASSIGNED' }] }),

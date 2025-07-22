@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 
 import { useDatacenters } from 'src/api/hooks/catalog';
 import { CatalogRegion } from 'src/api/model';
-import { getConfig } from 'src/application/config';
 import { getUrlLatency } from 'src/application/url-latency';
+import { getConfig } from 'src/utils/config';
 
-const { disablePolling } = getConfig();
+const disablePolling = getConfig('disablePolling');
 
 export function useRegionLatency(region: CatalogRegion | undefined): undefined | null | number {
   const latenciesQuery = useDatacenterLatencies();

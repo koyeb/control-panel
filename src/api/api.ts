@@ -1,5 +1,5 @@
 import { getToken } from 'src/application/authentication';
-import { getConfig } from 'src/application/config';
+import { getConfig } from 'src/utils/config';
 
 import { createApi } from './create-api';
 
@@ -16,7 +16,7 @@ type ApiEndpoints = {
 };
 
 export const api = createApi({
-  baseUrl: getConfig().apiBaseUrl,
+  baseUrl: getConfig('apiBaseUrl'),
   getToken,
 });
 

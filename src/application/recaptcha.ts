@@ -1,4 +1,4 @@
-import { getConfig } from './config';
+import { getConfig } from 'src/utils/config';
 
 type Grecaptcha = {
   ready(callback: () => void): void;
@@ -12,7 +12,7 @@ declare global {
 }
 
 export async function getCaptcha(action: 'signup') {
-  const { recaptchaClientKey } = getConfig();
+  const recaptchaClientKey = getConfig('recaptchaClientKey');
 
   if (recaptchaClientKey === undefined) {
     return;

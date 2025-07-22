@@ -2,10 +2,10 @@ import { Mutation, MutationCache, Query, QueryCache, QueryClient, QueryKey } fro
 import { navigate } from 'wouter/use-browser-location';
 
 import { inArray } from 'src/utils/arrays';
+import { getConfig } from 'src/utils/config';
 
 import { ApiError, isApiNotFoundError } from '../api/api-errors';
 
-import { getConfig } from './config';
 import { notify } from './notify';
 import { reportError } from './report-error';
 
@@ -49,7 +49,7 @@ declare global {
 }
 
 function refetchInterval(query: Query) {
-  const { disablePolling } = getConfig();
+  const disablePolling = getConfig('disablePolling');
 
   if (disablePolling || query.state.error) {
     return false;

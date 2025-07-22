@@ -89,6 +89,9 @@ importers:
       diff:
         specifier: ^8.0.2
         version: 8.0.2
+      ditox:
+        specifier: ^3.0.0
+        version: 3.0.0
       downshift:
         specifier: ^9.0.9
         version: 9.0.9(react@19.1.0)
@@ -2623,6 +2626,10 @@ packages:
   diff@8.0.2:
     resolution: {integrity: sha512-sSuxWU5j5SR9QQji/o2qMvqRNYRDOcBTgsJ/DeCf4iSN4gW+gNMXM7wFIP+fdXZxoNiAnHUTGjCr+TSWXdRDKg==}
     engines: {node: '>=0.3.1'}
+
+  ditox@3.0.0:
+    resolution: {integrity: sha512-1JtKKSc/iOYAYVq/v6Eztc9axCOW9tlEZzyW9zgPgu9tTGDuYoMCI1c71I8ln0OFiskl9s+RUC3APoGL3Z9ZCw==}
+    engines: {node: '>=12'}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -7426,6 +7433,8 @@ snapshots:
       dequal: 2.0.3
 
   diff@8.0.2: {}
+
+  ditox@3.0.0: {}
 
   doctrine@2.1.0:
     dependencies:

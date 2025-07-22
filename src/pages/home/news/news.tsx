@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { FormattedDate } from 'react-intl';
 
-import { getConfig } from 'src/application/config';
 import { createStorage } from 'src/application/storage';
 import { BadgeNew } from 'src/components/badge-new';
 import { IconArrowUpRight } from 'src/components/icons';
@@ -9,6 +8,7 @@ import { ExternalLinkButton } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
+import { getConfig } from 'src/utils/config';
 
 const T = createTranslate('pages.home.news');
 
@@ -27,7 +27,7 @@ export function News() {
     queryKey: ['news'],
     refetchInterval: false,
     async queryFn(): Promise<News[]> {
-      const { websiteUrl } = getConfig();
+      const websiteUrl = getConfig('websiteUrl');
       const url = new URL('/api/news.json', websiteUrl);
       const response = await fetch(url);
 
