@@ -94,3 +94,23 @@ function jwtExpires(jwt: string) {
     return new Date(exp * 1000);
   }
 }
+
+export function useTokenStorageListener() {
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    return accessToken.listen((value) => {
+      auth.token = value;
+      auth.session = false;
+      void queryClient.invalidateQueries();
+    });
+  }, [queryClient]);
+
+  useEffect(() => {
+    return sessionToken.listen((value) => {
+      auth.token = value;
+      auth.session = true;
+      void queryClient.invalidateQueries();
+    });
+  }, [queryClient]);
+}

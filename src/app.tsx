@@ -6,7 +6,7 @@ import { Redirect, Route, Switch, useRoute } from 'wouter';
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn } from './api/use-api';
-import { useRefreshToken, useSetToken } from './application/authentication';
+import { useRefreshToken, useSetToken, useTokenStorageListener } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
@@ -60,6 +60,7 @@ export function App() {
   }, [token, session, setToken, navigate]);
 
   useRefreshToken();
+  useTokenStorageListener();
 
   if (useOrganizationContextParam()) {
     return null;
