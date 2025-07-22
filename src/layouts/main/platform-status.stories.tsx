@@ -4,26 +4,30 @@ import { controls } from 'src/storybook';
 
 import { PlatformStatus } from './platform-status';
 
-// cSpell:ignore hasissues allundermaintenance alldegradedperformance allpartialoutage allminoroutage allmajoroutage
+// cSpell:ignore hasissues undermaintenance degradedperformance partialoutage majoroutage
 
 type Args = {
+  name: string;
   status: string;
+  impact: string;
 };
 
 export default {
   title: 'Components/PlatformStatus',
   args: {
+    name: '',
     status: 'UP',
+    impact: 'OPERATIONAL',
   },
   argTypes: {
-    status: controls.inlineRadio([
-      'UP',
-      'HASISSUES',
-      'ALLUNDERMAINTENANCE',
-      'ALLDEGRADEDPERFORMANCE',
-      'ALLPARTIALOUTAGE',
-      'ALLMINOROUTAGE',
-      'ALLMAJOROUTAGE',
+    name: controls.string(),
+    status: controls.inlineRadio(['UP', 'HASISSUES', 'UNDERMAINTENANCE']),
+    impact: controls.inlineRadio([
+      'OPERATIONAL',
+      'UNDERMAINTENANCE',
+      'DEGRADEDPERFORMANCE',
+      'PARTIALOUTAGE',
+      'MAJOROUTAGE',
     ]),
   },
   decorators: [
@@ -44,7 +48,7 @@ platformStatus.decorators = [
     window.fetch = () =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ page: { status: args.status } }),
+        json: () => Promise.resolve({ page: { status: args.status }, activeIncidents: [args] }),
       } as Response);
 
     return <Story />;

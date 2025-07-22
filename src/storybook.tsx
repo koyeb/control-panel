@@ -20,7 +20,7 @@ export const controls = {
   }),
 
   string: () => ({
-    control: 'text',
+    control: 'text' as const,
   }),
 
   inlineRadio: <Options extends string | number = string>(options: Options[]) => ({

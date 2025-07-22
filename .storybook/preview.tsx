@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import { api } from '../src/api/api';
 import { catalogInstanceFixtures, catalogRegionFixtures } from '../src/api/mock/fixtures';
-import { AuthProvider } from '../src/application/authentication';
 import { DialogProvider } from '../src/application/dialog-context';
 import { IntlProvider } from '../src/intl/translation-provider';
 
@@ -31,11 +30,6 @@ export default {
         <Story />
       );
     },
-    (Story) => (
-      <AuthProvider>
-        <Story />
-      </AuthProvider>
-    ),
     (Story) => (
       <QueryClientProvider client={new QueryClient()}>
         <Story />
