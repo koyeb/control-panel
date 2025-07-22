@@ -185,7 +185,7 @@ function Docker({ source, privileged }: { source: DockerDeploymentSource; privil
       <Data name={<T id="source.docker.imageLabel" />}>{source.image}</Data>
 
       <Data name={<T id="source.docker.entrypointLabel" />} className="font-mono">
-        {source.entrypoint}
+        {source.entrypoint?.join(' ')}
       </Data>
 
       <Data name={<T id="source.docker.commandLabel" />} className="font-mono">
@@ -193,7 +193,7 @@ function Docker({ source, privileged }: { source: DockerDeploymentSource; privil
       </Data>
 
       <Data name={<T id="source.docker.argumentsLabel" />} className="font-mono">
-        {source.arguments}
+        {source.arguments?.join(' ')}
       </Data>
 
       <Data name={<T id="source.docker.privilegedLabel" />}>{String(privileged)}</Data>
@@ -233,9 +233,9 @@ function DockerfileOptions({ builder }: { builder: DockerfileBuilder }) {
       </Data>
 
       <Data name={<T id="source.git.dockerfileLabel" />}>{builder.dockerfile}</Data>
-      <Data name={<T id="source.git.entrypointLabel" />}>{builder.entrypoint}</Data>
+      <Data name={<T id="source.git.entrypointLabel" />}>{builder.entrypoint?.join(' ')}</Data>
       <Data name={<T id="source.git.commandLabel" />}>{builder.command}</Data>
-      <Data name={<T id="source.git.argumentsLabel" />}>{builder.arguments}</Data>
+      <Data name={<T id="source.git.argumentsLabel" />}>{builder.arguments?.join(' ')}</Data>
       <Data name={<T id="source.git.targetLabel" />}>{builder.target}</Data>
     </>
   );
