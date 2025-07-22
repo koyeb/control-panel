@@ -2,7 +2,7 @@ import { Button } from '@koyeb/design-system';
 
 import { SvgComponent } from 'src/application/types';
 import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
-import { IconCpu, IconGlobe, IconTrendingUp } from 'src/components/icons';
+import { IconCpu, IconGlobe, IconTrendingUp } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.trial.welcomeDialog');

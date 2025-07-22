@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ComputeDeployment } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
-import { IconInfo } from 'src/components/icons';
+import { IconInfo } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 

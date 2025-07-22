@@ -1,4 +1,4 @@
-import { IconEarth, IconScale3d } from 'src/components/icons';
+import { IconEarth, IconScale3d } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';

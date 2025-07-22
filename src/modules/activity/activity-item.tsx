@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 
 import { Activity } from 'src/api/model';
-import { IconClock } from 'src/components/icons';
+import { IconClock } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 

@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 
 import { useApiQueryFn } from 'src/api/use-api';
 import { ControlledAutocomplete } from 'src/components/controlled';
-import { IconGitBranch } from 'src/components/icons';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
+import { IconGitBranch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 

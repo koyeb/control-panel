@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/controlled';
-import { IconPlus, IconTrash } from 'src/components/icons';
+import { IconPlus, IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';

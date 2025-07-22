@@ -9,7 +9,7 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
-import { IconEye, IconEyeOff } from 'src/components/icons';
+import { IconEye, IconEyeOff } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { getName, hasProperty } from 'src/utils/object';
 

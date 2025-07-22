@@ -3,9 +3,9 @@ import { FormattedDate } from 'react-intl';
 
 import { createStorage } from 'src/application/storage';
 import { BadgeNew } from 'src/components/badge-new';
-import { IconArrowUpRight } from 'src/components/icons';
 import { ExternalLinkButton } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
+import { IconArrowUpRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
 import { getConfig } from 'src/utils/config';

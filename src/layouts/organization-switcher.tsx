@@ -9,11 +9,11 @@ import { Organization } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { SvgComponent } from 'src/application/types';
-import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
+import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.organizationSwitcher');

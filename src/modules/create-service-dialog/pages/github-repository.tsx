@@ -10,12 +10,12 @@ import { useOrganization } from 'src/api/hooks/session';
 import { GitRepository } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { IconArrowRight, IconGithub, IconLock } from 'src/components/icons';
 import { ListItem, ListSections } from 'src/components/list';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
+import { IconArrowRight, IconGithub, IconLock } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 

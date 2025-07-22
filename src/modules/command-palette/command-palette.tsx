@@ -4,9 +4,9 @@ import { useEffect, useMemo } from 'react';
 
 import { stopPropagation } from 'src/application/dom-events';
 import { Dialog } from 'src/components/dialog';
-import { IconChevronRight } from 'src/components/icons';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useShortcut } from 'src/hooks/shortcut';
+import { IconChevronRight } from 'src/icons';
 
 import { PaletteItem, useCommandPaletteContext } from './command-palette.provider';
 import { useRegisterDefaultItems } from './register-default-commands';

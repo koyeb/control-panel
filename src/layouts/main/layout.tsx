@@ -12,9 +12,9 @@ import { Button, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
-import { IconMenu } from 'src/components/icons';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
+import { IconMenu } from 'src/icons';
 
 type LayoutProps = {
   banner: React.ReactNode;

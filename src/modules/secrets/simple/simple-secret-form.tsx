@@ -9,10 +9,10 @@ import { api } from 'src/api/api';
 import { Secret } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
-import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useZodResolver } from 'src/hooks/validation';
+import { IconEye, IconEyeOff } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.secrets.simpleSecretForm');

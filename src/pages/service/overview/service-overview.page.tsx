@@ -1,11 +1,11 @@
 import { Alert, IconButton, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { IconChevronLeft, IconChevronsLeft } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
+import { IconChevronLeft, IconChevronsLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';

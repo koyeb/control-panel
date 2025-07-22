@@ -3,9 +3,9 @@ import { Badge, Tooltip } from '@koyeb/design-system';
 import { App, ComputeDeployment, Service } from 'src/api/model';
 import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
-import { IconArrowRight } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
+import { IconArrowRight } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 

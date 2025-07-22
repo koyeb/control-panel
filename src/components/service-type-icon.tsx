@@ -1,14 +1,7 @@
 import clsx from 'clsx';
 
 import { ServiceType } from 'src/api/model';
-import {
-  IconCpu,
-  IconDatabase,
-  IconGlobeLock,
-  IconPackage,
-  IconSquareCode,
-  IconWorkflow,
-} from 'src/components/icons';
+import { IconCpu, IconDatabase, IconGlobeLock, IconPackage, IconSquareCode, IconWorkflow } from 'src/icons';
 
 type ServiceTypeIconProps = {
   type: ServiceType | 'private' | 'batch' | 'model';

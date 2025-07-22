@@ -5,6 +5,8 @@ import { useInstance } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
+import { ExternalLink } from 'src/components/link';
+import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import {
   IconAlarmClockCheck,
   IconClock,
@@ -13,9 +15,7 @@ import {
   IconMoon,
   IconPanelsLeftBottom,
   IconTimer,
-} from 'src/components/icons';
-import { ExternalLink } from 'src/components/link';
-import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
+} from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 

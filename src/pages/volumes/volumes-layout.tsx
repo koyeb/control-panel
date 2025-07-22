@@ -4,8 +4,8 @@ import React from 'react';
 import { useOrganization } from 'src/api/hooks/session';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
-import { IconArrowRight } from 'src/components/icons';
 import { LinkButton, TabButtonLink } from 'src/components/link';
+import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.volumes');

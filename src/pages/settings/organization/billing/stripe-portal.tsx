@@ -1,9 +1,9 @@
 import { useManageBillingQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
-import { IconSquareArrowOutUpRight } from 'src/components/icons';
 import { ExternalLinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
+import { IconSquareArrowOutUpRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.stripePortal');

@@ -1,4 +1,4 @@
-import { IconCheck } from 'src/components/icons';
+import { IconCheck } from 'src/icons';
 
 type PlanCardProps = {
   name: React.ReactNode;

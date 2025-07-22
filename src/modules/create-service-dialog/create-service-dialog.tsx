@@ -3,22 +3,22 @@ import { useCallback, useRef } from 'react';
 import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { Dialog } from 'src/components/dialog';
+import { Shortcut } from 'src/components/shortcut';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { useShortcut } from 'src/hooks/shortcut';
 import {
   IconArrowDown,
   IconArrowLeft,
   IconArrowUp,
   IconCornerDownLeft,
   IconDatabase,
+  IconDocker,
   IconGithub,
   IconGlobe,
   IconSearch,
   IconSettings,
   IconSquareCode,
-} from 'src/components/icons';
-import { Shortcut } from 'src/components/shortcut';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { useShortcut } from 'src/hooks/shortcut';
-import IconDocker from 'src/icons/docker.svg?react';
+} from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { Navigation } from './navigation';

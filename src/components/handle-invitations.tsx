@@ -10,7 +10,7 @@ import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { AuthButton } from 'src/pages/authentication/components/auth-button';
 
-import { IconArrowRight } from './icons';
+import { IconArrowRight } from '../icons';
 
 const T = createTranslate('components.invitation');
 

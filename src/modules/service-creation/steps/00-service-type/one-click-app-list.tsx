@@ -1,6 +1,6 @@
 import { useOneClickApps } from 'src/api/hooks/catalog';
-import { IconArrowRight } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
+import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';

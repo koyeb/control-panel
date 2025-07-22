@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
-import { IconTrash } from 'src/components/icons';
+import { IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 

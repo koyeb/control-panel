@@ -14,11 +14,11 @@ import {
   Service,
 } from 'src/api/model';
 import { hasBuild, isDeploymentRunning } from 'src/application/service-functions';
-import { IconCircleDashed } from 'src/components/icons';
 import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
+import { IconCircleDashed } from 'src/icons';
 import { TranslateStatus, createTranslate } from 'src/intl/translate';
 
 import { DeploymentScaling } from '../deployment-scaling/deployment-scaling';

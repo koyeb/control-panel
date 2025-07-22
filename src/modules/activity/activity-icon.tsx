@@ -12,7 +12,7 @@ import {
   IconGlobe,
   IconUserRound,
   IconUsers,
-} from 'src/components/icons';
+} from 'src/icons';
 import { inArray } from 'src/utils/arrays';
 import { entries } from 'src/utils/object';
 

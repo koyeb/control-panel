@@ -1,7 +1,7 @@
 import { OrganizationPlan } from 'src/api/model';
 import { SvgComponent, SvgProps } from 'src/application/types';
 
-import { IconCrown, IconGem, IconRocket } from './icons';
+import { IconCrown, IconGem, IconRocket } from '../icons';
 
 export function PlanIcon({ plan, ...props }: { plan?: OrganizationPlan } & SvgProps) {
   const Icon = map[plan!];

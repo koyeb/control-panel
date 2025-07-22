@@ -2,7 +2,7 @@ import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { DeploymentBuildStatus, DeploymentStatus } from 'src/api/model';
-import { IconCircleAlert, IconCircleCheck, IconCircleDashed, IconCircleX } from 'src/components/icons';
+import { IconCircleAlert, IconCircleCheck, IconCircleDashed, IconCircleX } from 'src/icons';
 import { ValueOf } from 'src/utils/types';
 
 const statuses = {

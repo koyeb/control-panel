@@ -2,8 +2,7 @@ import { useState } from 'react';
 
 import { SvgComponent } from 'src/application/types';
 import { ControlledRadio } from 'src/components/controlled';
-import { IconArchive, IconGitBranch, IconGithub } from 'src/components/icons';
-import IconDocker from 'src/icons/docker.svg?react';
+import { IconArchive, IconDocker, IconGitBranch, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

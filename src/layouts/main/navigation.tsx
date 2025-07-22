@@ -2,6 +2,8 @@ import clsx from 'clsx';
 
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { BadgeNew } from 'src/components/badge-new';
+import { Link, ValidateLinkOptions } from 'src/components/link';
+import { usePathname } from 'src/hooks/router';
 import {
   IconActivity,
   IconBoxes,
@@ -11,9 +13,7 @@ import {
   IconLayoutDashboard,
   IconSettings,
   IconUsers,
-} from 'src/components/icons';
-import { Link, ValidateLinkOptions } from 'src/components/link';
-import { usePathname } from 'src/hooks/router';
+} from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 

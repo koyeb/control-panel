@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { IconRefreshCcw } from 'src/components/icons';
+import { IconRefreshCcw } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 

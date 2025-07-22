@@ -15,8 +15,8 @@ import { useRef, useState } from 'react';
 import { useController } from 'react-hook-form';
 
 import { DocumentationLink } from 'src/components/documentation-link';
-import { IconChevronDown } from 'src/components/icons';
 import { useFormValues } from 'src/hooks/form';
+import { IconChevronDown } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';

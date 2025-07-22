@@ -3,9 +3,9 @@ import { useIsFetching } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useFormContext, useFormState } from 'react-hook-form';
 
-import { IconChevronDown } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
 import { useShortcut } from 'src/hooks/shortcut';
+import { IconChevronDown } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 

@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useLogoutMutation, useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { IconSend } from 'src/components/icons';
+import { IconSend } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from '../authentication/components/auth-button';

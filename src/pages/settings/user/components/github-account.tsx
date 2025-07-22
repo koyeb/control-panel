@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useUser } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
-import { IconGithub } from 'src/components/icons';
+import { IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';

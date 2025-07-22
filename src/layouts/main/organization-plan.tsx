@@ -4,11 +4,11 @@ import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
-import { IconChevronRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { PlanIcon } from 'src/components/plan-icon';
 import { useObserve } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
+import { IconChevronRight } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { TrialSummaryPopup } from 'src/modules/trial/trial-summary-popup';
 import { useTrial } from 'src/modules/trial/use-trial';

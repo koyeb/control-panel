@@ -1,8 +1,8 @@
 import { Badge, Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { IconCheck } from 'src/components/icons';
 import { PlanIcon } from 'src/components/plan-icon';
+import { IconCheck } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';

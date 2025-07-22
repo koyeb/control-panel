@@ -5,7 +5,7 @@ import { UseFieldArrayReturn, useFieldArray, useFormContext } from 'react-hook-f
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
-import { IconPlus } from 'src/components/icons';
+import { IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm, ServiceFormSection } from '../../service-form.types';

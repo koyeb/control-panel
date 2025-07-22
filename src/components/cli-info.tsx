@@ -1,7 +1,7 @@
 import { Tooltip } from '@koyeb/design-system';
 
 import { CopyIconButton } from 'src/components/copy-icon-button';
-import { IconInfo } from 'src/components/icons';
+import { IconInfo } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { DocumentationLink } from './documentation-link';

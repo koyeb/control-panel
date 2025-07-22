@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { IconExternalLink } from 'src/components/icons';
+import { IconExternalLink } from 'src/icons';
 
 import { ExternalLink } from './link';
 

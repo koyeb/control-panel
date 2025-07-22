@@ -1,7 +1,6 @@
 import { DeploymentDefinition } from 'src/api/model';
-import { IconArchive, IconGithub } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
-import IconDocker from 'src/icons/docker.svg?react';
+import { IconArchive, IconDocker, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.home.deploymentSource');

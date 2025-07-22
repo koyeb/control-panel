@@ -10,7 +10,6 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
 import { ControlledInput } from 'src/components/controlled';
-import { IconGithub, IconLock, IconRefreshCcw } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
@@ -18,6 +17,7 @@ import { BoxSkeleton, CircleSkeleton, TextSkeleton } from 'src/components/skelet
 import { handleSubmit, useFormValues } from 'src/hooks/form';
 import { useHistoryState, useLocation } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
+import { IconGithub, IconLock, IconRefreshCcw } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';

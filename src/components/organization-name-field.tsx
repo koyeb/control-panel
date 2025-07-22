@@ -6,8 +6,9 @@ import { UseFormReturn } from 'react-hook-form';
 import { createTranslate } from 'src/intl/translate';
 import { entries } from 'src/utils/object';
 
+import { IconCheck } from '../icons';
+
 import { ControlledInput } from './controlled';
-import { IconCheck } from './icons';
 
 const T = createTranslate('components.organizationNameField');
 

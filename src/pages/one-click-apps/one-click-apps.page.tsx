@@ -1,9 +1,9 @@
 import { Input, InputStart } from '@koyeb/design-system';
 
 import { useOneClickApps } from 'src/api/hooks/catalog';
-import { IconSearch } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { IconSearch } from 'src/icons';
 
 export function OneClickAppsPage() {
   const apps = useOneClickApps();

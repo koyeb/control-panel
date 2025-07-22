@@ -3,8 +3,8 @@ import { Badge, InfoTooltip, Spinner, Tooltip } from '@koyeb/design-system';
 import { App, ComputeDeployment, Deployment, Service } from 'src/api/model';
 import { ServiceUrl, getServiceUrls, isUpcomingDeployment } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
-import { IconArrowRight } from 'src/components/icons';
 import { Metadata } from 'src/components/metadata';
+import { IconArrowRight } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';
 

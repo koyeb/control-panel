@@ -14,7 +14,7 @@ import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
-import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/components/icons';
+import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, TranslateStatus, createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';

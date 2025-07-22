@@ -9,7 +9,7 @@ import { CodeEditor, CodeEditorLanguageSelect } from 'src/components/code-editor
 import { useCodeEditorLanguage } from 'src/components/code-editor/use-code-editor-language';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { FullScreen } from 'src/components/full-screen';
-import { IconFullscreen, IconX } from 'src/components/icons';
+import { IconFullscreen, IconX } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';

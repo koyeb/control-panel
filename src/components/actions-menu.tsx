@@ -1,7 +1,7 @@
 import { Floating, IconButton, Menu } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { IconEllipsisVertical } from 'src/components/icons';
+import { IconEllipsisVertical } from 'src/icons';
 
 type OnClose = () => void;
 type WithClose = (cb: () => void) => OnClose;

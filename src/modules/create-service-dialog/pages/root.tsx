@@ -1,10 +1,10 @@
 import { Button } from '@koyeb/design-system';
 
 import { type OneClickApp } from 'src/api/model';
-import { IconArrowRight, IconDatabase, IconGlobe, IconSettings } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
+import { IconArrowRight, IconDatabase, IconGlobe, IconSettings } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { useCreateServiceDialog } from '../use-create-service-dialog';

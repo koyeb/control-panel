@@ -8,9 +8,9 @@ import { useSecrets } from 'src/api/hooks/secret';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/controlled';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
-import { IconArrowRight } from 'src/components/icons';
 import { handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
+import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
 

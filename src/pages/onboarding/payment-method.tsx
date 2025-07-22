@@ -9,10 +9,10 @@ import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
 import { ControlledAddressField } from 'src/components/address-field/address-field';
 import { ControlledInput } from 'src/components/controlled';
-import { IconArrowLeftRight } from 'src/components/icons';
 import { PaymentFormFields, PaymentMethodTimeout } from 'src/components/payment-form';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { usePaymentMethodMutation } from 'src/hooks/stripe';
+import { IconArrowLeftRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 

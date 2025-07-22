@@ -5,8 +5,8 @@ import { useEffect } from 'react';
 import { z } from 'zod';
 
 import { reportError } from 'src/application/report-error';
-import { IconSquareArrowOutUpRight } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
+import { IconSquareArrowOutUpRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 // cSpell:ignore hasissues undermaintenance degradedperformance partialoutage majoroutage

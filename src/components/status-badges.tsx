@@ -17,7 +17,7 @@ import {
   IconCircleX,
   IconMoon,
   IconTrash,
-} from 'src/components/icons';
+} from 'src/icons';
 import { TranslateStatus } from 'src/intl/translate';
 
 type ResourceStatusProps<Status> = {

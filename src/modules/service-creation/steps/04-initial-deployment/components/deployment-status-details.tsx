@@ -6,9 +6,9 @@ import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { getServiceUrls } from 'src/application/service-functions';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
-import { IconArrowRight, IconExternalLink, IconInfo, IconSendHorizontal } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
 import { TimeoutUi } from 'src/components/timeout-ui';
+import { IconArrowRight, IconExternalLink, IconInfo, IconSendHorizontal } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 

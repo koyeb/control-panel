@@ -11,7 +11,6 @@ import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Serv
 import { isDeploymentRunning } from 'src/application/service-functions';
 import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
-import { IconFullscreen } from 'src/components/icons';
 import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {
   LogLineContent,
@@ -29,6 +28,7 @@ import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { LogsApi, LogsFilters, LogsPeriod } from 'src/hooks/logs';
+import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';

@@ -10,9 +10,9 @@ import {
 
 import { useCatalogRegionAvailability } from 'src/api/hooks/catalog';
 import { CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
-import { IconCircleGauge } from 'src/components/icons';
 import { RegionFlag } from 'src/components/region-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
+import { IconCircleGauge } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { CatalogAvailability as CatalogAvailabilityComponent } from './catalog-availability';

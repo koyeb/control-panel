@@ -7,7 +7,6 @@ import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/api/model';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
-import { IconFullscreen } from 'src/components/icons';
 import { Link } from 'src/components/link';
 import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {
@@ -21,6 +20,7 @@ import {
 import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
 import { QueryError } from 'src/components/query-error';
 import { LogsApi } from 'src/hooks/logs';
+import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';

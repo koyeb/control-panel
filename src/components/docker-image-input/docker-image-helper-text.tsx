@@ -1,6 +1,6 @@
 import { Spinner } from '@koyeb/design-system';
 
-import { IconCheck } from 'src/components/icons';
+import { IconCheck } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('components.dockerImageInput');

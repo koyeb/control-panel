@@ -1,7 +1,7 @@
 import { Badge } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { IconSparkles } from 'src/components/icons';
+import { IconSparkles } from 'src/icons';
 import { Translate } from 'src/intl/translate';
 
 export function BadgeNew({ className, children }: { className?: string; children?: React.ReactNode }) {

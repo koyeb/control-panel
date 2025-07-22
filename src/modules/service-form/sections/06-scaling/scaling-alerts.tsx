@@ -3,7 +3,7 @@ import { useFormContext, useFormState } from 'react-hook-form';
 
 import { useInstance } from 'src/api/hooks/catalog';
 import { DocumentationLink } from 'src/components/documentation-link';
-import { IconMoon } from 'src/components/icons';
+import { IconMoon } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';

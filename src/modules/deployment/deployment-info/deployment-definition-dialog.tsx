@@ -15,13 +15,12 @@ import type {
 } from 'src/api/model';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Dialog, DialogHeader } from 'src/components/dialog';
-import { IconGithub, IconPackage } from 'src/components/icons';
 import { ExternalLink } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
-import IconDocker from 'src/icons/docker.svg?react';
+import { IconDocker, IconGithub, IconPackage } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 

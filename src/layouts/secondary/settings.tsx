@@ -1,6 +1,6 @@
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
-import { IconArrowLeft } from 'src/components/icons';
 import { Link } from 'src/components/link';
+import { IconArrowLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { DeactivateOrganization } from 'src/modules/account/deactivate-organization';
 import { DeleteAccount } from 'src/modules/account/delete-account';

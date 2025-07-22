@@ -1,7 +1,7 @@
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { ComputeDeployment, DatabaseDeployment, Deployment } from 'src/api/model';
-import { IconDatabase } from 'src/components/icons';
 import { TextSkeleton } from 'src/components/skeleton';
+import { IconDatabase } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { DeploymentRegions } from './deployment-regions';

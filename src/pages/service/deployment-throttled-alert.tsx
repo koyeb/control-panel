@@ -4,7 +4,7 @@ import { useDeployments } from 'src/api/hooks/service';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan, Service } from 'src/api/model';
 import { upcomingDeploymentStatuses } from 'src/application/service-functions';
-import { IconRocket } from 'src/components/icons';
+import { IconRocket } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { inArray, last } from 'src/utils/arrays';
 

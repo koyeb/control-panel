@@ -16,8 +16,8 @@ import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
-import { IconEye, IconEyeOff } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
+import { IconEye, IconEyeOff } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 

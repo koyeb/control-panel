@@ -7,8 +7,8 @@ import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { Dialog } from 'src/components/dialog';
 import { FileDropZone } from 'src/components/file-drop-zone';
-import { IconPlus } from 'src/components/icons';
 import { useMount } from 'src/hooks/lifecycle';
+import { IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 

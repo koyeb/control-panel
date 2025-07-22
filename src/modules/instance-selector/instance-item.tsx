@@ -8,9 +8,9 @@ import { CatalogInstance } from 'src/api/model';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
-import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/components/icons';
 import { useMount } from 'src/hooks/lifecycle';
 import { tallyForms, useTallyDialog } from 'src/hooks/tally';
+import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 

@@ -1,7 +1,7 @@
 import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
-import { IconArrowRight } from 'src/components/icons';
 import { LinkButton } from 'src/components/link';
+import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.domains.domainsLocked');

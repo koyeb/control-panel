@@ -5,11 +5,11 @@ import { useSecretsQuery } from 'src/api/hooks/secret';
 import { Secret } from 'src/api/model';
 import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
-import { IconListPlus, IconPlus } from 'src/components/icons';
 import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
 import { useOnRouteStateCreate } from 'src/hooks/router';
+import { IconListPlus, IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 

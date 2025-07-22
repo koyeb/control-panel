@@ -1,7 +1,7 @@
 import { DocumentTitle } from 'src/components/document-title';
-import { IconMail } from 'src/components/icons';
 import { ExternalLink, Link } from 'src/components/link';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { IconMail } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { GithubOAuthButton } from './components/github-oauth-button';

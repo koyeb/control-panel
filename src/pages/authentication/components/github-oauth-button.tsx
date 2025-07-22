@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { IconGithub } from 'src/components/icons';
+import { IconGithub } from 'src/icons';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 

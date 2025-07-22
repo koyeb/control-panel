@@ -1,7 +1,6 @@
 import { SvgComponent } from 'src/application/types';
 import { ControlledSelectBox } from 'src/components/controlled';
-import { IconPackage } from 'src/components/icons';
-import IconDocker from 'src/icons/docker.svg?react';
+import { IconDocker, IconPackage } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

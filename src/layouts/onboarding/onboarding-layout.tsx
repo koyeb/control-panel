@@ -4,12 +4,12 @@ import { useState } from 'react';
 
 import { useLogoutMutation, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
-import { IconChevronRight, IconLogOut, IconUser } from 'src/components/icons';
 import { LinkMenuItem } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useSearchParams } from 'src/hooks/router';
 import { useForceThemeMode } from 'src/hooks/theme';
+import { IconChevronRight, IconLogOut, IconUser } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { OrganizationSwitcher } from '../organization-switcher';

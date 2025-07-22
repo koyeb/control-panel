@@ -13,9 +13,9 @@ import { hasBuild } from 'src/application/service-functions';
 import { CliInfoButton, CliInfoTooltip } from 'src/components/cli-info';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { Dialog, DialogHeader } from 'src/components/dialog';
-import { IconArrowRight } from 'src/components/icons';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
+import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.service.layout');

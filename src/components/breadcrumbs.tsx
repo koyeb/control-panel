@@ -1,8 +1,8 @@
 import clsx from 'clsx';
 import { createElement } from 'react';
 
-import { IconChevronRight } from 'src/components/icons';
 import { Link } from 'src/components/link';
+import { IconChevronRight } from 'src/icons';
 
 type BreadcrumbsProps = {
   className?: string;

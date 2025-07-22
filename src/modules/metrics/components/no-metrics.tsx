@@ -1,8 +1,8 @@
 import { Spinner } from '@koyeb/design-system';
 
 import { hasMessage } from 'src/api/api-errors';
-import { IconTriangleAlert } from 'src/components/icons';
 import { Loading } from 'src/components/loading';
+import { IconTriangleAlert } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.metrics');

@@ -6,11 +6,11 @@ import { Route, Switch } from 'wouter';
 
 import { useAppQuery, useServiceQuery, useServices } from 'src/api/hooks/service';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
-import { IconCheck, IconChevronDown, IconHouse } from 'src/components/icons';
 import { LinkMenuItem } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { usePathname } from 'src/hooks/router';
+import { IconCheck, IconChevronDown, IconHouse } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.breadcrumbs');

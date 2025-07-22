@@ -3,8 +3,8 @@ import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/controlled';
-import { IconTrash } from 'src/components/icons';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';

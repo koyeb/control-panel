@@ -9,12 +9,12 @@ import { Instance, LogLine } from 'src/api/model';
 import { isInstanceRunning } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
-import { IconFullscreen } from 'src/components/icons';
 import { LogOptions, getInitialLogOptions } from 'src/components/logs/log-options';
 import { LogLines, LogsFooter } from 'src/components/logs/logs';
 import { QueryError } from 'src/components/query-error';
 import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useRouteParam } from 'src/hooks/router';
+import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
 

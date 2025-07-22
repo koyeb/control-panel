@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { IconCheck, IconCopy } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
+import { IconCheck, IconCopy } from 'src/icons';
 
 type CopyIconButtonProps = React.ComponentProps<'button'> & {
   text: string;

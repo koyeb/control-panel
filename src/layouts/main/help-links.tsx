@@ -2,6 +2,7 @@ import { Floating, Menu, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
+import { ExternalLinkMenuItem } from 'src/components/link';
 import {
   IconBookMarked,
   IconBookOpen,
@@ -10,8 +11,7 @@ import {
   IconMessageCircleMore,
   IconNewspaper,
   IconSignal,
-} from 'src/components/icons';
-import { ExternalLinkMenuItem } from 'src/components/link';
+} from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.helpLinks');

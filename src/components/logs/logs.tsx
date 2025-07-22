@@ -6,10 +6,10 @@ import { FormattedTime } from 'react-intl';
 import { LogLine } from 'src/api/model';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { notify } from 'src/application/notify';
-import { IconCopy, IconDownload, IconEllipsis } from 'src/components/icons';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { LogsApi } from 'src/hooks/logs';
+import { IconCopy, IconDownload, IconEllipsis } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { shortId } from 'src/utils/strings';
 

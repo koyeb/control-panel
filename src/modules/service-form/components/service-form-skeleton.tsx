@@ -1,8 +1,8 @@
 import { AccordionSection } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { IconChevronDown } from 'src/components/icons';
 import { TextSkeleton } from 'src/components/skeleton';
+import { IconChevronDown } from 'src/icons';
 import { createArray } from 'src/utils/arrays';
 
 type ServiceFormSkeletonProps = {

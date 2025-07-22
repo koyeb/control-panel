@@ -7,8 +7,8 @@ import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { isUpcomingDeployment } from 'src/application/service-functions';
-import { IconChevronRight } from 'src/components/icons';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
+import { IconChevronRight } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 

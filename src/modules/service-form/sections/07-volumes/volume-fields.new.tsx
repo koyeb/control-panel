@@ -7,7 +7,7 @@ import { useVolumes } from 'src/api/hooks/volume';
 import { Volume } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { IconUnlink } from 'src/components/icons';
+import { IconUnlink } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { getName, hasProperty } from 'src/utils/object';
 

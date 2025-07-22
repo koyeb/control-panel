@@ -1,8 +1,8 @@
 import { AccordionSection } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { IconChevronDown } from 'src/components/icons';
 import { Shortcut } from 'src/components/shortcut';
+import { IconChevronDown } from 'src/icons';
 
 type ExpandSource = 'click' | 'keydown' | 'shortcut';
 

@@ -3,10 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 
 import { useGithubApp } from 'src/api/hooks/git';
 import { useApiMutationFn } from 'src/api/use-api';
-import { IconArrowRight, IconGithub } from 'src/components/icons';
 import { Intro } from 'src/components/intro';
 import { useShortcut } from 'src/hooks/shortcut';
-import IconDocker from 'src/icons/docker.svg?react';
+import { IconArrowRight, IconDocker, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { useCreateServiceDialog } from '../use-create-service-dialog';

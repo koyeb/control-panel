@@ -1,5 +1,5 @@
 import { Metadata } from 'src/components/metadata';
-import IconDocker from 'src/icons/docker.svg?react';
+import { IconDocker } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.deployment.deploymentInfo');

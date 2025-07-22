@@ -1,11 +1,13 @@
 import { type RegistryType } from 'src/api/model';
-import { IconGithub } from 'src/components/icons';
-import IconAzure from 'src/icons/azure.svg?react';
-import IconDigitalOcean from 'src/icons/digital-ocean.svg?react';
-import IconDockerHub from 'src/icons/docker-hub.svg?react';
-import IconGcp from 'src/icons/gcp.svg?react';
-import IconGitlab from 'src/icons/gitlab.svg?react';
-import IconPrivateRegistry from 'src/icons/private-registry.svg?react';
+import {
+  IconAzure,
+  IconDigitalOcean,
+  IconDockerHub,
+  IconGcp,
+  IconGithub,
+  IconGitlab,
+  IconPrivateRegistry,
+} from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.secrets');

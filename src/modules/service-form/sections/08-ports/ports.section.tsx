@@ -1,8 +1,8 @@
 import { Badge, Button } from '@koyeb/design-system';
 import { useFieldArray } from 'react-hook-form';
 
-import { IconPlus } from 'src/components/icons';
 import { FeatureFlag } from 'src/hooks/feature-flag';
+import { IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';

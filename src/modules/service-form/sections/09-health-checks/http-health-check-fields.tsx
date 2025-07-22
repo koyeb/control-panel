@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useFieldArray } from 'react-hook-form';
 
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { IconPlus, IconTrash } from 'src/components/icons';
+import { IconPlus, IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { upperCase } from 'src/utils/strings';

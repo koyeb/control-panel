@@ -1,10 +1,9 @@
 import { useCallback, useEffect } from 'react';
 
-import { IconGithub } from 'src/components/icons';
 import { Link, LinkButton, ValidateLinkOptions } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
-import IconDocker from 'src/icons/docker.svg?react';
+import { IconDocker, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { SourceType } from 'src/modules/service-form/service-form.types';
 import { inArray } from 'src/utils/arrays';
