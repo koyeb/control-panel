@@ -48,7 +48,7 @@ export function App() {
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
-  const { token, session } = useHistoryState();
+  const { token, session }: { token?: string; session?: boolean } = useHistoryState();
   const setToken = useSetToken();
   const navigate = useNavigate();
 

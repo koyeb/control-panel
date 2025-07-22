@@ -90,7 +90,6 @@ export function usePrefetchApiQuery() {
   return useCallback(
     <E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) => {
       return queryClient.prefetchQuery({
-        // eslint-disable-next-line @tanstack/query/exhaustive-deps
         queryKey: getApiQueryKey(endpoint, params),
         queryFn() {
           const fn = api[endpoint] as AnyFunction;
