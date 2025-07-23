@@ -128,8 +128,8 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
       });
     },
     onError: (error) => notify.error(error.message),
-    onSuccess({ serviceId }) {
-      navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
+    async onSuccess({ serviceId }) {
+      await navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
   });
 

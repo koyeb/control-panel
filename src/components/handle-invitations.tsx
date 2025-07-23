@@ -48,7 +48,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     })),
     async onSuccess() {
       await invalidate('listInvitations');
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.info(t('declineSuccess'));
     },
   });

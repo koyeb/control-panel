@@ -9,14 +9,14 @@ export function OneClickAppsPage() {
   const apps = useOneClickApps();
 
   const search = useSearchParams().get('search')?.toLowerCase() ?? '';
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/one-click-apps' });
 
   return (
     <div className="col gap-6">
       <Input
         value={search}
         onChange={(event) =>
-          navigate({ search: (prev) => ({ ...prev, search: event.target.value || null }) })
+          void navigate({ search: (prev) => ({ ...prev, search: event.target.value || null }) })
         }
         placeholder="Search..."
         start={

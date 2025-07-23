@@ -37,9 +37,9 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
         });
       }
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       closeDialog();
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.info(t('deleting'));
     },
   });
