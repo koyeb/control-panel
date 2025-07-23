@@ -22,6 +22,9 @@ export function ReviewStep() {
         }
         onCostChanged={setCost}
         onDeployUrlChanged={setDeployUrl}
+        onBack={() =>
+          navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'instanceRegions' }) })
+        }
       />
 
       <div className="col max-w-sm shrink-0 gap-8 xl:basis-80">

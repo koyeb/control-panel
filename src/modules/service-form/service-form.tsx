@@ -1,3 +1,4 @@
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect, useMemo, useRef } from 'react';
@@ -9,6 +10,7 @@ import { useOrganizationSummaryQuery } from 'src/api/hooks/session';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
+import { Translate } from 'src/intl/translate';
 
 import { GpuAlert } from './components/gpu-alert';
 import { QuotaAlert } from './components/quota-alert';
@@ -43,6 +45,7 @@ type ServiceFormProps = {
   onSaved?: () => void;
   onCostChanged?: (cost: ServiceCost | undefined) => void;
   onDeployUrlChanged?: (url: string) => void;
+  onBack?: () => void;
 };
 
 export function ServiceForm(props: ServiceFormProps) {
@@ -60,6 +63,7 @@ function ServiceForm_({
   onSaved,
   onCostChanged,
   onDeployUrlChanged,
+  onBack,
 }: ServiceFormProps) {
   const invalidate = useInvalidateApiQuery();
 
@@ -133,7 +137,15 @@ function ServiceForm_({
             })}
           </div>
 
-          <SubmitButton loading={form.formState.isSubmitting} />
+          <div className="row gap-4">
+            {onBack && (
+              <Button color="gray" onClick={onBack}>
+                <Translate id="common.back" />
+              </Button>
+            )}
+
+            <SubmitButton loading={form.formState.isSubmitting} />
+          </div>
         </form>
       </FormProvider>
 

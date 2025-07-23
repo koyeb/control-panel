@@ -8,8 +8,10 @@ import {
 } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
+import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
@@ -48,6 +50,7 @@ export function InstanceRegionStep() {
 }
 
 function InstanceRegionStep_() {
+  const hasBuilderStep = useFeatureFlag('service-creation-builder-step');
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
@@ -118,13 +121,22 @@ function InstanceRegionStep_() {
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 
-      <Button
-        onClick={() => navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'review' }) })}
-        disabled={selectedRegions.length === 0}
-        className="self-start"
-      >
-        <Translate id="common.next" />
-      </Button>
+      <div className="row gap-4">
+        <LinkButton
+          color="gray"
+          to="/services/new"
+          search={(prev) => ({ ...prev, step: hasBuilderStep ? 'builder' : 'serviceType' })}
+        >
+          <Translate id="common.back" />
+        </LinkButton>
+
+        <Button
+          onClick={() => navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'review' }) })}
+          disabled={selectedRegions.length === 0}
+        >
+          <Translate id="common.next" />
+        </Button>
+      </div>
     </div>
   );
 }

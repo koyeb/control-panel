@@ -1,8 +1,8 @@
-import { useCallback, useEffect } from 'react';
+import { ComponentProps, useCallback, useEffect } from 'react';
 
 import { Link, LinkButton, ValidateLinkOptions } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { SearchParams, useNavigate, useSearchParams } from 'src/hooks/router';
 import { IconDocker, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { SourceType } from 'src/modules/service-form/service-form.types';
@@ -110,35 +110,30 @@ function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | 
 }
 
 function DeploymentSource() {
-  const search = useSearchParams();
+  const search = (prev: SearchParams, source: SourceType): SearchParams => ({
+    ...prev,
+    type: source,
+    step: 'importProject',
+    ...(prev.service_type === 'private' && {
+      service_type: 'web',
+      ports: '8000;tcp',
+    }),
+  });
 
-  const href = (source: SourceType) => {
-    const params = new URLSearchParams(search);
-
-    params.set('type', source);
-    params.set('step', 'importProject');
-
-    if (params.get('service_type') === 'private') {
-      params.set('service_type', 'web');
-      params.set('ports', '8000;tcp');
-    }
-
-    return '?' + params.toString();
-  };
   return (
     <div className="col gap-4 lg:row">
       <DeploymentSourceOption
         Icon={IconGithub}
         title={<T id="deploymentSource.github.title" />}
         description={<T id="deploymentSource.github.description" />}
-        href={href('git')}
+        search={(prev) => search(prev, 'git')}
       />
 
       <DeploymentSourceOption
         Icon={IconDocker}
         title={<T id="deploymentSource.docker.title" />}
         description={<T id="deploymentSource.docker.description" />}
-        href={href('docker')}
+        search={(prev) => search(prev, 'docker')}
       />
     </div>
   );
@@ -148,12 +143,16 @@ type DeploymentSourceOptionProps = {
   Icon: React.ComponentType<{ className?: string }>;
   title: React.ReactNode;
   description: React.ReactNode;
-  href: string;
+  search: ComponentProps<typeof Link>['search'];
 };
 
-function DeploymentSourceOption({ Icon, title, description, href }: DeploymentSourceOptionProps) {
+function DeploymentSourceOption({ Icon, title, description, search }: DeploymentSourceOptionProps) {
   return (
-    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" to={href}>
+    <Link
+      to="/services/new"
+      search={search}
+      className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start"
+    >
       <div className="rounded-lg bg-muted p-3">
         <Icon className="size-10" />
       </div>

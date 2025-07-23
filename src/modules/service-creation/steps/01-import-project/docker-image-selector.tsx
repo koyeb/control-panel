@@ -10,6 +10,7 @@ import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
+import { LinkButton } from 'src/components/link';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
@@ -100,9 +101,15 @@ export function DockerImageSelector({ onSelected }: DockerImageSelectorProps) {
         </div>
       </div>
 
-      <Button type="submit" disabled={!verified} className="self-start">
-        <Translate id="common.next" />
-      </Button>
+      <div className="row gap-4">
+        <LinkButton color="gray" to="/services/new" search={(prev) => ({ ...prev, step: 'serviceType' })}>
+          <Translate id="common.back" />
+        </LinkButton>
+
+        <Button type="submit" disabled={!verified} className="self-start">
+          <Translate id="common.next" />
+        </Button>
+      </div>
     </form>
   );
 }

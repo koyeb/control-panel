@@ -4,6 +4,7 @@ import { FormProvider, useController, useForm } from 'react-hook-form';
 
 import { BuilderType } from 'src/api/model';
 import { ControlledCheckbox } from 'src/components/controlled';
+import { LinkButton } from 'src/components/link';
 import { OverridableInput } from 'src/components/overridable-input';
 import { ShellCommandInput } from 'src/components/shell-command-input';
 import { handleSubmit } from 'src/hooks/form';
@@ -163,9 +164,20 @@ function BuilderConfiguration({ builder }: { builder: BuilderType }) {
         </AccordionSection>
       </div>
 
-      <Button type="submit" color="gray" className="self-start">
-        <Translate id="common.next" />
-      </Button>
+      <div className="row gap-4">
+        <LinkButton
+          color="gray"
+          to="/services/new"
+          search={(prev) => ({ ...prev, step: 'importProject' })}
+          className="self-start"
+        >
+          <Translate id="common.back" />
+        </LinkButton>
+
+        <Button type="submit" className="self-start">
+          <Translate id="common.next" />
+        </Button>
+      </div>
     </form>
   );
 }

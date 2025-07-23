@@ -10,7 +10,7 @@ import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
 import { ControlledInput } from 'src/components/controlled';
-import { ExternalLink } from 'src/components/link';
+import { ExternalLink, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { BoxSkeleton, CircleSkeleton, TextSkeleton } from 'src/components/skeleton';
@@ -19,7 +19,7 @@ import { useHistoryState, useLocation } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { IconGithub, IconLock, IconRefreshCcw } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { createArray } from 'src/utils/arrays';
 
 const T = createTranslate('modules.serviceCreation.importProject.github');
@@ -44,6 +44,12 @@ export function RepositorySelector({ onImport }: RepositorySelectorProps) {
       {!githubApp && <InstallGithubApp />}
       {githubApp && <OrganizationRepositorySelector onImport={onImport} />}
       <PublicRepositorySelector onImport={onImport} />
+
+      <div>
+        <LinkButton color="gray" to="/services/new" search={(prev) => ({ ...prev, step: 'serviceType' })}>
+          <Translate id="common.back" />
+        </LinkButton>
+      </div>
     </>
   );
 }
