@@ -15996,6 +15996,7 @@ export interface operations {
                 /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
                  *     The call fails if no previous successful builds happened. */
                 skip_build?: boolean;
+                use_cache?: boolean;
             };
             header?: never;
             path: {

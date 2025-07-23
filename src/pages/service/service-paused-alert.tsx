@@ -8,6 +8,7 @@ import { Service } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
+import { ControlledCheckbox } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
@@ -66,13 +67,14 @@ export function ResumeServiceDialog({ service }: ResumeDialogProps) {
   const form = useForm({
     defaultValues: {
       skipBuild: false,
+      useCache: false,
     },
   });
 
   const resume = useMutation({
-    ...useApiMutationFn('resumeService', ({ skipBuild }: FormValues<typeof form>) => ({
+    ...useApiMutationFn('resumeService', ({ skipBuild, useCache }: FormValues<typeof form>) => ({
       path: { id: service.id },
-      query: { skip_build: skipBuild },
+      query: { skip_build: skipBuild, use_cache: useCache },
     })),
     onSuccess: () => {
       closeDialog();
@@ -125,7 +127,10 @@ export function ResumeServiceDialog({ service }: ResumeDialogProps) {
                       type="submit"
                       disabled={latestStashed}
                       loading={form.formState.isSubmitting && form.watch('skipBuild')}
-                      onClick={() => form.setValue('skipBuild', true)}
+                      onClick={() => {
+                        form.setValue('useCache', false);
+                        form.setValue('skipBuild', true);
+                      }}
                     >
                       <T id="resumeDialog.skipBuild.cta" />
                       <IconArrowRight className="size-4" />
@@ -145,6 +150,12 @@ export function ResumeServiceDialog({ service }: ResumeDialogProps) {
                   <T id="resumeDialog.triggerBuild.description" />
                 </div>
               </div>
+
+              <ControlledCheckbox
+                control={form.control}
+                name="useCache"
+                label={<T id="resumeDialog.triggerBuild.useCache" />}
+              />
 
               <Button
                 type="submit"
