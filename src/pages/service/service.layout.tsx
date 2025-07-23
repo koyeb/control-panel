@@ -1,4 +1,4 @@
-import { Alert, Button, TabButtons } from '@koyeb/design-system';
+import { TabButtons } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 
@@ -25,6 +25,7 @@ import { InstanceAvailabilityAlerts } from './instance-availability-alerts';
 import { PendingChangesAlert } from './pending-changes-alert';
 import { RedeployButton } from './redeploy-button';
 import { ServiceErrorAlert } from './service-error-alert';
+import { ServicePausedAlert } from './service-paused-alert';
 
 const T = createTranslate('pages.service.layout');
 
@@ -254,31 +255,5 @@ function Navigation() {
         <T id="navigation.settings" />
       </TabButtonLink>
     </TabButtons>
-  );
-}
-
-function ServicePausedAlert({ service }: { service: Service }) {
-  const openDialog = Dialog.useOpen();
-
-  if (service.status !== 'PAUSED') {
-    return null;
-  }
-
-  return (
-    <Alert
-      variant="info"
-      title={<T id="servicePaused.title" />}
-      description={
-        <T id={service.type === 'worker' ? 'servicePaused.descriptionWorker' : 'servicePaused.description'} />
-      }
-    >
-      <Button
-        color="blue"
-        onClick={() => openDialog('ResumeService', { resourceId: service.id })}
-        className="ml-auto self-center"
-      >
-        <T id="servicePaused.resume" />
-      </Button>
-    </Alert>
   );
 }
