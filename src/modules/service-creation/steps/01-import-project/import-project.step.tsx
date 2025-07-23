@@ -25,7 +25,7 @@ export function ImportProjectStep() {
               to: '/services/new',
               search: (prev) => ({
                 ...prev,
-                step: 'instanceRegions',
+                step: 'builder',
                 repository: `github.com/${repository}`,
               }),
             });

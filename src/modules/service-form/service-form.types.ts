@@ -1,4 +1,4 @@
-import { EnvironmentVariable, ServiceType } from 'src/api/model';
+import { BuilderType, EnvironmentVariable, ServiceType } from 'src/api/model';
 
 export type ServiceFormSection =
   | 'serviceType'
@@ -97,8 +97,6 @@ export type Builder = {
     privileged: boolean;
   };
 };
-
-export type BuilderType = 'buildpack' | 'dockerfile';
 
 export type DockerDeploymentOptions = {
   entrypoint: string[] | null;

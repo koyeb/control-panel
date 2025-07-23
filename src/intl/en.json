@@ -768,6 +768,7 @@
       "stepper": {
         "deploymentSource": "Select deployment source",
         "importProject": "Import project",
+        "builder": "Build options",
         "instanceRegions": "Choose instance and regions",
         "review": "Review and deploy 🚀"
       },
@@ -814,7 +815,8 @@
       },
       "importProject": {
         "title": "Create a new service",
-        "description": "Import the GitHub repository you want to deploy or use an existing public repository",
+        "description.git": "Import the GitHub repository you want to deploy or use an existing public repository",
+        "description.docker": "Configure the Docker image you want to deploy",
         "github": {
           "refresh": "Refresh",
           "import": "Import",
@@ -852,6 +854,69 @@
           "imageVerification": {
             "pending": "Validating the provided path",
             "validated": "The image is accessible"
+          }
+        }
+      },
+      "builder": {
+        "title": "Create a new service",
+        "description": "Choose whether to build your code with a Dockerfile or a Buildpack",
+        "buildpack": {
+          "title": "Buildpack",
+          "description": "Detect your project's language, install dependencies, and package the environment into a runnable image",
+          "configuration": {
+            "title": "Customize Buildpack settings",
+            "description": "Override the default deployment configuration to meet your application's needs",
+            "buildCommand": {
+              "label": "Build command",
+              "tooltip": "The command to build your application during the build phase. If your application does not require a build command, leave this field empty."
+            },
+            "runCommand": {
+              "label": "Run command",
+              "tooltip": "The command to run your application once the build is completed"
+            },
+            "workDirectory": {
+              "label": "Work directory",
+              "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
+              "placeholder": "./api"
+            },
+            "privileged": {
+              "label": "Privileged",
+              "tooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+            }
+          }
+        },
+        "dockerfile": {
+          "title": "Dockerfile",
+          "description": "Build a runnable container image for your project. Requires your repository to contain a Dockerfile.",
+          "configuration": {
+            "title": "Customize Dockerfile settings",
+            "description": "Override the default deployment configuration to meet your application's needs",
+            "dockerfileLocation": {
+              "label": "Dockerfile location",
+              "tooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository.",
+              "placeholder": "./Dockerfile"
+            },
+            "entrypoint": {
+              "label": "Entrypoint",
+              "tooltip": "Override the default entrypoint to execute on the container"
+            },
+            "command": {
+              "label": "Command",
+              "tooltip": "Override the command to execute on the container. To pass build-time variables similar to the ARG instruction, use environment variables."
+            },
+            "target": {
+              "label": "Target",
+              "tooltip": "Target build stage: If your Dockerfile contains multi-stage builds, you can choose the target stage to build and deploy by entering its name"
+            },
+            "workDirectory": {
+              "label": "Work directory",
+              "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
+              "placeholder": "./api"
+            },
+            "privileged": {
+              "label": "Privileged",
+              "tooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+            }
           }
         }
       },

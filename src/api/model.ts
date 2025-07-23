@@ -302,6 +302,8 @@ export type DockerDeploymentSource = {
   arguments?: string[];
 };
 
+export type BuilderType = BuildpackBuilder['type'] | DockerfileBuilder['type'];
+
 export type BuildpackBuilder = {
   type: 'buildpack';
   buildCommand?: string;

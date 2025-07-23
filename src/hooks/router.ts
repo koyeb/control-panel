@@ -71,7 +71,20 @@ export function useNavigate() {
     }
 
     if (typeof search === 'function') {
-      updateSearchParams(search(Object.fromEntries(new URLSearchParams(window.location.search))));
+      const params = new URLSearchParams(window.location.search);
+      const entries: SearchParams = {};
+
+      for (const key of params.keys()) {
+        const value = params.getAll(key);
+
+        if (Array.isArray(value)) {
+          entries[key] = value;
+        } else {
+          entries[key] = value[0];
+        }
+      }
+
+      updateSearchParams(search(entries));
     }
 
     let result = replacePathParams(url.pathname, params);
