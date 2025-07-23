@@ -3,13 +3,13 @@ import clsx from 'clsx';
 // eslint-disable-next-line no-restricted-imports
 import { Link as BaseLink, useRoute } from 'wouter';
 
-import { replacePathParams } from 'src/hooks/router';
+import { SearchParams, getNavigateUrl } from 'src/hooks/router';
 import { Extend } from 'src/utils/types';
 
 export type ValidateLinkOptions = {
   to: string;
   params?: Record<string, string>;
-  search?: Record<string, string | undefined>;
+  search?: Record<string, string | undefined> | ((params: SearchParams) => SearchParams);
 };
 
 type LinkProps = Extend<
@@ -17,27 +17,13 @@ type LinkProps = Extend<
   {
     to: string;
     params?: Record<string, string>;
-    search?: Record<string, string | undefined>;
+    search?: Record<string, string | undefined> | ((params: SearchParams) => SearchParams);
     state?: Record<string, unknown>;
   }
 >;
 
 export function Link({ to, params, search, ...props }: LinkProps) {
-  let href = replacePathParams(to, params);
-
-  const searchParams = new URLSearchParams();
-
-  for (const [key, value] of Object.entries(search ?? {})) {
-    if (value != null) {
-      searchParams.set(key, String(value));
-    }
-  }
-
-  if (searchParams.size > 0) {
-    href += '?' + searchParams.toString();
-  }
-
-  return <BaseLink href={href} {...props} />;
+  return <BaseLink href={getNavigateUrl({ to, params, search })} {...props} />;
 }
 
 type LinkButtonProps = Extend<
@@ -83,7 +69,7 @@ type TabButtonProps = Extend<
 >;
 
 export function TabButtonLink({ size, disabled, className, ...props }: TabButtonProps) {
-  const [isActive] = useRoute(replacePathParams(props.to, props.params));
+  const [isActive] = useRoute(getNavigateUrl(props));
 
   return (
     <Link

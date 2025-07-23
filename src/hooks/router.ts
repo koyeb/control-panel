@@ -32,8 +32,8 @@ export function useHistoryState(): Record<string, any> {
   return useWouterHistoryState() ?? {};
 }
 
-type SearchParam = string | number | boolean | null | undefined;
-type SearchParams = Record<string, SearchParam | SearchParam[]>;
+export type SearchParam = string | number | boolean | null | undefined;
+export type SearchParams = Record<string, SearchParam | SearchParam[]>;
 
 type NavigateOptions = {
   to?: string;
@@ -45,56 +45,66 @@ type NavigateOptions = {
 
 export function useNavigate() {
   return useCallback(({ to, search, params, replace, state }: NavigateOptions) => {
-    const url = new URL(to ?? window.location.pathname, window.location.origin);
-    const searchParams = new URLSearchParams();
-
-    const setParam = (key: string, value: SearchParam, set: 'set' | 'append' = 'set') => {
-      if (value === null) {
-        searchParams.delete(key);
-      } else if (value) {
-        searchParams[set](key, String(value));
-      }
-    };
-
-    const updateSearchParams = (params: SearchParams) => {
-      for (const [key, value] of Object.entries(params)) {
-        if (Array.isArray(value)) {
-          value.forEach((value) => setParam(key, value, 'append'));
-        } else {
-          setParam(key, value);
-        }
-      }
-    };
-
-    if (typeof search === 'object') {
-      updateSearchParams(search);
-    }
-
-    if (typeof search === 'function') {
-      const params = new URLSearchParams(window.location.search);
-      const entries: SearchParams = {};
-
-      for (const key of params.keys()) {
-        const value = params.getAll(key);
-
-        if (Array.isArray(value)) {
-          entries[key] = value;
-        } else {
-          entries[key] = value[0];
-        }
-      }
-
-      updateSearchParams(search(entries));
-    }
-
-    let result = replacePathParams(url.pathname, params);
-
-    if (searchParams.size > 0) {
-      result += `?${searchParams.toString()}`;
-    }
-
-    navigate(result, { replace, state });
+    navigate(getNavigateUrl({ to, params, search }), { replace, state });
   }, []);
+}
+
+export function getNavigateUrl({ to, params, search }: Pick<NavigateOptions, 'to' | 'params' | 'search'>) {
+  const url = new URL(to ?? window.location.pathname, window.location.origin);
+  const searchParams = new URLSearchParams();
+
+  const setParam = (key: string, value: SearchParam, set: 'set' | 'append' = 'set') => {
+    if (value === null) {
+      searchParams.delete(key);
+    } else if (value) {
+      searchParams[set](key, String(value));
+    }
+  };
+
+  const updateSearchParams = (params: SearchParams) => {
+    for (const [key, value] of Object.entries(params)) {
+      if (Array.isArray(value)) {
+        value.forEach((value) => setParam(key, value, 'append'));
+      } else {
+        setParam(key, value);
+      }
+    }
+  };
+
+  if (typeof search === 'object') {
+    updateSearchParams(search);
+  }
+
+  if (typeof search === 'function') {
+    const params = new URLSearchParams(window.location.search);
+    const entries: SearchParams = {};
+
+    for (const key of params.keys()) {
+      const value = params.getAll(key);
+
+      if (Array.isArray(value)) {
+        entries[key] = value;
+      } else {
+        entries[key] = value[0];
+      }
+    }
+
+    updateSearchParams(search(entries));
+  }
+
+  let result = replacePathParams(url.pathname, params);
+
+  if (searchParams.size > 0) {
+    result += `?${searchParams.toString()}`;
+  }
+
+  return result;
+}
+
+function replacePathParams(to: string, params?: Record<string, string>) {
+  return to.replaceAll(/\$([a-zA-Z]+)/g, (match, key: string) => {
+    return defined(params?.[key], new AssertionError(`Missing link param for ${key}`));
+  });
 }
 
 export function urlToLinkOptions(url: string) {
@@ -129,10 +139,4 @@ export function useOnRouteStateCreate(cb: () => void) {
       cbMemo();
     }
   }, [historyState, navigate, cbMemo]);
-}
-
-export function replacePathParams(to: string, params?: Record<string, string>) {
-  return to.replaceAll(/\$([a-zA-Z]+)/g, (match, key: string) => {
-    return defined(params?.[key], new AssertionError(`Missing link param for ${key}`));
-  });
 }
