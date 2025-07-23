@@ -23,9 +23,9 @@ export function DockerfileOptions() {
 
       <OverridableInput
         name="builder.dockerfileOptions.dockerfile"
-        label={<T id="dockerfileLocationLabel" />}
-        helpTooltip={<T id="dockerfileLocationTooltip" />}
-        placeholder={t('dockerfileLocationPlaceholder')}
+        label={<T id="dockerfileLocation.label" />}
+        helpTooltip={<T id="dockerfileLocation.tooltip" />}
+        placeholder={t('dockerfileLocation.placeholder')}
       />
 
       <EntrypointInput />
@@ -34,21 +34,21 @@ export function DockerfileOptions() {
 
       <OverridableInput
         name="builder.dockerfileOptions.target"
-        label={<T id="targetLabel" />}
-        helpTooltip={<T id="targetTooltip" />}
+        label={<T id="target.label" />}
+        helpTooltip={<T id="target.tooltip" />}
       />
 
       <OverridableInput
         name="source.git.workDirectory"
-        label={<T id="workDirectoryLabel" />}
-        helpTooltip={<T id="workDirectoryTooltip" />}
-        placeholder={t('workDirectoryPlaceholder')}
+        label={<T id="workDirectory.label" />}
+        helpTooltip={<T id="workDirectory.tooltip" />}
+        placeholder={t('workDirectory.placeholder')}
       />
 
       <ControlledCheckbox<ServiceForm>
         name="builder.dockerfileOptions.privileged"
-        label={<T id="privilegedLabel" />}
-        helpTooltip={<T id="privilegedTooltip" />}
+        label={<T id="privileged.label" />}
+        helpTooltip={<T id="privileged.tooltip" />}
       />
     </div>
   );
@@ -65,8 +65,8 @@ function EntrypointInput() {
 
   return (
     <ShellCommandInput
-      label={<T id="entrypointLabel" />}
-      helpTooltip={<T id="entrypointTooltip" />}
+      label={<T id="entrypoint.label" />}
+      helpTooltip={<T id="entrypoint.tooltip" />}
       instruction="ENTRYPOINT"
       value={field.value}
       onChange={field.onChange}
@@ -89,8 +89,8 @@ function CommandInput() {
 
   return (
     <ShellCommandInput
-      label={<T id="commandLabel" />}
-      helpTooltip={<T id="commandTooltip" />}
+      label={<T id="command.label" />}
+      helpTooltip={<T id="command.tooltip" />}
       instruction="CMD"
       value={value}
       onChange={(value) => {

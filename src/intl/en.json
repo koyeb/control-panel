@@ -1074,33 +1074,53 @@
         "buildpackConfiguration": {
           "title": "Configure Buildpack",
           "description": "Customize Buildpack configuration to meet the needs of your repository",
-          "buildCommandLabel": "Build command",
-          "buildCommandTooltip": "The command to build your application during the build phase. If your application does not require a build command, leave this field empty.",
-          "runCommandLabel": "Run command",
-          "runCommandTooltip": "The command to run your application once the build is completed",
-          "workDirectoryLabel": "Work directory",
-          "workDirectoryTooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
-          "workDirectoryPlaceholder": "./api",
-          "privilegedLabel": "Privileged",
-          "privilegedTooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+          "buildCommand": {
+            "label": "Build command",
+            "tooltip": "The command to build your application during the build phase. If your application does not require a build command, leave this field empty."
+          },
+          "runCommand": {
+            "label": "Run command",
+            "tooltip": "The command to run your application once the build is completed"
+          },
+          "workDirectory": {
+            "label": "Work directory",
+            "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
+            "placeholder": "./api"
+          },
+          "privileged": {
+            "label": "Privileged",
+            "tooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+          }
         },
         "dockerfileConfiguration": {
           "title": "Configure Dockerfile",
           "description": "Customize Dockerfile configuration to meet the needs of your repository",
-          "dockerfileLocationLabel": "Dockerfile location",
-          "dockerfileLocationTooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository.",
-          "dockerfileLocationPlaceholder": "./Dockerfile",
-          "entrypointLabel": "Entrypoint",
-          "entrypointTooltip": "Override the default entrypoint to execute on the container",
-          "commandLabel": "Command",
-          "commandTooltip": "Override the command to execute on the container. To pass build-time variables similar to the ARG instruction, use environment variables.",
-          "targetLabel": "Target",
-          "targetTooltip": "Target build stage: If your Dockerfile contains multi-stage builds, you can choose the target stage to build and deploy by entering its name",
-          "workDirectoryLabel": "Work directory",
-          "workDirectoryTooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
-          "workDirectoryPlaceholder": "./api",
-          "privilegedLabel": "Privileged",
-          "privilegedTooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+          "dockerfileLocation": {
+            "label": "Dockerfile location",
+            "tooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository.",
+            "placeholder": "./Dockerfile"
+          },
+          "entrypoint": {
+            "label": "Entrypoint",
+            "tooltip": "Override the default entrypoint to execute on the container"
+          },
+          "command": {
+            "label": "Command",
+            "tooltip": "Override the command to execute on the container. To pass build-time variables similar to the ARG instruction, use environment variables."
+          },
+          "target": {
+            "label": "Target",
+            "tooltip": "Target build stage: If your Dockerfile contains multi-stage builds, you can choose the target stage to build and deploy by entering its name"
+          },
+          "workDirectory": {
+            "label": "Work directory",
+            "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
+            "placeholder": "./api"
+          },
+          "privileged": {
+            "label": "Privileged",
+            "tooltip": "When enabled, the service container will run in privileged mode. This advanced feature is useful to get advanced system privileges, for example to start a docker daemon."
+          }
         }
       },
       "deployment": {
