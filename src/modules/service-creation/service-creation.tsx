@@ -11,9 +11,9 @@ import { enumIndex, isEnumValue } from 'src/utils/enums';
 import { Stepper, Step as StepperStep } from './stepper';
 import { ServiceTypeStep } from './steps/00-service-type/service-type.step';
 import { ImportProjectStep } from './steps/01-import-project/import-project.step';
-import { InstanceRegionStep } from './steps/02-instance-region/instance-region.step';
-import { ReviewStep } from './steps/03-review/review.step';
-import { InitialDeploymentStep } from './steps/04-initial-deployment/initial-deployment.step';
+import { InstanceRegionStep } from './steps/03-instance-region/instance-region.step';
+import { ReviewStep } from './steps/04-review/review.step';
+import { InitialDeploymentStep } from './steps/05-initial-deployment/initial-deployment.step';
 
 const T = createTranslate('modules.serviceCreation');
 
