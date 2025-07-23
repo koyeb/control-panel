@@ -1,10 +1,10 @@
 import { useController } from 'react-hook-form';
 
 import { ControlledCheckbox } from 'src/components/controlled';
+import { OverridableInput } from 'src/components/overridable-input';
+import { ShellCommandInput } from 'src/components/shell-command-input';
 import { createTranslate } from 'src/intl/translate';
 
-import { OverridableInput } from '../../components/overridable-input';
-import { ShellCommandInput } from '../../components/shell-command-input';
 import { ServiceForm } from '../../service-form.types';
 
 const T = createTranslate('modules.serviceForm.builder.dockerfileConfiguration');

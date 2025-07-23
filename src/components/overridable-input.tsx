@@ -1,10 +1,8 @@
 import { Switch } from '@koyeb/design-system';
-import { FieldPath, useFormContext } from 'react-hook-form';
+import { FieldPathByValue, FieldValues, useController } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/controlled';
 import { Translate } from 'src/intl/translate';
-
-import { ServiceForm } from '../service-form.types';
 
 type OverridableFieldProps = {
   override: boolean;
@@ -28,20 +26,26 @@ export function OverridableField({ override, onOverride, children }: Overridable
   );
 }
 
-type OverridableInputProps = {
-  name: FieldPath<ServiceForm>;
+type OverridableInputProps<
+  TFieldValues extends FieldValues,
+  Name extends FieldPathByValue<TFieldValues, string | null>,
+> = {
+  name: Name;
   label: React.ReactNode;
   helpTooltip?: React.ReactNode;
   placeholder?: string;
 };
 
-export function OverridableInput({ name, label, helpTooltip, placeholder }: OverridableInputProps) {
-  const { watch, setValue } = useFormContext<ServiceForm>();
+export function OverridableInput<
+  TFieldValues extends FieldValues,
+  Name extends FieldPathByValue<TFieldValues, string | null>,
+>({ name, label, helpTooltip, placeholder }: OverridableInputProps<TFieldValues, Name>) {
+  const { field } = useController<TFieldValues, Name>({ name });
 
   return (
     <OverridableField
-      override={watch(name) !== null}
-      onOverride={(override) => setValue(name, override ? '' : null)}
+      override={field.value !== null}
+      onOverride={(override) => field.onChange(override ? '' : null)}
     >
       {(disabled) => (
         <ControlledInput

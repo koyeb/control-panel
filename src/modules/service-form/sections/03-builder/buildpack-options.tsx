@@ -1,7 +1,7 @@
 import { ControlledCheckbox } from 'src/components/controlled';
+import { OverridableInput } from 'src/components/overridable-input';
 import { createTranslate } from 'src/intl/translate';
 
-import { OverridableInput } from '../../components/overridable-input';
 import { ServiceForm } from '../../service-form.types';
 
 const T = createTranslate('modules.serviceForm.builder.buildpackConfiguration');
@@ -18,19 +18,19 @@ export function BuildpackOptions() {
         </div>
       </div>
 
-      <OverridableInput
+      <OverridableInput<ServiceForm, 'builder.buildpackOptions.buildCommand'>
         name="builder.buildpackOptions.buildCommand"
         label={<T id="buildCommandLabel" />}
         helpTooltip={<T id="buildCommandTooltip" />}
       />
 
-      <OverridableInput
+      <OverridableInput<ServiceForm, 'builder.buildpackOptions.runCommand'>
         name="builder.buildpackOptions.runCommand"
         label={<T id="runCommandLabel" />}
         helpTooltip={<T id="runCommandTooltip" />}
       />
 
-      <OverridableInput
+      <OverridableInput<ServiceForm, 'source.git.workDirectory'>
         name="source.git.workDirectory"
         label={<T id="workDirectoryLabel" />}
         helpTooltip={<T id="workDirectoryTooltip" />}

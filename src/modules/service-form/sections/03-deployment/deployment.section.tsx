@@ -1,10 +1,10 @@
 import { useController } from 'react-hook-form';
 
 import { ControlledCheckbox } from 'src/components/controlled';
+import { ShellCommandInput } from 'src/components/shell-command-input';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
-import { ShellCommandInput } from '../../components/shell-command-input';
 import { DockerDeploymentOptions, ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 

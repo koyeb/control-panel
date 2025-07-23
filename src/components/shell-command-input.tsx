@@ -2,9 +2,8 @@ import { Input } from '@koyeb/design-system';
 import { useRef } from 'react';
 
 import { formatCommand, parseCommand } from 'src/application/parse-command';
+import { OverridableField } from 'src/components/overridable-input';
 import { Extend } from 'src/utils/types';
-
-import { OverridableField } from './overridable-input';
 
 type CommandInputProps = Extend<
   React.ComponentProps<typeof Input>,
