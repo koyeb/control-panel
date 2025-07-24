@@ -29,7 +29,7 @@ export function useUnknownInterpolationErrors() {
       }
 
       const variables = mapServiceVariables(
-        await api.getServiceVariables({
+        await api().getServiceVariables({
           body: { definition: serviceFormToDeploymentDefinition(values) },
         }),
       );

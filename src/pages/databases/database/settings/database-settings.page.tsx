@@ -55,16 +55,16 @@ function DeleteDatabaseService({ service }: { service: Service }) {
 
   const mutation = useMutation({
     async mutationFn() {
-      await api.deleteService({
+      await api().deleteService({
         path: { id: service.id },
       });
 
-      const { services } = await api.listServices({
+      const { services } = await api().listServices({
         query: { app_id: service.appId },
       });
 
       if (services?.length === 0) {
-        await api.deleteApp({
+        await api().deleteApp({
           path: { id: service.appId },
         });
       }

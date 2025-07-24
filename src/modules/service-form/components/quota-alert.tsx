@@ -35,13 +35,13 @@ export function QuotaAlert(props: QuotaAlertProps) {
 
       try {
         if (serviceId) {
-          await api.updateService({
+          await api().updateService({
             path: { id: serviceId },
             query: { dry_run: true },
             body: { definition },
           });
         } else {
-          await api.createService({
+          await api().createService({
             query: { dry_run: true },
             body: { app_id: values.meta.appId ?? '15c6a049-6594-4df0-99c3-a5c262e69624', definition },
           });

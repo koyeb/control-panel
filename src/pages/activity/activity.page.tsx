@@ -29,7 +29,7 @@ export function ActivityPage() {
   const query = useInfiniteQuery({
     queryKey: ['listActivities', {}],
     async queryFn({ pageParam }) {
-      return api
+      return api()
         .listActivities({
           query: {
             offset: String(pageParam * pageSize),

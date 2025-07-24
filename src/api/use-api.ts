@@ -1,12 +1,11 @@
 import { InvalidateQueryFilters, UseQueryOptions, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { ApiEndpointParams, ApiEndpointResult, api } from './api';
+import { AnyFunction } from 'src/utils/types';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type AnyFunction = (...params: any[]) => any;
+import { ApiEndpointParams, ApiEndpointResult, ApiPort, api } from './api';
 
-type Endpoint = keyof typeof api;
+type Endpoint = keyof ApiPort;
 
 export function getApiQueryKey<E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E>) {
   return [endpoint, params];
@@ -21,11 +20,11 @@ export function useApiQueryFn<E extends Endpoint>(
   endpoint: E,
   params: ApiEndpointParams<E> = {},
 ): UseApiQueryResult<E> {
+  const fn = api()[endpoint] as AnyFunction;
+
   return {
     queryKey: getApiQueryKey(endpoint, params),
     queryFn({ signal }) {
-      const fn = api[endpoint] as AnyFunction;
-
       return fn({
         signal,
         ...params,
@@ -56,11 +55,11 @@ export function useApiMutationFn<E extends Endpoint, Variables>(
   endpoint: E,
   options: ApiEndpointParams<E> | ApiEndpointParamsFn<E, Variables>,
 ): UseApiMutationResult<E, Variables> {
+  const fn = api()[endpoint] as AnyFunction;
+
   return {
     async mutationFn(param) {
       const opts = typeof options === 'function' ? await options(param) : options;
-      const fn = api[endpoint] as AnyFunction;
-
       return fn(opts) as Promise<ApiEndpointResult<E>>;
     },
   };
@@ -92,8 +91,7 @@ export function usePrefetchApiQuery() {
       return queryClient.prefetchQuery({
         queryKey: getApiQueryKey(endpoint, params),
         queryFn() {
-          const fn = api[endpoint] as AnyFunction;
-
+          const fn = api()[endpoint] as AnyFunction;
           return fn(params) as Promise<ApiEndpointResult<E>>;
         },
       });

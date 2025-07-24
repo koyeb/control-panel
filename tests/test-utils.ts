@@ -45,12 +45,12 @@ export async function authenticate(page: Page) {
 export async function deleteKoyebResources(page: Page) {
   await page.evaluate(async () => {
     const listAppIds = async () => {
-      const { apps } = await api.listApps({ query: { limit: '100' } });
+      const { apps } = await api().listApps({ query: { limit: '100' } });
       return apps!.map((app) => app.id!);
     };
 
     for (const appId of await listAppIds()) {
-      await api.deleteApp({ path: { id: appId } });
+      await api().deleteApp({ path: { id: appId } });
     }
 
     while ((await listAppIds()).length > 0) {

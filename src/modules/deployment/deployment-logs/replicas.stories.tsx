@@ -1,18 +1,26 @@
 import { Meta } from '@storybook/react-vite';
 
-import { api } from 'src/api/api';
+import { ApiPort } from 'src/api/api';
 import { Api } from 'src/api/api-types';
+import { container } from 'src/application/container';
+import { TOKENS } from 'src/tokens';
 import { create, createFactory } from 'src/utils/factories';
 import { createId } from 'src/utils/strings';
 
 import { Replicas } from './replicas';
 
+const api: Partial<ApiPort> = {};
+
 export default {
   title: 'Components/Replicas',
   parameters: { className: 'max-w-main' },
+  decorators: (Story) => {
+    container.bindValue(TOKENS.api, api);
+    return <Story />;
+  },
 } satisfies Meta;
 
-export const createApiInstance = createFactory<Api.Instance>(() => ({
+const createApiInstance = createFactory<Api.Instance>(() => ({
   id: createId(),
   status: 'HEALTHY',
   messages: [],

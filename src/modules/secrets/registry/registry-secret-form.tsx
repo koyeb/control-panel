@@ -72,13 +72,13 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
   const { mutateAsync: createSecret } = useMutation({
     async mutationFn(values: z.infer<typeof schema>) {
       if (secret) {
-        return api.updateSecret({
+        return api().updateSecret({
           path: { id: secret.id },
           query: {},
           body: getSecretPayload(values),
         });
       } else {
-        return api.createSecret({
+        return api().createSecret({
           body: getSecretPayload(values),
         });
       }

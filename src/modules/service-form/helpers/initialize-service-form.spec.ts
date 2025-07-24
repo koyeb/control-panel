@@ -1,9 +1,11 @@
 import { QueryClient } from '@tanstack/react-query';
-import { MockedFunction, MockedObject, beforeEach, describe, expect, test, vi } from 'vitest';
+import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { api } from 'src/api/api';
+import { ApiPort } from 'src/api/api';
 import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
+import { container } from 'src/application/container';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
+import { TOKENS } from 'src/tokens';
 import { create } from 'src/utils/factories';
 
 import { ServiceForm } from '../service-form.types';
@@ -11,22 +13,10 @@ import { ServiceForm } from '../service-form.types';
 import { defaultServiceForm, initializeServiceForm } from './initialize-service-form';
 
 const mockFetchGithubRepository = fetchGithubRepository as MockedFunction<typeof fetchGithubRepository>;
-const mockApi = api as MockedObject<typeof api>;
 
 vi.mock('src/components/public-github-repository-input/github-api', () => ({
   fetchGithubRepository: vi.fn(),
 }));
-
-vi.mock('src/api/api', async (importOriginal) => {
-  const actual: object = await importOriginal();
-
-  return {
-    ...actual,
-    api: {
-      listRepositories: vi.fn(),
-    },
-  };
-});
 
 vi.mock('./generate-app-name.ts', () => ({
   generateAppName: () => 'generated',
@@ -40,6 +30,7 @@ describe('initializeServiceForm', () => {
   let organization: Organization;
   let githubApp: GithubApp | undefined;
   let serviceId: string | undefined;
+  let api: ApiPort;
 
   beforeEach(() => {
     params = new URLSearchParams();
@@ -57,6 +48,9 @@ describe('initializeServiceForm', () => {
 
     githubApp = undefined;
     serviceId = undefined;
+
+    api = {} as ApiPort;
+    container.bindValue(TOKENS.api, api);
   });
 
   async function initialize() {
@@ -102,7 +96,7 @@ describe('initializeServiceForm', () => {
 
     githubApp = create.githubApp({ organizationName: 'org' });
 
-    mockApi.listRepositories.mockResolvedValue({ repositories: [] });
+    api.listRepositories = vi.fn().mockResolvedValue({ repositories: [] });
 
     expect(await initialize()).toEqual(serviceForm);
   });

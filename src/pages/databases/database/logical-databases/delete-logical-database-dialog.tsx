@@ -28,7 +28,7 @@ export function DeleteLogicalDatabaseDialog({
 
   const mutation = useMutation({
     async mutationFn() {
-      const { deployment: apiDeployment } = await api.getDeployment({
+      const { deployment: apiDeployment } = await api().getDeployment({
         path: { id: deployment.id },
       });
 
@@ -38,7 +38,7 @@ export function DeleteLogicalDatabaseDialog({
         ({ name }) => name !== database.name,
       );
 
-      await api.updateService({
+      await api().updateService({
         path: { id: service.id },
         query: {},
         body: { definition },

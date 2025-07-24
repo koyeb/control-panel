@@ -51,13 +51,13 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
   const { mutateAsync: createSecret } = useMutation({
     async mutationFn(param: { name: string; value: string }) {
       if (secret) {
-        return api.updateSecret({
+        return api().updateSecret({
           path: { id: secret.id },
           query: {},
           body: { type: 'SIMPLE', ...param },
         });
       } else {
-        return api.createSecret({
+        return api().createSecret({
           body: { type: 'SIMPLE', ...param },
         });
       }

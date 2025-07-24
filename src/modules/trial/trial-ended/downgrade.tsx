@@ -38,11 +38,11 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
 
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
-      const { organization } = await api.createOrganization({
+      const { organization } = await api().createOrganization({
         body: { name: organizationName },
       });
 
-      const { token: newToken } = await api.switchOrganization({
+      const { token: newToken } = await api().switchOrganization({
         path: { id: organization!.id! },
         header: {},
       });

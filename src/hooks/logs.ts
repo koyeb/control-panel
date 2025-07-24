@@ -100,7 +100,7 @@ function useLogsHistory(filters: LogsFilters) {
         return { data: [], pagination: { has_more: false } };
       }
 
-      return api.logsQuery({
+      return api().logsQuery({
         query: {
           type: filters.type,
           deployment_id: filters.deploymentId,
@@ -208,7 +208,7 @@ type LogStreamListeners = {
 };
 
 function tailLogs(filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
-  const stream = api.logs({
+  const stream = api().logs({
     query: {
       type: filters.type,
       deployment_id: filters.deploymentId,

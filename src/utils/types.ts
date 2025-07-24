@@ -45,3 +45,6 @@ export type SnakeToCamelCaseDeep<T> =
 export type RequiredDeep<T> = {
   [K in keyof T]-?: RequiredDeep<T[K]>;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyFunction = (...params: any[]) => any;

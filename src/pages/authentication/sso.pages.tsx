@@ -23,7 +23,7 @@ export function CannySso() {
       assert(companyID !== null, new AssertionError('Missing companyID query parameter'));
       assert(redirect !== null, new AssertionError('Missing redirect query parameter'));
 
-      const { token } = await api.cannySso({});
+      const { token } = await api().cannySso({});
 
       return {
         companyID,
@@ -66,7 +66,7 @@ export function DiscourseSsoPage() {
       assert(sso !== null, new AssertionError('Missing sso query parameter'));
       assert(sig !== null, new AssertionError('Missing sig query parameter'));
 
-      const result = await api.discourseSso({
+      const result = await api().discourseSso({
         body: { payload: sso, sig },
       });
 

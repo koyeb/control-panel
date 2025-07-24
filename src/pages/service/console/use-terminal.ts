@@ -27,7 +27,7 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);
 
   const connect = useCallback((instanceId: string) => {
-    setStream(api.exec({ query: { id: instanceId } }));
+    setStream(api().exec({ query: { id: instanceId } }));
   }, []);
 
   useMount(() => {

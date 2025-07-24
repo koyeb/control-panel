@@ -23,7 +23,7 @@ export function BulkDeleteSecretsDialog({ secrets, onDeleted }: BulkDeleteSecret
 
   const mutation = useMutation({
     async mutationFn(secrets: Secret[]) {
-      return Promise.allSettled(secrets.map((secret) => api.deleteSecret({ path: { id: secret.id } })));
+      return Promise.allSettled(secrets.map((secret) => api().deleteSecret({ path: { id: secret.id } })));
     },
     async onSuccess(result) {
       await invalidate('listSecrets');

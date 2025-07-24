@@ -54,7 +54,7 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
 }
 
 async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
-  const { payment_method } = await api.createPaymentAuthorization({});
+  const { payment_method } = await api().createPaymentAuthorization({});
 
   try {
     const card = elements.getElement(CardNumberElement);
@@ -69,7 +69,7 @@ async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
       throw new StripeError(result.error);
     }
   } finally {
-    await api.confirmPaymentAuthorization({
+    await api().confirmPaymentAuthorization({
       path: { id: payment_method!.id! },
     });
   }
@@ -82,7 +82,7 @@ async function waitForPaymentMethod() {
   const elapsed = () => new Date().getTime() - start;
 
   while (!hasPaymentMethod && elapsed() <= waitForPaymentMethodTimeout) {
-    const organization = await api.getCurrentOrganization({});
+    const organization = await api().getCurrentOrganization({});
 
     hasPaymentMethod = Boolean(organization.organization?.has_payment_method);
 

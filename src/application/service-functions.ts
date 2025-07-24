@@ -124,13 +124,13 @@ export async function updateDatabaseService(
   serviceId: string,
   updater: (deployment: Api.DeploymentDefinition) => void,
 ) {
-  const { service } = await api.getService({ path: { id: serviceId } });
-  const { deployment } = await api.getDeployment({ path: { id: service!.latest_deployment_id! } });
+  const { service } = await api().getService({ path: { id: serviceId } });
+  const { deployment } = await api().getDeployment({ path: { id: service!.latest_deployment_id! } });
   const definition = deployment!.definition!;
 
   updater(definition);
 
-  await api.updateService({
+  await api().updateService({
     path: { id: serviceId },
     query: {},
     body: { definition },

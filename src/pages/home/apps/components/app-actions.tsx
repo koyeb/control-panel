@@ -102,7 +102,7 @@ function EditAppDialog({ app }: { app: App }) {
 
       if (values.name !== app.name) {
         promises.push(
-          api.renameApp({
+          api().renameApp({
             path: { id: app.id },
             query: {},
             body: { name: values.name },
@@ -112,7 +112,7 @@ function EditAppDialog({ app }: { app: App }) {
 
       if (koyebDomain && values.subdomain !== subdomain) {
         promises.push(
-          api.editDomain({
+          api().editDomain({
             path: { id: koyebDomain.id },
             query: {},
             body: { subdomain: values.subdomain },

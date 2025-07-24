@@ -36,7 +36,7 @@ export async function submitServiceForm(form: ServiceForm): Promise<SubmitServic
 }
 
 async function findOrCreateApp(appName: string): Promise<string> {
-  const { apps } = await api.listApps({
+  const { apps } = await api().listApps({
     query: { name: appName, limit: '100' },
   });
 
@@ -46,7 +46,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
     return app.id!;
   }
 
-  const { app: newApp } = await api.createApp({
+  const { app: newApp } = await api().createApp({
     body: { name: appName },
   });
 
@@ -54,7 +54,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
 }
 
 async function createVolumes(form: ServiceForm): Promise<void> {
-  const { volumes: existingVolumes } = await api.listVolumes({
+  const { volumes: existingVolumes } = await api().listVolumes({
     query: { limit: '100' },
   });
 
@@ -81,7 +81,7 @@ async function createVolumes(form: ServiceForm): Promise<void> {
 
 async function createVolume(index: number, name: string, size: number, region: string): Promise<string> {
   try {
-    const response = await api.createVolume({
+    const response = await api().createVolume({
       body: {
         name,
         max_size: size,
@@ -121,7 +121,7 @@ async function createService(
     definition.volumes = definition.volumes?.filter((volume) => volume.id !== undefined);
   }
 
-  const result = await api.createService({
+  const result = await api().createService({
     query: { dry_run: dryRun },
     body: {
       app_id: appId,
@@ -141,7 +141,7 @@ async function createService(
 }
 
 async function updateService(serviceId: string, form: ServiceForm): Promise<SubmitServiceFormResult> {
-  const result = await api.updateService({
+  const result = await api().updateService({
     path: { id: serviceId },
     query: { dry_run: false },
     body: {

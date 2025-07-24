@@ -63,7 +63,7 @@ export function Qualification() {
   const mutation = useMutation({
     async mutationFn(form: QualificationFormType) {
       if (form.fullName !== '') {
-        await api.updateUser({
+        await api().updateUser({
           body: { name: form.fullName },
           query: {},
         });
@@ -79,7 +79,7 @@ export function Qualification() {
         submittedAt: new Date().toISOString(),
       };
 
-      await api.updateSignupQualification({
+      await api().updateSignupQualification({
         path: { id: organization.id },
         body: { signup_qualification: values as Record<string, never> },
       });
@@ -90,7 +90,7 @@ export function Qualification() {
         }
 
         try {
-          await api.sendInvitation({ body: { email } });
+          await api().sendInvitation({ body: { email } });
         } catch (error) {
           if (hasMessage(error)) {
             notify.error(error.message);

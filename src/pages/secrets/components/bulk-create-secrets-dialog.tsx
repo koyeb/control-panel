@@ -43,7 +43,7 @@ export function BulkCreateSecretsDialog() {
 
       const results = await Promise.allSettled(
         Object.entries(values).map(([name, value]) =>
-          api.createSecret({ body: { type: 'SIMPLE', name, value } }),
+          api().createSecret({ body: { type: 'SIMPLE', name, value } }),
         ),
       );
 
