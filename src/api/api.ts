@@ -1,4 +1,5 @@
-import { getToken } from 'src/application/authentication';
+import { container } from 'src/application/container';
+import { TOKENS } from 'src/tokens';
 import { getConfig } from 'src/utils/config';
 
 import { createApi } from './create-api';
@@ -17,7 +18,7 @@ type ApiEndpoints = {
 
 export const api = createApi({
   baseUrl: getConfig('apiBaseUrl'),
-  getToken,
+  getToken: () => container.resolve(TOKENS.authentication).token,
 });
 
 declare global {

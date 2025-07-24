@@ -9,7 +9,7 @@ type StoredValueOptions<T> = {
 
 type ChangeListener<T> = (value: T | null) => void;
 
-type StoredValue<T> = {
+export type StoredValue<T> = {
   read: () => T | null;
   write: (value: T | null) => void;
   listen: (onChange: ChangeListener<T>) => () => void;

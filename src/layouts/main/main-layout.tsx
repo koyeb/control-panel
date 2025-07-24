@@ -8,7 +8,6 @@ import {
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
-import { auth, getToken } from 'src/application/authentication';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { DocumentTitle } from 'src/components/document-title';
@@ -143,6 +142,7 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
+  const auth = container.resolve(TOKENS.authentication);
   const trial = useTrial();
 
   if (auth.session) {
@@ -194,8 +194,10 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
   }, [pageContextBaseUrl, iFrameRef]);
 
   useEffect(() => {
+    const token = container.resolve(TOKENS.authentication).token;
+
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token: getToken(), location }, pageContextBaseUrl);
+      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
     }
   }, [pageContextBaseUrl, iFrameRef, ready, location]);
 

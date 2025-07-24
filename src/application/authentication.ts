@@ -9,39 +9,70 @@ import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
 
 import { container } from './container';
+import { StoragePort, StoredValue } from './storage';
 
-const storage = container.resolve(TOKENS.storage);
+export interface AuthenticationPort {
+  get token(): string | null;
+  get session(): boolean;
 
-const opts = { parse: String, stringify: String };
-const accessToken = storage.value('access-token', { storage: localStorage, ...opts });
-const sessionToken = storage.value('session-token', { storage: sessionStorage, ...opts });
-
-export const auth = {
-  token: sessionToken.read() ?? accessToken.read(),
-  session: sessionToken.read() !== null,
-  setToken: (value: string | null, session?: boolean) => {
-    if (session) {
-      sessionToken.write(value);
-    } else {
-      accessToken.write(value);
-      sessionToken.write(null);
-    }
-
-    auth.token = sessionToken.read() ?? accessToken.read();
-    auth.session = sessionToken.read() !== null;
-  },
-};
-
-declare global {
-  interface Window {
-    auth: typeof auth;
-  }
+  setToken(token: string | null, session?: boolean): void;
+  listen(onChange: () => void): () => void;
 }
 
-window.auth = auth;
+export class StorageAuthenticationAdapter implements AuthenticationPort {
+  private accessToken: StoredValue<string>;
+  private sessionToken: StoredValue<string>;
 
-export function getToken() {
-  return auth.token;
+  public token: string | null;
+  public session: boolean;
+
+  constructor(storage: StoragePort) {
+    this.accessToken = storage.value('access-token', {
+      storage: localStorage,
+      parse: String,
+      stringify: String,
+    });
+
+    this.sessionToken = storage.value('session-token', {
+      storage: sessionStorage,
+      parse: String,
+      stringify: String,
+    });
+
+    this.token = this.sessionToken.read() ?? this.accessToken.read();
+    this.session = this.sessionToken.read() !== null;
+  }
+
+  setToken(value: string | null, session?: boolean): void {
+    if (session) {
+      this.sessionToken.write(value);
+    } else {
+      this.accessToken.write(value);
+      this.sessionToken.write(null);
+    }
+
+    this.token = this.sessionToken.read() ?? this.accessToken.read();
+    this.session = this.sessionToken.read() !== null;
+  }
+
+  listen(onChange: () => void): () => void {
+    const removeAccessTokenListener = this.accessToken.listen((value) => {
+      this.token = value;
+      this.session = false;
+      onChange();
+    });
+
+    const removeSessionTokenListener = this.sessionToken.listen((value) => {
+      this.token = value;
+      this.session = true;
+      onChange();
+    });
+
+    return () => {
+      removeAccessTokenListener();
+      removeSessionTokenListener();
+    };
+  }
 }
 
 export function useSetToken() {
@@ -49,11 +80,13 @@ export function useSetToken() {
 
   return useCallback(
     (token: string | null, session?: boolean) => {
+      const auth = container.resolve(TOKENS.authentication);
+
       auth.setToken(token, session);
 
       void queryClient.cancelQueries();
 
-      if (getToken()) {
+      if (auth.token) {
         const queriesToKeep = ['getCurrentUser', 'getCurrentOrganization', 'getSubscription'];
 
         queryClient.removeQueries({
@@ -71,6 +104,7 @@ export function useSetToken() {
 
 export function useRefreshToken() {
   const pathname = usePathname();
+  const auth = container.resolve(TOKENS.authentication);
 
   const { mutate } = useMutation({
     ...useApiMutationFn('refreshToken', {}),
@@ -87,7 +121,7 @@ export function useRefreshToken() {
     if (expires !== undefined && isAfter(new Date(), sub(expires, { hours: 12 }))) {
       mutate();
     }
-  }, [pathname, mutate]);
+  }, [auth, pathname, mutate]);
 }
 
 function jwtExpires(jwt: string) {
@@ -100,20 +134,9 @@ function jwtExpires(jwt: string) {
 
 export function useTokenStorageListener() {
   const queryClient = useQueryClient();
+  const auth = container.resolve(TOKENS.authentication);
 
   useEffect(() => {
-    return accessToken.listen((value) => {
-      auth.token = value;
-      auth.session = false;
-      void queryClient.invalidateQueries();
-    });
-  }, [queryClient]);
-
-  useEffect(() => {
-    return sessionToken.listen((value) => {
-      auth.token = value;
-      auth.session = true;
-      void queryClient.invalidateQueries();
-    });
-  }, [queryClient]);
+    return auth.listen(() => void queryClient.invalidateQueries());
+  }, [auth, queryClient]);
 }

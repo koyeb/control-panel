@@ -1,8 +1,9 @@
 import Intercom from '@intercom/messenger-js-sdk';
 
 import { api } from './api/api';
-import { getToken } from './application/authentication';
+import { container } from './application/container';
 import { reportError } from './application/report-error';
+import { TOKENS } from './tokens';
 import { getConfig } from './utils/config';
 
 loadIntercom().catch(reportError);
@@ -14,7 +15,7 @@ async function loadIntercom() {
     return;
   }
 
-  const token = getToken();
+  const token = container.resolve(TOKENS.authentication).token;
   const user = token ? await api.getCurrentUser({}) : undefined;
   const userHash = token ? await api.getIntercomUserHash({}) : undefined;
 
