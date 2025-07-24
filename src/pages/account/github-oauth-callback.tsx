@@ -51,7 +51,7 @@ export function GithubOauthCallbackPage() {
         ([, value]) => value,
       );
 
-      return api.githubOAuthCallback({
+      return api().githubOAuthCallback({
         header: { 'seon-fp': await getSeonFingerprint() },
         body,
       });
@@ -155,10 +155,12 @@ async function getCurrentOrganization() {
     return;
   }
 
-  return api.getCurrentOrganization({}).then(
-    ({ organization }) => organization,
-    () => undefined,
-  );
+  return api()
+    .getCurrentOrganization({})
+    .then(
+      ({ organization }) => organization,
+      () => undefined,
+    );
 }
 
 const isAccountNotFoundError = createValidationGuard(

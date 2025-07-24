@@ -23,16 +23,16 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
 
   const { mutateAsync: deleteService } = useMutation({
     mutationFn: async () => {
-      await api.deleteService({
+      await api().deleteService({
         path: { id: service.id },
       });
 
-      const { services } = await api.listServices({
+      const { services } = await api().listServices({
         query: { app_id: service.appId },
       });
 
       if (services?.length === 1) {
-        await api.deleteApp({
+        await api().deleteApp({
           path: { id: service.appId },
         });
       }

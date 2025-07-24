@@ -26,7 +26,7 @@ export function useVerifyDockerImage(image: string, registrySecretName: string |
         return null;
       }
 
-      return api.verifyDockerImage({
+      return api().verifyDockerImage({
         query: {
           image: image.trim(),
           secret_id: secretId,

@@ -26,9 +26,9 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
 
   const acceptMutation = useMutation({
     async mutationFn(invitation: OrganizationInvitation) {
-      await api.acceptInvitation({ path: { id: invitation.id } });
+      await api().acceptInvitation({ path: { id: invitation.id } });
 
-      const { token: newToken } = await api.switchOrganization({
+      const { token: newToken } = await api().switchOrganization({
         path: { id: invitation.organization.id },
         header: {},
       });

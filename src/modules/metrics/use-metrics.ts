@@ -47,7 +47,7 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
         const duration = timeFrameToDuration[timeFrame];
         const start = sub(new Date(), duration).toISOString();
 
-        return api.getServiceMetrics({
+        return api().getServiceMetrics({
           query: { name, start, step, service_id: serviceId, instance_id: instanceId },
         });
       },

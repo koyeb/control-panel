@@ -35,7 +35,7 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
         return false;
       }
 
-      await api.editDomain({
+      await api().editDomain({
         path: { id: domain.id },
         query: {},
         body: { app_id: appId as string | undefined },
