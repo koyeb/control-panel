@@ -5,13 +5,16 @@ import { useCallback, useEffect } from 'react';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { usePathname } from 'src/hooks/router';
+import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
 
-import { createStorage } from './storage';
+import { container } from './container';
+
+const storage = container.resolve(TOKENS.storage);
 
 const opts = { parse: String, stringify: String };
-const accessToken = createStorage('access-token', { storage: localStorage, ...opts });
-const sessionToken = createStorage('session-token', { storage: sessionStorage, ...opts });
+const accessToken = storage.value('access-token', { storage: localStorage, ...opts });
+const sessionToken = storage.value('session-token', { storage: sessionStorage, ...opts });
 
 export const auth = {
   token: sessionToken.read() ?? accessToken.read(),
