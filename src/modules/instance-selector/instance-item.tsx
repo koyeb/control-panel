@@ -1,4 +1,4 @@
-import { Badge, Button, RadioInput } from '@koyeb/design-system';
+import { Badge, Button, Radio } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useRef } from 'react';
 
@@ -122,8 +122,14 @@ function InstanceDescription({ instance, disabled, selected, onSelected, badges 
   return (
     <div className="col flex-1 gap-2">
       <div className="row items-center gap-2 font-medium">
-        <RadioInput disabled={disabled} checked={selected} onChange={onSelected} data-instance />
-        <span className="text-base">{instance.displayName}</span>
+        <Radio
+          label={<span className="text-base">{instance.displayName}</span>}
+          disabled={disabled}
+          checked={selected}
+          onChange={onSelected}
+          data-instance
+        />
+
         {badges}
       </div>
 
