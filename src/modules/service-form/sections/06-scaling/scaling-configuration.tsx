@@ -4,6 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import { useInstance } from 'src/api/hooks/catalog';
 import { createTranslate } from 'src/intl/translate';
 
+import { useScalingRules } from '../../helpers/scaling-rules';
 import { ServiceForm } from '../../service-form.types';
 
 import { AutoscalingConfiguration } from './autoscaling';
@@ -22,6 +23,8 @@ export function ScalingConfiguration() {
   const min = watch('scaling.min');
   const max = watch('scaling.max');
 
+  const { onScalingChanged } = useScalingRules();
+
   return (
     <>
       {isFreeInstance && <FreeInstanceInfo />}
@@ -29,6 +32,7 @@ export function ScalingConfiguration() {
       <ScalingValues
         type={isEcoInstance && !isFreeInstance ? 'fixed' : 'autoscaling'}
         disabled={isFreeInstance || hasVolumes}
+        onChanged={onScalingChanged}
       />
 
       <ScaleToZeroConfiguration

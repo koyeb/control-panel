@@ -12,18 +12,24 @@ const T = createTranslate('modules.serviceForm.scaling');
 type ScalingValuesProps = {
   disabled: boolean;
   type: 'fixed' | 'autoscaling';
+  onChanged: (min: number, max: number) => void;
 };
 
-export function ScalingValues({ disabled, type }: ScalingValuesProps) {
+export function ScalingValues({ disabled, type, onChanged }: ScalingValuesProps) {
   return (
     <div className="row gap-6">
-      {type === 'fixed' && <FixedScaling disabled={disabled} />}
-      {type === 'autoscaling' && <AutoScaling disabled={disabled} />}
+      {type === 'fixed' && <FixedScaling disabled={disabled} onChanged={onChanged} />}
+      {type === 'autoscaling' && <AutoScaling disabled={disabled} onChanged={onChanged} />}
     </div>
   );
 }
 
-function FixedScaling({ disabled }: { disabled: boolean }) {
+type FixedScalingProps = {
+  disabled: boolean;
+  onChanged: ScalingValuesProps['onChanged'];
+};
+
+function FixedScaling({ disabled, onChanged }: FixedScalingProps) {
   const { watch, setValue } = useFormContext<ServiceForm>();
   const max = watch('scaling.max');
 
@@ -36,7 +42,12 @@ function FixedScaling({ disabled }: { disabled: boolean }) {
         disabled={disabled}
         min={1}
         max={20}
-        onChangeEffect={(event) => setValue('scaling.min', event.target.valueAsNumber)}
+        onChangeEffect={(event) => {
+          const value = event.target.valueAsNumber;
+
+          setValue('scaling.min', value);
+          onChanged(value, value);
+        }}
         className="w-34"
       />
 
@@ -53,6 +64,7 @@ function FixedScaling({ disabled }: { disabled: boolean }) {
           if (value > 0) {
             setValue('scaling.min', value);
             setValue('scaling.max', value);
+            onChanged(value, value);
           }
         }}
         className="hidden flex-1 pt-10 sm:block"
@@ -63,7 +75,12 @@ function FixedScaling({ disabled }: { disabled: boolean }) {
   );
 }
 
-function AutoScaling({ disabled }: { disabled: boolean }) {
+type AutoScalingProps = {
+  disabled: boolean;
+  onChanged: ScalingValuesProps['onChanged'];
+};
+
+function AutoScaling({ disabled, onChanged }: AutoScalingProps) {
   const { watch, setValue } = useFormContext<ServiceForm>();
 
   const min = watch('scaling.min');
@@ -78,6 +95,7 @@ function AutoScaling({ disabled }: { disabled: boolean }) {
         disabled={disabled}
         min={0}
         max={max}
+        onChangeEffect={(event) => onChanged(event.target.valueAsNumber, max)}
         className="w-20"
       />
 
@@ -95,6 +113,7 @@ function AutoScaling({ disabled }: { disabled: boolean }) {
           if (min > 0 || max > 0) {
             setValue('scaling.min', min);
             setValue('scaling.max', max);
+            onChanged(min, max);
           }
         }}
         className="hidden flex-1 pt-10 sm:block"
@@ -107,6 +126,7 @@ function AutoScaling({ disabled }: { disabled: boolean }) {
         disabled={disabled}
         min={Math.max(1, min)}
         max={20}
+        onChangeEffect={(event) => onChanged(min, event.target.valueAsNumber)}
         className="w-20"
       />
     </>
