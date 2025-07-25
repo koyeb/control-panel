@@ -46,6 +46,10 @@ export function useScalingRules() {
         this.onScalingChanged(scaling.max, scaling.max);
       }
 
+      if (selected?.category === 'gpu') {
+        setValue('scaling.scaleToZero.lightSleep.enabled', false);
+      }
+
       if (meta.serviceId === null && previous?.category !== 'gpu' && selected?.category === 'gpu') {
         setValue('scaling.min', 0, { shouldValidate: true });
         this.onScalingChanged(0, scaling.max);

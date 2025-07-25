@@ -130,4 +130,13 @@ describe('useScalingRules', () => {
 
     expect(form.getValues()).toHaveProperty('scaling.min', 0);
   });
+
+  it('disables light sleep when a GPU is selected', () => {
+    form.setValue('scaling.min', 0);
+    form.setValue('scaling.scaleToZero.lightSleep.enabled', true);
+
+    hook.onInstanceChanged(standard, gpu);
+
+    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleep.enabled', false);
+  });
 });
