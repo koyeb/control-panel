@@ -1,7 +1,7 @@
 import { CatalogInstance } from 'src/api/model';
 
-export function isTenstorrentGpu(instance?: CatalogInstance) {
-  if (instance === undefined) {
+export function isTenstorrentGpu(instance?: CatalogInstance | null) {
+  if (instance == null) {
     return false;
   }
 
