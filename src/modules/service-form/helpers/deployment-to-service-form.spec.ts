@@ -52,7 +52,6 @@ describe('deploymentDefinitionToServiceForm', () => {
       requests: { enabled: false, value: undefined },
       concurrentRequests: { enabled: false, value: undefined },
       responseTime: { enabled: false, value: undefined },
-      sleepIdleDelay: { lightSleepValue: Number.NaN, deepSleepValue: undefined },
     });
   });
 
@@ -73,13 +72,13 @@ describe('deploymentDefinitionToServiceForm', () => {
     expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling', {
       min: 0,
       max: 1,
+      scaleToZero: {
+        deepSleep: 2,
+        lightSleep: { enabled: true, value: 1 },
+      },
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       targets: expect.objectContaining({
         memory: { enabled: false, value: 1000 },
-        sleepIdleDelay: {
-          lightSleepValue: 1,
-          deepSleepValue: 2,
-        },
       }),
     });
   });

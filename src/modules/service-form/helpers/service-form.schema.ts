@@ -94,25 +94,19 @@ const scaling = z
   .object({
     min: z.number().min(0).max(20),
     max: z.number().min(0).max(20),
+    scaleToZero: z.object({
+      deepSleep: z
+        .number()
+        .min(60)
+        .max(60 * 60),
+      lightSleep: target(5 * 60, 7 * 24 * 60 * 60),
+    }),
     targets: z.object({
       cpu: target(1, 100),
       memory: target(1, 100),
       requests: target(1, 1e9),
       concurrentRequests: target(1, 1e9),
       responseTime: target(1, 1e9),
-      sleepIdleDelay: z.object({
-        lightSleepValue: z.union([
-          z
-            .number()
-            .min(60)
-            .max(60 * 60),
-          z.nan(),
-        ]),
-        deepSleepValue: z
-          .number()
-          .min(5 * 60)
-          .max(7 * 24 * 60 * 60),
-      }),
     }),
   })
   .refine(({ min, max, targets }) => {

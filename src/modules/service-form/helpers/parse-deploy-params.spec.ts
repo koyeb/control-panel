@@ -335,8 +335,8 @@ describe('parseDeployParams', () => {
     it('autoscaling_sleep_idle_delay', () => {
       test.params.set('autoscaling_sleep_idle_delay', '1');
 
-      expect(test.getValues()).toHaveProperty('scaling.targets.sleepIdleDelay', {
-        deepSleepValue: 1,
+      expect(test.getValues()).toHaveProperty('scaling.scaleToZero', {
+        deepSleep: 1,
       });
     });
   });
