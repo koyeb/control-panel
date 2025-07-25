@@ -59,6 +59,7 @@ function InstanceRegionStep_() {
   const instances = useInstances();
   const regions = useRegions();
 
+  const sourceType = useSearchParams().get('type');
   const serviceType = useSearchParams().get('service_type') as ServiceType;
   const availabilities = useInstanceAvailabilities({ serviceType });
 
@@ -125,7 +126,10 @@ function InstanceRegionStep_() {
         <LinkButton
           color="gray"
           to="/services/new"
-          search={(prev) => ({ ...prev, step: hasBuilderStep ? 'builder' : 'serviceType' })}
+          search={(prev) => ({
+            ...prev,
+            step: hasBuilderStep && sourceType === 'git' ? 'builder' : 'importProject',
+          })}
         >
           <Translate id="common.back" />
         </LinkButton>
