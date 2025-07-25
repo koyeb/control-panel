@@ -6,7 +6,7 @@ import { useOrganization } from 'src/api/hooks/session';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelectBox } from 'src/components/controlled';
 import { ExternalLink } from 'src/components/link';
-import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import {
   IconAlarmClockCheck,
   IconClock,
@@ -138,14 +138,13 @@ function useMinScaling() {
   const { watch } = useFormContext<ServiceForm>();
 
   const instance = useInstance(watch('instance'));
-  const scaleToZero = useFeatureFlag('scale-to-zero');
   const hasPublicPort = watch('ports').some((port) => port.public);
 
   if (instance?.id === 'free') {
     return 0;
   }
 
-  if (scaleToZero && watch('serviceType') === 'web' && hasPublicPort) {
+  if (watch('serviceType') === 'web' && hasPublicPort) {
     return 0;
   }
 
