@@ -175,6 +175,13 @@ function scaling(definition: API.DeploymentDefinition): DeepPartial<Scaling> {
   const scaling = {
     min,
     max,
+    scaleToZero: {
+      deepSleep: sleep_idle_delay?.deep_sleep_value || sleep_idle_delay?.value,
+      lightSleep: {
+        enabled: sleep_idle_delay?.light_sleep_value !== undefined,
+        value: sleep_idle_delay?.light_sleep_value,
+      },
+    },
     targets: {
       cpu: {
         enabled: average_cpu !== undefined,
@@ -196,18 +203,12 @@ function scaling(definition: API.DeploymentDefinition): DeepPartial<Scaling> {
         enabled: requests_response_time !== undefined,
         value: requests_response_time?.value,
       },
-      sleepIdleDelay: {
-        lightSleepValue: sleep_idle_delay?.light_sleep_value || Number.NaN,
-        deepSleepValue: sleep_idle_delay?.deep_sleep_value || sleep_idle_delay?.value,
-      },
     },
   } satisfies DeepPartial<Scaling>;
 
   if (scaling.min === 0 && scaling.max === 1) {
     for (const target of keys(scaling.targets)) {
-      if (target !== 'sleepIdleDelay') {
-        scaling.targets[target].enabled = false;
-      }
+      scaling.targets[target].enabled = false;
     }
   }
 

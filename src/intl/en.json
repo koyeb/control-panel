@@ -1253,53 +1253,65 @@
       "scaling": {
         "title": "Scaling",
         "action": "Configure scaling",
-        "instancePerRegion": "({value} instance/region)",
-        "instancesPerRegion": "({min}-{max} instances/region)",
-        "fixed": "Fixed",
-        "fixedDescription": "Fixed number of instances in a region regardless of load level",
-        "autoscaling": "Autoscaling",
-        "autoscalingDescription": "Automatically adjusted number of instances in the region depending on the load",
-        "scalingLabel": "Number of instances per region",
-        "autoscalingSettings": {
-          "description": "Keep one or more instances running to prevent your service from going idle. To maintain a fixed number of instances in a region, set both the minimum and maximum instances per region to the same value.",
-          "scaleToZeroPreview": "Scale to zero is currently in preview, check out the <announcement>announcement</announcement>. <feedback>Give feedback?</feedback>",
-          "freeInstanceMessage": "Free instances are scaled to zero when they are inactive",
-          "enableAutoscaling": "To enable autoscaling and set scaling criteria, the maximum instances per region must be greater than one",
-          "min": "Min",
-          "max": "Max",
-          "cpuLabel": "Target CPU usage",
-          "cpuDescription": "Autoscale to target {value, number, :: percent} CPU usage on average, per instance",
-          "cpuUnit": "%",
-          "memoryLabel": "Target memory usage",
-          "memoryDescription": "Autoscale to target {value, number, :: percent} memory usage on average, per instance",
-          "memoryUnit": "%",
-          "requestsLabel": "Target number of requests per second",
-          "requestsDescription": "Autoscale to target {value} requests per second on average, per instance",
-          "requestsUnit": "#",
-          "concurrentRequestsLabel": "Target number of concurrent requests",
-          "concurrentRequestsDescription": "Autoscale to target {value} concurrent connections, per instance",
-          "concurrentRequestsUnit": "#",
-          "responseTimeLabel": "Target P95 response time",
-          "responseTimeDescription": "Autoscale to target a P95 response time of {value}ms or less, per instance",
-          "responseTimeUnit": "ms",
-          "sleepIdleDelayLabel": "Scale to zero idle time",
-          "sleepIdleDelayDescription": "Number of seconds to wait before sleeping the instance if it receives no traffic",
-          "sleepIdleDelayUnit": "s",
-          "lightSleepLabel": "Light sleep",
-          "deepSleepLabel": "Deep sleep",
-          "criteriaNotAvailableWithFixedScaling": "Scaling criteria are not available with fixed scaling",
-          "criteriaNotAvailableWhenMax1": "Scaling criteria are not available when the maximum scaling is set to 1",
-          "criterionNotAvailableWorker": "This criterion is not available for workers"
+        "summaryFixedScaling": "Fixed ({value} instance/region)",
+        "summaryAutoScaling": "Autoscaling ({min}-{max} instances/region)",
+        "freeInstanceInfo": "The free instance scales down to zero after periods of inactivity. Select any paid instance type to configure scaling",
+        "fixedLabel": "Instance per region",
+        "min": "Minimum",
+        "max": "Maximum",
+        "scaleToZero": {
+          "title": "Scale to zero configuration",
+          "deepSleep": {
+            "label": "Idle period",
+            "description": "Number of seconds to wait before sleeping the instance if it receives no traffic",
+            "unit": "s"
+          },
+          "lightSleep": {
+            "label": "Enable light sleep",
+            "description": "<light>Light Sleep</light> reduces cold starts to ~200ms After scaling to zero, the service stays in Light Sleep for {value}s before going into <deep>Deep Sleep</deep>.",
+            "unit": "s"
+          },
+          "disabled": {
+            "ecoInstance": {
+              "text": "Scale to zero requires a Standard or GPU instance type",
+              "cta": "Change instance"
+            },
+            "hasVolumes": {
+              "text": "Scale to zero can't be enabled when volumes are attached to the service"
+            }
+          }
         },
-        "alerts": {
-          "freeInstanceAlertTitle": "Upgrade to another instance type to configure scaling",
-          "freeInstanceAlertDescription": "The {instanceName} instance scales down to zero after periods of inactivity. Select any paid instance type to configure scaling.",
-          "ecoInstanceAlertTitle": "Services with the {instanceName} instance type cannot be scaled automatically",
-          "ecoInstanceAlertDescription": "Select a Standard instance type if you need to set up autoscaling",
-          "noTargetAlertTitle": "One scaling criteria must be set",
-          "noTargetAlertDescription": "Choose at least 1 criteria and set the value to meet your requirements",
-          "hasVolumesTitle": "Scaling settings can't be changed when volumes are attached",
-          "hasVolumesDescription": "Detach all the <volumesLink>volumes</volumesLink> from your service if you need to scale. <documentationLink>Learn more</documentationLink>"
+        "autoscaling": {
+          "title": "Autoscaling targets",
+          "description": "Configure one or more autoscaling target to automatically adjust the number of required instances",
+          "noTargetSelected": "One scaling criteria must be set",
+          "disabled": "Autoscaling can only be configured if the maximum number of instances is greater than one and the minimum and maximum instance counts are not equal",
+          "hasVolumes": "Autoscaling can't be configured when volumes are attached to the service",
+          "requests": {
+            "label": "Request per second",
+            "description": "Autoscale to target {value} requests per second on average, per instance",
+            "unit": "#"
+          },
+          "concurrentRequests": {
+            "label": "Concurrent requests",
+            "description": "Autoscale to target {value} concurrent connections, per instance",
+            "unit": "#"
+          },
+          "responseTime": {
+            "label": "P95 response time",
+            "description": "Autoscale to target a P95 response time of {value}ms or less, per instance",
+            "unit": "ms"
+          },
+          "cpu": {
+            "label": "CPU usage",
+            "description": "When enabled, scale the service to keep the CPU usage as close as possible to {value}%",
+            "unit": "%"
+          },
+          "memory": {
+            "label": "Memory usage",
+            "description": "When enabled, scale the service to keep the memory usage as close as possible to {value}%",
+            "unit": "%"
+          }
         }
       },
       "environmentVariables": {

@@ -107,7 +107,7 @@ function errorMessageHandler(translate: TranslateFn) {
       return t('noDockerImageSelected');
     }
 
-    if (path.match(/^scaling.targets.\w+.value$/)) {
+    if (path.match(/^scaling.(scaleToZero|targets).\w+.value$/)) {
       if (error.code === 'invalid_type') return t('scalingTargetEmpty');
       if (error.code === 'too_small') return t('scalingTargetTooSmall', { min: error.minimum });
       if (error.code === 'too_big') return t('scalingTargetTooBig', { max: error.maximum });
@@ -268,6 +268,10 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         if (name === 'scaling.max') {
           scaling.min = scaling.max;
         }
+      }
+
+      if (scaling.min > 0) {
+        scaling.scaleToZero.lightSleep.enabled = false;
       }
 
       if (scaling.min === scaling.max || scaling.max === 1) {

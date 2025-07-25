@@ -87,7 +87,7 @@ export function getDeployParams(form: ServiceForm, removeDefaultValues = true): 
   }
 
   if (form.scaling.min === 0) {
-    set(`autoscaling_sleep_idle_delay`, form.scaling.targets.sleepIdleDelay.deepSleepValue);
+    set(`autoscaling_sleep_idle_delay`, form.scaling.scaleToZero.deepSleep);
   }
 
   for (const { name, value } of form.environmentVariables) {
@@ -140,5 +140,4 @@ const scalingTargetMap: Record<keyof Scaling['targets'], string> = {
   requests: 'requests_per_second',
   concurrentRequests: 'concurrent_requests',
   responseTime: 'requests_response_time',
-  sleepIdleDelay: 'sleep_idle_delay',
 };

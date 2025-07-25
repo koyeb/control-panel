@@ -128,17 +128,15 @@ function scalings(scaling: Scaling): Array<API.DeploymentScaling> {
   }
 
   if (scaling.min === 0) {
-    const { lightSleepValue, deepSleepValue } = scaling.targets.sleepIdleDelay;
+    const { lightSleep, deepSleep } = scaling.scaleToZero;
     const target: API.DeploymentScalingTarget['sleep_idle_delay'] = {};
 
     targets.push({ sleep_idle_delay: target });
 
-    if (!Number.isNaN(lightSleepValue)) {
-      target.light_sleep_value = lightSleepValue;
-    }
+    target.deep_sleep_value = deepSleep;
 
-    if (!Number.isNaN(deepSleepValue)) {
-      target.deep_sleep_value = deepSleepValue;
+    if (lightSleep.enabled) {
+      target.light_sleep_value = lightSleep.value;
     }
   }
 

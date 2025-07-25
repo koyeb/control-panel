@@ -240,13 +240,16 @@ export function defaultServiceForm(): ServiceForm {
     scaling: {
       min: 1,
       max: 1,
+      scaleToZero: {
+        deepSleep: 5 * 60,
+        lightSleep: { enabled: false, value: 5 * 60 },
+      },
       targets: {
         requests: { enabled: false, value: 50 },
         cpu: { enabled: false, value: 80 },
         memory: { enabled: false, value: 80 },
         concurrentRequests: { enabled: false, value: 20 },
         responseTime: { enabled: false, value: 300 },
-        sleepIdleDelay: { lightSleepValue: NaN, deepSleepValue: 5 * 60 },
       },
     },
     instance: 'nano',

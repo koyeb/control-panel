@@ -64,13 +64,16 @@ describe('serviceFormToDeploymentDefinition', () => {
     form.scaling = {
       min: 0,
       max: 2,
+      scaleToZero: {
+        lightSleep: { value: 6, enabled: true },
+        deepSleep: 7,
+      },
       targets: {
         cpu: { enabled: true, value: 1 },
         memory: { enabled: true, value: 2 },
         requests: { enabled: true, value: 3 },
         concurrentRequests: { enabled: true, value: 4 },
         responseTime: { enabled: true, value: 5 },
-        sleepIdleDelay: { lightSleepValue: 6, deepSleepValue: 7 },
       },
     };
 
