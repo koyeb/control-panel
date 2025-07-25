@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { createStorage } from 'src/application/storage';
+import { container } from 'src/application/container';
+import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
 
 import { useMediaQuery } from './media-query';
@@ -8,7 +9,8 @@ import { useMediaQuery } from './media-query';
 export type ThemeMode = 'light' | 'dark' | 'system';
 type ThemeModeStrict = Exclude<ThemeMode, 'system'>;
 
-const storedTheme = createStorage('koyeb.theme', {
+const storage = container.resolve(TOKENS.storage);
+const storedTheme = storage.value('koyeb.theme', {
   parse: (value) => (isThemeMode(value) ? value : 'system'),
   stringify: String,
 });

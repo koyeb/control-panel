@@ -8,9 +8,8 @@ import {
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
-import { auth, getToken } from 'src/application/authentication';
+import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
-import { createStorage } from 'src/application/storage';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
@@ -25,6 +24,7 @@ import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-se
 import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { useTrial } from 'src/modules/trial/use-trial';
+import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
 import { getConfig } from 'src/utils/config';
 
@@ -142,6 +142,7 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
+  const auth = container.resolve(TOKENS.authentication);
   const trial = useTrial();
 
   if (auth.session) {
@@ -193,8 +194,10 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
   }, [pageContextBaseUrl, iFrameRef]);
 
   useEffect(() => {
+    const token = container.resolve(TOKENS.authentication).token;
+
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token: getToken(), location }, pageContextBaseUrl);
+      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
     }
   }, [pageContextBaseUrl, iFrameRef, ready, location]);
 
@@ -222,7 +225,8 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
 const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }));
 
-const pageContextExpanded = createStorage<boolean>('page-context-expanded');
+const storage = container.resolve(TOKENS.storage);
+const pageContextExpanded = storage.value<boolean>('page-context-expanded');
 
 function usePageContext() {
   const user = useUserUnsafe();

@@ -6,13 +6,14 @@ import { Component, Suspense, useEffect, useMemo } from 'react';
 
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { CommandPaletteProvider } from 'src/modules/command-palette/command-palette.provider';
-import { getConfig } from 'src/utils/config';
+import { TOKENS } from 'src/tokens';
 
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
-import { auth, useSetToken } from './authentication';
+import { useSetToken } from './authentication';
+import { container } from './container';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
 import { createQueryClient } from './query-client';
@@ -70,7 +71,8 @@ class RootErrorBoundary extends Component<{ children: React.ReactNode }> {
 }
 
 function PersistQueryClientProvider({ children }: { children: React.ReactNode }) {
-  const version = getConfig('version');
+  const config = container.resolve(TOKENS.config);
+  const auth = container.resolve(TOKENS.authentication);
 
   const persister = useMemo(() => {
     const storage = auth.session ? window.sessionStorage : window.localStorage;
@@ -79,10 +81,13 @@ function PersistQueryClientProvider({ children }: { children: React.ReactNode })
       key: 'query-cache',
       storage,
     });
-  }, []);
+  }, [auth]);
 
   return (
-    <BasePersistQueryClientProvider client={queryClient} persistOptions={{ persister, buster: version }}>
+    <BasePersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister, buster: config.get('version') }}
+    >
       {children}
     </BasePersistQueryClientProvider>
   );

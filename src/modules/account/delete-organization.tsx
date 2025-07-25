@@ -30,7 +30,7 @@ export function DeleteOrganization() {
 
   const deleteOrganization = useMutation({
     async mutationFn() {
-      const { members } = await api.listOrganizationMembers({
+      const { members } = await api().listOrganizationMembers({
         query: { user_id: user.id },
       });
 
@@ -41,19 +41,19 @@ export function DeleteOrganization() {
       let result: string;
 
       if (otherOrganizationId) {
-        const { token: newToken } = await api.switchOrganization({
+        const { token: newToken } = await api().switchOrganization({
           path: { id: otherOrganizationId },
           header: {},
         });
 
         result = newToken!.id!;
       } else {
-        const { token: newToken } = await api.newSession({});
+        const { token: newToken } = await api().newSession({});
 
         result = newToken!.id!;
       }
 
-      await api.deleteOrganization({
+      await api().deleteOrganization({
         path: { id: organization.id },
       });
 

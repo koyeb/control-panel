@@ -165,7 +165,7 @@ function useDeployments(service: Service) {
     queryKey: ['listDeployments', { serviceId: service.id }],
     initialPageParam: 0,
     async queryFn({ pageParam }) {
-      const { count, deployments } = await api.listDeployments({
+      const { count, deployments } = await api().listDeployments({
         query: {
           service_id: service.id,
           limit: String(10),

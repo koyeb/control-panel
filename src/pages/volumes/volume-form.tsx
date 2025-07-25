@@ -53,14 +53,14 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
   const mutation = useMutation({
     async mutationFn({ name, region, size }: FormValues<typeof form>) {
       if (volume) {
-        return api
+        return api()
           .updateVolume({
             path: { id: volume.id },
             body: { name },
           })
           .then(({ volume }) => mapVolume(volume!));
       } else {
-        return api
+        return api()
           .createVolume({
             body: {
               volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',

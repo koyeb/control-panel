@@ -31,8 +31,6 @@ type EndpointParams = {
 
 interface ApiCall<Params extends EndpointParams, Body, Result> {
   (params: ApiRequestParams<Params, Body>): Promise<Result>;
-  before?: (params: ApiRequestParams<Params, Body>) => void | Promise<void>;
-  after?: (params: ApiRequestParams<Params, Body>, result: Result) => void | Promise<void>;
 }
 
 type CreateApiOptions = {
@@ -214,8 +212,6 @@ function createEndpoint({ baseUrl, getToken }: CreateApiOptions) {
     type Result = InferResult<Endpoint>;
 
     const call: ApiCall<Params, Body, Result> = async function (params) {
-      await call.before?.(params);
-
       const url = buildUrl(path, params as EndpointParams);
       const headers = new Headers();
 
@@ -250,8 +246,6 @@ function createEndpoint({ baseUrl, getToken }: CreateApiOptions) {
       if (!response.ok) {
         throw buildError(response, responseBody);
       }
-
-      await call.after?.(params, responseBody as Result);
 
       return responseBody as Result;
     };
@@ -314,12 +308,7 @@ function createEndpoint({ baseUrl, getToken }: CreateApiOptions) {
         protocols.push('Bearer', token);
       }
 
-      const socket = new WebSocket(url, protocols);
-
-      window.sockets ??= [];
-      window.sockets.push(socket);
-
-      return socket;
+      return new WebSocket(url, protocols);
     };
   }
 

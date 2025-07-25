@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { FormattedDate } from 'react-intl';
 
-import { createStorage } from 'src/application/storage';
+import { container } from 'src/application/container';
 import { BadgeNew } from 'src/components/badge-new';
 import { ExternalLinkButton } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
 import { IconArrowUpRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { TOKENS } from 'src/tokens';
 import { unique } from 'src/utils/arrays';
 import { getConfig } from 'src/utils/config';
 
@@ -20,7 +21,8 @@ type News = {
   date: string;
 };
 
-const dismissedIds = createStorage<string[]>('dismissed-news');
+const storage = container.resolve(TOKENS.storage);
+const dismissedIds = storage.value<string[]>('dismissed-news');
 
 export function News() {
   const query = useQuery({

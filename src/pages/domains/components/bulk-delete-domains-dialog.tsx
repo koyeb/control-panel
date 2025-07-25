@@ -23,7 +23,7 @@ export function BulkDeleteDomainsDialog({ domains, onDeleted }: BulkDeleteDomain
 
   const mutation = useMutation({
     async mutationFn(domains: Domain[]) {
-      return Promise.allSettled(domains.map((domain) => api.deleteDomain({ path: { id: domain.id } })));
+      return Promise.allSettled(domains.map((domain) => api().deleteDomain({ path: { id: domain.id } })));
     },
     async onSuccess(result) {
       await invalidate('listDomains');

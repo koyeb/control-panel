@@ -38,7 +38,7 @@ export function useSubmitDatabaseServiceForm(
 
         return databaseServiceId;
       } else {
-        const { service } = await api.createService({
+        const { service } = await api().createService({
           query: { dry_run: false },
           body: createApiService(appId ?? (await getDatabaseAppId(values.serviceName)), values),
         });
@@ -71,7 +71,7 @@ export function useSubmitDatabaseServiceForm(
 }
 
 async function getDatabaseAppId(appName: string): Promise<string> {
-  const { apps } = await api.listApps({
+  const { apps } = await api().listApps({
     query: { name: appName },
   });
 
@@ -81,7 +81,7 @@ async function getDatabaseAppId(appName: string): Promise<string> {
     }
   }
 
-  const { app } = await api.createApp({
+  const { app } = await api().createApp({
     body: { name: appName },
   });
 
