@@ -8,7 +8,6 @@ import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
@@ -196,7 +195,6 @@ const scaleAboveZeroTargets = [
 ] satisfies Array<keyof Scaling['targets']>;
 
 function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
-  const scaleToZero = useFeatureFlag('scale-to-zero');
   const instances = useInstances();
   const previousInstance = usePrevious(useInstance(watch('instance')));
 
@@ -222,7 +220,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
       const hasVolumes = volumes.filter((volume) => volume.name !== '').length > 0;
       const instance = instances.find(hasProperty('id', values.instance));
 
-      if (scaleToZero && instance?.id === 'free') {
+      if (instance?.id === 'free') {
         scaling.min = 0;
         scaling.max = 1;
       }
@@ -232,15 +230,11 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
       }
 
       if (name === 'instance' && meta.serviceId === null) {
-        if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu' && scaleToZero) {
+        if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu') {
           scaling.min = 0;
         } else if (previousInstance?.category === 'gpu' && instance?.category === 'standard') {
           scaling.min = 1;
         }
-      }
-
-      if (scaling.min === 0 && !scaleToZero) {
-        scaling.min = 1;
       }
 
       if (scaling.min === 0 && serviceType !== 'web') {
@@ -259,7 +253,7 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
         scaling.min = 1;
       }
 
-      if (isTenstorrentGpu(previousInstance) && !isTenstorrentGpu(instance) && scaleToZero) {
+      if (isTenstorrentGpu(previousInstance) && !isTenstorrentGpu(instance)) {
         scaling.min = 0;
       }
 
@@ -295,5 +289,5 @@ function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormRetu
     return () => {
       subscription.unsubscribe();
     };
-  }, [scaleToZero, instances, previousInstance, watch, setValue, trigger]);
+  }, [instances, previousInstance, watch, setValue, trigger]);
 }
