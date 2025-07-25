@@ -101,7 +101,7 @@ function RegionItem({ type, region, selected, onSelected, instance }: RegionItem
   const availability = useCatalogRegionAvailability(instance.id, region.id);
 
   return (
-    <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 has-[:checked]:border-green">
+    <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 -outline-offset-2 has-focus-visible:outline has-[:checked]:border-green">
       <RegionFlag regionId={region.id} className="size-6" />
 
       <div className="col flex-1 gap-1.5">
