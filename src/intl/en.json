@@ -816,7 +816,7 @@
       "importProject": {
         "title": "Create a new service",
         "description.git": "Import the GitHub repository you want to deploy or use an existing public repository",
-        "description.docker": "Configure the Docker image you want to deploy",
+        "description.docker": "Deploy a Docker image from a container registry",
         "github": {
           "refresh": "Refresh",
           "import": "Import",
