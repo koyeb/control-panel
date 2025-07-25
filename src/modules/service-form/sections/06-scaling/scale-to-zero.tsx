@@ -1,6 +1,7 @@
-import { InputEnd } from '@koyeb/design-system';
+import { Badge, InputEnd } from '@koyeb/design-system';
 import { useFormContext, useFormState } from 'react-hook-form';
 
+import { useInstance } from 'src/api/hooks/catalog';
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { createTranslate } from 'src/intl/translate';
@@ -12,15 +13,17 @@ import { ScalingConfigSection, ScalingConfigSectionFooter } from './components/s
 
 const T = createTranslate('modules.serviceForm.scaling.scaleToZero');
 
+type ScaleToZeroConfigurationProps = {
+  disabled: boolean;
+  isEcoInstance: boolean;
+  hasVolumes: boolean;
+};
+
 export function ScaleToZeroConfiguration({
   disabled,
   isEcoInstance,
   hasVolumes,
-}: {
-  disabled: boolean;
-  isEcoInstance: boolean;
-  hasVolumes: boolean;
-}) {
+}: ScaleToZeroConfigurationProps) {
   const { errors } = useFormState<ServiceForm>();
 
   const hasError = [
@@ -98,15 +101,26 @@ function LightSleep({ disabled }: { disabled: boolean }) {
   const { errors } = useFormState<ServiceForm>();
   const error = errors.scaling?.scaleToZero?.lightSleep?.value?.message;
 
+  const instance = useInstance(watch('instance'));
+  const isGpu = instance?.category === 'gpu';
+
   return (
     <ScalingConfigValue
-      disabled={disabled}
+      disabled={disabled || isGpu}
       label={
-        <ControlledCheckbox<ServiceForm>
-          name="scaling.scaleToZero.lightSleep.enabled"
-          label={<T id="lightSleep.label" />}
-          disabled={disabled}
-        />
+        <div className="row items-center gap-2">
+          <ControlledCheckbox<ServiceForm>
+            name="scaling.scaleToZero.lightSleep.enabled"
+            label={<T id="lightSleep.label" />}
+            disabled={disabled || isGpu}
+          />
+
+          {isGpu && (
+            <Badge size={1} color="blue">
+              <T id="lightSleep.disabledGpu" />
+            </Badge>
+          )}
+        </div>
       }
       description={
         <T
@@ -129,7 +143,7 @@ function LightSleep({ disabled }: { disabled: boolean }) {
         <ControlledInput<ServiceForm>
           name="scaling.scaleToZero.lightSleep.value"
           type="number"
-          disabled={disabled}
+          disabled={disabled || isGpu}
           error={false}
           min={5 * 60}
           max={7 * 24 * 60 * 60}
