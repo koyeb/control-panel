@@ -17,6 +17,9 @@ type AutoscalingConfigurationProps = {
 };
 
 export function AutoscalingConfiguration({ hasVolumes, disabled }: AutoscalingConfigurationProps) {
+  const { watch } = useFormContext<ServiceForm>();
+  const isWorker = watch('serviceType') === 'worker';
+
   const { errors } = useFormState<ServiceForm>();
 
   const hasError = [
@@ -35,9 +38,9 @@ export function AutoscalingConfiguration({ hasVolumes, disabled }: AutoscalingCo
       footer={<AutoscalingFooter disabled={disabled} hasVolumes={hasVolumes} />}
       hasError={hasError}
     >
-      <AutoscalingTarget target="requests" disabled={disabled} />
-      <AutoscalingTarget target="concurrentRequests" disabled={disabled} />
-      <AutoscalingTarget target="responseTime" disabled={disabled} />
+      <AutoscalingTarget target="requests" disabled={disabled || isWorker} />
+      <AutoscalingTarget target="concurrentRequests" disabled={disabled || isWorker} />
+      <AutoscalingTarget target="responseTime" disabled={disabled || isWorker} />
       <AutoscalingTarget target="cpu" disabled={disabled} />
       <AutoscalingTarget target="memory" disabled={disabled} />
     </ScalingConfigSection>
