@@ -10,6 +10,7 @@ import { InstanceSelector as InstanceSelectorComponent } from 'src/modules/insta
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { hasProperty } from 'src/utils/object';
 
+import { useScalingRules } from '../../helpers/scaling-rules';
 import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
@@ -35,8 +36,11 @@ export function InstanceSelector() {
 
   const getBadges = useGetInstanceBadges({ previousInstance });
 
+  const scaling = useScalingRules();
+
   const handleInstanceSelected = (instance: CatalogInstance | null) => {
     instanceCtrl.field.onChange(instance?.id ?? null);
+    scaling.onInstanceChanged(selectedInstance, instance);
   };
 
   const handleRegionsSelected = (regions: CatalogRegion[]) => {

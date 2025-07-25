@@ -3,24 +3,20 @@ import { useCallback, useEffect } from 'react';
 import { FieldPath, Resolver, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
+import { useDatacenters, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
 import { createValidationGuard } from 'src/application/create-validation-guard';
-import { isTenstorrentGpu } from 'src/application/tenstorrent';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { usePrevious } from 'src/hooks/lifecycle';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
-import { hasProperty, trackChanges } from 'src/utils/object';
 import { Trim } from 'src/utils/types';
 
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { getServiceFormSections, sectionHasError } from './helpers/service-form-sections';
 import { serviceFormSchema } from './helpers/service-form.schema';
 import { useUnknownInterpolationErrors } from './helpers/unknown-interpolations';
-import { Scaling, ServiceForm, ServiceFormSection } from './service-form.types';
+import { ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
   const params = useSearchParams();
@@ -53,7 +49,6 @@ export function useServiceForm(serviceId?: string) {
   useTriggerInstanceValidationOnLoad(form);
   useExpandFirstSectionInError(form, sections);
   useTriggerValidationOnChange(form);
-  useEnsureScalingBusinessRules(form);
 
   return form;
 }
@@ -105,7 +100,7 @@ function errorMessageHandler(translate: TranslateFn) {
       return t('noDockerImageSelected');
     }
 
-    if (path.match(/^scaling.targets.\w+.value$/)) {
+    if (path.match(/^scaling.(scaleToZero|targets).\w+.value$/)) {
       if (error.code === 'invalid_type') return t('scalingTargetEmpty');
       if (error.code === 'too_small') return t('scalingTargetTooSmall', { min: error.minimum });
       if (error.code === 'too_big') return t('scalingTargetTooBig', { max: error.maximum });
@@ -185,115 +180,4 @@ function useTriggerValidationOnChange({ watch, trigger, formState }: UseFormRetu
       subscription.unsubscribe();
     };
   }, [watch, trigger, submitCount]);
-}
-
-const scaleAboveZeroTargets = [
-  'cpu',
-  'memory',
-  'requests',
-  'concurrentRequests',
-  'responseTime',
-] satisfies Array<keyof Scaling['targets']>;
-
-function useEnsureScalingBusinessRules({ watch, setValue, trigger }: UseFormReturn<ServiceForm>) {
-  const scaleToZero = useFeatureFlag('scale-to-zero');
-  const instances = useInstances();
-  const previousInstance = usePrevious(useInstance(watch('instance')));
-
-  useEffect(() => {
-    const subscription = watch((formValues, { type, name }) => {
-      if (type !== 'change' || name === undefined) {
-        return;
-      }
-
-      let triggerScalingValidation = false;
-
-      const values = trackChanges(formValues as ServiceForm, (key, value) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setValue(key as any, value as any, { shouldValidate: true });
-
-        if (key.startsWith('scaling')) {
-          triggerScalingValidation = true;
-        }
-      });
-
-      const { meta, serviceType, scaling, ports, volumes } = values;
-
-      const hasVolumes = volumes.filter((volume) => volume.name !== '').length > 0;
-      const instance = instances.find(hasProperty('id', values.instance));
-
-      if (scaleToZero && instance?.id === 'free') {
-        scaling.min = 0;
-        scaling.max = 1;
-      }
-
-      if (instance?.category === 'eco' && instance.id !== 'free') {
-        scaling.min = scaling.max;
-      }
-
-      if (name === 'instance' && meta.serviceId === null) {
-        if (previousInstance?.category !== 'gpu' && instance?.category === 'gpu' && scaleToZero) {
-          scaling.min = 0;
-        } else if (previousInstance?.category === 'gpu' && instance?.category === 'standard') {
-          scaling.min = 1;
-        }
-      }
-
-      if (scaling.min === 0 && !scaleToZero) {
-        scaling.min = 1;
-      }
-
-      if (scaling.min === 0 && serviceType !== 'web') {
-        scaling.min = 1;
-      }
-
-      if (scaling.min === 0 && instance?.id !== 'free' && !ports.some((port) => port.public)) {
-        scaling.min = 1;
-      }
-
-      if (scaling.min === 0 && hasVolumes) {
-        scaling.min = 1;
-      }
-
-      if (isTenstorrentGpu(instance) && !isTenstorrentGpu(previousInstance)) {
-        scaling.min = 1;
-      }
-
-      if (isTenstorrentGpu(previousInstance) && !isTenstorrentGpu(instance) && scaleToZero) {
-        scaling.min = 0;
-      }
-
-      if (scaling.min > scaling.max) {
-        if (name === 'scaling.min') {
-          scaling.max = scaling.min;
-        }
-
-        if (name === 'scaling.max') {
-          scaling.min = scaling.max;
-        }
-      }
-
-      if (scaling.min === scaling.max || scaling.max === 1) {
-        scaleAboveZeroTargets.forEach((target) => {
-          scaling.targets[target].enabled = false;
-        });
-      } else if (!name.startsWith('scaling.targets')) {
-        const hasEnabledTarget = scaleAboveZeroTargets.some((target) => scaling.targets[target].enabled);
-
-        if (!hasEnabledTarget) {
-          const target: keyof Scaling['targets'] = serviceType === 'worker' ? 'cpu' : 'requests';
-
-          scaling.targets[target].enabled = true;
-        }
-      }
-
-      if (triggerScalingValidation) {
-        void trigger('scaling');
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [scaleToZero, instances, previousInstance, watch, setValue, trigger]);
 }
