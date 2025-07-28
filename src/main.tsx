@@ -6,15 +6,16 @@ import './sentry';
 import './side-effects';
 import './styles.css';
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider, useQueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import qs from 'query-string';
-import { StrictMode } from 'react';
+import { StrictMode, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api/api-errors';
+import { container } from './application/container';
 import { DialogProvider } from './application/dialog-context';
 import { PostHogProvider } from './application/posthog';
 import { LogoLoading } from './components/logo-loading';
@@ -22,10 +23,17 @@ import { NotificationContainer } from './components/notification';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
 import { CommandPaletteProvider } from './modules/command-palette';
 import { routeTree } from './route-tree.generated';
+import { TOKENS } from './tokens';
 
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
+  }
+
+  interface HistoryState {
+    githubAppInstallationRequested?: boolean;
+    createOrganization?: boolean;
+    create?: boolean;
   }
 }
 
@@ -71,6 +79,13 @@ const router = createRouter({
     );
   },
   InnerWrap({ children }) {
+    const queryClient = useQueryClient();
+    const auth = container.resolve(TOKENS.authentication);
+
+    useEffect(() => {
+      return auth.listen(() => void queryClient.invalidateQueries());
+    }, [auth, queryClient]);
+
     return (
       <PostHogProvider>
         <CommandPaletteProvider>

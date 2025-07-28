@@ -1,8 +1,7 @@
 import { Alert, Button, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useMatch } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
-// eslint-disable-next-line no-restricted-imports
-import { useRoute } from 'wouter';
 
 import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
 import { useComputeDeployment } from 'src/api/hooks/service';
@@ -22,7 +21,7 @@ const T = createTranslate('pages.service.layout');
 
 export function RedeployButton({ app, service }: { app: App; service: Service }) {
   const openDialog = Dialog.useOpen();
-  const [isServiceSettings] = useRoute(`/services/${service.id}/settings`);
+  const isServiceSettings = useMatch({ from: '/_main/services/$serviceId/settings', shouldThrow: false });
 
   if (isServiceSettings || service.status === 'PAUSED') {
     return null;

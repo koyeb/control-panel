@@ -31,10 +31,8 @@
     "@nivo/line": "^0.99.0",
     "@stripe/react-stripe-js": "^3.9.1",
     "@stripe/stripe-js": "^7.8.0",
-    "@tanstack/query-async-storage-persister": "^5.85.5",
     "@tanstack/react-query": "^5.85.5",
     "@tanstack/react-query-devtools": "^5.85.5",
-    "@tanstack/react-query-persist-client": "^5.85.5",
     "@tanstack/react-ranger": "^0.0.4",
     "@tanstack/react-router": "^1.131.35",
     "@uiw/codemirror-extensions-langs": "^4.25.1",
@@ -76,7 +74,6 @@
     "unified": "^11.0.5",
     "unique-names-generator": "^4.7.1",
     "uuid": "^11.1.0",
-    "wouter": "^3.7.1",
     "zod": "^3.25.67"
   },
   "devDependencies": {
