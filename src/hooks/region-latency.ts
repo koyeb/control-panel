@@ -4,9 +4,6 @@ import { useMemo } from 'react';
 import { useDatacenters } from 'src/api/hooks/catalog';
 import { CatalogRegion } from 'src/api/model';
 import { getUrlLatency } from 'src/application/url-latency';
-import { getConfig } from 'src/utils/config';
-
-const disablePolling = getConfig('disablePolling');
 
 export function useRegionLatency(region: CatalogRegion | undefined): undefined | null | number {
   const latenciesQuery = useDatacenterLatencies();
@@ -34,7 +31,7 @@ function useDatacenterLatencies() {
       queryKey: ['datacenterLatency', datacenter.domain],
       queryFn: () => getUrlLatency(`https://${datacenter.domain}/health`),
       select: (latency: number | null) => [datacenter.id, latency] as const,
-      refetchInterval: disablePolling ? (false as const) : 10_000,
+      refetchInterval: 10_000,
       retry: false,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
