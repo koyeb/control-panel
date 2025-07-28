@@ -168,7 +168,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess(result) {
-      navigate({ to: '/', state: { token: result.token!.id!, session: false } });
+      await navigate({ to: '/', state: { token: result.token!.id! } });
       onSuccess?.();
     },
   });

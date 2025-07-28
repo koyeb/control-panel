@@ -33,8 +33,8 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
 
       return newToken!.id!;
     },
-    onSuccess(token) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token) {
+      await navigate({ to: '/', state: { token } });
       notify.info(t('acceptSuccess'));
     },
   });
@@ -45,7 +45,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     })),
     async onSuccess() {
       await invalidate('listInvitations');
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.info(t('declineSuccess'));
     },
   });

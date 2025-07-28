@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { usePathname } from 'src/hooks/router';
@@ -62,25 +62,6 @@ export class StorageAuthenticationAdapter implements AuthenticationPort {
       }
     });
   }
-}
-
-export function useSetToken() {
-  const queryClient = useQueryClient();
-
-  return useCallback(
-    (token: string | null, session?: boolean) => {
-      const auth = container.resolve(TOKENS.authentication);
-
-      auth.setToken(token, session);
-
-      if (auth.token) {
-        void queryClient.invalidateQueries();
-      } else {
-        queryClient.clear();
-      }
-    },
-    [queryClient],
-  );
 }
 
 export function useRefreshToken() {

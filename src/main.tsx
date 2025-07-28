@@ -30,6 +30,14 @@ declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router;
   }
+
+  interface HistoryState {
+    token?: string | null;
+    session?: boolean;
+    githubAppInstallationRequested?: boolean;
+    createOrganization?: boolean;
+    create?: boolean;
+  }
 }
 
 const queryClient = new QueryClient({
@@ -61,6 +69,7 @@ const router = createRouter({
   },
   context: {
     queryClient,
+    ensureQueryData: undefined!,
   },
   Wrap({ children }) {
     const config = container.resolve(TOKENS.config);

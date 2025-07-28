@@ -43,7 +43,7 @@ export function CreateSnapshotDialog({ volume }: { volume: Volume }) {
     async onSuccess({ snapshot }) {
       await invalidate('listVolumes');
       notify.success(t('successNotification', { name: snapshot!.name! }));
-      navigate({ to: '/volumes/snapshots' });
+      await navigate({ to: '/volumes/snapshots' });
       closeDialog();
     },
     onError: useFormErrorHandler(form),

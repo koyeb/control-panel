@@ -76,9 +76,9 @@ function CreateOrganizationDialog() {
     onError: useFormErrorHandler(form, (error) => ({
       organizationName: error.name,
     })),
-    onSuccess(token, { organizationName }) {
+    async onSuccess(token, { organizationName }) {
       form.reset();
-      navigate({ to: '/', state: { token } });
+      await navigate({ to: '/', state: { token } });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
   });
@@ -153,8 +153,8 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
       path: { id: organization.id },
       header: {},
     })),
-    onSuccess(token, redirect) {
-      navigate({
+    async onSuccess(token, redirect) {
+      await navigate({
         ...urlToLinkOptions(redirect),
         state: { token: token.token!.id! },
       });

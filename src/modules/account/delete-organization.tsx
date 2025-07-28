@@ -57,8 +57,8 @@ export function DeleteOrganization() {
 
       return result;
     },
-    onSuccess(token) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token) {
+      await navigate({ to: '/', state: { token } });
       notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });

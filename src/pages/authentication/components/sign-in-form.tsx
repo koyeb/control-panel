@@ -44,8 +44,8 @@ export function SignInForm({ redirect }: { redirect: string }) {
       token: undefined,
       body: credential,
     })),
-    onSuccess(result) {
-      navigate({
+    async onSuccess(result) {
+      await navigate({
         ...urlToLinkOptions(redirect),
         state: { token: result.token!.id! },
       });

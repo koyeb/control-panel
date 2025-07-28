@@ -25,8 +25,8 @@ export function DeleteAccount() {
     ...useApiMutationFn('deleteUser', {
       path: { id: user.id },
     }),
-    onSuccess() {
-      navigate({ to: '/auth/signin', state: { token: null } });
+    async onSuccess() {
+      await navigate({ to: '/auth/signin', state: { token: null } });
       notify.success(t('successNotification'));
     },
   });

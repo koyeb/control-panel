@@ -119,7 +119,7 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
   const [upcomingExpanded, setUpcomingExpanded] = useState(isMobile || upcoming.length > 0);
   const [pastExpanded, setPastExpanded] = useState(isMobile);
 
-  const [selectedDeployment, setSelectedDeployment] = useSelectedDeployment(sortedDeployments, isMobile);
+  const [selectedDeployment, setSelectedDeployment] = useSelectedDeployment();
 
   const onDeploymentSelected = useCallback(
     (deployment: ComputeDeployment) => {
@@ -230,28 +230,18 @@ function useDeploymentGroups(service: Service, deployments: ComputeDeployment[])
   }, [service, deployments]);
 }
 
-function useSelectedDeployment(deployments: ComputeDeployment[], noDefaultSelected: boolean) {
+function useSelectedDeployment() {
   const selectedDeploymentId = useSearchParams().get('deploymentId');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/$serviceId' });
 
   const selectedDeployment = useDeployment(selectedDeploymentId ?? undefined);
 
   const setSelectedDeployment = useCallback(
     (deployment: ComputeDeployment) => {
-      navigate({ search: (prev) => ({ ...prev, deploymentId: deployment.id }), replace: true });
+      void navigate({ search: (prev) => ({ ...prev, deploymentId: deployment.id }), replace: true });
     },
     [navigate],
   );
-
-  useEffect(() => {
-    if (noDefaultSelected) {
-      return;
-    }
-
-    if (selectedDeploymentId === null && deployments[0] !== undefined) {
-      setSelectedDeployment(deployments[0]);
-    }
-  }, [noDefaultSelected, deployments, selectedDeploymentId, setSelectedDeployment]);
 
   assert(selectedDeployment === undefined || isComputeDeployment(selectedDeployment));
 

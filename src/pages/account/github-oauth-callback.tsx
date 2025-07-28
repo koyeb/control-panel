@@ -66,7 +66,7 @@ export function GithubOauthCallbackPage() {
 
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
-        navigate({
+        await navigate({
           to: redirect.pathname,
           search: Object.fromEntries(redirect.searchParams),
           replace: true,
@@ -88,7 +88,7 @@ export function GithubOauthCallbackPage() {
       }
 
       if (currentOrganization?.id === organization_id) {
-        navigate({
+        await navigate({
           to: redirect.pathname,
           search: Object.fromEntries(redirect.searchParams),
           replace: true,
@@ -120,7 +120,7 @@ export function GithubOauthCallbackPage() {
         notify.error(error.message);
       }
 
-      navigate({
+      void navigate({
         ...urlToLinkOptions(redirect),
         replace: true,
       });

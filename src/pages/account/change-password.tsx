@@ -57,8 +57,8 @@ function ChangePasswordForm() {
       header: { 'seon-fp': await getSeonFingerprint() },
       body: { id: token, password },
     })),
-    onSuccess({ token }) {
-      navigate({ to: '/', state: { token: token!.id! } });
+    async onSuccess({ token }) {
+      await navigate({ to: '/', state: { token: token!.id! } });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),

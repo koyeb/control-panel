@@ -43,7 +43,7 @@ export function CannySso() {
     onError(error) {
       reportError(error);
       notify.error(<SsoError provider="canny" error={error} />);
-      navigate({ to: '/', replace: true });
+      void navigate({ to: '/', replace: true });
     },
   });
 
@@ -79,10 +79,10 @@ export function DiscourseSsoPage() {
       // don't use URLSearchParams, as `sso` is already url encoded
       window.location.href = `https://community.koyeb.com/session/sso_login?sso=${sso}&sig=${sig}`;
     },
-    onError(error) {
+    async onError(error) {
       reportError(error);
       notify.error(<SsoError provider="discourse" error={error} />);
-      navigate({ to: '/', replace: true });
+      await navigate({ to: '/', replace: true });
     },
   });
 

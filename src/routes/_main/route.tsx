@@ -19,7 +19,7 @@ export const Route = createFileRoute('/_main')({
 
   validateSearch: z.object({
     'organization-id': z.string().optional(),
-    settings: z.boolean().optional(),
+    settings: z.literal('true').optional(),
   }),
 
   async beforeLoad({ location, search }) {
