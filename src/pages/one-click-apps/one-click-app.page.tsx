@@ -10,7 +10,6 @@ import { SvgComponent } from 'src/application/types';
 import { ExternalLink, Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { useRouteParam } from 'src/hooks/router';
 import {
   IconCalendarDays,
   IconCircleUser,
@@ -34,8 +33,7 @@ const Markdown = lazy(() => import('src/components/markdown'));
 
 const T = createTranslate('pages.oneClickApps.details');
 
-export function OneClickAppPage() {
-  const slug = useRouteParam('slug');
+export function OneClickAppPage({ slug }: { slug: string }) {
   const appsQuery = useOneClickAppsQuery();
   const appQuery = useOneClickAppQuery(slug);
 

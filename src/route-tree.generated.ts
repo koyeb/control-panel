@@ -9,50 +9,1147 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteRouteImport } from './routes/auth/route'
+import { Route as MainRouteRouteImport } from './routes/_main/route'
+import { Route as MainIndexRouteImport } from './routes/_main/index'
+import { Route as AuthSignupRouteImport } from './routes/auth/signup'
+import { Route as AuthSigninRouteImport } from './routes/auth/signin'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
+import { Route as MainTeamRouteImport } from './routes/_main/team'
+import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
+import { Route as MainDomainsRouteImport } from './routes/_main/domains'
+import { Route as MainDeployRouteImport } from './routes/_main/deploy'
+import { Route as MainActivityRouteImport } from './routes/_main/activity'
+import { Route as MainVolumesRouteRouteImport } from './routes/_main/volumes/route'
+import { Route as MainSettingsRouteRouteImport } from './routes/_main/settings/route'
+import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/index'
+import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
+import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
+import { Route as MainOneClickAppsIndexRouteImport } from './routes/_main/one-click-apps/index'
+import { Route as AuthSsoDiscourseRouteImport } from './routes/auth/sso.discourse'
+import { Route as AuthSsoCannyRouteImport } from './routes/auth/sso.canny'
+import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
+import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
+import { Route as MainVolumesNewRouteImport } from './routes/_main/volumes/new'
+import { Route as MainSettingsRegistryConfigurationRouteImport } from './routes/_main/settings/registry-configuration'
+import { Route as MainSettingsPlansRouteImport } from './routes/_main/settings/plans'
+import { Route as MainSettingsBillingRouteImport } from './routes/_main/settings/billing'
+import { Route as MainSettingsApiRouteImport } from './routes/_main/settings/api'
+import { Route as MainServicesNewRouteImport } from './routes/_main/services/new'
+import { Route as MainServicesDeployRouteImport } from './routes/_main/services/deploy'
+import { Route as MainDatabaseServicesNewRouteImport } from './routes/_main/database-services/new'
+import { Route as MainUserSettingsRouteRouteImport } from './routes/_main/user.settings/route'
+import { Route as MainServicesServiceIdRouteRouteImport } from './routes/_main/services/$serviceId/route'
+import { Route as MainDatabaseServicesDatabaseServiceIdRouteRouteImport } from './routes/_main/database-services/$databaseServiceId/route'
+import { Route as MainUserSettingsIndexRouteImport } from './routes/_main/user.settings/index'
+import { Route as MainServicesServiceIdIndexRouteImport } from './routes/_main/services/$serviceId/index'
+import { Route as MainOneClickAppsSlugIndexRouteImport } from './routes/_main/one-click-apps/$slug.index'
+import { Route as MainDatabaseServicesDatabaseServiceIdIndexRouteImport } from './routes/_main/database-services/$databaseServiceId/index'
+import { Route as AccountOauthGithubCallbackRouteImport } from './routes/account/oauth.github.callback'
+import { Route as MainUserSettingsOrganizationsRouteImport } from './routes/_main/user.settings/organizations'
+import { Route as MainUserSettingsApiRouteImport } from './routes/_main/user.settings/api'
+import { Route as MainServicesServiceIdSettingsRouteImport } from './routes/_main/services/$serviceId/settings'
+import { Route as MainServicesServiceIdMetricsRouteImport } from './routes/_main/services/$serviceId/metrics'
+import { Route as MainServicesServiceIdConsoleRouteImport } from './routes/_main/services/$serviceId/console'
+import { Route as MainOneClickAppsCategoryCategoryRouteImport } from './routes/_main/one-click-apps/category.$category'
+import { Route as MainOneClickAppsSlugDeployRouteImport } from './routes/_main/one-click-apps/$slug.deploy'
+import { Route as MainDatabaseServicesDatabaseServiceIdSettingsRouteImport } from './routes/_main/database-services/$databaseServiceId/settings'
+import { Route as MainDatabaseServicesDatabaseServiceIdRolesRouteImport } from './routes/_main/database-services/$databaseServiceId/roles'
+import { Route as MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport } from './routes/_main/database-services/$databaseServiceId/databases'
+import { Route as MainAccountOrganization_invitationsInvitationIdRouteImport } from './routes/_main/account/organization_invitations.$invitationId'
+import { Route as MainOrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/_main/organization/deactivate.confirm.$confirmationId'
 
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MainRouteRoute = MainRouteRouteImport.update({
+  id: '/_main',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MainIndexRoute = MainIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const AuthSignupRoute = AuthSignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSigninRoute = AuthSigninRouteImport.update({
+  id: '/signin',
+  path: '/signin',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const MainTeamRoute = MainTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainSecretsRoute = MainSecretsRouteImport.update({
+  id: '/secrets',
+  path: '/secrets',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainDomainsRoute = MainDomainsRouteImport.update({
+  id: '/domains',
+  path: '/domains',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainDeployRoute = MainDeployRouteImport.update({
+  id: '/deploy',
+  path: '/deploy',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainActivityRoute = MainActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainVolumesRouteRoute = MainVolumesRouteRouteImport.update({
+  id: '/volumes',
+  path: '/volumes',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainSettingsRouteRoute = MainSettingsRouteRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainVolumesIndexRoute = MainVolumesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainVolumesRouteRoute,
+} as any)
+const MainSettingsIndexRoute = MainSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainSettingsRouteRoute,
+} as any)
+const MainServicesIndexRoute = MainServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainOneClickAppsIndexRoute = MainOneClickAppsIndexRouteImport.update({
+  id: '/one-click-apps/',
+  path: '/one-click-apps/',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const AuthSsoDiscourseRoute = AuthSsoDiscourseRouteImport.update({
+  id: '/sso/discourse',
+  path: '/sso/discourse',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthSsoCannyRoute = AuthSsoCannyRouteImport.update({
+  id: '/sso/canny',
+  path: '/sso/canny',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AccountValidateTokenRoute = AccountValidateTokenRouteImport.update({
+  id: '/account/validate/$token',
+  path: '/account/validate/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AccountResetPasswordTokenRoute =
+  AccountResetPasswordTokenRouteImport.update({
+    id: '/account/reset-password/$token',
+    path: '/account/reset-password/$token',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MainVolumesNewRoute = MainVolumesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => MainVolumesRouteRoute,
+} as any)
+const MainSettingsRegistryConfigurationRoute =
+  MainSettingsRegistryConfigurationRouteImport.update({
+    id: '/registry-configuration',
+    path: '/registry-configuration',
+    getParentRoute: () => MainSettingsRouteRoute,
+  } as any)
+const MainSettingsPlansRoute = MainSettingsPlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
+  getParentRoute: () => MainSettingsRouteRoute,
+} as any)
+const MainSettingsBillingRoute = MainSettingsBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => MainSettingsRouteRoute,
+} as any)
+const MainSettingsApiRoute = MainSettingsApiRouteImport.update({
+  id: '/api',
+  path: '/api',
+  getParentRoute: () => MainSettingsRouteRoute,
+} as any)
+const MainServicesNewRoute = MainServicesNewRouteImport.update({
+  id: '/services/new',
+  path: '/services/new',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainServicesDeployRoute = MainServicesDeployRouteImport.update({
+  id: '/services/deploy',
+  path: '/services/deploy',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainDatabaseServicesNewRoute = MainDatabaseServicesNewRouteImport.update({
+  id: '/database-services/new',
+  path: '/database-services/new',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainUserSettingsRouteRoute = MainUserSettingsRouteRouteImport.update({
+  id: '/user/settings',
+  path: '/user/settings',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainServicesServiceIdRouteRoute =
+  MainServicesServiceIdRouteRouteImport.update({
+    id: '/services/$serviceId',
+    path: '/services/$serviceId',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
+const MainDatabaseServicesDatabaseServiceIdRouteRoute =
+  MainDatabaseServicesDatabaseServiceIdRouteRouteImport.update({
+    id: '/database-services/$databaseServiceId',
+    path: '/database-services/$databaseServiceId',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
+const MainUserSettingsIndexRoute = MainUserSettingsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainUserSettingsRouteRoute,
+} as any)
+const MainServicesServiceIdIndexRoute =
+  MainServicesServiceIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MainServicesServiceIdRouteRoute,
+  } as any)
+const MainOneClickAppsSlugIndexRoute =
+  MainOneClickAppsSlugIndexRouteImport.update({
+    id: '/one-click-apps/$slug/',
+    path: '/one-click-apps/$slug/',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
+const MainDatabaseServicesDatabaseServiceIdIndexRoute =
+  MainDatabaseServicesDatabaseServiceIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
+  } as any)
+const AccountOauthGithubCallbackRoute =
+  AccountOauthGithubCallbackRouteImport.update({
+    id: '/account/oauth/github/callback',
+    path: '/account/oauth/github/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const MainUserSettingsOrganizationsRoute =
+  MainUserSettingsOrganizationsRouteImport.update({
+    id: '/organizations',
+    path: '/organizations',
+    getParentRoute: () => MainUserSettingsRouteRoute,
+  } as any)
+const MainUserSettingsApiRoute = MainUserSettingsApiRouteImport.update({
+  id: '/api',
+  path: '/api',
+  getParentRoute: () => MainUserSettingsRouteRoute,
+} as any)
+const MainServicesServiceIdSettingsRoute =
+  MainServicesServiceIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => MainServicesServiceIdRouteRoute,
+  } as any)
+const MainServicesServiceIdMetricsRoute =
+  MainServicesServiceIdMetricsRouteImport.update({
+    id: '/metrics',
+    path: '/metrics',
+    getParentRoute: () => MainServicesServiceIdRouteRoute,
+  } as any)
+const MainServicesServiceIdConsoleRoute =
+  MainServicesServiceIdConsoleRouteImport.update({
+    id: '/console',
+    path: '/console',
+    getParentRoute: () => MainServicesServiceIdRouteRoute,
+  } as any)
+const MainOneClickAppsCategoryCategoryRoute =
+  MainOneClickAppsCategoryCategoryRouteImport.update({
+    id: '/one-click-apps/category/$category',
+    path: '/one-click-apps/category/$category',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
+const MainOneClickAppsSlugDeployRoute =
+  MainOneClickAppsSlugDeployRouteImport.update({
+    id: '/one-click-apps/$slug/deploy',
+    path: '/one-click-apps/$slug/deploy',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
+const MainDatabaseServicesDatabaseServiceIdSettingsRoute =
+  MainDatabaseServicesDatabaseServiceIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
+  } as any)
+const MainDatabaseServicesDatabaseServiceIdRolesRoute =
+  MainDatabaseServicesDatabaseServiceIdRolesRouteImport.update({
+    id: '/roles',
+    path: '/roles',
+    getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
+  } as any)
+const MainDatabaseServicesDatabaseServiceIdDatabasesRoute =
+  MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport.update({
+    id: '/databases',
+    path: '/databases',
+    getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
+  } as any)
+const MainAccountOrganization_invitationsInvitationIdRoute =
+  MainAccountOrganization_invitationsInvitationIdRouteImport.update({
+    id: '/account/organization_invitations/$invitationId',
+    path: '/account/organization_invitations/$invitationId',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
+const MainOrganizationDeactivateConfirmConfirmationIdRoute =
+  MainOrganizationDeactivateConfirmConfirmationIdRouteImport.update({
+    id: '/organization/deactivate/confirm/$confirmationId',
+    path: '/organization/deactivate/confirm/$confirmationId',
+    getParentRoute: () => MainRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/settings': typeof MainSettingsRouteRouteWithChildren
+  '/volumes': typeof MainVolumesRouteRouteWithChildren
+  '/activity': typeof MainActivityRoute
+  '/deploy': typeof MainDeployRoute
+  '/domains': typeof MainDomainsRoute
+  '/secrets': typeof MainSecretsRoute
+  '/team': typeof MainTeamRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/': typeof MainIndexRoute
+  '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
+  '/services/$serviceId': typeof MainServicesServiceIdRouteRouteWithChildren
+  '/user/settings': typeof MainUserSettingsRouteRouteWithChildren
+  '/database-services/new': typeof MainDatabaseServicesNewRoute
+  '/services/deploy': typeof MainServicesDeployRoute
+  '/services/new': typeof MainServicesNewRoute
+  '/settings/api': typeof MainSettingsApiRoute
+  '/settings/billing': typeof MainSettingsBillingRoute
+  '/settings/plans': typeof MainSettingsPlansRoute
+  '/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
+  '/volumes/new': typeof MainVolumesNewRoute
+  '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
+  '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/auth/sso/canny': typeof AuthSsoCannyRoute
+  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
+  '/one-click-apps': typeof MainOneClickAppsIndexRoute
+  '/services': typeof MainServicesIndexRoute
+  '/settings/': typeof MainSettingsIndexRoute
+  '/volumes/': typeof MainVolumesIndexRoute
+  '/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
+  '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
+  '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
+  '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
+  '/one-click-apps/$slug/deploy': typeof MainOneClickAppsSlugDeployRoute
+  '/one-click-apps/category/$category': typeof MainOneClickAppsCategoryCategoryRoute
+  '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
+  '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
+  '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
+  '/user/settings/api': typeof MainUserSettingsApiRoute
+  '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
+  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
+  '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
+  '/one-click-apps/$slug': typeof MainOneClickAppsSlugIndexRoute
+  '/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
+  '/user/settings/': typeof MainUserSettingsIndexRoute
+  '/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/activity': typeof MainActivityRoute
+  '/deploy': typeof MainDeployRoute
+  '/domains': typeof MainDomainsRoute
+  '/secrets': typeof MainSecretsRoute
+  '/team': typeof MainTeamRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/': typeof MainIndexRoute
+  '/database-services/new': typeof MainDatabaseServicesNewRoute
+  '/services/deploy': typeof MainServicesDeployRoute
+  '/services/new': typeof MainServicesNewRoute
+  '/settings/api': typeof MainSettingsApiRoute
+  '/settings/billing': typeof MainSettingsBillingRoute
+  '/settings/plans': typeof MainSettingsPlansRoute
+  '/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
+  '/volumes/new': typeof MainVolumesNewRoute
+  '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
+  '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/auth/sso/canny': typeof AuthSsoCannyRoute
+  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
+  '/one-click-apps': typeof MainOneClickAppsIndexRoute
+  '/services': typeof MainServicesIndexRoute
+  '/settings': typeof MainSettingsIndexRoute
+  '/volumes': typeof MainVolumesIndexRoute
+  '/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
+  '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
+  '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
+  '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
+  '/one-click-apps/$slug/deploy': typeof MainOneClickAppsSlugDeployRoute
+  '/one-click-apps/category/$category': typeof MainOneClickAppsCategoryCategoryRoute
+  '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
+  '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
+  '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
+  '/user/settings/api': typeof MainUserSettingsApiRoute
+  '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
+  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
+  '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
+  '/one-click-apps/$slug': typeof MainOneClickAppsSlugIndexRoute
+  '/services/$serviceId': typeof MainServicesServiceIdIndexRoute
+  '/user/settings': typeof MainUserSettingsIndexRoute
+  '/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
+  '/_main': typeof MainRouteRouteWithChildren
+  '/auth': typeof AuthRouteRouteWithChildren
+  '/_main/settings': typeof MainSettingsRouteRouteWithChildren
+  '/_main/volumes': typeof MainVolumesRouteRouteWithChildren
+  '/_main/activity': typeof MainActivityRoute
+  '/_main/deploy': typeof MainDeployRoute
+  '/_main/domains': typeof MainDomainsRoute
+  '/_main/secrets': typeof MainSecretsRoute
+  '/_main/team': typeof MainTeamRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signup': typeof AuthSignupRoute
+  '/_main/': typeof MainIndexRoute
+  '/_main/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
+  '/_main/services/$serviceId': typeof MainServicesServiceIdRouteRouteWithChildren
+  '/_main/user/settings': typeof MainUserSettingsRouteRouteWithChildren
+  '/_main/database-services/new': typeof MainDatabaseServicesNewRoute
+  '/_main/services/deploy': typeof MainServicesDeployRoute
+  '/_main/services/new': typeof MainServicesNewRoute
+  '/_main/settings/api': typeof MainSettingsApiRoute
+  '/_main/settings/billing': typeof MainSettingsBillingRoute
+  '/_main/settings/plans': typeof MainSettingsPlansRoute
+  '/_main/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
+  '/_main/volumes/new': typeof MainVolumesNewRoute
+  '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
+  '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/auth/sso/canny': typeof AuthSsoCannyRoute
+  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
+  '/_main/one-click-apps/': typeof MainOneClickAppsIndexRoute
+  '/_main/services/': typeof MainServicesIndexRoute
+  '/_main/settings/': typeof MainSettingsIndexRoute
+  '/_main/volumes/': typeof MainVolumesIndexRoute
+  '/_main/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
+  '/_main/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
+  '/_main/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
+  '/_main/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
+  '/_main/one-click-apps/$slug/deploy': typeof MainOneClickAppsSlugDeployRoute
+  '/_main/one-click-apps/category/$category': typeof MainOneClickAppsCategoryCategoryRoute
+  '/_main/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
+  '/_main/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
+  '/_main/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
+  '/_main/user/settings/api': typeof MainUserSettingsApiRoute
+  '/_main/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
+  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
+  '/_main/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
+  '/_main/one-click-apps/$slug/': typeof MainOneClickAppsSlugIndexRoute
+  '/_main/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
+  '/_main/user/settings/': typeof MainUserSettingsIndexRoute
+  '/_main/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/auth'
+    | '/settings'
+    | '/volumes'
+    | '/activity'
+    | '/deploy'
+    | '/domains'
+    | '/secrets'
+    | '/team'
+    | '/auth/reset-password'
+    | '/auth/signin'
+    | '/auth/signup'
+    | '/'
+    | '/database-services/$databaseServiceId'
+    | '/services/$serviceId'
+    | '/user/settings'
+    | '/database-services/new'
+    | '/services/deploy'
+    | '/services/new'
+    | '/settings/api'
+    | '/settings/billing'
+    | '/settings/plans'
+    | '/settings/registry-configuration'
+    | '/volumes/new'
+    | '/account/reset-password/$token'
+    | '/account/validate/$token'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
+    | '/one-click-apps'
+    | '/services'
+    | '/settings/'
+    | '/volumes/'
+    | '/account/organization_invitations/$invitationId'
+    | '/database-services/$databaseServiceId/databases'
+    | '/database-services/$databaseServiceId/roles'
+    | '/database-services/$databaseServiceId/settings'
+    | '/one-click-apps/$slug/deploy'
+    | '/one-click-apps/category/$category'
+    | '/services/$serviceId/console'
+    | '/services/$serviceId/metrics'
+    | '/services/$serviceId/settings'
+    | '/user/settings/api'
+    | '/user/settings/organizations'
+    | '/account/oauth/github/callback'
+    | '/database-services/$databaseServiceId/'
+    | '/one-click-apps/$slug'
+    | '/services/$serviceId/'
+    | '/user/settings/'
+    | '/organization/deactivate/confirm/$confirmationId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/auth'
+    | '/activity'
+    | '/deploy'
+    | '/domains'
+    | '/secrets'
+    | '/team'
+    | '/auth/reset-password'
+    | '/auth/signin'
+    | '/auth/signup'
+    | '/'
+    | '/database-services/new'
+    | '/services/deploy'
+    | '/services/new'
+    | '/settings/api'
+    | '/settings/billing'
+    | '/settings/plans'
+    | '/settings/registry-configuration'
+    | '/volumes/new'
+    | '/account/reset-password/$token'
+    | '/account/validate/$token'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
+    | '/one-click-apps'
+    | '/services'
+    | '/settings'
+    | '/volumes'
+    | '/account/organization_invitations/$invitationId'
+    | '/database-services/$databaseServiceId/databases'
+    | '/database-services/$databaseServiceId/roles'
+    | '/database-services/$databaseServiceId/settings'
+    | '/one-click-apps/$slug/deploy'
+    | '/one-click-apps/category/$category'
+    | '/services/$serviceId/console'
+    | '/services/$serviceId/metrics'
+    | '/services/$serviceId/settings'
+    | '/user/settings/api'
+    | '/user/settings/organizations'
+    | '/account/oauth/github/callback'
+    | '/database-services/$databaseServiceId'
+    | '/one-click-apps/$slug'
+    | '/services/$serviceId'
+    | '/user/settings'
+    | '/organization/deactivate/confirm/$confirmationId'
+  id:
+    | '__root__'
+    | '/_main'
+    | '/auth'
+    | '/_main/settings'
+    | '/_main/volumes'
+    | '/_main/activity'
+    | '/_main/deploy'
+    | '/_main/domains'
+    | '/_main/secrets'
+    | '/_main/team'
+    | '/auth/reset-password'
+    | '/auth/signin'
+    | '/auth/signup'
+    | '/_main/'
+    | '/_main/database-services/$databaseServiceId'
+    | '/_main/services/$serviceId'
+    | '/_main/user/settings'
+    | '/_main/database-services/new'
+    | '/_main/services/deploy'
+    | '/_main/services/new'
+    | '/_main/settings/api'
+    | '/_main/settings/billing'
+    | '/_main/settings/plans'
+    | '/_main/settings/registry-configuration'
+    | '/_main/volumes/new'
+    | '/account/reset-password/$token'
+    | '/account/validate/$token'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
+    | '/_main/one-click-apps/'
+    | '/_main/services/'
+    | '/_main/settings/'
+    | '/_main/volumes/'
+    | '/_main/account/organization_invitations/$invitationId'
+    | '/_main/database-services/$databaseServiceId/databases'
+    | '/_main/database-services/$databaseServiceId/roles'
+    | '/_main/database-services/$databaseServiceId/settings'
+    | '/_main/one-click-apps/$slug/deploy'
+    | '/_main/one-click-apps/category/$category'
+    | '/_main/services/$serviceId/console'
+    | '/_main/services/$serviceId/metrics'
+    | '/_main/services/$serviceId/settings'
+    | '/_main/user/settings/api'
+    | '/_main/user/settings/organizations'
+    | '/account/oauth/github/callback'
+    | '/_main/database-services/$databaseServiceId/'
+    | '/_main/one-click-apps/$slug/'
+    | '/_main/services/$serviceId/'
+    | '/_main/user/settings/'
+    | '/_main/organization/deactivate/confirm/$confirmationId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
+  MainRouteRoute: typeof MainRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  AccountResetPasswordTokenRoute: typeof AccountResetPasswordTokenRoute
+  AccountValidateTokenRoute: typeof AccountValidateTokenRoute
+  AccountOauthGithubCallbackRoute: typeof AccountOauthGithubCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main': {
+      id: '/_main'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof MainRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main/': {
+      id: '/_main/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof MainIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/auth/signup': {
+      id: '/auth/signup'
+      path: '/signup'
+      fullPath: '/auth/signup'
+      preLoaderRoute: typeof AuthSignupRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/signin': {
+      id: '/auth/signin'
+      path: '/signin'
+      fullPath: '/auth/signin'
+      preLoaderRoute: typeof AuthSigninRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/_main/team': {
+      id: '/_main/team'
+      path: '/team'
+      fullPath: '/team'
+      preLoaderRoute: typeof MainTeamRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/secrets': {
+      id: '/_main/secrets'
+      path: '/secrets'
+      fullPath: '/secrets'
+      preLoaderRoute: typeof MainSecretsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/domains': {
+      id: '/_main/domains'
+      path: '/domains'
+      fullPath: '/domains'
+      preLoaderRoute: typeof MainDomainsRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/deploy': {
+      id: '/_main/deploy'
+      path: '/deploy'
+      fullPath: '/deploy'
+      preLoaderRoute: typeof MainDeployRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/activity': {
+      id: '/_main/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof MainActivityRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/volumes': {
+      id: '/_main/volumes'
+      path: '/volumes'
+      fullPath: '/volumes'
+      preLoaderRoute: typeof MainVolumesRouteRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/settings': {
+      id: '/_main/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof MainSettingsRouteRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/volumes/': {
+      id: '/_main/volumes/'
+      path: '/'
+      fullPath: '/volumes/'
+      preLoaderRoute: typeof MainVolumesIndexRouteImport
+      parentRoute: typeof MainVolumesRouteRoute
+    }
+    '/_main/settings/': {
+      id: '/_main/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof MainSettingsIndexRouteImport
+      parentRoute: typeof MainSettingsRouteRoute
+    }
+    '/_main/services/': {
+      id: '/_main/services/'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof MainServicesIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/one-click-apps/': {
+      id: '/_main/one-click-apps/'
+      path: '/one-click-apps'
+      fullPath: '/one-click-apps'
+      preLoaderRoute: typeof MainOneClickAppsIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/auth/sso/discourse': {
+      id: '/auth/sso/discourse'
+      path: '/sso/discourse'
+      fullPath: '/auth/sso/discourse'
+      preLoaderRoute: typeof AuthSsoDiscourseRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/sso/canny': {
+      id: '/auth/sso/canny'
+      path: '/sso/canny'
+      fullPath: '/auth/sso/canny'
+      preLoaderRoute: typeof AuthSsoCannyRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/account/validate/$token': {
+      id: '/account/validate/$token'
+      path: '/account/validate/$token'
+      fullPath: '/account/validate/$token'
+      preLoaderRoute: typeof AccountValidateTokenRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/account/reset-password/$token': {
+      id: '/account/reset-password/$token'
+      path: '/account/reset-password/$token'
+      fullPath: '/account/reset-password/$token'
+      preLoaderRoute: typeof AccountResetPasswordTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main/volumes/new': {
+      id: '/_main/volumes/new'
+      path: '/new'
+      fullPath: '/volumes/new'
+      preLoaderRoute: typeof MainVolumesNewRouteImport
+      parentRoute: typeof MainVolumesRouteRoute
+    }
+    '/_main/settings/registry-configuration': {
+      id: '/_main/settings/registry-configuration'
+      path: '/registry-configuration'
+      fullPath: '/settings/registry-configuration'
+      preLoaderRoute: typeof MainSettingsRegistryConfigurationRouteImport
+      parentRoute: typeof MainSettingsRouteRoute
+    }
+    '/_main/settings/plans': {
+      id: '/_main/settings/plans'
+      path: '/plans'
+      fullPath: '/settings/plans'
+      preLoaderRoute: typeof MainSettingsPlansRouteImport
+      parentRoute: typeof MainSettingsRouteRoute
+    }
+    '/_main/settings/billing': {
+      id: '/_main/settings/billing'
+      path: '/billing'
+      fullPath: '/settings/billing'
+      preLoaderRoute: typeof MainSettingsBillingRouteImport
+      parentRoute: typeof MainSettingsRouteRoute
+    }
+    '/_main/settings/api': {
+      id: '/_main/settings/api'
+      path: '/api'
+      fullPath: '/settings/api'
+      preLoaderRoute: typeof MainSettingsApiRouteImport
+      parentRoute: typeof MainSettingsRouteRoute
+    }
+    '/_main/services/new': {
+      id: '/_main/services/new'
+      path: '/services/new'
+      fullPath: '/services/new'
+      preLoaderRoute: typeof MainServicesNewRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/deploy': {
+      id: '/_main/services/deploy'
+      path: '/services/deploy'
+      fullPath: '/services/deploy'
+      preLoaderRoute: typeof MainServicesDeployRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/new': {
+      id: '/_main/database-services/new'
+      path: '/database-services/new'
+      fullPath: '/database-services/new'
+      preLoaderRoute: typeof MainDatabaseServicesNewRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/user/settings': {
+      id: '/_main/user/settings'
+      path: '/user/settings'
+      fullPath: '/user/settings'
+      preLoaderRoute: typeof MainUserSettingsRouteRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/services/$serviceId': {
+      id: '/_main/services/$serviceId'
+      path: '/services/$serviceId'
+      fullPath: '/services/$serviceId'
+      preLoaderRoute: typeof MainServicesServiceIdRouteRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/$databaseServiceId': {
+      id: '/_main/database-services/$databaseServiceId'
+      path: '/database-services/$databaseServiceId'
+      fullPath: '/database-services/$databaseServiceId'
+      preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/user/settings/': {
+      id: '/_main/user/settings/'
+      path: '/'
+      fullPath: '/user/settings/'
+      preLoaderRoute: typeof MainUserSettingsIndexRouteImport
+      parentRoute: typeof MainUserSettingsRouteRoute
+    }
+    '/_main/services/$serviceId/': {
+      id: '/_main/services/$serviceId/'
+      path: '/'
+      fullPath: '/services/$serviceId/'
+      preLoaderRoute: typeof MainServicesServiceIdIndexRouteImport
+      parentRoute: typeof MainServicesServiceIdRouteRoute
+    }
+    '/_main/one-click-apps/$slug/': {
+      id: '/_main/one-click-apps/$slug/'
+      path: '/one-click-apps/$slug'
+      fullPath: '/one-click-apps/$slug'
+      preLoaderRoute: typeof MainOneClickAppsSlugIndexRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/$databaseServiceId/': {
+      id: '/_main/database-services/$databaseServiceId/'
+      path: '/'
+      fullPath: '/database-services/$databaseServiceId/'
+      preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdIndexRouteImport
+      parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
+    }
+    '/account/oauth/github/callback': {
+      id: '/account/oauth/github/callback'
+      path: '/account/oauth/github/callback'
+      fullPath: '/account/oauth/github/callback'
+      preLoaderRoute: typeof AccountOauthGithubCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_main/user/settings/organizations': {
+      id: '/_main/user/settings/organizations'
+      path: '/organizations'
+      fullPath: '/user/settings/organizations'
+      preLoaderRoute: typeof MainUserSettingsOrganizationsRouteImport
+      parentRoute: typeof MainUserSettingsRouteRoute
+    }
+    '/_main/user/settings/api': {
+      id: '/_main/user/settings/api'
+      path: '/api'
+      fullPath: '/user/settings/api'
+      preLoaderRoute: typeof MainUserSettingsApiRouteImport
+      parentRoute: typeof MainUserSettingsRouteRoute
+    }
+    '/_main/services/$serviceId/settings': {
+      id: '/_main/services/$serviceId/settings'
+      path: '/settings'
+      fullPath: '/services/$serviceId/settings'
+      preLoaderRoute: typeof MainServicesServiceIdSettingsRouteImport
+      parentRoute: typeof MainServicesServiceIdRouteRoute
+    }
+    '/_main/services/$serviceId/metrics': {
+      id: '/_main/services/$serviceId/metrics'
+      path: '/metrics'
+      fullPath: '/services/$serviceId/metrics'
+      preLoaderRoute: typeof MainServicesServiceIdMetricsRouteImport
+      parentRoute: typeof MainServicesServiceIdRouteRoute
+    }
+    '/_main/services/$serviceId/console': {
+      id: '/_main/services/$serviceId/console'
+      path: '/console'
+      fullPath: '/services/$serviceId/console'
+      preLoaderRoute: typeof MainServicesServiceIdConsoleRouteImport
+      parentRoute: typeof MainServicesServiceIdRouteRoute
+    }
+    '/_main/one-click-apps/category/$category': {
+      id: '/_main/one-click-apps/category/$category'
+      path: '/one-click-apps/category/$category'
+      fullPath: '/one-click-apps/category/$category'
+      preLoaderRoute: typeof MainOneClickAppsCategoryCategoryRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/one-click-apps/$slug/deploy': {
+      id: '/_main/one-click-apps/$slug/deploy'
+      path: '/one-click-apps/$slug/deploy'
+      fullPath: '/one-click-apps/$slug/deploy'
+      preLoaderRoute: typeof MainOneClickAppsSlugDeployRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/database-services/$databaseServiceId/settings': {
+      id: '/_main/database-services/$databaseServiceId/settings'
+      path: '/settings'
+      fullPath: '/database-services/$databaseServiceId/settings'
+      preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdSettingsRouteImport
+      parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
+    }
+    '/_main/database-services/$databaseServiceId/roles': {
+      id: '/_main/database-services/$databaseServiceId/roles'
+      path: '/roles'
+      fullPath: '/database-services/$databaseServiceId/roles'
+      preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdRolesRouteImport
+      parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
+    }
+    '/_main/database-services/$databaseServiceId/databases': {
+      id: '/_main/database-services/$databaseServiceId/databases'
+      path: '/databases'
+      fullPath: '/database-services/$databaseServiceId/databases'
+      preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport
+      parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
+    }
+    '/_main/account/organization_invitations/$invitationId': {
+      id: '/_main/account/organization_invitations/$invitationId'
+      path: '/account/organization_invitations/$invitationId'
+      fullPath: '/account/organization_invitations/$invitationId'
+      preLoaderRoute: typeof MainAccountOrganization_invitationsInvitationIdRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/organization/deactivate/confirm/$confirmationId': {
+      id: '/_main/organization/deactivate/confirm/$confirmationId'
+      path: '/organization/deactivate/confirm/$confirmationId'
+      fullPath: '/organization/deactivate/confirm/$confirmationId'
+      preLoaderRoute: typeof MainOrganizationDeactivateConfirmConfirmationIdRouteImport
+      parentRoute: typeof MainRouteRoute
     }
   }
 }
 
+interface MainSettingsRouteRouteChildren {
+  MainSettingsApiRoute: typeof MainSettingsApiRoute
+  MainSettingsBillingRoute: typeof MainSettingsBillingRoute
+  MainSettingsPlansRoute: typeof MainSettingsPlansRoute
+  MainSettingsRegistryConfigurationRoute: typeof MainSettingsRegistryConfigurationRoute
+  MainSettingsIndexRoute: typeof MainSettingsIndexRoute
+}
+
+const MainSettingsRouteRouteChildren: MainSettingsRouteRouteChildren = {
+  MainSettingsApiRoute: MainSettingsApiRoute,
+  MainSettingsBillingRoute: MainSettingsBillingRoute,
+  MainSettingsPlansRoute: MainSettingsPlansRoute,
+  MainSettingsRegistryConfigurationRoute:
+    MainSettingsRegistryConfigurationRoute,
+  MainSettingsIndexRoute: MainSettingsIndexRoute,
+}
+
+const MainSettingsRouteRouteWithChildren =
+  MainSettingsRouteRoute._addFileChildren(MainSettingsRouteRouteChildren)
+
+interface MainVolumesRouteRouteChildren {
+  MainVolumesNewRoute: typeof MainVolumesNewRoute
+  MainVolumesIndexRoute: typeof MainVolumesIndexRoute
+}
+
+const MainVolumesRouteRouteChildren: MainVolumesRouteRouteChildren = {
+  MainVolumesNewRoute: MainVolumesNewRoute,
+  MainVolumesIndexRoute: MainVolumesIndexRoute,
+}
+
+const MainVolumesRouteRouteWithChildren =
+  MainVolumesRouteRoute._addFileChildren(MainVolumesRouteRouteChildren)
+
+interface MainDatabaseServicesDatabaseServiceIdRouteRouteChildren {
+  MainDatabaseServicesDatabaseServiceIdDatabasesRoute: typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
+  MainDatabaseServicesDatabaseServiceIdRolesRoute: typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
+  MainDatabaseServicesDatabaseServiceIdSettingsRoute: typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
+  MainDatabaseServicesDatabaseServiceIdIndexRoute: typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
+}
+
+const MainDatabaseServicesDatabaseServiceIdRouteRouteChildren: MainDatabaseServicesDatabaseServiceIdRouteRouteChildren =
+  {
+    MainDatabaseServicesDatabaseServiceIdDatabasesRoute:
+      MainDatabaseServicesDatabaseServiceIdDatabasesRoute,
+    MainDatabaseServicesDatabaseServiceIdRolesRoute:
+      MainDatabaseServicesDatabaseServiceIdRolesRoute,
+    MainDatabaseServicesDatabaseServiceIdSettingsRoute:
+      MainDatabaseServicesDatabaseServiceIdSettingsRoute,
+    MainDatabaseServicesDatabaseServiceIdIndexRoute:
+      MainDatabaseServicesDatabaseServiceIdIndexRoute,
+  }
+
+const MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren =
+  MainDatabaseServicesDatabaseServiceIdRouteRoute._addFileChildren(
+    MainDatabaseServicesDatabaseServiceIdRouteRouteChildren,
+  )
+
+interface MainServicesServiceIdRouteRouteChildren {
+  MainServicesServiceIdConsoleRoute: typeof MainServicesServiceIdConsoleRoute
+  MainServicesServiceIdMetricsRoute: typeof MainServicesServiceIdMetricsRoute
+  MainServicesServiceIdSettingsRoute: typeof MainServicesServiceIdSettingsRoute
+  MainServicesServiceIdIndexRoute: typeof MainServicesServiceIdIndexRoute
+}
+
+const MainServicesServiceIdRouteRouteChildren: MainServicesServiceIdRouteRouteChildren =
+  {
+    MainServicesServiceIdConsoleRoute: MainServicesServiceIdConsoleRoute,
+    MainServicesServiceIdMetricsRoute: MainServicesServiceIdMetricsRoute,
+    MainServicesServiceIdSettingsRoute: MainServicesServiceIdSettingsRoute,
+    MainServicesServiceIdIndexRoute: MainServicesServiceIdIndexRoute,
+  }
+
+const MainServicesServiceIdRouteRouteWithChildren =
+  MainServicesServiceIdRouteRoute._addFileChildren(
+    MainServicesServiceIdRouteRouteChildren,
+  )
+
+interface MainUserSettingsRouteRouteChildren {
+  MainUserSettingsApiRoute: typeof MainUserSettingsApiRoute
+  MainUserSettingsOrganizationsRoute: typeof MainUserSettingsOrganizationsRoute
+  MainUserSettingsIndexRoute: typeof MainUserSettingsIndexRoute
+}
+
+const MainUserSettingsRouteRouteChildren: MainUserSettingsRouteRouteChildren = {
+  MainUserSettingsApiRoute: MainUserSettingsApiRoute,
+  MainUserSettingsOrganizationsRoute: MainUserSettingsOrganizationsRoute,
+  MainUserSettingsIndexRoute: MainUserSettingsIndexRoute,
+}
+
+const MainUserSettingsRouteRouteWithChildren =
+  MainUserSettingsRouteRoute._addFileChildren(
+    MainUserSettingsRouteRouteChildren,
+  )
+
+interface MainRouteRouteChildren {
+  MainSettingsRouteRoute: typeof MainSettingsRouteRouteWithChildren
+  MainVolumesRouteRoute: typeof MainVolumesRouteRouteWithChildren
+  MainActivityRoute: typeof MainActivityRoute
+  MainDeployRoute: typeof MainDeployRoute
+  MainDomainsRoute: typeof MainDomainsRoute
+  MainSecretsRoute: typeof MainSecretsRoute
+  MainTeamRoute: typeof MainTeamRoute
+  MainIndexRoute: typeof MainIndexRoute
+  MainDatabaseServicesDatabaseServiceIdRouteRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
+  MainServicesServiceIdRouteRoute: typeof MainServicesServiceIdRouteRouteWithChildren
+  MainUserSettingsRouteRoute: typeof MainUserSettingsRouteRouteWithChildren
+  MainDatabaseServicesNewRoute: typeof MainDatabaseServicesNewRoute
+  MainServicesDeployRoute: typeof MainServicesDeployRoute
+  MainServicesNewRoute: typeof MainServicesNewRoute
+  MainOneClickAppsIndexRoute: typeof MainOneClickAppsIndexRoute
+  MainServicesIndexRoute: typeof MainServicesIndexRoute
+  MainAccountOrganization_invitationsInvitationIdRoute: typeof MainAccountOrganization_invitationsInvitationIdRoute
+  MainOneClickAppsSlugDeployRoute: typeof MainOneClickAppsSlugDeployRoute
+  MainOneClickAppsCategoryCategoryRoute: typeof MainOneClickAppsCategoryCategoryRoute
+  MainOneClickAppsSlugIndexRoute: typeof MainOneClickAppsSlugIndexRoute
+  MainOrganizationDeactivateConfirmConfirmationIdRoute: typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
+}
+
+const MainRouteRouteChildren: MainRouteRouteChildren = {
+  MainSettingsRouteRoute: MainSettingsRouteRouteWithChildren,
+  MainVolumesRouteRoute: MainVolumesRouteRouteWithChildren,
+  MainActivityRoute: MainActivityRoute,
+  MainDeployRoute: MainDeployRoute,
+  MainDomainsRoute: MainDomainsRoute,
+  MainSecretsRoute: MainSecretsRoute,
+  MainTeamRoute: MainTeamRoute,
+  MainIndexRoute: MainIndexRoute,
+  MainDatabaseServicesDatabaseServiceIdRouteRoute:
+    MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren,
+  MainServicesServiceIdRouteRoute: MainServicesServiceIdRouteRouteWithChildren,
+  MainUserSettingsRouteRoute: MainUserSettingsRouteRouteWithChildren,
+  MainDatabaseServicesNewRoute: MainDatabaseServicesNewRoute,
+  MainServicesDeployRoute: MainServicesDeployRoute,
+  MainServicesNewRoute: MainServicesNewRoute,
+  MainOneClickAppsIndexRoute: MainOneClickAppsIndexRoute,
+  MainServicesIndexRoute: MainServicesIndexRoute,
+  MainAccountOrganization_invitationsInvitationIdRoute:
+    MainAccountOrganization_invitationsInvitationIdRoute,
+  MainOneClickAppsSlugDeployRoute: MainOneClickAppsSlugDeployRoute,
+  MainOneClickAppsCategoryCategoryRoute: MainOneClickAppsCategoryCategoryRoute,
+  MainOneClickAppsSlugIndexRoute: MainOneClickAppsSlugIndexRoute,
+  MainOrganizationDeactivateConfirmConfirmationIdRoute:
+    MainOrganizationDeactivateConfirmConfirmationIdRoute,
+}
+
+const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
+  MainRouteRouteChildren,
+)
+
+interface AuthRouteRouteChildren {
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthSigninRoute: typeof AuthSigninRoute
+  AuthSignupRoute: typeof AuthSignupRoute
+  AuthSsoCannyRoute: typeof AuthSsoCannyRoute
+  AuthSsoDiscourseRoute: typeof AuthSsoDiscourseRoute
+}
+
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthSigninRoute: AuthSigninRoute,
+  AuthSignupRoute: AuthSignupRoute,
+  AuthSsoCannyRoute: AuthSsoCannyRoute,
+  AuthSsoDiscourseRoute: AuthSsoDiscourseRoute,
+}
+
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+  MainRouteRoute: MainRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
+  AccountResetPasswordTokenRoute: AccountResetPasswordTokenRoute,
+  AccountValidateTokenRoute: AccountValidateTokenRoute,
+  AccountOauthGithubCallbackRoute: AccountOauthGithubCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
