@@ -12,7 +12,6 @@ export type AppConfig = Partial<{
   stripePublicKey: string;
   mapboxToken: string;
   intercomAppId: string;
-  disablePolling: boolean;
 }>;
 
 export interface ConfigPort {
@@ -25,7 +24,6 @@ export class EnvConfigAdapter implements ConfigPort {
 
   constructor() {
     const string = (value?: string) => value ?? '';
-    const boolean = (value?: string) => value === 'true';
 
     this.envConfig = {
       environment: string(import.meta.env.VITE_ENVIRONMENT),
@@ -39,7 +37,6 @@ export class EnvConfigAdapter implements ConfigPort {
       stripePublicKey: string(import.meta.env.VITE_STRIPE_PUBLIC_KEY),
       mapboxToken: string(import.meta.env.VITE_MAPBOX_TOKEN),
       intercomAppId: string(import.meta.env.VITE_INTERCOM_APP_ID),
-      disablePolling: boolean(import.meta.env.VITE_DISABLE_POLLING),
     };
 
     try {

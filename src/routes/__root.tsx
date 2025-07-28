@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { ApiError } from 'src/api/api-errors';
 import { createEnsureApiQueryData } from 'src/api/use-api';
 import { container } from 'src/application/container';
+import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
 import { TranslateFn } from 'src/intl/translate';
 import { TOKENS } from 'src/tokens';
 
@@ -15,6 +16,9 @@ type RouterContext = {
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  errorComponent: ErrorComponent,
+  notFoundComponent: NotFoundComponent,
+
   validateSearch: z.object({
     token: z.string().optional(),
     'session-token': z.string().optional(),

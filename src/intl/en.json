@@ -171,15 +171,6 @@
     "documentTitle": {
       "title": "{prefix, select, undefined {Koyeb} other {{prefix} - Koyeb}}"
     },
-    "errorBoundary": {
-      "unhandledError": {
-        "title": "Whoops!",
-        "httpStatus": "{httpStatus} - ERROR",
-        "statusLink": "If this keeps happening, check out <link>status.koyeb.com</link>.",
-        "code": "Code: {code}",
-        "button": "Back to home"
-      }
-    },
     "featureUnavailable": {
       "technicalPreview": "Technical preview",
       "publicPreview": "Public preview"
@@ -3129,8 +3120,15 @@
     },
     "notFound": {
       "title": "That page is gone!",
-      "line1": "Maybe this page used to exist or you just spelled something wrong",
+      "message": "Maybe this page used to exist or you just spelled something wrong",
       "back": "Back to home"
+    },
+    "error": {
+      "title": "Whoops!",
+      "httpStatus": "{httpStatus} - ERROR",
+      "statusLink": "If this keeps happening, check out <link>status.koyeb.com</link>.",
+      "code": "Code: {code}",
+      "button": "Back to home"
     }
   }
 }

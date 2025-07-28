@@ -127,12 +127,12 @@ function Component() {
     organizationQuery.data?.statusMessage === 'VERIFICATION_FAILED',
   ].some(Boolean);
 
-  if (locked) {
-    return <AccountLocked />;
-  }
-
   if (settings) {
     return <SecondarySettings />;
+  }
+
+  if (locked) {
+    return <AccountLocked />;
   }
 
   if (trial?.ended) {
