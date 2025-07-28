@@ -1,6 +1,6 @@
 import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink, Link } from 'src/components/link';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import { IconMail } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
@@ -16,8 +16,6 @@ export function SignUpPage() {
   const params = useSearchParams();
   const next = params.get('next');
   const method = params.get('method');
-
-  const navigate = useNavigate();
 
   return (
     <div className="col flex-1">
@@ -48,13 +46,9 @@ export function SignUpPage() {
         )}
 
         {method === null && (
-          <button
-            type="button"
-            className="mx-auto row items-center gap-1"
-            onClick={() => navigate({ search: { method: 'email' } })}
-          >
+          <Link to="/auth/signup" search={{ method: 'email' }} className="mx-auto row items-center gap-1">
             <IconMail className="size-4" /> <T id="emailSignUp" />
-          </button>
+          </Link>
         )}
 
         <SignInLink />

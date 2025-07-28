@@ -24,7 +24,7 @@ export function OneClickAppDeployPage({ slug }: { slug: string }) {
 
   useEffect(() => {
     if (oneClickAppsQuery.isSuccess && app === undefined) {
-      navigate({ to: '/deploy', replace: true });
+      void navigate({ to: '/deploy', replace: true });
     }
   }, [oneClickAppsQuery, app, navigate]);
 

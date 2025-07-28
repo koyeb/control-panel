@@ -45,7 +45,7 @@ function DeployServiceForm() {
           serviceId={serviceId ?? undefined}
           className="grow"
           onDeployed={(appId, serviceId) =>
-            navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
+            void navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
           }
           onCostChanged={setCost}
           onDeployUrlChanged={setDeployUrl}

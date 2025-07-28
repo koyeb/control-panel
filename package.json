@@ -75,7 +75,6 @@
     "unified": "^11.0.5",
     "unique-names-generator": "^4.7.1",
     "uuid": "^11.1.0",
-    "wouter": "^3.7.1",
     "zod": "^3.25.67"
   },
   "devDependencies": {

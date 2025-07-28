@@ -133,8 +133,8 @@ function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
   const mutation = useMutation({
     mutationKey: ['deployOneClickApp'],
     mutationFn: submitServiceForm,
-    onSuccess({ serviceId }) {
-      navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
+    async onSuccess({ serviceId }) {
+      await navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
   });
 

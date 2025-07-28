@@ -66,7 +66,7 @@ export function Database() {
   const { closeDialog } = useCreateServiceDialog();
 
   const onCreate = () => {
-    navigate({ to: '/database-services/new' });
+    void navigate({ to: '/database-services/new' });
     closeDialog();
   };
 
@@ -97,7 +97,7 @@ export function OneClickApp({ app }: OneClickAppProps) {
   const { closeDialog } = useCreateServiceDialog();
 
   const deploy = () => {
-    navigate(urlToLinkOptions(app.deployUrl));
+    void navigate(urlToLinkOptions(app.deployUrl));
     closeDialog();
   };
 

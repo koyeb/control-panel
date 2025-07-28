@@ -25,9 +25,9 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
     ...useApiMutationFn('pauseService', {
       path: { id: service.id },
     }),
-    onSuccess: () => {
+    async onSuccess() {
       closeDialog();
-      navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
+      await navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
       notify.info(t('pausing'));
     },
   });

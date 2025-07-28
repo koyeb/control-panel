@@ -1,5 +1,6 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { useApiQueryFn } from 'src/api/use-api';
@@ -19,6 +20,7 @@ export function DeleteOrganization() {
   const organization = useOrganization();
 
   const setToken = useSetToken();
+  const navigate = useNavigate();
 
   const unpaidInvoicesQuery = useQuery({
     ...useApiQueryFn('hasUnpaidInvoices'),
@@ -61,6 +63,7 @@ export function DeleteOrganization() {
     },
     async onSuccess(token) {
       await setToken(token);
+      await navigate({ to: '/' });
       notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });

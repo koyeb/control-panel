@@ -97,11 +97,11 @@ function CreateOrganization() {
     },
     async onSuccess(token) {
       await setToken(token);
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
     },
-    onError(error) {
+    async onError(error) {
       if (state.createOrganization) {
-        navigate({ to: '/', state: {} });
+        await navigate({ to: '/', state: {} });
       } else {
         onError(error);
       }

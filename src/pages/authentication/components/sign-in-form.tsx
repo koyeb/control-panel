@@ -50,7 +50,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
     async onSuccess({ token }) {
       queryClient.clear();
       await setToken(token!.id!);
-      navigate(urlToLinkOptions(redirect));
+      await navigate(urlToLinkOptions(redirect));
     },
     onError(error) {
       if (ApiError.is(error) && error.message === invalidCredentialApiMessage) {
