@@ -2,6 +2,7 @@ import { Outlet, createFileRoute } from '@tanstack/react-router';
 
 import { mapService } from 'src/api/mappers/service';
 import { createEnsureApiQueryData } from 'src/api/use-api';
+import { AppServiceCrumb } from 'src/layouts/main/app-breadcrumbs';
 import { ServiceLayout } from 'src/pages/service/service.layout';
 
 export const Route = createFileRoute('/_main/services/$serviceId')({
@@ -10,6 +11,10 @@ export const Route = createFileRoute('/_main/services/$serviceId')({
       <Outlet />
     </ServiceLayout>
   ),
+
+  beforeLoad: ({ params }) => ({
+    breadcrumb: () => <AppServiceCrumb serviceId={params.serviceId} link={{ to: Route.fullPath, params }} />,
+  }),
 
   async loader({ context: { queryClient }, params, abortController }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient, abortController);

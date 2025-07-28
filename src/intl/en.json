@@ -1746,44 +1746,34 @@
         "default": "default"
       },
       "breadcrumbs": {
-        "services": "Services",
-        "domains": "Domains",
-        "secrets": "Secrets",
-        "volumes": {
-          "index": "Volumes",
-          "create": "Create volume"
-        },
-        "activity": "Activity",
-        "deploy": "Deploy",
-        "team": "Team",
-        "organizationSettings": {
-          "index": "Settings",
-          "billing": "Usage and billing",
-          "plans": "Plans",
-          "api": "API",
-          "registryConfiguration": "Registry configuration"
-        },
-        "userSettings": {
-          "index": "User settings",
-          "organizations": "Organizations",
-          "api": "Personal access tokens"
-        },
-        "createService": "Create new service",
-        "service": {
-          "metrics": "Metrics",
-          "console": "Console",
-          "deployments": "Deployments",
-          "settings": "Settings"
-        },
-        "database": {
-          "databases": "Databases",
-          "roles": "Roles",
-          "settings": "Settings"
-        },
-        "oneClickApps": {
-          "index": "One-click Apps",
-          "deploy": "Deploy"
-        }
+        "/services": "Services",
+        "/volumes": "Volumes",
+        "/volumes/new": "Create volume",
+        "/domains": "Domains",
+        "/secrets": "Secrets",
+        "/activity": "Activity",
+        "/services/deploy": "Deploy",
+        "/team": "Team",
+        "/one-click-apps": "One click apps",
+        "/one-click-apps/$slug/deploy": "Deploy",
+        "/one-click-apps/category": "Category",
+        "/settings": "Settings",
+        "/settings/billing": "Usage and billing",
+        "/settings/plans": "Plans",
+        "/settings/api": "API",
+        "/settings/registry-configuration": "Registry configuration",
+        "/user/settings": "User settings",
+        "/user/settings/organizations": "Organizations",
+        "/user/settings/api": "Personal access tokens",
+        "/services/new": "Create new service",
+        "/database-services/new": "Create new service",
+        "/services/$serviceId/metrics": "Metrics",
+        "/services/$serviceId/console": "Console",
+        "/services/$serviceId/deployments": "Deployments",
+        "/services/$serviceId/settings": "Settings",
+        "/database-services/$databaseServiceId/databases": "Databases",
+        "/database-services/$databaseServiceId/roles": "Roles",
+        "/database-services/$databaseServiceId/settings": "Settings"
       }
     },
     "secondary": {
