@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { Api } from 'src/api/api';
 import { getApiQueryKey } from 'src/api/use-api';
 import { container } from 'src/application/container';
+import { ErrorComponent } from 'src/components/error-view';
 import { TOKENS } from 'src/tokens';
 import { AnyFunction } from 'src/utils/types';
 
@@ -17,6 +18,8 @@ type RouterContext = {
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  errorComponent: ErrorComponent,
+
   validateSearch: z.object({
     token: z.string().optional(),
     'session-token': z.string().optional(),
