@@ -56,7 +56,7 @@ export function getNavigateUrl({ to, params, search }: Pick<NavigateOptions, 'to
   const setParam = (key: string, value: SearchParam, set: 'set' | 'append' = 'set') => {
     if (value === null) {
       searchParams.delete(key);
-    } else if (value) {
+    } else if (value !== undefined) {
       searchParams[set](key, String(value));
     }
   };
