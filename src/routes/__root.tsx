@@ -5,13 +5,13 @@ import { z } from 'zod';
 import { ApiError } from 'src/api/api-errors';
 import { createEnsureApiQueryData } from 'src/api/use-api';
 import { container } from 'src/application/container';
-import { TOKENS } from 'src/tokens';
-
 import { TranslateFn } from 'src/intl/translate';
+import { TOKENS } from 'src/tokens';
 
 type RouterContext = {
   queryClient: QueryClient;
   translate: TranslateFn;
+  breadcrumb?: () => React.ReactNode;
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({
