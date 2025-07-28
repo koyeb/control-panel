@@ -13,6 +13,7 @@ type EnsureQueryData = <E extends keyof Api>(endpoint: E, param: Parameters<Api[
 type RouterContext = {
   queryClient: QueryClient;
   ensureQueryData: EnsureQueryData;
+  breadcrumb?: () => React.ReactNode;
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({

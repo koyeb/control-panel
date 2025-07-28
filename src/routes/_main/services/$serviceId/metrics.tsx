@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
+import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 import { ServiceMetricsPage } from 'src/pages/service/metrics/service-metrics.page';
 
 export const Route = createFileRoute('/_main/services/$serviceId/metrics')({
@@ -23,5 +24,9 @@ export const Route = createFileRoute('/_main/services/$serviceId/metrics')({
         z.literal('7d'),
       ])
       .default('5m'),
+  }),
+
+  beforeLoad: ({ params }) => ({
+    breadcrumb: () => <CrumbLink to={Route.fullPath} params={params} />,
   }),
 });
