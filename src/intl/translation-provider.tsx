@@ -1,6 +1,7 @@
-import { IntlProvider as ReactIntlProvider } from 'react-intl';
+import { IntlProvider as ReactIntlProvider, createIntl, createIntlCache } from 'react-intl';
 
 import en from './en.json';
+import { TranslateFn, TranslateValues, TranslationKeys } from './translate';
 
 type IntlProviderProps = {
   children: React.ReactNode;
@@ -12,6 +13,26 @@ export function IntlProvider({ children }: IntlProviderProps) {
       {children}
     </ReactIntlProvider>
   );
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function createTranslateFn(): TranslateFn {
+  const intl = createIntl(
+    {
+      locale: 'en',
+      messages: flatten(en),
+    },
+    createIntlCache(),
+  );
+
+  function translate(id: TranslationKeys): string;
+  function translate(id: TranslationKeys, values: TranslateValues): React.ReactNode[];
+
+  function translate(id: TranslationKeys, values?: TranslateValues): string | React.ReactNode[] {
+    return intl.formatMessage({ id }, values);
+  }
+
+  return translate;
 }
 
 function flatten(obj: object, prefix = '') {
