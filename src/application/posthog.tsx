@@ -2,6 +2,7 @@
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 
+import { useUserUnsafe } from 'src/api/hooks/session';
 import { User } from 'src/api/model';
 import { useLocation } from 'src/hooks/router';
 import { getConfig } from 'src/utils/config';
@@ -33,6 +34,7 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
         autocapture: false,
       }}
     >
+      <Identify />
       <TrackPageViews />
       {children}
     </PostHogJsProvider>
@@ -41,6 +43,19 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
 
 function usePostHog(): PostHog | undefined {
   return usePostHogJs();
+}
+
+function Identify() {
+  const user = useUserUnsafe();
+  const [identify] = useIdentifyUser();
+
+  useEffect(() => {
+    if (user) {
+      identify(user);
+    }
+  }, [identify, user]);
+
+  return null;
 }
 
 function TrackPageViews() {

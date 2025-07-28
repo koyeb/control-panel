@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import { sentryVitePlugin } from '@sentry/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
+import tanstackRouter from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
 import dotenv from 'dotenv';
 import { Plugin } from 'vite';
@@ -16,6 +17,13 @@ dotenv.config();
 export default defineConfig({
   plugins: [
     tsconfigPaths(),
+    tanstackRouter({
+      target: 'react',
+      autoCodeSplitting: true,
+      routesDirectory: './src/routes',
+      generatedRouteTree: './src/route-tree.generated.ts',
+      tmpDir: 'node_modules/.tanstack',
+    }),
     react(),
     tailwindcss(),
     svgr({

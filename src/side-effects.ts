@@ -8,6 +8,12 @@ if (typeof globalThis === 'undefined' && typeof window !== 'undefined') {
   window.globalThis = window;
 }
 
+// https://vitejs.dev/guide/build#load-error-handling
+window.addEventListener('vite:preloadError', (event) => {
+  event.preventDefault();
+  window.location.reload();
+});
+
 // https://github.com/facebook/react/issues/11538#issuecomment-417504600
 if (typeof Node === 'function' && Node.prototype) {
   const originalRemoveChild = Node.prototype.removeChild;
