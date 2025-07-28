@@ -1,16 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn } from './api/use-api';
-import { useRefreshToken, useSetToken, useTokenStorageListener } from './application/authentication';
+import { useRefreshToken, useTokenStorageListener } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
-import { useHistoryState, useNavigate, useSearchParams } from './hooks/router';
+import { useNavigate, useSearchParams } from './hooks/router';
 import { useSeon } from './hooks/seon';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
@@ -45,33 +44,11 @@ import { VolumesLayout } from './pages/volumes/volumes-layout';
 import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page';
 
 export function App() {
-  const userQuery = useUserQuery();
-  const organizationQuery = useOrganizationQuery();
-
-  const { token, session }: { token?: string; session?: boolean } = useHistoryState();
-  const setToken = useSetToken();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (token !== undefined) {
-      setToken(token, session);
-      navigate({ state: { token: undefined, session: undefined } });
-    }
-  }, [token, session, setToken, navigate]);
-
   useRefreshToken();
   useTokenStorageListener();
 
   if (useOrganizationContextParam()) {
     return null;
-  }
-
-  if (
-    isAccountLockedError(userQuery.error) ||
-    isAccountLockedError(organizationQuery.error) ||
-    organizationQuery.data?.statusMessage === 'VERIFICATION_FAILED'
-  ) {
-    return <AccountLocked />;
   }
 
   return (
@@ -93,6 +70,14 @@ function AuthenticatedRoutes() {
   const [confirmDeactivateOrganization, params] = useRoute(
     '/organization/deactivate/confirm/:confirmationId',
   );
+
+  if (
+    isAccountLockedError(userQuery.error) ||
+    isAccountLockedError(organizationQuery.error) ||
+    organizationQuery.data?.statusMessage === 'VERIFICATION_FAILED'
+  ) {
+    return <AccountLocked />;
+  }
 
   if (!userQuery.isSuccess || organizationQuery.isPending) {
     return null;
