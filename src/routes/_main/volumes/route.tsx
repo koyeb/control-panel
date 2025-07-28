@@ -1,5 +1,6 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router';
 
+import { Crumb } from 'src/layouts/main/app-breadcrumbs';
 import { VolumesLayout } from 'src/pages/volumes/volumes-layout';
 
 export const Route = createFileRoute('/_main/volumes')({
@@ -8,4 +9,8 @@ export const Route = createFileRoute('/_main/volumes')({
       <Outlet />
     </VolumesLayout>
   ),
+
+  beforeLoad: () => ({
+    breadcrumb: () => <Crumb to={Route.fullPath} />,
+  }),
 });

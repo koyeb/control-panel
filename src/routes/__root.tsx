@@ -16,6 +16,7 @@ type EnsureQueryData = <E extends keyof ApiPort>(
 type RouterContext = {
   queryClient: QueryClient;
   ensureQueryData: EnsureQueryData;
+  breadcrumb?: () => React.ReactNode;
 };
 
 export const Route = createRootRouteWithContext<RouterContext>()({
