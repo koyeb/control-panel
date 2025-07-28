@@ -37,7 +37,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     },
     onSuccess(token) {
       setToken(token);
-      navigate({ to: '/', state: { token } });
+      navigate({ to: '/' });
       notify.info(t('acceptSuccess'));
     },
   });

@@ -5,7 +5,7 @@ import { Redirect, Route, Switch, useRoute } from 'wouter';
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn } from './api/use-api';
-import { useRefreshToken, useTokenStorageListener } from './application/authentication';
+import { useRefreshToken, useSetToken, useTokenStorageListener } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
@@ -168,6 +168,7 @@ function PageNotFound() {
 
 function useOrganizationContextParam() {
   const organizationIdParam = useSearchParams().get('organization-id');
+  const setToken = useSetToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -177,7 +178,8 @@ function useOrganizationContextParam() {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     onSuccess({ token }) {
-      navigate({ state: { token: token!.id! }, search: (prev) => ({ ...prev, 'organization-id': null }) });
+      setToken(token!.id!);
+      navigate({ search: (prev) => ({ ...prev, 'organization-id': null }) });
     },
   });
 
