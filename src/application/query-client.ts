@@ -1,46 +1,44 @@
 import { Mutation, MutationCache, Query, QueryCache, QueryClient, QueryKey } from '@tanstack/react-query';
 import { navigate } from 'wouter/use-browser-location';
 
+import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
 import { getConfig } from 'src/utils/config';
 
 import { ApiError, isApiNotFoundError } from '../api/api-errors';
 
+import { container } from './container';
 import { notify } from './notify';
 import { reportError } from './report-error';
 
 type UnknownQuery = Query<unknown, unknown, unknown, QueryKey>;
 type UnknownMutation = Mutation<unknown, unknown, unknown, unknown>;
 
-export function createQueryClient() {
-  const queryCache = new QueryCache({
-    onSuccess: onQuerySuccess,
-    onError: onQueryError,
-  });
+const queryCache = new QueryCache({
+  onSuccess: onQuerySuccess,
+  onError: onQueryError,
+});
 
-  const mutationCache = new MutationCache({
-    onError: onMutationError,
-  });
+const mutationCache = new MutationCache({
+  onError: onMutationError,
+});
 
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchInterval,
-        retry,
-        throwOnError,
-      },
-      mutations: {
-        throwOnError,
-      },
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval,
+      retry,
+      throwOnError,
     },
-    queryCache,
-    mutationCache,
-  });
+    mutations: {
+      throwOnError,
+    },
+  },
+  queryCache,
+  mutationCache,
+});
 
-  window.queryClient = queryClient;
-
-  return queryClient;
-}
+window.queryClient = queryClient;
 
 declare global {
   interface Window {
@@ -152,18 +150,23 @@ function isAuthenticatedRoute(pathname: string) {
 }
 
 function handleAuthenticationError() {
-  localStorage.removeItem('access-token');
-  sessionStorage.removeItem('session-token');
+  const location = new URL(window.location.href);
+  const auth = container.resolve(TOKENS.authentication);
 
-  if (!isUnauthenticatedRoute(window.location.pathname)) {
-    const next = window.location.href.slice(window.location.origin.length);
-    let location = '/auth/signin';
+  if (auth.token !== null) {
+    auth.setToken(null, true);
+    auth.setToken(null);
+    queryClient.clear();
+  }
 
-    if (next !== '/') {
-      location += `?${new URLSearchParams({ next }).toString()}`;
+  if (location.pathname !== '/auth/signin') {
+    const redirect = new URL('/auth/signin', location);
+    const next = location.href.slice(location.origin.length);
+
+    if (isAuthenticatedRoute(location.pathname) && next !== '/') {
+      redirect.searchParams.set('next', next);
     }
 
-    // use full page reload to avoid refetching resources
-    window.location.assign(location);
+    navigate(redirect);
   }
 }

@@ -16,10 +16,8 @@ import { useSetToken } from './authentication';
 import { container } from './container';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
-import { createQueryClient } from './query-client';
+import { queryClient } from './query-client';
 import { reportError } from './report-error';
-
-const queryClient = createQueryClient();
 
 type ProvidersProps = {
   children: React.ReactNode;
