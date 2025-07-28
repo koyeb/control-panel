@@ -89,7 +89,7 @@ export function RedeployDialog({ id, context, service }: RedeployDialogProps) {
 
       closeDialog();
 
-      navigate({
+      await navigate({
         to: '/services/$serviceId',
         params: { serviceId: service.id },
         search: { deploymentId: deployment?.id },

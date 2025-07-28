@@ -10,13 +10,12 @@ import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
-import { ValidateLinkOptions } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { urlToLinkOptions, useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
+import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
@@ -83,7 +82,7 @@ function CreateOrganizationDialog() {
     })),
     async onSuccess(token, { organizationName }) {
       await setToken(token);
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
   });
@@ -155,13 +154,13 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
-    ...useApiMutationFn('switchOrganization', (_: ValidateLinkOptions['to']) => ({
+    ...useApiMutationFn('switchOrganization', (_: '/' | '/settings') => ({
       path: { id: organization.id },
       header: {},
     })),
     async onSuccess({ token }, redirect) {
       await setToken(token!.id!);
-      navigate(urlToLinkOptions(redirect));
+      await navigate({ to: redirect });
     },
   });
 

@@ -1,11 +1,10 @@
-import { ComponentProps, useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { Link, LinkButton, ValidateLinkOptions } from 'src/components/link';
+import { Link, LinkButton, ValidateLinkOptions, linkOptions } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
-import { SearchParams, useNavigate, useSearchParams } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { IconDocker, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { SourceType } from 'src/modules/service-form/service-form.types';
 import { inArray } from 'src/utils/arrays';
 
 import { OneClickAppList } from './one-click-app-list';
@@ -23,33 +22,26 @@ export function ServiceTypeStep() {
   const navigate = useNavigate();
 
   useMount(() => {
-    navigate({
+    void navigate({
       search: (prev) => ({
         ...prev,
-        type: null,
-        service_type: null,
-        ports: null,
+        type: undefined,
+        service_type: undefined,
+        ports: undefined,
       }),
     });
   });
 
-  const setServiceType = useCallback(
-    (type: string) => {
-      navigate({ search: (prev) => ({ ...prev, service_type: type }) });
-    },
-    [navigate],
-  );
-
   useEffect(() => {
     if (!isServiceType(serviceType)) {
-      setServiceType('web');
+      void navigate({ search: (prev) => ({ ...prev, service_type: 'web' }) });
     }
-  }, [serviceType, setServiceType]);
+  }, [serviceType, navigate]);
 
   return (
     <div className="col divide-y rounded-md border sm:row sm:divide-x md:divide-y-0">
       <nav className="col gap-3 p-3 md:min-w-72 md:p-6">
-        <ServiceTypeList serviceType={serviceType} setServiceType={setServiceType} />
+        <ServiceTypeList />
         <hr />
         <OneClickAppList />
       </nav>
@@ -91,29 +83,34 @@ export function ServiceTypeStep() {
   );
 }
 
-function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | null): ValidateLinkOptions {
+function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | null) {
   return {
-    database: {
+    database: linkOptions({
       to: '/database-services/new',
       search: { app_id: appId ?? undefined },
-    },
-    model: {
+    }),
+    model: linkOptions({
       to: '/services/deploy',
       search: { type: 'model', app_id: appId ?? undefined },
-    },
+    }),
   }[serviceType];
 }
 
 function DeploymentSource() {
-  const search = (prev: SearchParams, source: SourceType): SearchParams => ({
-    ...prev,
-    type: source,
-    step: 'importProject',
-    ...(prev.service_type === 'private' && {
-      service_type: 'web',
-      ports: '8000;tcp',
-    }),
-  });
+  const link = (source: 'git' | 'docker') => {
+    return linkOptions({
+      to: '/services/new',
+      search: (prev) => ({
+        ...prev,
+        type: source,
+        step: 'importProject' as const,
+        ...(prev.service_type === 'private' && {
+          service_type: 'web' as const,
+          ports: '8000;tcp',
+        }),
+      }),
+    });
+  };
 
   return (
     <div className="col gap-4 lg:row">
@@ -121,14 +118,14 @@ function DeploymentSource() {
         Icon={IconGithub}
         title={<T id="deploymentSource.github.title" />}
         description={<T id="deploymentSource.github.description" />}
-        search={(prev) => search(prev, 'git')}
+        link={link('git')}
       />
 
       <DeploymentSourceOption
         Icon={IconDocker}
         title={<T id="deploymentSource.docker.title" />}
         description={<T id="deploymentSource.docker.description" />}
-        search={(prev) => search(prev, 'docker')}
+        link={link('docker')}
       />
     </div>
   );
@@ -138,16 +135,12 @@ type DeploymentSourceOptionProps = {
   Icon: React.ComponentType<{ className?: string }>;
   title: React.ReactNode;
   description: React.ReactNode;
-  search: ComponentProps<typeof Link>['search'];
+  link: ValidateLinkOptions;
 };
 
-function DeploymentSourceOption({ Icon, title, description, search }: DeploymentSourceOptionProps) {
+function DeploymentSourceOption({ Icon, title, description, link }: DeploymentSourceOptionProps) {
   return (
-    <Link
-      to="/services/new"
-      search={search}
-      className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start"
-    >
+    <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" {...link}>
       <div className="rounded-lg bg-muted p-3">
         <Icon className="size-10" />
       </div>

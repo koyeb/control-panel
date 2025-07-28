@@ -312,7 +312,7 @@ function useLeaveOrganization() {
     },
     async onSuccess(token, { organization }) {
       await setToken(token);
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });

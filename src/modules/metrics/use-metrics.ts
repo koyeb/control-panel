@@ -2,7 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import { Duration, sub } from 'date-fns';
 
 import type { API } from 'src/api/api';
-import { getQueryKey } from 'src/api/use-api';
+import { getApiQueryKey } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
@@ -39,31 +39,37 @@ type UseMetricsOptions = {
 
 export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }: UseMetricsOptions) {
   return useQueries({
-    queries: metrics.map((name) => ({
-      queryKey: getQueryKey('getServiceMetrics', { serviceId, instanceId, name, timeFrame }),
-      refetchInterval: 60 * 1000,
-      meta: { showError: false },
-      async queryFn() {
-        const step = timeFrameToStep[timeFrame];
-        const duration = timeFrameToDuration[timeFrame];
-        const start = sub(new Date(), duration).toISOString();
+    queries: metrics.map((name) => {
+      const step = timeFrameToStep[timeFrame];
+      const duration = timeFrameToDuration[timeFrame];
+      const start = sub(new Date(), duration).toISOString();
 
-        return getApi().getServiceMetrics({
-          query: { name, start, step, service_id: serviceId, instance_id: instanceId },
-        });
-      },
-      select(data: API.GetMetricsReply) {
-        return data.metrics!.map(({ labels, samples }) => ({
-          labels,
-          samples: samples!.map(
-            ({ timestamp, value }): DataPoint => ({
-              date: timestamp!,
-              value: value ?? undefined,
-            }),
-          ),
-        }));
-      },
-    })),
+      const query = {
+        service_id: serviceId,
+        instance_id: instanceId,
+        name,
+        start,
+        step,
+      };
+
+      return {
+        meta: { showError: false },
+        refetchInterval: 60 * 1000,
+        queryKey: getApiQueryKey('getServiceMetrics', { query }),
+        queryFn: () => getApi().getServiceMetrics({ query }),
+        select(data: API.GetMetricsReply) {
+          return data.metrics!.map(({ labels, samples }) => ({
+            labels,
+            samples: samples!.map(
+              ({ timestamp, value }): DataPoint => ({
+                date: timestamp!,
+                value: value ?? undefined,
+              }),
+            ),
+          }));
+        },
+      };
+    }),
     combine: (queries) => ({
       isPending: queries.some((query) => query.isPending),
       isError: queries.some((query) => query.isError),

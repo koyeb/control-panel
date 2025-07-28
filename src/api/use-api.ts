@@ -1,4 +1,4 @@
-import { InvalidateQueryFilters, QueryKey, useQueryClient } from '@tanstack/react-query';
+import { InvalidateQueryFilters, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 import { container } from 'src/application/container';
@@ -6,24 +6,18 @@ import { TOKENS } from 'src/tokens';
 
 import { Api, ApiEndpoint, ApiEndpointFn, ApiEndpointParams, ApiEndpointResult } from './api';
 
-export function getQueryKey(endpoint: string, params: object): QueryKey {
-  return [endpoint, params];
+export function getApiQueryKey<E extends ApiEndpoint>(endpoint: E, params: ApiEndpointParams<E>) {
+  return [endpoint, params] as const;
 }
 
-export function getApiQueryKey<E extends ApiEndpoint>(endpoint: E, params: ApiEndpointParams<E>) {
-  return getQueryKey(endpoint, params);
+function getApiQueryFn<E extends ApiEndpoint>(endpoint: E) {
+  return container.resolve(TOKENS.api)[endpoint] as ApiEndpointFn<E>;
 }
 
 export function useApiQueryFn<E extends ApiEndpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) {
   return {
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: getApiQueryKey(endpoint, params),
-    queryFn: ({ signal }: { signal: AbortSignal }) => {
-      const api = container.resolve(TOKENS.api);
-      const fn = api[endpoint] as ApiEndpointFn<E>;
-
-      return fn({ signal, ...params });
-    },
+    queryFn: ({ signal }: { signal: AbortSignal }) => getApiQueryFn(endpoint)({ signal, ...params }),
   };
 }
 
@@ -67,7 +61,7 @@ export function useEnsureApiQueryData() {
   const queryClient = useQueryClient();
 
   return useCallback(
-    async <E extends keyof Api>(endpoint: E, params: Parameters<Api[E]>[0]) => {
+    async <E extends ApiEndpoint>(endpoint: E, params: Parameters<Api[E]>[0]) => {
       const api = container.resolve(TOKENS.api);
       const fn = api[endpoint] as ApiEndpointFn<E>;
 

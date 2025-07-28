@@ -36,7 +36,7 @@ export function InstanceRegionStep() {
   const selectedRegions = regions.filter((region) => regionsParam.includes(region.id));
 
   const setInstanceParam = (instance: string) => {
-    navigate({
+    void navigate({
       to: '/services/new',
       search: (prev) => ({ ...prev, instance_type: instance }),
       replace: true,
@@ -44,7 +44,7 @@ export function InstanceRegionStep() {
   };
 
   const setRegionsParam = (regions: string[]) => {
-    navigate({
+    void navigate({
       to: '/services/new',
       search: (prev) => ({ ...prev, regions }),
       replace: true,
@@ -101,7 +101,9 @@ export function InstanceRegionStep() {
         </LinkButton>
 
         <Button
-          onClick={() => navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'review' }) })}
+          onClick={() => {
+            void navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'review' }) });
+          }}
           disabled={selectedRegions.length === 0}
         >
           <Translate id="common.next" />

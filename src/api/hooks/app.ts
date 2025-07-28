@@ -5,7 +5,7 @@ import { getApi } from 'src/application/container';
 import { mapDeployment } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
 import { AppFull } from '../model';
-import { getQueryKey, useApiQueryFn } from '../use-api';
+import { useApiQueryFn } from '../use-api';
 
 export function useAppsQuery() {
   return useQuery({
@@ -32,7 +32,7 @@ export function useApp(appId?: string) {
 
 export function useAppsFull() {
   return useQuery({
-    queryKey: getQueryKey('listAppsFull', {}),
+    queryKey: ['listAppsFull'],
     async queryFn({ signal }) {
       const api = getApi();
 

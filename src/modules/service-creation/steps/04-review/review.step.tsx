@@ -40,10 +40,10 @@ function ServiceFormWrapper({ serviceId }: { serviceId?: string }) {
       <ServiceForm
         form={form}
         onDeployed={(appId, serviceId) =>
-          navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
+          void navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
         }
         onBack={() =>
-          navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'instanceRegions' }) })
+          void navigate({ to: '/services/new', search: (prev) => ({ ...prev, step: 'instanceRegions' }) })
         }
         className="grow"
       />

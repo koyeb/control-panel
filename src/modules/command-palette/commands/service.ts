@@ -199,7 +199,13 @@ export function useDeploymentListCommand(service: Service) {
             }) as string,
             description: getDeploymentDescription(deployment, t),
             placeholder: 'Select a deployment',
-            execute: () => navigate({ search: { deploymentId: deployment.id } }),
+            execute: () => {
+              return navigate({
+                to: '/services/$serviceId',
+                params: { serviceId: service.id },
+                search: { deploymentId: deployment.id },
+              });
+            },
           });
         }
       },

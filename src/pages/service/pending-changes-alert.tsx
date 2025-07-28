@@ -1,14 +1,14 @@
 import { Alert, Button, DialogFooter } from '@koyeb/design-system';
-import { UseMutationResult, useMutation, useQuery } from '@tanstack/react-query';
+import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { dequal } from 'dequal';
 import { diffJson } from 'diff';
 import { useMemo } from 'react';
 
 import { useDeployment } from 'src/api/hooks/service';
-import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
-import { ComputeDeployment, Service } from 'src/api/model';
-import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { isComputeDeployment } from 'src/api/mappers/deployment';
+import { ComputeDeployment, Deployment, Service } from 'src/api/model';
+import { getApiQueryKey, useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useTrackEvent } from 'src/application/posthog';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { Dialog, DialogHeader } from 'src/components/dialog';
@@ -77,17 +77,19 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
 }
 
 function useLatestNonStashedDeployment(service: Service) {
-  const { data: latestNonStashedDeployment } = useQuery({
-    ...useApiQueryFn('listDeployments', {
+  const queryClient = useQueryClient();
+
+  // we can't useQuery because it's already used in an infinite query
+  const result = queryClient.getQueryData(
+    getApiQueryKey('listDeployments', {
       query: {
         service_id: service.id,
         statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
       },
     }),
-    select: (result) => mapDeployment(result.deployments![0]!),
-  });
+  ) as { pages: Array<{ deployments: Deployment[] }> };
 
-  return latestNonStashedDeployment;
+  return result.pages[0]?.deployments[0];
 }
 
 function useDiscardChanges(service: Service) {
@@ -132,7 +134,7 @@ function useApplyChanges(service: Service, onSuccess: () => void) {
       ]);
 
       onSuccess();
-      navigate({
+      await navigate({
         to: '/services/$serviceId',
         params: { serviceId: service.id },
         search: { deploymentId: deployment?.id },

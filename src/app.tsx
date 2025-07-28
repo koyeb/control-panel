@@ -193,7 +193,7 @@ function useOrganizationContextParam() {
     })),
     async onSuccess({ token }) {
       await setToken(token!.id!);
-      navigate({ search: (prev) => ({ ...prev, 'organization-id': null }) });
+      await navigate({ search: (prev) => ({ ...prev, 'organization-id': undefined }) });
     },
   });
 

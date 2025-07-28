@@ -50,7 +50,7 @@ function ServiceFormWrapper({ serviceId }: { serviceId: string }) {
       <ServiceForm
         form={form}
         onDeployed={(appId, serviceId, deploymentId) =>
-          navigate({
+          void navigate({
             to: '/services/$serviceId',
             params: { serviceId },
             search: { deploymentId },

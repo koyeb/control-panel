@@ -66,7 +66,7 @@ function ServiceFormWrapper({ serviceId }: { serviceId?: string }) {
       <ServiceForm
         form={form}
         onDeployed={(appId, serviceId) =>
-          navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
+          void navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
         }
         className="grow"
       />

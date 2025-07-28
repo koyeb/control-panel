@@ -18,10 +18,10 @@ const T = createTranslate('modules.serviceCreation.builder');
 
 export function BuilderStep() {
   const builder = useSearchParams().get('builder');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/new' });
 
   const setBuilder = (builder: BuilderType) => {
-    navigate({ search: (prev) => ({ ...prev, builder }), replace: true });
+    void navigate({ search: (prev) => ({ ...prev, builder }), replace: true });
   };
 
   useMount(() => {
@@ -90,7 +90,7 @@ type BuilderForm = {
 };
 
 function BuilderConfiguration({ builder }: { builder: BuilderType }) {
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/new' });
   const [expanded, setExpanded] = useState(false);
 
   const form = useForm<BuilderForm>({
@@ -113,28 +113,28 @@ function BuilderConfiguration({ builder }: { builder: BuilderType }) {
     },
   });
 
-  const onSubmit = ({ buildpack, dockerfile }: BuilderForm) => {
-    navigate({
+  const onSubmit = async ({ buildpack, dockerfile }: BuilderForm) => {
+    await navigate({
       search: (prev) => ({
         ...prev,
 
-        step: 'instanceRegions',
+        step: 'instanceRegions' as const,
 
         ...(builder === 'buildpack' && {
-          run_command: buildpack.runCommand,
-          build_command: buildpack.buildCommand,
-          workdir: buildpack.workDirectory,
-          privileged: buildpack.privileged,
+          run_command: buildpack.runCommand ?? undefined,
+          build_command: buildpack.buildCommand ?? undefined,
+          workdir: buildpack.workDirectory ?? undefined,
+          privileged: buildpack.privileged || undefined,
         }),
 
         ...(builder === 'dockerfile' && {
-          dockerfile: dockerfile.dockerfile,
-          entrypoint: dockerfile.entrypoint,
-          command: dockerfile.command,
-          args: dockerfile.args,
-          target: dockerfile.target,
-          workdir: dockerfile.workDirectory,
-          privileged: dockerfile.privileged,
+          dockerfile: dockerfile.dockerfile ?? undefined,
+          entrypoint: dockerfile.entrypoint ?? undefined,
+          command: dockerfile.command ?? undefined,
+          args: dockerfile.args ?? undefined,
+          target: dockerfile.target ?? undefined,
+          workdir: dockerfile.workDirectory ?? undefined,
+          privileged: dockerfile.privileged || undefined,
         }),
       }),
     });

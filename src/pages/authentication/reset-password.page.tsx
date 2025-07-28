@@ -56,9 +56,9 @@ function ResetPasswordForm() {
       body: { email },
       token: undefined,
     })),
-    onSuccess() {
+    async onSuccess() {
       notify.success(t('successNotification'));
-      navigate({ to: '/auth/signin' });
+      await navigate({ to: '/auth/signin' });
     },
     onError: useFormErrorHandler(form),
   });

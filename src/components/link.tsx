@@ -12,6 +12,11 @@ export type ValidateLinkOptions = {
   search?: Record<string, string | undefined> | ((params: SearchParams) => SearchParams);
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
+export function linkOptions(options: ValidateLinkOptions) {
+  return options;
+}
+
 type LinkProps = Extend<
   Omit<React.ComponentProps<'a'>, 'href'>,
   {

@@ -101,7 +101,7 @@ function onServiceTypeSelected(
   });
 
   const execute = (source: 'git' | 'docker') => {
-    navigate({
+    return navigate({
       to: '/services/new',
       search: {
         service_type: serviceType,

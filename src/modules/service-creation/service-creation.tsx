@@ -47,7 +47,7 @@ export function ServiceCreation() {
 
   const setCurrentStep = useCallback(
     (step: Step) => {
-      navigate({ search: (prev) => ({ ...prev, step }) });
+      void navigate({ search: (prev) => ({ ...prev, step }) });
     },
     [navigate],
   );

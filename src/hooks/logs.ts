@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
-import { getQueryKey } from 'src/api/use-api';
+import { getApiQueryKey } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { createId } from 'src/utils/strings';
 
@@ -90,24 +90,24 @@ function useLogsHistory(filters: LogsFilters) {
   }, [quotas, filters.start, filters.end]);
 
   return useInfiniteQuery({
-    queryKey: getQueryKey('logsQuery', { filters }),
-    queryFn: ({ pageParam: { start, end } }) => {
+    queryKey: getApiQueryKey('logsQuery', {
+      query: {
+        type: filters.type,
+        deployment_id: filters.deploymentId,
+        regional_deployment_id: filters.regionalDeploymentId ?? undefined,
+        instance_id: filters.instanceId ?? undefined,
+        text: filters.search || undefined,
+        order: 'desc',
+        limit: String(100),
+      },
+    }),
+    queryFn: ({ queryKey: [, { query }], pageParam: { start, end } }) => {
       if (start === end) {
         return { data: [], pagination: { has_more: false } };
       }
 
       return getApi().logsQuery({
-        query: {
-          type: filters.type,
-          deployment_id: filters.deploymentId,
-          start,
-          end,
-          regional_deployment_id: filters.regionalDeploymentId ?? undefined,
-          instance_id: filters.instanceId ?? undefined,
-          text: filters.search || undefined,
-          order: 'desc',
-          limit: String(100),
-        },
+        query: { ...query, start, end },
       });
     },
     refetchInterval: false,

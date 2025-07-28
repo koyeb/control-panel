@@ -31,19 +31,20 @@ describe('router', () => {
   });
 
   describe('useNavigate', () => {
-    it('navigates to a given URL', () => {
+    it('navigates to a given URL', async () => {
       const { result } = renderHook(() => useNavigate());
 
-      result.current({ to: '/some/route' });
+      await result.current({ to: '/some/route' });
 
       expect(pushState).toHaveBeenCalledWith(null, '', '/some/route');
     });
 
-    it('navigates to a given set of search params', () => {
+    it('navigates to a given set of search params', async () => {
       window.location.search = 'some=param';
+
       const { result } = renderHook(() => useNavigate());
 
-      result.current({
+      await result.current({
         search: {
           foo: 'bar',
         },
@@ -52,11 +53,11 @@ describe('router', () => {
       expect(pushState).toHaveBeenCalledWith(null, '', '/?foo=bar');
     });
 
-    it('navigates by mutating the search params', () => {
+    it('navigates by mutating the search params', async () => {
       window.location.search = 'some=param';
       const { result } = renderHook(() => useNavigate());
 
-      result.current({
+      await result.current({
         search: () => ({
           foo: 'bar',
         }),
@@ -65,13 +66,14 @@ describe('router', () => {
       expect(pushState).toHaveBeenCalledWith(null, '', '/?foo=bar');
     });
 
-    it('removes a search param', () => {
+    it('removes a search param', async () => {
       window.location.search = 'some=param';
+
       const { result } = renderHook(() => useNavigate());
 
-      result.current({
+      await result.current({
         search: () => ({
-          some: null,
+          some: undefined,
         }),
       });
 

@@ -33,7 +33,7 @@ export function useHistoryState(): Record<string, any> {
   return useWouterHistoryState() ?? {};
 }
 
-export type SearchParam = string | number | boolean | null | undefined;
+export type SearchParam = string | number | boolean | undefined;
 export type SearchParams = Record<string, SearchParam | SearchParam[]>;
 
 type NavigateOptions = {
@@ -44,8 +44,8 @@ type NavigateOptions = {
   state?: HistoryState;
 };
 
-export function useNavigate() {
-  return useCallback(({ to, search, params, replace, state }: NavigateOptions) => {
+export function useNavigate(_?: { from: string }) {
+  return useCallback(async ({ to, search, params, replace, state }: NavigateOptions) => {
     navigate(getNavigateUrl({ to, params, search }), { replace, state });
   }, []);
 }
@@ -55,9 +55,9 @@ export function getNavigateUrl({ to, params, search }: Pick<NavigateOptions, 'to
   const searchParams = new URLSearchParams();
 
   const setParam = (key: string, value: SearchParam, set: 'set' | 'append' = 'set') => {
-    if (value === null) {
+    if (value === undefined) {
       searchParams.delete(key);
-    } else if (value !== undefined) {
+    } else {
       searchParams[set](key, String(value));
     }
   };
@@ -136,7 +136,7 @@ export function useOnRouteStateCreate(cb: () => void) {
 
   useEffect(() => {
     if (historyState.create) {
-      navigate({ replace: true, state: { create: false } });
+      void navigate({ replace: true, state: { create: false } });
 
       // wait for the command palette to be closed
       setTimeout(cbMemo, 0);

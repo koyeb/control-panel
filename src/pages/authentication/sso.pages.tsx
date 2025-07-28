@@ -44,14 +44,14 @@ export function CannySsoPage() {
     },
     onError(error) {
       if (ApiError.is(error, 401)) {
-        navigate({
+        void navigate({
           to: '/auth/signin',
           search: { next: location },
         });
       } else {
         reportError(error);
         notify.error(<SsoError provider="canny" error={error} />);
-        navigate({ to: '/', replace: true });
+        void navigate({ to: '/', replace: true });
       }
     },
   });
@@ -91,14 +91,14 @@ export function DiscourseSsoPage() {
     },
     onError(error) {
       if (ApiError.is(error, 401)) {
-        navigate({
+        void navigate({
           to: '/auth/signin',
           search: { next: location },
         });
       } else {
         reportError(error);
         notify.error(<SsoError provider="discourse" error={error} />);
-        navigate({ to: '/', replace: true });
+        void navigate({ to: '/', replace: true });
       }
     },
   });

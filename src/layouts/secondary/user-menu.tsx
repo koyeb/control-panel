@@ -31,7 +31,7 @@ export function UserMenu() {
           {user && (
             <LinkMenuItem
               to="/"
-              search={{ settings: '' }}
+              search={{ settings: 'true' }}
               onClick={() => setOpen(false)}
               className="row gap-2"
             >

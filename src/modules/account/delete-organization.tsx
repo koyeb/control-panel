@@ -8,6 +8,7 @@ import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
+import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.account.deleteOrganization');
@@ -19,6 +20,7 @@ export function DeleteOrganization() {
   const organization = useOrganization();
 
   const setToken = useSetToken();
+  const navigate = useNavigate();
 
   const unpaidInvoicesQuery = useQuery({
     ...useApiQueryFn('hasUnpaidInvoices'),
@@ -61,6 +63,7 @@ export function DeleteOrganization() {
     },
     async onSuccess(token) {
       await setToken(token);
+      await navigate({ to: '/' });
       notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });

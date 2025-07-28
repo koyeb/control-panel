@@ -160,7 +160,7 @@ function useTimeFrame() {
 
   const setTimeFrame = useCallback(
     (timeFrame: MetricsTimeFrame) => {
-      navigate({ search: (prev) => ({ ...prev, 'time-frame': timeFrame }) });
+      void navigate({ search: (prev) => ({ ...prev, 'time-frame': timeFrame }) });
     },
     [navigate],
   );

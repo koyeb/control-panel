@@ -61,7 +61,7 @@ function ChangePasswordForm() {
     })),
     async onSuccess({ token }) {
       await setToken(token!.id!);
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),

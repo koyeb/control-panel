@@ -101,12 +101,12 @@ export function useTokenParams() {
   useMount(() => {
     if (token !== null) {
       auth.setToken(token);
-      navigate({ search: (prev) => ({ ...prev, token: null }) });
+      void navigate({ search: (prev) => ({ ...prev, token: undefined }) });
     }
 
     if (sessionToken !== null) {
       auth.setToken(sessionToken, true);
-      navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
+      void navigate({ search: (prev) => ({ ...prev, 'session-token': undefined }) });
     }
   });
 

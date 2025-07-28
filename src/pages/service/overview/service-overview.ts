@@ -165,17 +165,21 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
 
 function useDeployments(service: Service) {
   const deploymentsQuery = useInfiniteQuery({
-    queryKey: getApiQueryKey('listDeployments', { query: { service_id: service.id } }),
+    queryKey: getApiQueryKey('listDeployments', {
+      query: {
+        service_id: service.id,
+        statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+      },
+    }),
     initialPageParam: 0,
-    async queryFn({ pageParam }) {
+    async queryFn({ queryKey: [, { query }], pageParam }) {
       const api = getApi();
 
       const { count, deployments } = await api.listDeployments({
         query: {
-          service_id: service.id,
+          ...query,
           limit: String(10),
           offset: String(10 * pageParam),
-          statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
         },
       });
 
@@ -236,13 +240,13 @@ function useDeploymentGroups(service: Service, deployments: ComputeDeployment[])
 
 function useSelectedDeployment(deployments: ComputeDeployment[], noDefaultSelected: boolean) {
   const selectedDeploymentId = useSearchParams().get('deploymentId');
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/$serviceId' });
 
   const selectedDeployment = useDeployment(selectedDeploymentId ?? undefined);
 
   const setSelectedDeployment = useCallback(
     (deployment: ComputeDeployment) => {
-      navigate({ search: (prev) => ({ ...prev, deploymentId: deployment.id }), replace: true });
+      void navigate({ search: (prev) => ({ ...prev, deploymentId: deployment.id }), replace: true });
     },
     [navigate],
   );

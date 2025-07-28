@@ -27,8 +27,8 @@ export function ValidateAccountPage() {
     onError(error) {
       notify.error(error.message);
     },
-    onSettled() {
-      navigate({
+    async onSettled() {
+      await navigate({
         to: '/',
         state: { createOrganization: true },
       });
