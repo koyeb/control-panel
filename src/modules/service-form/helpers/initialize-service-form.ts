@@ -4,10 +4,18 @@ import { DeepPartial } from 'react-hook-form';
 
 import { api } from 'src/api/api';
 import { mapRepository } from 'src/api/mappers/git';
-import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
+import {
+  CatalogDatacenter,
+  CatalogInstance,
+  CatalogRegion,
+  GithubApp,
+  Organization,
+  OrganizationQuotas,
+} from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
+import { clamp } from 'src/utils/math';
 import { hasProperty } from 'src/utils/object';
 
 import { generateServiceName } from '../sections/00-service-name/use-generate-service-name';
@@ -23,6 +31,7 @@ export async function initializeServiceForm(
   regions: CatalogRegion[],
   instances: CatalogInstance[],
   organization: Organization,
+  quotas: OrganizationQuotas,
   githubApp: GithubApp | undefined,
   serviceId: string | undefined,
   queryClient: QueryClient,
@@ -84,6 +93,7 @@ export async function initializeServiceForm(
       regions,
       instances,
       organization,
+      quotas,
       parsedParams,
       queryClient,
     );
@@ -241,7 +251,7 @@ export function defaultServiceForm(): ServiceForm {
       max: 1,
       scaleToZero: {
         deepSleep: 5 * 60,
-        lightSleep: { enabled: false, value: 5 * 60 },
+        lightSleep: { enabled: false, value: 60 },
       },
       targets: {
         requests: { enabled: false, value: 50 },
@@ -273,6 +283,7 @@ function ensureServiceCreationBusinessRules(
   regions: CatalogRegion[],
   instances: CatalogInstance[],
   organization: Organization,
+  quotas: OrganizationQuotas,
   parsedParams: DeepPartial<ServiceForm>,
   queryClient: QueryClient,
 ) {
@@ -303,6 +314,18 @@ function ensureServiceCreationBusinessRules(
     const target = serviceType === 'worker' ? 'cpu' : 'requests';
     values.scaling.targets[target].enabled = true;
   }
+
+  values.scaling.scaleToZero.deepSleep = clamp(
+    values.scaling.scaleToZero.deepSleep,
+    quotas.scaleToZero.deepSleepIdleDelayMin,
+    quotas.scaleToZero.deepSleepIdleDelayMax,
+  );
+
+  values.scaling.scaleToZero.lightSleep.value = clamp(
+    values.scaling.scaleToZero.lightSleep.value,
+    quotas.scaleToZero.lightSleepIdleDelayMin,
+    quotas.scaleToZero.lightSleepIdleDelayMax,
+  );
 
   // todo: remove
   // eslint-disable-next-line

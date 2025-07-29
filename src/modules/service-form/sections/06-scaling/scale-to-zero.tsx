@@ -82,8 +82,6 @@ function DeepSleep({ disabled }: { disabled: boolean }) {
           type="number"
           disabled={disabled}
           error={false}
-          min={60}
-          max={60 * 60}
           end={
             <InputEnd>
               <T id="lightSleep.unit" />
@@ -145,8 +143,6 @@ function LightSleep({ disabled }: { disabled: boolean }) {
           type="number"
           disabled={disabled || isGpu}
           error={false}
-          min={5 * 60}
-          max={7 * 24 * 60 * 60}
           end={
             <InputEnd>
               <T id="lightSleep.unit" />

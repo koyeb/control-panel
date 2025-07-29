@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { EnvironmentVariable } from 'src/api/model';
+import { EnvironmentVariable, OrganizationQuotas } from 'src/api/model';
 import { isSlug } from 'src/utils/strings';
 
 import { File } from '../service-form.types';
@@ -90,33 +90,32 @@ const instance = z
   .nullable()
   .refine((id) => id !== null);
 
-const scaling = z
-  .object({
-    min: z.number().min(0).max(20),
-    max: z.number().min(0).max(20),
-    scaleToZero: z.object({
-      deepSleep: z
-        .number()
-        .min(60)
-        .max(60 * 60),
-      lightSleep: target(5 * 60, 7 * 24 * 60 * 60),
-    }),
-    targets: z.object({
-      cpu: target(1, 100),
-      memory: target(1, 100),
-      requests: target(1, 1e9),
-      concurrentRequests: target(1, 1e9),
-      responseTime: target(1, 1e9),
-    }),
-  })
-  .refine(({ min, max, targets }) => {
-    if (min === max || max === 1) {
-      return true;
-    }
+function scaling({ scaleToZero }: OrganizationQuotas) {
+  return z
+    .object({
+      min: z.number().min(0).max(20),
+      max: z.number().min(0).max(20),
+      scaleToZero: z.object({
+        deepSleep: z.number().min(scaleToZero.deepSleepIdleDelayMin).max(scaleToZero.deepSleepIdleDelayMax),
+        lightSleep: target(scaleToZero.lightSleepIdleDelayMin, scaleToZero.lightSleepIdleDelayMax),
+      }),
+      targets: z.object({
+        cpu: target(1, 100),
+        memory: target(1, 100),
+        requests: target(1, 1e9),
+        concurrentRequests: target(1, 1e9),
+        responseTime: target(1, 1e9),
+      }),
+    })
+    .refine(({ min, max, targets }) => {
+      if (min === max || max === 1) {
+        return true;
+      }
 
-    const enabledTargets = Object.values(targets).filter((target) => 'enabled' in target && target.enabled);
-    return enabledTargets.length > 0;
-  }, 'noTargetSelected');
+      const enabledTargets = Object.values(targets).filter((target) => 'enabled' in target && target.enabled);
+      return enabledTargets.length > 0;
+    }, 'noTargetSelected');
+}
 
 function target(min: number, max: number) {
   return z.discriminatedUnion('enabled', [
@@ -193,33 +192,35 @@ function preprocessVolumes(value: unknown) {
   return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
-export const serviceFormSchema = z.object({
-  meta: z.object({}).passthrough(),
-  appName: z
-    .string()
-    .trim()
-    .min(3)
-    .max(64)
-    .refine(isSlug, { params: { refinement: 'isSlug' } }),
-  serviceName: z
-    .string()
-    .trim()
-    .min(2)
-    .max(63)
-    .refine(isSlug, { params: { refinement: 'isSlug' } }),
-  serviceType: z.string(),
-  source: z.discriminatedUnion('type', [
-    z.object({ type: z.literal('archive'), archive: z.object({ archiveId: z.string() }) }),
-    z.object({ type: z.literal('git'), git }),
-    z.object({ type: z.literal('docker'), docker }),
-  ]),
-  builder,
-  dockerDeployment,
-  environmentVariables: z.preprocess(preprocessEnvironmentVariable, z.array(environmentVariable)),
-  files: z.preprocess(preprocessFiles, z.array(file)),
-  regions,
-  instance,
-  scaling,
-  ports: z.array(ports),
-  volumes: z.preprocess(preprocessVolumes, z.array(volumes)),
-});
+export function serviceFormSchema(quotas: OrganizationQuotas) {
+  return z.object({
+    meta: z.object({}).passthrough(),
+    appName: z
+      .string()
+      .trim()
+      .min(3)
+      .max(64)
+      .refine(isSlug, { params: { refinement: 'isSlug' } }),
+    serviceName: z
+      .string()
+      .trim()
+      .min(2)
+      .max(63)
+      .refine(isSlug, { params: { refinement: 'isSlug' } }),
+    serviceType: z.string(),
+    source: z.discriminatedUnion('type', [
+      z.object({ type: z.literal('archive'), archive: z.object({ archiveId: z.string() }) }),
+      z.object({ type: z.literal('git'), git }),
+      z.object({ type: z.literal('docker'), docker }),
+    ]),
+    builder,
+    dockerDeployment,
+    environmentVariables: z.preprocess(preprocessEnvironmentVariable, z.array(environmentVariable)),
+    files: z.preprocess(preprocessFiles, z.array(file)),
+    regions,
+    instance,
+    scaling: scaling(quotas),
+    ports: z.array(ports),
+    volumes: z.preprocess(preprocessVolumes, z.array(volumes)),
+  });
+}
