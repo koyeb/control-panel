@@ -92,7 +92,7 @@ function onQueryError(error: Error, query: UnknownQuery) {
     }
 
     // user removed from organization
-    if (error.status === 403) {
+    if (error.status === 403 && error.message === 'User is not a member of the organization') {
       handleAuthenticationError();
     }
 
@@ -122,9 +122,11 @@ function onQueryError(error: Error, query: UnknownQuery) {
 }
 
 function onMutationError(error: Error, variables: unknown, context: unknown, mutation: UnknownMutation) {
+  const { showError } = { showError: true, ...mutation.meta };
+
   if (ApiError.is(error, 401)) {
     handleAuthenticationError();
-  } else if (mutation.options.onError === undefined) {
+  } else if (mutation.options.onError === undefined && showError) {
     notify.error(error.message);
   }
 }
@@ -159,7 +161,7 @@ function handleAuthenticationError() {
     queryClient.clear();
   }
 
-  if (location.pathname !== '/auth/signin') {
+  if (!location.pathname.startsWith('/auth')) {
     const redirect = new URL('/auth/signin', location);
     const next = location.href.slice(location.origin.length);
 

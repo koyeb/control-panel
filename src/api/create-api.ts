@@ -7,7 +7,7 @@ import { ApiError, ApiValidationError, isApiError, isApiValidationError } from '
 import Api from './api.generated';
 
 type ApiRequestParams<Params extends EndpointParams, Body> = Simplify<
-  ApiRequestOption<'path', GetParam<Params, 'path'>> &
+  { signal?: AbortSignal } & ApiRequestOption<'path', GetParam<Params, 'path'>> &
     ApiRequestOption<'query', GetParam<Params, 'query'>> &
     ApiRequestOption<'header', GetParam<Params, 'header'>> &
     ApiRequestOption<'body', Body extends Record<string, never> ? never : Body>
@@ -216,6 +216,7 @@ function createEndpoint({ baseUrl, getToken }: CreateApiOptions) {
       const headers = new Headers();
 
       const init: RequestInit = {
+        signal: params.signal,
         method: upperCase(method as string),
         headers,
       };

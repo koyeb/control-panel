@@ -28,10 +28,17 @@ export function UserMenu() {
       )}
       renderFloating={(props) => (
         <Menu className="min-w-48" {...props}>
-          <LinkMenuItem to="/" search={{ settings: '' }} onClick={() => setOpen(false)} className="row gap-2">
-            <IconSettings className="icon" />
-            <T id="settings" />
-          </LinkMenuItem>
+          {user && (
+            <LinkMenuItem
+              to="/"
+              search={{ settings: '' }}
+              onClick={() => setOpen(false)}
+              className="row gap-2"
+            >
+              <IconSettings className="icon" />
+              <T id="settings" />
+            </LinkMenuItem>
+          )}
 
           <ButtonMenuItem onClick={() => logout.mutate()} className="row gap-2">
             <IconLogOut className="icon" />

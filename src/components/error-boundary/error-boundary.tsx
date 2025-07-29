@@ -1,7 +1,8 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 
-import { ApiError } from 'src/api/api-errors';
+import { ApiError, isAccountLockedError } from 'src/api/api-errors';
 import { reportError } from 'src/application/report-error';
+import { AccountLocked } from 'src/modules/account/account-locked';
 
 import { ErrorView } from './error-view';
 
@@ -27,6 +28,10 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
   render(): ReactNode {
     const { error } = this.state;
+
+    if (isAccountLockedError(error)) {
+      return <AccountLocked />;
+    }
 
     if (error) {
       const { status, code } = this.apiError ?? {};

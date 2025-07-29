@@ -3,10 +3,10 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSetToken } from 'src/application/authentication';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
-import { inArray } from 'src/utils/arrays';
 import { AssertionError, defined } from 'src/utils/assert';
 
-import { ApiError } from '../api-errors';
+import { api } from '../api';
+import { ApiError, isAccountLockedError } from '../api-errors';
 import {
   mapOrganization,
   mapOrganizationMember,
@@ -14,19 +14,12 @@ import {
   mapOrganizationSummary,
   mapUser,
 } from '../mappers/session';
-import { useApiMutationFn, useApiQueryFn } from '../use-api';
+import { getApiQueryKey, useApiMutationFn, useApiQueryFn } from '../use-api';
 
 export function useUserQuery() {
   return useQuery({
-    ...useApiQueryFn('getCurrentUser'),
-    select: ({ user }) => mapUser(user!),
-    throwOnError: (error) => {
-      if (!ApiError.is(error)) {
-        return true;
-      }
-
-      return !inArray(error.code, ['authentication_error', 'authorization_error']);
-    },
+    ...useApiQueryFn('getCurrentUser', {}),
+    select: (result) => mapUser(result.user!),
   });
 }
 
@@ -40,20 +33,24 @@ export function useUser() {
 
 export function useOrganizationQuery() {
   return useQuery({
-    ...useApiQueryFn('getCurrentOrganization'),
-    select: ({ organization }) => mapOrganization(organization!),
-    throwOnError: (error) => {
-      if (!ApiError.is(error)) {
-        return true;
-      }
+    queryKey: getApiQueryKey('getCurrentOrganization', {}),
+    queryFn: async ({ signal }) => {
+      try {
+        return await api().getCurrentOrganization({ signal });
+      } catch (error) {
+        if (ApiError.is(error, 404)) {
+          return null;
+        }
 
-      return !inArray(error.code, ['authentication_error', 'authorization_error', 'not_found']);
+        throw error;
+      }
     },
+    select: (result) => (result ? mapOrganization(result.organization!) : null),
   });
 }
 
 export function useOrganizationUnsafe() {
-  return useOrganizationQuery().data;
+  return useOrganizationQuery().data ?? undefined;
 }
 
 export function useOrganization() {
@@ -61,12 +58,11 @@ export function useOrganization() {
 }
 
 export function useOrganizationSummaryQuery() {
-  const { data: organization } = useOrganizationQuery();
-  const organizationId = organization?.id;
+  const organization = useOrganizationUnsafe();
 
   return useQuery({
-    ...useApiQueryFn('organizationSummary', { path: { organization_id: organizationId! } }),
-    enabled: organizationId !== undefined,
+    ...useApiQueryFn('organizationSummary', { path: { organization_id: organization!.id } }),
+    enabled: Boolean(organization),
     select: ({ summary }) => mapOrganizationSummary(summary!),
   });
 }
@@ -76,12 +72,11 @@ export function useOrganizationSummary() {
 }
 
 export function useOrganizationQuotasQuery() {
-  const { data: organization } = useOrganizationQuery();
-  const organizationId = organization?.id;
+  const organization = useOrganizationUnsafe();
 
   return useQuery({
-    ...useApiQueryFn('organizationQuotas', { path: { organization_id: organizationId! } }),
-    enabled: organizationId !== undefined,
+    ...useApiQueryFn('organizationQuotas', { path: { organization_id: organization!.id } }),
+    enabled: Boolean(organization),
     refetchInterval: false,
     select: ({ quotas }) => mapOrganizationQuotas(quotas!),
   });
@@ -103,11 +98,13 @@ export function useUserOrganizationMemberships() {
 }
 
 export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?: boolean) {
+  const userQuery = useUserQuery();
   const setToken = useSetToken();
   const navigate = useNavigate();
 
   return useMutation({
     ...useApiMutationFn('logout', {}),
+    meta: { showError: !isAccountLockedError(userQuery.error) },
     onSettled: () => {
       setToken(null, session);
       navigate(urlToLinkOptions(redirect));

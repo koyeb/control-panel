@@ -71,11 +71,7 @@ function AuthenticatedRoutes() {
     '/organization/deactivate/confirm/:confirmationId',
   );
 
-  if (
-    isAccountLockedError(userQuery.error) ||
-    isAccountLockedError(organizationQuery.error) ||
-    organizationQuery.data?.statusMessage === 'VERIFICATION_FAILED'
-  ) {
+  if (isAccountLockedError(userQuery.error) || isAccountLockedError(organizationQuery.error)) {
     return <AccountLocked />;
   }
 
@@ -85,6 +81,10 @@ function AuthenticatedRoutes() {
 
   if (confirmDeactivateOrganization) {
     return <ConfirmDeactivateOrganization confirmationId={params.confirmationId} />;
+  }
+
+  if (organizationQuery.data?.statusMessage === 'VERIFICATION_FAILED') {
+    return <AccountLocked />;
   }
 
   if (trial?.ended) {

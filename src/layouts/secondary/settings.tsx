@@ -1,4 +1,4 @@
-import { useOrganizationUnsafe } from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
 import { Link } from 'src/components/link';
 import { IconArrowLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -10,6 +10,7 @@ import { ReactivateOrganization } from 'src/modules/account/reactivate-organizat
 const T = createTranslate('layouts.secondary.settings');
 
 export function SecondarySettings() {
+  const user = useUserUnsafe();
   const organization = useOrganizationUnsafe();
 
   return (
@@ -37,12 +38,14 @@ export function SecondarySettings() {
         </div>
       )}
 
-      <div className="col gap-2">
-        <div className="font-medium">
-          <T id="userSettings" />
+      {user && (
+        <div className="col gap-2">
+          <div className="font-medium">
+            <T id="userSettings" />
+          </div>
+          <DeleteAccount />
         </div>
-        <DeleteAccount />
-      </div>
+      )}
     </div>
   );
 }

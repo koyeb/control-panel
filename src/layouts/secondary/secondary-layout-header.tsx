@@ -1,7 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { ApiError } from 'src/api/api-errors';
-import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
+import { useApiQueryFn } from 'src/api/use-api';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 
@@ -10,11 +10,10 @@ import { OrganizationSwitcher } from '../organization-switcher';
 import { UserMenu } from './user-menu';
 
 export function SecondaryLayoutHeader({ background }: { background?: boolean }) {
-  const userQuery = useUserQuery();
-  const organizationQuery = useOrganizationQuery();
-
-  const accountLocked = userQuery.isError && ApiError.is(userQuery.error, 403);
-  const isAuthenticated = userQuery.isSuccess || accountLocked;
+  const { data: hasMultipleOrganizations } = useQuery({
+    ...useApiQueryFn('listUserOrganizations', { query: {} }),
+    select: ({ organizations }) => organizations!.length > 1,
+  });
 
   return (
     <header
@@ -27,12 +26,8 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
         <LogoKoyeb className={clsx('h-8 self-start', !background && 'text-white')} />
       </Link>
 
-      {isAuthenticated && (
-        <>
-          {organizationQuery.isSuccess && <OrganizationSwitcher className="w-full max-w-48" />}
-          <UserMenu />
-        </>
-      )}
+      {hasMultipleOrganizations && <OrganizationSwitcher className="w-full max-w-48" />}
+      <UserMenu />
     </header>
   );
 }

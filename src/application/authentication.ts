@@ -6,7 +6,6 @@ import { useCallback, useEffect } from 'react';
 import { useApiMutationFn } from 'src/api/use-api';
 import { usePathname } from 'src/hooks/router';
 import { TOKENS } from 'src/tokens';
-import { inArray } from 'src/utils/arrays';
 
 import { container } from './container';
 import { StoragePort, StoredValue } from './storage';
@@ -84,15 +83,7 @@ export function useSetToken() {
 
       auth.setToken(token, session);
 
-      void queryClient.cancelQueries();
-
       if (auth.token) {
-        const queriesToKeep = ['getCurrentUser', 'getCurrentOrganization', 'getSubscription'];
-
-        queryClient.removeQueries({
-          predicate: ({ queryKey }) => !inArray(queryKey[0], queriesToKeep),
-        });
-
         void queryClient.invalidateQueries();
       } else {
         queryClient.clear();

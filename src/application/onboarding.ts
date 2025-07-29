@@ -16,7 +16,7 @@ function getOnboardingStep(
     return null;
   }
 
-  if (!user?.emailValidated) {
+  if (!user.emailValidated) {
     return 'emailValidation';
   }
 
