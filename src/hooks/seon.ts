@@ -1,35 +1,37 @@
 import seon, { SDKOptions } from '@seontechnologies/seon-javascript-sdk';
-import { sub } from 'date-fns';
 import { useCallback } from 'react';
 
-import { getCookie, setCookie } from 'src/application/cookies';
-
-import { useMount } from './lifecycle';
+import { container } from 'src/application/container';
+import { TOKENS } from 'src/tokens';
 
 // cSpell:ignore seontechnologies deviceinfresolver
 
-const cookieName = 'SSID';
+export interface SeonPort {
+  getFingerprint(): Promise<string>;
+}
 
-const options: SDKOptions = {
-  dnsResolverDomain: 'deviceinfresolver.com',
-  networkTimeoutMs: 5_000,
-  fieldTimeoutMs: 5_000,
-  silentMode: true,
-};
+export class SeonAdapter implements SeonPort {
+  private static options: SDKOptions = {
+    dnsResolverDomain: 'deviceinfresolver.com',
+    networkTimeoutMs: 5_000,
+    fieldTimeoutMs: 5_000,
+    silentMode: true,
+  };
+
+  private initialized = false;
+
+  async getFingerprint(): Promise<string> {
+    if (!this.initialized) {
+      seon.init();
+      this.initialized = true;
+    }
+
+    return seon.getSession(SeonAdapter.options);
+  }
+}
 
 export function useSeon() {
-  useMount(() => {
-    seon.init();
+  const seon = container.resolve(TOKENS.seon);
 
-    if (getCookie(cookieName)) {
-      setCookie(cookieName, '', {
-        Path: '/',
-        Secure: window.location.protocol === 'https',
-        SameSite: 'strict',
-        Expires: sub(new Date(), { seconds: 1 }).toUTCString(),
-      });
-    }
-  });
-
-  return useCallback(() => seon.getSession(options), []);
+  return useCallback(() => seon.getFingerprint(), [seon]);
 }
