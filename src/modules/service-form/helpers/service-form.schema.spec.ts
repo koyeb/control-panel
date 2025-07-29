@@ -1,4 +1,7 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
+
+import { OrganizationQuotas } from 'src/api/model';
+import { create } from 'src/utils/factories';
 
 import { Port, ServiceForm } from '../service-form.types';
 
@@ -6,6 +9,14 @@ import { defaultHealthCheck, defaultServiceForm } from './initialize-service-for
 import { serviceFormSchema } from './service-form.schema';
 
 describe('serviceFormSchema', () => {
+  let quotas: OrganizationQuotas;
+
+  beforeEach(() => {
+    quotas = create.quotas({});
+    quotas.scaleToZero.lightSleepIdleDelayMax = 60;
+    quotas.scaleToZero.deepSleepIdleDelayMax = 300;
+  });
+
   const createServiceForm = () => {
     const form = defaultServiceForm();
 
@@ -18,7 +29,7 @@ describe('serviceFormSchema', () => {
   };
 
   const parse = (form: ServiceForm) => {
-    const result = serviceFormSchema.safeParse(form);
+    const result = serviceFormSchema(quotas).safeParse(form);
 
     if ('error' in result) {
       // eslint-disable-next-line no-console
@@ -170,7 +181,7 @@ describe('serviceFormSchema', () => {
     form.appName = ' app ';
     form.serviceName = ' service ';
 
-    expect(serviceFormSchema.parse(form)).toMatchObject({
+    expect(serviceFormSchema(quotas).parse(form)).toMatchObject({
       appName: 'app',
       serviceName: 'service',
     });

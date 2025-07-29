@@ -2,7 +2,14 @@ import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { Api } from 'src/api/api';
-import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
+import {
+  CatalogDatacenter,
+  CatalogInstance,
+  CatalogRegion,
+  GithubApp,
+  Organization,
+  OrganizationQuotas,
+} from 'src/api/model';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { create } from 'src/utils/factories';
 
@@ -27,6 +34,7 @@ describe('initializeServiceForm', () => {
   let regions: CatalogRegion[];
   let instances: CatalogInstance[];
   let organization: Organization;
+  let quotas: OrganizationQuotas;
   let githubApp: GithubApp | undefined;
   let serviceId: string | undefined;
 
@@ -45,6 +53,7 @@ describe('initializeServiceForm', () => {
     ];
 
     organization = create.organization();
+    quotas = create.quotas();
 
     githubApp = undefined;
     serviceId = undefined;
@@ -58,6 +67,7 @@ describe('initializeServiceForm', () => {
       regions,
       instances,
       organization,
+      quotas,
       githubApp,
       serviceId,
       new QueryClient(),

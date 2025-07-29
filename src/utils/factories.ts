@@ -56,6 +56,14 @@ const quotas = createFactory<OrganizationQuotas>(() => ({
   maxMemory: 0,
   maxDomains: 0,
   logsRetention: 0,
+  scaleToZero: {
+    isDeepSleepEnabled: false,
+    deepSleepIdleDelayMin: 0,
+    deepSleepIdleDelayMax: 0,
+    isLightSleepEnabled: false,
+    lightSleepIdleDelayMin: 0,
+    lightSleepIdleDelayMax: 0,
+  },
 }));
 
 const activity = createFactory<Activity>(() => ({

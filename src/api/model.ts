@@ -677,6 +677,14 @@ export type OrganizationQuotas = {
   maxMemory: number;
   maxDomains: number;
   logsRetention: number;
+  scaleToZero: {
+    isDeepSleepEnabled: boolean;
+    deepSleepIdleDelayMin: number;
+    deepSleepIdleDelayMax: number;
+    isLightSleepEnabled: boolean;
+    lightSleepIdleDelayMin: number;
+    lightSleepIdleDelayMax: number;
+  };
 };
 
 export type OrganizationSummary = {

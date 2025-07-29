@@ -14,7 +14,7 @@ import {
   useRegionsQuery,
 } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganization, useOrganizationQuotas, useOrganizationQuotasQuery } from 'src/api/hooks/session';
 import { useApi } from 'src/api/use-api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { notify } from 'src/application/notify';
@@ -36,7 +36,7 @@ import {
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
-import { assert } from 'src/utils/assert';
+import { assert, defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
@@ -70,9 +70,16 @@ export function OneClickAppForm(props: OneClickAppFormProps) {
   const datacenters = useDatacentersQuery();
   const regions = useRegionsQuery();
   const instances = useInstancesQuery();
+  const quotas = useOrganizationQuotasQuery();
   const githubApp = useGithubAppQuery();
 
-  if (datacenters.isPending || regions.isPending || instances.isPending || githubApp.isPending) {
+  if (
+    datacenters.isPending ||
+    regions.isPending ||
+    instances.isPending ||
+    quotas.isPending ||
+    githubApp.isPending
+  ) {
     return <Loading />;
   }
 
@@ -88,6 +95,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   const regions = useRegions();
   const instances = useInstances();
   const organization = useOrganization();
+  const quotas = defined(useOrganizationQuotas());
   const githubApp = useGithubApp();
   const queryClient = useQueryClient();
 
@@ -102,6 +110,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         regions,
         instances,
         organization,
+        quotas,
         githubApp,
         undefined,
         queryClient,

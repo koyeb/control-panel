@@ -5,12 +5,13 @@ import { z } from 'zod';
 
 import { useDatacenters, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { useApi } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
+import { defined } from 'src/utils/assert';
 import { Trim } from 'src/utils/types';
 
 import { initializeServiceForm } from './helpers/initialize-service-form';
@@ -26,6 +27,7 @@ export function useServiceForm(serviceId?: string) {
   const regions = useRegions();
   const instances = useInstances();
   const organization = useOrganization();
+  const quotas = defined(useOrganizationQuotas());
   const githubApp = useGithubApp();
   const queryClient = useQueryClient();
 
@@ -39,6 +41,7 @@ export function useServiceForm(serviceId?: string) {
         regions,
         instances,
         organization,
+        quotas,
         githubApp,
         serviceId,
         queryClient,
@@ -63,7 +66,8 @@ export function useWatchServiceForm<Path extends FieldPath<ServiceForm>>(name: P
 function useServiceFormResolver() {
   const translate = useTranslate();
   const getUnknownInterpolationErrors = useUnknownInterpolationErrors();
-  const schemaResolver = useZodResolver(serviceFormSchema, errorMessageHandler(translate));
+  const quotas = defined(useOrganizationQuotas());
+  const schemaResolver = useZodResolver(serviceFormSchema(quotas), errorMessageHandler(translate));
 
   return useCallback<Resolver<ServiceForm>>(
     async (values, context, options) => {

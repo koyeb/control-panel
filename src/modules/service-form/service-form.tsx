@@ -6,7 +6,7 @@ import { FormProvider, UseFormReturn } from 'react-hook-form';
 
 import { useInstance, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
-import { useOrganizationSummaryQuery } from 'src/api/hooks/session';
+import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
 import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
@@ -187,12 +187,14 @@ type FetchServiceFormResourcesProps = {
 
 function FetchServiceFormResources({ className, children }: FetchServiceFormResourcesProps) {
   const organizationSummaryQuery = useOrganizationSummaryQuery();
+  const organizationQuotasQuery = useOrganizationQuotasQuery();
   const regionsQuery = useRegionsQuery();
   const instancesQuery = useInstancesQuery();
   const githubAppQuery = useGithubAppQuery();
 
   if (
     organizationSummaryQuery.isPending ||
+    organizationQuotasQuery.isPending ||
     regionsQuery.isPending ||
     instancesQuery.isPending ||
     githubAppQuery.isPending
