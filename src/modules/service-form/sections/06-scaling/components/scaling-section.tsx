@@ -1,7 +1,6 @@
-import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { IconCircleAlert, IconZap } from 'src/icons';
+import { IconCircleAlert, IconInfo } from 'src/icons';
 
 type ScalingConfigSectionProps = {
   title: React.ReactNode;
@@ -34,7 +33,7 @@ export function ScalingConfigSection({
 type ScalingConfigSectionFooterProps = {
   variant?: 'default' | 'error';
   text: React.ReactNode;
-  cta?: { text: React.ReactNode; onClick: () => void };
+  cta?: React.ReactNode;
 };
 
 export function ScalingConfigSectionFooter({
@@ -56,17 +55,13 @@ export function ScalingConfigSectionFooter({
       <div className="row items-center gap-2">
         <div>
           {variant === 'error' && <IconCircleAlert className="size-em text-red" />}
-          {variant === 'default' && <IconZap className="size-em text-blue" />}
+          {variant === 'default' && <IconInfo className="size-em text-blue" />}
         </div>
 
         {text}
       </div>
 
-      {cta && (
-        <Button variant="outline" color="gray" size={1} onClick={cta.onClick} className="bg-neutral">
-          {cta.text}
-        </Button>
-      )}
+      {cta}
     </div>
   );
 }
