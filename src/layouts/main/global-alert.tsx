@@ -1,10 +1,9 @@
-import { Alert } from '@koyeb/design-system';
+import { Alert, Spinner } from '@koyeb/design-system';
 
 import { useManageBillingQuery, useSubscriptionQuery } from 'src/api/hooks/billing';
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
 import { useIdenfyLink } from 'src/application/idenfy';
 import { ExternalLink } from 'src/components/link';
-import { useTallyDialog } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main');
@@ -30,7 +29,6 @@ export function GlobalAlert() {
 
 function AccountUnderReviewAlert() {
   const idenfyLink = useIdenfyLink();
-  const tally = useTallyDialog('wQRgBY');
 
   return (
     <Alert
@@ -46,9 +44,10 @@ function AccountUnderReviewAlert() {
                   {children}
                 </ExternalLink>
               ) : (
-                <button type="button" className="underline" onClick={tally.openPopup}>
+                <span className="underline">
                   {children}
-                </button>
+                  <Spinner className="ml-1 size-em" />
+                </span>
               ),
           }}
         />

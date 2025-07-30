@@ -1,7 +1,8 @@
+import { Spinner } from '@koyeb/design-system';
+
 import { useIdenfyLink } from 'src/application/idenfy';
 import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink } from 'src/components/link';
-import { useTallyDialog } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 
@@ -42,7 +43,6 @@ export function AccountLocked() {
 
 function ValidateAccount({ children }: { children: React.ReactNode }) {
   const idenfyLink = useIdenfyLink();
-  const tally = useTallyDialog('wQRgBY');
 
   if (idenfyLink) {
     return (
@@ -53,8 +53,9 @@ function ValidateAccount({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <button type="button" className="text-link" onClick={tally.openPopup}>
+    <span className="underline">
       {children}
-    </button>
+      <Spinner className="ml-1 size-em" />
+    </span>
   );
 }
