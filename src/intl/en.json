@@ -1279,6 +1279,10 @@
             },
             "hasVolumes": {
               "text": "Scale to zero can't be enabled when volumes are attached to the service"
+            },
+            "starterPlan": {
+              "text": "Idle period and light to deep sleep transition customization is available starting the Pro plan",
+              "cta": "Upgrade plan"
             }
           }
         },

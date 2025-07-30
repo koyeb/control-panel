@@ -71,13 +71,19 @@ function useServiceFormResolver() {
 
   return useCallback<Resolver<ServiceForm>>(
     async (values, context, options) => {
-      const errors = await getUnknownInterpolationErrors(values);
+      const schemaResult = await schemaResolver(values, context, options);
 
-      if (Object.keys(errors).length > 0) {
-        return { values: {}, errors };
+      if (Object.keys(schemaResult.errors).length > 0) {
+        return schemaResult;
       }
 
-      return schemaResolver(values, context, options);
+      const interpolationResults = getUnknownInterpolationErrors(values);
+
+      if (Object.keys(interpolationResults).length > 0) {
+        return { values: {}, errors: interpolationResults };
+      }
+
+      return schemaResult;
     },
     [schemaResolver, getUnknownInterpolationErrors],
   );
