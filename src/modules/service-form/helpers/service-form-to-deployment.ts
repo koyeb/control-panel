@@ -16,6 +16,8 @@ import {
   ServiceVolume,
 } from '../service-form.types';
 
+import { getDeepSleepValue, getLightSleepValue } from './scaling-rules';
+
 export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.DeploymentDefinition {
   return {
     name: form.serviceName,
@@ -128,16 +130,12 @@ function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
   }
 
   if (scaling.min === 0) {
-    const { lightSleep, deepSleep } = scaling.scaleToZero;
     const target: Api.DeploymentScalingTarget['sleep_idle_delay'] = {};
 
     targets.push({ sleep_idle_delay: target });
 
-    target.deep_sleep_value = deepSleep;
-
-    if (lightSleep.enabled) {
-      target.light_sleep_value = lightSleep.value;
-    }
+    target.deep_sleep_value = getDeepSleepValue(scaling.scaleToZero);
+    target.light_sleep_value = getLightSleepValue(scaling.scaleToZero);
   }
 
   return [

@@ -287,6 +287,14 @@ describe('parseDeployParams', () => {
   });
 
   describe('autoscaling', () => {
+    it('autoscaling_sleep_idle_delay', () => {
+      test.params.set('autoscaling_sleep_idle_delay', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.scaleToZero', {
+        idlePeriod: 1,
+      });
+    });
+
     it('autoscaling_average_cpu', () => {
       test.params.set('autoscaling_average_cpu', '1');
 
@@ -329,14 +337,6 @@ describe('parseDeployParams', () => {
       expect(test.getValues()).toHaveProperty('scaling.targets.responseTime', {
         enabled: true,
         value: 1,
-      });
-    });
-
-    it('autoscaling_sleep_idle_delay', () => {
-      test.params.set('autoscaling_sleep_idle_delay', '1');
-
-      expect(test.getValues()).toHaveProperty('scaling.scaleToZero', {
-        deepSleep: 1,
       });
     });
   });

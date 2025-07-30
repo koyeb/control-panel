@@ -6,6 +6,8 @@ import { keys } from 'src/utils/object';
 
 import { Scaling, ServiceForm } from '../service-form.types';
 
+import { defaultServiceForm } from './initialize-service-form';
+
 type Target = keyof Scaling['targets'];
 
 export function useScalingRules() {
@@ -15,7 +17,7 @@ export function useScalingRules() {
     const { serviceType, scaling } = getValues();
 
     if (min > 0) {
-      setValue('scaling.scaleToZero.lightSleep.enabled', false, { shouldValidate: true });
+      setValue('scaling.scaleToZero', defaultServiceForm().scaling.scaleToZero, { shouldValidate: true });
     }
 
     if (min !== max && max > 1) {
@@ -59,12 +61,48 @@ export function useScalingRules() {
     }
 
     if (selected?.category === 'gpu') {
-      setValue('scaling.scaleToZero.lightSleep.enabled', false);
+      setValue('scaling.scaleToZero.lightSleepEnabled', false);
     }
   };
 
   return {
     onScalingChanged,
     onInstanceChanged,
+  };
+}
+
+export function getDeepSleepValue({
+  idlePeriod,
+  lightToDeepPeriod,
+  lightSleepEnabled,
+}: Scaling['scaleToZero']) {
+  if (lightSleepEnabled) {
+    return idlePeriod + lightToDeepPeriod;
+  } else {
+    return idlePeriod;
+  }
+}
+
+export function getLightSleepValue({ idlePeriod, lightSleepEnabled }: Scaling['scaleToZero']) {
+  if (lightSleepEnabled) {
+    return idlePeriod;
+  }
+}
+
+export function getScaleToZero(
+  deepSleepValue: number,
+  lightSleepValue?: number,
+): Partial<Scaling['scaleToZero']> {
+  if (lightSleepValue !== undefined) {
+    return {
+      lightSleepEnabled: true,
+      idlePeriod: lightSleepValue,
+      lightToDeepPeriod: deepSleepValue - lightSleepValue,
+    };
+  }
+
+  return {
+    lightSleepEnabled: false,
+    idlePeriod: deepSleepValue,
   };
 }

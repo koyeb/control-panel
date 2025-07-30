@@ -38,11 +38,13 @@ describe('useScalingRules', () => {
 
   it('disables light sleep when min > 0', () => {
     form.setValue('scaling.min', 0);
-    form.setValue('scaling.scaleToZero.lightSleep.enabled', true);
+    form.setValue('scaling.scaleToZero.idlePeriod', 60);
+    form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
 
     hook.onScalingChanged(1, 1);
 
-    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleep.enabled', false);
+    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
+    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 300);
   });
 
   it('enables the requests autoscaling target for web services', () => {
@@ -133,10 +135,10 @@ describe('useScalingRules', () => {
 
   it('disables light sleep when a GPU is selected', () => {
     form.setValue('scaling.min', 0);
-    form.setValue('scaling.scaleToZero.lightSleep.enabled', true);
+    form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
 
     hook.onInstanceChanged(standard, gpu);
 
-    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleep.enabled', false);
+    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
   });
 });
