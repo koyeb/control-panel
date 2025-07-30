@@ -55,32 +55,37 @@ describe('deploymentDefinitionToServiceForm', () => {
     });
   });
 
-  it('autoscaling min = 0 and max = 1', () => {
+  it('scale to zero (no light sleep)', () => {
     const definition: API.DeploymentDefinition = {
       scalings: [
-        {
-          min: 0,
-          max: 1,
-          targets: [
-            { average_mem: { value: 1000 } },
-            { sleep_idle_delay: { light_sleep_value: 1, deep_sleep_value: 2 } },
-          ],
-        },
+        { min: 0, max: 1, targets: [{ sleep_idle_delay: { light_sleep_value: 0, deep_sleep_value: 300 } }] },
       ],
     };
 
-    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling', {
-      min: 0,
-      max: 1,
-      scaleToZero: {
-        deepSleep: 2,
-        lightSleep: { enabled: true, value: 1 },
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
+      'scaling.scaleToZero',
+      {
+        idlePeriod: 300,
+        lightSleepEnabled: false,
       },
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      targets: expect.objectContaining({
-        memory: { enabled: false, value: 1000 },
-      }),
-    });
+    );
+  });
+
+  it('scale to zero (light sleep)', () => {
+    const definition: API.DeploymentDefinition = {
+      scalings: [
+        { min: 0, max: 1, targets: [{ sleep_idle_delay: { light_sleep_value: 60, deep_sleep_value: 300 } }] },
+      ],
+    };
+
+    expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
+      'scaling.scaleToZero',
+      {
+        idlePeriod: 60,
+        lightToDeepPeriod: 240,
+        lightSleepEnabled: true,
+      },
+    );
   });
 
   it('volumes mapping', () => {

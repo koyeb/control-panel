@@ -1261,7 +1261,7 @@
         "max": "Maximum",
         "scaleToZero": {
           "title": "Scale to zero configuration",
-          "deepSleep": {
+          "idlePeriod": {
             "label": "Idle period",
             "description": "Number of seconds to wait before sleeping the instance if it receives no traffic",
             "unit": "s"

@@ -3,7 +3,7 @@ import merge from 'lodash-es/merge';
 import { API } from 'src/api/api';
 import { EnvironmentVariable, ServiceType } from 'src/api/model';
 import { AssertionError, assert } from 'src/utils/assert';
-import { hasProperty, keys } from 'src/utils/object';
+import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
 
 import {
@@ -21,6 +21,7 @@ import {
 } from '../service-form.types';
 
 import { defaultHealthCheck } from './initialize-service-form';
+import { getScaleToZero } from './scaling-rules';
 
 export function deploymentDefinitionToServiceForm(
   definition: API.DeploymentDefinition,
@@ -159,10 +160,10 @@ function dockerDeployment(
 }
 
 function scaling(definition: API.DeploymentDefinition): DeepPartial<Scaling> {
-  const { min, max, targets } = definition.scalings?.[0] ?? {};
+  const { min, max, targets: apiTargets } = definition.scalings?.[0] ?? {};
 
   const getTarget = (name: keyof API.DeploymentScalingTarget) => {
-    return targets?.find((target) => name in target) ?? {};
+    return apiTargets?.find((target) => name in target) ?? {};
   };
 
   const { average_cpu } = getTarget('average_cpu');
@@ -172,16 +173,13 @@ function scaling(definition: API.DeploymentDefinition): DeepPartial<Scaling> {
   const { requests_response_time } = getTarget('requests_response_time');
   const { sleep_idle_delay } = getTarget('sleep_idle_delay');
 
-  const scaling = {
+  const { deep_sleep_value, light_sleep_value } = sleep_idle_delay ?? {};
+  const scaleToZero = getScaleToZero(deep_sleep_value!, light_sleep_value || undefined);
+
+  return {
     min,
     max,
-    scaleToZero: {
-      deepSleep: sleep_idle_delay?.deep_sleep_value || sleep_idle_delay?.value,
-      lightSleep: {
-        enabled: sleep_idle_delay?.light_sleep_value !== undefined,
-        value: sleep_idle_delay?.light_sleep_value,
-      },
-    },
+    scaleToZero,
     targets: {
       cpu: {
         enabled: average_cpu !== undefined,
@@ -204,15 +202,7 @@ function scaling(definition: API.DeploymentDefinition): DeepPartial<Scaling> {
         value: requests_response_time?.value,
       },
     },
-  } satisfies DeepPartial<Scaling>;
-
-  if (scaling.min === 0 && scaling.max === 1) {
-    for (const target of keys(scaling.targets)) {
-      scaling.targets[target].enabled = false;
-    }
-  }
-
-  return scaling;
+  };
 }
 
 function environmentVariables(

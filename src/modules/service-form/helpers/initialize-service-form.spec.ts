@@ -53,7 +53,12 @@ describe('initializeServiceForm', () => {
     ];
 
     organization = create.organization();
+
     quotas = create.quotas();
+    quotas.scaleToZero.lightSleepIdleDelayMin = 60;
+    quotas.scaleToZero.lightSleepIdleDelayMax = 3600;
+    quotas.scaleToZero.deepSleepIdleDelayMin = 300;
+    quotas.scaleToZero.deepSleepIdleDelayMax = 7200;
 
     githubApp = undefined;
     serviceId = undefined;

@@ -24,6 +24,7 @@ import { HealthCheck, ServiceForm } from '../service-form.types';
 import { deploymentDefinitionToServiceForm } from './deployment-to-service-form';
 import { generateAppName } from './generate-app-name';
 import { parseDeployParams } from './parse-deploy-params';
+import { getScaleToZeroBounds } from './service-form.schema';
 
 export async function initializeServiceForm(
   api: Api,
@@ -251,8 +252,9 @@ export function defaultServiceForm(): ServiceForm {
       min: 1,
       max: 1,
       scaleToZero: {
-        deepSleep: 5 * 60,
-        lightSleep: { enabled: false, value: 60 },
+        idlePeriod: 5 * 60,
+        lightToDeepPeriod: 5 * 60,
+        lightSleepEnabled: false,
       },
       targets: {
         requests: { enabled: false, value: 50 },
@@ -311,22 +313,23 @@ function ensureServiceCreationBusinessRules(
     values.scaling.max = values.scaling.min;
   }
 
+  if (values.scaling.min === 0 && values.scaling.max === 1) {
+    Object.values(values.scaling.targets).forEach((target) => (target.enabled = false));
+  }
+
   if (values.scaling.min > 0 && values.scaling.min < values.scaling.max) {
     const target = serviceType === 'worker' ? 'cpu' : 'requests';
     values.scaling.targets[target].enabled = true;
   }
 
-  values.scaling.scaleToZero.deepSleep = clamp(
-    values.scaling.scaleToZero.deepSleep,
-    quotas.scaleToZero.deepSleepIdleDelayMin,
-    quotas.scaleToZero.deepSleepIdleDelayMax,
-  );
+  const scaleToZero = values.scaling.scaleToZero;
+  const bounds = getScaleToZeroBounds(quotas, scaleToZero);
 
-  values.scaling.scaleToZero.lightSleep.value = clamp(
-    values.scaling.scaleToZero.lightSleep.value,
-    quotas.scaleToZero.lightSleepIdleDelayMin,
-    quotas.scaleToZero.lightSleepIdleDelayMax,
-  );
+  scaleToZero.idlePeriod = clamp(scaleToZero.idlePeriod, bounds.idlePeriod);
+
+  if (bounds.lightToDeepPeriod) {
+    scaleToZero.lightToDeepPeriod = clamp(scaleToZero.lightToDeepPeriod, bounds.lightToDeepPeriod);
+  }
 
   // todo: remove
   // eslint-disable-next-line

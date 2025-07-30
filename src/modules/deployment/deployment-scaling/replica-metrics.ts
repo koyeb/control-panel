@@ -58,7 +58,7 @@ function getMetrics(
     const lastDataPoint = last(getSamples(cpu));
 
     if (lastDataPoint !== undefined) {
-      return clamp(0, lastDataPoint / (100 * vCpu), 1);
+      return clamp(lastDataPoint / (100 * vCpu), { min: 0, max: 1 });
     }
   };
 
@@ -67,7 +67,7 @@ function getMetrics(
     const maxMemory = parseBytes(instance?.memory);
 
     if (lastDataPoint !== undefined && !Number.isNaN(maxMemory)) {
-      return clamp(0, lastDataPoint / maxMemory, 1);
+      return clamp(lastDataPoint / maxMemory, { min: 0, max: 1 });
     }
   };
 

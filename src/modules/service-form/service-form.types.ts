@@ -115,8 +115,9 @@ export type Scaling = {
   min: number;
   max: number;
   scaleToZero: {
-    deepSleep: number;
-    lightSleep: { enabled: boolean; value: number };
+    idlePeriod: number;
+    lightToDeepPeriod: number;
+    lightSleepEnabled: boolean;
   };
   targets: {
     cpu: ScalingTarget;

@@ -33,8 +33,8 @@ export function ScaleToZeroConfiguration({
   const { errors } = useFormState<ServiceForm>();
 
   const hasError = [
-    errors.scaling?.scaleToZero?.deepSleep?.message,
-    errors.scaling?.scaleToZero?.lightSleep?.value?.message,
+    errors.scaling?.scaleToZero?.idlePeriod?.message,
+    errors.scaling?.scaleToZero?.lightToDeepPeriod?.message,
   ].some(Boolean);
 
   return (
@@ -85,27 +85,29 @@ function ScaleToZeroFooter({ isEcoInstance, hasVolumes }: { isEcoInstance: boole
 function IdlePeriod({ disabled }: { disabled: boolean }) {
   const organization = useOrganization();
 
+  const { trigger } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
-  const error = errors.scaling?.scaleToZero?.deepSleep?.message;
+  const error = errors.scaling?.scaleToZero?.idlePeriod?.message;
 
   return (
     <ScalingConfigValue
       disabled={disabled}
-      label={<T id="deepSleep.label" />}
-      description={<T id="deepSleep.description" />}
+      label={<T id="idlePeriod.label" />}
+      description={<T id="idlePeriod.description" />}
       error={error}
       padding={false}
       input={
-        <ControlledInput<ServiceForm>
-          name="scaling.scaleToZero.deepSleep"
+        <ControlledInput<ServiceForm, 'scaling.scaleToZero.idlePeriod'>
+          name="scaling.scaleToZero.idlePeriod"
           type="number"
           disabled={disabled || organization.plan === 'starter'}
           error={false}
           end={
             <InputEnd>
-              <T id="lightSleep.unit" />
+              <T id="idlePeriod.unit" />
             </InputEnd>
           }
+          onChangeEffect={() => void trigger('scaling.scaleToZero')}
           className="max-w-24"
         />
       }
@@ -118,18 +120,18 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
 
   const { watch, trigger } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
-  const error = errors.scaling?.scaleToZero?.lightSleep?.value?.message;
+  const error = errors.scaling?.scaleToZero?.lightToDeepPeriod?.message;
 
   return (
     <ScalingConfigValue
       disabled={disabled}
       label={
         <div className="row items-center gap-2">
-          <ControlledCheckbox<ServiceForm>
-            name="scaling.scaleToZero.lightSleep.enabled"
+          <ControlledCheckbox<ServiceForm, 'scaling.scaleToZero.lightSleepEnabled'>
+            name="scaling.scaleToZero.lightSleepEnabled"
             label={<T id="lightSleep.label" />}
             disabled={disabled}
-            onChangeEffect={() => trigger('scaling.scaleToZero')}
+            onChangeEffect={() => void trigger('scaling.scaleToZero')}
           />
 
           {isGpu && (
@@ -143,30 +145,31 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
         <T
           id="lightSleep.description"
           values={{
-            light: (children) => (
+            deep: (children) => (
               <DocumentationLink path="/docs/run-and-scale/scale-to-zero#idle-period">
                 {children}
               </DocumentationLink>
             ),
-            deep: (children) => (
+            light: (children) => (
               <DocumentationLink path="/docs/run-and-scale/scale-to-zero">{children}</DocumentationLink>
             ),
-            value: watch('scaling.scaleToZero.lightSleep.value'),
+            value: watch('scaling.scaleToZero.lightToDeepPeriod'),
           }}
         />
       }
       error={error}
       input={
-        <ControlledInput<ServiceForm>
-          name="scaling.scaleToZero.lightSleep.value"
+        <ControlledInput<ServiceForm, 'scaling.scaleToZero.lightToDeepPeriod'>
+          name="scaling.scaleToZero.lightToDeepPeriod"
           type="number"
-          disabled={!watch('scaling.scaleToZero.lightSleep.enabled') || organization.plan === 'starter'}
+          disabled={!watch('scaling.scaleToZero.lightSleepEnabled') || organization.plan === 'starter'}
           error={false}
           end={
             <InputEnd>
               <T id="lightSleep.unit" />
             </InputEnd>
           }
+          onChangeEffect={() => void trigger('scaling.scaleToZero')}
           className="max-w-24"
         />
       }

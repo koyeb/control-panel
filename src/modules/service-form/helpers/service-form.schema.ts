@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { EnvironmentVariable, OrganizationQuotas } from 'src/api/model';
 import { isSlug } from 'src/utils/strings';
 
-import { File } from '../service-form.types';
+import { File, Scaling } from '../service-form.types';
 
 const git = z.discriminatedUnion('repositoryType', [
   z.object({
@@ -90,15 +90,12 @@ const instance = z
   .nullable()
   .refine((id) => id !== null);
 
-function scaling({ scaleToZero }: OrganizationQuotas) {
+function scaling(quotas: OrganizationQuotas) {
   return z
     .object({
       min: z.number().min(0).max(20),
       max: z.number().min(0).max(20),
-      scaleToZero: z.object({
-        deepSleep: z.number().min(scaleToZero.deepSleepIdleDelayMin).max(scaleToZero.deepSleepIdleDelayMax),
-        lightSleep: target(scaleToZero.lightSleepIdleDelayMin, scaleToZero.lightSleepIdleDelayMax),
-      }),
+      scaleToZero: scaleToZero(quotas),
       targets: z.object({
         cpu: target(1, 100),
         memory: target(1, 100),
@@ -116,6 +113,80 @@ function scaling({ scaleToZero }: OrganizationQuotas) {
       return enabledTargets.length > 0;
     }, 'noTargetSelected');
 }
+
+function scaleToZero(quotas: OrganizationQuotas) {
+  return z
+    .object({
+      lightSleepEnabled: z.boolean(),
+      idlePeriod: z.number(),
+      lightToDeepPeriod: z.number(),
+    })
+    .superRefine((value, ctx) => {
+      const { idlePeriod, lightToDeepPeriod } = value;
+      const bounds = getScaleToZeroBounds(quotas, value);
+
+      if (idlePeriod < bounds.idlePeriod.min) {
+        ctx.addIssue(tooSmall('idlePeriod', bounds.idlePeriod.min));
+      }
+
+      if (idlePeriod > bounds.idlePeriod.max) {
+        ctx.addIssue(tooBig('idlePeriod', bounds.idlePeriod.max));
+      }
+
+      if (bounds.lightToDeepPeriod) {
+        if (lightToDeepPeriod < bounds.lightToDeepPeriod.min) {
+          ctx.addIssue(tooSmall('lightToDeepPeriod', bounds.lightToDeepPeriod.min));
+        }
+
+        if (lightToDeepPeriod > bounds.lightToDeepPeriod.max) {
+          ctx.addIssue(tooBig('lightToDeepPeriod', bounds.lightToDeepPeriod.max));
+        }
+      }
+    });
+}
+
+export function getScaleToZeroBounds(quotas: OrganizationQuotas, value: Scaling['scaleToZero']) {
+  const { deepSleepIdleDelayMin, deepSleepIdleDelayMax } = quotas.scaleToZero;
+  const { lightSleepIdleDelayMin, lightSleepIdleDelayMax } = quotas.scaleToZero;
+
+  const { lightSleepEnabled, idlePeriod } = value;
+
+  if (!lightSleepEnabled) {
+    return {
+      idlePeriod: {
+        min: deepSleepIdleDelayMin,
+        max: deepSleepIdleDelayMax,
+      },
+    };
+  }
+
+  return {
+    idlePeriod: {
+      min: lightSleepIdleDelayMin,
+      max: lightSleepIdleDelayMax,
+    },
+    lightToDeepPeriod: {
+      min: deepSleepIdleDelayMin - idlePeriod,
+      max: deepSleepIdleDelayMax - idlePeriod,
+    },
+  };
+}
+
+const tooSmall = (field: string, minimum: number): z.IssueData => ({
+  type: 'number',
+  code: z.ZodIssueCode.too_small,
+  inclusive: true,
+  path: [field],
+  minimum,
+});
+
+const tooBig = (field: string, maximum: number): z.IssueData => ({
+  type: 'number',
+  code: z.ZodIssueCode.too_big,
+  inclusive: true,
+  path: [field],
+  maximum,
+});
 
 function target(min: number, max: number) {
   return z.discriminatedUnion('enabled', [
