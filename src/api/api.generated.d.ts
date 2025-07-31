@@ -301,6 +301,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/account/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["GetUserSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["UpdateUserSettings"];
+        trace?: never;
+    };
     "/v1/account/signup": {
         parameters: {
             query?: never;
@@ -2194,6 +2210,8 @@ export interface components {
             gpu?: components["schemas"]["CatalogGPUDetails"];
             /** The name of the instance */
             id?: string;
+            /** Is light sleep enabled for this instance type */
+            light_sleep_enabled?: boolean;
             /** The memory in bytes in a format like 5MB */
             memory?: string;
             /** The price to pay per hour */
@@ -2237,6 +2255,8 @@ export interface components {
             gpu?: components["schemas"]["CatalogGPUDetails"];
             /** The name of the instance */
             id?: string;
+            /** Is light sleep enabled for this instance type */
+            light_sleep_enabled?: boolean;
             /** The memory in bytes in a format like 5MB */
             memory?: string;
             /** The price to pay per hour */
@@ -3145,6 +3165,9 @@ export interface components {
         };
         GetUserOrganizationInvitationReply: {
             invitation?: components["schemas"]["OrganizationInvitation"];
+        };
+        GetUserSettingsReply: {
+            settings?: components["schemas"]["UserSettings"];
         };
         GitDeploymentMetadata: {
             git_env?: components["schemas"]["GitEnvDeploymentMetadata"];
@@ -4940,6 +4963,13 @@ export interface components {
             newsletter_subscribed?: boolean;
             password?: string;
         };
+        UpdateUserSettingsReply: {
+            settings?: components["schemas"]["UserSettings"];
+        };
+        UpdateUserSettingsRequest: {
+            /** @description (Optional) Toggle failed deployment email notification. */
+            failed_deployment_email_notification?: boolean;
+        };
         UpsertSignupQualificationReply: {
             organization?: components["schemas"]["Organization"];
         };
@@ -5026,6 +5056,11 @@ export interface components {
          * @enum {string}
          */
         "UserRole.Role": "INVALID" | "OWNER";
+        UserSettings: {
+            failed_deployment_email_notification?: boolean;
+            id?: string;
+            user_id?: string;
+        };
         VerifyDockerImageReply: {
             code?: components["schemas"]["VerifyDockerImageReply.ErrCode"];
             /** (Optional) If the image is not accessible, the reason */
@@ -6731,6 +6766,176 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["LoginReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    GetUserSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["GetUserSettingsReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateUserSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateUserSettingsRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateUserSettingsReply"];
                 };
             };
             /** @description Validation error */

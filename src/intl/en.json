@@ -2795,6 +2795,11 @@
           "footer": "The full name of the person owning this account",
           "successNotification": "Your name was successfully changed to {name}"
         },
+        "notificationSettings": {
+          "title": "Deployment failure notifications",
+          "description": "Receive an email when a deployment fails to complete successfully",
+          "successNotification": "Deployment failure notifications {enabled, select, true {enabled} false {disabled} other {}}"
+        },
         "githubAccount": {
           "label": "Your GitHub account",
           "noGithubAccountRegistered": "You didn't link a GitHub account to Koyeb yet",

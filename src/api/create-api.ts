@@ -63,6 +63,8 @@ export function createApi(options: CreateApiOptions) {
     updatePassword: endpoint('post', '/v1/account/update_password'),
     updateUser: endpoint('patch', '/v1/account/profile'),
     deleteUser: endpoint('delete', '/v1/users/{id}'),
+    getUserSettings: endpoint('get', '/v1/account/settings'),
+    updateUserSettings: endpoint('patch', '/v1/account/settings'),
 
     // organization
     getCurrentOrganization: endpoint('get', '/v1/account/organization'),

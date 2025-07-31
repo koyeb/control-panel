@@ -12,9 +12,14 @@ import {
   OrganizationQuotas,
   OrganizationSummary,
   User,
+  UserSettings,
 } from '../model';
 
 export function mapUser(user: Api.User): User {
+  return snakeToCamelDeep(requiredDeep(user));
+}
+
+export function mapUserSettings(user: Api.UserSettings): UserSettings {
   return snakeToCamelDeep(requiredDeep(user));
 }
 

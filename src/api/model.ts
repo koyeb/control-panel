@@ -567,6 +567,10 @@ export type User = {
   flags: string[];
 };
 
+export type UserSettings = {
+  failedDeploymentEmailNotification: boolean;
+};
+
 export type Organization = {
   id: string;
   name: string;

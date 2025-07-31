@@ -59,5 +59,6 @@ export namespace Api {
   export type TCPHealthCheck = schemas['TCPHealthCheck'];
   export type Token = schemas['Token'];
   export type User = schemas['User'];
+  export type UserSettings = schemas['UserSettings'];
   export type VerifyDockerImageReply = schemas['VerifyDockerImageReply'];
 }
