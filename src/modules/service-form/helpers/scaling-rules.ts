@@ -10,8 +10,18 @@ import { defaultServiceForm } from './initialize-service-form';
 
 type Target = keyof Scaling['targets'];
 
+const { scaling: defaultScaling } = defaultServiceForm();
+
 export function useScalingRules() {
-  const { getValues, setValue, resetField } = useFormContext<ServiceForm>();
+  const { getValues, setValue } = useFormContext<ServiceForm>();
+
+  const enableTarget = (target: Target) => {
+    setValue(`scaling.targets.${target}.enabled`, true, { shouldValidate: true });
+  };
+
+  const disableTarget = (target: Target) => {
+    setValue(`scaling.targets.${target}`, defaultScaling.targets[target], { shouldValidate: true });
+  };
 
   const onScalingChanged = (min: number, max: number): void => {
     const { serviceType, scaling } = getValues();
@@ -21,13 +31,17 @@ export function useScalingRules() {
     }
 
     if (min !== max && max > 1) {
-      const target: Target = serviceType === 'worker' ? 'cpu' : 'requests';
-      setValue(`scaling.targets.${target}.enabled`, true, { shouldValidate: true });
+      enableTarget(serviceType === 'worker' ? 'cpu' : 'requests');
     } else {
-      for (const target of keys(scaling.targets)) {
-        setValue(`scaling.targets.${target}.enabled`, false, { shouldValidate: true });
-        resetField(`scaling.targets.${target}.value`);
-      }
+      keys(scaling.targets).forEach(disableTarget);
+    }
+  };
+
+  const onScalingTargetChanged = (target: Target, enabled: boolean) => {
+    const defaultValue = defaultScaling.targets[target].value;
+
+    if (!enabled) {
+      setValue(`scaling.targets.${target}.value`, defaultValue, { shouldValidate: true });
     }
   };
 
@@ -67,6 +81,7 @@ export function useScalingRules() {
 
   return {
     onScalingChanged,
+    onScalingTargetChanged,
     onInstanceChanged,
   };
 }

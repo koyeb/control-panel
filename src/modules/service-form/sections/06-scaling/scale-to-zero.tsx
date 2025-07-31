@@ -4,7 +4,6 @@ import { useFormContext, useFormState } from 'react-hook-form';
 import { useInstance } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
-import { DocumentationLink } from 'src/components/documentation-link';
 import { LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 
@@ -142,20 +141,7 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
         </div>
       }
       description={
-        <T
-          id="lightSleep.description"
-          values={{
-            deep: (children) => (
-              <DocumentationLink path="/docs/run-and-scale/scale-to-zero#idle-period">
-                {children}
-              </DocumentationLink>
-            ),
-            light: (children) => (
-              <DocumentationLink path="/docs/run-and-scale/scale-to-zero">{children}</DocumentationLink>
-            ),
-            value: watch('scaling.scaleToZero.lightToDeepPeriod'),
-          }}
-        />
+        <T id="lightSleep.description" values={{ value: watch('scaling.scaleToZero.lightToDeepPeriod') }} />
       }
       error={error}
       input={

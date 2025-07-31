@@ -4,6 +4,7 @@ import { useFormContext, useFormState } from 'react-hook-form';
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';
 
+import { useScalingRules } from '../../helpers/scaling-rules';
 import { Scaling, ServiceForm } from '../../service-form.types';
 
 import { ScalingConfigValue } from './components/scaling-config-value';
@@ -69,6 +70,7 @@ function AutoscalingTarget({ target, disabled }: { target: keyof Scaling['target
   const { watch } = useFormContext<ServiceForm>();
   const { errors } = useFormState<ServiceForm>();
   const error = errors.scaling?.targets?.[target]?.value?.message;
+  const { onScalingTargetChanged } = useScalingRules();
 
   return (
     <ScalingConfigValue
@@ -78,6 +80,7 @@ function AutoscalingTarget({ target, disabled }: { target: keyof Scaling['target
           name={`scaling.targets.${target}.enabled`}
           label={<T id={`${target}.label`} />}
           disabled={disabled}
+          onChangeEffect={(event) => onScalingTargetChanged(target, event.target.checked)}
         />
       }
       description={
@@ -88,7 +91,7 @@ function AutoscalingTarget({ target, disabled }: { target: keyof Scaling['target
         <ControlledInput<ServiceForm>
           name={`scaling.targets.${target}.value`}
           type="number"
-          disabled={disabled}
+          disabled={!watch(`scaling.targets.${target}.enabled`)}
           error={false}
           end={
             <InputEnd>

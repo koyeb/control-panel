@@ -116,7 +116,7 @@ function AutoScaling({ disabled, onChanged }: AutoScalingProps) {
             onChanged(min, max);
           }
         }}
-        className="hidden flex-1 pt-10 sm:block"
+        className="hidden flex-1 pt-10 sm:flex"
       />
 
       <ControlledInput<ServiceForm>
