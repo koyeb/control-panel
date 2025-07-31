@@ -6,11 +6,9 @@ import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
-import { tallyForms, useTallyDialog } from 'src/hooks/tally';
 
 export function usePreSubmitServiceForm(previousInstance?: string | null) {
   const openDialog = Dialog.useOpen();
-  const tally = useTallyDialog(tallyForms.tenstorrentRequest);
 
   const organization = useOrganization();
   const getInstanceQuota = useGetInstanceQuota();
@@ -32,16 +30,23 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         return true;
       }
 
+      if (isTenstorrentGpu(instance) && organization.trial !== undefined) {
+        setRequiredPlan('starter');
+        openDialog('Upgrade', { plan: 'starter' });
+
+        return false;
+      }
+
       if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
         const plan = instance.plans[0] as OrganizationPlan;
 
         setRequiredPlan(plan);
         openDialog('Upgrade', { plan });
-      } else if (isTenstorrentGpu(instance)) {
-        tally.openPopup();
-      } else {
-        openDialog('QuotaIncreaseRequest');
+
+        return false;
       }
+
+      openDialog('QuotaIncreaseRequest');
 
       return false;
     },

@@ -1,10 +1,15 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
+import { CatalogInstance, CatalogRegion, InstanceCategory, Organization, RegionScope } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
 import { create } from 'src/utils/factories';
 
-import { InstanceSelector, InstanceSelectorState, instanceSelector } from './instance-selector-state';
+import {
+  InstanceSelector,
+  InstanceSelectorState,
+  instanceSelector,
+  shouldAddCreditCard,
+} from './instance-selector-state';
 
 describe('instance selector', () => {
   let free: CatalogInstance, ecoNano: CatalogInstance, ecoMicro: CatalogInstance;
@@ -337,6 +342,68 @@ describe('instance selector', () => {
       act(() => selector.onInstanceCategorySelected('eco'));
 
       expect(selector.selectedRegions).toEqual([par]);
+    });
+  });
+
+  describe('shouldAddCreditCard', () => {
+    let organization: Organization;
+    let instance: CatalogInstance;
+    let quota: { max: number };
+
+    beforeEach(() => {
+      organization = create.organization({ plan: 'pro' });
+      instance = create.instance();
+      quota = { max: 0 };
+    });
+
+    it('hobby organizations', () => {
+      organization.plan = 'hobby';
+      expect(shouldAddCreditCard(organization, instance, quota)).toBe(true);
+    });
+
+    it('non-hobby organizations', () => {
+      organization.plan = 'starter';
+      expect(shouldAddCreditCard(organization, instance, quota)).toBe(false);
+    });
+
+    describe('tenstorrent instance', () => {
+      beforeEach(() => {
+        instance.id = 'gpu-tenstorrent-n300s';
+      });
+
+      it('trial organization, quota = 0', () => {
+        organization.trial = { endsAt: '' };
+        expect(shouldAddCreditCard(organization, instance, quota)).toBe(true);
+      });
+
+      it('trial organization, quota > 0', () => {
+        organization.trial = { endsAt: '' };
+        quota.max = 1;
+        expect(shouldAddCreditCard(organization, instance, quota)).toBe(false);
+      });
+
+      it('non-trial organization, quota > 0', () => {
+        organization.plan = 'starter';
+        quota.max = 1;
+        expect(shouldAddCreditCard(organization, instance, quota)).toBe(false);
+      });
+    });
+
+    describe('tenstorrent 4x instance', () => {
+      beforeEach(() => {
+        instance.id = '4-gpu-tenstorrent-n300s';
+      });
+
+      it('trial organization, quota = 0', () => {
+        organization.trial = { endsAt: '' };
+        expect(shouldAddCreditCard(organization, instance, quota)).toBe(true);
+      });
+
+      it('trial organization, quota > 0', () => {
+        organization.trial = { endsAt: '' };
+        quota.max = 1;
+        expect(shouldAddCreditCard(organization, instance, quota)).toBe(false);
+      });
     });
   });
 });

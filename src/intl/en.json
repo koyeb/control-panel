@@ -220,7 +220,6 @@
           "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
           "submitButton": "Add credit card"
         },
-        "requestAccess": "Request access",
         "requestQuotaIncrease": "Request increase",
         "requestQuotaIncreaseDialog": {
           "title": "Quota increase request",

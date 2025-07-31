@@ -5,17 +5,17 @@ import { useRef } from 'react';
 import { useCatalogInstanceAvailability } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
+import { useInstanceQuota } from 'src/application/instance-quota';
 import { formatBytes, parseBytes } from 'src/application/memory';
-import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
-import { tallyForms, useTallyDialog } from 'src/hooks/tally';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
 import { CatalogAvailability } from './catalog-availability';
 import { InstanceSelectorBadge } from './instance-selector';
+import { shouldAddCreditCard } from './instance-selector-state';
 import { RequestQuotaIncreaseDialog } from './request-quota-increase-dialog';
 
 const T = createTranslate('components.instanceSelector');
@@ -223,41 +223,26 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
 
 function RequestQuota({ instance }: { instance: CatalogInstance }) {
   const openDialog = Dialog.useOpen();
-  const tally = useTallyDialog(tallyForms.tenstorrentRequest);
-
+  const quota = useInstanceQuota(instance);
   const organization = useOrganization();
-  const isHobby = organization.plan === 'hobby';
+  const addCreditCard = shouldAddCreditCard(organization, instance, quota);
 
   if (instance.id === 'free') {
     return null;
   }
 
   const handleClick = () => {
-    if (!isHobby && isTenstorrentGpu(instance)) {
-      tally.openPopup();
-    } else if (isHobby) {
-      openDialog('UpgradeInstanceSelector');
+    if (addCreditCard) {
+      openDialog('UpgradeInstanceSelector', { plan: 'starter' });
     } else {
       openDialog('RequestQuotaIncrease', { instanceId: instance.id });
     }
   };
 
-  const text = () => {
-    if (isHobby) {
-      return <T id="actions.addCreditCard" />;
-    }
-
-    if (isTenstorrentGpu(instance)) {
-      return <T id="actions.requestAccess" />;
-    }
-
-    return <T id="actions.requestQuotaIncrease" />;
-  };
-
   return (
     <>
       <Button color="gray" onClick={handleClick} className="mt-4">
-        {text()}
+        <T id={`actions.${addCreditCard ? 'addCreditCard' : 'requestQuotaIncrease'}`} />
       </Button>
 
       <RequestQuotaIncreaseDialog instance={instance} />

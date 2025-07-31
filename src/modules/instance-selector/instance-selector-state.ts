@@ -3,9 +3,10 @@ import { dequal } from 'dequal';
 import { useState } from 'react';
 
 import { useDatacenters } from 'src/api/hooks/catalog';
-import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
+import { CatalogInstance, CatalogRegion, InstanceCategory, Organization, RegionScope } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { last } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
@@ -226,4 +227,23 @@ function otherScope(scope: RegionScope): RegionScope {
   };
 
   return map[scope];
+}
+
+export function shouldAddCreditCard(
+  organization: Organization,
+  instance: CatalogInstance,
+  quota: { max: number },
+) {
+  const isHobby = organization.plan === 'hobby';
+  const isTrial = organization.trial !== undefined;
+
+  if (isHobby) {
+    return true;
+  }
+
+  if (isTrial && isTenstorrentGpu(instance) && quota.max === 0) {
+    return true;
+  }
+
+  return false;
 }
