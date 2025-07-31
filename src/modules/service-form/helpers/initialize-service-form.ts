@@ -252,7 +252,7 @@ export function defaultServiceForm(): ServiceForm {
       max: 1,
       scaleToZero: {
         idlePeriod: 5 * 60,
-        lightToDeepPeriod: 5 * 60,
+        lightToDeepPeriod: 60 * 60,
         lightSleepEnabled: false,
       },
       targets: {

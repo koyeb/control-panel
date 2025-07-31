@@ -36,109 +36,123 @@ describe('useScalingRules', () => {
     hook = result.current;
   });
 
-  it('disables light sleep when min > 0', () => {
-    form.setValue('scaling.min', 0);
-    form.setValue('scaling.scaleToZero.idlePeriod', 60);
-    form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
+  describe('onScalingChanged', () => {
+    it('disables light sleep when min > 0', () => {
+      form.setValue('scaling.min', 0);
+      form.setValue('scaling.scaleToZero.idlePeriod', 60);
+      form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
 
-    hook.onScalingChanged(1, 1);
+      hook.onScalingChanged(1, 1);
 
-    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
-    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 300);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.idlePeriod', 300);
+    });
+
+    it('enables the requests autoscaling target for web services', () => {
+      hook.onScalingChanged(0, 2);
+
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', true);
+      expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', false);
+    });
+
+    it('enables the cpu autoscaling target for workers', () => {
+      form.setValue('serviceType', 'worker');
+
+      hook.onScalingChanged(0, 2);
+
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
+      expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', true);
+    });
+
+    it('disables all autoscaling targets when max is set to 1', () => {
+      form.setValue('scaling.targets.requests.enabled', true);
+      form.setValue('scaling.targets.cpu.enabled', true);
+
+      hook.onScalingChanged(0, 1);
+
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
+      expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', false);
+    });
+
+    it('disables all autoscaling targets when min and max are equal', () => {
+      form.setValue('scaling.targets.requests.enabled', true);
+      form.setValue('scaling.targets.cpu.enabled', true);
+
+      hook.onScalingChanged(2, 2);
+
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
+      expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', false);
+    });
   });
 
-  it('enables the requests autoscaling target for web services', () => {
-    hook.onScalingChanged(0, 2);
+  describe('onScalingTargetToggled', () => {
+    it("resets the target's value when disabled", () => {
+      form.setValue('scaling.targets.cpu', { enabled: true, value: 200 });
 
-    expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', true);
-    expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', false);
+      hook.onScalingTargetChanged('cpu', false);
+
+      expect(form.getValues('scaling.targets.cpu.value')).toBe(80);
+    });
   });
 
-  it('enables the cpu autoscaling target for workers', () => {
-    form.setValue('serviceType', 'worker');
+  describe('onInstanceChanged', () => {
+    it('sets min = 0 and max = 1 when the free instance is selected', () => {
+      form.setValue('scaling.min', 1);
+      form.setValue('scaling.max', 2);
+      form.setValue('scaling.targets.requests.enabled', true);
 
-    hook.onScalingChanged(0, 2);
+      hook.onInstanceChanged(standard, free);
 
-    expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
-    expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', true);
-  });
+      expect(form.getValues()).toHaveProperty('scaling.min', 0);
+      expect(form.getValues()).toHaveProperty('scaling.max', 1);
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
+    });
 
-  it('disables all autoscaling targets when max is set to 1', () => {
-    form.setValue('scaling.targets.requests.enabled', true);
-    form.setValue('scaling.targets.cpu.enabled', true);
+    it('sets min = max when the a non free eco instance is selected', () => {
+      form.setValue('scaling.min', 1);
+      form.setValue('scaling.max', 2);
+      form.setValue('scaling.targets.requests.enabled', true);
 
-    hook.onScalingChanged(0, 1);
+      hook.onInstanceChanged(standard, eco);
 
-    expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
-    expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', false);
-  });
+      expect(form.getValues()).toHaveProperty('scaling.min', 2);
+      expect(form.getValues()).toHaveProperty('scaling.max', 2);
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
+    });
 
-  it('disables all autoscaling targets when min and max are equal', () => {
-    form.setValue('scaling.targets.requests.enabled', true);
-    form.setValue('scaling.targets.cpu.enabled', true);
+    it('enables scale to zero when selecting a GPU for a new service', () => {
+      form.setValue('scaling.min', 1);
+      form.setValue('scaling.max', 2);
 
-    hook.onScalingChanged(2, 2);
+      hook.onInstanceChanged(standard, gpu);
 
-    expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
-    expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', false);
-  });
+      expect(form.getValues()).toHaveProperty('scaling.min', 0);
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', true);
+    });
 
-  it('sets min = 0 and max = 1 when the free instance is selected', () => {
-    form.setValue('scaling.min', 1);
-    form.setValue('scaling.max', 2);
-    form.setValue('scaling.targets.requests.enabled', true);
+    it('sets min = 1 when selecting a tenstorrent GPU', () => {
+      form.setValue('scaling.min', 0);
 
-    hook.onInstanceChanged(standard, free);
+      hook.onInstanceChanged(standard, tenstorrentGpu);
 
-    expect(form.getValues()).toHaveProperty('scaling.min', 0);
-    expect(form.getValues()).toHaveProperty('scaling.max', 1);
-    expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
-  });
+      expect(form.getValues()).toHaveProperty('scaling.min', 1);
+    });
 
-  it('sets min = max when the a non free eco instance is selected', () => {
-    form.setValue('scaling.min', 1);
-    form.setValue('scaling.max', 2);
-    form.setValue('scaling.targets.requests.enabled', true);
+    it('sets min = 0 when selecting a GPU different from a tenstorrent GPU', () => {
+      form.setValue('scaling.min', 1);
 
-    hook.onInstanceChanged(standard, eco);
+      hook.onInstanceChanged(tenstorrentGpu, standard);
 
-    expect(form.getValues()).toHaveProperty('scaling.min', 2);
-    expect(form.getValues()).toHaveProperty('scaling.max', 2);
-    expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
-  });
+      expect(form.getValues()).toHaveProperty('scaling.min', 0);
+    });
 
-  it('enables scale to zero when selecting a GPU for a new service', () => {
-    form.setValue('scaling.min', 1);
-    form.setValue('scaling.max', 2);
+    it('disables light sleep when a GPU is selected', () => {
+      form.setValue('scaling.min', 0);
+      form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
 
-    hook.onInstanceChanged(standard, gpu);
+      hook.onInstanceChanged(standard, gpu);
 
-    expect(form.getValues()).toHaveProperty('scaling.min', 0);
-    expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', true);
-  });
-
-  it('sets min = 1 when selecting a tenstorrent GPU', () => {
-    form.setValue('scaling.min', 0);
-
-    hook.onInstanceChanged(standard, tenstorrentGpu);
-
-    expect(form.getValues()).toHaveProperty('scaling.min', 1);
-  });
-
-  it('sets min = 0 when selecting a GPU different from a tenstorrent GPU', () => {
-    form.setValue('scaling.min', 1);
-
-    hook.onInstanceChanged(tenstorrentGpu, standard);
-
-    expect(form.getValues()).toHaveProperty('scaling.min', 0);
-  });
-
-  it('disables light sleep when a GPU is selected', () => {
-    form.setValue('scaling.min', 0);
-    form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
-
-    hook.onInstanceChanged(standard, gpu);
-
-    expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
+    });
   });
 });
