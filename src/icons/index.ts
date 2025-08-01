@@ -99,6 +99,7 @@ export {
   UsersIcon as IconUsers,
   WorkflowIcon as IconWorkflow,
   XIcon as IconX,
+  ZapIcon as IconZap,
 } from 'lucide-react';
 
 export { default as IconAzure } from './azure.svg?react';

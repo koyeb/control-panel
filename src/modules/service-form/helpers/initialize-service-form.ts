@@ -4,10 +4,18 @@ import { DeepPartial } from 'react-hook-form';
 
 import { api } from 'src/api/api';
 import { mapRepository } from 'src/api/mappers/git';
-import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
+import {
+  CatalogDatacenter,
+  CatalogInstance,
+  CatalogRegion,
+  GithubApp,
+  Organization,
+  OrganizationQuotas,
+} from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
+import { clamp } from 'src/utils/math';
 import { hasProperty } from 'src/utils/object';
 
 import { generateServiceName } from '../sections/00-service-name/use-generate-service-name';
@@ -16,6 +24,7 @@ import { HealthCheck, ServiceForm } from '../service-form.types';
 import { deploymentDefinitionToServiceForm } from './deployment-to-service-form';
 import { generateAppName } from './generate-app-name';
 import { parseDeployParams } from './parse-deploy-params';
+import { getScaleToZeroBounds } from './service-form.schema';
 
 export async function initializeServiceForm(
   params: URLSearchParams,
@@ -23,6 +32,7 @@ export async function initializeServiceForm(
   regions: CatalogRegion[],
   instances: CatalogInstance[],
   organization: Organization,
+  quotas: OrganizationQuotas,
   githubApp: GithubApp | undefined,
   serviceId: string | undefined,
   queryClient: QueryClient,
@@ -84,6 +94,7 @@ export async function initializeServiceForm(
       regions,
       instances,
       organization,
+      quotas,
       parsedParams,
       queryClient,
     );
@@ -239,13 +250,17 @@ export function defaultServiceForm(): ServiceForm {
     scaling: {
       min: 1,
       max: 1,
+      scaleToZero: {
+        idlePeriod: 5 * 60,
+        lightToDeepPeriod: 60 * 60,
+        lightSleepEnabled: false,
+      },
       targets: {
         requests: { enabled: false, value: 50 },
         cpu: { enabled: false, value: 80 },
         memory: { enabled: false, value: 80 },
         concurrentRequests: { enabled: false, value: 20 },
         responseTime: { enabled: false, value: 300 },
-        sleepIdleDelay: { lightSleepValue: NaN, deepSleepValue: 5 * 60 },
       },
     },
     instance: 'nano',
@@ -270,6 +285,7 @@ function ensureServiceCreationBusinessRules(
   regions: CatalogRegion[],
   instances: CatalogInstance[],
   organization: Organization,
+  quotas: OrganizationQuotas,
   parsedParams: DeepPartial<ServiceForm>,
   queryClient: QueryClient,
 ) {
@@ -296,9 +312,22 @@ function ensureServiceCreationBusinessRules(
     values.scaling.max = values.scaling.min;
   }
 
+  if (values.scaling.min === 0 && values.scaling.max === 1) {
+    Object.values(values.scaling.targets).forEach((target) => (target.enabled = false));
+  }
+
   if (values.scaling.min > 0 && values.scaling.min < values.scaling.max) {
     const target = serviceType === 'worker' ? 'cpu' : 'requests';
     values.scaling.targets[target].enabled = true;
+  }
+
+  const scaleToZero = values.scaling.scaleToZero;
+  const bounds = getScaleToZeroBounds(quotas, scaleToZero);
+
+  scaleToZero.idlePeriod = clamp(scaleToZero.idlePeriod, bounds.idlePeriod);
+
+  if (bounds.lightToDeepPeriod) {
+    scaleToZero.lightToDeepPeriod = clamp(scaleToZero.lightToDeepPeriod, bounds.lightToDeepPeriod);
   }
 
   // todo: remove

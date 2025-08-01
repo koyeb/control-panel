@@ -114,24 +114,23 @@ export type File = {
 export type Scaling = {
   min: number;
   max: number;
+  scaleToZero: {
+    idlePeriod: number;
+    lightToDeepPeriod: number;
+    lightSleepEnabled: boolean;
+  };
   targets: {
     cpu: ScalingTarget;
     memory: ScalingTarget;
     requests: ScalingTarget;
     concurrentRequests: ScalingTarget;
     responseTime: ScalingTarget;
-    sleepIdleDelay: SleepIdleDelayScalingTarget;
   };
 };
 
 export type ScalingTarget = {
   enabled: boolean;
   value: number;
-};
-
-export type SleepIdleDelayScalingTarget = {
-  deepSleepValue: number;
-  lightSleepValue: number;
 };
 
 export type Port = {

@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
-import { EnvironmentVariable } from 'src/api/model';
+import { EnvironmentVariable, OrganizationQuotas } from 'src/api/model';
 import { isSlug } from 'src/utils/strings';
 
-import { File } from '../service-form.types';
+import { File, Scaling } from '../service-form.types';
 
 const git = z.discriminatedUnion('repositoryType', [
   z.object({
@@ -90,39 +90,103 @@ const instance = z
   .nullable()
   .refine((id) => id !== null);
 
-const scaling = z
-  .object({
-    min: z.number().min(0).max(20),
-    max: z.number().min(0).max(20),
-    targets: z.object({
-      cpu: target(1, 100),
-      memory: target(1, 100),
-      requests: target(1, 1e9),
-      concurrentRequests: target(1, 1e9),
-      responseTime: target(1, 1e9),
-      sleepIdleDelay: z.object({
-        lightSleepValue: z.union([
-          z
-            .number()
-            .min(60)
-            .max(60 * 60),
-          z.nan(),
-        ]),
-        deepSleepValue: z
-          .number()
-          .min(5 * 60)
-          .max(7 * 24 * 60 * 60),
+function scaling(quotas: OrganizationQuotas) {
+  return z
+    .object({
+      min: z.number().min(0).max(20),
+      max: z.number().min(0).max(20),
+      scaleToZero: scaleToZero(quotas),
+      targets: z.object({
+        cpu: target(1, 100),
+        memory: target(1, 100),
+        requests: target(1, 1e9),
+        concurrentRequests: target(1, 1e9),
+        responseTime: target(1, 1e9),
       }),
-    }),
-  })
-  .refine(({ min, max, targets }) => {
-    if (min === max || max === 1) {
-      return true;
-    }
+    })
+    .refine(({ min, max, targets }) => {
+      if (min === max || max === 1) {
+        return true;
+      }
 
-    const enabledTargets = Object.values(targets).filter((target) => 'enabled' in target && target.enabled);
-    return enabledTargets.length > 0;
-  }, 'noTargetSelected');
+      const enabledTargets = Object.values(targets).filter((target) => 'enabled' in target && target.enabled);
+      return enabledTargets.length > 0;
+    }, 'noTargetSelected');
+}
+
+function scaleToZero(quotas: OrganizationQuotas) {
+  return z
+    .object({
+      lightSleepEnabled: z.boolean(),
+      idlePeriod: z.number(),
+      lightToDeepPeriod: z.number(),
+    })
+    .superRefine((value, ctx) => {
+      const { idlePeriod, lightToDeepPeriod } = value;
+      const bounds = getScaleToZeroBounds(quotas, value);
+
+      if (idlePeriod < bounds.idlePeriod.min) {
+        ctx.addIssue(tooSmall('idlePeriod', bounds.idlePeriod.min));
+      }
+
+      if (idlePeriod > bounds.idlePeriod.max) {
+        ctx.addIssue(tooBig('idlePeriod', bounds.idlePeriod.max));
+      }
+
+      if (bounds.lightToDeepPeriod) {
+        if (lightToDeepPeriod < bounds.lightToDeepPeriod.min) {
+          ctx.addIssue(tooSmall('lightToDeepPeriod', bounds.lightToDeepPeriod.min));
+        }
+
+        if (lightToDeepPeriod > bounds.lightToDeepPeriod.max) {
+          ctx.addIssue(tooBig('lightToDeepPeriod', bounds.lightToDeepPeriod.max));
+        }
+      }
+    });
+}
+
+export function getScaleToZeroBounds(quotas: OrganizationQuotas, value: Scaling['scaleToZero']) {
+  const { deepSleepIdleDelayMin, deepSleepIdleDelayMax } = quotas.scaleToZero;
+  const { lightSleepIdleDelayMin, lightSleepIdleDelayMax } = quotas.scaleToZero;
+
+  const { lightSleepEnabled, idlePeriod } = value;
+
+  if (!lightSleepEnabled) {
+    return {
+      idlePeriod: {
+        min: deepSleepIdleDelayMin,
+        max: deepSleepIdleDelayMax,
+      },
+    };
+  }
+
+  return {
+    idlePeriod: {
+      min: lightSleepIdleDelayMin,
+      max: lightSleepIdleDelayMax,
+    },
+    lightToDeepPeriod: {
+      min: deepSleepIdleDelayMin - idlePeriod,
+      max: deepSleepIdleDelayMax - idlePeriod,
+    },
+  };
+}
+
+const tooSmall = (field: string, minimum: number): z.IssueData => ({
+  type: 'number',
+  code: z.ZodIssueCode.too_small,
+  inclusive: true,
+  path: [field],
+  minimum,
+});
+
+const tooBig = (field: string, maximum: number): z.IssueData => ({
+  type: 'number',
+  code: z.ZodIssueCode.too_big,
+  inclusive: true,
+  path: [field],
+  maximum,
+});
 
 function target(min: number, max: number) {
   return z.discriminatedUnion('enabled', [
@@ -199,33 +263,35 @@ function preprocessVolumes(value: unknown) {
   return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
-export const serviceFormSchema = z.object({
-  meta: z.object({}).passthrough(),
-  appName: z
-    .string()
-    .trim()
-    .min(3)
-    .max(64)
-    .refine(isSlug, { params: { refinement: 'isSlug' } }),
-  serviceName: z
-    .string()
-    .trim()
-    .min(2)
-    .max(63)
-    .refine(isSlug, { params: { refinement: 'isSlug' } }),
-  serviceType: z.string(),
-  source: z.discriminatedUnion('type', [
-    z.object({ type: z.literal('archive'), archive: z.object({ archiveId: z.string() }) }),
-    z.object({ type: z.literal('git'), git }),
-    z.object({ type: z.literal('docker'), docker }),
-  ]),
-  builder,
-  dockerDeployment,
-  environmentVariables: z.preprocess(preprocessEnvironmentVariable, z.array(environmentVariable)),
-  files: z.preprocess(preprocessFiles, z.array(file)),
-  regions,
-  instance,
-  scaling,
-  ports: z.array(ports),
-  volumes: z.preprocess(preprocessVolumes, z.array(volumes)),
-});
+export function serviceFormSchema(quotas: OrganizationQuotas) {
+  return z.object({
+    meta: z.object({}).passthrough(),
+    appName: z
+      .string()
+      .trim()
+      .min(3)
+      .max(64)
+      .refine(isSlug, { params: { refinement: 'isSlug' } }),
+    serviceName: z
+      .string()
+      .trim()
+      .min(2)
+      .max(63)
+      .refine(isSlug, { params: { refinement: 'isSlug' } }),
+    serviceType: z.string(),
+    source: z.discriminatedUnion('type', [
+      z.object({ type: z.literal('archive'), archive: z.object({ archiveId: z.string() }) }),
+      z.object({ type: z.literal('git'), git }),
+      z.object({ type: z.literal('docker'), docker }),
+    ]),
+    builder,
+    dockerDeployment,
+    environmentVariables: z.preprocess(preprocessEnvironmentVariable, z.array(environmentVariable)),
+    files: z.preprocess(preprocessFiles, z.array(file)),
+    regions,
+    instance,
+    scaling: scaling(quotas),
+    ports: z.array(ports),
+    volumes: z.preprocess(preprocessVolumes, z.array(volumes)),
+  });
+}
