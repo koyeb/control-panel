@@ -5,7 +5,7 @@ import { inArray } from 'src/utils/arrays';
 import { mapInvoice, mapSubscription } from '../mappers/billing';
 import { useApiQueryFn } from '../use-api';
 
-import { useOrganization } from './session';
+import { useOrganization, useOrganizationQuery } from './session';
 
 export function useManageBillingQuery() {
   const organization = useOrganization();
@@ -17,9 +17,11 @@ export function useManageBillingQuery() {
 }
 
 export function useSubscriptionQuery(subscriptionId: string | undefined) {
+  const organizationQuery = useOrganizationQuery();
+
   return useQuery({
-    ...useApiQueryFn('getSubscription', { path: { id: subscriptionId! } }),
-    enabled: subscriptionId !== undefined,
+    ...useApiQueryFn('getSubscription', { path: { id: subscriptionId as string } }),
+    enabled: subscriptionId !== undefined && !organizationQuery.isFetching,
     select: ({ subscription }) => mapSubscription(subscription!),
   });
 }
