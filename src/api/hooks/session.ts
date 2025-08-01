@@ -103,8 +103,8 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?:
   return useMutation({
     ...useApiMutationFn('logout', {}),
     meta: { showError: !isAccountLockedError(userQuery.error) },
-    onSettled: () => {
-      navigate({
+    async onSettled() {
+      await navigate({
         ...urlToLinkOptions(redirect),
         state: { token: null, session },
       });

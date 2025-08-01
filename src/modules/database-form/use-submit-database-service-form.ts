@@ -52,7 +52,7 @@ export function useSubmitDatabaseServiceForm(
         prefetch('getService', { path: { id: databaseServiceId } }),
       ]);
 
-      navigate({ to: '/database-services/$databaseServiceId', params: { databaseServiceId } });
+      await navigate({ to: '/database-services/$databaseServiceId', params: { databaseServiceId } });
     },
     onError: useFormErrorHandler(form, (error) => ({
       serviceName: error.name ?? error['definition.name'],

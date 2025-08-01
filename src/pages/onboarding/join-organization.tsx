@@ -90,12 +90,12 @@ function CreateOrganization() {
 
       return newToken!.id!;
     },
-    onSuccess(token) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token) {
+      await navigate({ to: '/', state: { token } });
     },
-    onError(error) {
+    async onError(error) {
       if (state.createOrganization) {
-        navigate({ to: '/', state: {} });
+        await navigate({ to: '/', state: {} });
       } else {
         onError(error);
       }

@@ -305,8 +305,8 @@ function useLeaveOrganization() {
 
       return result;
     },
-    onSuccess(token, { organization }) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token, { organization }) {
+      await navigate({ to: '/', state: { token } });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });

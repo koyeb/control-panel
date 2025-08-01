@@ -76,9 +76,9 @@ export function ResumeServiceDialog({ service }: ResumeDialogProps) {
       path: { id: service.id },
       query: { skip_build: skipBuild, use_cache: useCache },
     })),
-    onSuccess: () => {
+    onSuccess: async () => {
       closeDialog();
-      navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
+      await navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
       notify.info(t('resuming'));
     },
   });

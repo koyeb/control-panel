@@ -47,8 +47,8 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
 
       return newToken!.id!;
     },
-    onSuccess(token) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token) {
+      await navigate({ to: '/', state: { token } });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({
@@ -80,7 +80,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
               id="footer.message"
               values={{
                 delete: (children) => (
-                  <Link to="/" search={{ settings: '' }} className="underline">
+                  <Link to="/" search={{ settings: 'true' }} className="underline">
                     {children}
                   </Link>
                 ),

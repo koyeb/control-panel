@@ -11,9 +11,9 @@ export function ImportProjectStep() {
   const navigate = useNavigate();
 
   useMount(() => {
-    navigate({
+    void navigate({
       to: '/services/new',
-      search: (prev) => ({ ...prev, repository: null, image: null }),
+      search: (prev) => ({ ...prev, repository: undefined, image: undefined }),
       replace: true,
     });
   });
@@ -23,7 +23,7 @@ export function ImportProjectStep() {
       {type === 'git' && (
         <RepositorySelector
           onImport={(repository) => {
-            navigate({
+            void navigate({
               to: '/services/new',
               search: (prev) => ({
                 ...prev,
@@ -43,7 +43,7 @@ export function ImportProjectStep() {
               (window as any).__KOYEB_REGISTRY_SECRET_HACK = secretName;
             }
 
-            navigate({
+            void navigate({
               to: '/services/new',
               search: (prev) => ({
                 ...prev,

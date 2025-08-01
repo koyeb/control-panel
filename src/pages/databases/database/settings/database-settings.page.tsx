@@ -72,7 +72,7 @@ function DeleteDatabaseService({ service }: { service: Service }) {
     async onSuccess() {
       await invalidate('listApps');
       await invalidate('listServices');
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
       notify.info(t('delete.successNotification', { serviceName: service.name }));
     },
   });
