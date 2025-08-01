@@ -1,4 +1,4 @@
-import { Spinner } from '@koyeb/design-system';
+import { Checkbox, MultiSelect, Spinner } from '@koyeb/design-system';
 import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -13,27 +13,50 @@ import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
 import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { useMount } from 'src/hooks/lifecycle';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { ActivityIcon } from 'src/modules/activity/activity-icon';
 import { ActivityItem } from 'src/modules/activity/activity-item';
 import { createArray } from 'src/utils/arrays';
+import { identity } from 'src/utils/generic';
 
 const T = createTranslate('pages.activity');
 
 const pageSize = 20;
 
+const allTypes = [
+  'session',
+  'secret',
+  'deployment',
+  'domain',
+  'service',
+  'subscription',
+  'user',
+  'app',
+  'credential',
+  'organization_member',
+  'organization_invitation',
+  'organization',
+];
+
 export function ActivityPage() {
   const queryClient = useQueryClient();
   const t = T.useTranslate();
 
+  const params = useSearchParams();
+  const types = params.has('types') ? params.getAll('types') : allTypes;
+
+  const navigate = useNavigate();
+
   const query = useInfiniteQuery({
-    queryKey: ['listActivities', {}],
+    queryKey: ['listActivities', { types }],
     async queryFn({ pageParam }) {
       return api()
         .listActivities({
           query: {
             offset: String(pageParam * pageSize),
             limit: String(pageSize),
+            types,
           },
         })
         .then(({ activities }) => activities!.map(mapActivity));
@@ -63,6 +86,27 @@ export function ActivityPage() {
       <DocumentTitle title={t('documentTitle')} />
 
       <Title title={<T id="title" />} />
+
+      <MultiSelect
+        items={allTypes}
+        getKey={identity}
+        itemToString={identity}
+        renderItem={(type, selected) => (
+          <div className="row items-center gap-2">
+            <Checkbox checked={selected} readOnly className="pointer-events-none" />
+            {type}
+          </div>
+        )}
+        renderSelectedItems={(types) => `${types.length} types`}
+        selectedItems={types}
+        onItemsSelected={(item) => {
+          navigate({ to: '/activity', search: { types: [...types, item] } });
+        }}
+        onItemsUnselected={(item) => {
+          navigate({ to: '/activity', search: { types: types.filter((type) => type !== item) } });
+        }}
+        className="hidden max-w-64"
+      />
 
       <div className="col">
         {query.isPending && (
