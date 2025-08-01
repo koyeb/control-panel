@@ -8,7 +8,7 @@ import {
 } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useApps } from 'src/api/hooks/service';
+import { useApps } from 'src/api/hooks/app';
 import { Domain, type DomainStatus } from 'src/api/model';
 import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';

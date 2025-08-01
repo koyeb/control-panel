@@ -2,7 +2,8 @@ import { TabButtons } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 
-import { useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
+import { useAppQuery } from 'src/api/hooks/app';
+import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { App, Deployment, Service } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';

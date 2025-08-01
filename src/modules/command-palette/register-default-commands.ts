@@ -2,8 +2,9 @@ import * as intercom from '@intercom/messenger-js-sdk';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
+import { useApps } from 'src/api/hooks/app';
 import { useOneClickApps } from 'src/api/hooks/catalog';
-import { useApps, useServices } from 'src/api/hooks/service';
+import { useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';

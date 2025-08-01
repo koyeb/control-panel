@@ -4,7 +4,8 @@ import { max, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
-import { useApp, useService } from 'src/api/hooks/service';
+import { useApp } from 'src/api/hooks/app';
+import { useService } from 'src/api/hooks/service';
 import { Instance, LogLine } from 'src/api/model';
 import { isInstanceRunning } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';

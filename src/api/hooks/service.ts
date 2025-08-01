@@ -10,32 +10,9 @@ import {
   mapRegionalDeployment,
   mapReplica,
 } from '../mappers/deployment';
-import { mapApp, mapService } from '../mappers/service';
+import { mapService } from '../mappers/service';
 import { DeploymentStatus, InstanceStatus } from '../model';
 import { useApiQueryFn } from '../use-api';
-
-export function useAppsQuery() {
-  return useQuery({
-    ...useApiQueryFn('listApps', { query: { limit: '100' } }),
-    select: ({ apps }) => apps!.map(mapApp),
-  });
-}
-
-export function useApps() {
-  return useAppsQuery().data;
-}
-
-export function useAppQuery(appId?: string) {
-  return useQuery({
-    ...useApiQueryFn('getApp', { path: { id: appId! } }),
-    enabled: appId !== undefined,
-    select: ({ app }) => mapApp(app!),
-  });
-}
-
-export function useApp(appId?: string) {
-  return useAppQuery(appId).data;
-}
 
 export function useServicesQuery(appId?: string) {
   return useQuery({

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { api } from 'src/api/api';
-import { useApps } from 'src/api/hooks/service';
+import { useApps } from 'src/api/hooks/app';
 import { Domain } from 'src/api/model';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';

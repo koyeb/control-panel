@@ -3,7 +3,8 @@ import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { api } from 'src/api/api';
-import { useApp, useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
+import { useApp } from 'src/api/hooks/app';
+import { useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';

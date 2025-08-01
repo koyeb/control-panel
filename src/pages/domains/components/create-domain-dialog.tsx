@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useApps } from 'src/api/hooks/service';
+import { useApps } from 'src/api/hooks/app';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';

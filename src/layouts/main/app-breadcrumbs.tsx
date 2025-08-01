@@ -4,7 +4,8 @@ import { useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
 
-import { useAppQuery, useServiceQuery, useServices } from 'src/api/hooks/service';
+import { useAppQuery } from 'src/api/hooks/app';
+import { useServiceQuery, useServices } from 'src/api/hooks/service';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
 import { LinkMenuItem } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';

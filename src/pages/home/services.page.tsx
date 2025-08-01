@@ -1,4 +1,5 @@
-import { useAppsQuery, useServicesQuery } from 'src/api/hooks/service';
+import { useAppsQuery } from 'src/api/hooks/app';
+import { useServicesQuery } from 'src/api/hooks/service';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';

@@ -1,7 +1,8 @@
 import { Select } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { useApps, useServices } from 'src/api/hooks/service';
+import { useApps } from 'src/api/hooks/app';
+import { useServices } from 'src/api/hooks/service';
 import { Service, ServiceType } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
 import { defined } from 'src/utils/assert';

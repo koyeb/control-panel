@@ -1,4 +1,5 @@
-import { useAppQuery, useDeploymentQuery, useInstancesQuery, useServiceQuery } from 'src/api/hooks/service';
+import { useAppQuery } from 'src/api/hooks/app';
+import { useDeploymentQuery, useInstancesQuery, useServiceQuery } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
