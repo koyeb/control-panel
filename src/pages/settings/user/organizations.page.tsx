@@ -7,7 +7,6 @@ import { api } from 'src/api/api';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
 import { useApiMutationFn } from 'src/api/use-api';
-import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ValidateLinkOptions } from 'src/components/link';
@@ -51,7 +50,6 @@ const schema = z.object({
 
 function CreateOrganizationDialog() {
   const t = T.useTranslate();
-  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -80,8 +78,7 @@ function CreateOrganizationDialog() {
     })),
     onSuccess(token, { organizationName }) {
       form.reset();
-      setToken(token);
-      navigate({ to: '/' });
+      navigate({ to: '/', state: { token } });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
   });
@@ -149,7 +146,6 @@ function OrganizationList() {
 
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
   const currentOrganization = useOrganizationUnsafe();
-  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
@@ -158,8 +154,10 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
       header: {},
     })),
     onSuccess(token, redirect) {
-      setToken(token.token!.id!);
-      navigate(urlToLinkOptions(redirect));
+      navigate({
+        ...urlToLinkOptions(redirect),
+        state: { token: token.token!.id! },
+      });
     },
   });
 

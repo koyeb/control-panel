@@ -4,7 +4,6 @@ import { useMutation } from '@tanstack/react-query';
 import { api } from 'src/api/api';
 import { OrganizationInvitation } from 'src/api/model';
 import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -20,7 +19,6 @@ type HandleInvitationsProps = {
 
 export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   const invalidate = useInvalidateApiQuery();
-  const setToken = useSetToken();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
@@ -36,8 +34,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
       return newToken!.id!;
     },
     onSuccess(token) {
-      setToken(token);
-      navigate({ to: '/' });
+      navigate({ to: '/', state: { token } });
       notify.info(t('acceptSuccess'));
     },
   });

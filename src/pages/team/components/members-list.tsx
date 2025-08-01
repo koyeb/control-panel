@@ -8,7 +8,6 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -277,7 +276,6 @@ function useLeaveOrganization() {
   const t = T.useTranslate();
 
   const user = useUser();
-  const setToken = useSetToken();
   const navigate = useNavigate();
 
   return useMutation({
@@ -308,8 +306,7 @@ function useLeaveOrganization() {
       return result;
     },
     onSuccess(token, { organization }) {
-      setToken(token);
-      navigate({ to: '/' });
+      navigate({ to: '/', state: { token } });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });

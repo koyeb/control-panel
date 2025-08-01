@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
@@ -9,7 +10,7 @@ import { useRefreshToken, useSetToken, useTokenStorageListener } from './applica
 import { useOnboardingStep } from './application/onboarding';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
-import { useNavigate, useSearchParams } from './hooks/router';
+import { useHistoryState, useNavigate, useSearchParams } from './hooks/router';
 import { useSeon } from './hooks/seon';
 import { Translate } from './intl/translate';
 import { MainLayout } from './layouts/main/main-layout';
@@ -44,8 +45,17 @@ import { VolumesLayout } from './pages/volumes/volumes-layout';
 import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page';
 
 export function App() {
+  const { token, session }: { token?: string | null; session?: boolean } = useHistoryState();
+  const setToken = useSetToken();
+
   useRefreshToken();
   useTokenStorageListener();
+
+  useEffect(() => {
+    if (token !== undefined) {
+      setToken(token, session);
+    }
+  }, [token, session, setToken]);
 
   if (useOrganizationContextParam()) {
     return null;
@@ -168,7 +178,6 @@ function PageNotFound() {
 
 function useOrganizationContextParam() {
   const organizationIdParam = useSearchParams().get('organization-id');
-  const setToken = useSetToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -178,8 +187,7 @@ function useOrganizationContextParam() {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     onSuccess({ token }) {
-      setToken(token!.id!);
-      navigate({ search: (prev) => ({ ...prev, 'organization-id': null }) });
+      navigate({ search: (prev) => ({ ...prev, 'organization-id': null }), state: { token: token!.id! } });
     },
   });
 

@@ -12,7 +12,6 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
-import { useSetToken } from './authentication';
 import { container } from './container';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
@@ -92,7 +91,6 @@ function PersistQueryClientProvider({ children }: { children: React.ReactNode })
 }
 
 function TokenParamsProvider({ children }: { children: React.ReactNode }) {
-  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const search = useSearchParams();
@@ -101,17 +99,21 @@ function TokenParamsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (sessionTokenParam) {
-      setToken(sessionTokenParam.replace(/^Bearer /, ''), true);
-      navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
+      navigate({
+        state: { token: sessionTokenParam.replace(/^Bearer /, ''), session: true },
+        search: (prev) => ({ ...prev, 'session-token': null }),
+      });
     }
-  }, [sessionTokenParam, setToken, navigate]);
+  }, [sessionTokenParam, navigate]);
 
   useEffect(() => {
     if (accessTokenParam) {
-      setToken(accessTokenParam.replace(/^Bearer /, ''));
-      navigate({ search: (prev) => ({ ...prev, token: null }) });
+      navigate({
+        state: { token: accessTokenParam.replace(/^Bearer /, '') },
+        search: (prev) => ({ ...prev, token: null }),
+      });
     }
-  }, [accessTokenParam, setToken, navigate]);
+  }, [accessTokenParam, navigate]);
 
   if (sessionTokenParam || accessTokenParam) {
     return null;

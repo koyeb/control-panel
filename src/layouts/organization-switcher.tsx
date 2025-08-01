@@ -7,7 +7,6 @@ import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
 import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
-import { useSetToken } from 'src/application/authentication';
 import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
@@ -160,7 +159,6 @@ function useOrganizationList(search: string) {
 }
 
 function useSwitchOrganization(onSuccess?: () => void) {
-  const setToken = useSetToken();
   const getSeonFingerprint = useSeon();
   const navigate = useNavigate();
 
@@ -170,8 +168,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess(result) {
-      setToken(result.token!.id!, false);
-      navigate({ to: '/' });
+      navigate({ to: '/', state: { token: result.token!.id!, session: false } });
       onSuccess?.();
     },
   });

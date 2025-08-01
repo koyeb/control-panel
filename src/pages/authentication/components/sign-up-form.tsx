@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -27,10 +26,7 @@ const schema = z.object({
 
 export function SignUpForm({ initialValues }: { initialValues: { name?: string; email?: string } }) {
   const t = T.useTranslate();
-
-  const setToken = useSetToken();
   const navigate = useNavigate();
-
   const getSeonFingerprint = useSeon();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -55,8 +51,7 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
       },
     })),
     onSuccess(result) {
-      setToken(result.token!.id!);
-      navigate({ to: '/' });
+      navigate({ to: '/', state: { token: result.token!.id! } });
     },
     onError: useFormErrorHandler(form, (error) => {
       if ('captcha' in error) {
