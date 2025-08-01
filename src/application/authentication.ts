@@ -55,22 +55,12 @@ export class StorageAuthenticationAdapter implements AuthenticationPort {
   }
 
   listen(onChange: () => void): () => void {
-    const removeAccessTokenListener = this.accessToken.listen((value) => {
-      this.token = value;
-      this.session = false;
-      onChange();
+    return this.accessToken.listen((value) => {
+      if (!this.session) {
+        this.token = value;
+        onChange();
+      }
     });
-
-    const removeSessionTokenListener = this.sessionToken.listen((value) => {
-      this.token = value;
-      this.session = true;
-      onChange();
-    });
-
-    return () => {
-      removeAccessTokenListener();
-      removeSessionTokenListener();
-    };
   }
 }
 
