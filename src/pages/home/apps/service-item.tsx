@@ -1,6 +1,5 @@
-import { useDeployment } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
-import { App, Service } from 'src/api/model';
+import { App, Deployment, Service } from 'src/api/model';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 
 import { DeploymentInfo } from './components/deployment-info';
@@ -11,11 +10,10 @@ import { ServiceUrl } from './components/service-url';
 type ServiceItemProps = {
   app: App;
   service: Service;
+  deployment: Deployment;
 };
 
-export function ServiceItem({ app, service }: ServiceItemProps) {
-  const deployment = useDeployment(service.latestDeploymentId);
-
+export function ServiceItem({ app, service, deployment }: ServiceItemProps) {
   return (
     <div className="card">
       <div className="grid grid-cols-1 items-center gap-4 p-4 sm:grid-cols-[10rem_1fr_10rem] lg:grid-cols-[14rem_1fr_12rem]">

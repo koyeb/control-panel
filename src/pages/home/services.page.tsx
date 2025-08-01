@@ -1,5 +1,4 @@
-import { useAppsQuery } from 'src/api/hooks/app';
-import { useServicesQuery } from 'src/api/hooks/service';
+import { useAppsFull } from 'src/api/hooks/app';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
@@ -7,24 +6,19 @@ import { ServiceCreation } from 'src/modules/service-creation/service-creation';
 import { Apps } from './apps/apps';
 
 export function ServicesPage() {
-  const appsQuery = useAppsQuery();
-  const servicesQuery = useServicesQuery();
+  const query = useAppsFull();
 
-  if (appsQuery.isPending || servicesQuery.isPending) {
+  if (query.isPending) {
     return <Loading />;
   }
 
-  if (appsQuery.isError) {
-    return <QueryError error={appsQuery.error} />;
+  if (query.isError) {
+    return <QueryError error={query.error} />;
   }
 
-  if (servicesQuery.isError) {
-    return <QueryError error={servicesQuery.error} />;
-  }
-
-  if (appsQuery.data.length === 0) {
+  if (query.data.length === 0) {
     return <ServiceCreation />;
   }
 
-  return <Apps showFilters />;
+  return <Apps apps={query.data} showFilters />;
 }

@@ -1,5 +1,4 @@
-import { useAppsQuery } from 'src/api/hooks/app';
-import { useServicesQuery } from 'src/api/hooks/service';
+import { useAppsFull } from 'src/api/hooks/app';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { createTranslate } from 'src/intl/translate';
@@ -12,22 +11,17 @@ import { News } from './news/news';
 const T = createTranslate('pages.home');
 
 export function HomePage() {
-  const appsQuery = useAppsQuery();
-  const servicesQuery = useServicesQuery();
+  const query = useAppsFull();
 
-  if (appsQuery.isPending || servicesQuery.isPending) {
+  if (query.isPending) {
     return <Loading />;
   }
 
-  if (appsQuery.isError) {
-    return <QueryError error={appsQuery.error} />;
+  if (query.isError) {
+    return <QueryError error={query.error} />;
   }
 
-  if (servicesQuery.isError) {
-    return <QueryError error={servicesQuery.error} />;
-  }
-
-  if (appsQuery.data.length === 0) {
+  if (query.data.length === 0) {
     return <ServiceCreation />;
   }
 
@@ -39,7 +33,7 @@ export function HomePage() {
 
       <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[1fr_24rem]">
         <div className="row-span-2 min-w-0">
-          <Apps />
+          <Apps apps={query.data} />
         </div>
 
         <News />

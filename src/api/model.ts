@@ -505,6 +505,10 @@ export type App = {
   domains: AppDomain[];
 };
 
+export type AppFull = App & {
+  services: Array<Service & { latestDeployment: Deployment }>;
+};
+
 export type AppStatus =
   | 'STARTING'
   | 'HEALTHY'

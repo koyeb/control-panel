@@ -1,11 +1,8 @@
 import { Select } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { useApps } from 'src/api/hooks/app';
-import { useServices } from 'src/api/hooks/service';
-import { Service, ServiceType } from 'src/api/model';
+import { AppFull, Service, ServiceType } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
-import { defined } from 'src/utils/assert';
 import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
@@ -13,32 +10,29 @@ import { AppItem } from './app-item';
 
 const T = createTranslate('pages.home');
 
-export function Apps({ showFilters = false }: { showFilters?: boolean }) {
+export function Apps({ apps, showFilters = false }: { apps: AppFull[]; showFilters?: boolean }) {
   const [serviceType, setServiceType] = useState<ServiceType | 'all'>('all');
-
-  const apps = defined(useApps());
-  const services = defined(useServices());
 
   return (
     // https://css-tricks.com/flexbox-truncated-text/
     <div className="col min-w-0 flex-1 gap-6">
       <Header
         showFilters={showFilters}
-        services={services}
+        services={apps.flatMap((app) => app.services)}
         serviceType={serviceType}
         setServiceType={setServiceType}
       />
 
       {apps.map((app) => {
-        const appServices = services
-          .filter(hasProperty('appId', app.id))
-          .filter((service) => serviceType === 'all' || service.type === serviceType);
+        const services = app.services.filter(
+          (service) => serviceType === 'all' || service.type === serviceType,
+        );
 
-        if (appServices.length === 0 && serviceType !== 'all') {
+        if (services.length === 0) {
           return null;
         }
 
-        return <AppItem key={app.id} app={app} services={appServices} />;
+        return <AppItem key={app.id} app={app} services={services} />;
       })}
     </div>
   );

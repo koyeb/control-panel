@@ -1,6 +1,6 @@
 import { HelpTooltip } from '@koyeb/design-system';
 
-import { App, Service } from 'src/api/model';
+import { App, Deployment, Service } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
 
 import { AppActions } from './components/app-actions';
@@ -10,7 +10,7 @@ const T = createTranslate('pages.home');
 
 type AppItemProps = {
   app: App;
-  services: Service[];
+  services: Array<Service & { latestDeployment: Deployment }>;
 };
 
 export function AppItem({ app, services }: AppItemProps) {
@@ -20,7 +20,7 @@ export function AppItem({ app, services }: AppItemProps) {
 
       <div className="col gap-4">
         {services.map((service) => (
-          <ServiceItem key={service.id} app={app} service={service} />
+          <ServiceItem key={service.id} app={app} service={service} deployment={service.latestDeployment} />
         ))}
 
         {services.length === 0 && <NoServicesFallback />}
