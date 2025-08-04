@@ -1788,6 +1788,11 @@
         }
       },
       "invitation": {
+        "unauthenticated": {
+          "title": "You are not authenticated",
+          "description": "You need to sign in to accept the invitation. Make sure you authenticate with the email the invitation was sent to.",
+          "cta": "Go to sign in"
+        },
         "notFound": {
           "title": "Invitation not found",
           "description": "Make sure you are authenticated with the account to which the invitation was sent to"

@@ -11,13 +11,13 @@ import { ValidateAccountPage } from './validate-account.page';
 export function AccountPages() {
   return (
     <Switch>
+      <Route path="/account/oauth/github/callback" component={GithubOauthCallbackPage} />
       <Route path="/account/reset-password/:token" component={ChangePasswordPage} />
       <Route>
         <SecondaryLayout>
           <Switch>
             <Route path="/account/validate/:token" component={ValidateAccountPage} />
             <Route path="/account/organization_invitations/:invitationId" component={InvitationPage} />
-            <Route path="/account/oauth/github/callback" component={GithubOauthCallbackPage} />
           </Switch>
         </SecondaryLayout>
       </Route>

@@ -66,7 +66,7 @@ export class StorageAuthenticationAdapter implements AuthenticationPort {
 
 type AuthContext = {
   token: string | null;
-  setToken: (token: string | null, session?: boolean) => void;
+  setToken: (token: string | null, opts?: { session?: boolean; clear?: boolean }) => void;
 };
 
 const authContext = createContext<AuthContext>(null as never);
@@ -83,11 +83,11 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
   const [token, setTokenState] = useState(auth.token);
 
   const setToken = useCallback<AuthContext['setToken']>(
-    (token, session) => {
+    (token, { session, clear } = {}) => {
       auth.setToken(token, session);
       setTokenState(token);
 
-      if (!auth.token) {
+      if (clear) {
         queryClient.clear();
       }
     },
@@ -101,7 +101,7 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
 
   useEffect(() => {
     if (sessionTokenParam) {
-      setToken(sessionTokenParam.replace(/^Bearer /, ''), true);
+      setToken(sessionTokenParam.replace(/^Bearer /, ''), { session: true });
       navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
     }
   }, [sessionTokenParam, setToken, navigate]);

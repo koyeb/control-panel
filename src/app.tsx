@@ -53,7 +53,7 @@ export function App() {
 
   useEffect(() => {
     if (token !== undefined) {
-      setToken(token, session);
+      setToken(token, { session, clear: token === null });
     }
   }, [token, session, setToken]);
 

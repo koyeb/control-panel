@@ -160,7 +160,7 @@ function handleAuthenticationError() {
     queryClient.clear();
   }
 
-  if (!location.pathname.startsWith('/auth')) {
+  if (!location.pathname.startsWith('/auth') && !location.pathname.startsWith('/account')) {
     const redirect = new URL('/auth/signin', location);
     const next = location.href.slice(location.origin.length);
 
