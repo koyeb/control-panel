@@ -1,8 +1,13 @@
+import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
+
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
+import { AuthButton } from './components/auth-button';
 import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignInForm } from './components/sign-in-form';
 import { Separator } from './separator';
@@ -28,6 +33,11 @@ export function SignInPage() {
       <GithubOAuthButton action="signin" metadata={next ?? undefined} className="mt-12">
         <T id="githubSignIn" />
       </GithubOAuthButton>
+
+      <FeatureFlag feature="work-os">
+        <Separator />
+        <SignInWorkOs />
+      </FeatureFlag>
 
       <Separator />
 
@@ -65,4 +75,11 @@ function PasswordResetLink() {
       <T id="forgotPasswordLink" values={{ link }} />
     </p>
   );
+}
+
+function SignInWorkOs() {
+  const { signIn } = useAuth();
+  const mutation = useMutation({ mutationFn: signIn });
+
+  return <AuthButton onClick={() => void mutation.mutateAsync({})}>Sign in with WorkOS</AuthButton>;
 }
