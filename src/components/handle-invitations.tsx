@@ -1,9 +1,8 @@
 import { Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { api } from 'src/api/api';
 import { OrganizationInvitation } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -18,15 +17,16 @@ type HandleInvitationsProps = {
 };
 
 export function HandleInvitation({ invitation }: HandleInvitationsProps) {
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
   const acceptMutation = useMutation({
     async mutationFn(invitation: OrganizationInvitation) {
-      await api().acceptInvitation({ path: { id: invitation.id } });
+      await api.acceptInvitation({ path: { id: invitation.id } });
 
-      const { token: newToken } = await api().switchOrganization({
+      const { token: newToken } = await api.switchOrganization({
         path: { id: invitation.organization.id },
         header: {},
       });

@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
-import { api } from 'src/api/api';
 import { EnvironmentVariable } from 'src/api/model';
+import { useApi } from 'src/api/use-api';
 import { createTranslate } from 'src/intl/translate';
 import { assert, defined } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
@@ -16,7 +16,7 @@ const T = createTranslate('modules.serviceForm.errors');
 
 export function useUnknownInterpolationErrors() {
   const t = T.useTranslate();
-
+  const api = useApi();
   const ctrl = useRef<AbortController>(null);
 
   return useCallback(
@@ -29,7 +29,7 @@ export function useUnknownInterpolationErrors() {
       }
 
       const variables = mapServiceVariables(
-        await api().getServiceVariables({
+        await api.getServiceVariables({
           body: { definition: serviceFormToDeploymentDefinition(values) },
         }),
       );
@@ -67,7 +67,7 @@ export function useUnknownInterpolationErrors() {
 
       return errors;
     },
-    [t],
+    [api, t],
   );
 }
 

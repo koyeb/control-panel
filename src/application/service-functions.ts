@@ -1,5 +1,4 @@
-import { api } from 'src/api/api';
-import type { Api } from 'src/api/api-types';
+import { API, Api } from 'src/api/api';
 import { databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
 import {
   App,
@@ -121,16 +120,17 @@ export function isInstanceRunning({ status }: Instance) {
 }
 
 export async function updateDatabaseService(
+  api: Api,
   serviceId: string,
-  updater: (deployment: Api.DeploymentDefinition) => void,
+  updater: (deployment: API.DeploymentDefinition) => void,
 ) {
-  const { service } = await api().getService({ path: { id: serviceId } });
-  const { deployment } = await api().getDeployment({ path: { id: service!.latest_deployment_id! } });
+  const { service } = await api.getService({ path: { id: serviceId } });
+  const { deployment } = await api.getDeployment({ path: { id: service!.latest_deployment_id! } });
   const definition = deployment!.definition!;
 
   updater(definition);
 
-  await api().updateService({
+  await api.updateService({
     path: { id: serviceId },
     query: {},
     body: { definition },
@@ -162,7 +162,7 @@ export function getDatabaseServiceReachedQuota(service: Service, deployment: Dat
   }
 }
 
-export const allApiDeploymentStatuses: Array<Api.DeploymentStatus> = [
+export const allApiDeploymentStatuses: Array<API.DeploymentStatus> = [
   'PENDING',
   'PROVISIONING',
   'SCHEDULED',

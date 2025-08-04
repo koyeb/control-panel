@@ -3,11 +3,10 @@ import { useMutation } from '@tanstack/react-query';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { api } from 'src/api/api';
 import { useRegions } from 'src/api/hooks/catalog';
 import { mapVolume } from 'src/api/mappers/volume';
 import { Volume, VolumeSnapshot } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FormValues, useFormErrorHandler } from 'src/hooks/form';
@@ -37,9 +36,11 @@ type VolumeFormProps = {
 };
 
 export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: VolumeFormProps) {
-  const invalidate = useInvalidateApiQuery();
-  const regions = useRegions().filter(hasProperty('volumesEnabled', true));
   const t = T.useTranslate();
+
+  const api = useApi();
+  const regions = useRegions().filter(hasProperty('volumesEnabled', true));
+  const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -53,14 +54,14 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
   const mutation = useMutation({
     async mutationFn({ name, region, size }: FormValues<typeof form>) {
       if (volume) {
-        return api()
+        return api
           .updateVolume({
             path: { id: volume.id },
             body: { name },
           })
           .then(({ volume }) => mapVolume(volume!));
       } else {
-        return api()
+        return api
           .createVolume({
             body: {
               volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',

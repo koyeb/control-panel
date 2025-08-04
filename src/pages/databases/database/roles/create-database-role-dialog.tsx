@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Service } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
@@ -21,9 +21,11 @@ const schema = z.object({
 });
 
 export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
-  const invalidate = useInvalidateApiQuery();
   const closeDialog = Dialog.useClose();
   const t = T.useTranslate();
+
+  const api = useApi();
+  const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -34,7 +36,7 @@ export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
 
   const mutation = useMutation({
     async mutationFn({ name }: FormValues<typeof form>) {
-      await updateDatabaseService(service.id, (definition) => {
+      await updateDatabaseService(api, service.id, (definition) => {
         definition.database!.neon_postgres!.roles!.push({
           name,
           secret: databaseRoleSecret(service.name),

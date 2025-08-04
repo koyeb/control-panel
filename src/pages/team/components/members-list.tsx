@@ -2,12 +2,11 @@ import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/desi
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
-import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -275,12 +274,13 @@ function useRemoveOrganizationMember() {
 function useLeaveOrganization() {
   const t = T.useTranslate();
 
+  const api = useApi();
   const user = useUser();
   const navigate = useNavigate();
 
   return useMutation({
     async mutationFn(membership: OrganizationMember) {
-      const { members } = await api().listOrganizationMembers({
+      const { members } = await api.listOrganizationMembers({
         query: { user_id: user.id },
       });
 
@@ -291,7 +291,7 @@ function useLeaveOrganization() {
       let result: string | null = null;
 
       if (otherOrganizationId) {
-        const { token: newToken } = await api().switchOrganization({
+        const { token: newToken } = await api.switchOrganization({
           path: { id: otherOrganizationId },
           header: {},
         });
@@ -299,7 +299,7 @@ function useLeaveOrganization() {
         result = newToken!.id!;
       }
 
-      await api().deleteOrganizationMember({
+      await api.deleteOrganizationMember({
         path: { id: membership.id },
       });
 

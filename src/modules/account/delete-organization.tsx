@@ -1,9 +1,8 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
-import { api } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useApiQueryFn } from 'src/api/use-api';
+import { useApi, useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
@@ -15,6 +14,7 @@ const T = createTranslate('modules.account.deleteOrganization');
 export function DeleteOrganization() {
   const t = T.useTranslate();
 
+  const api = useApi();
   const user = useUser();
   const organization = useOrganization();
 
@@ -28,7 +28,7 @@ export function DeleteOrganization() {
 
   const deleteOrganization = useMutation({
     async mutationFn() {
-      const { members } = await api().listOrganizationMembers({
+      const { members } = await api.listOrganizationMembers({
         query: { user_id: user.id },
       });
 
@@ -39,19 +39,19 @@ export function DeleteOrganization() {
       let result: string;
 
       if (otherOrganizationId) {
-        const { token: newToken } = await api().switchOrganization({
+        const { token: newToken } = await api.switchOrganization({
           path: { id: otherOrganizationId },
           header: {},
         });
 
         result = newToken!.id!;
       } else {
-        const { token: newToken } = await api().newSession({});
+        const { token: newToken } = await api.newSession({});
 
         result = newToken!.id!;
       }
 
-      await api().deleteOrganization({
+      await api.deleteOrganization({
         path: { id: organization.id },
       });
 

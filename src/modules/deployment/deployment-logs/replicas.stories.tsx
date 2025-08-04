@@ -1,7 +1,6 @@
 import { Meta } from '@storybook/react-vite';
 
-import { ApiPort } from 'src/api/api';
-import { Api } from 'src/api/api-types';
+import { API, Api } from 'src/api/api';
 import { container } from 'src/application/container';
 import { TOKENS } from 'src/tokens';
 import { create, createFactory } from 'src/utils/factories';
@@ -9,7 +8,7 @@ import { createId } from 'src/utils/strings';
 
 import { Replicas } from './replicas';
 
-const api: Partial<ApiPort> = {};
+const api: Partial<Api> = {};
 
 export default {
   title: 'Components/Replicas',
@@ -20,7 +19,7 @@ export default {
   },
 } satisfies Meta;
 
-const createApiInstance = createFactory<Api.Instance>(() => ({
+const createApiInstance = createFactory<API.Instance>(() => ({
   id: createId(),
   status: 'HEALTHY',
   messages: [],

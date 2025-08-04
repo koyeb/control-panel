@@ -3,9 +3,9 @@ import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 import { z } from 'zod';
 
-import { api } from 'src/api/api';
+import { Api } from 'src/api/api';
 import { ApiValidationError } from 'src/api/api-errors';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
@@ -28,6 +28,7 @@ const schema = z.object({
 });
 
 export function GithubOauthCallbackPage() {
+  const api = useApi();
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
   const invalidate = useInvalidateApiQuery();
@@ -49,13 +50,13 @@ export function GithubOauthCallbackPage() {
         ([, value]) => value,
       );
 
-      return api().githubOAuthCallback({
+      return api.githubOAuthCallback({
         header: { 'seon-fp': await getSeonFingerprint() },
         body,
       });
     },
     async onSuccess(result) {
-      const currentOrganization = await getCurrentOrganization();
+      const currentOrganization = await getCurrentOrganization(api);
 
       const setupAction = searchParams.get('setup_action');
       const state = searchParams.get('state');
@@ -147,19 +148,17 @@ export function GithubOauthCallbackPage() {
   return <LogoLoading />;
 }
 
-async function getCurrentOrganization() {
+async function getCurrentOrganization(api: Api) {
   const auth = container.resolve(TOKENS.authentication);
 
   if (!auth.token) {
     return;
   }
 
-  return api()
-    .getCurrentOrganization({})
-    .then(
-      ({ organization }) => organization,
-      () => undefined,
-    );
+  return api.getCurrentOrganization({}).then(
+    ({ organization }) => organization,
+    () => undefined,
+  );
 }
 
 const isAccountNotFoundError = createValidationGuard(

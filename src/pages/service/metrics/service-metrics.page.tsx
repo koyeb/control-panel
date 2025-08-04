@@ -2,7 +2,7 @@ import { Button, ButtonGroup, InfoTooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useCallback, useEffect } from 'react';
 
-import type { Api } from 'src/api/api-types';
+import type { API } from 'src/api/api';
 import { useInstance } from 'src/api/hooks/catalog';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isComputeDeployment } from 'src/api/mappers/deployment';
@@ -51,7 +51,7 @@ export function ServiceMetricsPage() {
   );
 }
 
-const metrics: Api.MetricName[] = [
+const metrics: API.MetricName[] = [
   'CPU_TOTAL_PERCENT',
   'MEM_RSS',
   'HTTP_THROUGHPUT',

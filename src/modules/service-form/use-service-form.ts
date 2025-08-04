@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
+import { useApi } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
@@ -23,6 +24,7 @@ import { useUnknownInterpolationErrors } from './helpers/unknown-interpolations'
 import { Scaling, ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
+  const api = useApi();
   const params = useSearchParams();
   const datacenters = useDatacenters();
   const regions = useRegions();
@@ -35,6 +37,7 @@ export function useServiceForm(serviceId?: string) {
     mode: 'onChange',
     defaultValues() {
       return initializeServiceForm(
+        api,
         params,
         datacenters,
         regions,

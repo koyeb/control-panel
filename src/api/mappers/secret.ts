@@ -1,16 +1,16 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
-import type { Api } from '../api-types';
+import type { API } from '../api';
 import { RegistrySecret, RegistryType, Secret } from '../model';
 
-export function mapSecret(secret: Api.Secret): Secret | RegistrySecret {
+export function mapSecret(secret: API.Secret): Secret | RegistrySecret {
   return {
     ...snakeToCamelDeep(requiredDeep(secret)),
     registry: getRegistryType(secret),
   };
 }
 
-function getRegistryType(secret: Api.Secret): RegistryType | undefined {
+function getRegistryType(secret: API.Secret): RegistryType | undefined {
   if ('docker_hub_registry' in secret) return 'docker-hub';
   if ('digital_ocean_registry' in secret) return 'digital-ocean';
   if ('github_registry' in secret) return 'github';

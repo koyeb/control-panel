@@ -1,11 +1,9 @@
 import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { ApiPort } from 'src/api/api';
+import { Api } from 'src/api/api';
 import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
-import { container } from 'src/application/container';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
-import { TOKENS } from 'src/tokens';
 import { create } from 'src/utils/factories';
 
 import { ServiceForm } from '../service-form.types';
@@ -23,6 +21,7 @@ vi.mock('./generate-app-name.ts', () => ({
 }));
 
 describe('initializeServiceForm', () => {
+  let api: Api;
   let params: URLSearchParams;
   let datacenters: CatalogDatacenter[];
   let regions: CatalogRegion[];
@@ -30,9 +29,10 @@ describe('initializeServiceForm', () => {
   let organization: Organization;
   let githubApp: GithubApp | undefined;
   let serviceId: string | undefined;
-  let api: ApiPort;
 
   beforeEach(() => {
+    api = {} as Api;
+
     params = new URLSearchParams();
 
     datacenters = [];
@@ -48,13 +48,11 @@ describe('initializeServiceForm', () => {
 
     githubApp = undefined;
     serviceId = undefined;
-
-    api = {} as ApiPort;
-    container.bindValue(TOKENS.api, api);
   });
 
   async function initialize() {
     return initializeServiceForm(
+      api,
       params,
       datacenters,
       regions,

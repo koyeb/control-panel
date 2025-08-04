@@ -2,7 +2,8 @@ import { CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-
 import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 
-import { api } from 'src/api/api';
+import { Api } from 'src/api/api';
+import { useApi } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { inArray } from 'src/utils/arrays';
@@ -25,6 +26,7 @@ type PaymentMutationProps = {
 };
 
 export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutationProps = {}) {
+  const api = useApi();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -33,8 +35,8 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
       assert(stripe !== null);
       assert(elements !== null);
 
-      await submitPaymentMethod(stripe, elements);
-      await waitForPaymentMethod();
+      await submitPaymentMethod(api, stripe, elements);
+      await waitForPaymentMethod(api);
     },
     onError(error) {
       if (error instanceof StripeError) {
@@ -53,8 +55,8 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
   });
 }
 
-async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
-  const { payment_method } = await api().createPaymentAuthorization({});
+async function submitPaymentMethod(api: Api, stripe: Stripe, elements: StripeElements) {
+  const { payment_method } = await api.createPaymentAuthorization({});
 
   try {
     const card = elements.getElement(CardNumberElement);
@@ -69,20 +71,20 @@ async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
       throw new StripeError(result.error);
     }
   } finally {
-    await api().confirmPaymentAuthorization({
+    await api.confirmPaymentAuthorization({
       path: { id: payment_method!.id! },
     });
   }
 }
 
-async function waitForPaymentMethod() {
+async function waitForPaymentMethod(api: Api) {
   let hasPaymentMethod = false;
 
   const start = new Date().getTime();
   const elapsed = () => new Date().getTime() - start;
 
   while (!hasPaymentMethod && elapsed() <= waitForPaymentMethodTimeout) {
-    const organization = await api().getCurrentOrganization({});
+    const organization = await api.getCurrentOrganization({});
 
     hasPaymentMethod = Boolean(organization.organization?.has_payment_method);
 

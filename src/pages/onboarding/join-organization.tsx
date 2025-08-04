@@ -3,9 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { api } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
+import { useApi } from 'src/api/use-api';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -57,8 +57,10 @@ export function JoinOrganization() {
 }
 
 function CreateOrganization() {
-  const navigate = useNavigate();
   const state = useHistoryState();
+
+  const api = useApi();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -79,11 +81,11 @@ function CreateOrganization() {
 
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
-      const { organization } = await api().createOrganization({
+      const { organization } = await api.createOrganization({
         body: { name: organizationName },
       });
 
-      const { token: newToken } = await api().switchOrganization({
+      const { token: newToken } = await api.switchOrganization({
         path: { id: organization!.id! },
         header: {},
       });

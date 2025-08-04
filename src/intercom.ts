@@ -1,6 +1,5 @@
 import Intercom from '@intercom/messenger-js-sdk';
 
-import { api } from './api/api';
 import { container } from './application/container';
 import { reportError } from './application/report-error';
 import { TOKENS } from './tokens';
@@ -16,8 +15,11 @@ async function loadIntercom() {
   }
 
   const token = container.resolve(TOKENS.authentication).token;
-  const user = token ? await api().getCurrentUser({}) : undefined;
-  const userHash = token ? await api().getIntercomUserHash({}) : undefined;
+  const baseUrl = container.resolve(TOKENS.config).get('apiBaseUrl');
+  const api = container.resolve(TOKENS.api);
+
+  const user = token ? await api.getCurrentUser({ baseUrl, token }) : undefined;
+  const userHash = token ? await api.getIntercomUserHash({ baseUrl, token }) : undefined;
 
   Intercom({
     app_id: intercomAppId,

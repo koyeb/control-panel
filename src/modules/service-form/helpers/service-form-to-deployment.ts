@@ -1,6 +1,6 @@
 import posthog from 'posthog-js';
 
-import { Api } from 'src/api/api-types';
+import { API } from 'src/api/api';
 import { EnvironmentVariable } from 'src/api/model';
 
 import {
@@ -16,7 +16,7 @@ import {
   ServiceVolume,
 } from '../service-form.types';
 
-export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.DeploymentDefinition {
+export function serviceFormToDeploymentDefinition(form: ServiceForm): API.DeploymentDefinition {
   return {
     name: form.serviceName,
     type: form.serviceType === 'web' ? 'WEB' : 'WORKER',
@@ -39,7 +39,7 @@ export function serviceFormToDeploymentDefinition(form: ServiceForm): Api.Deploy
   };
 }
 
-function archive(archive: ArchiveSource, builder: Builder): Api.ArchiveSource {
+function archive(archive: ArchiveSource, builder: Builder): API.ArchiveSource {
   return {
     id: archive.archiveId,
     buildpack: builder.type === 'buildpack' ? buildpack(builder) : undefined,
@@ -47,8 +47,8 @@ function archive(archive: ArchiveSource, builder: Builder): Api.ArchiveSource {
   };
 }
 
-function git(git: GitSource, builder: Builder): Api.GitSource {
-  const common: Api.GitSource = {
+function git(git: GitSource, builder: Builder): API.GitSource {
+  const common: API.GitSource = {
     workdir: git.workDirectory ?? undefined,
     buildpack: builder.type === 'buildpack' ? buildpack(builder) : undefined,
     docker: builder.type === 'dockerfile' ? dockerfile(builder) : undefined,
@@ -70,7 +70,7 @@ function git(git: GitSource, builder: Builder): Api.GitSource {
   };
 }
 
-function buildpack({ buildpackOptions }: Builder): Api.BuildpackBuilder {
+function buildpack({ buildpackOptions }: Builder): API.BuildpackBuilder {
   return {
     build_command: buildpackOptions.buildCommand ?? undefined,
     run_command: buildpackOptions.runCommand ?? undefined,
@@ -78,7 +78,7 @@ function buildpack({ buildpackOptions }: Builder): Api.BuildpackBuilder {
   };
 }
 
-function dockerfile({ dockerfileOptions }: Builder): Api.DockerBuilder {
+function dockerfile({ dockerfileOptions }: Builder): API.DockerBuilder {
   return {
     dockerfile: dockerfileOptions.dockerfile ?? undefined,
     entrypoint: dockerfileOptions.entrypoint ?? undefined,
@@ -89,7 +89,7 @@ function dockerfile({ dockerfileOptions }: Builder): Api.DockerBuilder {
   };
 }
 
-function docker(docker: DockerSource, options: DockerDeploymentOptions): Api.DockerSource {
+function docker(docker: DockerSource, options: DockerDeploymentOptions): API.DockerSource {
   return {
     image: docker.image,
     command: options.command ?? undefined,
@@ -100,12 +100,12 @@ function docker(docker: DockerSource, options: DockerDeploymentOptions): Api.Doc
   };
 }
 
-function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
+function scalings(scaling: Scaling): Array<API.DeploymentScaling> {
   if (scaling.min === scaling.max) {
     return [{ min: scaling.min, max: scaling.max }];
   }
 
-  const targets = new Array<Api.DeploymentScalingTarget>();
+  const targets = new Array<API.DeploymentScalingTarget>();
 
   if (scaling.targets.cpu.enabled) {
     targets.push({ average_cpu: { value: scaling.targets.cpu.value } });
@@ -129,7 +129,7 @@ function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
 
   if (scaling.min === 0) {
     const { lightSleepValue, deepSleepValue } = scaling.targets.sleepIdleDelay;
-    const target: Api.DeploymentScalingTarget['sleep_idle_delay'] = {};
+    const target: API.DeploymentScalingTarget['sleep_idle_delay'] = {};
 
     targets.push({ sleep_idle_delay: target });
 
@@ -151,7 +151,7 @@ function scalings(scaling: Scaling): Array<Api.DeploymentScaling> {
   ];
 }
 
-function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
+function env(variables: Array<EnvironmentVariable>): Array<API.DeploymentEnv> {
   const hasEnvScopes = posthog.featureFlags.isFeatureEnabled('environment-variable-scopes');
 
   return variables.map((variable) => ({
@@ -164,9 +164,9 @@ function env(variables: Array<EnvironmentVariable>): Array<Api.DeploymentEnv> {
   }));
 }
 
-function files(files: Array<File>): Array<Api.DeploymentConfigFile> {
+function files(files: Array<File>): Array<API.DeploymentConfigFile> {
   return files.map(
-    (file): Api.DeploymentConfigFile => ({
+    (file): API.DeploymentConfigFile => ({
       path: file.mountPath,
       content: file.content,
       permissions: file.permissions,
@@ -174,7 +174,7 @@ function files(files: Array<File>): Array<Api.DeploymentConfigFile> {
   );
 }
 
-function ports(ports: Array<Port>): Array<Api.Port> {
+function ports(ports: Array<Port>): Array<API.Port> {
   return ports.map(({ portNumber, protocol, public: isPublic }: Port) => {
     return {
       port: Number(portNumber),
@@ -183,7 +183,7 @@ function ports(ports: Array<Port>): Array<Api.Port> {
   });
 }
 
-function proxyPorts(ports: Array<Port>): Array<Api.DeploymentProxyPort> {
+function proxyPorts(ports: Array<Port>): Array<API.DeploymentProxyPort> {
   return ports
     .filter((port) => port.tcpProxy)
     .map((port) => ({
@@ -192,9 +192,9 @@ function proxyPorts(ports: Array<Port>): Array<Api.DeploymentProxyPort> {
     }));
 }
 
-function routes(ports: Array<Port>): Array<Api.Route> {
+function routes(ports: Array<Port>): Array<API.Route> {
   return ports
-    .map((port): Api.Route | undefined => {
+    .map((port): API.Route | undefined => {
       if (!port.public) {
         return;
       }
@@ -204,19 +204,19 @@ function routes(ports: Array<Port>): Array<Api.Route> {
         path: port.path,
       };
     })
-    .filter((value): value is Api.Route => value !== undefined);
+    .filter((value): value is API.Route => value !== undefined);
 }
 
-function healthChecks(ports: Array<Port>): Array<Api.DeploymentHealthCheck> {
-  return ports.map((port): Api.DeploymentHealthCheck => {
+function healthChecks(ports: Array<Port>): Array<API.DeploymentHealthCheck> {
+  return ports.map((port): API.DeploymentHealthCheck => {
     const portNumber = Number(port.portNumber);
     const healthCheck = port.healthCheck;
 
-    const tcp = (): Api.TCPHealthCheck => ({
+    const tcp = (): API.TCPHealthCheck => ({
       port: portNumber,
     });
 
-    const http = (): Api.HTTPHealthCheck => ({
+    const http = (): API.HTTPHealthCheck => ({
       port: portNumber,
       path: healthCheck.path,
       method: healthCheck.method.toUpperCase(),

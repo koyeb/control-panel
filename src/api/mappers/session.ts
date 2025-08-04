@@ -4,7 +4,7 @@ import { createValidationGuard } from 'src/application/create-validation-guard';
 import { parseBytes } from 'src/application/memory';
 import { entries, requiredDeep, snakeToCamelDeep, toObject } from 'src/utils/object';
 
-import type { Api } from '../api-types';
+import type { API } from '../api';
 import {
   Organization,
   OrganizationInvitation,
@@ -15,15 +15,15 @@ import {
   UserSettings,
 } from '../model';
 
-export function mapUser(user: Api.User): User {
+export function mapUser(user: API.User): User {
   return snakeToCamelDeep(requiredDeep(user));
 }
 
-export function mapUserSettings(user: Api.UserSettings): UserSettings {
+export function mapUserSettings(user: API.UserSettings): UserSettings {
   return snakeToCamelDeep(requiredDeep(user));
 }
 
-export function mapOrganization(organization: Api.Organization): Organization {
+export function mapOrganization(organization: API.Organization): Organization {
   return {
     ...snakeToCamelDeep(requiredDeep(organization)),
     plan: organization.plan! === 'hobby23' ? 'hobby' : organization.plan!,
@@ -46,7 +46,7 @@ export const addressSchema = z.object({
 
 const isAddress = createValidationGuard(addressSchema);
 
-function mapOrganizationBilling(organization: Api.Organization): Organization['billing'] {
+function mapOrganizationBilling(organization: API.Organization): Organization['billing'] {
   const address = {
     line1: organization.address1 || undefined,
     line2: organization.address2 || undefined,
@@ -65,15 +65,15 @@ function mapOrganizationBilling(organization: Api.Organization): Organization['b
   };
 }
 
-export function mapInvitation(invitation: Api.OrganizationInvitation): OrganizationInvitation {
+export function mapInvitation(invitation: API.OrganizationInvitation): OrganizationInvitation {
   return snakeToCamelDeep(requiredDeep(invitation));
 }
 
-export function mapOrganizationMember(membership: Api.OrganizationMember): OrganizationMember {
+export function mapOrganizationMember(membership: API.OrganizationMember): OrganizationMember {
   return snakeToCamelDeep(requiredDeep(membership));
 }
 
-export function mapOrganizationSummary(summary: Api.OrganizationSummary): OrganizationSummary {
+export function mapOrganizationSummary(summary: API.OrganizationSummary): OrganizationSummary {
   const freeInstances = Number(summary.instances!.by_type!['free']);
   const freeDatabases = Number(summary.neon_postgres!.by_instance_type!['free']);
 
@@ -88,7 +88,7 @@ export function mapOrganizationSummary(summary: Api.OrganizationSummary): Organi
   };
 }
 
-export function mapOrganizationQuotas(quotas: Api.Quotas): OrganizationQuotas {
+export function mapOrganizationQuotas(quotas: API.Quotas): OrganizationQuotas {
   return {
     maxNumberOfApps: Number(quotas?.apps),
     maxNumberOfServices: Number(quotas?.services),

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import { api } from 'src/api/api';
+import { useApi } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/report-error';
@@ -19,6 +19,7 @@ const { brightBlack, brightRed } = terminalColors;
 
 export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boolean } = {}) {
   const t = T.useTranslate();
+  const api = useApi();
 
   const [terminal, setTerminal] = useState<TerminalRef | null>(null);
   const [stream, setStream] = useState<WebSocket | null>(null);
@@ -26,9 +27,12 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
 
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);
 
-  const connect = useCallback((instanceId: string) => {
-    setStream(api().exec({ query: { id: instanceId } }));
-  }, []);
+  const connect = useCallback(
+    (instanceId: string) => {
+      setStream(api.exec({ query: { id: instanceId } }));
+    },
+    [api],
+  );
 
   useMount(() => {
     connect(instanceId);

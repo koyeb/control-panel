@@ -1,14 +1,14 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
-import type { Api } from '../api-types';
+import type { API } from '../api';
 import { App, Service } from '../model';
 
-export function mapApp(app: Api.App): App {
+export function mapApp(app: API.App): App {
   return snakeToCamelDeep(requiredDeep(app));
 }
 
-export function mapService(service: Api.Service): Service {
+export function mapService(service: API.Service): Service {
   return {
     ...snakeToCamelDeep(requiredDeep(service)),
     activeDeploymentId: service.active_deployment_id || undefined,

@@ -2,7 +2,7 @@ import { parseBytes } from 'src/application/memory';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
-import type { Api } from '../api-types';
+import type { API } from '../api';
 import {
   CatalogDatacenter,
   CatalogInstance,
@@ -12,7 +12,7 @@ import {
   RegionScope,
 } from '../model';
 
-export function mapCatalogRegion(region: Api.Region): CatalogRegion {
+export function mapCatalogRegion(region: API.Region): CatalogRegion {
   return {
     ...snakeToCamelDeep(requiredDeep(region)),
     status: lowerCase(region.status as 'AVAILABLE' | 'COMING_SOON'),
@@ -20,11 +20,11 @@ export function mapCatalogRegion(region: Api.Region): CatalogRegion {
   };
 }
 
-export function mapCatalogDatacenter(datacenter: Api.DatacenterListItem): CatalogDatacenter {
+export function mapCatalogDatacenter(datacenter: API.DatacenterListItem): CatalogDatacenter {
   return snakeToCamelDeep(requiredDeep(datacenter));
 }
 
-export function mapCatalogInstance(instance: Api.CatalogInstance): CatalogInstance {
+export function mapCatalogInstance(instance: API.CatalogInstance): CatalogInstance {
   return {
     ...snakeToCamelDeep(requiredDeep(instance)),
     status: lowerCase(instance.status as 'AVAILABLE' | 'COMING_SOON' | 'RESTRICTED'),
@@ -39,7 +39,7 @@ export function mapCatalogInstance(instance: Api.CatalogInstance): CatalogInstan
   };
 }
 
-export function mapCatalogUsage(usage: Api.CatalogUsage): CatalogUsage {
+export function mapCatalogUsage(usage: API.CatalogUsage): CatalogUsage {
   return new Map(
     Object.entries(usage.instances!).map(([instanceId, usage]) => [
       instanceId,

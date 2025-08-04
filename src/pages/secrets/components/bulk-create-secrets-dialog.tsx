@@ -4,8 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { api } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { ControlledTextArea } from 'src/components/controlled';
@@ -20,6 +19,7 @@ const T = createTranslate('pages.secrets.bulkCreateSecretsDialog');
 export function BulkCreateSecretsDialog() {
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
+  const api = useApi();
   const track = useTrackEvent();
 
   const form = useForm<{ value: string }>({
@@ -43,7 +43,7 @@ export function BulkCreateSecretsDialog() {
 
       const results = await Promise.allSettled(
         Object.entries(values).map(([name, value]) =>
-          api().createSecret({ body: { type: 'SIMPLE', name, value } }),
+          api.createSecret({ body: { type: 'SIMPLE', name, value } }),
         ),
       );
 

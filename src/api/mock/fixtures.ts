@@ -1,22 +1,22 @@
 import { createFactory } from 'src/utils/factories';
 import { createId } from 'src/utils/strings';
 
-import { Api } from '../api-types';
+import { API } from '../api';
 
-export const createApiRegion = createFactory<Api.Region>(() => ({
+export const createApiRegion = createFactory<API.Region>(() => ({
   id: createId(),
   name: '',
   status: 'AVAILABLE',
   datacenters: [],
 }));
 
-export const createApiDatacenter = createFactory<Api.DatacenterListItem>(() => ({
+export const createApiDatacenter = createFactory<API.DatacenterListItem>(() => ({
   id: createId(),
   name: '',
   domain: '',
 }));
 
-export const createApiCatalogInstance = createFactory<Api.CatalogInstance>(() => ({
+export const createApiCatalogInstance = createFactory<API.CatalogInstance>(() => ({
   id: createId(),
   display_name: '',
   status: 'AVAILABLE',

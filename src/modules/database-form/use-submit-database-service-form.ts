@@ -1,10 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 
-import { ApiEndpointParams, api } from 'src/api/api';
+import { API, Api } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
-import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
@@ -20,9 +20,11 @@ export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
+  const api = useApi();
+  const invalidate = useInvalidateApiQuery();
+
   const organization = useOrganization();
 
-  const invalidate = useInvalidateApiQuery();
   const prefetch = usePrefetchApiQuery();
   const navigate = useNavigate();
 
@@ -31,16 +33,16 @@ export function useSubmitDatabaseServiceForm(
       const { appId, databaseServiceId } = values.meta;
 
       if (databaseServiceId) {
-        await updateDatabaseService(databaseServiceId, (definition) => {
+        await updateDatabaseService(api, databaseServiceId, (definition) => {
           definition.name = values.serviceName;
           definition.database!.neon_postgres!.instance_type = values.instance;
         });
 
         return databaseServiceId;
       } else {
-        const { service } = await api().createService({
+        const { service } = await api.createService({
           query: { dry_run: false },
-          body: createApiService(appId ?? (await getDatabaseAppId(values.serviceName)), values),
+          body: createApiService(appId ?? (await getDatabaseAppId(api, values.serviceName)), values),
         });
 
         return service!.id!;
@@ -70,8 +72,8 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(appName: string): Promise<string> {
-  const { apps } = await api().listApps({
+async function getDatabaseAppId(api: Api, appName: string): Promise<string> {
+  const { apps } = await api.listApps({
     query: { name: appName },
   });
 
@@ -81,17 +83,14 @@ async function getDatabaseAppId(appName: string): Promise<string> {
     }
   }
 
-  const { app } = await api().createApp({
+  const { app } = await api.createApp({
     body: { name: appName },
   });
 
   return app!.id!;
 }
 
-function createApiService(
-  appId: string,
-  values: DatabaseServiceForm,
-): ApiEndpointParams<'createService'>['body'] {
+function createApiService(appId: string, values: DatabaseServiceForm): API.CreateService {
   return {
     app_id: appId,
     definition: {

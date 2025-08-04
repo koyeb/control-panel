@@ -1,8 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { api } from 'src/api/api';
 import { DatabaseDeployment, LogicalDatabase, Service } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -24,11 +23,12 @@ export function DeleteLogicalDatabaseDialog({
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
 
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     async mutationFn() {
-      const { deployment: apiDeployment } = await api().getDeployment({
+      const { deployment: apiDeployment } = await api.getDeployment({
         path: { id: deployment.id },
       });
 
@@ -38,7 +38,7 @@ export function DeleteLogicalDatabaseDialog({
         ({ name }) => name !== database.name,
       );
 
-      await api().updateService({
+      await api.updateService({
         path: { id: service.id },
         query: {},
         body: { definition },

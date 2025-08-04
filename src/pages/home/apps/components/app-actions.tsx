@@ -3,9 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { api } from 'src/api/api';
 import { App, AppDomain } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -83,6 +82,7 @@ function EditAppDialog({ app }: { app: App }) {
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
 
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const koyebDomain = app.domains.find(hasProperty('type', 'AUTOASSIGNED'));
@@ -102,7 +102,7 @@ function EditAppDialog({ app }: { app: App }) {
 
       if (values.name !== app.name) {
         promises.push(
-          api().renameApp({
+          api.renameApp({
             path: { id: app.id },
             query: {},
             body: { name: values.name },
@@ -112,7 +112,7 @@ function EditAppDialog({ app }: { app: App }) {
 
       if (koyebDomain && values.subdomain !== subdomain) {
         promises.push(
-          api().editDomain({
+          api.editDomain({
             path: { id: koyebDomain.id },
             query: {},
             body: { subdomain: values.subdomain },

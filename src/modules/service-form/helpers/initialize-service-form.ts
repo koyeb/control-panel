@@ -2,7 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { DeepPartial } from 'react-hook-form';
 
-import { api } from 'src/api/api';
+import { Api } from 'src/api/api';
 import { mapRepository } from 'src/api/mappers/git';
 import { CatalogDatacenter, CatalogInstance, CatalogRegion, GithubApp, Organization } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
@@ -18,6 +18,7 @@ import { generateAppName } from './generate-app-name';
 import { parseDeployParams } from './parse-deploy-params';
 
 export async function initializeServiceForm(
+  api: Api,
   params: URLSearchParams,
   datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
@@ -30,21 +31,21 @@ export async function initializeServiceForm(
   let values = defaultServiceForm();
 
   const getApp = async (appId: string) => {
-    return api().getApp({ path: { id: appId } });
+    return api.getApp({ path: { id: appId } });
   };
 
   const getService = async (serviceId: string) => {
-    return api().getService({ path: { id: serviceId } });
+    return api.getService({ path: { id: serviceId } });
   };
 
   const getDeployment = async (deploymentId: string) => {
-    return api().getDeployment({ path: { id: deploymentId } });
+    return api.getDeployment({ path: { id: deploymentId } });
   };
 
   if (serviceId) {
     const { service } = await getService(serviceId);
     const { app } = await getApp(service!.app_id!);
-    const { volumes } = await api().listVolumes({ query: { limit: '100' } });
+    const { volumes } = await api.listVolumes({ query: { limit: '100' } });
     const deployment = await getDeployment(service!.latest_deployment_id!);
     const definition = deployment.deployment!.definition!;
 
@@ -94,7 +95,7 @@ export async function initializeServiceForm(
       const { repositoryName } = values.source.git.organizationRepository;
 
       if (repositoryName) {
-        const repository = await api()
+        const repository = await api
           .listRepositories({ query: { name: repositoryName, name_search_op: 'equality' } })
           .then(({ repositories }) => repositories!.map(mapRepository))
           .then(([repository]) => repository);

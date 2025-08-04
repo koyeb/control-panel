@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
 
-import { Api } from 'src/api/api-types';
+import { API } from 'src/api/api';
 import { useInstance } from 'src/api/hooks/catalog';
 import { CatalogInstance, ComputeDeployment } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
@@ -41,10 +41,10 @@ export function useReplicaMetricsQuery(deployment: ComputeDeployment) {
 function getMetrics(
   instance: CatalogInstance | undefined,
   instanceId: string,
-  cpu: Api.GetMetricsReplyMetric[] | undefined,
-  memory: Api.GetMetricsReplyMetric[] | undefined,
+  cpu: API.GetMetricsReplyMetric[] | undefined,
+  memory: API.GetMetricsReplyMetric[] | undefined,
 ) {
-  const getSamples = (metric?: Api.GetMetricsReplyMetric[]): number[] => {
+  const getSamples = (metric?: API.GetMetricsReplyMetric[]): number[] => {
     return (
       metric
         ?.find((metric) => metric.labels!.instance_id === instanceId)

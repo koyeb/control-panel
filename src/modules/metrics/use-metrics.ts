@@ -1,8 +1,8 @@
 import { useQueries } from '@tanstack/react-query';
 import { Duration, sub } from 'date-fns';
 
-import { ApiEndpointResult, api } from 'src/api/api';
-import type { Api } from 'src/api/api-types';
+import type { API } from 'src/api/api';
+import { useApi } from 'src/api/use-api';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
 
@@ -32,11 +32,13 @@ const timeFrameToStep: Record<MetricsTimeFrame, string> = {
 type UseMetricsOptions = {
   serviceId?: string;
   instanceId?: string;
-  metrics: Api.MetricName[];
+  metrics: API.MetricName[];
   timeFrame: MetricsTimeFrame;
 };
 
 export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }: UseMetricsOptions) {
+  const api = useApi();
+
   return useQueries({
     queries: metrics.map((name) => ({
       queryKey: ['getServiceMetrics', { serviceId, instanceId, name, timeFrame }],
@@ -47,11 +49,11 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
         const duration = timeFrameToDuration[timeFrame];
         const start = sub(new Date(), duration).toISOString();
 
-        return api().getServiceMetrics({
+        return api.getServiceMetrics({
           query: { name, start, step, service_id: serviceId, instance_id: instanceId },
         });
       },
-      select(data: ApiEndpointResult<'getServiceMetrics'>) {
+      select(data: API.GetMetricsReply) {
         return data.metrics!.map(({ labels, samples }) => ({
           labels,
           samples: samples!.map(

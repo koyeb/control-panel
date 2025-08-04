@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { api } from 'src/api/api';
 import { useSecrets } from 'src/api/hooks/secret';
+import { useApi } from 'src/api/use-api';
 import { hasProperty } from 'src/utils/object';
 import { wait } from 'src/utils/promises';
 
 export function useVerifyDockerImage(image: string, registrySecretName: string | undefined) {
+  const api = useApi();
+
   const secrets = useSecrets('registry');
   const secretId = secrets?.find(hasProperty('name', registrySecretName))?.id;
 
@@ -26,7 +28,7 @@ export function useVerifyDockerImage(image: string, registrySecretName: string |
         return null;
       }
 
-      return api().verifyDockerImage({
+      return api.verifyDockerImage({
         query: {
           image: image.trim(),
           secret_id: secretId,

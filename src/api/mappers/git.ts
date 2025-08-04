@@ -1,9 +1,9 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
-import { Api } from '../api-types';
+import { API } from '../api';
 import { GitRepository, GithubApp } from '../model';
 
-export function mapGithubApp(installation: Api.GetGithubInstallationReply): GithubApp {
+export function mapGithubApp(installation: API.GetGithubInstallationReply): GithubApp {
   const { indexing_status, indexed_repositories, total_repositories } = installation;
 
   const indexing = indexing_status === 'NOT_STARTED' || indexing_status === 'IN_PROGRESS';
@@ -17,7 +17,7 @@ export function mapGithubApp(installation: Api.GetGithubInstallationReply): Gith
   };
 }
 
-export function mapRepository(repository: Api.Repository): GitRepository {
+export function mapRepository(repository: API.Repository): GitRepository {
   return {
     ...snakeToCamelDeep(requiredDeep(repository)),
     branches: [],

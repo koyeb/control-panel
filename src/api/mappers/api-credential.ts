@@ -1,10 +1,10 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
-import { Api } from '../api-types';
+import { API } from '../api';
 import { ApiCredential } from '../model';
 
-export function mapApiCredential(credential: Api.Credential): ApiCredential {
+export function mapApiCredential(credential: API.Credential): ApiCredential {
   return {
     ...snakeToCamelDeep(requiredDeep(credential)),
     type: lowerCase(credential.type as 'USER' | 'ORGANIZATION'),

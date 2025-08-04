@@ -2,11 +2,10 @@ import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { api } from 'src/api/api';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { Service } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -48,23 +47,25 @@ export function DatabaseSettingsPage() {
 
 function DeleteDatabaseService({ service }: { service: Service }) {
   const t = T.useTranslate();
+
+  const api = useApi();
+  const invalidate = useInvalidateApiQuery();
+
   const navigate = useNavigate();
   const openDialog = Dialog.useOpen();
 
-  const invalidate = useInvalidateApiQuery();
-
   const mutation = useMutation({
     async mutationFn() {
-      await api().deleteService({
+      await api.deleteService({
         path: { id: service.id },
       });
 
-      const { services } = await api().listServices({
+      const { services } = await api.listServices({
         query: { app_id: service.appId },
       });
 
       if (services?.length === 0) {
-        await api().deleteApp({
+        await api.deleteApp({
           path: { id: service.appId },
         });
       }

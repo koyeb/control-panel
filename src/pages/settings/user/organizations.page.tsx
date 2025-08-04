@@ -3,10 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { api } from 'src/api/api';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
+import { useApi, useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ValidateLinkOptions } from 'src/components/link';
@@ -50,6 +49,8 @@ const schema = z.object({
 
 function CreateOrganizationDialog() {
   const t = T.useTranslate();
+
+  const api = useApi();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -62,11 +63,11 @@ function CreateOrganizationDialog() {
 
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
-      const { organization } = await api().createOrganization({
+      const { organization } = await api.createOrganization({
         body: { name: organizationName },
       });
 
-      const { token: newToken } = await api().switchOrganization({
+      const { token: newToken } = await api.switchOrganization({
         path: { id: organization!.id! },
         header: {},
       });

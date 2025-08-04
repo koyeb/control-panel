@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { DatabaseDeployment, Service } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
@@ -27,9 +27,11 @@ type CreateLogicalDatabaseDialogProps = {
 };
 
 export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogicalDatabaseDialogProps) {
-  const invalidate = useInvalidateApiQuery();
   const closeDialog = Dialog.useClose();
   const t = T.useTranslate();
+
+  const api = useApi();
+  const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -41,7 +43,7 @@ export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogic
 
   const mutation = useMutation({
     async mutationFn({ name, owner }: FormValues<typeof form>) {
-      await updateDatabaseService(service.id, (definition) => {
+      await updateDatabaseService(api, service.id, (definition) => {
         definition.database!.neon_postgres!.databases?.push({ name, owner });
       });
     },

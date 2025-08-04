@@ -5,10 +5,9 @@ import omit from 'lodash-es/omit';
 import { useMemo } from 'react';
 import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { api } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
@@ -48,6 +47,7 @@ export function Qualification() {
   const user = useUser();
   const organization = useOrganization();
 
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const track = useTrackEvent();
@@ -63,7 +63,7 @@ export function Qualification() {
   const mutation = useMutation({
     async mutationFn(form: QualificationFormType) {
       if (form.fullName !== '') {
-        await api().updateUser({
+        await api.updateUser({
           body: { name: form.fullName },
           query: {},
         });
@@ -79,7 +79,7 @@ export function Qualification() {
         submittedAt: new Date().toISOString(),
       };
 
-      await api().updateSignupQualification({
+      await api.updateSignupQualification({
         path: { id: organization.id },
         body: { signup_qualification: values as Record<string, never> },
       });
@@ -90,7 +90,7 @@ export function Qualification() {
         }
 
         try {
-          await api().sendInvitation({ body: { email } });
+          await api.sendInvitation({ body: { email } });
         } catch (error) {
           if (hasMessage(error)) {
             notify.error(error.message);

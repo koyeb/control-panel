@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { FormattedDate } from 'react-intl';
 
-import type { Api } from 'src/api/api-types';
+import type { API } from 'src/api/api';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { useDeploymentScalingQuery } from 'src/api/hooks/service';
 import type { CatalogRegion, ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
@@ -251,7 +251,7 @@ const instanceStatusClasses: Record<InstanceStatus, string> = {
   SLEEPING: neutral,
 };
 
-const metrics: Api.MetricName[] = ['CPU_TOTAL_PERCENT', 'MEM_RSS'] as const;
+const metrics: API.MetricName[] = ['CPU_TOTAL_PERCENT', 'MEM_RSS'] as const;
 
 function InstanceDetails({ instance }: { instance: Instance }) {
   const [graph, setGraph] = useState<'cpu' | 'memory'>('cpu');

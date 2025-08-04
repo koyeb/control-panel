@@ -17,6 +17,7 @@ import {
 } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { AiModel, CatalogInstance } from 'src/api/model';
+import { useApi } from 'src/api/use-api';
 import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
@@ -76,6 +77,7 @@ export function ModelForm(props: ModelFormProps) {
 }
 
 function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
+  const api = useApi();
   const instances = useInstances();
   const models = useModels();
   const navigate = useNavigate();
@@ -105,7 +107,7 @@ function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
       assert(serviceForm.ports[0] !== undefined);
       serviceForm.ports[0].healthCheck.gracePeriod = 300;
 
-      return submitServiceForm(serviceForm);
+      return submitServiceForm(api, serviceForm);
     },
     onError: (error) => notify.error(error.message),
     onSuccess({ serviceId }) {

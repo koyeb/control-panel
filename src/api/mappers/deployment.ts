@@ -5,7 +5,7 @@ import { round } from 'src/utils/math';
 import { hasProperty, requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
 
-import type { Api } from '../api-types';
+import type { API } from '../api';
 import {
   ComputeDeployment,
   ComputeDeploymentType,
@@ -20,7 +20,7 @@ import {
   Replica,
 } from '../model';
 
-export function mapDeployment(deployment: Api.Deployment): Deployment {
+export function mapDeployment(deployment: API.Deployment): Deployment {
   if (deployment.definition!.type === 'DATABASE') {
     return mapDatabaseDeployment(deployment);
   }
@@ -28,7 +28,7 @@ export function mapDeployment(deployment: Api.Deployment): Deployment {
   return mapComputeDeployment(deployment);
 }
 
-export function mapRegionalDeployment(deployment: Api.RegionalDeployment): RegionalDeployment {
+export function mapRegionalDeployment(deployment: API.RegionalDeployment): RegionalDeployment {
   return snakeToCamelDeep(requiredDeep(deployment));
 }
 
@@ -40,14 +40,14 @@ export function isDatabaseDeployment(deployment: Deployment | undefined): deploy
   return deployment !== undefined && 'postgresVersion' in deployment;
 }
 
-export function mapInstance(instance: Api.Instance): Instance {
+export function mapInstance(instance: API.Instance): Instance {
   return {
     ...snakeToCamelDeep(requiredDeep(instance)),
     name: shortId(instance.id)!,
   };
 }
 
-export function mapReplica(replica: Api.GetDeploymentScalingReplyItem): Replica {
+export function mapReplica(replica: API.GetDeploymentScalingReplyItem): Replica {
   const instance = replica.instances?.find(hasProperty('status', 'HEALTHY')) ?? replica.instances?.[0];
 
   return {
@@ -62,7 +62,7 @@ export function mapReplica(replica: Api.GetDeploymentScalingReplyItem): Replica 
   };
 }
 
-function mapComputeDeployment(deployment: Api.Deployment): ComputeDeployment {
+function mapComputeDeployment(deployment: API.Deployment): ComputeDeployment {
   const definition = deployment.definition!;
 
   const type = (): ComputeDeploymentType => {
@@ -314,7 +314,7 @@ export const databaseQuotas = {
   maxStorageSize: parseBytes('1GB'), // 1 GB
 };
 
-function mapDatabaseDeployment(deployment: Api.Deployment): DatabaseDeployment {
+function mapDatabaseDeployment(deployment: API.Deployment): DatabaseDeployment {
   const definition = deployment.definition!.database!.neon_postgres!;
   const info = deployment.database_info?.neon_postgres;
 

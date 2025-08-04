@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { api } from '../api';
 import { mapDeployment } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
 import { AppFull } from '../model';
-import { useApiQueryFn } from '../use-api';
+import { useApi, useApiQueryFn } from '../use-api';
 
 export function useAppsQuery() {
   return useQuery({
@@ -30,18 +29,20 @@ export function useApp(appId?: string) {
 }
 
 export function useAppsFull() {
+  const api = useApi();
+
   return useQuery({
     queryKey: ['listAppsFull', {}],
     async queryFn({ signal }) {
       const [apps, services] = await Promise.all([
-        api().listApps({ signal, query: { limit: '100' } }),
-        api().listServices({ signal, query: { limit: '100' } }),
+        api.listApps({ signal, query: { limit: '100' } }),
+        api.listServices({ signal, query: { limit: '100' } }),
       ]);
 
       const deployments = await Promise.all(
         services
           .services!.map((service) => service.latest_deployment_id!)
-          .map((id) => api().getDeployment({ signal, path: { id } })),
+          .map((id) => api.getDeployment({ signal, path: { id } })),
       );
 
       return {

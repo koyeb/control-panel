@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 
-import type { Api } from '../api-types';
+import type { API } from '../api';
 import { Invoice, InvoiceDiscount, InvoicePlanLine, InvoiceUsageLine } from '../model';
 
 import { StripeInvoice, mapInvoice } from './billing';
@@ -17,7 +17,7 @@ const createStripeInvoice = createFactory<StripeInvoice>(() => ({
 
 const date = createDate();
 
-const createStripeInvoiceLine = createFactory<Api.NextInvoiceReplyLine>(() => ({
+const createStripeInvoiceLine = createFactory<API.NextInvoiceReplyLine>(() => ({
   amount_excluding_tax: 0,
   period: { end: date, start: date },
   plan_nickname: '',
@@ -28,8 +28,8 @@ const createStripeInvoiceLine = createFactory<Api.NextInvoiceReplyLine>(() => ({
 describe('mapInvoice', () => {
   const transform = (
     invoice: StripeInvoice,
-    lines: Api.NextInvoiceReplyLine[],
-    discounts: Api.NextInvoiceReplyDiscount[] = [],
+    lines: API.NextInvoiceReplyLine[],
+    discounts: API.NextInvoiceReplyDiscount[] = [],
   ) => {
     return mapInvoice({ stripe_invoice: invoice as never, lines, discounts });
   };
@@ -103,7 +103,7 @@ describe('mapInvoice', () => {
       subtotal_excluding_tax: 123,
     });
 
-    const discount: Api.NextInvoiceReplyDiscount = {
+    const discount: API.NextInvoiceReplyDiscount = {
       type: 'AMOUNT_OFF',
       name: 'Koyeb free tier',
       amount: '550',
@@ -125,7 +125,7 @@ describe('mapInvoice', () => {
       subtotal_excluding_tax: 123,
     });
 
-    const discount: Api.NextInvoiceReplyDiscount = {
+    const discount: API.NextInvoiceReplyDiscount = {
       type: 'PERCENT_OFF',
       name: 'Preview for instance usage',
       amount: '5432',
