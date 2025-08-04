@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -28,6 +28,7 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
   const t = T.useTranslate();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -51,6 +52,7 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
       },
     })),
     onSuccess(result) {
+      queryClient.clear();
       navigate({ to: '/', state: { token: result.token!.id! } });
     },
     onError: useFormErrorHandler(form, (error) => {

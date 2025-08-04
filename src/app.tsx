@@ -81,12 +81,12 @@ function AuthenticatedRoutes() {
     '/organization/deactivate/confirm/:confirmationId',
   );
 
-  if (isAccountLockedError(userQuery.error) || isAccountLockedError(organizationQuery.error)) {
-    return <AccountLocked />;
+  if (userQuery.isPending || organizationQuery.isPending) {
+    return null;
   }
 
-  if (!userQuery.isSuccess || organizationQuery.isPending) {
-    return null;
+  if (isAccountLockedError(userQuery.error) || isAccountLockedError(organizationQuery.error)) {
+    return <AccountLocked />;
   }
 
   if (confirmDeactivateOrganization) {

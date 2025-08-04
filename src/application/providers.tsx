@@ -2,9 +2,8 @@ import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persi
 import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistQueryClientProvider as BasePersistQueryClientProvider } from '@tanstack/react-query-persist-client';
-import { Component, Suspense, useEffect, useMemo } from 'react';
+import { Component, Suspense, useMemo } from 'react';
 
-import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { CommandPaletteProvider } from 'src/modules/command-palette/command-palette.provider';
 import { TOKENS } from 'src/tokens';
 
@@ -12,6 +11,7 @@ import { ErrorBoundary } from '../components/error-boundary/error-boundary';
 import { NotificationContainer } from '../components/notification';
 import { IntlProvider } from '../intl/translation-provider';
 
+import { AuthenticationProvider } from './authentication';
 import { container } from './container';
 import { DialogProvider } from './dialog-context';
 import { PostHogProvider } from './posthog';
@@ -29,7 +29,7 @@ export function Providers({ children }: ProvidersProps) {
         <Suspense>
           <QueryClientProvider client={queryClient}>
             <PersistQueryClientProvider>
-              <TokenParamsProvider>
+              <AuthenticationProvider>
                 <PostHogProvider>
                   <DialogProvider>
                     <CommandPaletteProvider>
@@ -39,7 +39,7 @@ export function Providers({ children }: ProvidersProps) {
                     </CommandPaletteProvider>
                   </DialogProvider>
                 </PostHogProvider>
-              </TokenParamsProvider>
+              </AuthenticationProvider>
             </PersistQueryClientProvider>
           </QueryClientProvider>
         </Suspense>
@@ -88,36 +88,4 @@ function PersistQueryClientProvider({ children }: { children: React.ReactNode })
       {children}
     </BasePersistQueryClientProvider>
   );
-}
-
-function TokenParamsProvider({ children }: { children: React.ReactNode }) {
-  const navigate = useNavigate();
-
-  const search = useSearchParams();
-  const sessionTokenParam = search.get('session-token');
-  const accessTokenParam = search.get('token');
-
-  useEffect(() => {
-    if (sessionTokenParam) {
-      navigate({
-        state: { token: sessionTokenParam.replace(/^Bearer /, ''), session: true },
-        search: (prev) => ({ ...prev, 'session-token': null }),
-      });
-    }
-  }, [sessionTokenParam, navigate]);
-
-  useEffect(() => {
-    if (accessTokenParam) {
-      navigate({
-        state: { token: accessTokenParam.replace(/^Bearer /, '') },
-        search: (prev) => ({ ...prev, token: null }),
-      });
-    }
-  }, [accessTokenParam, navigate]);
-
-  if (sessionTokenParam || accessTokenParam) {
-    return null;
-  }
-
-  return children;
 }

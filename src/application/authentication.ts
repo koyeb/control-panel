@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
-import { useCallback, useEffect } from 'react';
+import { createContext, createElement, useCallback, useContext, useEffect, useState } from 'react';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { usePathname } from 'src/hooks/router';
+import { useNavigate, usePathname, useSearchParams } from 'src/hooks/router';
 import { TOKENS } from 'src/tokens';
 
 import { container } from './container';
@@ -64,23 +64,68 @@ export class StorageAuthenticationAdapter implements AuthenticationPort {
   }
 }
 
-export function useSetToken() {
+type AuthContext = {
+  token: string | null;
+  setToken: (token: string | null, session?: boolean) => void;
+};
+
+const authContext = createContext<AuthContext>(null as never);
+
+export function AuthenticationProvider({ children }: { children: React.ReactNode }) {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  return useCallback(
-    (token: string | null, session?: boolean) => {
-      const auth = container.resolve(TOKENS.authentication);
+  const search = useSearchParams();
+  const sessionTokenParam = search.get('session-token');
+  const accessTokenParam = search.get('token');
 
+  const auth = container.resolve(TOKENS.authentication);
+  const [token, setTokenState] = useState(auth.token);
+
+  const setToken = useCallback<AuthContext['setToken']>(
+    (token, session) => {
       auth.setToken(token, session);
+      setTokenState(token);
 
-      if (auth.token) {
-        void queryClient.invalidateQueries();
-      } else {
+      if (!auth.token) {
         queryClient.clear();
       }
     },
-    [queryClient],
+    [auth, queryClient],
   );
+
+  const context: AuthContext = {
+    token,
+    setToken,
+  };
+
+  useEffect(() => {
+    if (sessionTokenParam) {
+      setToken(sessionTokenParam.replace(/^Bearer /, ''), true);
+      navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
+    }
+  }, [sessionTokenParam, setToken, navigate]);
+
+  useEffect(() => {
+    if (accessTokenParam) {
+      setToken(accessTokenParam.replace(/^Bearer /, ''));
+      navigate({ search: (prev) => ({ ...prev, token: null }) });
+    }
+  }, [accessTokenParam, setToken, navigate]);
+
+  if (sessionTokenParam || accessTokenParam) {
+    return null;
+  }
+
+  return createElement(authContext.Provider, { value: context }, children);
+}
+
+export function useToken() {
+  return useContext(authContext).token;
+}
+
+export function useSetToken() {
+  return useContext(authContext).setToken;
 }
 
 export function useRefreshToken() {

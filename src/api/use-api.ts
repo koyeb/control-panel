@@ -1,6 +1,7 @@
 import { InvalidateQueryFilters, useQueryClient } from '@tanstack/react-query';
 import { useCallback, useMemo } from 'react';
 
+import { useToken } from 'src/application/authentication';
 import { container } from 'src/application/container';
 import { TOKENS } from 'src/tokens';
 import { keys, toObject } from 'src/utils/object';
@@ -15,8 +16,9 @@ type ApiEndpointParams<E extends Endpoint> = Parameters<Api[E]>[0];
 type ApiEndpointResult<E extends Endpoint> = Awaited<ReturnType<Api[E]>>;
 
 export function useApi() {
+  const token = useToken();
+
   return useMemo(() => {
-    const auth = container.resolve(TOKENS.authentication);
     const config = container.resolve(TOKENS.config);
     const api = container.resolve(TOKENS.api);
 
@@ -29,33 +31,42 @@ export function useApi() {
 
           return fn({
             baseUrl: config.get('apiBaseUrl'),
-            token: auth.token,
+            token,
             ...param,
           }) as ReturnType<Api[Endpoint]>;
         };
       },
     ) as Api;
-  }, []);
+  }, [token]);
 }
 
-export function getApiQueryKey<E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E>) {
-  return [endpoint, params];
+export function getQueryKey(endpoint: string, params: object, token: string | null) {
+  return [endpoint, params, token?.slice(-6)];
+}
+
+export function getApiQueryKey<E extends Endpoint>(
+  endpoint: E,
+  params: ApiEndpointParams<E>,
+  token: string | null,
+) {
+  return getQueryKey(endpoint, params, token);
 }
 
 export function useApiQueryFn<E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) {
+  const token = useToken();
+
   return {
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: getApiQueryKey(endpoint, params),
+    queryKey: getApiQueryKey(endpoint, params, token),
     queryFn({ signal }: { signal: AbortSignal }): Promise<ApiEndpointResult<E>> {
       const config = container.resolve(TOKENS.config);
-      const auth = container.resolve(TOKENS.authentication);
       const api = container.resolve(TOKENS.api);
 
       const fn = api[endpoint] as EndpointFn<E>;
 
       return fn({
         baseUrl: config.get('apiBaseUrl'),
-        token: auth.token,
+        token,
         signal,
         ...params,
       });
@@ -71,6 +82,8 @@ export function useApiMutationFn<E extends Endpoint, Variables = void>(
   endpoint: E,
   options: ApiEndpointParams<E> | ApiEndpointParamsFn<E, Variables>,
 ) {
+  const token = useToken();
+
   return {
     async mutationFn(
       ...[variables]: Variables extends void ? [] : [Variables]
@@ -79,12 +92,11 @@ export function useApiMutationFn<E extends Endpoint, Variables = void>(
       const config = container.resolve(TOKENS.config);
       const api = container.resolve(TOKENS.api);
 
-      const auth = container.resolve(TOKENS.authentication);
       const fn = api[endpoint] as EndpointFn<E>;
 
       return fn({
         baseUrl: config.get('apiBaseUrl'),
-        token: auth.token,
+        token,
         ...params,
       });
     },
@@ -93,6 +105,7 @@ export function useApiMutationFn<E extends Endpoint, Variables = void>(
 
 export function useInvalidateApiQuery() {
   const queryClient = useQueryClient();
+  const token = useToken();
 
   return useCallback(
     <E extends Endpoint>(
@@ -101,21 +114,22 @@ export function useInvalidateApiQuery() {
       filters: InvalidateQueryFilters = {},
     ) => {
       return queryClient.invalidateQueries({
-        queryKey: getApiQueryKey(endpoint, params),
+        queryKey: getApiQueryKey(endpoint, params, token),
         ...filters,
       });
     },
-    [queryClient],
+    [queryClient, token],
   );
 }
 
 export function usePrefetchApiQuery() {
   const queryClient = useQueryClient();
+  const token = useToken();
 
   return useCallback(
     <E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) => {
       return queryClient.prefetchQuery({
-        queryKey: getApiQueryKey(endpoint, params),
+        queryKey: getApiQueryKey(endpoint, params, token),
         queryFn() {
           const api = container.resolve(TOKENS.api);
           const fn = api[endpoint] as EndpointFn<E>;
@@ -124,6 +138,6 @@ export function usePrefetchApiQuery() {
         },
       });
     },
-    [queryClient],
+    [queryClient, token],
   );
 }

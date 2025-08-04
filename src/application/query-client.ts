@@ -156,7 +156,6 @@ function handleAuthenticationError() {
   const auth = container.resolve(TOKENS.authentication);
 
   if (auth.token !== null) {
-    auth.setToken(null, true);
     auth.setToken(null);
     queryClient.clear();
   }

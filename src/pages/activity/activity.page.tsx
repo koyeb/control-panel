@@ -5,7 +5,8 @@ import { useState } from 'react';
 
 import { mapActivity } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
-import { useApi } from 'src/api/use-api';
+import { getApiQueryKey, useApi } from 'src/api/use-api';
+import { useToken } from 'src/application/authentication';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -43,6 +44,7 @@ export function ActivityPage() {
   const t = T.useTranslate();
 
   const api = useApi();
+  const token = useToken();
   const queryClient = useQueryClient();
 
   const params = useSearchParams();
@@ -51,7 +53,7 @@ export function ActivityPage() {
   const navigate = useNavigate();
 
   const query = useInfiniteQuery({
-    queryKey: ['listActivities', { types }],
+    queryKey: getApiQueryKey('listActivities', { query: { types } }, token),
     async queryFn({ pageParam }) {
       return api
         .listActivities({

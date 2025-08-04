@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { Api } from 'src/api/api';
 import { ApiValidationError } from 'src/api/api-errors';
 import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
-import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
@@ -16,7 +15,6 @@ import { useMount } from 'src/hooks/lifecycle';
 import { urlToLinkOptions, useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
-import { TOKENS } from 'src/tokens';
 import { toObject } from 'src/utils/object';
 
 const T = createTranslate('pages.account.githubOAuthCallback');
@@ -149,12 +147,6 @@ export function GithubOauthCallbackPage() {
 }
 
 async function getCurrentOrganization(api: Api) {
-  const auth = container.resolve(TOKENS.authentication);
-
-  if (!auth.token) {
-    return;
-  }
-
   return api.getCurrentOrganization({}).then(
     ({ organization }) => organization,
     () => undefined,

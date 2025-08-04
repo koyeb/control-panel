@@ -4,7 +4,7 @@ import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { AssertionError, defined } from 'src/utils/assert';
 
-import { ApiError, isAccountLockedError } from '../api-errors';
+import { isAccountLockedError } from '../api-errors';
 import {
   mapOrganization,
   mapOrganizationMember,
@@ -12,7 +12,7 @@ import {
   mapOrganizationSummary,
   mapUser,
 } from '../mappers/session';
-import { getApiQueryKey, useApi, useApiMutationFn, useApiQueryFn } from '../use-api';
+import { useApiMutationFn, useApiQueryFn } from '../use-api';
 
 export function useUserQuery() {
   return useQuery({
@@ -30,22 +30,9 @@ export function useUser() {
 }
 
 export function useOrganizationQuery() {
-  const api = useApi();
-
   return useQuery({
-    queryKey: getApiQueryKey('getCurrentOrganization', {}),
-    queryFn: async ({ signal }) => {
-      try {
-        return await api.getCurrentOrganization({ signal });
-      } catch (error) {
-        if (ApiError.is(error, 404)) {
-          return null;
-        }
-
-        throw error;
-      }
-    },
-    select: (result) => (result ? mapOrganization(result.organization!) : null),
+    ...useApiQueryFn('getCurrentOrganization', {}),
+    select: (result) => mapOrganization(result.organization!),
   });
 }
 

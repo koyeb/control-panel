@@ -8,6 +8,7 @@ import {
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
+import { useToken } from 'src/application/authentication';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { DocumentTitle } from 'src/components/document-title';
@@ -193,13 +194,13 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
     return () => window.removeEventListener('message', listener);
   }, [pageContextBaseUrl, iFrameRef]);
 
-  useEffect(() => {
-    const token = container.resolve(TOKENS.authentication).token;
+  const token = useToken();
 
+  useEffect(() => {
     if (pageContextBaseUrl !== undefined && ready) {
       iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
     }
-  }, [pageContextBaseUrl, iFrameRef, ready, location]);
+  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
 
   return (
     <>

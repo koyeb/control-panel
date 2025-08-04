@@ -7,7 +7,8 @@ import { z } from 'zod';
 import { Api } from 'src/api/api';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
-import { useApi } from 'src/api/use-api';
+import { getQueryKey, useApi } from 'src/api/use-api';
+import { useToken } from 'src/application/authentication';
 import { createId } from 'src/utils/strings';
 
 import { useDeepCompareMemo } from './lifecycle';
@@ -78,6 +79,7 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
 
 function useLogsHistory(filters: LogsFilters) {
   const api = useApi();
+  const token = useToken();
   const quotas = useOrganizationQuotas();
 
   const initialPageParam = useMemo(() => {
@@ -96,7 +98,7 @@ function useLogsHistory(filters: LogsFilters) {
 
   return useInfiniteQuery({
     enabled: quotas !== undefined,
-    queryKey: ['logsQuery', { filters }],
+    queryKey: getQueryKey('logsQuery', { filters }, token),
     queryFn: ({ pageParam: { start, end } }) => {
       if (start === end) {
         return { data: [], pagination: { has_more: false } };

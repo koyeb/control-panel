@@ -2,7 +2,8 @@ import { Alert } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isApiValidationError } from 'src/api/api-errors';
-import { useApi } from 'src/api/use-api';
+import { getQueryKey, useApi } from 'src/api/use-api';
+import { useToken } from 'src/application/authentication';
 import { ExternalLinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';
@@ -20,13 +21,18 @@ type QuotaAlertProps = {
 
 export function QuotaAlert(props: QuotaAlertProps) {
   const api = useApi();
+  const token = useToken();
 
   const serviceId = props.serviceId;
   const values = getValues(props);
 
   const { data: message } = useQuery({
     placeholderData: keepPreviousData,
-    queryKey: [serviceId ? 'updateService' : 'createService', { serviceId, dryRun: true }, values],
+    queryKey: getQueryKey(
+      serviceId ? 'updateService' : 'createService',
+      { serviceId, dryRun: true, values },
+      token,
+    ),
     refetchInterval: false,
     async queryFn({ signal }) {
       if (!(await wait(500, signal))) {
