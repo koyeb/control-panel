@@ -1,16 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
 import { isAccountLockedError } from './api/api-errors';
 import { useOrganizationQuery, useUserQuery } from './api/hooks/session';
 import { useApiMutationFn } from './api/use-api';
-import {
-  useRefreshToken,
-  useSetToken,
-  useTokenParams,
-  useTokenStorageListener,
-} from './application/authentication';
+import { useSetToken, useTokenParams, useTokenStorageListener } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
@@ -55,7 +51,6 @@ export function App() {
   const tokenParams = useTokenParams();
   const organizationContextParam = useOrganizationContextParam();
 
-  useRefreshToken();
   useTokenStorageListener();
 
   if (tokenParams || organizationContextParam) {
@@ -72,6 +67,7 @@ export function App() {
 }
 
 function AuthenticatedRoutes() {
+  const { isLoading } = useAuth();
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
@@ -82,7 +78,7 @@ function AuthenticatedRoutes() {
     '/organization/deactivate/confirm/:confirmationId',
   );
 
-  if (userQuery.isPending || organizationQuery.isPending) {
+  if (isLoading || userQuery.isPending || organizationQuery.isPending) {
     return null;
   }
 

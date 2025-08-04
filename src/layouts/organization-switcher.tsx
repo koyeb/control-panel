@@ -1,5 +1,6 @@
 import { Combobox, Spinner } from '@koyeb/design-system';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import clsx from 'clsx';
 import { useState } from 'react';
 
@@ -161,6 +162,7 @@ function useOrganizationList(search: string) {
 function useSwitchOrganization(onSuccess?: () => void) {
   const getSeonFingerprint = useSeon();
   const setToken = useSetToken();
+  const authKit = useAuth();
 
   return useMutation({
     ...useApiMutationFn('switchOrganization', async (organizationId: string) => ({
@@ -168,7 +170,10 @@ function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!, false);
+      if (authKit.getUser() === null) {
+        await setToken(token!.id!, false);
+      }
+
       onSuccess?.();
     },
   });
