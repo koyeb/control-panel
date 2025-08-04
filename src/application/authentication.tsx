@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { AuthKitProvider as BaseAuthKitProvider, useAuth } from '@workos-inc/authkit-react';
 import { isAfter, sub } from 'date-fns';
 import { jwtDecode } from 'jwt-decode';
-import { createContext, createElement, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { useApiMutationFn } from 'src/api/use-api';
 import { useNavigate, usePathname, useSearchParams } from 'src/hooks/router';
@@ -9,6 +10,8 @@ import { TOKENS } from 'src/tokens';
 
 import { container } from './container';
 import { StoragePort, StoredValue } from './storage';
+
+/* eslint-disable react-refresh/only-export-components */
 
 export interface AuthenticationPort {
   get token(): string | null;
@@ -117,7 +120,38 @@ export function AuthenticationProvider({ children }: { children: React.ReactNode
     return null;
   }
 
-  return createElement(authContext.Provider, { value: context }, children);
+  return (
+    <AuthKitProvider>
+      <authContext.Provider value={context}>{children}</authContext.Provider>
+    </AuthKitProvider>
+  );
+}
+
+function AuthKitProvider({ children }: { children: React.ReactNode }) {
+  const config = container.resolve(TOKENS.config);
+  const environment = config.get('environment');
+  const clientId = config.get('workOsClientId');
+  const redirectUri = config.get('workOsRedirectUri');
+
+  if (clientId === undefined) {
+    return children;
+  }
+
+  return (
+    <BaseAuthKitProvider
+      devMode={environment === 'development'}
+      redirectUri={redirectUri}
+      clientId={clientId}
+    >
+      <InjectWorkOs />
+      {children}
+    </BaseAuthKitProvider>
+  );
+}
+
+function InjectWorkOs() {
+  container.bindValue(TOKENS.workOs, useAuth());
+  return null;
 }
 
 export function useToken() {
