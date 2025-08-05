@@ -180,7 +180,7 @@ function getOneClickAppUrl(appSlug: string, appUrl: string): string {
   url.protocol = window.location.protocol;
   url.host = window.location.host;
 
-  // url.searchParams.set('one_click_app', appSlug);
+  // url.searchParams.set('one-click-app', appSlug);
 
   return url.toString();
 }
