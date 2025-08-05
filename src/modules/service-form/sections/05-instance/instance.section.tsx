@@ -4,7 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import { useInstance, useRegions } from 'src/api/hooks/catalog';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';
@@ -51,7 +51,7 @@ function SectionTitle() {
       </span>
 
       <Badge color="green" size={1}>
-        <T id={`category.${instance.category}`} />
+        <TranslateEnum enum="instanceCategory" value={instance.category} />
       </Badge>
 
       {regions.length === 1 && (
