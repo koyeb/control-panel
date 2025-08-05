@@ -125,6 +125,7 @@ type OneClickAppApiResponse = {
   category: string;
   name: string;
   logos: [string, ...string[]];
+  cover: string;
   description: string;
   repository: string;
   deploy_button_url: string;
@@ -164,6 +165,7 @@ function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
     slug: app.slug,
     description: app.description,
     logo: app.logos[0],
+    cover: app.cover,
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
     category: app.category,
     repository: app.repository,
