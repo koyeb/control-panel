@@ -15,7 +15,7 @@ const T = createTranslate('pages.deploy');
 
 export function DeployPage() {
   const params = useSearchParams();
-  const oneClickApp = params.get('one_click_app');
+  const oneClickApp = params.get('one-click-app');
   const type = params.get('type');
 
   if (oneClickApp) {

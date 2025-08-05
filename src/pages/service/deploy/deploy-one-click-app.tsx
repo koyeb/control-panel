@@ -16,7 +16,7 @@ export function DeployOneClickApp() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
-  const oneClickAppParam = useSearchParams().get('one_click_app');
+  const oneClickAppParam = useSearchParams().get('one-click-app');
   const oneClickAppsQuery = useOneClickAppsQuery();
   const app = oneClickAppsQuery.data?.find(hasProperty('slug', oneClickAppParam));
   const [ready, setReady] = useState(false);
@@ -27,7 +27,7 @@ export function DeployOneClickApp() {
     if (oneClickAppsQuery.isSuccess) {
       if (app === undefined) {
         navigate({
-          search: (prev) => ({ ...prev, one_click_app: null }),
+          search: (prev) => ({ ...prev, 'one-click-app': null }),
           replace: true,
         });
       } else {
@@ -36,7 +36,7 @@ export function DeployOneClickApp() {
         navigate({
           search: {
             ...Object.fromEntries(url.searchParams),
-            one_click_app: app.slug,
+            'one-click-app': app.slug,
           },
         });
       }
