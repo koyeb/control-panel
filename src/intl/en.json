@@ -2351,6 +2351,20 @@
         "successNotification": "Secret {name} deleted"
       }
     },
+    "oneClickApps": {
+      "title": "One-Click Apps",
+      "description": "Deploy apps with a click, get started with Koyeb in seconds",
+      "search": {
+        "placeholder": "What would you like to deploy today?"
+      },
+      "noResults": "No results",
+      "seeAll": "See all",
+      "deploy": "Deploy",
+      "section1": "The Lastest App We Try",
+      "section2": "Apps We Love",
+      "section3": "The Lastest App We Try",
+      "section4": "Apps For AI"
+    },
     "service": {
       "layout": {
         "serviceNotFound": {
