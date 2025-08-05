@@ -86,6 +86,11 @@
       "high": "High",
       "unknown": "Unknown"
     },
+    "instanceCategory": {
+      "eco": "Eco",
+      "standard": "Standard",
+      "gpu": "GPU"
+    },
     "portProtocol": {
       "tcp": "TCP",
       "http": "HTTP",
@@ -1015,10 +1020,15 @@
       },
       "oneClickAppForm": {
         "overview": "Overview",
-        "instance": "Choose instance",
-        "region": "Select region",
-        "environmentVariables": "Environment variables",
-        "submitButton": "Deploy"
+        "submitButton": "Deploy",
+        "environmentVariables": {
+          "title": "Environment variables",
+          "empty": "No environment variables",
+          "optional": "Optional +{count}"
+        },
+        "instance": {
+          "title": "Instance"
+        }
       },
       "submitButton": {
         "deploy": "Deploy",
@@ -1222,11 +1232,6 @@
         "action": "Select instances",
         "noInstanceSelected": "No instance selected",
         "instanceSpec": "<dim>({spec})</dim>",
-        "category": {
-          "eco": "Eco",
-          "standard": "Standard",
-          "gpu": "GPU"
-        },
         "alerts": {
           "noRegionSelectedTitle": "At least, one region must be selected",
           "noRegionSelectedDescription": "Select one or more regions to deploy your service",
@@ -2025,9 +2030,8 @@
       "documentTitle": "Deploy",
       "title": "Deploy on Koyeb",
       "oneClickApp": {
-        "documentTitle": "Deploy {appName}",
-        "title": "Deploy {appName}",
-        "pricing": "Pricing"
+        "back": "Back to template",
+        "submitButton": "Deploy"
       },
       "model": {
         "documentTitle": "One-Click models",

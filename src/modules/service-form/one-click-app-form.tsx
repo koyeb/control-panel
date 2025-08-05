@@ -1,8 +1,14 @@
-import { Button } from '@koyeb/design-system';
+import { AccordionHeader, AccordionSection, Badge } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Fragment, useEffect, useRef, useState } from 'react';
-import { UseFormReturn, useController, useFieldArray, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import {
+  FormProvider,
+  UseFormReturn,
+  useController,
+  useFieldArray,
+  useForm,
+  useFormContext,
+} from 'react-hook-form';
 
 import {
   useDatacenters,
@@ -16,15 +22,15 @@ import {
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas, useOrganizationQuotasQuery } from 'src/api/hooks/session';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
-import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
-import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
-import { FormValues, handleSubmit } from 'src/hooks/form';
+import { RegionFlag } from 'src/components/region-flag';
+import { RegionName } from 'src/components/region-name';
+import { handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { BranchMetadata, RepositoryMetadata } from 'src/modules/deployment/metadata/build-metadata';
 import { DockerImageMetadata } from 'src/modules/deployment/metadata/docker-metadata';
 import {
@@ -35,7 +41,7 @@ import {
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
-import { assert, defined } from 'src/utils/assert';
+import { defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
@@ -44,22 +50,13 @@ import { InstanceCategoryTabs } from '../instance-selector/instance-category-tab
 import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
-import { generateAppName } from './helpers/generate-app-name';
 import { initializeServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
+import { serviceFormSchema } from './helpers/service-form.schema';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
 
 const T = createTranslate('modules.serviceForm.oneClickAppForm');
-
-const schema = z.object({
-  instance: z.string().nullable(),
-  regions: z.string().array(),
-  environmentVariables: z.array(z.object({ name: z.string(), value: z.string() })),
-});
-
-type OneClickAppFormType = z.infer<typeof schema>;
-type OneClickAppForm = UseFormReturn<OneClickAppFormType>;
 
 type OneClickAppFormProps = {
   onCostChanged: (cost?: ServiceCost) => void;
@@ -97,11 +94,9 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   const githubApp = useGithubApp();
   const queryClient = useQueryClient();
 
-  const [serviceForm, setServiceForm] = useState<ServiceForm>();
-
-  const form = useForm<OneClickAppFormType>({
-    async defaultValues() {
-      const values = await initializeServiceForm(
+  const form = useForm<ServiceForm>({
+    defaultValues: () => {
+      return initializeServiceForm(
         params,
         datacenters,
         regions,
@@ -112,31 +107,13 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
         undefined,
         queryClient,
       );
-
-      setServiceForm(values);
-
-      return {
-        instance: values.instance,
-        regions: values.regions,
-        environmentVariables: values.environmentVariables.filter((env) => env.name !== ''),
-      };
     },
-    resolver: useZodResolver(schema),
+    resolver: useZodResolver(serviceFormSchema(organization, quotas)),
   });
 
   const mutation = useMutation({
-    async mutationFn({ instance, regions, environmentVariables }: FormValues<typeof form>) {
-      assert(serviceForm !== undefined);
-
-      return submitServiceForm({
-        ...serviceForm,
-        appName: generateAppName(),
-        instance,
-        regions,
-        environmentVariables: environmentVariables.map((env) => ({ ...env, regions: [] })),
-      });
-    },
-    onError: (error) => notify.error(error.message),
+    mutationKey: ['deployOneClickApp'],
+    mutationFn: submitServiceForm,
     onSuccess({ serviceId }) {
       navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
@@ -148,12 +125,18 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
 
   useOnCostEstimationChanged(form, onCostChanged);
 
-  if (!serviceForm) {
-    return null;
+  if (form.formState.isLoading) {
+    return <Loading />;
   }
 
+  const expanded = form.watch('meta.expandedSection');
+
+  const setExpanded = (section: 'environmentVariables' | 'instance') => {
+    return (expanded: boolean) => form.setValue('meta.expandedSection', expanded ? section : null);
+  };
+
   return (
-    <>
+    <FormProvider {...form}>
       <form
         ref={formRef}
         onSubmit={handleSubmit(form, (values) => {
@@ -163,30 +146,31 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
             return mutation.mutateAsync(values);
           }
         })}
+        id="one-click-app-form"
         className="col gap-6"
       >
-        <OverviewSection serviceForm={serviceForm} form={form} />
-        <InstanceSection serviceForm={serviceForm} form={form} />
-        <EnvironmentVariablesSection form={form} />
+        <OverviewSection />
 
-        <div className="row justify-end gap-2">
-          <LinkButton color="gray" to="/">
-            <Translate id="common.cancel" />
-          </LinkButton>
+        <div className="rounded-lg border">
+          <EnvironmentVariablesSection
+            expanded={expanded === 'environmentVariables'}
+            setExpanded={setExpanded('environmentVariables')}
+          />
 
-          <Button type="submit" loading={form.formState.isSubmitting}>
-            <T id="submitButton" />
-          </Button>
+          <InstanceSection expanded={expanded === 'instance'} setExpanded={setExpanded('instance')} />
         </div>
       </form>
 
       <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
-    </>
+    </FormProvider>
   );
 }
 
-function useOnCostEstimationChanged(form: OneClickAppForm, onChanged: (cost?: ServiceCost) => void) {
+function useOnCostEstimationChanged(
+  form: UseFormReturn<ServiceForm>,
+  onChanged: (cost?: ServiceCost) => void,
+) {
   const instance = useInstance(form.watch('instance'));
   const regions = useDeepCompareMemo(useRegions(form.watch('regions')));
 
@@ -215,10 +199,9 @@ function Section({ title, children }: SectionProps) {
   );
 }
 
-function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form: OneClickAppForm }) {
-  const { repositoryType, organizationRepository, publicRepository } = serviceForm.source.git;
-  const { repositoryName, branch } =
-    repositoryType === 'organization' ? organizationRepository : publicRepository;
+function OverviewSection() {
+  const { watch } = useFormContext<ServiceForm>();
+  const { repositoryName, branch } = watch(`source.git.${watch('source.git.repositoryType')}Repository`);
 
   const repository = {
     repository: `github.com/${repositoryName}`,
@@ -227,45 +210,106 @@ function OverviewSection({ serviceForm, form }: { serviceForm: ServiceForm; form
 
   return (
     <Section title={<T id="overview" />}>
-      <div className="divide-y rounded border">
+      <div className="divide-y rounded bg-muted">
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
-          {serviceForm.source.type === 'git' && (
+          {watch('source.type') === 'git' && (
             <>
               <RepositoryMetadata {...repository} />
               <BranchMetadata {...repository} />
             </>
           )}
 
-          {serviceForm.source.type === 'docker' && (
+          {watch('source.type') === 'docker' && (
             <>
-              <DockerImageMetadata image={serviceForm.source.docker.image} />
+              <DockerImageMetadata image={watch('source.docker.image')} />
             </>
           )}
         </div>
 
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
-          <InstanceTypeMetadata instanceType={form.watch('instance')} />
-          <ScalingMetadata scaling={serviceForm.scaling} />
-          <RegionsMetadata regions={form.watch('regions')} />
+          <InstanceTypeMetadata instanceType={watch('instance')} />
+          <ScalingMetadata scaling={watch('scaling')} />
+          <RegionsMetadata regions={watch('regions')} />
         </div>
       </div>
     </Section>
   );
 }
 
-function InstanceSection({ serviceForm, form }: { serviceForm: ServiceForm; form: OneClickAppForm }) {
+type EnvironmentVariableSectionProps = {
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
+};
+
+function EnvironmentVariablesSection({ expanded, setExpanded }: EnvironmentVariableSectionProps) {
+  const { watch } = useFormContext<ServiceForm>();
+  const { fields } = useFieldArray<ServiceForm, 'environmentVariables'>({ name: 'environmentVariables' });
+  const [optionalExpanded, setOptionalExpanded] = useState(false);
+
+  return (
+    <AccordionSection
+      isExpanded={expanded}
+      header={
+        <AccordionHeader expanded={expanded} setExpanded={setExpanded}>
+          <div className="font-medium">
+            <T id="environmentVariables.title" />
+          </div>
+        </AccordionHeader>
+      }
+    >
+      <div className="col gap-6 px-3 py-4">
+        {fields.length === 1 && <T id="environmentVariables.empty" />}
+
+        {fields
+          .filter((field) => field.name !== '')
+          .map((field, index) => (
+            <Fragment key={field.id}>
+              <ControlledInput
+                label={watch(`environmentVariables.${index}.name`)}
+                name={`environmentVariables.${index}.value`}
+                helperText="Some description"
+              />
+            </Fragment>
+          ))}
+
+        <AccordionSection
+          isExpanded={optionalExpanded}
+          header={
+            <AccordionHeader expanded={optionalExpanded} setExpanded={setOptionalExpanded}>
+              <div className="text-xs font-medium">
+                <T id="environmentVariables.optional" values={{ count: 1 }} />
+              </div>
+            </AccordionHeader>
+          }
+          className="rounded-md border bg-muted"
+        >
+          <div className="p-4">To do</div>
+        </AccordionSection>
+      </div>
+    </AccordionSection>
+  );
+}
+
+type InstanceSectionProps = {
+  expanded: boolean;
+  setExpanded: (expanded: boolean) => void;
+};
+
+function InstanceSection({ expanded, setExpanded }: InstanceSectionProps) {
+  const { watch } = useFormContext<ServiceForm>();
+
   const instances = useInstances();
   const regions = useRegions();
 
-  const instanceCtrl = useController({ control: form.control, name: 'instance' });
-  const regionsCtrl = useController({ control: form.control, name: 'regions' });
+  const instanceCtrl = useController<ServiceForm, 'instance'>({ name: 'instance' });
+  const regionsCtrl = useController<ServiceForm, 'regions'>({ name: 'regions' });
 
   const selectedInstance = instances.find(hasProperty('id', instanceCtrl.field.value));
   const selectedRegions = regions.filter((region) => inArray(region.id, regionsCtrl.field.value));
 
   const availabilities = useInstanceAvailabilities({
-    serviceType: serviceForm.serviceType,
-    hasVolumes: serviceForm.volumes.length > 0,
+    serviceType: watch('serviceType'),
+    hasVolumes: watch('volumes').length > 0,
   });
 
   const selector = useInstanceSelector({
@@ -281,46 +325,55 @@ function InstanceSection({ serviceForm, form }: { serviceForm: ServiceForm; form
   const getBadges = useGetInstanceBadges();
 
   return (
-    <Section title={<T id="instance" />}>
-      <InstanceCategoryTabs
-        category={selector.instanceCategory}
-        setCategory={selector.onInstanceCategorySelected}
-      />
+    <AccordionSection
+      isExpanded={expanded}
+      header={
+        <AccordionHeader expanded={expanded} setExpanded={setExpanded}>
+          <div className="col gap-1.5">
+            <div className="font-medium">
+              <T id="instance.title" />
+            </div>
 
-      <div className="mt-4 col max-h-96 scrollbar-thin gap-3 overflow-auto rounded-md border p-2 scrollbar-green">
+            {selectedInstance && (
+              <div className="row items-center gap-4 text-xs text-dim">
+                <Translate
+                  id="common.instanceSpec"
+                  values={{
+                    cpu: selectedInstance.vcpuShares,
+                    ram: selectedInstance.memory,
+                    disk: selectedInstance.disk,
+                  }}
+                />
+
+                <Badge color="green" size={1}>
+                  <TranslateEnum enum="instanceCategory" value={selectedInstance.category} />
+                </Badge>
+
+                {selectedRegions.length > 0 && (
+                  <span className="inline-flex flex-row items-center gap-2">
+                    <RegionName regionId={selectedRegions[0]!.id} />
+                    <RegionFlag regionId={selectedRegions[0]!.id} className="size-em" />
+                    {selectedRegions.length > 1 && (
+                      <Translate id="common.plusCount" values={{ count: selectedRegions.length - 1 }} />
+                    )}
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        </AccordionHeader>
+      }
+    >
+      <div className="px-3 py-4">
+        <InstanceCategoryTabs
+          category={selector.instanceCategory}
+          setCategory={selector.onInstanceCategorySelected}
+        />
+      </div>
+
+      <div className="col max-h-[32rem] scrollbar-thin gap-3 overflow-auto px-3 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
-    </Section>
-  );
-}
-
-function EnvironmentVariablesSection({ form }: { form: OneClickAppForm }) {
-  const { fields } = useFieldArray({ control: form.control, name: 'environmentVariables' });
-
-  if (fields.length === 0) {
-    return null;
-  }
-
-  return (
-    <Section title={<T id="environmentVariables" />}>
-      <div className="grid grid-cols-2 gap-4">
-        {fields.map((field, index) => (
-          <Fragment key={field.id}>
-            <ControlledInput
-              control={form.control}
-              name={`environmentVariables.${index}.name`}
-              label={index === 0 && 'Key'}
-              readOnly
-            />
-
-            <ControlledInput
-              control={form.control}
-              name={`environmentVariables.${index}.value`}
-              label={index === 0 && 'Value'}
-            />
-          </Fragment>
-        ))}
-      </div>
-    </Section>
+    </AccordionSection>
   );
 }
