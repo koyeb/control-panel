@@ -14,7 +14,7 @@ export function ReviewStep() {
   const navigate = useNavigate();
 
   return (
-    <div className="col gap-8 xl:row">
+    <div className="col gap-8 lg:row">
       <ServiceForm
         className="grow"
         onDeployed={(appId, serviceId) =>
@@ -27,7 +27,7 @@ export function ReviewStep() {
         }
       />
 
-      <div className="col max-w-sm shrink-0 gap-8 xl:basis-80">
+      <div className="col max-w-sm gap-8 lg:max-w-xs">
         <Tips />
         <ServiceEstimatedCost cost={cost} />
         <DeployToKoyebButton deployUrl={deployUrl} />

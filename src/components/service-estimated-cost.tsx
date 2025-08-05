@@ -13,9 +13,10 @@ function hasAutoscaling(cost: ServiceCost): cost is [any, any] {
 
 type ServiceEstimatedCostProps = {
   cost?: ServiceCost;
+  button?: React.ReactNode;
 };
 
-export function ServiceEstimatedCost({ cost }: ServiceEstimatedCostProps) {
+export function ServiceEstimatedCost({ cost, button }: ServiceEstimatedCostProps) {
   if (!cost) {
     return null;
   }
@@ -33,7 +34,7 @@ export function ServiceEstimatedCost({ cost }: ServiceEstimatedCostProps) {
   };
 
   return (
-    <div className="card col gap-4 p-4">
+    <div className="col gap-4 rounded-md border p-4">
       <div>
         <div className="text-base font-medium">
           <T id="title" />
@@ -47,6 +48,8 @@ export function ServiceEstimatedCost({ cost }: ServiceEstimatedCostProps) {
       <hr />
 
       <Total cost={cost} />
+
+      {button}
     </div>
   );
 }

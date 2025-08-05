@@ -46,7 +46,7 @@ function DeployServiceForm() {
         <T id="title" />
       </h1>
 
-      <div className="col gap-8 xl:row">
+      <div className="col gap-8 lg:row">
         <ServiceForm
           serviceId={serviceId ?? undefined}
           className="grow"
@@ -57,7 +57,7 @@ function DeployServiceForm() {
           onDeployUrlChanged={setDeployUrl}
         />
 
-        <div className="col shrink-0 gap-8 xl:basis-80">
+        <div className="col max-w-sm gap-8 lg:max-w-xs">
           <ServiceEstimatedCost cost={cost} />
           <DeployToKoyebButton deployUrl={deployUrl} />
         </div>

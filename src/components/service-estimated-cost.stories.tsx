@@ -6,7 +6,7 @@ import { ServiceEstimatedCost } from './service-estimated-cost';
 
 export default {
   title: 'Components/ServiceEstimatedCost',
-  parameters: { className: 'max-w-sm' },
+  parameters: { className: 'max-w-sm p-4 border rounded-md' },
   render: (args) => <ServiceEstimatedCost {...args} />,
 } satisfies Meta<typeof ServiceEstimatedCost>;
 
