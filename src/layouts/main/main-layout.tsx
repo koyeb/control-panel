@@ -132,7 +132,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
 function Main({ children }: { children: React.ReactNode }) {
   return (
-    <main className="overflow-x-auto px-2 py-4 sm:px-4">
+    <main className="px-2 py-4 sm:px-4">
       <Suspense>
         <GlobalAlert />
         {children}

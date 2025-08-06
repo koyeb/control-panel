@@ -1028,6 +1028,12 @@
         },
         "instance": {
           "title": "Instance"
+        },
+        "volumes": {
+          "title": "Volumes",
+          "name": "Volume {number}",
+          "mountPath": "Mount path",
+          "size": "Size"
         }
       },
       "submitButton": {
@@ -1731,7 +1737,10 @@
           "roles": "Roles",
           "settings": "Settings"
         },
-        "oneClickApps": "One click apps"
+        "oneClickApps": {
+          "index": "One-click Apps",
+          "deploy": "Deploy"
+        }
       }
     },
     "secondary": {
@@ -2029,10 +2038,6 @@
     "deploy": {
       "documentTitle": "Deploy",
       "title": "Deploy on Koyeb",
-      "oneClickApp": {
-        "back": "Back to template",
-        "submitButton": "Deploy"
-      },
       "model": {
         "documentTitle": "One-Click models",
         "documentTitleModel": "Deploy {modelName}",
@@ -2040,6 +2045,33 @@
         "title": "One-Click models",
         "anyModelDescription": "Deploy models faster than ever ...",
         "pricing": "Pricing"
+      }
+    },
+    "oneClickApps": {
+      "list": {
+        "title": "One-Click Apps",
+        "description": "Deploy apps with a click, get started with Koyeb in seconds",
+        "search": {
+          "placeholder": "What would you like to deploy today?"
+        },
+        "noResults": "No results",
+        "seeAll": "See all",
+        "deploy": "Deploy",
+        "officialModels": "Official models",
+        "models": "Models",
+        "others": "All others"
+      },
+      "details": {
+        "deploy": "Deploy",
+        "website": "Website",
+        "repository": "Repository",
+        "overview": "Overview"
+      },
+      "deploy": {
+        "submitButton": "Deploy"
+      },
+      "card": {
+        "deploy": "Deploy "
       }
     },
     "domains": {
@@ -2354,20 +2386,6 @@
         "confirm": "Delete secret",
         "successNotification": "Secret {name} deleted"
       }
-    },
-    "oneClickApps": {
-      "title": "One-Click Apps",
-      "description": "Deploy apps with a click, get started with Koyeb in seconds",
-      "search": {
-        "placeholder": "What would you like to deploy today?"
-      },
-      "noResults": "No results",
-      "seeAll": "See all",
-      "deploy": "Deploy",
-      "section1": "The Lastest App We Try",
-      "section2": "Apps We Love",
-      "section3": "The Lastest App We Try",
-      "section4": "Apps For AI"
     },
     "service": {
       "layout": {

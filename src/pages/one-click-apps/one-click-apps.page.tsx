@@ -3,12 +3,15 @@ import { useMemo, useState } from 'react';
 
 import { useOneClickApps } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
-import { ExternalLink, Link } from 'src/components/link';
+import { Link } from 'src/components/link';
 import { IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
+import { lowerCase } from 'src/utils/strings';
 
-const T = createTranslate('pages.oneClickApps');
+import { AppCard } from './app-card';
+
+const T = createTranslate('pages.oneClickApps.list');
 
 export function OneClickAppsPage() {
   const apps = useOneClickApps();
@@ -17,10 +20,14 @@ export function OneClickAppsPage() {
     category === 'Model' ? 1 : -1,
   );
 
-  const section1 = apps.slice(0, 2);
-  const section2 = apps.slice(2, 8);
-  const section3 = apps.slice(8, 10);
-  const section4 = apps.slice(10, 16);
+  const models = apps.filter((app) => app.category.toLowerCase() === 'model');
+
+  const officialModels = models.filter((app) =>
+    // cspell:disable-next-line
+    ['deepseek-r1-llama-8b', 'mistral-small-3-instruct'].includes(app.slug),
+  );
+
+  const others = apps.filter((app) => app.category.toLocaleLowerCase() !== 'model');
 
   const [search, setSearch] = useState('');
   const [activeCategories, setActiveCategories] = useState<string[]>([]);
@@ -31,7 +38,7 @@ export function OneClickAppsPage() {
     }
 
     return apps
-      .filter((app) => search === '' || app.name.toLowerCase().includes(search.toLowerCase()))
+      .filter((app) => search === '' || lowerCase(app.name).includes(lowerCase(search)))
       .filter((app) => activeCategories.length === 0 || activeCategories.includes(app.category));
   }, [apps, search, activeCategories]);
 
@@ -48,65 +55,49 @@ export function OneClickAppsPage() {
       />
 
       {filteredApps && (
-        <Section>
+        <section className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {filteredApps.map((app) => (
-            <AppItem key={app.slug} app={app} />
+            <AppCard key={app.slug} app={app} />
           ))}
 
           {filteredApps.length === 0 && <T id="noResults" />}
-        </Section>
+        </section>
       )}
 
       {!filteredApps && (
-        <>
-          <Section>
-            <SectionHeader title={<T id="section1" />} />
-            {section1.map((app) => (
+        <div className="col gap-8">
+          <section className="grid grid-cols-2 gap-x-6 gap-y-4">
+            <SectionHeader title={<T id="officialModels" />} />
+            {officialModels.map((app) => (
               <FeaturedApp key={app.slug} app={app} />
             ))}
-          </Section>
+          </section>
 
-          <Separator />
-
-          <Section>
+          <section className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <SectionHeader
-              title={<T id="section2" />}
+              title={<T id="models" />}
               right={
-                <ExternalLink href="https://www.koyeb.com/deploy" className="text-link text-base font-medium">
+                <Link
+                  to="/one-click-apps/category/$category"
+                  params={{ category: 'Model' }}
+                  className="text-link text-base font-medium"
+                >
                   <T id="seeAll" />
-                </ExternalLink>
+                </Link>
               }
             />
-            {section2.map((app) => (
-              <AppItem key={app.slug} app={app} />
+            {models.map((app) => (
+              <AppCard key={app.slug} app={app} />
             ))}
-          </Section>
+          </section>
 
-          <Separator />
-
-          <Section>
-            <SectionHeader title={<T id="section3" />} />
-            {section3.map((app) => (
-              <FeaturedApp key={app.slug} app={app} />
+          <section className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <SectionHeader title={<T id="others" />} />
+            {others.map((app) => (
+              <AppCard key={app.slug} app={app} />
             ))}
-          </Section>
-
-          <Separator />
-
-          <Section>
-            <SectionHeader
-              title={<T id="section4" />}
-              right={
-                <ExternalLink href="https://www.koyeb.com/deploy" className="text-link text-base font-medium">
-                  <T id="seeAll" />
-                </ExternalLink>
-              }
-            />
-            {section4.map((app) => (
-              <AppItem key={app.slug} app={app} />
-            ))}
-          </Section>
-        </>
+          </section>
+        </div>
       )}
     </>
   );
@@ -174,21 +165,13 @@ function Filters({ search, setSearch, categories, activeCategories, setActiveCat
   );
 }
 
-function Section({ children }: { children: React.ReactNode }) {
-  return <section className="grid grid-cols-2 gap-x-6 gap-y-4">{children}</section>;
-}
-
 function SectionHeader({ title, right }: { title: React.ReactNode; right?: React.ReactNode }) {
   return (
-    <header className="col-span-2 row justify-between gap-4">
+    <header className="col-span-full row justify-between gap-4">
       <h2 className="text-2xl font-medium">{title}</h2>
       {right}
     </header>
   );
-}
-
-function Separator() {
-  return <hr className="mt-8 mb-12" />;
 }
 
 function FeaturedApp({ app }: { app: OneClickApp }) {
@@ -199,23 +182,5 @@ function FeaturedApp({ app }: { app: OneClickApp }) {
       <div className="text-xl font-medium">{app.name}</div>
       <div className="truncate text-dim">{app.description}</div>
     </Link>
-  );
-}
-
-function AppItem({ app }: { app: OneClickApp }) {
-  return (
-    <div className="row items-center gap-3 px-3 py-2">
-      <img src={app.logo} className="size-10 rounded-lg bg-black/80 p-1 dark:bg-transparent" />
-
-      <div className="col min-w-0 grow gap-1">
-        <div className="text-base font-medium">{app.name}</div>
-        <div className="truncate text-xs text-dim">{app.description}</div>
-        <div className="text-xs font-bold text-dim">{app.category}</div>
-      </div>
-
-      <Link to={`/one-click-apps/${app.slug}`} className="text-link px-2 text-xs font-medium">
-        <T id="deploy" />
-      </Link>
-    </div>
   );
 }

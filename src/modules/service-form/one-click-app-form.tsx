@@ -23,8 +23,10 @@ import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas, useOrganizationQuotasQuery } from 'src/api/hooks/session';
 import { OneClickApp } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
+import { formatBytes, parseBytes } from 'src/application/memory';
 import { ControlledInput } from 'src/components/controlled';
 import { Loading } from 'src/components/loading';
+import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { handleSubmit } from 'src/hooks/form';
@@ -56,6 +58,7 @@ import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { serviceFormSchema } from './helpers/service-form.schema';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
+import { useWatchServiceForm } from './use-service-form';
 
 const T = createTranslate('modules.serviceForm.oneClickAppForm');
 
@@ -131,12 +134,6 @@ function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
     return <Loading />;
   }
 
-  const expanded = form.watch('meta.expandedSection');
-
-  const setExpanded = (section: 'environmentVariables' | 'instance') => {
-    return (expanded: boolean) => form.setValue('meta.expandedSection', expanded ? section : null);
-  };
-
   return (
     <FormProvider {...form}>
       <form
@@ -154,13 +151,11 @@ function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
         <OverviewSection />
 
         <div className="rounded-lg border">
-          <EnvironmentVariablesSection
-            expanded={expanded === 'environmentVariables'}
-            setExpanded={setExpanded('environmentVariables')}
-          />
-
-          <InstanceSection expanded={expanded === 'instance'} setExpanded={setExpanded('instance')} />
+          <EnvironmentVariablesSection />
+          <InstanceSection />
         </div>
+
+        <VolumesSection />
       </form>
 
       <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
@@ -238,41 +233,34 @@ function OverviewSection() {
   );
 }
 
-type EnvironmentVariableSectionProps = {
-  expanded: boolean;
-  setExpanded: (expanded: boolean) => void;
-};
-
-function EnvironmentVariablesSection({ expanded, setExpanded }: EnvironmentVariableSectionProps) {
-  const { watch } = useFormContext<ServiceForm>();
-  const { fields } = useFieldArray<ServiceForm, 'environmentVariables'>({ name: 'environmentVariables' });
+function EnvironmentVariablesSection() {
   const [optionalExpanded, setOptionalExpanded] = useState(false);
 
-  return (
-    <AccordionSection
-      isExpanded={expanded}
-      header={
-        <AccordionHeader expanded={expanded} setExpanded={setExpanded}>
-          <div className="font-medium">
-            <T id="environmentVariables.title" />
-          </div>
-        </AccordionHeader>
-      }
-    >
-      <div className="col gap-6 px-3 py-4">
-        {fields.length === 1 && <T id="environmentVariables.empty" />}
+  const { watch } = useFormContext<ServiceForm>();
 
-        {fields
-          .filter((field) => field.name !== '')
-          .map((field, index) => (
-            <Fragment key={field.id}>
-              <ControlledInput
-                label={watch(`environmentVariables.${index}.name`)}
-                name={`environmentVariables.${index}.value`}
-                helperText="Some description"
-              />
-            </Fragment>
-          ))}
+  const fieldArray = useFieldArray<ServiceForm, 'environmentVariables'>({ name: 'environmentVariables' });
+  const fields = fieldArray.fields.filter((field) => field.name !== '');
+
+  return (
+    <section>
+      <header className="row h-16 items-center px-3 py-2">
+        <div className="font-medium">
+          <T id="environmentVariables.title" />
+        </div>
+      </header>
+
+      <div className="col gap-6 px-3 py-4">
+        {fields.length === 0 && <T id="environmentVariables.empty" />}
+
+        {fields.map((field, index) => (
+          <Fragment key={field.id}>
+            <ControlledInput
+              label={watch(`environmentVariables.${index}.name`)}
+              name={`environmentVariables.${index}.value`}
+              helperText="Some description"
+            />
+          </Fragment>
+        ))}
 
         <AccordionSection
           isExpanded={optionalExpanded}
@@ -288,16 +276,13 @@ function EnvironmentVariablesSection({ expanded, setExpanded }: EnvironmentVaria
           <div className="p-4">To do</div>
         </AccordionSection>
       </div>
-    </AccordionSection>
+    </section>
   );
 }
 
-type InstanceSectionProps = {
-  expanded: boolean;
-  setExpanded: (expanded: boolean) => void;
-};
+function InstanceSection() {
+  const [expanded, setExpanded] = useState(false);
 
-function InstanceSection({ expanded, setExpanded }: InstanceSectionProps) {
   const { watch } = useFormContext<ServiceForm>();
 
   const instances = useInstances();
@@ -377,5 +362,32 @@ function InstanceSection({ expanded, setExpanded }: InstanceSectionProps) {
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
     </AccordionSection>
+  );
+}
+
+function VolumesSection() {
+  const volumes = useWatchServiceForm('volumes');
+
+  if (volumes.length === 0) {
+    return null;
+  }
+
+  return (
+    <Section title={<T id="volumes.title" />}>
+      {volumes.map((volume, index) => (
+        <div key={volume.name} className="divide-y rounded bg-muted">
+          <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
+            <Metadata label={<T id="volumes.name" values={{ number: index + 1 }} />} value={volume.name} />
+
+            <Metadata label={<T id="volumes.mountPath" />} value={volume.mountPath} />
+
+            <Metadata
+              label={<T id="volumes.size" />}
+              value={formatBytes(parseBytes(volume.size + 'GB'), { decimal: true })}
+            />
+          </div>
+        </div>
+      ))}
+    </Section>
   );
 }

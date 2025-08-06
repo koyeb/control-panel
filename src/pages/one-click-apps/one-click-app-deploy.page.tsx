@@ -5,18 +5,16 @@ import { useEffect, useState } from 'react';
 import { useOneClickAppsQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
-import { LinkButton } from 'src/components/link';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
-import { IconChevronLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { OneClickAppForm } from 'src/modules/service-form/one-click-app-form';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('pages.deploy.oneClickApp');
+const T = createTranslate('pages.oneClickApps.deploy');
 
-export function DeployOneClickAppPage() {
+export function OneClickAppDeployPage() {
   const navigate = useNavigate();
 
   const slug = useRouteParam('slug');
@@ -41,34 +39,30 @@ export function DeployOneClickAppPage() {
     <div className="col gap-6">
       <DocumentTitle title={app.name} />
 
-      <div className="col items-start gap-8 lg:row">
+      <div className="col items-stretch gap-8 lg:row">
         <div className="col grow gap-8">
           <Header app={app} />
-
           <OneClickAppForm app={app} onCostChanged={setCost} />
-
-          <LinkButton to="/one-click-apps" color="gray" className="self-start">
-            <IconChevronLeft className="size-4" />
-            <T id="back" />
-          </LinkButton>
         </div>
 
         {cost && (
-          <div className="top-32 max-w-md lg:sticky lg:max-w-xs">
-            <ServiceEstimatedCost
-              cost={cost}
-              button={
-                <Button
-                  size={3}
-                  type="submit"
-                  form="one-click-app-form"
-                  loading={isDeploying}
-                  className="w-full"
-                >
-                  <T id="submitButton" />
-                </Button>
-              }
-            />
+          <div className="max-w-md lg:min-h-[calc(100vh-6rem)] lg:max-w-xs">
+            <div className="lg:sticky lg:top-48">
+              <ServiceEstimatedCost
+                cost={cost}
+                button={
+                  <Button
+                    size={3}
+                    type="submit"
+                    form="one-click-app-form"
+                    loading={isDeploying}
+                    className="w-full"
+                  >
+                    <T id="submitButton" />
+                  </Button>
+                }
+              />
+            </div>
           </div>
         )}
       </div>
