@@ -7,7 +7,7 @@ import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
 import { LinkButton } from 'src/components/link';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { IconChevronLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
@@ -16,33 +16,18 @@ import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.deploy.oneClickApp');
 
-export function DeployOneClickApp() {
+export function DeployOneClickAppPage() {
   const navigate = useNavigate();
 
-  const oneClickAppParam = useSearchParams().get('one-click-app');
+  const slug = useRouteParam('slug');
   const oneClickAppsQuery = useOneClickAppsQuery();
-  const app = oneClickAppsQuery.data?.find(hasProperty('slug', oneClickAppParam));
+  const app = oneClickAppsQuery.data?.find(hasProperty('slug', slug));
 
   const [cost, setCost] = useState<ServiceCost>();
 
   useEffect(() => {
-    if (oneClickAppsQuery.isSuccess) {
-      if (app === undefined) {
-        navigate({
-          search: (prev) => ({ ...prev, 'one-click-app': null }),
-          replace: true,
-        });
-      } else {
-        const url = new URL(app.deployUrl);
-
-        navigate({
-          search: {
-            ...Object.fromEntries(url.searchParams),
-            'one-click-app': app.slug,
-          },
-          replace: true,
-        });
-      }
+    if (oneClickAppsQuery.isSuccess && app === undefined) {
+      navigate({ to: '/deploy', replace: true });
     }
   }, [oneClickAppsQuery, app, navigate]);
 
@@ -60,7 +45,7 @@ export function DeployOneClickApp() {
         <div className="col grow gap-8">
           <Header app={app} />
 
-          <OneClickAppForm onCostChanged={setCost} />
+          <OneClickAppForm app={app} onCostChanged={setCost} />
 
           <LinkButton to="/one-click-apps" color="gray" className="self-start">
             <IconChevronLeft className="size-4" />

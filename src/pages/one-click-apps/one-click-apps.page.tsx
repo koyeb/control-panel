@@ -193,7 +193,7 @@ function Separator() {
 
 function FeaturedApp({ app }: { app: OneClickApp }) {
   return (
-    <Link to="/deploy" search={{ 'one-click-app': app.slug }} className="col gap-2">
+    <Link to={`/one-click-apps/${app.slug}`} className="col gap-2">
       <img src={app.cover} className="max-h-[16rem] w-full rounded-xl object-cover" />
       <div className="text-xs font-bold text-dim">{app.category}</div>
       <div className="text-xl font-medium">{app.name}</div>
@@ -213,11 +213,7 @@ function AppItem({ app }: { app: OneClickApp }) {
         <div className="text-xs font-bold text-dim">{app.category}</div>
       </div>
 
-      <Link
-        to="/deploy"
-        search={{ 'one-click-app': app.slug }}
-        className="text-link px-2 text-xs font-medium"
-      >
+      <Link to={`/one-click-apps/${app.slug}`} className="text-link px-2 text-xs font-medium">
         <T id="deploy" />
       </Link>
     </div>
