@@ -1,6 +1,11 @@
+import { useEffect, useRef } from 'react';
+import { useFormContext } from 'react-hook-form';
+
+import { useTrackEvent } from 'src/application/posthog';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceFormSection } from '../../components/service-form-section';
+import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { ScalingConfiguration } from './scaling-configuration';
@@ -8,6 +13,8 @@ import { ScalingConfiguration } from './scaling-configuration';
 const T = createTranslate('modules.serviceForm.scaling');
 
 export function ScalingSection() {
+  useScalingChangedEvent();
+
   return (
     <ServiceFormSection
       section="scaling"
@@ -19,6 +26,26 @@ export function ScalingSection() {
       <ScalingConfiguration />
     </ServiceFormSection>
   );
+}
+
+function useScalingChangedEvent() {
+  const { watch } = useFormContext<ServiceForm>();
+  const track = useTrackEvent();
+
+  const changed = useRef(false);
+
+  useEffect(() => {
+    const { unsubscribe } = watch((values, { name }) => {
+      if (changed.current || !name?.startsWith('scaling')) {
+        return;
+      }
+
+      changed.current = true;
+      track('scaling_changed');
+    });
+
+    return () => unsubscribe();
+  }, [watch, track]);
 }
 
 function Summary() {
