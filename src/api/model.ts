@@ -142,9 +142,13 @@ export type OneClickApp = {
   slug: string;
   description: string;
   logo: string;
+  cover: string;
   deployUrl: string;
   category: string;
   repository: string;
+  developer?: string;
+  projectSite?: string;
+  modelSize?: string;
 };
 
 export type AiModel = {

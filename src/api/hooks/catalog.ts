@@ -3,7 +3,7 @@ import sortBy from 'lodash-es/sortBy';
 
 import { parseBytes } from 'src/application/memory';
 import { getConfig } from 'src/utils/config';
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
 import {
   mapCatalogDatacenter,
@@ -125,10 +125,13 @@ type OneClickAppApiResponse = {
   category: string;
   name: string;
   logos: [string, ...string[]];
+  cover: string;
   description: string;
   repository: string;
   deploy_button_url: string;
   slug: string;
+  project_site?: string;
+  developer?: string;
   env?: Array<{ name: string; value: string }>;
   model_name?: string;
   model_size?: string;
@@ -160,13 +163,9 @@ export function useOneClickAppsQuery() {
 
 function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
   return {
-    name: app.name,
-    slug: app.slug,
-    description: app.description,
+    ...snakeToCamelDeep(app),
     logo: app.logos[0],
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
-    category: app.category,
-    repository: app.repository,
   };
 }
 
@@ -180,7 +179,7 @@ function getOneClickAppUrl(appSlug: string, appUrl: string): string {
   url.protocol = window.location.protocol;
   url.host = window.location.host;
 
-  // url.searchParams.set('one_click_app', appSlug);
+  // url.searchParams.set('one-click-app', appSlug);
 
   return url.toString();
 }
