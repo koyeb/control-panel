@@ -65,9 +65,16 @@ export function useWatchServiceForm<Path extends FieldPath<ServiceForm>>(name: P
 
 function useServiceFormResolver() {
   const translate = useTranslate();
-  const getUnknownInterpolationErrors = useUnknownInterpolationErrors();
+
+  const organization = useOrganization();
   const quotas = defined(useOrganizationQuotas());
-  const schemaResolver = useZodResolver(serviceFormSchema(quotas), errorMessageHandler(translate));
+
+  const schemaResolver = useZodResolver(
+    serviceFormSchema(organization, quotas),
+    errorMessageHandler(translate),
+  );
+
+  const getUnknownInterpolationErrors = useUnknownInterpolationErrors();
 
   return useCallback<Resolver<ServiceForm>>(
     async (values, context, options) => {

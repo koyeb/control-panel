@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { OrganizationQuotas } from 'src/api/model';
+import { Organization, OrganizationQuotas } from 'src/api/model';
 import { create } from 'src/utils/factories';
 
 import { Port, ServiceForm } from '../service-form.types';
@@ -9,11 +9,14 @@ import { defaultHealthCheck, defaultServiceForm } from './initialize-service-for
 import { serviceFormSchema } from './service-form.schema';
 
 describe('serviceFormSchema', () => {
+  let organization: Organization;
   let quotas: OrganizationQuotas;
   let form: ServiceForm;
 
   beforeEach(() => {
-    quotas = create.quotas({});
+    organization = create.organization();
+
+    quotas = create.quotas();
     quotas.scaleToZero.lightSleepIdleDelayMin = 60;
     quotas.scaleToZero.lightSleepIdleDelayMax = 3600;
     quotas.scaleToZero.deepSleepIdleDelayMin = 300;
@@ -27,7 +30,7 @@ describe('serviceFormSchema', () => {
   });
 
   const parse = () => {
-    const result = serviceFormSchema(quotas).safeParse(form);
+    const result = serviceFormSchema(organization, quotas).safeParse(form);
 
     expect(result.success, JSON.stringify(result.error, null, 2)).toBe(true);
 
@@ -99,6 +102,17 @@ describe('serviceFormSchema', () => {
 
     form.scaling.scaleToZero.idlePeriod = 70;
     expect(() => parse()).toThrowError('Number must be less than or equal to 7130');
+  });
+
+  it('scale to zero on the hobby plan', () => {
+    organization.plan = 'hobby';
+
+    quotas.scaleToZero.deepSleepIdleDelayMin = 0;
+    quotas.scaleToZero.deepSleepIdleDelayMax = 0;
+
+    form.scaling.scaleToZero.idlePeriod = 300;
+
+    parse();
   });
 
   it('environment variables', () => {
@@ -184,7 +198,7 @@ describe('serviceFormSchema', () => {
     form.appName = ' app ';
     form.serviceName = ' service ';
 
-    expect(serviceFormSchema(quotas).parse(form)).toMatchObject({
+    expect(serviceFormSchema(organization, quotas).parse(form)).toMatchObject({
       appName: 'app',
       serviceName: 'service',
     });

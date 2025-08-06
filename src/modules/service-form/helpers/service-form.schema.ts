@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { EnvironmentVariable, OrganizationQuotas } from 'src/api/model';
+import { EnvironmentVariable, Organization, OrganizationQuotas } from 'src/api/model';
 import { isSlug } from 'src/utils/strings';
 
 import { File, Scaling } from '../service-form.types';
@@ -90,12 +90,12 @@ const instance = z
   .nullable()
   .refine((id) => id !== null);
 
-function scaling(quotas: OrganizationQuotas) {
+function scaling(organization: Organization, quotas: OrganizationQuotas) {
   return z
     .object({
       min: z.number().min(0).max(20),
       max: z.number().min(0).max(20),
-      scaleToZero: scaleToZero(quotas),
+      scaleToZero: scaleToZero(organization, quotas),
       targets: z.object({
         cpu: target(1, 100),
         memory: target(1, 100),
@@ -114,7 +114,7 @@ function scaling(quotas: OrganizationQuotas) {
     }, 'noTargetSelected');
 }
 
-function scaleToZero(quotas: OrganizationQuotas) {
+function scaleToZero(organization: Organization, quotas: OrganizationQuotas) {
   return z
     .object({
       lightSleepEnabled: z.boolean(),
@@ -122,6 +122,10 @@ function scaleToZero(quotas: OrganizationQuotas) {
       lightToDeepPeriod: z.number(),
     })
     .superRefine((value, ctx) => {
+      if (organization.plan === 'hobby') {
+        return;
+      }
+
       const { idlePeriod, lightToDeepPeriod } = value;
       const bounds = getScaleToZeroBounds(quotas, value);
 
@@ -263,7 +267,7 @@ function preprocessVolumes(value: unknown) {
   return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
-export function serviceFormSchema(quotas: OrganizationQuotas) {
+export function serviceFormSchema(organization: Organization, quotas: OrganizationQuotas) {
   return z.object({
     meta: z.object({}).passthrough(),
     appName: z
@@ -290,7 +294,7 @@ export function serviceFormSchema(quotas: OrganizationQuotas) {
     files: z.preprocess(preprocessFiles, z.array(file)),
     regions,
     instance,
-    scaling: scaling(quotas),
+    scaling: scaling(organization, quotas),
     ports: z.array(ports),
     volumes: z.preprocess(preprocessVolumes, z.array(volumes)),
   });
