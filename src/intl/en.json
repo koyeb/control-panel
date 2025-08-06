@@ -1268,7 +1268,7 @@
           },
           "lightSleep": {
             "label": "Enable light sleep",
-            "description": "Light Sleep reduces cold starts to ~200ms After scaling to zero, the service stays in Light Sleep for {value}s before going into Deep Sleep.",
+            "description": "Light Sleep reduces cold starts to ~200ms. After scaling to zero, the service stays in Light Sleep for {value}s before going into Deep Sleep.",
             "disabledGpu": "Light sleep is only supported on Standard CPU instances",
             "unit": "s"
           },
