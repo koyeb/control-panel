@@ -86,6 +86,12 @@ function AutoScaling({ disabled, onChanged }: AutoScalingProps) {
   const min = watch('scaling.min');
   const max = watch('scaling.max');
 
+  const minMin = watch('serviceType') === 'worker' ? 1 : 0;
+  const minMax = max;
+
+  const maxMin = Math.max(1, min);
+  const maxMax = 20;
+
   return (
     <>
       <ControlledInput<ServiceForm>
@@ -93,16 +99,16 @@ function AutoScaling({ disabled, onChanged }: AutoScalingProps) {
         type="number"
         label={<T id="min" />}
         disabled={disabled}
-        min={0}
-        max={max}
+        min={minMin}
+        max={minMax}
         onChangeEffect={(event) => onChanged(event.target.valueAsNumber, max)}
         className="w-20"
       />
 
       <Slider
         disabled={disabled}
-        min={0}
-        max={20}
+        min={minMin}
+        max={maxMax}
         connector
         tickSize={2}
         renderTick={(value) => <Tick value={value} />}
@@ -124,8 +130,8 @@ function AutoScaling({ disabled, onChanged }: AutoScalingProps) {
         type="number"
         label={<T id="max" />}
         disabled={disabled}
-        min={Math.max(1, min)}
-        max={20}
+        min={maxMin}
+        max={maxMax}
         onChangeEffect={(event) => onChanged(min, event.target.valueAsNumber)}
         className="w-20"
       />
