@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 
-import { CatalogInstance } from 'src/api/model';
+import { CatalogInstance, ServiceType } from 'src/api/model';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { keys } from 'src/utils/object';
 
@@ -79,10 +79,26 @@ export function useScalingRules() {
     }
   };
 
+  const onServiceTypeChanged = (type: ServiceType) => {
+    const { min, max } = getValues('scaling');
+
+    if (type === 'worker') {
+      if (min === 0) {
+        setValue('scaling.min', 1, { shouldValidate: true });
+        onScalingChanged(1, max);
+      }
+
+      disableTarget('requests');
+      disableTarget('concurrentRequests');
+      disableTarget('responseTime');
+    }
+  };
+
   return {
     onScalingChanged,
     onScalingTargetChanged,
     onInstanceChanged,
+    onServiceTypeChanged,
   };
 }
 

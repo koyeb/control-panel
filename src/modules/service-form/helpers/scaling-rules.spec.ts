@@ -155,4 +155,40 @@ describe('useScalingRules', () => {
       expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
     });
   });
+
+  describe('onServiceTypeChanged', () => {
+    it('sets min = 1 when min = 0 and changing the service type to worker', () => {
+      form.setValue('scaling.min', 0);
+      form.setValue('scaling.scaleToZero.lightSleepEnabled', true);
+
+      hook.onServiceTypeChanged('worker');
+
+      expect(form.getValues()).toHaveProperty('scaling.min', 1);
+      expect(form.getValues()).toHaveProperty('scaling.scaleToZero.lightSleepEnabled', false);
+    });
+
+    it('does not change min when it is > 0', () => {
+      form.setValue('scaling.min', 2);
+
+      hook.onServiceTypeChanged('worker');
+
+      expect(form.getValues()).toHaveProperty('scaling.min', 2);
+    });
+
+    it('disable web service autoscaling targets when switching to worker', () => {
+      form.setValue('scaling.targets.cpu.enabled', true);
+      form.setValue('scaling.targets.memory.enabled', true);
+      form.setValue('scaling.targets.requests.enabled', true);
+      form.setValue('scaling.targets.concurrentRequests.enabled', true);
+      form.setValue('scaling.targets.responseTime.enabled', true);
+
+      hook.onServiceTypeChanged('worker');
+
+      expect(form.getValues()).toHaveProperty('scaling.targets.cpu.enabled', true);
+      expect(form.getValues()).toHaveProperty('scaling.targets.memory.enabled', true);
+      expect(form.getValues()).toHaveProperty('scaling.targets.requests.enabled', false);
+      expect(form.getValues()).toHaveProperty('scaling.targets.concurrentRequests.enabled', false);
+      expect(form.getValues()).toHaveProperty('scaling.targets.responseTime.enabled', false);
+    });
+  });
 });

@@ -1,5 +1,3 @@
-import { useFormContext } from 'react-hook-form';
-
 import { useInstance } from 'src/api/hooks/catalog';
 import { ServiceType } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
@@ -9,7 +7,7 @@ import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 import { ServiceFormSection } from '../../components/service-form-section';
-import { ServiceForm } from '../../service-form.types';
+import { useScalingRules } from '../../helpers/scaling-rules';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { ServiceTypeAlerts } from './service-type-alerts';
@@ -71,7 +69,7 @@ type ServiceTypeOptionProps = {
 };
 
 function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOptionProps) {
-  const { setValue, trigger } = useFormContext<ServiceForm>();
+  const { onServiceTypeChanged } = useScalingRules();
   const instance = useInstance(useWatchServiceForm('instance'));
 
   const canSelect = () => {
@@ -91,18 +89,7 @@ function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOption
       icon={<Icon className="icon" />}
       title={title}
       description={description}
-      onChangeEffect={() => {
-        if (type === 'worker') {
-          setValue('scaling.targets.requests.enabled', false);
-          setValue('scaling.targets.concurrentRequests.enabled', false);
-          setValue('scaling.targets.responseTime.enabled', false);
-          void trigger('scaling');
-        }
-
-        if (type === 'web') {
-          setValue('scaling.min', instance?.category === 'gpu' ? 0 : 1);
-        }
-      }}
+      onChangeEffect={() => onServiceTypeChanged(type)}
       className="flex-1"
     />
   );
