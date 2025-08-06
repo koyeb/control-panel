@@ -21,6 +21,7 @@ import {
 } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas, useOrganizationQuotasQuery } from 'src/api/hooks/session';
+import { OneClickApp } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { ControlledInput } from 'src/components/controlled';
 import { Loading } from 'src/components/loading';
@@ -28,7 +29,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { BranchMetadata, RepositoryMetadata } from 'src/modules/deployment/metadata/build-metadata';
@@ -59,6 +60,7 @@ import { ServiceForm } from './service-form.types';
 const T = createTranslate('modules.serviceForm.oneClickAppForm');
 
 type OneClickAppFormProps = {
+  app: OneClickApp;
   onCostChanged: (cost?: ServiceCost) => void;
 };
 
@@ -82,10 +84,9 @@ export function OneClickAppForm(props: OneClickAppFormProps) {
   return <OneClickAppForm_ {...props} />;
 }
 
-function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
+function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
   const navigate = useNavigate();
 
-  const params = useSearchParams();
   const datacenters = useDatacenters();
   const regions = useRegions();
   const instances = useInstances();
@@ -96,8 +97,10 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
 
   const form = useForm<ServiceForm>({
     defaultValues: () => {
+      const { searchParams } = new URL(app.deployUrl);
+
       return initializeServiceForm(
-        params,
+        searchParams,
         datacenters,
         regions,
         instances,
@@ -120,7 +123,6 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   });
 
   const formRef = useRef<HTMLFormElement>(null);
-
   const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
 
   useOnCostEstimationChanged(form, onCostChanged);

@@ -36,6 +36,7 @@ import { OneClickAppsPage } from './pages/one-click-apps/one-click-apps.page';
 import { SecretsPage } from './pages/secrets/secrets.page';
 import { ServiceConsolePage } from './pages/service/console/service-console.page';
 import { CreateServicePage } from './pages/service/create-service.page';
+import { DeployOneClickAppPage } from './pages/service/deploy/deploy-one-click-app.page';
 import { DeployPage } from './pages/service/deploy/deploy.page';
 import { ServiceMetricsPage } from './pages/service/metrics/service-metrics.page';
 import { ServiceOverviewPage } from './pages/service/overview/service-overview.page';
@@ -145,6 +146,7 @@ function AuthenticatedRoutes() {
         <Route path="/user/settings/*?" component={UserSettingsPages} />
 
         <Route path="/one-click-apps" component={OneClickAppsPage} />
+        <Route path="/one-click-apps/:slug" component={DeployOneClickAppPage} />
 
         <Route path="__error" component={ErrorTestPage} />
 

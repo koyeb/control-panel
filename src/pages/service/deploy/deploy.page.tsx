@@ -9,18 +9,12 @@ import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ServiceForm } from 'src/modules/service-form/service-form';
 
 import { DeployModel } from './deploy-model';
-import { DeployOneClickApp } from './deploy-one-click-app';
 
 const T = createTranslate('pages.deploy');
 
 export function DeployPage() {
   const params = useSearchParams();
-  const oneClickApp = params.get('one-click-app');
   const type = params.get('type');
-
-  if (oneClickApp) {
-    return <DeployOneClickApp />;
-  }
 
   if (type === 'model') {
     return <DeployModel />;
