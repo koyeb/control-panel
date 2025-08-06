@@ -53,7 +53,7 @@ function FixedScaling({ disabled, onChanged }: FixedScalingProps) {
 
       <Slider
         disabled={disabled}
-        min={0}
+        min={1}
         max={20}
         tickSize={2}
         renderTick={(value) => <Tick value={value} />}
@@ -67,7 +67,7 @@ function FixedScaling({ disabled, onChanged }: FixedScalingProps) {
             onChanged(value, value);
           }
         }}
-        className="hidden flex-1 pt-10 sm:block"
+        className="hidden flex-1 pt-10 sm:flex"
       />
 
       <div className="w-20" />
