@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Route, Switch } from 'wouter';
 
 import { useAppQuery } from 'src/api/hooks/app';
+import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useServiceQuery, useServices } from 'src/api/hooks/service';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
 import { LinkMenuItem } from 'src/components/link';
@@ -76,7 +77,17 @@ export function AppBreadcrumbs() {
           <UserSettingsCrumbs />
         </Route>
 
-        <CrumbRoute path="/one-click-apps" label={<T id="oneClickApps" />} link="/one-click-apps" />
+        <Route path="/one-click-apps/*?">
+          <Crumb link="/one-click-apps" label={<T id="oneClickApps.index" />} />
+
+          <Route path="/one-click-apps/category/:category">
+            {({ category }) => (
+              <Crumb label={category} link="/one-click-apps/category/:category" params={{ category }} />
+            )}
+          </Route>
+
+          <Route path="/one-click-apps/:slug/*?">{({ slug }) => <OneClickAppCrumbs slug={slug} />}</Route>
+        </Route>
       </Switch>
     </Breadcrumbs>
   );
@@ -179,6 +190,27 @@ function DatabaseServiceCrumbs({ databaseServiceId }: { databaseServiceId: strin
         label={<T id="database.settings" />}
         link="/database-services/$databaseServiceId/settings"
         params={{ databaseServiceId }}
+      />
+    </>
+  );
+}
+
+function OneClickAppCrumbs({ slug }: { slug: string }) {
+  const app = useOneClickApps().find((app) => app.slug === slug);
+
+  if (!app) {
+    return <TextSkeleton width={8} />;
+  }
+
+  return (
+    <>
+      <Crumb label={app.name} link={`/one-click-apps/$slug`} params={{ slug: app.slug }} />
+
+      <CrumbRoute
+        path="/one-click-apps/:slug/deploy"
+        label={<T id="oneClickApps.deploy" />}
+        link="/one-click-apps/$slug/deploy"
+        params={{ slug }}
       />
     </>
   );
