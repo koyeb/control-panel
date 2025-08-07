@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { getApi } from 'src/application/container';
+
 import { mapDeployment } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
 import { AppFull } from '../model';
-import { getQueryKey, useApi, useApiQueryFn } from '../use-api';
+import { getQueryKey, useApiQueryFn } from '../use-api';
 
 export function useAppsQuery() {
   return useQuery({
@@ -29,11 +31,11 @@ export function useApp(appId?: string) {
 }
 
 export function useAppsFull() {
-  const api = useApi();
-
   return useQuery({
     queryKey: getQueryKey('listAppsFull', {}),
     async queryFn({ signal }) {
+      const api = getApi();
+
       const [apps, services] = await Promise.all([
         api.listApps({ signal, query: { limit: '100' } }),
         api.listServices({ signal, query: { limit: '100' } }),

@@ -6,7 +6,8 @@ import { z } from 'zod';
 
 import { API } from 'src/api/api';
 import { RegistrySecret, type RegistryType } from 'src/api/model';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { readFile } from 'src/application/read-file';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
@@ -67,11 +68,12 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
     }
   }, [form, secret]);
 
-  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const { mutateAsync: createSecret } = useMutation({
     async mutationFn(values: z.infer<typeof schema>) {
+      const api = getApi();
+
       if (secret) {
         return api.updateSecret({
           path: { id: secret.id },

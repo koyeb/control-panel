@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { DatabaseRole, Service } from 'src/api/model';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -18,14 +18,13 @@ type DeleteDatabaseRoleDialogProps = {
 
 export function DeleteDatabaseRoleDialog({ service, role }: DeleteDatabaseRoleDialogProps) {
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
 
-  const api = useApi();
+  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     async mutationFn() {
-      await updateDatabaseService(api, service.id, (definition) => {
+      await updateDatabaseService(service.id, (definition) => {
         const roles = definition.database!.neon_postgres!.roles!;
         const index = roles.findIndex(hasProperty('name', role.name));
 

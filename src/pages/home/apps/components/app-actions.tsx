@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { App, AppDomain } from 'src/api/model';
-import { useApi, useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -80,9 +81,8 @@ const editAppSchema = z.object({
 
 function EditAppDialog({ app }: { app: App }) {
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
 
-  const api = useApi();
+  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const koyebDomain = app.domains.find(hasProperty('type', 'AUTOASSIGNED'));
@@ -98,6 +98,7 @@ function EditAppDialog({ app }: { app: App }) {
 
   const mutation = useMutation({
     async mutationFn(values: FormValues<typeof form>) {
+      const api = getApi();
       const promises: Promise<unknown>[] = [];
 
       if (values.name !== app.name) {
