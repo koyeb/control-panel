@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useApiMutationFn } from 'src/api/use-api';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -42,6 +43,7 @@ const schema = z.object({
 function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
+  const setToken = useSetToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -57,8 +59,9 @@ function ChangePasswordForm() {
       header: { 'seon-fp': await getSeonFingerprint() },
       body: { id: token, password },
     })),
-    onSuccess({ token }) {
-      navigate({ to: '/', state: { token: token!.id! } });
+    async onSuccess({ token }) {
+      await setToken(token!.id!);
+      navigate({ to: '/' });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form),

@@ -3,13 +3,11 @@ import { useMemo } from 'react';
 
 import { useSecrets } from 'src/api/hooks/secret';
 import { getApiQueryKey, useApi } from 'src/api/use-api';
-import { useToken } from 'src/application/authentication';
 import { hasProperty } from 'src/utils/object';
 import { wait } from 'src/utils/promises';
 
 export function useVerifyDockerImage(image: string, registrySecretName: string | undefined) {
   const api = useApi();
-  const token = useToken();
 
   const secrets = useSecrets('registry');
   const secretId = secrets?.find(hasProperty('name', registrySecretName))?.id;
@@ -24,7 +22,7 @@ export function useVerifyDockerImage(image: string, registrySecretName: string |
     refetchInterval: false,
     refetchOnWindowFocus: false,
     retry: false,
-    queryKey: getApiQueryKey('verifyDockerImage', { query: { image, secret_id: secretId } }, token),
+    queryKey: getApiQueryKey('verifyDockerImage', { query: { image, secret_id: secretId } }),
     async queryFn({ signal }) {
       if (!(await wait(500, signal))) {
         return null;
