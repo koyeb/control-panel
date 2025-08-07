@@ -1,10 +1,8 @@
 import { InvalidateQueryFilters, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { container } from 'src/application/container';
 import { TOKENS } from 'src/tokens';
-import { keys, toObject } from 'src/utils/object';
-import { AnyFunction } from 'src/utils/types';
 
 import { Api } from './api';
 
@@ -13,30 +11,6 @@ type EndpointFn<E extends Endpoint> = (param: ApiEndpointParams<E>) => Promise<A
 
 type ApiEndpointParams<E extends Endpoint> = Parameters<Api[E]>[0];
 type ApiEndpointResult<E extends Endpoint> = Awaited<ReturnType<Api[E]>>;
-
-export function useApi() {
-  return useMemo(() => {
-    const config = container.resolve(TOKENS.config);
-    const auth = container.resolve(TOKENS.authentication);
-    const api = container.resolve(TOKENS.api);
-
-    return toObject(
-      keys(api),
-      (key) => key,
-      (key) => {
-        return (param: object) => {
-          const fn: AnyFunction = api[key];
-
-          return fn({
-            baseUrl: config.get('apiBaseUrl'),
-            token: auth.token,
-            ...param,
-          }) as ReturnType<Api[Endpoint]>;
-        };
-      },
-    ) as Api;
-  }, []);
-}
 
 export function getQueryKey(endpoint: string, params: object) {
   return [endpoint, params];

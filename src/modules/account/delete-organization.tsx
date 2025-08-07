@@ -2,8 +2,9 @@ import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useApi, useApiQueryFn } from 'src/api/use-api';
+import { useApiQueryFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
@@ -14,7 +15,6 @@ const T = createTranslate('modules.account.deleteOrganization');
 export function DeleteOrganization() {
   const t = T.useTranslate();
 
-  const api = useApi();
   const user = useUser();
   const organization = useOrganization();
 
@@ -28,6 +28,8 @@ export function DeleteOrganization() {
 
   const deleteOrganization = useMutation({
     async mutationFn() {
+      const api = getApi();
+
       const { members } = await api.listOrganizationMembers({
         query: { user_id: user.id },
       });

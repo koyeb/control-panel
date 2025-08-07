@@ -15,7 +15,6 @@ import {
 } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas, useOrganizationQuotasQuery } from 'src/api/hooks/session';
-import { useApi } from 'src/api/use-api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
@@ -89,7 +88,6 @@ export function OneClickAppForm(props: OneClickAppFormProps) {
 function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   const navigate = useNavigate();
 
-  const api = useApi();
   const params = useSearchParams();
   const datacenters = useDatacenters();
   const regions = useRegions();
@@ -104,7 +102,6 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
   const form = useForm<OneClickAppFormType>({
     async defaultValues() {
       const values = await initializeServiceForm(
-        api,
         params,
         datacenters,
         regions,
@@ -131,7 +128,7 @@ function OneClickAppForm_({ onCostChanged }: OneClickAppFormProps) {
     async mutationFn({ instance, regions, environmentVariables }: FormValues<typeof form>) {
       assert(serviceForm !== undefined);
 
-      return submitServiceForm(api, {
+      return submitServiceForm({
         ...serviceForm,
         appName: generateAppName(),
         instance,

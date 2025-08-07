@@ -6,8 +6,9 @@ import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
-import { useApi, useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -277,12 +278,13 @@ function useLeaveOrganization() {
 
   const user = useUser();
 
-  const api = useApi();
   const setToken = useSetToken();
   const navigate = useNavigate();
 
   return useMutation({
     async mutationFn(membership: OrganizationMember) {
+      const api = getApi();
+
       const { members } = await api.listOrganizationMembers({
         query: { user_id: user.id },
       });
