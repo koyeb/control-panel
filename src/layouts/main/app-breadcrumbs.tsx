@@ -196,7 +196,11 @@ function AppServiceCrumb({ serviceId }: { serviceId: string }) {
   const serviceQuery = useServiceQuery(serviceId);
   const appQuery = useAppQuery(serviceQuery.data?.appId);
 
-  if (!appQuery.isSuccess || !serviceQuery.isSuccess) {
+  if (appQuery.isError || serviceQuery.isError) {
+    return null;
+  }
+
+  if (appQuery.isPending || serviceQuery.isPending) {
     return <Crumb label={<TextSkeleton width={8} />} />;
   }
 
