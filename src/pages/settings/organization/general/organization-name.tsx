@@ -1,5 +1,6 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -22,9 +23,12 @@ export function OrganizationName() {
   const organization = useOrganization();
 
   const form = useForm<z.infer<typeof schema>>({
-    defaultValues: { organizationName: organization.name },
     resolver: useZodResolver(schema),
   });
+
+  useEffect(() => {
+    form.reset({ organizationName: organization.name });
+  }, [form, organization]);
 
   const invalidate = useInvalidateApiQuery();
 

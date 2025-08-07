@@ -34,7 +34,7 @@ export function BillingAlerts() {
 
   useEffect(() => {
     form.reset({ amount: currentAmount !== null ? currentAmount / 100 : Number.NaN });
-  }, [currentAmount, form]);
+  }, [form, currentAmount]);
 
   const onSubmit = async ({ amount }: FormValues<typeof form>) => {
     if (Number.isNaN(amount) || amount === 0) {
