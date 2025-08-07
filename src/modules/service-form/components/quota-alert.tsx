@@ -2,7 +2,8 @@ import { Alert } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { isApiValidationError } from 'src/api/api-errors';
-import { getQueryKey, useApi } from 'src/api/use-api';
+import { getQueryKey } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { ExternalLinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';
@@ -19,8 +20,6 @@ type QuotaAlertProps = {
 };
 
 export function QuotaAlert(props: QuotaAlertProps) {
-  const api = useApi();
-
   const serviceId = props.serviceId;
   const values = getValues(props);
 
@@ -33,6 +32,7 @@ export function QuotaAlert(props: QuotaAlertProps) {
         return null;
       }
 
+      const api = getApi();
       const definition = serviceFormToDeploymentDefinition(values);
 
       try {

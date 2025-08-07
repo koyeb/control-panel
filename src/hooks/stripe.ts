@@ -2,8 +2,7 @@ import { CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-
 import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 
-import { Api } from 'src/api/api';
-import { useApi } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { inArray } from 'src/utils/arrays';
@@ -26,7 +25,6 @@ type PaymentMutationProps = {
 };
 
 export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutationProps = {}) {
-  const api = useApi();
   const stripe = useStripe();
   const elements = useElements();
 
@@ -35,8 +33,8 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
       assert(stripe !== null);
       assert(elements !== null);
 
-      await submitPaymentMethod(api, stripe, elements);
-      await waitForPaymentMethod(api);
+      await submitPaymentMethod(stripe, elements);
+      await waitForPaymentMethod();
     },
     onError(error) {
       if (error instanceof StripeError) {
@@ -55,7 +53,8 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
   });
 }
 
-async function submitPaymentMethod(api: Api, stripe: Stripe, elements: StripeElements) {
+async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
+  const api = getApi();
   const { payment_method } = await api.createPaymentAuthorization({});
 
   try {
@@ -77,11 +76,13 @@ async function submitPaymentMethod(api: Api, stripe: Stripe, elements: StripeEle
   }
 }
 
-async function waitForPaymentMethod(api: Api) {
-  let hasPaymentMethod = false;
+async function waitForPaymentMethod() {
+  const api = getApi();
 
   const start = new Date().getTime();
   const elapsed = () => new Date().getTime() - start;
+
+  let hasPaymentMethod = false;
 
   while (!hasPaymentMethod && elapsed() <= waitForPaymentMethodTimeout) {
     const organization = await api.getCurrentOrganization({});

@@ -10,7 +10,9 @@ import {
   Organization,
   OrganizationQuotas,
 } from 'src/api/model';
+import { container } from 'src/application/container';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
+import { TOKENS } from 'src/tokens';
 import { create } from 'src/utils/factories';
 
 import { ServiceForm } from '../service-form.types';
@@ -40,6 +42,7 @@ describe('initializeServiceForm', () => {
 
   beforeEach(() => {
     api = {} as Api;
+    container.bindValue(TOKENS.api, api);
 
     params = new URLSearchParams();
 
@@ -66,7 +69,6 @@ describe('initializeServiceForm', () => {
 
   async function initialize() {
     return initializeServiceForm(
-      api,
       params,
       datacenters,
       regions,

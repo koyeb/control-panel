@@ -1,11 +1,11 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { useToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 
 import { ApiError } from '../api-errors';
 import { mapGithubApp, mapRepository } from '../mappers/git';
 import { GitRepository } from '../model';
-import { getApiQueryKey, useApi, useApiQueryFn } from '../use-api';
+import { getApiQueryKey, useApiQueryFn } from '../use-api';
 
 import { useOrganizationUnsafe } from './session';
 
@@ -15,19 +15,19 @@ export const isNoGithubAppError = (error: unknown) => {
 
 export function useGithubAppQuery(refetchInterval = 5000) {
   const organization = useOrganizationUnsafe();
-  const api = useApi();
-  const token = useToken();
 
   return useQuery({
-    queryKey: getApiQueryKey('getGithubApp', {}, token),
+    queryKey: getApiQueryKey('getGithubApp', {}),
     queryFn: async ({ signal }) => {
-      return api.getGithubApp({ signal }).catch((error) => {
-        if (isNoGithubAppError(error)) {
-          return null;
-        } else {
-          throw error;
-        }
-      });
+      return getApi()
+        .getGithubApp({ signal })
+        .catch((error) => {
+          if (isNoGithubAppError(error)) {
+            return null;
+          } else {
+            throw error;
+          }
+        });
     },
     enabled: organization !== undefined,
     refetchInterval,

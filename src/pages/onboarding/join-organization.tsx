@@ -5,8 +5,8 @@ import { z } from 'zod';
 
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
-import { useApi } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -60,7 +60,6 @@ export function JoinOrganization() {
 function CreateOrganization() {
   const state = useHistoryState();
 
-  const api = useApi();
   const setToken = useSetToken();
   const navigate = useNavigate();
 
@@ -83,6 +82,8 @@ function CreateOrganization() {
 
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
+      const api = getApi();
+
       const { organization } = await api.createOrganization({
         body: { name: organizationName },
       });

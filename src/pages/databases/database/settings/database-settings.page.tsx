@@ -5,7 +5,8 @@ import { useState } from 'react';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { Service } from 'src/api/model';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -48,14 +49,14 @@ export function DatabaseSettingsPage() {
 function DeleteDatabaseService({ service }: { service: Service }) {
   const t = T.useTranslate();
 
-  const api = useApi();
-  const invalidate = useInvalidateApiQuery();
-
-  const navigate = useNavigate();
   const openDialog = Dialog.useOpen();
+  const invalidate = useInvalidateApiQuery();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     async mutationFn() {
+      const api = getApi();
+
       await api.deleteService({
         path: { id: service.id },
       });

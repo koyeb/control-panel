@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useApi } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
@@ -26,7 +26,6 @@ const schema = z.object({
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
   const setToken = useSetToken();
-  const api = useApi();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -37,6 +36,8 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
 
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
+      const api = getApi();
+
       const { organization } = await api.createOrganization({
         body: { name: organizationName },
       });

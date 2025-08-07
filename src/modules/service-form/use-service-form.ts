@@ -6,7 +6,6 @@ import { z } from 'zod';
 import { useDatacenters, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { useApi } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
@@ -21,7 +20,6 @@ import { useUnknownInterpolationErrors } from './helpers/unknown-interpolations'
 import { ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
-  const api = useApi();
   const params = useSearchParams();
   const datacenters = useDatacenters();
   const regions = useRegions();
@@ -35,7 +33,6 @@ export function useServiceForm(serviceId?: string) {
     mode: 'onChange',
     defaultValues() {
       return initializeServiceForm(
-        api,
         params,
         datacenters,
         regions,

@@ -7,7 +7,8 @@ import { FieldPath, FormProvider, useController, useForm, useFormContext, useWat
 
 import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
@@ -47,11 +48,9 @@ export function Qualification() {
   const user = useUser();
   const organization = useOrganization();
 
-  const api = useApi();
-  const invalidate = useInvalidateApiQuery();
-
-  const track = useTrackEvent();
   const openDialog = Dialog.useOpen();
+  const invalidate = useInvalidateApiQuery();
+  const track = useTrackEvent();
 
   const form = useForm<QualificationFormType>({
     defaultValues: {
@@ -62,6 +61,8 @@ export function Qualification() {
 
   const mutation = useMutation({
     async mutationFn(form: QualificationFormType) {
+      const api = getApi();
+
       if (form.fullName !== '') {
         await api.updateUser({
           body: { name: form.fullName },

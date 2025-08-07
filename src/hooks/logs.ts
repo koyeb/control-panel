@@ -4,10 +4,10 @@ import { add, max, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { Api } from 'src/api/api';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
-import { getQueryKey, useApi } from 'src/api/use-api';
+import { getQueryKey } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { createId } from 'src/utils/strings';
 
 import { useDeepCompareMemo } from './lifecycle';
@@ -77,7 +77,6 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
 }
 
 function useLogsHistory(filters: LogsFilters) {
-  const api = useApi();
   const quotas = useOrganizationQuotas();
 
   const initialPageParam = useMemo(() => {
@@ -102,7 +101,7 @@ function useLogsHistory(filters: LogsFilters) {
         return { data: [], pagination: { has_more: false } };
       }
 
-      return api.logsQuery({
+      return getApi().logsQuery({
         query: {
           type: filters.type,
           deployment_id: filters.deploymentId,
@@ -147,8 +146,6 @@ const reconnectTimeout = [0, 1_000, 5_000, 60_000];
 function useLogsStream(connect: boolean, filters: LogsFilters) {
   const filtersMemo = useDeepCompareMemo(filters);
 
-  const api = useApi();
-
   const stream = useRef<ReturnType<typeof tailLogs>>(null);
   const [connected, setConnected] = useState(false);
   const [lines, setLines] = useState<Omit<LogLine, 'html'>[]>([]);
@@ -163,7 +160,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters) {
       start: filtersMemo.end,
     };
 
-    stream.current = tailLogs(api, filters, {
+    stream.current = tailLogs(filters, {
       onOpen: () => {
         setError(undefined);
         setConnected(true);
@@ -181,7 +178,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters) {
       },
       onLogLine: (line) => setLines((lines) => [...lines, line]),
     });
-  }, [api, filtersMemo]);
+  }, [filtersMemo]);
 
   useEffect(() => {
     let timeout: number;
@@ -211,8 +208,8 @@ type LogStreamListeners = {
   onLogLine: (line: Omit<LogLine, 'html'>) => void;
 };
 
-function tailLogs(api: Api, filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
-  const stream = api.logs({
+function tailLogs(filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
+  const stream = getApi().logs({
     query: {
       type: filters.type,
       deployment_id: filters.deploymentId,

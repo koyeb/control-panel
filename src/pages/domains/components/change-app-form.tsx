@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 
 import { useApps } from 'src/api/hooks/app';
 import { Domain } from 'src/api/model';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ControlledSelect } from 'src/components/controlled';
 import { handleSubmit } from 'src/hooks/form';
@@ -17,7 +18,6 @@ const T = createTranslate('pages.domains.domainsList.changeApp');
 export function ChangeAppForm({ domain }: { domain: Domain }) {
   const t = T.useTranslate();
 
-  const api = useApi();
   const apps = useApps();
   const invalidate = useInvalidateApiQuery();
 
@@ -35,7 +35,7 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
         return false;
       }
 
-      await api.editDomain({
+      await getApi().editDomain({
         path: { id: domain.id },
         query: {},
         body: { app_id: appId as string | undefined },

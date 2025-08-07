@@ -2,7 +2,6 @@ import { QueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { DeepPartial } from 'react-hook-form';
 
-import { Api } from 'src/api/api';
 import { mapRepository } from 'src/api/mappers/git';
 import {
   CatalogDatacenter,
@@ -12,6 +11,7 @@ import {
   Organization,
   OrganizationQuotas,
 } from 'src/api/model';
+import { getApi } from 'src/application/container';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
@@ -27,7 +27,6 @@ import { parseDeployParams } from './parse-deploy-params';
 import { getScaleToZeroBounds } from './service-form.schema';
 
 export async function initializeServiceForm(
-  api: Api,
   params: URLSearchParams,
   datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
@@ -38,6 +37,7 @@ export async function initializeServiceForm(
   serviceId: string | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {
+  const api = getApi();
   let values = defaultServiceForm();
 
   const getApp = async (appId: string) => {

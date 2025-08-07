@@ -7,7 +7,7 @@ import { FormProvider, UseFormReturn } from 'react-hook-form';
 import { useInstance, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
 import { useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
@@ -65,14 +65,13 @@ function ServiceForm_({
   onDeployUrlChanged,
   onBack,
 }: ServiceFormProps) {
-  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const form = useServiceForm(serviceId);
   const formRef = useRef<HTMLFormElement>(null);
 
   const mutation = useMutation({
-    mutationFn: (values: ServiceForm) => submitServiceForm(api, values),
+    mutationFn: submitServiceForm,
     onError: useFormErrorHandler(form, mapError),
     async onSuccess(result, { meta }) {
       await Promise.all([

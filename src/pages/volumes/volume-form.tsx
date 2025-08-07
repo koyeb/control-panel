@@ -6,7 +6,8 @@ import { z } from 'zod';
 import { useRegions } from 'src/api/hooks/catalog';
 import { mapVolume } from 'src/api/mappers/volume';
 import { Volume, VolumeSnapshot } from 'src/api/model';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FormValues, useFormErrorHandler } from 'src/hooks/form';
@@ -38,7 +39,6 @@ type VolumeFormProps = {
 export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: VolumeFormProps) {
   const t = T.useTranslate();
 
-  const api = useApi();
   const regions = useRegions().filter(hasProperty('volumesEnabled', true));
   const invalidate = useInvalidateApiQuery();
 
@@ -53,6 +53,8 @@ export function VolumeForm({ snapshot, volume, onSubmitted, renderFooter }: Volu
 
   const mutation = useMutation({
     async mutationFn({ name, region, size }: FormValues<typeof form>) {
+      const api = getApi();
+
       if (volume) {
         return api
           .updateVolume({
