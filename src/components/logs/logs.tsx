@@ -187,7 +187,7 @@ export function LogLineStream({ line }: { line: LogLine }) {
 }
 
 export function LogLineInstanceId({ line }: { line: LogLine }) {
-  return <LogLineMeta>{shortId(line.instanceId)}</LogLineMeta>;
+  return <LogLineMeta>{shortId(line.instanceId) ?? Array(8).fill(' ').join('')}</LogLineMeta>;
 }
 
 export function LogLineContent({ line, options }: { line: LogLine; options: LogOptions }) {
