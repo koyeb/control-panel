@@ -4,7 +4,8 @@ import { jwtDecode } from 'jwt-decode';
 import { useCallback, useEffect } from 'react';
 
 import { useApiMutationFn } from 'src/api/use-api';
-import { usePathname } from 'src/hooks/router';
+import { useMount } from 'src/hooks/lifecycle';
+import { useNavigate, usePathname, useSearchParams } from 'src/hooks/router';
 import { TOKENS } from 'src/tokens';
 
 import { container } from './container';
@@ -81,6 +82,29 @@ export function useSetToken() {
     },
     [queryClient],
   );
+}
+
+export function useTokenParams() {
+  const params = useSearchParams();
+  const navigate = useNavigate();
+  const token = params.get('token');
+  const sessionToken = params.get('session-token');
+
+  const auth = container.resolve(TOKENS.authentication);
+
+  useMount(() => {
+    if (token !== null) {
+      auth.setToken(token);
+      navigate({ search: (prev) => ({ ...prev, token: null }) });
+    }
+
+    if (sessionToken !== null) {
+      auth.setToken(sessionToken, true);
+      navigate({ search: (prev) => ({ ...prev, 'session-token': null }) });
+    }
+  });
+
+  return token !== null || sessionToken !== null;
 }
 
 export function useRefreshToken() {
