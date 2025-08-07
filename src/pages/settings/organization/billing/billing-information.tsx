@@ -1,5 +1,6 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -39,15 +40,18 @@ function BillingInformationForm() {
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
-    defaultValues: {
+    resolver: useZodResolver(schema),
+  });
+
+  useEffect(() => {
+    form.reset({
       name: organization.billing.name ?? user.name,
       email: organization.billing.email ?? user.email,
       address: organization.billing.address ?? {},
       company: organization.billing.company,
       vatNumber: organization.billing.vatNumber ?? '',
-    },
-    resolver: useZodResolver(schema),
-  });
+    });
+  }, [form, user, organization]);
 
   const invalidate = useInvalidateApiQuery();
 

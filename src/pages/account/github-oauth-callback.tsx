@@ -1,12 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 import { z } from 'zod';
 
-import { Api } from 'src/api/api';
 import { ApiValidationError } from 'src/api/api-errors';
-import { useApi, useInvalidateApiQuery } from 'src/api/use-api';
-import { useSetToken } from 'src/application/authentication';
+import { useInvalidateApiQuery } from 'src/api/use-api';
+import { container, getApi } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
@@ -16,6 +15,7 @@ import { useMount } from 'src/hooks/lifecycle';
 import { urlToLinkOptions, useNavigate, useSearchParams } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { createTranslate } from 'src/intl/translate';
+import { TOKENS } from 'src/tokens';
 import { toObject } from 'src/utils/object';
 
 const T = createTranslate('pages.account.githubOAuthCallback');
@@ -27,10 +27,9 @@ const schema = z.object({
 });
 
 export function GithubOauthCallbackPage() {
-  const api = useApi();
+  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
-  const setToken = useSetToken();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
@@ -38,6 +37,7 @@ export function GithubOauthCallbackPage() {
 
   const mutation = useMutation({
     async mutationFn() {
+      const api = getApi();
       const githubError = searchParams.get('error_description');
 
       if (githubError) {
@@ -56,7 +56,7 @@ export function GithubOauthCallbackPage() {
       });
     },
     async onSuccess(result) {
-      const currentOrganization = await getCurrentOrganization(api);
+      const currentOrganization = await getCurrentOrganization();
 
       const setupAction = searchParams.get('setup_action');
       const state = searchParams.get('state');
@@ -67,7 +67,10 @@ export function GithubOauthCallbackPage() {
 
       // authentication
       if (setupAction === null && result.token?.id !== undefined) {
-        setToken(result.token.id, { clear: true });
+        const auth = container.resolve(TOKENS.authentication);
+
+        auth.setToken(result.token.id);
+        queryClient.clear();
 
         navigate({
           to: redirect.pathname,
@@ -150,11 +153,13 @@ export function GithubOauthCallbackPage() {
   return <LogoLoading />;
 }
 
-async function getCurrentOrganization(api: Api) {
-  return api.getCurrentOrganization({}).then(
-    ({ organization }) => organization,
-    () => undefined,
-  );
+async function getCurrentOrganization() {
+  return getApi()
+    .getCurrentOrganization({})
+    .then(
+      ({ organization }) => organization,
+      () => undefined,
+    );
 }
 
 const isAccountNotFoundError = createValidationGuard(

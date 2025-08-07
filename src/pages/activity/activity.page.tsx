@@ -5,8 +5,8 @@ import { useState } from 'react';
 
 import { mapActivity } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
-import { getApiQueryKey, useApi } from 'src/api/use-api';
-import { useToken } from 'src/application/authentication';
+import { getApiQueryKey } from 'src/api/use-api';
+import { getApi } from 'src/application/container';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -43,19 +43,16 @@ const allTypes = [
 export function ActivityPage() {
   const t = T.useTranslate();
 
-  const api = useApi();
-  const token = useToken();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const params = useSearchParams();
   const types = params.has('types') ? params.getAll('types') : allTypes;
 
-  const navigate = useNavigate();
-
   const query = useInfiniteQuery({
-    queryKey: getApiQueryKey('listActivities', { query: { types } }, token),
+    queryKey: getApiQueryKey('listActivities', { query: { types } }),
     async queryFn({ pageParam }) {
-      return api
+      return getApi()
         .listActivities({
           query: {
             offset: String(pageParam * pageSize),

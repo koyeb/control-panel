@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+import { useSetToken } from 'src/application/authentication';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { AssertionError, defined } from 'src/utils/assert';
@@ -86,16 +87,15 @@ export function useUserOrganizationMemberships() {
 
 export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?: boolean) {
   const userQuery = useUserQuery();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   return useMutation({
     ...useApiMutationFn('logout', {}),
     meta: { showError: !isAccountLockedError(userQuery.error) },
     onSettled: () => {
-      navigate({
-        ...urlToLinkOptions(redirect),
-        state: { token: null, session },
-      });
+      void setToken(null, session);
+      navigate(urlToLinkOptions(redirect));
     },
   });
 }

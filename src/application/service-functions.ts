@@ -1,4 +1,4 @@
-import { API, Api } from 'src/api/api';
+import { API } from 'src/api/api';
 import { databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
 import {
   App,
@@ -15,6 +15,8 @@ import {
 import { ValidateLinkOptions } from 'src/components/link';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
+
+import { getApi } from './container';
 
 type ServiceLink = ValidateLinkOptions;
 
@@ -120,10 +122,11 @@ export function isInstanceRunning({ status }: Instance) {
 }
 
 export async function updateDatabaseService(
-  api: Api,
   serviceId: string,
   updater: (deployment: API.DeploymentDefinition) => void,
 ) {
+  const api = getApi();
+
   const { service } = await api.getService({ path: { id: serviceId } });
   const { deployment } = await api.getDeployment({ path: { id: service!.latest_deployment_id! } });
   const definition = deployment!.definition!;

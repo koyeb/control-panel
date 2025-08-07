@@ -2,11 +2,12 @@ import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useApi, useApiQueryFn } from 'src/api/use-api';
+import { useApiQueryFn } from 'src/api/use-api';
+import { useSetToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.account.deleteOrganization');
@@ -14,11 +15,10 @@ const T = createTranslate('modules.account.deleteOrganization');
 export function DeleteOrganization() {
   const t = T.useTranslate();
 
-  const api = useApi();
   const user = useUser();
   const organization = useOrganization();
 
-  const navigate = useNavigate();
+  const setToken = useSetToken();
 
   const unpaidInvoicesQuery = useQuery({
     ...useApiQueryFn('hasUnpaidInvoices'),
@@ -28,6 +28,8 @@ export function DeleteOrganization() {
 
   const deleteOrganization = useMutation({
     async mutationFn() {
+      const api = getApi();
+
       const { members } = await api.listOrganizationMembers({
         query: { user_id: user.id },
       });
@@ -57,8 +59,8 @@ export function DeleteOrganization() {
 
       return result;
     },
-    onSuccess(token) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token) {
+      await setToken(token);
       notify.info(t('successNotification', { organizationName: organization.name }));
     },
   });

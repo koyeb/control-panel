@@ -3,12 +3,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useApi } from 'src/api/use-api';
+import { useSetToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { isSlug } from 'src/utils/strings';
@@ -25,8 +25,7 @@ const schema = z.object({
 
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
-  const api = useApi();
-  const navigate = useNavigate();
+  const setToken = useSetToken();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -37,6 +36,8 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
 
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
+      const api = getApi();
+
       const { organization } = await api.createOrganization({
         body: { name: organizationName },
       });
@@ -48,8 +49,8 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
 
       return newToken!.id!;
     },
-    onSuccess(token) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token) {
+      await setToken(token);
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({

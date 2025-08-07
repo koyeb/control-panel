@@ -6,7 +6,9 @@ import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
-import { useApi, useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useSetToken } from 'src/application/authentication';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -274,12 +276,15 @@ function useRemoveOrganizationMember() {
 function useLeaveOrganization() {
   const t = T.useTranslate();
 
-  const api = useApi();
   const user = useUser();
+
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   return useMutation({
     async mutationFn(membership: OrganizationMember) {
+      const api = getApi();
+
       const { members } = await api.listOrganizationMembers({
         query: { user_id: user.id },
       });
@@ -305,8 +310,9 @@ function useLeaveOrganization() {
 
       return result;
     },
-    onSuccess(token, { organization }) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token, { organization }) {
+      await setToken(token);
+      navigate({ to: '/' });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });
