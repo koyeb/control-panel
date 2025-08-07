@@ -2,6 +2,7 @@ import { TabButtons } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 
+import { ApiError } from 'src/api/api-errors';
 import { useAppQuery } from 'src/api/hooks/app';
 import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { App, Deployment, Service } from 'src/api/model';
@@ -11,12 +12,13 @@ import { getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
-import { ExternalLink, TabButtonLink } from 'src/components/link';
+import { ExternalLink, LinkButton, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
+import { IconArrowLeft } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { PaletteItem, useCommandPaletteContext } from 'src/modules/command-palette/command-palette.provider';
 import { inArray } from 'src/utils/arrays';
@@ -41,6 +43,10 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   const appQuery = useAppQuery(serviceQuery.data?.appId);
   const activeDeploymentQuery = useDeploymentQuery(serviceQuery.data?.activeDeploymentId);
   const serviceName = useServiceName(serviceId);
+
+  if (serviceQuery.isError && ApiError.is(serviceQuery.error, 404)) {
+    return <ServiceNotFound />;
+  }
 
   if (appQuery.isPending || serviceQuery.isPending) {
     return <Loading />;
@@ -81,6 +87,26 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
       <Navigation />
 
       {children}
+    </div>
+  );
+}
+
+function ServiceNotFound() {
+  return (
+    <div className="col min-h-24 items-start justify-center gap-6">
+      <div className="col gap-2">
+        <h1 className="text-xl font-semibold">
+          <T id="serviceNotFound.title" />
+        </h1>
+        <p className="max-w-lg text-dim">
+          <T id="serviceNotFound.description" />
+        </p>
+      </div>
+
+      <LinkButton to="/">
+        <IconArrowLeft />
+        <T id="serviceNotFound.cta" />
+      </LinkButton>
     </div>
   );
 }
