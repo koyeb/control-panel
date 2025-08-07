@@ -5,7 +5,7 @@ import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
 import { getConfig } from 'src/utils/config';
 
-import { ApiError, isApiNotFoundError } from '../api/api-errors';
+import { ApiError } from '../api/api-errors';
 
 import { container } from './container';
 import { notify } from './notify';
@@ -79,7 +79,6 @@ function onQuerySuccess(data: unknown, query: UnknownQuery) {
 
 function onQueryError(error: Error, query: UnknownQuery) {
   const { showError } = { showError: true, ...query.meta };
-  const pathname = window.location.pathname;
 
   if (ApiError.is(error)) {
     if (error.status === 401) {
@@ -98,15 +97,6 @@ function onQueryError(error: Error, query: UnknownQuery) {
 
     if (error.status === 429) {
       notify.error(error.message);
-    }
-
-    if (
-      isApiNotFoundError(error) &&
-      inArray(query.queryKey[0], ['getApp', 'getService', 'getDeployment']) &&
-      pathname !== '/'
-    ) {
-      notify.info(error.message);
-      navigate('/');
     }
 
     if (error.status >= 500) {

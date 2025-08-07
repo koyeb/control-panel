@@ -2353,6 +2353,11 @@
     },
     "service": {
       "layout": {
+        "serviceNotFound": {
+          "title": "Service not found",
+          "description": "This service was not found, it may have been deleted or is not accessible within your current organization.",
+          "cta": "Back to home"
+        },
         "redeploy": "Redeploy",
         "redeploying": "Your service's latest deployment is being redeployed",
         "redeployCli": {
