@@ -7,7 +7,6 @@ import { useDeployment, useInstancesQuery, useService } from 'src/api/hooks/serv
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
 import { getApiQueryKey, useApi } from 'src/api/use-api';
-import { useToken } from 'src/application/authentication';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -164,10 +163,9 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
 
 function useDeployments(service: Service) {
   const api = useApi();
-  const token = useToken();
 
   const deploymentsQuery = useInfiniteQuery({
-    queryKey: getApiQueryKey('listDeployments', { query: { service_id: service.id } }, token),
+    queryKey: getApiQueryKey('listDeployments', { query: { service_id: service.id } }),
     initialPageParam: 0,
     async queryFn({ pageParam }) {
       const { count, deployments } = await api.listDeployments({

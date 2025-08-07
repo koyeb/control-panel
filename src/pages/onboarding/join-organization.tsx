@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
 import { useApi } from 'src/api/use-api';
+import { useSetToken } from 'src/application/authentication';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -60,6 +61,7 @@ function CreateOrganization() {
   const state = useHistoryState();
 
   const api = useApi();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -92,8 +94,9 @@ function CreateOrganization() {
 
       return newToken!.id!;
     },
-    onSuccess(token) {
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token) {
+      await setToken(token);
+      navigate({ to: '/' });
     },
     onError(error) {
       if (state.createOrganization) {

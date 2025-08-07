@@ -7,6 +7,7 @@ import { useOneClickApps } from 'src/api/hooks/catalog';
 import { useServices } from 'src/api/hooks/service';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { useApiMutationFn } from 'src/api/use-api';
+import { useSetToken } from 'src/application/authentication';
 import { Dialog } from 'src/components/dialog';
 import { useMount } from 'src/hooks/lifecycle';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
@@ -380,13 +381,15 @@ function useRegisterOneClickAppsCommands() {
 
 function useRegisterAccountCommands() {
   const { defaultItems, setItems, mutationEffects } = useCommandPaletteContext();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const { mutate: logout } = useMutation({
     ...useApiMutationFn('logout', {}),
     ...mutationEffects,
-    onSuccess: () => {
-      navigate({ to: '/auth/signin', state: { token: null } });
+    async onSuccess() {
+      await setToken(null);
+      navigate({ to: '/auth/signin' });
     },
   });
 
@@ -416,8 +419,8 @@ function useRegisterAccountCommands() {
       header: {},
     })),
     ...mutationEffects,
-    onSuccess(token) {
-      navigate({ to: '/', state: { token: token.token!.id! } });
+    async onSuccess({ token }) {
+      await setToken(token!.id!);
     },
   });
 
