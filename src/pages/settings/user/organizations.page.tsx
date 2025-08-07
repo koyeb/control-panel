@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
 import { useApi, useApiMutationFn } from 'src/api/use-api';
+import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ValidateLinkOptions } from 'src/components/link';
@@ -51,6 +52,8 @@ function CreateOrganizationDialog() {
   const t = T.useTranslate();
 
   const api = useApi();
+  const setToken = useSetToken();
+
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -77,9 +80,9 @@ function CreateOrganizationDialog() {
     onError: useFormErrorHandler(form, (error) => ({
       organizationName: error.name,
     })),
-    onSuccess(token, { organizationName }) {
-      form.reset();
-      navigate({ to: '/', state: { token } });
+    async onSuccess(token, { organizationName }) {
+      await setToken(token);
+      navigate({ to: '/' });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
   });
@@ -147,6 +150,7 @@ function OrganizationList() {
 
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
   const currentOrganization = useOrganizationUnsafe();
+  const setToken = useSetToken();
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
@@ -154,11 +158,9 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
       path: { id: organization.id },
       header: {},
     })),
-    onSuccess(token, redirect) {
-      navigate({
-        ...urlToLinkOptions(redirect),
-        state: { token: token.token!.id! },
-      });
+    async onSuccess({ token }, redirect) {
+      await setToken(token!.id!);
+      navigate(urlToLinkOptions(redirect));
     },
   });
 
