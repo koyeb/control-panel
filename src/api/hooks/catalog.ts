@@ -11,7 +11,7 @@ import {
   mapCatalogRegion,
   mapCatalogUsage,
 } from '../mappers/catalog';
-import { AiModel, CatalogAvailability, OneClickApp } from '../model';
+import { AiModel, CatalogAvailability, OneClickApp, OneClickAppEnv } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -132,13 +132,15 @@ type OneClickAppApiResponse = {
   slug: string;
   project_site?: string;
   developer?: string;
-  env?: Array<{ name: string; value: string }>;
   model_name?: string;
   model_size?: string;
   model_inference_engine?: string;
   model_docker_image?: string;
   model_min_vram_gb?: number;
+  env?: OneClickAppEnv[];
   metadata?: Array<{ name: string; value: string }>;
+  created_at: string;
+  updated_at: string;
 };
 
 async function fetchOneClickApps() {
@@ -163,9 +165,10 @@ export function useOneClickAppsQuery() {
 
 function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
   return {
-    ...snakeToCamelDeep(app),
     logo: app.logos[0],
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
+    env: [],
+    ...snakeToCamelDeep(app),
   };
 }
 
@@ -202,7 +205,7 @@ function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
     dockerImage: app.model_docker_image!,
     minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
     metadata: app.metadata ?? [],
-    env: app.env?.map((env) => ({ name: env.name, value: env.value, regions: [] })),
+    env: app.env?.map((env) => ({ name: env.name, value: String(env.default), regions: [] })),
   };
 }
 

@@ -1023,7 +1023,6 @@
         "submitButton": "Deploy",
         "environmentVariables": {
           "title": "Environment variables",
-          "empty": "No environment variables",
           "optional": "Optional +{count}"
         },
         "instance": {
