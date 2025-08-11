@@ -148,7 +148,50 @@ export type OneClickApp = {
   repository: string;
   developer?: string;
   projectSite?: string;
+  license?: string;
   modelSize?: string;
+  env: Array<OneClickAppEnv>;
+  metadata?: Array<{ name: string; value: string }>;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OneClickAppEnv =
+  | OneClickAppEnvBoolean
+  | OneClickAppEnvNumber
+  | OneClickAppEnvSelect
+  | OneClickAppEnvString;
+
+export type OneClickAppEnvBase = {
+  name: string;
+  label: string;
+  required: boolean;
+  description: string;
+};
+
+export type OneClickAppEnvBoolean = OneClickAppEnvBase & {
+  type: 'boolean';
+  default?: boolean;
+  trueValue?: string;
+  falseValue?: string;
+};
+
+export type OneClickAppEnvNumber = OneClickAppEnvBase & {
+  type: 'number';
+  default?: number;
+  min?: number;
+  max?: number;
+};
+
+export type OneClickAppEnvSelect = OneClickAppEnvBase & {
+  type: 'select';
+  default?: string;
+  options: Array<{ label: string; value: string }>;
+};
+
+export type OneClickAppEnvString = OneClickAppEnvBase & {
+  type: 'string';
+  default?: string;
 };
 
 export type AiModel = {

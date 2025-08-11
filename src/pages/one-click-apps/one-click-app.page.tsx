@@ -1,5 +1,6 @@
 import { Badge } from '@koyeb/design-system';
 import clsx from 'clsx';
+import { FormattedDate } from 'react-intl';
 
 import { useOneClickAppsQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
@@ -8,9 +9,20 @@ import { ExternalLink, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
-import { IconCode, IconDocker, IconDownload, IconGithub, IconGlobe, IconRocket, IconWeight } from 'src/icons';
+import {
+  IconDocker,
+  IconGithub,
+  IconGlobe,
+  IconPackage,
+  IconPen,
+  IconPlus,
+  IconRocket,
+  IconScale,
+  IconUser,
+} from 'src/icons';
+import IconHuggingFace from 'src/icons/huggingface.svg?react';
 import { createTranslate } from 'src/intl/translate';
-import { hasProperty } from 'src/utils/object';
+import { entries, hasProperty } from 'src/utils/object';
 
 import { AppCard } from './app-card';
 
@@ -89,47 +101,119 @@ function Header({ app }: { app: OneClickApp }) {
 function AppMetadata({ app }: { app: OneClickApp }) {
   return (
     <section className="row items-center gap-6">
-      {app.projectSite && (
-        <Metadata
-          Icon={IconGlobe}
-          label={
-            <ExternalLink href={app.projectSite} className="underline">
-              <T id="website" />
-            </ExternalLink>
-          }
-        />
-      )}
+      <img src={app.logo} className="size-6 rounded-md bg-black/80 p-1 dark:bg-transparent" />
 
-      <Metadata
-        Icon={app.repository.includes('github') ? IconGithub : IconDocker}
-        label={
-          <ExternalLink href={app.repository} className="underline">
-            <T id="repository" />
-          </ExternalLink>
-        }
-      />
-
-      <Metadata Icon={IconRocket} label={app.category} />
-
-      {app.modelSize && <Metadata Icon={IconWeight} label={app.modelSize} />}
-
-      <Metadata Icon={IconDownload} label={'1.3 K'} />
-
-      {app.developer && <Metadata Icon={IconCode} label={app.developer} />}
+      {entries(getAppMetadata(app)).map(([key, props]) => (
+        <Metadata key={key} {...props} />
+      ))}
     </section>
   );
 }
 
-function Metadata({ Icon, label }: { Icon: SvgComponent; label: React.ReactNode }) {
+function Metadata({ Icon, label, link }: { Icon: SvgComponent; label: React.ReactNode; link?: string }) {
   return (
     <div className="row items-center gap-2">
       <div>
         <Icon className="size-em" />
       </div>
 
-      {label}
+      {!link && label}
+
+      {link && (
+        <ExternalLink href={link} className="underline">
+          {label}
+        </ExternalLink>
+      )}
     </div>
   );
+}
+
+function getAppMetadata(app: OneClickApp) {
+  const metadata: Record<string, React.ComponentProps<typeof Metadata>> = {};
+
+  if (app.projectSite) {
+    metadata['website'] = {
+      Icon: IconGlobe,
+      label: <T id="website" />,
+      link: app.projectSite,
+    };
+  }
+
+  metadata['repository'] = {
+    Icon: getRepositoryIcon(app.repository),
+    label: <T id="repository" />,
+    link: app.repository,
+  };
+
+  metadata['category'] = {
+    Icon: IconRocket,
+    label: app.category,
+  };
+
+  if (app.developer) {
+    metadata['developer'] = {
+      Icon: IconUser,
+      label: app.developer,
+    };
+  }
+
+  if (app.license) {
+    metadata['license'] = {
+      Icon: IconScale,
+      label: app.license,
+    };
+  }
+
+  metadata['createdAt'] = {
+    Icon: IconPlus,
+    label: <FormattedDate value={app.createdAt} />,
+  };
+
+  metadata['updatedAt'] = {
+    Icon: IconPen,
+    label: <FormattedDate value={app.updatedAt} />,
+  };
+
+  if (app.category.toLowerCase() === 'model') {
+    const modelMetadata = [
+      { name: 'Model developer', Icon: IconPackage },
+      { name: 'Model family', Icon: IconPackage },
+      { name: 'Model version', Icon: IconPackage },
+      { name: 'Model variant', Icon: IconPackage },
+      { name: 'Model size', Icon: IconPackage },
+      { name: 'Model optimization', Icon: IconPackage },
+      { name: 'Model api', Icon: IconPackage },
+    ];
+
+    for (const { name, Icon } of modelMetadata) {
+      const data = app.metadata?.find(hasProperty('name', name));
+
+      if (data) {
+        metadata[`model_${name}`] = {
+          label: `${data.name}: ${data.value}`,
+          Icon,
+        };
+      }
+    }
+  }
+
+  return metadata;
+}
+
+function getRepositoryIcon(repository: string) {
+  if (repository.includes('github')) {
+    return IconGithub;
+  }
+
+  if (repository.includes('docker')) {
+    return IconDocker;
+  }
+
+  if (repository.includes('huggingface')) {
+    return IconHuggingFace;
+  }
+
+  return () => null;
 }
 
 function Images({ app }: { app: OneClickApp }) {

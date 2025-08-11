@@ -1,11 +1,11 @@
-import { AccordionHeader, AccordionSection, Badge } from '@koyeb/design-system';
+import { AccordionHeader, AccordionSection, Badge, Checkbox, FieldHelperText } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Fragment, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
+  Controller,
   FormProvider,
   UseFormReturn,
   useController,
-  useFieldArray,
   useForm,
   useFormContext,
 } from 'react-hook-form';
@@ -21,11 +21,11 @@ import {
 } from 'src/api/hooks/catalog';
 import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
 import { useOrganization, useOrganizationQuotas, useOrganizationQuotasQuery } from 'src/api/hooks/session';
-import { OneClickApp } from 'src/api/model';
+import { OneClickApp, OneClickAppEnv } from 'src/api/model';
 import { useApi } from 'src/api/use-api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
@@ -35,8 +35,6 @@ import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
-import { BranchMetadata, RepositoryMetadata } from 'src/modules/deployment/metadata/build-metadata';
-import { DockerImageMetadata } from 'src/modules/deployment/metadata/docker-metadata';
 import {
   InstanceTypeMetadata,
   RegionsMetadata,
@@ -101,10 +99,10 @@ function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
   const queryClient = useQueryClient();
 
   const form = useForm<ServiceForm>({
-    defaultValues: () => {
+    defaultValues: async () => {
       const { searchParams } = new URL(app.deployUrl);
 
-      return initializeServiceForm(
+      const form = await initializeServiceForm(
         api,
         searchParams,
         datacenters,
@@ -116,6 +114,14 @@ function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
         undefined,
         queryClient,
       );
+
+      form.environmentVariables = app.env.map((env) => ({
+        name: env.name,
+        value: String(env.default ?? ''),
+        regions: [],
+      }));
+
+      return form;
     },
     resolver: useZodResolver(serviceFormSchema(organization, quotas)),
   });
@@ -153,10 +159,10 @@ function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
         id="one-click-app-form"
         className="col gap-6"
       >
-        <OverviewSection />
+        <OverviewSection app={app} />
 
         <div className="rounded-lg border">
-          <EnvironmentVariablesSection />
+          <EnvironmentVariablesSection app={app} />
           <InstanceSection />
         </div>
 
@@ -201,31 +207,19 @@ function Section({ title, children }: SectionProps) {
   );
 }
 
-function OverviewSection() {
+function OverviewSection({ app }: { app: OneClickApp }) {
   const { watch } = useFormContext<ServiceForm>();
-  const { repositoryName, branch } = watch(`source.git.${watch('source.git.repositoryType')}Repository`);
-
-  const repository = {
-    repository: `github.com/${repositoryName}`,
-    branch,
-  };
 
   return (
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded bg-muted">
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
-          {watch('source.type') === 'git' && (
-            <>
-              <RepositoryMetadata {...repository} />
-              <BranchMetadata {...repository} />
-            </>
-          )}
+          {app.metadata?.map(({ name, value }, index) => (
+            <Metadata key={index} label={name} value={value} />
+          ))}
 
-          {watch('source.type') === 'docker' && (
-            <>
-              <DockerImageMetadata image={watch('source.docker.image')} />
-            </>
-          )}
+          {/* todo */}
+          {app.metadata === undefined && <>No metadata</>}
         </div>
 
         <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
@@ -238,13 +232,19 @@ function OverviewSection() {
   );
 }
 
-function EnvironmentVariablesSection() {
+function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
   const [optionalExpanded, setOptionalExpanded] = useState(false);
 
   const { watch } = useFormContext<ServiceForm>();
+  const env = watch('environmentVariables');
+  const index = (name: string) => env.findIndex(hasProperty('name', name));
 
-  const fieldArray = useFieldArray<ServiceForm, 'environmentVariables'>({ name: 'environmentVariables' });
-  const fields = fieldArray.fields.filter((field) => field.name !== '');
+  const required = app.env.filter(hasProperty('required', true));
+  const optional = app.env.filter(hasProperty('required', false));
+
+  if (required.length === 0 && optional.length === 0) {
+    return null;
+  }
 
   return (
     <section>
@@ -255,33 +255,81 @@ function EnvironmentVariablesSection() {
       </header>
 
       <div className="col gap-6 px-3 py-4">
-        {fields.length === 0 && <T id="environmentVariables.empty" />}
-
-        {fields.map((field, index) => (
-          <Fragment key={field.id}>
-            <ControlledInput
-              label={watch(`environmentVariables.${index}.name`)}
-              name={`environmentVariables.${index}.value`}
-              helperText="Some description"
-            />
-          </Fragment>
+        {required.map((env) => (
+          <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
         ))}
 
-        <AccordionSection
-          isExpanded={optionalExpanded}
-          header={
-            <AccordionHeader expanded={optionalExpanded} setExpanded={setOptionalExpanded}>
-              <div className="text-xs font-medium">
-                <T id="environmentVariables.optional" values={{ count: 1 }} />
-              </div>
-            </AccordionHeader>
-          }
-          className="rounded-md border bg-muted"
-        >
-          <div className="p-4">To do</div>
-        </AccordionSection>
+        {optional.length > 0 && (
+          <AccordionSection
+            isExpanded={optionalExpanded}
+            header={
+              <AccordionHeader expanded={optionalExpanded} setExpanded={setOptionalExpanded}>
+                <div className="text-xs font-medium">
+                  <T id="environmentVariables.optional" values={{ count: optional.length }} />
+                </div>
+              </AccordionHeader>
+            }
+            className="rounded-md border bg-muted"
+          >
+            <div className="col gap-6 p-4">
+              {optional.map((env) => (
+                <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
+              ))}
+            </div>
+          </AccordionSection>
+        )}
       </div>
     </section>
+  );
+}
+
+function EnvironmentVariableField({ index, env }: { index: number; env: OneClickAppEnv }) {
+  if (env.type === 'boolean') {
+    const { trueValue = 'true', falseValue = 'false' } = env;
+
+    return (
+      <Controller
+        name={`environmentVariables.${index}.value`}
+        render={({ field, fieldState }) => (
+          <div className="col gap-2">
+            <Checkbox
+              label={env.label}
+              checked={field.value === trueValue}
+              onChange={(event) => field.onChange(event.target.checked ? trueValue : falseValue)}
+            />
+            <FieldHelperText invalid={fieldState.invalid}>
+              {fieldState.error?.message ?? env.description}
+            </FieldHelperText>
+          </div>
+        )}
+      />
+    );
+  }
+
+  if (env.type === 'select') {
+    return (
+      <ControlledSelect
+        name={`environmentVariables.${index}.value`}
+        helperText={env.description}
+        label={env.label}
+        items={env.options}
+        getKey={({ label }) => label}
+        itemToString={({ value }) => value}
+        itemToValue={({ value }) => value}
+        renderItem={({ value }) => value}
+      />
+    );
+  }
+
+  return (
+    <ControlledInput
+      name={`environmentVariables.${index}.value`}
+      type={env.type}
+      label={env.label}
+      helperText={env.description}
+      min={env.type === 'number' ? env.min : undefined}
+      max={env.type === 'number' ? env.max : undefined}
+    />
   );
 }
 
@@ -363,7 +411,7 @@ function InstanceSection() {
         />
       </div>
 
-      <div className="col max-h-[32rem] scrollbar-thin gap-3 overflow-auto px-3 scrollbar-green">
+      <div className="col max-h-[32rem] scrollbar-thin gap-3 overflow-auto px-3 pb-3 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
     </AccordionSection>
