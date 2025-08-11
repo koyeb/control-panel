@@ -3,7 +3,7 @@ import sortBy from 'lodash-es/sortBy';
 
 import { parseBytes } from 'src/application/memory';
 import { getConfig } from 'src/utils/config';
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
 import {
   mapCatalogDatacenter,
@@ -11,7 +11,7 @@ import {
   mapCatalogRegion,
   mapCatalogUsage,
 } from '../mappers/catalog';
-import { AiModel, CatalogAvailability, OneClickApp } from '../model';
+import { AiModel, CatalogAvailability, OneClickApp, OneClickAppEnv } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -125,17 +125,22 @@ type OneClickAppApiResponse = {
   category: string;
   name: string;
   logos: [string, ...string[]];
+  cover: string;
   description: string;
   repository: string;
   deploy_button_url: string;
   slug: string;
-  env?: Array<{ name: string; value: string }>;
+  project_site?: string;
+  developer?: string;
   model_name?: string;
   model_size?: string;
   model_inference_engine?: string;
   model_docker_image?: string;
   model_min_vram_gb?: number;
+  env?: OneClickAppEnv[];
   metadata?: Array<{ name: string; value: string }>;
+  created_at: string;
+  updated_at: string;
 };
 
 async function fetchOneClickApps() {
@@ -160,13 +165,10 @@ export function useOneClickAppsQuery() {
 
 function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
   return {
-    name: app.name,
-    slug: app.slug,
-    description: app.description,
     logo: app.logos[0],
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
-    category: app.category,
-    repository: app.repository,
+    env: [],
+    ...snakeToCamelDeep(app),
   };
 }
 
@@ -180,7 +182,7 @@ function getOneClickAppUrl(appSlug: string, appUrl: string): string {
   url.protocol = window.location.protocol;
   url.host = window.location.host;
 
-  // url.searchParams.set('one_click_app', appSlug);
+  // url.searchParams.set('one-click-app', appSlug);
 
   return url.toString();
 }
@@ -203,7 +205,7 @@ function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
     dockerImage: app.model_docker_image!,
     minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
     metadata: app.metadata ?? [],
-    env: app.env?.map((env) => ({ name: env.name, value: env.value, regions: [] })),
+    env: app.env?.map((env) => ({ name: env.name, value: String(env.default), regions: [] })),
   };
 }
 

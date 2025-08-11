@@ -86,6 +86,11 @@
       "high": "High",
       "unknown": "Unknown"
     },
+    "instanceCategory": {
+      "eco": "Eco",
+      "standard": "Standard",
+      "gpu": "GPU"
+    },
     "portProtocol": {
       "tcp": "TCP",
       "http": "HTTP",
@@ -1015,10 +1020,20 @@
       },
       "oneClickAppForm": {
         "overview": "Overview",
-        "instance": "Choose instance",
-        "region": "Select region",
-        "environmentVariables": "Environment variables",
-        "submitButton": "Deploy"
+        "submitButton": "Deploy",
+        "environmentVariables": {
+          "title": "Environment variables",
+          "optional": "Optional +{count}"
+        },
+        "instance": {
+          "title": "Instance"
+        },
+        "volumes": {
+          "title": "Volumes",
+          "name": "Volume {number}",
+          "mountPath": "Mount path",
+          "size": "Size"
+        }
       },
       "submitButton": {
         "deploy": "Deploy",
@@ -1222,11 +1237,6 @@
         "action": "Select instances",
         "noInstanceSelected": "No instance selected",
         "instanceSpec": "<dim>({spec})</dim>",
-        "category": {
-          "eco": "Eco",
-          "standard": "Standard",
-          "gpu": "GPU"
-        },
         "alerts": {
           "noRegionSelectedTitle": "At least, one region must be selected",
           "noRegionSelectedDescription": "Select one or more regions to deploy your service",
@@ -1726,7 +1736,10 @@
           "roles": "Roles",
           "settings": "Settings"
         },
-        "oneClickApps": "One click apps"
+        "oneClickApps": {
+          "index": "One-click Apps",
+          "deploy": "Deploy"
+        }
       }
     },
     "secondary": {
@@ -2024,11 +2037,6 @@
     "deploy": {
       "documentTitle": "Deploy",
       "title": "Deploy on Koyeb",
-      "oneClickApp": {
-        "documentTitle": "Deploy {appName}",
-        "title": "Deploy {appName}",
-        "pricing": "Pricing"
-      },
       "model": {
         "documentTitle": "One-Click models",
         "documentTitleModel": "Deploy {modelName}",
@@ -2036,6 +2044,33 @@
         "title": "One-Click models",
         "anyModelDescription": "Deploy models faster than ever ...",
         "pricing": "Pricing"
+      }
+    },
+    "oneClickApps": {
+      "list": {
+        "title": "One-Click Apps",
+        "description": "Deploy apps with a click, get started with Koyeb in seconds",
+        "search": {
+          "placeholder": "What would you like to deploy today?"
+        },
+        "noResults": "No results",
+        "seeAll": "See all",
+        "deploy": "Deploy",
+        "officialModels": "Official models",
+        "models": "Models",
+        "others": "All others"
+      },
+      "details": {
+        "deploy": "Deploy",
+        "website": "Website",
+        "repository": "Repository",
+        "overview": "Overview"
+      },
+      "deploy": {
+        "submitButton": "Deploy"
+      },
+      "card": {
+        "deploy": "Deploy "
       }
     },
     "domains": {

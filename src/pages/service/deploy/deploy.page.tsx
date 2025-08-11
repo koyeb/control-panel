@@ -9,18 +9,12 @@ import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ServiceForm } from 'src/modules/service-form/service-form';
 
 import { DeployModel } from './deploy-model';
-import { DeployOneClickApp } from './deploy-one-click-app';
 
 const T = createTranslate('pages.deploy');
 
 export function DeployPage() {
   const params = useSearchParams();
-  const oneClickApp = params.get('one_click_app');
   const type = params.get('type');
-
-  if (oneClickApp) {
-    return <DeployOneClickApp />;
-  }
 
   if (type === 'model') {
     return <DeployModel />;
@@ -46,7 +40,7 @@ function DeployServiceForm() {
         <T id="title" />
       </h1>
 
-      <div className="col gap-8 xl:row">
+      <div className="col gap-8 lg:row">
         <ServiceForm
           serviceId={serviceId ?? undefined}
           className="grow"
@@ -57,7 +51,7 @@ function DeployServiceForm() {
           onDeployUrlChanged={setDeployUrl}
         />
 
-        <div className="col shrink-0 gap-8 xl:basis-80">
+        <div className="col max-w-sm gap-8 lg:max-w-xs">
           <ServiceEstimatedCost cost={cost} />
           <DeployToKoyebButton deployUrl={deployUrl} />
         </div>
