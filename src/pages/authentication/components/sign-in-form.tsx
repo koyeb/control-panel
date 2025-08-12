@@ -42,7 +42,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
   const { mutateAsync: signIn } = useMutation({
     ...useApiMutationFn('signIn', async (credential: FormValues<typeof form>) => ({
       header: { 'seon-fp': await getSeonFingerprint() },
-      token: undefined,
+      token: null,
       body: credential,
     })),
     onSuccess(result) {
