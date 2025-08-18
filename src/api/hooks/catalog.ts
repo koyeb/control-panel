@@ -121,7 +121,7 @@ export function useCatalogInstanceRegionsAvailability(
   }
 }
 
-type OneClickAppApiResponse = {
+type OneClickAppApiMetadata = {
   category: string;
   name: string;
   logos: [string, ...string[]];
@@ -143,15 +143,28 @@ type OneClickAppApiResponse = {
   updated_at: string;
 };
 
-async function fetchOneClickApps() {
+async function fetchOneClickApps(): Promise<OneClickAppApiMetadata[]> {
   const websiteUrl = getConfig('websiteUrl');
-  const response = await fetch(`${websiteUrl}/api/one-click-apps.json`, { mode: 'cors' });
+  const response = await fetch(`${websiteUrl}/api/one-click-apps`, { mode: 'cors' });
 
   if (!response.ok) {
     throw new Error(await response.text());
   }
 
-  return (await response.json()) as OneClickAppApiResponse[];
+  return response.json();
+}
+
+async function fetchOneClickApp(
+  slug: string,
+): Promise<{ metadata: OneClickAppApiMetadata; description: string }> {
+  const websiteUrl = getConfig('websiteUrl');
+  const response = await fetch(`${websiteUrl}/api/one-click-apps/${slug}`, { mode: 'cors' });
+
+  if (!response.ok) {
+    throw new Error(await response.text());
+  }
+
+  return response.json();
 }
 
 export function useOneClickAppsQuery() {
@@ -159,11 +172,23 @@ export function useOneClickAppsQuery() {
     refetchInterval: false,
     queryKey: ['listOneClickApps'],
     queryFn: fetchOneClickApps,
-    select: (apps) => apps.map(mapOneClickApp),
+    select: (apps) => apps.map(mapOneClickAppMetadata),
   });
 }
 
-function mapOneClickApp(app: OneClickAppApiResponse): OneClickApp {
+export function useOneClickAppQuery(slug: string) {
+  return useQuery({
+    refetchInterval: false,
+    queryKey: ['getOneClickApp', slug],
+    queryFn: () => fetchOneClickApp(slug),
+    select: ({ metadata, description }) => ({
+      metadata: mapOneClickAppMetadata(metadata),
+      description,
+    }),
+  });
+}
+
+function mapOneClickAppMetadata(app: OneClickAppApiMetadata): OneClickApp {
   return {
     logo: app.logos[0],
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
@@ -196,7 +221,7 @@ export function useModelsQuery() {
   });
 }
 
-function mapOneClickModel(app: OneClickAppApiResponse): AiModel {
+function mapOneClickModel(app: OneClickAppApiMetadata): AiModel {
   return {
     name: app.name,
     slug: app.slug,

@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @import '@koyeb/design-system/styles.css';
 
+@plugin "@tailwindcss/typography";
+
 @source "../node_modules/@koyeb/design-system";
 
 @theme {
@@ -31,6 +33,22 @@
   input[type='number'] {
     appearance: textfield;
     -moz-appearance: textfield;
+  }
+
+  .prose {
+    code::before,
+    code::after {
+      content: '' !important;
+    }
+
+    pre code {
+      overflow: visible !important;
+    }
+
+    .hljs {
+      padding: 0 !important;
+      background: none !important;
+    }
   }
 }
 

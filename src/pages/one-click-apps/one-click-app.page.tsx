@@ -1,8 +1,9 @@
 import { Badge } from '@koyeb/design-system';
 import clsx from 'clsx';
+import { lazy } from 'react';
 import { FormattedDate } from 'react-intl';
 
-import { useOneClickAppsQuery } from 'src/api/hooks/catalog';
+import { useOneClickAppQuery, useOneClickAppsQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
 import { ExternalLink, LinkButton } from 'src/components/link';
@@ -13,6 +14,7 @@ import {
   IconDocker,
   IconGithub,
   IconGlobe,
+  IconHuggingFace,
   IconPackage,
   IconPen,
   IconPlus,
@@ -20,58 +22,59 @@ import {
   IconScale,
   IconUser,
 } from 'src/icons';
-import IconHuggingFace from 'src/icons/huggingface.svg?react';
 import { createTranslate } from 'src/intl/translate';
 import { entries, hasProperty } from 'src/utils/object';
 
 import { AppCard } from './app-card';
 
+const Markdown = lazy(() => import('src/components/markdown'));
+
 const T = createTranslate('pages.oneClickApps.details');
 
 export function OneClickAppPage() {
   const slug = useRouteParam('slug');
-  const query = useOneClickAppsQuery();
+  const appsQuery = useOneClickAppsQuery();
+  const appQuery = useOneClickAppQuery(slug);
 
-  if (query.isPending) {
+  if (appsQuery.isPending || appQuery.isPending) {
     return <Loading />;
   }
 
-  if (query.isError) {
-    return <QueryError error={query.error} />;
+  if (appsQuery.isError) {
+    return <QueryError error={appsQuery.error} />;
   }
 
-  const apps = query.data;
-  const app = apps.find((app) => app.slug === slug);
-  const related = apps.filter(hasProperty('category', app?.category)).filter(not(eq(app)));
+  if (appQuery.isError) {
+    return <QueryError error={appQuery.error} />;
+  }
+
+  const apps = appsQuery.data;
+  const app = appQuery.data;
 
   if (app === undefined) {
     // to do
     return <>App not found</>;
   }
 
+  const related = apps
+    .filter(hasProperty('category', app.metadata.category))
+    .filter((app) => app.slug !== slug);
+
   return (
     <div className="col gap-6">
-      <Header app={app} />
+      <Header app={app.metadata} />
 
       <hr />
 
-      <AppMetadata app={app} />
-      <Images app={app} />
-      <AppDescription app={app} />
+      <AppMetadata app={app.metadata} />
+      <Images app={app.metadata} />
+      <AppDescription description={app.description} />
 
       <hr className={clsx({ hidden: related.length === 0 })} />
 
       <RelatedApps apps={related.slice(0, 8)} />
     </div>
   );
-}
-
-function not<Args extends unknown[]>(predicate: (...args: Args) => boolean) {
-  return (...args: Args) => !predicate(...args);
-}
-
-function eq<T>(a: T) {
-  return (b: T) => a === b;
 }
 
 function Header({ app }: { app: OneClickApp }) {
@@ -229,13 +232,10 @@ function Images({ app }: { app: OneClickApp }) {
   );
 }
 
-function AppDescription({ app }: { app: OneClickApp }) {
+function AppDescription({ description }: { description: string }) {
   return (
-    <section className="col gap-2">
-      <h2 className="text-xl font-medium">
-        <T id="overview" />
-      </h2>
-      <p className="text-dim">{app.description}</p>
+    <section>
+      <Markdown content={description} />
     </section>
   );
 }
