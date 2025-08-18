@@ -6,7 +6,7 @@ import { AuthenticationLayout } from 'src/layouts/authentication/authentication.
 import { ResetPasswordPage } from './reset-password.page';
 import { SignInPage } from './sign-in.page';
 import { SignUpPage } from './sign-up.page';
-import { CannySso as CannySsoPage, DiscourseSsoPage } from './sso.pages';
+import { CannySsoPage, DiscourseSsoPage } from './sso.pages';
 
 export function AuthenticationPages() {
   return (

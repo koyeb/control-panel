@@ -1,19 +1,21 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { ApiError } from 'src/api/api-errors';
 import { useApi } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/report-error';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useLocation, useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';
 
 const T = createTranslate('pages.authentication.sso');
 
-export function CannySso() {
+export function CannySsoPage() {
   const api = useApi();
   const searchParams = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -42,9 +44,16 @@ export function CannySso() {
       window.location.href = `https://canny.io/api/redirects/sso?${params.toString()}`;
     },
     onError(error) {
-      reportError(error);
-      notify.error(<SsoError provider="canny" error={error} />);
-      navigate({ to: '/', replace: true });
+      if (ApiError.is(error, 401)) {
+        navigate({
+          to: '/auth/signin',
+          search: { next: location },
+        });
+      } else {
+        reportError(error);
+        notify.error(<SsoError provider="canny" error={error} />);
+        navigate({ to: '/', replace: true });
+      }
     },
   });
 
@@ -58,6 +67,7 @@ export function CannySso() {
 export function DiscourseSsoPage() {
   const api = useApi();
   const searchParams = useSearchParams();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -82,9 +92,16 @@ export function DiscourseSsoPage() {
       window.location.href = `https://community.koyeb.com/session/sso_login?sso=${sso}&sig=${sig}`;
     },
     onError(error) {
-      reportError(error);
-      notify.error(<SsoError provider="discourse" error={error} />);
-      navigate({ to: '/', replace: true });
+      if (ApiError.is(error, 401)) {
+        navigate({
+          to: '/auth/signin',
+          search: { next: location },
+        });
+      } else {
+        reportError(error);
+        notify.error(<SsoError provider="discourse" error={error} />);
+        navigate({ to: '/', replace: true });
+      }
     },
   });
 
