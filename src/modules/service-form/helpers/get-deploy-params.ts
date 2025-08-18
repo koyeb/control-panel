@@ -119,6 +119,10 @@ export function getDeployParams(form: ServiceForm, removeDefaultValues = true): 
     const keysToDelete = new Set<string>();
 
     for (const key of params.keys()) {
+      if (key === 'type') {
+        continue;
+      }
+
       const value = params.getAll(key);
       const defaultValue = defaultParams.getAll(key);
 
