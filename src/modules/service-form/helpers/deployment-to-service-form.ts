@@ -173,8 +173,8 @@ function scaling(definition: API.DeploymentDefinition): DeepPartial<Scaling> {
   const { requests_response_time } = getTarget('requests_response_time');
   const { sleep_idle_delay } = getTarget('sleep_idle_delay');
 
-  const { deep_sleep_value, light_sleep_value } = sleep_idle_delay ?? {};
-  const scaleToZero = getScaleToZero(deep_sleep_value!, light_sleep_value || undefined);
+  const { value, deep_sleep_value, light_sleep_value } = sleep_idle_delay ?? {};
+  const scaleToZero = getScaleToZero(deep_sleep_value! || value!, light_sleep_value || undefined);
 
   return {
     min,
