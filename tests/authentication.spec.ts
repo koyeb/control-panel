@@ -1,7 +1,6 @@
-import test, { expect, Page } from '@playwright/test';
-import { TOTP } from 'totp-generator';
+import test, { Page, expect } from '@playwright/test';
 
-import { authenticate, config, pathname } from './test-utils';
+import { authenticate, authenticateOnGithub, config } from './test-utils';
 
 async function signIn(page: Page) {
   await page.getByPlaceholder('Email').fill(config.account.email);
@@ -11,57 +10,55 @@ async function signIn(page: Page) {
 
 test('log in', async ({ page }) => {
   await page.goto('/auth/signin');
+
   await signIn(page);
-  await expect(page).toHaveURL('/auth/signin');
+  await expect(page).toHaveURL('/');
 });
 
 test('log out', async ({ page }) => {
   await authenticate(page);
+  await page.reload();
 
-  await page.getByRole('button', { name: 'koyeb e2e' }).last().click();
-  await page.getByRole('button', { name: 'Log Out' }).click();
+  await page.getByRole('menuitem', { name: 'koyeb e2e' }).last().hover();
+  await page.getByRole('button', { name: 'Log out' }).click();
 
-  await expect.poll(() => pathname(page)).toEqual('/auth/signin');
+  await expect(page).toHaveURL('/auth/signin');
 });
 
 test('redirection after authenticated', async ({ page }) => {
-  await page.goto('/domains');
-  await expect(page).toHaveURL('/auth/signin?next=%2Fdomains');
+  await page.goto('/services/deploy?name=my-service');
+  await expect(page).toHaveURL('/auth/signin?next=%2Fservices%2Fdeploy%3Fname%3Dmy-service');
+
   await signIn(page);
-  await expect(page).toHaveURL('/domains');
+  await expect(page).toHaveURL('/services/deploy?name=my-service');
 });
 
 test('redirection when authenticated', async ({ page }) => {
   await authenticate(page);
+
   await page.goto('/auth/signin');
-  await expect.poll(() => pathname(page)).toEqual('/');
+  await expect(page).toHaveURL('/');
+
+  await page.goto('/auth/signin?next=%2Fservices%2Fdeploy%3Fname%3Dmy-service');
+  await expect(page).toHaveURL('/services/deploy?name=my-service');
 });
 
 test('github sign in', async ({ context, page }) => {
-  const githubPage = await context.newPage();
-
-  await githubPage.goto('https://github.com/login');
-
-  await githubPage.getByLabel('Username or email address').fill(config.github.email);
-  await githubPage.getByLabel('Password').fill(config.github.password);
-
-  await githubPage.getByRole('button', { name: 'Sign in' }).click();
-
-  await githubPage.locator('[name="app_otp"]').fill(TOTP.generate(config.github.totpKey).otp);
-
-  await githubPage.waitForURL('https://github.com');
-  await githubPage.close();
-
+  await authenticateOnGithub(context);
   await page.goto('/auth/signin');
+
   await page.getByRole('button', { name: 'Sign in with GitHub' }).click();
-  await expect.poll(() => pathname(page)).toEqual('/');
+  await expect(page).toHaveURL('/');
 });
 
 test('switch organization', async ({ page }) => {
   await authenticate(page);
+  await page.reload();
 
-  await page.getByTestId('organization-switcher').click();
-  await page.getByRole('button', { name: 'koyeb-e2e-2' }).click();
+  const switcher = page.getByRole('button', { name: 'koyeb-e2e' });
 
-  await expect(page.getByTestId('organization-switcher')).toHaveText(/koyeb-e2e-2/);
+  await switcher.click();
+  await page.getByRole('option', { name: 'koyeb-e2e-2' }).click();
+
+  await expect(switcher).toHaveAccessibleName('koyeb-e2e-2');
 });

@@ -1,10 +1,10 @@
 import js from '@eslint/js';
 import reactQuery from '@tanstack/eslint-plugin-query';
+import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
-import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 

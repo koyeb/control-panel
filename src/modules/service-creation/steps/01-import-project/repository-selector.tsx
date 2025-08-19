@@ -41,8 +41,9 @@ export function RepositorySelector({ onImport }: RepositorySelectorProps) {
 
   return (
     <>
-      {!githubApp && <InstallGithubApp />}
+      {githubApp === null && <InstallGithubApp />}
       {githubApp && <OrganizationRepositorySelector onImport={onImport} />}
+
       <PublicRepositorySelector onImport={onImport} />
 
       <div>

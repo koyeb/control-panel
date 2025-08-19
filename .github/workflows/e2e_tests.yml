@@ -2,29 +2,33 @@ name: E2E Tests
 
 on:
   workflow_dispatch:
+  push:
   # deployment_status:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  test:
-    timeout-minutes: 30
+  tests:
+    name: Run end-to-end tests
     runs-on: ubuntu-latest
-    # if: github.event.deployment_status.state == 'success'
+    timeout-minutes: 30
+    container:
+      image: mcr.microsoft.com/playwright:v1.53.2-noble
+      options: --user 1001
 
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
 
-      - name: Install Playwright dependencies
-        run: pnpm exec playwright install --with-deps
-
       - name: Run end-to-end tests
         run: pnpm e2e
         env:
           CI: 'true'
-          # BASE_URL: ${{ github.event.deployment_status.environment_url }}
-          E2E_BASE_URL: ${{ secrets.E2E_BASE_URL }}
+          E2E_BASE_URL: ${{ vars.E2E_BASE_URL }}
           E2E_USER_TOKEN: ${{ secrets.E2E_USER_TOKEN }}
-          E2E_USER_EMAIL: ${{ secrets.E2E_USER_EMAIL }}
+          E2E_USER_EMAIL: ${{ vars.E2E_USER_EMAIL }}
           E2E_USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
           E2E_USER_GITHUB_PASSWORD: ${{ secrets.E2E_USER_GITHUB_PASSWORD }}
           E2E_USER_GITHUB_TOTP_KEY: ${{ secrets.E2E_USER_GITHUB_TOTP_KEY }}

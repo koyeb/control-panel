@@ -1,5 +1,8 @@
 /* eslint-disable */
 // @ts-nocheck
+import { api } from './api/api';
+
+window.api = api;
 
 if (typeof globalThis === 'undefined' && typeof window !== 'undefined') {
   window.globalThis = window;

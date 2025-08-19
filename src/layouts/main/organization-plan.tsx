@@ -46,6 +46,7 @@ export function OrganizationPlan() {
       offset={8}
       renderReference={(props) => (
         <div
+          role="menuitem"
           className={clsx('col gap-4 py-2 pr-2 pl-3 text-start transition-colors', open && 'bg-muted/50')}
           {...props}
         >

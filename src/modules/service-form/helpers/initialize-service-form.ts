@@ -34,7 +34,7 @@ export async function initializeServiceForm(
   instances: CatalogInstance[],
   organization: Organization,
   quotas: OrganizationQuotas,
-  githubApp: GithubApp | undefined,
+  githubApp: GithubApp | null | undefined,
   serviceId: string | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {

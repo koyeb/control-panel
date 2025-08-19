@@ -1,8 +1,10 @@
 import { BrowserContext, Page } from '@playwright/test';
+import { TOTP } from 'totp-generator';
 
-import type { api as Api } from '../src/api/api';
-
-declare const api: typeof Api;
+import { api } from 'src/api/api';
+import { ApiError } from 'src/api/api-errors';
+import { mapOrganization } from 'src/api/mappers/session';
+import type { Organization } from 'src/api/model';
 
 export const config = {
   baseUrl: process.env.E2E_BASE_URL as string,
@@ -38,25 +40,39 @@ export async function authenticate(page: Page) {
   await page.evaluate((token) => {
     window.localStorage.setItem('access-token', token);
   }, config.account.token);
-
-  await page.goto('/');
 }
 
-export async function deleteKoyebResources(page: Page) {
-  await page.evaluate(async () => {
-    const listAppIds = async () => {
-      const { apps } = await api().listApps({ query: { limit: '100' } });
-      return apps!.map((app) => app.id!);
-    };
+export async function authenticateOnGithub(context: BrowserContext) {
+  const page = await context.newPage();
 
-    for (const appId of await listAppIds()) {
-      await api().deleteApp({ path: { id: appId } });
-    }
+  await page.goto('https://github.com/login');
 
-    while ((await listAppIds()).length > 0) {
-      await new Promise((r) => setTimeout(r, 1000));
-    }
-  });
+  await page.getByLabel('Username or email address').fill(config.github.email);
+  await page.getByLabel('Password').fill(config.github.password);
+
+  await page.getByRole('button', { name: 'Sign in' }).click();
+
+  await page.locator('[name="app_otp"]').fill(TOTP.generate(config.github.totpKey).otp);
+
+  await page.waitForURL('https://github.com');
+  await page.close();
+}
+
+export async function deleteKoyebResources(baseUrl?: string) {
+  const token = config.account.token;
+
+  const listAppIds = async () => {
+    const { apps } = await api.listApps({ baseUrl, token, query: { limit: '100' } });
+    return apps!.map((app) => app.id!);
+  };
+
+  for (const appId of await listAppIds()) {
+    await api.deleteApp({ baseUrl, token, path: { id: appId } });
+  }
+
+  while ((await listAppIds()).length > 0) {
+    await new Promise((r) => setTimeout(r, 1000));
+  }
 }
 
 export async function catchNewPage(context: BrowserContext, fn: () => Promise<void>) {
@@ -65,4 +81,17 @@ export async function catchNewPage(context: BrowserContext, fn: () => Promise<vo
   await fn();
 
   return promise;
+}
+
+export async function getOrganization(baseUrl?: string): Promise<Organization | undefined> {
+  return api.getCurrentOrganization({ baseUrl, token: config.account.token }).then(
+    ({ organization }) => mapOrganization(organization!),
+    (error) => {
+      if (ApiError.is(error, 404)) {
+        return undefined;
+      }
+
+      throw error;
+    },
+  );
 }

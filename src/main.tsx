@@ -1,7 +1,7 @@
 import './api/api.intercept';
 import './intercom';
-import './polyfills';
 import './sentry';
+import './side-effects';
 
 import ReactDOM from 'react-dom/client';
 

@@ -100,7 +100,7 @@ export default defineConfig({
   server: {
     port: 8000,
     proxy: {
-      '/v1': 'https://staging.koyeb.com',
+      '/v1': process.env.VITE_API_URL!,
     },
   },
   preview: {

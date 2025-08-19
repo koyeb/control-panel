@@ -151,10 +151,14 @@ export function useRefreshToken() {
 }
 
 function jwtExpires(jwt: string) {
-  const { exp } = jwtDecode(jwt);
+  try {
+    const { exp } = jwtDecode(jwt);
 
-  if (exp !== undefined) {
-    return new Date(exp * 1000);
+    if (exp !== undefined) {
+      return new Date(exp * 1000);
+    }
+  } catch {
+    return undefined;
   }
 }
 

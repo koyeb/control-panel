@@ -1,99 +1,118 @@
-import { expect, Page, test } from '@playwright/test';
-
+import { Page, expect, test } from '@playwright/test';
 import { describe } from 'node:test';
-import { authenticate } from './test-utils';
 
-describe('service form', () => {
-  test.beforeEach(async ({ page }) => {
-    await authenticate(page);
-    await page.goto('/services/deploy');
+import { authenticate, getOrganization } from './test-utils';
+
+test.beforeEach(async ({ page }) => {
+  await authenticate(page);
+  await page.goto('/services/deploy');
+});
+
+function section(page: Page, section: string) {
+  return page.locator('section').getByText(section, { exact: true });
+}
+
+function expandedSection(page: Page) {
+  return page.locator('section[data-expanded=true]');
+}
+
+async function selectInstance(page: Page, category: string, name: string) {
+  await section(page, 'Instance').click();
+  await page.getByRole('tab', { name: category }).click();
+  await page.getByRole('radio', { name }).locator('..').click();
+}
+
+describe('scaling', () => {
+  test('message when the free instance is selected', async ({ page }) => {
+    await selectInstance(page, 'CPU Eco', 'Free');
+
+    await section(page, 'Scaling').click();
+    await expect(expandedSection(page)).toContainText(
+      'The free instance scales down to zero after periods of inactivity. Select any paid instance type to configure scaling.',
+    );
   });
 
-  function section(page: Page, section: string) {
-    return page.getByText(section, { exact: true });
-  }
+  test('scale to zero message when an eco instance is selected', async ({ page }) => {
+    await selectInstance(page, 'CPU Eco', 'eNano');
 
-  function expandedSection(page: Page) {
-    return page.locator('section[data-expanded=true]');
-  }
+    await section(page, 'Scaling').click();
+    await expect(expandedSection(page)).toContainText(
+      'Scale to zero requires a Standard or GPU instance type',
+    );
+  });
 
-  describe('scaling', () => {
-    test('alert when the free instance is selected', async ({ page }) => {
-      await section(page, 'Scaling').click();
-      await expect(page.getByRole('alert')).toContainText(
-        'Services with the Free instance type cannot be scaled',
-      );
-    });
+  test('scale to zero message when the organization is on the starter plan', async ({ page, baseURL }) => {
+    const organization = await getOrganization(baseURL);
 
-    test('alert when an eco instance is selected', async ({ page }) => {
-      await section(page, 'Instance').click();
-      await page.getByText('eNano').click();
+    test.skip(organization?.plan !== 'starter', 'The organization is not on the starter plan');
 
-      await section(page, 'Scaling').click();
-      await expect(expandedSection(page).getByRole('alert')).toContainText(
-        'Services with the eNano instance type cannot be scaled automatically',
-      );
-    });
+    await selectInstance(page, 'CPU Standard', 'Nano');
 
-    test('set min and max on blur', async ({ page }) => {
-      await section(page, 'Instance').click();
-      await page.getByText('CPU Standard').click();
-      await page.getByText('Nano', { exact: true }).click();
+    await section(page, 'Scaling').click();
+    await page.getByLabel('Minimum').fill('0');
+    await expect(expandedSection(page)).toContainText(
+      'Idle period and light to deep sleep transition customization is available starting the Pro plan',
+    );
+  });
 
-      await section(page, 'Scaling').click();
+  test('enable and disable targets when min and max change', async ({ page }) => {
+    await selectInstance(page, 'CPU Standard', 'Nano');
 
-      const max = page.getByLabel('Max');
-      const min = page.getByLabel('Min');
+    await section(page, 'Scaling').click();
 
-      await max.fill('50');
-      await max.blur();
-      expect(max).toHaveValue('20');
+    const min = page.getByLabel('Minimum');
+    const max = page.getByLabel('Maximum');
 
-      await min.fill('5');
-      await max.fill('2');
-      await max.blur();
-      expect(max).toHaveValue('5');
+    const requestsPerSecond = page.getByLabel('Request per second');
+    const cpuUsage = page.getByLabel('CPU usage');
+    const memoryUsage = page.getByLabel('Memory usage');
 
-      await min.fill('7');
-      await min.blur();
-      expect(min).toHaveValue('5');
-    });
+    await max.fill('2');
+    await expect(requestsPerSecond).toBeEnabled();
+    await expect(requestsPerSecond).toBeChecked();
+    await expect(cpuUsage).toBeEnabled();
+    await expect(cpuUsage).not.toBeChecked();
+    await expect(memoryUsage).toBeEnabled();
+    await expect(memoryUsage).not.toBeChecked();
 
-    test('enable and disable targets when min and max change', async ({ page }) => {
-      await section(page, 'Instance').click();
-      await page.getByText('CPU Standard').click();
-      await page.getByText('Nano', { exact: true }).click();
+    await min.fill('2');
+    await expect(requestsPerSecond).toBeDisabled();
+    await expect(requestsPerSecond).not.toBeChecked();
+    await expect(cpuUsage).toBeDisabled();
+    await expect(cpuUsage).not.toBeChecked();
+    await expect(memoryUsage).toBeDisabled();
+    await expect(memoryUsage).not.toBeChecked();
 
-      await section(page, 'Scaling').click();
+    await expect(expandedSection(page)).toContainText(
+      'Autoscaling can only be configured if the maximum number of instances is greater than one and the minimum and maximum instance counts are not equal',
+    );
 
-      const max = page.getByLabel('Max');
-      const min = page.getByLabel('Min');
+    await section(page, 'Service type').click();
+    await page.getByRole('radio', { name: 'Worker' }).locator('..').click();
 
-      const requestsPerSecond = page.getByLabel('Target number of requests per second');
-      const cpuUsage = page.getByLabel('Target CPU usage');
-      const memoryUsage = page.getByLabel('Target memory usage');
+    await section(page, 'Scaling').click();
 
-      await max.fill('5');
-      await expect(requestsPerSecond).toBeEnabled();
-      await expect(requestsPerSecond).toBeChecked();
-      await expect(cpuUsage).toBeEnabled();
-      await expect(cpuUsage).not.toBeChecked();
-      await expect(memoryUsage).toBeEnabled();
-      await expect(memoryUsage).not.toBeChecked();
+    await min.fill('1');
+    await expect(requestsPerSecond).toBeDisabled();
+    await expect(requestsPerSecond).not.toBeChecked();
+    await expect(cpuUsage).toBeEnabled();
+    await expect(cpuUsage).toBeChecked();
+    await expect(memoryUsage).toBeEnabled();
+    await expect(memoryUsage).not.toBeChecked();
+  });
 
-      await min.fill('5');
-      await expect(requestsPerSecond).toBeDisabled();
-      await expect(requestsPerSecond).not.toBeChecked();
-      await expect(cpuUsage).toBeDisabled();
-      await expect(cpuUsage).not.toBeChecked();
-      await expect(memoryUsage).toBeDisabled();
-      await expect(memoryUsage).not.toBeChecked();
+  test('scaling disabled with volumes', async ({ page }) => {
+    await selectInstance(page, 'CPU Standard', 'Nano');
 
-      // bug: react-hook-form does not trigger a change event when calling setValue
-      await min.fill('6');
-      await min.blur();
-      await expect(requestsPerSecond).toBeDisabled();
-      await expect(requestsPerSecond).toBeChecked();
-    });
+    await section(page, 'Volumes').click();
+    await page.getByRole('button', { name: 'Add volume' }).click();
+
+    await section(page, 'Scaling').click();
+    await expect(expandedSection(page)).toContainText(
+      "Scale to zero can't be enabled when volumes are attached to the service",
+    );
+    await expect(expandedSection(page)).toContainText(
+      "Autoscaling can't be configured when volumes are attached to the service",
+    );
   });
 });

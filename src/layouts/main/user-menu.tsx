@@ -34,7 +34,11 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
       placement={isMobile ? 'top-end' : 'left-end'}
       offset={8}
       renderReference={(props) => (
-        <div className="row items-center gap-2 py-2 pr-2 pl-3 transition-colors hover:bg-muted/50" {...props}>
+        <div
+          role="menuitem"
+          className="row items-center gap-2 py-2 pr-2 pl-3 transition-colors hover:bg-muted/50"
+          {...props}
+        >
           <UserAvatar user={user} />
 
           {!collapsed && <span className="flex-1 truncate font-medium">{user.name}</span>}

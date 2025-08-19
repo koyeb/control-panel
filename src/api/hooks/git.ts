@@ -1,27 +1,37 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { isApiFailedPrecondition } from '../api-errors';
+import { useToken } from 'src/application/authentication';
+
+import { ApiError } from '../api-errors';
 import { mapGithubApp, mapRepository } from '../mappers/git';
 import { GitRepository } from '../model';
-import { useApiQueryFn } from '../use-api';
+import { getApiQueryKey, useApi, useApiQueryFn } from '../use-api';
 
 import { useOrganizationUnsafe } from './session';
 
-const isNotGithubAppError = (error: Error) => {
-  return isApiFailedPrecondition(error) && error.message === 'No GitHub Installation';
+export const isNoGithubAppError = (error: unknown) => {
+  return ApiError.is(error, 400) && error.message === 'No GitHub Installation';
 };
 
-export function useGithubAppQuery(refetchInterval?: number) {
+export function useGithubAppQuery(refetchInterval = 5000) {
   const organization = useOrganizationUnsafe();
+  const api = useApi();
+  const token = useToken();
 
   return useQuery({
-    ...useApiQueryFn('getGithubApp'),
+    queryKey: getApiQueryKey('getGithubApp', {}, token),
+    queryFn: async ({ signal }) => {
+      return api.getGithubApp({ signal }).catch((error) => {
+        if (isNoGithubAppError(error)) {
+          return null;
+        } else {
+          throw error;
+        }
+      });
+    },
     enabled: organization !== undefined,
     refetchInterval,
-    select: mapGithubApp,
-    refetchOnWindowFocus: () => false,
-    retry: (count, error) => (isNotGithubAppError(error) ? false : count < 3),
-    throwOnError: (error) => !isNotGithubAppError(error),
+    select: (result) => (result ? mapGithubApp(result) : null),
   });
 }
 

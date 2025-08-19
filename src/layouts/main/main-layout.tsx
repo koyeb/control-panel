@@ -116,7 +116,7 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 
       <div className="col gap-4">
         {!collapsed && (
-          <div className="mx-4 divide-y rounded-md border bg-neutral">
+          <div role="menu" className="mx-4 divide-y rounded-md border bg-neutral">
             <UserMenu collapsed={collapsed} />
             <OrganizationPlan />
           </div>
