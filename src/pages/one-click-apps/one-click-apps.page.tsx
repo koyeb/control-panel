@@ -30,17 +30,29 @@ export function OneClickAppsPage() {
   const others = apps.filter((app) => app.category.toLocaleLowerCase() !== 'model');
 
   const [search, setSearch] = useState('');
-  const [activeCategories, setActiveCategories] = useState<string[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const filteredApps = useMemo(() => {
-    if (search === '' && activeCategories.length === 0) {
+    if (search === '' && activeCategory === null) {
       return null;
     }
 
-    return apps
-      .filter((app) => search === '' || lowerCase(app.name).includes(lowerCase(search)))
-      .filter((app) => activeCategories.length === 0 || activeCategories.includes(app.category));
-  }, [apps, search, activeCategories]);
+    const query = lowerCase(search);
+
+    const matchSearch = (app: OneClickApp) => {
+      return [
+        query === '',
+        lowerCase(app.name).includes(query),
+        lowerCase(app.description).includes(query),
+      ].some(Boolean);
+    };
+
+    const matchCategory = (app: OneClickApp) => {
+      return activeCategory === null || app.category === activeCategory;
+    };
+
+    return apps.filter(matchSearch).filter(matchCategory);
+  }, [apps, search, activeCategory]);
 
   return (
     <>
@@ -50,8 +62,8 @@ export function OneClickAppsPage() {
         search={search}
         setSearch={setSearch}
         categories={categories}
-        activeCategories={activeCategories}
-        setActiveCategories={setActiveCategories}
+        activeCategory={activeCategory}
+        setActiveCategory={setActiveCategory}
       />
 
       {filteredApps && (
@@ -60,13 +72,13 @@ export function OneClickAppsPage() {
             <AppCard key={app.slug} app={app} />
           ))}
 
-          {filteredApps.length === 0 && <T id="noResults" />}
+          {filteredApps.length === 0 && <NoSearchResults />}
         </section>
       )}
 
       {!filteredApps && (
         <div className="col gap-8">
-          <section className="grid grid-cols-2 gap-x-6 gap-y-4">
+          <section className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
             <SectionHeader title={<T id="officialModels" />} />
             {officialModels.map((app) => (
               <FeaturedApp key={app.slug} app={app} />
@@ -120,18 +132,12 @@ type FiltersProps = {
   search: string;
   setSearch: (search: string) => void;
   categories: string[];
-  activeCategories: string[];
-  setActiveCategories: (categories: string[]) => void;
+  activeCategory: string | null;
+  setActiveCategory: (category: string | null) => void;
 };
 
-function Filters({ search, setSearch, categories, activeCategories, setActiveCategories }: FiltersProps) {
+function Filters({ search, setSearch, categories, activeCategory, setActiveCategory }: FiltersProps) {
   const t = T.useTranslate();
-
-  const toggleCategory = (category: string) => {
-    return activeCategories.includes(category)
-      ? activeCategories.filter((cat) => cat !== category)
-      : [...activeCategories, category];
-  };
 
   return (
     <div className="mb-10 col items-center gap-4">
@@ -153,8 +159,8 @@ function Filters({ search, setSearch, categories, activeCategories, setActiveCat
         {categories.map((category) => (
           <button
             key={category}
-            data-active={activeCategories.includes(category) || undefined}
-            onClick={() => setActiveCategories(toggleCategory(category))}
+            data-active={category === activeCategory || undefined}
+            onClick={() => setActiveCategory(category === activeCategory ? null : category)}
             className="rounded-full border px-3 py-1.5 font-medium transition-colors hover:bg-muted data-active:border-transparent data-active:bg-green data-active:text-white"
           >
             {category}
@@ -182,5 +188,16 @@ function FeaturedApp({ app }: { app: OneClickApp }) {
       <div className="text-xl font-medium">{app.name}</div>
       <div className="truncate text-dim">{app.description}</div>
     </Link>
+  );
+}
+
+function NoSearchResults() {
+  return (
+    <div className="col-span-full col min-h-48 items-center justify-center gap-6">
+      <IconSearch className="size-14 text-dim" />
+      <div className="text-3xl font-medium">
+        <T id="noResults" />
+      </div>
+    </div>
   );
 }

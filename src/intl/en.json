@@ -2063,7 +2063,12 @@
       "details": {
         "deploy": "Deploy",
         "website": "Website",
-        "repository": "Repository"
+        "repository": "Repository",
+        "related": "Related apps",
+        "notFound": {
+          "title": "Error 404",
+          "description": "This app doesn't exist. Please return to <link>One-click Apps</link>."
+        }
       },
       "deploy": {
         "submitButton": "Deploy"

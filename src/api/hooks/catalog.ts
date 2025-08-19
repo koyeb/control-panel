@@ -3,15 +3,16 @@ import sortBy from 'lodash-es/sortBy';
 
 import { parseBytes } from 'src/application/memory';
 import { getConfig } from 'src/utils/config';
-import { hasProperty, snakeToCamelDeep } from 'src/utils/object';
+import { entries, hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
+import { ApiError } from '../api-errors';
 import {
   mapCatalogDatacenter,
   mapCatalogInstance,
   mapCatalogRegion,
   mapCatalogUsage,
 } from '../mappers/catalog';
-import { AiModel, CatalogAvailability, OneClickApp, OneClickAppEnv } from '../model';
+import { AiModel, CatalogAvailability, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -121,29 +122,35 @@ export function useCatalogInstanceRegionsAvailability(
   }
 }
 
-type OneClickAppApiMetadata = {
-  category: string;
-  name: string;
-  logos: [string, ...string[]];
-  cover: string;
-  description: string;
-  repository: string;
-  deploy_button_url: string;
+export type ApiOneClickApp = {
   slug: string;
+  cover: string;
+  og: string;
+  logos: string[];
+  name: string;
+  href: string;
+  description: string;
+  category: string;
   project_site?: string;
   developer?: string;
-  model_name?: string;
-  model_size?: string;
-  model_inference_engine?: string;
-  model_docker_image?: string;
-  model_min_vram_gb?: number;
-  env?: OneClickAppEnv[];
-  metadata?: Array<{ name: string; value: string }>;
+  publisher?: string;
   created_at: string;
   updated_at: string;
+  repository: string;
+  deploy_button_url: string;
+  live_demo?: string;
+  technologies: string[];
+  official: boolean;
+  featured?: boolean;
+  env?: OneClickAppEnv[];
+  metadata?: OneClickAppMetadata[];
+
+  // model properties
+  model_docker_image?: string;
+  model_min_vram_gb?: string;
 };
 
-async function fetchOneClickApps(): Promise<OneClickAppApiMetadata[]> {
+async function fetchOneClickApps(): Promise<ApiOneClickApp[]> {
   const websiteUrl = getConfig('websiteUrl');
   const response = await fetch(`${websiteUrl}/api/one-click-apps`, { mode: 'cors' });
 
@@ -151,19 +158,23 @@ async function fetchOneClickApps(): Promise<OneClickAppApiMetadata[]> {
     throw new Error(await response.text());
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return response.json();
 }
 
-async function fetchOneClickApp(
-  slug: string,
-): Promise<{ metadata: OneClickAppApiMetadata; description: string }> {
+async function fetchOneClickApp(slug: string): Promise<{ metadata: ApiOneClickApp; description: string }> {
   const websiteUrl = getConfig('websiteUrl');
   const response = await fetch(`${websiteUrl}/api/one-click-apps/${slug}`, { mode: 'cors' });
 
   if (!response.ok) {
+    if (response.status === 404) {
+      throw new ApiError({ status: 404, code: '', message: 'Not found' });
+    }
+
     throw new Error(await response.text());
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return response.json();
 }
 
@@ -172,7 +183,7 @@ export function useOneClickAppsQuery() {
     refetchInterval: false,
     queryKey: ['listOneClickApps'],
     queryFn: fetchOneClickApps,
-    select: (apps) => apps.map(mapOneClickAppMetadata),
+    select: (apps) => apps.map(mapOneClickApp),
   });
 }
 
@@ -180,19 +191,32 @@ export function useOneClickAppQuery(slug: string) {
   return useQuery({
     refetchInterval: false,
     queryKey: ['getOneClickApp', slug],
+    retry: false,
     queryFn: () => fetchOneClickApp(slug),
     select: ({ metadata, description }) => ({
-      metadata: mapOneClickAppMetadata(metadata),
+      metadata: mapOneClickApp(metadata),
       description,
     }),
   });
 }
 
-function mapOneClickAppMetadata(app: OneClickAppApiMetadata): OneClickApp {
+function mapOneClickApp(app: ApiOneClickApp): OneClickApp {
+  const fallbackMetadata = () => {
+    const metadata: Record<string, string> = {};
+
+    metadata['Repository'] = app.repository;
+    if (app.project_site) metadata['Website'] = app.project_site;
+    if (app.developer) metadata['Developer'] = app.developer;
+    metadata['Category'] = app.category;
+
+    return entries(metadata).map(([name, value]) => ({ name, value }));
+  };
+
   return {
-    logo: app.logos[0],
+    logo: app.logos[0]!,
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
     env: [],
+    metadata: app.metadata ?? fallbackMetadata(),
     ...snakeToCamelDeep(app),
   };
 }
@@ -221,12 +245,12 @@ export function useModelsQuery() {
   });
 }
 
-function mapOneClickModel(app: OneClickAppApiMetadata): AiModel {
+function mapOneClickModel(app: ApiOneClickApp): AiModel {
   return {
     name: app.name,
     slug: app.slug,
     description: app.description,
-    logo: app.logos[0],
+    logo: app.logos[0]!,
     dockerImage: app.model_docker_image!,
     minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
     metadata: app.metadata ?? [],

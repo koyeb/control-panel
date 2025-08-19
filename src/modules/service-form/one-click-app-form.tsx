@@ -1,4 +1,11 @@
-import { AccordionHeader, AccordionSection, Badge, Checkbox, FieldHelperText } from '@koyeb/design-system';
+import {
+  AccordionHeader,
+  AccordionSection,
+  Badge,
+  Checkbox,
+  FieldHelperText,
+  Tooltip,
+} from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -208,20 +215,25 @@ function OverviewSection({ app }: { app: OneClickApp }) {
   return (
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded bg-muted">
-        <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
+        <dl className="row flex-wrap gap-3 p-3">
           {app.metadata?.map(({ name, value }, index) => (
-            <Metadata key={index} label={name} value={value} />
+            <Metadata
+              key={index}
+              label={name}
+              value={<Tooltip content={value}>{(props) => <span {...props}>{value}</span>}</Tooltip>}
+              className="w-40 [&>dd]:truncate"
+            />
           ))}
 
           {/* todo */}
           {app.metadata === undefined && <>No metadata</>}
-        </div>
+        </dl>
 
-        <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
+        <dl className="row flex-wrap gap-3 p-3 [&>div]:w-40">
           <InstanceTypeMetadata instanceType={watch('instance')} />
           <ScalingMetadata scaling={watch('scaling')} />
           <RegionsMetadata regions={watch('regions')} />
-        </div>
+        </dl>
       </div>
     </Section>
   );

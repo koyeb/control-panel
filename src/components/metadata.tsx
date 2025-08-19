@@ -9,8 +9,8 @@ type MetadataProps = {
 export function Metadata({ label, value, className }: MetadataProps) {
   return (
     <div className={clsx('col gap-1', className)}>
-      <div className="whitespace-nowrap text-dim">{label}</div>
-      <div className="line-clamp-2">{value}</div>
+      <dt className="whitespace-nowrap text-dim">{label}</dt>
+      <dd className="line-clamp-2">{value}</dd>
     </div>
   );
 }

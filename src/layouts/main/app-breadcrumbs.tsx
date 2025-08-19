@@ -4,8 +4,9 @@ import { useState } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Route, Switch } from 'wouter';
 
+import { ApiError } from 'src/api/api-errors';
 import { useAppQuery } from 'src/api/hooks/app';
-import { useOneClickApps } from 'src/api/hooks/catalog';
+import { useOneClickAppQuery } from 'src/api/hooks/catalog';
 import { useServiceQuery, useServices } from 'src/api/hooks/service';
 import { Breadcrumbs, Crumb } from 'src/components/breadcrumbs';
 import { LinkMenuItem } from 'src/components/link';
@@ -196,15 +197,23 @@ function DatabaseServiceCrumbs({ databaseServiceId }: { databaseServiceId: strin
 }
 
 function OneClickAppCrumbs({ slug }: { slug: string }) {
-  const app = useOneClickApps().find((app) => app.slug === slug);
+  const query = useOneClickAppQuery(slug);
 
-  if (!app) {
+  if (query.isPending) {
     return <TextSkeleton width={8} />;
+  }
+
+  if (query.isError) {
+    if (ApiError.is(query.error, 404)) {
+      return <Crumb label={query.error.message} />;
+    }
+
+    return null;
   }
 
   return (
     <>
-      <Crumb label={app.name} link={`/one-click-apps/$slug`} params={{ slug: app.slug }} />
+      <Crumb label={query.data.metadata.name} link={`/one-click-apps/$slug`} params={{ slug }} />
 
       <CrumbRoute
         path="/one-click-apps/:slug/deploy"

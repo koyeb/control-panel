@@ -3,24 +3,27 @@ import clsx from 'clsx';
 import { lazy } from 'react';
 import { FormattedDate } from 'react-intl';
 
+import { ApiError } from 'src/api/api-errors';
 import { useOneClickAppQuery, useOneClickAppsQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
-import { ExternalLink, LinkButton } from 'src/components/link';
+import { ExternalLink, Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
 import {
+  IconCalendarDays,
+  IconCircleUser,
   IconDocker,
   IconGithub,
   IconGlobe,
   IconHuggingFace,
   IconPackage,
-  IconPen,
-  IconPlus,
-  IconRocket,
+  IconRotateCw,
   IconScale,
+  IconTriangleAlert,
   IconUser,
+  IconWeight,
 } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { entries, hasProperty } from 'src/utils/object';
@@ -45,16 +48,15 @@ export function OneClickAppPage() {
   }
 
   if (appQuery.isError) {
+    if (ApiError.is(appQuery.error, 404)) {
+      return <AppNotFound />;
+    }
+
     return <QueryError error={appQuery.error} />;
   }
 
   const apps = appsQuery.data;
   const app = appQuery.data;
-
-  if (app === undefined) {
-    // to do
-    return <>App not found</>;
-  }
 
   const related = apps
     .filter(hasProperty('category', app.metadata.category))
@@ -73,6 +75,28 @@ export function OneClickAppPage() {
       <hr className={clsx({ hidden: related.length === 0 })} />
 
       <RelatedApps apps={related.slice(0, 8)} />
+    </div>
+  );
+}
+
+function AppNotFound() {
+  const link = (children: React.ReactNode) => (
+    <Link to="/one-click-apps" className="text-link font-medium">
+      {children}
+    </Link>
+  );
+
+  return (
+    <div className="col min-h-[calc(100vh-12rem)] items-center justify-center gap-6">
+      <IconTriangleAlert className="size-14 text-dim" />
+
+      <div className="text-3xl font-medium">
+        <T id="notFound.title" />
+      </div>
+
+      <div className="text-base text-dim">
+        <T id="notFound.description" values={{ link }} />
+      </div>
     </div>
   );
 }
@@ -103,9 +127,7 @@ function Header({ app }: { app: OneClickApp }) {
 
 function AppMetadata({ app }: { app: OneClickApp }) {
   return (
-    <section className="row items-center gap-6">
-      <img src={app.logo} className="size-6 rounded-md bg-black/80 p-1 dark:bg-transparent" />
-
+    <section className="row flex-wrap items-center gap-x-6 gap-y-3">
       {entries(getAppMetadata(app)).map(([key, props]) => (
         <Metadata key={key} {...props} />
       ))}
@@ -148,11 +170,6 @@ function getAppMetadata(app: OneClickApp) {
     link: app.repository,
   };
 
-  metadata['category'] = {
-    Icon: IconRocket,
-    label: app.category,
-  };
-
   if (app.developer) {
     metadata['developer'] = {
       Icon: IconUser,
@@ -168,22 +185,22 @@ function getAppMetadata(app: OneClickApp) {
   }
 
   metadata['createdAt'] = {
-    Icon: IconPlus,
+    Icon: IconCalendarDays,
     label: <FormattedDate value={app.createdAt} />,
   };
 
   metadata['updatedAt'] = {
-    Icon: IconPen,
+    Icon: IconRotateCw,
     label: <FormattedDate value={app.updatedAt} />,
   };
 
   if (app.category.toLowerCase() === 'model') {
     const modelMetadata = [
-      { name: 'Model developer', Icon: IconPackage },
+      { name: 'Model developer', Icon: IconCircleUser },
       { name: 'Model family', Icon: IconPackage },
       { name: 'Model version', Icon: IconPackage },
       { name: 'Model variant', Icon: IconPackage },
-      { name: 'Model size', Icon: IconPackage },
+      { name: 'Model size', Icon: IconWeight },
       { name: 'Model optimization', Icon: IconPackage },
       { name: 'Model api', Icon: IconPackage },
     ];
@@ -221,7 +238,7 @@ function getRepositoryIcon(repository: string) {
 
 function Images({ app }: { app: OneClickApp }) {
   return (
-    <section className="row gap-6">
+    <section className="col gap-6 sm:row">
       <div>
         <img src={app.cover} className="rounded-lg" />
       </div>
@@ -242,10 +259,16 @@ function AppDescription({ description }: { description: string }) {
 
 function RelatedApps({ apps }: { apps: OneClickApp[] }) {
   return (
-    <section className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {apps.map((app) => (
-        <AppCard key={app.slug} app={app} />
-      ))}
+    <section>
+      <h2 className="mb-4 text-xl font-medium">
+        <T id="related" />
+      </h2>
+
+      <div className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {apps.map((app) => (
+          <AppCard key={app.slug} app={app} />
+        ))}
+      </div>
     </section>
   );
 }

@@ -11,6 +11,7 @@
     "dequal",
     "ditox",
     "grecaptcha",
+    "huggingface",
     "idenfy",
     "instatus",
     "kgitproxy",

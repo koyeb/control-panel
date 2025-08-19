@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { JSX, useEffect, useState } from 'react';
-import production from 'react/jsx-runtime';
+import production, { type JSX as Jsx } from 'react/jsx-runtime';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeReact from 'rehype-react';
 import rehypeSanitize from 'rehype-sanitize';
@@ -12,6 +12,14 @@ import { unified } from 'unified';
 import 'highlight.js/styles/github-dark.min.css';
 
 import { CopyIconButton } from './copy-icon-button';
+
+// https://github.com/syntax-tree/hast-util-to-jsx-runtime/blob/b0920cd0837052144ebe94f53d8f792b05619444/readme.md?#use
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace JSX {
+    type Element = Jsx.Element;
+  }
+}
 
 export default function Markdown({ content }: { content: string }) {
   const [element, setElement] = useState<JSX.Element | null>(null);

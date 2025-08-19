@@ -138,22 +138,21 @@ export type CatalogUsage = Map<
 >;
 
 export type OneClickApp = {
-  name: string;
   slug: string;
-  description: string;
-  logo: string;
   cover: string;
-  deployUrl: string;
+  logo: string;
+  name: string;
+  description: string;
   category: string;
-  repository: string;
-  developer?: string;
   projectSite?: string;
-  license?: string;
-  modelSize?: string;
-  env: Array<OneClickAppEnv>;
-  metadata?: Array<{ name: string; value: string }>;
+  developer?: string;
   createdAt: string;
   updatedAt: string;
+  repository: string;
+  license?: string;
+  deployUrl: string;
+  env: OneClickAppEnv[];
+  metadata?: OneClickAppMetadata[];
 };
 
 export type OneClickAppEnv =
@@ -162,36 +161,41 @@ export type OneClickAppEnv =
   | OneClickAppEnvSelect
   | OneClickAppEnvString;
 
-export type OneClickAppEnvBase = {
+type OneClickAppEnvBase = {
   name: string;
   label: string;
+  description?: string;
   required: boolean;
-  description: string;
 };
 
-export type OneClickAppEnvBoolean = OneClickAppEnvBase & {
+type OneClickAppEnvBoolean = OneClickAppEnvBase & {
   type: 'boolean';
-  default?: boolean;
+  default?: boolean | string;
   trueValue?: string;
   falseValue?: string;
 };
 
-export type OneClickAppEnvNumber = OneClickAppEnvBase & {
+type OneClickAppEnvNumber = OneClickAppEnvBase & {
   type: 'number';
   default?: number;
   min?: number;
   max?: number;
 };
 
-export type OneClickAppEnvSelect = OneClickAppEnvBase & {
+type OneClickAppEnvSelect = OneClickAppEnvBase & {
   type: 'select';
   default?: string;
   options: Array<{ label: string; value: string }>;
 };
 
-export type OneClickAppEnvString = OneClickAppEnvBase & {
+type OneClickAppEnvString = OneClickAppEnvBase & {
   type: 'string';
   default?: string;
+};
+
+export type OneClickAppMetadata = {
+  name: string;
+  value: string | number;
 };
 
 export type AiModel = {
@@ -201,7 +205,7 @@ export type AiModel = {
   logo: string;
   dockerImage: string;
   minVRam: number;
-  metadata: Array<{ name: string; value: string }>;
+  metadata: Array<{ name: string; value: number | string }>;
   env?: Array<EnvironmentVariable>;
 };
 
