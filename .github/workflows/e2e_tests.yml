@@ -2,7 +2,7 @@ name: E2E Tests
 
 on:
   workflow_dispatch:
-  push:
+  # push:
   # deployment_status:
 
 concurrency:
