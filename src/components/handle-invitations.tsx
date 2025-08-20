@@ -58,11 +58,11 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     <div className="col w-full max-w-md items-center gap-12 pt-[15vh] text-center">
       <div className="col gap-2">
         <h1 className="text-4xl font-semibold text-dim">
-          <T id="title" />
+          <T id="title" values={{ hasInviter: invitation.inviter !== null }} />
         </h1>
 
         <div className="text-xl font-semibold">
-          <T id="description" values={{ email: invitation.inviter.email }} />
+          <T id="description" values={{ email: invitation.inviter?.email }} />
         </div>
       </div>
 

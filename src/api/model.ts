@@ -641,7 +641,7 @@ export type OrganizationInvitation = {
     name: string;
   };
   email: string;
-  inviter: {
+  inviter: null | {
     name: string;
     email: string;
     avatarUrl: string;

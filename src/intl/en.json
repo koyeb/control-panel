@@ -230,7 +230,7 @@
       }
     },
     "invitation": {
-      "title": "You've been invited by",
+      "title": "You've been invited {hasInviter, select, true {by} other {}}",
       "description": "{email} to join:",
       "accept": "Join",
       "decline": "<dim>Unknown invite?</dim> <link>Decline</link>",
