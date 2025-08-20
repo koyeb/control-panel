@@ -50,7 +50,7 @@ export async function authenticateOnGithub(context: BrowserContext) {
   await page.getByLabel('Username or email address').fill(config.github.email);
   await page.getByLabel('Password').fill(config.github.password);
 
-  await page.getByRole('button', { name: 'Sign in' }).click();
+  await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
   await page.locator('[name="app_otp"]').fill(TOTP.generate(config.github.totpKey).otp);
 
