@@ -25,7 +25,6 @@ export function useApiQueryFn<E extends Endpoint>(endpoint: E, params: ApiEndpoi
   const fn = api[endpoint] as EndpointFn<E>;
 
   return {
-    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: getApiQueryKey(endpoint, params ?? {}),
     queryFn: ({ signal }: { signal: AbortSignal }) => fn({ signal, ...params }),
   };
@@ -44,7 +43,7 @@ export function useApiMutationFn<E extends Endpoint, Variables = void>(
 
   return {
     mutationFn: async (variables: Variables): Promise<ApiEndpointResult<E>> => {
-      return fn(typeof options === 'function' ? await options(variables as Variables) : options);
+      return fn(typeof options === 'function' ? await options(variables) : options);
     },
   };
 }
