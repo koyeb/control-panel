@@ -1,10 +1,10 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 
 import { API } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
-import { useInvalidateApiQuery, usePrefetchApiQuery } from 'src/api/use-api';
+import { getApiQueryKey, useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
@@ -23,8 +23,8 @@ export function useSubmitDatabaseServiceForm(
 ) {
   const organization = useOrganization();
 
+  const queryClient = useQueryClient();
   const invalidate = useInvalidateApiQuery();
-  const prefetch = usePrefetchApiQuery();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -51,7 +51,10 @@ export function useSubmitDatabaseServiceForm(
     async onSuccess(databaseServiceId) {
       await Promise.all([
         invalidate('listApps'),
-        prefetch('getService', { path: { id: databaseServiceId } }),
+        queryClient.prefetchQuery({
+          queryKey: getApiQueryKey('getService', { path: { id: databaseServiceId } }),
+          queryFn: () => getApi().getService({ path: { id: databaseServiceId } }),
+        }),
       ]);
 
       navigate({ to: '/database-services/$databaseServiceId', params: { databaseServiceId } });

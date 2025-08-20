@@ -66,22 +66,3 @@ export function useInvalidateApiQuery() {
     [queryClient],
   );
 }
-
-export function usePrefetchApiQuery() {
-  const queryClient = useQueryClient();
-
-  return useCallback(
-    <E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) => {
-      return queryClient.prefetchQuery({
-        queryKey: getApiQueryKey(endpoint, params),
-        queryFn() {
-          const api = container.resolve(TOKENS.api);
-          const fn = api[endpoint] as EndpointFn<E>;
-
-          return fn(params);
-        },
-      });
-    },
-    [queryClient],
-  );
-}
