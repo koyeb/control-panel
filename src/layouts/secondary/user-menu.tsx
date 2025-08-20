@@ -22,7 +22,7 @@ export function UserMenu() {
       placement="bottom-end"
       offset={8}
       renderReference={(props) => (
-        <button type="button" onClick={() => setOpen(true)} className="ml-auto" {...props}>
+        <button type="button" onClick={() => setOpen(true)} {...props}>
           <UserAvatar user={user} />
         </button>
       )}

@@ -13,6 +13,7 @@ import { IconChevronRight, IconLogOut, IconUser } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { OrganizationSwitcher } from '../organization-switcher';
+import { SecondaryLayoutHeader } from '../secondary/secondary-layout-header';
 import { SecondarySettings } from '../secondary/settings';
 
 const T = createTranslate('layouts.onboarding');
@@ -32,9 +33,18 @@ export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) 
   }
 
   return (
-    <div className="row h-screen overflow-auto bg-muted p-3">
-      <Slides sentence={sentence} />
-      <main className="mx-auto col max-w-xl flex-1 py-8">{children}</main>
+    <div className="col min-h-screen bg-muted">
+      <div className="lg:hidden">
+        <SecondaryLayoutHeader className="from-muted!" />
+      </div>
+
+      <div className="fixed hidden h-full w-sm py-3 pl-3 lg:block">
+        <Slides sentence={sentence} />
+      </div>
+
+      <div className="col flex-1 justify-center px-4 py-18 lg:ml-[24rem] lg:py-4">
+        <main className="mx-auto max-w-xl">{children}</main>
+      </div>
     </div>
   );
 }
@@ -46,7 +56,7 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
   });
 
   return (
-    <aside className="dark hidden w-full max-w-sm flex-col gap-8 rounded-2xl bg-neutral/95 px-12 py-16 lg:flex">
+    <aside className="dark col h-full gap-8 rounded-2xl bg-neutral/95 px-12 py-16">
       <LogoKoyeb className="h-8 self-start" />
 
       {hasMultipleOrganizations && <OrganizationSwitcher />}

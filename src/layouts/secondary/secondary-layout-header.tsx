@@ -9,7 +9,7 @@ import { OrganizationSwitcher } from '../organization-switcher';
 
 import { UserMenu } from './user-menu';
 
-export function SecondaryLayoutHeader({ background }: { background?: boolean }) {
+export function SecondaryLayoutHeader({ className }: { className?: string }) {
   const { data: hasMultipleOrganizations } = useQuery({
     ...useApiQueryFn('listUserOrganizations', { query: {} }),
     select: ({ organizations }) => organizations!.length > 1,
@@ -18,16 +18,19 @@ export function SecondaryLayoutHeader({ background }: { background?: boolean }) 
   return (
     <header
       className={clsx(
-        'sticky top-0 z-10 row flex-wrap items-center gap-6 px-6 py-4',
-        background && 'bg-gradient-to-b from-neutral from-75% to-transparent',
+        'fixed inset-x-0 top-0 z-10 row flex-wrap items-center gap-4 bg-gradient-to-b from-neutral from-75% to-transparent p-4',
+        className,
       )}
     >
       <Link to="/">
-        <LogoKoyeb className={clsx('h-8 self-start', !background && 'text-white')} />
+        <LogoKoyeb className="h-8" />
       </Link>
 
-      {hasMultipleOrganizations && <OrganizationSwitcher className="w-full max-w-48" />}
-      <UserMenu />
+      {hasMultipleOrganizations && <OrganizationSwitcher className="w-48" />}
+
+      <div className="ml-auto">
+        <UserMenu />
+      </div>
     </header>
   );
 }

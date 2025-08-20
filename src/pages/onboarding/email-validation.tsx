@@ -27,7 +27,7 @@ export function EmailValidation() {
 
   return (
     <section className="col w-full max-w-md flex-1 items-center justify-center gap-12">
-      <Background className="absolute bottom-0" />
+      <Background className="absolute bottom-0 hidden sm:block" />
 
       <div className="col gap-6 text-center">
         <h1 className="text-3xl font-semibold">
