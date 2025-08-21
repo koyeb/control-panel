@@ -14,7 +14,7 @@ import {
   Service,
 } from 'src/api/model';
 import { hasBuild, isDeploymentRunning } from 'src/application/service-functions';
-import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
 import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
@@ -26,7 +26,6 @@ import { DeploymentScaling } from '../deployment-scaling/deployment-scaling';
 import { BuildLogs } from './build-logs';
 import { BuildSteps } from './build-steps';
 import { buildStatusMap, runtimeStatusMap } from './deployment-status-icons';
-import { Replicas } from './replicas';
 import { RuntimeLogs } from './runtime-logs';
 
 type DeploymentPhase = 'build' | 'runtime';
@@ -310,9 +309,7 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
           logs={logs}
         />
 
-        <FeatureFlag feature="new-deployment-scaling" fallback={<Replicas deployment={deployment} />}>
-          <DeploymentScaling deployment={deployment} />
-        </FeatureFlag>
+        <DeploymentScaling deployment={deployment} />
       </div>
     </AccordionSection>
   );
