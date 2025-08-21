@@ -144,11 +144,14 @@ function isAuthenticatedRoute(pathname: string) {
 function handleAuthenticationError() {
   const location = new URL(window.location.href);
   const auth = container.resolve(TOKENS.authentication);
+  const workOs = container.get(TOKENS.workOs);
 
   if (auth.token !== null) {
     auth.setToken(null);
     queryClient.clear();
   }
+
+  void workOs?.signOut({ navigate: false });
 
   if (!location.pathname.startsWith('/auth') && !location.pathname.startsWith('/account')) {
     const redirect = new URL('/auth/signin', location);

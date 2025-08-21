@@ -12,6 +12,8 @@ export type AppConfig = Partial<{
   stripePublicKey: string;
   mapboxToken: string;
   intercomAppId: string;
+  workOsClientId: string;
+  workOsRedirectUri: string;
   disablePolling: boolean;
 }>;
 
@@ -39,6 +41,8 @@ export class EnvConfigAdapter implements ConfigPort {
       stripePublicKey: string(import.meta.env.VITE_STRIPE_PUBLIC_KEY),
       mapboxToken: string(import.meta.env.VITE_MAPBOX_TOKEN),
       intercomAppId: string(import.meta.env.VITE_INTERCOM_APP_ID),
+      workOsClientId: string(import.meta.env.VITE_WORK_OS_CLIENT_ID),
+      workOsRedirectUri: string(import.meta.env.VITE_WORK_OS_REDIRECT_URI),
       disablePolling: boolean(import.meta.env.VITE_DISABLE_POLLING),
     };
 

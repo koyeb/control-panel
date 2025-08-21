@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
@@ -72,6 +73,7 @@ export function App() {
 }
 
 function AuthenticatedRoutes() {
+  const { isLoading } = useAuth();
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
@@ -82,7 +84,7 @@ function AuthenticatedRoutes() {
     '/organization/deactivate/confirm/:confirmationId',
   );
 
-  if (userQuery.isPending || organizationQuery.isPending) {
+  if (isLoading || userQuery.isPending || organizationQuery.isPending) {
     return null;
   }
 
