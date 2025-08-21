@@ -132,7 +132,7 @@ function useApplyChanges(service: Service, onSuccess: () => void) {
       ]);
 
       onSuccess();
-      navigate({
+      await navigate({
         to: '/services/$serviceId',
         params: { serviceId: service.id },
         search: { deploymentId: deployment?.id },

@@ -29,7 +29,7 @@ export function DeleteAccount() {
     }),
     async onSuccess() {
       await setToken(null);
-      navigate({ to: '/auth/signin' });
+      await navigate({ to: '/auth/signin' });
       notify.success(t('successNotification'));
     },
   });

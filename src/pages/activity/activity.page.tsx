@@ -101,10 +101,10 @@ export function ActivityPage() {
         renderSelectedItems={(types) => `${types.length} types`}
         selectedItems={types}
         onItemsSelected={(item) => {
-          navigate({ to: '/activity', search: { types: [...types, item] } });
+          void navigate({ to: '/activity', search: { types: [...types, item] } });
         }}
         onItemsUnselected={(item) => {
-          navigate({ to: '/activity', search: { types: types.filter((type) => type !== item) } });
+          void navigate({ to: '/activity', search: { types: types.filter((type) => type !== item) } });
         }}
         className="hidden max-w-64"
       />

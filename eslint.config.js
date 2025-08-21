@@ -44,9 +44,10 @@ export default [
       ...reactQuery.configs.recommended.rules,
       ...eslintPluginBetterTailwindcss.configs['recommended'].rules,
       'no-console': ci ? 'error' : 'off',
-      'no-restricted-imports': ['warn', { paths: ['wouter', 'posthog-js', 'posthog-js/react'] }],
+      'no-restricted-imports': ['warn', { paths: ['posthog-js', 'posthog-js/react'] }],
       '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
       '@typescript-eslint/require-await': 'off',
+      '@typescript-eslint/only-throw-error': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { ignoreRestSiblings: true, varsIgnorePattern: '^_', argsIgnorePattern: '^_' },

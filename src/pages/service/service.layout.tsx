@@ -149,28 +149,28 @@ function RegisterServiceCommands({ service }: { service: Service }) {
         label: `Go to dashboard`,
         description: `Navigate to the ${name} service's dashboard page`,
         keywords: ['overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
-        execute: () => navigate({ to: '/services/$serviceId', params: { serviceId } }),
+        execute: () => void navigate({ to: '/services/$serviceId', params: { serviceId } }),
       },
 
       {
         label: `Go to metrics`,
         description: `Navigate to the ${name} service's metrics page`,
         keywords: ['metrics', 'monitoring', 'graphs', 'charts'],
-        execute: () => navigate({ to: '/services/$serviceId/metrics', params: { serviceId } }),
+        execute: () => void navigate({ to: '/services/$serviceId/metrics', params: { serviceId } }),
       },
 
       {
         label: `Go to console`,
         description: `Navigate to the ${name} service's console page`,
         keywords: ['console', 'shell', 'terminal', 'command', 'execute', 'run', 'ssh'],
-        execute: () => navigate({ to: '/services/$serviceId/console', params: { serviceId } }),
+        execute: () => void navigate({ to: '/services/$serviceId/console', params: { serviceId } }),
       },
 
       {
         label: `Go to settings`,
         description: `Navigate to the ${name} service's settings page`,
         keywords: ['settings', 'update'],
-        execute: () => navigate({ to: '/services/$serviceId/settings', params: { serviceId } }),
+        execute: () => void navigate({ to: '/services/$serviceId/settings', params: { serviceId } }),
       },
 
       {

@@ -56,7 +56,7 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
     async onSuccess({ token }) {
       queryClient.clear();
       await setToken(token!.id!);
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
     },
     onError: useFormErrorHandler(form, (error) => {
       if ('captcha' in error) {
