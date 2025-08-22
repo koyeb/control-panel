@@ -375,7 +375,11 @@ function SectionHeader({
   end,
 }: SectionHeaderProps) {
   return (
-    <AccordionHeader expanded={expanded} setExpanded={setExpanded} className={clsx(disabled && 'opacity-50')}>
+    <AccordionHeader
+      expanded={expanded}
+      setExpanded={setExpanded}
+      className={clsx(disabled && 'opacity-50 pointer-events-none')}
+    >
       <div className="font-medium">{title}</div>
 
       <div className="ms-auto row min-w-0 items-center gap-2 ps-4 text-xs">
