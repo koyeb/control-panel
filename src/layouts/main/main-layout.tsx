@@ -1,27 +1,22 @@
-import { useQueries } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import {
-  useDatacenters,
-  useDatacentersQuery,
-  useInstancesQuery,
-  useRegionsQuery,
-} from 'src/api/hooks/catalog';
+import { useDatacenters } from 'src/api/hooks/catalog';
 import {
   useLogoutMutation,
   useOrganization,
-  useOrganizationQuotasQuery,
-  useOrganizationSummaryQuery,
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
+import { useEnsureApiQueryData } from 'src/api/use-api';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { getUrlLatency } from 'src/application/url-latency';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
+import { Loading } from 'src/components/loading';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
@@ -67,7 +62,6 @@ export function MainLayout({ children }: LayoutProps) {
   return (
     <>
       <DocumentTitle />
-      <PreloadResources />
       <CommandPalette />
 
       <CreateServiceDialog />
@@ -86,27 +80,6 @@ export function MainLayout({ children }: LayoutProps) {
       />
     </>
   );
-}
-
-function PreloadResources() {
-  useDatacentersQuery();
-  useRegionsQuery();
-  useInstancesQuery();
-  useOrganizationSummaryQuery();
-  useOrganizationQuotasQuery();
-
-  const datacenters = useDatacenters().filter(({ id }) => !id.includes('aws'));
-  const urls = datacenters.map((datacenter) => `https://${datacenter.domain}/health`);
-
-  useQueries({
-    queries: urls.map((url) => ({
-      refetchInterval: false as const,
-      queryKey: ['datacenterLatency', url],
-      queryFn: () => getUrlLatency(url),
-    })),
-  });
-
-  return null;
 }
 
 function Menu({ collapsed = false }: { collapsed?: boolean }) {
@@ -163,7 +136,8 @@ function Menu({ collapsed = false }: { collapsed?: boolean }) {
 function Main({ children }: { children: React.ReactNode }) {
   return (
     <main className="px-2 py-4 sm:px-4">
-      <Suspense>
+      <Suspense fallback={<Loading />}>
+        <PreloadResources />
         <GlobalAlert />
         {children}
       </Suspense>
@@ -171,6 +145,38 @@ function Main({ children }: { children: React.ReactNode }) {
   );
 }
 
+function PreloadResources() {
+  const organization = useOrganization();
+  const queryClient = useQueryClient();
+  const ensureApiQueryData = useEnsureApiQueryData();
+
+  useEffect(() => {
+    void ensureApiQueryData('listCatalogDatacenters', {});
+    void ensureApiQueryData('listCatalogRegions', { query: { limit: '100' } });
+    void ensureApiQueryData('listCatalogInstances', { query: { limit: '100' } });
+    void ensureApiQueryData('organizationSummary', { path: { organization_id: organization.id } });
+    void ensureApiQueryData('organizationQuotas', { path: { organization_id: organization.id } });
+  }, [ensureApiQueryData, organization]);
+
+  const datacenters = useDatacenters().filter(({ id }) => !id.includes('aws'));
+
+  useEffect(() => {
+    for (const datacenter of datacenters) {
+      if (datacenter.id.includes('aws')) {
+        continue;
+      }
+
+      const url = `https://${datacenter.domain}/health`;
+
+      void queryClient.ensureQueryData({
+        queryKey: ['datacenterLatency', url],
+        queryFn: () => getUrlLatency(url),
+      });
+    }
+  }, [datacenters, queryClient]);
+
+  return null;
+}
 function useBanner(): 'session' | 'trial' | void {
   const auth = container.resolve(TOKENS.authentication);
   const trial = useTrial();

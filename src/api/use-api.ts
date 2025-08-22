@@ -65,3 +65,20 @@ export function useInvalidateApiQuery() {
     [queryClient],
   );
 }
+
+export function useEnsureApiQueryData() {
+  const queryClient = useQueryClient();
+  const api = container.resolve(TOKENS.api);
+
+  return useCallback(
+    async <E extends keyof Api>(endpoint: E, params: Parameters<Api[E]>[0]) => {
+      const fn = api[endpoint] as EndpointFn<E>;
+
+      return queryClient.ensureQueryData({
+        queryKey: getApiQueryKey(endpoint, params),
+        queryFn: () => fn(params),
+      });
+    },
+    [queryClient],
+  );
+}
