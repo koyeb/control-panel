@@ -38,7 +38,7 @@ export function MemoryGraph({ loading, error, data, max }: MemoryGraphProps) {
       ]}
       colors={{ scheme: 'set2' }}
       gridYValues={tickValuesY}
-      yScale={{ min: 0, max: tickValuesY?.[tickValuesY?.length - 1] ?? 'auto', type: 'linear' }}
+      yScale={{ min: 0, max: tickValuesY?.[tickValuesY.length - 1] ?? 'auto', type: 'linear' }}
       yFormat={(value) => formatBytes(value as number, { decimal: true, round: true })}
       axisLeft={{
         format: (value: number) => formatBytes(value, { decimal: true }),
@@ -111,7 +111,7 @@ function getSeries(data?: Array<Metric>): LabelledLineSeries[] {
     })),
   ];
 
-  if (series.every((serie) => serie.data.every((data) => data.y === undefined))) {
+  if (series.every((serie) => serie.data.every((data) => data.y === null))) {
     return [];
   }
 

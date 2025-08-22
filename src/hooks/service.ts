@@ -13,7 +13,10 @@ export function useServiceName(serviceId: string): string | null {
     return null;
   }
 
-  const name = t('common.appServiceName', { appName: app?.name, serviceName: service?.name });
+  const name = t('common.appServiceName', {
+    appName: app.name,
+    serviceName: service.name,
+  });
 
   assert(typeof name === 'string');
 

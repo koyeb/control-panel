@@ -7,10 +7,6 @@ export function createArray<T>(length: number, init: T | ((index: number) => T))
 }
 
 export function unique<T>(array: T[], iteratee: (value: T) => unknown = identity): T[] {
-  if (!iteratee) {
-    return Array.from(new Set(array));
-  }
-
   return Array.from(new Map(array.map((value) => [iteratee(value), value])).values());
 }
 

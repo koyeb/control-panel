@@ -44,6 +44,7 @@ export function DialogProvider(props: { children: React.ReactNode }) {
 export function useDialogContext() {
   const value = useContext(dialogContext);
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (value === null) {
     throw new Error('Missing dialog context');
   }

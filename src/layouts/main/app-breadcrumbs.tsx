@@ -269,7 +269,7 @@ function AppServiceCrumb({ serviceId }: { serviceId: string }) {
         }
       />
 
-      <ServiceSwitcherMenu appId={appQuery.data?.id} serviceId={serviceId} />
+      <ServiceSwitcherMenu appId={appQuery.data.id} serviceId={serviceId} />
     </div>
   );
 }

@@ -20,12 +20,7 @@ export function StripePortal() {
     <section className="col items-start gap-4">
       <SectionHeader title={<T id="title" />} description={<T id="description" />} />
 
-      <ExternalLinkButton
-        openInNewTab
-        color="gray"
-        disabled={query.isPending || query.data === undefined}
-        href={query.data?.url}
-      >
+      <ExternalLinkButton openInNewTab color="gray" disabled={query.isPending} href={query.data?.url}>
         <T id="cta" />
         <IconSquareArrowOutUpRight className="size-4" />
       </ExternalLinkButton>

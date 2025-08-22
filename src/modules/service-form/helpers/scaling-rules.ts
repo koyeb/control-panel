@@ -58,7 +58,7 @@ export function useScalingRules() {
       set({ min: 0, max: 1 });
     }
 
-    if (selected?.category === 'eco' && selected?.id !== 'free') {
+    if (selected?.category === 'eco' && selected.id !== 'free') {
       set({ min: scaling.max });
     }
 

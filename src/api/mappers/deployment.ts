@@ -231,9 +231,9 @@ function mapComputeDeployment(deployment: API.Deployment): ComputeDeployment {
   };
 
   const trigger = (): ComputeDeployment['trigger'] => {
-    const trigger = deployment?.metadata?.trigger;
+    const trigger = deployment.metadata?.trigger;
 
-    if (deployment?.parent_id === '') {
+    if (deployment.parent_id === '') {
       return { type: 'initial' };
     }
 
@@ -241,11 +241,11 @@ function mapComputeDeployment(deployment: API.Deployment): ComputeDeployment {
       return { type: 'redeploy' };
     }
 
-    if (trigger?.type === 'RESUME') {
+    if (trigger.type === 'RESUME') {
       return { type: 'resume' };
     }
 
-    if (trigger?.type === 'GIT') {
+    if (trigger.type === 'GIT') {
       return {
         type: 'git',
         repository: trigger.git!.repository!,
@@ -332,7 +332,7 @@ function mapDatabaseDeployment(deployment: API.Deployment): DatabaseDeployment {
     region: definition.region!,
     host: info?.server_host,
     instance: definition.instance_type!,
-    roles: definition?.roles?.map((role) => ({ name: role.name!, secretId: getSecretId(role.name!) })),
+    roles: definition.roles?.map((role) => ({ name: role.name!, secretId: getSecretId(role.name!) })),
     databases: definition.databases?.map((database) => ({ name: database.name!, owner: database.owner! })),
     neonPostgres: info ? snakeToCamelDeep(info) : {},
     activeTime: {

@@ -54,7 +54,7 @@ export function PublicRepository() {
               });
 
               if (getValues('source.git.publicRepository.branch') === null) {
-                setValue('source.git.publicRepository.branch', repository?.defaultBranch);
+                setValue('source.git.publicRepository.branch', repository.defaultBranch);
               }
 
               generateServiceName();

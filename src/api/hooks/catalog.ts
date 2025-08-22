@@ -99,7 +99,7 @@ export function useCatalogRegionAvailability(instanceId?: string, regionId?: str
   const { data } = useCatalogUsageQuery();
 
   if (instanceId !== undefined && regionId !== undefined) {
-    return data?.get(instanceId)?.byRegion?.get(regionId);
+    return data?.get(instanceId)?.byRegion.get(regionId);
   }
 }
 

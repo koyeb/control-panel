@@ -48,7 +48,7 @@ function getSeries(data?: Array<Metric>): LabelledLineSeries[] {
     data: data.samples.map(toGraph),
   }));
 
-  if (series.every((serie) => serie.data.every((data) => data.y === undefined))) {
+  if (series.every((serie) => serie.data.every((data) => data.y === null))) {
     return [];
   }
 

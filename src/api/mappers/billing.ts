@@ -9,9 +9,9 @@ import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from '../model';
 export function mapSubscription(subscription: API.Subscription): Subscription {
   return {
     id: subscription.id!,
-    hasPaymentFailure: subscription.payment_failure !== null,
+    hasPaymentFailure: Boolean(subscription.payment_failure),
     hasPendingUpdate: subscription.has_pending_update!,
-    trial: subscription?.trialing
+    trial: subscription.trialing
       ? {
           currentSpend: Number(subscription.current_spend),
           maxSpend: Number(subscription.trial_max_spend),

@@ -86,7 +86,7 @@ function PendingUpdateAlert() {
 function StripePortal({ children }: { children: React.ReactNode }) {
   const manageBillingQuery = useManageBillingQuery();
 
-  if (!manageBillingQuery.isSuccess || manageBillingQuery.data === null) {
+  if (!manageBillingQuery.isSuccess) {
     return children;
   }
 

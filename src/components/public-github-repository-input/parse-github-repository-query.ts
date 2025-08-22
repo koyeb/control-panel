@@ -6,5 +6,5 @@ export function parseGithubRepositoryQuery(value: string): string | undefined {
     return;
   }
 
-  return `${org}/${repo?.replace(/\.git$/, '')}`;
+  return `${org}/${repo.replace(/\.git$/, '')}`;
 }

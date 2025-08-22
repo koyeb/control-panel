@@ -112,10 +112,6 @@ function useGeneralQuotaItems(): QuotaItem[] {
   const allowedRegions = useAllowedRegions();
 
   return useMemo(() => {
-    if (quotas === undefined) {
-      return [];
-    }
-
     const web = <Translate key="web" id="common.serviceType.web" />;
     const worker = <Translate key="worker" id="common.serviceType.worker" />;
     const database = <Translate key="database" id="common.serviceType.database" />;
@@ -166,7 +162,7 @@ function useAllowedRegions() {
   const quotas = useOrganizationQuotas();
   const availableRegions = useRegions().filter(hasProperty('status', 'available'));
 
-  if (quotas?.regions === undefined) {
+  if (quotas.regions === undefined) {
     return availableRegions;
   }
 
@@ -183,7 +179,7 @@ function useInstanceTypeQuotaItems(): Record<'koyeb' | 'aws' | 'gpu', QuotaItem[
   const getQuota = (instance: CatalogInstance): QuotaItem => ({
     key: instance.id,
     label: instance.displayName,
-    value: quotas?.maxInstancesByType[instance.id] ?? unset,
+    value: quotas.maxInstancesByType[instance.id] ?? unset,
   });
 
   return {
@@ -200,7 +196,7 @@ function useVolumesQuotaItems(): QuotaItem[] {
   const regions = useAllowedRegions();
 
   const quota = (regionId: string) => {
-    return quotas?.volumesByRegion[regionId] ?? quotas?.volumesByRegion['*'];
+    return quotas.volumesByRegion[regionId] ?? quotas.volumesByRegion['*'];
   };
 
   return regions.map((region) => ({

@@ -49,7 +49,7 @@ export function useOrganizationSummaryQuery() {
   const organization = useOrganization();
 
   return useSuspenseQuery({
-    ...useApiQueryFn('organizationSummary', { path: { organization_id: organization!.id } }),
+    ...useApiQueryFn('organizationSummary', { path: { organization_id: organization.id } }),
     select: ({ summary }) => mapOrganizationSummary(summary!),
   });
 }
@@ -62,7 +62,7 @@ export function useOrganizationQuotasQuery() {
   const organization = useOrganization();
 
   return useSuspenseQuery({
-    ...useApiQueryFn('organizationQuotas', { path: { organization_id: organization!.id } }),
+    ...useApiQueryFn('organizationQuotas', { path: { organization_id: organization.id } }),
     refetchInterval: false,
     select: ({ quotas }) => mapOrganizationQuotas(quotas!),
   });

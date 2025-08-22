@@ -3,6 +3,7 @@ import { Fragment } from 'react/jsx-runtime';
 
 import { useFormValues } from 'src/hooks/form';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { defined } from 'src/utils/assert';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';
@@ -34,15 +35,16 @@ export function HealthChecksSection() {
 
 function Summary() {
   const ports = useWatchServiceForm('ports').filter((port) => !Number.isNaN(port.portNumber));
-  const firstPort = ports[0];
 
-  if (firstPort && ports.length === 1) {
+  if (ports.length === 1) {
+    const firstPort = defined(ports[0]);
+
     return (
       <T
         id="summarySingleHealthCheck"
         values={{
           protocol: <TranslateEnum enum="portProtocol" value={firstPort.healthCheck.protocol} />,
-          portNumber: firstPort?.portNumber,
+          portNumber: firstPort.portNumber,
         }}
       />
     );

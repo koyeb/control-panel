@@ -80,10 +80,6 @@ function useLogsHistory(filters: LogsFilters) {
   const quotas = useOrganizationQuotas();
 
   const initialPageParam = useMemo(() => {
-    if (!quotas) {
-      return {};
-    }
-
     const start = max([filters.start, add(sub(new Date(), { days: quotas.logsRetention }), { minutes: 1 })]);
     const end = max([start, filters.end]);
 
@@ -94,7 +90,6 @@ function useLogsHistory(filters: LogsFilters) {
   }, [quotas, filters.start, filters.end]);
 
   return useInfiniteQuery({
-    enabled: quotas !== undefined,
     queryKey: getQueryKey('logsQuery', { filters }),
     queryFn: ({ pageParam: { start, end } }) => {
       if (start === end) {

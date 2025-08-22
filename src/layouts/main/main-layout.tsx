@@ -1,15 +1,25 @@
+import { useQueries } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import {
+  useDatacenters,
+  useDatacentersQuery,
+  useInstancesQuery,
+  useRegionsQuery,
+} from 'src/api/hooks/catalog';
+import {
   useLogoutMutation,
   useOrganization,
+  useOrganizationQuotasQuery,
+  useOrganizationSummaryQuery,
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
+import { getUrlLatency } from 'src/application/url-latency';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
@@ -38,7 +48,6 @@ import { Layout } from './layout';
 import { Navigation } from './navigation';
 import { OrganizationPlan } from './organization-plan';
 import { PlatformStatus } from './platform-status';
-import { PreloadDatacenterLatencies } from './preload-datacenter-latencies';
 import { UserMenu } from './user-menu';
 
 const T = createTranslate('layouts.main');
@@ -58,7 +67,7 @@ export function MainLayout({ children }: LayoutProps) {
   return (
     <>
       <DocumentTitle />
-      <PreloadDatacenterLatencies />
+      <PreloadResources />
       <CommandPalette />
 
       <CreateServiceDialog />
@@ -77,6 +86,27 @@ export function MainLayout({ children }: LayoutProps) {
       />
     </>
   );
+}
+
+function PreloadResources() {
+  useDatacentersQuery();
+  useRegionsQuery();
+  useInstancesQuery();
+  useOrganizationSummaryQuery();
+  useOrganizationQuotasQuery();
+
+  const datacenters = useDatacenters().filter(({ id }) => !id.includes('aws'));
+  const urls = datacenters.map((datacenter) => `https://${datacenter.domain}/health`);
+
+  useQueries({
+    queries: urls.map((url) => ({
+      refetchInterval: false as const,
+      queryKey: ['datacenterLatency', url],
+      queryFn: () => getUrlLatency(url),
+    })),
+  });
+
+  return null;
 }
 
 function Menu({ collapsed = false }: { collapsed?: boolean }) {

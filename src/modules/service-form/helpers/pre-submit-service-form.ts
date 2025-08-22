@@ -22,7 +22,7 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
       const quotas = getInstanceQuota(instance);
       const hasQuotas = previousInstance === instance.id || quotas.used < quotas.max;
 
-      if (instance?.category === 'gpu') {
+      if (instance.category === 'gpu') {
         trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.id });
       }
 
@@ -37,7 +37,7 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         return false;
       }
 
-      if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
+      if (instance.plans !== undefined && !instance.plans.includes(organization.plan)) {
         const plan = instance.plans[0] as OrganizationPlan;
 
         setRequiredPlan(plan);

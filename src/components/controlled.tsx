@@ -41,7 +41,7 @@ export function ControlledCheckbox<
       {...field}
       checked={field.value}
       onChange={(event) => {
-        field.onChange?.(event);
+        field.onChange(event);
         onChangeEffect?.(event);
       }}
       {...props}

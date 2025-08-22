@@ -117,7 +117,7 @@ function NoLogs() {
   return (
     <>
       <p className="text-base">
-        <T id="noLogs.expired" values={{ retention: quotas?.logsRetention }} />
+        <T id="noLogs.expired" values={{ retention: quotas.logsRetention }} />
       </p>
 
       <p>{inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}</p>
@@ -170,7 +170,7 @@ function LogsHeader({ options }: LogsHeaderProps) {
   return (
     <header className="row items-center gap-4">
       <div className="mr-auto">
-        <T id="header.title" values={{ retention: quotas?.logsRetention }} />
+        <T id="header.title" values={{ retention: quotas.logsRetention }} />
       </div>
 
       <IconButton

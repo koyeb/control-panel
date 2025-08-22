@@ -98,7 +98,7 @@ function docker(docker: DockerSource, options: DockerDeploymentOptions): API.Doc
     args: options.args ?? undefined,
     image_registry_secret: docker.registrySecret ?? undefined,
     entrypoint: options.entrypoint ?? undefined,
-    privileged: options.privileged ?? false,
+    privileged: options.privileged,
   };
 }
 

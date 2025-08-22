@@ -104,19 +104,20 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
   if (isOrganizationActivity(activity) && activity.verb === 'updated') {
     const organizationName = activity.object.name;
 
-    if (activity.metadata?.event === 'plan_updated') {
+    if (activity.metadata.event === 'plan_updated') {
       return <T id="organizationPlanUpdated" />;
     }
 
-    if (activity.metadata?.event === 'create_budget') {
+    if (activity.metadata.event === 'create_budget') {
       return <T id="organizationBudgetCreated" values={{ organizationName }} />;
     }
 
-    if (activity.metadata?.event === 'update_budget') {
+    if (activity.metadata.event === 'update_budget') {
       return <T id="organizationBudgetUpdated" values={{ organizationName }} />;
     }
 
-    if (activity.metadata?.event === 'delete_budget') {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (activity.metadata.event === 'delete_budget') {
       return <T id="organizationBudgetDeleted" values={{ organizationName }} />;
     }
   }

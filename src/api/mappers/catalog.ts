@@ -32,7 +32,7 @@ export function mapCatalogInstance(instance: API.CatalogInstance): CatalogInstan
     regions: instance.regions!.length > 0 ? instance.regions! : undefined,
     category: instance.type! as InstanceCategory,
     regionCategory: instance.id?.startsWith('aws-') ? 'aws' : 'koyeb',
-    vram: instance.gpu?.memory ? parseBytes(instance.gpu?.memory) : undefined,
+    vram: instance.gpu?.memory ? parseBytes(instance.gpu.memory) : undefined,
     priceMonthly: Number(instance.price_monthly!),
     priceHourly: Number(instance.price_hourly!),
     pricePerSecond: Number(instance.price_per_second!),

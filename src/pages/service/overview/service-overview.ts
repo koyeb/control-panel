@@ -186,7 +186,7 @@ function useDeployments(service: Service) {
     getNextPageParam: (lastPage, pages, lastPageParam) => {
       const nextPage = lastPageParam + 1;
 
-      if (lastPage !== undefined && nextPage * 10 >= lastPage.count) {
+      if (nextPage * 10 >= lastPage.count) {
         return undefined;
       }
 

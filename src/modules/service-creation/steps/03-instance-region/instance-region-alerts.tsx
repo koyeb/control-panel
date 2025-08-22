@@ -30,7 +30,7 @@ export function InstanceRegionAlerts({
         description={
           <T
             id="requiresUpgrade"
-            values={{ plan: <span className="capitalize">{instance?.plans?.[0]}</span> }}
+            values={{ plan: <span className="capitalize">{instance.plans?.[0]}</span> }}
           />
         }
       />

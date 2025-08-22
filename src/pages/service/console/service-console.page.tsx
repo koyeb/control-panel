@@ -1,5 +1,5 @@
 import { Alert } from '@koyeb/design-system';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useInstanceQuery, useInstancesQuery } from 'src/api/hooks/service';
 import { Instance } from 'src/api/model';
@@ -16,16 +16,17 @@ const T = createTranslate('pages.service.console');
 
 export function ServiceConsolePage() {
   const serviceId = useRouteParam('serviceId');
+
   const instancesQuery = useInstancesQuery({ serviceId, statuses: ['HEALTHY'] });
+  const instances = useMemo(() => instancesQuery.data?.instances ?? [], [instancesQuery.data]);
+
   const [instance, setInstance] = useState<Instance | null>(null);
 
   useEffect(() => {
-    const instances = instancesQuery.data?.instances ?? [];
-
     if (instance === null && instances[0] !== undefined) {
       setInstance(instances[0]);
     }
-  }, [instancesQuery.data, instance]);
+  }, [instances, instance]);
 
   if (instancesQuery.isPending) {
     return <Loading />;
@@ -34,8 +35,6 @@ export function ServiceConsolePage() {
   if (instancesQuery.error) {
     return <QueryError error={instancesQuery.error} />;
   }
-
-  const instances = instancesQuery.data?.instances ?? [];
 
   return (
     <>

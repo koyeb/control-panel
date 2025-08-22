@@ -40,7 +40,7 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
 
   useEffect(() => {
     if (stream && terminal) {
-      stream?.close();
+      stream.close();
       reset(terminal);
       connect(instanceId);
     }

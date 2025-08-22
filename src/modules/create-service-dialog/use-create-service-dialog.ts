@@ -273,6 +273,7 @@ function reducer(
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (action.type === 'backspace-key-pressed') {
     const next = { ...state };
 

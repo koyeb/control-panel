@@ -10,7 +10,6 @@ import { createValidationGuard } from 'src/application/create-validation-guard';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
-import { defined } from 'src/utils/assert';
 import { Trim } from 'src/utils/types';
 
 import { initializeServiceForm } from './helpers/initialize-service-form';
@@ -25,7 +24,7 @@ export function useServiceForm(serviceId?: string) {
   const regions = useRegions();
   const instances = useInstances();
   const organization = useOrganization();
-  const quotas = defined(useOrganizationQuotas());
+  const quotas = useOrganizationQuotas();
   const githubApp = useGithubApp();
   const queryClient = useQueryClient();
 
@@ -64,7 +63,7 @@ function useServiceFormResolver() {
   const translate = useTranslate();
 
   const organization = useOrganization();
-  const quotas = defined(useOrganizationQuotas());
+  const quotas = useOrganizationQuotas();
 
   const schemaResolver = useZodResolver(
     serviceFormSchema(organization, quotas),

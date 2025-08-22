@@ -25,7 +25,7 @@ export function useApiQueryFn<E extends Endpoint>(endpoint: E, params: ApiEndpoi
   const fn = api[endpoint] as EndpointFn<E>;
 
   return {
-    queryKey: getApiQueryKey(endpoint, params ?? {}),
+    queryKey: getApiQueryKey(endpoint, params),
     queryFn: ({ signal }: { signal: AbortSignal }) => fn({ signal, ...params }),
   };
 }

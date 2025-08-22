@@ -40,8 +40,8 @@ export function useGetInstanceQuota() {
   return useCallback(
     (instance: CatalogInstance) => {
       const max = () => {
-        const { maxInstancesByType, instanceTypes } = quotas ?? {};
-        const quota = maxInstancesByType?.[instance.id];
+        const { maxInstancesByType, instanceTypes } = quotas;
+        const quota = maxInstancesByType[instance.id];
 
         if (quota !== undefined) {
           return quota;
@@ -55,7 +55,7 @@ export function useGetInstanceQuota() {
       };
 
       const used = () => {
-        return summary?.instancesUsed[instance.id] ?? 0;
+        return summary.instancesUsed[instance.id] ?? 0;
       };
 
       return { max: max(), used: used() };

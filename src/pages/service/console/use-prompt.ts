@@ -81,7 +81,7 @@ export function usePrompt(instanceId: string, stream: WebSocket | null, terminal
         }
 
         terminal.write('\b \b');
-        setCommand(command?.slice(0, command.length - 1));
+        setCommand(command.slice(0, command.length - 1));
       } else if (input[0]! < '\x20') {
         // control character
       } else {

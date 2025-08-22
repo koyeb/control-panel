@@ -54,7 +54,7 @@ export function useTallyDialog(formId: string, onSubmitted?: () => void) {
     const listener = (event: MessageEvent) => {
       const data: unknown = event.data;
 
-      if (typeof data === 'string' && data?.includes?.(eventName)) {
+      if (typeof data === 'string' && data.includes(eventName)) {
         callback?.();
       }
     };

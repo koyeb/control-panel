@@ -53,7 +53,7 @@ export function ConfirmationDialog({
 
       {destructiveAction && (
         <p className="font-medium text-red">
-          {destructiveAction && (destructiveActionMessage ?? <Translate id="common.destructiveAction" />)}
+          {destructiveActionMessage ?? <Translate id="common.destructiveAction" />}
         </p>
       )}
 

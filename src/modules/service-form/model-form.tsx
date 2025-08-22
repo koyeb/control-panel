@@ -176,7 +176,7 @@ function useInitialValues(model: AiModel): Partial<ModelFormType> {
   const defaultRegion = getDefaultRegion(queryClient, datacenters, continentalRegions, instance);
 
   return {
-    modelSlug: model?.slug,
+    modelSlug: model.slug,
     instance: instance?.id,
     regions: [defaultRegion?.id ?? 'fra'],
   };

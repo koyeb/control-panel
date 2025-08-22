@@ -30,7 +30,7 @@ export function DatabaseInstanceSelector({ allowFreeInstanceIfAlreadyUsed }: Dat
   const summary = useOrganizationSummary();
 
   const checkAvailability = (instance: CatalogInstance): InstanceAvailability => {
-    if (instance.id === 'free' && summary?.freeDatabaseUsed && !allowFreeInstanceIfAlreadyUsed) {
+    if (instance.id === 'free' && summary.freeDatabaseUsed && !allowFreeInstanceIfAlreadyUsed) {
       return [false, 'freeAlreadyUsed'];
     }
 

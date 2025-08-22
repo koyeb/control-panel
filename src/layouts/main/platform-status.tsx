@@ -84,7 +84,7 @@ export function PlatformStatus({ collapsed }: { collapsed: boolean }) {
 
       const incident = summary.activeIncidents?.[0];
 
-      if (summary.page.status === 'HASISSUES' && incident !== undefined) {
+      if (incident !== undefined) {
         return [statusMap[incident.impact], incident.name];
       }
 

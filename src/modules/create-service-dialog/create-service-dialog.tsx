@@ -75,7 +75,7 @@ function useGetSections() {
           },
           {
             title: t('navigation.oneClickApps'),
-            items: oneClickApps?.map((app) => ({
+            items: oneClickApps.map((app) => ({
               label: app.name,
               icon: <img src={app.logo} className="icon rounded-full bg-black/50 grayscale" />,
               render: () => <OneClickApp app={app} />,
@@ -128,6 +128,7 @@ function useGetSections() {
         ];
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (deploymentMethod === 'docker') {
         return [
           {

@@ -22,7 +22,7 @@ export function DeployModel() {
   return (
     <div className="col gap-6">
       <DocumentTitle
-        title={model ? (t('documentTitleModel', { modelName: model?.name }) as string) : t('documentTitle')}
+        title={model ? (t('documentTitleModel', { modelName: model.name }) as string) : t('documentTitle')}
       />
 
       <Header model={model} />
@@ -52,7 +52,7 @@ function Header({ model }: { model?: AiModel }) {
 
       <div className="col gap-1">
         <div className="text-2xl">
-          {model ? <T id="titleModel" values={{ modelName: model?.name }} /> : <T id="title" />}
+          {model ? <T id="titleModel" values={{ modelName: model.name }} /> : <T id="title" />}
         </div>
         <div className="max-w-xl text-dim">{model?.description ?? <T id="anyModelDescription" />}</div>
       </div>

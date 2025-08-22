@@ -3,7 +3,7 @@ import { useId, useMemo } from 'react';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganizationUnsafe } from 'src/api/hooks/session';
 
-const useGithubAvatar = false;
+const useGithubAvatar: boolean = false;
 
 type OrganizationAvatarProps = {
   organizationName?: string;

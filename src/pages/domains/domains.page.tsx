@@ -39,7 +39,7 @@ export function DomainsPage() {
   const domains = query.data;
   const hasDomains = domains !== undefined && domains.length > 0;
 
-  if (quotas?.maxDomains === 0 && !hasDomains) {
+  if (quotas.maxDomains === 0 && !hasDomains) {
     return <DomainsLocked />;
   }
 

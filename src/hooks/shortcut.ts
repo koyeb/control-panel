@@ -46,6 +46,7 @@ function checkKeyStrokes(keystrokes: string[], event: KeyboardEvent) {
 
   // event.key is undefined on chrome when accepting autofill suggestions
   // https://issues.chromium.org/issues/41425904
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (event.key !== undefined && keys[0]?.toLowerCase() === event.key.toLowerCase()) {
     keys.shift();
   }

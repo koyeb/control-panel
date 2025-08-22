@@ -92,21 +92,16 @@ export function ServiceTypeStep() {
 }
 
 function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | null): ValidateLinkOptions {
-  if (serviceType === 'database') {
-    return {
+  return {
+    database: {
       to: '/database-services/new',
       search: { app_id: appId ?? undefined },
-    };
-  }
-
-  if (serviceType === 'model') {
-    return {
+    },
+    model: {
       to: '/services/deploy',
       search: { type: 'model', app_id: appId ?? undefined },
-    };
-  }
-
-  throw new Error('Invalid service type');
+    },
+  }[serviceType];
 }
 
 function DeploymentSource() {

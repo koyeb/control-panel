@@ -16,7 +16,7 @@ type ResponseTimeGraphProps = {
 };
 
 export function ResponseTimeGraph({ loading, error, data }: ResponseTimeGraphProps) {
-  const graphData = data ? getGraphData(data) : [];
+  const graphData = getGraphData(data);
 
   return (
     <LineGraph

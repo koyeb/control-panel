@@ -200,6 +200,7 @@ function QualificationStep() {
     return <ReferralSourceStep />;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (step === 'sendInvites') {
     return <SendInvitesStep />;
   }
@@ -458,11 +459,11 @@ function Tag({ name, label, ...props }: TagProps) {
     if (type === 'checkbox') {
       assert(Array.isArray(field.value));
 
-      if (field.value?.includes(value)) {
-        field.onChange(field.value?.filter((v: unknown) => v !== value));
+      if (field.value.includes(value)) {
+        field.onChange(field.value.filter((v: unknown) => v !== value));
       } else {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        field.onChange([...(field.value ?? []), value]);
+        field.onChange([...field.value, value]);
       }
     }
   };

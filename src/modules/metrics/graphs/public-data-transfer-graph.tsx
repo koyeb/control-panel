@@ -17,7 +17,7 @@ type PublicDataTransferGraphProps = {
 };
 
 export function PublicDataTransferGraph({ loading, error, data }: PublicDataTransferGraphProps) {
-  const graphData = data ? getGraphData(data) : [];
+  const graphData = getGraphData(data);
 
   return (
     <LineGraph

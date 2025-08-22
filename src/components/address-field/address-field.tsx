@@ -131,9 +131,7 @@ type ControlledAddressFieldProps = Extend<
 
 export function ControlledAddressField({ control, name, ...props }: ControlledAddressFieldProps) {
   const { field, fieldState } = useController({ control, name });
-
-  // @ts-expect-error this works
-  const error = fieldState.error as Record<string, { message: string }>;
+  const error = fieldState.error as Record<string, { message: string }> | undefined;
 
   return (
     <AddressField

@@ -95,7 +95,7 @@ function HobbyPlanAlerts({ instance }: { instance?: CatalogInstance }) {
     );
   }
 
-  if (summary?.freeInstanceUsed && previousInstance && previousInstance.id !== 'free') {
+  if (summary.freeInstanceUsed && previousInstance && previousInstance.id !== 'free') {
     return (
       <Alert
         variant="error"
@@ -163,7 +163,7 @@ function PaidPlanAlerts({ instance }: { instance?: CatalogInstance }) {
     }
   }
 
-  if (sinSelected && !summary?.freeInstanceUsed && instance?.category === 'eco') {
+  if (sinSelected && !summary.freeInstanceUsed && instance?.category === 'eco') {
     return (
       <Alert
         variant="info"

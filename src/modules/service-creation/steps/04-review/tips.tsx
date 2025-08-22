@@ -4,7 +4,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('modules.serviceCreation.review');
 
 export function Tips() {
-  const isPending = false;
+  const isPending = false as boolean;
 
   return (
     <div className="card hidden gap-2 p-4 xl:col">

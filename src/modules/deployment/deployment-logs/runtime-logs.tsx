@@ -309,10 +309,6 @@ function useRetentionPeriods() {
   return useMemo(() => {
     const periods: LogsPeriod[] = ['live', '1h', '6h'];
 
-    if (quotas?.logsRetention === undefined) {
-      return periods;
-    }
-
     if (quotas.logsRetention >= 1) {
       periods.push('24h');
     }

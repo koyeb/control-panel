@@ -28,8 +28,8 @@ export function mapOrganization(organization: API.Organization): Organization {
     ...snakeToCamelDeep(requiredDeep(organization)),
     plan: organization.plan! === 'hobby23' ? 'hobby' : organization.plan!,
     hasSignupQualification: Object.keys(organization.signup_qualification ?? {}).length > 0,
-    currentSubscriptionId: organization?.current_subscription_id || undefined,
-    latestSubscriptionId: organization?.latest_subscription_id || undefined,
+    currentSubscriptionId: organization.current_subscription_id || undefined,
+    latestSubscriptionId: organization.latest_subscription_id || undefined,
     billing: mapOrganizationBilling(organization),
     trial: organization.trialing ? { endsAt: organization.trial_ends_at! } : undefined,
   };
@@ -90,9 +90,9 @@ export function mapOrganizationSummary(summary: API.OrganizationSummary): Organi
 
 export function mapOrganizationQuotas(quotas: API.Quotas): OrganizationQuotas {
   return {
-    maxNumberOfApps: Number(quotas?.apps),
-    maxNumberOfServices: Number(quotas?.services),
-    maxOrganizationMembers: Number(quotas?.max_organization_members),
+    maxNumberOfApps: Number(quotas.apps),
+    maxNumberOfServices: Number(quotas.services),
+    maxOrganizationMembers: Number(quotas.max_organization_members),
     instanceTypes: quotas.instance_types!.length > 0 ? quotas.instance_types! : undefined,
     maxInstancesByType: toObject(
       Object.entries(quotas.max_instances_by_type!),

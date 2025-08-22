@@ -17,7 +17,7 @@ import { PublicDataTransferGraph } from 'src/modules/metrics/graphs/public-data-
 import { ResponseTimeGraph } from 'src/modules/metrics/graphs/response-time-graph';
 import { MetricsTimeFrame, isMetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
-import { assert, defined } from 'src/utils/assert';
+import { assert } from 'src/utils/assert';
 
 const T = createTranslate('pages.service.metrics');
 
@@ -64,7 +64,7 @@ const metrics: API.MetricName[] = [
 ] as const;
 
 function ServiceMetrics({ serviceId, timeFrame }: { serviceId: string; timeFrame: MetricsTimeFrame }) {
-  const service = defined(useService(serviceId));
+  const service = useService(serviceId);
   const queries = useMetricsQueries({ serviceId, metrics, timeFrame });
   const instance = useServiceInstanceType(serviceId);
 
@@ -89,7 +89,7 @@ function ServiceMetrics({ serviceId, timeFrame }: { serviceId: string; timeFrame
         </GraphCard>
       </div>
 
-      {service.type === 'web' && (
+      {service?.type === 'web' && (
         <>
           <GraphCard label={<T id="responseTime.label" />} tooltip={<T id="responseTime.tooltip" />}>
             <ResponseTimeGraph

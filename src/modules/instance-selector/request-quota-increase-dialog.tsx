@@ -18,7 +18,7 @@ export function RequestQuotaIncreaseDialog({ instance }: { instance: CatalogInst
       <DialogHeader title={<T id="title" />} />
 
       <p>
-        <T id="line1" values={{ instance: instance?.displayName }} />
+        <T id="line1" values={{ instance: instance.displayName }} />
       </p>
 
       <p>

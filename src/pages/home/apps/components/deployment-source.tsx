@@ -34,6 +34,7 @@ export function DeploymentSource({ source }: DeploymentSourceProps) {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (source.type === 'docker') {
     return (
       <div className="row items-center gap-2">

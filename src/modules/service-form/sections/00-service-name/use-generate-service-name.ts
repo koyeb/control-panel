@@ -11,7 +11,7 @@ export function useGenerateServiceName() {
   return useCallback(() => {
     const values = getValues();
 
-    if (values.meta?.serviceId) {
+    if (values.meta.serviceId) {
       return;
     }
 

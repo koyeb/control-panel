@@ -30,6 +30,7 @@ function createResourceStatus<Status extends string>(
   map: Record<Status, [React.ComponentType<{ className?: string }>, BadgeColor]>,
 ) {
   return function ResourceStatus({ ref, status, className }: ResourceStatusProps<Status>) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const [Icon, color] = map[status] ?? unknownStatusBadge;
 
     return (
