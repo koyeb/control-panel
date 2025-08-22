@@ -1,5 +1,4 @@
 import { Page, expect, test } from '@playwright/test';
-import { describe } from 'node:test';
 
 import { authenticate, getOrganization } from './test-utils';
 
@@ -22,7 +21,7 @@ async function selectInstance(page: Page, category: string, name: string) {
   await page.getByRole('radio', { name }).locator('..').click();
 }
 
-describe('scaling', () => {
+test.describe('scaling', () => {
   test('message when the free instance is selected', async ({ page }) => {
     await selectInstance(page, 'CPU Eco', 'Free');
 
