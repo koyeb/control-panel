@@ -2,8 +2,6 @@ import { Button } from '@koyeb/design-system';
 import { useRef, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import { useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
-import { useOrganizationSummary } from 'src/api/hooks/session';
 import { DatabaseDeployment, OrganizationPlan } from 'src/api/model';
 import { Dialog } from 'src/components/dialog';
 import { UpgradeDialog } from 'src/components/payment-form';
@@ -25,19 +23,7 @@ type DatabaseFormProps = {
   onCostChanged: (cost: number) => void;
 };
 
-export function DatabaseForm(props: DatabaseFormProps) {
-  const regionsQuery = useRegionsQuery();
-  const instancesQuery = useInstancesQuery();
-  useOrganizationSummary();
-
-  if (regionsQuery.isPending || instancesQuery.isPending) {
-    return null;
-  }
-
-  return <DatabaseForm_ {...props} />;
-}
-
-function DatabaseForm_({ appId, deployment, onCostChanged }: DatabaseFormProps) {
+export function DatabaseForm({ appId, deployment, onCostChanged }: DatabaseFormProps) {
   const form = useDatabaseServiceForm({ appId, deployment, onCostChanged });
   const openDialog = Dialog.useOpen();
 

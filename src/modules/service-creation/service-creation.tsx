@@ -1,7 +1,5 @@
 import { useCallback, useEffect } from 'react';
 
-import { useInstances, useRegions } from 'src/api/hooks/catalog';
-import { useGithubApp, useRepositories } from 'src/api/hooks/git';
 import { Link } from 'src/components/link';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -69,8 +67,6 @@ export function ServiceCreation() {
 
   return (
     <div className="col gap-8">
-      <PrefetchResources />
-
       <Header step={currentStep} />
 
       {inArray(currentStep, stepperSteps) && (
@@ -98,16 +94,6 @@ export function ServiceCreation() {
       {currentStep === 'initialDeployment' && serviceId && <InitialDeploymentStep serviceId={serviceId} />}
     </div>
   );
-}
-
-// avoid the parent component to unmount and remount several times
-function PrefetchResources() {
-  useGithubApp();
-  useRepositories('');
-  useInstances();
-  useRegions();
-
-  return null;
 }
 
 function useInitialStep(): Step {

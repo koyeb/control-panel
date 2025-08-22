@@ -17,17 +17,9 @@ import {
   useFormContext,
 } from 'react-hook-form';
 
-import {
-  useDatacenters,
-  useDatacentersQuery,
-  useInstance,
-  useInstances,
-  useInstancesQuery,
-  useRegions,
-  useRegionsQuery,
-} from 'src/api/hooks/catalog';
-import { useGithubApp, useGithubAppQuery } from 'src/api/hooks/git';
-import { useOrganization, useOrganizationQuotas, useOrganizationQuotasQuery } from 'src/api/hooks/session';
+import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
+import { useGithubApp } from 'src/api/hooks/git';
+import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { OneClickApp, OneClickAppEnv } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
@@ -49,7 +41,6 @@ import {
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
-import { defined } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
@@ -72,34 +63,14 @@ type OneClickAppFormProps = {
   onCostChanged: (cost?: ServiceCost) => void;
 };
 
-export function OneClickAppForm(props: OneClickAppFormProps) {
-  const datacenters = useDatacentersQuery();
-  const regions = useRegionsQuery();
-  const instances = useInstancesQuery();
-  const quotas = useOrganizationQuotasQuery();
-  const githubApp = useGithubAppQuery();
-
-  if (
-    datacenters.isPending ||
-    regions.isPending ||
-    instances.isPending ||
-    quotas.isPending ||
-    githubApp.isPending
-  ) {
-    return <Loading />;
-  }
-
-  return <OneClickAppForm_ {...props} />;
-}
-
-function OneClickAppForm_({ app, onCostChanged }: OneClickAppFormProps) {
+export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   const navigate = useNavigate();
 
   const datacenters = useDatacenters();
   const regions = useRegions();
   const instances = useInstances();
   const organization = useOrganization();
-  const quotas = defined(useOrganizationQuotas());
+  const quotas = useOrganizationQuotas();
   const githubApp = useGithubApp();
   const queryClient = useQueryClient();
 

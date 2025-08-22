@@ -1,16 +1,10 @@
 import { Button } from '@koyeb/design-system';
 
-import { useInstances, useInstancesQuery, useRegions, useRegionsQuery } from 'src/api/hooks/catalog';
-import {
-  useOrganization,
-  useOrganizationQuotasQuery,
-  useOrganizationSummaryQuery,
-} from 'src/api/hooks/session';
+import { useInstances, useRegions } from 'src/api/hooks/catalog';
+import { useOrganization } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { LinkButton } from 'src/components/link';
-import { Loading } from 'src/components/loading';
-import { QueryError } from 'src/components/query-error';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -24,32 +18,6 @@ import { hasProperty } from 'src/utils/object';
 import { InstanceRegionAlerts } from './instance-region-alerts';
 
 export function InstanceRegionStep() {
-  const instancesQuery = useInstancesQuery();
-  const regionsQuery = useRegionsQuery();
-  const organizationSummaryQuery = useOrganizationSummaryQuery();
-  const organizationQuotasQuery = useOrganizationQuotasQuery();
-
-  if (
-    instancesQuery.isPending ||
-    regionsQuery.isPending ||
-    organizationSummaryQuery.isPending ||
-    organizationQuotasQuery.isPending
-  ) {
-    return <Loading />;
-  }
-
-  if (organizationSummaryQuery.isError) {
-    return <QueryError error={organizationSummaryQuery.error} />;
-  }
-
-  if (organizationQuotasQuery.isError) {
-    return <QueryError error={organizationQuotasQuery.error} />;
-  }
-
-  return <InstanceRegionStep_ />;
-}
-
-function InstanceRegionStep_() {
   const hasBuilderStep = useFeatureFlag('service-creation-builder-step');
   const searchParams = useSearchParams();
   const navigate = useNavigate();

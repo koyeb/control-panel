@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useSetToken } from 'src/application/authentication';
 import { ValidateLinkOptions } from 'src/components/link';
@@ -46,11 +46,10 @@ export function useOrganization() {
 }
 
 export function useOrganizationSummaryQuery() {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
 
-  return useQuery({
+  return useSuspenseQuery({
     ...useApiQueryFn('organizationSummary', { path: { organization_id: organization!.id } }),
-    enabled: Boolean(organization),
     select: ({ summary }) => mapOrganizationSummary(summary!),
   });
 }
@@ -60,11 +59,10 @@ export function useOrganizationSummary() {
 }
 
 export function useOrganizationQuotasQuery() {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
 
-  return useQuery({
+  return useSuspenseQuery({
     ...useApiQueryFn('organizationQuotas', { path: { organization_id: organization!.id } }),
-    enabled: Boolean(organization),
     refetchInterval: false,
     select: ({ quotas }) => mapOrganizationQuotas(quotas!),
   });

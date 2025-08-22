@@ -8,14 +8,10 @@ import {
   useDatacenters,
   useInstance,
   useInstances,
-  useInstancesQuery,
   useModel,
   useModels,
-  useModelsQuery,
   useRegions,
-  useRegionsQuery,
 } from 'src/api/hooks/catalog';
-import { useGithubAppQuery } from 'src/api/hooks/git';
 import { AiModel, CatalogInstance } from 'src/api/model';
 import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
@@ -23,7 +19,6 @@ import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
 import { ControlledSelect } from 'src/components/controlled';
 import { LinkButton } from 'src/components/link';
-import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
@@ -62,20 +57,7 @@ type ModelFormProps = {
   onCostChanged: (cost?: ServiceCost) => void;
 };
 
-export function ModelForm(props: ModelFormProps) {
-  const instances = useInstancesQuery();
-  const regions = useRegionsQuery();
-  const githubApp = useGithubAppQuery();
-  const models = useModelsQuery();
-
-  if (instances.isPending || regions.isPending || githubApp.isPending || models.isPending) {
-    return <Loading />;
-  }
-
-  return <ModelForm_ {...props} />;
-}
-
-function ModelForm_({ model: initialModel, onCostChanged }: ModelFormProps) {
+export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps) {
   const instances = useInstances();
   const models = useModels();
   const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import sortBy from 'lodash-es/sortBy';
 
 import { parseBytes } from 'src/application/memory';
@@ -16,7 +16,7 @@ import { AiModel, CatalogAvailability, OneClickApp, OneClickAppEnv, OneClickAppM
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     ...useApiQueryFn('listCatalogInstances', {
       query: { limit: '100' },
     }),
@@ -42,7 +42,7 @@ export function useInstance(id?: string | null) {
 }
 
 export function useRegionsQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     ...useApiQueryFn('listCatalogRegions', {
       query: { limit: '100' },
     }),
@@ -66,7 +66,7 @@ export function useRegion(id?: string) {
 }
 
 export function useDatacentersQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     ...useApiQueryFn('listCatalogDatacenters'),
     refetchInterval: false,
     select: ({ datacenters }) => datacenters!.map(mapCatalogDatacenter),
@@ -237,7 +237,7 @@ function getOneClickAppUrl(appSlug: string, appUrl: string): string {
 }
 
 export function useModelsQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     refetchInterval: false,
     queryKey: ['listOneClickApps'],
     queryFn: fetchOneClickApps,

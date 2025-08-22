@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { Suspense } from 'react';
 
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
-import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
-import { ServiceForm } from 'src/modules/service-form/service-form';
+import {
+  ServiceForm,
+  ServiceFormSkeleton,
+  useDeployUrl,
+  useEstimatedCost,
+  useServiceForm,
+} from 'src/modules/service-form';
 
 import { DeployModel } from './deploy-model';
 
@@ -15,22 +20,17 @@ const T = createTranslate('pages.deploy');
 export function DeployPage() {
   const params = useSearchParams();
   const type = params.get('type');
+  const serviceId = params.get('serviceId');
 
   if (type === 'model') {
     return <DeployModel />;
   }
 
-  return <DeployServiceForm />;
+  return <DeployServiceForm serviceId={serviceId ?? undefined} />;
 }
 
-function DeployServiceForm() {
+function DeployServiceForm({ serviceId }: { serviceId?: string }) {
   const t = T.useTranslate();
-
-  const serviceId = useSearchParams().get('serviceId');
-  const navigate = useNavigate();
-
-  const [cost, setCost] = useState<ServiceCost>();
-  const [deployUrl, setDeployUrl] = useState<string>();
 
   return (
     <div className="col gap-6">
@@ -40,21 +40,40 @@ function DeployServiceForm() {
         <T id="title" />
       </h1>
 
-      <div className="col gap-8 lg:row">
-        <ServiceForm
-          serviceId={serviceId ?? undefined}
-          className="grow"
-          onDeployed={(appId, serviceId) =>
-            navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
-          }
-          onCostChanged={setCost}
-          onDeployUrlChanged={setDeployUrl}
-        />
+      <Suspense
+        fallback={
+          <div className="col gap-8 lg:row">
+            <ServiceFormSkeleton className="grow" />
+            <div className="col w-full max-w-xs gap-8" />
+          </div>
+        }
+      >
+        <ServiceFormWrapper serviceId={serviceId} />
+      </Suspense>
+    </div>
+  );
+}
 
-        <div className="col max-w-sm gap-8 lg:max-w-xs">
-          <ServiceEstimatedCost cost={cost} />
-          <DeployToKoyebButton deployUrl={deployUrl} />
-        </div>
+function ServiceFormWrapper({ serviceId }: { serviceId?: string }) {
+  const navigate = useNavigate();
+
+  const form = useServiceForm(serviceId);
+  const cost = useEstimatedCost(form.watch());
+  const deployUrl = useDeployUrl(form);
+
+  return (
+    <div className="col gap-8 lg:row">
+      <ServiceForm
+        form={form}
+        onDeployed={(appId, serviceId) =>
+          navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } })
+        }
+        className="grow"
+      />
+
+      <div className="col w-full max-w-xs gap-8">
+        <ServiceEstimatedCost cost={cost} />
+        <DeployToKoyebButton deployUrl={deployUrl} />
       </div>
     </div>
   );

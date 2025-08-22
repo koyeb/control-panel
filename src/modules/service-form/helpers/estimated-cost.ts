@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { useInstance } from 'src/api/hooks/catalog';
 import { CatalogInstance } from 'src/api/model';
 
@@ -11,9 +9,7 @@ export function useEstimatedCost(
   const { scaling, regions } = values;
   const instance = useInstance(values.instance ?? null);
 
-  return useMemo(() => {
-    return computeEstimatedCost(instance, regions, scaling);
-  }, [instance, regions, scaling]);
+  return computeEstimatedCost(instance, regions, scaling);
 }
 
 export function computeEstimatedCost(

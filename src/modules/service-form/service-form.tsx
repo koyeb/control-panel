@@ -1,15 +1,13 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useEffect, useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
-import { useInstance, useInstancesQuery, useRegionsQuery } from 'src/api/hooks/catalog';
-import { useGithubAppQuery } from 'src/api/hooks/git';
-import { useOrganizationQuotasQuery, useOrganizationSummaryQuery } from 'src/api/hooks/session';
+import { useInstance } from 'src/api/hooks/catalog';
 import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
-import { handleSubmit, useFormErrorHandler, useFormValues } from 'src/hooks/form';
+import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 
 import { GpuAlert } from './components/gpu-alert';
@@ -18,8 +16,6 @@ import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { SubmitButton } from './components/submit-button';
-import { ServiceCost, useEstimatedCost } from './helpers/estimated-cost';
-import { getDeployParams } from './helpers/get-deploy-params';
 import { mapServiceFormApiValidationError } from './helpers/map-service-form-api-validation-error';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { getServiceFormSections } from './helpers/service-form-sections';
@@ -36,38 +32,20 @@ import { VolumesSection } from './sections/07-volumes/volumes.section';
 import { PortsSection } from './sections/08-ports/ports.section';
 import { HealthChecksSection } from './sections/09-health-checks/health-checks.section';
 import { type ServiceForm, ServiceFormSection } from './service-form.types';
-import { useServiceForm } from './use-service-form';
 
 type ServiceFormProps = {
-  serviceId?: string;
+  form: UseFormReturn<ServiceForm>;
   className?: string;
   onDeployed: (appId: string, serviceId: string, deploymentId: string) => void;
   onSaved?: () => void;
-  onCostChanged?: (cost: ServiceCost | undefined) => void;
-  onDeployUrlChanged?: (url: string) => void;
   onBack?: () => void;
 };
 
-export function ServiceForm(props: ServiceFormProps) {
-  return (
-    <FetchServiceFormResources className={props.className}>
-      <ServiceForm_ {...props} />
-    </FetchServiceFormResources>
-  );
-}
-
-function ServiceForm_({
-  serviceId,
-  className,
-  onDeployed,
-  onSaved,
-  onCostChanged,
-  onDeployUrlChanged,
-  onBack,
-}: ServiceFormProps) {
+export function ServiceForm({ form, className, onDeployed, onSaved, onBack }: ServiceFormProps) {
   const invalidate = useInvalidateApiQuery();
+  const instance = useInstance(form.watch('instance'));
 
-  const form = useServiceForm(serviceId);
+  const [requiredPlan, preSubmit] = usePreSubmitServiceForm(form.watch('meta.previousInstance'));
   const formRef = useRef<HTMLFormElement>(null);
 
   const mutation = useMutation({
@@ -87,22 +65,6 @@ function ServiceForm_({
       }
     },
   });
-
-  const [requiredPlan, preSubmit] = usePreSubmitServiceForm(form.watch('meta.previousInstance'));
-
-  const instance = useInstance(form.watch('instance'));
-  const cost = useEstimatedCost(useFormValues(form));
-  const deployUrl = useDeployUrl(form);
-
-  useEffect(() => {
-    onCostChanged?.(cost);
-  }, [onCostChanged, cost]);
-
-  useEffect(() => {
-    if (deployUrl !== undefined) {
-      onDeployUrlChanged?.(deployUrl);
-    }
-  }, [onDeployUrlChanged, deployUrl]);
 
   if (form.formState.isLoading) {
     return <ServiceFormSkeleton className={className} />;
@@ -177,39 +139,4 @@ function mapError(fields: Record<string, string>): Record<string, string> {
   }
 
   return mapped as Record<string, string>;
-}
-
-type FetchServiceFormResourcesProps = {
-  className?: string;
-  children: React.ReactNode;
-};
-
-function FetchServiceFormResources({ className, children }: FetchServiceFormResourcesProps) {
-  const organizationSummaryQuery = useOrganizationSummaryQuery();
-  const organizationQuotasQuery = useOrganizationQuotasQuery();
-  const regionsQuery = useRegionsQuery();
-  const instancesQuery = useInstancesQuery();
-  const githubAppQuery = useGithubAppQuery();
-
-  if (
-    organizationSummaryQuery.isPending ||
-    organizationQuotasQuery.isPending ||
-    regionsQuery.isPending ||
-    instancesQuery.isPending ||
-    githubAppQuery.isPending
-  ) {
-    return <ServiceFormSkeleton className={className} />;
-  }
-
-  return children;
-}
-
-function useDeployUrl({ formState, getValues }: UseFormReturn<ServiceForm>) {
-  return useMemo(() => {
-    if (formState.isLoading) {
-      return;
-    }
-
-    return `${window.location.origin}/deploy?${getDeployParams(getValues()).toString()}`;
-  }, [formState, getValues]);
 }
