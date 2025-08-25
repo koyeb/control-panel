@@ -47,7 +47,7 @@ export default [
       'no-restricted-imports': ['warn', { paths: ['wouter', 'posthog-js', 'posthog-js/react'] }],
       '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
       '@typescript-eslint/require-await': 'off',
-      '@typescript-eslint/no-unnecessary-condition': 'warn',
+      '@typescript-eslint/no-unnecessary-condition': ci ? 'warn' : 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { ignoreRestSiblings: true, varsIgnorePattern: '^_', argsIgnorePattern: '^_' },

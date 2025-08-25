@@ -378,7 +378,7 @@ function SectionHeader({
     <AccordionHeader
       expanded={expanded}
       setExpanded={setExpanded}
-      className={clsx(disabled && 'opacity-50 pointer-events-none')}
+      className={clsx(disabled && 'pointer-events-none opacity-50')}
     >
       <div className="font-medium">{title}</div>
 
