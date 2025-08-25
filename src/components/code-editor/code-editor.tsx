@@ -1,24 +1,21 @@
 import { Autocomplete } from '@koyeb/design-system';
-import { LanguageName, langNames, langs } from '@uiw/codemirror-extensions-langs';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import CodeMirror from '@uiw/react-codemirror';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
-import { identity } from 'src/utils/generic';
 
-export type CodeEditorLanguage = LanguageName | 'plaintext';
+import { type CodeEditor } from './use-code-editor';
 
 type CodeEditorProps = {
+  editor: CodeEditor;
   autoFocus?: boolean;
-  language?: CodeEditorLanguage;
   value: string;
   onChange: (value: string) => void;
   className?: string;
 };
 
-export function CodeEditor({ language, className, ...props }: CodeEditorProps) {
+export function CodeEditor({ editor, className, ...props }: CodeEditorProps) {
   const theme = useThemeModeOrPreferred();
 
   return (
@@ -26,7 +23,7 @@ export function CodeEditor({ language, className, ...props }: CodeEditorProps) {
       {...props}
       height="200px"
       theme={theme === 'light' ? githubLight : githubDark}
-      extensions={language && language !== 'plaintext' ? [langs[language]!()] : []}
+      extensions={editor.extensions}
       className={clsx('overflow-hidden rounded border', className)}
       minHeight="100%"
     />
@@ -34,33 +31,21 @@ export function CodeEditor({ language, className, ...props }: CodeEditorProps) {
 }
 
 type CodeEditorLanguageSelectProps = {
+  codeEditor: CodeEditor;
   placeholder?: string;
-  value?: CodeEditorLanguage;
-  onChange: (value: CodeEditorLanguage) => void;
 };
 
-export function CodeEditorLanguageSelect({ placeholder, value, onChange }: CodeEditorLanguageSelectProps) {
-  const [filteredItems, setFilteredItems] = useState(langNames);
-
-  useEffect(() => {
-    setFilteredItems(langNames);
-  }, [value]);
-
+export function CodeEditorLanguageSelect({ codeEditor, placeholder }: CodeEditorLanguageSelectProps) {
   return (
     <Autocomplete
       placeholder={placeholder}
-      items={filteredItems}
-      getKey={identity}
-      itemToString={identity}
-      renderItem={identity}
-      onInputValueChange={(search, isItemSelected) => {
-        setFilteredItems(isItemSelected ? langNames : langNames.filter((lang) => lang.includes(search)));
-      }}
-      selectedItem={value ?? null}
-      onSelectedItemChange={(value) => {
-        onChange(value);
-        setFilteredItems(langNames);
-      }}
+      items={codeEditor.filteredLanguages}
+      getKey={codeEditor.getLanguageName}
+      itemToString={codeEditor.getLanguageName}
+      renderItem={codeEditor.getLanguageName}
+      onInputValueChange={codeEditor.onSearch}
+      selectedItem={codeEditor.selectedLanguage}
+      onSelectedItemChange={codeEditor.onLanguageSelected}
       size={1}
     />
   );

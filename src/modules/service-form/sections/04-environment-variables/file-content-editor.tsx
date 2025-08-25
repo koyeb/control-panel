@@ -6,7 +6,7 @@ import { hasMessage } from 'src/api/api-errors';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { CodeEditor, CodeEditorLanguageSelect } from 'src/components/code-editor/code-editor';
-import { useCodeEditorLanguage } from 'src/components/code-editor/use-code-editor-language';
+import { useCodeEditor } from 'src/components/code-editor/use-code-editor';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { FullScreen } from 'src/components/full-screen';
 import { IconFullscreen, IconX } from 'src/icons';
@@ -44,8 +44,9 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
   });
 
   const mountPath = form.watch(`files.${index}.mountPath`);
-  const [language, setLanguage] = useCodeEditorLanguage(mountPath);
   const [fullScreen, setFullScreen] = useState(false);
+
+  const codeEditor = useCodeEditor(mountPath);
 
   return (
     <FileDropZone onDrop={([file]) => file && onFileDropped(file)}>
@@ -56,11 +57,7 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
               {<T id="label" />}
             </FieldLabel>
 
-            <CodeEditorLanguageSelect
-              placeholder={t('languageSelect.placeholder')}
-              value={language}
-              onChange={setLanguage}
-            />
+            <CodeEditorLanguageSelect codeEditor={codeEditor} placeholder={t('languageSelect.placeholder')} />
 
             <IconButton size={1} color="gray" Icon={IconFullscreen} onClick={() => setFullScreen(true)}>
               <T id="toggleFullScreen" />
@@ -87,9 +84,9 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
 
           <CodeEditor
             autoFocus
+            editor={codeEditor}
             value={field.value}
             onChange={field.onChange}
-            language={language}
             className="flex-1"
           />
         </FullScreen>
