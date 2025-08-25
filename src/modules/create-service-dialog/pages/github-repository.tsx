@@ -153,7 +153,7 @@ export function PublicRepository() {
     repositoryName: z.string().min(1),
   });
 
-  const form = useForm({
+  const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
       url: '',
       repositoryName: '',
