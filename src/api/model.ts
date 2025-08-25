@@ -1,4 +1,5 @@
 // activity
+import { API } from './api-types';
 
 export type Activity = {
   id: string;
@@ -151,8 +152,9 @@ export type OneClickApp = {
   repository: string;
   license?: string;
   deployUrl: string;
-  env: OneClickAppEnv[];
-  metadata?: OneClickAppMetadata[];
+  definition: API.DeploymentDefinition;
+  templateEnv: OneClickAppEnv[];
+  templateMetadata: OneClickAppMetadata[];
 };
 
 export type OneClickAppEnv =

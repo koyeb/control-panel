@@ -204,7 +204,7 @@ function getAppMetadata(app: OneClickApp) {
     ];
 
     for (const { name, Icon } of modelMetadata) {
-      const data = app.metadata?.find(hasProperty('name', name));
+      const data = app.templateMetadata?.find(hasProperty('name', name));
 
       if (data) {
         metadata[`model_${name}`] = {

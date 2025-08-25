@@ -6,6 +6,7 @@ import { getConfig } from 'src/utils/config';
 import { entries, hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
 import { ApiError } from '../api-errors';
+import { API } from '../api-types';
 import {
   mapCatalogDatacenter,
   mapCatalogInstance,
@@ -142,8 +143,9 @@ export type ApiOneClickApp = {
   technologies: string[];
   official: boolean;
   featured?: boolean;
-  env?: OneClickAppEnv[];
-  metadata?: OneClickAppMetadata[];
+  definition: API.DeploymentDefinition;
+  template_env?: OneClickAppEnv[];
+  template_metadata?: OneClickAppMetadata[];
 
   // model properties
   model_docker_image?: string;
@@ -215,9 +217,10 @@ function mapOneClickApp(app: ApiOneClickApp): OneClickApp {
   return {
     logo: app.logos[0]!,
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
-    env: [],
-    metadata: app.metadata ?? fallbackMetadata(),
+    templateEnv: [],
+    templateMetadata: fallbackMetadata(),
     ...snakeToCamelDeep(app),
+    definition: app.definition,
   };
 }
 
@@ -253,8 +256,8 @@ function mapOneClickModel(app: ApiOneClickApp): AiModel {
     logo: app.logos[0]!,
     dockerImage: app.model_docker_image!,
     minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
-    metadata: app.metadata ?? [],
-    env: app.env?.map((env) => ({ name: env.name, value: String(env.default), regions: [] })),
+    metadata: app.template_metadata ?? [],
+    env: app.template_env?.map((env) => ({ name: env.name, value: String(env.default), regions: [] })),
   };
 }
 
