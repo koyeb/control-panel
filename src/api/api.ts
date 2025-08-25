@@ -11,6 +11,15 @@ export { type API } from './api-types';
 
 export type Api = typeof api;
 
+export type ApiEndpoint = keyof Api;
+
+export type ApiEndpointFn<E extends ApiEndpoint> = (
+  param: ApiEndpointParams<E>,
+) => Promise<ApiEndpointResult<E>>;
+
+export type ApiEndpointParams<E extends ApiEndpoint> = Parameters<Api[E]>[0];
+export type ApiEndpointResult<E extends ApiEndpoint> = Awaited<ReturnType<Api[E]>>;
+
 export const api = {
   // authentication
   getOAuthProviders: endpoint('get', '/v1/account/oauth'),

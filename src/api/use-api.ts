@@ -4,45 +4,42 @@ import { useCallback } from 'react';
 import { container } from 'src/application/container';
 import { TOKENS } from 'src/tokens';
 
-import { Api } from './api';
-
-type Endpoint = keyof Api;
-type EndpointFn<E extends Endpoint> = (param: ApiEndpointParams<E>) => Promise<ApiEndpointResult<E>>;
-
-type ApiEndpointParams<E extends Endpoint> = Parameters<Api[E]>[0];
-type ApiEndpointResult<E extends Endpoint> = Awaited<ReturnType<Api[E]>>;
+import { Api, ApiEndpoint, ApiEndpointFn, ApiEndpointParams, ApiEndpointResult } from './api';
 
 export function getQueryKey(endpoint: string, params: object): QueryKey {
   return [endpoint, params];
 }
 
-export function getApiQueryKey<E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E>) {
+export function getApiQueryKey<E extends ApiEndpoint>(endpoint: E, params: ApiEndpointParams<E>) {
   return getQueryKey(endpoint, params);
 }
 
-export function useApiQueryFn<E extends Endpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) {
-  const api = container.resolve(TOKENS.api);
-  const fn = api[endpoint] as EndpointFn<E>;
-
+export function useApiQueryFn<E extends ApiEndpoint>(endpoint: E, params: ApiEndpointParams<E> = {}) {
   return {
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: getApiQueryKey(endpoint, params),
-    queryFn: ({ signal }: { signal: AbortSignal }) => fn({ signal, ...params }),
+    queryFn: ({ signal }: { signal: AbortSignal }) => {
+      const api = container.resolve(TOKENS.api);
+      const fn = api[endpoint] as ApiEndpointFn<E>;
+
+      return fn({ signal, ...params });
+    },
   };
 }
 
-type ApiEndpointParamsFn<E extends Endpoint, Variables> = (
+type ApiEndpointParamsFn<E extends ApiEndpoint, Variables> = (
   variables: Variables,
 ) => ApiEndpointParams<E> | Promise<ApiEndpointParams<E>>;
 
-export function useApiMutationFn<E extends Endpoint, Variables = void>(
+export function useApiMutationFn<E extends ApiEndpoint, Variables = void>(
   endpoint: E,
   options: ApiEndpointParams<E> | ApiEndpointParamsFn<E, Variables>,
 ) {
-  const api = container.resolve(TOKENS.api);
-  const fn = api[endpoint] as EndpointFn<E>;
-
   return {
     mutationFn: async (variables: Variables): Promise<ApiEndpointResult<E>> => {
+      const api = container.resolve(TOKENS.api);
+      const fn = api[endpoint] as ApiEndpointFn<E>;
+
       return fn(typeof options === 'function' ? await options(variables) : options);
     },
   };
@@ -52,7 +49,7 @@ export function useInvalidateApiQuery() {
   const queryClient = useQueryClient();
 
   return useCallback(
-    <E extends Endpoint>(
+    <E extends ApiEndpoint>(
       endpoint: E,
       params: ApiEndpointParams<E> = {},
       filters: InvalidateQueryFilters = {},
@@ -68,11 +65,11 @@ export function useInvalidateApiQuery() {
 
 export function useEnsureApiQueryData() {
   const queryClient = useQueryClient();
-  const api = container.resolve(TOKENS.api);
 
   return useCallback(
     async <E extends keyof Api>(endpoint: E, params: Parameters<Api[E]>[0]) => {
-      const fn = api[endpoint] as EndpointFn<E>;
+      const api = container.resolve(TOKENS.api);
+      const fn = api[endpoint] as ApiEndpointFn<E>;
 
       return queryClient.ensureQueryData({
         queryKey: getApiQueryKey(endpoint, params),
