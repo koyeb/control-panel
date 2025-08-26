@@ -1,11 +1,4 @@
-import {
-  AccordionHeader,
-  AccordionSection,
-  Badge,
-  Checkbox,
-  FieldHelperText,
-  Tooltip,
-} from '@koyeb/design-system';
+import { AccordionHeader, AccordionSection, Badge, Checkbox, FieldHelperText } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -21,11 +14,12 @@ import { z } from 'zod';
 
 import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
-import { EnvironmentVariable, OneClickApp, OneClickAppEnv } from 'src/api/model';
+import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { tooBig, tooSmall } from 'src/application/zod';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
@@ -215,15 +209,27 @@ function Section({ title, children }: SectionProps) {
 function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: ServiceForm }) {
   const { watch } = useFormContext<OneClickAppForm>();
 
+  const value = ({ value, href }: OneClickAppMetadata) => {
+    if (href) {
+      return (
+        <ExternalLink href={href} className="text-link" title={String(value)}>
+          {value}
+        </ExternalLink>
+      );
+    }
+
+    return <span title={String(value)}>{value}</span>;
+  };
+
   return (
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded bg-muted">
         <dl className="row flex-wrap gap-3 p-3">
-          {app.templateMetadata?.map(({ name, value }, index) => (
+          {app.templateMetadata?.map((metadata, index) => (
             <Metadata
               key={index}
-              label={name}
-              value={<Tooltip content={value}>{(props) => <span {...props}>{value}</span>}</Tooltip>}
+              label={metadata.name}
+              value={value(metadata)}
               className="w-40 [&>dd]:truncate"
             />
           ))}

@@ -198,6 +198,7 @@ type OneClickAppEnvString = OneClickAppEnvBase & {
 export type OneClickAppMetadata = {
   name: string;
   value: string | number;
+  href?: string;
 };
 
 export type AiModel = {
