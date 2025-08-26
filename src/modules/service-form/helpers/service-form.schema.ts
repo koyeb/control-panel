@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { EnvironmentVariable, Organization, OrganizationQuotas } from 'src/api/model';
+import { tooBig, tooSmall } from 'src/application/zod';
 import { isSlug } from 'src/utils/strings';
 
 import { File, Scaling } from '../service-form.types';
@@ -175,22 +176,6 @@ export function getScaleToZeroBounds(quotas: OrganizationQuotas, value: Scaling[
     },
   };
 }
-
-const tooSmall = (field: string, minimum: number): z.IssueData => ({
-  type: 'number',
-  code: z.ZodIssueCode.too_small,
-  inclusive: true,
-  path: [field],
-  minimum,
-});
-
-const tooBig = (field: string, maximum: number): z.IssueData => ({
-  type: 'number',
-  code: z.ZodIssueCode.too_big,
-  inclusive: true,
-  path: [field],
-  maximum,
-});
 
 function target(min: number, max: number) {
   return z.discriminatedUnion('enabled', [
