@@ -236,7 +236,7 @@ function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: 
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded bg-muted">
         <dl className="row flex-wrap gap-3 p-3">
-          {app.templateMetadata?.map((metadata, index) => (
+          {app.templateMetadata.map((metadata, index) => (
             <Metadata
               key={index}
               label={metadata.name}
