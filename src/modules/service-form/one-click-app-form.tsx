@@ -75,9 +75,18 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
 
   const serviceForm = useMemo(() => {
     return merge(
-      defaultServiceForm(),
-      deploymentDefinitionToServiceForm(app.definition, githubApp?.organizationName, []),
-      { meta: { appId }, appName: app.slug },
+      { ...defaultServiceForm(), environmentVariables: [] },
+      deploymentDefinitionToServiceForm(app.deploymentDefinition, githubApp?.organizationName, []),
+      {
+        meta: { appId },
+        appName: app.slug,
+        volumes: app.templateDefinition?.volumes?.map((volume) => ({
+          name: volume.name,
+          size: volume.size,
+          mountPath: volume.path,
+          mounted: false,
+        })),
+      },
     );
   }, [app, githubApp, appId]);
 
@@ -91,18 +100,14 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
         regions: [],
       })),
     },
-    resolver: useZodResolver(
-      z.object({
-        instance: z.string(),
-        regions: z.array(z.string()).min(1),
-        environmentVariables: z.array(createEnvironmentVariableSchema(app.templateEnv)),
-      }),
-    ),
+    resolver: useZodResolver(createSchema(app)),
   });
 
   const mutation = useMutation({
     mutationKey: ['deployOneClickApp'],
-    mutationFn: (values: OneClickAppForm) => submitServiceForm(merge(serviceForm, values)),
+    mutationFn(values: OneClickAppForm) {
+      return submitServiceForm(merge(serviceForm, values));
+    },
     onSuccess({ serviceId }) {
       navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
@@ -145,6 +150,14 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </FormProvider>
   );
+}
+
+function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm> {
+  return z.object({
+    instance: z.string(),
+    regions: z.array(z.string()).min(1),
+    environmentVariables: z.array(createEnvironmentVariableSchema(app.templateEnv)),
+  });
 }
 
 function createEnvironmentVariableSchema(env: OneClickAppEnv[]): z.ZodType<EnvironmentVariable> {
