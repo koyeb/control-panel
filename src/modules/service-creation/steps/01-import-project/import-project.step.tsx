@@ -1,4 +1,3 @@
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 
@@ -6,7 +5,6 @@ import { DockerImageSelector } from './docker-image-selector';
 import { RepositorySelector } from './repository-selector';
 
 export function ImportProjectStep() {
-  const hasBuilderStep = useFeatureFlag('service-creation-builder-step');
   const type = useSearchParams().get('type');
   const navigate = useNavigate();
 
@@ -27,7 +25,7 @@ export function ImportProjectStep() {
               to: '/services/new',
               search: (prev) => ({
                 ...prev,
-                step: hasBuilderStep ? 'builder' : 'instanceRegions',
+                step: 'builder',
                 repository: `github.com/${repository}`,
               }),
             });

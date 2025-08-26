@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
 import { Link } from 'src/components/link';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
@@ -35,7 +34,6 @@ function isBefore(left: Step, right: Step) {
 }
 
 export function ServiceCreation() {
-  const hasBuilderStep = useFeatureFlag('service-creation-builder-step');
   const initialStep = useInitialStep();
   const searchParams = useSearchParams();
 
@@ -61,7 +59,7 @@ export function ServiceCreation() {
   }, [currentStepParam, initialStep, setCurrentStep]);
 
   const stepperSteps =
-    hasBuilderStep && type === 'git'
+    type === 'git'
       ? (['importProject', 'builder', 'instanceRegions', 'review'] satisfies Step[])
       : (['importProject', 'instanceRegions', 'review'] satisfies Step[]);
 

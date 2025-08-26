@@ -5,7 +5,6 @@ import { useOrganization } from 'src/api/hooks/session';
 import { ServiceType } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { LinkButton } from 'src/components/link';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
@@ -18,7 +17,6 @@ import { hasProperty } from 'src/utils/object';
 import { InstanceRegionAlerts } from './instance-region-alerts';
 
 export function InstanceRegionStep() {
-  const hasBuilderStep = useFeatureFlag('service-creation-builder-step');
   const searchParams = useSearchParams();
   const navigate = useNavigate();
 
@@ -96,7 +94,7 @@ export function InstanceRegionStep() {
           to="/services/new"
           search={(prev) => ({
             ...prev,
-            step: hasBuilderStep && sourceType === 'git' ? 'builder' : 'importProject',
+            step: sourceType === 'git' ? 'builder' : 'importProject',
           })}
         >
           <Translate id="common.back" />
