@@ -13,7 +13,14 @@ import {
   mapCatalogRegion,
   mapCatalogUsage,
 } from '../mappers/catalog';
-import { AiModel, CatalogAvailability, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from '../model';
+import {
+  AiModel,
+  CatalogAvailability,
+  OneClickApp,
+  OneClickAppCustomDefinition,
+  OneClickAppEnv,
+  OneClickAppMetadata,
+} from '../model';
 import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
@@ -143,7 +150,8 @@ export type ApiOneClickApp = {
   technologies: string[];
   official: boolean;
   featured?: boolean;
-  definition: API.DeploymentDefinition;
+  deployment_definition: API.DeploymentDefinition;
+  template_definition?: OneClickAppCustomDefinition;
   template_env?: OneClickAppEnv[];
   template_metadata?: OneClickAppMetadata[];
 
@@ -220,7 +228,7 @@ function mapOneClickApp(app: ApiOneClickApp): OneClickApp {
     templateEnv: [],
     templateMetadata: fallbackMetadata(),
     ...snakeToCamelDeep(app),
-    definition: app.definition,
+    deploymentDefinition: app.deployment_definition,
   };
 }
 
