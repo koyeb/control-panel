@@ -67,7 +67,6 @@ export function OneClickAppPage({ slug }: { slug: string }) {
       <hr />
 
       <AppMetadata app={app.metadata} />
-      <Images app={app.metadata} />
       <AppDescription description={app.description} />
 
       <hr className={clsx({ hidden: related.length === 0 })} />
@@ -232,19 +231,6 @@ function getRepositoryIcon(repository: string) {
   }
 
   return () => null;
-}
-
-function Images({ app }: { app: OneClickApp }) {
-  return (
-    <section className="col gap-6 sm:row">
-      <div>
-        <img src={app.cover} className="rounded-lg" />
-      </div>
-      <div>
-        <img src={app.cover} className="rounded-lg" />
-      </div>
-    </section>
-  );
 }
 
 function AppDescription({ description }: { description: string }) {
