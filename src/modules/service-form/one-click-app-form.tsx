@@ -17,13 +17,14 @@ import {
   useForm,
   useFormContext,
 } from 'react-hook-form';
+import { z } from 'zod';
 
 import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
 import { EnvironmentVariable, OneClickApp, OneClickAppEnv } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
+import { tooBig, tooSmall } from 'src/application/zod';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
@@ -53,7 +54,6 @@ import { deploymentDefinitionToServiceForm } from './helpers/deployment-to-servi
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
-import { serviceFormSchema } from './helpers/service-form.schema';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
 
@@ -77,8 +77,6 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   const appId = searchParams.get('app_id');
 
   const instances = useInstances();
-  const organization = useOrganization();
-  const quotas = useOrganizationQuotas();
   const githubApp = useGithubApp();
 
   const serviceForm = useMemo(() => {
@@ -100,10 +98,10 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
       })),
     },
     resolver: useZodResolver(
-      serviceFormSchema(organization, quotas).pick({
-        instance: true,
-        regions: true,
-        environmentVariables: true,
+      z.object({
+        instance: z.string(),
+        regions: z.array(z.string()).min(1),
+        environmentVariables: z.array(createEnvironmentVariableSchema(app.templateEnv)),
       }),
     ),
   });
@@ -153,6 +151,28 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </FormProvider>
   );
+}
+
+function createEnvironmentVariableSchema(env: OneClickAppEnv[]): z.ZodType<EnvironmentVariable> {
+  return z.object({ name: z.string(), value: z.string(), regions: z.tuple([]) }).superRefine((value, ctx) => {
+    const definition = env.find(hasProperty('name', value.name));
+
+    if (definition?.type === 'number') {
+      const number = Number(value.value);
+
+      if (Number.isNaN(number)) {
+        return;
+      }
+
+      if (definition.min !== undefined && number < definition.min) {
+        ctx.addIssue(tooSmall('value', definition.min));
+      }
+
+      if (definition.max !== undefined && number > definition.max) {
+        ctx.addIssue(tooBig('value', definition.max));
+      }
+    }
+  });
 }
 
 function useOnCostEstimationChanged(
