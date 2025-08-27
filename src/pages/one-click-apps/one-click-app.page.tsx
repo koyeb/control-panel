@@ -1,33 +1,31 @@
-import { Badge } from '@koyeb/design-system';
+import { Badge, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { lazy } from 'react';
-import { FormattedDate } from 'react-intl';
 
 import { ApiError } from 'src/api/api-errors';
 import { useOneClickAppQuery, useOneClickAppsQuery } from 'src/api/hooks/catalog';
-import { OneClickApp } from 'src/api/model';
+import { OneClickApp, OneClickAppMetadata } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
-import { ExternalLink, Link, LinkButton } from 'src/components/link';
+import { ExternalLink, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import {
-  IconCalendarDays,
   IconCircleUser,
   IconDocker,
   IconGithub,
   IconGlobe,
   IconHuggingFace,
-  IconPackage,
+  IconRocket,
   IconRotateCw,
   IconScale,
-  IconTriangleAlert,
   IconUser,
   IconWeight,
 } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { entries, hasProperty } from 'src/utils/object';
+import { hasProperty } from 'src/utils/object';
 
 import { AppCard } from './app-card';
+import { AppNotFound } from './app-not-found';
 
 const Markdown = lazy(() => import('src/components/markdown'));
 
@@ -76,41 +74,23 @@ export function OneClickAppPage({ slug }: { slug: string }) {
   );
 }
 
-function AppNotFound() {
-  const link = (children: React.ReactNode) => (
-    <Link to="/one-click-apps" className="text-link font-medium">
-      {children}
-    </Link>
-  );
-
-  return (
-    <div className="col min-h-[calc(100vh-12rem)] items-center justify-center gap-6">
-      <IconTriangleAlert className="size-14 text-dim" />
-
-      <div className="text-3xl font-medium">
-        <T id="notFound.title" />
-      </div>
-
-      <div className="text-base text-dim">
-        <T id="notFound.description" values={{ link }} />
-      </div>
-    </div>
-  );
-}
-
 function Header({ app }: { app: OneClickApp }) {
   return (
     <header className="row gap-6">
       <img src={app.logo} className="size-28 rounded-lg bg-black/80 p-2 dark:bg-transparent" />
 
       <div className="col items-start gap-1">
-        <h1 className="text-2xl font-bold">{app.name}</h1>
+        <div className="row items-center gap-2">
+          <h1 className="text-2xl font-bold">{app.name}</h1>
 
-        <div>
-          <Badge size={1} color="gray">
-            {app.category}
-          </Badge>
+          <div>
+            <Badge size={1} color="gray">
+              {app.category}
+            </Badge>
+          </div>
         </div>
+
+        <p className="text-dim">{app.description}</p>
 
         <div className="mt-auto">
           <LinkButton to="/one-click-apps/$slug/deploy" params={{ slug: app.slug }}>
@@ -125,113 +105,49 @@ function Header({ app }: { app: OneClickApp }) {
 function AppMetadata({ app }: { app: OneClickApp }) {
   return (
     <section className="row flex-wrap items-center gap-x-6 gap-y-3">
-      {entries(getAppMetadata(app)).map(([key, props]) => (
-        <Metadata key={key} {...props} />
+      {app.metadata.map((metadata, index) => (
+        <Metadata key={index} metadata={metadata} />
       ))}
     </section>
   );
 }
 
-function Metadata({ Icon, label, link }: { Icon: SvgComponent; label: React.ReactNode; link?: string }) {
+function Metadata({ metadata }: { metadata: OneClickAppMetadata }) {
+  const { icon, href } = metadata;
+  const Icon = icon ? metadataIconMap[icon] : undefined;
+  const [tooltip, label] = href ? [metadata.value, metadata.name] : [metadata.name, metadata.value];
+
   return (
-    <div className="row items-center gap-2">
-      <div>
-        <Icon className="size-em" />
-      </div>
+    <Tooltip content={tooltip}>
+      {(props) => (
+        <div {...props} className="row items-center gap-2">
+          <div>{Icon && <Icon className="size-em" />}</div>
 
-      {!link && label}
+          {!href && <span className="max-w-64 truncate">{label}</span>}
 
-      {link && (
-        <ExternalLink href={link} className="underline">
-          {label}
-        </ExternalLink>
+          {href && (
+            <ExternalLink href={href} className="max-w-64 truncate underline">
+              {label}
+            </ExternalLink>
+          )}
+        </div>
       )}
-    </div>
+    </Tooltip>
   );
 }
 
-function getAppMetadata(app: OneClickApp) {
-  const metadata: Record<string, React.ComponentProps<typeof Metadata>> = {};
-
-  if (app.projectSite) {
-    metadata['website'] = {
-      Icon: IconGlobe,
-      label: <T id="website" />,
-      link: app.projectSite,
-    };
-  }
-
-  metadata['repository'] = {
-    Icon: getRepositoryIcon(app.repository),
-    label: <T id="repository" />,
-    link: app.repository,
-  };
-
-  if (app.developer) {
-    metadata['developer'] = {
-      Icon: IconUser,
-      label: app.developer,
-    };
-  }
-
-  if (app.license) {
-    metadata['license'] = {
-      Icon: IconScale,
-      label: app.license,
-    };
-  }
-
-  metadata['createdAt'] = {
-    Icon: IconCalendarDays,
-    label: <FormattedDate value={app.createdAt} />,
-  };
-
-  metadata['updatedAt'] = {
-    Icon: IconRotateCw,
-    label: <FormattedDate value={app.updatedAt} />,
-  };
-
-  if (app.category.toLowerCase() === 'model') {
-    const modelMetadata = [
-      { name: 'Model developer', Icon: IconCircleUser },
-      { name: 'Model family', Icon: IconPackage },
-      { name: 'Model version', Icon: IconPackage },
-      { name: 'Model variant', Icon: IconPackage },
-      { name: 'Model size', Icon: IconWeight },
-      { name: 'Model optimization', Icon: IconPackage },
-      { name: 'Model api', Icon: IconPackage },
-    ];
-
-    for (const { name, Icon } of modelMetadata) {
-      const data = app.templateMetadata.find(hasProperty('name', name));
-
-      if (data) {
-        metadata[`model_${name}`] = {
-          label: `${data.name}: ${data.value}`,
-          Icon,
-        };
-      }
-    }
-  }
-
-  return metadata;
-}
-
-function getRepositoryIcon(repository: string) {
-  if (repository.includes('github')) {
-    return IconGithub;
-  }
-
-  if (repository.includes('docker')) {
-    return IconDocker;
-  }
-
-  if (repository.includes('huggingface')) {
-    return IconHuggingFace;
-  }
-
-  return () => null;
-}
+const metadataIconMap: Record<string, SvgComponent> = {
+  rotate: IconRotateCw,
+  globe: IconGlobe,
+  rocket: IconRocket,
+  weight: IconWeight,
+  scale: IconScale,
+  user: IconUser,
+  'circle-user': IconCircleUser,
+  github: IconGithub,
+  docker: IconDocker,
+  'hugging-face': IconHuggingFace,
+};
 
 function AppDescription({ description }: { description: string }) {
   return (

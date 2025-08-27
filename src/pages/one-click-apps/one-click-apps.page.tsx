@@ -7,6 +7,7 @@ import { Link } from 'src/components/link';
 import { IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
+import { getConfig } from 'src/utils/config';
 import { lowerCase } from 'src/utils/strings';
 
 import { AppCard } from './app-card';
@@ -183,7 +184,10 @@ function SectionHeader({ title, right }: { title: React.ReactNode; right?: React
 function FeaturedApp({ app }: { app: OneClickApp }) {
   return (
     <Link to="/one-click-apps/$slug" params={{ slug: app.slug }} className="col gap-2">
-      <img src={app.cover} className="max-h-[16rem] w-full rounded-xl object-cover" />
+      <img
+        src={`${getConfig('websiteUrl')}${app.cover}`}
+        className="max-h-[16rem] w-full rounded-xl object-cover"
+      />
       <div className="text-xs font-bold text-dim">{app.category}</div>
       <div className="text-xl font-medium">{app.name}</div>
       <div className="truncate text-dim">{app.description}</div>

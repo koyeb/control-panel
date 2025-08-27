@@ -80,7 +80,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
       {
         meta: { appId },
         appName: app.slug,
-        volumes: app.templateDefinition?.volumes?.map((volume) => ({
+        volumes: app.volumes?.map((volume) => ({
           name: volume.name,
           size: volume.size,
           mountPath: volume.path,
@@ -94,7 +94,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
     defaultValues: {
       instance: serviceForm.instance,
       regions: serviceForm.regions,
-      environmentVariables: app.templateEnv.map((env) => ({
+      environmentVariables: app.env.map((env) => ({
         name: env.name,
         value: String(env.default ?? ''),
         regions: [],
@@ -154,7 +154,7 @@ function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm> {
   return z.object({
     instance: z.string(),
     regions: z.array(z.string()).min(1),
-    environmentVariables: z.array(createEnvironmentVariableSchema(app.templateEnv)),
+    environmentVariables: z.array(createEnvironmentVariableSchema(app.env)),
   });
 }
 
@@ -236,7 +236,7 @@ function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: 
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded bg-muted">
         <dl className="row flex-wrap gap-3 p-3">
-          {app.templateMetadata.map((metadata, index) => (
+          {app.metadata.map((metadata, index) => (
             <Metadata
               key={index}
               label={metadata.name}
@@ -263,8 +263,8 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
   const env = watch('environmentVariables');
   const index = (name: string) => env.findIndex(hasProperty('name', name));
 
-  const required = app.templateEnv.filter(hasProperty('required', true));
-  const optional = app.templateEnv.filter(hasProperty('required', false));
+  const required = app.env.filter(hasProperty('required', true));
+  const optional = app.env.filter(hasProperty('required', false));
 
   if (required.length === 0 && optional.length === 0) {
     return null;
@@ -272,13 +272,13 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
 
   return (
     <section>
-      <header className="row h-16 items-center px-3 py-2">
+      <header className="row items-center px-3 pt-2 pb-1">
         <div className="font-medium">
           <T id="environmentVariables.title" />
         </div>
       </header>
 
-      <div className="col gap-6 px-3 py-4">
+      <div className="col gap-6 px-3 pt-1 pb-3">
         {required.map((env) => (
           <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
         ))}
@@ -295,7 +295,7 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
             }
             className="rounded-md border bg-muted"
           >
-            <div className="col gap-6 p-4">
+            <div className="col gap-6 px-3 pt-1 pb-3">
               {optional.map((env) => (
                 <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
               ))}
@@ -449,10 +449,10 @@ function VolumesSection({ serviceForm }: { serviceForm: ServiceForm }) {
 
   return (
     <Section title={<T id="volumes.title" />}>
-      {volumes.map((volume, index) => (
+      {volumes.map((volume) => (
         <div key={volume.name} className="divide-y rounded bg-muted">
           <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
-            <Metadata label={<T id="volumes.name" values={{ number: index + 1 }} />} value={volume.name} />
+            <Metadata label={<T id="volumes.name" />} value={volume.name} />
 
             <Metadata label={<T id="volumes.mountPath" />} value={volume.mountPath} />
 

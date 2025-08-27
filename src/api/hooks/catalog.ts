@@ -6,7 +6,6 @@ import { getConfig } from 'src/utils/config';
 import { entries, hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
 import { ApiError } from '../api-errors';
-import { API } from '../api-types';
 import {
   mapCatalogDatacenter,
   mapCatalogInstance,
@@ -17,9 +16,9 @@ import {
   AiModel,
   CatalogAvailability,
   OneClickApp,
-  OneClickAppCustomDefinition,
   OneClickAppEnv,
   OneClickAppMetadata,
+  OneClickAppVolume,
 } from '../model';
 import { useApiQueryFn } from '../use-api';
 
@@ -129,7 +128,6 @@ export function useCatalogInstanceRegionsAvailability(
     }
   }
 }
-
 export type ApiOneClickApp = {
   slug: string;
   cover: string;
@@ -150,14 +148,11 @@ export type ApiOneClickApp = {
   technologies: string[];
   official: boolean;
   featured?: boolean;
-  deployment_definition: API.DeploymentDefinition;
-  template_definition?: OneClickAppCustomDefinition;
-  template_env?: OneClickAppEnv[];
-  template_metadata?: OneClickAppMetadata[];
-
-  // model properties
-  model_docker_image?: string;
-  model_min_vram_gb?: string;
+  model_min_vram_gb?: number;
+  env?: OneClickAppEnv[];
+  metadata?: OneClickAppMetadata[];
+  template_volumes?: OneClickAppVolume[];
+  template_definition?: Record<string, unknown>;
 };
 
 async function fetchOneClickApps(): Promise<ApiOneClickApp[]> {
@@ -225,10 +220,11 @@ function mapOneClickApp(app: ApiOneClickApp): OneClickApp {
   return {
     logo: app.logos[0]!,
     deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
-    templateEnv: [],
-    templateMetadata: fallbackMetadata(),
+    env: [],
+    metadata: fallbackMetadata(),
+    volumes: app.template_volumes ?? [],
+    deploymentDefinition: app.template_definition ?? {},
     ...snakeToCamelDeep(app),
-    deploymentDefinition: app.deployment_definition,
   };
 }
 
@@ -257,15 +253,17 @@ export function useModelsQuery() {
 }
 
 function mapOneClickModel(app: ApiOneClickApp): AiModel {
+  const definition = app.template_definition as { docker: { image: string } };
+
   return {
     name: app.name,
     slug: app.slug,
     description: app.description,
     logo: app.logos[0]!,
-    dockerImage: app.model_docker_image!,
+    dockerImage: definition.docker.image,
     minVRam: parseBytes(app.model_min_vram_gb + 'GB'),
-    metadata: app.template_metadata ?? [],
-    env: app.template_env?.map((env) => ({ name: env.name, value: String(env.default), regions: [] })),
+    metadata: app.metadata ?? [],
+    env: app.env?.map((env) => ({ name: env.name, value: String(env.default), regions: [] })),
   };
 }
 

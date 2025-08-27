@@ -152,10 +152,10 @@ export type OneClickApp = {
   repository: string;
   license?: string;
   deployUrl: string;
+  metadata: OneClickAppMetadata[];
+  env: OneClickAppEnv[];
+  volumes?: OneClickAppVolume[];
   deploymentDefinition: API.DeploymentDefinition;
-  templateDefinition?: OneClickAppCustomDefinition;
-  templateEnv: OneClickAppEnv[];
-  templateMetadata: OneClickAppMetadata[];
 };
 
 export type OneClickAppEnv =
@@ -200,10 +200,13 @@ export type OneClickAppMetadata = {
   name: string;
   value: string | number;
   href?: string;
+  icon?: string;
 };
 
-export type OneClickAppCustomDefinition = {
-  volumes?: Array<{ name: string; path: string; size: number }>;
+export type OneClickAppVolume = {
+  name: string;
+  path: string;
+  size: number;
 };
 
 export type AiModel = {

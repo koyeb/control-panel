@@ -1,38 +1,42 @@
 import { Button } from '@koyeb/design-system';
 import { useIsMutating } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-import { useOneClickAppsQuery } from 'src/api/hooks/catalog';
+import { ApiError } from 'src/api/api-errors';
+import { useOneClickAppQuery } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
 import { DocumentTitle } from 'src/components/document-title';
+import { Loading } from 'src/components/loading';
+import { QueryError } from 'src/components/query-error';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { OneClickAppForm } from 'src/modules/service-form/one-click-app-form';
-import { hasProperty } from 'src/utils/object';
+
+import { AppNotFound } from './app-not-found';
 
 const T = createTranslate('pages.oneClickApps.deploy');
 
 export function OneClickAppDeployPage({ slug }: { slug: string }) {
-  const navigate = useNavigate();
-
-  const oneClickAppsQuery = useOneClickAppsQuery();
-  const app = oneClickAppsQuery.data?.find(hasProperty('slug', slug));
+  const query = useOneClickAppQuery(slug);
 
   const [cost, setCost] = useState<ServiceCost>();
 
-  useEffect(() => {
-    if (oneClickAppsQuery.isSuccess && app === undefined) {
-      void navigate({ to: '/deploy', replace: true });
-    }
-  }, [oneClickAppsQuery, app, navigate]);
-
   const isDeploying = useIsMutating({ mutationKey: ['deployOneClickApp'] }) > 0;
 
-  if (!app) {
-    return null;
+  if (query.isPending) {
+    return <Loading />;
   }
+
+  if (query.isError) {
+    if (ApiError.is(query.error, 404)) {
+      return <AppNotFound />;
+    }
+
+    return <QueryError error={query.error} />;
+  }
+
+  const app = query.data.metadata;
 
   return (
     <div className="col gap-6">

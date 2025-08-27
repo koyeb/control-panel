@@ -1056,14 +1056,14 @@
         "submitButton": "Deploy",
         "environmentVariables": {
           "title": "Environment variables",
-          "optional": "Optional +{count}"
+          "optional": "{count} optional {count, plural, =1 {variable} other {variables}}"
         },
         "instance": {
           "title": "Instance"
         },
         "volumes": {
           "title": "Volumes",
-          "name": "Volume {number}",
+          "name": "Name",
           "mountPath": "Mount path",
           "size": "Size"
         }
