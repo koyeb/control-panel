@@ -4,8 +4,7 @@ import { useCallback, useEffect } from 'react';
 
 import type { API } from 'src/api/api';
 import { useInstance } from 'src/api/hooks/catalog';
-import { useDeployment, useService } from 'src/api/hooks/service';
-import { isComputeDeployment } from 'src/api/mappers/deployment';
+import { useComputeDeployment, useService } from 'src/api/hooks/service';
 import { parseBytes } from 'src/application/memory';
 import { Title } from 'src/components/title';
 import { useNavigate, useRouteParam, useSearchParams } from 'src/hooks/router';
@@ -17,7 +16,6 @@ import { PublicDataTransferGraph } from 'src/modules/metrics/graphs/public-data-
 import { ResponseTimeGraph } from 'src/modules/metrics/graphs/response-time-graph';
 import { MetricsTimeFrame, isMetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
-import { assert } from 'src/utils/assert';
 
 const T = createTranslate('pages.service.metrics');
 
@@ -178,9 +176,8 @@ function useTimeFrame() {
 
 function useServiceInstanceType(serviceId: string) {
   const service = useService(serviceId);
-  const deployment = useDeployment(service?.latestDeploymentId);
+  const activeDeployment = useComputeDeployment(service?.activeDeploymentId);
+  const latestDeployment = useComputeDeployment(service?.latestDeploymentId);
 
-  assert(!deployment || isComputeDeployment(deployment));
-
-  return useInstance(deployment?.definition.instanceType ?? null);
+  return useInstance((activeDeployment ?? latestDeployment)?.definition.instanceType);
 }
