@@ -200,6 +200,7 @@ export type OneClickAppMetadata = {
   name: string;
   value: string | number;
   href?: string;
+  icon?: string;
 };
 
 export type OneClickAppCustomDefinition = {

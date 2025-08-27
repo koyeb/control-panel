@@ -274,13 +274,13 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
 
   return (
     <section>
-      <header className="row h-16 items-center px-3 py-2">
+      <header className="row items-center px-3 pt-2 pb-1">
         <div className="font-medium">
           <T id="environmentVariables.title" />
         </div>
       </header>
 
-      <div className="col gap-6 px-3 py-4">
+      <div className="col gap-6 px-3 pt-1 pb-3">
         {required.map((env) => (
           <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
         ))}
@@ -297,7 +297,7 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
             }
             className="rounded-md border bg-muted"
           >
-            <div className="col gap-6 p-4">
+            <div className="col gap-6 px-3 pt-1 pb-3">
               {optional.map((env) => (
                 <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
               ))}
@@ -451,10 +451,10 @@ function VolumesSection({ serviceForm }: { serviceForm: ServiceForm }) {
 
   return (
     <Section title={<T id="volumes.title" />}>
-      {volumes.map((volume, index) => (
+      {volumes.map((volume) => (
         <div key={volume.name} className="divide-y rounded bg-muted">
           <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
-            <Metadata label={<T id="volumes.name" values={{ number: index + 1 }} />} value={volume.name} />
+            <Metadata label={<T id="volumes.name" />} value={volume.name} />
 
             <Metadata label={<T id="volumes.mountPath" />} value={volume.mountPath} />
 
