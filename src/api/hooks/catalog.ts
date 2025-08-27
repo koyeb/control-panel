@@ -150,7 +150,7 @@ export type ApiOneClickApp = {
   technologies: string[];
   official: boolean;
   featured?: boolean;
-  deployment_definition: API.DeploymentDefinition;
+  deployment_definition?: API.DeploymentDefinition;
   template_definition?: OneClickAppCustomDefinition;
   template_env?: OneClickAppEnv[];
   template_metadata?: OneClickAppMetadata[];
@@ -228,7 +228,7 @@ function mapOneClickApp(app: ApiOneClickApp): OneClickApp {
     templateEnv: [],
     templateMetadata: fallbackMetadata(),
     ...snakeToCamelDeep(app),
-    deploymentDefinition: app.deployment_definition,
+    deploymentDefinition: app.deployment_definition ?? {},
   };
 }
 
