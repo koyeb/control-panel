@@ -4,7 +4,6 @@ import { FormattedDate } from 'react-intl';
 import { container } from 'src/application/container';
 import { BadgeNew } from 'src/components/badge-new';
 import { ExternalLinkButton } from 'src/components/link';
-import { QueryGuard } from 'src/components/query-error';
 import { IconArrowUpRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { TOKENS } from 'src/tokens';
@@ -28,6 +27,7 @@ export function News() {
   const query = useQuery({
     queryKey: ['news'],
     refetchInterval: false,
+    meta: { showError: false },
     async queryFn(): Promise<News[]> {
       const websiteUrl = getConfig('websiteUrl');
       const url = new URL('/api/news.json', websiteUrl);
@@ -53,6 +53,10 @@ export function News() {
     }
   };
 
+  if (!query.isSuccess) {
+    return null;
+  }
+
   return (
     <div className="hidden gap-3 xl:col">
       <div className="row items-center justify-between gap-4">
@@ -64,15 +68,11 @@ export function News() {
         </button>
       </div>
 
-      <QueryGuard query={query}>
-        {(news) => (
-          <ul className="col gap-2">
-            {news.map((news) => (
-              <NewsItem key={news.id} news={news} />
-            ))}
-          </ul>
-        )}
-      </QueryGuard>
+      <ul className="col gap-2">
+        {query.data.map((news) => (
+          <NewsItem key={news.id} news={news} />
+        ))}
+      </ul>
     </div>
   );
 }
