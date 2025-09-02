@@ -12,9 +12,10 @@ describe('getDeployParams', () => {
 
     const params = getDeployParams(form);
 
-    expect(params.size).toEqual(3);
+    expect(params.size).toEqual(4);
     expect(params.get('type')).toEqual('git');
     expect(params.get('name')).toEqual('name');
     expect(params.get('builder')).toEqual('dockerfile');
+    expect(params.get('regions')).toEqual('fra');
   });
 });

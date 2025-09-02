@@ -123,7 +123,7 @@ export function getDeployParams(form: ServiceForm, removeDefaultValues = true): 
     const keysToDelete = new Set<string>();
 
     for (const key of params.keys()) {
-      if (key === 'type') {
+      if (key === 'type' || key === 'regions') {
         continue;
       }
 
