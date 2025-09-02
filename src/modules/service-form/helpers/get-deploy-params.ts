@@ -87,7 +87,11 @@ export function getDeployParams(form: ServiceForm, removeDefaultValues = true): 
   }
 
   if (form.scaling.min === 0) {
-    set(`autoscaling_sleep_idle_delay`, form.scaling.scaleToZero.idlePeriod);
+    set('autoscaling_sleep_idle_delay', form.scaling.scaleToZero.idlePeriod);
+
+    if (form.scaling.scaleToZero.lightSleepEnabled) {
+      set('autoscaling_deep_sleep_delay', form.scaling.scaleToZero.lightToDeepPeriod);
+    }
   }
 
   for (const { name, value } of form.environmentVariables) {

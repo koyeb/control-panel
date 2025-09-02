@@ -45,6 +45,7 @@ export function parseDeployParams(
   builder.autoscaling_concurrent_requests = params.get('autoscaling_concurrent_requests');
   builder.autoscaling_requests_response_time = params.get('autoscaling_requests_response_time');
   builder.autoscaling_sleep_idle_delay = params.get('autoscaling_sleep_idle_delay');
+  builder.autoscaling_deep_sleep_delay = params.get('autoscaling_deep_sleep_delay');
   builder.volumes = params.entries();
   builder.healthChecks = params.entries();
 
@@ -282,6 +283,14 @@ class ServiceFormBuilder {
     if (value !== null) {
       this.set('scaling', {
         scaleToZero: { idlePeriod: Number(value) },
+      });
+    }
+  }
+
+  set autoscaling_deep_sleep_delay(value: string | null) {
+    if (value !== null) {
+      this.set('scaling', {
+        scaleToZero: { lightSleepEnabled: true, lightToDeepPeriod: Number(value) },
       });
     }
   }

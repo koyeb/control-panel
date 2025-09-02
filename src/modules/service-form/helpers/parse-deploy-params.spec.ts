@@ -295,6 +295,15 @@ describe('parseDeployParams', () => {
       });
     });
 
+    it('autoscaling_deep_sleep_delay', () => {
+      test.params.set('autoscaling_deep_sleep_delay', '1');
+
+      expect(test.getValues()).toHaveProperty('scaling.scaleToZero', {
+        lightSleepEnabled: true,
+        lightToDeepPeriod: 1,
+      });
+    });
+
     it('autoscaling_average_cpu', () => {
       test.params.set('autoscaling_average_cpu', '1');
 
