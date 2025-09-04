@@ -1,4 +1,4 @@
-import { identity } from 'lodash-es';
+import identity from 'lodash-es/identity';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useRegions } from 'src/api/hooks/catalog';

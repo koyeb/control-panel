@@ -67,3 +67,7 @@ export function snakeToCamelCase<Str extends string>(str: Str): SnakeToCamelCase
 export function isUuid(str: string): boolean {
   return z.string().uuid().safeParse(str).success;
 }
+
+export function normalizeDiacriticCharacters(string: string) {
+  return string.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+}

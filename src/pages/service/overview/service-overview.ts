@@ -8,6 +8,7 @@ import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
 import { getApiQueryKey } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
+import { useDialogContext } from 'src/application/dialog-context';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -269,8 +270,10 @@ function useShortcuts(
   const selectPrevious = () => setSelectedIndex(selectedIndex - 1);
   const selectNext = () => setSelectedIndex(selectedIndex + 1);
 
-  const canSelectPrevious = selectedIndex > 0;
-  const canSelectNext = selectedIndex < totalDeployments - 1;
+  const { dialogId } = useDialogContext();
+
+  const canSelectPrevious = dialogId === undefined && selectedIndex > 0;
+  const canSelectNext = dialogId === undefined && selectedIndex < totalDeployments - 1;
 
   useShortcut(['j'], canSelectNext ? selectNext : undefined);
   useShortcut(['ArrowDown'], canSelectNext ? selectNext : undefined);

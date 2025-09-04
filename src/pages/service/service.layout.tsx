@@ -1,27 +1,21 @@
 import { TabButtons } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
-import { useCallback, useEffect } from 'react';
 
 import { ApiError } from 'src/api/api-errors';
 import { useAppQuery } from 'src/api/hooks/app';
 import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
 import { App, Deployment, Service } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
-import { notify } from 'src/application/notify';
 import { getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
-import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink, LinkButton, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { useNavigate, useRouteParam } from 'src/hooks/router';
+import { useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { IconArrowLeft } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { PaletteItem, useCommandPaletteContext } from 'src/modules/command-palette/command-palette.provider';
-import { inArray } from 'src/utils/arrays';
+import { useCreateServiceCommands } from 'src/modules/command-palette';
 
 import { DeploymentThrottledAlert } from './deployment-throttled-alert';
 import { InstanceAvailabilityAlerts } from './instance-availability-alerts';
@@ -112,114 +106,7 @@ function ServiceNotFound() {
 }
 
 function RegisterServiceCommands({ service }: { service: Service }) {
-  const { defaultItems, mutationEffects } = useCommandPaletteContext();
-  const openDialog = Dialog.useOpen();
-  const invalidate = useInvalidateApiQuery();
-  const navigate = useNavigate();
-
-  const invalidateService = useCallback(async () => {
-    await invalidate('listServices');
-    await invalidate('getService', { path: { id: service.id } });
-  }, [invalidate, service.id]);
-
-  const { mutate: redeploy } = useMutation({
-    ...useApiMutationFn('redeployService', { path: { id: service.id }, body: {} }),
-    ...mutationEffects,
-    onSuccess: async () => {
-      await invalidateService();
-      notify.success(`Service ${service.name} is being redeployed`);
-    },
-  });
-
-  const { mutate: pause } = useMutation({
-    ...useApiMutationFn('pauseService', { path: { id: service.id } }),
-    ...mutationEffects,
-    onSuccess: async () => {
-      await invalidateService();
-      notify.success(`Service ${service.name} is being paused`);
-    },
-  });
-
-  useEffect(() => {
-    const serviceId = service.id;
-    const name = service.name;
-
-    const commands: PaletteItem[] = [
-      {
-        label: `Go to dashboard`,
-        description: `Navigate to the ${name} service's dashboard page`,
-        keywords: ['overview', 'dashboard', 'deployments', 'logs', 'build', 'runtime'],
-        execute: () => navigate({ to: '/services/$serviceId', params: { serviceId } }),
-      },
-
-      {
-        label: `Go to metrics`,
-        description: `Navigate to the ${name} service's metrics page`,
-        keywords: ['metrics', 'monitoring', 'graphs', 'charts'],
-        execute: () => navigate({ to: '/services/$serviceId/metrics', params: { serviceId } }),
-      },
-
-      {
-        label: `Go to console`,
-        description: `Navigate to the ${name} service's console page`,
-        keywords: ['console', 'shell', 'terminal', 'command', 'execute', 'run', 'ssh'],
-        execute: () => navigate({ to: '/services/$serviceId/console', params: { serviceId } }),
-      },
-
-      {
-        label: `Go to settings`,
-        description: `Navigate to the ${name} service's settings page`,
-        keywords: ['settings', 'update'],
-        execute: () => navigate({ to: '/services/$serviceId/settings', params: { serviceId } }),
-      },
-
-      {
-        label: `Redeploy service`,
-        description: `Redeploy ${name}'s latest deployment`,
-        keywords: ['redeploy', 'restart'],
-        weight: 4,
-        execute: redeploy,
-      },
-    ];
-
-    commands.forEach((command) => defaultItems.add(command));
-
-    return () => {
-      commands.forEach((command) => defaultItems.delete(command));
-    };
-  }, [defaultItems, navigate, service.id, service.name, redeploy]);
-
-  useEffect(() => {
-    const name = service.name;
-    let command: PaletteItem | undefined = undefined;
-
-    if (service.status === 'PAUSED') {
-      command = {
-        label: `Resume service ${name}`,
-        description: `Resume ${name}`,
-        keywords: ['resume', 'start'],
-        weight: 4,
-        execute: () => openDialog('ResumeService', { resourceId: service.id }),
-      };
-    } else if (inArray(service.status, ['HEALTHY', 'DEGRADED'])) {
-      command = {
-        label: `Pause service ${name}`,
-        description: `Pause ${name}`,
-        keywords: ['pause', 'stop'],
-        weight: 4,
-        execute: pause,
-      };
-    }
-
-    if (command !== undefined) {
-      defaultItems.add(command);
-
-      return () => {
-        defaultItems.delete(command);
-      };
-    }
-  }, [defaultItems, service, pause, openDialog]);
-
+  useCreateServiceCommands(service);
   return null;
 }
 

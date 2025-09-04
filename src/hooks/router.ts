@@ -137,7 +137,9 @@ export function useOnRouteStateCreate(cb: () => void) {
   useEffect(() => {
     if (historyState.create) {
       navigate({ replace: true, state: { create: false } });
-      cbMemo();
+
+      // wait for the command palette to be closed
+      setTimeout(cbMemo, 0);
     }
   }, [historyState, navigate, cbMemo]);
 }

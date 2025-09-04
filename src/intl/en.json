@@ -359,6 +359,121 @@
         "mustBeDeactivated": "The organization must first be deactivated before it can be deleted"
       }
     },
+    "commandPalette": {
+      "placeholder": "Type a command...",
+      "noResults": "No results for \"{search}\"",
+      "footer": {
+        "escape": "Esc",
+        "up": "Up",
+        "down": "Down",
+        "left": "Left",
+        "right": "Right"
+      },
+      "contexts": {
+        "learn": "Learn",
+        "organization": "Organization",
+        "services": "Services",
+        "settings": "Settings"
+      },
+      "commands": {
+        "learn:community": {
+          "label": "Go to Koyeb community platform",
+          "description": "Open community.koyeb.com"
+        },
+        "learn:koyeb.com": {
+          "label": "Go to Koyeb website",
+          "description": "Open www.koyeb.com"
+        },
+        "organization:switch": {
+          "label": "Switch organization",
+          "description": "Access resources within another organization",
+          "placeholder": "Select an organizaton"
+        },
+        "organization:create": {
+          "label": "Create organization",
+          "description": "Create a new organization"
+        },
+        "services:create": {
+          "label": "Create service",
+          "description": "Create a new service",
+          "placeholders": {
+            "serviceType": "Select service type",
+            "deploymentSource": "Select deployment source"
+          },
+          "options": {
+            "web": {
+              "label": "Web",
+              "description": "Can be accessed accessible from the internet or the private network"
+            },
+            "private": {
+              "label": "Private",
+              "description": "Only exposed to your other services via the internal private network"
+            },
+            "worker": {
+              "label": "Worker",
+              "description": "For long running processes like background processing and task execution"
+            },
+            "database": {
+              "label": "Database",
+              "description": "A fully managed, serverless Postgres database"
+            },
+            "github": {
+              "label": "GitHub",
+              "description": "Connect, build and deploy your code from GitHub repository"
+            },
+            "docker": {
+              "label": "Docker",
+              "description": "Deployer docker images from any public or private registries"
+            }
+          }
+        },
+        "redeployService": {
+          "label": "Redeploy service",
+          "description": "Redeploy {name}'s latest deployment",
+          "success": "Service {name} is being redeployed"
+        },
+        "pauseService": {
+          "label": "Pause service",
+          "description": "Pause service {name}",
+          "success": "Service {name} is being paused"
+        },
+        "resumeService": {
+          "label": "Resume service",
+          "description": "Resume service {name}"
+        },
+        "copyPublicUrl": {
+          "label": "Copy public URL",
+          "description": "Copy service {name}'s public URL to clipboard"
+        },
+        "copyPrivateDomain": {
+          "label": "Copy private domain",
+          "description": "Copy service {name}'s private (internal) domain to clipboard"
+        },
+        "copyDeploymentId": {
+          "label": "Copy deployment ID",
+          "description": "Copy the selected deployment's identifier"
+        },
+        "listDeployments": {
+          "label": "View deployments",
+          "description": "List the last deployments of service {name}",
+          "placeholder": "Select a deployment",
+          "deploymentLabel": "{deploymentId} ({date})",
+          "trigger": {
+            "initial": "This is your first deployment",
+            "resume": "Triggered because service has been resumed",
+            "redeploy": "Triggered because service has been updated or redeployed"
+          }
+        },
+        "settings:changeThemeMode": {
+          "label": "Change theme mode",
+          "description": "Change the theme mode of the interface"
+        },
+        "settings:logout": {
+          "label": "Log out",
+          "description": "Sign out from the Koyeb control panel"
+        }
+      }
+    },
     "createServiceDialog": {
       "searchPlaceholder": "Search",
       "shortcuts": {

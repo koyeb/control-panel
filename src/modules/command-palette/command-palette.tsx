@@ -1,30 +1,64 @@
-import { Spinner } from '@koyeb/design-system';
 import { useCombobox } from 'downshift';
-import { useEffect, useMemo } from 'react';
 
-import { stopPropagation } from 'src/application/dom-events';
 import { Dialog } from 'src/components/dialog';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { useMount } from 'src/hooks/lifecycle';
 import { useShortcut } from 'src/hooks/shortcut';
-import { IconChevronRight } from 'src/icons';
+import { IconSearch } from 'src/icons';
+import { createTranslate } from 'src/intl/translate';
 
-import { PaletteItem, useCommandPaletteContext } from './command-palette.provider';
-import { useRegisterDefaultItems } from './register-default-commands';
+import { CommandPaletteContext, useCommandPaletteContext } from './command-palette-context';
+import { useLearnCommands } from './commands/learn';
+import { useOrganizationCommands } from './commands/organization';
+import { useCreateServicesCommands } from './commands/services';
+import { useSettingsCommands } from './commands/settings';
+import { Footer } from './components/footer';
+import { OptionsList } from './components/options-list';
+import { SearchInput } from './components/search-input';
+import { useCommandPalette } from './use-command-palette';
 
-export function CommandPalette() {
-  const openDialog = Dialog.useOpen();
+const T = createTranslate('modules.commandPalette');
+
+export function CommandPaletteProvider({ children }: { children: React.ReactNode }) {
   const newCommandPalette = useFeatureFlag('new-command-palette');
+
+  const openDialog = Dialog.useOpen();
+  const closeDialog = Dialog.useClose();
+
+  const palette = useCommandPalette(closeDialog);
 
   useShortcut(['meta', 'k'], newCommandPalette ? () => openDialog('CommandPalette') : undefined);
 
-  useRegisterDefaultItems();
+  return (
+    <CommandPaletteContext value={palette}>
+      {children}
+      <CommandPaletteDialog />
+    </CommandPaletteContext>
+  );
+}
+
+function CommandPaletteDialog() {
+  const t = T.useTranslate();
+
+  const palette = useCommandPaletteContext();
+  const registerCommonCommands = useRegisterCommonCommands();
+
+  useMount(() => {
+    palette.setIcon(IconSearch);
+    palette.setPlaceholder(t('placeholder'));
+
+    registerCommonCommands();
+
+    return () => {
+      palette.clear();
+    };
+  });
 
   return (
-    <Dialog id="CommandPalette" overlayClassName="col !justify-start">
+    <Dialog id="CommandPalette" overlayClassName="col !justify-start" onClosed={() => palette.reset()}>
       {(props) => (
         <div
           {...props}
-          onKeyDown={stopPropagation}
           className="relative top-1/4 w-full max-w-3xl overflow-hidden rounded-lg bg-popover shadow-xl"
         >
           <CommandPaletteContent />
@@ -35,43 +69,50 @@ export function CommandPalette() {
 }
 
 function CommandPaletteContent() {
-  const { defaultItems, items, setItems, inputValue, setInputValue, loading } = useCommandPaletteContext();
-  const closeDialog = Dialog.useClose();
+  const combobox = useCommandPaletteCombobox();
 
-  const filteredItems = useMemo(() => {
-    return (items ?? Array.from(defaultItems))
-      .filter(filter(inputValue))
-      .sort((a, b) => (b.weight ?? 0) - (a.weight ?? 0));
-  }, [items, defaultItems, inputValue]);
+  return (
+    <div>
+      <SearchInput combobox={combobox} />
+      <OptionsList combobox={combobox} />
+      <Footer />
+    </div>
+  );
+}
 
-  useEffect(() => {
-    return () => {
-      setItems(undefined);
-      setInputValue('');
-    };
-  }, [setItems, setInputValue]);
+function useCommandPaletteCombobox() {
+  const palette = useCommandPaletteContext();
 
-  const combobox = useCombobox({
+  return useCombobox({
     isOpen: true,
-    items: filteredItems,
+    items: palette.options,
     selectedItem: null,
-    defaultHighlightedIndex: 0,
+
     itemToString(item) {
       return item?.label ?? '';
     },
-    inputValue,
-    onInputValueChange({ inputValue }) {
-      setInputValue(inputValue);
-    },
-    onSelectedItemChange({ selectedItem }) {
-      selectedItem?.execute();
 
-      if (!selectedItem?.keepOpen) {
-        closeDialog();
+    highlightedIndex: palette.highlightedIndex,
+    onHighlightedIndexChange({ highlightedIndex }) {
+      palette.setHighlightedIndex(highlightedIndex);
+    },
+
+    inputValue: palette.input.value,
+    onInputValueChange({ inputValue }) {
+      palette.setInputValue(inputValue);
+    },
+
+    onSelectedItemChange({ selectedItem }) {
+      if (selectedItem) {
+        void palette.execute(selectedItem);
       }
     },
+
     stateReducer(state, { type, changes }) {
       switch (type) {
+        case useCombobox.stateChangeTypes.InputChange:
+          return { ...changes, highlightedIndex: 0 };
+
         case useCombobox.stateChangeTypes.ItemClick:
         case useCombobox.stateChangeTypes.InputKeyDownEnter:
           return { ...changes, inputValue: state.inputValue, highlightedIndex: state.highlightedIndex };
@@ -81,76 +122,18 @@ function CommandPaletteContent() {
       }
     },
   });
-
-  const { setHighlightedIndex } = combobox;
-
-  useEffect(() => {
-    setHighlightedIndex(0);
-  }, [filteredItems, setHighlightedIndex]);
-
-  return (
-    <>
-      <div className="row items-center gap-2 border-b px-2">
-        <IconChevronRight className="size-4 text-dim" />
-
-        <input
-          autoFocus
-          type="search"
-          placeholder="Type a command..."
-          className="w-full bg-transparent py-2 outline-none"
-          {...combobox.getInputProps({
-            onKeyDown: (event) => {
-              if (event.key === 'Escape') {
-                if (combobox.inputValue === '') {
-                  closeDialog();
-                } else {
-                  setInputValue('');
-                }
-              }
-
-              if (event.key === 'Backspace' && combobox.inputValue === '') {
-                setItems(undefined);
-              }
-            },
-          })}
-        />
-
-        {loading && <Spinner className="size-4 text-dim" />}
-      </div>
-
-      <ul
-        {...combobox.getMenuProps()}
-        className="max-h-96 scrollbar-thin scroll-my-2 overflow-auto p-2 scrollbar-green"
-      >
-        {filteredItems.map((item) => (
-          <li
-            key={item.label}
-            className="col cursor-pointer gap-0.5 rounded p-1 aria-selected:bg-muted/50"
-            {...combobox.getItemProps({ item })}
-          >
-            {item.render?.()}
-
-            {!item.render && (
-              <>
-                <div>{item.label}</div>
-                {item.description && <div className="text-xs text-dim">{item.description}</div>}
-              </>
-            )}
-          </li>
-        ))}
-
-        {filteredItems.length === 0 && (
-          <li className="col min-h-12 items-center justify-center text-dim">No results</li>
-        )}
-      </ul>
-    </>
-  );
 }
 
-const filter = (inputValue: string) => (command: PaletteItem) => {
-  if (inputValue === '') {
-    return true;
-  }
+function useRegisterCommonCommands() {
+  const createService = useCreateServicesCommands();
+  const organization = useOrganizationCommands();
+  const settings = useSettingsCommands();
+  const learn = useLearnCommands();
 
-  return command.keywords.some((keyword) => keyword.includes(inputValue.toLowerCase()));
-};
+  return () => {
+    createService();
+    organization();
+    settings();
+    learn();
+  };
+}

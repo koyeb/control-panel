@@ -7,6 +7,10 @@ import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
 import { IconChevronLeft, IconChevronsLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import {
+  useCreateServiceUrlsCommands,
+  useDeploymentListCommand,
+} from 'src/modules/command-palette/commands/service';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';
 import { DeploymentLogs } from 'src/modules/deployment/deployment-logs/deployment-logs';
@@ -65,6 +69,9 @@ function SelectedDeployment({ className, ...props }: ServiceOverview & { classNa
   const { app, service, instances, selectedDeployment } = props;
 
   assert(selectedDeployment !== undefined);
+
+  useCreateServiceUrlsCommands(app, service, selectedDeployment);
+  useDeploymentListCommand(service);
 
   return (
     <section className="col min-w-0 flex-1 gap-8">

@@ -11,6 +11,7 @@ import {
   InstanceStatus,
   Port,
   Service,
+  ServiceStatus,
 } from 'src/api/model';
 import { ValidateLinkOptions } from 'src/components/link';
 import { inArray } from 'src/utils/arrays';
@@ -102,6 +103,17 @@ export function isUpcomingDeployment({ status }: Deployment) {
 
 export function hasBuild(deployment?: Deployment) {
   return isComputeDeployment(deployment) && inArray(deployment.definition.source.type, ['git', 'archive']);
+}
+
+export function isServiceRunning({ status }: Service) {
+  return inArray<ServiceStatus>(status, [
+    'STARTING',
+    'HEALTHY',
+    'DEGRADED',
+    'UNHEALTHY',
+    'PAUSING',
+    'RESUMING',
+  ]);
 }
 
 export function isDeploymentRunning({ status }: Deployment) {

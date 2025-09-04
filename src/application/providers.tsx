@@ -4,7 +4,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { PersistQueryClientProvider as BasePersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { Component, Suspense, useMemo } from 'react';
 
-import { CommandPaletteProvider } from 'src/modules/command-palette/command-palette.provider';
 import { TOKENS } from 'src/tokens';
 
 import { ErrorBoundary } from '../components/error-boundary/error-boundary';
@@ -30,11 +29,9 @@ export function Providers({ children }: ProvidersProps) {
             <PersistQueryClientProvider>
               <PostHogProvider>
                 <DialogProvider>
-                  <CommandPaletteProvider>
-                    <ReactQueryDevtools />
-                    <NotificationContainer />
-                    <ErrorBoundary>{children}</ErrorBoundary>
-                  </CommandPaletteProvider>
+                  <ReactQueryDevtools />
+                  <NotificationContainer />
+                  <ErrorBoundary>{children}</ErrorBoundary>
                 </DialogProvider>
               </PostHogProvider>
             </PersistQueryClientProvider>

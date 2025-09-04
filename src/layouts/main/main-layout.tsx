@@ -24,7 +24,7 @@ import { useLocation } from 'src/hooks/router';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus, IconX } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { CommandPalette } from 'src/modules/command-palette/command-palette';
+import { CommandPaletteProvider } from 'src/modules/command-palette';
 import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
 import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
@@ -60,9 +60,8 @@ export function MainLayout({ children }: LayoutProps) {
   }
 
   return (
-    <>
+    <CommandPaletteProvider>
       <DocumentTitle />
-      <CommandPalette />
 
       <CreateServiceDialog />
       <FeatureFlagsDialog />
@@ -78,7 +77,7 @@ export function MainLayout({ children }: LayoutProps) {
         context={pageContext.enabled ? <PageContext {...pageContext} /> : null}
         contextExpanded={pageContext.expanded}
       />
-    </>
+    </CommandPaletteProvider>
   );
 }
 
