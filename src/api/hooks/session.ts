@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { useSetToken } from 'src/application/authentication';
 import { ValidateLinkOptions } from 'src/components/link';
@@ -84,11 +85,12 @@ export function useUserOrganizationMemberships() {
 }
 
 export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?: boolean) {
+  const authKit = useAuth();
   const userQuery = useUserQuery();
   const setToken = useSetToken();
   const navigate = useNavigate();
 
-  return useMutation({
+  const apiLogout = useMutation({
     ...useApiMutationFn('logout', {}),
     meta: { showError: !isAccountLockedError(userQuery.error) },
     onSettled: () => {
@@ -96,4 +98,18 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?:
       navigate(urlToLinkOptions(redirect));
     },
   });
+
+  const workOsLogout = useMutation({
+    mutationFn: async () => authKit.signOut(),
+    onSettled: () => {
+      void setToken(null, session);
+      navigate(urlToLinkOptions(redirect));
+    },
+  });
+
+  if (authKit.getUser() !== null) {
+    return workOsLogout;
+  } else {
+    return apiLogout;
+  }
 }
