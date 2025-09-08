@@ -12,7 +12,7 @@ export type CodeEditor = ReturnType<typeof useCodeEditor>;
 
 export function useCodeEditor(filepath: string) {
   const filename = last(filepath.split('/'));
-  const extension = last((filename ?? '')?.split('.'));
+  const extension = last((filename ?? '').split('.'));
 
   const [selectedLanguage, setSelectedLanguage] = useState(getLanguage('txt'));
   const [filteredLanguages, setFilteredLanguages] = useState<Language[]>(languageItems);
