@@ -45,6 +45,10 @@
       overflow: visible !important;
     }
 
+    table th {
+      white-space: nowrap;
+    }
+
     .hljs {
       padding: 0 !important;
       background: none !important;
