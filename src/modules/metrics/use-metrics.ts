@@ -40,23 +40,26 @@ type UseMetricsOptions = {
 export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }: UseMetricsOptions) {
   return useQueries({
     queries: metrics.map((name) => {
-      const step = timeFrameToStep[timeFrame];
-      const duration = timeFrameToDuration[timeFrame];
-      const start = sub(new Date(), duration).toISOString();
-
       const query = {
+        name,
         service_id: serviceId,
         instance_id: instanceId,
-        name,
-        start,
-        step,
+        step: timeFrameToStep[timeFrame],
+        time_frame: timeFrame,
       };
 
       return {
         meta: { showError: false },
         refetchInterval: 60 * 1000,
         queryKey: getApiQueryKey('getServiceMetrics', { query }),
-        queryFn: () => getApi().getServiceMetrics({ query }),
+        queryFn: () => {
+          const duration = timeFrameToDuration[timeFrame];
+          const start = sub(new Date(), duration).toISOString();
+
+          return getApi().getServiceMetrics({
+            query: { ...query, start },
+          });
+        },
         select(data: API.GetMetricsReply) {
           return data.metrics!.map(({ labels, samples }) => ({
             labels,
