@@ -49,15 +49,15 @@ jobs:
         env:
           ENVIRONMENT: ${{ github.ref_name }}
           APP_VERSION: ${{ github.sha }}
-          API_URL:
-          WEBSITE_URL: ${{ secrets.WEBSITE_URL }}
-          PAGE_CONTEXT_BASE_URL: ${{ secrets.PAGE_CONTEXT_BASE_URL }}
-          RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}
-          POSTHOG_API_HOST: ${{ secrets.POSTHOG_API_HOST }}
-          POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
-          STRIPE_PUBLIC_KEY: ${{ secrets.STRIPE_PUBLIC_KEY }}
-          MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}
-          INTERCOM_APP_ID: ${{ secrets.INTERCOM_APP_ID }}
+          API_URL: ${{ vars.API_URL }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+          PAGE_CONTEXT_BASE_URL: ${{ vars.PAGE_CONTEXT_BASE_URL }}
+          RECAPTCHA_CLIENT_KEY: ${{ vars.RECAPTCHA_CLIENT_KEY }}
+          POSTHOG_API_HOST: ${{ vars.POSTHOG_API_HOST }}
+          POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
+          STRIPE_PUBLIC_KEY: ${{ vars.STRIPE_PUBLIC_KEY }}
+          MAPBOX_TOKEN: ${{ vars.MAPBOX_TOKEN }}
+          INTERCOM_APP_ID: ${{ vars.INTERCOM_APP_ID }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
 
       - name: Push docker image
