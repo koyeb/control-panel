@@ -62,7 +62,7 @@ export function GithubOauthCallbackPage() {
       const state = searchParams.get('state');
 
       const statePayload = state ? schema.parse(jwtDecode(state)) : {};
-      const { metadata = '/', organization_id = undefined, action } = statePayload;
+      const { metadata = '/', organization_id = undefined } = statePayload;
       const redirect = new URL(metadata, window.location.origin);
 
       // authentication
@@ -76,7 +76,6 @@ export function GithubOauthCallbackPage() {
           to: redirect.pathname,
           search: Object.fromEntries(redirect.searchParams),
           replace: true,
-          state: { createOrganization: action === 'signup' },
         });
 
         return;
