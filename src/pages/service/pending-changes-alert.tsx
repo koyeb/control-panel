@@ -80,16 +80,16 @@ function useLatestNonStashedDeployment(service: Service) {
   const queryClient = useQueryClient();
 
   // we can't useQuery because it's already used in an infinite query
-  const result = queryClient.getQueryData(
+  const result: { pages: Array<{ deployments: Deployment[] }> } | undefined = queryClient.getQueryData(
     getApiQueryKey('listDeployments', {
       query: {
         service_id: service.id,
         statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
       },
     }),
-  ) as { pages: Array<{ deployments: Deployment[] }> };
+  );
 
-  return result.pages[0]?.deployments[0];
+  return result?.pages[0]?.deployments[0];
 }
 
 function useDiscardChanges(service: Service) {
