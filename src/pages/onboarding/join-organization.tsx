@@ -1,4 +1,4 @@
-import { InfoTooltip, Spinner } from '@koyeb/design-system';
+import { InfoTooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -12,8 +12,7 @@ import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError, QueryGuard } from 'src/components/query-error';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useMount } from 'src/hooks/lifecycle';
-import { useHistoryState, useNavigate } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
@@ -58,8 +57,6 @@ export function JoinOrganization() {
 }
 
 function CreateOrganization() {
-  const state = useHistoryState();
-
   const setToken = useSetToken();
   const navigate = useNavigate();
 
@@ -69,16 +66,6 @@ function CreateOrganization() {
     },
     resolver: useZodResolver(schema),
   });
-
-  useMount(() => {
-    if (state.createOrganization) {
-      mutation.mutate(form.getValues());
-    }
-  });
-
-  const onError = useFormErrorHandler(form, (error) => ({
-    organizationName: error.name,
-  }));
 
   const mutation = useMutation({
     async mutationFn({ organizationName }: FormValues<typeof form>) {
@@ -99,23 +86,10 @@ function CreateOrganization() {
       await setToken(token);
       await navigate({ to: '/' });
     },
-    async onError(error) {
-      if (state.createOrganization) {
-        await navigate({ to: '/', state: {} });
-      } else {
-        onError(error);
-      }
-    },
+    onError: useFormErrorHandler(form, (error) => ({
+      organizationName: error.name,
+    })),
   });
-
-  if (state.createOrganization) {
-    return (
-      <section className="row flex-1 items-center justify-center gap-2">
-        <Spinner className="size-5" />
-        <T id="creatingOrganization" />
-      </section>
-    );
-  }
 
   return (
     <section className="col flex-1 justify-center gap-8">

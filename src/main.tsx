@@ -36,7 +36,6 @@ declare module '@tanstack/react-router' {
 
   interface HistoryState {
     githubAppInstallationRequested?: boolean;
-    createOrganization?: boolean;
     create?: boolean;
   }
 }
