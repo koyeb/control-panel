@@ -69,7 +69,6 @@ export function MainLayout({ children }: LayoutProps) {
 
       <Layout
         banner={banner ? { session: <SessionTokenBanner />, trial: <TrialBanner /> }[banner] : null}
-        hasBanner={banner !== undefined}
         header={<AppBreadcrumbs />}
         menu={<Menu />}
         menuCollapsed={<Menu collapsed />}
@@ -240,7 +239,7 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
       <button
         onClick={() => setExpanded(!expanded)}
         className={clsx(
-          'absolute right-full col h-full justify-center bg-muted/50 transition-opacity',
+          'absolute right-full hidden h-full justify-center bg-muted/50 transition-opacity sm:col',
           !expanded && 'opacity-0 hover:opacity-100',
         )}
       >

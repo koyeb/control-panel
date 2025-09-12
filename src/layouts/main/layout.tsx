@@ -8,17 +8,22 @@ import {
   useTransitionStatus,
   useTransitionStyles,
 } from '@floating-ui/react';
-import { Button, useBreakpoint } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
+import { cva } from 'class-variance-authority';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer } from 'react';
 
-import { useUpdateEffect } from 'src/hooks/lifecycle';
+import { usePureFunction, useUpdateEffect } from 'src/hooks/lifecycle';
 import { useLocation } from 'src/hooks/router';
 import { IconMenu } from 'src/icons';
 
+const breakpoints = {
+  tablet: '40rem', // 640px
+  desktop: '80rem', // 1280px
+};
+
 type LayoutProps = {
   banner: React.ReactNode;
-  hasBanner: boolean;
   header: React.ReactNode;
   menu: React.ReactNode;
   menuCollapsed: React.ReactNode;
@@ -27,105 +32,92 @@ type LayoutProps = {
   contextExpanded: boolean;
 };
 
-export function Layout(props: LayoutProps) {
-  const isMobile = !useBreakpoint('sm');
+export function Layout({ banner, header, menu, menuCollapsed, main, context, contextExpanded }: LayoutProps) {
+  const [state, dispatch] = useLayoutState();
+  const location = useLocation();
 
-  if (isMobile) {
-    return <LayoutMobile {...props} />;
-  }
+  useMediaQuery(`(width >= ${breakpoints.tablet})`, () => {
+    dispatch({ type: 'resized', size: getCurrentSize() });
+  });
 
-  return <LayoutTablet {...props} />;
-}
+  useMediaQuery(`(width >= ${breakpoints.desktop})`, () => {
+    dispatch({ type: 'resized', size: getCurrentSize() });
+  });
 
-function LayoutTablet({
-  banner,
-  hasBanner,
-  header,
-  menu,
-  menuCollapsed,
-  main,
-  context,
-  contextExpanded,
-}: LayoutProps) {
-  const [state, setState] = useState<'opened' | 'collapsed'>('collapsed');
-  const isDesktop = useBreakpoint('xl');
-
-  useEffect(() => {
-    if (isDesktop) {
-      setState('opened');
-    } else {
-      setState('collapsed');
-    }
-  }, [isDesktop]);
+  useUpdateEffect(() => {
+    dispatch({ type: 'menu:closed' });
+    dispatch({ type: 'sidebar:closed' });
+  }, [location]);
 
   return (
     <>
       {banner && <div className="fixed inset-x-0 top-0 z-30 h-8 bg-neutral">{banner}</div>}
 
       <div
-        onMouseEnter={() => !isDesktop && setState('opened')}
-        onMouseLeave={() => !isDesktop && setState('collapsed')}
-        className={clsx('fixed z-20 h-screen w-16 overflow-x-visible', hasBanner && 'pt-8')}
+        onMouseEnter={() => dispatch({ type: 'sidebar:opened' })}
+        onMouseLeave={() => dispatch({ type: 'sidebar:closed' })}
+        className={clsx('fixed z-20 hidden h-screen w-16 overflow-x-visible sm:block', banner && 'pt-8')}
       >
-        <Aside className={clsx({ 'w-full': state === 'collapsed', 'w-64': state === 'opened' })}>
-          {state === 'opened' && menu}
-          {state === 'collapsed' && menuCollapsed}
-        </Aside>
+        <aside className={sidebarClass({ state: state.sidebar })}>
+          {state.sidebar === 'opened' && menu}
+          {state.sidebar === 'collapsed' && menuCollapsed}
+        </aside>
       </div>
 
-      <div className={clsx('pl-16 xl:pl-64', hasBanner && 'pt-8', contextExpanded && '3xl:pr-[32rem]')}>
+      <div className={clsx('sm:pl-16 xl:pl-64', banner && 'pt-8', contextExpanded && 'min-[120rem]:pr-128')}>
         <div className="@container/main mx-auto max-w-[75rem]">
-          <header className="px-4">{header}</header>
+          <header
+            className={clsx(
+              'px-2 max-sm:z-10 sm:px-4',
+              'max-sm:bg-neutral max-sm:shadow-sm',
+              'max-sm:row max-sm:items-center max-sm:gap-1',
+              'max-sm:sticky max-sm:top-0',
+              banner && 'max-sm:top-8',
+            )}
+          >
+            <Button
+              size={1}
+              color="gray"
+              variant="ghost"
+              onClick={() => dispatch({ type: 'menu:opened' })}
+              className="!px-1 sm:hidden"
+            >
+              <IconMenu className="size-5 text-dim" />
+            </Button>
+
+            {header}
+          </header>
+
           {main}
         </div>
       </div>
 
-      <Context context={context} expanded={contextExpanded} banner={Boolean(banner)} />
-    </>
-  );
-}
-
-function LayoutMobile({ banner, header, menu, main }: LayoutProps) {
-  const [state, setState] = useState<'opened' | 'closed'>('closed');
-  const location = useLocation();
-
-  useUpdateEffect(() => {
-    setState('closed');
-  }, [location]);
-
-  return (
-    <>
-      <header className="sticky top-0 z-10 row items-center gap-1 border-b bg-neutral px-2 shadow-sm">
-        <Button size={1} color="gray" variant="ghost" onClick={() => setState('opened')} className="!px-1">
-          <IconMenu className="size-5 text-dim" />
-        </Button>
-
-        <div className="flex-1 overflow-x-auto">{header}</div>
-      </header>
-
-      <MobileMenu state={state} setState={setState}>
+      <MobileMenu
+        state={state.menu}
+        onOpen={() => dispatch({ type: 'menu:opened' })}
+        onClose={() => dispatch({ type: 'menu:closed' })}
+      >
         {menu}
       </MobileMenu>
 
-      {banner}
-
-      {main}
+      {context && (
+        <div className={contextClass({ expanded: contextExpanded, banner: Boolean(banner) })}>{context}</div>
+      )}
     </>
   );
 }
 
 type MobileMenuProps = {
   state: 'opened' | 'closed';
-  setState: (state: 'opened' | 'closed') => void;
+  onOpen: () => void;
+  onClose: () => void;
   children: React.ReactNode;
 };
 
-function MobileMenu({ state, setState, children }: MobileMenuProps) {
+function MobileMenu({ state, onOpen, onClose, children }: MobileMenuProps) {
   const { refs, floatingStyles, context } = useFloating({
     whileElementsMounted: autoUpdate,
-    onOpenChange: (open) => {
-      setState(open ? 'opened' : 'closed');
-    },
+    onOpenChange: (open) => (open ? onOpen() : onClose()),
     open: state === 'opened',
     strategy: 'fixed',
   });
@@ -149,42 +141,116 @@ function MobileMenu({ state, setState, children }: MobileMenuProps) {
       className={clsx('z-20 transition-all', status === 'open' && 'bg-black/25 backdrop-blur-sm')}
     >
       <FloatingPortal root={document.getElementById('root')}>
-        <Aside
+        <aside
           ref={refs.setFloating}
           style={{ ...floatingStyles, ...styles }}
-          className="z-20 w-64"
+          className={sidebarClass({ state: 'mobile' })}
           {...getFloatingProps()}
         >
           {children}
-        </Aside>
+        </aside>
       </FloatingPortal>
     </FloatingOverlay>
   );
 }
 
-function Aside({ className, ...props }: React.ComponentProps<'aside'>) {
-  return (
-    <aside
-      className={clsx('h-full overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', className)}
-      {...props}
-    />
-  );
-}
+const sidebarClass = cva('h-full overflow-y-auto border-r bg-[#fbfbfb] dark:bg-[#151518]', {
+  variants: {
+    state: {
+      collapsed: 'w-full',
+      opened: 'w-64',
+      mobile: 'z-20 w-64',
+    },
+  },
+  defaultVariants: {
+    state: 'collapsed',
+  },
+});
 
-type ContextProps = {
-  context: React.ReactNode;
-  expanded: boolean;
-  banner: boolean;
+const contextClass = cva('fixed inset-y-0 right-0 w-0', {
+  variants: {
+    expanded: { true: 'w-full max-w-lg' },
+    banner: { true: 'pt-8' },
+  },
+});
+
+type LayoutState = {
+  menu: 'closed' | 'opened';
+  sidebar: 'collapsed' | 'opened';
+  size: 'mobile' | 'tablet' | 'desktop';
 };
 
-function Context({ context, expanded, banner }: ContextProps) {
-  if (!context) {
-    return null;
+type LayoutAction =
+  | { type: 'menu:opened' }
+  | { type: 'menu:closed' }
+  | { type: 'sidebar:opened' }
+  | { type: 'sidebar:closed' }
+  | { type: 'resized'; size: 'mobile' | 'tablet' | 'desktop' };
+
+function useLayoutState() {
+  const size = getCurrentSize();
+
+  return useReducer(layoutStateReducer, {
+    menu: 'closed',
+    sidebar: size === 'desktop' ? 'opened' : 'collapsed',
+    size,
+  });
+}
+
+const layoutStateReducer: React.Reducer<LayoutState, LayoutAction> = (state, action) => {
+  if (state.size === 'mobile') {
+    if (action.type === 'menu:opened') {
+      return { ...state, menu: 'opened' };
+    }
+
+    if (action.type === 'menu:closed') {
+      return { ...state, menu: 'closed' };
+    }
   }
 
-  return (
-    <div className={clsx('fixed inset-y-0 right-0 w-0', expanded && 'w-full max-w-lg', banner && 'pt-8')}>
-      {context}
-    </div>
-  );
+  if (state.size === 'tablet') {
+    if (action.type === 'sidebar:opened') {
+      return { ...state, sidebar: 'opened' };
+    }
+
+    if (action.type === 'sidebar:closed') {
+      return { ...state, sidebar: 'collapsed' };
+    }
+  }
+
+  if (action.type === 'resized') {
+    if (action.size === 'mobile' || action.size === 'tablet') {
+      return { menu: 'closed', sidebar: 'collapsed', size: action.size };
+    }
+
+    return { menu: 'closed', sidebar: 'opened', size: action.size };
+  }
+
+  return state;
+};
+
+function getCurrentSize(): LayoutState['size'] {
+  if (window.matchMedia(`(width < ${breakpoints.tablet})`).matches) {
+    return 'mobile';
+  }
+
+  if (window.matchMedia(`(width < ${breakpoints.desktop})`).matches) {
+    return 'tablet';
+  }
+
+  return 'desktop';
+}
+
+function useMediaQuery(query: string, cb: () => void) {
+  const cbMemo = usePureFunction(cb);
+
+  useEffect(() => {
+    const matchMedia = window.matchMedia(query);
+
+    matchMedia.addEventListener('change', cbMemo);
+
+    return () => {
+      matchMedia.removeEventListener('change', cbMemo);
+    };
+  }, [query, cbMemo]);
 }
