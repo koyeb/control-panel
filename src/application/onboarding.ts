@@ -8,7 +8,7 @@ export function useOnboardingStep() {
   return getOnboardingStep(user, organization);
 }
 
-function getOnboardingStep(
+export function getOnboardingStep(
   user: User | undefined,
   organization: Organization | undefined,
 ): OnboardingStep | null {

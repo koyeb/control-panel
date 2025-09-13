@@ -1,4 +1,5 @@
-import { useCallback, useEffect } from 'react';
+import { useSearch } from '@tanstack/react-router';
+import { useCallback } from 'react';
 
 import { Link } from 'src/components/link';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
@@ -26,24 +27,19 @@ const steps = [
 
 type Step = (typeof steps)[number];
 
-const isStep = (step: unknown): step is Step => steps.includes(step as Step);
-const stepIndex = (step: Step) => steps.indexOf(step);
-
 function isBefore(left: Step, right: Step) {
-  return stepIndex(left) < stepIndex(right);
+  return steps.indexOf(left) < steps.indexOf(right);
 }
 
 export function ServiceCreation() {
-  const initialStep = useInitialStep();
   const searchParams = useSearchParams();
 
-  const currentStepParam = searchParams.get('step');
-  const currentStep = isStep(currentStepParam) ? currentStepParam : 'serviceType';
+  const { step: currentStep } = useSearch({ from: '/_main/services/new' });
 
   const serviceId = searchParams.get('serviceId');
   const type = searchParams.get('type');
 
-  const navigate = useNavigate();
+  const navigate = useNavigate({ from: '/services/new' });
 
   const setCurrentStep = useCallback(
     (step: Step) => {
@@ -51,12 +47,6 @@ export function ServiceCreation() {
     },
     [navigate],
   );
-
-  useEffect(() => {
-    if (!isStep(currentStepParam)) {
-      setCurrentStep(initialStep);
-    }
-  }, [currentStepParam, initialStep, setCurrentStep]);
 
   const stepperSteps =
     type === 'git'
@@ -92,40 +82,6 @@ export function ServiceCreation() {
       {currentStep === 'initialDeployment' && serviceId && <InitialDeploymentStep serviceId={serviceId} />}
     </div>
   );
-}
-
-function useInitialStep(): Step {
-  const search = useSearchParams();
-
-  const serviceType = search.get('service_type');
-  const type = search.get('type');
-  const repository = search.get('repository');
-  const image = search.get('image');
-  const builder = search.get('builder');
-  const instanceType = search.get('instance_type');
-  const regions = search.get('regions');
-
-  if (serviceType !== 'web' && serviceType !== 'worker') {
-    return 'serviceType';
-  }
-
-  if (type !== 'git' && type !== 'docker') {
-    return 'serviceType';
-  }
-
-  if ((type === 'git' && repository === null) || (type === 'docker' && image === null)) {
-    return 'importProject';
-  }
-
-  if (type === 'git' && builder === null) {
-    return 'builder';
-  }
-
-  if (instanceType === null || regions === null) {
-    return 'instanceRegions';
-  }
-
-  return 'review';
 }
 
 function Header({ step }: { step: Step }) {

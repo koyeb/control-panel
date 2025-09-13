@@ -1,11 +1,9 @@
 import { useOneClickApps } from 'src/api/hooks/catalog';
-import { useRouteParam } from 'src/hooks/router';
 import { hasProperty } from 'src/utils/object';
 
 import { AppCard } from './app-card';
 
-export function OneClickAppsCategoryPage() {
-  const category = useRouteParam('category');
+export function OneClickAppsCategoryPage({ category }: { category: string }) {
   const apps = useOneClickApps().filter(hasProperty('category', category));
 
   return (
