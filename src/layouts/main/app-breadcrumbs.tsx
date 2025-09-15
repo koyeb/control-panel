@@ -41,11 +41,6 @@ export function AppBreadcrumbs() {
         <Route path="/volumes/*?">
           <Crumb label={<T id="volumes.index" />} link="/volumes" />
           <CrumbRoute path="/volumes/new" label={<T id="volumes.create" />} link="/volumes/new" />
-          <CrumbRoute
-            path="/volumes/snapshots"
-            label={<T id="volumes.snapshots" />}
-            link="/volumes/snapshots"
-          />
         </Route>
 
         <CrumbRoute path="/domains" label={<T id="domains" />} link="/domains" />

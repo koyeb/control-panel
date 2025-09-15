@@ -1747,8 +1747,7 @@
         "secrets": "Secrets",
         "volumes": {
           "index": "Volumes",
-          "create": "Create volume",
-          "snapshots": "Snapshots"
+          "create": "Create volume"
         },
         "activity": "Activity",
         "deploy": "Deploy",
@@ -3010,6 +3009,7 @@
       }
     },
     "volumes": {
+      "documentTitle": "Volumes",
       "unavailable": {
         "title": "Volumes",
         "subTitle": "Blazing-fast NVMe SSD for your data",
@@ -3017,8 +3017,7 @@
         "cta": "Upgrade to unlock",
         "learnMore": "Learn more about volumes"
       },
-      "list": {
-        "documentTitle": "Volumes",
+      "volumesList": {
         "header": {
           "title": "Volumes",
           "createVolume": "Create volume"
@@ -3064,33 +3063,8 @@
           "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
         }
       },
-      "create": {
-        "title": "Create volume",
-        "description": "Set the name, region and size of your volume",
-        "name": {
-          "label": "Volume name",
-          "placeholder": "my-volume"
-        },
-        "regions": {
-          "label": "Select a region",
-          "continental": "Continental",
-          "metropolitan": "Metropolitan",
-          "required": "Please select a region",
-          "boundedToSnapshot": "The volume must be created in the snapshot's region"
-        },
-        "size": {
-          "label": "Size",
-          "placeholder": "Enter a size",
-          "unit": "GB"
-        },
-        "submit": "Create volume",
-        "created": "Volume <strong>{name}</strong> created"
-      }
-    },
-    "volumeSnapshots": {
-      "documentTitle": "Snapshots",
-      "title": "Snapshots",
-      "list": {
+      "snapshotsList": {
+        "title": "Snapshots",
         "name": "Name",
         "volumeName": "Parent volume",
         "created": "Created",
@@ -3112,23 +3086,45 @@
         "noSnapshots": {
           "title": "You don't have any volume snapshots yet",
           "description": "Snapshots are point-in-time copies of your volumes, allowing you to restore or create new volumes from previous states"
+        },
+        "createVolumeDialog": {
+          "title": "Create volume from snapshot"
+        },
+        "editDialog": {
+          "title": "Edit snapshot",
+          "nameLabel": "Name",
+          "namePlaceholder": "my-snapshot",
+          "successNotification": "Snapshot <strong>{name}</strong> edited"
+        },
+        "deleteDialog": {
+          "title": "Delete snapshot",
+          "description": "Are you sure you want to delete the {name} snapshot?",
+          "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
+          "confirm": "Delete snapshot",
+          "deleteSuccess": "Snapshot <strong>{name}</strong> is being deleted"
         }
       },
-      "createVolume": {
-        "title": "Create volume from snapshot"
-      },
-      "updateSnapshot": {
-        "title": "Edit snapshot",
-        "nameLabel": "Name",
-        "namePlaceholder": "my-snapshot",
-        "successNotification": "Snapshot <strong>{name}</strong> edited"
-      },
-      "deleteSnapshot": {
-        "title": "Delete snapshot",
-        "description": "Are you sure you want to delete the {name} snapshot?",
-        "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
-        "confirm": "Delete snapshot",
-        "deleteSuccess": "Snapshot <strong>{name}</strong> is being deleted"
+      "create": {
+        "title": "Create volume",
+        "description": "Set the name, region and size of your volume",
+        "name": {
+          "label": "Volume name",
+          "placeholder": "my-volume"
+        },
+        "regions": {
+          "label": "Select a region",
+          "continental": "Continental",
+          "metropolitan": "Metropolitan",
+          "required": "Please select a region",
+          "boundedToSnapshot": "The volume must be created in the snapshot's region"
+        },
+        "size": {
+          "label": "Size",
+          "placeholder": "Enter a size",
+          "unit": "GB"
+        },
+        "submit": "Create volume",
+        "created": "Volume <strong>{name}</strong> created"
       }
     },
     "notFound": {

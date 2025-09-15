@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.volumeSnapshots.deleteSnapshot');
+const T = createTranslate('pages.volumes.snapshotsList.deleteDialog');
 
 export function DeleteSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
   const t = T.useTranslate();

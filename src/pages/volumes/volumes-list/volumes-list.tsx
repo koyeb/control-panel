@@ -15,6 +15,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
+import { Title } from 'src/components/title';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 
@@ -22,7 +23,27 @@ import { CreateSnapshotDialog } from './create-snapshot-dialog';
 import { DeleteVolumeDialog } from './delete-volume-dialog';
 import { EditVolumeDialog } from './edit-volume-dialog';
 
-const T = createTranslate('pages.volumes.list');
+const T = createTranslate('pages.volumes.volumesList');
+
+export function VolumesListSection({ volumes }: { volumes: Volume[] }) {
+  return (
+    <section className="col gap-4">
+      <Title
+        as="h2"
+        title={<T id="header.title" />}
+        end={
+          volumes.length > 0 && (
+            <LinkButton to="/volumes/new">
+              <T id="header.createVolume" />
+            </LinkButton>
+          )
+        }
+      />
+
+      <VolumesList volumes={volumes} />
+    </section>
+  );
+}
 
 export function VolumesList({ volumes }: { volumes: Volume[] }) {
   const isMobile = !useBreakpoint('sm');

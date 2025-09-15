@@ -12,7 +12,7 @@ import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.volumes.list.editDialog');
+const T = createTranslate('pages.volumes.volumesList.editDialog');
 
 export function EditVolumeDialog({ volume }: { volume: Volume }) {
   return (

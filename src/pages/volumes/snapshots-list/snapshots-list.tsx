@@ -9,6 +9,7 @@ import { NoResource } from 'src/components/no-resource';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { VolumeSnapshotStatusBadge } from 'src/components/status-badges';
+import { Title } from 'src/components/title';
 import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
@@ -16,11 +17,20 @@ import { hasProperty } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { DeleteSnapshotDialog } from './delete-snapshot-dialog';
-import { UpdateSnapshotDialog } from './update-snapshot-dialog';
+import { EditSnapshotDialog } from './edit-snapshot-dialog';
 
-const T = createTranslate('pages.volumeSnapshots.list');
+const T = createTranslate('pages.volumes.snapshotsList');
 
-export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
+export function SnapshotsListSection({ snapshots }: { snapshots: VolumeSnapshot[] }) {
+  return (
+    <section className="col gap-4">
+      <Title as="h2" title={<T id="title" />} />
+      <SnapshotsList snapshots={snapshots} />
+    </section>
+  );
+}
+
+function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
   const isMobile = !useBreakpoint('sm');
   const volumes = useVolumes();
 
@@ -95,7 +105,7 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
                   {...props}
                   disabled={!canCreate}
                   onClick={withClose(() => {
-                    navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
+                    void navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
                   })}
                 >
                   <T id="actions.createVolume" />
@@ -104,7 +114,7 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
             </Tooltip>
 
             <ButtonMenuItem
-              onClick={withClose(() => openDialog('UpdateSnapshot', { snapshotId: snapshot.id }))}
+              onClick={withClose(() => openDialog('EditSnapshot', { snapshotId: snapshot.id }))}
             >
               <T id="actions.update" />
             </ButtonMenuItem>
@@ -118,7 +128,7 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
         )}
       </ActionsMenu>
 
-      <UpdateSnapshotDialog snapshot={snapshot} />
+      <EditSnapshotDialog snapshot={snapshot} />
       <DeleteSnapshotDialog snapshot={snapshot} />
     </>
   );

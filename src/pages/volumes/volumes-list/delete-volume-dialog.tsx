@@ -7,7 +7,7 @@ import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.volumes.list.deleteDialog');
+const T = createTranslate('pages.volumes.volumesList.deleteDialog');
 
 export function DeleteVolumeDialog({ volume }: { volume: Volume }) {
   const t = T.useTranslate();

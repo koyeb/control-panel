@@ -33,7 +33,7 @@ export function RegionSelector({ selected, onChange, error }: RegionSelectorProp
             <T id={`regions.${scope}`} />
           </div>
 
-          <div className="grid max-w-3xl grid-cols-3 gap-4">
+          <div className="row max-w-4xl flex-wrap gap-4">
             {regions
               .filter((region) => region.scope === scope)
               .map((region) => (
@@ -59,7 +59,7 @@ type RegionItemProps = {
 
 function RegionItem({ region, selected, onSelected }: RegionItemProps) {
   return (
-    <label className="row cursor-pointer items-center gap-2 rounded-md border px-3 py-1">
+    <label className="row w-64 cursor-pointer items-center gap-2 rounded-md border px-3 py-1">
       <RegionFlag regionId={region.id} className="size-5" />
       <RegionName regionId={region.id} className="flex-1" />
       <RadioInput type="radio" checked={selected} onChange={() => onSelected()} />

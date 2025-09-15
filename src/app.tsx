@@ -50,9 +50,8 @@ import { OrganizationSettingsPages } from './pages/settings/organization/organiz
 import { UserSettingsPages } from './pages/settings/user/user-settings.pages';
 import { TeamPage } from './pages/team/team.page';
 import { CreateVolumePage } from './pages/volumes/create-volume/create-volume.page';
-import { VolumeSnapshotsPage } from './pages/volumes/volume-snapshots/volume-snapshots.page';
 import { VolumesLayout } from './pages/volumes/volumes-layout';
-import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page';
+import { VolumesPage } from './pages/volumes/volumes.page';
 
 export function App() {
   const tokenParams = useTokenParams();
@@ -126,9 +125,8 @@ function AuthenticatedRoutes() {
 
         <Route path="/volumes/*?">
           <VolumesLayout>
-            <Route path="/volumes" component={VolumesListPage} />
+            <Route path="/volumes" component={VolumesPage} />
             <Route path="/volumes/new" component={CreateVolumePage} />
-            <Route path="/volumes/snapshots" component={VolumeSnapshotsPage} />
           </VolumesLayout>
         </Route>
 
@@ -166,9 +164,7 @@ function AuthenticatedRoutes() {
 
         <Route path="__error" component={ErrorTestPage} />
 
-        <Route>
-          <PageNotFound />
-        </Route>
+        <Route component={PageNotFound} />
       </Switch>
     </MainLayout>
   );

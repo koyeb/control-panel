@@ -10,19 +10,17 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.volumeSnapshots.updateSnapshot');
+const T = createTranslate('pages.volumes.snapshotsList.editDialog');
 
 const schema = z.object({
   name: z.string().min(2).max(63),
 });
 
-export function UpdateSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
+export function EditSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
   const t = T.useTranslate();
-  const navigate = useNavigate();
   const closeDialog = Dialog.useClose();
 
   const invalidate = useInvalidateApiQuery();
@@ -43,7 +41,6 @@ export function UpdateSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
       await invalidate('listSnapshots');
       notify.success(t('successNotification', { name: snapshot!.name! }));
       closeDialog();
-      await navigate({ to: '/volumes/snapshots' });
     },
     onError: useFormErrorHandler(form),
   });
@@ -54,7 +51,7 @@ export function UpdateSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
 
   return (
     <Dialog
-      id="UpdateSnapshot"
+      id="EditSnapshot"
       context={{ snapshotId: snapshot.id }}
       onClosed={() => form.reset()}
       className="col w-full max-w-xl gap-4"

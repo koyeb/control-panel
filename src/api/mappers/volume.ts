@@ -13,10 +13,6 @@ export function mapVolume(volume: API.PersistentVolume): Volume {
   };
 }
 
-export function mapSnapshotList(snapshots: API.Snapshot[]): VolumeSnapshot[] {
-  return snapshots.map(mapSnapshot);
-}
-
 export function mapSnapshot(snapshot: API.Snapshot): VolumeSnapshot {
   return {
     ...snakeToCamelDeep(requiredDeep(snapshot)),

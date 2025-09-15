@@ -9,11 +9,10 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.volumes.list.createSnapshotDialog');
+const T = createTranslate('pages.volumes.volumesList.createSnapshotDialog');
 
 const schema = z.object({
   name: z.string().min(2).max(63),
@@ -22,8 +21,6 @@ const schema = z.object({
 export function CreateSnapshotDialog({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
-
-  const navigate = useNavigate();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -41,9 +38,8 @@ export function CreateSnapshotDialog({ volume }: { volume: Volume }) {
       },
     })),
     async onSuccess({ snapshot }) {
-      await invalidate('listVolumes');
+      await Promise.all([invalidate('listVolumes'), invalidate('listSnapshots')]);
       notify.success(t('successNotification', { name: snapshot!.name! }));
-      await navigate({ to: '/volumes/snapshots' });
       closeDialog();
     },
     onError: useFormErrorHandler(form),
