@@ -32,6 +32,7 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
         capture_pageview: false,
         capture_pageleave: true,
         autocapture: false,
+        debug: true,
       }}
     >
       <TrackPageViews />
@@ -69,18 +70,21 @@ function IdentifyUser() {
     identifyUserInSentry(user);
 
     if (user !== undefined) {
+      console.log('[POSTHOG] Calling identify');
       posthog?.identify(user.id);
       identified.current = true;
     }
 
     if (identified.current && !user) {
       intercom.shutdown();
+      console.log('[POSTHOG] Calling reset');
       posthog?.reset(true);
     }
   }, [posthog, user]);
 
   useEffect(() => {
     if (organization !== undefined) {
+      console.log('[POSTHOG] Calling group');
       posthog?.group('segment_group', organization.id);
     }
   }, [posthog, organization]);
