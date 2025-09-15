@@ -35,7 +35,7 @@ export function BuilderStep() {
   }
 
   return (
-    <div className="col gap-8">
+    <div className="col gap-6">
       <BuilderSelection builder={builder as BuilderType} onChange={setBuilder} />
       <BuilderConfiguration builder={builder as BuilderType} />
     </div>
@@ -57,6 +57,7 @@ function BuilderSelection({ builder, onChange }: BuilderSelectionProps) {
         icon={<IconPackage className="icon" />}
         title={<T id="buildpack.title" />}
         description={<T id="buildpack.description" />}
+        className="max-w-sm"
       />
 
       <SelectBox
@@ -66,6 +67,7 @@ function BuilderSelection({ builder, onChange }: BuilderSelectionProps) {
         icon={<IconDocker className="icon" />}
         title={<T id="dockerfile.title" />}
         description={<T id="dockerfile.description" />}
+        className="max-w-sm"
       />
     </div>
   );
@@ -141,7 +143,7 @@ function BuilderConfiguration({ builder }: { builder: BuilderType }) {
   };
 
   return (
-    <form onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
+    <form onSubmit={handleSubmit(form, onSubmit)} className="col gap-8">
       <div className="rounded-md border">
         <AccordionSection
           isExpanded={expanded}
