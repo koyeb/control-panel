@@ -1,10 +1,9 @@
-import { TabButtons } from '@koyeb/design-system';
 import React from 'react';
 
 import { useOrganization } from 'src/api/hooks/session';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
-import { LinkButton, TabButtonLink } from 'src/components/link';
+import { LinkButton } from 'src/components/link';
 import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
@@ -35,14 +34,5 @@ export function VolumesLayout({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return (
-    <>
-      <TabButtons className="mb-6">
-        <TabButtonLink to="/volumes">Volumes</TabButtonLink>
-        <TabButtonLink to="/volumes/snapshots">Snapshots</TabButtonLink>
-      </TabButtons>
-
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

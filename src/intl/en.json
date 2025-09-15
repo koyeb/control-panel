@@ -1743,10 +1743,13 @@
       },
       "breadcrumbs": {
         "services": "Services",
-        "volumes": "Volumes",
-        "volumeSnapshots": "Snapshots",
         "domains": "Domains",
         "secrets": "Secrets",
+        "volumes": {
+          "index": "Volumes",
+          "create": "Create volume",
+          "snapshots": "Snapshots"
+        },
         "activity": "Activity",
         "deploy": "Deploy",
         "team": "Team",
@@ -3007,12 +3010,19 @@
       }
     },
     "volumes": {
-      "documentTitle": "Volumes",
-      "header": {
+      "unavailable": {
         "title": "Volumes",
-        "createVolume": "Create volume"
+        "subTitle": "Blazing-fast NVMe SSD for your data",
+        "description": "Volumes provide additional, persistent, storage capacity for your services and come in addition to your instances provided ephemeral disk. The Starter plan is required to access the volumes public preview.",
+        "cta": "Upgrade to unlock",
+        "learnMore": "Learn more about volumes"
       },
-      "volumesList": {
+      "list": {
+        "documentTitle": "Volumes",
+        "header": {
+          "title": "Volumes",
+          "createVolume": "Create volume"
+        },
         "name": "Name",
         "parentSnapshot": "Created from snapshot {name}",
         "created": "Created",
@@ -3029,48 +3039,52 @@
           "title": "You don't have any volumes yet",
           "description": "Volumes provide additional, persistent, storage capacity for your services",
           "cta": "Create volume"
+        },
+        "createSnapshotDialog": {
+          "title": "Create snapshot",
+          "description": "Choose a name for your snapshot",
+          "nameLabel": "Name",
+          "namePlaceholder": "my-snapshot",
+          "successNotification": "Snapshot <strong>{name}</strong> created"
+        },
+        "editDialog": {
+          "title": "Edit volume",
+          "description": "Change the name of your volume",
+          "name": {
+            "label": "Volume name",
+            "placeholder": "my-volume"
+          },
+          "updated": "Volume <strong>{name}</strong> updated"
+        },
+        "deleteDialog": {
+          "title": "Delete volume",
+          "description": "Are you sure you want to delete the {name} volume?",
+          "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
+          "confirm": "Delete volume",
+          "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
         }
       },
-      "createSnapshotDialog": {
-        "title": "Create snapshot",
-        "description": "Choose a name for your snapshot",
-        "nameLabel": "Name",
-        "namePlaceholder": "my-snapshot",
-        "successNotification": "Snapshot <strong>{name}</strong> created"
-      },
-      "deleteVolume": {
-        "title": "Delete volume",
-        "description": "Are you sure you want to delete the {name} volume?",
-        "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
-        "confirm": "Delete volume",
-        "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
-      },
-      "unavailable": {
-        "title": "Volumes",
-        "subTitle": "Blazing-fast NVMe SSD for your data",
-        "description": "Volumes provide additional, persistent, storage capacity for your services and come in addition to your instances provided ephemeral disk. The Starter plan is required to access the volumes public preview.",
-        "cta": "Upgrade to unlock",
-        "learnMore": "Learn more about volumes"
-      },
-      "createDialog": {
+      "create": {
         "title": "Create volume",
-        "description": "Set the name, region and size of your volume"
-      },
-      "editDialog": {
-        "title": "Edit volume",
-        "description": "Change the name of your volume"
-      },
-      "volumeForm": {
-        "nameLabel": "Name",
-        "namePlaceholder": "my-volume",
-        "regionLabel": "Region",
-        "regionPlaceholder": "Select a region",
-        "regionBoundedToSnapshot": "The volume must be created in the snapshot's region",
-        "sizeLabel": "Size",
-        "sizePlaceholder": "Select a size",
-        "sizeUnit": "GB",
-        "createSuccess": "Volume <strong>{name}</strong> created",
-        "editSuccess": "Volume <strong>{name}</strong> edited"
+        "description": "Set the name, region and size of your volume",
+        "name": {
+          "label": "Volume name",
+          "placeholder": "my-volume"
+        },
+        "regions": {
+          "label": "Select a region",
+          "continental": "Continental",
+          "metropolitan": "Metropolitan",
+          "required": "Please select a region",
+          "boundedToSnapshot": "The volume must be created in the snapshot's region"
+        },
+        "size": {
+          "label": "Size",
+          "placeholder": "Enter a size",
+          "unit": "GB"
+        },
+        "submit": "Create volume",
+        "created": "Volume <strong>{name}</strong> created"
       }
     },
     "volumeSnapshots": {

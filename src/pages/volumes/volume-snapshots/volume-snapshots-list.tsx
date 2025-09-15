@@ -9,12 +9,11 @@ import { NoResource } from 'src/components/no-resource';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { VolumeSnapshotStatusBadge } from 'src/components/status-badges';
+import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
-
-import { CreateVolumeDialog } from '../create-volume-dialog';
 
 import { DeleteSnapshotDialog } from './delete-snapshot-dialog';
 import { UpdateSnapshotDialog } from './update-snapshot-dialog';
@@ -83,6 +82,7 @@ export function VolumeSnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[]
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
   const canCreate = snapshot.status === 'AVAILABLE' && snapshot.type === 'REMOTE';
   const openDialog = Dialog.useOpen();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -94,7 +94,9 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
                 <ButtonMenuItem
                   {...props}
                   disabled={!canCreate}
-                  onClick={withClose(() => openDialog('CreateVolume', { snapshotId: snapshot.id }))}
+                  onClick={withClose(() => {
+                    navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
+                  })}
                 >
                   <T id="actions.createVolume" />
                 </ButtonMenuItem>
@@ -116,7 +118,6 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
         )}
       </ActionsMenu>
 
-      <CreateVolumeDialog snapshot={snapshot} />
       <UpdateSnapshotDialog snapshot={snapshot} />
       <DeleteSnapshotDialog snapshot={snapshot} />
     </>

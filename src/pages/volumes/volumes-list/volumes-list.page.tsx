@@ -1,27 +1,17 @@
-import { Button } from '@koyeb/design-system';
-
 import { useVolumesQuery } from 'src/api/hooks/volume';
-import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
+import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
-import { useOnRouteStateCreate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
-
-import { CreateVolumeDialog } from '../create-volume-dialog';
 
 import { VolumesList } from './volumes-list';
 
-const T = createTranslate('pages.volumes');
+const T = createTranslate('pages.volumes.list');
 
 export function VolumesListPage() {
-  const openDialog = Dialog.useOpen();
   const t = T.useTranslate();
-
-  useOnRouteStateCreate(() => {
-    openDialog('CreateVolume');
-  });
 
   const volumesQuery = useVolumesQuery();
 
@@ -43,15 +33,14 @@ export function VolumesListPage() {
         title={<T id="header.title" />}
         end={
           volumes.length > 0 && (
-            <Button onClick={() => openDialog('CreateVolume')}>
+            <LinkButton to="/volumes/new">
               <T id="header.createVolume" />
-            </Button>
+            </LinkButton>
           )
         }
       />
 
-      <VolumesList volumes={volumes} onCreate={() => openDialog('CreateVolume')} />
-      <CreateVolumeDialog />
+      <VolumesList volumes={volumes} />
     </div>
   );
 }

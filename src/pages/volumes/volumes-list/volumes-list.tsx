@@ -1,4 +1,4 @@
-import { Button, ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
+import { ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
@@ -22,9 +22,9 @@ import { CreateSnapshotDialog } from './create-snapshot-dialog';
 import { DeleteVolumeDialog } from './delete-volume-dialog';
 import { EditVolumeDialog } from './edit-volume-dialog';
 
-const T = createTranslate('pages.volumes.volumesList');
+const T = createTranslate('pages.volumes.list');
 
-export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate: () => void }) {
+export function VolumesList({ volumes }: { volumes: Volume[] }) {
   const isMobile = !useBreakpoint('sm');
 
   if (volumes.length === 0) {
@@ -33,9 +33,9 @@ export function VolumesList({ volumes, onCreate }: { volumes: Volume[]; onCreate
         title={<T id="noVolumes.title" />}
         description={<T id="noVolumes.description" />}
         cta={
-          <Button onClick={onCreate}>
+          <LinkButton to="/volumes/new">
             <T id="noVolumes.cta" />
-          </Button>
+          </LinkButton>
         }
       />
     );

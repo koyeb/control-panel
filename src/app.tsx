@@ -49,6 +49,7 @@ import { ServiceSettingsPage } from './pages/service/settings/service-settings.p
 import { OrganizationSettingsPages } from './pages/settings/organization/organization-settings.pages';
 import { UserSettingsPages } from './pages/settings/user/user-settings.pages';
 import { TeamPage } from './pages/team/team.page';
+import { CreateVolumePage } from './pages/volumes/create-volume/create-volume.page';
 import { VolumeSnapshotsPage } from './pages/volumes/volume-snapshots/volume-snapshots.page';
 import { VolumesLayout } from './pages/volumes/volumes-layout';
 import { VolumesListPage } from './pages/volumes/volumes-list/volumes-list.page';
@@ -126,6 +127,7 @@ function AuthenticatedRoutes() {
         <Route path="/volumes/*?">
           <VolumesLayout>
             <Route path="/volumes" component={VolumesListPage} />
+            <Route path="/volumes/new" component={CreateVolumePage} />
             <Route path="/volumes/snapshots" component={VolumeSnapshotsPage} />
           </VolumesLayout>
         </Route>

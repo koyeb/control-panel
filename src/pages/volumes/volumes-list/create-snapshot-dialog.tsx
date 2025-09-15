@@ -13,7 +13,7 @@ import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.volumes.createSnapshotDialog');
+const T = createTranslate('pages.volumes.list.createSnapshotDialog');
 
 const schema = z.object({
   name: z.string().min(2).max(63),

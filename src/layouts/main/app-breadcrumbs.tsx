@@ -38,9 +38,14 @@ export function AppBreadcrumbs() {
       <Switch>
         <CrumbRoute path="/services" label={<T id="services" />} link="/services" />
 
-        <Route path="/volumes">
-          <Crumb label={<T id="volumes" />} link="/volumes" />
-          <CrumbRoute path="/snapshots" label={<T id="volumeSnapshots" />} link="/volumes/snapshots" />
+        <Route path="/volumes/*?">
+          <Crumb label={<T id="volumes.index" />} link="/volumes" />
+          <CrumbRoute path="/volumes/new" label={<T id="volumes.create" />} link="/volumes/new" />
+          <CrumbRoute
+            path="/volumes/snapshots"
+            label={<T id="volumes.snapshots" />}
+            link="/volumes/snapshots"
+          />
         </Route>
 
         <CrumbRoute path="/domains" label={<T id="domains" />} link="/domains" />
