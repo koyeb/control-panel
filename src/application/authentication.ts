@@ -75,12 +75,7 @@ export function useSetToken() {
       auth.setToken(token, session);
 
       if (auth.token) {
-        const queriesToKeep: unknown[] = ['getCurrentUser', 'getCurrentOrganization'];
-
-        queryClient.removeQueries({
-          predicate: (query) => !queriesToKeep.includes(query.queryKey[0]),
-        });
-
+        queryClient.removeQueries({ predicate: (query) => !query.isActive() });
         await queryClient.invalidateQueries();
       } else {
         queryClient.clear();
