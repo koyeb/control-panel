@@ -1,3 +1,4 @@
+import omit from 'lodash-es/omit';
 import { z } from 'zod';
 
 import { createValidationGuard } from 'src/application/create-validation-guard';
@@ -16,7 +17,7 @@ import {
 } from '../model';
 
 export function mapUser(user: API.User): User {
-  return snakeToCamelDeep(requiredDeep(user));
+  return omit(snakeToCamelDeep(requiredDeep(user)), ['createdAt', 'updatedAt']);
 }
 
 export function mapUserSettings(user: API.UserSettings): UserSettings {

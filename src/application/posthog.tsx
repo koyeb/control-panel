@@ -1,9 +1,8 @@
-import * as intercom from '@intercom/messenger-js-sdk';
 // eslint-disable-next-line no-restricted-imports
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect } from 'react';
 
-import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
+import { User } from 'src/api/model';
 import { useLocation } from 'src/hooks/router';
 import { getConfig } from 'src/utils/config';
 
@@ -32,11 +31,9 @@ export function PostHogProvider({ children }: PostHogProviderProps) {
         capture_pageview: false,
         capture_pageleave: true,
         autocapture: false,
-        debug: true,
       }}
     >
       <TrackPageViews />
-      <IdentifyUser />
       {children}
     </PostHogJsProvider>
   );
@@ -59,37 +56,24 @@ function TrackPageViews() {
   return null;
 }
 
-function IdentifyUser() {
+// eslint-disable-next-line react-refresh/only-export-components
+export function useIdentifyUser() {
   const posthog = usePostHog();
-  const identified = useRef(false);
 
-  const user = useUserUnsafe();
-  const organization = useOrganizationUnsafe();
-
-  useEffect(() => {
-    identifyUserInSentry(user);
-
-    if (user !== undefined) {
-      console.log('[POSTHOG] Calling identify');
+  const identify = useCallback(
+    (user: User) => {
       posthog?.identify(user.id);
-      identified.current = true;
-    }
+      identifyUserInSentry(user);
+    },
+    [posthog],
+  );
 
-    if (identified.current && !user) {
-      intercom.shutdown();
-      console.log('[POSTHOG] Calling reset');
-      posthog?.reset(true);
-    }
-  }, [posthog, user]);
+  const clear = useCallback(() => {
+    posthog?.reset();
+    identifyUserInSentry(undefined);
+  }, [posthog]);
 
-  useEffect(() => {
-    if (organization !== undefined) {
-      console.log('[POSTHOG] Calling group');
-      posthog?.group('segment_group', organization.id);
-    }
-  }, [posthog, organization]);
-
-  return null;
+  return [identify, clear] as const;
 }
 
 // eslint-disable-next-line react-refresh/only-export-components

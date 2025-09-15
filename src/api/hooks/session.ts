@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useSetToken } from 'src/application/authentication';
+import { useIdentifyUser } from 'src/application/posthog';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { AssertionError, defined } from 'src/utils/assert';
@@ -87,11 +88,13 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?:
   const userQuery = useUserQuery();
   const setToken = useSetToken();
   const navigate = useNavigate();
+  const [, clearIdentify] = useIdentifyUser();
 
   return useMutation({
     ...useApiMutationFn('logout', {}),
     meta: { showError: !isAccountLockedError(userQuery.error) },
     async onSettled() {
+      clearIdentify();
       await setToken(null, session);
       await navigate(urlToLinkOptions(redirect));
     },

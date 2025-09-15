@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 // eslint-disable-next-line no-restricted-imports
 import { Redirect, Route, Switch, useRoute } from 'wouter';
 
@@ -12,6 +13,7 @@ import {
   useTokenStorageListener,
 } from './application/authentication';
 import { useOnboardingStep } from './application/onboarding';
+import { useIdentifyUser } from './application/posthog';
 import { LinkButton } from './components/link';
 import { useMount } from './hooks/lifecycle';
 import { useNavigate, useSearchParams } from './hooks/router';
@@ -81,6 +83,14 @@ function AuthenticatedRoutes() {
   const [confirmDeactivateOrganization, params] = useRoute(
     '/organization/deactivate/confirm/:confirmationId',
   );
+
+  const [identify] = useIdentifyUser();
+
+  useEffect(() => {
+    if (userQuery.data) {
+      identify(userQuery.data);
+    }
+  }, [identify, userQuery.data]);
 
   if (userQuery.isPending || organizationQuery.isPending) {
     return null;
