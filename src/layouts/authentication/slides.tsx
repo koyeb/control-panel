@@ -2,12 +2,10 @@ import { Stepper } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { AnimatePresence, motion, wrap } from 'motion/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Helmet } from 'react-helmet';
 
 import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { createTranslate } from 'src/intl/translate';
-import { createArray } from 'src/utils/arrays';
 
 import anyHardware from './images/any-hardware.png';
 import Dots from './images/dots.svg?react';
@@ -91,12 +89,6 @@ export default function Slides() {
 
   return (
     <div className="dark col h-full rounded-2xl bg-neutral/95 [&_*]:border-border" onClick={next}>
-      <Helmet>
-        {createArray(3, (i) => (
-          <link rel="preload" href={slides[i as 0 | 1 | 2].illustration} as="image" />
-        ))}
-      </Helmet>
-
       <div className="row justify-center py-8" onClick={stopPropagation}>
         <Stepper totalSteps={3} activeStep={index} onClick={(i) => setIndex(i as typeof index)} />
       </div>
