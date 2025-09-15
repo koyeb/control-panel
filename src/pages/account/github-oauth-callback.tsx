@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 import { z } from 'zod';
@@ -27,7 +27,6 @@ const schema = z.object({
 });
 
 export function GithubOauthCallbackPage() {
-  const queryClient = useQueryClient();
   const searchParams = useSearchParams();
   const getSeonFingerprint = useSeon();
   const invalidate = useInvalidateApiQuery();
@@ -70,7 +69,6 @@ export function GithubOauthCallbackPage() {
         const auth = container.resolve(TOKENS.authentication);
 
         auth.setToken(result.token.id);
-        queryClient.clear();
 
         await navigate({
           to: redirect.pathname,

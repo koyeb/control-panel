@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -31,7 +31,6 @@ export function SignInForm({ redirect }: { redirect: string }) {
   const setToken = useSetToken();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
-  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -48,7 +47,6 @@ export function SignInForm({ redirect }: { redirect: string }) {
       body: credential,
     })),
     async onSuccess({ token }) {
-      queryClient.clear();
       await setToken(token!.id!);
       await navigate(urlToLinkOptions(redirect));
     },
