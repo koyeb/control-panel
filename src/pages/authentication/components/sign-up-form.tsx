@@ -25,7 +25,14 @@ const schema = z.object({
   password: z.string().min(8).max(128),
 });
 
-export function SignUpForm({ initialValues }: { initialValues: { name?: string; email?: string } }) {
+type SignUpFormProps = {
+  initialValues: {
+    name: string | null;
+    email: string | null;
+  };
+};
+
+export function SignUpForm({ initialValues }: SignUpFormProps) {
   const t = T.useTranslate();
   const setToken = useSetToken();
   const navigate = useNavigate();
@@ -34,10 +41,9 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      name: '',
-      email: '',
+      name: initialValues.name ?? '',
+      email: initialValues.email ?? '',
       password: '',
-      ...initialValues,
     },
     resolver: useZodResolver(schema),
   });
@@ -85,6 +91,7 @@ export function SignUpForm({ initialValues }: { initialValues: { name?: string; 
         required
         name="email"
         type="email"
+        autoComplete="email"
         placeholder={t('emailPlaceholder')}
       />
 

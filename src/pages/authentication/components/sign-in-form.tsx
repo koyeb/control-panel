@@ -77,10 +77,11 @@ export function SignInForm({ redirect }: { redirect: string }) {
     <form onSubmit={handleSubmit(form, signIn)} className="col gap-6">
       <AuthInput
         control={form.control}
-        name="email"
         autoFocus
-        type="email"
         required
+        name="email"
+        type="email"
+        autoComplete="email"
         placeholder={t('emailPlaceholder')}
       />
 

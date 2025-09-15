@@ -39,8 +39,8 @@ export function SignUpPage() {
         {method === 'email' && (
           <SignUpForm
             initialValues={{
-              name: params.get('name') ?? undefined,
-              email: params.get('email') ?? undefined,
+              name: params.get('name'),
+              email: params.get('email'),
             }}
           />
         )}
