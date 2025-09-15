@@ -1,4 +1,4 @@
-import { Helmet } from 'react-helmet';
+import { useEffect } from 'react';
 
 import { createTranslate } from 'src/intl/translate';
 
@@ -7,9 +7,15 @@ const T = createTranslate('components.documentTitle');
 export function DocumentTitle({ title }: { title?: string }) {
   const t = T.useTranslate();
 
-  return (
-    <Helmet>
-      <title>{t('title', { prefix: title })}</title>
-    </Helmet>
-  );
+  useEffect(() => {
+    const prev = document.title;
+
+    document.title = t('title', { prefix: title }) as string;
+
+    return () => {
+      document.title = prev;
+    };
+  }, [t, title]);
+
+  return null;
 }
