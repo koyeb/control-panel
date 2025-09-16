@@ -30,7 +30,7 @@ export function News() {
     meta: { showError: false },
     async queryFn(): Promise<News[]> {
       const websiteUrl = getConfig('websiteUrl');
-      const url = new URL('/api/news.json', websiteUrl);
+      const url = new URL('/api/news', websiteUrl);
       const response = await fetch(url);
 
       if (!response.ok) {
