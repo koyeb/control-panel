@@ -99,6 +99,7 @@ function useLogsHistory(filters: LogsFilters) {
         text: filters.search || undefined,
         order: 'desc',
         limit: String(100),
+        ...initialPageParam,
       },
     }),
     queryFn: ({ queryKey: [, { query }], pageParam: { start, end } }) => {
