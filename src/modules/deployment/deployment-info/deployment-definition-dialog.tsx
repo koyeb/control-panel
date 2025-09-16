@@ -21,7 +21,7 @@ import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconDocker, IconGithub, IconPackage } from 'src/icons';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 const T = createTranslate('modules.deployment.deploymentInfo.definitionDialog');
@@ -123,11 +123,11 @@ function General({ definition }: { definition: DeploymentDefinition }) {
 
       <Data name={<T id="general.typeLabel" />}>
         <ServiceTypeIcon type={definition.type} size="medium" />
-        <Translate id={`common.serviceType.${definition.type}`} />
+        <TranslateEnum enum="serviceType" value={definition.type} />
       </Data>
 
       <Data name={<T id="general.strategyLabel" />}>
-        <Translate id={`common.deploymentStrategy.${definition.strategy}`} />
+        <TranslateEnum enum="deploymentStrategy" value={definition.strategy} />
       </Data>
     </Section>
   );

@@ -6,7 +6,7 @@ import { Link } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { IconFolders } from 'src/icons';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 
 import {
   isAutoscalingActivity,
@@ -148,7 +148,7 @@ function ServiceResource({
 
       {serviceType && (
         <div className="font-normal text-dim">
-          <Translate id={`common.serviceType.${serviceType}`} />
+          <TranslateEnum enum="serviceType" value={serviceType} />
         </div>
       )}
     </ActivityResource>

@@ -1,7 +1,7 @@
 import { App, ComputeDeployment, Service } from 'src/api/model';
 import { Dialog } from 'src/components/dialog';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 
 import {
   BranchMetadata,
@@ -47,7 +47,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
           </div>
 
           <div className="ml-auto row items-center gap-2 font-medium">
-            <Translate id={`common.serviceType.${type}`} />
+            <TranslateEnum enum="serviceType" value={type} />
             <ServiceTypeIcon type={type} size="medium" />
           </div>
         </div>

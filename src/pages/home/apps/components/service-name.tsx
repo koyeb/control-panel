@@ -7,7 +7,7 @@ import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { IconCircleAlert, IconCircleCheck, IconCirclePause } from 'src/icons';
-import { Translate } from 'src/intl/translate';
+import { TranslateEnum } from 'src/intl/translate';
 
 export function ServiceName({ service }: { service: Service }) {
   return (
@@ -38,7 +38,7 @@ export function ServiceName({ service }: { service: Service }) {
         </div>
 
         <span className="text-dim">
-          <Translate id={`common.serviceType.${service.type}`} />
+          <TranslateEnum enum="serviceType" value={service.type} />
         </span>
       </div>
     </div>

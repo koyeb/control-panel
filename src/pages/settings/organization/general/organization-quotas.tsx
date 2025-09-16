@@ -8,7 +8,7 @@ import { CatalogInstance } from 'src/api/model';
 import { formatBytes } from 'src/application/memory';
 import { LinkButton } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
@@ -112,9 +112,9 @@ function useGeneralQuotaItems(): QuotaItem[] {
   const allowedRegions = useAllowedRegions();
 
   return useMemo(() => {
-    const web = <Translate key="web" id="common.serviceType.web" />;
-    const worker = <Translate key="worker" id="common.serviceType.worker" />;
-    const database = <Translate key="database" id="common.serviceType.database" />;
+    const web = <TranslateEnum key="web" enum="serviceType" value="web" />;
+    const worker = <TranslateEnum key="worker" enum="serviceType" value="worker" />;
+    const database = <TranslateEnum key="database" enum="serviceType" value="database" />;
 
     const allowedServiceTypes = organization.plan === 'hobby' ? [web, database] : [web, database, worker];
 

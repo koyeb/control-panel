@@ -14,7 +14,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { IconArrowLeft } from 'src/icons';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { useCreateServiceCommands } from 'src/modules/command-palette';
 
 import { DeploymentThrottledAlert } from './deployment-throttled-alert';
@@ -131,7 +131,7 @@ function Header({ app, service, deployment }: HeaderProps) {
 
         <div className="row gap-2 text-dim">
           <div className="whitespace-nowrap">
-            <Translate id={`common.serviceType.${service.type}`} />
+            <TranslateEnum enum="serviceType" value={service.type} />
           </div>
 
           {url !== undefined && (

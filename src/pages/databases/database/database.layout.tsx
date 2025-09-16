@@ -8,7 +8,7 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useRouteParam } from 'src/hooks/router';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 
 import { DatabaseAlerts } from './database-alerts';
@@ -50,7 +50,7 @@ export function DatabaseLayout({ children }: { children: React.ReactNode }) {
         <div className="col min-w-0 gap-1">
           <div className="typo-heading">{service.name}</div>
           <div className="whitespace-nowrap text-dim">
-            <Translate id="common.serviceType.database" />
+            <TranslateEnum enum="serviceType" value="database" />
           </div>
         </div>
       </div>

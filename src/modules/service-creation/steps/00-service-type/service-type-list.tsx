@@ -2,7 +2,7 @@ import { ServiceType } from 'src/api/model';
 import { Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 
 import { ServiceTypeItem } from './components/service-type-item';
 
@@ -29,7 +29,7 @@ export function ServiceTypeList() {
             <Link to="/services/new" search={(prev) => ({ ...prev, service_type: type })} className="group">
               <ServiceTypeItem
                 icon={<ServiceTypeIcon type={type} />}
-                label={<Translate id={`common.serviceType.${type}`} />}
+                label={<TranslateEnum enum="serviceType" value={type} />}
               />
             </Link>
           </li>

@@ -2,7 +2,7 @@ import clsx from 'clsx';
 
 import { ComputeDeployment, DeploymentBuildStep } from 'src/api/model';
 import { useNow } from 'src/hooks/timers';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 
 import { buildStatusMap } from './deployment-status-icons';
 
@@ -47,7 +47,7 @@ function BuildStep({ step }: { step: DeploymentBuildStep }) {
     <div className="col gap-2 lg:row">
       <div className="row min-w-48 items-center gap-2">
         <StatusIcon className={clsx('size-4', statusColorClassName)} />
-        <Translate id={`common.deploymentBuildStep.${step.name}`} />
+        <TranslateEnum enum="deploymentBuildStep" value={step.name} />
         {elapsed(clsx('lg:hidden'))}
       </div>
 

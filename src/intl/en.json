@@ -29,30 +29,6 @@
     "destructiveAction": "This can not be undone.",
     "confirmationDialogText": "Type <value>{confirmationText}</value> to confirm",
     "appServiceName": "{appName}/{serviceName}",
-    "serviceType": {
-      "web": "Web service",
-      "private": "Private service",
-      "worker": "Worker",
-      "database": "Database",
-      "model": "Model"
-    },
-    "deploymentStrategy": {
-      "invalid": "Invalid",
-      "canary": "Canary",
-      "rolling": "Rolling",
-      "blue_green": "Blue green",
-      "immediate": "Immediate"
-    },
-    "deploymentBuildStep": {
-      "start-docker": "Start Docker",
-      "archive-clone": "Retrieve archive",
-      "git-clone": "Clone repository",
-      "analyze": "Analyze",
-      "detect": "Detect runtime",
-      "restore": "Restore build cache",
-      "build": "Build",
-      "export": "Export docker image"
-    },
     "validation": {
       "required": "Required",
       "integer": "Must be an integer",
@@ -66,6 +42,34 @@
     }
   },
   "enums": {
+    "catalogAvailability": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "unknown": "Unknown"
+    },
+    "deploymentBuildStep": {
+      "start-docker": "Start Docker",
+      "archive-clone": "Retrieve archive",
+      "git-clone": "Clone repository",
+      "analyze": "Analyze",
+      "detect": "Detect runtime",
+      "restore": "Restore build cache",
+      "build": "Build",
+      "export": "Export docker image"
+    },
+    "deploymentStrategy": {
+      "invalid": "Invalid",
+      "canary": "Canary",
+      "rolling": "Rolling",
+      "blue_green": "Blue green",
+      "immediate": "Immediate"
+    },
+    "instanceCategory": {
+      "eco": "Eco",
+      "standard": "Standard",
+      "gpu": "GPU"
+    },
     "plans": {
       "no_plan": "No plan",
       "hobby": "Hobby",
@@ -80,21 +84,17 @@
       "partner_csp": "Partner CSP",
       "partner_csp_unit": "Partner CSP Unit"
     },
-    "catalogAvailability": {
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High",
-      "unknown": "Unknown"
-    },
-    "instanceCategory": {
-      "eco": "Eco",
-      "standard": "Standard",
-      "gpu": "GPU"
-    },
     "portProtocol": {
       "tcp": "TCP",
       "http": "HTTP",
       "http2": "HTTP/2"
+    },
+    "serviceType": {
+      "web": "Web service",
+      "private": "Private service",
+      "worker": "Worker",
+      "database": "Database",
+      "model": "Model"
     }
   },
   "components": {
