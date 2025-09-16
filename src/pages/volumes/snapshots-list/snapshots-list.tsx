@@ -1,16 +1,22 @@
 import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
 import { useVolumes } from 'src/api/hooks/volume';
+import { mapSnapshot } from 'src/api/mappers/volume';
 import { VolumeSnapshot } from 'src/api/model';
+import { useApiQueryFn } from 'src/api/use-api';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
+import { Pagination, usePagination } from 'src/components/pagination';
+import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { VolumeSnapshotStatusBadge } from 'src/components/status-badges';
 import { Title } from 'src/components/title';
 import { useNavigate } from 'src/hooks/router';
+import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -21,28 +27,46 @@ import { EditSnapshotDialog } from './edit-snapshot-dialog';
 
 const T = createTranslate('pages.volumes.snapshotsList');
 
-export function SnapshotsListSection({ snapshots }: { snapshots: VolumeSnapshot[] }) {
+export function SnapshotsListSection() {
+  const pagination = usePagination();
+
+  const query = useQuery({
+    ...useApiQueryFn('listSnapshots', { query: pagination.query }),
+    placeholderData: keepPreviousData,
+    select: ({ snapshots, has_next }) => ({
+      snapshots: snapshots!.map(mapSnapshot),
+      hasNext: Boolean(has_next),
+    }),
+  });
+
+  pagination.useSync(query.data);
+
   return (
-    <section className="col gap-4">
-      <Title as="h2" title={<T id="title" />} />
-      <SnapshotsList snapshots={snapshots} />
-    </section>
+    <QueryGuard query={query}>
+      {({ snapshots }) => (
+        <section className="col gap-4">
+          <Title as="h2" title={<T id="title" />} />
+
+          {snapshots.length === 0 && (
+            <NoResource
+              title={<T id="noSnapshots.title" />}
+              description={<T id="noSnapshots.description" />}
+              cta={null}
+            />
+          )}
+
+          {snapshots.length > 0 && <SnapshotsList snapshots={snapshots} />}
+
+          {pagination.hasPages && <Pagination pagination={pagination} />}
+        </section>
+      )}
+    </QueryGuard>
   );
 }
 
 function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
-  const isMobile = !useBreakpoint('sm');
+  const lg = !useBreakpoint('lg');
   const volumes = useVolumes();
-
-  if (snapshots.length === 0) {
-    return (
-      <NoResource
-        title={<T id="noSnapshots.title" />}
-        description={<T id="noSnapshots.description" />}
-        cta={null}
-      />
-    );
-  }
 
   return (
     <Table
@@ -57,7 +81,7 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
           render: (snapshot) => <VolumeSnapshotStatusBadge status={snapshot.status} />,
         },
         region: {
-          hidden: isMobile,
+          hidden: lg,
           header: <T id="region" />,
           render: (volume) => (
             <div className="row items-center gap-2">
@@ -68,6 +92,7 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
         },
         type: {
           header: <T id="type" />,
+          className: clsx('w-26'),
           render: (snapshot) => <T id={`snapshotType.${lowerCase(snapshot.type)}`} />,
         },
         volumeName: {
@@ -75,13 +100,19 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
           render: (snapshot) => volumes?.find(hasProperty('id', snapshot.volumeId))?.name,
         },
         created: {
-          className: 'w-48',
-          hidden: isMobile,
+          hidden: lg,
           header: <T id="created" />,
+          className: clsx('w-34'),
           render: (snapshot) => <FormattedDistanceToNow value={snapshot.createdAt} />,
         },
+        empty: {
+          hidden: lg,
+          header: null,
+          className: clsx('w-26'),
+          render: () => null,
+        },
         actions: {
-          className: clsx('w-0'),
+          className: clsx('w-[1%]'),
           render: (snapshot) => <Actions snapshot={snapshot} />,
         },
       }}
@@ -108,6 +139,7 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
                     void navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
                   })}
                 >
+                  <IconPlus className="size-4" />
                   <T id="actions.createVolume" />
                 </ButtonMenuItem>
               )}
@@ -116,12 +148,14 @@ function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
             <ButtonMenuItem
               onClick={withClose(() => openDialog('EditSnapshot', { snapshotId: snapshot.id }))}
             >
+              <IconPen className="size-4" />
               <T id="actions.update" />
             </ButtonMenuItem>
 
             <ButtonMenuItem
               onClick={withClose(() => openDialog('ConfirmDeleteSnapshot', { resourceId: snapshot.id }))}
             >
+              <IconTrash className="size-4" />
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>

@@ -38,7 +38,7 @@ export function ActionsMenu({ Icon = IconEllipsisVertical, children }: ActionsMe
         />
       )}
       renderFloating={(props) => (
-        <Menu className="min-w-24" {...props}>
+        <Menu className="min-w-40" {...props}>
           {children(withClose, onClose)}
         </Menu>
       )}

@@ -1,9 +1,9 @@
 import { ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
 import { useService } from 'src/api/hooks/service';
-import { mapSnapshot } from 'src/api/mappers/volume';
+import { mapSnapshot, mapVolume } from 'src/api/mappers/volume';
 import { Volume } from 'src/api/model';
 import { useApiQueryFn } from 'src/api/use-api';
 import { formatBytes } from 'src/application/memory';
@@ -11,11 +11,14 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { LinkButton } from 'src/components/link';
 import { NoResource } from 'src/components/no-resource';
+import { Pagination, usePagination } from 'src/components/pagination';
+import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
 import { Title } from 'src/components/title';
+import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 
@@ -26,42 +29,59 @@ import { EditVolumeDialog } from './edit-volume-dialog';
 
 const T = createTranslate('pages.volumes.volumesList');
 
-export function VolumesListSection({ volumes }: { volumes: Volume[] }) {
-  return (
-    <section className="col gap-4">
-      <Title
-        as="h2"
-        title={<T id="header.title" />}
-        end={
-          volumes.length > 0 && (
-            <LinkButton to="/volumes/new">
-              <T id="header.createVolume" />
-            </LinkButton>
-          )
-        }
-      />
+export function VolumesListSection() {
+  const pagination = usePagination();
 
-      <VolumesList volumes={volumes} />
-    </section>
+  const query = useQuery({
+    ...useApiQueryFn('listVolumes', { query: pagination.query }),
+    placeholderData: keepPreviousData,
+    select: ({ volumes, has_next }) => ({
+      volumes: volumes!.map(mapVolume),
+      hasNext: Boolean(has_next),
+    }),
+  });
+
+  pagination.useSync(query.data);
+
+  return (
+    <QueryGuard query={query}>
+      {({ volumes }) => (
+        <section className="col gap-4">
+          <Title
+            as="h2"
+            title={<T id="header.title" />}
+            end={
+              volumes.length > 0 && (
+                <LinkButton to="/volumes/new">
+                  <T id="header.createVolume" />
+                </LinkButton>
+              )
+            }
+          />
+
+          {volumes.length === 0 && (
+            <NoResource
+              title={<T id="noVolumes.title" />}
+              description={<T id="noVolumes.description" />}
+              cta={
+                <LinkButton to="/volumes/new">
+                  <T id="noVolumes.cta" />
+                </LinkButton>
+              }
+            />
+          )}
+
+          {volumes.length > 0 && <VolumesList volumes={volumes} />}
+
+          {pagination.hasPages && <Pagination pagination={pagination} />}
+        </section>
+      )}
+    </QueryGuard>
   );
 }
 
 export function VolumesList({ volumes }: { volumes: Volume[] }) {
-  const isMobile = !useBreakpoint('sm');
-
-  if (volumes.length === 0) {
-    return (
-      <NoResource
-        title={<T id="noVolumes.title" />}
-        description={<T id="noVolumes.description" />}
-        cta={
-          <LinkButton to="/volumes/new">
-            <T id="noVolumes.cta" />
-          </LinkButton>
-        }
-      />
-    );
-  }
+  const lg = !useBreakpoint('lg');
 
   return (
     <Table
@@ -76,7 +96,7 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
           render: (volume) => <VolumeStatusBadge status={volume.status} />,
         },
         region: {
-          hidden: isMobile,
+          hidden: lg,
           header: <T id="region" />,
           render: (volume) => (
             <div className="row items-center gap-2">
@@ -87,27 +107,28 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
         },
         size: {
           header: <T id="size" />,
+          className: clsx('w-26'),
           render: (volume) => formatBytes(volume.size, { decimal: true }),
         },
         attachedTo: {
-          hidden: isMobile,
+          hidden: lg,
           header: <T id="attachedTo" />,
           render: (volume) => <AttachedService serviceId={volume.serviceId} />,
         },
         created: {
-          className: 'w-48',
-          hidden: isMobile,
+          hidden: lg,
           header: <T id="created" />,
+          className: clsx('w-34'),
           render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
         },
         attach: {
-          hidden: isMobile,
-          className: clsx('w-0'),
+          hidden: lg,
           header: null,
+          className: clsx('w-26'),
           render: (volume) => <AttachVolumeButton volume={volume} />,
         },
         actions: {
-          className: clsx('w-0'),
+          className: clsx('w-[1%]'),
           render: (volume) => <Actions volume={volume} />,
         },
       }}
@@ -161,18 +182,21 @@ function Actions({ volume }: { volume: Volume }) {
         {(withClose) => (
           <>
             <ButtonMenuItem onClick={withClose(() => openDialog('EditVolume', { volumeId: volume.id }))}>
+              <IconPen className="size-4" />
               <T id="actions.edit" />
             </ButtonMenuItem>
 
             <ButtonMenuItem
               onClick={withClose(() => openDialog('CreateSnapshotFromVolume', { volumeId: volume.id }))}
             >
+              <IconPlus className="size-4" />
               <T id="actions.createSnapshot" />
             </ButtonMenuItem>
 
             <ButtonMenuItem
               onClick={withClose(() => openDialog('ConfirmDeleteVolume', { resourceId: volume.id }))}
             >
+              <IconTrash className="size-4" />
               <T id="actions.delete" />
             </ButtonMenuItem>
           </>

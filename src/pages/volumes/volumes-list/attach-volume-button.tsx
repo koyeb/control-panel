@@ -12,6 +12,7 @@ import { IconChevronDown, IconSearch } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
 import { getId } from 'src/utils/object';
+import { wait } from 'src/utils/promises';
 
 const T = createTranslate('pages.volumes.volumesList.attach');
 
@@ -57,21 +58,17 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
     },
   });
 
-  if (!searchQuery.isSuccess) {
-    return null;
-  }
-
-  const { apps, services, total } = searchQuery.data;
+  const { apps, services, total } = searchQuery.data ?? {};
   const Icon = searchQuery.isFetching ? Spinner : IconSearch;
 
   return (
     <Combobox.Provider value={combobox}>
-      <Tooltip content={volume.serviceId && <T id="alreadyMounted" />}>
+      <Tooltip content={searchQuery.error?.message ?? (volume.serviceId && <T id="alreadyMounted" />)}>
         {(props) => (
           <div {...props}>
             <Button
               {...combobox.getToggleButtonProps({ ref: combobox.floating.refs.setReference })}
-              disabled={volume.serviceId !== undefined}
+              disabled={volume.serviceId !== undefined || searchQuery.isError}
               size={1}
               color="gray"
             >
@@ -88,22 +85,21 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
           type="search"
           start={<Icon className="ml-3 size-4 text-dim" />}
           placeholder={t('placeholder')}
-          // className={clsx('max-w-full border-b bg-transparent px-3 py-1.5', { hidden: count <= 10 })}
-          boxClassName={clsx('items-center border-none outline-none', { hidden: total <= 10 })}
+          boxClassName={clsx('items-center rounded-b-none border-x-0 border-t-0 outline-none', {
+            hidden: total !== undefined && total <= 10,
+          })}
         />
 
-        <hr />
-
-        {services.length === 0 && (
+        {services?.length === 0 && (
           <div className="col min-h-24 items-center justify-center text-dim">
             <T id="noServices" />
           </div>
         )}
 
         <Combobox.Menu>
-          {services.map((service) => (
+          {services?.map((service) => (
             <Combobox.MenuItem key={service.id} item={service} className="py-1.5">
-              <ServiceItem app={apps[service.appId]} service={service} />
+              <ServiceItem app={apps?.[service.appId]} service={service} />
             </Combobox.MenuItem>
           ))}
         </Combobox.Menu>
@@ -118,6 +114,8 @@ function useSearchServicesQuery(search: string) {
     refetchInterval: false,
     placeholderData: keepPreviousData,
     queryFn: async ({ signal }) => {
+      await wait(200, signal);
+
       const [total, matchingApps, matchingServices] = await Promise.all([
         getTotalServices(signal),
         searchApps(search, signal),
@@ -160,7 +158,7 @@ async function searchApps(search: string, signal: AbortSignal): Promise<App[]> {
 
 async function searchServices(search: string, signal: AbortSignal): Promise<Service[]> {
   return getApi()
-    .listServices({ query: { name: search, limit: '10' }, signal })
+    .listServices({ query: { name: search, limit: '10', types: ['WEB', 'WORKER'] }, signal })
     .then(({ services }) => services!.map(mapService));
 }
 
@@ -183,7 +181,7 @@ async function getAppsServices(apps: App[]): Promise<Service[]> {
     ),
   );
 
-  return services.flat();
+  return services.flat().filter((service) => service.type !== 'database');
 }
 
 function ServiceItem({ app, service }: { app?: App; service: Service }) {
