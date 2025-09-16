@@ -1,97 +1,87 @@
 import { Button, ButtonColor, ButtonSize, ButtonVariant, MenuItem, TabButton } from '@koyeb/design-system';
+import { Link as BaseLink, LinkComponent, ValidateLinkOptions, createLink } from '@tanstack/react-router';
 import clsx from 'clsx';
-// eslint-disable-next-line no-restricted-imports
-import { Link as BaseLink, useRoute } from 'wouter';
 
-import { SearchParams, getNavigateUrl } from 'src/hooks/router';
 import { Extend } from 'src/utils/types';
 
-export type ValidateLinkOptions = {
-  to: string;
-  params?: Record<string, string>;
-  search?: Record<string, string | undefined> | ((params: SearchParams) => SearchParams);
-};
+export { type ValidateLinkOptions };
 
-// eslint-disable-next-line react-refresh/only-export-components
-export function linkOptions(options: ValidateLinkOptions) {
-  return options;
-}
+export const Link = BaseLink;
 
-type LinkProps = Extend<
-  Omit<React.ComponentProps<'a'>, 'href'>,
-  {
-    to: string;
-    params?: Record<string, string>;
-    search?: Record<string, string | undefined> | ((params: SearchParams) => SearchParams);
-    state?: Record<string, unknown>;
-  }
->;
-
-export function Link({ to, params, search, ...props }: LinkProps) {
-  return <BaseLink href={getNavigateUrl({ to, params, search })} {...props} />;
-}
-
-type LinkButtonProps = Extend<
-  LinkProps,
+type LinkButtonNativeProps = Extend<
+  React.ComponentProps<'a'>,
   {
     variant?: ButtonVariant;
     size?: ButtonSize;
     color?: ButtonColor;
     openInNewTab?: boolean;
-    disabled?: boolean;
   }
 >;
 
-export function LinkButton({
+function LinkButtonNative({
   variant,
   size,
   color,
   openInNewTab,
-  disabled,
   className,
   ...props
-}: LinkButtonProps) {
+}: LinkButtonNativeProps) {
+  const disabled = props.href === undefined;
+
   return (
-    <Link
+    <a
       role="button"
       target={openInNewTab ? '_blank' : undefined}
       aria-disabled={disabled}
       className={Button.className(
         { variant, size, color },
-        clsx(className, disabled && 'pointer-events-none opacity-50'),
+        clsx(className, { 'pointer-events-none opacity-50': disabled }),
       )}
       {...props}
     />
   );
 }
 
-type TabButtonProps = Extend<
-  LinkProps,
+export const LinkButton = createLink(LinkButtonNative);
+
+type TabButtonNativeProps = Extend<
+  React.ComponentProps<'a'>,
   {
     size?: 1 | 2;
     disabled?: boolean;
   }
 >;
 
-export function TabButtonLink({ size, disabled, className, ...props }: TabButtonProps) {
-  const [isActive] = useRoute(getNavigateUrl(props));
-
+function TabButtonLinkNative({ size, disabled, className, ...props }: TabButtonNativeProps) {
   return (
-    <Link
+    <a
       role="tab"
       aria-disabled={disabled}
-      data-status={isActive ? 'active' : 'inactive'}
       className={clsx(TabButton.className({ size, className }))}
       {...props}
     />
   );
 }
 
-type LinkMenuItemProps = LinkProps;
+const CreatedTabButtonLink = createLink(TabButtonLinkNative);
 
-export function LinkMenuItem({ className, ...props }: LinkMenuItemProps) {
-  return <Link className={clsx(MenuItem.className({ className }))} {...props} />;
+export const TabButtonLink: LinkComponent<typeof TabButtonLinkNative> = (props) => {
+  return (
+    <CreatedTabButtonLink
+      activeOptions={{ exact: true, includeSearch: false }}
+      inactiveProps={{ 'data-status': 'inactive' }}
+      {...props}
+    />
+  );
+};
+
+type LinkMenuItemNativeProps = React.ComponentProps<'a'>;
+
+export function LinkMenuItemNative({ className, ...props }: LinkMenuItemNativeProps) {
+  return <a className={clsx(MenuItem.className({ className }))} {...props} />;
 }
+
+export const LinkMenuItem = createLink(LinkMenuItemNative);
 
 type ExternalLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   openInNewTab?: boolean;
@@ -121,7 +111,8 @@ export function ExternalLinkButton({
 }: ExternalLinkButtonProps) {
   return (
     <ExternalLink
-      arias-disabled={disabled}
+      role="button"
+      aria-disabled={disabled}
       className={Button.className({ variant, size, color }, className)}
       {...props}
     />

@@ -1,29 +1,29 @@
-import { Button, ButtonGroup, InfoTooltip } from '@koyeb/design-system';
+import { ButtonGroup, InfoTooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { useCallback, useEffect } from 'react';
 
 import type { API } from 'src/api/api';
 import { useInstance } from 'src/api/hooks/catalog';
 import { useComputeDeployment, useService } from 'src/api/hooks/service';
 import { parseBytes } from 'src/application/memory';
+import { LinkButton } from 'src/components/link';
 import { Title } from 'src/components/title';
-import { useNavigate, useRouteParam, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { HttpThroughputGraph } from 'src/modules/metrics/graphs/http-throughput-graph';
 import { MemoryGraph } from 'src/modules/metrics/graphs/memory-graph';
 import { PublicDataTransferGraph } from 'src/modules/metrics/graphs/public-data-transfer-graph';
 import { ResponseTimeGraph } from 'src/modules/metrics/graphs/response-time-graph';
-import { MetricsTimeFrame, isMetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
+import { MetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
 
 const T = createTranslate('pages.service.metrics');
 
-export function ServiceMetricsPage() {
-  const serviceId = useRouteParam('serviceId');
+type MetricsPageProps = {
+  serviceId: string;
+  timeFrame: MetricsTimeFrame;
+};
 
-  const [timeFrame, setTimeFrame] = useTimeFrame();
-
+export function ServiceMetricsPage({ serviceId, timeFrame }: MetricsPageProps) {
   return (
     <>
       <Title
@@ -31,20 +31,21 @@ export function ServiceMetricsPage() {
         end={
           <ButtonGroup>
             {metricsTimeFrames.map((s) => (
-              <Button
+              <LinkButton
                 key={s}
+                from="/services/$serviceId/metrics"
+                search={{ 'time-frame': s }}
                 type="button"
                 variant={s === timeFrame ? 'solid' : 'outline'}
-                onClick={() => setTimeFrame(s)}
               >
                 {s.toUpperCase()}
-              </Button>
+              </LinkButton>
             ))}
           </ButtonGroup>
         }
       />
 
-      {isMetricsTimeFrame(timeFrame) && <ServiceMetrics serviceId={serviceId} timeFrame={timeFrame} />}
+      <ServiceMetrics serviceId={serviceId} timeFrame={timeFrame} />
     </>
   );
 }
@@ -152,26 +153,6 @@ function GraphCard({ label, tooltip, className, children }: GraphCardProps) {
       {children}
     </div>
   );
-}
-
-function useTimeFrame() {
-  const timeFrame = useSearchParams().get('time-frame');
-  const navigate = useNavigate();
-
-  const setTimeFrame = useCallback(
-    (timeFrame: MetricsTimeFrame) => {
-      void navigate({ search: (prev) => ({ ...prev, 'time-frame': timeFrame }) });
-    },
-    [navigate],
-  );
-
-  useEffect(() => {
-    if (!isMetricsTimeFrame(timeFrame)) {
-      setTimeFrame('5m');
-    }
-  }, [timeFrame, setTimeFrame]);
-
-  return [timeFrame, setTimeFrame] as const;
 }
 
 function useServiceInstanceType(serviceId: string) {

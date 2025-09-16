@@ -1,8 +1,6 @@
 import { Floating, Menu } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
-// eslint-disable-next-line no-restricted-imports
-import { Route, Switch } from 'wouter';
 
 import { ApiError } from 'src/api/api-errors';
 import { useAppQuery } from 'src/api/hooks/app';
@@ -17,6 +15,14 @@ import { IconCheck, IconChevronDown, IconHouse } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('layouts.main.breadcrumbs');
+
+function Route(_props: Record<string, unknown>) {
+  return null;
+}
+
+function Switch(_props: Record<string, unknown>) {
+  return null;
+}
 
 export function AppBreadcrumbs() {
   const pathname = usePathname();
@@ -63,11 +69,11 @@ export function AppBreadcrumbs() {
         <CrumbRoute path="/services/new" label={<T id="createService" />} link="/services/new" />
 
         <Route path="/database-services/:serviceId/*?">
-          {({ serviceId }) => <DatabaseServiceCrumbs databaseServiceId={serviceId} />}
+          {({ serviceId }: { serviceId: string }) => <DatabaseServiceCrumbs databaseServiceId={serviceId} />}
         </Route>
 
         <Route path="/services/:serviceId/*?">
-          {({ serviceId }) => <ServiceCrumbs serviceId={serviceId} />}
+          {({ serviceId }: { serviceId: string }) => <ServiceCrumbs serviceId={serviceId} />}
         </Route>
 
         <Route path="/settings/*?">
@@ -82,12 +88,14 @@ export function AppBreadcrumbs() {
           <Crumb link="/one-click-apps" label={<T id="oneClickApps.index" />} />
 
           <Route path="/one-click-apps/category/:category">
-            {({ category }) => (
+            {({ category }: { category: string }) => (
               <Crumb label={category} link="/one-click-apps/category/:category" params={{ category }} />
             )}
           </Route>
 
-          <Route path="/one-click-apps/:slug/*?">{({ slug }) => <OneClickAppCrumbs slug={slug} />}</Route>
+          <Route path="/one-click-apps/:slug/*?">
+            {({ slug }: { slug: string }) => <OneClickAppCrumbs slug={slug} />}
+          </Route>
         </Route>
       </Switch>
     </Breadcrumbs>

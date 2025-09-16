@@ -1,13 +1,7 @@
-import { inArray } from 'src/utils/arrays';
-
 import { DataPoint, GraphDataPoint } from './metrics-types';
 
 export const metricsTimeFrames = ['5m', '15m', '1h', '6h', '1d', '2d', '7d'] as const;
 export type MetricsTimeFrame = (typeof metricsTimeFrames)[number];
-
-export function isMetricsTimeFrame(value: unknown): value is MetricsTimeFrame {
-  return inArray(value, metricsTimeFrames);
-}
 
 export function toGraph({ date, value }: DataPoint): GraphDataPoint {
   const result: GraphDataPoint = { x: date, y: null };

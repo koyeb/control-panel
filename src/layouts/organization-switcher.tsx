@@ -172,7 +172,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!, false);
+      await setToken(token!.id!);
       onSuccess?.();
     },
   });

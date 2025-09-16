@@ -4,7 +4,12 @@ import z from 'zod';
 import { ServiceMetricsPage } from 'src/pages/service/metrics/service-metrics.page';
 
 export const Route = createFileRoute('/_main/services/$serviceId/metrics')({
-  component: ServiceMetricsPage,
+  component: function Component() {
+    const { serviceId } = Route.useParams();
+    const { 'time-frame': timeFrame } = Route.useSearch();
+
+    return <ServiceMetricsPage serviceId={serviceId} timeFrame={timeFrame} />;
+  },
 
   validateSearch: z.object({
     'time-frame': z

@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
+import { RegisteredRouter, ValidateLinkOptions, linkOptions } from '@tanstack/react-router';
 
-import { Link, LinkButton, ValidateLinkOptions, linkOptions } from 'src/components/link';
-import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { Link, LinkButton } from 'src/components/link';
+import { useSearchParams } from 'src/hooks/router';
 import { IconDocker, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { inArray } from 'src/utils/arrays';
@@ -19,24 +18,6 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 export function ServiceTypeStep() {
   const appId = useSearchParams().get('app_id');
   const serviceType = useSearchParams().get('service_type');
-  const navigate = useNavigate();
-
-  useMount(() => {
-    void navigate({
-      search: (prev) => ({
-        ...prev,
-        type: undefined,
-        service_type: undefined,
-        ports: undefined,
-      }),
-    });
-  });
-
-  useEffect(() => {
-    if (!isServiceType(serviceType)) {
-      void navigate({ search: (prev) => ({ ...prev, service_type: 'web' }) });
-    }
-  }, [serviceType, navigate]);
 
   return (
     <div className="col divide-y rounded-md border sm:row sm:divide-x md:divide-y-0">
@@ -131,14 +112,19 @@ function DeploymentSource() {
   );
 }
 
-type DeploymentSourceOptionProps = {
+type DeploymentSourceOptionProps<Router extends RegisteredRouter, Options> = {
   Icon: React.ComponentType<{ className?: string }>;
   title: React.ReactNode;
   description: React.ReactNode;
-  link: ValidateLinkOptions;
+  link: ValidateLinkOptions<Router, Options>;
 };
 
-function DeploymentSourceOption({ Icon, title, description, link }: DeploymentSourceOptionProps) {
+function DeploymentSourceOption<Router extends RegisteredRouter, Options>({
+  Icon,
+  title,
+  description,
+  link,
+}: DeploymentSourceOptionProps<Router, Options>) {
   return (
     <Link className="row max-w-80 items-center gap-3 rounded-xl border p-3 text-start" {...link}>
       <div className="rounded-lg bg-muted p-3">
