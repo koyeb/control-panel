@@ -1,7 +1,8 @@
 import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { Api } from 'src/api/api';
+import { API, Api } from 'src/api/api';
+import { createApiApp, createApiDeployment, createApiService, createApiVolume } from 'src/api/mock/fixtures';
 import {
   CatalogDatacenter,
   CatalogInstance,
@@ -15,7 +16,7 @@ import { fetchGithubRepository } from 'src/components/public-github-repository-i
 import { TOKENS } from 'src/tokens';
 import { create } from 'src/utils/factories';
 
-import { ServiceForm } from '../service-form.types';
+import { ServiceForm, ServiceVolume } from '../service-form.types';
 
 import { defaultServiceForm, initializeServiceForm } from './initialize-service-form';
 
@@ -139,6 +140,34 @@ describe('initializeServiceForm', () => {
 
       expect(values).toHaveProperty('scaling.min', 2);
       expect(values).toHaveProperty('scaling.max', 2);
+    });
+
+    test('attach volume', async () => {
+      serviceId = 'serviceId';
+      params.set('attach-volume', 'volumeId');
+
+      const definition: API.DeploymentDefinition = {
+        name: '',
+      };
+
+      const volume = createApiVolume({
+        id: 'volumeId',
+        name: 'volume-name',
+        max_size: 1,
+      });
+
+      api.getApp = async () => ({ app: createApiApp() });
+      api.getService = async () => ({ service: createApiService() });
+      api.getDeployment = async () => ({ deployment: createApiDeployment({ definition }) });
+      api.listVolumes = async () => ({ volumes: [volume] });
+
+      const values = await initialize();
+
+      expect(values).toHaveProperty('meta.expandedSection', 'volumes');
+
+      expect(values).toHaveProperty<ServiceVolume[]>('volumes', [
+        { mounted: false, mountPath: '', name: 'volume-name', size: 1, volumeId: 'volumeId' },
+      ]);
     });
 
     describe('default instance', () => {

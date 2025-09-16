@@ -81,7 +81,7 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
           render: (snapshot) => <FormattedDistanceToNow value={snapshot.createdAt} />,
         },
         actions: {
-          className: clsx('w-12'),
+          className: clsx('w-0'),
           render: (snapshot) => <Actions snapshot={snapshot} />,
         },
       }}

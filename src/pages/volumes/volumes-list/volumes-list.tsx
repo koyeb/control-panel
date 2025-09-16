@@ -19,6 +19,7 @@ import { Title } from 'src/components/title';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 
+import { AttachVolumeButton } from './attach-volume-button';
 import { CreateSnapshotDialog } from './create-snapshot-dialog';
 import { DeleteVolumeDialog } from './delete-volume-dialog';
 import { EditVolumeDialog } from './edit-volume-dialog';
@@ -99,8 +100,14 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
           header: <T id="created" />,
           render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
         },
+        attach: {
+          hidden: isMobile,
+          className: clsx('w-0'),
+          header: null,
+          render: (volume) => <AttachVolumeButton volume={volume} />,
+        },
         actions: {
-          className: clsx('w-12'),
+          className: clsx('w-0'),
           render: (volume) => <Actions volume={volume} />,
         },
       }}

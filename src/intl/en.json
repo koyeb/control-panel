@@ -3029,6 +3029,12 @@
         "size": "Size",
         "status": "Status",
         "attachedTo": "Attached to",
+        "attach": {
+          "label": "Attach to",
+          "placeholder": "Search",
+          "noServices": "No serivce found",
+          "alreadyMounted": "This volume has already been attached to a service and cannot be attached again."
+        },
         "actions": {
           "edit": "Edit",
           "createSnapshot": "Create snapshot",

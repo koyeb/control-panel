@@ -1,0 +1,206 @@
+import { Button, Combobox, InputBox, Spinner, Tooltip } from '@koyeb/design-system';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import clsx from 'clsx';
+import { useState } from 'react';
+
+import { mapApp, mapService } from 'src/api/mappers/service';
+import { App, Service, Volume } from 'src/api/model';
+import { getApi } from 'src/application/container';
+import { ServiceTypeIcon } from 'src/components/service-type-icon';
+import { useNavigate } from 'src/hooks/router';
+import { IconChevronDown, IconSearch } from 'src/icons';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { unique } from 'src/utils/arrays';
+import { getId } from 'src/utils/object';
+
+const T = createTranslate('pages.volumes.volumesList.attach');
+
+export function AttachVolumeButton({ volume }: { volume: Volume }) {
+  const t = T.useTranslate();
+  const navigate = useNavigate();
+
+  const [search, setSearch] = useState('');
+  const searchQuery = useSearchServicesQuery(search);
+
+  const combobox = Combobox.useCombobox({
+    placement: 'bottom-end',
+    offset: 4,
+    flip: true,
+    items: searchQuery.data?.services ?? [],
+    combobox: {
+      itemToString: (service) => service?.name ?? '',
+
+      inputValue: search,
+      onInputValueChange({ inputValue }) {
+        setSearch(inputValue);
+      },
+
+      onSelectedItemChange({ selectedItem: service }) {
+        if (service) {
+          void navigate({ to: `/services/${service.id}/settings`, search: { 'attach-volume': volume.id } });
+        }
+      },
+
+      stateReducer: (state, { type, changes }) => {
+        switch (type) {
+          case Combobox.stateChangeTypes.InputClick:
+            return { ...changes, isOpen: state.isOpen };
+
+          case Combobox.stateChangeTypes.ItemClick:
+          case Combobox.stateChangeTypes.InputKeyDownEnter:
+            return { ...changes, inputValue: state.inputValue };
+
+          default:
+            return changes;
+        }
+      },
+    },
+  });
+
+  if (!searchQuery.isSuccess) {
+    return null;
+  }
+
+  const { apps, services, total } = searchQuery.data;
+  const Icon = searchQuery.isFetching ? Spinner : IconSearch;
+
+  return (
+    <Combobox.Provider value={combobox}>
+      <Tooltip content={volume.serviceId && <T id="alreadyMounted" />}>
+        {(props) => (
+          <div {...props}>
+            <Button
+              {...combobox.getToggleButtonProps({ ref: combobox.floating.refs.setReference })}
+              disabled={volume.serviceId !== undefined}
+              size={1}
+              color="gray"
+            >
+              <T id="label" />
+              <IconChevronDown className="size-em" />
+            </Button>
+          </div>
+        )}
+      </Tooltip>
+
+      <Combobox.Dropdown onTransitionCancel={() => setSearch('')} className="w-full max-w-sm">
+        <InputBox
+          {...combobox.getInputProps()}
+          type="search"
+          start={<Icon className="ml-3 size-4 text-dim" />}
+          placeholder={t('placeholder')}
+          // className={clsx('max-w-full border-b bg-transparent px-3 py-1.5', { hidden: count <= 10 })}
+          boxClassName={clsx('items-center border-none outline-none', { hidden: total <= 10 })}
+        />
+
+        <hr />
+
+        {services.length === 0 && (
+          <div className="col min-h-24 items-center justify-center text-dim">
+            <T id="noServices" />
+          </div>
+        )}
+
+        <Combobox.Menu>
+          {services.map((service) => (
+            <Combobox.MenuItem key={service.id} item={service} className="py-1.5">
+              <ServiceItem app={apps[service.appId]} service={service} />
+            </Combobox.MenuItem>
+          ))}
+        </Combobox.Menu>
+      </Combobox.Dropdown>
+    </Combobox.Provider>
+  );
+}
+
+function useSearchServicesQuery(search: string) {
+  return useQuery({
+    queryKey: ['searchServices', { search }],
+    refetchInterval: false,
+    placeholderData: keepPreviousData,
+    queryFn: async ({ signal }) => {
+      const [total, matchingApps, matchingServices] = await Promise.all([
+        getTotalServices(signal),
+        searchApps(search, signal),
+        searchServices(search, signal),
+      ]);
+
+      const apps = new Map(matchingApps.map((app) => [app.id, app]));
+
+      const appsServices = await getAppsServices(matchingApps);
+      const services = unique([...matchingServices, ...appsServices], getId).slice(0, 10);
+
+      const missingAppIds = matchingServices
+        .map((service) => service.appId)
+        .filter((appId) => !apps.has(appId));
+
+      for (const app of await getApps(missingAppIds)) {
+        apps.set(app.id, app);
+      }
+
+      return {
+        total,
+        apps: Object.fromEntries(apps.entries()),
+        services,
+      };
+    },
+  });
+}
+
+async function getTotalServices(signal: AbortSignal): Promise<number> {
+  return getApi()
+    .listServices({ query: { limit: '1' }, signal })
+    .then(({ count }) => count!);
+}
+
+async function searchApps(search: string, signal: AbortSignal): Promise<App[]> {
+  return getApi()
+    .listApps({ query: { name: search, limit: '10' }, signal })
+    .then(({ apps }) => apps!.map(mapApp));
+}
+
+async function searchServices(search: string, signal: AbortSignal): Promise<Service[]> {
+  return getApi()
+    .listServices({ query: { name: search, limit: '10' }, signal })
+    .then(({ services }) => services!.map(mapService));
+}
+
+async function getApps(appIds: string[]): Promise<App[]> {
+  return Promise.all(
+    appIds.map((appId) =>
+      getApi()
+        .getApp({ path: { id: appId } })
+        .then(({ app }) => mapApp(app!)),
+    ),
+  );
+}
+
+async function getAppsServices(apps: App[]): Promise<Service[]> {
+  const services = await Promise.all(
+    apps.map((app) =>
+      getApi()
+        .listServices({ query: { app_id: app.id } })
+        .then(({ services }) => services!.map(mapService)),
+    ),
+  );
+
+  return services.flat();
+}
+
+function ServiceItem({ app, service }: { app?: App; service: Service }) {
+  return (
+    <div className="row items-center gap-2">
+      <ServiceTypeIcon type={service.type} size="medium" />
+
+      <div className="col gap-0.5">
+        <Translate
+          id="common.appServiceName"
+          values={{ appName: app?.name ?? '', serviceName: service.name }}
+        />
+
+        <div className="text-xs text-dim">
+          <TranslateEnum enum="serviceType" value={service.type} />
+        </div>
+      </div>
+    </div>
+  );
+}

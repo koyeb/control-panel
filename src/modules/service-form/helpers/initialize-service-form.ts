@@ -70,6 +70,22 @@ export async function initializeServiceForm(
 
     values.meta.previousInstance = values.instance;
     values.meta.hasPreviousBuild = service?.last_provisioned_deployment_id !== '';
+
+    if (params.has('attach-volume')) {
+      const volume = volumes?.find(hasProperty('id', params.get('attach-volume')));
+
+      values.meta.expandedSection = 'volumes';
+
+      if (volume) {
+        values.volumes.push({
+          mounted: false,
+          mountPath: '',
+          name: volume.name!,
+          size: volume.max_size!,
+          volumeId: volume.id!,
+        });
+      }
+    }
   }
 
   const duplicateServiceId = params.get('duplicate-service-id');

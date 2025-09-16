@@ -1,7 +1,32 @@
+import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 import { createId } from 'src/utils/strings';
 
 import { API } from '../api';
+
+export const createApiApp = createFactory<API.App>(() => ({
+  id: createId(),
+}));
+
+export const createApiService = createFactory<API.Service>(() => ({
+  app_id: 'appId',
+  created_at: createDate(),
+  id: createId(),
+  latest_deployment_id: '',
+  messages: [],
+  name: '',
+  organization_id: '',
+  status: 'HEALTHY',
+  type: 'WEB',
+}));
+
+export const createApiDeployment = createFactory<API.Deployment>(() => ({
+  id: createId(),
+}));
+
+export const createApiVolume = createFactory<API.PersistentVolume>(() => ({
+  id: createId(),
+}));
 
 export const createApiRegion = createFactory<API.Region>(() => ({
   id: createId(),
