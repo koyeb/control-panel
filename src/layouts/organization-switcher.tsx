@@ -34,10 +34,14 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
     combobox.closeMenu();
   });
 
-  const combobox = Combobox.useCombobox(
-    {
-      items: organizations,
+  const combobox = Combobox.useCombobox({
+    placement: 'bottom',
+    offset: 4,
+    matchReferenceSize: true,
 
+    items: organizations,
+
+    combobox: {
       isItemDisabled: (item) => item.id === currentOrganization.id,
       itemToString: (item) => item?.name ?? '',
 
@@ -67,10 +71,10 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
         }
       },
     },
-    {
+    floating: {
       strategy: 'fixed',
     },
-  );
+  });
 
   const getItemIcon = (organization: Organization) => {
     if (organization.id === currentOrganization.id) {
