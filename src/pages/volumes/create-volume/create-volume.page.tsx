@@ -1,16 +1,16 @@
 import { Button, InputEnd } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { DocumentTitle } from 'src/components/document-title';
 import { LinkButton } from 'src/components/link';
 import { Title } from 'src/components/title';
-import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useNavigate } from 'src/hooks/router';
+import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
@@ -29,11 +29,25 @@ export function CreateVolumePage() {
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
+  const snapshotId = useSearchParams().get('snapshot');
+  const fromSnapshot = snapshotId !== null;
+
+  const snapshotQuery = useQuery({
+    enabled: fromSnapshot,
+    refetchInterval: false,
+    experimental_prefetchInRender: true,
+    ...useApiQueryFn('getSnapshot', { path: { id: snapshotId! } }),
+  });
+
   const form = useForm<z.infer<typeof schema>>({
-    defaultValues: {
-      name: '',
-      region: '',
-      size: NaN,
+    defaultValues: async () => {
+      const { snapshot } = snapshotId ? await snapshotQuery.promise : {};
+
+      return {
+        name: '',
+        region: snapshot?.region ?? '',
+        size: snapshot?.size ?? NaN,
+      };
     },
     resolver: useZodResolver(schema, (error) => {
       if (error.path[0] === 'region' && error.code === 'too_small') {
@@ -47,8 +61,9 @@ export function CreateVolumePage() {
       body: {
         volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
         name,
-        max_size: size,
         region,
+        max_size: !snapshotId ? size : undefined,
+        snapshot_id: snapshotId ?? undefined,
       },
     })),
     async onSuccess(result) {
@@ -56,6 +71,7 @@ export function CreateVolumePage() {
       await navigate({ to: '/volumes' });
       notify.success(t('created', { name: result.volume?.name }));
     },
+    onError: useFormErrorHandler(form),
   });
 
   return (
@@ -82,17 +98,14 @@ export function CreateVolumePage() {
           control={form.control}
           name="region"
           render={({ field, fieldState }) => (
-            <RegionSelector
-              selected={field.value}
-              onChange={field.onChange}
-              error={fieldState.error?.message}
-            />
+            <RegionSelector field={{ ...field, disabled: fromSnapshot }} error={fieldState.error?.message} />
           )}
         />
 
         <ControlledInput
           control={form.control}
           name="size"
+          disabled={fromSnapshot}
           type="number"
           label={<T id="size.label" />}
           placeholder={t('size.placeholder')}
@@ -108,7 +121,11 @@ export function CreateVolumePage() {
           <LinkButton color="gray" to="/volumes">
             <Translate id="common.back" />
           </LinkButton>
-          <Button type="submit" loading={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            loading={form.formState.isSubmitting}
+            disabled={form.formState.submitCount > 0 && !form.formState.isValid}
+          >
             <T id="submit" />
           </Button>
         </div>

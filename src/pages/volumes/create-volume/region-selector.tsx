@@ -1,4 +1,5 @@
 import { Field, FieldHelperText, FieldLabel, RadioInput } from '@koyeb/design-system';
+import clsx from 'clsx';
 
 import { useRegions } from 'src/api/hooks/catalog';
 import { CatalogRegion } from 'src/api/model';
@@ -9,12 +10,11 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('pages.volumes.create');
 
 type RegionSelectorProps = {
-  selected: string;
-  onChange: (identifier: string) => void;
+  field: React.ComponentProps<'input'> & { onChange: (regionId: string) => void };
   error?: React.ReactNode;
 };
 
-export function RegionSelector({ selected, onChange, error }: RegionSelectorProps) {
+export function RegionSelector({ field, error }: RegionSelectorProps) {
   const regions = useRegions().filter((region) => region.volumesEnabled);
 
   return (
@@ -37,12 +37,7 @@ export function RegionSelector({ selected, onChange, error }: RegionSelectorProp
             {regions
               .filter((region) => region.scope === scope)
               .map((region) => (
-                <RegionItem
-                  key={region.id}
-                  region={region}
-                  selected={selected === region.id}
-                  onSelected={() => onChange(region.id)}
-                />
+                <RegionItem key={region.id} region={region} {...field} />
               ))}
           </div>
         </div>
@@ -51,18 +46,21 @@ export function RegionSelector({ selected, onChange, error }: RegionSelectorProp
   );
 }
 
-type RegionItemProps = {
+type RegionItemProps = RegionSelectorProps['field'] & {
   region: CatalogRegion;
-  selected: boolean;
-  onSelected: () => void;
 };
 
-function RegionItem({ region, selected, onSelected }: RegionItemProps) {
+function RegionItem({ region, ...field }: RegionItemProps) {
   return (
-    <label className="row w-64 cursor-pointer items-center gap-2 rounded-md border px-3 py-1">
+    <label
+      className={clsx(
+        'row w-64 cursor-pointer items-center gap-2 rounded-md border px-3 py-1',
+        'has-disabled:pointer-events-none has-disabled:bg-muted has-disabled:text-dim',
+      )}
+    >
       <RegionFlag regionId={region.id} className="size-5" />
       <RegionName regionId={region.id} className="flex-1" />
-      <RadioInput type="radio" checked={selected} onChange={() => onSelected()} />
+      <RadioInput {...field} checked={field.value === region.id} onChange={() => field.onChange(region.id)} />
     </label>
   );
 }
