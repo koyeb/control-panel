@@ -25,7 +25,6 @@ import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus, IconX } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { CommandPaletteProvider } from 'src/modules/command-palette';
-import { CreateServiceDialog } from 'src/modules/create-service-dialog/create-service-dialog';
 import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { useTrial } from 'src/modules/trial/use-trial';
@@ -63,7 +62,6 @@ export function MainLayout({ children }: LayoutProps) {
     <CommandPaletteProvider>
       <DocumentTitle />
 
-      <CreateServiceDialog />
       <FeatureFlagsDialog />
       <TrialWelcomeDialog />
 

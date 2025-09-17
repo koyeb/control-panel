@@ -474,57 +474,6 @@
         }
       }
     },
-    "createServiceDialog": {
-      "searchPlaceholder": "Search",
-      "shortcuts": {
-        "navigate": "to navigate",
-        "select": "to select",
-        "close": "to close",
-        "return": "to return"
-      },
-      "navigation": {
-        "create": "Create",
-        "webService": "Web service",
-        "worker": "Worker",
-        "database": "Database",
-        "oneClickApps": "one-click apps",
-        "source": "Source",
-        "github": "GitHub",
-        "docker": "Docker",
-        "yourRepository": "Your repository",
-        "publicRepository": "Public repository",
-        "settings": "Settings",
-        "dockerImage": "Docker image",
-        "registryConfiguration": "Registry configuration"
-      },
-      "webService": "Web service",
-      "webServiceDescription": "A web service accessible from the Internet and the service mesh",
-      "worker": "Worker",
-      "workerDescription": "Runs in the background and is not internet accessible",
-      "database": "Database",
-      "databaseDescription": "Fully managed, serverless Postgres database",
-      "createService": "Create {serviceType}",
-      "github": "GitHub",
-      "githubDescription": "Connect, build and deploy your code from a GitHub repository",
-      "installGithubApp": "Install GitHub app",
-      "docker": "Docker",
-      "dockerDescription": "Deploy docker images from any public or private registries",
-      "deployOneClickApp": "Deploy {name}",
-      "deployWith": "Deploy with {type}",
-      "publicRepositoryLabel": "Public repository URL",
-      "publicRepositoryPlaceholder": "e.g. https://github.com/koyeb/example-golang",
-      "deployRepository": "Deploy repository",
-      "invalidGithubRepositoryUrl": "Please provide a GitHub repository URL",
-      "repositories": "Repositories",
-      "githubAppLinks": "Missing Git repository? <resynchronizeLink>Re-synchronize</resynchronizeLink> repositories or <githubAppLink>edit GitHub app permissions</githubAppLink>.",
-      "repositoriesSynchronized": "Repositories synchronized",
-      "dockerImagePath": "Docker image path",
-      "deployImage": "Deploy image",
-      "privateImage": "Private",
-      "registryConfigurationLabel": "Registry configuration",
-      "noRegistrySecrets": "No registry configuration secret found",
-      "createRegistrySecret": "Missing registry configuration secret? <link>Create secret</link>"
-    },
     "databaseForm": {
       "engine": {
         "title": "Engine",

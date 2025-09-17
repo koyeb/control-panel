@@ -52,10 +52,15 @@ export async function authenticateOnGithub(context: BrowserContext) {
 
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
 
-  await page.locator('[name="app_otp"]').fill(TOTP.generate(config.github.totpKey).otp);
+  await page.locator('[name="app_otp"]').fill(await oneTimePassword());
 
   await page.waitForURL('https://github.com');
   await page.close();
+}
+
+async function oneTimePassword() {
+  const { otp } = await TOTP.generate(config.github.totpKey);
+  return otp;
 }
 
 export async function deleteKoyebResources(baseUrl?: string) {
