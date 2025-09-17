@@ -1,13 +1,7 @@
-import {
-  AccordionHeader,
-  AccordionSection,
-  Badge,
-  Checkbox,
-  FieldHelperText,
-  Tooltip,
-} from '@koyeb/design-system';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef, useState } from 'react';
+import { AccordionHeader, AccordionSection, Badge, Checkbox, FieldHelperText } from '@koyeb/design-system';
+import { useMutation } from '@tanstack/react-query';
+import merge from 'lodash-es/merge';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -16,21 +10,23 @@ import {
   useForm,
   useFormContext,
 } from 'react-hook-form';
+import { z } from 'zod';
 
-import { useDatacenters, useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
+import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
 import { useGithubApp } from 'src/api/hooks/git';
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { OneClickApp, OneClickAppEnv } from 'src/api/model';
+import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/api/model';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
+import { tooBig, tooSmall } from 'src/application/zod';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
-import { useNavigate } from 'src/hooks/router';
+import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import {
@@ -48,15 +44,20 @@ import { InstanceCategoryTabs } from '../instance-selector/instance-category-tab
 
 import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
+import { deploymentDefinitionToServiceForm } from './helpers/deployment-to-service-form';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
-import { initializeServiceForm } from './helpers/initialize-service-form';
+import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
-import { serviceFormSchema } from './helpers/service-form.schema';
 import { submitServiceForm } from './helpers/submit-service-form';
 import { ServiceForm } from './service-form.types';
-import { useWatchServiceForm } from './use-service-form';
 
 const T = createTranslate('modules.serviceForm.oneClickAppForm');
+
+type OneClickAppForm = {
+  instance: string | null;
+  regions: string[];
+  environmentVariables: EnvironmentVariable[];
+};
 
 type OneClickAppFormProps = {
   app: OneClickApp;
@@ -66,44 +67,45 @@ type OneClickAppFormProps = {
 export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   const navigate = useNavigate();
 
-  const datacenters = useDatacenters();
-  const regions = useRegions();
+  const searchParams = useSearchParams();
+  const appId = searchParams.get('app_id');
+
   const instances = useInstances();
-  const organization = useOrganization();
-  const quotas = useOrganizationQuotas();
   const githubApp = useGithubApp();
-  const queryClient = useQueryClient();
 
-  const form = useForm<ServiceForm>({
-    defaultValues: async () => {
-      const { searchParams } = new URL(app.deployUrl);
+  const serviceForm = useMemo(() => {
+    return merge(
+      { ...defaultServiceForm(), environmentVariables: [] },
+      deploymentDefinitionToServiceForm(app.deploymentDefinition, githubApp?.organizationName, []),
+      {
+        meta: { appId },
+        appName: app.slug,
+        volumes: app.templateDefinition?.volumes?.map((volume) => ({
+          name: volume.name,
+          size: volume.size,
+          mountPath: volume.path,
+          mounted: false,
+        })),
+      },
+    );
+  }, [app, githubApp, appId]);
 
-      const form = await initializeServiceForm(
-        searchParams,
-        datacenters,
-        regions,
-        instances,
-        organization,
-        quotas,
-        githubApp,
-        undefined,
-        queryClient,
-      );
-
-      form.environmentVariables = app.env.map((env) => ({
+  const form = useForm<OneClickAppForm>({
+    defaultValues: {
+      instance: serviceForm.instance,
+      regions: serviceForm.regions,
+      environmentVariables: app.templateEnv.map((env) => ({
         name: env.name,
         value: String(env.default ?? ''),
         regions: [],
-      }));
-
-      return form;
+      })),
     },
-    resolver: useZodResolver(serviceFormSchema(organization, quotas)),
+    resolver: useZodResolver(createSchema(app)),
   });
 
   const mutation = useMutation({
     mutationKey: ['deployOneClickApp'],
-    mutationFn: submitServiceForm,
+    mutationFn: (values: OneClickAppForm) => submitServiceForm(merge(serviceForm, values)),
     async onSuccess({ serviceId }) {
       await navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },
@@ -112,7 +114,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   const formRef = useRef<HTMLFormElement>(null);
   const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
 
-  useOnCostEstimationChanged(form, onCostChanged);
+  useOnCostEstimationChanged(form, serviceForm, onCostChanged);
 
   if (form.formState.isLoading) {
     return <Loading />;
@@ -132,14 +134,14 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
         id="one-click-app-form"
         className="col gap-6"
       >
-        <OverviewSection app={app} />
+        <OverviewSection app={app} serviceForm={serviceForm} />
 
         <div className="rounded-lg border">
           <EnvironmentVariablesSection app={app} />
-          <InstanceSection />
+          <InstanceSection serviceForm={serviceForm} />
         </div>
 
-        <VolumesSection />
+        <VolumesSection serviceForm={serviceForm} />
       </form>
 
       <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
@@ -148,22 +150,57 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   );
 }
 
+function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm> {
+  return z.object({
+    instance: z.string(),
+    regions: z.array(z.string()).min(1),
+    environmentVariables: z.array(createEnvironmentVariableSchema(app.templateEnv)),
+  });
+}
+
+function createEnvironmentVariableSchema(env: OneClickAppEnv[]): z.ZodType<EnvironmentVariable> {
+  return z.object({ name: z.string(), value: z.string(), regions: z.tuple([]) }).superRefine((value, ctx) => {
+    const definition = env.find(hasProperty('name', value.name));
+
+    if (definition?.type === 'number') {
+      const number = Number(value.value);
+
+      if (Number.isNaN(number)) {
+        return;
+      }
+
+      if (definition.min !== undefined && number < definition.min) {
+        ctx.addIssue(tooSmall('value', definition.min));
+      }
+
+      if (definition.max !== undefined && number > definition.max) {
+        ctx.addIssue(tooBig('value', definition.max));
+      }
+    }
+  });
+}
+
 function useOnCostEstimationChanged(
-  form: UseFormReturn<ServiceForm>,
+  form: UseFormReturn<OneClickAppForm>,
+  serviceForm: ServiceForm | undefined,
   onChanged: (cost?: ServiceCost) => void,
 ) {
   const instance = useInstance(form.watch('instance'));
   const regions = useDeepCompareMemo(useRegions(form.watch('regions')));
 
   useEffect(() => {
+    if (serviceForm === undefined) {
+      return;
+    }
+
     const cost = computeEstimatedCost(
       instance,
       regions.map((region) => region.id),
-      { min: 1, max: 1 },
+      serviceForm.scaling,
     );
 
     onChanged(cost);
-  }, [instance, regions, onChanged]);
+  }, [instance, regions, serviceForm, onChanged]);
 }
 
 type SectionProps = {
@@ -180,29 +217,38 @@ function Section({ title, children }: SectionProps) {
   );
 }
 
-function OverviewSection({ app }: { app: OneClickApp }) {
-  const { watch } = useFormContext<ServiceForm>();
+function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: ServiceForm }) {
+  const { watch } = useFormContext<OneClickAppForm>();
+
+  const value = ({ value, href }: OneClickAppMetadata) => {
+    if (href) {
+      return (
+        <ExternalLink href={href} className="text-link" title={String(value)}>
+          {value}
+        </ExternalLink>
+      );
+    }
+
+    return <span title={String(value)}>{value}</span>;
+  };
 
   return (
     <Section title={<T id="overview" />}>
       <div className="divide-y rounded bg-muted">
         <dl className="row flex-wrap gap-3 p-3">
-          {app.metadata?.map(({ name, value }, index) => (
+          {app.templateMetadata.map((metadata, index) => (
             <Metadata
               key={index}
-              label={name}
-              value={<Tooltip content={value}>{(props) => <span {...props}>{value}</span>}</Tooltip>}
+              label={metadata.name}
+              value={value(metadata)}
               className="w-40 [&>dd]:truncate"
             />
           ))}
-
-          {/* todo */}
-          {app.metadata === undefined && <>No metadata</>}
         </dl>
 
         <dl className="row flex-wrap gap-3 p-3 [&>div]:w-40">
           <InstanceTypeMetadata instanceType={watch('instance')} />
-          <ScalingMetadata scaling={watch('scaling')} />
+          <ScalingMetadata scaling={serviceForm.scaling} />
           <RegionsMetadata regions={watch('regions')} />
         </dl>
       </div>
@@ -213,12 +259,12 @@ function OverviewSection({ app }: { app: OneClickApp }) {
 function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
   const [optionalExpanded, setOptionalExpanded] = useState(false);
 
-  const { watch } = useFormContext<ServiceForm>();
+  const { watch } = useFormContext<OneClickAppForm>();
   const env = watch('environmentVariables');
   const index = (name: string) => env.findIndex(hasProperty('name', name));
 
-  const required = app.env.filter(hasProperty('required', true));
-  const optional = app.env.filter(hasProperty('required', false));
+  const required = app.templateEnv.filter(hasProperty('required', true));
+  const optional = app.templateEnv.filter(hasProperty('required', false));
 
   if (required.length === 0 && optional.length === 0) {
     return null;
@@ -226,13 +272,13 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
 
   return (
     <section>
-      <header className="row h-16 items-center px-3 py-2">
+      <header className="row items-center px-3 pt-2 pb-1">
         <div className="font-medium">
           <T id="environmentVariables.title" />
         </div>
       </header>
 
-      <div className="col gap-6 px-3 py-4">
+      <div className="col gap-6 px-3 pt-1 pb-3">
         {required.map((env) => (
           <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
         ))}
@@ -249,7 +295,7 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
             }
             className="rounded-md border bg-muted"
           >
-            <div className="col gap-6 p-4">
+            <div className="col gap-6 px-3 pt-1 pb-3">
               {optional.map((env) => (
                 <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
               ))}
@@ -303,20 +349,16 @@ function EnvironmentVariableField({ index, env }: { index: number; env: OneClick
   return (
     <ControlledInput
       name={`environmentVariables.${index}.value`}
-      type={env.type}
+      type="string"
       label={env.label}
       helperText={env.description}
       required={env.required}
-      min={env.type === 'number' ? env.min : undefined}
-      max={env.type === 'number' ? env.max : undefined}
     />
   );
 }
 
-function InstanceSection() {
+function InstanceSection({ serviceForm }: { serviceForm: ServiceForm }) {
   const [expanded, setExpanded] = useState(false);
-
-  const { watch } = useFormContext<ServiceForm>();
 
   const instances = useInstances();
   const regions = useRegions();
@@ -328,8 +370,8 @@ function InstanceSection() {
   const selectedRegions = regions.filter((region) => inArray(region.id, regionsCtrl.field.value));
 
   const availabilities = useInstanceAvailabilities({
-    serviceType: watch('serviceType'),
-    hasVolumes: watch('volumes').length > 0,
+    serviceType: serviceForm.serviceType,
+    hasVolumes: serviceForm.volumes.length > 0,
   });
 
   const selector = useInstanceSelector({
@@ -398,8 +440,8 @@ function InstanceSection() {
   );
 }
 
-function VolumesSection() {
-  const volumes = useWatchServiceForm('volumes');
+function VolumesSection({ serviceForm }: { serviceForm: ServiceForm }) {
+  const volumes = serviceForm.volumes;
 
   if (volumes.length === 0) {
     return null;
@@ -407,10 +449,10 @@ function VolumesSection() {
 
   return (
     <Section title={<T id="volumes.title" />}>
-      {volumes.map((volume, index) => (
+      {volumes.map((volume) => (
         <div key={volume.name} className="divide-y rounded bg-muted">
           <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
-            <Metadata label={<T id="volumes.name" values={{ number: index + 1 }} />} value={volume.name} />
+            <Metadata label={<T id="volumes.name" />} value={volume.name} />
 
             <Metadata label={<T id="volumes.mountPath" />} value={volume.mountPath} />
 
