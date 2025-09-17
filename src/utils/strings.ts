@@ -1,5 +1,3 @@
-import { z } from 'zod';
-
 import { SnakeToCamelCase } from './types';
 
 export function lowerCase(str: undefined): undefined;
@@ -62,10 +60,6 @@ export function snakeToCamelCase<Str extends string>(str: Str): SnakeToCamelCase
     .split('_')
     .map((str, i) => (i === 0 ? str : capitalize(str)))
     .join('') as SnakeToCamelCase<Str>;
-}
-
-export function isUuid(str: string): boolean {
-  return z.string().uuid().safeParse(str).success;
 }
 
 export function normalizeDiacriticCharacters(string: string) {

@@ -1,6 +1,6 @@
 // cspell:word dequal
 import { dequal as deepEqual } from 'dequal';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 /* eslint-disable react-hooks/exhaustive-deps */
 
@@ -25,18 +25,6 @@ export function useUpdateEffect(effect: React.EffectCallback, deps: React.Depend
   const isFirstRender = useRef(true);
 
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-    } else {
-      effect();
-    }
-  }, deps);
-}
-
-export function useUpdateLayoutEffect(effect: React.EffectCallback, deps: React.DependencyList) {
-  const isFirstRender = useRef(true);
-
-  useLayoutEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
     } else {

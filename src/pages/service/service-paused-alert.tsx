@@ -49,7 +49,7 @@ type ResumeDialogProps = {
   service: Service;
 };
 
-export function ResumeServiceDialog({ service }: ResumeDialogProps) {
+function ResumeServiceDialog({ service }: ResumeDialogProps) {
   const navigate = useNavigate();
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();

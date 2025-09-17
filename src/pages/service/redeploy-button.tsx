@@ -56,7 +56,7 @@ type RedeployDialogProps = {
   service: Service;
 };
 
-export function RedeployDialog({ id, context, service }: RedeployDialogProps) {
+function RedeployDialog({ id, context, service }: RedeployDialogProps) {
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
   const navigate = useNavigate();

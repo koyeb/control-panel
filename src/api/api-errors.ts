@@ -19,18 +19,6 @@ const apiErrorSchema = z.object({
 type ApiErrorType = z.infer<typeof apiErrorSchema>;
 export const isApiError = createValidationGuard(apiErrorSchema);
 
-export const isApiNotFoundError = createValidationGuard(
-  apiErrorSchema.extend({
-    code: z.literal('not_found'),
-  }),
-);
-
-export const isApiFailedPrecondition = createValidationGuard(
-  apiErrorSchema.extend({
-    code: z.literal('failed_precondition'),
-  }),
-);
-
 export const isAccountLockedError = createValidationGuard(
   z.object({
     status: z.literal(403),

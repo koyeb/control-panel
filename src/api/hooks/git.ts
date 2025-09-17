@@ -9,7 +9,7 @@ import { getApiQueryKey, useApiQueryFn } from '../use-api';
 
 import { useOrganizationUnsafe } from './session';
 
-export const isNoGithubAppError = (error: unknown) => {
+const isNoGithubAppError = (error: unknown) => {
   return ApiError.is(error, 400) && error.message === 'No GitHub Installation';
 };
 

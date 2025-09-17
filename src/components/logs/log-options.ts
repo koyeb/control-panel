@@ -47,7 +47,3 @@ function getStoredOptions(): Partial<LogOptions> {
 
   return {};
 }
-
-export function storeLogOptions({ fullScreen, tail, ...options }: Partial<LogOptions>) {
-  localStorage.setItem('logs', JSON.stringify(options));
-}

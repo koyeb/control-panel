@@ -5,5 +5,3 @@ export function createValidationGuard<Schema extends ZodType>(schema: Schema) {
     return schema.safeParse(value).success;
   };
 }
-
-export type InferGuardType<Guard> = Guard extends (value: unknown) => value is infer T ? T : never;

@@ -45,7 +45,7 @@ type ReplicaItemProps = {
   metrics?: { cpu?: number; memory?: number };
 };
 
-export function ReplicaItem({ deployment, replica, metrics }: ReplicaItemProps) {
+function ReplicaItem({ deployment, replica, metrics }: ReplicaItemProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
