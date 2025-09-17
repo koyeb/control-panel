@@ -269,9 +269,6 @@ function useShortcuts(
   const canSelectPrevious = dialogId === undefined && selectedIndex > 0;
   const canSelectNext = dialogId === undefined && selectedIndex < totalDeployments - 1;
 
-  useShortcut(['j'], canSelectNext ? selectNext : undefined);
   useShortcut(['ArrowDown'], canSelectNext ? selectNext : undefined);
-
-  useShortcut(['k'], canSelectPrevious ? selectPrevious : undefined);
   useShortcut(['ArrowUp'], canSelectPrevious ? selectPrevious : undefined);
 }
