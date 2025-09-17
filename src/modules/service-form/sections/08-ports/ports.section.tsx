@@ -1,7 +1,6 @@
 import { Badge, Button } from '@koyeb/design-system';
 import { useFieldArray } from 'react-hook-form';
 
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
@@ -11,7 +10,6 @@ import { ServiceForm } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
 import { PortFields } from './port-fields';
-import { PortFields as PortFieldsOld } from './port-fields.old';
 
 const T = createTranslate('modules.serviceForm.ports');
 
@@ -27,15 +25,7 @@ export function PortsSection() {
       className="col gap-6"
     >
       {fields.map(({ id }, index) => (
-        <FeatureFlag
-          key={id}
-          feature="proxy-ports"
-          fallback={
-            <PortFieldsOld index={index} onRemove={fields.length === 1 ? undefined : () => remove(index)} />
-          }
-        >
-          <PortFields index={index} onRemove={fields.length === 1 ? undefined : () => remove(index)} />
-        </FeatureFlag>
+        <PortFields key={id} index={index} onRemove={fields.length === 1 ? undefined : () => remove(index)} />
       ))}
 
       <Button
