@@ -32,7 +32,7 @@ export function PublicGithubRepositoryInput({
 
   const { mutate } = useMutation({
     mutationKey: ['fetchPublicRepository'],
-    mutationFn: fetchGithubRepository,
+    mutationFn: (name: string) => fetchGithubRepository(name),
     onSuccess: onRepositoryFetched,
     onError(error) {
       if (error.message === 'GithubRepositoryNotFound') {
