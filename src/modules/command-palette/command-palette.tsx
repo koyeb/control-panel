@@ -1,7 +1,6 @@
 import { useCombobox } from 'downshift';
 
 import { Dialog } from 'src/components/dialog';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useMount } from 'src/hooks/lifecycle';
 import { useShortcut } from 'src/hooks/shortcut';
 import { IconSearch } from 'src/icons';
@@ -20,14 +19,14 @@ import { useCommandPalette } from './use-command-palette';
 const T = createTranslate('modules.commandPalette');
 
 export function CommandPaletteProvider({ children }: { children: React.ReactNode }) {
-  const newCommandPalette = useFeatureFlag('new-command-palette');
-
   const openDialog = Dialog.useOpen();
   const closeDialog = Dialog.useClose();
 
   const palette = useCommandPalette(closeDialog);
 
-  useShortcut(['meta', 'k'], newCommandPalette ? () => openDialog('CommandPalette') : undefined);
+  useShortcut(['meta', 'k'], () => {
+    openDialog('CommandPalette');
+  });
 
   return (
     <CommandPaletteContext value={palette}>
