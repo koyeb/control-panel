@@ -28,8 +28,8 @@ type InstanceLogsProps = {
 };
 
 export function InstanceLogs({ instance }: InstanceLogsProps) {
-  const app = useApp(useRouteParam('appId'));
   const service = useService(useRouteParam('serviceId'));
+  const app = useApp(service?.appId);
 
   const now = useMemo(() => new Date(), []);
 
