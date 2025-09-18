@@ -140,14 +140,14 @@ class ServiceFormBuilder {
 
   set privileged(privileged: string | null) {
     if (privileged === 'true') {
-      if (this.type === 'git') {
+      if (this.type === 'docker') {
+        this.set('dockerDeployment', {
+          privileged: true,
+        });
+      } else {
         this.set('builder', {
           buildpackOptions: { privileged: true },
           dockerfileOptions: { privileged: true },
-        });
-      } else {
-        this.set('dockerDeployment', {
-          privileged: true,
         });
       }
     }

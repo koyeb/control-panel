@@ -126,7 +126,7 @@ function BuilderConfiguration({ builder }: { builder: BuilderType }) {
           run_command: buildpack.runCommand ?? undefined,
           build_command: buildpack.buildCommand ?? undefined,
           workdir: buildpack.workDirectory ?? undefined,
-          privileged: buildpack.privileged || undefined,
+          privileged: buildpack.privileged ? String(buildpack.privileged) : undefined,
         }),
 
         ...(builder === 'dockerfile' && {
@@ -136,7 +136,7 @@ function BuilderConfiguration({ builder }: { builder: BuilderType }) {
           args: dockerfile.args ?? undefined,
           target: dockerfile.target ?? undefined,
           workdir: dockerfile.workDirectory ?? undefined,
-          privileged: dockerfile.privileged || undefined,
+          privileged: dockerfile.privileged ? String(buildpack.privileged) : undefined,
         }),
       }),
     });

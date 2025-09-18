@@ -21,7 +21,7 @@ export const Route = createFileRoute('/_main/services/new')({
         z.literal('review'),
         z.literal('initialDeployment'),
       ])
-      .default('serviceType'),
+      .catch('serviceType'),
     serviceId: z.string().optional(),
   }),
 

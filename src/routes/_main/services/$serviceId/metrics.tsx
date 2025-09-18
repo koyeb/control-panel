@@ -23,7 +23,7 @@ export const Route = createFileRoute('/_main/services/$serviceId/metrics')({
         z.literal('2d'),
         z.literal('7d'),
       ])
-      .default('5m'),
+      .catch('5m'),
   }),
 
   beforeLoad: ({ params }) => ({
