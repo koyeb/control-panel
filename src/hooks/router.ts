@@ -38,7 +38,7 @@ export function useSearchParams(): URLSearchParams {
   return new URLSearchParams(useTanstackLocation({ select: (s) => s.searchStr }));
 }
 
-export function urlToLinkOptions(url: string): ValidateLinkOptions {
+export function urlToLinkOptions(url: string | URL): ValidateLinkOptions {
   const { pathname, searchParams } = new URL(url, window.location.origin);
 
   return {
