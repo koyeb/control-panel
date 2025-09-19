@@ -62,7 +62,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
           throw error;
         }),
-      ]);
+      ]).catch(() => {});
     }
   },
 });

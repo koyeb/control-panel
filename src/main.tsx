@@ -156,6 +156,13 @@ const router = createRouter({
     queryClient,
     translate: createTranslateFn(),
   },
+  defaultOnCatch(error, errorInfo) {
+    if (ApiError.is(error, 401)) {
+      void handleAuthenticationError(error);
+    } else {
+      reportError(error, errorInfo);
+    }
+  },
   Wrap({ children }) {
     const persister = useQueryClientPersister();
     const auth = container.resolve(TOKENS.authentication);
