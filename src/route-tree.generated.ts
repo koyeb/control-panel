@@ -48,6 +48,7 @@ import { Route as MainUserSettingsIndexRouteImport } from './routes/_main/user.s
 import { Route as MainServicesServiceIdIndexRouteImport } from './routes/_main/services/$serviceId/index'
 import { Route as MainOneClickAppsSlugIndexRouteImport } from './routes/_main/one-click-apps/$slug.index'
 import { Route as MainDatabaseServicesDatabaseServiceIdIndexRouteImport } from './routes/_main/database-services/$databaseServiceId/index'
+import { Route as OrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/organization/deactivate.confirm.$confirmationId'
 import { Route as AccountOauthGithubCallbackRouteImport } from './routes/account/oauth.github.callback'
 import { Route as MainUserSettingsOrganizationsRouteImport } from './routes/_main/user.settings/organizations'
 import { Route as MainUserSettingsApiRouteImport } from './routes/_main/user.settings/api'
@@ -60,7 +61,6 @@ import { Route as MainDatabaseServicesDatabaseServiceIdSettingsRouteImport } fro
 import { Route as MainDatabaseServicesDatabaseServiceIdRolesRouteImport } from './routes/_main/database-services/$databaseServiceId/roles'
 import { Route as MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport } from './routes/_main/database-services/$databaseServiceId/databases'
 import { Route as MainAccountOrganization_invitationsInvitationIdRouteImport } from './routes/_main/account/organization_invitations.$invitationId'
-import { Route as MainOrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/_main/organization/deactivate.confirm.$confirmationId'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
@@ -265,6 +265,12 @@ const MainDatabaseServicesDatabaseServiceIdIndexRoute =
     path: '/',
     getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
   } as any)
+const OrganizationDeactivateConfirmConfirmationIdRoute =
+  OrganizationDeactivateConfirmConfirmationIdRouteImport.update({
+    id: '/organization/deactivate/confirm/$confirmationId',
+    path: '/organization/deactivate/confirm/$confirmationId',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AccountOauthGithubCallbackRoute =
   AccountOauthGithubCallbackRouteImport.update({
     id: '/account/oauth/github/callback',
@@ -336,12 +342,6 @@ const MainAccountOrganization_invitationsInvitationIdRoute =
     path: '/account/organization_invitations/$invitationId',
     getParentRoute: () => MainRouteRoute,
   } as any)
-const MainOrganizationDeactivateConfirmConfirmationIdRoute =
-  MainOrganizationDeactivateConfirmConfirmationIdRouteImport.update({
-    id: '/organization/deactivate/confirm/$confirmationId',
-    path: '/organization/deactivate/confirm/$confirmationId',
-    getParentRoute: () => MainRouteRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -390,11 +390,11 @@ export interface FileRoutesByFullPath {
   '/user/settings/api': typeof MainUserSettingsApiRoute
   '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
   '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
+  '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-click-apps/$slug/': typeof MainOneClickAppsSlugIndexRoute
   '/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/user/settings/': typeof MainUserSettingsIndexRoute
-  '/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
@@ -436,11 +436,11 @@ export interface FileRoutesByTo {
   '/user/settings/api': typeof MainUserSettingsApiRoute
   '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
   '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
+  '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-click-apps/$slug': typeof MainOneClickAppsSlugIndexRoute
   '/services/$serviceId': typeof MainServicesServiceIdIndexRoute
   '/user/settings': typeof MainUserSettingsIndexRoute
-  '/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -491,11 +491,11 @@ export interface FileRoutesById {
   '/_main/user/settings/api': typeof MainUserSettingsApiRoute
   '/_main/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
   '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
+  '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/_main/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/_main/one-click-apps/$slug/': typeof MainOneClickAppsSlugIndexRoute
   '/_main/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/_main/user/settings/': typeof MainUserSettingsIndexRoute
-  '/_main/organization/deactivate/confirm/$confirmationId': typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -546,11 +546,11 @@ export interface FileRouteTypes {
     | '/user/settings/api'
     | '/user/settings/organizations'
     | '/account/oauth/github/callback'
+    | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId/'
     | '/one-click-apps/$slug/'
     | '/services/$serviceId/'
     | '/user/settings/'
-    | '/organization/deactivate/confirm/$confirmationId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
@@ -592,11 +592,11 @@ export interface FileRouteTypes {
     | '/user/settings/api'
     | '/user/settings/organizations'
     | '/account/oauth/github/callback'
+    | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId'
     | '/one-click-apps/$slug'
     | '/services/$serviceId'
     | '/user/settings'
-    | '/organization/deactivate/confirm/$confirmationId'
   id:
     | '__root__'
     | '/_main'
@@ -646,11 +646,11 @@ export interface FileRouteTypes {
     | '/_main/user/settings/api'
     | '/_main/user/settings/organizations'
     | '/account/oauth/github/callback'
+    | '/organization/deactivate/confirm/$confirmationId'
     | '/_main/database-services/$databaseServiceId/'
     | '/_main/one-click-apps/$slug/'
     | '/_main/services/$serviceId/'
     | '/_main/user/settings/'
-    | '/_main/organization/deactivate/confirm/$confirmationId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -659,6 +659,7 @@ export interface RootRouteChildren {
   AccountResetPasswordTokenRoute: typeof AccountResetPasswordTokenRoute
   AccountValidateTokenRoute: typeof AccountValidateTokenRoute
   AccountOauthGithubCallbackRoute: typeof AccountOauthGithubCallbackRoute
+  OrganizationDeactivateConfirmConfirmationIdRoute: typeof OrganizationDeactivateConfirmConfirmationIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -936,6 +937,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdIndexRouteImport
       parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
     }
+    '/organization/deactivate/confirm/$confirmationId': {
+      id: '/organization/deactivate/confirm/$confirmationId'
+      path: '/organization/deactivate/confirm/$confirmationId'
+      fullPath: '/organization/deactivate/confirm/$confirmationId'
+      preLoaderRoute: typeof OrganizationDeactivateConfirmConfirmationIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/account/oauth/github/callback': {
       id: '/account/oauth/github/callback'
       path: '/account/oauth/github/callback'
@@ -1018,13 +1026,6 @@ declare module '@tanstack/react-router' {
       path: '/account/organization_invitations/$invitationId'
       fullPath: '/account/organization_invitations/$invitationId'
       preLoaderRoute: typeof MainAccountOrganization_invitationsInvitationIdRouteImport
-      parentRoute: typeof MainRouteRoute
-    }
-    '/_main/organization/deactivate/confirm/$confirmationId': {
-      id: '/_main/organization/deactivate/confirm/$confirmationId'
-      path: '/organization/deactivate/confirm/$confirmationId'
-      fullPath: '/organization/deactivate/confirm/$confirmationId'
-      preLoaderRoute: typeof MainOrganizationDeactivateConfirmConfirmationIdRouteImport
       parentRoute: typeof MainRouteRoute
     }
   }
@@ -1191,7 +1192,6 @@ interface MainRouteRouteChildren {
   MainServicesNewRoute: typeof MainServicesNewRoute
   MainServicesIndexRoute: typeof MainServicesIndexRoute
   MainAccountOrganization_invitationsInvitationIdRoute: typeof MainAccountOrganization_invitationsInvitationIdRoute
-  MainOrganizationDeactivateConfirmConfirmationIdRoute: typeof MainOrganizationDeactivateConfirmConfirmationIdRoute
 }
 
 const MainRouteRouteChildren: MainRouteRouteChildren = {
@@ -1214,8 +1214,6 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainServicesIndexRoute: MainServicesIndexRoute,
   MainAccountOrganization_invitationsInvitationIdRoute:
     MainAccountOrganization_invitationsInvitationIdRoute,
-  MainOrganizationDeactivateConfirmConfirmationIdRoute:
-    MainOrganizationDeactivateConfirmConfirmationIdRoute,
 }
 
 const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
@@ -1248,6 +1246,8 @@ const rootRouteChildren: RootRouteChildren = {
   AccountResetPasswordTokenRoute: AccountResetPasswordTokenRoute,
   AccountValidateTokenRoute: AccountValidateTokenRoute,
   AccountOauthGithubCallbackRoute: AccountOauthGithubCallbackRoute,
+  OrganizationDeactivateConfirmConfirmationIdRoute:
+    OrganizationDeactivateConfirmConfirmationIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

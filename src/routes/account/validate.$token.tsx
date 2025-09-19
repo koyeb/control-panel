@@ -13,8 +13,10 @@ import { slugify } from 'src/utils/strings';
 
 export const Route = createFileRoute('/account/validate/$token')({
   pendingComponent: LogoLoading,
+  pendingMinMs: 0,
+  pendingMs: 0,
 
-  async beforeLoad({ params, context: { queryClient, translate } }) {
+  async loader({ params, context: { queryClient, translate } }) {
     try {
       await validateAccount(queryClient, params.token);
       await createOrganization(queryClient).catch(() => {});
