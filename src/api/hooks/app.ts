@@ -43,7 +43,8 @@ export function useAppsFull() {
 
       const deployments = await Promise.all(
         services
-          .services!.map((service) => service.latest_deployment_id!)
+          .services!.flatMap((service) => [service.active_deployment_id!, service.latest_deployment_id!])
+          .filter((id) => id !== '')
           .map((id) => api.getDeployment({ signal, path: { id } })),
       );
 
@@ -67,7 +68,11 @@ export function useAppsFull() {
         ...app,
         services: services
           .filter((service) => service.appId === app.id)
-          .map((service) => ({ ...service, latestDeployment: deployments.get(service.latestDeploymentId)! })),
+          .map((service) => ({
+            ...service,
+            activeDeployment: deployments.get(service.activeDeploymentId ?? ''),
+            latestDeployment: deployments.get(service.latestDeploymentId)!,
+          })),
       }));
     },
   });
