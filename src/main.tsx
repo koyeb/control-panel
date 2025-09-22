@@ -24,7 +24,6 @@ import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/report-error';
 import { NotificationContainer } from './components/notification';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
-import { CommandPaletteProvider } from './modules/command-palette';
 import { routeTree } from './route-tree.generated';
 import { TOKENS } from './tokens';
 import { getConfig } from './utils/config';
@@ -187,12 +186,10 @@ const router = createRouter({
   InnerWrap({ children }) {
     return (
       <PostHogProvider>
-        <CommandPaletteProvider>
-          {children}
-          <NotificationContainer />
-          <TanStackRouterDevtools />
-          <ReactQueryDevtools />
-        </CommandPaletteProvider>
+        {children}
+        <NotificationContainer />
+        <TanStackRouterDevtools />
+        <ReactQueryDevtools />
       </PostHogProvider>
     );
   },
