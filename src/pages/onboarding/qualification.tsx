@@ -85,7 +85,7 @@ export function Qualification() {
         body: { signup_qualification: values as Record<string, never> },
       });
 
-      for (const email of form.invites?.split(/[ ,]/) ?? []) {
+      for (const email of form.invites?.split(/[ ,\n]/) ?? []) {
         if (email === '') {
           continue;
         }
@@ -147,7 +147,7 @@ export function Qualification() {
       <section className="mb-8 row flex-wrap gap-6 lg:justify-between">
         <LogoKoyeb className="me-auto h-8 lg:hidden" />
 
-        <Stepper activeStep={steps.indexOf(step)} totalSteps={steps.length + 1} />
+        <Stepper activeStep={steps.indexOf(step)} totalSteps={steps.length} />
 
         <AuthButton
           onClick={() => handleSubmit(form.getValues())}

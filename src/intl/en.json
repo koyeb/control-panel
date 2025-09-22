@@ -2342,7 +2342,7 @@
         "sendInvites": {
           "sidebar": "Experience collaborative development on high-performance cloud infrastructure with Koyeb",
           "title": "Invite your teammates",
-          "description": "Add multiple emails with space or comma",
+          "description": "Add multiple emails",
           "placeholder": "email@server.com,",
           "submit": "Send invites"
         }
