@@ -170,6 +170,11 @@ function ContextPalette() {
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
+  const user = useUserUnsafe();
+  const pageContextBaseUrl = getConfig('pageContextBaseUrl');
+
+  const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
+
   const iFrameRef = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(0);
 
@@ -209,7 +214,7 @@ function ContextPalette() {
     }
   }, [iFrameRef, ready, location]);
 
-  useShortcut(['meta', 'j'], () => openDialog('ContextPalette'));
+  useShortcut(['meta', 'j'], () => enabled && openDialog('ContextPalette'));
 
   return (
     <Dialog id="ContextPalette" className="p-0!">
