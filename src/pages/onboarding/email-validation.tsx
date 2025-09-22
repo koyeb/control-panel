@@ -26,50 +26,52 @@ export function EmailValidation() {
   const logoutMutation = useLogoutMutation('/auth/signup');
 
   return (
-    <section className="col w-full max-w-md flex-1 items-center justify-center gap-12">
-      <Background className="absolute bottom-0 hidden sm:block" />
+    <>
+      <Background className="absolute bottom-0 hidden w-1/2 opacity-40 sm:block" />
 
-      <div className="col gap-6 text-center">
-        <h1 className="text-3xl font-semibold">
-          <T id="title" />
-        </h1>
+      <section className="z-10 col w-full max-w-md flex-1 items-center justify-center gap-12">
+        <div className="col gap-6 text-center">
+          <h1 className="text-3xl font-semibold">
+            <T id="title" />
+          </h1>
 
-        <p className="text-base text-dim">
+          <p className="text-base text-dim">
+            <T
+              id="line1"
+              values={{
+                email: user.email,
+                strong: (children) => <strong className="text-default">{children}</strong>,
+              }}
+            />
+          </p>
+
+          <p className="text-base text-dim">
+            <T id="line2" />
+          </p>
+        </div>
+
+        <AuthButton onClick={() => resendMutation.mutate()}>
+          <IconSend className="size-4" />
+          <T id="resendValidationEmail" />
+        </AuthButton>
+
+        <p className="text-dim">
           <T
-            id="line1"
+            id="wrongEmail"
             values={{
-              email: user.email,
-              strong: (children) => <strong className="text-default">{children}</strong>,
+              logout: (children) => (
+                <button
+                  type="button"
+                  onClick={() => logoutMutation.mutate()}
+                  className="text-default underline"
+                >
+                  {children}
+                </button>
+              ),
             }}
           />
         </p>
-
-        <p className="text-base text-dim">
-          <T id="line2" />
-        </p>
-      </div>
-
-      <AuthButton onClick={() => resendMutation.mutate()}>
-        <IconSend className="size-4" />
-        <T id="resendValidationEmail" />
-      </AuthButton>
-
-      <p className="text-dim">
-        <T
-          id="wrongEmail"
-          values={{
-            logout: (children) => (
-              <button
-                type="button"
-                onClick={() => logoutMutation.mutate()}
-                className="text-default underline"
-              >
-                {children}
-              </button>
-            ),
-          }}
-        />
-      </p>
-    </section>
+      </section>
+    </>
   );
 }
