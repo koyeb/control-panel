@@ -20,7 +20,14 @@ export function Dialog({ id, context: contextProp, ...props }: DialogProps) {
 
   const open = id === dialogId && dequal(context, contextProp);
 
-  return <BaseDialog open={open} onClose={onClose} {...props} />;
+  return (
+    <BaseDialog
+      open={open}
+      onClose={onClose}
+      root={document.getElementById('root') ?? undefined}
+      {...props}
+    />
+  );
 }
 
 Dialog.useOpen = function useOpenDialog() {
