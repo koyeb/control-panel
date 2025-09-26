@@ -70,11 +70,10 @@ function SelectedDeployment({ className, ...props }: ServiceOverview & { classNa
 
   assert(selectedDeployment !== undefined);
 
-  useCreateServiceUrlsCommands(app, service, selectedDeployment);
-  useDeploymentListCommand(service);
-
   return (
     <section className="col min-w-0 flex-1 gap-8">
+      <RegisterDeploymentCommands {...props} />
+
       <div className="col gap-4">
         <DeploymentsListActions {...props} />
         <DeploymentHeader deployment={selectedDeployment} />
@@ -89,6 +88,13 @@ function SelectedDeployment({ className, ...props }: ServiceOverview & { classNa
       )}
     </section>
   );
+}
+
+function RegisterDeploymentCommands({ app, service, selectedDeployment }: ServiceOverview) {
+  useCreateServiceUrlsCommands(app, service, selectedDeployment);
+  useDeploymentListCommand(service);
+
+  return null;
 }
 
 function DeploymentsListActions({

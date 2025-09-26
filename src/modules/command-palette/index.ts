@@ -1,2 +1,2 @@
 export { CommandPaletteProvider } from './command-palette';
-export { useCreateServiceCommands } from './commands/service';
+export { useServiceCommands } from './commands/service';

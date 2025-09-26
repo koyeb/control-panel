@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
-import { z } from 'zod';
+import z from 'zod';
 
 import {
   useLogoutMutation,
@@ -10,7 +10,6 @@ import {
 } from 'src/api/hooks/session';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
-import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -18,7 +17,6 @@ import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useLocation } from 'src/hooks/router';
-import { useShortcut } from 'src/hooks/shortcut';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus, IconX } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -33,6 +31,7 @@ import { getConfig } from 'src/utils/config';
 import { OrganizationSwitcher } from '../organization-switcher';
 
 import { AppBreadcrumbs } from './app-breadcrumbs';
+import { ContextPalette } from './context-palette';
 import { FeatureFlagsDialog } from './feature-flags-dialog';
 import { GlobalAlert } from './global-alert';
 import { HelpLinks } from './help-links';
@@ -166,71 +165,7 @@ function SessionTokenBanner() {
   );
 }
 
-function ContextPalette() {
-  const location = useLocation();
-  const theme = useThemeModeOrPreferred();
-
-  const user = useUserUnsafe();
-  const pageContextBaseUrl = getConfig('pageContextBaseUrl');
-
-  const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
-
-  const iFrameRef = useRef<HTMLIFrameElement>(null);
-  const [ready, setReady] = useState(0);
-
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
-
-  useEffect(() => {
-    const pageContextBaseUrl = getConfig('pageContextBaseUrl');
-
-    function listener(event: MessageEvent<unknown>) {
-      if (event.origin !== pageContextBaseUrl) {
-        return;
-      }
-
-      if (isReadyEvent(event.data)) {
-        setReady((ready) => ready + 1);
-      }
-
-      if (isCloseEvent(event.data)) {
-        closeDialog();
-      }
-    }
-
-    window.addEventListener('message', listener);
-
-    return () => {
-      window.removeEventListener('message', listener);
-    };
-  }, [iFrameRef, closeDialog]);
-
-  useEffect(() => {
-    const auth = container.resolve(TOKENS.authentication);
-    const pageContextBaseUrl = getConfig('pageContextBaseUrl');
-
-    if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token: auth.token, location }, pageContextBaseUrl);
-    }
-  }, [iFrameRef, ready, location]);
-
-  useShortcut(['meta', 'j'], () => enabled && openDialog('ContextPalette'));
-
-  return (
-    <Dialog id="ContextPalette" className="p-0!">
-      <iframe
-        ref={iFrameRef}
-        src={`${getConfig('pageContextBaseUrl')}/command-palette?theme=${theme}`}
-        allow="clipboard-write"
-        width={840}
-        height={380}
-      />
-    </Dialog>
-  );
-}
-
 const isReadyEvent = createValidationGuard(z.object({ ready: z.literal(true) }));
-const isCloseEvent = createValidationGuard(z.object({ close: z.literal(true) }));
 
 type PageContextProps = {
   expanded?: boolean;

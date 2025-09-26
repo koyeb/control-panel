@@ -1,3 +1,4 @@
+import { CommandPaletteItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { useCallback, useEffect } from 'react';
@@ -21,11 +22,11 @@ import { useCommandPaletteContext } from '../command-palette-context';
 
 const T = createTranslate('modules.commandPalette.commands');
 
-export function useCreateServiceCommands(service: Service) {
+export function useServiceCommands(service: Service) {
   const { id, name } = service;
   const t = T.useTranslate();
 
-  const { addOption, removeOption } = useCommandPaletteContext();
+  const { addItem } = useCommandPaletteContext();
 
   const openDialog = Dialog.useOpen();
   const invalidate = useInvalidateApiQuery();
@@ -53,137 +54,136 @@ export function useCreateServiceCommands(service: Service) {
 
   useEffect(() => {
     const name = service.name;
+    const items = new Set<ReturnType<typeof addItem>>();
+
+    const redeployCommand = (): Omit<CommandPaletteItem, 'id'> => ({
+      label: t('redeployService.label'),
+      description: t('redeployService.description', { name }),
+      Icon: IconRotateCw,
+      execute: redeploy,
+    });
+
+    const pauseCommand = (): Omit<CommandPaletteItem, 'id'> => ({
+      label: t('pauseService.label'),
+      description: t('pauseService.description', { name }),
+      Icon: IconPause,
+      execute: pause,
+    });
+
+    const resumeCommand = (): Omit<CommandPaletteItem, 'id'> => ({
+      label: t('resumeService.label'),
+      description: t('resumeService.description', { name }),
+      Icon: IconPlay,
+      execute: () => setTimeout(() => openDialog('ResumeService', { resourceId: service.id }), 0),
+    });
 
     if (isServiceRunning(service)) {
-      addOption({
-        id: 'redeployService',
-        label: t('redeployService.label'),
-        description: t('redeployService.description', { name }) as string,
-        Icon: IconRotateCw,
-        execute: redeploy,
-      });
-
-      addOption({
-        id: 'pauseService',
-        label: t('pauseService.label'),
-        description: t('pauseService.description', { name }) as string,
-        Icon: IconPause,
-        execute: pause,
-      });
+      items.add(addItem(redeployCommand()));
+      items.add(addItem(pauseCommand()));
     }
 
     if (service.status === 'PAUSED') {
-      addOption({
-        id: 'resumeService',
-        label: t('resumeService.label'),
-        description: t('resumeService.description', { name }) as string,
-        Icon: IconPlay,
-        execute: () => setTimeout(() => openDialog('ResumeService', { resourceId: service.id }), 0),
-      });
+      items.add(addItem(resumeCommand()));
     }
 
     return () => {
-      removeOption('redeployService');
-      removeOption('resumeService');
-      removeOption('pauseService');
+      items.forEach((item) => item.remove());
     };
-  }, [service, addOption, removeOption, redeploy, pause, openDialog, t]);
+  }, [addItem, service, redeploy, pause, openDialog, t]);
 }
 
 export function useCreateServiceUrlsCommands(app: App, service: Service, deployment?: Deployment) {
   const t = T.useTranslate();
-  const { addOption, removeOption } = useCommandPaletteContext();
+  const { addItem } = useCommandPaletteContext();
 
   const copy = useClipboard();
 
   useEffect(() => {
     const name = service.name;
+    const items = new Set<ReturnType<typeof addItem>>();
 
     const urls = getServiceUrls(app, service, deployment);
     const externalUrls = urls.map((url) => url.externalUrl!).filter(isDefined);
     const internalUrls = urls.map((url) => url.internalUrl!).filter(isDefined);
 
-    if (externalUrls.length > 0) {
-      addOption({
-        id: 'copyPublicUrl',
-        label: t('copyPublicUrl.label'),
-        description: t('copyPublicUrl.description', { name }) as string,
-        Icon: IconCopy,
-        hasSubOptions: externalUrls.length > 1,
-        execute: () => {
-          if (externalUrls.length === 1) {
-            copy(externalUrls[0]!);
-          } else {
-            for (const url of externalUrls) {
-              addOption({
-                id: url,
-                label: url,
-                execute: () => copy(url),
-              });
-            }
+    const copyExternalUrlsCommand = (): Omit<CommandPaletteItem, 'id'> => ({
+      label: t('copyPublicUrl.label'),
+      description: t('copyPublicUrl.description', { name }),
+      Icon: IconCopy,
+      hasSubItems: externalUrls.length > 1,
+      execute: () => {
+        if (externalUrls.length === 1) {
+          copy(externalUrls[0]!);
+        } else {
+          for (const url of externalUrls) {
+            addItem({
+              label: url,
+              execute: () => copy(url),
+            });
           }
-        },
-      });
+        }
+      },
+    });
+
+    const copyPrivateDomainCommand = (): Omit<CommandPaletteItem, 'id'> => ({
+      label: t('copyPrivateDomain.label'),
+      description: t('copyPrivateDomain.description', { name }),
+      Icon: IconCopy,
+      hasSubItems: internalUrls.length > 1,
+      execute: () => {
+        if (internalUrls.length === 1) {
+          copy(internalUrls[0]!);
+        } else {
+          for (const url of internalUrls) {
+            addItem({ label: url, execute: () => copy(url) });
+          }
+        }
+      },
+    });
+
+    const copyDeploymentIdCommand = (deploymentId: string): Omit<CommandPaletteItem, 'id'> => ({
+      label: t('copyDeploymentId.label'),
+      description: t('copyDeploymentId.description', { name }),
+      Icon: IconCopy,
+      execute: () => copy(deploymentId),
+    });
+
+    if (externalUrls.length > 0) {
+      items.add(addItem(copyExternalUrlsCommand()));
     }
 
     if (internalUrls.length > 0) {
-      addOption({
-        id: 'copyPrivateDomain',
-        label: t('copyPrivateDomain.label'),
-        description: t('copyPrivateDomain.description', { name }) as string,
-        Icon: IconCopy,
-        hasSubOptions: internalUrls.length > 1,
-        execute: () => {
-          if (internalUrls.length === 1) {
-            copy(internalUrls[0]!);
-          } else {
-            for (const url of internalUrls) {
-              addOption({
-                id: url,
-                label: url,
-                execute: () => copy(url),
-              });
-            }
-          }
-        },
-      });
+      items.add(addItem(copyPrivateDomainCommand()));
     }
 
     if (deployment) {
-      addOption({
-        id: 'copyDeploymentId',
-        label: t('copyDeploymentId.label'),
-        description: t('copyDeploymentId.description', { name }) as string,
-        Icon: IconCopy,
-        execute: () => copy(deployment.id),
-      });
+      items.add(addItem(copyDeploymentIdCommand(deployment.id)));
     }
 
     return () => {
-      removeOption('copyPublicUrl');
-      removeOption('copyPrivateDomain');
-      removeOption('copyDeploymentId');
+      items.forEach((item) => item.remove());
     };
-  }, [app, service, deployment, addOption, removeOption, copy, t]);
+  }, [addItem, app, service, deployment, copy, t]);
 }
 
 export function useDeploymentListCommand(service: Service) {
   const t = T.useTranslate();
 
-  const { addOption, removeOption } = useCommandPaletteContext();
+  const { addItem, setIcon, setPlaceholder } = useCommandPaletteContext();
   const navigate = useNavigate();
 
   useEffect(() => {
     const name = service.name;
 
-    addOption({
-      id: 'listDeployments',
+    const item = addItem({
       label: t('listDeployments.label'),
-      description: t('listDeployments.description', { name }) as string,
+      description: t('listDeployments.description', { name }),
       Icon: IconList,
-      hasSubOptions: true,
-      placeholder: t('listDeployments.placeholder'),
+      hasSubItems: true,
       execute: async () => {
+        setIcon(IconList);
+        setPlaceholder(t('listDeployments.placeholder'));
+
         const deployments = await getApi()
           .listDeployments({ query: { service_id: service.id } })
           .then(({ deployments }) => deployments!.map(mapDeployment));
@@ -191,15 +191,16 @@ export function useDeploymentListCommand(service: Service) {
         for (const deployment of deployments) {
           assert(isComputeDeployment(deployment));
 
-          addOption({
-            id: deployment.id,
+          addItem({
             label: t('listDeployments.deploymentLabel', {
               deploymentId: shortId(deployment.id),
               date: formatDistanceToNow(deployment.date),
-            }) as string,
+            }),
             description: getDeploymentDescription(deployment, t),
-            placeholder: 'Select a deployment',
             execute: () => {
+              // todo: translation
+              setPlaceholder('Select a deployment');
+
               return navigate({
                 to: '/services/$serviceId',
                 params: { serviceId: service.id },
@@ -212,9 +213,9 @@ export function useDeploymentListCommand(service: Service) {
     });
 
     return () => {
-      removeOption('listDeployments');
+      item.remove();
     };
-  }, [service, addOption, removeOption, navigate, t]);
+  }, [addItem, setIcon, setPlaceholder, service, navigate, t]);
 }
 
 function getDeploymentDescription(deployment: ComputeDeployment, t: ReturnType<typeof T.useTranslate>) {

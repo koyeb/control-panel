@@ -1,10 +1,10 @@
+import { CommandPalette } from '@koyeb/design-system';
+
 import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { useNavigate } from 'src/hooks/router';
 import { IconCirclePlus, IconRefreshCcw } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
-
-import { useCommandPaletteContext } from '../command-palette-context';
 
 const T = createTranslate('modules.commandPalette.commands');
 
@@ -12,32 +12,27 @@ export function useOrganizationCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
 
-  const palette = useCommandPaletteContext();
   const navigate = useNavigate();
   const setToken = useSetToken();
 
-  return () => {
-    const contextId = 'organization';
-
-    palette.addContext({
-      id: contextId,
+  return (palette: CommandPalette) => {
+    const group = palette.addGroup({
       label: t2('modules.commandPalette.contexts.organization'),
     });
 
-    palette.addOption({
-      id: 'switch',
-      contextId,
+    group.addItem({
       label: t('organization:switch.label'),
       description: t('organization:switch.description'),
       Icon: IconRefreshCcw,
-      hasSubOptions: true,
-      placeholder: t('organization:switch.placeholder'),
+      hasSubItems: true,
       execute: async () => {
+        palette.setIcon(IconRefreshCcw);
+        palette.setPlaceholder(t('organization:switch.placeholder'));
+
         const organizations = await getApi().listUserOrganizations({ query: {} });
 
         for (const organization of organizations.organizations!) {
-          palette.addOption({
-            id: organization.id!,
+          palette.addItem({
             label: organization.name!,
             execute: async () => {
               const { token } = await getApi().switchOrganization({
@@ -52,13 +47,15 @@ export function useOrganizationCommands() {
       },
     });
 
-    palette.addOption({
-      id: 'create',
-      contextId,
+    group.addItem({
       label: t('organization:create.label'),
       description: t('organization:create.description'),
       Icon: IconCirclePlus,
       execute: () => navigate({ to: '/user/settings/organizations', state: { create: true } }),
     });
+
+    return () => {
+      group.remove();
+    };
   };
 }

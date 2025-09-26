@@ -1,76 +1,77 @@
+import { CommandPalette } from '@koyeb/design-system';
+
 import { useNavigate } from 'src/hooks/router';
 import { IconBoxes, IconCpu, IconDatabase, IconDocker, IconGlobeLock, IconSquareCode } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
 
-import { useCommandPaletteContext } from '../command-palette-context';
-import { CommandPalette } from '../use-command-palette';
-
 const T = createTranslate('modules.commandPalette.commands.services:create');
 type TranslateFn = ReturnType<typeof T.useTranslate>;
 
-export function useCreateServicesCommands() {
+export function useServicesCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
 
-  const palette = useCommandPaletteContext();
   const navigate = useNavigate();
 
-  return () => {
-    const contextId = 'services';
-
-    palette.addContext({
-      id: contextId,
+  return (palette: CommandPalette) => {
+    const group = palette.addGroup({
       label: t2('modules.commandPalette.contexts.services'),
     });
 
-    palette.addOption({
-      id: 'create',
-      contextId,
+    group.addItem({
       label: t('label'),
       description: t('description'),
       Icon: IconBoxes,
-      hasSubOptions: true,
-      placeholder: t('placeholders.serviceType'),
+      hasSubItems: true,
       execute: () => onCreateService(palette, navigate, t),
     });
+
+    return () => {
+      group.remove();
+    };
   };
 }
 
 type Navigate = ReturnType<typeof useNavigate>;
 
 function onCreateService(palette: CommandPalette, navigate: Navigate, t: TranslateFn) {
-  palette.addOption({
-    id: 'web',
+  palette.setIcon(IconBoxes);
+  palette.setPlaceholder(t('placeholders.serviceType'));
+
+  palette.addItem({
     label: t('options.web.label'),
     description: t('options.web.description'),
     Icon: IconSquareCode,
-    hasSubOptions: true,
-    placeholder: t('placeholders.deploymentSource'),
-    execute: () => onServiceTypeSelected('web', palette, navigate, t),
+    hasSubItems: true,
+    execute: () => {
+      palette.setIcon(IconSquareCode);
+      onServiceTypeSelected('web', palette, navigate, t);
+    },
   });
 
-  palette.addOption({
-    id: 'private',
+  palette.addItem({
     label: t('options.private.label'),
     description: t('options.private.description'),
     Icon: IconGlobeLock,
-    hasSubOptions: true,
-    placeholder: t('placeholders.deploymentSource'),
-    execute: () => onServiceTypeSelected('private', palette, navigate, t),
+    hasSubItems: true,
+    execute: () => {
+      palette.setIcon(IconGlobeLock);
+      onServiceTypeSelected('private', palette, navigate, t);
+    },
   });
 
-  palette.addOption({
-    id: 'worker',
+  palette.addItem({
     label: t('options.worker.label'),
     description: t('options.worker.description'),
     Icon: IconCpu,
-    hasSubOptions: true,
-    placeholder: t('placeholders.deploymentSource'),
-    execute: () => onServiceTypeSelected('worker', palette, navigate, t),
+    hasSubItems: true,
+    execute: () => {
+      palette.setIcon(IconCpu);
+      onServiceTypeSelected('worker', palette, navigate, t);
+    },
   });
 
-  palette.addOption({
-    id: 'database',
+  palette.addItem({
     label: t('options.database.label'),
     description: t('options.database.description'),
     Icon: IconDatabase,
@@ -80,20 +81,20 @@ function onCreateService(palette: CommandPalette, navigate: Navigate, t: Transla
 
 function onServiceTypeSelected(
   serviceType: 'web' | 'private' | 'worker',
-  palette: Pick<CommandPalette, 'addContext' | 'addOption'>,
+  palette: CommandPalette,
   navigate: Navigate,
   t: TranslateFn,
 ) {
-  palette.addOption({
-    id: 'github',
+  palette.setPlaceholder(t('placeholders.deploymentSource'));
+
+  palette.addItem({
     label: t('options.github.label'),
     description: t('options.github.description'),
     Icon: IconSquareCode,
     execute: () => execute('git'),
   });
 
-  palette.addOption({
-    id: 'docker',
+  palette.addItem({
     label: t('options.docker.label'),
     description: t('options.docker.description'),
     Icon: IconDocker,

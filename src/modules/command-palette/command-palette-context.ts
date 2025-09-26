@@ -1,8 +1,7 @@
+import { CommandPalette } from '@koyeb/design-system';
 import { createContext, useContext } from 'react';
 
 import { AssertionError, assert } from 'src/utils/assert';
-
-import { CommandPalette } from './use-command-palette';
 
 export const CommandPaletteContext = createContext<CommandPalette>(null as never);
 

@@ -15,7 +15,7 @@ import { useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { IconArrowLeft } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
-import { useCreateServiceCommands } from 'src/modules/command-palette';
+import { useServiceCommands } from 'src/modules/command-palette';
 
 import { DeploymentThrottledAlert } from './deployment-throttled-alert';
 import { InstanceAvailabilityAlerts } from './instance-availability-alerts';
@@ -106,7 +106,7 @@ function ServiceNotFound() {
 }
 
 function RegisterServiceCommands({ service }: { service: Service }) {
-  useCreateServiceCommands(service);
+  useServiceCommands(service);
   return null;
 }
 
