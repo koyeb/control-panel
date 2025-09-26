@@ -1,8 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
+import { useAppsFull } from 'src/api/hooks/app';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
-import { ServicesPage } from 'src/pages/home/services.page';
+import { Loading } from 'src/components/loading';
+import { QueryError } from 'src/components/query-error';
+import { Apps } from 'src/modules/home/apps/apps';
+import { ServiceCreation } from 'src/modules/service-creation/service-creation';
 
 export const Route = createFileRoute('/_main/services/')({
   component: ServicesPage,
@@ -23,3 +27,21 @@ export const Route = createFileRoute('/_main/services/')({
       .optional(),
   }),
 });
+
+function ServicesPage() {
+  const query = useAppsFull();
+
+  if (query.isPending) {
+    return <Loading />;
+  }
+
+  if (query.isError) {
+    return <QueryError error={query.error} />;
+  }
+
+  if (query.data.length === 0) {
+    return <ServiceCreation from="/services" />;
+  }
+
+  return <Apps apps={query.data} showFilters />;
+}
