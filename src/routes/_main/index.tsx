@@ -9,7 +9,6 @@ import { createTranslate } from 'src/intl/translate';
 import { Activities } from 'src/modules/home/activities/activities';
 import { Apps } from 'src/modules/home/apps/apps';
 import { HomePageBanner } from 'src/modules/home/banner/banner';
-import { News } from 'src/modules/home/news/news';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
 
 export const Route = createFileRoute('/_main/')({
@@ -73,8 +72,7 @@ function HomePage() {
           <Apps apps={query.data} />
         </div>
 
-        <div className="col max-w-sm gap-8">
-          <News />
+        <div className="max-w-sm">
           <Activities />
         </div>
       </div>
