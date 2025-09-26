@@ -1,11 +1,12 @@
 import * as Sentry from '@sentry/react';
 
-import { ApiError } from './api/api-errors';
-import { UnexpectedError } from './application/errors';
-import { inArray } from './utils/arrays';
-import { getConfig } from './utils/config';
+import { ApiError, hasMessage } from '../api/api-errors';
+import { inArray } from '../utils/arrays';
+import { getConfig } from '../utils/config';
 
-async function initSentry() {
+import { UnexpectedError } from './errors';
+
+export function initSentry() {
   const environment = getConfig('environment');
 
   if (environment === 'development') {
@@ -19,11 +20,11 @@ async function initSentry() {
     beforeSend(event, hint) {
       const error = hint.originalException;
 
-      if (error instanceof TypeError && inArray(error.message, ['Failed to fetch', 'Load failed'])) {
+      if (hasMessage(error) && inArray(error.message, ['Failed to fetch', 'Load failed'])) {
         return null;
       }
 
-      if (error instanceof ApiError && error.status < 500) {
+      if (ApiError.is(error, 500)) {
         return null;
       }
 
@@ -37,6 +38,3 @@ async function initSentry() {
     },
   });
 }
-
-// eslint-disable-next-line no-console
-initSentry().catch(console.error);

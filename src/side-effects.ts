@@ -1,8 +1,11 @@
 /* eslint-disable */
 // @ts-nocheck
 import { api } from './api/api';
+import { initSentry } from './application/sentry';
 
 window.api = api;
+
+initSentry();
 
 if (typeof globalThis === 'undefined' && typeof window !== 'undefined') {
   window.globalThis = window;

@@ -1,8 +1,6 @@
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
-import './api/api.intercept';
 import './intercom';
-import './sentry';
 import './side-effects';
 import './styles.css';
 
