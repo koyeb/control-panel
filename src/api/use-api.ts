@@ -11,13 +11,12 @@ export function getApiQueryKey<E extends ApiEndpoint>(endpoint: E, params: ApiEn
 }
 
 export function createEnsureApiQueryData(queryClient: QueryClient, abortController?: AbortController) {
-  const signal = abortController?.signal;
+  void abortController;
 
   return <E extends ApiEndpoint>(endpoint: E, params: ApiEndpointParams<E>) => {
     return queryClient.ensureQueryData({
-      // eslint-disable-next-line @tanstack/query/exhaustive-deps
       queryKey: getApiQueryKey(endpoint, params),
-      queryFn: () => apiQueryFn(endpoint)({ signal, ...params }),
+      queryFn: () => apiQueryFn(endpoint)({ ...params }),
     });
   };
 }
