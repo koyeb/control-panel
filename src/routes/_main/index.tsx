@@ -8,6 +8,7 @@ import { QueryError } from 'src/components/query-error';
 import { createTranslate } from 'src/intl/translate';
 import { Activities } from 'src/modules/home/activities/activities';
 import { Apps } from 'src/modules/home/apps/apps';
+import { HomePageBanner } from 'src/modules/home/banner/banner';
 import { News } from 'src/modules/home/news/news';
 import { ServiceCreation } from 'src/modules/service-creation/service-creation';
 
@@ -33,6 +34,17 @@ export const Route = createFileRoute('/_main/')({
 
 const T = createTranslate('pages.home');
 
+const banner = {
+  id: '',
+  title: 'Discover scale-to-zero and autoscaling',
+  description:
+    'Take a deep dive into how our scale-to-zero and autoscaling can benefit your high performance production services.',
+  cta: {
+    label: 'Discover more',
+    href: '#',
+  },
+};
+
 function HomePage() {
   const query = useAppsFull();
 
@@ -50,17 +62,21 @@ function HomePage() {
 
   return (
     <>
-      <h1 className="typo-heading">
+      {banner.id && <HomePageBanner {...banner} />}
+
+      <h1 className="my-8 typo-heading">
         <T id="title" />
       </h1>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 xl:grid-cols-[1fr_24rem]">
-        <div className="row-span-2 min-w-0">
+      <div className="row gap-8">
+        <div className="min-w-0 flex-1">
           <Apps apps={query.data} />
         </div>
 
-        <News />
-        <Activities />
+        <div className="col max-w-sm gap-8">
+          <News />
+          <Activities />
+        </div>
       </div>
     </>
   );
