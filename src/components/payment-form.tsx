@@ -1,3 +1,4 @@
+import { showNewMessage } from '@intercom/messenger-js-sdk';
 import { Button, Field, FieldLabel, InputEnd, InputStart } from '@koyeb/design-system';
 import { CardCvcElement, CardExpiryElement, CardNumberElement, useStripe } from '@stripe/react-stripe-js';
 import { useMutation } from '@tanstack/react-query';
@@ -265,7 +266,9 @@ export function PaymentMethodTimeout() {
           id="paymentMethodTimeoutDescription"
           values={{
             contactUs: (children) => (
-              <span className="intercom-contact-us cursor-pointer underline">{children}</span>
+              <button type="button" className="underline" onClick={() => showNewMessage('')}>
+                {children}
+              </button>
             ),
           }}
         />

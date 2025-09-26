@@ -234,7 +234,7 @@ function endpoint<Path extends Paths, Method extends PathMethods<Path>>(method: 
 }
 
 function buildUrl(path: string, params: UnknownEndpointParams) {
-  const url = new URL(path, params.baseUrl ?? window.location.origin);
+  const url = new URL(path, window.location.origin);
 
   for (const [key, value] of Object.entries(params.path ?? {})) {
     url.pathname = url.pathname.replaceAll(encodeURIComponent(`{${key}}`), value);
