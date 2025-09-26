@@ -60,7 +60,7 @@ export default [
       'react-refresh/only-export-components': 'error',
       'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
       'better-tailwindcss/no-conflicting-classes': 'warn',
-      'better-tailwindcss/no-unregistered-classes': ['warn', { ignore: ['dark', 'intercom-contact-us'] }],
+      'better-tailwindcss/no-unregistered-classes': ['warn', { ignore: ['dark'] }],
     },
   },
   {

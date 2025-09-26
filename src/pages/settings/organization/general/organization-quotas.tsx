@@ -1,3 +1,4 @@
+import { showNewMessage } from '@intercom/messenger-js-sdk';
 import { Alert, Button } from '@koyeb/design-system';
 import { Fragment, useMemo } from 'react';
 import { FormattedList } from 'react-intl';
@@ -66,7 +67,7 @@ export function OrganizationQuotas() {
       </div>
 
       {organization.plan !== 'hobby' && (
-        <Button color="gray" className="intercom-contact-us self-end">
+        <Button color="gray" className="self-end" onClick={() => showNewMessage('')}>
           <T id="requestIncrease" />
         </Button>
       )}
