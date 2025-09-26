@@ -10,7 +10,7 @@ const T = createTranslate('modules.serviceCreation.serviceType');
 
 export type ExtendedServiceType = ServiceType | 'private' | 'model';
 
-export function ServiceTypeList() {
+export function ServiceTypeList({ serviceType }: { serviceType: ExtendedServiceType }) {
   const serviceTypes: ExtendedServiceType[] = ['web', 'private', 'worker', 'database'];
 
   if (useFeatureFlag('ai-onboarding')) {
@@ -26,7 +26,12 @@ export function ServiceTypeList() {
       <ul className="col gap-2">
         {serviceTypes.map((type) => (
           <li key={type}>
-            <Link to="/services/new" search={(prev) => ({ ...prev, service_type: type })} className="group">
+            <Link
+              to="/services/new"
+              search={(prev) => ({ ...prev, service_type: type })}
+              data-status={type === serviceType ? 'active' : undefined}
+              className="group"
+            >
               <ServiceTypeItem
                 icon={<ServiceTypeIcon type={type} />}
                 label={<TranslateEnum enum="serviceType" value={type} />}

@@ -17,12 +17,12 @@ function isServiceType(value: unknown): value is ExtendedServiceType {
 
 export function ServiceTypeStep() {
   const appId = useSearchParams().get('app_id');
-  const serviceType = useSearchParams().get('service_type');
+  const serviceType = useSearchParams().get('service_type') ?? 'web';
 
   return (
     <div className="col divide-y rounded-md border sm:row sm:divide-x md:divide-y-0">
       <nav className="col gap-3 p-3 md:min-w-72 md:p-6">
-        <ServiceTypeList />
+        <ServiceTypeList serviceType={serviceType as ExtendedServiceType} />
         <hr />
         <OneClickAppList />
       </nav>

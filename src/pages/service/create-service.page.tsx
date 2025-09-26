@@ -10,7 +10,7 @@ export function CreateServicePage() {
   return (
     <>
       <DocumentTitle title={t('documentTitle')} />
-      <ServiceCreation />
+      <ServiceCreation from="/services/new" />
     </>
   );
 }

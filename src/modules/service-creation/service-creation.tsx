@@ -31,15 +31,14 @@ function isBefore(left: Step, right: Step) {
   return steps.indexOf(left) < steps.indexOf(right);
 }
 
-export function ServiceCreation() {
+export function ServiceCreation({ from }: { from: '/' | '/services' | '/services/new' }) {
   const searchParams = useSearchParams();
-
-  const { step: currentStep } = useSearch({ from: '/_main/services/new' });
+  const { step: currentStep = 'serviceType' }: { step: Step } = useSearch({ strict: false });
 
   const serviceId = searchParams.get('serviceId');
   const type = searchParams.get('type');
 
-  const navigate = useNavigate({ from: '/services/new' });
+  const navigate = useNavigate({ from });
 
   const setCurrentStep = useCallback(
     (step: Step) => {

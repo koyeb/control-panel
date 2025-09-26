@@ -1,9 +1,8 @@
-import { Navigate } from '@tanstack/react-router';
-
 import { useAppsFull } from 'src/api/hooks/app';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { createTranslate } from 'src/intl/translate';
+import { ServiceCreation } from 'src/modules/service-creation/service-creation';
 
 import { Activities } from './activities/activities';
 import { Apps } from './apps/apps';
@@ -23,7 +22,7 @@ export function HomePage() {
   }
 
   if (query.data.length === 0) {
-    return <Navigate to="/services/new" />;
+    return <ServiceCreation from="/" />;
   }
 
   return (

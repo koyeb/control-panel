@@ -13,7 +13,7 @@ export const deployParamsSchema = z
         z.literal('database'),
         z.literal('model'),
       ])
-      .catch('web'),
+      .optional(),
     instance_type: z.string().optional(),
     ports: z.union([z.string(), z.array(z.string())]).optional(),
     regions: z.union([z.string(), z.array(z.string())]).optional(),
