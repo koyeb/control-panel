@@ -34,7 +34,7 @@ export function DeploymentThrottledAlert({ service }: DeploymentThrottledAlertPr
     }
   }, [lastUpcoming]);
 
-  if (!throttled || !inArray<OrganizationPlan>(organization.plan, ['hobby', 'starter'])) {
+  if (!throttled || !inArray<OrganizationPlan>(organization?.plan, ['hobby', 'starter'])) {
     return null;
   }
 

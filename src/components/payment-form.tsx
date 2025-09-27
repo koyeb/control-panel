@@ -64,7 +64,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
   const form = useForm<{ billingAlertAmount: number; address: Address }>({
     defaultValues: {
       billingAlertAmount: 20,
-      address: organization.billing.address ?? {
+      address: organization?.billing.address ?? {
         line1: '',
         postalCode: '',
         city: '',
@@ -75,7 +75,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
 
   const billingInfoMutation = useMutation({
     ...apiMutation('patch /v1/organizations/{id}', (address: Address) => ({
-      path: { id: organization.id },
+      path: { id: organization!.id },
       query: {},
       body: {
         address1: address.line1,
@@ -84,8 +84,8 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
         postal_code: address.postalCode,
         state: address.state,
         country: address.country,
-        billing_name: organization.billing.name === undefined ? user.name : undefined,
-        billing_email: organization.billing.email === undefined ? user.email : undefined,
+        billing_name: organization?.billing.name === undefined ? user?.name : undefined,
+        billing_email: organization?.billing.email === undefined ? user?.email : undefined,
       },
     })),
     onError: useFormErrorHandler(form, (error) => ({
@@ -100,7 +100,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
 
   const changePlanMutation = useMutation({
     ...apiMutation('post /v1/organizations/{id}/plan', (plan: OrganizationPlan) => ({
-      path: { id: organization.id },
+      path: { id: organization!.id },
       body: { plan },
     })),
     async onSuccess() {
@@ -115,7 +115,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
 
   const updateBudgetMutation = useMutation({
     ...apiMutation('put /v1/organizations/{organization_id}/budget', (amount: number) => ({
-      path: { organization_id: organization.id },
+      path: { organization_id: organization!.id },
       body: { amount: String(100 * amount) },
     })),
   });

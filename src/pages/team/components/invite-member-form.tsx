@@ -40,7 +40,7 @@ export function InviteMemberForm() {
     onError: useFormErrorHandler(form),
   });
 
-  const disabled = organization.plan === 'hobby' || organization.plan === 'starter';
+  const disabled = organization?.plan === 'hobby' || organization?.plan === 'starter';
 
   return (
     <div className="col gap-4">
@@ -50,7 +50,7 @@ export function InviteMemberForm() {
         </div>
 
         <p className="text-dim">
-          <T id="description" values={{ organizationName: organization.name }} />
+          <T id="description" values={{ organizationName: organization?.name }} />
         </p>
       </div>
 

@@ -22,7 +22,7 @@ const schema = z.object({
 
 export function BillingAlerts() {
   const organization = useOrganization();
-  const isHobby = organization.plan === 'hobby';
+  const isHobby = organization?.plan === 'hobby';
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: { amount: NaN },
@@ -95,8 +95,9 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
 
   const query = useQuery({
     ...apiQuery('get /v1/organizations/{organization_id}/budget', {
-      path: { organization_id: organization.id },
+      path: { organization_id: organization?.id as string },
     }),
+    enabled: organization !== undefined,
     select({ budget }) {
       return Number(budget!.amount!);
     },
@@ -104,7 +105,7 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
 
   const updateMutation = useMutation({
     ...apiMutation('put /v1/organizations/{organization_id}/budget', (amount: number) => ({
-      path: { organization_id: organization.id },
+      path: { organization_id: organization!.id },
       body: { amount: String(amount * 100) },
     })),
     onError: useFormErrorHandler(form),
@@ -116,7 +117,7 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
 
   const deleteMutation = useMutation({
     ...apiMutation('delete /v1/organizations/{organization_id}/budget', {
-      path: { organization_id: organization.id },
+      path: { organization_id: organization!.id },
     }),
     onError: useFormErrorHandler(form),
     async onSuccess() {

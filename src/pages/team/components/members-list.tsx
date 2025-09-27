@@ -35,7 +35,7 @@ export function MembersList() {
   const invitationsQuery = useInvitationsQuery({ status: 'PENDING' });
 
   const membersQuery = useQuery({
-    ...apiQuery('get /v1/organization_members', { query: { organization_id: organization.id } }),
+    ...apiQuery('get /v1/organization_members', { query: { organization_id: organization?.id } }),
     select: ({ members }) => members!.map(mapOrganizationMember),
   });
 
@@ -55,7 +55,7 @@ export function MembersList() {
         </div>
 
         <p className="text-dim">
-          <T id="description" values={{ organizationName: organization.name }} />
+          <T id="description" values={{ organizationName: organization?.name }} />
         </p>
       </div>
 
@@ -136,7 +136,7 @@ function InvitationMember({ invitation }: { invitation: OrganizationInvitation }
 function OrganizationMember({ membership }: { membership: OrganizationMember }) {
   return (
     <div className="row items-center gap-4">
-      <img src={membership.user.avatarUrl} className="size-8 rounded-full" />
+      <img src={membership.user?.avatarUrl} className="size-8 rounded-full" />
 
       <div>
         <div className="font-medium">{membership.user.name}</div>
@@ -151,7 +151,7 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
 
   const user = useUser();
   const organization = useOrganization();
-  const organizationName = organization.name;
+  const organizationName = organization?.name ?? '';
 
   const resendInvitationMutation = useResendInvitation();
   const deleteInvitationMutation = useDeleteInvitation();
@@ -177,7 +177,7 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
 
             {!isInvitation(item) && (
               <>
-                {item.user.id === user.id && (
+                {item.user.id === user?.id && (
                   <ButtonMenuItem
                     onClick={withClose(() =>
                       openDialog('ConfirmLeaveOrganization', { resourceId: item.user.id }),
@@ -187,7 +187,7 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
                   </ButtonMenuItem>
                 )}
 
-                {item.user.id !== user.id && (
+                {item.user.id !== user?.id && (
                   <ButtonMenuItem
                     onClick={withClose(() => openDialog('ConfirmRemoveMember', { resourceId: item.user.id }))}
                   >
@@ -271,7 +271,7 @@ function useRemoveOrganizationMember() {
       notify.info(
         t('actions.removeMemberSuccessNotification', {
           memberName: user.name,
-          organizationName: organization.name,
+          organizationName: organization?.name,
         }),
       );
     },
@@ -291,12 +291,12 @@ function useLeaveOrganization() {
       const api = getApi();
 
       const { members } = await api('get /v1/organization_members', {
-        query: { user_id: user.id },
+        query: { user_id: user!.id },
       });
 
       const [otherOrganizationId] = members!
         .map((member) => member.organization_id!)
-        .filter((organizationId) => organizationId !== membership.organization.id);
+        .filter((organizationId) => organizationId !== membership.organization?.id);
 
       let result: string | null = null;
 
@@ -318,7 +318,7 @@ function useLeaveOrganization() {
     async onSuccess(token, { organization }) {
       await setToken(token, { queryClient });
       await navigate({ to: '/' });
-      notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
+      notify.info(t('actions.leaveSuccessNotification', { organizationName: organization?.name }));
     },
   });
 }

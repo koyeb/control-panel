@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useOrganizationUnsafe } from 'src/api';
+import { useOrganization } from 'src/api';
 import { BadgeNew } from 'src/components/badge-new';
 import { Link, ValidateLinkOptions } from 'src/components/link';
 import { usePathname } from 'src/hooks/router';
@@ -20,7 +20,7 @@ import { inArray } from 'src/utils/arrays';
 const T = createTranslate('layouts.main.navigation');
 
 export function Navigation({ collapsed }: { collapsed: boolean }) {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
 
   const disableComputeLinks =
     organization === undefined || inArray(organization.status, ['WARNING', 'DEACTIVATING', 'DEACTIVATED']);

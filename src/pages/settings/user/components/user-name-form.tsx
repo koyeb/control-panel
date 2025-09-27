@@ -22,7 +22,7 @@ export function UserNameForm() {
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      name: user.name,
+      name: user?.name,
     },
     resolver: useZodResolver(schema),
   });

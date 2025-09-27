@@ -26,7 +26,7 @@ export function GpuAlert() {
     return null;
   }
 
-  if (organization.plan === 'hobby') {
+  if (organization?.plan === 'hobby') {
     return (
       <div className="rounded-md border p-4">
         <T

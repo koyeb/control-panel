@@ -18,7 +18,7 @@ export function EmailValidation() {
   const resendMutation = useMutation({
     ...apiMutation('post /v1/account/resend_validation', {}),
     onSuccess() {
-      notify.success(t('resendEmailSuccessNotification', { email: user.email }));
+      notify.success(t('resendEmailSuccessNotification', { email: user?.email }));
     },
   });
 
@@ -38,7 +38,7 @@ export function EmailValidation() {
             <T
               id="line1"
               values={{
-                email: user.email,
+                email: user?.email,
                 strong: (children) => <strong className="text-default">{children}</strong>,
               }}
             />

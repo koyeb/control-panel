@@ -52,7 +52,11 @@ type Enum = EnumKeys extends `enums.${infer E}.${string}` ? E : never;
 type EnumValue<E extends Enum> =
   Extract<EnumKeys, `enums.${E}.${string}`> extends `enums.${E}.${infer V}` ? V : never;
 
-export function TranslateEnum<E extends Enum>({ enum: enumName, value }: { enum: E; value: EnumValue<E> }) {
+export function TranslateEnum<E extends Enum>({ enum: enumName, value }: { enum: E; value?: EnumValue<E> }) {
+  if (value === undefined) {
+    return null;
+  }
+
   return <Translate id={`enums.${enumName}.${value}` as TranslationKeys} />;
 }
 

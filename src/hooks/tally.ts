@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { useUserUnsafe } from 'src/api';
+import { useUser } from 'src/api';
 
 import { usePathname } from './router';
 
@@ -25,7 +25,7 @@ export const tallyForms = {
 };
 
 export function useTallyDialog(formId: string, onSubmitted?: () => void) {
-  const user = useUserUnsafe();
+  const user = useUser();
 
   useEffect(() => {
     if (document.getElementById('tally-embed-script') !== null) {

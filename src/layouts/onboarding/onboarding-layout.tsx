@@ -85,7 +85,7 @@ function UserMenu() {
         <div className="row items-center gap-2 py-2 transition-colors hover:bg-muted/50" {...props}>
           <UserAvatar user={user} />
 
-          <span className="flex-1 truncate font-medium">{user.name}</span>
+          <span className="flex-1 truncate font-medium">{user?.name}</span>
 
           <span>
             <IconChevronRight className="size-4 text-dim" />

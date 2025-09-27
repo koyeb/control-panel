@@ -1,6 +1,6 @@
 import { Alert, Spinner } from '@koyeb/design-system';
 
-import { useManageBillingQuery, useOrganizationUnsafe, useSubscriptionQuery } from 'src/api';
+import { useManageBillingQuery, useOrganization, useSubscriptionQuery } from 'src/api';
 import { useIdenfyLink } from 'src/application/idenfy';
 import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
@@ -8,7 +8,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('layouts.main');
 
 export function GlobalAlert() {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
   const subscriptionQuery = useSubscriptionQuery(organization?.latestSubscriptionId);
 
   if (organization?.statusMessage === 'REVIEWING_ACCOUNT') {

@@ -31,7 +31,7 @@ export function OrganizationQuotas() {
     <section className="col items-start gap-6">
       <SectionHeader title={<T id="title" />} description={<T id="description" />} />
 
-      {organization.plan === 'hobby' && <HobbyPlanAlert />}
+      {organization?.plan === 'hobby' && <HobbyPlanAlert />}
 
       <div className="grid w-full grid-cols-2 rounded-md border md:grid-cols-[24rem_1fr]">
         <QuotasSection
@@ -65,7 +65,7 @@ export function OrganizationQuotas() {
         />
       </div>
 
-      {organization.plan !== 'hobby' && (
+      {organization?.plan !== 'hobby' && (
         <Button color="gray" className="self-end" onClick={() => showNewMessage('')}>
           <T id="requestIncrease" />
         </Button>
@@ -116,7 +116,7 @@ function useGeneralQuotaItems(): QuotaItem[] {
     const worker = <TranslateEnum key="worker" enum="serviceType" value="worker" />;
     const database = <TranslateEnum key="database" enum="serviceType" value="database" />;
 
-    const allowedServiceTypes = organization.plan === 'hobby' ? [web, database] : [web, database, worker];
+    const allowedServiceTypes = organization?.plan === 'hobby' ? [web, database] : [web, database, worker];
 
     return [
       {
@@ -174,7 +174,7 @@ function useInstanceTypeQuotaItems(): Record<'koyeb' | 'aws' | 'gpu', QuotaItem[
   const quotas = useOrganizationQuotas();
   const instances = useInstancesCatalog();
 
-  const unset = organization.plan === 'hobby' ? <T id="zero" /> : <T id="infinity" />;
+  const unset = organization?.plan === 'hobby' ? <T id="zero" /> : <T id="infinity" />;
 
   const getQuota = (instance: CatalogInstance): QuotaItem => ({
     key: instance.id,

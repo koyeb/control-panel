@@ -11,7 +11,7 @@ export function useManageBillingQuery() {
   const organization = useOrganization();
 
   return useQuery({
-    enabled: organization.latestSubscriptionId !== undefined && !organization.trial,
+    enabled: organization?.latestSubscriptionId !== undefined && !organization.trial,
     ...apiQuery('get /v1/billing/manage', {}),
   });
 }
@@ -32,8 +32,8 @@ export function useNextInvoiceQuery() {
   return useQuery({
     ...apiQuery('get /v1/billing/next_invoice', {}),
     enabled:
-      !organization.trial &&
-      inArray(organization.plan, ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise']),
+      !organization?.trial &&
+      inArray(organization?.plan, ['starter', 'startup', 'pro', 'scale', 'business', 'enterprise']),
     select: mapInvoice,
     meta: { showError: false },
   });

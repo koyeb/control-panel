@@ -1,7 +1,7 @@
 import { ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { useLogoutMutation, useUserUnsafe } from 'src/api';
+import { useLogoutMutation, useUser } from 'src/api';
 import { LinkMenuItem } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
 import { IconLogOut, IconSettings } from 'src/icons';
@@ -10,7 +10,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
-  const user = useUserUnsafe();
+  const user = useUser();
   const logout = useLogoutMutation('/auth/signin');
 
   const [open, setOpen] = useState(false);

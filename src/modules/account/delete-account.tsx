@@ -1,7 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { apiMutation, useOrganizationUnsafe, useUser } from 'src/api';
+import { apiMutation, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
 import { setToken } from 'src/application/token';
@@ -17,7 +17,7 @@ export function DeleteAccount() {
   const openDialog = Dialog.useOpen();
 
   const user = useUser();
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
   const canDelete = organization === undefined;
 
   const queryClient = useQueryClient();
@@ -26,7 +26,7 @@ export function DeleteAccount() {
 
   const { mutateAsync: deleteAccount } = useMutation({
     ...apiMutation('delete /v1/users/{id}', {
-      path: { id: user.id },
+      path: { id: user?.id as string },
     }),
     async onSuccess() {
       clearIdentify();
@@ -65,7 +65,7 @@ export function DeleteAccount() {
         id="ConfirmDeleteAccount"
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
-        confirmationText={user.name}
+        confirmationText={user!.name ?? ''}
         submitText={<T id="confirmationDialog.confirm" />}
         onConfirm={deleteAccount}
       />

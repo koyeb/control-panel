@@ -12,7 +12,7 @@ const T = createTranslate('pages.volumes');
 export function VolumesLayout({ children }: { children: React.ReactNode }) {
   const organization = useOrganization();
 
-  if (organization.plan === 'hobby') {
+  if (organization?.plan === 'hobby') {
     return (
       <FeatureUnavailable
         preview="public"

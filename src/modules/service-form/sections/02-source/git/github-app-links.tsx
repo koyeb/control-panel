@@ -14,7 +14,7 @@ export function GithubAppLinks() {
 
   const { mutate: resync } = useMutation({
     ...apiMutation('post /v1/git/sync/organization/{organization_id}', {
-      path: { organization_id: organization.id },
+      path: { organization_id: organization?.id as string },
     }),
     onMutate() {
       notify.info(t('repositoriesSynchronized'));

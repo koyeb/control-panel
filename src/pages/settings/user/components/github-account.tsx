@@ -36,13 +36,13 @@ export function GithubAccount() {
             <T id="label" />
           </div>
 
-          {user.githubUser && (
+          {user?.githubUser && (
             <p className="text-dim">
-              <T id="accountRegistered" values={{ githubUser: user.githubUser }} />
+              <T id="accountRegistered" values={{ githubUser: user?.githubUser }} />
             </p>
           )}
 
-          {!user.githubUser && (
+          {!user?.githubUser && (
             <>
               <p className="text-dim">
                 <T id="noGithubAccountRegistered" />
@@ -51,7 +51,7 @@ export function GithubAccount() {
           )}
         </div>
 
-        {!user.githubUser && (
+        {!user?.githubUser && (
           <Button onClick={() => mutate()} loading={isPending}>
             <IconGithub className="size-5" />
             <T id="registerAccount" />

@@ -30,7 +30,7 @@ const schema = z.object({
 
 export function JoinOrganization() {
   const user = useUser();
-  const invitationsQuery = useInvitationsQuery({ userId: user.id, status: 'PENDING' });
+  const invitationsQuery = useInvitationsQuery({ userId: user?.id, status: 'PENDING' });
 
   if (invitationsQuery.isPending) {
     return <Loading />;

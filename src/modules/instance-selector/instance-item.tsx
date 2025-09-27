@@ -218,7 +218,7 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
         </Badge>
       )}
 
-      {badges.includes('requiresHigherQuota') && organization.plan !== 'hobby' && (
+      {badges.includes('requiresHigherQuota') && organization?.plan !== 'hobby' && (
         <Badge key="quotas" size={1} color="orange">
           <T id="badge.requiresHigherQuota" />
         </Badge>
@@ -230,7 +230,7 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
 function RequestQuota({ instance }: { instance: CatalogInstance }) {
   const openDialog = Dialog.useOpen();
   const organization = useOrganization();
-  const addCreditCard = organization.plan === 'hobby';
+  const addCreditCard = organization?.plan === 'hobby';
 
   if (instance.id === 'free') {
     return null;

@@ -4,7 +4,6 @@ import { useIdentifyUser } from 'src/application/posthog';
 import { setToken } from 'src/application/token';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
-import { AssertionError, defined } from 'src/utils/assert';
 
 import { ApiError } from '../api-error';
 import {
@@ -23,12 +22,8 @@ export function useUserQuery() {
   });
 }
 
-export function useUserUnsafe() {
-  return useUserQuery().data;
-}
-
 export function useUser() {
-  return defined(useUserUnsafe(), new AssertionError('User is not set'));
+  return useUserQuery().data;
 }
 
 export function useOrganizationQuery() {
@@ -38,12 +33,8 @@ export function useOrganizationQuery() {
   });
 }
 
-export function useOrganizationUnsafe() {
-  return useOrganizationQuery().data ?? undefined;
-}
-
 export function useOrganization() {
-  return defined(useOrganizationUnsafe(), new AssertionError('Organization is not set'));
+  return useOrganizationQuery().data;
 }
 
 export function useOrganizationSummaryQuery() {
@@ -51,7 +42,7 @@ export function useOrganizationSummaryQuery() {
 
   return useSuspenseQuery({
     ...apiQuery('get /v1/organizations/{organization_id}/summary', {
-      path: { organization_id: organization.id },
+      path: { organization_id: organization?.id as string },
     }),
     select: ({ summary }) => mapOrganizationSummary(summary!),
   });
@@ -66,7 +57,7 @@ export function useOrganizationQuotasQuery() {
 
   return useSuspenseQuery({
     ...apiQuery('get /v1/organizations/{organization_id}/quotas', {
-      path: { organization_id: organization.id },
+      path: { organization_id: organization?.id as string },
     }),
     refetchInterval: false,
     select: ({ quotas }) => mapOrganizationQuotas(quotas!),
@@ -78,7 +69,7 @@ export function useOrganizationQuotas() {
 }
 
 export function useUserOrganizationMemberships() {
-  const user = useUserUnsafe();
+  const user = useUser();
 
   return useQuery({
     ...apiQuery('get /v1/organization_members', { query: { user_id: user?.id } }),

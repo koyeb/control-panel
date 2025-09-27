@@ -16,7 +16,7 @@ export function UserPasswordForm() {
 
   const mutation = useMutation({
     ...apiMutation('post /v1/account/reset_password', {
-      body: { email: user.email },
+      body: { email: user?.email },
     }),
     async onSuccess() {
       notify.success(t('successNotification'));

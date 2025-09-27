@@ -22,7 +22,7 @@ export function UserEmailForm() {
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      email: user.email,
+      email: user?.email,
     },
     resolver: useZodResolver(schema),
   });

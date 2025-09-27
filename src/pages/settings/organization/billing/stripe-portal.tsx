@@ -24,7 +24,7 @@ export function StripePortal() {
         <IconSquareArrowOutUpRight className="size-4" />
       </ExternalLinkButton>
 
-      {organization.plan === 'hobby' && (
+      {organization?.plan === 'hobby' && (
         <p className="border-l-4 border-green/50 pl-3 text-xs text-dim">
           <T id="upgradeRequired" />
         </p>

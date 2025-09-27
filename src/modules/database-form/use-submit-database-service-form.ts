@@ -61,7 +61,7 @@ export function useSubmitDatabaseServiceForm(
   return async (values: DatabaseServiceForm) => {
     const instance = databaseInstances.find(hasProperty('id', values.instance));
 
-    if (instance?.plans !== undefined && !instance.plans.includes(organization.plan)) {
+    if (instance?.plans !== undefined && !instance.plans.includes(organization!.plan)) {
       onPlanUpgradeRequired(instance.plans[0] as OrganizationPlan);
     } else {
       await mutation.mutateAsync(values).catch(() => {});

@@ -20,7 +20,7 @@ export function InstanceRegionAlerts({
   const was = useCatalogRegion('was')?.name;
 
   const organization = useOrganization();
-  const requireUpgrade = instance?.plans !== undefined && !instance.plans.includes(organization.plan);
+  const requireUpgrade = instance?.plans !== undefined && !instance.plans.includes(organization?.plan ?? '');
 
   if (requireUpgrade) {
     return (

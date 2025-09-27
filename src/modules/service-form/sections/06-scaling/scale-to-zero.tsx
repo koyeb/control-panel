@@ -67,7 +67,7 @@ function ScaleToZeroFooter({ isEcoInstance, hasVolumes }: { isEcoInstance: boole
     return <ScalingConfigSectionFooter text={<T id="disabled.hasVolumes.text" />} />;
   }
 
-  if (watch('scaling.min') === 0 && organization.plan === 'starter') {
+  if (watch('scaling.min') === 0 && organization?.plan === 'starter') {
     const cta = (
       <LinkButton to="/settings/plans" variant="outline" color="gray" size={1} className="bg-neutral">
         <T id="disabled.starterPlan.cta" />
@@ -98,7 +98,7 @@ function IdlePeriod({ disabled }: { disabled: boolean }) {
         <ControlledInput<ServiceForm, 'scaling.scaleToZero.idlePeriod'>
           name="scaling.scaleToZero.idlePeriod"
           type="number"
-          disabled={disabled || organization.plan === 'starter'}
+          disabled={disabled || organization?.plan === 'starter'}
           error={false}
           end={
             <InputEnd>
@@ -147,7 +147,7 @@ function LightSleep({ disabled, isGpu }: { disabled: boolean; isGpu: boolean }) 
         <ControlledInput<ServiceForm, 'scaling.scaleToZero.lightToDeepPeriod'>
           name="scaling.scaleToZero.lightToDeepPeriod"
           type="number"
-          disabled={!watch('scaling.scaleToZero.lightSleepEnabled') || organization.plan === 'starter'}
+          disabled={!watch('scaling.scaleToZero.lightSleepEnabled') || organization?.plan === 'starter'}
           error={false}
           end={
             <InputEnd>

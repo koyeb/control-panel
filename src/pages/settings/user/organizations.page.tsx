@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, getApi, useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api';
+import { apiMutation, getApi, useOrganization, useUserOrganizationMemberships } from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
@@ -147,8 +147,8 @@ function OrganizationList() {
 }
 
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
-  const currentOrganization = useOrganizationUnsafe();
   const queryClient = useQueryClient();
+  const currentOrganization = useOrganization();
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({

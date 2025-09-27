@@ -22,7 +22,7 @@ export function DeactivateOrganization() {
 
   const requestDeactivation = useMutation({
     ...apiMutation('post /v1/organizations/{id}/deactivate', {
-      path: { id: organization.id },
+      path: { id: organization?.id as string },
       body: { skip_confirmation: skipConfirmation },
     }),
     onSuccess() {
@@ -42,14 +42,14 @@ export function DeactivateOrganization() {
           disabled={
             requestDeactivation.isPending ||
             requestDeactivation.isSuccess ||
-            organization.status === 'DEACTIVATING'
+            organization?.status === 'DEACTIVATING'
           }
         >
           <T id="deactivate" />
         </Button>
       </div>
 
-      {organization.status === 'DEACTIVATING' && (
+      {organization?.status === 'DEACTIVATING' && (
         <footer className="text-xs text-dim">
           <T id="deactivating" />
         </footer>
@@ -59,7 +59,7 @@ export function DeactivateOrganization() {
         id="ConfirmDeactivateOrganization"
         title={<T id="title" />}
         description={<T id="description" />}
-        confirmationText={organization.name}
+        confirmationText={organization?.name ?? ''}
         submitText={<T id="deactivate" />}
         submitColor="orange"
         onConfirm={requestDeactivation.mutateAsync}

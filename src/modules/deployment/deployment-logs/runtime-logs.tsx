@@ -131,7 +131,7 @@ type NoLogsProps = {
 };
 
 export function NoRuntimeLogs({ running, loading, filters }: NoLogsProps) {
-  const { plan } = useOrganization();
+  const organization = useOrganization();
   const periods = useRetentionPeriods();
   const period = filters.watch('period');
 
@@ -149,7 +149,7 @@ export function NoRuntimeLogs({ running, loading, filters }: NoLogsProps) {
         )}
       </p>
 
-      {inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && period === last(periods) && (
+      {inArray(organization?.plan, ['hobby', 'starter', 'pro', 'scale']) && period === last(periods) && (
         <p>
           <T id="noLogs.upgrade" />
         </p>

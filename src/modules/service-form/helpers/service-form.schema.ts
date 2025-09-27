@@ -91,7 +91,7 @@ const instance = z
   .nullable()
   .refine((id) => id !== null);
 
-function scaling(organization: Organization, quotas: OrganizationQuotas) {
+function scaling(organization: Organization | undefined, quotas: OrganizationQuotas) {
   return z
     .object({
       min: z.number().min(0).max(20),
@@ -115,7 +115,7 @@ function scaling(organization: Organization, quotas: OrganizationQuotas) {
     }, 'noTargetSelected');
 }
 
-function scaleToZero(organization: Organization, quotas: OrganizationQuotas) {
+function scaleToZero(organization: Organization | undefined, quotas: OrganizationQuotas) {
   return z
     .object({
       lightSleepEnabled: z.boolean(),
@@ -123,7 +123,7 @@ function scaleToZero(organization: Organization, quotas: OrganizationQuotas) {
       lightToDeepPeriod: z.number(),
     })
     .superRefine((value, ctx) => {
-      if (organization.plan === 'hobby') {
+      if (organization?.plan === 'hobby') {
         return;
       }
 
@@ -252,7 +252,7 @@ function preprocessVolumes(value: unknown) {
   return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
-export function serviceFormSchema(organization: Organization, quotas: OrganizationQuotas) {
+export function serviceFormSchema(organization: Organization | undefined, quotas: OrganizationQuotas) {
   return z.object({
     meta: z.object({}).passthrough(),
     appName: z

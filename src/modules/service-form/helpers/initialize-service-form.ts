@@ -30,7 +30,7 @@ export async function initializeServiceForm(
   datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
   instances: CatalogInstance[],
-  organization: Organization,
+  organization: Organization | undefined,
   quotas: OrganizationQuotas,
   githubApp: GithubApp | null | undefined,
   serviceId: string | undefined,
@@ -301,7 +301,7 @@ function ensureServiceCreationBusinessRules(
   datacenters: CatalogDatacenter[],
   regions: CatalogRegion[],
   instances: CatalogInstance[],
-  organization: Organization,
+  organization: Organization | undefined,
   quotas: OrganizationQuotas,
   parsedParams: DeepPartial<ServiceForm>,
   queryClient: QueryClient,
@@ -310,7 +310,7 @@ function ensureServiceCreationBusinessRules(
     values.appName = generateAppName();
   }
 
-  if (organization.plan === 'hobby' && !parsedParams.instance) {
+  if (organization?.plan === 'hobby' && !parsedParams.instance) {
     values.instance = 'free';
   }
 

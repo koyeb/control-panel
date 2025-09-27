@@ -36,7 +36,7 @@ export function Usage() {
             values={{
               strong: (children) => <strong className="text-default">{children}</strong>,
               days: trial?.daysLeft,
-              plan: <TranslateEnum enum="plans" value={organization.plan} />,
+              plan: <TranslateEnum enum="plans" value={organization?.plan} />,
               upgrade: <T id="upgrade" />,
             }}
           />

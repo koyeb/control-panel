@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
-import { useOrganizationUnsafe } from 'src/api';
+import { useOrganization } from 'src/api';
 import { LinkButton } from 'src/components/link';
 import { PlanIcon } from 'src/components/plan-icon';
 import { useObserve } from 'src/hooks/lifecycle';
@@ -18,7 +18,7 @@ import { EstimatedCostsPopup } from './estimated-costs-popup';
 const T = createTranslate('layouts.main.organizationPlan');
 
 export function OrganizationPlan() {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
   const trial = useTrial();
   const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);

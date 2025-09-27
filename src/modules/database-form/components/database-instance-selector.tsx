@@ -37,7 +37,7 @@ export function DatabaseInstanceSelector({ allowFreeInstanceIfAlreadyUsed }: Dat
   };
 
   const getBadges = (instance: CatalogInstance): InstanceSelectorBadge[] => {
-    if (instance.plans && !inArray(organization.plan, instance.plans)) {
+    if (instance.plans && !inArray(organization?.plan, instance.plans)) {
       return ['requiresHigherQuota'];
     }
 

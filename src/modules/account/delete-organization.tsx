@@ -22,7 +22,7 @@ export function DeleteOrganization() {
 
   const unpaidInvoicesQuery = useQuery({
     ...apiQuery('get /v1/billing/has_unpaid_invoices', {}),
-    enabled: organization.currentSubscriptionId !== undefined,
+    enabled: organization?.currentSubscriptionId !== undefined,
     select: (result) => result.has_unpaid_invoices!,
   });
 
@@ -31,12 +31,12 @@ export function DeleteOrganization() {
       const api = getApi();
 
       const { members } = await api('get /v1/organization_members', {
-        query: { user_id: user.id },
+        query: { user_id: user!.id },
       });
 
       const [otherOrganizationId] = members!
         .map((member) => member.organization_id!)
-        .filter((organizationId) => organizationId !== organization.id);
+        .filter((organizationId) => organizationId !== organization?.id);
 
       let result: string;
 
@@ -54,7 +54,7 @@ export function DeleteOrganization() {
       }
 
       await api('delete /v1/organizations/{id}', {
-        path: { id: organization.id },
+        path: { id: organization!.id },
       });
 
       return result;
@@ -62,11 +62,11 @@ export function DeleteOrganization() {
     async onSuccess(token) {
       await setToken(token, { queryClient });
       await navigate({ to: '/' });
-      notify.info(t('successNotification', { organizationName: organization.name }));
+      notify.info(t('successNotification', { organizationName: organization?.name }));
     },
   });
 
-  const isDeactivated = organization.status === 'DEACTIVATED';
+  const isDeactivated = organization?.status === 'DEACTIVATED';
   const hasUnpaidInvoices = unpaidInvoicesQuery.data;
   const canDeleteOrganization = isDeactivated && !hasUnpaidInvoices;
 

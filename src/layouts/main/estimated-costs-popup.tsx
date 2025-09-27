@@ -18,7 +18,7 @@ export function EstimatedCostsPopup({ className, ...props }: React.ComponentProp
   return (
     <div className={clsx('w-56 rounded-md border bg-popover', className)} {...props}>
       <div className="p-3 font-medium">
-        <T id="currentPlan" values={{ plan: <TranslateEnum enum="plans" value={organization.plan} /> }} />
+        <T id="currentPlan" values={{ plan: <TranslateEnum enum="plans" value={organization?.plan} /> }} />
       </div>
 
       <hr />

@@ -16,7 +16,7 @@ export function Coupon() {
   const t = T.useTranslate();
 
   const organization = useOrganization();
-  const isHobby = organization.plan === 'hobby';
+  const isHobby = organization?.plan === 'hobby';
 
   const params = useSearchParams();
 

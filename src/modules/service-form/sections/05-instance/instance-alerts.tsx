@@ -12,7 +12,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 const T = createTranslate('modules.serviceForm.instance.alerts');
 
 export function InstanceAlerts({ selectedCategory }: { selectedCategory: InstanceCategory }) {
-  const { plan } = useOrganization();
+  const organization = useOrganization();
 
   const hasVolumes = useWatchServiceForm('volumes').filter((volume) => volume.name !== '').length > 0;
   const instance = useCatalogInstance(useWatchServiceForm('instance'));
@@ -59,7 +59,7 @@ export function InstanceAlerts({ selectedCategory }: { selectedCategory: Instanc
     }
   }
 
-  if (plan === 'hobby') {
+  if (organization?.plan === 'hobby') {
     return <HobbyPlanAlerts instance={instance} />;
   }
 
@@ -76,7 +76,7 @@ function HobbyPlanAlerts({ instance }: { instance?: CatalogInstance }) {
   const error = errors.instance?.message;
 
   const organization = useOrganization();
-  const requireUpgrade = instance?.plans !== undefined && !instance.plans.includes(organization.plan);
+  const requireUpgrade = instance?.plans !== undefined && !instance.plans.includes(organization?.plan ?? '');
 
   if (requireUpgrade) {
     return (

@@ -26,7 +26,7 @@ export function OrganizationName() {
   });
 
   useEffect(() => {
-    form.reset({ organizationName: organization.name });
+    form.reset({ organizationName: organization?.name });
   }, [form, organization]);
 
   const invalidate = useInvalidateApiQuery();
@@ -34,7 +34,7 @@ export function OrganizationName() {
   const mutation = useMutation({
     ...apiMutation('patch /v1/organizations/{id}', ({ organizationName }: FormValues<typeof form>) => ({
       query: {},
-      path: { id: organization.id },
+      path: { id: organization!.id },
       body: { name: organizationName },
     })),
     onSuccess(_, values) {

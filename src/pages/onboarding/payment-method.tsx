@@ -41,7 +41,7 @@ function Form() {
 
   const form = useForm<{ address: Address; billingAlertAmount: number }>({
     defaultValues: {
-      address: organization.billing.address ?? {
+      address: organization?.billing.address ?? {
         line1: '',
         postalCode: '',
         city: '',
@@ -53,7 +53,7 @@ function Form() {
 
   const billingInfoMutation = useMutation({
     ...apiMutation('patch /v1/organizations/{id}', (address: Address) => ({
-      path: { id: organization.id },
+      path: { id: organization!.id },
       query: {},
       body: {
         address1: address.line1,
@@ -62,8 +62,8 @@ function Form() {
         postal_code: address.postalCode,
         state: address.state,
         country: address.country,
-        billing_name: organization.billing.name === undefined ? user.name : undefined,
-        billing_email: organization.billing.email === undefined ? user.email : undefined,
+        billing_name: organization?.billing.name === undefined ? user?.name : undefined,
+        billing_email: organization?.billing.email === undefined ? user?.email : undefined,
       },
     })),
     onError: useFormErrorHandler(form, (error) => ({
@@ -78,14 +78,14 @@ function Form() {
 
   const changePlanMutation = useMutation({
     ...apiMutation('post /v1/organizations/{id}/plan', (plan: OrganizationPlan) => ({
-      path: { id: organization.id },
+      path: { id: organization!.id },
       body: { plan },
     })),
   });
 
   const updateBudgetMutation = useMutation({
     ...apiMutation('put /v1/organizations/{organization_id}/budget', (amount: number) => ({
-      path: { organization_id: organization.id },
+      path: { organization_id: organization!.id },
       body: { amount: String(100 * amount) },
     })),
   });

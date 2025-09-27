@@ -28,7 +28,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   const mutation = useChangePlan(onPlanChanged);
 
   const onChangePlan = () => {
-    if (organization.hasPaymentMethod) {
+    if (organization?.hasPaymentMethod) {
       mutation.mutate(plan);
     } else {
       openDialog('Upgrade', { plan });
@@ -36,15 +36,15 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   };
 
   const text = () => {
-    if (organization.trial || organization.plan === 'startup') {
+    if (organization?.trial || organization?.plan === 'startup') {
       return <T id="select" />;
     }
 
-    if (organization.plan === plan) {
+    if (organization?.plan === plan) {
       return <T id="currentPlan" />;
     }
 
-    if (isUpgrade(organization.plan, plan)) {
+    if (isUpgrade(organization?.plan, plan)) {
       return <T id="upgrade" />;
     }
 
@@ -52,16 +52,16 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   };
 
   const disabled = () => {
-    if (organization.trial) {
+    if (organization?.trial) {
       return false;
     }
 
-    return organization.plan === plan || organization.plan === 'enterprise';
+    return organization?.plan === plan || organization?.plan === 'enterprise';
   };
 
   return (
     <>
-      <Tooltip content={organization.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
+      <Tooltip content={organization?.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
         {(props) => (
           <div {...props}>
             <Button
@@ -94,10 +94,10 @@ export function ChangePlanEnterpriseButton() {
     <ExternalLinkButton
       openInNewTab
       href={tallyLink}
-      disabled={organization.plan === 'enterprise'}
+      disabled={organization?.plan === 'enterprise'}
       className="w-full"
     >
-      {organization.plan === 'enterprise' ? <T id="currentPlan" /> : <T id="upgradeEnterprise" />}
+      {organization?.plan === 'enterprise' ? <T id="currentPlan" /> : <T id="upgradeEnterprise" />}
     </ExternalLinkButton>
   );
 }
@@ -122,7 +122,7 @@ function useChangePlan(onSuccess: () => void) {
 
   return useMutation({
     ...apiMutation('post /v1/organizations/{id}/plan', (plan: Plan) => ({
-      path: { id: organization.id },
+      path: { id: organization!.id },
       body: { plan },
     })),
     async onSuccess() {
@@ -132,10 +132,10 @@ function useChangePlan(onSuccess: () => void) {
   });
 }
 
-function isUpgrade(prevPlan: OrganizationPlan, nextPlan: OrganizationPlan) {
+function isUpgrade(prevPlan: OrganizationPlan | undefined, nextPlan: OrganizationPlan | undefined) {
   const plans: OrganizationPlan[] = ['hobby', 'starter', 'startup', 'pro', 'scale', 'enterprise', 'business'];
-  const prevPlanIndex = plans.indexOf(prevPlan);
-  const nextPlanIndex = plans.indexOf(nextPlan);
+  const prevPlanIndex = plans.indexOf(prevPlan as OrganizationPlan);
+  const nextPlanIndex = plans.indexOf(nextPlan as OrganizationPlan);
 
   return nextPlanIndex > prevPlanIndex;
 }

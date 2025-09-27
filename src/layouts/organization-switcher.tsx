@@ -40,7 +40,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
     items: organizations,
 
     combobox: {
-      isItemDisabled: (item) => item.id === currentOrganization.id,
+      isItemDisabled: (item) => item.id === currentOrganization?.id,
       itemToString: (item) => item?.name ?? '',
 
       inputValue,
@@ -75,7 +75,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
   });
 
   const getItemIcon = (organization: Organization) => {
-    if (organization.id === currentOrganization.id) {
+    if (organization.id === currentOrganization?.id) {
       return IconCheck;
     }
 
@@ -83,6 +83,10 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
       return Spinner;
     }
   };
+
+  if (!currentOrganization) {
+    return;
+  }
 
   return (
     <Combobox.Provider value={combobox}>
@@ -137,7 +141,8 @@ function useOrganizationCount() {
   const user = useUser();
 
   const { data } = useQuery({
-    ...apiQuery('get /v1/organization_members', { query: { user_id: user.id } }),
+    ...apiQuery('get /v1/organization_members', { query: { user_id: user?.id } }),
+    enabled: user !== undefined,
     refetchInterval: false,
     placeholderData: keepPreviousData,
     select: ({ count }) => count,

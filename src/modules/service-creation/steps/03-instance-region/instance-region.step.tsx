@@ -70,7 +70,7 @@ export function InstanceRegionStep() {
 
   useMount(() => {
     if (!selectedInstance) {
-      selector.onInstanceCategorySelected(organization.plan === 'hobby' ? 'eco' : 'standard');
+      selector.onInstanceCategorySelected(organization?.plan === 'hobby' ? 'eco' : 'standard');
     }
   });
 

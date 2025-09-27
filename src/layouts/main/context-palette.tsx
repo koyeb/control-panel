@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
-import { useUserUnsafe } from 'src/api';
+import { useUser } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
@@ -16,7 +16,7 @@ export function ContextPalette() {
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
-  const user = useUserUnsafe();
+  const user = useUser();
   const pageContextBaseUrl = getConfig('pageContextBaseUrl');
 
   const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));

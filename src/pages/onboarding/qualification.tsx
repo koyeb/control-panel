@@ -53,7 +53,7 @@ export function Qualification() {
   const form = useForm<QualificationFormType>({
     defaultValues: {
       primaryUseCase: [],
-      step: user.githubUser ? 'fullName' : 'usage',
+      step: user?.githubUser ? 'fullName' : 'usage',
     },
   });
 
@@ -79,7 +79,7 @@ export function Qualification() {
       };
 
       await api('post /v1/organizations/{id}/signup_qualification', {
-        path: { id: organization.id },
+        path: { id: organization!.id },
         body: { signup_qualification: values as Record<string, never> },
       });
 
@@ -107,7 +107,7 @@ export function Qualification() {
         ...omit(values, 'step', 'invites'),
       });
 
-      if (organization.trial) {
+      if (organization?.trial) {
         openDialog('TrialWelcome');
       }
     },
@@ -116,7 +116,7 @@ export function Qualification() {
   const steps: Step[] = ['usage', 'primaryUseCase'];
   const step = form.watch('step');
 
-  if (user.githubUser) {
+  if (user?.githubUser) {
     steps.unshift('fullName');
   }
 
@@ -126,7 +126,7 @@ export function Qualification() {
 
   steps.push('referralSource');
 
-  if (['pro', 'scale', 'enterprise'].includes(organization.plan)) {
+  if (['pro', 'scale', 'enterprise'].includes(organization!.plan)) {
     steps.push('sendInvites');
   }
 

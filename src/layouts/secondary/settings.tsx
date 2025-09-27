@@ -1,4 +1,4 @@
-import { useOrganizationUnsafe, useUserUnsafe } from 'src/api';
+import { useOrganization, useUser } from 'src/api';
 import { Link } from 'src/components/link';
 import { IconArrowLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -10,8 +10,8 @@ import { ReactivateOrganization } from 'src/modules/account/reactivate-organizat
 const T = createTranslate('layouts.secondary.settings');
 
 export function SecondarySettings() {
-  const user = useUserUnsafe();
-  const organization = useOrganizationUnsafe();
+  const user = useUser();
+  const organization = useOrganization();
 
   return (
     <div className="mx-auto col w-full max-w-3xl gap-10 px-4 py-8 lg:py-32">

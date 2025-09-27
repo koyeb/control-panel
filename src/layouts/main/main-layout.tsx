@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
-import { useLogoutMutation, useOrganization, useOrganizationUnsafe, useUserUnsafe } from 'src/api';
+import { useLogoutMutation, useOrganization, useUser } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
 import { isSessionToken, useToken } from 'src/application/token';
@@ -46,7 +46,7 @@ export function MainLayout({ children }: LayoutProps) {
   const banner = useBanner();
   const pageContext = usePageContext();
 
-  if (!useOrganizationUnsafe()) {
+  if (!useOrganization()) {
     return null;
   }
 
@@ -73,7 +73,7 @@ export function MainLayout({ children }: LayoutProps) {
 
 function Menu({ collapsed = false }: { collapsed?: boolean }) {
   const organization = useOrganization();
-  const isDeactivated = inArray(organization.status, ['DEACTIVATING', 'DEACTIVATED']);
+  const isDeactivated = inArray(organization?.status, ['DEACTIVATING', 'DEACTIVATED']);
 
   return (
     <div className="col min-h-full gap-4 py-4 sm:gap-6 sm:py-6">
@@ -151,7 +151,7 @@ function SessionTokenBanner() {
 
   return (
     <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">
-      <T id="sessionTokenWarning" values={{ organizationName: organization.name }} />
+      <T id="sessionTokenWarning" values={{ organizationName: organization?.name }} />
       <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => logout.mutate()}>
         <IconX className="size-5" />
       </button>
@@ -218,7 +218,7 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 const pageContextExpanded = new StoredValue<boolean>('page-context-expanded');
 
 function usePageContext() {
-  const user = useUserUnsafe();
+  const user = useUser();
   const pageContextBaseUrl = getConfig('pageContextBaseUrl');
 
   const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));

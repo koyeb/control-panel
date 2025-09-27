@@ -1,9 +1,9 @@
-import { useOrganizationUnsafe, useUserUnsafe } from 'src/api';
+import { useOrganization, useUser } from 'src/api';
 import { OnboardingStep, Organization, User } from 'src/model';
 
 export function useOnboardingStep() {
-  const user = useUserUnsafe();
-  const organization = useOrganizationUnsafe();
+  const user = useUser();
+  const organization = useOrganization();
 
   return getOnboardingStep(user, organization);
 }

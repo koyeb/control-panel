@@ -38,7 +38,7 @@ export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogPro
         <p className="text-dim">
           <T
             id="createDialog.description"
-            values={{ organizationName: organization.name, userName: user.name }}
+            values={{ organizationName: organization?.name, userName: user?.name }}
           />
         </p>
 
@@ -111,7 +111,7 @@ function CreateApiCredentialForm({ type, onCreated }: CreateApiCredentialFormPro
         name: values.name,
         description: values.description || undefined,
         type: upperCase(type),
-        organization_id: organization.id,
+        organization_id: organization?.id,
       },
     })),
     async onSuccess(result, { name }) {

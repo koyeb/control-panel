@@ -111,7 +111,7 @@ function WaitingForLogs() {
 }
 
 function NoLogs() {
-  const { plan } = useOrganization();
+  const organization = useOrganization();
   const quotas = useOrganizationQuotas();
 
   return (
@@ -120,7 +120,7 @@ function NoLogs() {
         <T id="noLogs.expired" values={{ retention: quotas.logsRetention }} />
       </p>
 
-      <p>{inArray(plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}</p>
+      <p>{inArray(organization?.plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}</p>
     </>
   );
 }

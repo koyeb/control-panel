@@ -15,7 +15,7 @@ export function ReactivateOrganization() {
 
   const reactivate = useMutation({
     ...apiMutation('post /v1/organizations/{id}/reactivate', {
-      path: { id: organization.id },
+      path: { id: organization?.id as string },
     }),
     async onSuccess() {
       await invalidate('get /v1/account/organization');

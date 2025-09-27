@@ -24,7 +24,7 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
       const hasQuotas = previousInstance === instance.id || quotas.used < quotas.max;
 
       if (instance.category === 'gpu') {
-        trackEvent('gpu_deployed', { plan: organization.plan, gpu_id: instance.id });
+        trackEvent('gpu_deployed', { plan: organization?.plan, gpu_id: instance.id });
       }
 
       if (hasQuotas) {
@@ -32,7 +32,7 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
       }
 
       if (isTenstorrentGpu(instance)) {
-        if (organization.plan === 'hobby') {
+        if (organization?.plan === 'hobby') {
           setRequiredPlan('starter');
           openDialog('Upgrade', { plan: 'starter' });
         } else {
@@ -42,7 +42,7 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         return false;
       }
 
-      if (instance.plans !== undefined && !instance.plans.includes(organization.plan)) {
+      if (instance.plans !== undefined && !instance.plans.includes(organization?.plan ?? '')) {
         const plan = instance.plans[0] as OrganizationPlan;
 
         setRequiredPlan(plan);

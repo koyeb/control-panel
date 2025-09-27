@@ -43,11 +43,11 @@ function BillingInformationForm() {
 
   useEffect(() => {
     form.reset({
-      name: organization.billing.name ?? user.name,
-      email: organization.billing.email ?? user.email,
-      address: organization.billing.address ?? {},
-      company: organization.billing.company,
-      vatNumber: organization.billing.vatNumber ?? '',
+      name: organization?.billing.name ?? user?.name,
+      email: organization?.billing.email ?? user?.email,
+      address: organization?.billing.address ?? {},
+      company: organization?.billing.company,
+      vatNumber: organization?.billing.vatNumber ?? '',
     });
   }, [form, user, organization]);
 
@@ -57,7 +57,7 @@ function BillingInformationForm() {
     ...apiMutation(
       'patch /v1/organizations/{id}',
       ({ name, email, address, company, vatNumber }: FormValues<typeof form>) => ({
-        path: { id: organization.id },
+        path: { id: organization!.id },
         query: {},
         body: {
           billing_name: name,

@@ -2,7 +2,7 @@
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 
-import { useUserUnsafe } from 'src/api';
+import { useUser } from 'src/api';
 import { useLocation } from 'src/hooks/router';
 import { User } from 'src/model';
 
@@ -47,7 +47,7 @@ function usePostHog(): PostHog | undefined {
 }
 
 function Identify() {
-  const user = useUserUnsafe();
+  const user = useUser();
   const [identify] = useIdentifyUser();
 
   useEffect(() => {

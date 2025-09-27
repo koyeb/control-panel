@@ -7,14 +7,14 @@ import { ApiError } from '../api-error';
 import { mapGithubApp, mapRepository } from '../mappers/git';
 import { apiQuery, getApiQueryKey } from '../query';
 
-import { useOrganizationUnsafe } from './session';
+import { useOrganization } from './session';
 
 const isNoGithubAppError = (error: unknown) => {
   return ApiError.is(error, 400) && error.message === 'No GitHub Installation';
 };
 
 export function useGithubAppQuery(refetchInterval = 5000) {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
 
   return useQuery({
     queryKey: getApiQueryKey('get /v1/github/installation', {}),

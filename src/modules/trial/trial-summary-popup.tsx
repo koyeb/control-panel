@@ -20,7 +20,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
   return (
     <div {...props} className={clsx('w-56 rounded-md border bg-popover', className)}>
       <div className="row justify-between border-b p-3">
-        <T id="currentPlan" values={{ plan: <TranslateEnum enum="plans" value={organization.plan} /> }} />
+        <T id="currentPlan" values={{ plan: <TranslateEnum enum="plans" value={organization?.plan} /> }} />
 
         <Badge size={1} color="green" className="ms-auto">
           <T id="badge" />

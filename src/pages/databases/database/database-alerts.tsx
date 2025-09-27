@@ -72,7 +72,7 @@ function QuotaReachedAlert({ service, quota }: QuotaReachedAlertProps) {
   );
 
   const message = () => {
-    if (organization.plan === 'hobby') {
+    if (organization?.plan === 'hobby') {
       return <T id={`quotaReached.hobbyPlan.${quota}`} values={{ link }} />;
     }
 
@@ -81,7 +81,7 @@ function QuotaReachedAlert({ service, quota }: QuotaReachedAlertProps) {
 
   return (
     <Alert variant="warning" description={message()}>
-      {organization.plan === 'hobby' ? (
+      {organization?.plan === 'hobby' ? (
         <LinkButton to="/settings/plans" color="orange" className="self-center whitespace-nowrap">
           <T id="quotaReached.upgradePlan" />
         </LinkButton>

@@ -1,9 +1,9 @@
 import { intervalToDuration, isAfter } from 'date-fns';
 
-import { useOrganizationUnsafe, useSubscriptionQuery } from 'src/api';
+import { useOrganization, useSubscriptionQuery } from 'src/api';
 
 export function useTrial() {
-  const organization = useOrganizationUnsafe();
+  const organization = useOrganization();
   const { data: subscription } = useSubscriptionQuery(organization?.latestSubscriptionId);
 
   if (!organization?.trial || !subscription?.trial) {

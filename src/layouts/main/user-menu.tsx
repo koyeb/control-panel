@@ -41,7 +41,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
         >
           <UserAvatar user={user} />
 
-          {!collapsed && <span className="flex-1 truncate font-medium">{user.name}</span>}
+          {!collapsed && <span className="flex-1 truncate font-medium">{user?.name}</span>}
 
           {!collapsed && (
             <span>
