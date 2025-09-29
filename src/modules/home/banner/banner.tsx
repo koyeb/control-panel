@@ -9,9 +9,9 @@ import { TOKENS } from 'src/tokens';
 import BackgroundLeft from './background-left.svg?react';
 import BackgroundRight from './background-right.svg?react';
 
-const storage = container.get(TOKENS.storage);
-const storedDismissedIds = storage?.value('dismissed-banner-id', JSON);
-const dismissedIds = (storedDismissedIds?.read() as Record<string, string>) ?? {};
+const storage = container.resolve(TOKENS.storage);
+const storedDismissedIds = storage.value<Record<string, boolean>>('dismissed-banner-id', JSON);
+const dismissedIds = storedDismissedIds.read() ?? {};
 
 type HomePageBannerProps = {
   id: string;
@@ -29,7 +29,7 @@ export function HomePageBanner({ id, title, description, cta, className }: HomeP
   }
 
   const handleDismiss = () => {
-    storedDismissedIds?.write({ ...dismissedIds, [id]: true });
+    storedDismissedIds.write({ ...dismissedIds, [id]: true });
     setDismissed(true);
   };
 

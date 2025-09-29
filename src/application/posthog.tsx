@@ -80,7 +80,7 @@ export function useIdentifyUser() {
     (user: User) => {
       posthog?.identify(user.id);
       identifyUserInSentry(user);
-      identifyUserInIntercom(user);
+      void identifyUserInIntercom(user);
     },
     [posthog],
   );
@@ -88,7 +88,7 @@ export function useIdentifyUser() {
   const clear = useCallback(() => {
     posthog?.reset();
     identifyUserInSentry(null);
-    identifyUserInIntercom(null);
+    void identifyUserInIntercom(null);
   }, [posthog]);
 
   return [identify, clear] as const;
