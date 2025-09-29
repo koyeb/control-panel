@@ -7,7 +7,7 @@ import { User } from 'src/api/model';
 import { useLocation } from 'src/hooks/router';
 import { getConfig } from 'src/utils/config';
 
-import { identifyUserInSentry } from './report-error';
+import { identifyUserInSentry } from './sentry';
 
 // cSpell:ignore pageleave autocapture
 
@@ -85,7 +85,7 @@ export function useIdentifyUser() {
 
   const clear = useCallback(() => {
     posthog?.reset();
-    identifyUserInSentry(undefined);
+    identifyUserInSentry(null);
   }, [posthog]);
 
   return [identify, clear] as const;

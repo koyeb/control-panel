@@ -12,6 +12,7 @@ export type AppConfig = Partial<{
   stripePublicKey: string;
   mapboxToken: string;
   intercomAppId: string;
+  sentryDsn: string;
 }>;
 
 export interface ConfigPort {
@@ -37,6 +38,7 @@ export class EnvConfigAdapter implements ConfigPort {
       stripePublicKey: string(import.meta.env.VITE_STRIPE_PUBLIC_KEY),
       mapboxToken: string(import.meta.env.VITE_MAPBOX_TOKEN),
       intercomAppId: string(import.meta.env.VITE_INTERCOM_APP_ID),
+      sentryDsn: string(import.meta.env.VITE_SENTRY_DSN),
     };
 
     try {

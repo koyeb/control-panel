@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { reportError } from 'src/application/report-error';
+import { reportError } from 'src/application/sentry';
 
 export function useSha256(message: string) {
   const [hash, setHash] = useState<string>();

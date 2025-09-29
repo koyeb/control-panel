@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useEffect } from 'react';
 import { z } from 'zod';
 
-import { reportError } from 'src/application/report-error';
+import { reportError } from 'src/application/sentry';
 import { ExternalLink } from 'src/components/link';
 import { IconSquareArrowOutUpRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

@@ -7,7 +7,7 @@ import { getConfig } from 'src/utils/config';
 
 import { createValidationGuard } from './create-validation-guard';
 import { notify } from './notify';
-import { reportError } from './report-error';
+import { reportError } from './sentry';
 
 let retry = 0;
 

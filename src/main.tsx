@@ -1,5 +1,6 @@
 import '@fontsource-variable/inter';
 import '@fontsource-variable/jetbrains-mono';
+import './application/sentry';
 import './intercom';
 import './side-effects';
 import './styles.css';
@@ -19,7 +20,7 @@ import { container } from './application/container';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
-import { reportError } from './application/report-error';
+import { reportError } from './application/sentry';
 import { NotificationContainer } from './components/notification';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
 import { routeTree } from './route-tree.generated';

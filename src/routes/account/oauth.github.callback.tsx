@@ -9,6 +9,7 @@ import { createEnsureApiQueryData } from 'src/api/use-api';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
+import { reportError } from 'src/application/sentry';
 import { Link } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
 import { urlToLinkOptions } from 'src/hooks/router';

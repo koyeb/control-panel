@@ -1,30 +1,25 @@
 import * as Sentry from '@sentry/react';
 
-import { ApiError, hasMessage } from '../api/api-errors';
-import { inArray } from '../utils/arrays';
+import { ApiError } from 'src/api/api-errors';
+import { User } from 'src/api/model';
+
 import { getConfig } from '../utils/config';
 
 import { UnexpectedError } from './errors';
 
 export function initSentry() {
-  const environment = getConfig('environment');
-
-  if (environment === 'development') {
-    return;
-  }
-
   Sentry.init({
-    dsn: 'https://72a8f873435143dbde30ac565779a50f@o4503964164554752.ingest.us.sentry.io/4507418130972672',
-    integrations: [],
-    environment,
+    dsn: getConfig('sentryDsn'),
+    environment: getConfig('environment'),
+    sendDefaultPii: true,
+    integrations: [Sentry.replayIntegration()],
+    replaysSessionSampleRate: 0,
+    replaysOnErrorSampleRate: 1,
+    ignoreErrors: ['Failed to fetch', 'Load failed', 'NetworkError when attempting to fetch resource'],
     beforeSend(event, hint) {
       const error = hint.originalException;
 
-      if (hasMessage(error) && inArray(error.message, ['Failed to fetch', 'Load failed'])) {
-        return null;
-      }
-
-      if (ApiError.is(error, 500)) {
+      if (ApiError.is(error) && error.status < 500) {
         return null;
       }
 
@@ -37,4 +32,16 @@ export function initSentry() {
       return event;
     },
   });
+}
+
+export function reportError(error: unknown, payload?: unknown) {
+  Sentry.captureException(error, { contexts: { extra: { payload } } });
+}
+
+export function identifyUserInSentry(user: User | null) {
+  if (user) {
+    Sentry.setUser({ id: user.id, username: user.name, email: user.email });
+  } else {
+    Sentry.setUser(null);
+  }
 }

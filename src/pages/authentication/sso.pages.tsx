@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { ApiError } from 'src/api/api-errors';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
-import { reportError } from 'src/application/report-error';
+import { reportError } from 'src/application/sentry';
 import { LogoLoading } from 'src/components/logo-loading';
 import { useMount } from 'src/hooks/lifecycle';
 import { useLocation, useNavigate, useSearchParams } from 'src/hooks/router';

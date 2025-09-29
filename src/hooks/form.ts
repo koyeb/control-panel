@@ -11,7 +11,7 @@ import {
 
 import { hasMessage, isApiResponse, isApiValidationError } from 'src/api/api-errors';
 import { notify } from 'src/application/notify';
-import { reportError } from 'src/application/report-error';
+import { reportError } from 'src/application/sentry';
 import { useTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';

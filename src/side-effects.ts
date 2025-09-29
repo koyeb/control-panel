@@ -3,9 +3,9 @@
 import { api } from './api/api';
 import { initSentry } from './application/sentry';
 
-window.api = api;
-
 initSentry();
+
+window.api = api;
 
 if (typeof globalThis === 'undefined' && typeof window !== 'undefined') {
   window.globalThis = window;

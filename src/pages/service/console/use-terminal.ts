@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { getApi } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
-import { reportError } from 'src/application/report-error';
+import { reportError } from 'src/application/sentry';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useMount } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';
