@@ -1,9 +1,11 @@
 /* eslint-disable */
 // @ts-nocheck
 import { api } from './api/api';
+import { initIntercom } from './application/intercom';
 import { initSentry } from './application/sentry';
 
 initSentry();
+initIntercom();
 
 window.api = api;
 

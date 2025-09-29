@@ -7,6 +7,7 @@ import { User } from 'src/api/model';
 import { useLocation } from 'src/hooks/router';
 import { getConfig } from 'src/utils/config';
 
+import { identifyUserInIntercom } from './intercom';
 import { identifyUserInSentry } from './sentry';
 
 // cSpell:ignore pageleave autocapture
@@ -79,6 +80,7 @@ export function useIdentifyUser() {
     (user: User) => {
       posthog?.identify(user.id);
       identifyUserInSentry(user);
+      identifyUserInIntercom(user);
     },
     [posthog],
   );
@@ -86,6 +88,7 @@ export function useIdentifyUser() {
   const clear = useCallback(() => {
     posthog?.reset();
     identifyUserInSentry(null);
+    identifyUserInIntercom(null);
   }, [posthog]);
 
   return [identify, clear] as const;
