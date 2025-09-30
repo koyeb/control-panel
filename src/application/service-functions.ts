@@ -1,7 +1,7 @@
 import { RegisteredRouter } from '@tanstack/react-router';
 
-import { API } from 'src/api/api-types';
-import { databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
+import { API, databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api';
+import { ValidateLinkOptions } from 'src/components/link';
 import {
   App,
   AppDomain,
@@ -14,12 +14,11 @@ import {
   Port,
   Service,
   ServiceStatus,
-} from 'src/api/model';
-import { ValidateLinkOptions } from 'src/components/link';
+} from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-import { getApi } from './container';
+import { getApi } from '../api';
 
 type ServiceLink = ValidateLinkOptions<
   RegisteredRouter,

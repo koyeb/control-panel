@@ -1,8 +1,7 @@
 import { TabButtons } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
-import { isDatabaseDeployment } from 'src/api/mappers/deployment';
+import { isDatabaseDeployment, useDeploymentQuery, useServiceQuery } from 'src/api';
 import { TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';

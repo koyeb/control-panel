@@ -3,11 +3,13 @@ import { useMutation } from '@tanstack/react-query';
 import { useMatch } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
-import { useComputeDeployment } from 'src/api/hooks/service';
-import { App, Service } from 'src/api/model';
+import {
+  apiMutation,
+  useCatalogInstance,
+  useCatalogInstanceRegionsAvailability,
+  useComputeDeployment,
+  useInvalidateApiQuery,
+} from 'src/api';
 import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
 import { CliInfoButton, CliInfoTooltip } from 'src/components/cli-info';
@@ -17,6 +19,7 @@ import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { App, Service } from 'src/model';
 
 const T = createTranslate('pages.service.layout');
 
@@ -70,7 +73,7 @@ function RedeployDialog({ id, context, service }: RedeployDialogProps) {
     latestDeployment?.definition.regions,
   );
 
-  const instance = useInstance(latestDeployment?.definition.instanceType);
+  const instance = useCatalogInstance(latestDeployment?.definition.instanceType);
 
   const form = useForm({
     defaultValues: {

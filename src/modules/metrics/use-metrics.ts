@@ -1,9 +1,8 @@
 import { useQueries } from '@tanstack/react-query';
 import { Duration, sub } from 'date-fns';
 
-import { getApiQueryKey } from 'src/api/api';
-import type { API } from 'src/api/api-types';
-import { getApi } from 'src/application/container';
+import type { API } from 'src/api';
+import { getApi, getApiQueryKey } from 'src/api';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
 

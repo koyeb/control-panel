@@ -1,7 +1,6 @@
-import { apiQuery } from 'src/api/api';
-
 import { useQuery } from '@tanstack/react-query';
-import { mapActivity } from 'src/api/mappers/activity';
+
+import { apiQuery, mapActivity } from 'src/api';
 import { Link } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';

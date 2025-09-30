@@ -1,7 +1,7 @@
 import { Alert, Button } from '@koyeb/design-system';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { useInstance, useRegions } from 'src/api/hooks/catalog';
+import { useCatalogInstance, useRegionsCatalog } from 'src/api';
 import { Dialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/icons';
@@ -94,11 +94,11 @@ function SectionContent() {
 function useVolumesUnavailableAlert(): { title: React.ReactNode; description: React.ReactNode } | undefined {
   const { setValue } = useFormContext<ServiceForm>();
 
-  const instance = useInstance(useWatchServiceForm('instance'));
+  const instance = useCatalogInstance(useWatchServiceForm('instance'));
   const hasScaleToZero = useWatchServiceForm('scaling.min') === 0;
   const hasMultipleInstances = useWatchServiceForm('scaling.max') > 1;
 
-  const regions = useRegions(useWatchServiceForm('regions'));
+  const regions = useRegionsCatalog(useWatchServiceForm('regions'));
   const hasMultipleRegions = useWatchServiceForm('regions').length > 1;
 
   const sectionLink = (section: ServiceFormSectionType) => {

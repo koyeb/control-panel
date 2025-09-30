@@ -2,9 +2,7 @@ import { Badge, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { lazy } from 'react';
 
-import { ApiError } from 'src/api/api-errors';
-import { useOneClickAppQuery, useOneClickAppsQuery } from 'src/api/hooks/catalog';
-import { OneClickApp, OneClickAppMetadata } from 'src/api/model';
+import { ApiError, useOneClickAppQuery, useOneClickAppsQuery } from 'src/api';
 import { SvgComponent } from 'src/application/types';
 import { ExternalLink, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -22,6 +20,7 @@ import {
   IconWeight,
 } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { OneClickApp, OneClickAppMetadata } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 import { AppCard } from './app-card';

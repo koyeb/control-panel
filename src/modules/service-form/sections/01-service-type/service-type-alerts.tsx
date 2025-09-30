@@ -1,6 +1,6 @@
 import { Alert } from '@koyeb/design-system';
 
-import { useInstance } from 'src/api/hooks/catalog';
+import { useCatalogInstance } from 'src/api';
 import { createTranslate } from 'src/intl/translate';
 
 import { useWatchServiceForm } from '../../use-service-form';
@@ -8,7 +8,7 @@ import { useWatchServiceForm } from '../../use-service-form';
 const T = createTranslate('modules.serviceForm.serviceType.alerts');
 
 export function ServiceTypeAlerts() {
-  const instance = useInstance(useWatchServiceForm('instance'));
+  const instance = useCatalogInstance(useWatchServiceForm('instance'));
 
   if (instance?.id === 'free') {
     return (

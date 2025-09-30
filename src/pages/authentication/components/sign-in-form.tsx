@@ -3,8 +3,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation } from 'src/api/api';
-import { ApiError } from 'src/api/api-errors';
+import { ApiError, apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { FormValues, handleSubmit } from 'src/hooks/form';

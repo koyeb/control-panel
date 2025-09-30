@@ -1,7 +1,6 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router';
 
-import { createEnsureApiQueryData } from 'src/api/api';
-import { mapService } from 'src/api/mappers/service';
+import { createEnsureApiQueryData, mapService } from 'src/api';
 import { AppServiceCrumb } from 'src/layouts/main/app-breadcrumbs';
 import { ServiceLayout } from 'src/pages/service/service.layout';
 

@@ -1,13 +1,13 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { Service } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { getApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { Service } from 'src/model';
 
 const T = createTranslate('pages.service.settings.deleteService');
 

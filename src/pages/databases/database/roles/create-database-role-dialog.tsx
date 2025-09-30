@@ -3,8 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { Service } from 'src/api/model';
+import { useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
@@ -12,6 +11,7 @@ import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/compo
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Service } from 'src/model';
 import { randomString } from 'src/utils/random';
 
 const T = createTranslate('pages.database.roles.createDialog');

@@ -2,7 +2,7 @@ import { Button, TabButton, TabButtons } from '@koyeb/design-system';
 import { useState } from 'react';
 import { useFieldArray, useFormContext, useFormState } from 'react-hook-form';
 
-import { useSecrets } from 'src/api/hooks/secret';
+import { useSecrets } from 'src/api';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
 import { Dialog } from 'src/components/dialog';

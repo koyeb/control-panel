@@ -1,6 +1,6 @@
 import { ErrorComponentProps } from '@tanstack/react-router';
 
-import { ApiError } from 'src/api/api-errors';
+import { ApiError } from 'src/api';
 import { getConfig } from 'src/application/config';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useForceThemeMode } from 'src/hooks/theme';

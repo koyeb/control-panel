@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
-import { EnvironmentVariable, Organization, OrganizationQuotas } from 'src/api/model';
 import { tooBig, tooSmall } from 'src/application/zod';
+import { EnvironmentVariable, Organization, OrganizationQuotas } from 'src/model';
 import { isSlug } from 'src/utils/strings';
 
 import { File, Scaling } from '../service-form.types';

@@ -1,8 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { createEnsureApiQueryData } from 'src/api/api';
-import { mapOrganization, mapUser } from 'src/api/mappers/session';
-import { getApi } from 'src/application/container';
+import { createEnsureApiQueryData, getApi, mapOrganization, mapUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { LogoLoading } from 'src/components/logo-loading';

@@ -1,7 +1,7 @@
+import { RegistrySecret, RegistryType, Secret } from 'src/model';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
 import type { API } from '../api-types';
-import { RegistrySecret, RegistryType, Secret } from '../model';
 
 export function mapSecret(secret: API.Secret): Secret | RegistrySecret {
   return {

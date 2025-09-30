@@ -1,4 +1,3 @@
-import { type RegistryType } from 'src/api/model';
 import {
   IconAzure,
   IconDigitalOcean,
@@ -9,6 +8,7 @@ import {
   IconPrivateRegistry,
 } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { type RegistryType } from 'src/model';
 
 const T = createTranslate('modules.secrets');
 

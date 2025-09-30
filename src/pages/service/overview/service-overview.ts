@@ -2,17 +2,22 @@ import { useBreakpoint } from '@koyeb/design-system';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { apiQuery } from 'src/api/api';
-import { useApp } from 'src/api/hooks/app';
-import { useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
-import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
-import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import {
+  apiQuery,
+  getApi,
+  isComputeDeployment,
+  mapDeployment,
+  useApp,
+  useDeployment,
+  useInstancesQuery,
+  useService,
+} from 'src/api';
 import { useDialogContext } from 'src/application/dialog-context';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
+import { App, ComputeDeployment, Instance, Service } from 'src/model';
 import { AssertionError, assert, defined } from 'src/utils/assert';
 import { isDefined } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';

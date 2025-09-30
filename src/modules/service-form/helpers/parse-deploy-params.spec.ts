@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { CatalogInstance, CatalogRegion } from 'src/api/model';
+import { CatalogInstance, CatalogRegion } from 'src/model';
 import { create } from 'src/utils/factories';
 
 import { Port } from '../service-form.types';

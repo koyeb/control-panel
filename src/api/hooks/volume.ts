@@ -1,7 +1,7 @@
-import { apiQuery } from 'src/api/api';
-
 import { useQuery } from '@tanstack/react-query';
+
 import { mapVolume } from '../mappers/volume';
+import { apiQuery } from '../query';
 
 export function useVolumesQuery(region?: string) {
   return useQuery({

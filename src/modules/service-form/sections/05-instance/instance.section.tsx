@@ -1,7 +1,7 @@
 import { Badge } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
-import { useInstance, useRegions } from 'src/api/hooks/catalog';
+import { useCatalogInstance, useRegionsCatalog } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -28,8 +28,8 @@ export function InstanceSection() {
 }
 
 function SectionTitle() {
-  const instance = useInstance(useFormContext<ServiceForm>().watch('instance'));
-  const regions = useRegions(useFormContext<ServiceForm>().watch('regions'));
+  const instance = useCatalogInstance(useFormContext<ServiceForm>().watch('instance'));
+  const regions = useRegionsCatalog(useFormContext<ServiceForm>().watch('regions'));
 
   if (!instance) {
     return <T id="noInstanceSelected" />;

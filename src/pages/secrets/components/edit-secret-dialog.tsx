@@ -1,9 +1,9 @@
 import { Button } from '@koyeb/design-system';
 
-import { Secret } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Secret } from 'src/model';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 
 const T = createTranslate('pages.secrets.editSecretDialog');

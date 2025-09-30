@@ -1,14 +1,13 @@
 import identity from 'lodash-es/identity';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
-import { useRegions } from 'src/api/hooks/catalog';
-import { useDeploymentScalingQuery } from 'src/api/hooks/service';
-import { CatalogRegion, ComputeDeployment, InstanceStatus, Replica } from 'src/api/model';
+import { useDeploymentScalingQuery, useRegionsCatalog } from 'src/api';
 import { ControlledSelect } from 'src/components/controlled';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { TranslateStatus, createTranslate } from 'src/intl/translate';
+import { CatalogRegion, ComputeDeployment, InstanceStatus, Replica } from 'src/model';
 import { getId } from 'src/utils/object';
 
 import { ReplicaList } from './replica-list';
@@ -21,7 +20,7 @@ export type DeploymentScalingFilters = {
 };
 
 export function DeploymentScaling({ deployment }: { deployment: ComputeDeployment }) {
-  const regions = useRegions(deployment.definition.regions);
+  const regions = useRegionsCatalog(deployment.definition.regions);
 
   const filters = useForm<DeploymentScalingFilters>({
     defaultValues: {

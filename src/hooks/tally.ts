@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 
-import { useUserUnsafe } from 'src/api/hooks/session';
+import { useUserUnsafe } from 'src/api';
 
 import { usePathname } from './router';
 

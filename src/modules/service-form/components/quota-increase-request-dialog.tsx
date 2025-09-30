@@ -1,4 +1,4 @@
-import { useInstance } from 'src/api/hooks/catalog';
+import { useCatalogInstance } from 'src/api';
 import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { tallyForms, useTallyLink } from 'src/hooks/tally';
@@ -7,7 +7,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('modules.serviceForm');
 
 export function QuotaIncreaseRequestDialog({ catalogInstanceId }: { catalogInstanceId: string | null }) {
-  const instance = useInstance(catalogInstanceId);
+  const instance = useCatalogInstance(catalogInstanceId);
   const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (

@@ -1,7 +1,7 @@
-import { apiMutation } from 'src/api/api';
 import { Alert, Button } from '@koyeb/design-system';
-
 import { useMutation } from '@tanstack/react-query';
+
+import { apiMutation } from 'src/api';
 import { useHistoryState, useLocation } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 

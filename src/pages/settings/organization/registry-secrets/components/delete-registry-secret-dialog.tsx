@@ -1,12 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { RegistrySecret } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
+import { RegistrySecret } from 'src/model';
 
 const T = createTranslate('pages.organizationSettings.registrySecrets.deleteDialog');
 

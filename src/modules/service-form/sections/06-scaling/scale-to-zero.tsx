@@ -1,8 +1,7 @@
 import { Badge, Button, InputEnd } from '@koyeb/design-system';
 import { useFormContext, useFormState } from 'react-hook-form';
 
-import { useInstance } from 'src/api/hooks/catalog';
-import { useOrganization } from 'src/api/hooks/session';
+import { useCatalogInstance, useOrganization } from 'src/api';
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
 import { LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
@@ -26,7 +25,7 @@ export function ScaleToZeroConfiguration({
   hasVolumes,
 }: ScaleToZeroConfigurationProps) {
   const { watch } = useFormContext<ServiceForm>();
-  const instance = useInstance(watch('instance'));
+  const instance = useCatalogInstance(watch('instance'));
   const isGpu = instance?.category === 'gpu';
 
   const { errors } = useFormState<ServiceForm>();

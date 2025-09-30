@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/react';
 
-import { ApiError } from 'src/api/api-errors';
-import { User } from 'src/api/model';
+import { ApiError } from 'src/api';
+import { User } from 'src/model';
 
 import { getConfig } from './config';
 import { UnexpectedError } from './errors';

@@ -1,9 +1,8 @@
 import { useController } from 'react-hook-form';
 
-import { useRegions } from 'src/api/hooks/catalog';
-import { useOrganization, useOrganizationSummary } from 'src/api/hooks/session';
-import { CatalogInstance } from 'src/api/model';
+import { useOrganization, useOrganizationSummary, useRegionsCatalog } from 'src/api';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { CatalogInstance } from 'src/model';
 import { InstanceSelector, InstanceSelectorBadge } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
@@ -20,7 +19,7 @@ type DatabaseInstanceSelectorProps = {
 
 export function DatabaseInstanceSelector({ allowFreeInstanceIfAlreadyUsed }: DatabaseInstanceSelectorProps) {
   const organization = useOrganization();
-  const regions = useRegions(neonRegions);
+  const regions = useRegionsCatalog(neonRegions);
 
   const instanceCtrl = useController<DatabaseServiceForm, 'instance'>({ name: 'instance' });
   const regionCtrl = useController<DatabaseServiceForm, 'region'>({ name: 'region' });

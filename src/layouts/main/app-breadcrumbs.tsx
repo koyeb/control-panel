@@ -3,14 +3,13 @@ import { RegisteredRouter, ValidateLinkOptions, linkOptions, useRouterState } fr
 import clsx from 'clsx';
 import { Fragment, useState } from 'react';
 
-import { useAppQuery } from 'src/api/hooks/app';
-import { useServiceQuery, useServices } from 'src/api/hooks/service';
-import { Service } from 'src/api/model';
+import { useAppQuery, useServiceQuery, useServices } from 'src/api';
 import { Link, LinkMenuItem } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { IconCheck, IconChevronDown, IconChevronRight, IconHouse } from 'src/icons';
 import { Translate, TranslationKeys } from 'src/intl/translate';
+import { Service } from 'src/model';
 import { unique } from 'src/utils/arrays';
 import { isDefined } from 'src/utils/generic';
 

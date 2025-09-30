@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useOrganizationUnsafe } from 'src/api/hooks/session';
+import { useOrganizationUnsafe } from 'src/api';
 import { BadgeNew } from 'src/components/badge-new';
 import { Link, ValidateLinkOptions } from 'src/components/link';
 import { usePathname } from 'src/hooks/router';

@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { AppStatus, DomainStatus, InstanceStatus, ServiceStatus } from 'src/api/model';
+import { AppStatus, DomainStatus, InstanceStatus, ServiceStatus } from 'src/model';
 
 type StatusDotProps<Status extends string> = {
   status: Status;

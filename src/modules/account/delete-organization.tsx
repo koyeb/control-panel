@@ -1,9 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { apiQuery } from 'src/api/api';
-import { useOrganization, useUser } from 'src/api/hooks/session';
-import { getApi } from 'src/application/container';
+import { apiQuery, getApi, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { QueryError } from 'src/components/query-error';

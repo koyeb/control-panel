@@ -2,9 +2,7 @@ import { Badge, Button, Collapse, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { ComputeDeployment, GitDeploymentTrigger, Service } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { isUpcomingDeployment } from 'src/application/service-functions';
@@ -12,6 +10,7 @@ import { DeploymentStatusBadge } from 'src/components/status-badges';
 import { IconChevronRight } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, GitDeploymentTrigger, Service } from 'src/model';
 
 import { DeploymentTrigger } from './deployment-trigger';
 

@@ -1,12 +1,12 @@
 import { Input } from '@koyeb/design-system';
 import { useMemo, useState } from 'react';
 
-import { useOneClickApps } from 'src/api/hooks/catalog';
-import { OneClickApp } from 'src/api/model';
+import { useOneClickApps } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { Link } from 'src/components/link';
 import { IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { OneClickApp } from 'src/model';
 import { unique } from 'src/utils/arrays';
 import { lowerCase } from 'src/utils/strings';
 

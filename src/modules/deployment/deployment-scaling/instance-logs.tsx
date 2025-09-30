@@ -4,9 +4,7 @@ import { max, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
-import { useApp } from 'src/api/hooks/app';
-import { useService } from 'src/api/hooks/service';
-import { Instance, LogLine } from 'src/api/model';
+import { useApp, useService } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
@@ -17,6 +15,7 @@ import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useRouteParam } from 'src/hooks/router';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Instance, LogLine } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 
 import { NoRuntimeLogs, RuntimeLogLine } from '../deployment-logs/runtime-logs';

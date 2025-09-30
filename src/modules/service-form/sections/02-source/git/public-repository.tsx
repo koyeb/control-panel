@@ -2,9 +2,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { GitRepository } from 'src/api/model';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';
 import { createTranslate } from 'src/intl/translate';
+import { GitRepository } from 'src/model';
 
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';
 import { ServiceForm } from '../../../service-form.types';

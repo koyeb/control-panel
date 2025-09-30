@@ -1,5 +1,5 @@
-import { ComputeDeployment } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment } from 'src/model';
 
 const T = createTranslate('pages.service.overview.deploymentTrigger');
 

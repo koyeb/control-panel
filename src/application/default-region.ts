@@ -1,6 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 
-import { CatalogDatacenter, CatalogInstance, CatalogRegion } from 'src/api/model';
+import { CatalogDatacenter, CatalogInstance, CatalogRegion } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 

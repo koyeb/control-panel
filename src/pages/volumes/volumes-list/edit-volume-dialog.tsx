@@ -1,16 +1,16 @@
-import { apiMutation } from 'src/api/api';
 import { Button, DialogFooter } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-
 import z from 'zod';
-import { Volume } from 'src/api/model';
+
+import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Volume } from 'src/model';
 
 const T = createTranslate('pages.volumes.volumesList.editDialog');
 

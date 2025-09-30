@@ -2,7 +2,7 @@ import { Button, TextArea } from '@koyeb/design-system';
 import { useCallback, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useSecrets } from 'src/api/hooks/secret';
+import { useSecrets } from 'src/api';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 

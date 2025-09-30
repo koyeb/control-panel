@@ -1,5 +1,5 @@
-import { useInstance } from 'src/api/hooks/catalog';
-import { CatalogInstance } from 'src/api/model';
+import { useCatalogInstance } from 'src/api';
+import { CatalogInstance } from 'src/model';
 
 import { Scaling, ServiceForm } from '../service-form.types';
 
@@ -7,7 +7,7 @@ export function useEstimatedCost(
   values: Partial<Pick<ServiceForm, 'instance' | 'regions' | 'scaling'>>,
 ): ServiceCost | undefined {
   const { scaling, regions } = values;
-  const instance = useInstance(values.instance ?? null);
+  const instance = useCatalogInstance(values.instance ?? null);
 
   return computeEstimatedCost(instance, regions, scaling);
 }

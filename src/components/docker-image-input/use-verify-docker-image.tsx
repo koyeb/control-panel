@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
-import { apiQuery } from 'src/api/api';
-import { useSecrets } from 'src/api/hooks/secret';
+import { apiQuery, useSecrets } from 'src/api';
 import { hasProperty } from 'src/utils/object';
 
 export function useVerifyDockerImage(image: string, registrySecretName: string | undefined) {

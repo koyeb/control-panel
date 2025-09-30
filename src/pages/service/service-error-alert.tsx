@@ -1,11 +1,11 @@
 import { Alert, ButtonColor } from '@koyeb/design-system';
 
-import { useDeployment } from 'src/api/hooks/service';
-import { Service } from 'src/api/model';
+import { useDeployment } from 'src/api';
 import { isUpcomingDeployment } from 'src/application/service-functions';
 import { Link, LinkButton } from 'src/components/link';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { Service } from 'src/model';
 import { shortId } from 'src/utils/strings';
 
 const T = createTranslate('pages.service.overview.serviceErrorAlert');

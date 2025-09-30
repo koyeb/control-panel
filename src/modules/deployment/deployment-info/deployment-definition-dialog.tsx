@@ -2,17 +2,7 @@ import { Json, TabButton, TabButtons } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 
-import { useInstance } from 'src/api/hooks/catalog';
-import type {
-  BuildpackBuilder,
-  ComputeDeployment,
-  DeploymentDefinition,
-  DockerDeploymentSource,
-  DockerfileBuilder,
-  EnvironmentVariable,
-  GitDeploymentSource,
-  Scaling,
-} from 'src/api/model';
+import { useCatalogInstance } from 'src/api';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Dialog, DialogHeader } from 'src/components/dialog';
 import { ExternalLink } from 'src/components/link';
@@ -22,6 +12,16 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconDocker, IconGithub, IconPackage } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import type {
+  BuildpackBuilder,
+  ComputeDeployment,
+  DeploymentDefinition,
+  DockerDeploymentSource,
+  DockerfileBuilder,
+  EnvironmentVariable,
+  GitDeploymentSource,
+  Scaling,
+} from 'src/model';
 import { assert } from 'src/utils/assert';
 
 const T = createTranslate('modules.deployment.deploymentInfo.definitionDialog');
@@ -241,7 +241,7 @@ function DockerfileOptions({ builder }: { builder: DockerfileBuilder }) {
 }
 
 function Instances({ definition }: { definition: DeploymentDefinition }) {
-  const instance = useInstance(definition.instanceType);
+  const instance = useCatalogInstance(definition.instanceType);
 
   return (
     <Section title={<T id="instances.title" />}>

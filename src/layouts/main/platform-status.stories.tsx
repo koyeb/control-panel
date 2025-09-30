@@ -1,7 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react-vite';
 
-import { controls } from 'src/storybook';
-
 import { PlatformStatus } from './platform-status';
 
 // cSpell:ignore hasissues undermaintenance degradedperformance partialoutage majoroutage
@@ -12,6 +10,13 @@ type Args = {
   impact: string;
 };
 
+function inlineRadio<Options extends string>(options: Options[]) {
+  return {
+    control: 'inline-radio' as const,
+    options,
+  };
+}
+
 export default {
   title: 'Components/PlatformStatus',
   args: {
@@ -20,9 +25,9 @@ export default {
     impact: 'OPERATIONAL',
   },
   argTypes: {
-    name: controls.string(),
-    status: controls.inlineRadio(['UP', 'HASISSUES', 'UNDERMAINTENANCE']),
-    impact: controls.inlineRadio([
+    name: { control: 'text' },
+    status: inlineRadio(['UP', 'HASISSUES', 'UNDERMAINTENANCE']),
+    impact: inlineRadio([
       'OPERATIONAL',
       'UNDERMAINTENANCE',
       'DEGRADEDPERFORMANCE',

@@ -1,7 +1,7 @@
 import { Fragment } from 'react/jsx-runtime';
 
-import { OnboardingStep } from 'src/api/model';
 import { FullScreenLayout } from 'src/layouts/onboarding/full-screen-layout';
+import { OnboardingStep } from 'src/model';
 
 import { AutomaticReview } from './automatic-review';
 import { EmailValidation } from './email-validation';

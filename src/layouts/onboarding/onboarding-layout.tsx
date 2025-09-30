@@ -1,9 +1,8 @@
-import { apiQuery } from 'src/api/api';
 import { ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
-
 import { useState } from 'react';
-import { useLogoutMutation, useUser } from 'src/api/hooks/session';
+
+import { apiQuery, useLogoutMutation, useUser } from 'src/api';
 import { LinkMenuItem } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { UserAvatar } from 'src/components/user-avatar';

@@ -1,4 +1,4 @@
-import { EnvironmentVariable } from 'src/api/model';
+import { EnvironmentVariable } from 'src/model';
 import { dotenvParse } from 'src/utils/dotenv';
 
 export class SecretNotFoundError extends Error {

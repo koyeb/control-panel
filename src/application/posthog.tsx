@@ -2,9 +2,9 @@
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 
-import { useUserUnsafe } from 'src/api/hooks/session';
-import { User } from 'src/api/model';
+import { useUserUnsafe } from 'src/api';
 import { useLocation } from 'src/hooks/router';
+import { User } from 'src/model';
 
 import { getConfig } from './config';
 import { identifyUserInIntercom } from './intercom';

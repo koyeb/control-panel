@@ -1,8 +1,6 @@
-import { apiMutation } from 'src/api/api';
-
 import { useMutation } from '@tanstack/react-query';
-import { useGithubApp } from 'src/api/hooks/git';
-import { useOrganization } from 'src/api/hooks/session';
+
+import { apiMutation, useGithubApp, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { createTranslate } from 'src/intl/translate';
 

@@ -1,11 +1,11 @@
-import { useRegions } from 'src/api/hooks/catalog';
+import { useRegionsCatalog } from 'src/api';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 import { RegionFlag } from './region-flag';
 
 export function RegionsList({ regionIds }: { regionIds: string[] }) {
-  const regions = useRegions();
+  const regions = useRegionsCatalog();
 
   return (
     <ul className="col gap-2">

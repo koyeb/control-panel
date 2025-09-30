@@ -1,5 +1,4 @@
-import { useManageBillingQuery } from 'src/api/hooks/billing';
-import { useOrganization } from 'src/api/hooks/session';
+import { useManageBillingQuery, useOrganization } from 'src/api';
 import { ExternalLinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';

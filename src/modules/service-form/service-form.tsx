@@ -4,8 +4,7 @@ import clsx from 'clsx';
 import { useRef } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useInstance } from 'src/api/hooks/catalog';
+import { useCatalogInstance, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
@@ -43,7 +42,7 @@ type ServiceFormProps = {
 
 export function ServiceForm({ form, className, onDeployed, onSaved, onBack }: ServiceFormProps) {
   const invalidate = useInvalidateApiQuery();
-  const instance = useInstance(form.watch('instance'));
+  const instance = useCatalogInstance(form.watch('instance'));
 
   const [requiredPlan, preSubmit] = usePreSubmitServiceForm(form.watch('meta.previousInstance'));
   const formRef = useRef<HTMLFormElement>(null);

@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation } from 'src/api/api';
+import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';

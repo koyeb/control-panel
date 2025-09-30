@@ -1,6 +1,6 @@
 import { Spinner } from '@koyeb/design-system';
 
-import { useGithubApp } from 'src/api/hooks/git';
+import { useGithubApp } from 'src/api';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.serviceForm.source');

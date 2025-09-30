@@ -1,4 +1,4 @@
-import { GitRepository } from 'src/api/model';
+import { GitRepository } from 'src/model';
 
 type GithubRepository = {
   id: string;

@@ -1,4 +1,4 @@
-import { useOneClickApps } from 'src/api/hooks/catalog';
+import { useOneClickApps } from 'src/api';
 import { hasProperty } from 'src/utils/object';
 
 import { AppCard } from './app-card';

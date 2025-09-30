@@ -2,8 +2,8 @@ import { Input } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
-import { GitRepository } from 'src/api/model';
 import { useTranslate } from 'src/intl/translate';
+import { GitRepository } from 'src/model';
 
 import { fetchGithubRepository } from './github-api';
 import { parseGithubRepositoryQuery } from './parse-github-repository-query';

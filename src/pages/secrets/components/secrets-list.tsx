@@ -1,4 +1,3 @@
-import { apiQuery } from 'src/api/api';
 import {
   Button,
   ButtonMenuItem,
@@ -10,9 +9,9 @@ import {
 } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-
 import { useState } from 'react';
-import { Secret } from 'src/api/model';
+
+import { apiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
@@ -20,6 +19,7 @@ import { useClipboard } from 'src/hooks/clipboard';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Secret } from 'src/model';
 
 import { DeleteSecretDialog } from './delete-secret-dialog';
 import { EditSecretDialog } from './edit-secret-dialog';

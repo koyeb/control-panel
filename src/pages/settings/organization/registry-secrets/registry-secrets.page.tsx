@@ -1,7 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useSecrets } from 'src/api/hooks/secret';
+import { useSecrets } from 'src/api';
 import { Dialog } from 'src/components/dialog';
 import { Title } from 'src/components/title';
 import { createTranslate } from 'src/intl/translate';

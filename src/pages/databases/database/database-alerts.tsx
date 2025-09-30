@@ -1,14 +1,12 @@
 import { Alert, Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useOrganization } from 'src/api/hooks/session';
-import { DatabaseDeployment, Service } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { getDatabaseServiceReachedQuota } from 'src/application/service-functions';
 import { ExternalLink, LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
+import { DatabaseDeployment, Service } from 'src/model';
 
 const T = createTranslate('pages.database.layout.alerts');
 

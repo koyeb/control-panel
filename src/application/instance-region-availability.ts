@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 
-import { useInstances, useRegions } from 'src/api/hooks/catalog';
-import { useOrganizationSummary } from 'src/api/hooks/session';
-import { CatalogInstance, CatalogRegion, OrganizationSummary, ServiceType } from 'src/api/model';
+import { useInstancesCatalog, useOrganizationSummary, useRegionsCatalog } from 'src/api';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
+import { CatalogInstance, CatalogRegion, OrganizationSummary, ServiceType } from 'src/model';
 import { toObject } from 'src/utils/object';
 
 export type RegionAvailability = [available: true] | [available: false, reason: RegionUnavailableReason];
@@ -15,7 +14,7 @@ type RegionAvailabilityOptions = {
 };
 
 export function useRegionAvailabilities(options?: RegionAvailabilityOptions) {
-  const regions = useRegions();
+  const regions = useRegionsCatalog();
   const optionsMemo = useDeepCompareMemo(options);
 
   return useMemo(() => {
@@ -64,7 +63,7 @@ type InstanceAvailabilityOptions = {
 };
 
 export function useInstanceAvailabilities(options: InstanceAvailabilityOptions = {}) {
-  const instances = useInstances();
+  const instances = useInstancesCatalog();
   const organizationSummary = useOrganizationSummary();
   const optionsMemo = useDeepCompareMemo(options);
 

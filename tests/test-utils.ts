@@ -1,10 +1,8 @@
 import { BrowserContext, Page } from '@playwright/test';
 import { TOTP } from 'totp-generator';
 
-import { api } from 'src/api/api';
-import { ApiError } from 'src/api/api-errors';
-import { mapOrganization } from 'src/api/mappers/session';
-import type { Organization } from 'src/api/model';
+import type { Organization } from 'src/api';
+import { ApiError, api, mapOrganization } from 'src/api';
 
 export const config = {
   baseUrl: process.env.E2E_BASE_URL as string,

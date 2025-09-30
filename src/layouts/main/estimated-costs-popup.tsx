@@ -2,13 +2,12 @@ import clsx from 'clsx';
 import { FormattedNumber } from 'react-intl';
 import { Fragment } from 'react/jsx-runtime';
 
-import { useNextInvoiceQuery } from 'src/api/hooks/billing';
-import { useOrganization } from 'src/api/hooks/session';
-import { Invoice, InvoiceLine, InvoicePlanLine, InvoiceUsageLine } from 'src/api/model';
+import { useNextInvoiceQuery, useOrganization } from 'src/api';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { FormattedPrice } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { Invoice, InvoiceLine, InvoicePlanLine, InvoiceUsageLine } from 'src/model';
 
 const T = createTranslate('layouts.main.organizationPlan.estimatedCost');
 

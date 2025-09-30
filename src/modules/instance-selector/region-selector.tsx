@@ -8,12 +8,12 @@ import {
   Tooltip,
 } from '@koyeb/design-system';
 
-import { useCatalogRegionAvailability } from 'src/api/hooks/catalog';
-import { CatalogInstance, CatalogRegion, RegionScope } from 'src/api/model';
+import { useCatalogRegionAvailability } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { IconCircleGauge } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { CatalogInstance, CatalogRegion, RegionScope } from 'src/model';
 
 import { CatalogAvailability as CatalogAvailabilityComponent } from './catalog-availability';
 

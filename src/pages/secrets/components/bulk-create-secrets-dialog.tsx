@@ -4,8 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { getApi } from 'src/application/container';
+import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { ControlledTextArea } from 'src/components/controlled';

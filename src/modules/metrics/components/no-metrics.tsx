@@ -1,6 +1,6 @@
 import { Spinner } from '@koyeb/design-system';
 
-import { hasMessage } from 'src/api/api-errors';
+import { hasMessage } from 'src/application/validation';
 import { Loading } from 'src/components/loading';
 import { IconTriangleAlert } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';

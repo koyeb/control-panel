@@ -3,8 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { DatabaseDeployment, Service } from 'src/api/model';
+import { useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
@@ -12,6 +11,7 @@ import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { DatabaseDeployment, Service } from 'src/model';
 import { getName } from 'src/utils/object';
 
 const T = createTranslate('pages.database.logicalDatabases.createDialog');

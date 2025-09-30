@@ -1,7 +1,7 @@
 import { ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { useLogoutMutation, useUserUnsafe } from 'src/api/hooks/session';
+import { useLogoutMutation, useUserUnsafe } from 'src/api';
 import { LinkMenuItem } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
 import { IconLogOut, IconSettings } from 'src/icons';

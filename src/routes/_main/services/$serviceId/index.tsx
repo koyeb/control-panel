@@ -1,10 +1,7 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
-import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/api';
-import { mapDeployment } from 'src/api/mappers/deployment';
-import { mapService } from 'src/api/mappers/service';
-import { getApi } from 'src/application/container';
+import { createEnsureApiQueryData, getApi, getApiQueryKey, mapDeployment, mapService } from 'src/api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
 

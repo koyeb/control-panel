@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { createValidationGuard } from 'src/application/create-validation-guard';
+import { createValidationGuard } from 'src/application/validation';
 
 export const isDomainObject = createValidationGuard(
   z.object({

@@ -2,10 +2,10 @@ import { InfoTooltip } from '@koyeb/design-system';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-import { useApiCredentialsQuery } from 'src/api/hooks/api-credential';
-import { Activity, ApiCredential } from 'src/api/model';
-import { createValidationGuard } from 'src/application/create-validation-guard';
+import { useApiCredentialsQuery } from 'src/api';
+import { createValidationGuard } from 'src/application/validation';
 import { createTranslate } from 'src/intl/translate';
+import { Activity, ApiCredential } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('components.activity');

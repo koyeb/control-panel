@@ -5,14 +5,13 @@ import { UseFormReturn, useController, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import {
-  useDatacenters,
-  useInstance,
-  useInstances,
+  useCatalogInstance,
+  useDatacentersCatalog,
+  useInstancesCatalog,
   useModel,
   useModels,
-  useRegions,
-} from 'src/api/hooks/catalog';
-import { AiModel, CatalogInstance } from 'src/api/model';
+  useRegionsCatalog,
+} from 'src/api';
 import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
@@ -25,6 +24,7 @@ import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { AiModel, CatalogInstance } from 'src/model';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { inArray } from 'src/utils/arrays';
 import { assert, defined } from 'src/utils/assert';
@@ -58,7 +58,7 @@ type ModelFormProps = {
 };
 
 export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps) {
-  const instances = useInstances();
+  const instances = useInstancesCatalog();
   const models = useModels();
   const navigate = useNavigate();
 
@@ -137,8 +137,8 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
 }
 
 function useOnCostEstimationChanged(form: ModelForm, onChanged: (cost?: ServiceCost) => void) {
-  const instance = useInstance(form.watch('instance'));
-  const regions = useDeepCompareMemo(useRegions(form.watch('regions')));
+  const instance = useCatalogInstance(form.watch('instance'));
+  const regions = useDeepCompareMemo(useRegionsCatalog(form.watch('regions')));
 
   useEffect(() => {
     const cost = computeEstimatedCost(
@@ -167,9 +167,9 @@ function instanceBestFit(model?: AiModel) {
 
 function useInitialValues(model: AiModel): Partial<ModelFormType> {
   const queryClient = useQueryClient();
-  const instances = useInstances();
-  const datacenters = useDatacenters();
-  const regions = useRegions();
+  const instances = useInstancesCatalog();
+  const datacenters = useDatacentersCatalog();
+  const regions = useRegionsCatalog();
 
   const instance = instances.find(instanceBestFit(model));
   const continentalRegions = regions.filter(hasProperty('scope', 'continental'));
@@ -197,8 +197,8 @@ function Section({ title, children }: SectionProps) {
 }
 
 function OverviewSection({ model, form }: { model?: AiModel; form: ModelForm }) {
-  const instance = useInstance(form.watch('instance'));
-  const regions = useRegions(form.watch('regions'));
+  const instance = useCatalogInstance(form.watch('instance'));
+  const regions = useRegionsCatalog(form.watch('regions'));
 
   return (
     <Section title={<T id="overview.title" />}>
@@ -223,7 +223,7 @@ function OverviewSection({ model, form }: { model?: AiModel; form: ModelForm }) 
 
 function ModelSection({ form }: { form: ModelForm }) {
   const models = useModels();
-  const instances = useInstances();
+  const instances = useInstancesCatalog();
 
   return (
     <Section title={<T id="model.title" />}>
@@ -250,8 +250,8 @@ function ModelSection({ form }: { form: ModelForm }) {
 
 function InstanceSection({ model, form }: { model?: AiModel; form: ModelForm }) {
   const availabilities = useInstanceAvailabilities();
-  const instances = useInstances();
-  const regions = useRegions();
+  const instances = useInstancesCatalog();
+  const regions = useRegionsCatalog();
 
   const bestFit = instances.find(instanceBestFit(model));
 

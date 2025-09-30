@@ -1,6 +1,6 @@
-import { OrganizationPlan } from 'src/api/model';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { OrganizationPlan } from 'src/model';
 
 const T = createTranslate('modules.serviceForm');
 

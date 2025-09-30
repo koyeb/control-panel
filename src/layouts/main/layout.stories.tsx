@@ -1,7 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
 
-import { controls } from 'src/storybook';
-
 import { Layout } from './layout';
 
 type Args = React.ComponentProps<typeof Layout>;
@@ -34,9 +32,9 @@ export default {
     main: <div>main</div>,
   },
   argTypes: {
-    header: controls.hidden(),
-    menu: controls.hidden(),
-    main: controls.hidden(),
+    header: { table: { disable: true } },
+    menu: { table: { disable: true } },
+    main: { table: { disable: true } },
   },
 } satisfies Meta<Args>;
 

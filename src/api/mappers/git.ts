@@ -1,7 +1,7 @@
+import { GitRepository, GithubApp } from 'src/model';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
 import type { API } from '../api-types';
-import { GitRepository, GithubApp } from '../model';
 
 export function mapGithubApp(installation: API.GetGithubInstallationReply): GithubApp {
   const { indexing_status, indexed_repositories, total_repositories } = installation;

@@ -1,18 +1,18 @@
-import { useRegion } from 'src/api/hooks/catalog';
-import { DatabaseDeployment, Service } from 'src/api/model';
+import { useCatalogRegion } from 'src/api';
 import { formatBytes } from 'src/application/memory';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceStatusBadge } from 'src/components/status-badges';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { DatabaseDeployment, Service } from 'src/model';
 import { databaseInstances } from 'src/modules/database-form/database-instance-types';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.database.overview.info');
 
 export function DatabaseInfo({ service, deployment }: { service: Service; deployment: DatabaseDeployment }) {
-  const region = useRegion(deployment.region);
+  const region = useCatalogRegion(deployment.region);
   const instance = databaseInstances.find(hasProperty('id', deployment.instance));
 
   return (

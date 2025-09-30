@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 
-import { useOrganizationQuotas, useOrganizationSummary } from 'src/api/hooks/session';
-import { CatalogInstance } from 'src/api/model';
+import { useOrganizationQuotas, useOrganizationSummary } from 'src/api';
+import { CatalogInstance } from 'src/model';
 
 export function useInstanceQuota(instance: CatalogInstance) {
   const getInstanceQuota = useGetInstanceQuota();

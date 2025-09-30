@@ -3,10 +3,15 @@ import { useCallback, useEffect } from 'react';
 import { FieldPath, Resolver, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useDatacenters, useInstances, useRegions } from 'src/api/hooks/catalog';
-import { useGithubApp } from 'src/api/hooks/git';
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { createValidationGuard } from 'src/application/create-validation-guard';
+import {
+  useDatacentersCatalog,
+  useGithubApp,
+  useInstancesCatalog,
+  useOrganization,
+  useOrganizationQuotas,
+  useRegionsCatalog,
+} from 'src/api';
+import { createValidationGuard } from 'src/application/validation';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
@@ -20,9 +25,9 @@ import { ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
   const params = useSearchParams();
-  const datacenters = useDatacenters();
-  const regions = useRegions();
-  const instances = useInstances();
+  const datacenters = useDatacentersCatalog();
+  const regions = useRegionsCatalog();
+  const instances = useInstancesCatalog();
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
   const githubApp = useGithubApp();

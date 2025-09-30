@@ -2,12 +2,16 @@ import { QueryClient } from '@tanstack/react-query';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 import z from 'zod';
 
-import { createEnsureApiQueryData } from 'src/api/api';
-import { ApiError } from 'src/api/api-errors';
-import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
-import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
-import { mapOrganization, mapUser } from 'src/api/mappers/session';
-import { getApi } from 'src/application/container';
+import {
+  ApiError,
+  createEnsureApiQueryData,
+  getApi,
+  mapCatalogDatacenter,
+  mapOrganization,
+  mapUser,
+  useOrganizationQuery,
+  useUserQuery,
+} from 'src/api';
 import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
 import { getToken, setToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
@@ -116,7 +120,7 @@ async function switchOrganization(queryClient: QueryClient, organizationId: stri
     header: {},
   });
 
-  setToken(result.token!.id!, { queryClient });
+  void setToken(result.token!.id!, { queryClient });
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),

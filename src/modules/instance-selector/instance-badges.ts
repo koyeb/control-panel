@@ -1,6 +1,6 @@
-import { CatalogInstance } from 'src/api/model';
 import { useGetHasInstanceQuota } from 'src/application/instance-quota';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
+import { CatalogInstance } from 'src/model';
 
 import { InstanceSelectorBadge } from './instance-selector';
 

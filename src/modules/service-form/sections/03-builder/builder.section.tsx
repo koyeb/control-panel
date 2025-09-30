@@ -1,8 +1,8 @@
-import { BuilderType } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
 import { ControlledSelectBox } from 'src/components/controlled';
 import { IconDocker, IconPackage } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { BuilderType } from 'src/model';
 
 import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm } from '../../service-form.types';

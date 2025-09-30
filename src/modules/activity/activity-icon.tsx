@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 
-import { Activity } from 'src/api/model';
 import { SvgComponent } from 'src/application/types';
 import {
   IconBox,
@@ -13,6 +12,7 @@ import {
   IconUserRound,
   IconUsers,
 } from 'src/icons';
+import { Activity } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { entries } from 'src/utils/object';
 

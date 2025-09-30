@@ -1,13 +1,13 @@
 import { Spinner, Tooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { Service, ServiceStatus } from 'src/api/model';
 import { getServiceLink } from 'src/application/service-functions';
 import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { IconCircleAlert, IconCircleCheck, IconCirclePause } from 'src/icons';
 import { TranslateEnum } from 'src/intl/translate';
+import { Service, ServiceStatus } from 'src/model';
 
 export function ServiceName({ service }: { service: Service }) {
   return (

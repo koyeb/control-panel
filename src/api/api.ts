@@ -1,93 +1,22 @@
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
-import { useCallback } from 'react';
-
-import { getConfig } from 'src/application/config';
-import { getToken } from 'src/application/token';
 import { wait } from 'src/utils/promises';
 import { OmitBy, ValueOf } from 'src/utils/types';
 
-import { ApiError } from './api-errors';
+import { ApiError } from './api-error';
 import { paths } from './api.generated';
 
-export { type API } from './api-types';
-
-export type ApiEndpoint = ValueOf<{
-  [Path in keyof paths]: ValueOf<{
-    [Method in Exclude<keyof OmitBy<Required<paths[Path]>, never>, 'parameters'>]: `${Method} ${Path}`;
-  }>;
-}>;
+export type ApiEndpoint = Compute<
+  ValueOf<{
+    [Path in keyof paths]: ValueOf<{
+      [Method in Exclude<keyof OmitBy<Required<paths[Path]>, never>, 'parameters'>]: `${Method} ${Path}`;
+    }>;
+  }>
+>;
 
 export type GetApiEndpoint<E extends ApiEndpoint> = E extends `${infer Method} ${infer Path}`
   ? paths extends { [P in Path]: { [M in Method]: infer Endpoint } }
     ? Endpoint
     : never
   : never;
-
-export function getApiQueryKey<E extends ApiEndpoint>(
-  endpoint: E,
-  params: ApiRequestParams<E>,
-): [E, ApiRequestParams<E>] {
-  return [endpoint, params];
-}
-
-export function apiQuery<E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) {
-  return {
-    queryKey: getApiQueryKey(endpoint, params),
-    queryFn: ({
-      queryKey: [endpoint, params],
-      signal,
-      meta,
-    }: {
-      queryKey: readonly [E, ApiRequestParams<E>];
-      signal: AbortSignal;
-      meta?: Record<string, unknown>;
-    }) => {
-      return api(endpoint, params, {
-        baseUrl: getConfig('apiBaseUrl'),
-        token: getToken(),
-        signal,
-        ...meta,
-      });
-    },
-  };
-}
-
-export function apiMutation<E extends ApiEndpoint, Variables = void>(
-  endpoint: E,
-  params:
-    | ApiRequestParams<E>
-    | ((variables: Variables) => ApiRequestParams<E> | Promise<ApiRequestParams<E>>),
-) {
-  return {
-    mutationKey: [endpoint, typeof params === 'object' ? params : null] as const,
-    mutationFn: async (variables: Variables, { meta }: { meta?: Record<string, unknown> }) => {
-      return api<E>(endpoint, typeof params === 'function' ? await params(variables) : params, {
-        baseUrl: getConfig('apiBaseUrl'),
-        token: getToken(),
-        ...meta,
-      });
-    },
-  };
-}
-
-export function createEnsureApiQueryData(queryClient: QueryClient, abortController?: AbortController) {
-  void abortController;
-
-  return <E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) => {
-    return queryClient.ensureQueryData(apiQuery(endpoint, params));
-  };
-}
-
-export function useInvalidateApiQuery() {
-  const queryClient = useQueryClient();
-
-  return useCallback(
-    <E extends ApiEndpoint>(endpoint: E, params?: Partial<ApiRequestParams<E>>) => {
-      return queryClient.invalidateQueries({ queryKey: [endpoint, ...(params ? [params] : [])] });
-    },
-    [queryClient],
-  );
-}
 
 type ApiRequestOptions = Partial<{
   baseUrl: string;
@@ -143,8 +72,8 @@ export async function api<E extends ApiEndpoint>(
   return responseBody as ApiResponseBody<E>;
 }
 
-export function apiStream<E extends Extract<ApiEndpoint, `get /v1/streams/${string}`>>(
-  endpoint: E,
+export function apiStream<E extends ApiEndpoint>(
+  endpoint: Extract<E, `get /v1/streams/${string}`>,
   params: ApiRequestParams<E>,
   { baseUrl, token }: { baseUrl?: string; token?: string | null } = {},
 ): WebSocket {
@@ -161,7 +90,11 @@ export function apiStream<E extends Extract<ApiEndpoint, `get /v1/streams/${stri
   return new WebSocket(url, protocols);
 }
 
-function buildUrl<E extends ApiEndpoint>(path: string, params: ApiRequestParams<E>, baseUrl?: string) {
+function buildUrl(
+  path: string,
+  params: Partial<Record<'path' | 'query', Partial<Record<string, unknown>>>>,
+  baseUrl?: string,
+) {
   const url = new URL(path, baseUrl ?? window.location.origin);
 
   for (const [key, value] of Object.entries(params.path ?? {})) {
@@ -184,7 +117,7 @@ function buildUrl<E extends ApiEndpoint>(path: string, params: ApiRequestParams<
   return url;
 }
 
-type ApiRequestParams<E extends ApiEndpoint> =
+export type ApiRequestParams<E extends ApiEndpoint> =
   GetApiEndpoint<E> extends {
     parameters: {
       path?: infer Path extends Record<string, string> | undefined;
@@ -196,7 +129,7 @@ type ApiRequestParams<E extends ApiEndpoint> =
     : never;
 
 type ProcessApiParams<P> =
-  LiftOptional<OmitBy<P, undefined | never>> extends infer Output
+  LiftOptional<OmitBy<P, undefined>> extends infer Output
     ? keyof Output extends never
       ? Record<string, never>
       : Output
@@ -218,6 +151,7 @@ type ApiResponseBody<E extends ApiEndpoint> =
     ? Result
     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 type Compute<T> = { [K in keyof T]: Compute<T[K]> } | never;
 
 type AllOptional<T> = Partial<T> extends T ? true : false;

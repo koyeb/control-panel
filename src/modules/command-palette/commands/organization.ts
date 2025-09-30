@@ -1,7 +1,7 @@
 import { CommandPalette } from '@koyeb/design-system';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { getApi } from 'src/application/container';
+import { getApi } from 'src/api';
 import { setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { IconCirclePlus, IconRefreshCcw } from 'src/icons';

@@ -3,10 +3,7 @@ import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tansta
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { apiMutation, apiQuery } from 'src/api/api';
-import { useOrganization, useUser } from 'src/api/hooks/session';
-import { mapOrganization } from 'src/api/mappers/session';
-import { Organization } from 'src/api/model';
+import { apiMutation, apiQuery, mapOrganization, useOrganization, useUser } from 'src/api';
 import { setToken } from 'src/application/token';
 import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
@@ -14,6 +11,7 @@ import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { useSeon } from 'src/hooks/seon';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { Organization } from 'src/model';
 
 const T = createTranslate('layouts.organizationSwitcher');
 

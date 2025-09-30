@@ -1,10 +1,10 @@
 import { Checkbox, MultiSelect } from '@koyeb/design-system';
 import { useController } from 'react-hook-form';
 
-import { useRegions } from 'src/api/hooks/catalog';
-import { CatalogRegion } from 'src/api/model';
+import { useRegionsCatalog } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
+import { CatalogRegion } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../../service-form.types';
@@ -16,7 +16,7 @@ type RegionsScopeProps = {
 };
 
 export function RegionsScope({ index, label, className }: RegionsScopeProps) {
-  const regions = useRegions().filter(hasProperty('status', 'available'));
+  const regions = useRegionsCatalog().filter(hasProperty('status', 'available'));
 
   const { field } = useController<ServiceForm, `environmentVariables.${number}.regions`>({
     name: `environmentVariables.${index}.regions`,

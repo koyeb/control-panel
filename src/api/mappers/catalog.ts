@@ -1,8 +1,4 @@
 import { parseBytes } from 'src/application/memory';
-import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
-import { lowerCase } from 'src/utils/strings';
-
-import type { API } from '../api-types';
 import {
   CatalogDatacenter,
   CatalogInstance,
@@ -10,7 +6,11 @@ import {
   CatalogUsage,
   InstanceCategory,
   RegionScope,
-} from '../model';
+} from 'src/model';
+import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
+import { lowerCase } from 'src/utils/strings';
+
+import type { API } from '../api-types';
 
 export function mapCatalogRegion(region: API.Region): CatalogRegion {
   return {

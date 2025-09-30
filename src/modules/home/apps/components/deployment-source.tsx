@@ -1,7 +1,7 @@
-import { DeploymentDefinition } from 'src/api/model';
 import { ExternalLink } from 'src/components/link';
 import { IconArchive, IconDocker, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { DeploymentDefinition } from 'src/model';
 
 const T = createTranslate('pages.home.deploymentSource');
 

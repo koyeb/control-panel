@@ -3,13 +3,12 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { mapApp, mapService } from 'src/api/mappers/service';
-import { App, Service, Volume } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { getApi, mapApp, mapService } from 'src/api';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useNavigate } from 'src/hooks/router';
 import { IconChevronDown, IconSearch } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { App, Service, Volume } from 'src/model';
 import { unique } from 'src/utils/arrays';
 import { getId } from 'src/utils/object';
 import { wait } from 'src/utils/promises';

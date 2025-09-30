@@ -3,13 +3,12 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useRegion } from 'src/api/hooks/catalog';
-import { useVolumes } from 'src/api/hooks/volume';
-import { Volume } from 'src/api/model';
+import { useCatalogRegion, useVolumes } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { IconUnlink } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { Volume } from 'src/model';
 import { getName, hasProperty } from 'src/utils/object';
 
 import { ServiceForm, ServiceVolume } from '../../service-form.types';
@@ -68,7 +67,7 @@ function VolumeField({ index, label, onCreate }: VolumeFieldProps) {
   const form = useFormContext<ServiceForm>();
 
   const [regionId] = useWatchServiceForm('regions');
-  const region = useRegion(regionId);
+  const region = useCatalogRegion(regionId);
 
   const items = useVolumeItems();
 

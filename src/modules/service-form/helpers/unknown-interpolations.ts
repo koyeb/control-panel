@@ -1,9 +1,9 @@
 import { useCallback, useRef } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
-import { EnvironmentVariable } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { getApi } from 'src/api';
 import { createTranslate } from 'src/intl/translate';
+import { EnvironmentVariable } from 'src/model';
 import { assert, defined } from 'src/utils/assert';
 import { wait } from 'src/utils/promises';
 

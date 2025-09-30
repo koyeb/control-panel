@@ -2,12 +2,16 @@ import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/desi
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api/api';
-import { useInvitationsQuery } from 'src/api/hooks/invitation';
-import { useOrganization, useUser } from 'src/api/hooks/session';
-import { mapOrganizationMember } from 'src/api/mappers/session';
-import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import {
+  apiMutation,
+  apiQuery,
+  getApi,
+  mapOrganizationMember,
+  useInvalidateApiQuery,
+  useInvitationsQuery,
+  useOrganization,
+  useUser,
+} from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
@@ -19,6 +23,7 @@ import { useSha256 } from 'src/hooks/hash';
 import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { OrganizationInvitation, type OrganizationMember } from 'src/model';
 import { identity } from 'src/utils/generic';
 
 const T = createTranslate('pages.team.membersList');

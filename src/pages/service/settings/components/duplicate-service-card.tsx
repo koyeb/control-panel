@@ -1,6 +1,6 @@
-import { Service } from 'src/api/model';
 import { LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
+import { Service } from 'src/model';
 
 const T = createTranslate('pages.service.settings.duplicateService');
 

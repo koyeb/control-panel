@@ -1,7 +1,7 @@
 import { Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 
-import { apiQuery } from 'src/api/api';
+import { apiQuery } from 'src/api';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.onboarding.automaticReview');

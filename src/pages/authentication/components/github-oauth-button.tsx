@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation } from 'src/api/api';
+import { apiMutation } from 'src/api';
 import { IconGithub } from 'src/icons';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';

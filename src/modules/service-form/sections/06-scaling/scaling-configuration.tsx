@@ -1,7 +1,7 @@
 import { Badge } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
-import { useInstance } from 'src/api/hooks/catalog';
+import { useCatalogInstance } from 'src/api';
 import { createTranslate } from 'src/intl/translate';
 
 import { useScalingRules } from '../../helpers/scaling-rules';
@@ -15,7 +15,7 @@ const T = createTranslate('modules.serviceForm.scaling');
 
 export function ScalingConfiguration() {
   const { watch } = useFormContext<ServiceForm>();
-  const instance = useInstance(watch('instance'));
+  const instance = useCatalogInstance(watch('instance'));
 
   const isFreeInstance = instance?.id === 'free';
   const isEcoInstance = instance?.category === 'eco';

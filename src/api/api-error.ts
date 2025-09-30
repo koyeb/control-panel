@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
 
 type ApiErrorBody = z.infer<typeof apiErrorSchema>;
@@ -64,9 +63,7 @@ const apiValidationErrorSchema = apiErrorSchema.extend({
   ),
 });
 
-export const accountLockedErrorSchema = apiErrorSchema.extend({
+const accountLockedErrorSchema = apiErrorSchema.extend({
   status: z.literal(403),
   message: z.literal('Account is locked'),
 });
-
-export const hasMessage = createValidationGuard(z.object({ message: z.string() }));

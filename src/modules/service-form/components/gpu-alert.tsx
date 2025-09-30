@@ -1,8 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
-import { useInstances } from 'src/api/hooks/catalog';
-import { useOrganization } from 'src/api/hooks/session';
+import { useInstancesCatalog, useOrganization } from 'src/api';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 import { hasProperty } from 'src/utils/object';
@@ -13,7 +12,7 @@ const T = createTranslate('modules.serviceForm');
 
 export function GpuAlert() {
   const organization = useOrganization();
-  const instances = useInstances();
+  const instances = useInstancesCatalog();
   const { setValue } = useFormContext<ServiceForm>();
 
   const expandGpu = () => {

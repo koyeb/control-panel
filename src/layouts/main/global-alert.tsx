@@ -1,7 +1,6 @@
 import { Alert, Spinner } from '@koyeb/design-system';
 
-import { useManageBillingQuery, useSubscriptionQuery } from 'src/api/hooks/billing';
-import { useOrganizationUnsafe } from 'src/api/hooks/session';
+import { useManageBillingQuery, useOrganizationUnsafe, useSubscriptionQuery } from 'src/api';
 import { useIdenfyLink } from 'src/application/idenfy';
 import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';

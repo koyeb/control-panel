@@ -1,7 +1,7 @@
-import { apiQuery } from 'src/api/api';
 import { useQuery } from '@tanstack/react-query';
-
 import sort from 'lodash-es/sortBy';
+
+import { apiQuery } from 'src/api';
 import { useDebouncedValue } from 'src/hooks/timers';
 
 import { ServiceForm } from '../service-form.types';

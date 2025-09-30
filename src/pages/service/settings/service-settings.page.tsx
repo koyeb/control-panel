@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { useService } from 'src/api/hooks/service';
+import { useService } from 'src/api';
 import { notify } from 'src/application/notify';
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';

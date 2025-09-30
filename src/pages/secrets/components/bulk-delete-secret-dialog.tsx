@@ -1,12 +1,11 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { Secret } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
+import { Secret } from 'src/model';
 
 const T = createTranslate('pages.secrets.bulkDelete');
 

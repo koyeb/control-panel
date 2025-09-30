@@ -2,7 +2,7 @@ import merge from 'lodash-es/merge';
 import unique from 'lodash-es/uniq';
 import { ValueOf } from 'type-fest';
 
-import { CatalogInstance, CatalogRegion, EnvironmentVariable } from 'src/api/model';
+import { CatalogInstance, CatalogRegion, EnvironmentVariable } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';

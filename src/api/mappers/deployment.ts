@@ -1,11 +1,4 @@
 import { parseBytes } from 'src/application/memory';
-import { inArray, last } from 'src/utils/arrays';
-import { assert } from 'src/utils/assert';
-import { round } from 'src/utils/math';
-import { hasProperty, requiredDeep, snakeToCamelDeep } from 'src/utils/object';
-import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
-
-import type { API } from '../api-types';
 import {
   ComputeDeployment,
   ComputeDeploymentType,
@@ -18,7 +11,14 @@ import {
   PostgresVersion,
   RegionalDeployment,
   Replica,
-} from '../model';
+} from 'src/model';
+import { inArray, last } from 'src/utils/arrays';
+import { assert } from 'src/utils/assert';
+import { round } from 'src/utils/math';
+import { hasProperty, requiredDeep, snakeToCamelDeep } from 'src/utils/object';
+import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
+
+import type { API } from '../api-types';
 
 export function mapDeployment(deployment: API.Deployment): Deployment {
   if (deployment.definition!.type === 'DATABASE') {

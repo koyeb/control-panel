@@ -1,9 +1,6 @@
 import { TabButtons } from '@koyeb/design-system';
 
-import { ApiError } from 'src/api/api-errors';
-import { useAppQuery } from 'src/api/hooks/app';
-import { useDeploymentQuery, useServiceQuery } from 'src/api/hooks/service';
-import { App, Deployment, Service } from 'src/api/model';
+import { ApiError, useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api';
 import { getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DocumentTitle } from 'src/components/document-title';
@@ -15,6 +12,7 @@ import { useRouteParam } from 'src/hooks/router';
 import { useServiceName } from 'src/hooks/service';
 import { IconArrowLeft } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { App, Deployment, Service } from 'src/model';
 import { useServiceCommands } from 'src/modules/command-palette';
 
 import { DeploymentThrottledAlert } from './deployment-throttled-alert';

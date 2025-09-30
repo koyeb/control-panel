@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import { DatabaseDeployment } from 'src/api/model';
 import { useZodResolver } from 'src/hooks/validation';
+import { DatabaseDeployment } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 import { databaseInstances } from './database-instance-types';

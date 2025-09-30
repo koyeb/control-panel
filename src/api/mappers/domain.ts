@@ -1,7 +1,7 @@
+import { Domain } from 'src/model';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
 import type { API } from '../api-types';
-import { Domain } from '../model';
 
 export function mapDomain(domain: API.Domain): Domain {
   return {

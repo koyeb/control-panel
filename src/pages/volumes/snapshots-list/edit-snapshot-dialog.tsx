@@ -4,15 +4,14 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { VolumeSnapshot } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { VolumeSnapshot } from 'src/model';
 
 const T = createTranslate('pages.volumes.snapshotsList.editDialog');
 

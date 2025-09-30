@@ -1,11 +1,8 @@
-import { apiQuery } from 'src/api/api';
 import { ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
 import clsx from 'clsx';
-import { useService } from 'src/api/hooks/service';
-import { mapSnapshot, mapVolume } from 'src/api/mappers/volume';
-import { Volume } from 'src/api/model';
+
+import { apiQuery, mapSnapshot, mapVolume, useService } from 'src/api';
 import { formatBytes } from 'src/application/memory';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
@@ -21,6 +18,7 @@ import { Title } from 'src/components/title';
 import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Volume } from 'src/model';
 
 import { AttachVolumeButton } from './attach-volume-button';
 import { CreateSnapshotDialog } from './create-snapshot-dialog';

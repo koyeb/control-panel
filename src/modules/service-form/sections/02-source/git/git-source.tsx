@@ -2,7 +2,7 @@ import { TabButton, TabButtons } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { Controller } from 'react-hook-form';
 
-import { useGithubApp } from 'src/api/hooks/git';
+import { useGithubApp } from 'src/api';
 import { ControlledSelect } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';

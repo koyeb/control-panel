@@ -3,9 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInvitationsQuery } from 'src/api/hooks/invitation';
-import { useUser } from 'src/api/hooks/session';
-import { getApi } from 'src/application/container';
+import { getApi, useInvitationsQuery, useUser } from 'src/api';
 import { setToken } from 'src/application/token';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';

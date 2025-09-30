@@ -1,7 +1,7 @@
 import { Input } from '@koyeb/design-system';
 
-import { Address } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
+import { Address } from 'src/model';
 
 import { CountrySelector } from './country-selector';
 

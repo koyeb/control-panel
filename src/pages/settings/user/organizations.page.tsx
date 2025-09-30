@@ -3,10 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation } from 'src/api/api';
-import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
-import { OrganizationMember } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { apiMutation, getApi, useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
@@ -18,6 +15,7 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { OrganizationMember } from 'src/model';
 
 const T = createTranslate('pages.userSettings.organizations');
 

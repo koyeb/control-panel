@@ -1,9 +1,9 @@
-import { apiQuery } from 'src/api/api';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
+
 import { mapSecret } from '../mappers/secret';
+import { apiQuery } from '../query';
 
 export function useSecretsQuery(type?: 'simple' | 'registry') {
   return useQuery({

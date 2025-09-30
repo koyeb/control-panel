@@ -3,13 +3,12 @@ import { useMutation } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { parse } from 'tldts';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { Domain } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ExternalLinkButton } from 'src/components/link';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { Domain } from 'src/model';
 
 const T = createTranslate('pages.domains.domainsList.dnsConfiguration');
 

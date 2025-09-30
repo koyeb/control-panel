@@ -13,8 +13,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
-import { useInstancesQuery, useRegionalDeployment } from 'src/api/hooks/service';
-import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/api/model';
+import { useInstancesQuery, useRegionalDeployment } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
@@ -23,6 +22,7 @@ import { InstanceStatusBadge } from 'src/components/status-badges';
 import { IconChevronRight } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, TranslateStatus, createTranslate, translateStatus } from 'src/intl/translate';
+import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/model';
 import { identity } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
 

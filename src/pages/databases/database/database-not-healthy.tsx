@@ -2,12 +2,11 @@ import * as intercom from '@intercom/messenger-js-sdk';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { Service } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { Service } from 'src/model';
 
 const T = createTranslate('pages.database.layout.databaseNotHealthy');
 

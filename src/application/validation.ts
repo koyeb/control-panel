@@ -5,3 +5,5 @@ export function createValidationGuard<Schema extends ZodType>(schema: Schema) {
     return schema.safeParse(value).success;
   };
 }
+
+export const hasMessage = createValidationGuard(z.object({ message: z.string() }));

@@ -1,7 +1,7 @@
 import { TabButton, TabButtons } from '@koyeb/design-system';
 
-import { InstanceCategory } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
+import { InstanceCategory } from 'src/model';
 
 const T = createTranslate('components.instanceSelector');
 

@@ -2,16 +2,11 @@ import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
-import {
-  useLogoutMutation,
-  useOrganization,
-  useOrganizationUnsafe,
-  useUserUnsafe,
-} from 'src/api/hooks/session';
+import { useLogoutMutation, useOrganization, useOrganizationUnsafe, useUserUnsafe } from 'src/api';
 import { getConfig } from 'src/application/config';
-import { createValidationGuard } from 'src/application/create-validation-guard';
 import { StoredValue } from 'src/application/storage';
 import { isSessionToken, useToken } from 'src/application/token';
+import { createValidationGuard } from 'src/application/validation';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';

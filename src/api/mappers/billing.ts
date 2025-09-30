@@ -1,10 +1,10 @@
 import { sub } from 'date-fns';
 
+import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { isDefined } from 'src/utils/generic';
 
 import type { API } from '../api-types';
-import { Invoice, InvoiceDiscount, InvoiceLine, Subscription } from '../model';
 
 export function mapSubscription(subscription: API.Subscription): Subscription {
   return {

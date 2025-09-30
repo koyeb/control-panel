@@ -1,10 +1,14 @@
 import { Meta } from '@storybook/react-vite';
 import { useState } from 'react';
 
-import { mapCatalogInstance, mapCatalogRegion } from 'src/api/mappers/catalog';
-import { catalogInstanceFixtures, catalogRegionFixtures } from 'src/api/mock/fixtures';
-import { CatalogInstance } from 'src/api/model';
+import {
+  catalogInstanceFixtures,
+  catalogRegionFixtures,
+  mapCatalogInstance,
+  mapCatalogRegion,
+} from 'src/api';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { CatalogInstance } from 'src/model';
 import { toObject } from 'src/utils/object';
 
 import { InstanceCategoryTabs } from './instance-category-tabs';

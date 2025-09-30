@@ -2,10 +2,10 @@ import { useQueryClient } from '@tanstack/react-query';
 import { dequal } from 'dequal';
 import { useState } from 'react';
 
-import { useDatacenters } from 'src/api/hooks/catalog';
-import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
+import { useDatacentersCatalog } from 'src/api';
 import { getDefaultRegion } from 'src/application/default-region';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/model';
 import { last } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
@@ -48,7 +48,7 @@ export function useInstanceSelector({
   setSelectedRegions,
 }: InstanceSelectorParams): InstanceSelector {
   const queryClient = useQueryClient();
-  const datacenters = useDatacenters();
+  const datacenters = useDatacentersCatalog();
 
   const [instanceCategory, setInstanceCategory] = useState<InstanceCategory>(
     selectedInstance?.category ?? 'standard',

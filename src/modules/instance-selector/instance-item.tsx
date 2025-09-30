@@ -2,9 +2,7 @@ import { Badge, Button, Radio } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useRef } from 'react';
 
-import { useCatalogInstanceAvailability } from 'src/api/hooks/catalog';
-import { useOrganization } from 'src/api/hooks/session';
-import { CatalogInstance } from 'src/api/model';
+import { useCatalogInstanceAvailability, useOrganization } from 'src/api';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
@@ -14,6 +12,7 @@ import { tallyForms } from 'src/hooks/tally';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { CatalogInstance } from 'src/model';
 
 import { CatalogAvailability } from './catalog-availability';
 import { InstanceSelectorBadge } from './instance-selector';

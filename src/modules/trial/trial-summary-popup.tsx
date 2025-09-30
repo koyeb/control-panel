@@ -1,7 +1,7 @@
 import { Badge, ProgressBar } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganization } from 'src/api';
 import { LinkButton } from 'src/components/link';
 import { FormattedPrice } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';

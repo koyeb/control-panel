@@ -2,8 +2,8 @@ import { CommandPalette, CommandPaletteComponent, useCommandPalette } from '@koy
 import clsx from 'clsx';
 import { useRef } from 'react';
 
-import { hasMessage } from 'src/api/api-errors';
 import { notify } from 'src/application/notify';
+import { hasMessage } from 'src/application/validation';
 import { Dialog } from 'src/components/dialog';
 import { BoxSkeleton } from 'src/components/skeleton';
 import { useMount } from 'src/hooks/lifecycle';

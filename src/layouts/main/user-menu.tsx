@@ -2,7 +2,7 @@ import { ButtonMenuItem, Collapse, Floating, Menu, useBreakpoint } from '@koyeb/
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useLogoutMutation, useUser } from 'src/api/hooks/session';
+import { useLogoutMutation, useUser } from 'src/api';
 import { LinkMenuItem } from 'src/components/link';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useSetThemeMode, useThemeMode } from 'src/hooks/theme';

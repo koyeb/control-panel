@@ -2,13 +2,6 @@ import { Badge, BadgeColor, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import {
-  DeploymentStatus,
-  InstanceStatus,
-  ServiceStatus,
-  VolumeSnapshotStatus,
-  VolumeStatus,
-} from 'src/api/model';
-import {
   IconCircleAlert,
   IconCircleCheck,
   IconCircleDashed,
@@ -19,6 +12,13 @@ import {
   IconTrash,
 } from 'src/icons';
 import { TranslateStatus } from 'src/intl/translate';
+import {
+  DeploymentStatus,
+  InstanceStatus,
+  ServiceStatus,
+  VolumeSnapshotStatus,
+  VolumeStatus,
+} from 'src/model';
 
 type ResourceStatusProps<Status> = {
   ref?: React.Ref<React.ComponentRef<typeof Badge>>;

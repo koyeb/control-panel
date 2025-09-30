@@ -1,8 +1,8 @@
 import { Select } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { AppFull, Service, ServiceType } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
+import { AppFull, Service, ServiceType } from 'src/model';
 import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 

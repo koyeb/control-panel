@@ -13,7 +13,7 @@ import qs from 'query-string';
 import { StrictMode, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
-import { ApiError } from './api/api-errors';
+import { ApiError } from './api';
 import { getConfig } from './application/config';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';

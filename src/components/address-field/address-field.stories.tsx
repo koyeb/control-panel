@@ -1,7 +1,7 @@
 import { Meta, StoryFn } from '@storybook/react-vite';
 import { useState } from 'react';
 
-import { Address } from 'src/api/model';
+import { Address } from 'src/model';
 
 import { AddressField } from './address-field';
 

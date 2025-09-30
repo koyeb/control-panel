@@ -1,7 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { UseQueryResult } from '@tanstack/react-query';
 
-import { ApiError } from 'src/api/api-errors';
+import { ApiError } from 'src/api';
 import { Translate } from 'src/intl/translate';
 
 import { Loading } from './loading';

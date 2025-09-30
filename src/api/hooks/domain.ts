@@ -1,9 +1,9 @@
-import { apiQuery } from 'src/api/api';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
+
 import { mapDomain } from '../mappers/domain';
+import { apiQuery } from '../query';
 
 export function useDomainsQuery(type?: 'autoassigned' | 'custom') {
   return useQuery({

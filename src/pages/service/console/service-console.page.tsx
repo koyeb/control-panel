@@ -1,14 +1,14 @@
 import { Alert } from '@koyeb/design-system';
 import { useEffect, useMemo, useState } from 'react';
 
-import { useInstanceQuery, useInstancesQuery } from 'src/api/hooks/service';
-import { Instance } from 'src/api/model';
+import { useInstanceQuery, useInstancesQuery } from 'src/api';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { SelectInstance } from 'src/components/select-instance';
 import Terminal from 'src/components/terminal/terminal';
 import { useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { Instance } from 'src/model';
 
 import { useTerminal } from './use-terminal';
 

@@ -1,6 +1,10 @@
-import { useAppQuery } from 'src/api/hooks/app';
-import { useDeploymentQuery, useInstancesQuery, useServiceQuery } from 'src/api/hooks/service';
-import { isComputeDeployment } from 'src/api/mappers/deployment';
+import {
+  isComputeDeployment,
+  useAppQuery,
+  useDeploymentQuery,
+  useInstancesQuery,
+  useServiceQuery,
+} from 'src/api';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';

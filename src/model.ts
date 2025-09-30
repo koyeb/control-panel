@@ -1,5 +1,5 @@
 // activity
-import { API } from './api-types';
+import { API } from './api';
 
 export type Activity = {
   id: string;

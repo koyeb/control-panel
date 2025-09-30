@@ -3,13 +3,12 @@ import { Alert, Button } from '@koyeb/design-system';
 import { Fragment, useMemo } from 'react';
 import { FormattedList } from 'react-intl';
 
-import { useInstances, useRegions } from 'src/api/hooks/catalog';
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { CatalogInstance } from 'src/api/model';
+import { useInstancesCatalog, useOrganization, useOrganizationQuotas, useRegionsCatalog } from 'src/api';
 import { formatBytes } from 'src/application/memory';
 import { LinkButton } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { CatalogInstance } from 'src/model';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
@@ -161,7 +160,7 @@ function useGeneralQuotaItems(): QuotaItem[] {
 
 function useAllowedRegions() {
   const quotas = useOrganizationQuotas();
-  const availableRegions = useRegions().filter(hasProperty('status', 'available'));
+  const availableRegions = useRegionsCatalog().filter(hasProperty('status', 'available'));
 
   if (quotas.regions === undefined) {
     return availableRegions;
@@ -173,7 +172,7 @@ function useAllowedRegions() {
 function useInstanceTypeQuotaItems(): Record<'koyeb' | 'aws' | 'gpu', QuotaItem[]> {
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
-  const instances = useInstances();
+  const instances = useInstancesCatalog();
 
   const unset = organization.plan === 'hobby' ? <T id="zero" /> : <T id="infinity" />;
 

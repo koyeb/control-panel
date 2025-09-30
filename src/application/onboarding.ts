@@ -1,5 +1,5 @@
-import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
-import { OnboardingStep, Organization, User } from 'src/api/model';
+import { useOrganizationUnsafe, useUserUnsafe } from 'src/api';
+import { OnboardingStep, Organization, User } from 'src/model';
 
 export function useOnboardingStep() {
   const user = useUserUnsafe();

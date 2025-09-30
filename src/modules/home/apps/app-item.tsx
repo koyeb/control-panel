@@ -1,7 +1,7 @@
 import { HelpTooltip } from '@koyeb/design-system';
 
-import { App, AppFull } from 'src/api/model';
 import { createTranslate } from 'src/intl/translate';
+import { App, AppFull } from 'src/model';
 
 import { AppActions } from './components/app-actions';
 import { ServiceItem } from './service-item';

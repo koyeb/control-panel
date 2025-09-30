@@ -2,14 +2,13 @@ import { Button } from '@koyeb/design-system';
 import { useIsMutating } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { ApiError } from 'src/api/api-errors';
-import { useOneClickAppQuery } from 'src/api/hooks/catalog';
-import { OneClickApp } from 'src/api/model';
+import { ApiError, useOneClickAppQuery } from 'src/api';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { createTranslate } from 'src/intl/translate';
+import { OneClickApp } from 'src/model';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { OneClickAppForm } from 'src/modules/service-form/one-click-app-form';
 

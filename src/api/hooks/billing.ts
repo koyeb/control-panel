@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { apiQuery } from 'src/api/api';
 import { inArray } from 'src/utils/arrays';
 
 import { mapInvoice, mapSubscription } from '../mappers/billing';
+import { apiQuery } from '../query';
 
 import { useOrganization, useOrganizationQuery } from './session';
 

@@ -5,10 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { FormState, useForm } from 'react-hook-form';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useOrganization, useUser } from 'src/api/hooks/session';
-import { Address, OrganizationPlan } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
@@ -16,6 +13,7 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { usePaymentMethodMutation } from 'src/hooks/stripe';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Address, OrganizationPlan } from 'src/model';
 
 import { ControlledAddressField } from './address-field/address-field';
 import { ControlledInput } from './controlled';

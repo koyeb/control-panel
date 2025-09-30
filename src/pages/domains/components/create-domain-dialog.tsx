@@ -4,9 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useApps } from 'src/api/hooks/app';
+import { apiMutation, useApps, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';

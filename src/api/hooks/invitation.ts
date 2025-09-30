@@ -1,10 +1,10 @@
-import { apiQuery } from 'src/api/api';
-
 import { useQuery } from '@tanstack/react-query';
 
+import { InvitationStatus } from 'src/model';
 import { upperCase } from 'src/utils/strings';
+
 import { mapInvitation } from '../mappers/session';
-import { InvitationStatus } from '../model';
+import { apiQuery } from '../query';
 
 export function useInvitationsQuery({ userId, status }: { userId?: string; status?: InvitationStatus }) {
   return useQuery({

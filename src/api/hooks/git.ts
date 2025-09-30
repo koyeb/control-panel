@@ -1,12 +1,11 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { apiQuery } from 'src/api/api';
-import { getApi } from 'src/application/container';
+import { getApi } from 'src/api';
+import { GitRepository } from 'src/model';
 
-import { getApiQueryKey } from '../api';
-import { ApiError } from '../api-errors';
+import { ApiError } from '../api-error';
 import { mapGithubApp, mapRepository } from '../mappers/git';
-import { GitRepository } from '../model';
+import { apiQuery, getApiQueryKey } from '../query';
 
 import { useOrganizationUnsafe } from './session';
 

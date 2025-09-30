@@ -2,7 +2,7 @@ import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 import { createId } from 'src/utils/strings';
 
-import { API } from '../api-types';
+import { API } from './api-types';
 
 export const createApiApp = createFactory<API.App>(() => ({
   id: createId(),

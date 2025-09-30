@@ -1,4 +1,4 @@
-import { useGithubApp } from 'src/api/hooks/git';
+import { useGithubApp } from 'src/api';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { createTranslate } from 'src/intl/translate';
 

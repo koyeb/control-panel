@@ -1,11 +1,11 @@
 import { Field, FieldHelperText, FieldLabel, RadioInput } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useRegions } from 'src/api/hooks/catalog';
-import { CatalogRegion } from 'src/api/model';
+import { useRegionsCatalog } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { createTranslate } from 'src/intl/translate';
+import { CatalogRegion } from 'src/model';
 
 const T = createTranslate('pages.volumes.create');
 
@@ -15,7 +15,7 @@ type RegionSelectorProps = {
 };
 
 export function RegionSelector({ field, error }: RegionSelectorProps) {
-  const regions = useRegions().filter((region) => region.volumesEnabled);
+  const regions = useRegionsCatalog().filter((region) => region.volumesEnabled);
 
   return (
     <Field

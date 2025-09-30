@@ -1,7 +1,7 @@
-import { App, ComputeDeployment, Service } from 'src/api/model';
 import { Dialog } from 'src/components/dialog';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { App, ComputeDeployment, Service } from 'src/model';
 
 import {
   BranchMetadata,

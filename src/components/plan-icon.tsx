@@ -1,5 +1,5 @@
-import { OrganizationPlan } from 'src/api/model';
 import { SvgComponent, SvgProps } from 'src/application/types';
+import { OrganizationPlan } from 'src/model';
 
 import { IconCrown, IconGem, IconRocket } from '../icons';
 

@@ -1,11 +1,11 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
 
-import { App, ComputeDeployment, Service } from 'src/api/model';
 import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Metadata } from 'src/components/metadata';
 import { useClipboard } from 'src/hooks/clipboard';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { App, ComputeDeployment, Service } from 'src/model';
 import { assert, defined } from 'src/utils/assert';
 
 const T = createTranslate('modules.deployment.deploymentInfo');

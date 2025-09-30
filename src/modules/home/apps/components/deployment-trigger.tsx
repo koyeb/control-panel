@@ -1,7 +1,7 @@
-import { ComputeDeployment, type GitDeploymentTrigger } from 'src/api/model';
 import { ExternalLink } from 'src/components/link';
 import { IconGitBranch, IconGitCommitHorizontal } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, type GitDeploymentTrigger } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { shortId } from 'src/utils/strings';
 

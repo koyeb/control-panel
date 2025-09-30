@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useSecrets } from 'src/api/hooks/secret';
-import { Secret } from 'src/api/model';
+import { useSecrets } from 'src/api';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
@@ -13,6 +12,7 @@ import { useVerifyDockerImage } from 'src/components/docker-image-input/use-veri
 import { LinkButton } from 'src/components/link';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Secret } from 'src/model';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
 
 const T = createTranslate('modules.serviceCreation.importProject.docker');

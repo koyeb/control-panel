@@ -119,7 +119,6 @@ export default defineConfig({
     environment: 'happy-dom',
     reporters: 'verbose',
     dir: 'src',
-    setupFiles: ['src/vitest.setup.ts'],
     restoreMocks: true,
   },
 });

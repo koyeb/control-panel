@@ -1,8 +1,8 @@
-import { ServiceType } from 'src/api/model';
 import { Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { ServiceType } from 'src/model';
 
 import { ServiceTypeItem } from './components/service-type-item';
 

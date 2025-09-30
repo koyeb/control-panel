@@ -1,12 +1,9 @@
-import { apiQuery } from 'src/api/api';
 import { Button, ButtonMenuItem, Spinner, Table, Tooltip } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-
 import { useState } from 'react';
-import { useDeployment, useService } from 'src/api/hooks/service';
-import { isDatabaseDeployment } from 'src/api/mappers/deployment';
-import { DatabaseRole, Service } from 'src/api/model';
+
+import { apiQuery, isDatabaseDeployment, useDeployment, useService } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
@@ -16,6 +13,7 @@ import { useClipboard } from 'src/hooks/clipboard';
 import { useRouteParam } from 'src/hooks/router';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { DatabaseRole, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
 

@@ -1,8 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useSecretsQuery } from 'src/api/hooks/secret';
-import { Secret } from 'src/api/model';
+import { useSecretsQuery } from 'src/api';
 import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { QueryGuard } from 'src/components/query-error';
@@ -11,6 +10,7 @@ import { useSet } from 'src/hooks/collection';
 import { useOnRouteStateCreate } from 'src/hooks/router';
 import { IconListPlus, IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { Secret } from 'src/model';
 import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dialog';
 
 import { BulkCreateSecretsDialog } from './components/bulk-create-secrets-dialog';

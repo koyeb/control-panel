@@ -1,4 +1,4 @@
-import { useOrganizationUnsafe, useUserUnsafe } from 'src/api/hooks/session';
+import { useOrganizationUnsafe, useUserUnsafe } from 'src/api';
 import { Link } from 'src/components/link';
 import { IconArrowLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

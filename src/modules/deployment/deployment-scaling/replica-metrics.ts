@@ -1,17 +1,15 @@
 import { useQueries } from '@tanstack/react-query';
 
-import { apiQuery } from 'src/api/api';
-import { API } from 'src/api/api-types';
-import { useInstance } from 'src/api/hooks/catalog';
-import { CatalogInstance, ComputeDeployment } from 'src/api/model';
+import { API, apiQuery, useCatalogInstance } from 'src/api';
 import { parseBytes } from 'src/application/memory';
+import { CatalogInstance, ComputeDeployment } from 'src/model';
 import { last, unique } from 'src/utils/arrays';
 import { identity, isDefined } from 'src/utils/generic';
 import { clamp } from 'src/utils/math';
 import { toObject } from 'src/utils/object';
 
 export function useReplicaMetricsQuery(deployment: ComputeDeployment) {
-  const instance = useInstance(deployment.definition.instanceType);
+  const instance = useCatalogInstance(deployment.definition.instanceType);
 
   return useQueries({
     queries: [

@@ -2,11 +2,11 @@ import { Button } from '@koyeb/design-system';
 import { useRef, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import { DatabaseDeployment, OrganizationPlan } from 'src/api/model';
 import { Dialog } from 'src/components/dialog';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { DatabaseDeployment, OrganizationPlan } from 'src/model';
 
 import { DatabaseEngineSection } from './sections/01-database-engine.section';
 import { InstanceSection } from './sections/02-instance.section';

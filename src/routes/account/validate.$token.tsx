@@ -1,15 +1,13 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/api';
-import { hasMessage } from 'src/api/api-errors';
-import { mapOrganization, mapUser } from 'src/api/mappers/session';
-import { User } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { createEnsureApiQueryData, getApi, getApiQueryKey, mapOrganization, mapUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
+import { hasMessage } from 'src/application/validation';
 import { LogoLoading } from 'src/components/logo-loading';
 import { SeonPort } from 'src/hooks/seon';
+import { User } from 'src/model';
 import { slugify } from 'src/utils/strings';
 
 export const Route = createFileRoute('/account/validate/$token')({
@@ -61,8 +59,7 @@ async function createOrganization(queryClient: QueryClient) {
     header: {},
   });
 
-  setToken(token!.id!, { queryClient });
-  await queryClient.invalidateQueries();
+  await setToken(token!.id!, { queryClient });
 }
 
 function defaultOrganizationName(user: User): string {

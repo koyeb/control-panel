@@ -1,14 +1,14 @@
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useSecretsQuery } from 'src/api/hooks/secret';
-import { RegistrySecret } from 'src/api/model';
+import { useSecretsQuery } from 'src/api';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate } from 'src/intl/translate';
+import { RegistrySecret } from 'src/model';
 import { RegistryType } from 'src/modules/secrets/registry/registry-type';
 import { createArray } from 'src/utils/arrays';
 

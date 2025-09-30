@@ -2,10 +2,7 @@ import { InputEnd, InputStart, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useOrganization, useUser } from 'src/api/hooks/session';
-import { Address, OrganizationPlan } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
 import { ControlledAddressField } from 'src/components/address-field/address-field';
@@ -16,6 +13,7 @@ import { usePaymentMethodMutation } from 'src/hooks/stripe';
 import { IconArrowLeftRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
+import { Address, OrganizationPlan } from 'src/model';
 
 import { AuthButton } from '../authentication/components/auth-button';
 

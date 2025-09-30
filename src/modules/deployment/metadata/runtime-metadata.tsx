@@ -1,18 +1,17 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
 
-import { useInstance, useRegions } from 'src/api/hooks/catalog';
-import { useVolumes } from 'src/api/hooks/volume';
-import { DeploymentDefinition, EnvironmentVariable, type Scaling } from 'src/api/model';
+import { useCatalogInstance, useRegionsCatalog, useVolumes } from 'src/api';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { DeploymentDefinition, EnvironmentVariable, type Scaling } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentInfo');
 
 export function InstanceTypeMetadata({ instanceType }: { instanceType: string | null }) {
-  const instance = useInstance(instanceType);
+  const instance = useCatalogInstance(instanceType);
 
   return <Metadata label={<T id="instanceTypeLabel" />} value={instance?.displayName} />;
 }
@@ -31,7 +30,7 @@ export function ScalingMetadata({ scaling }: { scaling: Scaling }) {
 
 export function RegionsMetadata({ regions }: { regions: string[] }) {
   const [firstRegion, ...otherRegions] = regions;
-  const catalogRegions = useRegions();
+  const catalogRegions = useRegionsCatalog();
 
   if (!firstRegion) {
     return null;

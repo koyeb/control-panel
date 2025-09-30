@@ -4,10 +4,7 @@ import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 
-import { useRegions } from 'src/api/hooks/catalog';
-import { useRegionalDeployments } from 'src/api/hooks/service';
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Service } from 'src/api/model';
+import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
 import { isDeploymentRunning } from 'src/application/service-functions';
 import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
@@ -30,6 +27,7 @@ import { FeatureFlag } from 'src/hooks/feature-flag';
 import { LogsApi, LogsFilters, LogsPeriod } from 'src/hooks/logs';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Service } from 'src/model';
 import { inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
@@ -192,7 +190,7 @@ type LogsHeaderProps = {
 function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps) {
   const regionalDeployments = useRegionalDeployments(deployment.id);
   const periods = useRetentionPeriods();
-  const regions = useRegions();
+  const regions = useRegionsCatalog();
   const t = T.useTranslate();
 
   const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');

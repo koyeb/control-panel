@@ -1,7 +1,7 @@
 import { useFormContext } from 'react-hook-form';
 
-import { CatalogInstance, ServiceType } from 'src/api/model';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
+import { CatalogInstance, ServiceType } from 'src/model';
 import { keys } from 'src/utils/object';
 
 import { Scaling, ServiceForm } from '../service-form.types';

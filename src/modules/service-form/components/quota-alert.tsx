@@ -1,8 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { ApiError } from 'src/api/api-errors';
-import { getApi } from 'src/application/container';
+import { ApiError, getApi } from 'src/api';
 import { ExternalLinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';

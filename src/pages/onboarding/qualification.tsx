@@ -5,12 +5,10 @@ import omit from 'lodash-es/omit';
 import { useMemo } from 'react';
 import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { hasMessage } from 'src/api/api-errors';
-import { useOrganization, useUser } from 'src/api/hooks/session';
-import { getApi } from 'src/application/container';
+import { getApi, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
+import { hasMessage } from 'src/application/validation';
 import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
 import { Dialog } from 'src/components/dialog';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';

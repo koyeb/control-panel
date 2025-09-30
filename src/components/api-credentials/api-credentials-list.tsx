@@ -1,9 +1,9 @@
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 
-import { ApiCredential, ApiCredentialType } from 'src/api/model';
 import { NoResource } from 'src/components/no-resource';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { ApiCredential, ApiCredentialType } from 'src/model';
 
 import { ActionsMenu } from '../actions-menu';
 import { Dialog } from '../dialog';

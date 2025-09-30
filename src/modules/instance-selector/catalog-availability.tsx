@@ -1,5 +1,5 @@
-import type { CatalogAvailability } from 'src/api/model';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import type { CatalogAvailability } from 'src/model';
 
 const T = createTranslate('components.instanceSelector');
 

@@ -4,12 +4,8 @@ import { add, max, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { apiStream, getApiQueryKey } from 'src/api/api';
-import { useOrganizationQuotas } from 'src/api/hooks/session';
-import { LogLine } from 'src/api/model';
-import { getConfig } from 'src/application/config';
-import { getApi } from 'src/application/container';
-import { getToken } from 'src/application/token';
+import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src/api';
+import { LogLine } from 'src/model';
 import { createId } from 'src/utils/strings';
 
 import { useDeepCompareMemo } from './lifecycle';
@@ -208,23 +204,18 @@ type LogStreamListeners = {
 };
 
 function tailLogs(filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
-  const stream = apiStream(
-    'get /v1/streams/logs/tail',
-    {
-      query: {
-        type: filters.type,
-        deployment_id: filters.deploymentId,
-        regional_deployment_id: filters.regionalDeploymentId ?? undefined,
-        instance_id: filters.instanceId ?? undefined,
-        start: filters.start.toISOString(),
-        text: filters.search || undefined,
-      },
+  const apiStream = getApiStream();
+
+  const stream = apiStream('get /v1/streams/logs/tail', {
+    query: {
+      type: filters.type,
+      deployment_id: filters.deploymentId,
+      regional_deployment_id: filters.regionalDeploymentId ?? undefined,
+      instance_id: filters.instanceId ?? undefined,
+      start: filters.start.toISOString(),
+      text: filters.search || undefined,
     },
-    {
-      baseUrl: getConfig('apiBaseUrl'),
-      token: getToken(),
-    },
-  );
+  });
 
   const onOpen = () => listeners.onOpen?.();
   const onClose = () => listeners.onClose?.();

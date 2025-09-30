@@ -2,8 +2,10 @@ import { QueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { DeepPartial } from 'react-hook-form';
 
-import { createEnsureApiQueryData } from 'src/api/api';
-import { mapRepository } from 'src/api/mappers/git';
+import { createEnsureApiQueryData, mapRepository } from 'src/api';
+import { getDefaultRegion } from 'src/application/default-region';
+import { notify } from 'src/application/notify';
+import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import {
   CatalogDatacenter,
   CatalogInstance,
@@ -11,10 +13,7 @@ import {
   GithubApp,
   Organization,
   OrganizationQuotas,
-} from 'src/api/model';
-import { getDefaultRegion } from 'src/application/default-region';
-import { notify } from 'src/application/notify';
-import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
+} from 'src/model';
 import { clamp } from 'src/utils/math';
 import { hasProperty } from 'src/utils/object';
 

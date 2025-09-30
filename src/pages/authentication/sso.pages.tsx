@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { ApiError } from 'src/api/api-errors';
-import { getApi } from 'src/application/container';
+import { ApiError, getApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { LogoLoading } from 'src/components/logo-loading';

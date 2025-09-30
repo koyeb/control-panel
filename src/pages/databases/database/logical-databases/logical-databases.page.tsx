@@ -1,15 +1,14 @@
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useDeployment, useService } from 'src/api/hooks/service';
-import { isDatabaseDeployment } from 'src/api/mappers/deployment';
-import { DatabaseDeployment, LogicalDatabase, Service } from 'src/api/model';
+import { isDatabaseDeployment, useDeployment, useService } from 'src/api';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useOnRouteStateCreate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { DatabaseDeployment, LogicalDatabase, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
 

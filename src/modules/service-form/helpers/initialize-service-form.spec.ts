@@ -1,8 +1,15 @@
 import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { API, getApiQueryKey } from 'src/api/api';
-import { createApiApp, createApiDeployment, createApiService, createApiVolume } from 'src/api/mock/fixtures';
+import {
+  API,
+  createApiApp,
+  createApiDeployment,
+  createApiService,
+  createApiVolume,
+  getApiQueryKey,
+} from 'src/api';
+import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import {
   CatalogDatacenter,
   CatalogInstance,
@@ -10,8 +17,7 @@ import {
   GithubApp,
   Organization,
   OrganizationQuotas,
-} from 'src/api/model';
-import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
+} from 'src/model';
 import { create } from 'src/utils/factories';
 
 import { ServiceForm, ServiceVolume } from '../service-form.types';

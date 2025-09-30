@@ -1,9 +1,7 @@
-import { apiQuery } from 'src/api/api';
 import { Spinner } from '@koyeb/design-system';
-
 import { useQuery } from '@tanstack/react-query';
-import { ApiError } from 'src/api/api-errors';
-import { mapInvitation } from 'src/api/mappers/session';
+
+import { ApiError, apiQuery, mapInvitation } from 'src/api';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { LinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';

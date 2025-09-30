@@ -1,5 +1,4 @@
-import { useApp } from 'src/api/hooks/app';
-import { useService } from 'src/api/hooks/service';
+import { useApp, useService } from 'src/api';
 import { useTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
 

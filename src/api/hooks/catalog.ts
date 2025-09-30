@@ -1,18 +1,8 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import sortBy from 'lodash-es/sortBy';
 
-import { apiQuery } from 'src/api/api';
 import { getConfig } from 'src/application/config';
 import { parseBytes } from 'src/application/memory';
-import { entries, hasProperty, snakeToCamelDeep } from 'src/utils/object';
-
-import { ApiError } from '../api-errors';
-import {
-  mapCatalogDatacenter,
-  mapCatalogInstance,
-  mapCatalogRegion,
-  mapCatalogUsage,
-} from '../mappers/catalog';
 import {
   AiModel,
   CatalogAvailability,
@@ -20,9 +10,19 @@ import {
   OneClickAppEnv,
   OneClickAppMetadata,
   OneClickAppVolume,
-} from '../model';
+} from 'src/model';
+import { entries, hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
-export function useInstancesQuery() {
+import { ApiError } from '../api-error';
+import {
+  mapCatalogDatacenter,
+  mapCatalogInstance,
+  mapCatalogRegion,
+  mapCatalogUsage,
+} from '../mappers/catalog';
+import { apiQuery } from '../query';
+
+export function useInstancesCatalogQuery() {
   return useSuspenseQuery({
     ...apiQuery('get /v1/catalog/instances', {
       query: { limit: '100' },
@@ -34,8 +34,8 @@ export function useInstancesQuery() {
   });
 }
 
-export function useInstances(ids?: string[]) {
-  const { data: instances = [] } = useInstancesQuery();
+export function useInstancesCatalog(ids?: string[]) {
+  const { data: instances = [] } = useInstancesCatalogQuery();
 
   if (ids === undefined) {
     return instances;
@@ -44,11 +44,11 @@ export function useInstances(ids?: string[]) {
   return instances.filter((instance) => ids.includes(instance.id));
 }
 
-export function useInstance(id?: string | null) {
-  return useInstances().find(hasProperty('id', id));
+export function useCatalogInstance(id?: string | null) {
+  return useInstancesCatalog().find(hasProperty('id', id));
 }
 
-export function useRegionsQuery() {
+export function useRegionsCatalogQuery() {
   return useSuspenseQuery({
     ...apiQuery('get /v1/catalog/regions', {
       query: { limit: '100' },
@@ -58,8 +58,8 @@ export function useRegionsQuery() {
   });
 }
 
-export function useRegions(ids?: string[]) {
-  const { data: regions = [] } = useRegionsQuery();
+export function useRegionsCatalog(ids?: string[]) {
+  const { data: regions = [] } = useRegionsCatalogQuery();
 
   if (ids === undefined) {
     return regions;
@@ -68,11 +68,11 @@ export function useRegions(ids?: string[]) {
   return regions.filter((region) => ids.includes(region.id));
 }
 
-export function useRegion(id?: string) {
-  return useRegions().find(hasProperty('id', id));
+export function useCatalogRegion(id?: string) {
+  return useRegionsCatalog().find(hasProperty('id', id));
 }
 
-export function useDatacentersQuery() {
+export function useDatacentersCatalogQuery() {
   return useSuspenseQuery({
     ...apiQuery('get /v1/catalog/datacenters', {}),
     refetchInterval: false,
@@ -80,8 +80,8 @@ export function useDatacentersQuery() {
   });
 }
 
-export function useDatacenters() {
-  const { data: datacenters = [] } = useDatacentersQuery();
+export function useDatacentersCatalog() {
+  const { data: datacenters = [] } = useDatacentersCatalogQuery();
 
   return datacenters;
 }

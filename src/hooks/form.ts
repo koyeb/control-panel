@@ -9,9 +9,10 @@ import {
   useWatch,
 } from 'react-hook-form';
 
-import { ApiError, hasMessage } from 'src/api/api-errors';
+import { ApiError } from 'src/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
+import { hasMessage } from 'src/application/validation';
 import { useTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';

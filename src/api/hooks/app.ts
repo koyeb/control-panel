@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { apiQuery } from 'src/api/api';
-import { getApi } from 'src/application/container';
+import { getApi } from 'src/api';
+import { AppFull } from 'src/model';
 
 import { mapDeployment } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
-import { AppFull } from '../model';
+import { apiQuery } from '../query';
 
 export function useAppsQuery() {
   return useQuery({

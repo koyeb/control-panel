@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { useDeployments } from 'src/api/hooks/service';
-import { useOrganization } from 'src/api/hooks/session';
-import { OrganizationPlan, Service } from 'src/api/model';
+import { useDeployments, useOrganization } from 'src/api';
 import { upcomingDeploymentStatuses } from 'src/application/service-functions';
 import { IconRocket } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { OrganizationPlan, Service } from 'src/model';
 import { inArray, last } from 'src/utils/arrays';
 
 const T = createTranslate('pages.service.layout.deploymentThrottled');

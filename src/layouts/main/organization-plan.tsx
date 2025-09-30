@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
-import { useOrganizationUnsafe } from 'src/api/hooks/session';
+import { useOrganizationUnsafe } from 'src/api';
 import { LinkButton } from 'src/components/link';
 import { PlanIcon } from 'src/components/plan-icon';
 import { useObserve } from 'src/hooks/lifecycle';

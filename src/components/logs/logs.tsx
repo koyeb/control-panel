@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedTime } from 'react-intl';
 
-import { LogLine } from 'src/api/model';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { notify } from 'src/application/notify';
 import { useClipboard } from 'src/hooks/clipboard';
@@ -11,6 +10,7 @@ import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { LogsApi } from 'src/hooks/logs';
 import { IconCopy, IconDownload, IconEllipsis } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { LogLine } from 'src/model';
 import { shortId } from 'src/utils/strings';
 
 import { LogOptions } from './log-options';

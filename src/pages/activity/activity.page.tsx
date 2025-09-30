@@ -3,10 +3,7 @@ import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanst
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { getApiQueryKey } from 'src/api/api';
-import { mapActivity } from 'src/api/mappers/activity';
-import { Activity } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { getApi, getApiQueryKey, mapActivity } from 'src/api';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -16,6 +13,7 @@ import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { Activity } from 'src/model';
 import { ActivityIcon } from 'src/modules/activity/activity-icon';
 import { ActivityItem } from 'src/modules/activity/activity-item';
 import { createArray } from 'src/utils/arrays';

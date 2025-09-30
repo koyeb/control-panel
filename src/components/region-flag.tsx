@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 
-import { useRegion } from 'src/api/hooks/catalog';
+import { useCatalogRegion } from 'src/api';
 import af from 'src/icons/flags/AF.png';
 import de from 'src/icons/flags/DE.png';
 import eu from 'src/icons/flags/EU.png';
@@ -17,7 +17,7 @@ type RegionFlagProps = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src'> & 
 };
 
 export function RegionFlag({ regionId, className, ...props }: RegionFlagProps) {
-  const region = useRegion(regionId);
+  const region = useCatalogRegion(regionId);
   const flag = region?.id ? map[region.id] : undefined;
 
   if (!flag) {

@@ -1,5 +1,4 @@
-import { useDeployment, useService } from 'src/api/hooks/service';
-import { isDatabaseDeployment } from 'src/api/mappers/deployment';
+import { isDatabaseDeployment, useDeployment, useService } from 'src/api';
 import { LinkButton } from 'src/components/link';
 import { NoResource } from 'src/components/no-resource';
 import { useRouteParam } from 'src/hooks/router';

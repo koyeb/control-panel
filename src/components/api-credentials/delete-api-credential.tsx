@@ -1,11 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { ApiCredential, ApiCredentialType } from 'src/api/model';
+import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { createTranslate } from 'src/intl/translate';
+import { ApiCredential, ApiCredentialType } from 'src/model';
 
 import { Dialog } from '../dialog';
 

@@ -1,7 +1,6 @@
-import { apiMutation } from 'src/api/api';
-
 import { useMutation } from '@tanstack/react-query';
-import { useLogoutMutation, useUser } from 'src/api/hooks/session';
+
+import { apiMutation, useLogoutMutation, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { IconSend } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

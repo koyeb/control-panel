@@ -1,13 +1,12 @@
 import { Button } from '@koyeb/design-system';
 
-import { useInstances, useRegions } from 'src/api/hooks/catalog';
-import { useOrganization } from 'src/api/hooks/session';
-import { ServiceType } from 'src/api/model';
+import { useInstancesCatalog, useOrganization, useRegionsCatalog } from 'src/api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { LinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { Translate } from 'src/intl/translate';
+import { ServiceType } from 'src/model';
 import { useGetInstanceBadges } from 'src/modules/instance-selector/instance-badges';
 import { InstanceCategoryTabs } from 'src/modules/instance-selector/instance-category-tabs';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
@@ -22,8 +21,8 @@ export function InstanceRegionStep() {
 
   const organization = useOrganization();
 
-  const instances = useInstances();
-  const regions = useRegions();
+  const instances = useInstancesCatalog();
+  const regions = useRegionsCatalog();
 
   const sourceType = useSearchParams().get('type');
   const serviceType = useSearchParams().get('service_type') as ServiceType;

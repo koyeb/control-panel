@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import { useModel } from 'src/api/hooks/catalog';
-import { AiModel } from 'src/api/model';
+import { useModel } from 'src/api';
 import { DocumentTitle } from 'src/components/document-title';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
 import { useSearchParams } from 'src/hooks/router';
 import { IconPackage } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { AiModel } from 'src/model';
 import { ServiceCost } from 'src/modules/service-form/helpers/estimated-cost';
 import { ModelForm } from 'src/modules/service-form/model-form';
 

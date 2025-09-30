@@ -1,7 +1,7 @@
 import { Select } from '@koyeb/design-system';
 
-import { useInstance, useRegion } from 'src/api/hooks/catalog';
-import { Instance } from 'src/api/model';
+import { useCatalogInstance, useCatalogRegion } from 'src/api';
+import { Instance } from 'src/model';
 import { getId, getName } from 'src/utils/object';
 
 type SelectInstanceOwnProps = {
@@ -41,8 +41,8 @@ export function SelectInstance({
 }
 
 function InstanceItem({ instance }: { instance: Instance }) {
-  const region = useRegion(instance.region);
-  const instanceType = useInstance(instance.type);
+  const region = useCatalogRegion(instance.region);
+  const instanceType = useCatalogInstance(instance.type);
 
   return (
     <div className="row items-center gap-4">

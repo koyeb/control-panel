@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api/api';
+import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { DocumentTitle } from 'src/components/document-title';

@@ -1,6 +1,6 @@
-import { isComputeDeployment } from 'src/api/mappers/deployment';
-import { App, Deployment, Service } from 'src/api/model';
+import { isComputeDeployment } from 'src/api';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
+import { App, Deployment, Service } from 'src/model';
 
 import { DeploymentInfo } from './components/deployment-info';
 import { DeploymentTrigger } from './components/deployment-trigger';

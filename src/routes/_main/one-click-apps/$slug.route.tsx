@@ -1,7 +1,6 @@
 import { Outlet, createFileRoute } from '@tanstack/react-router';
 
-import { ApiError } from 'src/api/api-errors';
-import { useOneClickAppQuery } from 'src/api/hooks/catalog';
+import { ApiError, useOneClickAppQuery } from 'src/api';
 import { TextSkeleton } from 'src/components/skeleton';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 

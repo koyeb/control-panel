@@ -1,7 +1,7 @@
-import { apiQuery } from 'src/api/api';
 import { useQuery } from '@tanstack/react-query';
-
 import clsx from 'clsx';
+
+import { apiQuery } from 'src/api';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 

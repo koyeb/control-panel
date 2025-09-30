@@ -2,9 +2,7 @@ import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useDomainsQuery } from 'src/api/hooks/domain';
-import { useOrganizationQuotas } from 'src/api/hooks/session';
-import { Domain } from 'src/api/model';
+import { useDomainsQuery, useOrganizationQuotas } from 'src/api';
 import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { QueryGuard } from 'src/components/query-error';
@@ -12,6 +10,7 @@ import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
 import { useOnRouteStateCreate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { Domain } from 'src/model';
 
 import { BulkDeleteDomainsDialog } from './components/bulk-delete-domains-dialog';
 import { CreateDomainDialog } from './components/create-domain-dialog';

@@ -1,8 +1,8 @@
 import { Badge } from '@koyeb/design-system';
 
-import { OneClickApp } from 'src/api/model';
 import { Link } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
+import { OneClickApp } from 'src/model';
 
 const T = createTranslate('pages.oneClickApps.card');
 

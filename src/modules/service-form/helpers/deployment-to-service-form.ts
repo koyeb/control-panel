@@ -1,7 +1,7 @@
 import merge from 'lodash-es/merge';
 
-import { API } from 'src/api/api-types';
-import { EnvironmentVariable, ServiceType } from 'src/api/model';
+import { API } from 'src/api';
+import { EnvironmentVariable, ServiceType } from 'src/model';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';

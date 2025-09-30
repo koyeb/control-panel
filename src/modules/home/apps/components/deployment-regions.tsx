@@ -1,6 +1,6 @@
 import { Badge, Tooltip } from '@koyeb/design-system';
 
-import { useRegion } from 'src/api/hooks/catalog';
+import { useCatalogRegion } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';
 import { Translate } from 'src/intl/translate';
@@ -11,7 +11,7 @@ type DeploymentRegionsProps = {
 
 export function DeploymentRegions({ regions }: DeploymentRegionsProps) {
   const firstRegion = regions[0];
-  const region = useRegion(firstRegion);
+  const region = useCatalogRegion(firstRegion);
 
   if (firstRegion === undefined) {
     return null;

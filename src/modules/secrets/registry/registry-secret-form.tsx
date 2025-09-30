@@ -4,15 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import { FieldValues, FormState, Path, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { API, useInvalidateApiQuery } from 'src/api/api';
-import { RegistrySecret, type RegistryType } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { API, getApi, useInvalidateApiQuery } from 'src/api';
 import { readFile } from 'src/application/read-file';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
+import { RegistrySecret, type RegistryType } from 'src/model';
 import { identity } from 'src/utils/generic';
 
 import { RegistryType as RegistryTypeComponent } from './registry-type';

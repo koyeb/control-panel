@@ -1,9 +1,9 @@
-import { apiQuery } from 'src/api/api';
-
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { assert } from 'src/utils/assert';
 
+import { DeploymentStatus, InstanceStatus } from 'src/model';
+import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
+
 import {
   isComputeDeployment,
   mapDeployment,
@@ -12,7 +12,7 @@ import {
   mapReplica,
 } from '../mappers/deployment';
 import { mapService } from '../mappers/service';
-import { DeploymentStatus, InstanceStatus } from '../model';
+import { apiQuery } from '../query';
 
 export function useServicesQuery(appId?: string) {
   return useQuery({

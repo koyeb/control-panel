@@ -1,9 +1,10 @@
 import Intercom, { boot, shutdown } from '@intercom/messenger-js-sdk';
 
-import { User } from 'src/api/model';
+import { User } from 'src/model';
+
+import { getApi } from '../api';
 
 import { getConfig } from './config';
-import { getApi } from './container';
 
 export function initIntercom() {
   const appId = getConfig('intercomAppId');

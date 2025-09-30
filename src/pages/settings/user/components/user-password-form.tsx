@@ -1,9 +1,8 @@
-import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-
 import { useForm } from 'react-hook-form';
-import { useUser } from 'src/api/hooks/session';
+
+import { apiMutation, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { handleSubmit } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';

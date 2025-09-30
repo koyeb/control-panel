@@ -3,8 +3,7 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
-import { useOrganization, useOrganizationQuotas } from 'src/api/hooks/session';
-import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/api/model';
+import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { FullScreen } from 'src/components/full-screen';
 import { Link } from 'src/components/link';
@@ -22,6 +21,7 @@ import { QueryError } from 'src/components/query-error';
 import { LogsApi } from 'src/hooks/logs';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';

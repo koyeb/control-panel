@@ -1,9 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useOrganization } from 'src/api/hooks/session';
+import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { SectionHeader } from 'src/components/section-header';
 import { createTranslate } from 'src/intl/translate';

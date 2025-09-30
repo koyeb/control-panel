@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import type { API } from 'src/api/api';
+import type { API } from 'src/api';
 
 import { ServiceForm } from '../service-form.types';
 

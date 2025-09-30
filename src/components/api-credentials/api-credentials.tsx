@@ -1,10 +1,10 @@
 import { Table } from '@koyeb/design-system';
 
-import { ApiCredential, ApiCredentialType } from 'src/api/model';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate } from 'src/intl/translate';
+import { ApiCredential, ApiCredentialType } from 'src/model';
 
 import { Dialog } from '../dialog';
 

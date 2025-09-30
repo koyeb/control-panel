@@ -1,8 +1,7 @@
-import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
-
 import { useMutation } from '@tanstack/react-query';
-import { useUser } from 'src/api/hooks/session';
+
+import { apiMutation, useUser } from 'src/api';
 import { IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';

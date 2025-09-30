@@ -5,15 +5,14 @@ import { useState } from 'react';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { Secret } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { getApi, useInvalidateApiQuery } from 'src/api';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { useZodResolver } from 'src/hooks/validation';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { Secret } from 'src/model';
 
 const T = createTranslate('modules.secrets.simpleSecretForm');
 

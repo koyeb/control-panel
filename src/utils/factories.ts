@@ -19,7 +19,7 @@ import {
   Secret,
   Service,
   Volume,
-} from 'src/api/model';
+} from 'src/model';
 
 import { createDate } from './date';
 import { createId } from './strings';

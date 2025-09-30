@@ -1,7 +1,7 @@
 import posthog from 'posthog-js';
 
-import { API } from 'src/api/api-types';
-import { EnvironmentVariable } from 'src/api/model';
+import { API } from 'src/api';
+import { EnvironmentVariable } from 'src/model';
 
 import {
   ArchiveSource,

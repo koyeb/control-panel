@@ -2,7 +2,7 @@ import { CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-
 import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 
-import { getApi } from 'src/application/container';
+import { getApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { inArray } from 'src/utils/arrays';

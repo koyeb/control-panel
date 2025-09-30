@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/api/model';
 import { InstanceAvailability } from 'src/application/instance-region-availability';
+import { CatalogInstance, CatalogRegion, InstanceCategory, RegionScope } from 'src/model';
 import { create } from 'src/utils/factories';
 
 import { InstanceSelector, InstanceSelectorState, instanceSelector } from './instance-selector-state';

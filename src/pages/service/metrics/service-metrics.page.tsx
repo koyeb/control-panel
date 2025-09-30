@@ -1,9 +1,8 @@
 import { ButtonGroup, InfoTooltip } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import type { API } from 'src/api/api';
-import { useInstance } from 'src/api/hooks/catalog';
-import { useComputeDeployment, useService } from 'src/api/hooks/service';
+import type { API } from 'src/api';
+import { useCatalogInstance, useComputeDeployment, useService } from 'src/api';
 import { parseBytes } from 'src/application/memory';
 import { LinkButton } from 'src/components/link';
 import { Title } from 'src/components/title';
@@ -160,5 +159,5 @@ function useServiceInstanceType(serviceId: string) {
   const activeDeployment = useComputeDeployment(service?.activeDeploymentId);
   const latestDeployment = useComputeDeployment(service?.latestDeploymentId);
 
-  return useInstance((activeDeployment ?? latestDeployment)?.definition.instanceType);
+  return useCatalogInstance((activeDeployment ?? latestDeployment)?.definition.instanceType);
 }

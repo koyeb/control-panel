@@ -1,13 +1,12 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
-import { apiMutation, apiQuery } from 'src/api/api';
 import { useIdentifyUser } from 'src/application/posthog';
 import { setToken } from 'src/application/token';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { AssertionError, defined } from 'src/utils/assert';
 
-import { ApiError } from '../api-errors';
+import { ApiError } from '../api-error';
 import {
   mapOrganization,
   mapOrganizationMember,
@@ -15,6 +14,7 @@ import {
   mapOrganizationSummary,
   mapUser,
 } from '../mappers/session';
+import { apiMutation, apiQuery } from '../query';
 
 export function useUserQuery() {
   return useQuery({

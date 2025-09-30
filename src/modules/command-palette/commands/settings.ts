@@ -1,6 +1,6 @@
 import { CommandPalette } from '@koyeb/design-system';
 
-import { useLogoutMutation } from 'src/api/hooks/session';
+import { useLogoutMutation } from 'src/api';
 import { useSetThemeMode } from 'src/hooks/theme';
 import { IconLaptop, IconLogOut, IconMoon, IconSunDim, IconSunMoon } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';

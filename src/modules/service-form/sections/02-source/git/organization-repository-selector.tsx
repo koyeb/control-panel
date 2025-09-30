@@ -2,14 +2,14 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { useRepositories } from 'src/api/hooks/git';
-import { GitRepository } from 'src/api/model';
+import { useRepositories } from 'src/api';
 import { ControlledAutocomplete } from 'src/components/controlled';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
 import { IconGithub, IconLock } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { GitRepository } from 'src/model';
 import { getId, getName } from 'src/utils/object';
 
 import { useGenerateServiceName } from '../../00-service-name/use-generate-service-name';

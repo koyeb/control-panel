@@ -5,15 +5,20 @@ import { dequal } from 'dequal';
 import { diffJson } from 'diff';
 import { useMemo } from 'react';
 
-import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api/api';
-import { useDeployment } from 'src/api/hooks/service';
-import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
-import { ComputeDeployment, Service } from 'src/api/model';
+import {
+  apiMutation,
+  apiQuery,
+  isComputeDeployment,
+  mapDeployment,
+  useDeployment,
+  useInvalidateApiQuery,
+} from 'src/api';
 import { useTrackEvent } from 'src/application/posthog';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { Dialog, DialogHeader } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
 
 const T = createTranslate('pages.service.layout.pendingChanges');

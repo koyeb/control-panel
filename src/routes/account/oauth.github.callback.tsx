@@ -3,14 +3,11 @@ import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
-import { createEnsureApiQueryData } from 'src/api/api';
-import { ApiError, hasMessage } from 'src/api/api-errors';
-import { mapOrganization } from 'src/api/mappers/session';
-import { getApi } from 'src/application/container';
-import { createValidationGuard } from 'src/application/create-validation-guard';
+import { ApiError, createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { setToken } from 'src/application/token';
+import { createValidationGuard, hasMessage } from 'src/application/validation';
 import { Link } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
 import { urlToLinkOptions } from 'src/hooks/router';
@@ -95,7 +92,7 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
 });
 
 async function handleAuthentication(queryClient: QueryClient, token: string, redirectUrl: URL) {
-  setToken(token, { queryClient });
+  void setToken(token, { queryClient });
 
   throw redirect({
     to: redirectUrl.pathname,

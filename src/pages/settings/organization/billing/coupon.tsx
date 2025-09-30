@@ -1,9 +1,8 @@
-import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-
 import { useForm } from 'react-hook-form';
-import { useOrganization } from 'src/api/hooks/session';
+
+import { apiMutation, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';

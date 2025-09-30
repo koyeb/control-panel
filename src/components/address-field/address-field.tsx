@@ -8,9 +8,9 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { Control, useController } from 'react-hook-form';
 
-import { Address } from 'src/api/model';
 import { getConfig } from 'src/application/config';
 import { createTranslate } from 'src/intl/translate';
+import { Address } from 'src/model';
 import { isDefined } from 'src/utils/generic';
 import { Extend } from 'src/utils/types';
 

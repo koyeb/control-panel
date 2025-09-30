@@ -1,9 +1,9 @@
-import { apiQuery } from 'src/api/api';
-
 import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
+
 import { mapApiCredential } from '../mappers/api-credential';
+import { apiQuery } from '../query';
 
 export function useApiCredentialsQuery(type?: 'user' | 'organization') {
   return useQuery({

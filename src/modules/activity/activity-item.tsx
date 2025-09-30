@@ -1,9 +1,9 @@
 import clsx from 'clsx';
 
-import { Activity } from 'src/api/model';
 import { IconClock } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
+import { Activity } from 'src/model';
 
 import { ActivityActorImage } from './activity-actor';
 import { ActivityApiCredentialIcon } from './activity-api-credential-icon';

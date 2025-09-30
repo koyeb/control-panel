@@ -1,13 +1,12 @@
 import { Spinner } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { apiMutation, useInvalidateApiQuery } from 'src/api/api';
-import { OrganizationInvitation } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { apiMutation, getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { OrganizationInvitation } from 'src/model';
 import { AuthButton } from 'src/pages/authentication/components/auth-button';
 
 import { IconArrowRight } from '../icons';

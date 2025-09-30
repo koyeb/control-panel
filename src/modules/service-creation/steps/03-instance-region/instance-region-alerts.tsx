@@ -1,9 +1,8 @@
 import { Alert } from '@koyeb/design-system';
 
-import { useRegion } from 'src/api/hooks/catalog';
-import { useOrganization } from 'src/api/hooks/session';
-import { CatalogInstance, CatalogRegion } from 'src/api/model';
+import { useCatalogRegion, useOrganization } from 'src/api';
 import { createTranslate } from 'src/intl/translate';
+import { CatalogInstance, CatalogRegion } from 'src/model';
 import { QuotaAlert } from 'src/modules/service-form/components/quota-alert';
 
 const T = createTranslate('modules.serviceCreation.instanceRegions.alerts');
@@ -17,8 +16,8 @@ export function InstanceRegionAlerts({
   selectedInstance: instance,
   selectedRegions: regions,
 }: InstanceRegionAlertsProps) {
-  const fra = useRegion('fra')?.name;
-  const was = useRegion('was')?.name;
+  const fra = useCatalogRegion('fra')?.name;
+  const was = useCatalogRegion('was')?.name;
 
   const organization = useOrganization();
   const requireUpgrade = instance?.plans !== undefined && !instance.plans.includes(organization.plan);

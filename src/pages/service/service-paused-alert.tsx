@@ -1,11 +1,13 @@
-import { apiMutation } from 'src/api/api';
 import { Alert, Button, DialogHeader, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-
 import { useForm } from 'react-hook-form';
-import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
-import { useComputeDeployment } from 'src/api/hooks/service';
-import { Service } from 'src/api/model';
+
+import {
+  apiMutation,
+  useCatalogInstance,
+  useCatalogInstanceRegionsAvailability,
+  useComputeDeployment,
+} from 'src/api';
 import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';
@@ -14,6 +16,7 @@ import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { Service } from 'src/model';
 
 const T = createTranslate('pages.service.layout.servicePaused');
 
@@ -62,7 +65,7 @@ function ResumeServiceDialog({ service }: ResumeDialogProps) {
     latestDeployment?.definition.regions,
   );
 
-  const instance = useInstance(latestDeployment?.definition.instanceType);
+  const instance = useCatalogInstance(latestDeployment?.definition.instanceType);
 
   const form = useForm({
     defaultValues: {

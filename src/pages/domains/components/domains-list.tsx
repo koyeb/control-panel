@@ -8,8 +8,7 @@ import {
 } from '@koyeb/design-system';
 import clsx from 'clsx';
 
-import { useApps } from 'src/api/hooks/app';
-import { Domain, type DomainStatus } from 'src/api/model';
+import { useApps } from 'src/api';
 import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { ActionsMenu } from 'src/components/actions-menu';
@@ -17,6 +16,7 @@ import { Dialog } from 'src/components/dialog';
 import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, TranslateStatus, createTranslate } from 'src/intl/translate';
+import { Domain, type DomainStatus } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 import { ChangeAppForm } from './change-app-form';

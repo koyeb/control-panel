@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import { useAppsFull } from 'src/api/hooks/app';
+import { useAppsFull } from 'src/api';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';

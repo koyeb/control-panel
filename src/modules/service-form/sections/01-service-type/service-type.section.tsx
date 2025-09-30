@@ -1,9 +1,9 @@
-import { useInstance } from 'src/api/hooks/catalog';
-import { ServiceType } from 'src/api/model';
+import { useCatalogInstance } from 'src/api';
 import { SvgComponent } from 'src/application/types';
 import { ControlledSelectBox } from 'src/components/controlled';
 import { IconGlobe, IconSettings } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { ServiceType } from 'src/model';
 import { assert } from 'src/utils/assert';
 
 import { ServiceFormSection } from '../../components/service-form-section';
@@ -70,7 +70,7 @@ type ServiceTypeOptionProps = {
 
 function ServiceTypeOption({ type, Icon, title, description }: ServiceTypeOptionProps) {
   const { onServiceTypeChanged } = useScalingRules();
-  const instance = useInstance(useWatchServiceForm('instance'));
+  const instance = useCatalogInstance(useWatchServiceForm('instance'));
 
   const canSelect = () => {
     if (instance?.id === 'free') {

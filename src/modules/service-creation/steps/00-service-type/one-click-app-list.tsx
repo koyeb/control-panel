@@ -1,4 +1,4 @@
-import { useOneClickApps } from 'src/api/hooks/catalog';
+import { useOneClickApps } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { ExternalLink, Link } from 'src/components/link';
 import { FeatureFlag } from 'src/hooks/feature-flag';

@@ -1,4 +1,4 @@
-import { CatalogInstance } from 'src/api/model';
+import { CatalogInstance } from 'src/model';
 
 // prettier-ignore
 export const databaseInstances = Object.freeze([

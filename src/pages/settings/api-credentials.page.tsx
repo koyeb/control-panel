@@ -1,14 +1,13 @@
-import { apiQuery } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
-
 import clsx from 'clsx';
-import { mapApiCredential } from 'src/api/mappers/api-credential';
-import { ApiCredentialType } from 'src/api/model';
+
+import { apiQuery, mapApiCredential } from 'src/api';
 import { ApiCredentials } from 'src/components/api-credentials/api-credentials';
 import { Dialog } from 'src/components/dialog';
 import { Title } from 'src/components/title';
 import { createTranslate } from 'src/intl/translate';
+import { ApiCredentialType } from 'src/model';
 import { upperCase } from 'src/utils/strings';
 
 export function BaseApiCredentialsPage({ type }: { type: ApiCredentialType }) {

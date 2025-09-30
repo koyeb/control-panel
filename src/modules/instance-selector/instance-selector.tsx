@@ -1,6 +1,6 @@
-import { CatalogInstance } from 'src/api/model';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { CatalogInstance } from 'src/model';
 
 import { InstanceItem } from './instance-item';
 import { type InstanceSelector } from './instance-selector-state';

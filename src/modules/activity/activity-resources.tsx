@@ -1,12 +1,12 @@
 import clsx from 'clsx';
 import { createElement } from 'react';
 
-import { Activity, ServiceType } from 'src/api/model';
 import { Link } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { IconFolders } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { Activity, ServiceType } from 'src/model';
 
 import {
   isAutoscalingActivity,

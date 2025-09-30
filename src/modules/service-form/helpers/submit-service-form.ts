@@ -1,5 +1,4 @@
-import { ApiError } from 'src/api/api-errors';
-import { getApi } from 'src/application/container';
+import { ApiError, getApi } from 'src/api';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../service-form.types';

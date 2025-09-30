@@ -1,8 +1,8 @@
-import { isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
-import { ComputeDeployment, DatabaseDeployment, Deployment } from 'src/api/model';
+import { isComputeDeployment, isDatabaseDeployment } from 'src/api';
 import { TextSkeleton } from 'src/components/skeleton';
 import { IconDatabase } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, DatabaseDeployment, Deployment } from 'src/model';
 
 import { DeploymentRegions } from './deployment-regions';
 import { DeploymentSource } from './deployment-source';

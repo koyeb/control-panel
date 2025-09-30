@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { App, ComputeDeployment, Service } from 'src/api/model';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { getServiceUrls } from 'src/application/service-functions';
@@ -10,6 +9,7 @@ import { ExternalLink, Link } from 'src/components/link';
 import { TimeoutUi } from 'src/components/timeout-ui';
 import { IconArrowRight, IconExternalLink, IconInfo, IconSendHorizontal } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { App, ComputeDeployment, Service } from 'src/model';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 
 const T = createTranslate('modules.serviceCreation.initialDeployment.deploymentStatusDetails');

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganization } from 'src/api';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { FeatureUnavailable } from 'src/components/feature-unavailable';
 import { LinkButton } from 'src/components/link';

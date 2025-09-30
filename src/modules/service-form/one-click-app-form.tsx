@@ -12,9 +12,7 @@ import {
 } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInstance, useInstances, useRegions } from 'src/api/hooks/catalog';
-import { useGithubApp } from 'src/api/hooks/git';
-import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/api/model';
+import { useCatalogInstance, useGithubApp, useInstancesCatalog, useRegionsCatalog } from 'src/api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { tooBig, tooSmall } from 'src/application/zod';
@@ -29,6 +27,7 @@ import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/model';
 import {
   InstanceTypeMetadata,
   RegionsMetadata,
@@ -70,7 +69,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   const searchParams = useSearchParams();
   const appId = searchParams.get('app_id');
 
-  const instances = useInstances();
+  const instances = useInstancesCatalog();
   const githubApp = useGithubApp();
 
   const serviceForm = useMemo(() => {
@@ -185,8 +184,8 @@ function useOnCostEstimationChanged(
   serviceForm: ServiceForm | undefined,
   onChanged: (cost?: ServiceCost) => void,
 ) {
-  const instance = useInstance(form.watch('instance'));
-  const regions = useDeepCompareMemo(useRegions(form.watch('regions')));
+  const instance = useCatalogInstance(form.watch('instance'));
+  const regions = useDeepCompareMemo(useRegionsCatalog(form.watch('regions')));
 
   useEffect(() => {
     if (serviceForm === undefined) {
@@ -360,8 +359,8 @@ function EnvironmentVariableField({ index, env }: { index: number; env: OneClick
 function InstanceSection({ serviceForm }: { serviceForm: ServiceForm }) {
   const [expanded, setExpanded] = useState(false);
 
-  const instances = useInstances();
-  const regions = useRegions();
+  const instances = useInstancesCatalog();
+  const regions = useRegionsCatalog();
 
   const instanceCtrl = useController<ServiceForm, 'instance'>({ name: 'instance' });
   const regionsCtrl = useController<ServiceForm, 'regions'>({ name: 'regions' });

@@ -4,10 +4,7 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
-import { useOrganization, useUser } from 'src/api/hooks/session';
-import { addressSchema } from 'src/api/mappers/session';
+import { addressSchema, apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledAddressField } from 'src/components/address-field/address-field';
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';

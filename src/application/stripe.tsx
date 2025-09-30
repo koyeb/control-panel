@@ -4,9 +4,9 @@ import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { getConfig } from './config';
-import { createValidationGuard } from './create-validation-guard';
 import { notify } from './notify';
 import { reportError } from './sentry';
+import { createValidationGuard } from './validation';
 
 let retry = 0;
 

@@ -1,4 +1,4 @@
-import { useOrganization } from 'src/api/hooks/session';
+import { useOrganization } from 'src/api';
 import { DeactivateOrganization } from 'src/modules/account/deactivate-organization';
 import { DeleteOrganization } from 'src/modules/account/delete-organization';
 import { ReactivateOrganization } from 'src/modules/account/reactivate-organization';

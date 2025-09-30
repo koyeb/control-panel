@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import { useOrganization } from 'src/api/hooks/session';
-import { CatalogInstance, OrganizationPlan } from 'src/api/model';
+import { useOrganization } from 'src/api';
 import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
 import { tallyForms } from 'src/hooks/tally';
+import { CatalogInstance, OrganizationPlan } from 'src/model';
 
 export function usePreSubmitServiceForm(previousInstance?: string | null) {
   const openDialog = Dialog.useOpen();

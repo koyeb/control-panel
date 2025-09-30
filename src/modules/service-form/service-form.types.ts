@@ -1,4 +1,4 @@
-import { BuilderType, EnvironmentVariable, ServiceType } from 'src/api/model';
+import { BuilderType, EnvironmentVariable, ServiceType } from 'src/model';
 
 export type ServiceFormSection =
   | 'serviceType'

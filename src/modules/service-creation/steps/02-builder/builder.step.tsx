@@ -2,7 +2,6 @@ import { AccordionHeader, AccordionSection, Button, SelectBox } from '@koyeb/des
 import { useState } from 'react';
 import { FormProvider, useController, useForm } from 'react-hook-form';
 
-import { BuilderType } from 'src/api/model';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { LinkButton } from 'src/components/link';
 import { OverridableInput } from 'src/components/overridable-input';
@@ -13,6 +12,7 @@ import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { IconPackage } from 'src/icons';
 import IconDocker from 'src/icons/docker.svg?react';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { BuilderType } from 'src/model';
 
 const T = createTranslate('modules.serviceCreation.builder');
 

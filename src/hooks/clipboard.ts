@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 
-import { hasMessage } from 'src/api/api-errors';
+import { hasMessage } from 'src/application/validation';
 import { useTranslate } from 'src/intl/translate';
 
 import { notify } from '../application/notify';

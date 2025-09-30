@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
-import { useUserUnsafe } from 'src/api/hooks/session';
+import { useUserUnsafe } from 'src/api';
 import { getConfig } from 'src/application/config';
-import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
+import { createValidationGuard } from 'src/application/validation';
 import { Dialog } from 'src/components/dialog';
 import { useLocation } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';

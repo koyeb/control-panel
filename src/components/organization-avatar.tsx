@@ -1,7 +1,6 @@
 import { useId, useMemo } from 'react';
 
-import { useGithubApp } from 'src/api/hooks/git';
-import { useOrganizationUnsafe } from 'src/api/hooks/session';
+import { useGithubApp, useOrganizationUnsafe } from 'src/api';
 
 const useGithubAvatar: boolean = false;
 

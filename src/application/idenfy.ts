@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { apiQuery } from 'src/api/api';
+import { apiQuery } from 'src/api';
 
 export function useIdenfyLink() {
   const query = useQuery({

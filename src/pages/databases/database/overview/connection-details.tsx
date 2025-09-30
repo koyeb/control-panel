@@ -1,16 +1,16 @@
-import { apiQuery } from 'src/api/api';
 import { Code, CodeLang, Tab, Tabs } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-
 import { z } from 'zod';
-import { DatabaseDeployment, DatabaseRole, LogicalDatabase } from 'src/api/model';
-import { createValidationGuard } from 'src/application/create-validation-guard';
+
+import { apiQuery } from 'src/api';
+import { createValidationGuard } from 'src/application/validation';
 import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { DatabaseDeployment, DatabaseRole, LogicalDatabase } from 'src/model';
 import { getName, hasProperty } from 'src/utils/object';
 
 import {

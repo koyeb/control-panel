@@ -2,9 +2,9 @@ import { Field, FieldHelperText, FieldLabel, IconButton } from '@koyeb/design-sy
 import { useId, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { hasMessage } from 'src/api/api-errors';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
+import { hasMessage } from 'src/application/validation';
 import { CodeEditor, CodeEditorLanguageSelect } from 'src/components/code-editor/code-editor';
 import { useCodeEditor } from 'src/components/code-editor/use-code-editor';
 import { FileDropZone } from 'src/components/file-drop-zone';

@@ -1,8 +1,8 @@
-import { ComputeDeployment, DeploymentDefinition } from 'src/api/model';
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
 import { IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, DeploymentDefinition } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 

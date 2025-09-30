@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { useInvalidateApiQuery } from 'src/api/api';
-import { DatabaseRole, Service } from 'src/api/model';
+import { useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
+import { DatabaseRole, Service } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.database.roles.deleteDialog');

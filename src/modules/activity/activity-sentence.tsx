@@ -1,6 +1,6 @@
-import { Activity } from 'src/api/model';
 import { FormattedPrice } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { Activity } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { capitalize, shortId } from 'src/utils/strings';
 

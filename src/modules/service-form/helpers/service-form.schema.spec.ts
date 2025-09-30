@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { Organization, OrganizationQuotas } from 'src/api/model';
+import { Organization, OrganizationQuotas } from 'src/model';
 import { create } from 'src/utils/factories';
 
 import { Port, ServiceForm } from '../service-form.types';

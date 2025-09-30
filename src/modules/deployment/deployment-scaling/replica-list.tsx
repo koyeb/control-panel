@@ -1,10 +1,10 @@
 import { Button } from '@koyeb/design-system';
 import { useState } from 'react';
 
-import { ComputeDeployment, Replica } from 'src/api/model';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, Replica } from 'src/model';
 
 import { ReplicaDrawer } from './replica-drawer';
 import { ReplicaCpu, ReplicaMemory } from './replica-metadata';

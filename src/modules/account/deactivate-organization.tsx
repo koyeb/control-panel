@@ -1,9 +1,8 @@
-import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-
 import { useState } from 'react';
-import { useOrganization } from 'src/api/hooks/session';
+
+import { apiMutation, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';

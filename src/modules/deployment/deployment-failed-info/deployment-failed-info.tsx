@@ -1,10 +1,10 @@
 import clsx from 'clsx';
 import React from 'react';
 
-import { ComputeDeployment } from 'src/api/model';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconInfo } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { ComputeDeployment } from 'src/model';
 import { createArray } from 'src/utils/arrays';
 
 const T = createTranslate('modules.deployment.deploymentFailedInfo');
