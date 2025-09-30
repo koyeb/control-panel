@@ -5,7 +5,7 @@ import { round } from 'src/utils/math';
 import { hasProperty, requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase, removePrefix, shortId } from 'src/utils/strings';
 
-import type { API } from '../api';
+import type { API } from '../api-types';
 import {
   ComputeDeployment,
   ComputeDeploymentType,

@@ -1,243 +1,171 @@
-import { Simplify } from 'type-fest';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useCallback } from 'react';
 
-import { UnexpectedError } from 'src/application/errors';
-import { upperCase } from 'src/utils/strings';
-import { OmitNever } from 'src/utils/types';
+import { getConfig } from 'src/application/config';
+import { getToken } from 'src/application/token';
+import { wait } from 'src/utils/promises';
+import { OmitBy, ValueOf } from 'src/utils/types';
 
-import { ApiError, ApiValidationError, isApiError, isApiValidationError } from './api-errors';
+import { ApiError } from './api-errors';
 import { paths } from './api.generated';
 
 export { type API } from './api-types';
 
-export type Api = typeof api;
+export type ApiEndpoint = ValueOf<{
+  [Path in keyof paths]: ValueOf<{
+    [Method in Exclude<keyof OmitBy<Required<paths[Path]>, never>, 'parameters'>]: `${Method} ${Path}`;
+  }>;
+}>;
 
-export type ApiEndpoint = keyof Api;
+export type GetApiEndpoint<E extends ApiEndpoint> = E extends `${infer Method} ${infer Path}`
+  ? paths extends { [P in Path]: { [M in Method]: infer Endpoint } }
+    ? Endpoint
+    : never
+  : never;
 
-export type ApiEndpointFn<E extends ApiEndpoint> = (
-  param: ApiEndpointParams<E>,
-) => Promise<ApiEndpointResult<E>>;
+export function getApiQueryKey<E extends ApiEndpoint>(
+  endpoint: E,
+  params: ApiRequestParams<E>,
+): [E, ApiRequestParams<E>] {
+  return [endpoint, params];
+}
 
-export type ApiEndpointParams<E extends ApiEndpoint> = Parameters<Api[E]>[0];
-export type ApiEndpointResult<E extends ApiEndpoint> = Awaited<ReturnType<Api[E]>>;
-
-export const api = {
-  // authentication
-  getOAuthProviders: endpoint('get', '/v1/account/oauth'),
-  githubOAuthCallback: endpoint('post', '/v1/account/oauth'),
-  signIn: endpoint('post', '/v1/account/login'),
-  signUp: endpoint('post', '/v1/account/signup'),
-  refreshToken: endpoint('put', '/v1/account/refresh'),
-  logout: endpoint('delete', '/v1/account/logout'),
-  setUpOAuth: endpoint('get', '/v1/account/oauth'),
-  cannySso: endpoint('post', '/v1/sso/canny'),
-  discourseSso: endpoint('post', '/v1/sso/discourse'),
-
-  // account
-  getCurrentUser: endpoint('get', '/v1/account/profile'),
-  getIntercomUserHash: endpoint('get', '/v1/intercom/profile'),
-  resendValidationEmail: endpoint('post', '/v1/account/resend_validation'),
-  validateAccount: endpoint('post', '/v1/account/validate/{id}'),
-  getIdenfyToken: endpoint('get', '/v1/account/idenfy'),
-  resetPassword: endpoint('post', '/v1/account/reset_password'),
-  updatePassword: endpoint('post', '/v1/account/update_password'),
-  updateUser: endpoint('patch', '/v1/account/profile'),
-  deleteUser: endpoint('delete', '/v1/users/{id}'),
-  getUserSettings: endpoint('get', '/v1/account/settings'),
-  updateUserSettings: endpoint('patch', '/v1/account/settings'),
-
-  // organization
-  getCurrentOrganization: endpoint('get', '/v1/account/organization'),
-  listUserOrganizations: endpoint('get', '/v1/account/organizations'),
-  switchOrganization: endpoint('post', '/v1/organizations/{id}/switch'),
-  listOrganizationMembers: endpoint('get', '/v1/organization_members'),
-  deleteOrganizationMember: endpoint('delete', '/v1/organization_members/{id}'),
-  organizationSummary: endpoint('get', '/v1/organizations/{organization_id}/summary'),
-  organizationQuotas: endpoint('get', '/v1/organizations/{organization_id}/quotas'),
-  createOrganization: endpoint('post', '/v1/organizations'),
-  updateOrganization: endpoint('patch', '/v1/organizations/{id}'),
-  updateSignupQualification: endpoint('post', '/v1/organizations/{id}/signup_qualification'),
-  changePlan: endpoint('post', '/v1/organizations/{id}/plan'),
-  organizationConfirmation: endpoint('post', '/v1/organization_confirmations/{id}'),
-  deactivateOrganization: endpoint('post', '/v1/organizations/{id}/deactivate'),
-  reactivateOrganization: endpoint('post', '/v1/organizations/{id}/reactivate'),
-  deleteOrganization: endpoint('delete', '/v1/organizations/{id}'),
-  newSession: endpoint('post', '/v1/account/session'),
-
-  // subscription
-  getSubscription: endpoint('get', '/v1/subscriptions/{id}'),
-  manageBilling: endpoint('get', '/v1/billing/manage'),
-  createPaymentAuthorization: endpoint('post', '/v1/payment_methods'),
-  confirmPaymentAuthorization: endpoint('post', '/v1/payment_methods/{id}/confirm'),
-  getNextInvoice: endpoint('get', '/v1/billing/next_invoice'),
-  hasUnpaidInvoices: endpoint('get', '/v1/billing/has_unpaid_invoices'),
-  getUsageCsv: endpoint('get', '/v1/usages/details'),
-  redeemCoupon: endpoint('post', '/v1/coupons'),
-
-  // budget
-  getBudget: endpoint('get', '/v1/organizations/{organization_id}/budget'),
-  createBudget: endpoint('post', '/v1/organizations/{organization_id}/budget'),
-  updateBudget: endpoint('put', '/v1/organizations/{organization_id}/budget'),
-  deleteBudget: endpoint('delete', '/v1/organizations/{organization_id}/budget'),
-
-  // invitations
-  listInvitations: endpoint('get', '/v1/organization_invitations'),
-  getInvitation: endpoint('get', '/v1/organization_invitations/{id}'),
-  sendInvitation: endpoint('post', '/v1/organization_invitations'),
-  resendInvitation: endpoint('post', '/v1/organization_invitations/{id}/resend'),
-  acceptInvitation: endpoint('post', '/v1/account/organization_invitations/{id}/accept'),
-  declineInvitation: endpoint('post', '/v1/account/organization_invitations/{id}/decline'),
-  deleteInvitation: endpoint('delete', '/v1/organization_invitations/{id}'),
-
-  // catalog
-  listCatalogRegions: endpoint('get', '/v1/catalog/regions'),
-  listCatalogDatacenters: endpoint('get', '/v1/catalog/datacenters'),
-  listCatalogInstances: endpoint('get', '/v1/catalog/instances'),
-  listCatalogUsage: endpoint('get', '/v1/catalog/usage'),
-
-  // docker image verification
-  verifyDockerImage: endpoint('get', '/v1/docker-helper/verify'),
-
-  // volumes
-  listVolumes: endpoint('get', '/v1/volumes'),
-  createVolume: endpoint('post', '/v1/volumes'),
-  updateVolume: endpoint('post', '/v1/volumes/{id}'),
-  deleteVolume: endpoint('delete', '/v1/volumes/{id}'),
-  listSnapshots: endpoint('get', '/v1/snapshots'),
-  getSnapshot: endpoint('get', '/v1/snapshots/{id}'),
-  createSnapshot: endpoint('post', '/v1/snapshots'),
-  updateSnapshot: endpoint('post', '/v1/snapshots/{id}'),
-  deleteSnapshot: endpoint('delete', '/v1/snapshots/{id}'),
-
-  // secrets
-  listSecrets: endpoint('get', '/v1/secrets'),
-  revealSecret: endpoint('post', '/v1/secrets/{id}/reveal'),
-  createSecret: endpoint('post', '/v1/secrets'),
-  updateSecret: endpoint('put', '/v1/secrets/{id}'),
-  deleteSecret: endpoint('delete', '/v1/secrets/{id}'),
-
-  // domains
-  listDomains: endpoint('get', '/v1/domains'),
-  createDomain: endpoint('post', '/v1/domains'),
-  editDomain: endpoint('patch', '/v1/domains/{id}'),
-  refreshDomain: endpoint('post', '/v1/domains/{id}/refresh'),
-  deleteDomain: endpoint('delete', '/v1/domains/{id}'),
-
-  // github app
-  getGithubApp: endpoint('get', '/v1/github/installation'),
-  installGithubApp: endpoint('post', '/v1/github/installation'),
-  resyncRepositories: endpoint('post', '/v1/git/sync/organization/{organization_id}'),
-  listRepositories: endpoint('get', '/v1/git/repositories'),
-  listRepositoryBranches: endpoint('get', '/v1/git/branches'),
-
-  // apps
-  listApps: endpoint('get', '/v1/apps'),
-  getApp: endpoint('get', '/v1/apps/{id}'),
-  createApp: endpoint('post', '/v1/apps'),
-  renameApp: endpoint('put', '/v1/apps/{id}'),
-  pauseApp: endpoint('post', '/v1/apps/{id}/pause'),
-  resumeApp: endpoint('post', '/v1/apps/{id}/resume'),
-  deleteApp: endpoint('delete', '/v1/apps/{id}'),
-
-  // services
-  listServices: endpoint('get', '/v1/services'),
-  getService: endpoint('get', '/v1/services/{id}'),
-  getServiceMetrics: endpoint('get', '/v1/streams/metrics'),
-  getServiceVariables: endpoint('post', '/v1/services-autocomplete'),
-  createService: endpoint('post', '/v1/services'),
-  updateService: endpoint('put', '/v1/services/{id}'),
-  redeployService: endpoint('post', '/v1/services/{id}/redeploy'),
-  pauseService: endpoint('post', '/v1/services/{id}/pause'),
-  resumeService: endpoint('post', '/v1/services/{id}/resume'),
-  deleteService: endpoint('delete', '/v1/services/{id}'),
-
-  // deployments
-  listDeployments: endpoint('get', '/v1/deployments'),
-  getDeployment: endpoint('get', '/v1/deployments/{id}'),
-  getDeploymentScaling: endpoint('get', '/v1/deployment/{id}/scaling'),
-  cancelDeployment: endpoint('post', '/v1/deployments/{id}/cancel'),
-  listRegionalDeployments: endpoint('get', '/v1/regional_deployments'),
-
-  // instances
-  listInstances: endpoint('get', '/v1/instances'),
-  getInstance: endpoint('get', '/v1/instances/{id}'),
-
-  // logs
-  logsQuery: endpoint('get', '/v1/streams/logs/query'),
-
-  // activities
-  listActivities: endpoint('get', '/v1/activities'),
-
-  // api credentials
-  listApiCredentials: endpoint('get', '/v1/credentials'),
-  createApiCredential: endpoint('post', '/v1/credentials'),
-  deleteApiCredential: endpoint('delete', '/v1/credentials/{id}'),
-
-  // streams
-  logs: stream('/v1/streams/logs/tail'),
-  exec: stream('/v1/streams/instances/exec'),
-};
-
-type Paths = keyof paths;
-type PathMethods<Path extends Paths> = Extract<keyof paths[Path], string>;
-
-function endpoint<Path extends Paths, Method extends PathMethods<Path>>(method: Method, path: Path) {
-  type Endpoint = paths[Path][Method];
-
-  type Parameters = InferParameters<Endpoint>;
-  type RequestBody = InferRequestBody<Endpoint>;
-  type ResponseBody = InferResponseBody<Endpoint>;
-
-  type Params = EndpointParams<
-    Exclude<Parameters['path'], undefined>,
-    Exclude<Parameters['query'], undefined>,
-    Exclude<Parameters['header'], undefined>,
-    Exclude<RequestBody, undefined>
-  >;
-
-  return async function (params: Params): Promise<ResponseBody> {
-    const url = buildUrl(path, params);
-    const headers = new Headers();
-
-    const init: RequestInit = {
-      signal: params.signal,
-      method: upperCase(method),
-      headers,
-    };
-
-    if (params.token) {
-      headers.set('Authorization', `Bearer ${params.token}`);
-    }
-
-    if ('body' in params) {
-      headers.set('Content-Type', 'application/json');
-      init.body = JSON.stringify(params.body);
-    }
-
-    if ('header' in params) {
-      for (const [name, value] of Object.entries(params.header as Record<string, string>)) {
-        headers.set(name, value);
-      }
-    }
-
-    const response = await fetch(url.toString(), init);
-
-    const responseBody: unknown = response.headers.get('Content-Type')?.startsWith('application/json')
-      ? await response.json()
-      : await response.text();
-
-    if (!response.ok) {
-      throw buildError(response, responseBody);
-    }
-
-    return responseBody as ResponseBody;
+export function apiQuery<E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) {
+  return {
+    queryKey: getApiQueryKey(endpoint, params),
+    queryFn: ({
+      queryKey: [endpoint, params],
+      signal,
+      meta,
+    }: {
+      queryKey: readonly [E, ApiRequestParams<E>];
+      signal: AbortSignal;
+      meta?: Record<string, unknown>;
+    }) => {
+      return api(endpoint, params, {
+        baseUrl: getConfig('apiBaseUrl'),
+        token: getToken(),
+        signal,
+        ...meta,
+      });
+    },
   };
 }
 
-function buildUrl(path: string, params: UnknownEndpointParams) {
-  const url = new URL(path, params.baseUrl ?? window.location.origin);
+export function apiMutation<E extends ApiEndpoint, Variables = void>(
+  endpoint: E,
+  params:
+    | ApiRequestParams<E>
+    | ((variables: Variables) => ApiRequestParams<E> | Promise<ApiRequestParams<E>>),
+) {
+  return {
+    mutationKey: [endpoint, typeof params === 'object' ? params : null] as const,
+    mutationFn: async (variables: Variables, { meta }: { meta?: Record<string, unknown> }) => {
+      return api<E>(endpoint, typeof params === 'function' ? await params(variables) : params, {
+        baseUrl: getConfig('apiBaseUrl'),
+        token: getToken(),
+        ...meta,
+      });
+    },
+  };
+}
+
+export function createEnsureApiQueryData(queryClient: QueryClient, abortController?: AbortController) {
+  void abortController;
+
+  return <E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) => {
+    return queryClient.ensureQueryData(apiQuery(endpoint, params));
+  };
+}
+
+export function useInvalidateApiQuery() {
+  const queryClient = useQueryClient();
+
+  return useCallback(
+    <E extends ApiEndpoint>(endpoint: E, params?: Partial<ApiRequestParams<E>>) => {
+      return queryClient.invalidateQueries({ queryKey: [endpoint, ...(params ? [params] : [])] });
+    },
+    [queryClient],
+  );
+}
+
+type ApiRequestOptions = Partial<{
+  baseUrl: string;
+  token: string | null;
+  delay: number;
+  signal: AbortSignal;
+}>;
+
+export async function api<E extends ApiEndpoint>(
+  endpoint: E,
+  params: ApiRequestParams<E>,
+  { baseUrl, token, delay, signal }: ApiRequestOptions = {},
+): Promise<ApiResponseBody<E>> {
+  const [method, path] = endpoint.split(' ') as [string, string];
+  const url = buildUrl(path, params, baseUrl);
+  const headers = new Headers();
+
+  const init: RequestInit = {
+    method: method.toUpperCase(),
+    headers,
+    signal,
+  };
+
+  if ('header' in params) {
+    for (const [name, value] of Object.entries(params.header)) {
+      headers.set(name, String(value));
+    }
+  }
+
+  if ('body' in params) {
+    headers.set('Content-Type', 'application/json');
+    init.body = JSON.stringify(params.body);
+  }
+
+  if (token) {
+    headers.set('Authorization', `Bearer ${token}`);
+  }
+
+  if (delay !== undefined) {
+    await wait(delay, signal);
+  }
+
+  const response = await fetch(url, init);
+
+  const responseBody: unknown = response.headers.get('Content-Type')?.startsWith('application/json')
+    ? await response.json()
+    : await response.text();
+
+  if (!response.ok) {
+    throw new ApiError(response, responseBody);
+  }
+
+  return responseBody as ApiResponseBody<E>;
+}
+
+export function apiStream<E extends Extract<ApiEndpoint, `get /v1/streams/${string}`>>(
+  endpoint: E,
+  params: ApiRequestParams<E>,
+  { baseUrl, token }: { baseUrl?: string; token?: string | null } = {},
+): WebSocket {
+  const [, path] = endpoint.split(' ') as [string, string];
+  const url = buildUrl(path, params, baseUrl);
+  const protocols: string[] = [];
+
+  if (token) {
+    protocols.push('Bearer', token);
+  }
+
+  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+
+  return new WebSocket(url, protocols);
+}
+
+function buildUrl<E extends ApiEndpoint>(path: string, params: ApiRequestParams<E>, baseUrl?: string) {
+  const url = new URL(path, baseUrl ?? window.location.origin);
 
   for (const [key, value] of Object.entries(params.path ?? {})) {
-    url.pathname = url.pathname.replaceAll(encodeURIComponent(`{${key}}`), value);
+    url.pathname = url.pathname.replaceAll(encodeURIComponent(`{${key}}`), String(value));
   }
 
   for (const [key, value] of Object.entries(params.query ?? {})) {
@@ -256,85 +184,48 @@ function buildUrl(path: string, params: UnknownEndpointParams) {
   return url;
 }
 
-function buildError(response: Response, body: unknown) {
-  if (response.status === 429) {
-    return new ApiError({ code: '', message: 'Too many requests', status: 429 });
+type ApiRequestParams<E extends ApiEndpoint> =
+  GetApiEndpoint<E> extends {
+    parameters: {
+      path?: infer Path extends Record<string, string> | undefined;
+      query?: infer Query extends Record<string, unknown> | undefined;
+      header?: infer Header extends Record<string, string> | undefined;
+    };
   }
+    ? ProcessApiParams<{ path: Path; query: Query; header: Header; body: ApiRequestBody<E> }>
+    : never;
 
-  if (isApiValidationError(body)) {
-    return new ApiValidationError(body);
+type ProcessApiParams<P> =
+  LiftOptional<OmitBy<P, undefined | never>> extends infer Output
+    ? keyof Output extends never
+      ? Record<string, never>
+      : Output
+    : never;
+
+type ApiRequestBody<E extends ApiEndpoint> =
+  GetApiEndpoint<E> extends {
+    requestBody: { content: { '*/*': infer Body } };
   }
+    ? Body extends Record<string, never>
+      ? never
+      : Body
+    : never;
 
-  if (isApiError(body)) {
-    return new ApiError(body);
+type ApiResponseBody<E extends ApiEndpoint> =
+  GetApiEndpoint<E> extends {
+    responses: { 200: { content: { '*/*': infer Result } } };
   }
+    ? Result
+    : never;
 
-  return new UnexpectedError('Unknown API error', { body });
-}
+type Compute<T> = { [K in keyof T]: Compute<T[K]> } | never;
 
-function stream<Path extends Extract<Paths, `/v1/streams/${string}`>>(path: Path) {
-  type Endpoint = paths[Path]['get'];
+type AllOptional<T> = Partial<T> extends T ? true : false;
 
-  type Parameters = InferParameters<Endpoint>;
-  type Params = EndpointParams<never, Exclude<Parameters['query'], undefined>, never, never>;
-
-  return function (params: Params): WebSocket {
-    const url = buildUrl(path, params);
-    const protocols: string[] = [];
-
-    if (params.token) {
-      protocols.push('Bearer', params.token);
-    }
-
-    url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
-
-    return new WebSocket(url, protocols);
-  };
-}
-
-type EndpointParams<
-  Path extends Record<string, string>,
-  Query extends Record<string, unknown>,
-  Header extends Record<string, string>,
-  Body,
-> = Simplify<
-  OmitNever<{
-    signal?: AbortSignal;
-    baseUrl?: string;
-    token?: string | null;
-    path: Path;
-    query: Query;
-    header: Header;
-    body: Body;
-  }>
+type LiftOptional<T> = Compute<
+  {
+    [K in keyof T as AllOptional<T[K]> extends true ? K : never]?: T[K];
+  } & {
+    [K in keyof T as AllOptional<T[K]> extends true ? never : K]: T[K];
+  }
 >;
-
-type UnknownEndpointParams = Partial<
-  EndpointParams<Record<string, string>, Record<string, unknown>, Record<string, string>, unknown>
->;
-
-type ApiParams = {
-  path?: Record<string, string>;
-  query?: Record<string, unknown>;
-  header?: Record<string, string>;
-};
-
-type InferParameters<Endpoint> = Endpoint extends {
-  parameters: infer Params extends ApiParams;
-}
-  ? Params
-  : never;
-
-type InferRequestBody<Endpoint> = Endpoint extends {
-  requestBody: { content: { '*/*': infer Body } };
-}
-  ? Body extends Record<string, never>
-    ? never
-    : Body
-  : never;
-
-type InferResponseBody<Endpoint> = Endpoint extends {
-  responses: { 200: { content: { '*/*': infer Result } } };
-}
-  ? Result
-  : never;

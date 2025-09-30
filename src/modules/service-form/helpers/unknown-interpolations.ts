@@ -20,6 +20,8 @@ export function useUnknownInterpolationErrors() {
 
   return useCallback(
     async (values: ServiceForm) => {
+      const api = getApi();
+
       ctrl.current?.abort();
       ctrl.current = new AbortController();
 
@@ -28,7 +30,7 @@ export function useUnknownInterpolationErrors() {
       }
 
       const variables = mapServiceVariables(
-        await getApi().getServiceVariables({
+        await api('post /v1/services-autocomplete', {
           body: { definition: serviceFormToDeploymentDefinition(values) },
         }),
       );

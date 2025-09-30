@@ -26,16 +26,18 @@ export function useOrganizationCommands() {
       Icon: IconRefreshCcw,
       hasSubItems: true,
       execute: async () => {
+        const api = getApi();
+
         palette.setIcon(IconRefreshCcw);
         palette.setPlaceholder(t('organization:switch.placeholder'));
 
-        const organizations = await getApi().listUserOrganizations({ query: {} });
+        const organizations = await api('get /v1/account/organizations', { query: {} });
 
         for (const organization of organizations.organizations!) {
           palette.addItem({
             label: organization.name!,
             execute: async () => {
-              const { token } = await getApi().switchOrganization({
+              const { token } = await api('post /v1/organizations/{id}/switch', {
                 path: { id: organization.id! },
                 header: {},
               });

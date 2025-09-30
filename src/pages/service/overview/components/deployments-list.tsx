@@ -2,8 +2,9 @@ import { Badge, Button, Collapse, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { ComputeDeployment, GitDeploymentTrigger, Service } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { isUpcomingDeployment } from 'src/application/service-functions';
@@ -197,11 +198,11 @@ function DeploymentItem({ service, deployment, selected, onClick }: DeploymentIt
   const invalidate = useInvalidateApiQuery();
 
   const cancelMutation = useMutation({
-    ...useApiMutationFn('cancelDeployment', {
+    ...apiMutation('post /v1/deployments/{id}/cancel', {
       path: { id: deployment.id },
     }),
     async onSuccess() {
-      await invalidate('listDeployments');
+      await invalidate('get /v1/deployments');
       notify.info(t('upcoming.cancelSuccess'));
     },
   });

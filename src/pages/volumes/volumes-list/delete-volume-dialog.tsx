@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Volume } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -16,11 +17,11 @@ export function DeleteVolumeDialog({ volume }: { volume: Volume }) {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('deleteVolume', {
+    ...apiMutation('delete /v1/volumes/{id}', {
       path: { id: volume.id },
     }),
     async onSuccess() {
-      await invalidate('listVolumes');
+      await invalidate('get /v1/volumes');
       notify.info(t('deleteSuccess', { name: volume.name }));
       closeDialog();
     },

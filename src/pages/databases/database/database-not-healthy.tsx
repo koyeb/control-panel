@@ -2,8 +2,9 @@ import * as intercom from '@intercom/messenger-js-sdk';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Service } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -16,11 +17,11 @@ export function DatabaseNotHealth({ service }: { service: Service }) {
   const t = T.useTranslate();
 
   const mutation = useMutation({
-    ...useApiMutationFn('deleteService', {
+    ...apiMutation('delete /v1/services/{id}', {
       path: { id: service.id },
     }),
     async onSuccess() {
-      await invalidate('getService', { path: { id: service.id } });
+      await invalidate('get /v1/services/{id}', { path: { id: service.id } });
       await navigate({ to: '/' });
       notify.info(t('deleteSuccessNotification'));
     },

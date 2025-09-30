@@ -1,11 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
+import { apiQuery } from 'src/api/api';
 import { useSecrets } from 'src/api/hooks/secret';
-import { getApiQueryKey } from 'src/api/use-api';
-import { getApi } from 'src/application/container';
 import { hasProperty } from 'src/utils/object';
-import { wait } from 'src/utils/promises';
 
 export function useVerifyDockerImage(image: string, registrySecretName: string | undefined) {
   const secrets = useSecrets('registry');
@@ -21,21 +19,13 @@ export function useVerifyDockerImage(image: string, registrySecretName: string |
     refetchInterval: false,
     refetchOnWindowFocus: false,
     retry: false,
-    queryKey: getApiQueryKey('verifyDockerImage', { query: { image, secret_id: secretId } }),
-    async queryFn({ signal }) {
-      const api = getApi();
-
-      if (!(await wait(500, signal))) {
-        return null;
-      }
-
-      return api.verifyDockerImage({
-        query: {
-          image: image.trim(),
-          secret_id: secretId,
-        },
-      });
-    },
+    meta: { delay: 500 },
+    ...apiQuery('get /v1/docker-helper/verify', {
+      query: {
+        image: image.trim(),
+        secret_id: secretId,
+      },
+    }),
   });
 
   const error = useMemo(() => {

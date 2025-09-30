@@ -49,6 +49,6 @@ export type RequiredDeep<T> = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyFunction = (...params: any[]) => any;
 
-export type OmitNever<T> = {
-  [K in keyof T as [T[K]] extends [never] ? never : K]: T[K];
+export type OmitBy<T, V> = {
+  [Key in keyof T as T[Key] extends V ? never : Key]: T[Key];
 };

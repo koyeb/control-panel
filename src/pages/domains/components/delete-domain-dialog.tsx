@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Domain } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -15,11 +16,11 @@ export function DeleteDomainDialog({ domain }: { domain: Domain }) {
   const closeDialog = Dialog.useClose();
 
   const { mutateAsync: deleteDomain } = useMutation({
-    ...useApiMutationFn('deleteDomain', {
+    ...apiMutation('delete /v1/domains/{id}', {
       path: { id: domain.id },
     }),
     async onSuccess() {
-      await invalidate('listDomains');
+      await invalidate('get /v1/domains');
       notify.success(t('successNotification', { domainName: domain.name }));
       closeDialog();
     },

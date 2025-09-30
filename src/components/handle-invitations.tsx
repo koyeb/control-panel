@@ -1,8 +1,9 @@
 import { Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { OrganizationInvitation } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
@@ -28,9 +29,9 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     async mutationFn(invitation: OrganizationInvitation) {
       const api = getApi();
 
-      await api.acceptInvitation({ path: { id: invitation.id } });
+      await api('post /v1/account/organization_invitations/{id}/accept', { path: { id: invitation.id } });
 
-      const { token: newToken } = await api.switchOrganization({
+      const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
         path: { id: invitation.organization.id },
         header: {},
       });
@@ -45,11 +46,14 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   });
 
   const declineMutation = useMutation({
-    ...useApiMutationFn('declineInvitation', (invitation: OrganizationInvitation) => ({
-      path: { id: invitation.id },
-    })),
+    ...apiMutation(
+      'post /v1/account/organization_invitations/{id}/decline',
+      (invitation: OrganizationInvitation) => ({
+        path: { id: invitation.id },
+      }),
+    ),
     async onSuccess() {
-      await invalidate('listInvitations');
+      await invalidate('get /v1/organization_invitations');
       await navigate({ to: '/' });
       notify.info(t('declineSuccess'));
     },

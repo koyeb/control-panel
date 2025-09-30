@@ -1,8 +1,8 @@
+import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
 
+import { useMutation } from '@tanstack/react-query';
 import { useUser } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';
@@ -14,7 +14,7 @@ export function GithubAccount() {
   const user = useUser();
 
   const { mutate, isPending } = useMutation({
-    ...useApiMutationFn('getOAuthProviders', {
+    ...apiMutation('get /v1/account/oauth', {
       query: { action: 'register' },
     }),
     onSuccess({ oauth_providers }) {

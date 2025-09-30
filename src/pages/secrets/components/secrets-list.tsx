@@ -1,3 +1,4 @@
+import { apiQuery } from 'src/api/api';
 import {
   Button,
   ButtonMenuItem,
@@ -9,10 +10,9 @@ import {
 } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useState } from 'react';
 
+import { useState } from 'react';
 import { Secret } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
@@ -75,7 +75,7 @@ function Value({ secret }: { secret: Secret }) {
   const [showValue, setShowValue] = useState(false);
 
   const query = useQuery({
-    ...useApiQueryFn('revealSecret', { path: { id: secret.id } }),
+    ...apiQuery('post /v1/secrets/{id}/reveal', { path: { id: secret.id } }),
     enabled: showValue,
     refetchInterval: false,
     placeholderData: keepPreviousData,

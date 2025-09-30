@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Domain } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -25,10 +25,12 @@ export function BulkDeleteDomainsDialog({ domains, onDeleted }: BulkDeleteDomain
     async mutationFn(domains: Domain[]) {
       const api = getApi();
 
-      return Promise.allSettled(domains.map((domain) => api.deleteDomain({ path: { id: domain.id } })));
+      return Promise.allSettled(
+        domains.map((domain) => api('delete /v1/domains/{id}', { path: { id: domain.id } })),
+      );
     },
     async onSuccess(result) {
-      await invalidate('listDomains');
+      await invalidate('get /v1/domains');
 
       const fulfilled = result.filter((result) => result.status === 'fulfilled');
       notify.success(t('successNotification', { count: fulfilled.length }));

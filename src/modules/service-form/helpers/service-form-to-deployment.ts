@@ -1,6 +1,6 @@
 import posthog from 'posthog-js';
 
-import { API } from 'src/api/api';
+import { API } from 'src/api/api-types';
 import { EnvironmentVariable } from 'src/api/model';
 
 import {

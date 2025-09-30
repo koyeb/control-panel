@@ -1,11 +1,11 @@
+import { apiQuery } from 'src/api/api';
 import { ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import clsx from 'clsx';
 
+import clsx from 'clsx';
 import { useService } from 'src/api/hooks/service';
 import { mapSnapshot, mapVolume } from 'src/api/mappers/volume';
 import { Volume } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { formatBytes } from 'src/application/memory';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
@@ -33,7 +33,7 @@ export function VolumesListSection() {
   const pagination = usePagination();
 
   const query = useQuery({
-    ...useApiQueryFn('listVolumes', { query: pagination.query }),
+    ...apiQuery('get /v1/volumes', { query: pagination.query }),
     placeholderData: keepPreviousData,
     select: ({ volumes, has_next }) => ({
       volumes: volumes!.map(mapVolume),
@@ -138,7 +138,7 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
 
 function VolumeName({ volume }: { volume: Volume }) {
   const snapshot = useQuery({
-    ...useApiQueryFn('getSnapshot', { path: { id: volume.snapshotId! } }),
+    ...apiQuery('get /v1/snapshots/{id}', { path: { id: volume.snapshotId! } }),
     enabled: volume.snapshotId !== undefined,
     select: ({ snapshot }) => mapSnapshot(snapshot!),
   });

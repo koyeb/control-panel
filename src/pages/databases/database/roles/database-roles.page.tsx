@@ -1,12 +1,12 @@
+import { apiQuery } from 'src/api/api';
 import { Button, ButtonMenuItem, Spinner, Table, Tooltip } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useState } from 'react';
 
+import { useState } from 'react';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { DatabaseRole, Service } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
@@ -97,7 +97,7 @@ function DatabaseRolePassword({ role }: { role: DatabaseRole }) {
   const [showValue, setShowValue] = useState(false);
 
   const query = useQuery({
-    ...useApiQueryFn('revealSecret', { path: { id: role.secretId } }),
+    ...apiQuery('post /v1/secrets/{id}/reveal', { path: { id: role.secretId } }),
     enabled: showValue,
     refetchInterval: false,
     placeholderData: keepPreviousData,

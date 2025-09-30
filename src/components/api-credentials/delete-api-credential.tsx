@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { ApiCredential, ApiCredentialType } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { createTranslate } from 'src/intl/translate';
@@ -21,11 +22,11 @@ export function DeleteCredentialDialog({ type, credential }: DeleteCredentialDia
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('deleteApiCredential', {
+    ...apiMutation('delete /v1/credentials/{id}', {
       path: { id: credential.id },
     }),
     async onSuccess() {
-      await invalidate('listApiCredentials');
+      await invalidate('get /v1/credentials');
       notify.info(t('successNotification', { name: credential.name }));
       closeDialog();
     },

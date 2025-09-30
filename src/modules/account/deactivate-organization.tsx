@@ -1,9 +1,9 @@
+import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
 
+import { useState } from 'react';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -22,7 +22,7 @@ export function DeactivateOrganization() {
   const [skipConfirmation, setSkipConfirmation] = useState(false);
 
   const requestDeactivation = useMutation({
-    ...useApiMutationFn('deactivateOrganization', {
+    ...apiMutation('post /v1/organizations/{id}/deactivate', {
       path: { id: organization.id },
       body: { skip_confirmation: skipConfirmation },
     }),

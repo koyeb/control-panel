@@ -1,9 +1,10 @@
 import { Alert, Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { DatabaseDeployment, Service } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { getDatabaseServiceReachedQuota } from 'src/application/service-functions';
 import { ExternalLink, LinkButton } from 'src/components/link';
@@ -35,12 +36,12 @@ function DatabasePausedAlert({ service }: { service: Service }) {
   const t = T.useTranslate();
 
   const mutation = useMutation({
-    ...useApiMutationFn('resumeService', {
+    ...apiMutation('post /v1/services/{id}/resume', {
       path: { id: service.id },
       query: { skip_build: true },
     }),
     async onSuccess() {
-      await invalidate('getService', { path: { id: service.id } });
+      await invalidate('get /v1/services/{id}', { path: { id: service.id } });
       notify.info(t('databasePaused.resuming'));
     },
   });

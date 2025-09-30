@@ -1,13 +1,13 @@
+import { apiQuery } from 'src/api/api';
+
 import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
-
 import { mapApiCredential } from '../mappers/api-credential';
-import { useApiQueryFn } from '../use-api';
 
 export function useApiCredentialsQuery(type?: 'user' | 'organization') {
   return useQuery({
-    ...useApiQueryFn('listApiCredentials', {
+    ...apiQuery('get /v1/credentials', {
       query: {
         limit: '100',
         type: type !== undefined ? upperCase(type) : undefined,

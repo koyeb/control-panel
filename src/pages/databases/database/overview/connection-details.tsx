@@ -1,11 +1,11 @@
+import { apiQuery } from 'src/api/api';
 import { Code, CodeLang, Tab, Tabs } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
+import { z } from 'zod';
 import { DatabaseDeployment, DatabaseRole, LogicalDatabase } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
@@ -157,7 +157,7 @@ function useRolePassword(role?: { secretId: string }) {
   const secretId = role?.secretId;
 
   const { isSuccess, data } = useQuery({
-    ...useApiQueryFn('revealSecret', { path: { id: secretId! } }),
+    ...apiQuery('post /v1/secrets/{id}/reveal', { path: { id: secretId! } }),
     enabled: secretId !== undefined,
   });
 

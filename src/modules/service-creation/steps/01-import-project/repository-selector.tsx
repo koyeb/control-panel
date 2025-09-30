@@ -1,12 +1,12 @@
+import { apiMutation } from 'src/api/api';
 import { Button, Spinner } from '@koyeb/design-system';
 import { useIsMutating, useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
 
+import { z } from 'zod';
 import { useGithubApp, useGithubAppQuery, useRepositoriesQuery } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
 import { ControlledInput } from 'src/components/controlled';
@@ -75,7 +75,7 @@ function InstallGithubApp() {
   const location = useLocation();
 
   const { mutate: installGithubApp } = useMutation({
-    ...useApiMutationFn('installGithubApp', {
+    ...apiMutation('post /v1/github/installation', {
       body: { metadata: location },
     }),
     onSuccess(result) {
@@ -246,7 +246,7 @@ function ResynchronizeButton() {
   const [loading, setLoading] = useState(false);
 
   const { mutate: resync } = useMutation({
-    ...useApiMutationFn('resyncRepositories', {
+    ...apiMutation('post /v1/git/sync/organization/{organization_id}', {
       path: { organization_id: organization.id },
     }),
     onMutate() {

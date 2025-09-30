@@ -1,8 +1,8 @@
+import { apiMutation } from 'src/api/api';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
-import { useApiMutationFn } from 'src/api/use-api';
+import { z } from 'zod';
 import { notify } from 'src/application/notify';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
@@ -52,7 +52,7 @@ function ResetPasswordForm() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('resetPassword', ({ email }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/account/reset_password', ({ email }: FormValues<typeof form>) => ({
       body: { email },
       token: undefined,
     })),

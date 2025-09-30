@@ -1,9 +1,9 @@
+import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
 
+import { useForm } from 'react-hook-form';
 import { useUser } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { handleSubmit } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
@@ -16,7 +16,7 @@ export function UserPasswordForm() {
   const form = useForm();
 
   const mutation = useMutation({
-    ...useApiMutationFn('resetPassword', {
+    ...apiMutation('post /v1/account/reset_password', {
       body: { email: user.email },
     }),
     async onSuccess() {

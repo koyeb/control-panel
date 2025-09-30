@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { DatabaseRole, Service } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -34,7 +34,7 @@ export function DeleteDatabaseRoleDialog({ service, role }: DeleteDatabaseRoleDi
       });
     },
     async onSuccess() {
-      await invalidate('getService', { path: { id: service.id } });
+      await invalidate('get /v1/services/{id}', { path: { id: service.id } });
       notify.info(t('successNotification', { name: role.name }));
       closeDialog();
     },

@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -30,11 +31,11 @@ export function InviteMemberForm() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('sendInvitation', ({ email }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/organization_invitations', ({ email }: FormValues<typeof form>) => ({
       body: { email },
     })),
     async onSuccess(_, { email }) {
-      await invalidate('listInvitations');
+      await invalidate('get /v1/organization_invitations');
       notify.success(t('successNotification', { email }));
       form.reset();
     },

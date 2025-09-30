@@ -3,9 +3,9 @@ import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanst
 import clsx from 'clsx';
 import { useState } from 'react';
 
+import { getApiQueryKey } from 'src/api/api';
 import { mapActivity } from 'src/api/mappers/activity';
 import { Activity } from 'src/api/model';
-import { getApiQueryKey } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
@@ -50,17 +50,17 @@ export function ActivityPage() {
   const types = params.has('types') ? params.getAll('types') : allTypes;
 
   const query = useInfiniteQuery({
-    queryKey: getApiQueryKey('listActivities', { query: { types } }),
+    queryKey: getApiQueryKey('get /v1/activities', { query: { types } }),
     async queryFn({ pageParam }) {
-      return getApi()
-        .listActivities({
-          query: {
-            offset: String(pageParam * pageSize),
-            limit: String(pageSize),
-            types,
-          },
-        })
-        .then(({ activities }) => activities!.map(mapActivity));
+      const api = getApi();
+
+      return api('get /v1/activities', {
+        query: {
+          offset: String(pageParam * pageSize),
+          limit: String(pageSize),
+          types,
+        },
+      }).then(({ activities }) => activities!.map(mapActivity));
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage: Activity[], pages, lastPageParam) => {

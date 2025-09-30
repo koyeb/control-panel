@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Secret } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
@@ -53,22 +53,22 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
       const api = getApi();
 
       if (secret) {
-        return api.updateSecret({
+        return api('put /v1/secrets/{id}', {
           path: { id: secret.id },
           query: {},
           body: { type: 'SIMPLE', ...param },
         });
       } else {
-        return api.createSecret({
+        return api('post /v1/secrets', {
           body: { type: 'SIMPLE', ...param },
         });
       }
     },
     async onSuccess({ secret }) {
       await Promise.all([
-        invalidate('listSecrets'),
-        invalidate('revealSecret', { path: { id: secret!.id! } }),
-        invalidate('getServiceVariables', { body: { definition: {} } }),
+        invalidate('get /v1/secrets'),
+        invalidate('post /v1/secrets/{id}/reveal', { path: { id: secret!.id! } }),
+        invalidate('post /v1/services-autocomplete', { body: { definition: {} } }),
       ]);
 
       form.reset();

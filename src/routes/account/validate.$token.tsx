@@ -1,11 +1,11 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
+import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { User } from 'src/api/model';
-import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/use-api';
-import { container } from 'src/application/container';
+import { container, getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { LogoLoading } from 'src/components/logo-loading';
 import { SeonPort } from 'src/hooks/seon';
@@ -34,33 +34,31 @@ export const Route = createFileRoute('/account/validate/$token')({
 });
 
 async function validateAccount(seon: SeonPort, queryClient: QueryClient, token: string) {
-  const auth = container.resolve(TOKENS.authentication);
-  const api = container.resolve(TOKENS.api);
+  const api = getApi();
 
-  await api.validateAccount({
+  await api('post /v1/account/validate/{id}', {
     path: { id: token },
-    token: auth.token,
     header: { 'seon-fp': await seon.getFingerprint() },
   });
 
   await queryClient.invalidateQueries({
-    queryKey: getApiQueryKey('getCurrentUser', {}),
+    queryKey: getApiQueryKey('get /v1/account/profile', {}),
   });
 }
 
 async function createOrganization(queryClient: QueryClient) {
-  const api = container.resolve(TOKENS.api);
+  const api = getApi();
   const auth = container.resolve(TOKENS.authentication);
 
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
-  const user = await ensureApiQueryData('getCurrentUser', {}).then(({ user }) => mapUser(user!));
+  const user = await ensureApiQueryData('get /v1/account/profile', {}).then(({ user }) => mapUser(user!));
 
-  const organization = await api
-    .createOrganization({ body: { name: defaultOrganizationName(user) } })
-    .then(({ organization }) => mapOrganization(organization!));
+  const organization = await api('post /v1/organizations', {
+    body: { name: defaultOrganizationName(user) },
+  }).then(({ organization }) => mapOrganization(organization!));
 
-  const { token } = await api.switchOrganization({
+  const { token } = await api('post /v1/organizations/{id}/switch', {
     path: { id: organization.id },
     header: {},
   });

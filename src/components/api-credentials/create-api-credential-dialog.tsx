@@ -4,9 +4,10 @@ import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { ApiCredential } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
@@ -107,7 +108,7 @@ function CreateApiCredentialForm({ type, onCreated }: CreateApiCredentialFormPro
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('createApiCredential', (values: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/credentials', (values: FormValues<typeof form>) => ({
       body: {
         name: values.name,
         description: values.description || undefined,
@@ -116,7 +117,7 @@ function CreateApiCredentialForm({ type, onCreated }: CreateApiCredentialFormPro
       },
     })),
     async onSuccess(result, { name }) {
-      await invalidate('listApiCredentials');
+      await invalidate('get /v1/credentials');
 
       notify.success(t('createDialog.successNotification', { name }));
       form.reset();

@@ -71,11 +71,11 @@ function CreateOrganization() {
     async mutationFn({ organizationName }: FormValues<typeof form>) {
       const api = getApi();
 
-      const { organization } = await api.createOrganization({
+      const { organization } = await api('post /v1/organizations', {
         body: { name: organizationName },
       });
 
-      const { token: newToken } = await api.switchOrganization({
+      const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
         path: { id: organization!.id! },
         header: {},
       });

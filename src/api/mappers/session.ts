@@ -5,7 +5,7 @@ import { createValidationGuard } from 'src/application/create-validation-guard';
 import { parseBytes } from 'src/application/memory';
 import { entries, requiredDeep, snakeToCamelDeep, toObject } from 'src/utils/object';
 
-import type { API } from '../api';
+import type { API } from '../api-types';
 import {
   Organization,
   OrganizationInvitation,

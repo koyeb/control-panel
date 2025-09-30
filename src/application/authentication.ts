@@ -5,6 +5,7 @@ import { TOKENS } from 'src/tokens';
 
 import { container } from './container';
 import { StoredValue } from './storage';
+import { setToken } from './token';
 
 export interface AuthenticationPort {
   get token(): string | null;
@@ -68,6 +69,7 @@ export function useSetToken() {
       const auth = container.resolve(TOKENS.authentication);
 
       auth.setToken(token, session);
+      setToken(token);
 
       if (auth.token) {
         queryClient.removeQueries({ predicate: (query) => !query.isActive() });

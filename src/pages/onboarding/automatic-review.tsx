@@ -1,14 +1,14 @@
 import { Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 
-import { useApiQueryFn } from 'src/api/use-api';
+import { apiQuery } from 'src/api/api';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.onboarding.automaticReview');
 
 export function AutomaticReview() {
   useQuery({
-    ...useApiQueryFn('getCurrentOrganization'),
+    ...apiQuery('get /v1/account/organization', {}),
     refetchInterval: 1000,
   });
 

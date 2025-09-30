@@ -9,7 +9,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 
-import { hasMessage, isApiResponse, isApiValidationError } from 'src/api/api-errors';
+import { ApiError, hasMessage } from 'src/api/api-errors';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { useTranslate } from 'src/intl/translate';
@@ -45,13 +45,13 @@ export const useFormErrorHandler = <Values extends FieldValues>(
     (error: unknown) => {
       const message = hasMessage(error) && error.message;
 
-      if (!isApiResponse(error)) {
+      if (!ApiError.is(error)) {
         notify.error(message || translate('common.unknownError'));
         reportError(error);
         return;
       }
 
-      if (!isApiValidationError(error.body)) {
+      if (!ApiError.isValidationError(error)) {
         notify.error(message || translate('common.apiError'));
         return;
       }

@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { API } from 'src/api/api';
+import { API, getApiQueryKey } from 'src/api/api';
 import { createApiApp, createApiDeployment, createApiService, createApiVolume } from 'src/api/mock/fixtures';
 import {
   CatalogDatacenter,
@@ -11,7 +11,6 @@ import {
   Organization,
   OrganizationQuotas,
 } from 'src/api/model';
-import { getApiQueryKey } from 'src/api/use-api';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { create } from 'src/utils/factories';
 
@@ -111,7 +110,7 @@ describe('initializeServiceForm', () => {
     githubApp = create.githubApp({ organizationName: 'org' });
 
     queryClient.setQueryData(
-      getApiQueryKey('listRepositories', { query: { name: 'org/repo', name_search_op: 'equality' } }),
+      getApiQueryKey('get /v1/git/repositories', { query: { name: 'org/repo', name_search_op: 'equality' } }),
       { repositories: [] },
     );
 
@@ -157,17 +156,19 @@ describe('initializeServiceForm', () => {
         max_size: 1,
       });
 
-      queryClient.setQueryData(getApiQueryKey('getApp', { path: { id: 'appId' } }), { app: createApiApp() });
+      queryClient.setQueryData(getApiQueryKey('get /v1/apps/{id}', { path: { id: 'appId' } }), {
+        app: createApiApp(),
+      });
 
-      queryClient.setQueryData(getApiQueryKey('getService', { path: { id: 'serviceId' } }), {
+      queryClient.setQueryData(getApiQueryKey('get /v1/services/{id}', { path: { id: 'serviceId' } }), {
         service: createApiService({ app_id: 'appId', latest_deployment_id: 'deploymentId' }),
       });
 
-      queryClient.setQueryData(getApiQueryKey('getDeployment', { path: { id: 'deploymentId' } }), {
+      queryClient.setQueryData(getApiQueryKey('get /v1/deployments/{id}', { path: { id: 'deploymentId' } }), {
         deployment: createApiDeployment({ definition }),
       });
 
-      queryClient.setQueryData(getApiQueryKey('listVolumes', { query: { limit: '100' } }), {
+      queryClient.setQueryData(getApiQueryKey('get /v1/volumes', { query: { limit: '100' } }), {
         volumes: [volume],
       });
 

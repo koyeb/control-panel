@@ -22,7 +22,6 @@ export function Apps({ apps, showFilters = false }: { apps: AppFull[]; showFilte
         serviceType={serviceType}
         setServiceType={setServiceType}
       />
-
       {apps.map((app) => {
         const services = app.services.filter(
           (service) => serviceType === 'all' || service.type === serviceType,

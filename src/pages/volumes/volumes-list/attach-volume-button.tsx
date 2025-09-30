@@ -145,39 +145,45 @@ function useSearchServicesQuery(search: string) {
 }
 
 async function getTotalServices(signal: AbortSignal): Promise<number> {
-  return getApi()
-    .listServices({ query: { limit: '1' }, signal })
-    .then(({ count }) => count!);
+  const api = getApi();
+
+  return api('get /v1/services', { query: { limit: '1' } }, { signal }).then(({ count }) => count!);
 }
 
 async function searchApps(search: string, signal: AbortSignal): Promise<App[]> {
-  return getApi()
-    .listApps({ query: { name: search, limit: '10' }, signal })
-    .then(({ apps }) => apps!.map(mapApp));
+  const api = getApi();
+
+  return api('get /v1/apps', { query: { name: search, limit: '10' } }, { signal }).then(({ apps }) =>
+    apps!.map(mapApp),
+  );
 }
 
 async function searchServices(search: string, signal: AbortSignal): Promise<Service[]> {
-  return getApi()
-    .listServices({ query: { name: search, limit: '10', types: ['WEB', 'WORKER'] }, signal })
-    .then(({ services }) => services!.map(mapService));
+  const api = getApi();
+
+  return api(
+    'get /v1/services',
+    { query: { name: search, limit: '10', types: ['WEB', 'WORKER'] } },
+    { signal },
+  ).then(({ services }) => services!.map(mapService));
 }
 
 async function getApps(appIds: string[]): Promise<App[]> {
+  const api = getApi();
+
   return Promise.all(
-    appIds.map((appId) =>
-      getApi()
-        .getApp({ path: { id: appId } })
-        .then(({ app }) => mapApp(app!)),
-    ),
+    appIds.map((appId) => api('get /v1/apps/{id}', { path: { id: appId } }).then(({ app }) => mapApp(app!))),
   );
 }
 
 async function getAppsServices(apps: App[]): Promise<Service[]> {
+  const api = getApi();
+
   const services = await Promise.all(
     apps.map((app) =>
-      getApi()
-        .listServices({ query: { app_id: app.id } })
-        .then(({ services }) => services!.map(mapService)),
+      api('get /v1/services', { query: { app_id: app.id } }).then(({ services }) =>
+        services!.map(mapService),
+      ),
     ),
   );
 

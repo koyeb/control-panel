@@ -1,7 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { isApiValidationError } from 'src/api/api-errors';
+import { ApiError } from 'src/api/api-errors';
 import { getApi } from 'src/application/container';
 import { ExternalLinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
@@ -36,13 +36,13 @@ export function QuotaAlert(props: QuotaAlertProps) {
 
       try {
         if (serviceId) {
-          await api.updateService({
+          await api('put /v1/services/{id}', {
             path: { id: serviceId },
             query: { dry_run: true },
             body: { definition },
           });
         } else {
-          await api.createService({
+          await api('post /v1/services', {
             query: { dry_run: true },
             body: { app_id: values.meta.appId ?? '15c6a049-6594-4df0-99c3-a5c262e69624', definition },
           });
@@ -104,8 +104,8 @@ function getMessage(error: unknown): string | null {
     return error.message;
   }
 
-  if (isApiValidationError(error)) {
-    for (const field of error.fields) {
+  if (ApiError.isValidationError(error)) {
+    for (const field of error.body.fields) {
       if (field.description.match('not available with current plan') !== null) {
         return field.description;
       }

@@ -1,8 +1,9 @@
+import { apiQuery } from 'src/api/api';
+
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-
 import { assert } from 'src/utils/assert';
-import { hasProperty } from 'src/utils/object';
 
+import { hasProperty } from 'src/utils/object';
 import {
   isComputeDeployment,
   mapDeployment,
@@ -12,11 +13,10 @@ import {
 } from '../mappers/deployment';
 import { mapService } from '../mappers/service';
 import { DeploymentStatus, InstanceStatus } from '../model';
-import { useApiQueryFn } from '../use-api';
 
 export function useServicesQuery(appId?: string) {
   return useQuery({
-    ...useApiQueryFn('listServices', { query: { limit: '100', app_id: appId } }),
+    ...apiQuery('get /v1/services', { query: { limit: '100', app_id: appId } }),
     select: ({ services }) => services!.map(mapService),
   });
 }
@@ -27,7 +27,7 @@ export function useServices(appId?: string) {
 
 export function useServiceQuery(serviceId?: string) {
   return useQuery({
-    ...useApiQueryFn('getService', { path: { id: serviceId! } }),
+    ...apiQuery('get /v1/services/{id}', { path: { id: serviceId! } }),
     enabled: serviceId !== undefined,
     select: ({ service }) => mapService(service!),
   });
@@ -39,7 +39,7 @@ export function useService(serviceId?: string) {
 
 export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStatus[]) {
   return useQuery({
-    ...useApiQueryFn('listDeployments', { query: { service_id: serviceId, statuses } }),
+    ...apiQuery('get /v1/deployments', { query: { service_id: serviceId, statuses } }),
     select: ({ deployments }) => deployments!.map(mapDeployment),
   });
 }
@@ -50,7 +50,7 @@ export function useDeployments(serviceId: string, statuses?: DeploymentStatus[])
 
 export function useDeploymentQuery(deploymentId: string | undefined) {
   return useQuery({
-    ...useApiQueryFn('getDeployment', { path: { id: deploymentId as string } }),
+    ...apiQuery('get /v1/deployments/{id}', { path: { id: deploymentId as string } }),
     enabled: deploymentId !== undefined,
     select: ({ deployment }) => mapDeployment(deployment!),
   });
@@ -72,7 +72,7 @@ export function useComputeDeployment(deploymentId: string | undefined) {
 
 export function useRegionalDeploymentsQuery(deploymentId: string | undefined) {
   return useQuery({
-    ...useApiQueryFn('listRegionalDeployments', { query: { deployment_id: deploymentId } }),
+    ...apiQuery('get /v1/regional_deployments', { query: { deployment_id: deploymentId } }),
     enabled: deploymentId !== undefined,
     select: ({ regional_deployments }) => regional_deployments!.map(mapRegionalDeployment),
   });
@@ -88,7 +88,7 @@ export function useRegionalDeployment(deploymentId: string | undefined, region: 
 
 export function useDeploymentScalingQuery(deploymentId: string | undefined, filters?: { region?: string }) {
   return useQuery({
-    ...useApiQueryFn('getDeploymentScaling', {
+    ...apiQuery('get /v1/deployment/{id}/scaling', {
       path: { id: deploymentId! },
       query: { ...filters },
     }),
@@ -124,7 +124,7 @@ export function useInstancesQuery({
   offset,
 }: InstancesQueryOptions = {}) {
   return useQuery({
-    ...useApiQueryFn('listInstances', {
+    ...apiQuery('get /v1/instances', {
       query: {
         service_id: serviceId,
         deployment_id: deploymentId,
@@ -147,7 +147,7 @@ export function useInstancesQuery({
 
 export function useInstanceQuery(instanceId: string) {
   return useQuery({
-    ...useApiQueryFn('getInstance', { path: { id: instanceId } }),
+    ...apiQuery('get /v1/instances/{id}', { path: { id: instanceId } }),
     placeholderData: keepPreviousData,
     select: ({ instance }) => mapInstance(instance!),
   });

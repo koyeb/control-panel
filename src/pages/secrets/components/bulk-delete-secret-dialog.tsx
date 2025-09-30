@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Secret } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -25,10 +25,12 @@ export function BulkDeleteSecretsDialog({ secrets, onDeleted }: BulkDeleteSecret
     async mutationFn(secrets: Secret[]) {
       const api = getApi();
 
-      return Promise.allSettled(secrets.map((secret) => api.deleteSecret({ path: { id: secret.id } })));
+      return Promise.allSettled(
+        secrets.map((secret) => api('delete /v1/secrets/{id}', { path: { id: secret.id } })),
+      );
     },
     async onSuccess(result) {
-      await invalidate('listSecrets');
+      await invalidate('get /v1/secrets');
 
       const fulfilled = result.filter((result) => result.status === 'fulfilled');
       notify.success(t('successNotification', { count: fulfilled.length }));

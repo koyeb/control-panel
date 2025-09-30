@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 
-import { API } from 'src/api/api';
+import { apiQuery, useInvalidateApiQuery } from 'src/api/api';
+import { API } from 'src/api/api-types';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
-import { getApiQueryKey, useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
@@ -40,7 +40,7 @@ export function useSubmitDatabaseServiceForm(
 
         return databaseServiceId;
       } else {
-        const { service } = await api.createService({
+        const { service } = await api('post /v1/services', {
           query: { dry_run: false },
           body: createApiService(appId ?? (await getDatabaseAppId(values.serviceName)), values),
         });
@@ -50,11 +50,8 @@ export function useSubmitDatabaseServiceForm(
     },
     async onSuccess(databaseServiceId) {
       await Promise.all([
-        invalidate('listApps'),
-        queryClient.prefetchQuery({
-          queryKey: getApiQueryKey('getService', { path: { id: databaseServiceId } }),
-          queryFn: () => getApi().getService({ path: { id: databaseServiceId } }),
-        }),
+        invalidate('get /v1/apps'),
+        queryClient.prefetchQuery(apiQuery('get /v1/services/{id}', { path: { id: databaseServiceId } })),
       ]);
 
       await navigate({ to: '/database-services/$databaseServiceId', params: { databaseServiceId } });
@@ -78,7 +75,7 @@ export function useSubmitDatabaseServiceForm(
 async function getDatabaseAppId(appName: string): Promise<string> {
   const api = getApi();
 
-  const { apps } = await api.listApps({
+  const { apps } = await api('get /v1/apps', {
     query: { name: appName },
   });
 
@@ -88,7 +85,7 @@ async function getDatabaseAppId(appName: string): Promise<string> {
     }
   }
 
-  const { app } = await api.createApp({
+  const { app } = await api('post /v1/apps', {
     body: { name: appName },
   });
 

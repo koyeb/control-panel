@@ -1,14 +1,14 @@
 import { Alert, Button, DialogFooter } from '@koyeb/design-system';
-import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
+import { UseMutationResult, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { dequal } from 'dequal';
 import { diffJson } from 'diff';
 import { useMemo } from 'react';
 
+import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api/api';
 import { useDeployment } from 'src/api/hooks/service';
-import { isComputeDeployment } from 'src/api/mappers/deployment';
-import { ComputeDeployment, Deployment, Service } from 'src/api/model';
-import { getApiQueryKey, useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
+import { ComputeDeployment, Service } from 'src/api/model';
 import { useTrackEvent } from 'src/application/posthog';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { Dialog, DialogHeader } from 'src/components/dialog';
@@ -77,19 +77,18 @@ export function PendingChangesAlert({ service }: PendingChangesAlertProps) {
 }
 
 function useLatestNonStashedDeployment(service: Service) {
-  const queryClient = useQueryClient();
-
-  // we can't useQuery because it's already used in an infinite query
-  const result: { pages: Array<{ deployments: Deployment[] }> } | undefined = queryClient.getQueryData(
-    getApiQueryKey('listDeployments', {
+  const { data } = useQuery({
+    ...apiQuery('get /v1/deployments', {
       query: {
         service_id: service.id,
         statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+        limit: '1',
       },
     }),
-  );
+    select: ({ deployments }) => deployments!.map(mapDeployment),
+  });
 
-  return result?.pages[0]?.deployments[0];
+  return data?.[0];
 }
 
 function useDiscardChanges(service: Service) {
@@ -98,7 +97,7 @@ function useDiscardChanges(service: Service) {
   const track = useTrackEvent();
 
   return useMutation({
-    ...useApiMutationFn('updateService', (_: void) => {
+    ...apiMutation('put /v1/services/{id}', (_: void) => {
       assert(isComputeDeployment(latestNonStashedDeployment));
 
       return {
@@ -114,8 +113,8 @@ function useDiscardChanges(service: Service) {
       track('service_change_discarded');
 
       await Promise.all([
-        invalidate('getService', { path: { id: service.id } }),
-        invalidate('listDeployments', { query: { service_id: service.id } }),
+        invalidate('get /v1/services/{id}', { path: { id: service.id } }),
+        invalidate('get /v1/deployments', { query: { service_id: service.id } }),
       ]);
     },
   });
@@ -126,11 +125,11 @@ function useApplyChanges(service: Service, onSuccess: () => void) {
   const navigate = useNavigate();
 
   return useMutation({
-    ...useApiMutationFn('redeployService', { path: { id: service.id }, body: {} }),
+    ...apiMutation('post /v1/services/{id}/redeploy', { path: { id: service.id }, body: {} }),
     async onSuccess({ deployment }) {
       await Promise.all([
-        invalidate('getService', { path: { id: service.id } }),
-        invalidate('listDeployments', { query: { service_id: service.id } }),
+        invalidate('get /v1/services/{id}', { path: { id: service.id } }),
+        invalidate('get /v1/deployments', { query: { service_id: service.id } }),
       ]);
 
       onSuccess();

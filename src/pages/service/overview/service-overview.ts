@@ -2,11 +2,11 @@ import { useBreakpoint } from '@koyeb/design-system';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { apiQuery } from 'src/api/api';
 import { useApp } from 'src/api/hooks/app';
 import { useDeployment, useInstancesQuery, useService } from 'src/api/hooks/service';
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Instance, Service } from 'src/api/model';
-import { getApiQueryKey } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { useDialogContext } from 'src/application/dialog-context';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
@@ -165,17 +165,16 @@ function useContextState(service: Service, deployments: ComputeDeployment[]): [s
 
 function useDeployments(service: Service) {
   const deploymentsQuery = useInfiniteQuery({
-    queryKey: getApiQueryKey('listDeployments', {
+    ...apiQuery('get /v1/deployments', {
       query: {
         service_id: service.id,
         statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
       },
     }),
-    initialPageParam: 0,
     async queryFn({ queryKey: [, { query }], pageParam }) {
       const api = getApi();
 
-      const { count, deployments } = await api.listDeployments({
+      const { count, deployments } = await api('get /v1/deployments', {
         query: {
           ...query,
           limit: String(10),
@@ -188,6 +187,7 @@ function useDeployments(service: Service) {
         deployments: deployments!.map(mapDeployment),
       };
     },
+    initialPageParam: 0,
     getNextPageParam: (lastPage, pages, lastPageParam) => {
       const nextPage = lastPageParam + 1;
 

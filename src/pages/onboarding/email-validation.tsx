@@ -1,7 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
+import { apiMutation } from 'src/api/api';
 
+import { useMutation } from '@tanstack/react-query';
 import { useLogoutMutation, useUser } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { IconSend } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -17,7 +17,7 @@ export function EmailValidation() {
   const t = T.useTranslate();
 
   const resendMutation = useMutation({
-    ...useApiMutationFn('resendValidationEmail', {}),
+    ...apiMutation('post /v1/account/resend_validation', {}),
     onSuccess() {
       notify.success(t('resendEmailSuccessNotification', { email: user.email }));
     },

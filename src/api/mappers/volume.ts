@@ -2,7 +2,7 @@ import { parseBytes } from 'src/application/memory';
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { removePrefix } from 'src/utils/strings';
 
-import type { API } from '../api';
+import type { API } from '../api-types';
 import { Volume, VolumeSnapshot } from '../model';
 
 export function mapVolume(volume: API.PersistentVolume): Volume {

@@ -2,10 +2,10 @@ import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useDeployment, useService } from 'src/api/hooks/service';
 import { isDatabaseDeployment } from 'src/api/mappers/deployment';
 import { Service } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
@@ -57,23 +57,23 @@ function DeleteDatabaseService({ service }: { service: Service }) {
     async mutationFn() {
       const api = getApi();
 
-      await api.deleteService({
+      await api('delete /v1/services/{id}', {
         path: { id: service.id },
       });
 
-      const { services } = await api.listServices({
+      const { services } = await api('get /v1/services', {
         query: { app_id: service.appId },
       });
 
       if (services?.length === 0) {
-        await api.deleteApp({
+        await api('delete /v1/apps/{id}', {
           path: { id: service.appId },
         });
       }
     },
     async onSuccess() {
-      await invalidate('listApps');
-      await invalidate('listServices');
+      await invalidate('get /v1/apps');
+      await invalidate('get /v1/services');
       await navigate({ to: '/' });
       notify.info(t('delete.successNotification', { serviceName: service.name }));
     },

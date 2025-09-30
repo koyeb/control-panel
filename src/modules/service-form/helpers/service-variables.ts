@@ -1,7 +1,7 @@
+import { apiQuery } from 'src/api/api';
 import { useQuery } from '@tanstack/react-query';
-import sort from 'lodash-es/sortBy';
 
-import { useApiQueryFn } from 'src/api/use-api';
+import sort from 'lodash-es/sortBy';
 import { useDebouncedValue } from 'src/hooks/timers';
 
 import { ServiceForm } from '../service-form.types';
@@ -12,7 +12,7 @@ export function useServiceVariables(values: ServiceForm) {
   const valuesDebounced = useDebouncedValue(values, 1000);
 
   const query = useQuery({
-    ...useApiQueryFn('getServiceVariables', {
+    ...apiQuery('post /v1/services-autocomplete', {
       body: { definition: serviceFormToDeploymentDefinition(valuesDebounced) },
     }),
     refetchInterval: false,

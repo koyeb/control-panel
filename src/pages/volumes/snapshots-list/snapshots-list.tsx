@@ -1,11 +1,11 @@
+import { apiQuery } from 'src/api/api';
 import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import clsx from 'clsx';
 
+import clsx from 'clsx';
 import { useVolumes } from 'src/api/hooks/volume';
 import { mapSnapshot } from 'src/api/mappers/volume';
 import { VolumeSnapshot } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
@@ -31,7 +31,7 @@ export function SnapshotsListSection() {
   const pagination = usePagination();
 
   const query = useQuery({
-    ...useApiQueryFn('listSnapshots', { query: pagination.query }),
+    ...apiQuery('get /v1/snapshots', { query: pagination.query }),
     placeholderData: keepPreviousData,
     select: ({ snapshots, has_next }) => ({
       snapshots: snapshots!.map(mapSnapshot),

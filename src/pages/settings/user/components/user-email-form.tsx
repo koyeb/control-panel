@@ -1,10 +1,10 @@
+import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
+import { z } from 'zod';
 import { useUser } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -29,7 +29,7 @@ export function UserEmailForm() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('updateUser', ({ email }: FormValues<typeof form>) => ({
+    ...apiMutation('patch /v1/account/profile', ({ email }: FormValues<typeof form>) => ({
       query: {},
       body: { email },
     })),

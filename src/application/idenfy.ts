@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { useApiQueryFn } from 'src/api/use-api';
+import { apiQuery } from 'src/api/api';
 
 export function useIdenfyLink() {
   const query = useQuery({
-    ...useApiQueryFn('getIdenfyToken'),
+    ...apiQuery('get /v1/account/idenfy', {}),
     select: (result) => result.auth_token!,
     meta: { showError: false },
     retry: true,

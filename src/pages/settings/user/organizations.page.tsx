@@ -1,11 +1,11 @@
+import { apiMutation } from 'src/api/api';
 import { Button, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
+import { z } from 'zod';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
@@ -66,11 +66,11 @@ function CreateOrganizationDialog() {
     async mutationFn({ organizationName }: FormValues<typeof form>) {
       const api = getApi();
 
-      const { organization } = await api.createOrganization({
+      const { organization } = await api('post /v1/organizations', {
         body: { name: organizationName },
       });
 
-      const { token: newToken } = await api.switchOrganization({
+      const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
         path: { id: organization!.id! },
         header: {},
       });
@@ -154,7 +154,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
-    ...useApiMutationFn('switchOrganization', (_: '/' | '/settings') => ({
+    ...apiMutation('post /v1/organizations/{id}/switch', (_: '/' | '/settings') => ({
       path: { id: organization.id },
       header: {},
     })),

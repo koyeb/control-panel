@@ -1,6 +1,6 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 
-import { API } from '../api';
+import type { API } from '../api-types';
 import { GitRepository, GithubApp } from '../model';
 
 export function mapGithubApp(installation: API.GetGithubInstallationReply): GithubApp {

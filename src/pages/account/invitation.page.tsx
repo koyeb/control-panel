@@ -1,9 +1,9 @@
+import { apiQuery } from 'src/api/api';
 import { Spinner } from '@koyeb/design-system';
-import { useQuery } from '@tanstack/react-query';
 
+import { useQuery } from '@tanstack/react-query';
 import { ApiError } from 'src/api/api-errors';
 import { mapInvitation } from 'src/api/mappers/session';
-import { useApiQueryFn } from 'src/api/use-api';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { LinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
@@ -16,7 +16,7 @@ export function InvitationPage() {
   const invitationId = useRouteParam('invitationId');
 
   const invitationQuery = useQuery({
-    ...useApiQueryFn('getInvitation', { path: { id: invitationId } }),
+    ...apiQuery('get /v1/organization_invitations/{id}', { path: { id: invitationId } }),
     select: ({ invitation }) => mapInvitation(invitation!),
   });
 

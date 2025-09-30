@@ -1,9 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
+import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/api';
 import { mapDeployment } from 'src/api/mappers/deployment';
 import { mapService } from 'src/api/mappers/service';
-import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
@@ -29,8 +29,8 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
     const [service_id, deployment_id] = [serviceId, deploymentId];
 
     if (deploymentId === undefined) {
-      const service = await ensureApiQueryData('getService', { path: { id: serviceId } }).then((result) =>
-        mapService(result.service!),
+      const service = await ensureApiQueryData('get /v1/services/{id}', { path: { id: serviceId } }).then(
+        (result) => mapService(result.service!),
       );
 
       throw redirect({
@@ -44,22 +44,26 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
     }
 
     await Promise.all([
-      ensureApiQueryData('listVolumes', { query: { limit: String(100) } }),
-      ensureApiQueryData('getServiceMetrics', { query: { service_id, name: 'CPU_TOTAL_PERCENT' } }),
-      ensureApiQueryData('getServiceMetrics', { query: { service_id, name: 'MEM_RSS' } }),
-      ensureApiQueryData('getDeployment', { path: { id: deploymentId } }),
-      ensureApiQueryData('getDeploymentScaling', { path: { id: deploymentId }, query: {} }),
-      ensureApiQueryData('listInstances', { query: { deployment_id, limit: String(100), order: 'desc' } }),
+      ensureApiQueryData('get /v1/volumes', { query: { limit: String(100) } }),
+      ensureApiQueryData('get /v1/streams/metrics', { query: { service_id, name: 'CPU_TOTAL_PERCENT' } }),
+      ensureApiQueryData('get /v1/streams/metrics', { query: { service_id, name: 'MEM_RSS' } }),
+      ensureApiQueryData('get /v1/deployments/{id}', { path: { id: deploymentId } }),
+      ensureApiQueryData('get /v1/deployment/{id}/scaling', { path: { id: deploymentId }, query: {} }),
+      ensureApiQueryData('get /v1/instances', {
+        query: { deployment_id, limit: String(100), order: 'desc' },
+      }),
 
       queryClient.ensureInfiniteQueryData({
-        queryKey: getApiQueryKey('listDeployments', {
+        queryKey: getApiQueryKey('get /v1/deployments', {
           query: {
             service_id,
             statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
           },
         }),
         queryFn: async ({ queryKey, pageParam }) => {
-          const { count, deployments } = await getApi().listDeployments({
+          const api = getApi();
+
+          const { count, deployments } = await api('get /v1/deployments', {
             query: {
               ...queryKey[1].query,
               limit: String(10),

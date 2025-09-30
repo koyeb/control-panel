@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Volume } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
@@ -31,14 +32,14 @@ export function CreateSnapshotDialog({ volume }: { volume: Volume }) {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('createSnapshot', ({ name }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/snapshots', ({ name }: FormValues<typeof form>) => ({
       body: {
         parent_volume_id: volume.id,
         name,
       },
     })),
     async onSuccess({ snapshot }) {
-      await Promise.all([invalidate('listVolumes'), invalidate('listSnapshots')]);
+      await Promise.all([invalidate('get /v1/volumes'), invalidate('get /v1/snapshots')]);
       notify.success(t('successNotification', { name: snapshot!.name! }));
       closeDialog();
     },

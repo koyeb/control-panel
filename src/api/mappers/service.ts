@@ -1,7 +1,7 @@
 import { requiredDeep, snakeToCamelDeep } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
-import type { API } from '../api';
+import type { API } from '../api-types';
 import { App, Service } from '../model';
 
 export function mapApp(app: API.App): App {

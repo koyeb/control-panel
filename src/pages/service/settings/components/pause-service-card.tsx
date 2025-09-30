@@ -1,8 +1,8 @@
+import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
 
+import { useMutation } from '@tanstack/react-query';
 import { Service } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -22,7 +22,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
   const closeDialog = Dialog.useClose();
 
   const pause = useMutation({
-    ...useApiMutationFn('pauseService', {
+    ...apiMutation('post /v1/services/{id}/pause', {
       path: { id: service.id },
     }),
     async onSuccess() {

@@ -4,9 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { FieldValues, FormState, Path, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { API } from 'src/api/api';
+import { API, useInvalidateApiQuery } from 'src/api/api';
 import { RegistrySecret, type RegistryType } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { readFile } from 'src/application/read-file';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
@@ -75,19 +74,19 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
       const api = getApi();
 
       if (secret) {
-        return api.updateSecret({
+        return api('put /v1/secrets/{id}', {
           path: { id: secret.id },
           query: {},
           body: getSecretPayload(values),
         });
       } else {
-        return api.createSecret({
+        return api('post /v1/secrets', {
           body: getSecretPayload(values),
         });
       }
     },
     onSuccess({ secret }) {
-      void invalidate('listSecrets');
+      void invalidate('get /v1/secrets');
       form.reset();
       onSubmitted(secret!.name!);
     },

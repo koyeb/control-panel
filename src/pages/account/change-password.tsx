@@ -1,8 +1,8 @@
+import { apiMutation } from 'src/api/api';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
-import { useApiMutationFn } from 'src/api/use-api';
+import { z } from 'zod';
 import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { DocumentTitle } from 'src/components/document-title';
@@ -55,7 +55,7 @@ function ChangePasswordForm() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('updatePassword', async ({ password }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/account/update_password', async ({ password }: FormValues<typeof form>) => ({
       header: { 'seon-fp': await getSeonFingerprint() },
       body: { id: token, password },
     })),

@@ -1,12 +1,13 @@
 import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
 
+import { apiMutation, apiQuery } from 'src/api/api';
 import { useSetToken } from 'src/application/authentication';
 import { useIdentifyUser } from 'src/application/posthog';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { AssertionError, defined } from 'src/utils/assert';
 
-import { isAccountLockedError } from '../api-errors';
+import { ApiError } from '../api-errors';
 import {
   mapOrganization,
   mapOrganizationMember,
@@ -14,11 +15,10 @@ import {
   mapOrganizationSummary,
   mapUser,
 } from '../mappers/session';
-import { useApiMutationFn, useApiQueryFn } from '../use-api';
 
 export function useUserQuery() {
   return useQuery({
-    ...useApiQueryFn('getCurrentUser', {}),
+    ...apiQuery('get /v1/account/profile', {}),
     select: (result) => mapUser(result.user!),
   });
 }
@@ -33,7 +33,7 @@ export function useUser() {
 
 export function useOrganizationQuery() {
   return useQuery({
-    ...useApiQueryFn('getCurrentOrganization', {}),
+    ...apiQuery('get /v1/account/organization', {}),
     select: (result) => mapOrganization(result.organization!),
   });
 }
@@ -50,7 +50,9 @@ export function useOrganizationSummaryQuery() {
   const organization = useOrganization();
 
   return useSuspenseQuery({
-    ...useApiQueryFn('organizationSummary', { path: { organization_id: organization.id } }),
+    ...apiQuery('get /v1/organizations/{organization_id}/summary', {
+      path: { organization_id: organization.id },
+    }),
     select: ({ summary }) => mapOrganizationSummary(summary!),
   });
 }
@@ -63,7 +65,9 @@ export function useOrganizationQuotasQuery() {
   const organization = useOrganization();
 
   return useSuspenseQuery({
-    ...useApiQueryFn('organizationQuotas', { path: { organization_id: organization.id } }),
+    ...apiQuery('get /v1/organizations/{organization_id}/quotas', {
+      path: { organization_id: organization.id },
+    }),
     refetchInterval: false,
     select: ({ quotas }) => mapOrganizationQuotas(quotas!),
   });
@@ -77,7 +81,7 @@ export function useUserOrganizationMemberships() {
   const user = useUserUnsafe();
 
   return useQuery({
-    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user?.id } }),
+    ...apiQuery('get /v1/organization_members', { query: { user_id: user?.id } }),
     refetchInterval: false,
     enabled: user !== undefined,
     select: ({ members }) => members!.map(mapOrganizationMember),
@@ -91,8 +95,8 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?:
   const [, clearIdentify] = useIdentifyUser();
 
   return useMutation({
-    ...useApiMutationFn('logout', {}),
-    meta: { showError: !isAccountLockedError(userQuery.error) },
+    ...apiMutation('delete /v1/account/logout', {}),
+    meta: { showError: !ApiError.isAccountLockedError(userQuery.error) },
     async onSettled() {
       if (!session) {
         clearIdentify();

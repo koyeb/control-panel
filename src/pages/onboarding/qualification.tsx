@@ -5,9 +5,9 @@ import omit from 'lodash-es/omit';
 import { useMemo } from 'react';
 import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
@@ -64,7 +64,7 @@ export function Qualification() {
       const api = getApi();
 
       if (form.fullName !== '') {
-        await api.updateUser({
+        await api('patch /v1/account/profile', {
           body: { name: form.fullName },
           query: {},
         });
@@ -80,7 +80,7 @@ export function Qualification() {
         submittedAt: new Date().toISOString(),
       };
 
-      await api.updateSignupQualification({
+      await api('post /v1/organizations/{id}/signup_qualification', {
         path: { id: organization.id },
         body: { signup_qualification: values as Record<string, never> },
       });
@@ -91,7 +91,7 @@ export function Qualification() {
         }
 
         try {
-          await api.sendInvitation({ body: { email } });
+          await api('post /v1/organization_invitations', { body: { email } });
         } catch (error) {
           if (hasMessage(error)) {
             notify.error(error.message);
@@ -100,8 +100,8 @@ export function Qualification() {
       }
     },
     async onSuccess(_, values) {
-      await invalidate('getCurrentUser');
-      await invalidate('getCurrentOrganization');
+      await invalidate('get /v1/account/profile');
+      await invalidate('get /v1/account/organization');
 
       track('Form Submitted', {
         category: 'User Qualification',

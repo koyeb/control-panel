@@ -1,30 +1,53 @@
 import { z } from 'zod';
 
 import { createValidationGuard } from 'src/application/create-validation-guard';
+import { UnexpectedError } from 'src/application/errors';
 
-const apiResponseSchema = z.object({
-  body: z.object({
-    status: z.number(),
-  }),
-});
+type ApiErrorBody = z.infer<typeof apiErrorSchema>;
 
-export const isApiResponse = createValidationGuard(apiResponseSchema);
+export class ApiError extends Error {
+  static is(value: unknown, status?: number): value is ApiError {
+    if (!(value instanceof this)) {
+      return false;
+    }
+
+    return status === undefined || value.status === status;
+  }
+
+  static isValidationError(value: unknown): value is { body: z.infer<typeof apiValidationErrorSchema> } {
+    return ApiError.is(value) && apiValidationErrorSchema.safeParse(value.body).success;
+  }
+
+  static isAccountLockedError(value: unknown): value is { body: z.infer<typeof accountLockedErrorSchema> } {
+    return ApiError.is(value) && accountLockedErrorSchema.safeParse(value.body).success;
+  }
+
+  public readonly response: Response;
+  public readonly body: ApiErrorBody;
+
+  constructor(response: Response, body: unknown) {
+    const result = apiErrorSchema.safeParse(body);
+
+    if (!result.success) {
+      throw new UnexpectedError('Unknown API error', { body });
+    }
+
+    super(result.data.message);
+
+    this.response = response;
+    this.body = result.data;
+  }
+
+  get status() {
+    return this.response.status;
+  }
+}
 
 const apiErrorSchema = z.object({
+  status: z.number(),
   code: z.string(),
   message: z.string(),
-  status: z.number(),
 });
-
-type ApiErrorType = z.infer<typeof apiErrorSchema>;
-export const isApiError = createValidationGuard(apiErrorSchema);
-
-export const isAccountLockedError = createValidationGuard(
-  z.object({
-    status: z.literal(403),
-    message: z.literal('Account is locked'),
-  }),
-);
 
 const apiValidationErrorSchema = apiErrorSchema.extend({
   code: z.union([
@@ -41,45 +64,9 @@ const apiValidationErrorSchema = apiErrorSchema.extend({
   ),
 });
 
-type ApiValidationErrorType = z.infer<typeof apiValidationErrorSchema>;
-export const isApiValidationError = createValidationGuard(apiValidationErrorSchema);
-
-const objectWithMessageSchema = z.object({
-  message: z.string(),
+export const accountLockedErrorSchema = apiErrorSchema.extend({
+  status: z.literal(403),
+  message: z.literal('Account is locked'),
 });
 
-export const hasMessage = createValidationGuard(objectWithMessageSchema);
-
-export class ApiError extends Error {
-  constructor(public readonly body: ApiErrorType) {
-    super(body.message);
-  }
-
-  get code() {
-    return this.body.code;
-  }
-
-  get status() {
-    return this.body.status;
-  }
-
-  static is(value: unknown, status?: number): value is ApiError {
-    if (!(value instanceof this)) {
-      return false;
-    }
-
-    return status === undefined || status === value.status;
-  }
-}
-
-export class ApiValidationError extends ApiError {
-  static schema = apiValidationErrorSchema;
-
-  constructor(public readonly body: ApiValidationErrorType) {
-    super(body);
-  }
-
-  get fields() {
-    return this.body.fields;
-  }
-}
+export const hasMessage = createValidationGuard(z.object({ message: z.string() }));

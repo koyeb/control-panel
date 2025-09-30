@@ -1,8 +1,8 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+import { apiQuery } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useApiQueryFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
@@ -23,7 +23,7 @@ export function DeleteOrganization() {
   const navigate = useNavigate();
 
   const unpaidInvoicesQuery = useQuery({
-    ...useApiQueryFn('hasUnpaidInvoices'),
+    ...apiQuery('get /v1/billing/has_unpaid_invoices', {}),
     enabled: organization.currentSubscriptionId !== undefined,
     select: (result) => result.has_unpaid_invoices!,
   });
@@ -32,7 +32,7 @@ export function DeleteOrganization() {
     async mutationFn() {
       const api = getApi();
 
-      const { members } = await api.listOrganizationMembers({
+      const { members } = await api('get /v1/organization_members', {
         query: { user_id: user.id },
       });
 
@@ -43,19 +43,19 @@ export function DeleteOrganization() {
       let result: string;
 
       if (otherOrganizationId) {
-        const { token: newToken } = await api.switchOrganization({
+        const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
           path: { id: otherOrganizationId },
           header: {},
         });
 
         result = newToken!.id!;
       } else {
-        const { token: newToken } = await api.newSession({});
+        const { token: newToken } = await api('post /v1/account/session', {});
 
         result = newToken!.id!;
       }
 
-      await api.deleteOrganization({
+      await api('delete /v1/organizations/{id}', {
         path: { id: organization.id },
       });
 

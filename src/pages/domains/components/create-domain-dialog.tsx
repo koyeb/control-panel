@@ -4,8 +4,9 @@ import { useMutation } from '@tanstack/react-query';
 import { FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useApps } from 'src/api/hooks/app';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
@@ -77,7 +78,7 @@ function DomainForm({ onCreated, renderFooter }: DomainFormProps) {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('createDomain', (values: FormValues) => ({
+    ...apiMutation('post /v1/domains', (values: FormValues) => ({
       body: {
         name: values.domainName,
         app_id: values.appId ?? undefined,
@@ -85,7 +86,7 @@ function DomainForm({ onCreated, renderFooter }: DomainFormProps) {
       },
     })),
     async onSuccess({ domain }, { domainName }) {
-      await invalidate('listDomains');
+      await invalidate('get /v1/domains');
       form.reset();
       onCreated(domain!.id!, domainName);
     },

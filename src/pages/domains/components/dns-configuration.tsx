@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { parse } from 'tldts';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Domain } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ExternalLinkButton } from 'src/components/link';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
@@ -20,11 +21,11 @@ export function DnsConfiguration({ domain }: { domain: Domain }) {
   const invalidate = useInvalidateApiQuery();
 
   const { mutate, isPending } = useMutation({
-    ...useApiMutationFn('refreshDomain', {
+    ...apiMutation('post /v1/domains/{id}/refresh', {
       path: { id: domain.id },
     }),
     onSuccess() {
-      void invalidate('listDomains');
+      void invalidate('get /v1/domains');
       notify.info(t('refreshSuccess', { domainName: domain.name }));
     },
   });

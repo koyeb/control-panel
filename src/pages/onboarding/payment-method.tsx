@@ -2,9 +2,10 @@ import { InputEnd, InputStart, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { Address, OrganizationPlan } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
 import { ControlledAddressField } from 'src/components/address-field/address-field';
@@ -53,7 +54,7 @@ function Form() {
   });
 
   const billingInfoMutation = useMutation({
-    ...useApiMutationFn('updateOrganization', (address: Address) => ({
+    ...apiMutation('patch /v1/organizations/{id}', (address: Address) => ({
       path: { id: organization.id },
       query: {},
       body: {
@@ -78,14 +79,14 @@ function Form() {
   });
 
   const changePlanMutation = useMutation({
-    ...useApiMutationFn('changePlan', (plan: OrganizationPlan) => ({
+    ...apiMutation('post /v1/organizations/{id}/plan', (plan: OrganizationPlan) => ({
       path: { id: organization.id },
       body: { plan },
     })),
   });
 
   const updateBudgetMutation = useMutation({
-    ...useApiMutationFn('updateBudget', (amount: number) => ({
+    ...apiMutation('put /v1/organizations/{organization_id}/budget', (amount: number) => ({
       path: { organization_id: organization.id },
       body: { amount: String(100 * amount) },
     })),
@@ -104,7 +105,7 @@ function Form() {
       await updateBudgetMutation.mutateAsync(billingAlertAmount);
     }
 
-    await invalidate('getCurrentOrganization');
+    await invalidate('get /v1/account/organization');
   };
 
   return (

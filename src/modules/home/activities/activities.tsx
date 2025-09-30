@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { apiQuery } from 'src/api/api';
 
+import { useQuery } from '@tanstack/react-query';
 import { mapActivity } from 'src/api/mappers/activity';
-import { useApiQueryFn } from 'src/api/use-api';
 import { Link } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -34,7 +34,7 @@ function ActivityList() {
   const limit = 5;
 
   const query = useQuery({
-    ...useApiQueryFn('listActivities', {
+    ...apiQuery('get /v1/activities', {
       query: {
         limit: String(limit),
         types: [

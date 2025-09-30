@@ -1,6 +1,6 @@
 import { RegisteredRouter } from '@tanstack/react-router';
 
-import { API } from 'src/api/api';
+import { API } from 'src/api/api-types';
 import { databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api/mappers/deployment';
 import {
   App,
@@ -144,13 +144,15 @@ export async function updateDatabaseService(
 ) {
   const api = getApi();
 
-  const { service } = await api.getService({ path: { id: serviceId } });
-  const { deployment } = await api.getDeployment({ path: { id: service!.latest_deployment_id! } });
+  const { service } = await api('get /v1/services/{id}', { path: { id: serviceId } });
+  const { deployment } = await api('get /v1/deployments/{id}', {
+    path: { id: service!.latest_deployment_id! },
+  });
   const definition = deployment!.definition!;
 
   updater(definition);
 
-  await api.updateService({
+  await api('put /v1/services/{id}', {
     path: { id: serviceId },
     query: {},
     body: { definition },

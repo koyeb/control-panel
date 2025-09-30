@@ -1,15 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { apiQuery } from 'src/api/api';
 import { getApi } from 'src/application/container';
 
 import { mapDeployment } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
 import { AppFull } from '../model';
-import { useApiQueryFn } from '../use-api';
 
 export function useAppsQuery() {
   return useQuery({
-    ...useApiQueryFn('listApps', { query: { limit: '100' } }),
+    ...apiQuery('get /v1/apps', { query: { limit: '100' } }),
     select: ({ apps }) => apps!.map(mapApp),
   });
 }
@@ -20,7 +20,7 @@ export function useApps() {
 
 export function useAppQuery(appId?: string) {
   return useQuery({
-    ...useApiQueryFn('getApp', { path: { id: appId! } }),
+    ...apiQuery('get /v1/apps/{id}', { path: { id: appId! } }),
     enabled: appId !== undefined,
     select: ({ app }) => mapApp(app!),
   });
@@ -37,15 +37,15 @@ export function useAppsFull() {
       const api = getApi();
 
       const [apps, services] = await Promise.all([
-        api.listApps({ signal, query: { limit: '100' } }),
-        api.listServices({ signal, query: { limit: '100' } }),
+        api('get /v1/apps', { query: { limit: '100' } }, { signal }),
+        api('get /v1/services', { query: { limit: '100' } }, { signal }),
       ]);
 
       const deployments = await Promise.all(
         services
           .services!.flatMap((service) => [service.active_deployment_id!, service.latest_deployment_id!])
           .filter((id) => id !== '')
-          .map((id) => api.getDeployment({ signal, path: { id } })),
+          .map((id) => api('get /v1/deployments/{id}', { path: { id } }), { signal }),
       );
 
       return {

@@ -1,9 +1,9 @@
+import { apiQuery } from 'src/api/api';
 import { ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 
+import { useState } from 'react';
 import { useLogoutMutation, useUser } from 'src/api/hooks/session';
-import { useApiQueryFn } from 'src/api/use-api';
 import { LinkMenuItem } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { UserAvatar } from 'src/components/user-avatar';
@@ -51,7 +51,7 @@ export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) 
 
 function Slides({ sentence }: { sentence: React.ReactNode }) {
   const { data: hasMultipleOrganizations } = useQuery({
-    ...useApiQueryFn('listUserOrganizations', { query: {} }),
+    ...apiQuery('get /v1/account/organizations', { query: {} }),
     select: ({ organizations }) => organizations!.length > 1,
   });
 

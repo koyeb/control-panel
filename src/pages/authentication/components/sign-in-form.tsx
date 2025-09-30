@@ -1,10 +1,10 @@
+import { apiMutation } from 'src/api/api';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 
+import { z } from 'zod';
 import { ApiError } from 'src/api/api-errors';
-import { useApiMutationFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -41,7 +41,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
   });
 
   const { mutateAsync: signIn } = useMutation({
-    ...useApiMutationFn('signIn', async (credential: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/account/login', async (credential: FormValues<typeof form>) => ({
       header: { 'seon-fp': await getSeonFingerprint() },
       token: null,
       body: credential,

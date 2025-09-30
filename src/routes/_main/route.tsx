@@ -1,11 +1,11 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 import z from 'zod';
 
-import { isAccountLockedError } from 'src/api/api-errors';
+import { createEnsureApiQueryData } from 'src/api/api';
+import { ApiError } from 'src/api/api-errors';
 import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
-import { createEnsureApiQueryData } from 'src/api/use-api';
 import { container, getApi } from 'src/application/container';
 import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
 import { getUrlLatency } from 'src/application/url-latency';
@@ -45,9 +45,11 @@ export const Route = createFileRoute('/_main')({
   async loader({ context: { queryClient }, location, abortController }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient, abortController);
 
-    const user = await ensureApiQueryData('getCurrentUser', {}).then((result) => mapUser(result.user!));
+    const user = await ensureApiQueryData('get /v1/account/profile', {}).then((result) =>
+      mapUser(result.user!),
+    );
 
-    const organization = await ensureApiQueryData('getCurrentOrganization', {}).then(
+    const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
       (result) => mapOrganization(result.organization!),
       () => undefined,
     );
@@ -58,23 +60,33 @@ export const Route = createFileRoute('/_main')({
 
     const promises = new Set<Promise<unknown>>();
 
-    promises.add(ensureApiQueryData('listCatalogRegions', { query: { limit: '100' } }));
-    promises.add(ensureApiQueryData('listCatalogInstances', { query: { limit: '100' } }));
+    promises.add(ensureApiQueryData('get /v1/catalog/regions', { query: { limit: '100' } }));
+    promises.add(ensureApiQueryData('get /v1/catalog/instances', { query: { limit: '100' } }));
 
     if (organization && organization.status === 'ACTIVE') {
-      promises.add(ensureApiQueryData('organizationSummary', { path: { organization_id: organization.id } }));
-      promises.add(ensureApiQueryData('organizationQuotas', { path: { organization_id: organization.id } }));
+      promises.add(
+        ensureApiQueryData('get /v1/organizations/{organization_id}/summary', {
+          path: { organization_id: organization.id },
+        }),
+      );
+      promises.add(
+        ensureApiQueryData('get /v1/organizations/{organization_id}/quotas', {
+          path: { organization_id: organization.id },
+        }),
+      );
 
       if (organization.latestSubscriptionId) {
         promises.add(
-          ensureApiQueryData('getSubscription', { path: { id: organization.latestSubscriptionId } }),
+          ensureApiQueryData('get /v1/subscriptions/{id}', {
+            path: { id: organization.latestSubscriptionId },
+          }),
         );
       }
     }
 
     await Promise.all(promises);
 
-    const datacenters = await ensureApiQueryData('listCatalogDatacenters', {}).then((result) =>
+    const datacenters = await ensureApiQueryData('get /v1/catalog/datacenters', {}).then((result) =>
       result.datacenters!.map(mapCatalogDatacenter),
     );
 
@@ -96,11 +108,11 @@ export const Route = createFileRoute('/_main')({
 });
 
 async function switchOrganization(organizationId: string) {
+  const api = getApi();
   const auth = container.resolve(TOKENS.authentication);
 
-  const result = await getApi().switchOrganization({
+  const result = await api('post /v1/organizations/{id}/switch', {
     path: { id: organizationId },
-    token: auth.token,
     header: {},
   });
 
@@ -122,8 +134,8 @@ function Component() {
   const onboardingStep = useOnboardingStep();
 
   const locked = [
-    isAccountLockedError(userQuery.error),
-    isAccountLockedError(organizationQuery.error),
+    ApiError.isAccountLockedError(userQuery.error),
+    ApiError.isAccountLockedError(organizationQuery.error),
     organizationQuery.data?.statusMessage === 'VERIFICATION_FAILED',
   ].some(Boolean);
 

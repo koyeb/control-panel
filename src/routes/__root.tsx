@@ -2,8 +2,8 @@ import { QueryClient } from '@tanstack/react-query';
 import { createRootRouteWithContext, redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
+import { createEnsureApiQueryData } from 'src/api/api';
 import { ApiError } from 'src/api/api-errors';
-import { createEnsureApiQueryData } from 'src/api/use-api';
 import { container } from 'src/application/container';
 import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
 import { SeonPort } from 'src/hooks/seon';
@@ -56,8 +56,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 
     if (auth.token) {
       await Promise.all([
-        ensureApiQueryData('getCurrentUser', {}),
-        ensureApiQueryData('getCurrentOrganization', {}).catch((error) => {
+        ensureApiQueryData('get /v1/account/profile', {}),
+        ensureApiQueryData('get /v1/account/organization', {}).catch((error) => {
           if (ApiError.is(error, 404)) {
             return;
           }

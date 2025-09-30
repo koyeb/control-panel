@@ -1,7 +1,7 @@
+import { apiQuery } from 'src/api/api';
 import { useQuery } from '@tanstack/react-query';
-import clsx from 'clsx';
 
-import { useApiQueryFn } from 'src/api/use-api';
+import clsx from 'clsx';
 import { Link } from 'src/components/link';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 
@@ -11,7 +11,7 @@ import { UserMenu } from './user-menu';
 
 export function SecondaryLayoutHeader({ className }: { className?: string }) {
   const { data: hasMultipleOrganizations } = useQuery({
-    ...useApiQueryFn('listUserOrganizations', { query: {} }),
+    ...apiQuery('get /v1/account/organizations', { query: {} }),
     select: ({ organizations }) => organizations!.length > 1,
   });
 

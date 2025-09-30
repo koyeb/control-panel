@@ -4,9 +4,10 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { addressSchema } from 'src/api/mappers/session';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledAddressField } from 'src/components/address-field/address-field';
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
@@ -56,8 +57,8 @@ function BillingInformationForm() {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn(
-      'updateOrganization',
+    ...apiMutation(
+      'patch /v1/organizations/{id}',
       ({ name, email, address, company, vatNumber }: FormValues<typeof form>) => ({
         path: { id: organization.id },
         query: {},
@@ -76,7 +77,7 @@ function BillingInformationForm() {
       }),
     ),
     async onSuccess(_, values) {
-      await invalidate('getCurrentOrganization');
+      await invalidate('get /v1/account/organization');
       form.reset(values);
       notify.success(t('successNotification'));
     },

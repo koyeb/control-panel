@@ -1,6 +1,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import sortBy from 'lodash-es/sortBy';
 
+import { apiQuery } from 'src/api/api';
 import { getConfig } from 'src/application/config';
 import { parseBytes } from 'src/application/memory';
 import { entries, hasProperty, snakeToCamelDeep } from 'src/utils/object';
@@ -20,11 +21,10 @@ import {
   OneClickAppMetadata,
   OneClickAppVolume,
 } from '../model';
-import { useApiQueryFn } from '../use-api';
 
 export function useInstancesQuery() {
   return useSuspenseQuery({
-    ...useApiQueryFn('listCatalogInstances', {
+    ...apiQuery('get /v1/catalog/instances', {
       query: { limit: '100' },
     }),
     refetchInterval: false,
@@ -50,7 +50,7 @@ export function useInstance(id?: string | null) {
 
 export function useRegionsQuery() {
   return useSuspenseQuery({
-    ...useApiQueryFn('listCatalogRegions', {
+    ...apiQuery('get /v1/catalog/regions', {
       query: { limit: '100' },
     }),
     refetchInterval: false,
@@ -74,7 +74,7 @@ export function useRegion(id?: string) {
 
 export function useDatacentersQuery() {
   return useSuspenseQuery({
-    ...useApiQueryFn('listCatalogDatacenters'),
+    ...apiQuery('get /v1/catalog/datacenters', {}),
     refetchInterval: false,
     select: ({ datacenters }) => datacenters!.map(mapCatalogDatacenter),
   });
@@ -88,7 +88,7 @@ export function useDatacenters() {
 
 export function useCatalogUsageQuery() {
   return useQuery({
-    ...useApiQueryFn('listCatalogUsage'),
+    ...apiQuery('get /v1/catalog/usage', {}),
     refetchInterval: false,
     select: ({ usage }) => mapCatalogUsage(usage!),
   });
@@ -173,7 +173,7 @@ async function fetchOneClickApp(slug: string): Promise<{ metadata: ApiOneClickAp
 
   if (!response.ok) {
     if (response.status === 404) {
-      throw new ApiError({ status: 404, code: '', message: 'Not found' });
+      throw new ApiError(response, { status: 404, code: '', message: 'Not found' });
     }
 
     throw new Error(await response.text());

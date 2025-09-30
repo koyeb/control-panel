@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm, useFormContext } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { mapVolume } from 'src/api/mappers/volume';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
@@ -40,7 +41,7 @@ export function CreateVolumeDialog() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('createVolume', ({ name, size }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/volumes', ({ name, size }: FormValues<typeof form>) => ({
       body: {
         volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK' as const,
         name,
@@ -51,7 +52,7 @@ export function CreateVolumeDialog() {
     async onSuccess({ volume }) {
       const { id: volumeId, name, size } = mapVolume(volume!);
 
-      await invalidate('listVolumes');
+      await invalidate('get /v1/volumes');
 
       assert(index !== undefined);
       setValue(`volumes.${index}.volumeId`, volumeId);

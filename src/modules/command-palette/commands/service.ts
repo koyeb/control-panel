@@ -3,9 +3,10 @@ import { useMutation } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { useCallback, useEffect } from 'react';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { isComputeDeployment, mapDeployment } from 'src/api/mappers/deployment';
 import { App, ComputeDeployment, Deployment, Service } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { getServiceUrls, isServiceRunning } from 'src/application/service-functions';
@@ -32,12 +33,12 @@ export function useServiceCommands(service: Service) {
   const invalidate = useInvalidateApiQuery();
 
   const invalidateService = useCallback(async () => {
-    await invalidate('listServices');
-    await invalidate('getService', { path: { id } });
+    await invalidate('get /v1/services');
+    await invalidate('get /v1/services/{id}', { path: { id } });
   }, [invalidate, id]);
 
   const { mutateAsync: redeploy } = useMutation({
-    ...useApiMutationFn('redeployService', { path: { id }, body: {} }),
+    ...apiMutation('post /v1/services/{id}/redeploy', { path: { id }, body: {} }),
     onSuccess: async () => {
       await invalidateService();
       notify.success(t('redeployService.success', { name }));
@@ -45,7 +46,7 @@ export function useServiceCommands(service: Service) {
   });
 
   const { mutateAsync: pause } = useMutation({
-    ...useApiMutationFn('pauseService', { path: { id } }),
+    ...apiMutation('post /v1/services/{id}/pause', { path: { id } }),
     onSuccess: async () => {
       await invalidateService();
       notify.success(t('pauseService.success', { name }));
@@ -181,12 +182,14 @@ export function useDeploymentListCommand(service: Service) {
       Icon: IconList,
       hasSubItems: true,
       execute: async () => {
+        const api = getApi();
+
         setIcon(IconList);
         setPlaceholder(t('listDeployments.placeholder'));
 
-        const deployments = await getApi()
-          .listDeployments({ query: { service_id: service.id } })
-          .then(({ deployments }) => deployments!.map(mapDeployment));
+        const deployments = await api('get /v1/deployments', { query: { service_id: service.id } }).then(
+          ({ deployments }) => deployments!.map(mapDeployment),
+        );
 
         for (const deployment of deployments) {
           assert(isComputeDeployment(deployment));

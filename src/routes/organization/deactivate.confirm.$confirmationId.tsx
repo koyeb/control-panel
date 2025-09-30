@@ -1,12 +1,11 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
+import { createEnsureApiQueryData } from 'src/api/api';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
-import { createEnsureApiQueryData } from 'src/api/use-api';
-import { container } from 'src/application/container';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { LogoLoading } from 'src/components/logo-loading';
-import { TOKENS } from 'src/tokens';
 
 export const Route = createFileRoute('/organization/deactivate/confirm/$confirmationId')({
   pendingComponent: LogoLoading,
@@ -14,11 +13,11 @@ export const Route = createFileRoute('/organization/deactivate/confirm/$confirma
   pendingMs: 0,
 
   async loader({ params, context: { queryClient, translate } }) {
-    const api = container.resolve(TOKENS.api);
+    const api = getApi();
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     try {
-      await api.organizationConfirmation({
+      await api('post /v1/organization_confirmations/{id}', {
         path: { id: params.confirmationId },
       });
 
@@ -30,10 +29,10 @@ export const Route = createFileRoute('/organization/deactivate/confirm/$confirma
         notify.error(error.message);
       }
     } finally {
-      const user = await ensureApiQueryData('getCurrentUser', {}).then(({ user }) => mapUser(user!));
+      const user = await ensureApiQueryData('get /v1/account/profile', {}).then(({ user }) => mapUser(user!));
 
-      const organization = await ensureApiQueryData('getCurrentOrganization', {}).then(({ organization }) =>
-        mapOrganization(organization!),
+      const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
+        ({ organization }) => mapOrganization(organization!),
       );
 
       const onboardingStep = getOnboardingStep(user, organization) !== null;

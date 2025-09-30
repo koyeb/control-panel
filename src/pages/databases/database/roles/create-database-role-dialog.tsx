@@ -3,8 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Service } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
@@ -43,7 +43,7 @@ export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
       });
     },
     async onSuccess(_, { name }) {
-      await invalidate('getService', { path: { id: service.id } });
+      await invalidate('get /v1/services/{id}', { path: { id: service.id } });
       notify.info(t('successNotification', { name }));
       closeDialog();
     },

@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { VolumeSnapshot } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -16,11 +17,11 @@ export function DeleteSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('deleteSnapshot', {
+    ...apiMutation('delete /v1/snapshots/{id}', {
       path: { id: snapshot.id },
     }),
     async onSuccess() {
-      await invalidate('listSnapshots');
+      await invalidate('get /v1/snapshots');
       notify.info(t('deleteSuccess', { name: snapshot.name }));
       closeDialog();
     },

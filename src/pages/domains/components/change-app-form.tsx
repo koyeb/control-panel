@@ -3,9 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useApps } from 'src/api/hooks/app';
 import { Domain } from 'src/api/model';
-import { useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ControlledSelect } from 'src/components/controlled';
@@ -31,11 +31,13 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
 
   const mutation = useMutation({
     async mutationFn({ appId }: { appId: string | null }) {
+      const api = getApi();
+
       if (appId === domain.appId) {
         return false;
       }
 
-      await getApi().editDomain({
+      await api('patch /v1/domains/{id}', {
         path: { id: domain.id },
         query: {},
         body: { app_id: appId as string | undefined },
@@ -46,7 +48,7 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
         return;
       }
 
-      await invalidate('listDomains');
+      await invalidate('get /v1/domains');
 
       form.reset(values);
 

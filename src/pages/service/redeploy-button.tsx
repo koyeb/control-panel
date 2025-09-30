@@ -3,10 +3,11 @@ import { useMutation } from '@tanstack/react-query';
 import { useMatch } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
 import { useComputeDeployment } from 'src/api/hooks/service';
 import { App, Service } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
 import { CliInfoButton, CliInfoTooltip } from 'src/components/cli-info';
@@ -79,12 +80,12 @@ function RedeployDialog({ id, context, service }: RedeployDialogProps) {
   });
 
   const redeploy = useMutation({
-    ...useApiMutationFn('redeployService', ({ skipBuild, useCache }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/services/{id}/redeploy', ({ skipBuild, useCache }: FormValues<typeof form>) => ({
       path: { id: service.id },
       body: { skip_build: skipBuild, use_cache: useCache },
     })),
     async onSuccess({ deployment }) {
-      await invalidate('listDeployments');
+      await invalidate('get /v1/deployments');
 
       closeDialog();
 

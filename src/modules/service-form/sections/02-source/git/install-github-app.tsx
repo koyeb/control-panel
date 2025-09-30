@@ -1,7 +1,7 @@
+import { apiMutation } from 'src/api/api';
 import { Alert, Button } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
 
-import { useApiMutationFn } from 'src/api/use-api';
+import { useMutation } from '@tanstack/react-query';
 import { useHistoryState, useLocation } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
@@ -12,7 +12,7 @@ export function InstallGithubApp() {
   const location = useLocation();
 
   const { mutate: installGithubApp } = useMutation({
-    ...useApiMutationFn('installGithubApp', {
+    ...apiMutation('post /v1/github/installation', {
       body: { metadata: location },
     }),
     onSuccess(result) {

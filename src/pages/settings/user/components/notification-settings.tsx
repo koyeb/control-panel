@@ -1,8 +1,8 @@
 import { Switch } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api/api';
 import { mapUserSettings } from 'src/api/mappers/session';
-import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate } from 'src/intl/translate';
@@ -13,18 +13,18 @@ export function NotificationSettings() {
   const t = T.useTranslate();
 
   const settingsQuery = useQuery({
-    ...useApiQueryFn('getUserSettings'),
+    ...apiQuery('get /v1/account/settings', {}),
     select: ({ settings }) => mapUserSettings(settings!),
   });
 
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('updateUserSettings', ({ enabled }: { enabled: boolean }) => ({
+    ...apiMutation('patch /v1/account/settings', ({ enabled }: { enabled: boolean }) => ({
       body: { failed_deployment_email_notification: enabled },
     })),
     async onSuccess(_, { enabled }) {
-      await invalidate('getUserSettings');
+      await invalidate('get /v1/account/settings');
       notify.success(t('successNotification', { enabled }));
     },
   });

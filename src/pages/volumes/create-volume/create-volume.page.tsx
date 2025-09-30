@@ -3,7 +3,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
+import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { DocumentTitle } from 'src/components/document-title';
@@ -36,7 +36,7 @@ export function CreateVolumePage() {
     enabled: fromSnapshot,
     refetchInterval: false,
     experimental_prefetchInRender: true,
-    ...useApiQueryFn('getSnapshot', { path: { id: snapshotId! } }),
+    ...apiQuery('get /v1/snapshots/{id}', { path: { id: snapshotId! } }),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -57,9 +57,9 @@ export function CreateVolumePage() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('createVolume', ({ name, size, region }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/volumes', ({ name, size, region }: FormValues<typeof form>) => ({
       body: {
-        volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK',
+        volume_type: 'PERSISTENT_VOLUME_BACKING_STORE_LOCAL_BLK' as const,
         name,
         region,
         max_size: !snapshotId ? size : undefined,
@@ -67,7 +67,7 @@ export function CreateVolumePage() {
       },
     })),
     async onSuccess(result) {
-      await invalidate('listVolumes');
+      await invalidate('get /v1/volumes');
       await navigate({ to: '/volumes' });
       notify.success(t('created', { name: result.volume?.name }));
     },

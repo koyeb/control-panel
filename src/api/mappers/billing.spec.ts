@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { createDate } from 'src/utils/date';
 import { createFactory } from 'src/utils/factories';
 
-import type { API } from '../api';
+import type { API } from '../api-types';
 import { Invoice, InvoiceDiscount, InvoicePlanLine, InvoiceUsageLine } from '../model';
 
 import { StripeInvoice, mapInvoice } from './billing';

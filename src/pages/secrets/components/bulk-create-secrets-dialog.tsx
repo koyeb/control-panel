@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInvalidateApiQuery } from 'src/api/use-api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
@@ -45,7 +45,7 @@ export function BulkCreateSecretsDialog() {
 
       const results = await Promise.allSettled(
         Object.entries(values).map(([name, value]) =>
-          api.createSecret({ body: { type: 'SIMPLE', name, value } }),
+          api('post /v1/secrets', { body: { type: 'SIMPLE', name, value } }),
         ),
       );
 
@@ -57,7 +57,7 @@ export function BulkCreateSecretsDialog() {
       };
     },
     async onSuccess({ created, errors }) {
-      await invalidate('listSecrets');
+      await invalidate('get /v1/secrets');
 
       if (created > 0) {
         notify.success(<T id="successNotification" values={{ created }} />);

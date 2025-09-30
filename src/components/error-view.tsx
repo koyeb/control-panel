@@ -1,6 +1,6 @@
 import { ErrorComponentProps } from '@tanstack/react-router';
 
-import { ApiError, isAccountLockedError } from 'src/api/api-errors';
+import { ApiError } from 'src/api/api-errors';
 import { getConfig } from 'src/application/config';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useForceThemeMode } from 'src/hooks/theme';
@@ -12,9 +12,9 @@ import { ExternalLink, Link } from './link';
 const T = createTranslate('pages');
 
 export function ErrorComponent({ error, reset, info }: ErrorComponentProps) {
-  const { code, status } = ApiError.is(error) ? error : {};
+  const { code, status } = ApiError.is(error) ? error.body : {};
 
-  if (isAccountLockedError(error)) {
+  if (ApiError.isAccountLockedError(error)) {
     return <AccountLocked />;
   }
 

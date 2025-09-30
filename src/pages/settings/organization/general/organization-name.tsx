@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
@@ -33,13 +34,13 @@ export function OrganizationName() {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('updateOrganization', ({ organizationName }: FormValues<typeof form>) => ({
+    ...apiMutation('patch /v1/organizations/{id}', ({ organizationName }: FormValues<typeof form>) => ({
       query: {},
       path: { id: organization.id },
       body: { name: organizationName },
     })),
     onSuccess(_, values) {
-      void invalidate('getCurrentOrganization');
+      void invalidate('get /v1/account/organization');
       form.reset(values);
       notify.success("Your organization's name was updated");
     },

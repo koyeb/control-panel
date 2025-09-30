@@ -27,16 +27,16 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
     mutationFn: async () => {
       const api = getApi();
 
-      await api.deleteService({
+      await api('delete /v1/services/{id}', {
         path: { id: service.id },
       });
 
-      const { services } = await api.listServices({
+      const { services } = await api('get /v1/services', {
         query: { app_id: service.appId },
       });
 
       if (services?.length === 1) {
-        await api.deleteApp({
+        await api('delete /v1/apps/{id}', {
           path: { id: service.appId },
         });
       }

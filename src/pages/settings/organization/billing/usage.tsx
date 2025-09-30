@@ -1,15 +1,15 @@
+import { apiMutation } from 'src/api/api';
 import { Button, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { add, endOfMonth, format, isBefore, isEqual, startOfMonth, sub } from 'date-fns';
 import { useForm } from 'react-hook-form';
 import { FormattedDate, FormattedNumber } from 'react-intl';
-import { Fragment } from 'react/jsx-runtime';
 
+import { Fragment } from 'react/jsx-runtime';
 import { useNextInvoiceQuery } from 'src/api/hooks/billing';
 import { useOrganization } from 'src/api/hooks/session';
 import { InvoiceDiscount, InvoicePeriod } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
@@ -313,7 +313,7 @@ function DownloadUsage() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('getUsageCsv', ({ period }: FormValues<typeof form>) => {
+    ...apiMutation('get /v1/usages/details', ({ period }: FormValues<typeof form>) => {
       const { start, end } = getStartEnd(period);
 
       return {

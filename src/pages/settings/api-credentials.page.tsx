@@ -1,10 +1,10 @@
+import { apiQuery } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
-import clsx from 'clsx';
 
+import clsx from 'clsx';
 import { mapApiCredential } from 'src/api/mappers/api-credential';
 import { ApiCredentialType } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { ApiCredentials } from 'src/components/api-credentials/api-credentials';
 import { Dialog } from 'src/components/dialog';
 import { Title } from 'src/components/title';
@@ -16,7 +16,7 @@ export function BaseApiCredentialsPage({ type }: { type: ApiCredentialType }) {
   const openDialog = Dialog.useOpen();
 
   const query = useQuery({
-    ...useApiQueryFn('listApiCredentials', { query: { limit: '100', type: upperCase(type) } }),
+    ...apiQuery('get /v1/credentials', { query: { limit: '100', type: upperCase(type) } }),
     select: ({ credentials }) => credentials!.map(mapApiCredential),
   });
 

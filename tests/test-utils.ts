@@ -67,12 +67,12 @@ export async function deleteKoyebResources(baseUrl?: string) {
   const token = config.account.token;
 
   const listAppIds = async () => {
-    const { apps } = await api.listApps({ baseUrl, token, query: { limit: '100' } });
+    const { apps } = await api('get /v1/apps', { query: { limit: '100' } }, { baseUrl, token });
     return apps!.map((app) => app.id!);
   };
 
   for (const appId of await listAppIds()) {
-    await api.deleteApp({ baseUrl, token, path: { id: appId } });
+    await api('delete /v1/apps/{id}', { path: { id: appId } }, { baseUrl, token });
   }
 
   while ((await listAppIds()).length > 0) {
@@ -89,7 +89,7 @@ export async function catchNewPage(context: BrowserContext, fn: () => Promise<vo
 }
 
 export async function getOrganization(baseUrl?: string): Promise<Organization | undefined> {
-  return api.getCurrentOrganization({ baseUrl, token: config.account.token }).then(
+  return api('get /v1/account/organization', {}, { baseUrl, token: config.account.token }).then(
     ({ organization }) => mapOrganization(organization!),
     (error) => {
       if (ApiError.is(error, 404)) {

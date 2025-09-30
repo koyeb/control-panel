@@ -1,11 +1,11 @@
+import { apiMutation } from 'src/api/api';
 import { Alert, Button, DialogHeader, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
 
+import { useForm } from 'react-hook-form';
 import { useCatalogInstanceRegionsAvailability, useInstance } from 'src/api/hooks/catalog';
 import { useComputeDeployment } from 'src/api/hooks/service';
 import { Service } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';
@@ -72,7 +72,7 @@ function ResumeServiceDialog({ service }: ResumeDialogProps) {
   });
 
   const resume = useMutation({
-    ...useApiMutationFn('resumeService', ({ skipBuild, useCache }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/services/{id}/resume', ({ skipBuild, useCache }: FormValues<typeof form>) => ({
       path: { id: service.id },
       query: { skip_build: skipBuild, use_cache: useCache },
     })),

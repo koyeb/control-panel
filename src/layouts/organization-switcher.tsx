@@ -1,12 +1,13 @@
+import { apiMutation } from 'src/api/api';
+import { apiQuery } from 'src/api/api';
 import { Combobox, Spinner } from '@koyeb/design-system';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useState } from 'react';
 
+import { useState } from 'react';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
-import { useApiMutationFn, useApiQueryFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
@@ -139,7 +140,7 @@ function useOrganizationCount() {
   const user = useUser();
 
   const { data } = useQuery({
-    ...useApiQueryFn('listOrganizationMembers', { query: { user_id: user.id } }),
+    ...apiQuery('get /v1/organization_members', { query: { user_id: user.id } }),
     refetchInterval: false,
     placeholderData: keepPreviousData,
     select: ({ count }) => count,
@@ -150,7 +151,7 @@ function useOrganizationCount() {
 
 function useOrganizationList(search: string) {
   const { data } = useQuery({
-    ...useApiQueryFn('listUserOrganizations', {
+    ...apiQuery('get /v1/account/organizations', {
       query: { search, limit: '10' },
     }),
     refetchInterval: false,
@@ -167,7 +168,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
   const setToken = useSetToken();
 
   return useMutation({
-    ...useApiMutationFn('switchOrganization', async (organizationId: string) => ({
+    ...apiMutation('post /v1/organizations/{id}/switch', async (organizationId: string) => ({
       path: { id: organizationId },
       header: { 'seon-fp': await getSeonFingerprint() },
     })),

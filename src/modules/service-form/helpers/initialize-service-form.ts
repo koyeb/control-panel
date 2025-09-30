@@ -2,6 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { DeepPartial } from 'react-hook-form';
 
+import { createEnsureApiQueryData } from 'src/api/api';
 import { mapRepository } from 'src/api/mappers/git';
 import {
   CatalogDatacenter,
@@ -11,7 +12,6 @@ import {
   Organization,
   OrganizationQuotas,
 } from 'src/api/model';
-import { createEnsureApiQueryData } from 'src/api/use-api';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
@@ -41,21 +41,21 @@ export async function initializeServiceForm(
   let values = defaultServiceForm();
 
   const getApp = async (appId: string) => {
-    return api('getApp', { path: { id: appId } });
+    return api('get /v1/apps/{id}', { path: { id: appId } });
   };
 
   const getService = async (serviceId: string) => {
-    return api('getService', { path: { id: serviceId } });
+    return api('get /v1/services/{id}', { path: { id: serviceId } });
   };
 
   const getDeployment = async (deploymentId: string) => {
-    return api('getDeployment', { path: { id: deploymentId } });
+    return api('get /v1/deployments/{id}', { path: { id: deploymentId } });
   };
 
   if (serviceId) {
     const { service } = await getService(serviceId);
     const { app } = await getApp(service!.app_id!);
-    const { volumes } = await api('listVolumes', { query: { limit: '100' } });
+    const { volumes } = await api('get /v1/volumes', { query: { limit: '100' } });
     const deployment = await getDeployment(service!.latest_deployment_id!);
     const definition = deployment.deployment!.definition!;
 
@@ -122,7 +122,7 @@ export async function initializeServiceForm(
       const { repositoryName } = values.source.git.organizationRepository;
 
       if (repositoryName) {
-        const repository = await api('listRepositories', {
+        const repository = await api('get /v1/git/repositories', {
           query: { name: repositoryName, name_search_op: 'equality' },
         })
           .then(({ repositories }) => repositories!.map(mapRepository))

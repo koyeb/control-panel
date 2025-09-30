@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import { getApi } from 'src/application/container';
+import { apiStream } from 'src/api/api';
+import { getConfig } from 'src/application/config';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/sentry';
+import { getToken } from 'src/application/token';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useMount } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';
@@ -27,7 +29,13 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);
 
   const connect = useCallback((instanceId: string) => {
-    setStream(getApi().exec({ query: { id: instanceId } }));
+    setStream(
+      apiStream(
+        'get /v1/streams/instances/exec',
+        { query: { id: instanceId } },
+        { baseUrl: getConfig('apiBaseUrl'), token: getToken() },
+      ),
+    );
   }, []);
 
   useMount(() => {

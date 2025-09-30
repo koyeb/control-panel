@@ -1,13 +1,13 @@
+import { apiQuery } from 'src/api/api';
+
 import { useQuery } from '@tanstack/react-query';
 
 import { upperCase } from 'src/utils/strings';
-
 import { mapSecret } from '../mappers/secret';
-import { useApiQueryFn } from '../use-api';
 
 export function useSecretsQuery(type?: 'simple' | 'registry') {
   return useQuery({
-    ...useApiQueryFn('listSecrets', {
+    ...apiQuery('get /v1/secrets', {
       query: {
         types: type !== undefined ? [upperCase(type)] : undefined,
         limit: '100',

@@ -1,12 +1,9 @@
 import Intercom, { boot, shutdown } from '@intercom/messenger-js-sdk';
 
-import { api } from 'src/api/api';
 import { User } from 'src/api/model';
 
-import { TOKENS } from '../tokens';
-
 import { getConfig } from './config';
-import { container } from './container';
+import { getApi } from './container';
 
 export function initIntercom() {
   const appId = getConfig('intercomAppId');
@@ -35,8 +32,7 @@ export async function identifyUserInIntercom(user: User | null) {
 }
 
 async function getUserHash() {
-  const token = container.resolve(TOKENS.authentication).token;
-  const baseUrl = getConfig('apiBaseUrl');
+  const api = getApi();
 
-  return api.getIntercomUserHash({ baseUrl, token }).then(({ hash }) => hash);
+  return api('get /v1/intercom/profile', {}).then(({ hash }) => hash);
 }

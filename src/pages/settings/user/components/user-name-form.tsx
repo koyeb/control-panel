@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useUser } from 'src/api/hooks/session';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -31,12 +32,12 @@ export function UserNameForm() {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('updateUser', ({ name }: FormValues<typeof form>) => ({
+    ...apiMutation('patch /v1/account/profile', ({ name }: FormValues<typeof form>) => ({
       query: {},
       body: { name },
     })),
     async onSuccess(_, { name }) {
-      await invalidate('getCurrentUser');
+      await invalidate('get /v1/account/profile');
       form.reset({ name });
       notify.success(t('successNotification', { name }));
     },

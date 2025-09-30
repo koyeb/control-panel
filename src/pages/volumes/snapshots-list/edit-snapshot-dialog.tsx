@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { VolumeSnapshot } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
@@ -33,12 +34,12 @@ export function EditSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('updateSnapshot', ({ name }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/snapshots/{id}', ({ name }: FormValues<typeof form>) => ({
       path: { id: snapshot.id },
       body: { name },
     })),
     async onSuccess({ snapshot }) {
-      await invalidate('listSnapshots');
+      await invalidate('get /v1/snapshots');
       notify.success(t('successNotification', { name: snapshot!.name! }));
       closeDialog();
     },

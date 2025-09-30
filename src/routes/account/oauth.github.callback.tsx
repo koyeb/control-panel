@@ -3,10 +3,10 @@ import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
-import { ApiValidationError, hasMessage } from 'src/api/api-errors';
+import { createEnsureApiQueryData } from 'src/api/api';
+import { ApiError, hasMessage } from 'src/api/api-errors';
 import { mapOrganization } from 'src/api/mappers/session';
-import { createEnsureApiQueryData } from 'src/api/use-api';
-import { container } from 'src/application/container';
+import { container, getApi } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
@@ -48,7 +48,7 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
   },
 
   async loader({ deps, context: { seon, queryClient } }) {
-    const api = container.resolve(TOKENS.api);
+    const api = getApi();
 
     const search = deps.search;
     const redirectUrl = new URL(deps.metadata, window.location.origin);
@@ -58,7 +58,7 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
     }
 
     try {
-      const { token } = await api.githubOAuthCallback({
+      const { token } = await api('post /v1/account/oauth', {
         header: {
           'seon-fp': await seon.getFingerprint(),
         },
@@ -145,7 +145,7 @@ async function handleGithubAppInstalled(
 
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
-  const currentOrganization = await ensureApiQueryData('getCurrentOrganization', {}).then(
+  const currentOrganization = await ensureApiQueryData('get /v1/account/organization', {}).then(
     ({ organization }) => mapOrganization(organization!),
   );
 
@@ -165,17 +165,21 @@ async function handleGithubAppInstallationError(error: unknown, redirectUrl: URL
   throw redirect({ ...urlToLinkOptions(redirectUrl), replace: true });
 }
 
-const isAccountNotFoundError = createValidationGuard(
-  ApiValidationError.schema.extend({ fields: z.array(z.object({ description: z.literal('not found') })) }),
-);
+function isAccountNotFoundError(error: unknown) {
+  if (!ApiError.isValidationError(error)) {
+    return false;
+  }
 
-const isAccountAlreadyExistsError = createValidationGuard(
-  ApiValidationError.schema.extend({
-    fields: z.array(
-      z.object({ description: z.string().refine((str) => str.match(/Email: '.*' already used/) !== null) }),
-    ),
-  }),
-);
+  return Boolean(error.body.fields[0]?.description === 'not found');
+}
+
+function isAccountAlreadyExistsError(error: unknown) {
+  if (!ApiError.isValidationError(error)) {
+    return false;
+  }
+
+  return Boolean(error.body.fields[0]?.description.match(/Email: '.*' already used/));
+}
 
 const isUnauthorizedAccountError = createValidationGuard(
   z.object({ message: z.literal('This OAuth2 account is not authorized to sign up') }),

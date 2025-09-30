@@ -20,6 +20,7 @@ import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
+import { getToken, setToken } from './application/token';
 import { NotificationContainer } from './components/notification';
 import { SeonAdapter } from './hooks/seon';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
@@ -89,10 +90,8 @@ async function handleAuthenticationError(error: Error) {
     return;
   }
 
-  const auth = container.resolve(TOKENS.authentication);
-
-  if (auth.token !== null) {
-    auth.setToken(null);
+  if (getToken() !== null) {
+    setToken(null);
     queryClient.clear();
   }
 
@@ -117,11 +116,11 @@ function throwOnError(error: Error) {
 }
 
 function retry(failureCount: number, error: Error) {
-  if (ApiError.is(error) && error.status >= 500) {
-    return failureCount <= 3;
+  if (ApiError.is(error) && error.status % 100 === 4) {
+    return false;
   }
 
-  return false;
+  return failureCount <= 3;
 }
 
 const queryClient = new QueryClient({

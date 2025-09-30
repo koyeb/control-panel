@@ -4,8 +4,9 @@ import { useEffect } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation, apiQuery } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
@@ -95,7 +96,7 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
   const invalidate = useInvalidateApiQuery();
 
   const query = useQuery({
-    ...useApiQueryFn('getBudget', {
+    ...apiQuery('get /v1/organizations/{organization_id}/budget', {
       path: { organization_id: organization.id },
     }),
     select({ budget }) {
@@ -104,24 +105,24 @@ function useSpendingLimit(form: UseFormReturn<{ amount: number }>) {
   });
 
   const updateMutation = useMutation({
-    ...useApiMutationFn('updateBudget', (amount: number) => ({
+    ...apiMutation('put /v1/organizations/{organization_id}/budget', (amount: number) => ({
       path: { organization_id: organization.id },
       body: { amount: String(amount * 100) },
     })),
     onError: useFormErrorHandler(form),
     async onSuccess({ budget }) {
-      await invalidate('getBudget');
+      await invalidate('get /v1/organizations/{organization_id}/budget');
       notify.success(t('alertSetNotification', { value: <FormattedPrice value={Number(budget?.amount)} /> }));
     },
   });
 
   const deleteMutation = useMutation({
-    ...useApiMutationFn('deleteBudget', {
+    ...apiMutation('delete /v1/organizations/{organization_id}/budget', {
       path: { organization_id: organization.id },
     }),
     onError: useFormErrorHandler(form),
     async onSuccess() {
-      await invalidate('getBudget');
+      await invalidate('get /v1/organizations/{organization_id}/budget');
       notify.success(t('alertRemovedNotification'));
     },
   });

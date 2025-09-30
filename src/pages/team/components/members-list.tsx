@@ -2,11 +2,12 @@ import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/desi
 import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
+import { apiMutation, apiQuery } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
-import { useApiMutationFn, useApiQueryFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
@@ -30,7 +31,7 @@ export function MembersList() {
   const invitationsQuery = useInvitationsQuery({ status: 'PENDING' });
 
   const membersQuery = useQuery({
-    ...useApiQueryFn('listOrganizationMembers', { query: { organization_id: organization.id } }),
+    ...apiQuery('get /v1/organization_members', { query: { organization_id: organization.id } }),
     select: ({ members }) => members!.map(mapOrganizationMember),
   });
 
@@ -228,7 +229,7 @@ function useResendInvitation() {
   const t = T.useTranslate();
 
   return useMutation({
-    ...useApiMutationFn('resendInvitation', (invitation: OrganizationInvitation) => ({
+    ...apiMutation('post /v1/organization_invitations/{id}/resend', (invitation: OrganizationInvitation) => ({
       path: { id: invitation.id },
     })),
     onSuccess(_, { email }) {
@@ -242,11 +243,11 @@ function useDeleteInvitation() {
   const t = T.useTranslate();
 
   return useMutation({
-    ...useApiMutationFn('deleteInvitation', (invitation: OrganizationInvitation) => ({
+    ...apiMutation('delete /v1/organization_invitations/{id}', (invitation: OrganizationInvitation) => ({
       path: { id: invitation.id },
     })),
     async onSuccess(_, { email }) {
-      await invalidate('listInvitations');
+      await invalidate('get /v1/organization_invitations');
       notify.info(t('actions.deleteInvitationSuccessNotification', { email }));
     },
   });
@@ -257,11 +258,11 @@ function useRemoveOrganizationMember() {
   const t = T.useTranslate();
 
   return useMutation({
-    ...useApiMutationFn('deleteOrganizationMember', (membership: OrganizationMember) => ({
+    ...apiMutation('delete /v1/organization_members/{id}', (membership: OrganizationMember) => ({
       path: { id: membership.id },
     })),
     async onSuccess(_, { user, organization }) {
-      await invalidate('listOrganizationMembers');
+      await invalidate('get /v1/organization_members');
 
       notify.info(
         t('actions.removeMemberSuccessNotification', {
@@ -285,7 +286,7 @@ function useLeaveOrganization() {
     async mutationFn(membership: OrganizationMember) {
       const api = getApi();
 
-      const { members } = await api.listOrganizationMembers({
+      const { members } = await api('get /v1/organization_members', {
         query: { user_id: user.id },
       });
 
@@ -296,7 +297,7 @@ function useLeaveOrganization() {
       let result: string | null = null;
 
       if (otherOrganizationId) {
-        const { token: newToken } = await api.switchOrganization({
+        const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
           path: { id: otherOrganizationId },
           header: {},
         });
@@ -304,7 +305,7 @@ function useLeaveOrganization() {
         result = newToken!.id!;
       }
 
-      await api.deleteOrganizationMember({
+      await api('delete /v1/organization_members/{id}', {
         path: { id: membership.id },
       });
 

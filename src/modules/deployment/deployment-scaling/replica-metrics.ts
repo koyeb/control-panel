@@ -1,9 +1,9 @@
 import { useQueries } from '@tanstack/react-query';
 
-import { API } from 'src/api/api';
+import { apiQuery } from 'src/api/api';
+import { API } from 'src/api/api-types';
 import { useInstance } from 'src/api/hooks/catalog';
 import { CatalogInstance, ComputeDeployment } from 'src/api/model';
-import { useApiQueryFn } from 'src/api/use-api';
 import { parseBytes } from 'src/application/memory';
 import { last, unique } from 'src/utils/arrays';
 import { identity, isDefined } from 'src/utils/generic';
@@ -15,10 +15,10 @@ export function useReplicaMetricsQuery(deployment: ComputeDeployment) {
 
   return useQueries({
     queries: [
-      useApiQueryFn('getServiceMetrics', {
+      apiQuery('get /v1/streams/metrics', {
         query: { service_id: deployment.serviceId, name: 'CPU_TOTAL_PERCENT' },
       }),
-      useApiQueryFn('getServiceMetrics', {
+      apiQuery('get /v1/streams/metrics', {
         query: { service_id: deployment.serviceId, name: 'MEM_RSS' },
       }),
     ],

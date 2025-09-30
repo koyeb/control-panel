@@ -19,13 +19,15 @@ export function CannySsoPage() {
 
   const mutation = useMutation({
     async mutationFn() {
+      const api = getApi();
+
       const companyID = searchParams.get('companyID');
       const redirect = searchParams.get('redirect');
 
       assert(companyID !== null, new AssertionError('Missing companyID query parameter'));
       assert(redirect !== null, new AssertionError('Missing redirect query parameter'));
 
-      const { token } = await getApi().cannySso({});
+      const { token } = await api('post /v1/sso/canny', {});
 
       return {
         companyID,
@@ -70,13 +72,15 @@ export function DiscourseSsoPage() {
 
   const mutation = useMutation({
     async mutationFn() {
+      const api = getApi();
+
       const sso = searchParams.get('sso');
       const sig = searchParams.get('sig');
 
       assert(sso !== null, new AssertionError('Missing sso query parameter'));
       assert(sig !== null, new AssertionError('Missing sig query parameter'));
 
-      const result = await getApi().discourseSso({
+      const result = await api('post /v1/sso/discourse', {
         body: { payload: sso, sig },
       });
 

@@ -1,10 +1,10 @@
+import { apiMutation } from 'src/api/api';
 import { Button, DialogFooter } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import z from 'zod';
 
+import z from 'zod';
 import { Volume } from 'src/api/model';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
@@ -44,7 +44,7 @@ function EditVolumeForm({ volume }: { volume: Volume }) {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('updateVolume', ({ name }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/volumes/{id}', ({ name }: FormValues<typeof form>) => ({
       path: { id: volume.id },
       body: { name },
     })),

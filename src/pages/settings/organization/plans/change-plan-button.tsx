@@ -1,9 +1,10 @@
 import { Button, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { useOrganization } from 'src/api/hooks/session';
 import { OrganizationPlan } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { Dialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
@@ -122,12 +123,12 @@ function useChangePlan(onSuccess: () => void) {
   const invalidate = useInvalidateApiQuery();
 
   return useMutation({
-    ...useApiMutationFn('changePlan', (plan: Plan) => ({
+    ...apiMutation('post /v1/organizations/{id}/plan', (plan: Plan) => ({
       path: { id: organization.id },
       body: { plan },
     })),
     async onSuccess() {
-      await invalidate('getCurrentOrganization');
+      await invalidate('get /v1/account/organization');
       onSuccess();
     },
   });

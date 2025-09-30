@@ -1,7 +1,7 @@
+import { apiQuery } from 'src/api/api';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
 
-import { useApiQueryFn } from 'src/api/use-api';
+import { useEffect, useState } from 'react';
 import { ControlledAutocomplete } from 'src/components/controlled';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
@@ -23,7 +23,7 @@ export function OrganizationRepositoryBranchSelector() {
   const searchQuery = search === selectedRepository.branch ? undefined : search;
 
   const { data: branches = [] } = useQuery({
-    ...useApiQueryFn('listRepositoryBranches', {
+    ...apiQuery('get /v1/git/branches', {
       query: {
         repository_id: repositoryId as string,
         name: searchQuery || undefined,

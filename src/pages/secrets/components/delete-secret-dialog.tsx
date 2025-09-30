@@ -1,7 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { Secret } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -16,11 +17,11 @@ export function DeleteSecretDialog({ secret }: { secret: Secret }) {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...useApiMutationFn('deleteSecret', {
+    ...apiMutation('delete /v1/secrets/{id}', {
       path: { id: secret.id },
     }),
     async onSuccess() {
-      await invalidate('listSecrets');
+      await invalidate('get /v1/secrets');
       notify.info(t('successNotification', { name: secret.name }));
       closeDialog();
     },

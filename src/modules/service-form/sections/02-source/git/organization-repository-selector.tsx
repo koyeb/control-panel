@@ -71,7 +71,6 @@ function RepositoryItem({ repository }: OrganizationRepositoryItemProps) {
   return (
     <div className="row items-center gap-2">
       <IconGithub className="icon" />
-
       <span className="flex-1 text-xs font-medium">
         {repository.name.replace(/.*\//, '')}
 
@@ -81,7 +80,6 @@ function RepositoryItem({ repository }: OrganizationRepositoryItemProps) {
           <FormattedDistanceToNow value={repository.lastPushDate} />
         </span>
       </span>
-
       {repository.isPrivate && <IconLock className="icon" />}
     </div>
   );

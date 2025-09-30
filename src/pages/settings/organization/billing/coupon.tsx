@@ -1,9 +1,9 @@
+import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
 
+import { useForm } from 'react-hook-form';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
@@ -28,7 +28,7 @@ export function Coupon() {
   });
 
   const mutation = useMutation({
-    ...useApiMutationFn('redeemCoupon', ({ code }: FormValues<typeof form>) => ({
+    ...apiMutation('post /v1/coupons', ({ code }: FormValues<typeof form>) => ({
       body: { code },
     })),
     onSuccess() {

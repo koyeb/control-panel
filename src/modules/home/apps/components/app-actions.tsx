@@ -3,8 +3,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { apiMutation } from 'src/api/api';
+import { useInvalidateApiQuery } from 'src/api/api';
 import { App, AppDomain } from 'src/api/model';
-import { useApiMutationFn, useInvalidateApiQuery } from 'src/api/use-api';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
@@ -103,7 +104,7 @@ function EditAppDialog({ app }: { app: App }) {
 
       if (values.name !== app.name) {
         promises.push(
-          api.renameApp({
+          api('put /v1/apps/{id}', {
             path: { id: app.id },
             query: {},
             body: { name: values.name },
@@ -113,7 +114,7 @@ function EditAppDialog({ app }: { app: App }) {
 
       if (koyebDomain && values.subdomain !== subdomain) {
         promises.push(
-          api.editDomain({
+          api('patch /v1/domains/{id}', {
             path: { id: koyebDomain.id },
             query: {},
             body: { subdomain: values.subdomain },
@@ -124,7 +125,7 @@ function EditAppDialog({ app }: { app: App }) {
       await Promise.all(promises);
     },
     async onSuccess(_, values) {
-      await invalidate('listApps');
+      await invalidate('get /v1/apps');
       form.reset(values);
       notify.info(t('editAppDialog.successNotification'));
       closeDialog();
@@ -189,11 +190,11 @@ function PauseAppConfirmationDialog({ app }: { app: App }) {
   const closeDialog = Dialog.useClose();
 
   const { mutateAsync: pauseApp } = useMutation({
-    ...useApiMutationFn('pauseApp', {
+    ...apiMutation('post /v1/apps/{id}/pause', {
       path: { id: app.id },
     }),
     onSuccess() {
-      void invalidate('listApps');
+      void invalidate('get /v1/apps');
       notify.info(t('pauseAppConfirmationDialog.successNotification'));
       closeDialog();
     },
@@ -218,11 +219,11 @@ function DeleteAppConfirmationDialog({ app }: { app: App }) {
   const closeDialog = Dialog.useClose();
 
   const { mutateAsync: deleteApp } = useMutation({
-    ...useApiMutationFn('deleteApp', {
+    ...apiMutation('delete /v1/apps/{id}', {
       path: { id: app.id },
     }),
     onSuccess() {
-      void invalidate('listApps');
+      void invalidate('get /v1/apps');
       notify.info(t('deleteAppConfirmationDialog.successNotification'));
       closeDialog();
     },

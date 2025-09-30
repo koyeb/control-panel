@@ -4,10 +4,12 @@ import { add, max, sub } from 'date-fns';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
+import { apiStream, getApiQueryKey } from 'src/api/api';
 import { useOrganizationQuotas } from 'src/api/hooks/session';
 import { LogLine } from 'src/api/model';
-import { getApiQueryKey } from 'src/api/use-api';
+import { getConfig } from 'src/application/config';
 import { getApi } from 'src/application/container';
+import { getToken } from 'src/application/token';
 import { createId } from 'src/utils/strings';
 
 import { useDeepCompareMemo } from './lifecycle';
@@ -90,24 +92,25 @@ function useLogsHistory(filters: LogsFilters) {
   }, [quotas, filters.start, filters.end]);
 
   return useInfiniteQuery({
-    queryKey: getApiQueryKey('logsQuery', {
+    queryKey: getApiQueryKey('get /v1/streams/logs/tail', {
       query: {
         type: filters.type,
         deployment_id: filters.deploymentId,
         regional_deployment_id: filters.regionalDeploymentId ?? undefined,
         instance_id: filters.instanceId ?? undefined,
         text: filters.search || undefined,
-        order: 'desc',
         limit: String(100),
         ...initialPageParam,
       },
     }),
     queryFn: ({ queryKey: [, { query }], pageParam: { start, end } }) => {
+      const api = getApi();
+
       if (start === end) {
         return { data: [], pagination: { has_more: false } };
       }
 
-      return getApi().logsQuery({
+      return api('get /v1/streams/logs/query', {
         query: { ...query, start, end },
       });
     },
@@ -205,16 +208,23 @@ type LogStreamListeners = {
 };
 
 function tailLogs(filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
-  const stream = getApi().logs({
-    query: {
-      type: filters.type,
-      deployment_id: filters.deploymentId,
-      regional_deployment_id: filters.regionalDeploymentId ?? undefined,
-      instance_id: filters.instanceId ?? undefined,
-      start: filters.start.toISOString(),
-      text: filters.search || undefined,
+  const stream = apiStream(
+    'get /v1/streams/logs/tail',
+    {
+      query: {
+        type: filters.type,
+        deployment_id: filters.deploymentId,
+        regional_deployment_id: filters.regionalDeploymentId ?? undefined,
+        instance_id: filters.instanceId ?? undefined,
+        start: filters.start.toISOString(),
+        text: filters.search || undefined,
+      },
     },
-  });
+    {
+      baseUrl: getConfig('apiBaseUrl'),
+      token: getToken(),
+    },
+  );
 
   const onOpen = () => listeners.onOpen?.();
   const onClose = () => listeners.onClose?.();

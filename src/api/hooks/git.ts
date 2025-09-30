@@ -1,11 +1,12 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
+import { apiQuery } from 'src/api/api';
 import { getApi } from 'src/application/container';
 
+import { getApiQueryKey } from '../api';
 import { ApiError } from '../api-errors';
 import { mapGithubApp, mapRepository } from '../mappers/git';
 import { GitRepository } from '../model';
-import { getApiQueryKey, useApiQueryFn } from '../use-api';
 
 import { useOrganizationUnsafe } from './session';
 
@@ -17,17 +18,17 @@ export function useGithubAppQuery(refetchInterval = 5000) {
   const organization = useOrganizationUnsafe();
 
   return useQuery({
-    queryKey: getApiQueryKey('getGithubApp', {}),
+    queryKey: getApiQueryKey('get /v1/github/installation', {}),
     queryFn: async ({ signal }) => {
-      return getApi()
-        .getGithubApp({ signal })
-        .catch((error) => {
-          if (isNoGithubAppError(error)) {
-            return null;
-          } else {
-            throw error;
-          }
-        });
+      const api = getApi();
+
+      return api('get /v1/github/installation', {}, { signal }).catch((error) => {
+        if (isNoGithubAppError(error)) {
+          return null;
+        } else {
+          throw error;
+        }
+      });
     },
     enabled: organization !== undefined,
     refetchInterval,
@@ -41,7 +42,7 @@ export function useGithubApp(refetchInterval?: number) {
 
 export function useRepositoriesQuery(search: string) {
   return useQuery({
-    ...useApiQueryFn('listRepositories', {
+    ...apiQuery('get /v1/git/repositories', {
       query: {
         limit: '5',
         name: search || undefined,

@@ -1,8 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { apiMutation } from 'src/api/api';
 
+import { useMutation } from '@tanstack/react-query';
 import { useGithubApp } from 'src/api/hooks/git';
 import { useOrganization } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { notify } from 'src/application/notify';
 import { createTranslate } from 'src/intl/translate';
 
@@ -15,7 +15,7 @@ export function GithubAppLinks() {
   const githubApp = useGithubApp();
 
   const { mutate: resync } = useMutation({
-    ...useApiMutationFn('resyncRepositories', {
+    ...apiMutation('post /v1/git/sync/organization/{organization_id}', {
       path: { organization_id: organization.id },
     }),
     onMutate() {

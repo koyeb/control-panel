@@ -1,4 +1,4 @@
-import { isApiValidationError } from 'src/api/api-errors';
+import { ApiError } from 'src/api/api-errors';
 import { getApi } from 'src/application/container';
 import { hasProperty } from 'src/utils/object';
 
@@ -38,7 +38,7 @@ export async function submitServiceForm(form: ServiceForm): Promise<SubmitServic
 async function findOrCreateApp(appName: string): Promise<string> {
   const api = getApi();
 
-  const { apps } = await api.listApps({
+  const { apps } = await api('get /v1/apps', {
     query: { name: appName, limit: '100' },
   });
 
@@ -48,7 +48,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
     return app.id!;
   }
 
-  const { app: newApp } = await api.createApp({
+  const { app: newApp } = await api('post /v1/apps', {
     body: { name: appName },
   });
 
@@ -58,7 +58,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
 async function createVolumes(form: ServiceForm): Promise<void> {
   const api = getApi();
 
-  const { volumes: existingVolumes } = await api.listVolumes({
+  const { volumes: existingVolumes } = await api('get /v1/volumes', {
     query: { limit: '100' },
   });
 
@@ -87,7 +87,7 @@ async function createVolume(index: number, name: string, size: number, region: s
   const api = getApi();
 
   try {
-    const response = await api.createVolume({
+    const response = await api('post /v1/volumes', {
       body: {
         name,
         max_size: size,
@@ -98,8 +98,8 @@ async function createVolume(index: number, name: string, size: number, region: s
 
     return response.volume!.id!;
   } catch (error) {
-    if (isApiValidationError(error)) {
-      for (const field of error.fields) {
+    if (ApiError.isValidationError(error)) {
+      for (const field of error.body.fields) {
         field.field = `volumes.${index}.${field.field}`;
       }
     }
@@ -128,7 +128,7 @@ async function createService(
     definition.volumes = definition.volumes?.filter((volume) => volume.id !== undefined);
   }
 
-  const result = await api.createService({
+  const result = await api('post /v1/services', {
     query: { dry_run: dryRun },
     body: {
       app_id: appId,
@@ -150,7 +150,7 @@ async function createService(
 async function updateService(serviceId: string, form: ServiceForm): Promise<SubmitServiceFormResult> {
   const api = getApi();
 
-  const result = await api.updateService({
+  const result = await api('put /v1/services/{id}', {
     path: { id: serviceId },
     query: { dry_run: false },
     body: {

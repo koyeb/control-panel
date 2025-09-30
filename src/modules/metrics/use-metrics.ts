@@ -1,8 +1,8 @@
 import { useQueries } from '@tanstack/react-query';
 import { Duration, sub } from 'date-fns';
 
-import type { API } from 'src/api/api';
-import { getApiQueryKey } from 'src/api/use-api';
+import { getApiQueryKey } from 'src/api/api';
+import type { API } from 'src/api/api-types';
 import { getApi } from 'src/application/container';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
@@ -51,12 +51,13 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
       return {
         meta: { showError: false },
         refetchInterval: 60 * 1000,
-        queryKey: getApiQueryKey('getServiceMetrics', { query }),
+        queryKey: getApiQueryKey('get /v1/streams/metrics', { query }),
         queryFn: () => {
+          const api = getApi();
           const duration = timeFrameToDuration[timeFrame];
           const start = sub(new Date(), duration).toISOString();
 
-          return getApi().getServiceMetrics({
+          return api('get /v1/streams/metrics', {
             query: { ...query, start },
           });
         },

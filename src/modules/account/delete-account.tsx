@@ -1,8 +1,8 @@
+import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
 
+import { useMutation } from '@tanstack/react-query';
 import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
-import { useApiMutationFn } from 'src/api/use-api';
 import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
@@ -26,7 +26,7 @@ export function DeleteAccount() {
   const [, clearIdentify] = useIdentifyUser();
 
   const { mutateAsync: deleteAccount } = useMutation({
-    ...useApiMutationFn('deleteUser', {
+    ...apiMutation('delete /v1/users/{id}', {
       path: { id: user.id },
     }),
     async onSuccess() {
