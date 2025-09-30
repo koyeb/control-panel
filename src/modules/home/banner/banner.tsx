@@ -1,16 +1,14 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { container } from 'src/application/container';
+import { StoredValue } from 'src/application/storage';
 import { ExternalLink } from 'src/components/link';
 import { IconX } from 'src/icons';
-import { TOKENS } from 'src/tokens';
 
 import BackgroundLeft from './background-left.svg?react';
 import BackgroundRight from './background-right.svg?react';
 
-const storage = container.resolve(TOKENS.storage);
-const storedDismissedIds = storage.value<Record<string, boolean>>('dismissed-banner-id', JSON);
+const storedDismissedIds = new StoredValue<Record<string, boolean>>('dismissed-banner-id');
 const dismissedIds = storedDismissedIds.read() ?? {};
 
 type HomePageBannerProps = {

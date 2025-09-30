@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { TOKENS } from 'src/tokens';
 
 import { container } from './container';
-import { StoragePort, StoredValue } from './storage';
+import { StoredValue } from './storage';
 
 export interface AuthenticationPort {
   get token(): string | null;
@@ -21,14 +21,14 @@ export class StorageAuthenticationAdapter implements AuthenticationPort {
   public token: string | null;
   public session: boolean;
 
-  constructor(storage: StoragePort) {
-    this.accessToken = storage.value('access-token', {
+  constructor() {
+    this.accessToken = new StoredValue('access-token', {
       storage: localStorage,
       parse: String,
       stringify: String,
     });
 
-    this.sessionToken = storage.value('session-token', {
+    this.sessionToken = new StoredValue('session-token', {
       storage: sessionStorage,
       parse: String,
       stringify: String,

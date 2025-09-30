@@ -8,12 +8,10 @@ import { AnyFunction } from 'src/utils/types';
 
 import { AuthenticationPort, StorageAuthenticationAdapter } from './authentication';
 import { getConfig } from './config';
-import { BrowserStorageAdapter } from './storage';
 
 export const container = createContainer();
 
-container.bindFactory(TOKENS.storage, injectableClass(BrowserStorageAdapter));
-container.bindFactory(TOKENS.authentication, injectableClass(StorageAuthenticationAdapter, TOKENS.storage));
+container.bindFactory(TOKENS.authentication, injectableClass(StorageAuthenticationAdapter));
 container.bindFactory(TOKENS.seon, injectableClass(SeonAdapter));
 container.bindFactory(TOKENS.api, injectable(createApi, TOKENS.authentication));
 

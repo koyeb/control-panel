@@ -11,6 +11,7 @@ import {
 import { getConfig } from 'src/application/config';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
+import { StoredValue } from 'src/application/storage';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -221,8 +222,7 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
   );
 }
 
-const storage = container.resolve(TOKENS.storage);
-const pageContextExpanded = storage.value<boolean>('page-context-expanded');
+const pageContextExpanded = new StoredValue<boolean>('page-context-expanded');
 
 function usePageContext() {
   const user = useUserUnsafe();

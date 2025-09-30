@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import { container } from 'src/application/container';
+import { StoredValue } from 'src/application/storage';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { createTranslate } from 'src/intl/translate';
-import { TOKENS } from 'src/tokens';
 
 import { terminalColors } from './terminal-colors';
 
@@ -15,8 +14,7 @@ const defaultInitialCommand = '/bin/sh';
 const enter = '\x0D';
 const backspace = '\x7F';
 
-const storage = container.resolve(TOKENS.storage);
-const initialCommand = storage.value('shellInitialCommand', {
+const initialCommand = new StoredValue('shellInitialCommand', {
   storage: window.sessionStorage,
   parse: String,
   stringify: String,

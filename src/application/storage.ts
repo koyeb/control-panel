@@ -1,5 +1,6 @@
 type Parse<T> = (value: string) => T;
 type Serialize<T> = (value: T) => string;
+type ChangeListener<T> = (value: T | null) => void;
 
 type StoredValueOptions<T> = {
   storage?: Storage;
@@ -7,19 +8,7 @@ type StoredValueOptions<T> = {
   stringify?: Serialize<T>;
 };
 
-type ChangeListener<T> = (value: T | null) => void;
-
-export type StoredValue<T> = {
-  read: () => T | null;
-  write: (value: T | null) => void;
-  listen: (onChange: ChangeListener<T>) => () => void;
-};
-
-export interface StoragePort {
-  value<T>(key: string, options?: StoredValueOptions<T>): StoredValue<T>;
-}
-
-export class BrowserStorageAdapter implements StoragePort {
+export class StoredValue<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static defaultOptions: Required<StoredValueOptions<any>> = {
     storage: window.localStorage,
@@ -27,21 +16,21 @@ export class BrowserStorageAdapter implements StoragePort {
     stringify: JSON.stringify,
   };
 
-  value<T>(key: string, options?: StoredValueOptions<T>): StoredValue<T> {
-    const { storage, parse, stringify } = {
-      ...BrowserStorageAdapter.defaultOptions,
-      ...options,
-    };
+  private key: string;
+  private options: Required<StoredValueOptions<T>>;
 
-    return {
-      read: () => this.read<T>(storage, key, parse),
-      write: (value) => this.write<T>(storage, key, value, stringify),
-      listen: (onChange) => this.listen<T>(key, onChange, parse),
+  constructor(key: string, options?: StoredValueOptions<T>) {
+    this.key = key;
+
+    this.options = {
+      ...StoredValue.defaultOptions,
+      ...options,
     };
   }
 
-  private read<T>(storage: Storage, key: string, parse: Parse<T>): T | null {
-    const value = storage.getItem(key);
+  read(): T | null {
+    const { storage, parse } = this.options;
+    const value = storage.getItem(this.key);
 
     if (value === null) {
       return null;
@@ -50,17 +39,21 @@ export class BrowserStorageAdapter implements StoragePort {
     return parse(value);
   }
 
-  private write<T>(storage: Storage, key: string, value: T | null, stringify: Serialize<T>): void {
+  write(value: T | null): void {
+    const { storage, stringify } = this.options;
+
     if (value === null) {
-      storage.removeItem(key);
+      storage.removeItem(this.key);
     } else {
-      storage.setItem(key, stringify(value));
+      storage.setItem(this.key, stringify(value));
     }
   }
 
-  private listen<T>(key: string, onChange: ChangeListener<T>, parse: Parse<T>): () => void {
+  listen(onChange: ChangeListener<T>): () => void {
+    const { parse } = this.options;
+
     const listener = (event: StorageEvent) => {
-      if (event.key === key) {
+      if (event.key === this.key) {
         onChange(event.newValue === null ? null : parse(event.newValue));
       }
     };
