@@ -5,17 +5,18 @@ import { useRef } from 'react';
 import { useCatalogInstanceAvailability } from 'src/api/hooks/catalog';
 import { useOrganization } from 'src/api/hooks/session';
 import { CatalogInstance } from 'src/api/model';
-import { useInstanceQuota } from 'src/application/instance-quota';
 import { formatBytes, parseBytes } from 'src/application/memory';
+import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
+import { ExternalLinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
+import { tallyForms } from 'src/hooks/tally';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
 import { CatalogAvailability } from './catalog-availability';
 import { InstanceSelectorBadge } from './instance-selector';
-import { shouldAddCreditCard } from './instance-selector-state';
 import { RequestQuotaIncreaseDialog } from './request-quota-increase-dialog';
 
 const T = createTranslate('components.instanceSelector');
@@ -229,12 +230,24 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
 
 function RequestQuota({ instance }: { instance: CatalogInstance }) {
   const openDialog = Dialog.useOpen();
-  const quota = useInstanceQuota(instance);
   const organization = useOrganization();
-  const addCreditCard = shouldAddCreditCard(organization, instance, quota);
+  const addCreditCard = organization.plan === 'hobby';
 
   if (instance.id === 'free') {
     return null;
+  }
+
+  if (isTenstorrentGpu(instance)) {
+    return (
+      <ExternalLinkButton
+        href={`https://tally.so/r/${tallyForms.requestTenstorrentAccess}`}
+        openInNewTab
+        color="gray"
+        className="mt-4"
+      >
+        <T id="actions.requestAccess" />
+      </ExternalLinkButton>
+    );
   }
 
   const handleClick = () => {

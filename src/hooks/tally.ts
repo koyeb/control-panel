@@ -21,6 +21,7 @@ declare global {
 
 export const tallyForms = {
   getInTouch: 'nGLjGo',
+  requestTenstorrentAccess: 'npRak8',
 };
 
 export function useTallyDialog(formId: string, onSubmitted?: () => void) {
