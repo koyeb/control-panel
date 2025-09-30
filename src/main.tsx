@@ -14,6 +14,7 @@ import { StrictMode, useEffect, useMemo, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api/api-errors';
+import { getConfig } from './application/config';
 import { container } from './application/container';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
@@ -23,7 +24,6 @@ import { NotificationContainer } from './components/notification';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
 import { routeTree } from './route-tree.generated';
 import { TOKENS } from './tokens';
-import { getConfig } from './utils/config';
 
 declare module '@tanstack/react-router' {
   interface Register {

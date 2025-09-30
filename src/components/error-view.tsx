@@ -1,11 +1,11 @@
 import { ErrorComponentProps } from '@tanstack/react-router';
 
 import { ApiError, isAccountLockedError } from 'src/api/api-errors';
+import { getConfig } from 'src/application/config';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useForceThemeMode } from 'src/hooks/theme';
 import { createTranslate } from 'src/intl/translate';
 import { AccountLocked } from 'src/modules/account/account-locked';
-import { getConfig } from 'src/utils/config';
 
 import { ExternalLink, Link } from './link';
 

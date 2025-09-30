@@ -7,18 +7,17 @@ import { keys, toObject } from 'src/utils/object';
 import { AnyFunction } from 'src/utils/types';
 
 import { AuthenticationPort, StorageAuthenticationAdapter } from './authentication';
-import { ConfigPort, EnvConfigAdapter } from './config';
+import { getConfig } from './config';
 import { BrowserStorageAdapter } from './storage';
 
 export const container = createContainer();
 
-container.bindFactory(TOKENS.config, injectableClass(EnvConfigAdapter));
 container.bindFactory(TOKENS.storage, injectableClass(BrowserStorageAdapter));
 container.bindFactory(TOKENS.authentication, injectableClass(StorageAuthenticationAdapter, TOKENS.storage));
 container.bindFactory(TOKENS.seon, injectableClass(SeonAdapter));
-container.bindFactory(TOKENS.api, injectable(createApi, TOKENS.config, TOKENS.authentication));
+container.bindFactory(TOKENS.api, injectable(createApi, TOKENS.authentication));
 
-function createApi(config: ConfigPort, auth: AuthenticationPort) {
+function createApi(auth: AuthenticationPort) {
   return toObject(
     keys(api),
     (key) => key,
@@ -28,7 +27,7 @@ function createApi(config: ConfigPort, auth: AuthenticationPort) {
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return fn({
-          baseUrl: config.get('apiBaseUrl'),
+          baseUrl: getConfig('apiBaseUrl'),
           token: auth.token,
           ...param,
         });

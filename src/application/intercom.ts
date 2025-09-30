@@ -4,8 +4,8 @@ import { api } from 'src/api/api';
 import { User } from 'src/api/model';
 
 import { TOKENS } from '../tokens';
-import { getConfig } from '../utils/config';
 
+import { getConfig } from './config';
 import { container } from './container';
 
 export function initIntercom() {
@@ -36,7 +36,7 @@ export async function identifyUserInIntercom(user: User | null) {
 
 async function getUserHash() {
   const token = container.resolve(TOKENS.authentication).token;
-  const baseUrl = container.resolve(TOKENS.config).get('apiBaseUrl');
+  const baseUrl = getConfig('apiBaseUrl');
 
   return api.getIntercomUserHash({ baseUrl, token }).then(({ hash }) => hash);
 }

@@ -5,8 +5,8 @@ import { useCallback, useEffect } from 'react';
 import { useUserUnsafe } from 'src/api/hooks/session';
 import { User } from 'src/api/model';
 import { useLocation } from 'src/hooks/router';
-import { getConfig } from 'src/utils/config';
 
+import { getConfig } from './config';
 import { identifyUserInIntercom } from './intercom';
 import { identifyUserInSentry } from './sentry';
 

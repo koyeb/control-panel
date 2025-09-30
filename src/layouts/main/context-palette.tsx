@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
 import { useUserUnsafe } from 'src/api/hooks/session';
+import { getConfig } from 'src/application/config';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
@@ -10,7 +11,6 @@ import { useLocation } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { TOKENS } from 'src/tokens';
-import { getConfig } from 'src/utils/config';
 
 export function ContextPalette() {
   const location = useLocation();

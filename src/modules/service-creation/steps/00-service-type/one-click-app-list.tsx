@@ -1,10 +1,9 @@
 import { useOneClickApps } from 'src/api/hooks/catalog';
-import { container } from 'src/application/container';
+import { getConfig } from 'src/application/config';
 import { ExternalLink, Link } from 'src/components/link';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { TOKENS } from 'src/tokens';
 import { isDefined } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
@@ -16,7 +15,6 @@ const T = createTranslate('modules.serviceCreation.serviceType');
 
 export function OneClickAppList() {
   const oneClickApps = useOneClickApps();
-  const config = container.resolve(TOKENS.config);
 
   const apps = [
     oneClickApps.find(hasProperty('slug', 'bun')),
@@ -36,7 +34,7 @@ export function OneClickAppList() {
           <>
             <ul>
               {apps.map((app) => (
-                <ExternalLink key={app.slug} href={`${config.get('websiteUrl')}/deploy/${app.slug}`}>
+                <ExternalLink key={app.slug} href={`${getConfig('websiteUrl')}/deploy/${app.slug}`}>
                   <ServiceTypeItem
                     icon={
                       <div className="rounded-md bg-black/60 p-1.5">
@@ -50,7 +48,7 @@ export function OneClickAppList() {
             </ul>
 
             <ExternalLink
-              href={`${config.get('websiteUrl')}/deploy`}
+              href={`${getConfig('websiteUrl')}/deploy`}
               className="ms-4 row items-center gap-1 text-link"
             >
               <T id="navigation.moreOneClickApps" />

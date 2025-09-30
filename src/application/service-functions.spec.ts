@@ -1,19 +1,10 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
-import { TOKENS } from 'src/tokens';
 import { create } from 'src/utils/factories';
 
-import { StubConfigAdapter } from './config';
-import { container } from './container';
 import { ServiceUrl, getServiceUrls } from './service-functions';
 
 describe('getServiceUrls', () => {
-  const config = new StubConfigAdapter();
-
-  beforeEach(() => {
-    container.bindValue(TOKENS.config, config);
-  });
-
   it('web service urls', () => {
     const urls = getServiceUrls(
       create.app({ name: 'app', domains: [{ id: '', name: 'test.com', type: 'CUSTOM' }] }),
@@ -64,7 +55,7 @@ describe('getServiceUrls', () => {
   });
 
   it('tcp proxy', () => {
-    config.set('environment', 'production');
+    vi.stubEnv('VITE_ENVIRONMENT', 'production');
 
     const urls = getServiceUrls(
       create.app({ domains: [{ id: '', name: 'app.koyeb.app', type: 'AUTOASSIGNED' }] }),

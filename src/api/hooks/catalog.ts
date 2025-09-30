@@ -1,8 +1,8 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import sortBy from 'lodash-es/sortBy';
 
+import { getConfig } from 'src/application/config';
 import { parseBytes } from 'src/application/memory';
-import { getConfig } from 'src/utils/config';
 import { entries, hasProperty, snakeToCamelDeep } from 'src/utils/object';
 
 import { ApiError } from '../api-errors';

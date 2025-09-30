@@ -3,8 +3,7 @@ import { Stripe, loadStripe } from '@stripe/stripe-js';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
-import { getConfig } from 'src/utils/config';
-
+import { getConfig } from './config';
 import { createValidationGuard } from './create-validation-guard';
 import { notify } from './notify';
 import { reportError } from './sentry';

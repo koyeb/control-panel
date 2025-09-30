@@ -1,78 +1,44 @@
 import { z } from 'zod';
 
-export type AppConfig = Partial<{
-  environment: string;
-  version: string;
-  apiBaseUrl: string;
-  websiteUrl: string;
-  pageContextBaseUrl: string;
-  recaptchaClientKey: string;
-  posthogApiHost: string;
-  posthogKey: string;
-  stripePublicKey: string;
-  mapboxToken: string;
-  intercomAppId: string;
-  sentryDsn: string;
-}>;
+export type AppConfig = Partial<Record<keyof typeof envVars, string>>;
 
-export interface ConfigPort {
-  get<K extends keyof AppConfig>(key: K): AppConfig[K];
-}
+const envVars = {
+  environment: 'VITE_ENVIRONMENT',
+  version: 'VITE_APP_VERSION',
+  apiBaseUrl: 'VITE_API_URL',
+  websiteUrl: 'VITE_WEBSITE_URL',
+  pageContextBaseUrl: 'VITE_PAGE_CONTEXT_BASE_URL',
+  recaptchaClientKey: 'VITE_RECAPTCHA_CLIENT_KEY',
+  posthogApiHost: 'VITE_POSTHOG_API_HOST',
+  posthogKey: 'VITE_POSTHOG_KEY',
+  stripePublicKey: 'VITE_STRIPE_PUBLIC_KEY',
+  mapboxToken: 'VITE_MAPBOX_TOKEN',
+  intercomAppId: 'VITE_INTERCOM_APP_ID',
+  sentryDsn: 'VITE_SENTRY_DSN',
+};
 
-export class EnvConfigAdapter implements ConfigPort {
-  private envConfig: AppConfig;
-  private localConfig: AppConfig;
+const localConfig: AppConfig = {};
 
-  constructor() {
-    const string = (value?: string) => value ?? '';
+if (typeof window !== 'undefined') {
+  const { success, data } = z
+    .record(z.string(), z.string())
+    .safeParse(JSON.parse(localStorage.getItem('config') ?? '{}'));
 
-    this.envConfig = {
-      environment: string(import.meta.env.VITE_ENVIRONMENT),
-      version: string(import.meta.env.VITE_APP_VERSION),
-      apiBaseUrl: string(import.meta.env.VITE_API_URL),
-      websiteUrl: string(import.meta.env.VITE_WEBSITE_URL),
-      pageContextBaseUrl: string(import.meta.env.VITE_PAGE_CONTEXT_BASE_URL),
-      recaptchaClientKey: string(import.meta.env.VITE_RECAPTCHA_CLIENT_KEY),
-      posthogApiHost: string(import.meta.env.VITE_POSTHOG_API_HOST),
-      posthogKey: string(import.meta.env.VITE_POSTHOG_KEY),
-      stripePublicKey: string(import.meta.env.VITE_STRIPE_PUBLIC_KEY),
-      mapboxToken: string(import.meta.env.VITE_MAPBOX_TOKEN),
-      intercomAppId: string(import.meta.env.VITE_INTERCOM_APP_ID),
-      sentryDsn: string(import.meta.env.VITE_SENTRY_DSN),
-    };
-
-    try {
-      this.localConfig = z
-        .record(z.string(), z.string())
-        .parse(JSON.parse(localStorage.getItem('config') ?? ''));
-    } catch {
-      this.localConfig = {};
-    }
-  }
-
-  get<K extends keyof AppConfig>(key: K): AppConfig[K] {
-    if (key in this.localConfig) {
-      return this.localConfig[key];
-    }
-
-    const value = this.envConfig[key];
-
-    if (value === '') {
-      return undefined;
-    }
-
-    return value;
+  if (success) {
+    Object.assign(localConfig, data);
   }
 }
 
-export class StubConfigAdapter implements ConfigPort {
-  private config: AppConfig = {};
-
-  get<K extends keyof AppConfig>(key: K): AppConfig[K] {
-    return this.config[key];
+export function getConfig<K extends keyof AppConfig>(key: K): AppConfig[K] {
+  if (key in localConfig) {
+    return localConfig[key];
   }
 
-  set<K extends keyof AppConfig>(key: K, value: AppConfig[K]): void {
-    this.config[key] = value;
+  const value: string | undefined = import.meta.env[envVars[key]];
+
+  if (value === '') {
+    return undefined;
   }
+
+  return value;
 }

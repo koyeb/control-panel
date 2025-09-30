@@ -8,6 +8,7 @@ import {
   useOrganizationUnsafe,
   useUserUnsafe,
 } from 'src/api/hooks/session';
+import { getConfig } from 'src/application/config';
 import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { DocumentTitle } from 'src/components/document-title';
@@ -26,7 +27,6 @@ import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { useTrial } from 'src/modules/trial/use-trial';
 import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
-import { getConfig } from 'src/utils/config';
 
 import { OrganizationSwitcher } from '../organization-switcher';
 

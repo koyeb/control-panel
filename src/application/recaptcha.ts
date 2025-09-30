@@ -1,4 +1,4 @@
-import { getConfig } from 'src/utils/config';
+import { getConfig } from './config';
 
 type Grecaptcha = {
   ready(callback: () => void): void;

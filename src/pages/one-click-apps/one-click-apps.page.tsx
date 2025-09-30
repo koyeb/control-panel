@@ -3,11 +3,11 @@ import { useMemo, useState } from 'react';
 
 import { useOneClickApps } from 'src/api/hooks/catalog';
 import { OneClickApp } from 'src/api/model';
+import { getConfig } from 'src/application/config';
 import { Link } from 'src/components/link';
 import { IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { unique } from 'src/utils/arrays';
-import { getConfig } from 'src/utils/config';
 import { lowerCase } from 'src/utils/strings';
 
 import { AppCard } from './app-card';
