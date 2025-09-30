@@ -47,8 +47,7 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
     };
   },
 
-  async loader({ deps, context: { queryClient } }) {
-    const seon = container.resolve(TOKENS.seon);
+  async loader({ deps, context: { seon, queryClient } }) {
     const api = container.resolve(TOKENS.api);
 
     const search = deps.search;
@@ -60,7 +59,9 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
 
     try {
       const { token } = await api.githubOAuthCallback({
-        header: { 'seon-fp': await seon.getFingerprint() },
+        header: {
+          'seon-fp': await seon.getFingerprint(),
+        },
         body: {
           code: search.code,
           state: search.state,

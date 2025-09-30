@@ -8,6 +8,7 @@ import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/use-api';
 import { container } from 'src/application/container';
 import { notify } from 'src/application/notify';
 import { LogoLoading } from 'src/components/logo-loading';
+import { SeonPort } from 'src/hooks/seon';
 import { TOKENS } from 'src/tokens';
 import { slugify } from 'src/utils/strings';
 
@@ -16,9 +17,9 @@ export const Route = createFileRoute('/account/validate/$token')({
   pendingMinMs: 0,
   pendingMs: 0,
 
-  async loader({ params, context: { queryClient, translate } }) {
+  async loader({ params, context: { seon, queryClient, translate } }) {
     try {
-      await validateAccount(queryClient, params.token);
+      await validateAccount(seon, queryClient, params.token);
       await createOrganization(queryClient).catch(() => {});
 
       notify.success(translate('pages.onboarding.emailValidation.emailAddressValidated'));
@@ -32,9 +33,8 @@ export const Route = createFileRoute('/account/validate/$token')({
   },
 });
 
-async function validateAccount(queryClient: QueryClient, token: string) {
+async function validateAccount(seon: SeonPort, queryClient: QueryClient, token: string) {
   const auth = container.resolve(TOKENS.authentication);
-  const seon = container.resolve(TOKENS.seon);
   const api = container.resolve(TOKENS.api);
 
   await api.validateAccount({

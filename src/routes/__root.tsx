@@ -6,10 +6,12 @@ import { ApiError } from 'src/api/api-errors';
 import { createEnsureApiQueryData } from 'src/api/use-api';
 import { container } from 'src/application/container';
 import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
+import { SeonPort } from 'src/hooks/seon';
 import { TranslateFn } from 'src/intl/translate';
 import { TOKENS } from 'src/tokens';
 
 type RouterContext = {
+  seon: SeonPort;
   queryClient: QueryClient;
   translate: TranslateFn;
   breadcrumb?: () => React.ReactNode;

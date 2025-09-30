@@ -21,6 +21,7 @@ import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
 import { NotificationContainer } from './components/notification';
+import { SeonAdapter } from './hooks/seon';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
 import { routeTree } from './route-tree.generated';
 import { TOKENS } from './tokens';
@@ -149,6 +150,7 @@ const router = createRouter({
     return result !== '' ? `?${result}` : '';
   },
   context: {
+    seon: new SeonAdapter(),
     queryClient,
     translate: createTranslateFn(),
   },

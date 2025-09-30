@@ -1,8 +1,6 @@
 import seon, { SDKOptions } from '@seontechnologies/seon-javascript-sdk';
+import { useRouteContext } from '@tanstack/react-router';
 import { useCallback } from 'react';
-
-import { container } from 'src/application/container';
-import { TOKENS } from 'src/tokens';
 
 // cSpell:ignore seontechnologies deviceinfresolver
 
@@ -31,7 +29,7 @@ export class SeonAdapter implements SeonPort {
 }
 
 export function useSeon() {
-  const seon = container.resolve(TOKENS.seon);
+  const seon = useRouteContext({ from: '__root__', select: (ctx) => ctx.seon });
 
   return useCallback(() => seon.getFingerprint(), [seon]);
 }

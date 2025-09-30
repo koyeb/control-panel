@@ -1,7 +1,6 @@
 import { createContainer, injectable, injectableClass } from 'ditox';
 
 import { api } from 'src/api/api';
-import { SeonAdapter } from 'src/hooks/seon';
 import { TOKENS } from 'src/tokens';
 import { keys, toObject } from 'src/utils/object';
 import { AnyFunction } from 'src/utils/types';
@@ -12,7 +11,6 @@ import { getConfig } from './config';
 export const container = createContainer();
 
 container.bindFactory(TOKENS.authentication, injectableClass(StorageAuthenticationAdapter));
-container.bindFactory(TOKENS.seon, injectableClass(SeonAdapter));
 container.bindFactory(TOKENS.api, injectable(createApi, TOKENS.authentication));
 
 function createApi(auth: AuthenticationPort) {
