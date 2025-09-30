@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { API, Api } from 'src/api/api';
+import { API } from 'src/api/api';
 import { createApiApp, createApiDeployment, createApiService, createApiVolume } from 'src/api/mock/fixtures';
 import {
   CatalogDatacenter,
@@ -11,9 +11,8 @@ import {
   Organization,
   OrganizationQuotas,
 } from 'src/api/model';
-import { container } from 'src/application/container';
+import { getApiQueryKey } from 'src/api/use-api';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
-import { TOKENS } from 'src/tokens';
 import { create } from 'src/utils/factories';
 
 import { ServiceForm, ServiceVolume } from '../service-form.types';
@@ -31,7 +30,6 @@ vi.mock('./generate-app-name.ts', () => ({
 }));
 
 describe('initializeServiceForm', () => {
-  let api: Api;
   let params: URLSearchParams;
   let datacenters: CatalogDatacenter[];
   let regions: CatalogRegion[];
@@ -40,11 +38,9 @@ describe('initializeServiceForm', () => {
   let quotas: OrganizationQuotas;
   let githubApp: GithubApp | undefined;
   let serviceId: string | undefined;
+  let queryClient: QueryClient;
 
   beforeEach(() => {
-    api = {} as Api;
-    container.bindValue(TOKENS.api, api);
-
     params = new URLSearchParams();
 
     datacenters = [];
@@ -66,6 +62,8 @@ describe('initializeServiceForm', () => {
 
     githubApp = undefined;
     serviceId = undefined;
+
+    queryClient = new QueryClient();
   });
 
   async function initialize() {
@@ -78,7 +76,7 @@ describe('initializeServiceForm', () => {
       quotas,
       githubApp,
       serviceId,
-      new QueryClient(),
+      queryClient,
     );
   }
 
@@ -112,7 +110,10 @@ describe('initializeServiceForm', () => {
 
     githubApp = create.githubApp({ organizationName: 'org' });
 
-    api.listRepositories = vi.fn().mockResolvedValue({ repositories: [] });
+    queryClient.setQueryData(
+      getApiQueryKey('listRepositories', { query: { name: 'org/repo', name_search_op: 'equality' } }),
+      { repositories: [] },
+    );
 
     expect(await initialize()).toEqual(serviceForm);
   });
@@ -156,10 +157,19 @@ describe('initializeServiceForm', () => {
         max_size: 1,
       });
 
-      api.getApp = async () => ({ app: createApiApp() });
-      api.getService = async () => ({ service: createApiService() });
-      api.getDeployment = async () => ({ deployment: createApiDeployment({ definition }) });
-      api.listVolumes = async () => ({ volumes: [volume] });
+      queryClient.setQueryData(getApiQueryKey('getApp', { path: { id: 'appId' } }), { app: createApiApp() });
+
+      queryClient.setQueryData(getApiQueryKey('getService', { path: { id: 'serviceId' } }), {
+        service: createApiService({ app_id: 'appId', latest_deployment_id: 'deploymentId' }),
+      });
+
+      queryClient.setQueryData(getApiQueryKey('getDeployment', { path: { id: 'deploymentId' } }), {
+        deployment: createApiDeployment({ definition }),
+      });
+
+      queryClient.setQueryData(getApiQueryKey('listVolumes', { query: { limit: '100' } }), {
+        volumes: [volume],
+      });
 
       const values = await initialize();
 

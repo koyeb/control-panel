@@ -11,7 +11,7 @@ import {
   Organization,
   OrganizationQuotas,
 } from 'src/api/model';
-import { getApi } from 'src/application/container';
+import { createEnsureApiQueryData } from 'src/api/use-api';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
@@ -37,25 +37,25 @@ export async function initializeServiceForm(
   serviceId: string | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {
-  const api = getApi();
+  const api = createEnsureApiQueryData(queryClient);
   let values = defaultServiceForm();
 
   const getApp = async (appId: string) => {
-    return api.getApp({ path: { id: appId } });
+    return api('getApp', { path: { id: appId } });
   };
 
   const getService = async (serviceId: string) => {
-    return api.getService({ path: { id: serviceId } });
+    return api('getService', { path: { id: serviceId } });
   };
 
   const getDeployment = async (deploymentId: string) => {
-    return api.getDeployment({ path: { id: deploymentId } });
+    return api('getDeployment', { path: { id: deploymentId } });
   };
 
   if (serviceId) {
     const { service } = await getService(serviceId);
     const { app } = await getApp(service!.app_id!);
-    const { volumes } = await api.listVolumes({ query: { limit: '100' } });
+    const { volumes } = await api('listVolumes', { query: { limit: '100' } });
     const deployment = await getDeployment(service!.latest_deployment_id!);
     const definition = deployment.deployment!.definition!;
 
@@ -122,8 +122,9 @@ export async function initializeServiceForm(
       const { repositoryName } = values.source.git.organizationRepository;
 
       if (repositoryName) {
-        const repository = await api
-          .listRepositories({ query: { name: repositoryName, name_search_op: 'equality' } })
+        const repository = await api('listRepositories', {
+          query: { name: repositoryName, name_search_op: 'equality' },
+        })
           .then(({ repositories }) => repositories!.map(mapRepository))
           .then(([repository]) => repository);
 
