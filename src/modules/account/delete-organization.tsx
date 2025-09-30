@@ -1,11 +1,11 @@
 import { Button } from '@koyeb/design-system';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { apiQuery } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
-import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
+import { setToken } from 'src/application/token';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
@@ -19,7 +19,7 @@ export function DeleteOrganization() {
   const user = useUser();
   const organization = useOrganization();
 
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const unpaidInvoicesQuery = useQuery({
@@ -62,7 +62,7 @@ export function DeleteOrganization() {
       return result;
     },
     async onSuccess(token) {
-      await setToken(token);
+      await setToken(token, { queryClient });
       await navigate({ to: '/' });
       notify.info(t('successNotification', { organizationName: organization.name }));
     },

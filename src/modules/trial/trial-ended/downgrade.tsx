@@ -1,11 +1,11 @@
 import { Alert, Button, DialogFooter, DialogHeader } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
+import { setToken } from 'src/application/token';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -25,7 +25,7 @@ const schema = z.object({
 
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -50,7 +50,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      await setToken(token);
+      await setToken(token, { queryClient });
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({

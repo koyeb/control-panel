@@ -6,15 +6,15 @@ import { z } from 'zod';
 import { createEnsureApiQueryData } from 'src/api/api';
 import { ApiError, hasMessage } from 'src/api/api-errors';
 import { mapOrganization } from 'src/api/mappers/session';
-import { container, getApi } from 'src/application/container';
+import { getApi } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
+import { setToken } from 'src/application/token';
 import { Link } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
 import { urlToLinkOptions } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
-import { TOKENS } from 'src/tokens';
 import { assert } from 'src/utils/assert';
 
 const jwtSchema = z.object({
@@ -72,7 +72,7 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
 
       if (search.setup_action === undefined) {
         assert(token?.id !== undefined);
-        await handleAuthentication(token.id, redirectUrl);
+        await handleAuthentication(queryClient, token.id, redirectUrl);
       }
 
       await handleGithubAppInstalled(queryClient, redirectUrl, deps);
@@ -94,10 +94,8 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
   onError: reportError,
 });
 
-async function handleAuthentication(token: string, redirectUrl: URL) {
-  const auth = container.resolve(TOKENS.authentication);
-
-  auth.setToken(token);
+async function handleAuthentication(queryClient: QueryClient, token: string, redirectUrl: URL) {
+  setToken(token, { queryClient });
 
   throw redirect({
     to: redirectUrl.pathname,

@@ -5,11 +5,11 @@ import { createEnsureApiQueryData, getApiQueryKey } from 'src/api/api';
 import { hasMessage } from 'src/api/api-errors';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
 import { User } from 'src/api/model';
-import { container, getApi } from 'src/application/container';
+import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
+import { setToken } from 'src/application/token';
 import { LogoLoading } from 'src/components/logo-loading';
 import { SeonPort } from 'src/hooks/seon';
-import { TOKENS } from 'src/tokens';
 import { slugify } from 'src/utils/strings';
 
 export const Route = createFileRoute('/account/validate/$token')({
@@ -48,8 +48,6 @@ async function validateAccount(seon: SeonPort, queryClient: QueryClient, token: 
 
 async function createOrganization(queryClient: QueryClient) {
   const api = getApi();
-  const auth = container.resolve(TOKENS.authentication);
-
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
   const user = await ensureApiQueryData('get /v1/account/profile', {}).then(({ user }) => mapUser(user!));
@@ -63,7 +61,7 @@ async function createOrganization(queryClient: QueryClient) {
     header: {},
   });
 
-  auth.setToken(token!.id!);
+  setToken(token!.id!, { queryClient });
   await queryClient.invalidateQueries();
 }
 

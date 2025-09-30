@@ -1,14 +1,13 @@
-import { apiMutation } from 'src/api/api';
-import { apiQuery } from 'src/api/api';
 import { Combobox, Spinner } from '@koyeb/design-system';
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
-
 import { useState } from 'react';
+
+import { apiMutation, apiQuery } from 'src/api/api';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganization } from 'src/api/mappers/session';
 import { Organization } from 'src/api/model';
-import { useSetToken } from 'src/application/authentication';
+import { setToken } from 'src/application/token';
 import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
@@ -165,7 +164,7 @@ function useOrganizationList(search: string) {
 
 function useSwitchOrganization(onSuccess?: () => void) {
   const getSeonFingerprint = useSeon();
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
 
   return useMutation({
     ...apiMutation('post /v1/organizations/{id}/switch', async (organizationId: string) => ({
@@ -173,7 +172,7 @@ function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!);
+      await setToken(token!.id!, { queryClient });
       onSuccess?.();
     },
   });

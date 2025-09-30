@@ -1,16 +1,15 @@
 import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/design-system';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { apiMutation, apiQuery } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
+import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api/api';
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useOrganization, useUser } from 'src/api/hooks/session';
 import { mapOrganizationMember } from 'src/api/mappers/session';
 import { OrganizationInvitation, type OrganizationMember } from 'src/api/model';
-import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
+import { setToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
@@ -279,7 +278,7 @@ function useLeaveOrganization() {
 
   const user = useUser();
 
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
@@ -312,7 +311,7 @@ function useLeaveOrganization() {
       return result;
     },
     async onSuccess(token, { organization }) {
-      await setToken(token);
+      await setToken(token, { queryClient });
       await navigate({ to: '/' });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },

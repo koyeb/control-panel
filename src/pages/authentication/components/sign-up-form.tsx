@@ -1,13 +1,13 @@
-import { apiMutation } from 'src/api/api';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-
 import { z } from 'zod';
-import { useSetToken } from 'src/application/authentication';
+
+import { apiMutation } from 'src/api/api';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
+import { setToken } from 'src/application/token';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -34,7 +34,7 @@ type SignUpFormProps = {
 
 export function SignUpForm({ initialValues }: SignUpFormProps) {
   const t = T.useTranslate();
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -59,7 +59,7 @@ export function SignUpForm({ initialValues }: SignUpFormProps) {
       },
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!);
+      await setToken(token!.id!, { queryClient });
       await navigate({ to: '/' });
     },
     onError: useFormErrorHandler(form, (error) => {

@@ -1,12 +1,11 @@
 import { Spinner } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { apiMutation } from 'src/api/api';
-import { useInvalidateApiQuery } from 'src/api/api';
+import { apiMutation, useInvalidateApiQuery } from 'src/api/api';
 import { OrganizationInvitation } from 'src/api/model';
-import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
+import { setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { AuthButton } from 'src/pages/authentication/components/auth-button';
@@ -21,7 +20,7 @@ type HandleInvitationsProps = {
 
 export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   const invalidate = useInvalidateApiQuery();
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
@@ -39,7 +38,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      await setToken(token);
+      await setToken(token, { queryClient });
       await navigate({ to: '/' });
       notify.info(t('acceptSuccess'));
     },

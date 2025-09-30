@@ -1,7 +1,8 @@
 import { CommandPalette } from '@koyeb/design-system';
+import { useQueryClient } from '@tanstack/react-query';
 
-import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
+import { setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { IconCirclePlus, IconRefreshCcw } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
@@ -13,7 +14,7 @@ export function useOrganizationCommands() {
   const t2 = useTranslate();
 
   const navigate = useNavigate();
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
 
   return (palette: CommandPalette) => {
     const group = palette.addGroup({
@@ -42,7 +43,7 @@ export function useOrganizationCommands() {
                 header: {},
               });
 
-              await setToken(token!.id!);
+              await setToken(token!.id!, { queryClient });
             },
           });
         }

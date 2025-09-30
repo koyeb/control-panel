@@ -1,12 +1,12 @@
 import { InfoTooltip } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useInvitationsQuery } from 'src/api/hooks/invitation';
 import { useUser } from 'src/api/hooks/session';
-import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
+import { setToken } from 'src/application/token';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -57,7 +57,7 @@ export function JoinOrganization() {
 }
 
 function CreateOrganization() {
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -83,7 +83,7 @@ function CreateOrganization() {
       return newToken!.id!;
     },
     async onSuccess(token) {
-      await setToken(token);
+      await setToken(token, { queryClient });
       await navigate({ to: '/' });
     },
     onError: useFormErrorHandler(form, (error) => ({

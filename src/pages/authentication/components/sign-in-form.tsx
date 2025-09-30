@@ -1,12 +1,12 @@
-import { apiMutation } from 'src/api/api';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-
 import { z } from 'zod';
+
+import { apiMutation } from 'src/api/api';
 import { ApiError } from 'src/api/api-errors';
-import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
+import { setToken } from 'src/application/token';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -28,7 +28,7 @@ const invalidCredentialApiMessage =
 
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -47,7 +47,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
       body: credential,
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!);
+      await setToken(token!.id!, { queryClient });
       await navigate(urlToLinkOptions(redirect));
     },
     onError(error) {

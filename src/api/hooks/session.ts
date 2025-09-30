@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { apiMutation, apiQuery } from 'src/api/api';
-import { useSetToken } from 'src/application/authentication';
 import { useIdentifyUser } from 'src/application/posthog';
+import { setToken } from 'src/application/token';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { AssertionError, defined } from 'src/utils/assert';
@@ -89,8 +89,8 @@ export function useUserOrganizationMemberships() {
 }
 
 export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?: boolean) {
+  const queryClient = useQueryClient();
   const userQuery = useUserQuery();
-  const setToken = useSetToken();
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
@@ -102,7 +102,7 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?:
         clearIdentify();
       }
 
-      await setToken(null, session);
+      await setToken(null, { queryClient, session });
       await navigate(urlToLinkOptions(redirect));
     },
   });

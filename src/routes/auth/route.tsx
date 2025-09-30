@@ -1,9 +1,8 @@
 import { Navigate, Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
-import { container } from 'src/application/container';
+import { getToken } from 'src/application/token';
 import { AuthenticationLayout } from 'src/layouts/authentication/authentication.layout';
-import { TOKENS } from 'src/tokens';
 
 export const Route = createFileRoute('/auth')({
   component: function () {
@@ -21,9 +20,9 @@ export const Route = createFileRoute('/auth')({
   }),
 
   beforeLoad({ search }) {
-    const auth = container.resolve(TOKENS.authentication);
+    const token = getToken();
 
-    if (auth.token !== null) {
+    if (token !== null) {
       throw redirect({ to: search.next ?? '/' });
     }
   },

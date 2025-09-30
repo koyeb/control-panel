@@ -3,16 +3,16 @@ import z from 'zod';
 
 import { useUserUnsafe } from 'src/api/hooks/session';
 import { getConfig } from 'src/application/config';
-import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { notify } from 'src/application/notify';
+import { useToken } from 'src/application/token';
 import { Dialog } from 'src/components/dialog';
 import { useLocation } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
-import { TOKENS } from 'src/tokens';
 
 export function ContextPalette() {
+  const token = useToken();
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
@@ -44,8 +44,6 @@ export function ContextPalette() {
       }
 
       if (isReadyEvent(event.data)) {
-        const { token } = container.resolve(TOKENS.authentication);
-
         postMessage({ token });
         setReady((ready) => ready + 1);
       }
@@ -64,7 +62,7 @@ export function ContextPalette() {
     return () => {
       window.removeEventListener('message', listener);
     };
-  }, [iFrameRef, closeDialog, postMessage]);
+  }, [iFrameRef, token, closeDialog, postMessage]);
 
   useEffect(() => {
     if (ready) {

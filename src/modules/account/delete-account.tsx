@@ -1,11 +1,11 @@
-import { apiMutation } from 'src/api/api';
 import { Button } from '@koyeb/design-system';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useMutation } from '@tanstack/react-query';
+import { apiMutation } from 'src/api/api';
 import { useOrganizationUnsafe, useUser } from 'src/api/hooks/session';
-import { useSetToken } from 'src/application/authentication';
 import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
+import { setToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { Dialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -21,7 +21,7 @@ export function DeleteAccount() {
   const organization = useOrganizationUnsafe();
   const canDelete = organization === undefined;
 
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
@@ -31,7 +31,7 @@ export function DeleteAccount() {
     }),
     async onSuccess() {
       clearIdentify();
-      await setToken(null);
+      await setToken(null, { queryClient });
       await navigate({ to: '/auth/signin' });
       notify.success(t('successNotification'));
     },

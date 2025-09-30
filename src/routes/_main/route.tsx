@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 import z from 'zod';
 
@@ -6,8 +7,9 @@ import { ApiError } from 'src/api/api-errors';
 import { useOrganizationQuery, useUserQuery } from 'src/api/hooks/session';
 import { mapCatalogDatacenter } from 'src/api/mappers/catalog';
 import { mapOrganization, mapUser } from 'src/api/mappers/session';
-import { container, getApi } from 'src/application/container';
+import { getApi } from 'src/application/container';
 import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
+import { getToken, setToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { SecondarySettings } from 'src/layouts/secondary/settings';
@@ -15,7 +17,6 @@ import { AccountLocked } from 'src/modules/account/account-locked';
 import { TrialEnded } from 'src/modules/trial/trial-ended/trial-ended';
 import { useTrial } from 'src/modules/trial/use-trial';
 import { OnboardingPage } from 'src/pages/onboarding/onboarding.page';
-import { TOKENS } from 'src/tokens';
 
 export const Route = createFileRoute('/_main')({
   component: Component,
@@ -25,10 +26,10 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ location, search }) {
-    const auth = container.resolve(TOKENS.authentication);
+  async beforeLoad({ location, search, context: { queryClient } }) {
+    const token = getToken();
 
-    if (auth.token === null) {
+    if (token === null) {
       const next = location.pathname !== '/' ? location.href : undefined;
 
       throw redirect({
@@ -38,7 +39,7 @@ export const Route = createFileRoute('/_main')({
     }
 
     if (search['organization-id']) {
-      await switchOrganization(search['organization-id']);
+      await switchOrganization(queryClient, search['organization-id']);
     }
   },
 
@@ -107,16 +108,15 @@ export const Route = createFileRoute('/_main')({
   },
 });
 
-async function switchOrganization(organizationId: string) {
+async function switchOrganization(queryClient: QueryClient, organizationId: string) {
   const api = getApi();
-  const auth = container.resolve(TOKENS.authentication);
 
   const result = await api('post /v1/organizations/{id}/switch', {
     path: { id: organizationId },
     header: {},
   });
 
-  auth.setToken(result.token!.id!);
+  setToken(result.token!.id!, { queryClient });
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),

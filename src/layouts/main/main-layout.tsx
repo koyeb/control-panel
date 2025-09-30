@@ -9,9 +9,9 @@ import {
   useUserUnsafe,
 } from 'src/api/hooks/session';
 import { getConfig } from 'src/application/config';
-import { container } from 'src/application/container';
 import { createValidationGuard } from 'src/application/create-validation-guard';
 import { StoredValue } from 'src/application/storage';
+import { isSessionToken, useToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -26,7 +26,6 @@ import { CommandPaletteProvider } from 'src/modules/command-palette';
 import { TrialBanner } from 'src/modules/trial/trial-banner';
 import { TrialWelcomeDialog } from 'src/modules/trial/trial-welcome-dialog';
 import { useTrial } from 'src/modules/trial/use-trial';
-import { TOKENS } from 'src/tokens';
 import { inArray } from 'src/utils/arrays';
 
 import { OrganizationSwitcher } from '../organization-switcher';
@@ -140,10 +139,9 @@ function Main({ children }: { children: React.ReactNode }) {
 }
 
 function useBanner(): 'session' | 'trial' | void {
-  const auth = container.resolve(TOKENS.authentication);
   const trial = useTrial();
 
-  if (auth.session) {
+  if (isSessionToken()) {
     return 'session';
   }
 
@@ -175,7 +173,7 @@ type PageContextProps = {
 
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const pageContextBaseUrl = getConfig('pageContextBaseUrl');
-  const auth = container.resolve(TOKENS.authentication);
+  const token = useToken();
 
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
@@ -196,9 +194,9 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
   useEffect(() => {
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token: auth.token, location }, pageContextBaseUrl);
+      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
     }
-  }, [pageContextBaseUrl, iFrameRef, ready, location, auth]);
+  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
 
   return (
     <>

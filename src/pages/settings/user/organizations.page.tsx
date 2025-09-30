@@ -1,14 +1,14 @@
-import { apiMutation } from 'src/api/api';
 import { Button, Spinner } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-
 import { z } from 'zod';
+
+import { apiMutation } from 'src/api/api';
 import { useOrganizationUnsafe, useUserOrganizationMemberships } from 'src/api/hooks/session';
 import { OrganizationMember } from 'src/api/model';
-import { useSetToken } from 'src/application/authentication';
 import { getApi } from 'src/application/container';
 import { notify } from 'src/application/notify';
+import { setToken } from 'src/application/token';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -51,7 +51,7 @@ const schema = z.object({
 function CreateOrganizationDialog() {
   const t = T.useTranslate();
 
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -81,7 +81,7 @@ function CreateOrganizationDialog() {
       organizationName: error.name,
     })),
     async onSuccess(token, { organizationName }) {
-      await setToken(token);
+      await setToken(token, { queryClient });
       await navigate({ to: '/' });
       notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
     },
@@ -150,7 +150,7 @@ function OrganizationList() {
 
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
   const currentOrganization = useOrganizationUnsafe();
-  const setToken = useSetToken();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const { mutate: switchOrganization } = useMutation({
@@ -159,7 +159,7 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
       header: {},
     })),
     async onSuccess({ token }, redirect) {
-      await setToken(token!.id!);
+      await setToken(token!.id!, { queryClient });
       await navigate({ to: redirect });
     },
   });
