@@ -1,9 +1,8 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { apiQuery, getApi, useOrganization, useUser } from 'src/api';
-import { notify } from 'src/application/notify';
-import { setToken } from 'src/application/token';
+import { apiMutation, apiQuery, useOrganization } from 'src/api';
+import { ApiEndpoint } from 'src/api/api';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate } from 'src/hooks/router';
@@ -12,13 +11,10 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('modules.account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const t = T.useTranslate();
-
-  const user = useUser();
-  const organization = useOrganization();
-
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+  const organization = useOrganization();
 
   const unpaidInvoicesQuery = useQuery({
     ...apiQuery('get /v1/billing/has_unpaid_invoices', {}),
@@ -27,42 +23,10 @@ export function DeleteOrganization() {
   });
 
   const deleteOrganization = useMutation({
-    async mutationFn() {
-      const api = getApi();
-
-      const { members } = await api('get /v1/organization_members', {
-        query: { user_id: user!.id },
-      });
-
-      const [otherOrganizationId] = members!
-        .map((member) => member.organization_id!)
-        .filter((organizationId) => organizationId !== organization?.id);
-
-      let result: string;
-
-      if (otherOrganizationId) {
-        const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
-          path: { id: otherOrganizationId },
-          header: {},
-        });
-
-        result = newToken!.id!;
-      } else {
-        const { token: newToken } = await api('post /v1/account/session', {});
-
-        result = newToken!.id!;
-      }
-
-      await api('delete /v1/organizations/{id}', {
-        path: { id: organization!.id },
-      });
-
-      return result;
-    },
-    async onSuccess(token) {
-      await setToken(token, { queryClient });
+    ...apiMutation('delete /v1/organizations/{id}', { path: { id: organization?.id as string } }),
+    async onSuccess() {
+      queryClient.removeQueries({ queryKey: ['get /v1/account/organization' satisfies ApiEndpoint] });
       await navigate({ to: '/' });
-      notify.info(t('successNotification', { organizationName: organization?.name }));
     },
   });
 

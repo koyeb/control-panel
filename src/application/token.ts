@@ -35,6 +35,7 @@ export async function setToken(
   if (session) {
     sessionToken.write(value);
   } else {
+    sessionToken.write(null);
     accessToken.write(value);
   }
 
@@ -51,6 +52,10 @@ export async function setToken(
   } else {
     queryClient.clear();
   }
+}
+
+export function setAuthKitToken(value: string | null = null) {
+  token = value;
 }
 
 export function accessTokenListener(cb: (value: string | null) => void) {

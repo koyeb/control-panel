@@ -1,9 +1,8 @@
 import { Spinner } from '@koyeb/design-system';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation, getApi, useInvalidateApiQuery } from 'src/api';
+import { apiMutation, useInvalidateApiQuery, useSwitchOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
-import { setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { OrganizationInvitation } from 'src/model';
@@ -19,25 +18,17 @@ type HandleInvitationsProps = {
 
 export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   const invalidate = useInvalidateApiQuery();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const t = T.useTranslate();
 
+  const switchOrganization = useSwitchOrganization();
+
   const acceptMutation = useMutation({
-    async mutationFn(invitation: OrganizationInvitation) {
-      const api = getApi();
-
-      await api('post /v1/account/organization_invitations/{id}/accept', { path: { id: invitation.id } });
-
-      const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
-        path: { id: invitation.organization.id },
-        header: {},
-      });
-
-      return newToken!.id!;
-    },
-    async onSuccess(token) {
-      await setToken(token, { queryClient });
+    ...apiMutation('post /v1/account/organization_invitations/{id}/accept', {
+      path: { id: invitation.id },
+    }),
+    async onSuccess() {
+      await switchOrganization.mutateAsync(invitation.organization.id);
       await navigate({ to: '/' });
       notify.info(t('acceptSuccess'));
     },
@@ -76,7 +67,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
       <div className="row w-full items-center justify-between rounded-lg border p-4">
         <div className="text-xl font-semibold">{invitation.organization.name}</div>
 
-        <AuthButton onClick={() => acceptMutation.mutate(invitation)}>
+        <AuthButton onClick={() => acceptMutation.mutate()}>
           <T id="accept" />
           {acceptMutation.isPending ? <Spinner className="size-4" /> : <IconArrowRight className="size-4" />}
         </AuthButton>
