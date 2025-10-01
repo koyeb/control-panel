@@ -3,6 +3,7 @@ import { useIsFetching } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useFormContext, useFormState } from 'react-hook-form';
 
+import { ApiEndpoint } from 'src/api/api';
 import { Shortcut } from 'src/components/shortcut';
 import { useShortcut } from 'src/hooks/shortcut';
 import { IconChevronDown } from 'src/icons';
@@ -31,7 +32,10 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
   const saveOnly = useWatchServiceForm('meta.saveOnly');
 
   const { errors } = useFormState();
-  const isVerifyingDockerImage = useIsFetching({ queryKey: ['verifyDockerImage'] }) > 0;
+
+  const isVerifyingDockerImage =
+    useIsFetching({ queryKey: ['get /v1/docker-helper/verify' satisfies ApiEndpoint] }) > 0;
+
   const disabled = Object.keys(errors).length > 0 || isVerifyingDockerImage;
 
   const showBuildOptions = hasBuild && !isNewService;

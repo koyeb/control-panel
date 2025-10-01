@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { getApi, getApiQueryKey, mapActivity } from 'src/api';
+import { ApiEndpoint } from 'src/api/api';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -73,7 +74,7 @@ export function ActivityPage() {
   const setInfiniteScrollElementRef = useInfiniteScroll(query);
 
   useMount(() => {
-    return () => queryClient.removeQueries({ queryKey: ['listActivities'] });
+    return () => queryClient.removeQueries({ queryKey: ['get /v1/activities' satisfies ApiEndpoint] });
   });
 
   if (query.isError) {

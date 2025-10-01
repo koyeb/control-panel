@@ -39,7 +39,7 @@ async function validateAccount(seon: SeonPort, queryClient: QueryClient, token: 
     header: { 'seon-fp': await seon.getFingerprint() },
   });
 
-  await queryClient.invalidateQueries({
+  await queryClient.refetchQueries({
     queryKey: getApiQueryKey('get /v1/account/profile', {}),
   });
 }

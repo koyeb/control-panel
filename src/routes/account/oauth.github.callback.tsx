@@ -4,6 +4,7 @@ import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
 import { ApiError, createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
+import { ApiEndpoint } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { setToken } from 'src/application/token';
@@ -129,7 +130,7 @@ async function handleGithubAppInstalled(
   { search, organizationId }: typeof Route.types.loaderDeps,
 ) {
   if (search.setup_action === 'install' && search.state) {
-    await queryClient.invalidateQueries({ queryKey: ['getGithubApp'] });
+    await queryClient.invalidateQueries({ queryKey: ['get /v1/github/installation' satisfies ApiEndpoint] });
 
     throw redirect({
       to: redirectUrl.pathname,

@@ -1,6 +1,6 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { createEnsureApiQueryData, getApi, mapOrganization, mapUser } from 'src/api';
+import { createEnsureApiQueryData, getApi, getApiQueryKey, mapOrganization, mapUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { getOnboardingStep } from 'src/application/onboarding';
 import { LogoLoading } from 'src/components/logo-loading';
@@ -19,7 +19,9 @@ export const Route = createFileRoute('/organization/deactivate/confirm/$confirma
         path: { id: params.confirmationId },
       });
 
-      await queryClient.invalidateQueries({ queryKey: ['getCurrentOrganization'] });
+      await queryClient.refetchQueries({
+        queryKey: getApiQueryKey('get /v1/account/organization', {}),
+      });
 
       notify.success(translate('modules.account.deactivateOrganization.deactivationSuccessNotification'));
     } catch (error) {
