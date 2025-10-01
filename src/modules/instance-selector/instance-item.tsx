@@ -237,6 +237,18 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
     return null;
   }
 
+  if (addCreditCard) {
+    return (
+      <Button
+        color="gray"
+        onClick={() => openDialog('UpgradeInstanceSelector', { plan: 'starter' })}
+        className="mt-4"
+      >
+        <T id="actions.addCreditCard" />
+      </Button>
+    );
+  }
+
   if (isTenstorrentGpu(instance)) {
     return (
       <ExternalLinkButton
@@ -250,18 +262,14 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
     );
   }
 
-  const handleClick = () => {
-    if (addCreditCard) {
-      openDialog('UpgradeInstanceSelector', { plan: 'starter' });
-    } else {
-      openDialog('RequestQuotaIncrease', { instanceId: instance.id });
-    }
-  };
-
   return (
     <>
-      <Button color="gray" onClick={handleClick} className="mt-4">
-        <T id={`actions.${addCreditCard ? 'addCreditCard' : 'requestQuotaIncrease'}`} />
+      <Button
+        color="gray"
+        onClick={() => openDialog('RequestQuotaIncrease', { instanceId: instance.id })}
+        className="mt-4"
+      >
+        <T id="actions.requestQuotaIncrease" />
       </Button>
 
       <RequestQuotaIncreaseDialog instance={instance} />

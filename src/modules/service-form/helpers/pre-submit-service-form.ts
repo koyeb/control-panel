@@ -6,6 +6,7 @@ import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { Dialog } from 'src/components/dialog';
+import { tallyForms } from 'src/hooks/tally';
 
 export function usePreSubmitServiceForm(previousInstance?: string | null) {
   const openDialog = Dialog.useOpen();
@@ -30,9 +31,13 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         return true;
       }
 
-      if (isTenstorrentGpu(instance) && organization.trial !== undefined) {
-        setRequiredPlan('starter');
-        openDialog('Upgrade', { plan: 'starter' });
+      if (isTenstorrentGpu(instance)) {
+        if (organization.plan === 'hobby') {
+          setRequiredPlan('starter');
+          openDialog('Upgrade', { plan: 'starter' });
+        } else {
+          window.open(`https://tally.so/r/${tallyForms.requestTenstorrentAccess}`);
+        }
 
         return false;
       }
