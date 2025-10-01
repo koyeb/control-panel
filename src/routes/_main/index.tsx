@@ -72,7 +72,7 @@ function HomePage() {
           <Apps apps={query.data} />
         </div>
 
-        <div className="max-w-sm">
+        <div className="hidden w-sm xl:block">
           <Activities />
         </div>
       </div>

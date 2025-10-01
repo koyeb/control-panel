@@ -12,7 +12,7 @@ const T = createTranslate('pages.home.activity');
 
 export function Activities() {
   return (
-    <div className="hidden gap-3 xl:col">
+    <div className="col gap-3">
       <div className="row items-center justify-between gap-4">
         <span className="text-lg font-medium">
           <T id="title" />
