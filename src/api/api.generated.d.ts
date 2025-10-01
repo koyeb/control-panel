@@ -30,7 +30,8 @@ export interface paths {
         /** Begin a session with iDenfy, emit an authToken */
         get: operations["GetIdenfyToken"];
         put?: never;
-        post?: never;
+        /** ClearIdenfyVerificationResult marks the current result for idenfy as superseded */
+        post: operations["ClearIdenfyVerificationResult"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1205,6 +1206,25 @@ export interface paths {
         patch: operations["UpdateOrganization2"];
         trace?: never;
     };
+    "/v1/organizations/{id}/access_token": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** CreateAccessToken creates a short-lived access token in the scope of the specified organization,
+         *     provided the user making the request is part of said organization. It's possible to specify a validity
+         *     for the token, which defaults to 1h and must be no more than 24h. */
+        post: operations["CreateAccessToken"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/organizations/{id}/deactivate": {
         parameters: {
             query?: never;
@@ -1440,7 +1460,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Review Organization Capacity */
+        /** DEPRECATED: Review Organization Capacity */
         post: operations["ReviewOrganizationCapacity"];
         delete?: never;
         options?: never;
@@ -2293,6 +2313,11 @@ export interface components {
                 [key: string]: components["schemas"]["InstanceAvailability"];
             };
         };
+        ClearIdenfyVerificationResultReply: Record<string, never>;
+        ClearIdenfyVerificationResultRequest: {
+            organization_id?: string;
+            user_id?: string;
+        };
         ComposeReply: {
             app?: components["schemas"]["App"];
             services?: components["schemas"]["Service"][];
@@ -2308,6 +2333,9 @@ export interface components {
         ConfirmOrganizationActionReply: Record<string, never>;
         ConfirmPaymentAuthorizationReply: {
             payment_method?: components["schemas"]["PaymentMethod"];
+        };
+        CreateAccessTokenReply: {
+            token?: string;
         };
         /**
          * Create new account
@@ -2441,6 +2469,8 @@ export interface components {
             /** Format: date-time */
             created_at?: string;
             description?: string;
+            /** Format: date-time */
+            expires_at?: string;
             id?: string;
             name?: string;
             organization_id?: string;
@@ -4072,6 +4102,7 @@ export interface components {
             country?: string;
             current_subscription_id?: string;
             deactivation_reason?: components["schemas"]["Organization.DeactivationReason"];
+            email_domain_allowlist?: string[];
             has_payment_method?: boolean;
             id?: string;
             latest_subscription_id?: string;
@@ -4342,6 +4373,8 @@ export interface components {
             /** Format: int64 */
             apps?: string;
             /** Format: int64 */
+            archives?: string;
+            /** Format: int64 */
             custom_domains?: string;
             /**
              * Deprecated, use custom_domains instead
@@ -4571,6 +4604,7 @@ export interface components {
         };
         ReviewOrganizationCapacityRequest: {
             plan?: string;
+            trialing?: boolean;
         };
         Route: {
             path?: string;
@@ -5081,10 +5115,12 @@ export interface components {
          *      - MALFORMED: The provided image name is malformed
          *      - INVALID_OS: The operating system is not supported
          *      - INVALID_ARCH: The architecture is not supported
+         *      - INVALID_SCHEME: The scheme is not https
+         *      - GENERIC: Generic catch-all error code
          * @default UNKNOWN
          * @enum {string}
          */
-        "VerifyDockerImageReply.ErrCode": "UNKNOWN" | "AUTH_ACCESS_DENIED" | "ANON_ACCESS_DENIED" | "AUTH_NOT_FOUND" | "ANON_NOT_FOUND" | "REGISTRY_ERROR" | "TIMEOUT" | "DNS" | "MALFORMED" | "INVALID_OS" | "INVALID_ARCH";
+        "VerifyDockerImageReply.ErrCode": "UNKNOWN" | "AUTH_ACCESS_DENIED" | "ANON_ACCESS_DENIED" | "AUTH_NOT_FOUND" | "ANON_NOT_FOUND" | "REGISTRY_ERROR" | "TIMEOUT" | "DNS" | "MALFORMED" | "INVALID_OS" | "INVALID_ARCH" | "INVALID_SCHEME" | "GENERIC";
     };
     responses: never;
     parameters: never;
@@ -5196,6 +5232,93 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["GetIdenfyTokenReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    ClearIdenfyVerificationResult: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["ClearIdenfyVerificationResultRequest"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ClearIdenfyVerificationResultReply"];
                 };
             };
             /** @description Validation error */
@@ -12449,6 +12572,99 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["UpdateOrganizationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    CreateAccessToken: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Organization id for ephemeral credential */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    /** Validity of the credential */
+                    validity?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["CreateAccessTokenReply"];
                 };
             };
             /** @description Validation error */
