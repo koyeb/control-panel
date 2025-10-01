@@ -3,14 +3,16 @@ import { createRootRouteWithContext, redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
 import { ApiError, createEnsureApiQueryData } from 'src/api';
+import { AuthKitAdapter } from 'src/application/authkit';
 import { getToken, setToken } from 'src/application/token';
 import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
-import { SeonPort } from 'src/hooks/seon';
+import { SeonAdapter } from 'src/hooks/seon';
 import { TranslateFn } from 'src/intl/translate';
 
 type RouterContext = {
-  seon: SeonPort;
   queryClient: QueryClient;
+  seon: SeonAdapter;
+  authKit: AuthKitAdapter;
   translate: TranslateFn;
   breadcrumb?: () => React.ReactNode;
 };

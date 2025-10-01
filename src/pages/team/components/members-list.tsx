@@ -5,15 +5,14 @@ import clsx from 'clsx';
 import {
   apiMutation,
   apiQuery,
-  getApi,
   mapOrganizationMember,
   useInvalidateApiQuery,
   useInvitationsQuery,
   useOrganization,
   useUser,
 } from 'src/api';
+import { ApiEndpoint } from 'src/api/api';
 import { notify } from 'src/application/notify';
-import { setToken } from 'src/application/token';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { openDialog } from 'src/components/dialog';
 import { Loading } from 'src/components/loading';
@@ -266,45 +265,17 @@ function useRemoveOrganizationMember() {
 
 function useLeaveOrganization() {
   const t = T.useTranslate();
-
-  const user = useUser();
-
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
-    async mutationFn(membership: OrganizationMember) {
-      const api = getApi();
-
-      const { members } = await api('get /v1/organization_members', {
-        query: { user_id: user!.id },
-      });
-
-      const [otherOrganizationId] = members!
-        .map((member) => member.organization_id!)
-        .filter((organizationId) => organizationId !== membership.organization.id);
-
-      let result: string | null = null;
-
-      if (otherOrganizationId) {
-        const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
-          path: { id: otherOrganizationId },
-          header: {},
-        });
-
-        result = newToken!.id!;
-      }
-
-      await api('delete /v1/organization_members/{id}', {
-        path: { id: membership.id },
-      });
-
-      return result;
-    },
-    async onSuccess(token, { organization }) {
-      await setToken(token, { queryClient });
+    ...apiMutation('delete /v1/organization_members/{id}', (membership: OrganizationMember) => ({
+      path: { id: membership.id },
+    })),
+    async onSuccess(_, membership) {
+      queryClient.removeQueries({ queryKey: ['get /v1/account/organization' satisfies ApiEndpoint] });
       await navigate({ to: '/' });
-      notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
+      notify.info(t('actions.leaveSuccessNotification', { organizationName: membership.organization.name }));
     },
   });
 }

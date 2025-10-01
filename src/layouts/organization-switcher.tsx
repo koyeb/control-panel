@@ -1,14 +1,12 @@
 import { Combobox, Spinner } from '@koyeb/design-system';
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { apiMutation, apiQuery, mapOrganization, useOrganization, useUser } from 'src/api';
-import { setToken } from 'src/application/token';
+import { apiQuery, mapOrganization, useOrganization, useSwitchOrganization, useUser } from 'src/api';
 import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
-import { useSeon } from 'src/hooks/seon';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { Organization } from 'src/model';
@@ -163,22 +161,6 @@ function useOrganizationList(search: string) {
   });
 
   return data ?? [];
-}
-
-function useSwitchOrganization(onSuccess?: () => void) {
-  const getSeonFingerprint = useSeon();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    ...apiMutation('post /v1/organizations/{id}/switch', async (organizationId: string) => ({
-      path: { id: organizationId },
-      header: { 'seon-fp': await getSeonFingerprint() },
-    })),
-    async onSuccess({ token }) {
-      await setToken(token!.id!, { queryClient });
-      onSuccess?.();
-    },
-  });
 }
 
 type OrganizationItemProps = {

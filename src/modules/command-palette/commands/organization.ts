@@ -1,8 +1,6 @@
 import { CommandPalette } from '@koyeb/design-system';
-import { useQueryClient } from '@tanstack/react-query';
 
-import { getApi } from 'src/api';
-import { setToken } from 'src/application/token';
+import { getApi, useSwitchOrganization } from 'src/api';
 import { useNavigate } from 'src/hooks/router';
 import { IconCirclePlus, IconRefreshCcw } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
@@ -13,8 +11,8 @@ export function useOrganizationCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
 
+  const switchOrganization = useSwitchOrganization();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
 
   return (palette: CommandPalette) => {
     const group = palette.addGroup({
@@ -37,14 +35,7 @@ export function useOrganizationCommands() {
         for (const organization of organizations.organizations!) {
           palette.addItem({
             label: organization.name!,
-            execute: async () => {
-              const { token } = await api('post /v1/organizations/{id}/switch', {
-                path: { id: organization.id! },
-                header: {},
-              });
-
-              await setToken(token!.id!, { queryClient });
-            },
+            execute: () => switchOrganization.mutateAsync(organization.id!),
           });
         }
       },

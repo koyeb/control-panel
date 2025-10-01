@@ -1,11 +1,10 @@
 import { Button, Spinner } from '@koyeb/design-system';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, getApi, useOrganization, useUserOrganizationMemberships } from 'src/api';
+import { apiMutation, useOrganization, useSwitchOrganization, useUserOrganizationMemberships } from 'src/api';
 import { notify } from 'src/application/notify';
-import { setToken } from 'src/application/token';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -47,9 +46,6 @@ const schema = z.object({
 function Create() {
   const t = T.useTranslate();
 
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-
   const form = useForm<z.infer<typeof schema>>({
     mode: 'onChange',
     defaultValues: {
@@ -58,26 +54,18 @@ function Create() {
     resolver: useZodResolver(schema),
   });
 
+  const switchOrganization = useSwitchOrganization();
+  const navigate = useNavigate();
+
   const mutation = useMutation({
-    async mutationFn({ organizationName }: FormValues<typeof form>) {
-      const api = getApi();
-
-      const { organization } = await api('post /v1/organizations', {
-        body: { name: organizationName },
-      });
-
-      const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
-        path: { id: organization!.id! },
-        header: {},
-      });
-
-      return newToken!.id!;
-    },
+    ...apiMutation('post /v1/organizations', ({ organizationName }: FormValues<typeof form>) => ({
+      body: { name: organizationName },
+    })),
     onError: useFormErrorHandler(form, (error) => ({
       organizationName: error.name,
     })),
-    async onSuccess(token, { organizationName }) {
-      await setToken(token, { queryClient });
+    async onSuccess({ organization }, { organizationName }) {
+      await switchOrganization.mutateAsync(organization!.id!);
       await navigate({ to: '/' });
       notify.success(t('create.success', { organizationName }));
     },
@@ -142,19 +130,15 @@ function OrganizationList() {
 }
 
 function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
-  const queryClient = useQueryClient();
   const currentOrganization = useOrganization();
   const navigate = useNavigate();
 
-  const { mutate: switchOrganization } = useMutation({
-    ...apiMutation('post /v1/organizations/{id}/switch', (_: '/' | '/settings') => ({
-      path: { id: organization.id },
-      header: {},
-    })),
-    async onSuccess({ token }, redirect) {
-      await setToken(token!.id!, { queryClient });
-      await navigate({ to: redirect });
-    },
+  const switchOrganization = useSwitchOrganization(() => {
+    void navigate({ to: '/' });
+  });
+
+  const manageOrganization = useSwitchOrganization(() => {
+    void navigate({ to: '/settings' });
   });
 
   return (
@@ -170,12 +154,12 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
 
       <div className="ml-auto row gap-2">
         {organization.id !== currentOrganization?.id && (
-          <Button variant="outline" color="gray" onClick={() => switchOrganization('/')}>
+          <Button variant="outline" color="gray" onClick={() => switchOrganization.mutate(organization.id)}>
             <T id="switch" />
           </Button>
         )}
 
-        <Button variant="outline" color="gray" onClick={() => switchOrganization('/settings')}>
+        <Button variant="outline" color="gray" onClick={() => manageOrganization.mutate(organization.id)}>
           <T id="manage" />
         </Button>
       </div>

@@ -2,11 +2,12 @@ import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
 import { createEnsureApiQueryData, getApi, getApiQueryKey, mapOrganization, mapUser } from 'src/api';
+import { AuthKitAdapter } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { hasMessage } from 'src/application/validation';
 import { LogoLoading } from 'src/components/logo-loading';
-import { SeonPort } from 'src/hooks/seon';
+import { SeonAdapter } from 'src/hooks/seon';
 import { User } from 'src/model';
 import { slugify } from 'src/utils/strings';
 
@@ -15,10 +16,10 @@ export const Route = createFileRoute('/account/validate/$token')({
   pendingMinMs: 0,
   pendingMs: 0,
 
-  async loader({ params, context: { seon, queryClient, translate } }) {
+  async loader({ params, context: { seon, authKit, queryClient, translate } }) {
     try {
       await validateAccount(seon, queryClient, params.token);
-      await createOrganization(queryClient).catch(() => {});
+      await createOrganization(authKit, queryClient).catch(() => {});
 
       notify.success(translate('pages.onboarding.emailValidation.emailAddressValidated'));
     } catch (error) {
@@ -31,7 +32,7 @@ export const Route = createFileRoute('/account/validate/$token')({
   },
 });
 
-async function validateAccount(seon: SeonPort, queryClient: QueryClient, token: string) {
+async function validateAccount(seon: SeonAdapter, queryClient: QueryClient, token: string) {
   const api = getApi();
 
   await api('post /v1/account/validate/{id}', {
@@ -44,7 +45,7 @@ async function validateAccount(seon: SeonPort, queryClient: QueryClient, token: 
   });
 }
 
-async function createOrganization(queryClient: QueryClient) {
+async function createOrganization(authKit: AuthKitAdapter, queryClient: QueryClient) {
   const api = getApi();
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
@@ -59,7 +60,9 @@ async function createOrganization(queryClient: QueryClient) {
     header: {},
   });
 
-  await setToken(token!.id!, { queryClient });
+  if (!authKit.user) {
+    await setToken(token!.id!, { queryClient });
+  }
 }
 
 function defaultOrganizationName(user: User): string {

@@ -1,8 +1,11 @@
+import { useAuthKit } from 'src/application/authkit';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
+import { AuthButton } from './components/auth-button';
 import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignInForm } from './components/sign-in-form';
 import { Separator } from './separator';
@@ -11,6 +14,7 @@ const T = createTranslate('pages.authentication.signIn');
 
 export function SignInPage() {
   const t = T.useTranslate();
+  const authKit = useAuthKit();
   const next = useSearchParams().get('next');
 
   return (
@@ -30,6 +34,13 @@ export function SignInPage() {
       </GithubOAuthButton>
 
       <Separator />
+
+      <FeatureFlag feature="work-os">
+        <AuthButton type="button" onClick={() => authKit.signIn(next)}>
+          Sign in with WorkOS
+        </AuthButton>
+        <Separator />
+      </FeatureFlag>
 
       <SignInForm redirect={next ?? '/'} />
 

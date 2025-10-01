@@ -4,11 +4,7 @@ import { useCallback } from 'react';
 
 // cSpell:ignore seontechnologies deviceinfresolver
 
-export interface SeonPort {
-  getFingerprint(): Promise<string>;
-}
-
-export class SeonAdapter implements SeonPort {
+export class SeonAdapter {
   private static options: SDKOptions = {
     dnsResolverDomain: 'deviceinfresolver.com',
     networkTimeoutMs: 5_000,

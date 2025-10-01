@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
+import { useAuthKit } from 'src/application/authkit';
 import { useIdentifyUser } from 'src/application/posthog';
-import { isSessionToken, setToken } from 'src/application/token';
+import { isSessionToken, setAuthKitToken, setToken } from 'src/application/token';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
+import { useSeon } from 'src/hooks/seon';
 
 import { ApiError } from '../api-error';
 import {
@@ -35,6 +37,28 @@ export function useOrganizationQuery() {
 
 export function useOrganization() {
   return useOrganizationQuery().data;
+}
+
+export function useSwitchOrganization(onSuccess?: () => void) {
+  const getSeonFingerprint = useSeon();
+  const authKit = useAuthKit();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    ...apiMutation('post /v1/organizations/{id}/switch', async (organizationId: string) => ({
+      path: { id: organizationId },
+      header: { 'seon-fp': await getSeonFingerprint() },
+    })),
+    async onSuccess({ token }) {
+      if (!authKit.user) {
+        await setToken(token!.id!, { queryClient });
+      } else {
+        await queryClient.invalidateQueries();
+      }
+
+      onSuccess?.();
+    },
+  });
 }
 
 export function useOrganizationSummaryQuery() {
@@ -81,11 +105,12 @@ export function useUserOrganizationMemberships() {
 
 export function useLogoutMutation(redirect: ValidateLinkOptions['to']) {
   const queryClient = useQueryClient();
+  const authKit = useAuthKit();
   const userQuery = useUserQuery();
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
-  return useMutation({
+  const apiLogout = useMutation({
     ...apiMutation('delete /v1/account/logout', {}),
     meta: { showError: !ApiError.isAccountLockedError(userQuery.error) },
     async onSettled() {
@@ -99,4 +124,21 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to']) {
       await navigate(urlToLinkOptions(redirect));
     },
   });
+
+  const authKitLogout = useMutation({
+    mutationFn: async () => {
+      authKit.client?.signOut({ returnTo: `${window.location.origin}/auth/signin` });
+    },
+    onSuccess: () => {
+      const session = isSessionToken();
+
+      if (!session) {
+        clearIdentify();
+      }
+
+      setAuthKitToken(null);
+    },
+  });
+
+  return authKit.user ? authKitLogout : apiLogout;
 }
