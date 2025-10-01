@@ -27,8 +27,6 @@ import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/ind
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
 import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
 import { Route as MainOneClickAppsIndexRouteImport } from './routes/_main/one-click-apps/index'
-import { Route as AuthSsoDiscourseRouteImport } from './routes/auth/sso.discourse'
-import { Route as AuthSsoCannyRouteImport } from './routes/auth/sso.canny'
 import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
 import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
 import { Route as MainVolumesNewRouteImport } from './routes/_main/volumes/new'
@@ -60,6 +58,8 @@ import { Route as MainOneClickAppsSlugDeployRouteImport } from './routes/_main/o
 import { Route as MainDatabaseServicesDatabaseServiceIdSettingsRouteImport } from './routes/_main/database-services/$databaseServiceId/settings'
 import { Route as MainDatabaseServicesDatabaseServiceIdRolesRouteImport } from './routes/_main/database-services/$databaseServiceId/roles'
 import { Route as MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport } from './routes/_main/database-services/$databaseServiceId/databases'
+import { Route as MainAuthSsoDiscourseRouteImport } from './routes/_main/auth/sso.discourse'
+import { Route as MainAuthSsoCannyRouteImport } from './routes/_main/auth/sso.canny'
 import { Route as MainAccountOrganization_invitationsInvitationIdRouteImport } from './routes/_main/account/organization_invitations.$invitationId'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -150,16 +150,6 @@ const MainOneClickAppsIndexRoute = MainOneClickAppsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MainOneClickAppsRouteRoute,
-} as any)
-const AuthSsoDiscourseRoute = AuthSsoDiscourseRouteImport.update({
-  id: '/sso/discourse',
-  path: '/sso/discourse',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthSsoCannyRoute = AuthSsoCannyRouteImport.update({
-  id: '/sso/canny',
-  path: '/sso/canny',
-  getParentRoute: () => AuthRouteRoute,
 } as any)
 const AccountValidateTokenRoute = AccountValidateTokenRouteImport.update({
   id: '/account/validate/$token',
@@ -336,6 +326,16 @@ const MainDatabaseServicesDatabaseServiceIdDatabasesRoute =
     path: '/databases',
     getParentRoute: () => MainDatabaseServicesDatabaseServiceIdRouteRoute,
   } as any)
+const MainAuthSsoDiscourseRoute = MainAuthSsoDiscourseRouteImport.update({
+  id: '/auth/sso/discourse',
+  path: '/auth/sso/discourse',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainAuthSsoCannyRoute = MainAuthSsoCannyRouteImport.update({
+  id: '/auth/sso/canny',
+  path: '/auth/sso/canny',
+  getParentRoute: () => MainRouteRoute,
+} as any)
 const MainAccountOrganization_invitationsInvitationIdRoute =
   MainAccountOrganization_invitationsInvitationIdRouteImport.update({
     id: '/account/organization_invitations/$invitationId',
@@ -372,13 +372,13 @@ export interface FileRoutesByFullPath {
   '/volumes/new': typeof MainVolumesNewRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
-  '/auth/sso/canny': typeof AuthSsoCannyRoute
-  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
   '/one-click-apps/': typeof MainOneClickAppsIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/volumes/': typeof MainVolumesIndexRoute
   '/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
+  '/auth/sso/canny': typeof MainAuthSsoCannyRoute
+  '/auth/sso/discourse': typeof MainAuthSsoDiscourseRoute
   '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
@@ -418,13 +418,13 @@ export interface FileRoutesByTo {
   '/volumes/new': typeof MainVolumesNewRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
-  '/auth/sso/canny': typeof AuthSsoCannyRoute
-  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
   '/one-click-apps': typeof MainOneClickAppsIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/volumes': typeof MainVolumesIndexRoute
   '/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
+  '/auth/sso/canny': typeof MainAuthSsoCannyRoute
+  '/auth/sso/discourse': typeof MainAuthSsoDiscourseRoute
   '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
@@ -473,13 +473,13 @@ export interface FileRoutesById {
   '/_main/volumes/new': typeof MainVolumesNewRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
-  '/auth/sso/canny': typeof AuthSsoCannyRoute
-  '/auth/sso/discourse': typeof AuthSsoDiscourseRoute
   '/_main/one-click-apps/': typeof MainOneClickAppsIndexRoute
   '/_main/services/': typeof MainServicesIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/volumes/': typeof MainVolumesIndexRoute
   '/_main/account/organization_invitations/$invitationId': typeof MainAccountOrganization_invitationsInvitationIdRoute
+  '/_main/auth/sso/canny': typeof MainAuthSsoCannyRoute
+  '/_main/auth/sso/discourse': typeof MainAuthSsoDiscourseRoute
   '/_main/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/_main/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/_main/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
@@ -528,13 +528,13 @@ export interface FileRouteTypes {
     | '/volumes/new'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
-    | '/auth/sso/canny'
-    | '/auth/sso/discourse'
     | '/one-click-apps/'
     | '/services'
     | '/settings/'
     | '/volumes/'
     | '/account/organization_invitations/$invitationId'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
     | '/database-services/$databaseServiceId/databases'
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
@@ -574,13 +574,13 @@ export interface FileRouteTypes {
     | '/volumes/new'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
-    | '/auth/sso/canny'
-    | '/auth/sso/discourse'
     | '/one-click-apps'
     | '/services'
     | '/settings'
     | '/volumes'
     | '/account/organization_invitations/$invitationId'
+    | '/auth/sso/canny'
+    | '/auth/sso/discourse'
     | '/database-services/$databaseServiceId/databases'
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
@@ -628,13 +628,13 @@ export interface FileRouteTypes {
     | '/_main/volumes/new'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
-    | '/auth/sso/canny'
-    | '/auth/sso/discourse'
     | '/_main/one-click-apps/'
     | '/_main/services/'
     | '/_main/settings/'
     | '/_main/volumes/'
     | '/_main/account/organization_invitations/$invitationId'
+    | '/_main/auth/sso/canny'
+    | '/_main/auth/sso/discourse'
     | '/_main/database-services/$databaseServiceId/databases'
     | '/_main/database-services/$databaseServiceId/roles'
     | '/_main/database-services/$databaseServiceId/settings'
@@ -789,20 +789,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/one-click-apps/'
       preLoaderRoute: typeof MainOneClickAppsIndexRouteImport
       parentRoute: typeof MainOneClickAppsRouteRoute
-    }
-    '/auth/sso/discourse': {
-      id: '/auth/sso/discourse'
-      path: '/sso/discourse'
-      fullPath: '/auth/sso/discourse'
-      preLoaderRoute: typeof AuthSsoDiscourseRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/sso/canny': {
-      id: '/auth/sso/canny'
-      path: '/sso/canny'
-      fullPath: '/auth/sso/canny'
-      preLoaderRoute: typeof AuthSsoCannyRouteImport
-      parentRoute: typeof AuthRouteRoute
     }
     '/account/validate/$token': {
       id: '/account/validate/$token'
@@ -1021,6 +1007,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport
       parentRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRoute
     }
+    '/_main/auth/sso/discourse': {
+      id: '/_main/auth/sso/discourse'
+      path: '/auth/sso/discourse'
+      fullPath: '/auth/sso/discourse'
+      preLoaderRoute: typeof MainAuthSsoDiscourseRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/auth/sso/canny': {
+      id: '/_main/auth/sso/canny'
+      path: '/auth/sso/canny'
+      fullPath: '/auth/sso/canny'
+      preLoaderRoute: typeof MainAuthSsoCannyRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
     '/_main/account/organization_invitations/$invitationId': {
       id: '/_main/account/organization_invitations/$invitationId'
       path: '/account/organization_invitations/$invitationId'
@@ -1192,6 +1192,8 @@ interface MainRouteRouteChildren {
   MainServicesNewRoute: typeof MainServicesNewRoute
   MainServicesIndexRoute: typeof MainServicesIndexRoute
   MainAccountOrganization_invitationsInvitationIdRoute: typeof MainAccountOrganization_invitationsInvitationIdRoute
+  MainAuthSsoCannyRoute: typeof MainAuthSsoCannyRoute
+  MainAuthSsoDiscourseRoute: typeof MainAuthSsoDiscourseRoute
 }
 
 const MainRouteRouteChildren: MainRouteRouteChildren = {
@@ -1214,6 +1216,8 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainServicesIndexRoute: MainServicesIndexRoute,
   MainAccountOrganization_invitationsInvitationIdRoute:
     MainAccountOrganization_invitationsInvitationIdRoute,
+  MainAuthSsoCannyRoute: MainAuthSsoCannyRoute,
+  MainAuthSsoDiscourseRoute: MainAuthSsoDiscourseRoute,
 }
 
 const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
@@ -1224,16 +1228,12 @@ interface AuthRouteRouteChildren {
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   AuthSigninRoute: typeof AuthSigninRoute
   AuthSignupRoute: typeof AuthSignupRoute
-  AuthSsoCannyRoute: typeof AuthSsoCannyRoute
-  AuthSsoDiscourseRoute: typeof AuthSsoDiscourseRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthResetPasswordRoute: AuthResetPasswordRoute,
   AuthSigninRoute: AuthSigninRoute,
   AuthSignupRoute: AuthSignupRoute,
-  AuthSsoCannyRoute: AuthSsoCannyRoute,
-  AuthSsoDiscourseRoute: AuthSsoDiscourseRoute,
 }
 
 const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
