@@ -38,7 +38,7 @@ export function GithubAccount() {
 
           {user?.githubUser && (
             <p className="text-dim">
-              <T id="accountRegistered" values={{ githubUser: user?.githubUser }} />
+              <T id="accountRegistered" values={{ githubUser: user.githubUser }} />
             </p>
           )}
 

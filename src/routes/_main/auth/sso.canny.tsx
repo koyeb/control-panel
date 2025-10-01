@@ -36,7 +36,7 @@ export const Route = createFileRoute('/_main/auth/sso/canny')({
     window.location.href = `https://canny.io/api/redirects/sso?${params.toString()}`;
   },
 
-  onError(error) {
+  onError(error: Error) {
     reportError(error);
     notify.error(<SsoError error={error} />);
     throw redirect({ to: '/', replace: true });

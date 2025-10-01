@@ -37,7 +37,7 @@ export const Route = createFileRoute('/_main/auth/sso/discourse')({
     window.location.href = `https://community.koyeb.com/session/sso_login?sso=${result.sso}&sig=${result.sig}`;
   },
 
-  onError(error) {
+  onError(error: Error) {
     reportError(error);
     notify.error(<SsoError error={error} />);
     throw redirect({ to: '/', replace: true });

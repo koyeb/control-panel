@@ -65,7 +65,7 @@ export function DeleteAccount() {
         id="ConfirmDeleteAccount"
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
-        confirmationText={user!.name ?? ''}
+        confirmationText={user?.name ?? ''}
         submitText={<T id="confirmationDialog.confirm" />}
         onConfirm={deleteAccount}
       />

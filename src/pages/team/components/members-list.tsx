@@ -136,7 +136,7 @@ function InvitationMember({ invitation }: { invitation: OrganizationInvitation }
 function OrganizationMember({ membership }: { membership: OrganizationMember }) {
   return (
     <div className="row items-center gap-4">
-      <img src={membership.user?.avatarUrl} className="size-8 rounded-full" />
+      <img src={membership.user.avatarUrl} className="size-8 rounded-full" />
 
       <div>
         <div className="font-medium">{membership.user.name}</div>
@@ -271,7 +271,7 @@ function useRemoveOrganizationMember() {
       notify.info(
         t('actions.removeMemberSuccessNotification', {
           memberName: user.name,
-          organizationName: organization?.name,
+          organizationName: organization.name,
         }),
       );
     },
@@ -296,7 +296,7 @@ function useLeaveOrganization() {
 
       const [otherOrganizationId] = members!
         .map((member) => member.organization_id!)
-        .filter((organizationId) => organizationId !== membership.organization?.id);
+        .filter((organizationId) => organizationId !== membership.organization.id);
 
       let result: string | null = null;
 
@@ -318,7 +318,7 @@ function useLeaveOrganization() {
     async onSuccess(token, { organization }) {
       await setToken(token, { queryClient });
       await navigate({ to: '/' });
-      notify.info(t('actions.leaveSuccessNotification', { organizationName: organization?.name }));
+      notify.info(t('actions.leaveSuccessNotification', { organizationName: organization.name }));
     },
   });
 }
