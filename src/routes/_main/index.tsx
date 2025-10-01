@@ -34,13 +34,13 @@ export const Route = createFileRoute('/_main/')({
 const T = createTranslate('pages.home');
 
 const banner = {
-  id: '',
-  title: 'Discover scale-to-zero and autoscaling',
+  id: 'command-palette',
+  title: 'Boost your workflow with the new Command Palette',
   description:
-    'Take a deep dive into how our scale-to-zero and autoscaling can benefit your high performance production services.',
+    'Quickly find what you need and take action without leaving your keyboard. The new Command Palette lets you search, navigate, and trigger commands instantly—making your workflow faster and smoother.',
   cta: {
     label: 'Discover more',
-    href: '#',
+    href: 'https://www.koyeb.com',
   },
 };
 
