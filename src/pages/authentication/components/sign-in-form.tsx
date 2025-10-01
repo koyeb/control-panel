@@ -22,8 +22,10 @@ const schema = z.object({
   password: z.string().min(8).max(128),
 });
 
-const invalidCredentialApiMessage =
-  'There is no Koyeb account associated with this email address or your password is incorrect';
+const invalidCredentialApiMessages = [
+  'There is no Koyeb account associated with this email address or your password is incorrect',
+  'Cannot find user',
+];
 
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
@@ -50,7 +52,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
       await navigate(urlToLinkOptions(redirect));
     },
     onError(error) {
-      if (ApiError.is(error) && error.message === invalidCredentialApiMessage) {
+      if (ApiError.is(error) && invalidCredentialApiMessages.includes(error.message)) {
         form.setError('root', { message: 'invalidCredential' });
       } else {
         notify.error(error.message);
