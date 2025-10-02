@@ -1,5 +1,5 @@
 import { Badge, Button } from '@koyeb/design-system';
-import { useFieldArray } from 'react-hook-form';
+import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -15,6 +15,14 @@ const T = createTranslate('modules.serviceForm.ports');
 
 export function PortsSection() {
   const { fields, append, remove } = useFieldArray<ServiceForm>({ name: 'ports' });
+  const { trigger } = useFormContext<ServiceForm>();
+
+  const onRemove = (index: number) => {
+    if (fields.length > 1) {
+      remove(index);
+      void trigger('ports');
+    }
+  };
 
   return (
     <ServiceFormSection
@@ -25,7 +33,7 @@ export function PortsSection() {
       className="col gap-6"
     >
       {fields.map(({ id }, index) => (
-        <PortFields key={id} index={index} onRemove={fields.length === 1 ? undefined : () => remove(index)} />
+        <PortFields key={id} index={index} onRemove={() => onRemove(index)} />
       ))}
 
       <Button
