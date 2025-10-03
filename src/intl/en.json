@@ -3111,10 +3111,12 @@
         },
         "regions": {
           "label": "Select a region",
-          "continental": "Continental",
-          "metropolitan": "Metropolitan",
-          "required": "Please select a region",
-          "boundedToSnapshot": "The volume must be created in the snapshot's region"
+          "boundedToSnapshot": "The volume must be created in the snapshot's region",
+          "warning": "Warning, you will not be able to change the region",
+          "scopeDescriptions": {
+            "metropolitan": "Deploy in a metropolitan region for fine-grained placement control and optimized latency",
+            "continental": "Deploy across multiple regions within a continent for maximum availability and resilience"
+          }
         },
         "size": {
           "label": "Size",

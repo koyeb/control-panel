@@ -1,9 +1,10 @@
 import { Button, InputEnd } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, apiQuery, useInvalidateApiQuery } from 'src/api';
+import { apiMutation, apiQuery, useInvalidateApiQuery, useRegionsCatalog } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { DocumentTitle } from 'src/components/document-title';
@@ -13,8 +14,10 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
-
-import { RegionSelector } from './region-selector';
+import { RegionScope } from 'src/model';
+import { RegionScopeTabs, RegionSelector } from 'src/modules/instance-selector/region-selector';
+import { isDefined } from 'src/utils/generic';
+import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.volumes.create');
 
@@ -28,6 +31,12 @@ export function CreateVolumePage() {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
+
+  const [scope, setScope] = useState<RegionScope>('continental');
+
+  const regions = useRegionsCatalog()
+    .filter((region) => !region.id.startsWith('aws-'))
+    .filter(hasProperty('status', 'available'));
 
   const snapshotId = useSearchParams().get('snapshot');
   const fromSnapshot = snapshotId !== null;
@@ -45,15 +54,11 @@ export function CreateVolumePage() {
 
       return {
         name: '',
-        region: snapshot?.region ?? '',
+        region: snapshot?.region ?? 'eu',
         size: snapshot?.size ?? NaN,
       };
     },
-    resolver: useZodResolver(schema, (error) => {
-      if (error.path[0] === 'region' && error.code === 'too_small') {
-        return t('regions.required');
-      }
-    }),
+    resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({
@@ -73,6 +78,16 @@ export function CreateVolumePage() {
     },
     onError: useFormErrorHandler(form),
   });
+
+  const onScopeChanged = (scope: RegionScope) => {
+    setScope(scope);
+
+    const region = regions.find(hasProperty('scope', scope));
+
+    if (region) {
+      form.setValue('region', region.id);
+    }
+  };
 
   return (
     <>
@@ -97,8 +112,26 @@ export function CreateVolumePage() {
         <Controller
           control={form.control}
           name="region"
-          render={({ field, fieldState }) => (
-            <RegionSelector field={{ ...field, disabled: fromSnapshot }} error={fieldState.error?.message} />
+          render={({ field }) => (
+            <div className="@container col max-w-3xl gap-4">
+              <div className="row items-center justify-between">
+                <div>
+                  <T id="regions.label" />
+                </div>
+                <RegionScopeTabs scope={scope} onScopeChanged={onScopeChanged} />
+              </div>
+
+              <div className="text-dim">
+                <T id={`regions.scopeDescriptions.${scope}`} />
+              </div>
+
+              <RegionSelector
+                type="radio"
+                regions={regions.filter(hasProperty('scope', scope))}
+                selected={[regions.find(hasProperty('id', field.value))].filter(isDefined)}
+                onSelected={(region) => field.onChange(region.id)}
+              />
+            </div>
           )}
         />
 
@@ -117,10 +150,11 @@ export function CreateVolumePage() {
           className="max-w-xs"
         />
 
-        <div className="row gap-4">
+        <div className="row items-center gap-4">
           <LinkButton color="gray" to="/volumes">
             <Translate id="common.back" />
           </LinkButton>
+
           <Button
             type="submit"
             loading={form.formState.isSubmitting}
@@ -128,6 +162,10 @@ export function CreateVolumePage() {
           >
             <T id="submit" />
           </Button>
+
+          <div className="text-dim">
+            <T id="regions.warning" />
+          </div>
         </div>
       </form>
     </>
