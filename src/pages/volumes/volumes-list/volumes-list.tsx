@@ -1,6 +1,7 @@
-import { ButtonMenuItem, InfoTooltip, Table, useBreakpoint } from '@koyeb/design-system';
+import { ButtonMenuItem, InfoTooltip, Input, Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { useState } from 'react';
 
 import { apiQuery, mapSnapshot, mapVolume, useService } from 'src/api';
 import { formatBytes } from 'src/application/memory';
@@ -14,8 +15,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
-import { Title } from 'src/components/title';
-import { IconPen, IconPlus, IconTrash } from 'src/icons';
+import { IconPen, IconPlus, IconSearch, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
@@ -28,10 +28,13 @@ import { EditVolumeDialog } from './edit-volume-dialog';
 const T = createTranslate('pages.volumes.volumesList');
 
 export function VolumesListSection() {
+  const t = T.useTranslate();
+
   const pagination = usePagination();
+  const [name, setName] = useState<string>();
 
   const query = useQuery({
-    ...apiQuery('get /v1/volumes', { query: pagination.query }),
+    ...apiQuery('get /v1/volumes', { query: { ...pagination.query, name } }),
     placeholderData: keepPreviousData,
     select: ({ volumes, has_next }) => ({
       volumes: volumes!.map(mapVolume),
@@ -45,17 +48,24 @@ export function VolumesListSection() {
     <QueryGuard query={query}>
       {({ volumes }) => (
         <section className="col gap-4">
-          <Title
-            as="h2"
-            title={<T id="header.title" />}
-            end={
-              volumes.length > 0 && (
-                <LinkButton to="/volumes/new">
-                  <T id="header.createVolume" />
-                </LinkButton>
-              )
-            }
-          />
+          <div className="row items-center justify-between gap-4">
+            <Input
+              start={
+                <span className="row items-center self-stretch pl-1">
+                  <IconSearch className="size-4 text-dim" />
+                </span>
+              }
+              placeholder={t('header.search')}
+              value={name ?? ''}
+              onChange={(event) => setName(event.target.value)}
+            />
+
+            {volumes.length > 0 && (
+              <LinkButton to="/volumes/new">
+                <T id="header.createVolume" />
+              </LinkButton>
+            )}
+          </div>
 
           {volumes.length === 0 && (
             <NoResource

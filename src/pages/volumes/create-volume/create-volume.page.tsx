@@ -78,7 +78,7 @@ export function CreateVolumePage() {
     <>
       <DocumentTitle title={t('title')} />
 
-      <div className="mb-8 col gap-2">
+      <div className="col gap-2">
         <Title title={<T id="title" />} />
         <p className="text-dim">
           <T id="description" />

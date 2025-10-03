@@ -2,7 +2,7 @@ import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-sys
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { apiQuery, mapSnapshot, useVolumes } from 'src/api';
+import { apiQuery, mapSnapshot, useVolume } from 'src/api';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
@@ -17,7 +17,6 @@ import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { VolumeSnapshot } from 'src/model';
-import { hasProperty } from 'src/utils/object';
 import { lowerCase } from 'src/utils/strings';
 
 import { DeleteSnapshotDialog } from './delete-snapshot-dialog';
@@ -64,7 +63,6 @@ export function SnapshotsListSection() {
 
 function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
   const lg = !useBreakpoint('lg');
-  const volumes = useVolumes();
 
   return (
     <Table
@@ -95,7 +93,7 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
         },
         volumeName: {
           header: <T id="volumeName" />,
-          render: (snapshot) => volumes?.find(hasProperty('id', snapshot.volumeId))?.name,
+          render: (snapshot) => <VolumeName volumeId={snapshot.volumeId} />,
         },
         created: {
           hidden: lg,
@@ -116,6 +114,12 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
       }}
     />
   );
+}
+
+function VolumeName({ volumeId }: { volumeId: string }) {
+  const volume = useVolume(volumeId);
+
+  return <>{volume?.name}</>;
 }
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {

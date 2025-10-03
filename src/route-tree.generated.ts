@@ -29,6 +29,7 @@ import { Route as MainServicesIndexRouteImport } from './routes/_main/services/i
 import { Route as MainOneClickAppsIndexRouteImport } from './routes/_main/one-click-apps/index'
 import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
 import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
+import { Route as MainVolumesSnapshotsRouteImport } from './routes/_main/volumes/snapshots'
 import { Route as MainVolumesNewRouteImport } from './routes/_main/volumes/new'
 import { Route as MainSettingsRegistryConfigurationRouteImport } from './routes/_main/settings/registry-configuration'
 import { Route as MainSettingsPlansRouteImport } from './routes/_main/settings/plans'
@@ -162,6 +163,11 @@ const AccountResetPasswordTokenRoute =
     path: '/account/reset-password/$token',
     getParentRoute: () => rootRouteImport,
   } as any)
+const MainVolumesSnapshotsRoute = MainVolumesSnapshotsRouteImport.update({
+  id: '/snapshots',
+  path: '/snapshots',
+  getParentRoute: () => MainVolumesRouteRoute,
+} as any)
 const MainVolumesNewRoute = MainVolumesNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -370,6 +376,7 @@ export interface FileRoutesByFullPath {
   '/settings/plans': typeof MainSettingsPlansRoute
   '/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
   '/volumes/new': typeof MainVolumesNewRoute
+  '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/one-click-apps/': typeof MainOneClickAppsIndexRoute
@@ -416,6 +423,7 @@ export interface FileRoutesByTo {
   '/settings/plans': typeof MainSettingsPlansRoute
   '/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
   '/volumes/new': typeof MainVolumesNewRoute
+  '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/one-click-apps': typeof MainOneClickAppsIndexRoute
@@ -471,6 +479,7 @@ export interface FileRoutesById {
   '/_main/settings/plans': typeof MainSettingsPlansRoute
   '/_main/settings/registry-configuration': typeof MainSettingsRegistryConfigurationRoute
   '/_main/volumes/new': typeof MainVolumesNewRoute
+  '/_main/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/_main/one-click-apps/': typeof MainOneClickAppsIndexRoute
@@ -526,6 +535,7 @@ export interface FileRouteTypes {
     | '/settings/plans'
     | '/settings/registry-configuration'
     | '/volumes/new'
+    | '/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
     | '/one-click-apps/'
@@ -572,6 +582,7 @@ export interface FileRouteTypes {
     | '/settings/plans'
     | '/settings/registry-configuration'
     | '/volumes/new'
+    | '/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
     | '/one-click-apps'
@@ -626,6 +637,7 @@ export interface FileRouteTypes {
     | '/_main/settings/plans'
     | '/_main/settings/registry-configuration'
     | '/_main/volumes/new'
+    | '/_main/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
     | '/_main/one-click-apps/'
@@ -803,6 +815,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/account/reset-password/$token'
       preLoaderRoute: typeof AccountResetPasswordTokenRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_main/volumes/snapshots': {
+      id: '/_main/volumes/snapshots'
+      path: '/snapshots'
+      fullPath: '/volumes/snapshots'
+      preLoaderRoute: typeof MainVolumesSnapshotsRouteImport
+      parentRoute: typeof MainVolumesRouteRoute
     }
     '/_main/volumes/new': {
       id: '/_main/volumes/new'
@@ -1102,11 +1121,13 @@ const MainSettingsRouteRouteWithChildren =
 
 interface MainVolumesRouteRouteChildren {
   MainVolumesNewRoute: typeof MainVolumesNewRoute
+  MainVolumesSnapshotsRoute: typeof MainVolumesSnapshotsRoute
   MainVolumesIndexRoute: typeof MainVolumesIndexRoute
 }
 
 const MainVolumesRouteRouteChildren: MainVolumesRouteRouteChildren = {
   MainVolumesNewRoute: MainVolumesNewRoute,
+  MainVolumesSnapshotsRoute: MainVolumesSnapshotsRoute,
   MainVolumesIndexRoute: MainVolumesIndexRoute,
 }
 

@@ -13,3 +13,14 @@ export function useVolumesQuery(region?: string) {
 export function useVolumes(region?: string) {
   return useVolumesQuery(region).data;
 }
+
+export function useVolumeQuery(volumeId: string) {
+  return useQuery({
+    ...apiQuery('get /v1/volumes/{id}', { path: { id: volumeId } }),
+    select: ({ volume }) => mapVolume(volume!),
+  });
+}
+
+export function useVolume(volumeId: string) {
+  return useVolumeQuery(volumeId).data;
+}

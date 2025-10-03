@@ -1742,6 +1742,7 @@
         "/services": "Services",
         "/volumes": "Volumes",
         "/volumes/new": "Create volume",
+        "/volumes/snapshots": "Snapshots",
         "/domains": "Domains",
         "/secrets": "Secrets",
         "/activity": "Activity",
@@ -3004,9 +3005,13 @@
         "cta": "Upgrade to unlock",
         "learnMore": "Learn more about volumes"
       },
+      "tabs": {
+        "volumes": "Volumes",
+        "snapshots": "Snapshots"
+      },
       "volumesList": {
         "header": {
-          "title": "Volumes",
+          "search": "Search",
           "createVolume": "Create volume"
         },
         "name": "Name",
