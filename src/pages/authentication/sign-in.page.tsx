@@ -36,7 +36,7 @@ export function SignInPage() {
       <Separator />
 
       <FeatureFlag feature="work-os">
-        <AuthButton type="button" onClick={() => void authKit.signIn(next)}>
+        <AuthButton type="button" onClick={() => authKit.signIn(next)}>
           Sign in with WorkOS
         </AuthButton>
         <Separator />

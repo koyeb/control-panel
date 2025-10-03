@@ -115,11 +115,11 @@ function RegionItem({
       <div className="col flex-1 gap-1.5">
         <div className="leading-none">{region.name}</div>
 
-        {showLatency && showAvailability && (
+        {(showLatency || showAvailability) && (
           <div className="row gap-1 text-xs text-dim">
             {showLatency && <RegionLatency region={region} />}
 
-            {availability && (
+            {showAvailability && availability && (
               <>
                 <div className="text-dim">{bullet}</div>
                 <CatalogAvailabilityComponent availability={availability} />

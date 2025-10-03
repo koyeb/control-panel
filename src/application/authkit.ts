@@ -30,7 +30,7 @@ export class AuthKitAdapter {
   }
 
   signIn(next: string | null) {
-    this.client?.signIn({ state: { next } });
+    void this.client?.signIn({ state: { next } });
   }
 
   get next() {

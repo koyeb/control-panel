@@ -139,11 +139,11 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
   const navigate = useNavigate();
 
   const switchOrganization = useSwitchOrganization(() => {
-    navigate({ to: '/' });
+    void navigate({ to: '/' });
   });
 
   const manageOrganization = useSwitchOrganization(() => {
-    navigate({ to: '/settings' });
+    void navigate({ to: '/settings' });
   });
 
   return (
