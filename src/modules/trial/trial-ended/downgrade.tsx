@@ -1,11 +1,10 @@
 import { Alert, Button, DialogFooter, DialogHeader } from '@koyeb/design-system';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { getApi } from 'src/api';
+import { apiMutation, useSwitchOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
-import { setToken } from 'src/application/token';
 import { ControlledInput } from 'src/components/controlled';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -25,7 +24,6 @@ const schema = z.object({
 
 export function Downgrade({ onCancel }: { onCancel: () => void }) {
   const t = T.useTranslate();
-  const queryClient = useQueryClient();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -34,23 +32,15 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
     resolver: useZodResolver(schema),
   });
 
+  const switchOrganization = useSwitchOrganization();
+
   const mutation = useMutation({
-    async mutationFn({ organizationName }: FormValues<typeof form>) {
-      const api = getApi();
+    ...apiMutation('post /v1/organizations', ({ organizationName }: FormValues<typeof form>) => ({
+      body: { name: organizationName },
+    })),
 
-      const { organization } = await api('post /v1/organizations', {
-        body: { name: organizationName },
-      });
-
-      const { token: newToken } = await api('post /v1/organizations/{id}/switch', {
-        path: { id: organization!.id! },
-        header: {},
-      });
-
-      return newToken!.id!;
-    },
-    async onSuccess(token) {
-      await setToken(token, { queryClient });
+    async onSuccess({ organization }) {
+      await switchOrganization.mutateAsync(organization!.id!);
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({

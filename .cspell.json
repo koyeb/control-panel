@@ -2,6 +2,7 @@
   "files": ["src/**/*.{ts,tsx}", "design-system/src/**/*.{ts,tsx}"],
   "ignorePaths": ["**/*.generated.d.ts"],
   "words": [
+    "authkit",
     "autoassigned",
     "autodeploy",
     "autoscaled",
@@ -29,6 +30,7 @@
     "tldts",
     "upsell",
     "vcpu",
+    "workos",
     "worktree",
     "xlarge"
   ]

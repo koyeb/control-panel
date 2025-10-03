@@ -27,6 +27,7 @@ import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/ind
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
 import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
 import { Route as MainOneClickAppsIndexRouteImport } from './routes/_main/one-click-apps/index'
+import { Route as AccountWorkosCallbackRouteImport } from './routes/account/workos.callback'
 import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
 import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
 import { Route as MainVolumesSnapshotsRouteImport } from './routes/_main/volumes/snapshots'
@@ -151,6 +152,11 @@ const MainOneClickAppsIndexRoute = MainOneClickAppsIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MainOneClickAppsRouteRoute,
+} as any)
+const AccountWorkosCallbackRoute = AccountWorkosCallbackRouteImport.update({
+  id: '/account/workos/callback',
+  path: '/account/workos/callback',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AccountValidateTokenRoute = AccountValidateTokenRouteImport.update({
   id: '/account/validate/$token',
@@ -379,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/one-click-apps/': typeof MainOneClickAppsIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
@@ -426,6 +433,7 @@ export interface FileRoutesByTo {
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/one-click-apps': typeof MainOneClickAppsIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings': typeof MainSettingsIndexRoute
@@ -482,6 +490,7 @@ export interface FileRoutesById {
   '/_main/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
+  '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/_main/one-click-apps/': typeof MainOneClickAppsIndexRoute
   '/_main/services/': typeof MainServicesIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
@@ -538,6 +547,7 @@ export interface FileRouteTypes {
     | '/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
+    | '/account/workos/callback'
     | '/one-click-apps/'
     | '/services'
     | '/settings/'
@@ -585,6 +595,7 @@ export interface FileRouteTypes {
     | '/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
+    | '/account/workos/callback'
     | '/one-click-apps'
     | '/services'
     | '/settings'
@@ -640,6 +651,7 @@ export interface FileRouteTypes {
     | '/_main/volumes/snapshots'
     | '/account/reset-password/$token'
     | '/account/validate/$token'
+    | '/account/workos/callback'
     | '/_main/one-click-apps/'
     | '/_main/services/'
     | '/_main/settings/'
@@ -670,6 +682,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AccountResetPasswordTokenRoute: typeof AccountResetPasswordTokenRoute
   AccountValidateTokenRoute: typeof AccountValidateTokenRoute
+  AccountWorkosCallbackRoute: typeof AccountWorkosCallbackRoute
   AccountOauthGithubCallbackRoute: typeof AccountOauthGithubCallbackRoute
   OrganizationDeactivateConfirmConfirmationIdRoute: typeof OrganizationDeactivateConfirmConfirmationIdRoute
 }
@@ -801,6 +814,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/one-click-apps/'
       preLoaderRoute: typeof MainOneClickAppsIndexRouteImport
       parentRoute: typeof MainOneClickAppsRouteRoute
+    }
+    '/account/workos/callback': {
+      id: '/account/workos/callback'
+      path: '/account/workos/callback'
+      fullPath: '/account/workos/callback'
+      preLoaderRoute: typeof AccountWorkosCallbackRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/account/validate/$token': {
       id: '/account/validate/$token'
@@ -1266,6 +1286,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   AccountResetPasswordTokenRoute: AccountResetPasswordTokenRoute,
   AccountValidateTokenRoute: AccountValidateTokenRoute,
+  AccountWorkosCallbackRoute: AccountWorkosCallbackRoute,
   AccountOauthGithubCallbackRoute: AccountOauthGithubCallbackRoute,
   OrganizationDeactivateConfirmConfirmationIdRoute:
     OrganizationDeactivateConfirmConfirmationIdRoute,

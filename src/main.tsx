@@ -10,16 +10,23 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import qs from 'query-string';
-import { StrictMode, useEffect } from 'react';
+import { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api';
+import { AuthKitAdapter } from './application/authkit';
 import { getConfig } from './application/config';
 import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
-import { accessTokenListener, getToken, isSessionToken, setToken } from './application/token';
+import {
+  accessTokenListener,
+  getToken,
+  isSessionToken,
+  setAuthKitToken,
+  setToken,
+} from './application/token';
 import { NotificationContainer } from './components/notification';
 import { SeonAdapter } from './hooks/seon';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
@@ -89,7 +96,11 @@ async function handleAuthenticationError(error: Error) {
   }
 
   if (getToken() !== null) {
-    await setToken(null, { queryClient });
+    if (authKit.user) {
+      setAuthKitToken(null);
+    } else {
+      await setToken(null, { queryClient });
+    }
   }
 
   const location = new URL(window.location.href);
@@ -120,6 +131,10 @@ function retry(failureCount: number, error: Error) {
   return failureCount <= 3;
 }
 
+const seon = new SeonAdapter();
+
+const authKit = new AuthKitAdapter();
+
 const queryClient = new QueryClient({
   queryCache,
   mutationCache,
@@ -146,8 +161,9 @@ const router = createRouter({
     return result !== '' ? `?${result}` : '';
   },
   context: {
-    seon: new SeonAdapter(),
     queryClient,
+    seon,
+    authKit,
     translate: createTranslateFn(),
   },
   defaultOnCatch(error, errorInfo) {
@@ -165,13 +181,15 @@ const router = createRouter({
     }, []);
 
     return (
-      <IntlProvider>
-        <QueryClientProvider client={queryClient}>
-          <PersistQueryClient>
-            <DialogProvider>{children}</DialogProvider>
-          </PersistQueryClient>
-        </QueryClientProvider>
-      </IntlProvider>
+      <AuthKitProvider>
+        <IntlProvider>
+          <QueryClientProvider client={queryClient}>
+            <PersistQueryClient>
+              <DialogProvider>{children}</DialogProvider>
+            </PersistQueryClient>
+          </QueryClientProvider>
+        </IntlProvider>
+      </AuthKitProvider>
     );
   },
   InnerWrap({ children }) {
@@ -185,6 +203,33 @@ const router = createRouter({
     );
   },
 });
+
+// eslint-disable-next-line react-refresh/only-export-components
+function AuthKitProvider({ children }: { children: React.ReactNode }) {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function initialize() {
+      await authKit.initialize();
+
+      if (authKit.user) {
+        setAuthKitToken(await authKit.client?.getAccessToken());
+      }
+    }
+
+    const id = setTimeout(() => {
+      initialize()
+        .catch(reportError)
+        .finally(() => setLoading(false));
+    });
+
+    return () => {
+      clearTimeout(id);
+    };
+  }, []);
+
+  return loading ? null : children;
+}
 
 const persister = createAsyncStoragePersister({ key: 'query-cache', storage: localStorage });
 
