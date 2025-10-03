@@ -3011,13 +3011,13 @@
         },
         "name": "Name",
         "parentSnapshot": "Created from snapshot {name}",
-        "created": "Created",
+        "status": "Status",
         "region": "Region",
         "size": "Size",
-        "status": "Status",
+        "created": "Created",
         "attachedTo": "Attached to",
         "attach": {
-          "label": "Attach to",
+          "label": "Attach volume to",
           "placeholder": "Search",
           "noServices": "No serivce found",
           "alreadyMounted": "This volume has already been attached to a service and cannot be attached again."

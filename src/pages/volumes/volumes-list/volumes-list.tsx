@@ -17,7 +17,7 @@ import { VolumeStatusBadge } from 'src/components/status-badges';
 import { Title } from 'src/components/title';
 import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
 
 import { AttachVolumeButton } from './attach-volume-button';
@@ -108,22 +108,17 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
           className: clsx('w-26'),
           render: (volume) => formatBytes(volume.size, { decimal: true }),
         },
-        attachedTo: {
-          hidden: lg,
-          header: <T id="attachedTo" />,
-          render: (volume) => <AttachedService serviceId={volume.serviceId} />,
-        },
         created: {
           hidden: lg,
           header: <T id="created" />,
           className: clsx('w-34'),
           render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
         },
-        attach: {
+        service: {
           hidden: lg,
-          header: null,
+          header: <T id="attachedTo" />,
           className: clsx('w-26'),
-          render: (volume) => <AttachVolumeButton volume={volume} />,
+          render: (volume) => <AttachedService volume={volume} serviceId={volume.serviceId} />,
         },
         actions: {
           className: clsx('w-[1%]'),
@@ -143,7 +138,7 @@ function VolumeName({ volume }: { volume: Volume }) {
 
   return (
     <div className="row items-center gap-2">
-      {volume.name}
+      <div className="max-w-xs truncate">{volume.name}</div>
       {snapshot.isSuccess && (
         <InfoTooltip content={<T id="parentSnapshot" values={{ name: snapshot.data.name }} />} />
       )}
@@ -151,12 +146,12 @@ function VolumeName({ volume }: { volume: Volume }) {
   );
 }
 
-function AttachedService({ serviceId }: { serviceId?: string }) {
+function AttachedService({ volume, serviceId }: { volume: Volume; serviceId?: string }) {
   // todo: fetch all services with a single query (to avoid the n+1 select problem)
   const service = useService(serviceId);
 
   if (serviceId === undefined) {
-    return <Translate id="common.noValue" />;
+    return <AttachVolumeButton volume={volume} />;
   }
 
   if (!service) {
