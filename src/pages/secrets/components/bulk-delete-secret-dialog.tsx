@@ -11,7 +11,7 @@ const T = createTranslate('pages.secrets.bulkDelete');
 
 type BulkDeleteSecretsDialogProps = {
   secrets: Secret[];
-  onDeleted: () => void;
+  onDeleted?: () => void;
 };
 
 export function BulkDeleteSecretsDialog({ secrets, onDeleted }: BulkDeleteSecretsDialogProps) {
@@ -35,7 +35,7 @@ export function BulkDeleteSecretsDialog({ secrets, onDeleted }: BulkDeleteSecret
       notify.success(t('successNotification', { count: fulfilled.length }));
 
       closeDialog();
-      onDeleted();
+      onDeleted?.();
     },
   });
 

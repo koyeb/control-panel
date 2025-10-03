@@ -9,7 +9,7 @@ import { Secret } from 'src/model';
 
 const T = createTranslate('pages.secrets.deleteSecretDialog');
 
-export function DeleteSecretDialog({ secret }: { secret: Secret }) {
+export function DeleteSecretDialog({ secret, onDeleted }: { secret: Secret; onDeleted?: () => void }) {
   const t = T.useTranslate();
   const closeDialog = Dialog.useClose();
 
@@ -22,6 +22,7 @@ export function DeleteSecretDialog({ secret }: { secret: Secret }) {
     async onSuccess() {
       await invalidate('get /v1/secrets');
       notify.info(t('successNotification', { name: secret.name }));
+      onDeleted?.();
       closeDialog();
     },
   });

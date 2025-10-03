@@ -16,7 +16,7 @@ import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('pages.secrets.bulkCreateSecretsDialog');
 
-export function BulkCreateSecretsDialog() {
+export function BulkCreateSecretsDialog({ onCreated }: { onCreated?: () => void }) {
   const t = T.useTranslate();
 
   const closeDialog = Dialog.useClose();
@@ -67,6 +67,7 @@ export function BulkCreateSecretsDialog() {
       }
 
       closeDialog();
+      onCreated?.();
       track('BulkSecretsCreated', { count: created });
     },
   });

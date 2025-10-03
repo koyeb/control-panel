@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { useSecretsQuery } from 'src/api';
 import { Dialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
+import { Pagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { useSet } from 'src/hooks/collection';
@@ -26,10 +27,15 @@ export function SecretsPage() {
     openDialog('CreateSecret');
   });
 
-  const query = useSecretsQuery('simple');
-  const secrets = query.data;
+  const [query, pagination] = useSecretsQuery('simple');
+  const secrets = query.data?.secrets;
 
   const [selected, { toggle, set, clear }] = useSet<Secret>();
+
+  const onChanged = () => {
+    pagination.setPage(1);
+    clear();
+  };
 
   return (
     <div className="col gap-8">
@@ -62,18 +68,21 @@ export function SecretsPage() {
       />
 
       <QueryGuard query={query}>
-        {(secrets) => (
+        {({ secrets }) => (
           <SecretsList
             secrets={secrets}
             onCreate={() => openDialog('CreateSecret')}
+            onDeleted={onChanged}
             selection={{ selected, selectAll: () => set(secrets), clear, toggle }}
           />
         )}
       </QueryGuard>
 
-      <BulkDeleteSecretsDialog secrets={Array.from(selected.values())} onDeleted={clear} />
-      <BulkCreateSecretsDialog />
-      <CreateSecretDialog />
+      {pagination.hasPages && <Pagination pagination={pagination} />}
+
+      <BulkDeleteSecretsDialog secrets={Array.from(selected.values())} onDeleted={onChanged} />
+      <BulkCreateSecretsDialog onCreated={onChanged} />
+      <CreateSecretDialog onCreated={onChanged} />
     </div>
   );
 }
