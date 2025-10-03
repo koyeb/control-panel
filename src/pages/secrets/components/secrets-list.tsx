@@ -30,10 +30,11 @@ const T = createTranslate('pages.secrets.secretsList');
 type SecretListProps = {
   secrets: Secret[];
   onCreate: () => void;
+  onDeleted: () => void;
   selection: TableColumnSelection<Secret>;
 };
 
-export function SecretsList({ secrets, onCreate, selection }: SecretListProps) {
+export function SecretsList({ secrets, onCreate, onDeleted, selection }: SecretListProps) {
   const isMobile = !useBreakpoint('sm');
 
   if (secrets.length === 0) {
@@ -62,7 +63,7 @@ export function SecretsList({ secrets, onCreate, selection }: SecretListProps) {
         },
         actions: {
           className: clsx('w-12'),
-          render: (secret) => <SecretActions secret={secret} />,
+          render: (secret) => <SecretActions secret={secret} onDeleted={onDeleted} />,
         },
       }}
     />
@@ -126,7 +127,7 @@ function Value({ secret }: { secret: Secret }) {
   );
 }
 
-function SecretActions({ secret }: { secret: Secret }) {
+function SecretActions({ secret, onDeleted }: { secret: Secret; onDeleted?: () => void }) {
   const openDialog = Dialog.useOpen();
 
   return (
@@ -147,7 +148,7 @@ function SecretActions({ secret }: { secret: Secret }) {
       </ActionsMenu>
 
       <EditSecretDialog secret={secret} />
-      <DeleteSecretDialog secret={secret} />
+      <DeleteSecretDialog secret={secret} onDeleted={onDeleted} />
     </>
   );
 }
