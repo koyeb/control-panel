@@ -914,8 +914,7 @@
             },
             "workDirectory": {
               "label": "Work directory",
-              "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
-              "placeholder": "./api"
+              "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository."
             },
             "privileged": {
               "label": "Privileged",
@@ -931,8 +930,7 @@
             "description": "Override the default deployment configuration to meet your application's needs",
             "dockerfileLocation": {
               "label": "Dockerfile location",
-              "tooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository.",
-              "placeholder": "./Dockerfile"
+              "tooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository."
             },
             "entrypoint": {
               "label": "Entrypoint",
@@ -948,8 +946,7 @@
             },
             "workDirectory": {
               "label": "Work directory",
-              "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
-              "placeholder": "./api"
+              "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository."
             },
             "privileged": {
               "label": "Privileged",
@@ -1197,8 +1194,7 @@
           },
           "workDirectory": {
             "label": "Work directory",
-            "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
-            "placeholder": "./api"
+            "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository."
           },
           "privileged": {
             "label": "Privileged",
@@ -1210,8 +1206,7 @@
           "description": "Customize Dockerfile configuration to meet the needs of your repository",
           "dockerfileLocation": {
             "label": "Dockerfile location",
-            "tooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository.",
-            "placeholder": "./Dockerfile"
+            "tooltip": "The location of your Dockerfile relative to the work directory. If not set, the work directory defaults to the root of the repository."
           },
           "entrypoint": {
             "label": "Entrypoint",
@@ -1227,8 +1222,7 @@
           },
           "workDirectory": {
             "label": "Work directory",
-            "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository.",
-            "placeholder": "./api"
+            "tooltip": "The directory where your source code is located. If not set, the work directory defaults to the root of the repository."
           },
           "privileged": {
             "label": "Privileged",

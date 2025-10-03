@@ -185,8 +185,6 @@ function BuilderConfiguration({ builder }: { builder: BuilderType }) {
 }
 
 function BuildpackConfiguration() {
-  const t = T.useTranslate();
-
   return (
     <div className="col gap-4">
       <OverridableInput<BuilderForm, 'buildpack.buildCommand'>
@@ -205,7 +203,6 @@ function BuildpackConfiguration() {
         name="buildpack.workDirectory"
         label={<T id="buildpack.configuration.workDirectory.label" />}
         helpTooltip={<T id="buildpack.configuration.workDirectory.tooltip" />}
-        placeholder={t('buildpack.configuration.workDirectory.placeholder')}
       />
 
       <ControlledCheckbox<BuilderForm, 'buildpack.privileged'>
@@ -218,8 +215,6 @@ function BuildpackConfiguration() {
 }
 
 function DockerfileConfiguration() {
-  const t = T.useTranslate();
-
   const entrypoint = useController<BuilderForm, 'dockerfile.entrypoint'>({ name: 'dockerfile.entrypoint' });
   const command = useController<BuilderForm, 'dockerfile.command'>({ name: 'dockerfile.command' });
   const args = useController<BuilderForm, 'dockerfile.args'>({ name: 'dockerfile.args' });
@@ -230,7 +225,6 @@ function DockerfileConfiguration() {
         name="dockerfile.dockerfile"
         label={<T id="dockerfile.configuration.dockerfileLocation.label" />}
         helpTooltip={<T id="dockerfile.configuration.dockerfileLocation.tooltip" />}
-        placeholder={t('dockerfile.configuration.dockerfileLocation.placeholder')}
       />
 
       <ShellCommandInput
@@ -266,7 +260,6 @@ function DockerfileConfiguration() {
         name="dockerfile.workDirectory"
         label={<T id="buildpack.configuration.workDirectory.label" />}
         helpTooltip={<T id="buildpack.configuration.workDirectory.tooltip" />}
-        placeholder={t('buildpack.configuration.workDirectory.placeholder')}
       />
 
       <ControlledCheckbox<BuilderForm, 'dockerfile.privileged'>
