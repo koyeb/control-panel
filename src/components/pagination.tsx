@@ -1,48 +1,51 @@
+import { Button, Select } from '@koyeb/design-system';
 import { useCallback, useEffect, useState } from 'react';
 
-import { SvgComponent } from 'src/application/types';
 import { IconChevronLeft, IconChevronRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { identity } from 'src/utils/generic';
 
 const T = createTranslate('components.pagination');
 
 export function Pagination({ pagination }: { pagination: ReturnType<typeof usePagination> }) {
   return (
-    <div className="row justify-center gap-4">
-      <PaginationButton
-        label={<T id="previous" />}
-        Start={IconChevronLeft}
-        disabled={!pagination.hasPrevious}
-        onClick={pagination.previous}
-      />
+    <div className="row items-center justify-between gap-4">
+      <div className="row items-center gap-2">
+        <Button
+          variant="outline"
+          color="gray"
+          disabled={!pagination.hasPrevious}
+          onClick={pagination.previous}
+        >
+          <IconChevronLeft className="size-4" />
+          <T id="previous" />
+        </Button>
 
-      <PaginationButton
-        label={<T id="next" />}
-        End={IconChevronRight}
-        disabled={!pagination.hasNext}
-        onClick={pagination.next}
-      />
+        <Button variant="outline" color="gray" disabled={!pagination.hasNext} onClick={pagination.next}>
+          <T id="next" />
+          <IconChevronRight className="size-4" />
+        </Button>
+      </div>
+
+      <div className="row items-center gap-3">
+        <T
+          id="pageSize"
+          values={{
+            select: (
+              <Select
+                items={[10, 25, 50, 100]}
+                getKey={identity}
+                itemToString={String}
+                renderItem={identity}
+                selectedItem={pagination.pageSize}
+                onSelectedItemChange={pagination.setPageSize}
+                className="min-w-20"
+              />
+            ),
+          }}
+        />
+      </div>
     </div>
-  );
-}
-
-type PaginationButtonProps = React.ComponentProps<'button'> & {
-  label: React.ReactNode;
-  Start?: SvgComponent;
-  End?: SvgComponent;
-};
-
-function PaginationButton({ label, Start, End, ...props }: PaginationButtonProps) {
-  return (
-    <button
-      type="button"
-      className="group row items-center gap-1 text-link disabled:pointer-events-none disabled:opacity-50"
-      {...props}
-    >
-      {Start && <Start className="size-em group-disabled:hidden" />}
-      {label}
-      {End && <End className="size-em group-disabled:hidden" />}
-    </button>
   );
 }
 

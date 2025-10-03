@@ -157,7 +157,8 @@
     },
     "pagination": {
       "previous": "Previous",
-      "next": "Next"
+      "next": "Next",
+      "pageSize": "Show {select} per page"
     },
     "deployToKoyebButton": {
       "title": "Deploy to Koyeb button",
