@@ -10,8 +10,6 @@ import { ServiceForm } from '../../service-form.types';
 const T = createTranslate('modules.serviceForm.builder.dockerfileConfiguration');
 
 export function DockerfileOptions() {
-  const t = T.useTranslate();
-
   return (
     <div className="col gaps">
       <div className="col gap-2">
@@ -25,7 +23,6 @@ export function DockerfileOptions() {
         name="builder.dockerfileOptions.dockerfile"
         label={<T id="dockerfileLocation.label" />}
         helpTooltip={<T id="dockerfileLocation.tooltip" />}
-        placeholder={t('dockerfileLocation.placeholder')}
       />
 
       <EntrypointInput />
@@ -42,7 +39,6 @@ export function DockerfileOptions() {
         name="source.git.workDirectory"
         label={<T id="workDirectory.label" />}
         helpTooltip={<T id="workDirectory.tooltip" />}
-        placeholder={t('workDirectory.placeholder')}
       />
 
       <ControlledCheckbox<ServiceForm>
