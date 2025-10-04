@@ -66,12 +66,12 @@ function CredentialActions({ type, credential }: { type: ApiCredentialType; cred
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...apiMutation('delete /v1/credentials/{id}', {
+    ...apiMutation('delete /v1/credentials/{id}', (credential: ApiCredential) => ({
       path: { id: credential.id },
-    }),
-    async onSuccess() {
+    })),
+    async onSuccess(_, { name }) {
       await invalidate('get /v1/credentials');
-      notify.info(t('deleteDialog.successNotification', { name: credential.name }));
+      notify.info(t('deleteDialog.successNotification', { name }));
       closeDialog();
     },
   });
@@ -86,7 +86,7 @@ function CredentialActions({ type, credential }: { type: ApiCredentialType; cred
       destructiveAction: true,
       confirmationText: credential.name,
       submitText: t('delete.confirm'),
-      onConfirm: () => mutation.mutateAsync(),
+      onConfirm: () => mutation.mutateAsync(credential),
     });
   };
 

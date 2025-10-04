@@ -1,24 +1,16 @@
-import { Alert, Button } from '@koyeb/design-system';
+import { Alert, Button, DialogHeader } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
-import {
-  CloseDialogButton,
-  Dialog,
-  DialogFooter,
-  DialogHeader,
-  closeDialog,
-  useDialogContext,
-} from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { AppDomain } from 'src/model';
+import { App, AppDomain } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { isSlug } from 'src/utils/strings';
@@ -41,31 +33,37 @@ const editAppSchema = z.object({
 });
 
 export function EditAppDialog() {
+  return (
+    <Dialog id="EditApp" className="col w-full max-w-xl gap-4">
+      {(app) => (
+        <>
+          <DialogHeader title={<T id="title" />} />
+          <EditAppForm app={app} />
+        </>
+      )}
+    </Dialog>
+  );
+}
+
+function EditAppForm({ app }: { app: App }) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
-  const app = useDialogContext('EditApp');
 
-  const koyebDomain = app?.domains.find(hasProperty('type', 'AUTOASSIGNED'));
+  const koyebDomain = app.domains.find(hasProperty('type', 'AUTOASSIGNED'));
   const [subdomain = '', domainSuffix] = splitDomain(koyebDomain);
 
   const form = useForm<z.infer<typeof editAppSchema>>({
     defaultValues: {
-      name: '',
-      subdomain: '',
+      name: app.name,
+      subdomain,
     },
     resolver: useZodResolver(editAppSchema),
   });
-
-  useEffect(() => {
-    form.reset({ name: app?.name ?? '', subdomain });
-  }, [form, app, subdomain]);
 
   const mutation = useMutation({
     async mutationFn(values: FormValues<typeof form>) {
       const api = getApi();
       const promises: Promise<unknown>[] = [];
-
-      assert(app !== undefined);
 
       if (values.name !== app.name) {
         promises.push(
@@ -99,36 +97,32 @@ export function EditAppDialog() {
   });
 
   return (
-    <Dialog id="EditApp" onClosed={form.reset} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="title" />} />
+    <form className="col gap-4" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
+      <Alert variant="warning" description={<T id="warning" />} />
 
-      <form className="col gap-4" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
-        <Alert variant="warning" description={<T id="warning" />} />
+      <ControlledInput control={form.control} name="name" label={<T id="appNameLabel" />} />
 
-        <ControlledInput control={form.control} name="name" label={<T id="appNameLabel" />} />
+      <ControlledInput
+        control={form.control}
+        name="subdomain"
+        label={<T id="appDomainLabel" />}
+        end={<div className="row items-center px-2 text-dim">{domainSuffix}</div>}
+      />
 
-        <ControlledInput
-          control={form.control}
-          name="subdomain"
-          label={<T id="appDomainLabel" />}
-          end={<div className="row items-center px-2 text-dim">{domainSuffix}</div>}
-        />
+      <DialogFooter>
+        <CloseDialogButton>
+          <Translate id="common.cancel" />
+        </CloseDialogButton>
 
-        <DialogFooter>
-          <CloseDialogButton>
-            <Translate id="common.cancel" />
-          </CloseDialogButton>
-
-          <Button
-            type="submit"
-            loading={form.formState.isSubmitting}
-            disabled={Object.keys(form.formState.errors).length > 0}
-          >
-            <Translate id="common.save" />
-          </Button>
-        </DialogFooter>
-      </form>
-    </Dialog>
+        <Button
+          type="submit"
+          loading={form.formState.isSubmitting}
+          disabled={Object.keys(form.formState.errors).length > 0}
+        >
+          <Translate id="common.save" />
+        </Button>
+      </DialogFooter>
+    </form>
   );
 }
 

@@ -73,9 +73,9 @@ function InstallGithubApp() {
   const location = useLocation();
 
   const { mutate: installGithubApp } = useMutation({
-    ...apiMutation('post /v1/github/installation', {
-      body: { metadata: location },
-    }),
+    ...apiMutation('post /v1/github/installation', (metadata: string) => ({
+      body: { metadata },
+    })),
     onSuccess(result) {
       window.location.href = result.url!;
     },
@@ -93,7 +93,7 @@ function InstallGithubApp() {
         </div>
       </div>
 
-      <Button onClick={() => installGithubApp()} disabled={githubAppInstallationRequested}>
+      <Button onClick={() => installGithubApp(location)} disabled={githubAppInstallationRequested}>
         <IconGithub className="size-icon text-inherit" />
         <T id="installGithubApp.button" />
       </Button>

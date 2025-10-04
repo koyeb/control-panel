@@ -6,17 +6,11 @@ import { z } from 'zod';
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
-import {
-  CloseDialogButton,
-  Dialog,
-  DialogFooter,
-  DialogHeader,
-  closeDialog,
-  useDialogContext,
-} from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
+import { Volume } from 'src/model';
 
 const T = createTranslate('pages.volumes.createSnapshot');
 
@@ -25,9 +19,26 @@ const schema = z.object({
 });
 
 export function CreateSnapshotDialog() {
+  return (
+    <Dialog id="CreateSnapshotFromVolume" className="col w-full max-w-xl gap-4">
+      {(volume) => (
+        <>
+          <DialogHeader title={<T id="title" />} />
+
+          <div className="text-dim">
+            <T id="description" />
+          </div>
+
+          <CreateSnapshotForm volume={volume} />
+        </>
+      )}
+    </Dialog>
+  );
+}
+
+function CreateSnapshotForm({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
-  const volume = useDialogContext('CreateSnapshotFromVolume');
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
@@ -39,7 +50,7 @@ export function CreateSnapshotDialog() {
   const mutation = useMutation({
     ...apiMutation('post /v1/snapshots', ({ name }: FormValues<typeof form>) => ({
       body: {
-        parent_volume_id: volume!.id,
+        parent_volume_id: volume.id,
         name,
       },
     })),
@@ -52,31 +63,23 @@ export function CreateSnapshotDialog() {
   });
 
   return (
-    <Dialog id="CreateSnapshotFromVolume" onClosed={() => form.reset()} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="title" />} />
+    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
+      <ControlledInput
+        control={form.control}
+        name="name"
+        label={<T id="nameLabel" />}
+        placeholder={t('namePlaceholder')}
+      />
 
-      <div className="text-dim">
-        <T id="description" />
-      </div>
+      <DialogFooter>
+        <CloseDialogButton>
+          <Translate id="common.cancel" />
+        </CloseDialogButton>
 
-      <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <ControlledInput
-          control={form.control}
-          name="name"
-          label={<T id="nameLabel" />}
-          placeholder={t('namePlaceholder')}
-        />
-
-        <DialogFooter>
-          <CloseDialogButton>
-            <Translate id="common.cancel" />
-          </CloseDialogButton>
-
-          <Button type="submit" loading={form.formState.isSubmitting} autoFocus>
-            <Translate id="common.create" />
-          </Button>
-        </DialogFooter>
-      </form>
-    </Dialog>
+        <Button type="submit" loading={form.formState.isSubmitting} autoFocus>
+          <Translate id="common.create" />
+        </Button>
+      </DialogFooter>
+    </form>
   );
 }
