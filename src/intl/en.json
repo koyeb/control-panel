@@ -219,7 +219,7 @@
         "upgradeDialog": {
           "title": "Add credit card",
           "description": "To extend your usage quota, upgrade your account to a paid plan and give us an indication of your usage",
-          "submitButton": "Add credit card"
+          "submit": "Add credit card"
         },
         "requestAccess": "Request access",
         "requestQuotaIncrease": "Request increase",
@@ -263,6 +263,8 @@
       "noConsecutiveDashes": "No consecutive dashes"
     },
     "upgradeDialog": {
+      "title": "Upgrade plan",
+      "submit": "Upgrade",
       "loadingStripe": "Loading stripe...",
       "cardNumberLabel": "Card number",
       "expirationLabel": "Expiration",
@@ -502,9 +504,8 @@
         "pricePerMonth": "{price}/month"
       },
       "upgradeDialog": {
-        "title": "Upgrade plan",
         "description": "The current selected instance is available on the {plan} plan at $0/mo. Add a payment method to upgrade and deploy.",
-        "submitButton": "Upgrade and deploy"
+        "submit": "Upgrade and deploy"
       }
     },
     "deployment": {
@@ -1086,9 +1087,8 @@
         "cta": "Book a call"
       },
       "upgradeDialog": {
-        "title": "Upgrade plan",
         "description": "The current selected instance is available on the {plan} plan at $0/mo. Add a payment method to upgrade and deploy.",
-        "submitButton": "Upgrade and deploy"
+        "submit": "Upgrade and deploy"
       },
       "errors": {
         "noRepositorySelected": "Please select a repository",

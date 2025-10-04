@@ -17,7 +17,7 @@ import { Address, OrganizationPlan } from 'src/model';
 
 import { ControlledAddressField } from './address-field/address-field';
 import { ControlledInput } from './controlled';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, DialogId, closeDialog } from './dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from './dialog';
 
 const T = createTranslate('components.upgradeDialog');
 
@@ -211,19 +211,26 @@ export function PaymentFormFields() {
   );
 }
 
-type UpgradeDialogProps = {
-  id?: DialogId;
+export type UpgradeDialogProps = {
   plan?: OrganizationPlan;
   onPlanChanged?: () => void;
-  title: React.ReactNode;
+  title?: React.ReactNode;
   description?: React.ReactNode;
-  submit: React.ReactNode;
+  submit?: React.ReactNode;
 };
 
-export function UpgradeDialog({ id, plan, onPlanChanged, title, description, submit }: UpgradeDialogProps) {
+export function UpgradeDialog() {
   return (
-    <Dialog id={id ?? 'Upgrade'} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={title} />
+    <Dialog id="Upgrade" className="col w-full max-w-xl gap-4">
+      {(props) => <UpgradeDialogContent {...props} />}
+    </Dialog>
+  );
+}
+
+function UpgradeDialogContent({ plan, onPlanChanged, title, description, submit }: UpgradeDialogProps) {
+  return (
+    <>
+      <DialogHeader title={title ?? <T id="title" />} />
 
       {description && <p className="text-dim">{description}</p>}
 
@@ -241,13 +248,13 @@ export function UpgradeDialog({ id, plan, onPlanChanged, title, description, sub
               </CloseDialogButton>
 
               <Button type="submit" size={3} loading={formState.isSubmitting}>
-                {submit}
+                {submit ?? <T id="submit" />}
               </Button>
             </DialogFooter>
           )}
         />
       </StripeProvider>
-    </Dialog>
+    </>
   );
 }
 

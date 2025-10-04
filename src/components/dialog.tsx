@@ -21,6 +21,7 @@ import {
 } from 'src/model';
 
 import { ConfirmationDialogProps } from './confirmation-dialog';
+import { UpgradeDialogProps } from './payment-form';
 
 type Dialogs = {
   // api credential
@@ -66,7 +67,7 @@ type Dialogs = {
   ContextPalette: null;
   TrialWelcome: null;
   Confirmation: ConfirmationDialogProps;
-  Upgrade: OrganizationPlan;
+  Upgrade: UpgradeDialogProps;
   UpgradeInstanceSelector: OrganizationPlan;
   DownloadUsage: null;
   FeatureFlags: null;
@@ -84,7 +85,7 @@ type DialogProps<Id extends DialogId> = Omit<
 
 export function Dialog<Id extends DialogId>({ id, children, ...props }: DialogProps<Id>) {
   const dialogId = useOpenedDialogId();
-  const context = useDialogContext() as Dialogs[Id];
+  const context = useDialogContext(id);
   const open = id === dialogId;
 
   return (
@@ -98,7 +99,7 @@ export function Dialog<Id extends DialogId>({ id, children, ...props }: DialogPr
       root={document.getElementById('root') ?? undefined}
       {...props}
     >
-      {typeof children === 'function' ? open && children(context) : children}
+      {typeof children === 'function' ? open && children(context!) : children}
     </BaseDialog>
   );
 }
@@ -177,6 +178,10 @@ export function useOpenedDialogId() {
   return useSyncExternalStore(dialog.subscribe, dialog.getSnapshot).dialogId;
 }
 
-export function useDialogContext<Id extends DialogId>() {
-  return useSyncExternalStore(dialog.subscribe, dialog.getSnapshot).context as Dialogs[Id] | undefined;
+export function useDialogContext<Id extends DialogId>(id: Id) {
+  const { dialogId, context } = useSyncExternalStore(dialog.subscribe, dialog.getSnapshot);
+
+  if (id === dialogId) {
+    return context as Dialogs[Id];
+  }
 }

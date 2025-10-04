@@ -27,7 +27,7 @@ const schema = z.object({
 export function CreateSnapshotDialog() {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
-  const volume = useDialogContext<'CreateSnapshotFromVolume'>();
+  const volume = useDialogContext('CreateSnapshotFromVolume');
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {

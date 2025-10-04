@@ -11,7 +11,7 @@ import { useMount } from 'src/hooks/lifecycle';
 import { tallyForms } from 'src/hooks/tally';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
-import { createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { CatalogInstance } from 'src/model';
 
 import { CatalogAvailability } from './catalog-availability';
@@ -235,11 +235,7 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
   }
 
   if (addCreditCard) {
-    return (
-      <Button color="gray" onClick={() => openDialog('UpgradeInstanceSelector', 'starter')} className="mt-4">
-        <T id="actions.addCreditCard" />
-      </Button>
-    );
+    return <AddCreditCardButton />;
   }
 
   if (isTenstorrentGpu(instance)) {
@@ -258,6 +254,25 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
   return (
     <Button color="gray" onClick={() => openDialog('RequestQuotaIncrease', instance)} className="mt-4">
       <T id="actions.requestQuotaIncrease" />
+    </Button>
+  );
+}
+
+function AddCreditCardButton() {
+  const plan = <TranslateEnum enum="plans" value="starter" />;
+
+  const onUpgrade = () => {
+    openDialog('Upgrade', {
+      plan: 'starter',
+      title: <T id="actions.upgradeDialog.title" />,
+      description: <T id="actions.upgradeDialog.description" values={{ plan }} />,
+      submit: <T id="actions.upgradeDialog.submit" />,
+    });
+  };
+
+  return (
+    <Button color="gray" onClick={onUpgrade} className="mt-4">
+      <T id="actions.addCreditCard" />
     </Button>
   );
 }

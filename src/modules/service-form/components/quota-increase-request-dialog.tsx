@@ -6,7 +6,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('components.instanceSelector.actions.requestQuotaIncreaseDialog');
 
 export function RequestQuotaIncreaseDialog() {
-  const instance = useDialogContext<'RequestQuotaIncrease'>();
+  const instance = useDialogContext('RequestQuotaIncrease');
   const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (

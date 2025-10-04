@@ -35,7 +35,6 @@ import { useGetInstanceBadges } from '../instance-selector/instance-badges';
 import { useInstanceSelector } from '../instance-selector/instance-selector-state';
 
 import { RequestQuotaIncreaseDialog } from './components/quota-increase-request-dialog';
-import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
@@ -98,7 +97,7 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
   const model = useModel(form.watch('modelSlug'));
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
+  const preSubmit = usePreSubmitServiceForm(formRef.current);
 
   useOnCostEstimationChanged(form, onCostChanged);
 
@@ -131,7 +130,6 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
       </form>
 
       <RequestQuotaIncreaseDialog />
-      <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );
 }
