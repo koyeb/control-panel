@@ -33,7 +33,7 @@ export function OrganizationsPage() {
           </Button>
         }
       />
-      <CreateOrganizationDialog />
+      <Create />
       <OrganizationList />
     </>
   );
@@ -43,7 +43,7 @@ const schema = z.object({
   organizationName: z.string().min(1).max(39),
 });
 
-function CreateOrganizationDialog() {
+function Create() {
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -67,23 +67,20 @@ function CreateOrganizationDialog() {
     async onSuccess({ organization }, { organizationName }) {
       await switchOrganization.mutateAsync(organization!.id!);
       await navigate({ to: '/' });
-      notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
+      notify.success(t('create.success', { organizationName }));
     },
   });
 
   return (
     <Dialog id="CreateOrganization" onClosed={form.reset} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="createOrganizationDialog.title" />} />
+      <DialogHeader title={<T id="create.title" />} />
 
       <p className="text-dim">
-        <T id="createOrganizationDialog.description" />
+        <T id="create.description" />
       </p>
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <OrganizationNameField
-          form={form}
-          label={<T id="createOrganizationDialog.organizationNameLabel" />}
-        />
+        <OrganizationNameField form={form} label={<T id="create.organizationNameLabel" />} />
 
         <DialogFooter>
           <CloseDialogButton>

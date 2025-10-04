@@ -25,11 +25,11 @@ export function TrialWelcomeDialog() {
       </div>
 
       <DialogFooter>
-        <p className="me-auto text-dim" onClick={closeDialog}>
+        <p className="me-auto text-dim" onClick={() => closeDialog()}>
           <T id="footer" />
         </p>
 
-        <Button size={3} onClick={closeDialog}>
+        <Button size={3} onClick={() => closeDialog()}>
           <T id="cta" />
         </Button>
       </DialogFooter>

@@ -5,10 +5,10 @@ import { apiMutation, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
 import { setToken } from 'src/application/token';
-import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { User } from 'src/model';
 
 const T = createTranslate('modules.account.deleteAccount');
 
@@ -23,17 +23,27 @@ export function DeleteAccount() {
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
-  const { mutateAsync: deleteAccount } = useMutation({
-    ...apiMutation('delete /v1/users/{id}', {
-      path: { id: user?.id as string },
-    }),
+  const deleteMutation = useMutation({
+    ...apiMutation('delete /v1/users/{id}', (user: User) => ({
+      path: { id: user.id },
+    })),
     async onSuccess() {
       clearIdentify();
       await setToken(null, { queryClient });
       await navigate({ to: '/auth/signin' });
-      notify.success(t('successNotification'));
+      notify.success(t('success'));
     },
   });
+
+  const onDelete = () => {
+    openDialog('Confirmation', {
+      title: t('confirmation.title'),
+      description: t('confirmation.description'),
+      confirmationText: user?.name ?? '',
+      submitText: t('confirmation.confirm'),
+      onConfirm: () => deleteMutation.mutateAsync(user!),
+    });
+  };
 
   return (
     <div className="card">
@@ -47,8 +57,8 @@ export function DeleteAccount() {
           </div>
         </div>
 
-        <Button color="red" disabled={!canDelete} onClick={() => openDialog('ConfirmDeleteAccount')}>
-          <T id="cta" />
+        <Button color="red" disabled={!canDelete} onClick={onDelete}>
+          <T id="delete" />
         </Button>
       </div>
 
@@ -59,15 +69,6 @@ export function DeleteAccount() {
           </p>
         </footer>
       )}
-
-      <ConfirmationDialog
-        id="ConfirmDeleteAccount"
-        title={<T id="confirmationDialog.title" />}
-        description={<T id="confirmationDialog.description" />}
-        confirmationText={user?.name ?? ''}
-        submitText={<T id="confirmationDialog.confirm" />}
-        onConfirm={deleteAccount}
-      />
     </div>
   );
 }

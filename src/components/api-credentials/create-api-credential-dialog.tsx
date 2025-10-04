@@ -32,11 +32,11 @@ export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogPro
   return (
     <>
       <Dialog id="CreateApiCredential" className="col w-full max-w-xl gap-4">
-        <DialogHeader title={<T id="createDialog.title" />} />
+        <DialogHeader title={<T id="create.title" />} />
 
         <p className="text-dim">
           <T
-            id="createDialog.description"
+            id="create.description"
             values={{ organizationName: organization?.name, userName: user?.name }}
           />
         </p>
@@ -55,10 +55,10 @@ export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogPro
         onClosed={() => setCreated(undefined)}
         className="col w-full max-w-xl gap-4"
       >
-        <DialogHeader title={<T id="createDialog.createdTitle" />} />
+        <DialogHeader title={<T id="created.title" />} />
 
         <p className="text-dim">
-          <T id="createDialog.createdDescription" />
+          <T id="created.description" />
         </p>
 
         <Input
@@ -116,7 +116,7 @@ function CreateApiCredentialForm({ type, onCreated }: CreateApiCredentialFormPro
     async onSuccess(result, { name }) {
       await invalidate('get /v1/credentials');
 
-      notify.success(t('createDialog.successNotification', { name }));
+      notify.success(t('create.success', { name }));
       form.reset();
 
       onCreated(result.credential!.token!);
@@ -126,13 +126,9 @@ function CreateApiCredentialForm({ type, onCreated }: CreateApiCredentialFormPro
 
   return (
     <form className="col gap-4" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
-      <ControlledInput control={form.control} name="name" label={<T id="createDialog.nameLabel" />} />
+      <ControlledInput control={form.control} name="name" label={<T id="create.nameLabel" />} />
 
-      <ControlledInput
-        control={form.control}
-        name="description"
-        label={<T id="createDialog.descriptionLabel" />}
-      />
+      <ControlledInput control={form.control} name="description" label={<T id="create.descriptionLabel" />} />
 
       <DialogFooter>
         <CloseDialogButton />

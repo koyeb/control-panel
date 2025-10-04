@@ -14,7 +14,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 import { randomString } from 'src/utils/random';
 
-const T = createTranslate('pages.database.roles.createDialog');
+const T = createTranslate('pages.database.roles.create');
 
 const schema = z.object({
   name: z.string().min(1).max(63),
@@ -43,7 +43,7 @@ export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
     },
     async onSuccess(_, { name }) {
       await invalidate('get /v1/services/{id}', { path: { id: service.id } });
-      notify.info(t('successNotification', { name }));
+      notify.info(t('success', { name }));
       closeDialog();
     },
     onError: useFormErrorHandler(form, mapError),

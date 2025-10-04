@@ -1,9 +1,7 @@
-import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
+import { Button, Table } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { useSecretsQuery } from 'src/api';
-import { ActionsMenu } from 'src/components/actions-menu';
-import { openDialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
@@ -12,8 +10,8 @@ import { RegistrySecret } from 'src/model';
 import { RegistryType } from 'src/modules/secrets/registry/registry-type';
 import { createArray } from 'src/utils/arrays';
 
-import { DeleteRegistrySecretDialog } from './delete-registry-secret-dialog';
 import { EditRegistrySecretDialog } from './edit-registry-secret-dialog';
+import { RegistrySecretActions } from './registry-secret-actions';
 
 const T = createTranslate('pages.organizationSettings.registrySecrets.list');
 
@@ -66,7 +64,6 @@ export function RegistrySecretList({ onCreate }: { onCreate: () => void }) {
       />
 
       <EditRegistrySecretDialog />
-      <DeleteRegistrySecretDialog />
     </>
   );
 }
@@ -91,23 +88,5 @@ function Skeleton() {
         },
       }}
     />
-  );
-}
-
-function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
-  return (
-    <ActionsMenu>
-      {(withClose) => (
-        <>
-          <ButtonMenuItem onClick={withClose(() => openDialog('EditRegistrySecret', secret))}>
-            <T id="actions.edit" />
-          </ButtonMenuItem>
-
-          <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteRegistrySecret', secret))}>
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        </>
-      )}
-    </ActionsMenu>
   );
 }

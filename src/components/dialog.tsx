@@ -9,14 +9,9 @@ import { useSyncExternalStore } from 'react';
 
 import { Translate } from 'src/intl/translate';
 import {
-  ApiCredential,
   App,
   CatalogInstance,
   ComputeDeployment,
-  DatabaseRole,
-  Domain,
-  LogicalDatabase,
-  OrganizationMember,
   OrganizationPlan,
   RegistrySecret,
   Secret,
@@ -25,46 +20,36 @@ import {
   VolumeSnapshot,
 } from 'src/model';
 
+import { ConfirmationDialogProps } from './confirmation-dialog';
+
 type Dialogs = {
   // api credential
   CreateApiCredential: null;
   ApiCredentialCreated: null;
-  ConfirmDeleteApiCredential: ApiCredential;
 
   // domain
   CreateDomain: null;
-  ConfirmBulkDeleteDomains: null;
-  ConfirmDeleteDomain: Domain;
 
   // secret
   CreateSecret: null;
   BulkCreateSecrets: null;
-  ConfirmBulkDeleteSecrets: null;
   EditSecret: Secret;
-  ConfirmDeleteSecret: Secret;
   CreateRegistrySecret: null;
   EditRegistrySecret: RegistrySecret;
-  ConfirmDeleteRegistrySecret: RegistrySecret;
 
   // volume
   EditVolume: Volume;
-  ConfirmDeleteVolume: Volume;
   CreateSnapshotFromVolume: Volume;
   EditSnapshot: VolumeSnapshot;
-  ConfirmDeleteSnapshot: VolumeSnapshot;
 
   // app
   EditApp: App;
-  ConfirmPauseApp: App;
-  ConfirmDeleteApp: App;
 
   // service
   RedeployService: Service;
   ResumeService: Service;
   DeploymentDefinition: ComputeDeployment;
   DeploymentsDiff: [ComputeDeployment, ComputeDeployment];
-  ConfirmPauseService: Service;
-  ConfirmDeleteService: Service;
   RequestQuotaIncrease: CatalogInstance;
   BulkEnvironmentVariablesEdition: null;
   CreateVolume: { index: number };
@@ -72,21 +57,15 @@ type Dialogs = {
   // database
   CreateLogicalDatabase: null;
   CreateDatabaseRole: null;
-  ConfirmDeleteDatabaseRole: DatabaseRole;
-  ConfirmDeleteLogicalDatabase: LogicalDatabase;
-  ConfirmDeleteDatabaseService: null;
 
   // account / organization
   CreateOrganization: null;
-  ConfirmRemoveMember: OrganizationMember;
-  ConfirmLeaveOrganization: OrganizationMember;
-  ConfirmDeactivateOrganization: null;
-  ConfirmDeleteAccount: null;
 
   // misc
   CommandPalette: null;
   ContextPalette: null;
   TrialWelcome: null;
+  Confirmation: ConfirmationDialogProps;
   Upgrade: OrganizationPlan;
   UpgradeInstanceSelector: OrganizationPlan;
   DownloadUsage: null;
@@ -134,7 +113,7 @@ export function DialogFooter(props: React.ComponentProps<typeof BaseDialogFooter
 
 export function CloseDialogButton(props: React.ComponentProps<typeof Button>) {
   return (
-    <Button variant="ghost" color="gray" onClick={closeDialog} {...props}>
+    <Button variant="ghost" color="gray" onClick={() => closeDialog()} {...props}>
       {props.children ?? <Translate id="common.close" />}
     </Button>
   );
@@ -154,8 +133,13 @@ class DialogContext extends EventTarget {
     this.dispatchEvent(new Event('changed'));
   };
 
-  closeDialog = () => {
+  closeDialog = (clearContext = false) => {
     this.dialog = { context: this.dialog.context };
+
+    if (clearContext) {
+      this.clearContext();
+    }
+
     this.dispatchEvent(new Event('changed'));
   };
 

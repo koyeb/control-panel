@@ -3,13 +3,12 @@ import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 
-const T = createTranslate('pages.service.settings.pauseService');
+const T = createTranslate('pages.service.settings.pause');
 
 type PauseServiceCardProps = {
   service: Service;
@@ -20,15 +19,25 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
   const t = T.useTranslate();
 
   const pause = useMutation({
-    ...apiMutation('post /v1/services/{id}/pause', {
+    ...apiMutation('post /v1/services/{id}/pause', (service: Service) => ({
       path: { id: service.id },
-    }),
-    async onSuccess() {
+    })),
+    async onSuccess(_, service) {
       closeDialog();
       await navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
       notify.info(t('pausing'));
     },
   });
+
+  const onPause = () => {
+    openDialog('Confirmation', {
+      title: t('confirmation.title'),
+      description: t('confirmation.description'),
+      confirmationText: service.name,
+      submitText: t('confirmation.confirm'),
+      onConfirm: () => pause.mutateAsync(service),
+    });
+  };
 
   return (
     <div className="col-start-1 card row items-center gap-4 p-3">
@@ -53,21 +62,12 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
 
         <Button
           color="orange"
-          onClick={() => openDialog('ConfirmPauseService', service)}
+          onClick={onPause}
           disabled={service.status === 'PAUSING' || service.status === 'PAUSED'}
         >
           <T id="pause" />
         </Button>
       </div>
-
-      <ConfirmationDialog
-        id="ConfirmPauseService"
-        title={<T id="confirmationDialog.title" />}
-        description={<T id="confirmationDialog.description" />}
-        confirmationText={service.name}
-        submitText={<T id="confirmationDialog.confirm" />}
-        onConfirm={pause.mutateAsync}
-      />
     </div>
   );
 }

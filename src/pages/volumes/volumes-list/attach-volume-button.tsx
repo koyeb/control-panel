@@ -13,7 +13,7 @@ import { unique } from 'src/utils/arrays';
 import { getId } from 'src/utils/object';
 import { wait } from 'src/utils/promises';
 
-const T = createTranslate('pages.volumes.volumesList.attach');
+const T = createTranslate('pages.volumes.list.attach');
 
 export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const t = T.useTranslate();

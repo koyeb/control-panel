@@ -2,9 +2,15 @@ import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import { getApi, isDatabaseDeployment, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
+import {
+  apiMutation,
+  getApi,
+  isDatabaseDeployment,
+  useDeployment,
+  useInvalidateApiQuery,
+  useService,
+} from 'src/api';
 import { notify } from 'src/application/notify';
-import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { openDialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -49,31 +55,44 @@ function DeleteDatabaseService({ service }: { service: Service }) {
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
-  const mutation = useMutation({
-    async mutationFn() {
-      const api = getApi();
+  const deleteAppMutation = useMutation({
+    ...apiMutation('delete /v1/apps/{id}', (appId: string) => ({
+      path: { id: appId },
+    })),
+  });
 
-      await api('delete /v1/services/{id}', {
-        path: { id: service.id },
-      });
+  const deleteServiceMutation = useMutation({
+    ...apiMutation('delete /v1/services/{id}', (service: Service) => ({
+      path: { id: service.id },
+    })),
+    async onSuccess() {
+      const api = getApi();
 
       const { services } = await api('get /v1/services', {
         query: { app_id: service.appId },
       });
 
       if (services?.length === 0) {
-        await api('delete /v1/apps/{id}', {
-          path: { id: service.appId },
-        });
+        await deleteAppMutation.mutateAsync(service.appId);
       }
-    },
-    async onSuccess() {
-      await invalidate('get /v1/apps');
-      await invalidate('get /v1/services');
+
+      await Promise.all([invalidate('get /v1/apps'), invalidate('get /v1/services')]);
+
+      notify.info(t('delete.confirmation.success', { serviceName: service.name }));
       await navigate({ to: '/' });
-      notify.info(t('delete.successNotification', { serviceName: service.name }));
     },
   });
+
+  const onDelete = () => {
+    openDialog('Confirmation', {
+      title: t('delete.confirmation.title'),
+      description: t('delete.confirmation.description'),
+      destructiveAction: true,
+      confirmationText: service.name,
+      submitText: t('delete.confirmation.confirm'),
+      onConfirm: () => deleteServiceMutation.mutateAsync(service),
+    });
+  };
 
   return (
     <section className="card">
@@ -84,24 +103,10 @@ function DeleteDatabaseService({ service }: { service: Service }) {
           className="flex-1"
         />
 
-        <Button
-          color="red"
-          loading={mutation.isPending}
-          onClick={() => openDialog('ConfirmDeleteDatabaseService')}
-        >
+        <Button color="red" loading={deleteServiceMutation.isPending} onClick={onDelete}>
           <T id="delete.delete" />
         </Button>
       </div>
-
-      <ConfirmationDialog
-        id="ConfirmDeleteDatabaseService"
-        title={<T id="delete.confirmationDialog.title" />}
-        description={<T id="delete.confirmationDialog.description" />}
-        destructiveAction
-        confirmationText={service.name}
-        submitText={<T id="delete.confirmationDialog.confirm" />}
-        onConfirm={() => mutation.mutateAsync()}
-      />
     </section>
   );
 }

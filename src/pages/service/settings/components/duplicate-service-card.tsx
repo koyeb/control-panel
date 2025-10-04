@@ -2,7 +2,7 @@ import { LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 
-const T = createTranslate('pages.service.settings.duplicateService');
+const T = createTranslate('pages.service.settings.duplicate');
 
 type DuplicateServiceCardProps = {
   service: Service;

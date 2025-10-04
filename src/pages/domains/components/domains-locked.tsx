@@ -4,7 +4,7 @@ import { LinkButton } from 'src/components/link';
 import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.domains.domainsLocked');
+const T = createTranslate('pages.domains.locked');
 
 export function DomainsLocked() {
   return (

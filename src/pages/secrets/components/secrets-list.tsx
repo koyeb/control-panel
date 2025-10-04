@@ -1,20 +1,10 @@
-import {
-  Button,
-  ButtonMenuItem,
-  Spinner,
-  Table,
-  TableColumnSelection,
-  Tooltip,
-  useBreakpoint,
-} from '@koyeb/design-system';
+import { Button, Spinner, Table, TableColumnSelection, Tooltip, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { apiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
-import { openDialog } from 'src/components/dialog';
 import { useClipboard } from 'src/hooks/clipboard';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
@@ -22,16 +12,18 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
 
 import { NoSecrets } from './no-secrets';
+import { SecretActions } from './secret-actions';
 
-const T = createTranslate('pages.secrets.secretsList');
+const T = createTranslate('pages.secrets.list');
 
 type SecretListProps = {
   secrets: Secret[];
   onCreate: () => void;
+  onDeleted: () => void;
   selection: TableColumnSelection<Secret>;
 };
 
-export function SecretsList({ secrets, onCreate, selection }: SecretListProps) {
+export function SecretsList({ secrets, onCreate, onDeleted, selection }: SecretListProps) {
   const isMobile = !useBreakpoint('sm');
 
   if (secrets.length === 0) {
@@ -60,7 +52,7 @@ export function SecretsList({ secrets, onCreate, selection }: SecretListProps) {
         },
         actions: {
           className: clsx('w-12'),
-          render: (secret) => <SecretActions secret={secret} />,
+          render: (secret) => <SecretActions secret={secret} onDeleted={onDeleted} />,
         },
       }}
     />
@@ -121,22 +113,5 @@ function Value({ secret }: { secret: Secret }) {
         <div className="text-dim">{masked}</div>
       )}
     </div>
-  );
-}
-
-function SecretActions({ secret }: { secret: Secret }) {
-  return (
-    <ActionsMenu>
-      {(withClose) => (
-        <>
-          <ButtonMenuItem onClick={withClose(() => openDialog('EditSecret', secret))}>
-            <T id="actions.edit" />
-          </ButtonMenuItem>
-          <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteSecret', secret))}>
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        </>
-      )}
-    </ActionsMenu>
   );
 }

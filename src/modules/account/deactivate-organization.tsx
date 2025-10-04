@@ -4,10 +4,10 @@ import { useState } from 'react';
 
 import { apiMutation, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { createTranslate } from 'src/intl/translate';
+import { Organization } from 'src/model';
 
 const T = createTranslate('modules.account.deactivateOrganization');
 
@@ -18,15 +18,27 @@ export function DeactivateOrganization() {
   const [skipConfirmation, setSkipConfirmation] = useState(false);
 
   const requestDeactivation = useMutation({
-    ...apiMutation('post /v1/organizations/{id}/deactivate', {
-      path: { id: organization?.id as string },
+    ...apiMutation('post /v1/organizations/{id}/deactivate', (organization: Organization) => ({
+      path: { id: organization.id },
       body: { skip_confirmation: skipConfirmation },
-    }),
+    })),
     onSuccess() {
       closeDialog();
-      notify.info(t('deactivationRequestSuccessNotification'));
+      notify.info(t('success'));
     },
   });
+
+  const onDeactivate = () => {
+    openDialog('Confirmation', {
+      title: t('title'),
+      description: t('description'),
+      confirmationText: organization?.name ?? '',
+      submitText: t('deactivate'),
+      submitColor: 'orange',
+      onAutofill: () => setSkipConfirmation(true),
+      onConfirm: () => requestDeactivation.mutateAsync(organization!),
+    });
+  };
 
   return (
     <section className="card">
@@ -35,7 +47,7 @@ export function DeactivateOrganization() {
 
         <Button
           color="orange"
-          onClick={() => openDialog('ConfirmDeactivateOrganization')}
+          onClick={onDeactivate}
           disabled={
             requestDeactivation.isPending ||
             requestDeactivation.isSuccess ||
@@ -51,17 +63,6 @@ export function DeactivateOrganization() {
           <T id="deactivating" />
         </footer>
       )}
-
-      <ConfirmationDialog
-        id="ConfirmDeactivateOrganization"
-        title={<T id="title" />}
-        description={<T id="description" />}
-        confirmationText={organization?.name ?? ''}
-        submitText={<T id="deactivate" />}
-        submitColor="orange"
-        onConfirm={requestDeactivation.mutateAsync}
-        onAutofill={() => setSkipConfirmation(true)}
-      />
     </section>
   );
 }
