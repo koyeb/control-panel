@@ -11,7 +11,7 @@ import { Translate } from 'src/intl/translate';
 
 import { GpuAlert } from './components/gpu-alert';
 import { QuotaAlert } from './components/quota-alert';
-import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
+import { RequestQuotaIncreaseDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { SubmitButton } from './components/submit-button';
@@ -24,9 +24,11 @@ import { ServiceTypeSection } from './sections/01-service-type/service-type.sect
 import { SourceSection } from './sections/02-source/source.section';
 import { BuilderSection } from './sections/03-builder/builder.section';
 import { DeploymentSection } from './sections/03-deployment/deployment.section';
+import { BulkEnvironmentVariablesEditionDialog } from './sections/04-environment-variables/bulk-environment-variables-edition';
 import { EnvironmentVariablesSection } from './sections/04-environment-variables/environment-variables.section';
 import { InstanceSection } from './sections/05-instance/instance.section';
 import { ScalingSection } from './sections/06-scaling/scaling.section';
+import { CreateVolumeDialog } from './sections/07-volumes/create-volume-dialog';
 import { VolumesSection } from './sections/07-volumes/volumes.section';
 import { PortsSection } from './sections/08-ports/ports.section';
 import { HealthChecksSection } from './sections/09-health-checks/health-checks.section';
@@ -110,7 +112,9 @@ export function ServiceForm({ form, className, onDeployed, onSaved, onBack }: Se
         </form>
       </FormProvider>
 
-      <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
+      <BulkEnvironmentVariablesEditionDialog form={form} />
+      <CreateVolumeDialog form={form} />
+      <RequestQuotaIncreaseDialog />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </>
   );

@@ -6,7 +6,7 @@ import z from 'zod';
 import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
-import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -14,16 +14,20 @@ import { Volume } from 'src/model';
 
 const T = createTranslate('pages.volumes.volumesList.editDialog');
 
-export function EditVolumeDialog({ volume }: { volume: Volume }) {
+export function EditVolumeDialog() {
   return (
-    <Dialog id="EditVolume" context={{ volumeId: volume.id }} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="title" />} />
+    <Dialog id="EditVolume" className="col w-full max-w-xl gap-4">
+      {(volume) => (
+        <>
+          <DialogHeader title={<T id="title" />} />
 
-      <p className="text-dim">
-        <T id="description" />
-      </p>
+          <p className="text-dim">
+            <T id="description" />
+          </p>
 
-      <EditVolumeForm volume={volume} />
+          <EditVolumeForm volume={volume} />
+        </>
+      )}
     </Dialog>
   );
 }
@@ -34,7 +38,6 @@ const schema = z.object({
 
 function EditVolumeForm({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {

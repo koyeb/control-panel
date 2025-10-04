@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
 
@@ -17,7 +17,6 @@ type BulkDeleteSecretsDialogProps = {
 export function BulkDeleteSecretsDialog({ secrets, onDeleted }: BulkDeleteSecretsDialogProps) {
   const t = T.useTranslate();
 
-  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({

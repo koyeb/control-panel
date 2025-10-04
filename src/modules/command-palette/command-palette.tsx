@@ -1,10 +1,10 @@
-import { CommandPalette, CommandPaletteComponent, useCommandPalette } from '@koyeb/design-system';
+import { CommandPalette, CommandPaletteComponent, Dialog, useCommandPalette } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useRef } from 'react';
 
 import { notify } from 'src/application/notify';
 import { hasMessage } from 'src/application/validation';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog, useOpenedDialogId } from 'src/components/dialog';
 import { BoxSkeleton } from 'src/components/skeleton';
 import { useMount } from 'src/hooks/lifecycle';
 import { useShortcut } from 'src/hooks/shortcut';
@@ -21,9 +21,7 @@ const T = createTranslate('modules.commandPalette');
 
 export function CommandPaletteProvider({ children }: { children: React.ReactNode }) {
   const t = useTranslate();
-
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
+  const openedDialogId = useOpenedDialogId();
 
   const palette = useCommandPalette({
     onSuccess: closeDialog,
@@ -42,7 +40,12 @@ export function CommandPaletteProvider({ children }: { children: React.ReactNode
     <CommandPaletteContext value={palette}>
       {children}
 
-      <Dialog id="CommandPalette" overlayClassName="col !justify-start" onClosed={() => palette.reset()}>
+      <Dialog
+        open={openedDialogId === 'CommandPalette'}
+        overlayClassName="col !justify-start"
+        onClose={closeDialog}
+        onClosed={() => palette.reset()}
+      >
         {(props) => (
           <div
             {...props}

@@ -1,4 +1,4 @@
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Service } from 'src/model';
@@ -33,8 +33,6 @@ type DeploymentInfoProps = {
 };
 
 export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps) {
-  const openDialog = Dialog.useOpen();
-
   const { definition } = deployment;
   const { type, source, builder, privileged } = definition;
 
@@ -91,12 +89,12 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
       </div>
 
       <div className="mb-4 row justify-center">
-        <button className="text-link" onClick={() => openDialog('DeploymentDefinition')}>
+        <button className="text-link" onClick={() => openDialog('DeploymentDefinition', deployment)}>
           <T id="viewMore" />
         </button>
       </div>
 
-      <DeploymentDefinitionDialog deployment={deployment} />
+      <DeploymentDefinitionDialog />
     </section>
   );
 }

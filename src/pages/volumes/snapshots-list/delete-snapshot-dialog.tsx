@@ -3,25 +3,24 @@ import { useMutation } from '@tanstack/react-query';
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, useDialogContext } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
-import { VolumeSnapshot } from 'src/model';
 
 const T = createTranslate('pages.volumes.snapshotsList.deleteDialog');
 
-export function DeleteSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
+export function DeleteSnapshotDialog() {
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
+  const snapshot = useDialogContext<'ConfirmDeleteSnapshot'>();
 
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     ...apiMutation('delete /v1/snapshots/{id}', {
-      path: { id: snapshot.id },
+      path: { id: snapshot?.id as string },
     }),
     async onSuccess() {
       await invalidate('get /v1/snapshots');
-      notify.info(t('deleteSuccess', { name: snapshot.name }));
+      notify.info(t('deleteSuccess', { name: snapshot?.name }));
       closeDialog();
     },
   });
@@ -29,15 +28,14 @@ export function DeleteSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot })
   return (
     <ConfirmationDialog
       id="ConfirmDeleteSnapshot"
-      resourceId={snapshot.id}
       title={<T id="title" />}
       description={
         <T
           id="description"
-          values={{ name: <span className="font-medium text-default">{snapshot.name}</span> }}
+          values={{ name: <span className="font-medium text-default">{snapshot?.name}</span> }}
         />
       }
-      confirmationText={snapshot.name}
+      confirmationText={snapshot?.name ?? ''}
       submitText={<T id="confirm" />}
       onConfirm={() => mutation.mutateAsync()}
       destructiveAction

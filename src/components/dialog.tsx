@@ -1,50 +1,130 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   Dialog as BaseDialog,
   DialogFooter as BaseDialogFooter,
   DialogHeader as BaseDialogHeader,
   Button,
 } from '@koyeb/design-system';
-import { dequal } from 'dequal';
+import { useSyncExternalStore } from 'react';
 
-import { useDialogContext } from 'src/application/dialog-context';
 import { Translate } from 'src/intl/translate';
+import {
+  ApiCredential,
+  App,
+  CatalogInstance,
+  ComputeDeployment,
+  DatabaseRole,
+  Domain,
+  LogicalDatabase,
+  OrganizationMember,
+  OrganizationPlan,
+  RegistrySecret,
+  Secret,
+  Service,
+  Volume,
+  VolumeSnapshot,
+} from 'src/model';
 
-type DialogProps = Omit<React.ComponentProps<typeof BaseDialog>, 'open' | 'onClose'> & {
-  id: string;
-  context?: Record<string, unknown>;
+type Dialogs = {
+  // api credential
+  CreateApiCredential: null;
+  ApiCredentialCreated: null;
+  ConfirmDeleteApiCredential: ApiCredential;
+
+  // domain
+  CreateDomain: null;
+  ConfirmBulkDeleteDomains: null;
+  ConfirmDeleteDomain: Domain;
+
+  // secret
+  CreateSecret: null;
+  BulkCreateSecrets: null;
+  ConfirmBulkDeleteSecrets: null;
+  EditSecret: Secret;
+  ConfirmDeleteSecret: Secret;
+  CreateRegistrySecret: null;
+  EditRegistrySecret: RegistrySecret;
+  ConfirmDeleteRegistrySecret: RegistrySecret;
+
+  // volume
+  EditVolume: Volume;
+  ConfirmDeleteVolume: Volume;
+  CreateSnapshotFromVolume: Volume;
+  EditSnapshot: VolumeSnapshot;
+  ConfirmDeleteSnapshot: VolumeSnapshot;
+
+  // app
+  EditApp: App;
+  ConfirmPauseApp: App;
+  ConfirmDeleteApp: App;
+
+  // service
+  RedeployService: Service;
+  ResumeService: Service;
+  DeploymentDefinition: ComputeDeployment;
+  DeploymentsDiff: [ComputeDeployment, ComputeDeployment];
+  ConfirmPauseService: Service;
+  ConfirmDeleteService: Service;
+  RequestQuotaIncrease: CatalogInstance;
+  BulkEnvironmentVariablesEdition: null;
+  CreateVolume: { index: number };
+
+  // database
+  CreateLogicalDatabase: null;
+  CreateDatabaseRole: null;
+  ConfirmDeleteDatabaseRole: DatabaseRole;
+  ConfirmDeleteLogicalDatabase: LogicalDatabase;
+  ConfirmDeleteDatabaseService: null;
+
+  // account / organization
+  CreateOrganization: null;
+  ConfirmRemoveMember: OrganizationMember;
+  ConfirmLeaveOrganization: OrganizationMember;
+  ConfirmDeactivateOrganization: null;
+  ConfirmDeleteAccount: null;
+
+  // misc
+  CommandPalette: null;
+  ContextPalette: null;
+  TrialWelcome: null;
+  Upgrade: OrganizationPlan;
+  UpgradeInstanceSelector: OrganizationPlan;
+  DownloadUsage: null;
+  FeatureFlags: null;
 };
 
-export function Dialog({ id, context: contextProp, ...props }: DialogProps) {
-  const { dialogId, context } = useDialogContext();
-  const onClose = Dialog.useClose();
+export type DialogId = keyof Dialogs;
 
-  const open = id === dialogId && dequal(context, contextProp);
+type DialogProps<Id extends DialogId> = Omit<
+  React.ComponentProps<typeof BaseDialog>,
+  'open' | 'onClose' | 'children'
+> & {
+  id: Id;
+  children: React.ReactNode | ((context: Dialogs[Id]) => React.ReactNode);
+};
+
+export function Dialog<Id extends DialogId>({ id, children, ...props }: DialogProps<Id>) {
+  const dialogId = useOpenedDialogId();
+  const context = useDialogContext() as Dialogs[Id];
+  const open = id === dialogId;
 
   return (
     <BaseDialog
       open={open}
-      onClose={onClose}
+      onClose={closeDialog}
+      onClosed={() => {
+        dialog.clearContext();
+        props.onClosed?.();
+      }}
       root={document.getElementById('root') ?? undefined}
       {...props}
-    />
+    >
+      {typeof children === 'function' ? open && children(context) : children}
+    </BaseDialog>
   );
 }
 
-Dialog.useOpen = function useOpenDialog() {
-  return useDialogContext().openDialog;
-};
-
-Dialog.useClose = function useCloseDialog() {
-  return useDialogContext().closeDialog;
-};
-
-Dialog.useContext = function useCloseDialog<T>(): Partial<T> {
-  return (useDialogContext().context as T) ?? {};
-};
-
 export function DialogHeader(props: Omit<React.ComponentProps<typeof BaseDialogHeader>, 'onClose'>) {
-  const closeDialog = Dialog.useClose();
-
   return <BaseDialogHeader onClose={closeDialog} {...props} />;
 }
 
@@ -53,11 +133,66 @@ export function DialogFooter(props: React.ComponentProps<typeof BaseDialogFooter
 }
 
 export function CloseDialogButton(props: React.ComponentProps<typeof Button>) {
-  const closeDialog = Dialog.useClose();
-
   return (
     <Button variant="ghost" color="gray" onClick={closeDialog} {...props}>
       {props.children ?? <Translate id="common.close" />}
     </Button>
   );
+}
+
+class DialogContext extends EventTarget {
+  private dialog: {
+    dialogId?: DialogId;
+    context?: unknown;
+  } = {};
+
+  openDialog = <Id extends DialogId>(
+    dialogId: Id,
+    ...context: Dialogs[Id] extends null ? [] : [Dialogs[Id]]
+  ) => {
+    this.dialog = { dialogId, context: context[0] };
+    this.dispatchEvent(new Event('changed'));
+  };
+
+  closeDialog = () => {
+    this.dialog = { context: this.dialog.context };
+    this.dispatchEvent(new Event('changed'));
+  };
+
+  clearContext = () => {
+    delete this.dialog.context;
+  };
+
+  subscribe = (cb: () => void) => {
+    this.addEventListener('changed', cb);
+
+    return () => {
+      this.removeEventListener('changed', cb);
+    };
+  };
+
+  getSnapshot = () => {
+    return this.dialog;
+  };
+}
+
+const dialog = new DialogContext();
+
+export const openDialog = dialog.openDialog;
+export const closeDialog = dialog.closeDialog;
+
+declare global {
+  interface Window {
+    openDialog: typeof openDialog;
+  }
+}
+
+window.openDialog = openDialog;
+
+export function useOpenedDialogId() {
+  return useSyncExternalStore(dialog.subscribe, dialog.getSnapshot).dialogId;
+}
+
+export function useDialogContext<Id extends DialogId>() {
+  return useSyncExternalStore(dialog.subscribe, dialog.getSnapshot).context as Dialogs[Id] | undefined;
 }

@@ -7,6 +7,11 @@ import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 import { AppItem } from './app-item';
+import {
+  DeleteAppConfirmationDialog,
+  EditAppDialog,
+  PauseAppConfirmationDialog,
+} from './components/app-dialogs';
 
 const T = createTranslate('pages.home');
 
@@ -22,6 +27,7 @@ export function Apps({ apps, showFilters = false }: { apps: AppFull[]; showFilte
         serviceType={serviceType}
         setServiceType={setServiceType}
       />
+
       {apps.map((app) => {
         const services = app.services.filter(
           (service) => serviceType === 'all' || service.type === serviceType,
@@ -33,6 +39,10 @@ export function Apps({ apps, showFilters = false }: { apps: AppFull[]; showFilte
 
         return <AppItem key={app.id} app={app} services={services} />;
       })}
+
+      <EditAppDialog />
+      <PauseAppConfirmationDialog />
+      <DeleteAppConfirmationDialog />
     </div>
   );
 }

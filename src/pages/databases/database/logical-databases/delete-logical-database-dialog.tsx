@@ -3,26 +3,21 @@ import { useMutation } from '@tanstack/react-query';
 import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, useDialogContext } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
-import { DatabaseDeployment, LogicalDatabase, Service } from 'src/model';
+import { DatabaseDeployment, Service } from 'src/model';
 
 const T = createTranslate('pages.database.logicalDatabases.deleteDialog');
 
 type DeleteLogicalDatabaseDialogProps = {
   service: Service;
   deployment: DatabaseDeployment;
-  database: LogicalDatabase;
 };
 
-export function DeleteLogicalDatabaseDialog({
-  service,
-  deployment,
-  database,
-}: DeleteLogicalDatabaseDialogProps) {
+export function DeleteLogicalDatabaseDialog({ service, deployment }: DeleteLogicalDatabaseDialogProps) {
   const t = T.useTranslate();
+  const database = useDialogContext<'ConfirmDeleteLogicalDatabase'>();
 
-  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
@@ -36,7 +31,7 @@ export function DeleteLogicalDatabaseDialog({
       const definition = apiDeployment!.definition!;
 
       definition.database!.neon_postgres!.databases = definition.database!.neon_postgres!.databases!.filter(
-        ({ name }) => name !== database.name,
+        ({ name }) => name !== database?.name,
       );
 
       await api('put /v1/services/{id}', {
@@ -47,7 +42,7 @@ export function DeleteLogicalDatabaseDialog({
     },
     async onSuccess() {
       await invalidate('get /v1/services/{id}', { path: { id: service.id } });
-      notify.info(t('successNotification', { name: database.name }));
+      notify.info(t('successNotification', { name: database?.name }));
       closeDialog();
     },
   });
@@ -55,11 +50,10 @@ export function DeleteLogicalDatabaseDialog({
   return (
     <ConfirmationDialog
       id="ConfirmDeleteLogicalDatabase"
-      resourceId={database.name}
       title={<T id="title" />}
       description={<T id="description" />}
       destructiveAction
-      confirmationText={database.name}
+      confirmationText={database?.name ?? ''}
       onConfirm={mutation.mutateAsync}
       submitText={<T id="confirm" />}
     />

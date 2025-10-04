@@ -14,15 +14,13 @@ import { useState } from 'react';
 import { apiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { useClipboard } from 'src/hooks/clipboard';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
 
-import { DeleteSecretDialog } from './delete-secret-dialog';
-import { EditSecretDialog } from './edit-secret-dialog';
 import { NoSecrets } from './no-secrets';
 
 const T = createTranslate('pages.secrets.secretsList');
@@ -30,11 +28,10 @@ const T = createTranslate('pages.secrets.secretsList');
 type SecretListProps = {
   secrets: Secret[];
   onCreate: () => void;
-  onDeleted: () => void;
   selection: TableColumnSelection<Secret>;
 };
 
-export function SecretsList({ secrets, onCreate, onDeleted, selection }: SecretListProps) {
+export function SecretsList({ secrets, onCreate, selection }: SecretListProps) {
   const isMobile = !useBreakpoint('sm');
 
   if (secrets.length === 0) {
@@ -63,7 +60,7 @@ export function SecretsList({ secrets, onCreate, onDeleted, selection }: SecretL
         },
         actions: {
           className: clsx('w-12'),
-          render: (secret) => <SecretActions secret={secret} onDeleted={onDeleted} />,
+          render: (secret) => <SecretActions secret={secret} />,
         },
       }}
     />
@@ -127,28 +124,19 @@ function Value({ secret }: { secret: Secret }) {
   );
 }
 
-function SecretActions({ secret, onDeleted }: { secret: Secret; onDeleted?: () => void }) {
-  const openDialog = Dialog.useOpen();
-
+function SecretActions({ secret }: { secret: Secret }) {
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <>
-            <ButtonMenuItem onClick={withClose(() => openDialog('EditSecret', { secretId: secret.id }))}>
-              <T id="actions.edit" />
-            </ButtonMenuItem>
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('ConfirmDeleteSecret', { resourceId: secret.id }))}
-            >
-              <T id="actions.delete" />
-            </ButtonMenuItem>
-          </>
-        )}
-      </ActionsMenu>
-
-      <EditSecretDialog secret={secret} />
-      <DeleteSecretDialog secret={secret} onDeleted={onDeleted} />
-    </>
+    <ActionsMenu>
+      {(withClose) => (
+        <>
+          <ButtonMenuItem onClick={withClose(() => openDialog('EditSecret', secret))}>
+            <T id="actions.edit" />
+          </ButtonMenuItem>
+          <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteSecret', secret))}>
+            <T id="actions.delete" />
+          </ButtonMenuItem>
+        </>
+      )}
+    </ActionsMenu>
   );
 }

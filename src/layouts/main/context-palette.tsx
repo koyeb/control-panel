@@ -6,7 +6,7 @@ import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { useToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
-import { Dialog } from 'src/components/dialog';
+import { Dialog, closeDialog, openDialog } from 'src/components/dialog';
 import { useLocation } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
@@ -23,9 +23,6 @@ export function ContextPalette() {
 
   const iFrameRef = useRef<HTMLIFrameElement>(null);
   const [ready, setReady] = useState(0);
-
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
 
   const postMessage = useCallback((message: unknown) => {
     const pageContextBaseUrl = getConfig('pageContextBaseUrl');
@@ -62,7 +59,7 @@ export function ContextPalette() {
     return () => {
       window.removeEventListener('message', listener);
     };
-  }, [iFrameRef, token, closeDialog, postMessage]);
+  }, [iFrameRef, token, postMessage]);
 
   useEffect(() => {
     if (ready) {

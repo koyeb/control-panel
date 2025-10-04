@@ -17,7 +17,7 @@ import { Address, OrganizationPlan } from 'src/model';
 
 import { ControlledAddressField } from './address-field/address-field';
 import { ControlledInput } from './controlled';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, DialogId, closeDialog } from './dialog';
 
 const T = createTranslate('components.upgradeDialog');
 
@@ -212,7 +212,7 @@ export function PaymentFormFields() {
 }
 
 type UpgradeDialogProps = {
-  id?: string;
+  id?: DialogId;
   plan?: OrganizationPlan;
   onPlanChanged?: () => void;
   title: React.ReactNode;
@@ -221,10 +221,8 @@ type UpgradeDialogProps = {
 };
 
 export function UpgradeDialog({ id, plan, onPlanChanged, title, description, submit }: UpgradeDialogProps) {
-  const closeDialog = Dialog.useClose();
-
   return (
-    <Dialog id={id ?? 'Upgrade'} context={{ plan }} className="col w-full max-w-xl gap-4">
+    <Dialog id={id ?? 'Upgrade'} className="col w-full max-w-xl gap-4">
       <DialogHeader title={title} />
 
       {description && <p className="text-dim">{description}</p>}

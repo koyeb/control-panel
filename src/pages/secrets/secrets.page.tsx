@@ -2,7 +2,7 @@ import { Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { useSecretsQuery } from 'src/api';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { Pagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
@@ -16,13 +16,13 @@ import { CreateSecretDialog } from 'src/modules/secrets/simple/create-secret-dia
 
 import { BulkCreateSecretsDialog } from './components/bulk-create-secrets-dialog';
 import { BulkDeleteSecretsDialog } from './components/bulk-delete-secret-dialog';
+import { DeleteSecretDialog } from './components/delete-secret-dialog';
+import { EditSecretDialog } from './components/edit-secret-dialog';
 import { SecretsList } from './components/secrets-list';
 
 const T = createTranslate('pages.secrets');
 
 export function SecretsPage() {
-  const openDialog = Dialog.useOpen();
-
   useOnRouteStateCreate(() => {
     openDialog('CreateSecret');
   });
@@ -72,13 +72,15 @@ export function SecretsPage() {
           <SecretsList
             secrets={secrets}
             onCreate={() => openDialog('CreateSecret')}
-            onDeleted={onChanged}
             selection={{ selected, selectAll: () => set(secrets), clear, toggle }}
           />
         )}
       </QueryGuard>
 
       {pagination.hasPages && <Pagination pagination={pagination} />}
+
+      <EditSecretDialog />
+      <DeleteSecretDialog onDeleted={onChanged} />
 
       <BulkDeleteSecretsDialog secrets={Array.from(selected.values())} onDeleted={onChanged} />
       <BulkCreateSecretsDialog onCreated={onChanged} />

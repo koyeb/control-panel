@@ -2420,12 +2420,11 @@
           "cta": "Back to home"
         },
         "redeploy": "Redeploy",
-        "redeploying": "Your service's latest deployment is being redeployed",
         "redeployCli": {
           "title": "Redeploy service using the Koyeb CLI",
           "description": "Run the command above right from your terminal to redeploy this service"
         },
-        "redeployDialog": {
+        "redeployServiceDialog": {
           "title": "Redeploy service",
           "descriptionWithoutBuild": "You are about to create a new deployment of your service",
           "descriptionWithBuild": "Before redeploying service, chose between those two options",
@@ -2445,36 +2444,37 @@
             "useCache": "Use build cache",
             "cta": "Trigger build"
           },
-          "submitButton": "Redeploy service"
+          "submitButton": "Redeploy service",
+          "redeploying": "Your service's latest deployment is being redeployed"
         },
         "servicePaused": {
           "title": "Service paused",
           "description": "Your service is currently paused, deployments are stopped, and no traffic will be handled by the service",
           "descriptionWorker": "Your service is currently paused, deployments are stopped",
-          "resume": "Resume",
-          "resuming": "Your service is being resumed",
-          "resumeDialog": {
-            "title": "Resume service",
-            "descriptionWithoutBuild": "You are about to create a new deployment of your service",
-            "descriptionWithBuild": "Before resumeing service, chose between those two options",
-            "lowCapacity": {
-              "title": "Limited availability for {instance} instances",
-              "description": "The capacity for this instance type is currently limited, which may affect service resumement. To guarantee a successful resume, consider switching to a different instance type or region."
-            },
-            "skipBuild": {
-              "title": "Use previous build",
-              "description": "Reuse the previous build for faster deployment if unchanged build process",
-              "latestStashed": "Your latest deployment is stashed, which requires to trigger a build",
-              "cta": "Skip build"
-            },
-            "triggerBuild": {
-              "title": "Create build",
-              "description": "If you wish to rebuild your service, use the build cache for faster deployment",
-              "useCache": "Use build cache",
-              "cta": "Trigger build"
-            },
-            "submitButton": "Resume service"
-          }
+          "resume": "Resume"
+        },
+        "resumeServiceDialog": {
+          "title": "Resume service",
+          "descriptionWithoutBuild": "You are about to create a new deployment of your service",
+          "descriptionWithBuild": "Before resumeing service, chose between those two options",
+          "lowCapacity": {
+            "title": "Limited availability for {instance} instances",
+            "description": "The capacity for this instance type is currently limited, which may affect service resumement. To guarantee a successful resume, consider switching to a different instance type or region."
+          },
+          "skipBuild": {
+            "title": "Use previous build",
+            "description": "Reuse the previous build for faster deployment if unchanged build process",
+            "latestStashed": "Your latest deployment is stashed, which requires to trigger a build",
+            "cta": "Skip build"
+          },
+          "triggerBuild": {
+            "title": "Create build",
+            "description": "If you wish to rebuild your service, use the build cache for faster deployment",
+            "useCache": "Use build cache",
+            "cta": "Trigger build"
+          },
+          "submitButton": "Resume service",
+          "resuming": "Your service is being resumed"
         },
         "pendingChanges": {
           "title": "Pending changes",

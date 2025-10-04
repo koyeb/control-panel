@@ -4,29 +4,28 @@ import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { createTranslate } from 'src/intl/translate';
-import { ApiCredential, ApiCredentialType } from 'src/model';
+import { ApiCredentialType } from 'src/model';
 
-import { Dialog } from '../dialog';
+import { closeDialog, useDialogContext } from '../dialog';
 
 type DeleteCredentialDialogProps = {
   type: ApiCredentialType;
-  credential: ApiCredential;
 };
 
-export function DeleteCredentialDialog({ type, credential }: DeleteCredentialDialogProps) {
+export function DeleteCredentialDialog({ type }: DeleteCredentialDialogProps) {
   const T = createTranslate(`pages.${type}Settings.apiCredential.deleteDialog`);
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
+  const credential = useDialogContext<'ConfirmDeleteApiCredential'>();
 
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     ...apiMutation('delete /v1/credentials/{id}', {
-      path: { id: credential.id },
+      path: { id: credential?.id as string },
     }),
     async onSuccess() {
       await invalidate('get /v1/credentials');
-      notify.info(t('successNotification', { name: credential.name }));
+      notify.info(t('successNotification', { name: credential?.name }));
       closeDialog();
     },
   });
@@ -34,19 +33,18 @@ export function DeleteCredentialDialog({ type, credential }: DeleteCredentialDia
   return (
     <ConfirmationDialog
       id="ConfirmDeleteApiCredential"
-      resourceId={credential.id}
       title={<T id="title" />}
       description={
         <T
           id="description"
           values={{
-            name: credential.name,
+            name: credential?.name,
             strong: (children) => <strong className="text-default">{children}</strong>,
           }}
         />
       }
       destructiveAction
-      confirmationText={credential.name}
+      confirmationText={credential?.name ?? ''}
       onConfirm={mutation.mutateAsync}
       submitText={<T id="confirm" />}
     />

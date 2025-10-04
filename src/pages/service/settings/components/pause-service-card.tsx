@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
@@ -18,8 +18,6 @@ type PauseServiceCardProps = {
 export function PauseServiceCard({ service }: PauseServiceCardProps) {
   const navigate = useNavigate();
   const t = T.useTranslate();
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
 
   const pause = useMutation({
     ...apiMutation('post /v1/services/{id}/pause', {
@@ -47,7 +45,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
       <div className="ml-auto row gap-4">
         <Button
           color="gray"
-          onClick={() => openDialog('ResumeService', { resourceId: service.id })}
+          onClick={() => openDialog('ResumeService', service)}
           disabled={service.status !== 'PAUSED'}
         >
           <T id="resume" />
@@ -55,7 +53,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
 
         <Button
           color="orange"
-          onClick={() => openDialog('ConfirmPauseService', { resourceId: service.id })}
+          onClick={() => openDialog('ConfirmPauseService', service)}
           disabled={service.status === 'PAUSING' || service.status === 'PAUSED'}
         >
           <T id="pause" />
@@ -64,7 +62,6 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
 
       <ConfirmationDialog
         id="ConfirmPauseService"
-        resourceId={service.id}
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
         confirmationText={service.name}

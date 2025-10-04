@@ -6,7 +6,7 @@ import { createTranslate } from 'src/intl/translate';
 import { ApiCredential, ApiCredentialType } from 'src/model';
 
 import { ActionsMenu } from '../actions-menu';
-import { Dialog } from '../dialog';
+import { openDialog } from '../dialog';
 
 import { DeleteCredentialDialog } from './delete-api-credential';
 
@@ -34,48 +34,45 @@ export function ApiCredentialsList({ type, credentials, onCreate }: ApiCredentia
   }
 
   return (
-    <Table
-      items={credentials}
-      columns={{
-        name: {
-          header: <T id="name" />,
-          render: (credential) => credential.name,
-        },
-        description: {
-          header: <T id="description" />,
-          render: (credential) => credential.description,
-        },
-        created: {
-          className: 'lg:w-48',
-          header: <T id="created" />,
-          render: (credential) => <FormattedDistanceToNow value={credential.createdAt} />,
-        },
-        actions: {
-          className: 'w-12',
-          render: (credential) => <CredentialActions type={type} credential={credential} />,
-        },
-      }}
-    />
+    <>
+      <Table
+        items={credentials}
+        columns={{
+          name: {
+            header: <T id="name" />,
+            render: (credential) => credential.name,
+          },
+          description: {
+            header: <T id="description" />,
+            render: (credential) => credential.description,
+          },
+          created: {
+            className: 'lg:w-48',
+            header: <T id="created" />,
+            render: (credential) => <FormattedDistanceToNow value={credential.createdAt} />,
+          },
+          actions: {
+            className: 'w-12',
+            render: (credential) => <CredentialActions type={type} credential={credential} />,
+          },
+        }}
+      />
+
+      <DeleteCredentialDialog type={type} />
+    </>
   );
 }
 
 function CredentialActions({ type, credential }: { type: ApiCredentialType; credential: ApiCredential }) {
   const T = createTranslate(`pages.${type}Settings.apiCredential.list`);
-  const openDialog = Dialog.useOpen();
 
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <ButtonMenuItem
-            onClick={withClose(() => openDialog('ConfirmDeleteApiCredential', { resourceId: credential.id }))}
-          >
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        )}
-      </ActionsMenu>
-
-      <DeleteCredentialDialog type={type} credential={credential} />
-    </>
+    <ActionsMenu>
+      {(withClose) => (
+        <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteApiCredential', credential))}>
+          <T id="actions.delete" />
+        </ButtonMenuItem>
+      )}
+    </ActionsMenu>
   );
 }

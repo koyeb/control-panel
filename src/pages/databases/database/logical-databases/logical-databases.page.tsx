@@ -3,12 +3,12 @@ import clsx from 'clsx';
 
 import { isDatabaseDeployment, useDeployment, useService } from 'src/api';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useOnRouteStateCreate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
-import { DatabaseDeployment, LogicalDatabase, Service } from 'src/model';
+import { LogicalDatabase } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
 
@@ -22,10 +22,10 @@ export function LogicalDatabasesPage() {
   const service = useService(databaseServiceId);
   const deployment = useDeployment(service?.latestDeploymentId);
 
-  const openDialog = Dialog.useOpen();
-
   useOnRouteStateCreate(() => {
-    openDialog('CreateLogicalDatabase');
+    if (service) {
+      openDialog('CreateLogicalDatabase');
+    }
   });
 
   if (!service || !deployment) {
@@ -76,43 +76,26 @@ export function LogicalDatabasesPage() {
             },
             actions: {
               className: clsx('w-12'),
-              render: (database) => (
-                <DatabaseActions service={service} deployment={deployment} database={database} />
-              ),
+              render: (database) => <DatabaseActions database={database} />,
             },
           }}
         />
       )}
 
       <CreateLogicalDatabaseDialog service={service} deployment={deployment} />
+      <DeleteLogicalDatabaseDialog service={service} deployment={deployment} />
     </>
   );
 }
 
-type DatabaseActionsProps = {
-  service: Service;
-  deployment: DatabaseDeployment;
-  database: LogicalDatabase;
-};
-
-function DatabaseActions({ service, deployment, database }: DatabaseActionsProps) {
-  const openDialog = Dialog.useOpen();
-
+function DatabaseActions({ database }: { database: LogicalDatabase }) {
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <ButtonMenuItem
-            onClick={withClose(() =>
-              openDialog('ConfirmDeleteLogicalDatabase', { resourceId: database.name }),
-            )}
-          >
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        )}
-      </ActionsMenu>
-
-      <DeleteLogicalDatabaseDialog service={service} deployment={deployment} database={database} />
-    </>
+    <ActionsMenu>
+      {(withClose) => (
+        <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteLogicalDatabase', database))}>
+          <T id="actions.delete" />
+        </ButtonMenuItem>
+      )}
+    </ActionsMenu>
   );
 }

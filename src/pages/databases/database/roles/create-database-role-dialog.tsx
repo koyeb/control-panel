@@ -7,7 +7,7 @@ import { useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -23,7 +23,6 @@ const schema = z.object({
 export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
   const t = T.useTranslate();
 
-  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({

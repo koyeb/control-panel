@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { apiQuery, mapSnapshot, mapVolume, useService } from 'src/api';
 import { formatBytes } from 'src/application/memory';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { LinkButton } from 'src/components/link';
 import { NoResource } from 'src/components/no-resource';
 import { Pagination, usePagination } from 'src/components/pagination';
@@ -92,50 +92,56 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
   const lg = !useBreakpoint('lg');
 
   return (
-    <Table
-      items={volumes}
-      columns={{
-        name: {
-          header: <T id="name" />,
-          render: (volume) => <VolumeName volume={volume} />,
-        },
-        status: {
-          header: <T id="status" />,
-          render: (volume) => <VolumeStatusBadge status={volume.status} />,
-        },
-        region: {
-          hidden: lg,
-          header: <T id="region" />,
-          render: (volume) => (
-            <div className="row items-center gap-2">
-              <RegionFlag regionId={volume.region} className="size-4" />
-              <RegionName regionId={volume.region} />
-            </div>
-          ),
-        },
-        size: {
-          header: <T id="size" />,
-          className: clsx('w-26'),
-          render: (volume) => formatBytes(volume.size, { decimal: true }),
-        },
-        created: {
-          hidden: lg,
-          header: <T id="created" />,
-          className: clsx('w-34'),
-          render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
-        },
-        service: {
-          hidden: lg,
-          header: <T id="attachedTo" />,
-          className: clsx('w-26'),
-          render: (volume) => <AttachedService volume={volume} serviceId={volume.serviceId} />,
-        },
-        actions: {
-          className: clsx('w-[1%]'),
-          render: (volume) => <Actions volume={volume} />,
-        },
-      }}
-    />
+    <>
+      <Table
+        items={volumes}
+        columns={{
+          name: {
+            header: <T id="name" />,
+            render: (volume) => <VolumeName volume={volume} />,
+          },
+          status: {
+            header: <T id="status" />,
+            render: (volume) => <VolumeStatusBadge status={volume.status} />,
+          },
+          region: {
+            hidden: lg,
+            header: <T id="region" />,
+            render: (volume) => (
+              <div className="row items-center gap-2">
+                <RegionFlag regionId={volume.region} className="size-4" />
+                <RegionName regionId={volume.region} />
+              </div>
+            ),
+          },
+          size: {
+            header: <T id="size" />,
+            className: clsx('w-26'),
+            render: (volume) => formatBytes(volume.size, { decimal: true }),
+          },
+          created: {
+            hidden: lg,
+            header: <T id="created" />,
+            className: clsx('w-34'),
+            render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
+          },
+          service: {
+            hidden: lg,
+            header: <T id="attachedTo" />,
+            className: clsx('w-26'),
+            render: (volume) => <AttachedService volume={volume} serviceId={volume.serviceId} />,
+          },
+          actions: {
+            className: clsx('w-[1%]'),
+            render: (volume) => <Actions volume={volume} />,
+          },
+        }}
+      />
+
+      <EditVolumeDialog />
+      <CreateSnapshotDialog />
+      <DeleteVolumeDialog />
+    </>
   );
 }
 
@@ -177,38 +183,26 @@ function AttachedService({ volume, serviceId }: { volume: Volume; serviceId?: st
 }
 
 function Actions({ volume }: { volume: Volume }) {
-  const openDialog = Dialog.useOpen();
-
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <>
-            <ButtonMenuItem onClick={withClose(() => openDialog('EditVolume', { volumeId: volume.id }))}>
-              <IconPen className="size-4" />
-              <T id="actions.edit" />
-            </ButtonMenuItem>
+    <ActionsMenu>
+      {(withClose) => (
+        <>
+          <ButtonMenuItem onClick={withClose(() => openDialog('EditVolume', volume))}>
+            <IconPen className="size-4" />
+            <T id="actions.edit" />
+          </ButtonMenuItem>
 
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('CreateSnapshotFromVolume', { volumeId: volume.id }))}
-            >
-              <IconPlus className="size-4" />
-              <T id="actions.createSnapshot" />
-            </ButtonMenuItem>
+          <ButtonMenuItem onClick={withClose(() => openDialog('CreateSnapshotFromVolume', volume))}>
+            <IconPlus className="size-4" />
+            <T id="actions.createSnapshot" />
+          </ButtonMenuItem>
 
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('ConfirmDeleteVolume', { resourceId: volume.id }))}
-            >
-              <IconTrash className="size-4" />
-              <T id="actions.delete" />
-            </ButtonMenuItem>
-          </>
-        )}
-      </ActionsMenu>
-
-      <EditVolumeDialog volume={volume} />
-      <CreateSnapshotDialog volume={volume} />
-      <DeleteVolumeDialog volume={volume} />
-    </>
+          <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteVolume', volume))}>
+            <IconTrash className="size-4" />
+            <T id="actions.delete" />
+          </ButtonMenuItem>
+        </>
+      )}
+    </ActionsMenu>
   );
 }

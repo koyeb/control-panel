@@ -2,7 +2,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { useSecrets } from 'src/api';
 import { ControlledSelect } from 'src/components/controlled';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
@@ -14,8 +14,6 @@ import { DockerImageField } from './docker-image-field';
 const T = createTranslate('modules.serviceForm.source.docker');
 
 export function DockerSource() {
-  const openDialog = Dialog.useOpen();
-
   const secrets = useSecrets('registry');
   const { setValue } = useFormContext<ServiceForm>();
 

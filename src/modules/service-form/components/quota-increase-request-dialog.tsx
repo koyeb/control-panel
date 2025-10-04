@@ -1,26 +1,25 @@
-import { useCatalogInstance } from 'src/api';
-import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { Dialog, DialogFooter, DialogHeader, useDialogContext } from 'src/components/dialog';
 import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('modules.serviceForm');
+const T = createTranslate('components.instanceSelector.actions.requestQuotaIncreaseDialog');
 
-export function QuotaIncreaseRequestDialog({ catalogInstanceId }: { catalogInstanceId: string | null }) {
-  const instance = useCatalogInstance(catalogInstanceId);
+export function RequestQuotaIncreaseDialog() {
+  const instance = useDialogContext<'RequestQuotaIncrease'>();
   const tallyLink = useTallyLink(tallyForms.getInTouch);
 
   return (
-    <Dialog id="QuotaIncreaseRequest" className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="quotaIncreaseRequestDialog.title" />} />
+    <Dialog id="RequestQuotaIncrease" className="col w-full max-w-xl gap-4">
+      <DialogHeader title={<T id="title" />} />
 
       <p>
-        <T id="quotaIncreaseRequestDialog.line1" values={{ instance: instance?.displayName }} />
+        <T id="line1" values={{ instance: instance?.displayName }} />
       </p>
 
       <p>
         <T
-          id="quotaIncreaseRequestDialog.line2"
+          id="line2"
           values={{
             link: (children) => (
               <ExternalLink openInNewTab href={tallyLink} className="underline">
@@ -33,7 +32,7 @@ export function QuotaIncreaseRequestDialog({ catalogInstanceId }: { catalogInsta
 
       <DialogFooter>
         <ExternalLinkButton openInNewTab href={tallyLink}>
-          <T id="quotaIncreaseRequestDialog.cta" />
+          <T id="cta" />
         </ExternalLinkButton>
       </DialogFooter>
     </Dialog>

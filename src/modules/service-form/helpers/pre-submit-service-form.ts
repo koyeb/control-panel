@@ -4,13 +4,11 @@ import { useOrganization } from 'src/api';
 import { useGetInstanceQuota } from 'src/application/instance-quota';
 import { useTrackEvent } from 'src/application/posthog';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { tallyForms } from 'src/hooks/tally';
 import { CatalogInstance, OrganizationPlan } from 'src/model';
 
 export function usePreSubmitServiceForm(previousInstance?: string | null) {
-  const openDialog = Dialog.useOpen();
-
   const organization = useOrganization();
   const getInstanceQuota = useGetInstanceQuota();
   const trackEvent = useTrackEvent();
@@ -34,7 +32,7 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
       if (isTenstorrentGpu(instance)) {
         if (organization?.plan === 'hobby') {
           setRequiredPlan('starter');
-          openDialog('Upgrade', { plan: 'starter' });
+          openDialog('Upgrade', 'starter');
         } else {
           window.open(`https://tally.so/r/${tallyForms.requestTenstorrentAccess}`);
         }
@@ -46,12 +44,12 @@ export function usePreSubmitServiceForm(previousInstance?: string | null) {
         const plan = instance.plans[0] as OrganizationPlan;
 
         setRequiredPlan(plan);
-        openDialog('Upgrade', { plan });
+        openDialog('Upgrade', plan);
 
         return false;
       }
 
-      openDialog('QuotaIncreaseRequest');
+      openDialog('RequestQuotaIncrease', instance);
 
       return false;
     },

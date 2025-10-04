@@ -5,7 +5,7 @@ import { useRef } from 'react';
 import { useCatalogInstanceAvailability, useOrganization } from 'src/api';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
 import { tallyForms } from 'src/hooks/tally';
@@ -16,7 +16,6 @@ import { CatalogInstance } from 'src/model';
 
 import { CatalogAvailability } from './catalog-availability';
 import { InstanceSelectorBadge } from './instance-selector';
-import { RequestQuotaIncreaseDialog } from './request-quota-increase-dialog';
 
 const T = createTranslate('components.instanceSelector');
 
@@ -228,7 +227,6 @@ function InstanceBadges({ badges }: { badges: InstanceSelectorBadge[] }) {
 }
 
 function RequestQuota({ instance }: { instance: CatalogInstance }) {
-  const openDialog = Dialog.useOpen();
   const organization = useOrganization();
   const addCreditCard = organization?.plan === 'hobby';
 
@@ -238,11 +236,7 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
 
   if (addCreditCard) {
     return (
-      <Button
-        color="gray"
-        onClick={() => openDialog('UpgradeInstanceSelector', { plan: 'starter' })}
-        className="mt-4"
-      >
+      <Button color="gray" onClick={() => openDialog('UpgradeInstanceSelector', 'starter')} className="mt-4">
         <T id="actions.addCreditCard" />
       </Button>
     );
@@ -262,16 +256,8 @@ function RequestQuota({ instance }: { instance: CatalogInstance }) {
   }
 
   return (
-    <>
-      <Button
-        color="gray"
-        onClick={() => openDialog('RequestQuotaIncrease', { instanceId: instance.id })}
-        className="mt-4"
-      >
-        <T id="actions.requestQuotaIncrease" />
-      </Button>
-
-      <RequestQuotaIncreaseDialog instance={instance} />
-    </>
+    <Button color="gray" onClick={() => openDialog('RequestQuotaIncrease', instance)} className="mt-4">
+      <T id="actions.requestQuotaIncrease" />
+    </Button>
   );
 }

@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { getApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
@@ -17,9 +17,6 @@ type DeleteServiceCardProps = {
 
 export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   const t = T.useTranslate();
-
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
 
   const navigate = useNavigate();
 
@@ -63,7 +60,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       <div className="ml-auto row gap-4">
         <Button
           color="red"
-          onClick={() => openDialog('ConfirmDeleteService', { resourceId: service.id })}
+          onClick={() => openDialog('ConfirmDeleteService', service)}
           disabled={service.status === 'PAUSING' || service.status === 'DELETED'}
         >
           <T id="delete" />
@@ -72,7 +69,6 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
 
       <ConfirmationDialog
         id="ConfirmDeleteService"
-        resourceId={service.id}
         title={<T id="confirmationDialog.title" />}
         description={<T id="confirmationDialog.description" />}
         destructiveAction

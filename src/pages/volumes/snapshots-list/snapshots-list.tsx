@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { apiQuery, mapSnapshot, useVolume } from 'src/api';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Pagination, usePagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
@@ -65,54 +65,59 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
   const lg = !useBreakpoint('lg');
 
   return (
-    <Table
-      items={snapshots}
-      columns={{
-        name: {
-          header: <T id="name" />,
-          render: (snapshots) => snapshots.name,
-        },
-        status: {
-          header: <T id="status" />,
-          render: (snapshot) => <VolumeSnapshotStatusBadge status={snapshot.status} />,
-        },
-        region: {
-          hidden: lg,
-          header: <T id="region" />,
-          render: (volume) => (
-            <div className="row items-center gap-2">
-              <RegionFlag regionId={volume.region} className="size-4" />
-              <RegionName regionId={volume.region} />
-            </div>
-          ),
-        },
-        type: {
-          header: <T id="type" />,
-          className: clsx('w-26'),
-          render: (snapshot) => <T id={`snapshotType.${lowerCase(snapshot.type)}`} />,
-        },
-        volumeName: {
-          header: <T id="volumeName" />,
-          render: (snapshot) => <VolumeName volumeId={snapshot.volumeId} />,
-        },
-        created: {
-          hidden: lg,
-          header: <T id="created" />,
-          className: clsx('w-34'),
-          render: (snapshot) => <FormattedDistanceToNow value={snapshot.createdAt} />,
-        },
-        empty: {
-          hidden: lg,
-          header: null,
-          className: clsx('w-26'),
-          render: () => null,
-        },
-        actions: {
-          className: clsx('w-[1%]'),
-          render: (snapshot) => <Actions snapshot={snapshot} />,
-        },
-      }}
-    />
+    <>
+      <Table
+        items={snapshots}
+        columns={{
+          name: {
+            header: <T id="name" />,
+            render: (snapshots) => snapshots.name,
+          },
+          status: {
+            header: <T id="status" />,
+            render: (snapshot) => <VolumeSnapshotStatusBadge status={snapshot.status} />,
+          },
+          region: {
+            hidden: lg,
+            header: <T id="region" />,
+            render: (volume) => (
+              <div className="row items-center gap-2">
+                <RegionFlag regionId={volume.region} className="size-4" />
+                <RegionName regionId={volume.region} />
+              </div>
+            ),
+          },
+          type: {
+            header: <T id="type" />,
+            className: clsx('w-26'),
+            render: (snapshot) => <T id={`snapshotType.${lowerCase(snapshot.type)}`} />,
+          },
+          volumeName: {
+            header: <T id="volumeName" />,
+            render: (snapshot) => <VolumeName volumeId={snapshot.volumeId} />,
+          },
+          created: {
+            hidden: lg,
+            header: <T id="created" />,
+            className: clsx('w-34'),
+            render: (snapshot) => <FormattedDistanceToNow value={snapshot.createdAt} />,
+          },
+          empty: {
+            hidden: lg,
+            header: null,
+            className: clsx('w-26'),
+            render: () => null,
+          },
+          actions: {
+            className: clsx('w-[1%]'),
+            render: (snapshot) => <Actions snapshot={snapshot} />,
+          },
+        }}
+      />
+
+      <EditSnapshotDialog />
+      <DeleteSnapshotDialog />
+    </>
   );
 }
 
@@ -124,48 +129,38 @@ function VolumeName({ volumeId }: { volumeId: string }) {
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
   const canCreate = snapshot.status === 'AVAILABLE' && snapshot.type === 'REMOTE';
-  const openDialog = Dialog.useOpen();
   const navigate = useNavigate();
 
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <>
-            <Tooltip content={canCreate ? undefined : <T id="actions.cannotCreateVolume" />}>
-              {(props) => (
-                <ButtonMenuItem
-                  {...props}
-                  disabled={!canCreate}
-                  onClick={withClose(() => {
-                    void navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
-                  })}
-                >
-                  <IconPlus className="size-4" />
-                  <T id="actions.createVolume" />
-                </ButtonMenuItem>
-              )}
-            </Tooltip>
+    <ActionsMenu>
+      {(withClose) => (
+        <>
+          <Tooltip content={canCreate ? undefined : <T id="actions.cannotCreateVolume" />}>
+            {(props) => (
+              <ButtonMenuItem
+                {...props}
+                disabled={!canCreate}
+                onClick={withClose(() => {
+                  void navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
+                })}
+              >
+                <IconPlus className="size-4" />
+                <T id="actions.createVolume" />
+              </ButtonMenuItem>
+            )}
+          </Tooltip>
 
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('EditSnapshot', { snapshotId: snapshot.id }))}
-            >
-              <IconPen className="size-4" />
-              <T id="actions.update" />
-            </ButtonMenuItem>
+          <ButtonMenuItem onClick={withClose(() => openDialog('EditSnapshot', snapshot))}>
+            <IconPen className="size-4" />
+            <T id="actions.update" />
+          </ButtonMenuItem>
 
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('ConfirmDeleteSnapshot', { resourceId: snapshot.id }))}
-            >
-              <IconTrash className="size-4" />
-              <T id="actions.delete" />
-            </ButtonMenuItem>
-          </>
-        )}
-      </ActionsMenu>
-
-      <EditSnapshotDialog snapshot={snapshot} />
-      <DeleteSnapshotDialog snapshot={snapshot} />
-    </>
+          <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteSnapshot', snapshot))}>
+            <IconTrash className="size-4" />
+            <T id="actions.delete" />
+          </ButtonMenuItem>
+        </>
+      )}
+    </ActionsMenu>
   );
 }
