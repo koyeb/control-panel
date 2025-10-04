@@ -22,3 +22,8 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// todo: remove when it's part of the official react types
+namespace React {
+  declare function useEffectEvent<Fn extends (...args: unknown[]) => unknown>(cb: Fn): Fn;
+}

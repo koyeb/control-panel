@@ -18,7 +18,7 @@ import { EditRegistrySecretDialog } from './edit-registry-secret-dialog';
 const T = createTranslate('pages.organizationSettings.registrySecrets.list');
 
 export function RegistrySecretList({ onCreate }: { onCreate: () => void }) {
-  const secretsQuery = useSecretsQuery('registry');
+  const [secretsQuery] = useSecretsQuery('registry');
 
   if (secretsQuery.isPending) {
     return <Skeleton />;
@@ -28,7 +28,7 @@ export function RegistrySecretList({ onCreate }: { onCreate: () => void }) {
     return <QueryError error={secretsQuery.error} />;
   }
 
-  const secrets = secretsQuery.data as RegistrySecret[];
+  const secrets = secretsQuery.data.secrets as RegistrySecret[];
 
   if (secrets.length === 0) {
     return (
