@@ -6,14 +6,14 @@ import { useState } from 'react';
 import { apiQuery, isDatabaseDeployment, useDeployment, useService } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useRouteParam } from 'src/hooks/router';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { DatabaseRole, Service } from 'src/model';
+import { DatabaseRole } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { getName } from 'src/utils/object';
 
@@ -26,8 +26,6 @@ export function DatabaseRolesPage() {
   const databaseServiceId = useRouteParam('databaseServiceId');
   const service = useService(databaseServiceId);
   const deployment = useDeployment(service?.latestDeploymentId);
-
-  const openDialog = Dialog.useOpen();
 
   if (!service || !deployment) {
     return null;
@@ -78,13 +76,14 @@ export function DatabaseRolesPage() {
             },
             actions: {
               className: clsx('w-12'),
-              render: (role) => <DatabaseRoleActions service={service} role={role} />,
+              render: (role) => <DatabaseRoleActions role={role} />,
             },
           }}
         />
       )}
 
       <CreateDatabaseRoleDialog service={service} />
+      <DeleteDatabaseRoleDialog service={service} />
     </>
   );
 }
@@ -142,27 +141,14 @@ function DatabaseRolePassword({ role }: { role: DatabaseRole }) {
   );
 }
 
-type DatabaseRoleActionsProps = {
-  service: Service;
-  role: DatabaseRole;
-};
-
-function DatabaseRoleActions({ service, role }: DatabaseRoleActionsProps) {
-  const openDialog = Dialog.useOpen();
-
+function DatabaseRoleActions({ role }: { role: DatabaseRole }) {
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <ButtonMenuItem
-            onClick={withClose(() => openDialog('ConfirmDeleteDatabaseRole', { resourceId: role.name }))}
-          >
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        )}
-      </ActionsMenu>
-
-      <DeleteDatabaseRoleDialog service={service} role={role} />
-    </>
+    <ActionsMenu>
+      {(withClose) => (
+        <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteDatabaseRole', role))}>
+          <T id="actions.delete" />
+        </ButtonMenuItem>
+      )}
+    </ActionsMenu>
   );
 }

@@ -1,6 +1,6 @@
 import { Button } from '@koyeb/design-system';
 
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { RegistrySecretForm } from 'src/modules/secrets/registry/registry-secret-form';
 
@@ -11,8 +11,6 @@ type CreateRegistrySecretDialogProps = {
 };
 
 export function CreateRegistrySecretDialog({ onCreated }: CreateRegistrySecretDialogProps) {
-  const closeDialog = Dialog.useClose();
-
   return (
     <Dialog id="CreateRegistrySecret" className="col w-full max-w-xl gap-4">
       <DialogHeader title={<T id="title" />} />

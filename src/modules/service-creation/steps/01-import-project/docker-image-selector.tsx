@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { useSecrets } from 'src/api';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
 import { LinkButton } from 'src/components/link';
@@ -119,7 +119,6 @@ type RegistrySecretFieldProps = {
 };
 
 function RegistrySecretField({ form }: RegistrySecretFieldProps) {
-  const openDialog = Dialog.useOpen();
   const registrySecrets = useSecrets('registry');
 
   return (

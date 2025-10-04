@@ -7,6 +7,7 @@ import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
 import { isSessionToken, useToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
+import { closeDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -45,6 +46,11 @@ type LayoutProps = {
 export function MainLayout({ children }: LayoutProps) {
   const banner = useBanner();
   const pageContext = usePageContext();
+  const location = useLocation();
+
+  useEffect(() => {
+    closeDialog();
+  }, [location]);
 
   if (!useOrganization()) {
     return null;

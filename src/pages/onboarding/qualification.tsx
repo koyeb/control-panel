@@ -10,7 +10,7 @@ import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { hasMessage } from 'src/application/validation';
 import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
@@ -46,7 +46,6 @@ export function Qualification() {
   const user = useUser();
   const organization = useOrganization();
 
-  const openDialog = Dialog.useOpen();
   const invalidate = useInvalidateApiQuery();
   const track = useTrackEvent();
 

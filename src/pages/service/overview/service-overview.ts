@@ -12,8 +12,8 @@ import {
   useInstancesQuery,
   useService,
 } from 'src/api';
-import { useDialogContext } from 'src/application/dialog-context';
 import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
+import { useOpenedDialogId } from 'src/components/dialog';
 import { useObserve, usePrevious } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useShortcut } from 'src/hooks/shortcut';
@@ -269,7 +269,7 @@ function useShortcuts(
   const selectPrevious = () => setSelectedIndex(selectedIndex - 1);
   const selectNext = () => setSelectedIndex(selectedIndex + 1);
 
-  const { dialogId } = useDialogContext();
+  const dialogId = useOpenedDialogId();
 
   const canSelectPrevious = dialogId === undefined && selectedIndex > 0;
   const canSelectNext = dialogId === undefined && selectedIndex < totalDeployments - 1;

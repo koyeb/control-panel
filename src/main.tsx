@@ -16,7 +16,6 @@ import ReactDOM from 'react-dom/client';
 import { ApiError } from './api';
 import { AuthKitAdapter } from './application/authkit';
 import { getConfig } from './application/config';
-import { DialogProvider } from './application/dialog-context';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
@@ -184,9 +183,7 @@ const router = createRouter({
       <AuthKitProvider>
         <IntlProvider>
           <QueryClientProvider client={queryClient}>
-            <PersistQueryClient>
-              <DialogProvider>{children}</DialogProvider>
-            </PersistQueryClient>
+            <PersistQueryClient>{children}</PersistQueryClient>
           </QueryClientProvider>
         </IntlProvider>
       </AuthKitProvider>

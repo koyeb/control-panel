@@ -9,10 +9,9 @@ import {
 import clsx from 'clsx';
 
 import { useApps } from 'src/api';
-import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, TranslateStatus, createTranslate } from 'src/intl/translate';
@@ -42,52 +41,56 @@ export function DomainsList({ domains, expanded, toggleExpanded, onCreate, selec
   }
 
   return (
-    <Table
-      items={domains}
-      columns={{
-        expand: {
-          className: clsx('lg:w-12'),
-          render: (domain) => (
-            <IconChevronDown className={clsx('size-4 text-icon', expanded === domain.id && 'rotate-180')} />
-          ),
-        },
-        name: {
-          header: <T id="name" />,
-          render: (domain) => domain.name,
-        },
-        status: {
-          header: <T id="status" />,
-          render: (domain) => <DomainStatus status={domain.status} />,
-        },
-        assignedTo: {
-          header: <T id="assignedTo" />,
-          render: (domain) => <AppName appId={domain.appId} />,
-        },
-        updated: {
-          hidden: isMobile,
-          className: clsx('lg:w-48'),
-          header: <T id="updated" />,
-          render: (domain) => <FormattedDistanceToNow value={domain.updatedAt} />,
-        },
-        actions: {
-          className: clsx('w-12'),
-          render: (domain) => <DomainActions domain={domain} />,
-        },
-      }}
-      onRowClick={toggleExpanded}
-      isExpanded={(domain) => expanded === domain.id}
-      renderExpanded={(domain) => (
-        <div className="col gap-6 px-3 pt-2 pb-4">
-          <DomainError domain={domain} />
-          <DnsConfiguration domain={domain} />
-          <ChangeAppForm domain={domain} />
-        </div>
-      )}
-      selection={selection}
-      classes={{
-        tr: (domain) => clsx(expanded === domain?.id && 'bg-gradient-to-b from-inverted/5 to-inverted/0'),
-      }}
-    />
+    <>
+      <Table
+        items={domains}
+        columns={{
+          expand: {
+            className: clsx('lg:w-12'),
+            render: (domain) => (
+              <IconChevronDown className={clsx('size-4 text-icon', expanded === domain.id && 'rotate-180')} />
+            ),
+          },
+          name: {
+            header: <T id="name" />,
+            render: (domain) => domain.name,
+          },
+          status: {
+            header: <T id="status" />,
+            render: (domain) => <DomainStatus status={domain.status} />,
+          },
+          assignedTo: {
+            header: <T id="assignedTo" />,
+            render: (domain) => <AppName appId={domain.appId} />,
+          },
+          updated: {
+            hidden: isMobile,
+            className: clsx('lg:w-48'),
+            header: <T id="updated" />,
+            render: (domain) => <FormattedDistanceToNow value={domain.updatedAt} />,
+          },
+          actions: {
+            className: clsx('w-12'),
+            render: (domain) => <DomainActions domain={domain} />,
+          },
+        }}
+        onRowClick={toggleExpanded}
+        isExpanded={(domain) => expanded === domain.id}
+        renderExpanded={(domain) => (
+          <div className="col gap-6 px-3 pt-2 pb-4">
+            <DomainError domain={domain} />
+            <DnsConfiguration domain={domain} />
+            <ChangeAppForm domain={domain} />
+          </div>
+        )}
+        selection={selection}
+        classes={{
+          tr: (domain) => clsx(expanded === domain?.id && 'bg-gradient-to-b from-inverted/5 to-inverted/0'),
+        }}
+      />
+
+      <DeleteDomainDialog />
+    </>
   );
 }
 
@@ -123,23 +126,17 @@ function AppName({ appId }: { appId: string | null }) {
 }
 
 function DomainActions({ domain }: { domain: Domain }) {
-  const openDialog = Dialog.useOpen();
-
   return (
-    <div onClick={stopPropagation}>
-      <ActionsMenu>
-        {(withClose) => (
-          <ButtonMenuItem
-            disabled={domain.status === 'DELETING'}
-            onClick={withClose(() => openDialog('ConfirmDeleteDomain', { resourceId: domain.id }))}
-          >
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        )}
-      </ActionsMenu>
-
-      <DeleteDomainDialog domain={domain} />
-    </div>
+    <ActionsMenu>
+      {(withClose) => (
+        <ButtonMenuItem
+          disabled={domain.status === 'DELETING'}
+          onClick={withClose(() => openDialog('ConfirmDeleteDomain', domain))}
+        >
+          <T id="actions.delete" />
+        </ButtonMenuItem>
+      )}
+    </ActionsMenu>
   );
 }
 

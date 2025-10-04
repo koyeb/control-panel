@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 
 import { useDomainsQuery, useOrganizationQuotas } from 'src/api';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { QueryGuard } from 'src/components/query-error';
 import { Title } from 'src/components/title';
@@ -21,9 +21,6 @@ const T = createTranslate('pages.domains');
 
 export function DomainsPage() {
   const t = T.useTranslate();
-
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
 
   useOnRouteStateCreate(() => {
     openDialog('CreateDomain');

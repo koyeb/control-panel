@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { apiMutation, useOrganization, useSwitchOrganization, useUserOrganizationMemberships } from 'src/api';
 import { notify } from 'src/application/notify';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
@@ -19,8 +19,6 @@ import { OrganizationMember } from 'src/model';
 const T = createTranslate('pages.userSettings.organizations');
 
 export function OrganizationsPage() {
-  const openDialog = Dialog.useOpen();
-
   useOnRouteStateCreate(() => {
     openDialog('CreateOrganization');
   });

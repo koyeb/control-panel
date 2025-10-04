@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import { apiQuery, mapApiCredential } from 'src/api';
 import { ApiCredentials } from 'src/components/api-credentials/api-credentials';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { Title } from 'src/components/title';
 import { createTranslate } from 'src/intl/translate';
 import { ApiCredentialType } from 'src/model';
@@ -12,7 +12,6 @@ import { upperCase } from 'src/utils/strings';
 
 export function BaseApiCredentialsPage({ type }: { type: ApiCredentialType }) {
   const T = createTranslate(`pages.${type}Settings.apiCredential`);
-  const openDialog = Dialog.useOpen();
 
   const query = useQuery({
     ...apiQuery('get /v1/credentials', { query: { limit: '100', type: upperCase(type) } }),

@@ -10,7 +10,7 @@ import { apiMutation, useNextInvoiceQuery, useOrganization } from 'src/api';
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
-import { Dialog, DialogHeader } from 'src/components/dialog';
+import { Dialog, DialogHeader, closeDialog, openDialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { FormattedPrice } from 'src/intl/formatted';
@@ -45,7 +45,7 @@ export function Usage() {
 
       {invoiceQuery.isSuccess && <UsageDetails {...invoiceQuery.data} />}
 
-      <DownloadUsage />
+      <DownloadUsageButton />
     </section>
   );
 }
@@ -300,10 +300,27 @@ function secondsToHMS(seconds: number) {
   };
 }
 
-function DownloadUsage() {
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
+function DownloadUsageButton() {
+  return (
+    <>
+      <Button color="gray" onClick={() => openDialog('DownloadUsage')} className="self-start">
+        <T id="downloadUsage" />
+      </Button>
 
+      <Dialog id="DownloadUsage" className="col w-full max-w-lg gap-4">
+        <DialogHeader title={<T id="downloadUsageDialog.title" />} />
+
+        <div className="text-dim">
+          <T id="downloadUsageDialog.description" />
+        </div>
+
+        <DownloadUsageForm />
+      </Dialog>
+    </>
+  );
+}
+
+function DownloadUsageForm() {
   const form = useForm({
     defaultValues: {
       period: '',
@@ -331,41 +348,27 @@ function DownloadUsage() {
   });
 
   return (
-    <>
-      <Button color="gray" onClick={() => openDialog('DownloadUsage')} className="self-start">
-        <T id="downloadUsage" />
-      </Button>
+    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
+      <ControlledSelect
+        control={form.control}
+        name="period"
+        items={getPeriods()}
+        placeholder="Select a period"
+        getKey={(date) => date.toISOString()}
+        itemToString={(date) => date.toString()}
+        itemToValue={(date) => date.toISOString()}
+        renderItem={(date) => <FormattedDate value={date} month="long" year="numeric" />}
+      />
 
-      <Dialog id="DownloadUsage" onClosed={() => form.reset()} className="col w-full max-w-lg gap-4">
-        <DialogHeader title={<T id="downloadUsageDialog.title" />} />
-
-        <div className="text-dim">
-          <T id="downloadUsageDialog.description" />
-        </div>
-
-        <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-          <ControlledSelect
-            control={form.control}
-            name="period"
-            items={getPeriods()}
-            placeholder="Select a period"
-            getKey={(date) => date.toISOString()}
-            itemToString={(date) => date.toString()}
-            itemToValue={(date) => date.toISOString()}
-            renderItem={(date) => <FormattedDate value={date} month="long" year="numeric" />}
-          />
-
-          <footer className="row justify-end gap-2">
-            <Button color="gray" variant="ghost" onClick={closeDialog}>
-              <Translate id="common.close" />
-            </Button>
-            <Button type="submit" loading={form.formState.isSubmitting}>
-              <T id="downloadUsageDialog.submit" />
-            </Button>
-          </footer>
-        </form>
-      </Dialog>
-    </>
+      <footer className="row justify-end gap-2">
+        <Button color="gray" variant="ghost" onClick={closeDialog}>
+          <Translate id="common.close" />
+        </Button>
+        <Button type="submit" loading={form.formState.isSubmitting}>
+          <T id="downloadUsageDialog.submit" />
+        </Button>
+      </footer>
+    </form>
   );
 }
 

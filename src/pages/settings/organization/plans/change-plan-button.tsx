@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { tallyForms, useTallyLink } from 'src/hooks/tally';
@@ -17,9 +17,6 @@ const T = createTranslate('pages.organizationSettings.plans');
 export function ChangePlanButton({ plan }: { plan: Plan }) {
   const organization = useOrganization();
 
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
-
   const onPlanChanged = () => {
     closeDialog();
     notify.success(<PlanChangedNotification plan={plan} />);
@@ -31,7 +28,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
     if (organization?.hasPaymentMethod) {
       mutation.mutate(plan);
     } else {
-      openDialog('Upgrade', { plan });
+      openDialog('Upgrade', plan);
     }
   };
 

@@ -7,11 +7,17 @@ import { z } from 'zod';
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import {
+  CloseDialogButton,
+  Dialog,
+  DialogFooter,
+  DialogHeader,
+  closeDialog,
+  useDialogContext,
+} from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { VolumeSnapshot } from 'src/model';
 
 const T = createTranslate('pages.volumes.snapshotsList.editDialog');
 
@@ -19,22 +25,21 @@ const schema = z.object({
   name: z.string().min(2).max(63),
 });
 
-export function EditSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
+export function EditSnapshotDialog() {
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
-
   const invalidate = useInvalidateApiQuery();
+  const snapshot = useDialogContext<'EditSnapshot'>();
 
   const form = useForm<z.infer<typeof schema>>({
     defaultValues: {
-      name: snapshot.name,
+      name: '',
     },
     resolver: useZodResolver(schema),
   });
 
   const mutation = useMutation({
     ...apiMutation('post /v1/snapshots/{id}', ({ name }: FormValues<typeof form>) => ({
-      path: { id: snapshot.id },
+      path: { id: snapshot!.id },
       body: { name },
     })),
     async onSuccess({ snapshot }) {
@@ -46,16 +51,11 @@ export function EditSnapshotDialog({ snapshot }: { snapshot: VolumeSnapshot }) {
   });
 
   useEffect(() => {
-    form.reset({ name: snapshot.name });
+    form.reset({ name: snapshot?.name ?? '' });
   }, [form, snapshot]);
 
   return (
-    <Dialog
-      id="EditSnapshot"
-      context={{ snapshotId: snapshot.id }}
-      onClosed={() => form.reset()}
-      className="col w-full max-w-xl gap-4"
-    >
+    <Dialog id="EditSnapshot" onClosed={() => form.reset()} className="col w-full max-w-xl gap-4">
       <DialogHeader title={<T id="title" />} />
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">

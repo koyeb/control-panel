@@ -2,7 +2,7 @@ import { Button } from '@koyeb/design-system';
 import { useRef, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { UpgradeDialog } from 'src/components/payment-form';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -25,14 +25,13 @@ type DatabaseFormProps = {
 
 export function DatabaseForm({ appId, deployment, onCostChanged }: DatabaseFormProps) {
   const form = useDatabaseServiceForm({ appId, deployment, onCostChanged });
-  const openDialog = Dialog.useOpen();
 
   const [requiredPlan, setRequiredPlan] = useState<OrganizationPlan>();
   const formRef = useRef<HTMLFormElement>(null);
 
   const onSubmit = useSubmitDatabaseServiceForm(form, (plan) => {
     setRequiredPlan(plan);
-    openDialog('Upgrade', { plan });
+    openDialog('Upgrade', plan);
   });
 
   return (

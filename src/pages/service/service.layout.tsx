@@ -1,8 +1,11 @@
-import { TabButtons } from '@koyeb/design-system';
+import { Button, TabButtons } from '@koyeb/design-system';
+import { useMatch } from '@tanstack/react-router';
 
 import { ApiError, useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api';
 import { getServiceUrls } from 'src/application/service-functions';
+import { CliInfoButton, CliInfoTooltip } from 'src/components/cli-info';
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { ExternalLink, LinkButton, TabButtonLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -18,7 +21,8 @@ import { useServiceCommands } from 'src/modules/command-palette';
 import { DeploymentThrottledAlert } from './deployment-throttled-alert';
 import { InstanceAvailabilityAlerts } from './instance-availability-alerts';
 import { PendingChangesAlert } from './pending-changes-alert';
-import { RedeployButton } from './redeploy-button';
+import { RedeployServiceDialog } from './redeploy-button';
+import { ResumeServiceDialog } from './resume-service-dialog';
 import { ServiceErrorAlert } from './service-error-alert';
 import { ServicePausedAlert } from './service-paused-alert';
 
@@ -64,6 +68,9 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
     <div className="col gap-8">
       <DocumentTitle title={serviceName ?? undefined} />
       <RegisterServiceCommands service={service} />
+
+      <RedeployServiceDialog />
+      <ResumeServiceDialog />
 
       <div className="col items-start justify-between gap-4 sm:row">
         <Header app={app} service={service} deployment={activeDeployment} />
@@ -143,6 +150,31 @@ function Header({ app, service, deployment }: HeaderProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+function RedeployButton({ app, service }: { app: App; service: Service }) {
+  const isServiceSettings = useMatch({ from: '/_main/services/$serviceId/settings', shouldThrow: false });
+
+  if (isServiceSettings || service.status === 'PAUSED') {
+    return null;
+  }
+
+  return (
+    <CliInfoButton
+      button={
+        <Button onClick={() => openDialog('RedeployService', service)} className="self-stretch sm:self-start">
+          <T id="redeploy" />
+        </Button>
+      }
+      tooltip={
+        <CliInfoTooltip
+          title={<T id="redeployCli.title" />}
+          description={<T id="redeployCli.description" />}
+          command={`koyeb service redeploy ${app.name}/${service.name}`}
+        />
+      }
+    />
   );
 }
 

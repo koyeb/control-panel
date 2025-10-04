@@ -6,7 +6,7 @@ import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
 import { setToken } from 'src/application/token';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
@@ -14,7 +14,6 @@ const T = createTranslate('modules.account.deleteAccount');
 
 export function DeleteAccount() {
   const t = T.useTranslate();
-  const openDialog = Dialog.useOpen();
 
   const user = useUser();
   const organization = useOrganization();

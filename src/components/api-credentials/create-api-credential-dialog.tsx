@@ -14,7 +14,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { ApiCredential } from 'src/model';
 import { upperCase } from 'src/utils/strings';
 
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from '../dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from '../dialog';
 
 type CreateApiCredentialDialogProps = {
   type: ApiCredential['type'];
@@ -22,7 +22,6 @@ type CreateApiCredentialDialogProps = {
 
 export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogProps) {
   const T = createTranslate(`pages.${type}Settings.apiCredential`);
-  const openDialog = Dialog.useOpen();
 
   const user = useUser();
   const organization = useOrganization();

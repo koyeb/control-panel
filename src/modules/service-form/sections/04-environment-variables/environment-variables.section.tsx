@@ -5,7 +5,7 @@ import { useFieldArray, useFormContext, useFormState } from 'react-hook-form';
 import { useSecrets } from 'src/api';
 import { notify } from 'src/application/notify';
 import { readFile } from 'src/application/read-file';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { FileDropZone } from 'src/components/file-drop-zone';
 import { useMount } from 'src/hooks/lifecycle';
 import { IconPlus } from 'src/icons';
@@ -16,7 +16,6 @@ import { ServiceFormSection } from '../../components/service-form-section';
 import { parseEnvironmentVariables } from '../../helpers/parse-environment-variables';
 import { ServiceForm } from '../../service-form.types';
 
-import { BulkEnvironmentVariablesEditionDialog } from './bulk-environment-variables-edition';
 import { EnvironmentVariableFields } from './environment-variable-fields';
 import { Files } from './files';
 
@@ -72,7 +71,6 @@ function WatchFilesErrors({ onError }: { onError: () => void }) {
 
 function EnvironmentVariables() {
   const t = T.useTranslate();
-  const openDialog = Dialog.useOpen();
 
   const { setValue } = useFormContext<ServiceForm>();
 
@@ -147,8 +145,6 @@ function EnvironmentVariables() {
           </div>
         </div>
       </FileDropZone>
-
-      <BulkEnvironmentVariablesEditionDialog />
 
       <CreateSecretDialog
         onCreated={(secretName) => {

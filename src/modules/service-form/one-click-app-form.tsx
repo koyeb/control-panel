@@ -41,7 +41,7 @@ import { hasProperty } from 'src/utils/object';
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
 import { InstanceCategoryTabs } from '../instance-selector/instance-category-tabs';
 
-import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
+import { RequestQuotaIncreaseDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
 import { deploymentDefinitionToServiceForm } from './helpers/deployment-to-service-form';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
@@ -143,7 +143,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
         <VolumesSection serviceForm={serviceForm} />
       </form>
 
-      <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
+      <RequestQuotaIncreaseDialog />
       <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
     </FormProvider>
   );

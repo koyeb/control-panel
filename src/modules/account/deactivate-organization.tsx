@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { apiMutation, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { createTranslate } from 'src/intl/translate';
 
@@ -14,9 +14,6 @@ const T = createTranslate('modules.account.deactivateOrganization');
 export function DeactivateOrganization() {
   const organization = useOrganization();
   const t = T.useTranslate();
-
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
 
   const [skipConfirmation, setSkipConfirmation] = useState(false);
 

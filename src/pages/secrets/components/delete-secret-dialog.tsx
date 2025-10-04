@@ -3,25 +3,24 @@ import { useMutation } from '@tanstack/react-query';
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, useDialogContext } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
-import { Secret } from 'src/model';
 
 const T = createTranslate('pages.secrets.deleteSecretDialog');
 
-export function DeleteSecretDialog({ secret, onDeleted }: { secret: Secret; onDeleted?: () => void }) {
+export function DeleteSecretDialog({ onDeleted }: { onDeleted?: () => void }) {
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
+  const secret = useDialogContext<'ConfirmDeleteSecret'>();
 
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
     ...apiMutation('delete /v1/secrets/{id}', {
-      path: { id: secret.id },
+      path: { id: secret?.id as string },
     }),
     async onSuccess() {
       await invalidate('get /v1/secrets');
-      notify.info(t('successNotification', { name: secret.name }));
+      notify.info(t('successNotification', { name: secret?.name }));
       onDeleted?.();
       closeDialog();
     },
@@ -30,18 +29,17 @@ export function DeleteSecretDialog({ secret, onDeleted }: { secret: Secret; onDe
   return (
     <ConfirmationDialog
       id="ConfirmDeleteSecret"
-      resourceId={secret.id}
       title={<T id="title" />}
       description={
         <T
           id="description"
           values={{
-            name: secret.name,
+            name: secret?.name,
             strong: (children) => <strong className="text-default">{children}</strong>,
           }}
         />
       }
-      confirmationText={secret.name}
+      confirmationText={secret?.name ?? ''}
       onConfirm={mutation.mutateAsync}
       submitText={<T id="confirm" />}
     />

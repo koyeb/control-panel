@@ -26,28 +26,28 @@ import { assert } from 'src/utils/assert';
 
 const T = createTranslate('modules.deployment.deploymentInfo.definitionDialog');
 
-type DeploymentDefinitionDialogProps = {
-  deployment: ComputeDeployment;
-};
-
-export function DeploymentDefinitionDialog({ deployment }: DeploymentDefinitionDialogProps) {
+export function DeploymentDefinitionDialog() {
   const [tab, setTab] = useState<'json' | 'parsed'>('json');
 
   return (
     <Dialog id="DeploymentDefinition" className="col w-full max-w-4xl gap-4">
-      <DialogHeader title={<T id="title" />} />
+      {(deployment) => (
+        <>
+          <DialogHeader title={<T id="title" />} />
 
-      <TabButtons>
-        <TabButton selected={tab === 'json'} onClick={() => setTab('json')}>
-          <T id="json" />
-        </TabButton>
-        <TabButton selected={tab === 'parsed'} onClick={() => setTab('parsed')}>
-          <T id="parsed" />
-        </TabButton>
-      </TabButtons>
+          <TabButtons>
+            <TabButton selected={tab === 'json'} onClick={() => setTab('json')}>
+              <T id="json" />
+            </TabButton>
+            <TabButton selected={tab === 'parsed'} onClick={() => setTab('parsed')}>
+              <T id="parsed" />
+            </TabButton>
+          </TabButtons>
 
-      {tab === 'json' && <DeploymentJson definition={deployment.definitionApi} />}
-      {tab === 'parsed' && <DeploymentParsed deployment={deployment} />}
+          {tab === 'json' && <DeploymentJson definition={deployment.definitionApi} />}
+          {tab === 'parsed' && <DeploymentParsed deployment={deployment} />}
+        </>
+      )}
     </Dialog>
   );
 }

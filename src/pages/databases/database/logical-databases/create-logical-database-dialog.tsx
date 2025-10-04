@@ -7,7 +7,7 @@ import { useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -28,8 +28,6 @@ type CreateLogicalDatabaseDialogProps = {
 
 export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogicalDatabaseDialogProps) {
   const t = T.useTranslate();
-
-  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({

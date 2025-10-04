@@ -1,5 +1,6 @@
-import { Alert, Button, Tooltip } from '@koyeb/design-system';
+import { Alert, Button, DialogHeader, Tooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 
 import {
@@ -7,32 +8,30 @@ import {
   useCatalogInstance,
   useCatalogInstanceRegionsAvailability,
   useComputeDeployment,
-  useInvalidateApiQuery,
 } from 'src/api';
 import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';
-import { Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
+import { Dialog, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 
-const T = createTranslate('pages.service.layout.redeployServiceDialog');
+const T = createTranslate('pages.service.layout.resumeServiceDialog');
 
-export function RedeployServiceDialog() {
+export function ResumeServiceDialog() {
   return (
-    <Dialog id="RedeployService" className="col w-full max-w-xl gap-4">
+    <Dialog id="ResumeService" className="col w-full max-w-xl gap-4">
       {(service) => <DialogContent service={service} />}
     </Dialog>
   );
 }
 
-export function DialogContent({ service }: { service: Service }) {
-  const t = T.useTranslate();
+function DialogContent({ service }: { service: Service }) {
   const navigate = useNavigate();
-  const invalidate = useInvalidateApiQuery();
+  const t = T.useTranslate();
 
   const latestDeployment = useComputeDeployment(service.latestDeploymentId);
   const latestStashed = latestDeployment?.status === 'STASHED';
@@ -47,27 +46,23 @@ export function DialogContent({ service }: { service: Service }) {
   const form = useForm({
     defaultValues: {
       skipBuild: false,
-      useCache: hasBuild(latestDeployment),
+      useCache: false,
     },
   });
 
-  const redeploy = useMutation({
-    ...apiMutation('post /v1/services/{id}/redeploy', ({ skipBuild, useCache }: FormValues<typeof form>) => ({
+  useEffect(() => {
+    form.reset({ skipBuild: false, useCache: false });
+  }, [form, service]);
+
+  const resume = useMutation({
+    ...apiMutation('post /v1/services/{id}/resume', ({ skipBuild, useCache }: FormValues<typeof form>) => ({
       path: { id: service.id },
-      body: { skip_build: skipBuild, use_cache: useCache },
+      query: { skip_build: skipBuild, use_cache: useCache },
     })),
-    async onSuccess({ deployment }) {
-      await invalidate('get /v1/deployments');
-
+    onSuccess: async () => {
       closeDialog();
-
-      await navigate({
-        to: '/services/$serviceId',
-        params: { serviceId: service.id },
-        search: { deploymentId: deployment?.id },
-      });
-
-      notify.info(t('redeploying'));
+      await navigate({ to: '/services/$serviceId', params: { serviceId: service.id } });
+      notify.info(t('resuming'));
     },
   });
 
@@ -89,7 +84,7 @@ export function DialogContent({ service }: { service: Service }) {
         />
       )}
 
-      <form onSubmit={handleSubmit(form, redeploy.mutateAsync)} className="col gap-2">
+      <form onSubmit={handleSubmit(form, resume.mutateAsync)} className="col gap-2">
         {wasBuilt && (
           <>
             <div className="col items-start gap-4 rounded-md border p-3">

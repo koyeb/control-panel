@@ -5,11 +5,10 @@ import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 
 import { ControlledInput } from './controlled';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, DialogId } from './dialog';
 
 type ConfirmationDialogProps = {
-  id: string;
-  resourceId?: string;
+  id: DialogId;
   title: React.ReactNode;
   description: React.ReactNode;
   destructiveAction?: boolean;
@@ -23,7 +22,6 @@ type ConfirmationDialogProps = {
 
 export function ConfirmationDialog({
   id,
-  resourceId,
   title,
   description,
   destructiveAction,
@@ -41,12 +39,7 @@ export function ConfirmationDialog({
   });
 
   return (
-    <Dialog
-      id={id}
-      context={resourceId ? { resourceId } : undefined}
-      onClosed={form.reset}
-      className="col w-full max-w-xl gap-4"
-    >
+    <Dialog id={id} onClosed={form.reset} className="col w-full max-w-xl gap-4">
       <DialogHeader title={title} />
 
       <p className="text-dim">{description}</p>

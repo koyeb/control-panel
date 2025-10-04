@@ -1,47 +1,45 @@
 import { Button } from '@koyeb/design-system';
 
 import { notify } from 'src/application/notify';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { Secret } from 'src/model';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 
 const T = createTranslate('pages.secrets.editSecretDialog');
 
-type EditSecretDialogProps = {
-  secret: Secret;
-};
-
-export function EditSecretDialog({ secret }: EditSecretDialogProps) {
+export function EditSecretDialog() {
   const t = T.useTranslate();
-  const closeDialog = Dialog.useClose();
 
   return (
-    <Dialog id="EditSecret" context={{ secretId: secret.id }} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="title" />} />
+    <Dialog id="EditSecret" className="col w-full max-w-xl gap-4">
+      {(secret) => (
+        <>
+          <DialogHeader title={<T id="title" />} />
 
-      <p className="text-dim">
-        <T id="description" />
-      </p>
+          <p className="text-dim">
+            <T id="description" />
+          </p>
 
-      <SecretForm
-        secret={secret}
-        renderFooter={(formState) => (
-          <DialogFooter>
-            <CloseDialogButton>
-              <Translate id="common.cancel" />
-            </CloseDialogButton>
+          <SecretForm
+            secret={secret}
+            renderFooter={(formState) => (
+              <DialogFooter>
+                <CloseDialogButton>
+                  <Translate id="common.cancel" />
+                </CloseDialogButton>
 
-            <Button type="submit" loading={formState.isSubmitting}>
-              <T id="confirm" />
-            </Button>
-          </DialogFooter>
-        )}
-        onSubmitted={(name) => {
-          notify.success(t('successNotification', { name }));
-          closeDialog();
-        }}
-      />
+                <Button type="submit" loading={formState.isSubmitting}>
+                  <T id="confirm" />
+                </Button>
+              </DialogFooter>
+            )}
+            onSubmitted={(name) => {
+              notify.success(t('successNotification', { name }));
+              closeDialog();
+            }}
+          />
+        </>
+      )}
     </Dialog>
   );
 }

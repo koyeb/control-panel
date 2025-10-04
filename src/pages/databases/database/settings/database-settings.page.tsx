@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { getApi, isDatabaseDeployment, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -46,7 +46,6 @@ export function DatabaseSettingsPage() {
 function DeleteDatabaseService({ service }: { service: Service }) {
   const t = T.useTranslate();
 
-  const openDialog = Dialog.useOpen();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
@@ -88,7 +87,7 @@ function DeleteDatabaseService({ service }: { service: Service }) {
         <Button
           color="red"
           loading={mutation.isPending}
-          onClick={() => openDialog('ConfirmDeleteDatabaseService', { resourceId: service.id })}
+          onClick={() => openDialog('ConfirmDeleteDatabaseService')}
         >
           <T id="delete.delete" />
         </Button>
@@ -96,7 +95,6 @@ function DeleteDatabaseService({ service }: { service: Service }) {
 
       <ConfirmationDialog
         id="ConfirmDeleteDatabaseService"
-        resourceId={service.id}
         title={<T id="delete.confirmationDialog.title" />}
         description={<T id="delete.confirmationDialog.description" />}
         destructiveAction

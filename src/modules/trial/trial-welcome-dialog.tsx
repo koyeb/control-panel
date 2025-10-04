@@ -1,15 +1,13 @@
 import { Button } from '@koyeb/design-system';
 
 import { SvgComponent } from 'src/application/types';
-import { Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { IconCpu, IconGlobe, IconTrendingUp } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('modules.trial.welcomeDialog');
 
 export function TrialWelcomeDialog() {
-  const closeDialog = Dialog.useClose();
-
   return (
     <Dialog id="TrialWelcome" className="col w-full max-w-2xl gap-8">
       <div className="col gap-6">
