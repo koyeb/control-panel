@@ -62,7 +62,7 @@ export function DeleteOrganization() {
     async onSuccess(token) {
       await setToken(token, { queryClient });
       await navigate({ to: '/' });
-      notify.info(t('successNotification', { organizationName: organization?.name }));
+      notify.info(t('success', { organizationName: organization?.name }));
     },
   });
 

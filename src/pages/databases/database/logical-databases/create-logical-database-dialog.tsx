@@ -14,7 +14,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { DatabaseDeployment, Service } from 'src/model';
 import { getName } from 'src/utils/object';
 
-const T = createTranslate('pages.database.logicalDatabases.createDialog');
+const T = createTranslate('pages.database.logicalDatabases.create');
 
 const schema = z.object({
   name: z.string().min(1).max(63),
@@ -46,7 +46,7 @@ export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogic
     },
     async onSuccess(_, { name }) {
       await invalidate('get /v1/services/{id}', { path: { id: service.id } });
-      notify.info(t('successNotification', { name }));
+      notify.info(t('success', { name }));
       closeDialog();
     },
   });

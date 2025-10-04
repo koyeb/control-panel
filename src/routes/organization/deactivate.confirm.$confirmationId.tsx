@@ -23,7 +23,7 @@ export const Route = createFileRoute('/organization/deactivate/confirm/$confirma
         queryKey: getApiQueryKey('get /v1/account/organization', {}),
       });
 
-      notify.success(translate('modules.account.deactivateOrganization.deactivationSuccessNotification'));
+      notify.success(translate('modules.account.deactivateOrganization.deactivating'));
     } catch (error) {
       if (error instanceof Error) {
         notify.error(error.message);

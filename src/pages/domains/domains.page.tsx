@@ -1,8 +1,10 @@
 import { Button } from '@koyeb/design-system';
+import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useDomainsQuery, useOrganizationQuotas } from 'src/api';
+import { getApi, useDomainsQuery, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
+import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { QueryGuard } from 'src/components/query-error';
@@ -12,7 +14,6 @@ import { useOnRouteStateCreate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Domain } from 'src/model';
 
-import { BulkDeleteDomainsDialog } from './components/bulk-delete-domains-dialog';
 import { CreateDomainDialog } from './components/create-domain-dialog';
 import { DomainsList } from './components/domains-list';
 import { DomainsLocked } from './components/domains-locked';
@@ -35,6 +36,18 @@ export function DomainsPage() {
   const domains = query.data;
   const hasDomains = domains !== undefined && domains.length > 0;
 
+  const bulkDeleteMutation = useBulkDeleteMutation(() => clear());
+
+  const onBulkDelete = () => {
+    openDialog('Confirmation', {
+      title: t('bulkDelete.title'),
+      description: t('bulkDelete.description', { count: selected.size }),
+      confirmationText: t('bulkDelete.confirmationText'),
+      submitText: t('bulkDelete.confirm'),
+      onConfirm: () => bulkDeleteMutation.mutateAsync(Array.from(selected.values())),
+    });
+  };
+
   if (quotas.maxDomains === 0 && !hasDomains) {
     return <DomainsLocked />;
   }
@@ -49,7 +62,7 @@ export function DomainsPage() {
           <div className="row gap-4">
             <Button
               variant="outline"
-              onClick={() => openDialog('ConfirmBulkDeleteDomains')}
+              onClick={onBulkDelete}
               className={clsx(selected.size === 0 && '!hidden')}
             >
               <T id="deleteDomains" values={{ count: selected.size }} />
@@ -74,8 +87,6 @@ export function DomainsPage() {
         )}
       </QueryGuard>
 
-      <BulkDeleteDomainsDialog domains={selected} onDeleted={clear} />
-
       <CreateDomainDialog
         onCreated={(domainId) => {
           setExpanded(domainId);
@@ -84,4 +95,28 @@ export function DomainsPage() {
       />
     </div>
   );
+}
+
+function useBulkDeleteMutation(onDeleted: () => void) {
+  const t = T.useTranslate();
+  const invalidate = useInvalidateApiQuery();
+
+  return useMutation({
+    async mutationFn(domains: Domain[]) {
+      const api = getApi();
+
+      return Promise.allSettled(
+        domains.map((domain) => api('delete /v1/domains/{id}', { path: { id: domain.id } })),
+      );
+    },
+    async onSuccess(result) {
+      await invalidate('get /v1/domains');
+
+      const fulfilled = result.filter((result) => result.status === 'fulfilled');
+      notify.success(t('bulkDelete.successNotification', { count: fulfilled.length }));
+
+      closeDialog();
+      onDeleted();
+    },
+  });
 }

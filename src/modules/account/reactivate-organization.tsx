@@ -19,7 +19,7 @@ export function ReactivateOrganization() {
     }),
     async onSuccess() {
       await invalidate('get /v1/account/organization');
-      notify.info(t('successNotification'));
+      notify.info(t('success'));
     },
   });
 

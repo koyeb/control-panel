@@ -1,12 +1,10 @@
-import { ButtonMenuItem, InfoTooltip, Input, Table, useBreakpoint } from '@koyeb/design-system';
+import { InfoTooltip, Input, Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { apiQuery, mapSnapshot, mapVolume, useService } from 'src/api';
 import { formatBytes } from 'src/application/memory';
-import { ActionsMenu } from 'src/components/actions-menu';
-import { openDialog } from 'src/components/dialog';
 import { LinkButton } from 'src/components/link';
 import { NoResource } from 'src/components/no-resource';
 import { Pagination, usePagination } from 'src/components/pagination';
@@ -15,17 +13,17 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
-import { IconPen, IconPlus, IconSearch, IconTrash } from 'src/icons';
+import { IconSearch } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
 
 import { AttachVolumeButton } from './attach-volume-button';
 import { CreateSnapshotDialog } from './create-snapshot-dialog';
-import { DeleteVolumeDialog } from './delete-volume-dialog';
 import { EditVolumeDialog } from './edit-volume-dialog';
+import { VolumeActions } from './volume-actions';
 
-const T = createTranslate('pages.volumes.volumesList');
+const T = createTranslate('pages.volumes.list');
 
 export function VolumesListSection() {
   const t = T.useTranslate();
@@ -133,14 +131,13 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
           },
           actions: {
             className: clsx('w-[1%]'),
-            render: (volume) => <Actions volume={volume} />,
+            render: (volume) => <VolumeActions volume={volume} />,
           },
         }}
       />
 
       <EditVolumeDialog />
       <CreateSnapshotDialog />
-      <DeleteVolumeDialog />
     </>
   );
 }
@@ -179,30 +176,5 @@ function AttachedService({ volume, serviceId }: { volume: Volume; serviceId?: st
       <ServiceTypeIcon type={service.type} size="small" />
       {service.name}
     </LinkButton>
-  );
-}
-
-function Actions({ volume }: { volume: Volume }) {
-  return (
-    <ActionsMenu>
-      {(withClose) => (
-        <>
-          <ButtonMenuItem onClick={withClose(() => openDialog('EditVolume', volume))}>
-            <IconPen className="size-4" />
-            <T id="actions.edit" />
-          </ButtonMenuItem>
-
-          <ButtonMenuItem onClick={withClose(() => openDialog('CreateSnapshotFromVolume', volume))}>
-            <IconPlus className="size-4" />
-            <T id="actions.createSnapshot" />
-          </ButtonMenuItem>
-
-          <ButtonMenuItem onClick={withClose(() => openDialog('ConfirmDeleteVolume', volume))}>
-            <IconTrash className="size-4" />
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        </>
-      )}
-    </ActionsMenu>
   );
 }

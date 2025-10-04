@@ -12,7 +12,7 @@ import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
 
-const T = createTranslate('pages.volumes.volumesList.editDialog');
+const T = createTranslate('pages.volumes.edit');
 
 export function EditVolumeDialog() {
   return (

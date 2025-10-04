@@ -7,11 +7,7 @@ import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
 import { AppItem } from './app-item';
-import {
-  DeleteAppConfirmationDialog,
-  EditAppDialog,
-  PauseAppConfirmationDialog,
-} from './components/app-dialogs';
+import { EditAppDialog } from './components/edit-app-dialog';
 
 const T = createTranslate('pages.home');
 
@@ -41,8 +37,6 @@ export function Apps({ apps, showFilters = false }: { apps: AppFull[]; showFilte
       })}
 
       <EditAppDialog />
-      <PauseAppConfirmationDialog />
-      <DeleteAppConfirmationDialog />
     </div>
   );
 }

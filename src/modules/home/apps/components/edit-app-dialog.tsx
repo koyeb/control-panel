@@ -4,9 +4,8 @@ import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, getApi, useInvalidateApiQuery } from 'src/api';
+import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { ControlledInput } from 'src/components/controlled';
 import {
   CloseDialogButton,
@@ -24,7 +23,7 @@ import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { isSlug } from 'src/utils/strings';
 
-const T = createTranslate('pages.home');
+const T = createTranslate('pages.home.apps.edit');
 
 const editAppSchema = z.object({
   name: z
@@ -93,7 +92,7 @@ export function EditAppDialog() {
     async onSuccess(_, values) {
       await invalidate('get /v1/apps');
       form.reset(values);
-      notify.info(t('editAppDialog.successNotification'));
+      notify.info(t('success'));
       closeDialog();
     },
     onError: useFormErrorHandler(form),
@@ -101,17 +100,17 @@ export function EditAppDialog() {
 
   return (
     <Dialog id="EditApp" onClosed={form.reset} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="editAppDialog.title" />} />
+      <DialogHeader title={<T id="title" />} />
 
       <form className="col gap-4" onSubmit={handleSubmit(form, mutation.mutateAsync)}>
-        <Alert variant="warning" description={<T id="appActions.editAppNameWarning" />} />
+        <Alert variant="warning" description={<T id="warning" />} />
 
-        <ControlledInput control={form.control} name="name" label={<T id="editAppDialog.appNameLabel" />} />
+        <ControlledInput control={form.control} name="name" label={<T id="appNameLabel" />} />
 
         <ControlledInput
           control={form.control}
           name="subdomain"
-          label={<T id="editAppDialog.appDomainLabel" />}
+          label={<T id="appDomainLabel" />}
           end={<div className="row items-center px-2 text-dim">{domainSuffix}</div>}
         />
 
@@ -143,61 +142,4 @@ function splitDomain(domain: AppDomain | undefined): [string, string] {
   assert(domain !== undefined);
 
   return [domain.name.substring(0, index), domain.name.substring(index)];
-}
-
-export function PauseAppConfirmationDialog() {
-  const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
-  const app = useDialogContext<'ConfirmPauseApp'>();
-
-  const { mutateAsync: pauseApp } = useMutation({
-    ...apiMutation('post /v1/apps/{id}/pause', {
-      path: { id: app?.id as string },
-    }),
-    onSuccess() {
-      void invalidate('get /v1/apps');
-      notify.info(t('pauseAppConfirmationDialog.successNotification'));
-      closeDialog();
-    },
-  });
-
-  return (
-    <ConfirmationDialog
-      id="ConfirmPauseApp"
-      title={<T id="pauseAppConfirmationDialog.title" />}
-      description={<T id="pauseAppConfirmationDialog.description" />}
-      confirmationText={app?.name ?? ''}
-      submitText={<T id="pauseAppConfirmationDialog.confirm" />}
-      onConfirm={pauseApp}
-    />
-  );
-}
-
-export function DeleteAppConfirmationDialog() {
-  const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
-  const app = useDialogContext<'ConfirmDeleteApp'>();
-
-  const { mutateAsync: deleteApp } = useMutation({
-    ...apiMutation('delete /v1/apps/{id}', {
-      path: { id: app?.id as string },
-    }),
-    onSuccess() {
-      void invalidate('get /v1/apps');
-      notify.info(t('deleteAppConfirmationDialog.successNotification'));
-      closeDialog();
-    },
-  });
-
-  return (
-    <ConfirmationDialog
-      id="ConfirmDeleteApp"
-      title={<T id="deleteAppConfirmationDialog.title" />}
-      description={<T id="deleteAppConfirmationDialog.description" />}
-      destructiveAction
-      confirmationText={app?.name ?? ''}
-      submitText={<T id="deleteAppConfirmationDialog.confirm" />}
-      onConfirm={deleteApp}
-    />
-  );
 }

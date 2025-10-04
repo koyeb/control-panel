@@ -10,7 +10,7 @@ import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { Domain } from 'src/model';
 
-const T = createTranslate('pages.domains.domainsList.dnsConfiguration');
+const T = createTranslate('pages.domains.list.dnsConfiguration');
 
 export function DnsConfiguration({ domain }: { domain: Domain }) {
   const t = T.useTranslate();

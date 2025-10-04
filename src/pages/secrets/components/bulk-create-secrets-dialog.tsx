@@ -14,7 +14,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { dotenvParse } from 'src/utils/dotenv';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('pages.secrets.bulkCreateSecretsDialog');
+const T = createTranslate('pages.secrets.bulkCreate');
 
 export function BulkCreateSecretsDialog({ onCreated }: { onCreated?: () => void }) {
   const t = T.useTranslate();

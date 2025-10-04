@@ -11,7 +11,7 @@ import { createTranslate } from 'src/intl/translate';
 import { Domain } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('pages.domains.domainsList.changeApp');
+const T = createTranslate('pages.domains.list.changeApp');
 
 export function ChangeAppForm({ domain }: { domain: Domain }) {
   const t = T.useTranslate();

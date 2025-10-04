@@ -5,7 +5,7 @@ import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } fr
 import { Translate, createTranslate } from 'src/intl/translate';
 import { SecretForm } from 'src/modules/secrets/simple/simple-secret-form';
 
-const T = createTranslate('pages.secrets.editSecretDialog');
+const T = createTranslate('pages.secrets.edit');
 
 export function EditSecretDialog() {
   const t = T.useTranslate();

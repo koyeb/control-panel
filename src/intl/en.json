@@ -323,9 +323,9 @@
         "label": "Delete account",
         "description": "Once this operation is performed, your account will be permanently deleted",
         "mustLeaveOrganizations": "You must leave or delete all your organizations before you can delete your account",
-        "cta": "Delete",
-        "successNotification": "Your Koyeb account was deleted",
-        "confirmationDialog": {
+        "delete": "Delete",
+        "success": "Your Koyeb account was deleted",
+        "confirmation": {
           "title": "Delete account",
           "description": "Your user account will be deleted. Are you sure?",
           "confirm": "Delete account"
@@ -335,23 +335,21 @@
         "title": "Deactivate the organization",
         "description": "When you deactivate an organization, all associated resources will be deleted: Apps, Services, Secrets, Domains, GitHub app and API credentials. You can reactivate an organization at any time.",
         "deactivate": "Deactivate",
-        "deactivationRequestSuccessNotification": "We've sent you an email to confirm the deactivation of your organization",
-        "deactivationSuccessNotification": "Your organization is being deactivated",
+        "success": "We've sent you an email to confirm the deactivation of your organization",
         "deactivating": "Your organization is being deactivated..."
       },
       "reactivateOrganization": {
         "title": "Reactivate the organization",
         "description": "Activate the organization to start using this Koyeb organization again.",
         "reactivate": "Reactivate",
-        "successNotification": "Your organization was reactivated"
+        "success": "Your organization was reactivated"
       },
       "deleteOrganization": {
         "title": "Delete the organization",
         "description": "Permanently delete the organization and the associated payment information",
         "delete": "Delete",
-        "successNotification": "Your organization {organizationName} was deleted",
+        "success": "Your organization {organizationName} was deleted",
         "unpaidInvoicesPending": "Checking for unpaid invoices...",
-        "deactivating": "Your organization is being deactivated...",
         "hasUnpaidInvoices": "Your organization has unpaid invoices. Settle the outstanding payment to be able to delete the organization.",
         "mustBeDeactivated": "The organization must first be deactivated before it can be deleted"
       }
@@ -2001,18 +1999,18 @@
           "description": "Create the first database to use this database service",
           "cta": "Create database"
         },
-        "createDialog": {
+        "create": {
           "title": "Create database",
           "nameLabel": "Name",
           "ownerLabel": "Owner",
           "noRoles": "No roles found, create a database role first",
-          "successNotification": "Database <strong>{name}</strong> created"
+          "success": "Database <strong>{name}</strong> created"
         },
-        "deleteDialog": {
+        "delete": {
           "title": "Delete database",
           "description": "Your database will be permanently deleted. Are you sure you want to continue?",
           "confirm": "Delete database",
-          "successNotification": "Your database <strong>{name}</strong> has been deleted"
+          "success": "Your database <strong>{name}</strong> has been deleted"
         }
       },
       "roles": {
@@ -2030,16 +2028,16 @@
           "description": "Create your first role to use this database service",
           "cta": "Create role"
         },
-        "createDialog": {
+        "create": {
           "title": "Create role",
           "nameLabel": "Role name",
-          "successNotification": "Role <strong>{name}</strong> created"
+          "success": "Role <strong>{name}</strong> created"
         },
-        "deleteDialog": {
+        "delete": {
           "title": "Delete role",
           "description": "Your database role will be permanently deleted. Are you sure you want to continue?",
           "confirm": "Delete role",
-          "successNotification": "Your role <strong>{name}</strong> has been deleted"
+          "success": "Your role <strong>{name}</strong> has been deleted"
         }
       },
       "settings": {
@@ -2047,11 +2045,11 @@
           "title": "Delete database service",
           "description": "This action will permanently delete your database service. This means that you will not be able to use it.",
           "delete": "Delete",
-          "successNotification": "Your database service <strong>{serviceName}</strong> is being deleted",
-          "confirmationDialog": {
+          "confirmation": {
             "title": "Delete database service",
             "description": "Your database service and all the data it contains will be permanently deleted. Are you sure you want to continue?",
-            "confirm": "Delete database"
+            "confirm": "Delete database",
+            "success": "Your database service <strong>{serviceName}</strong> is being deleted"
           }
         }
       }
@@ -2104,30 +2102,7 @@
       "title": "Domains",
       "deleteDomains": "Delete selected ({count})",
       "createDomain": "Add domain",
-      "createDialog": {
-        "title": "Create domain",
-        "description": "Create a custom domain and assign it to one of your Koyeb app",
-        "domainNameLabel": "Domain name",
-        "domainNamePlaceholder": "e.g. domain.tld",
-        "appLabel": "Assign to Koyeb app",
-        "noApps": "No apps found",
-        "submitButton": "Create domain",
-        "successNotification": "Domain <strong>{domainName}</strong> created"
-      },
-      "bulkDelete": {
-        "title": "Delete domains",
-        "description": "Are you sure you want to delete these {count} {count, plural, =1 {domain} other {domains}}?",
-        "successNotification": "{count} {count, plural, =1 {domain} other {domains}} are being deleted",
-        "confirmationText": "delete",
-        "cta": "Delete"
-      },
-      "deleteDialog": {
-        "title": "Delete domain",
-        "description": "Are you sure you want to delete the <strong>{domainName}</strong> domain?",
-        "confirm": "Delete domain",
-        "successNotification": "Domain <strong>{domainName}</strong> is being deleted"
-      },
-      "domainsList": {
+      "list": {
         "name": "Name",
         "status": "Status",
         "assignedTo": "Assigned to",
@@ -2166,7 +2141,30 @@
           "cta": "Add domain"
         }
       },
-      "domainsLocked": {
+      "createDialog": {
+        "title": "Create domain",
+        "description": "Create a custom domain and assign it to one of your Koyeb app",
+        "domainNameLabel": "Domain name",
+        "domainNamePlaceholder": "e.g. domain.tld",
+        "appLabel": "Assign to Koyeb app",
+        "noApps": "No apps found",
+        "submitButton": "Create domain",
+        "successNotification": "Domain <strong>{domainName}</strong> created"
+      },
+      "bulkDelete": {
+        "title": "Delete domains",
+        "description": "Are you sure you want to delete these {count} {count, plural, =1 {domain} other {domains}}?",
+        "successNotification": "{count} {count, plural, =1 {domain} other {domains}} are being deleted",
+        "confirmationText": "delete",
+        "confirm": "Delete"
+      },
+      "delete": {
+        "title": "Delete domain",
+        "description": "Are you sure you want to delete the <strong>{domainName}</strong> domain?",
+        "confirm": "Delete domain",
+        "successNotification": "Domain <strong>{domainName}</strong> is being deleted"
+      },
+      "locked": {
         "title": "Enable domains",
         "subTitle": "Domains allow you to access your apps using your own domains",
         "description": "Domains make your apps accessible via your own domain names like www.mydomain.tld or api.example.io.<br></br>Upgrade your plan and get started adding your first domain.",
@@ -2178,6 +2176,10 @@
       "title": "Overview",
       "services": "Services",
       "servicesSummary": "{web} {web, plural, one {web service} other {web services}}, {worker} {worker, plural, one {worker} other {workers}}, {database} {database, plural, one {database} other {databases}}",
+      "copyServiceUrlSuccess": "Service URL copied to clipboard",
+      "postgresVersion": "Postgres (v{version})",
+      "noServices": "This app has no services",
+      "appTooltip": "Apps allow you to group your services together and provide a gateway to expose web services under the same domain",
       "serviceType": {
         "all": "All services",
         "web": "Web services",
@@ -2185,33 +2187,34 @@
         "database": "Database services",
         "model": "Models"
       },
-      "appTooltip": "Apps allow you to group your services together and provide a gateway to expose web services under the same domain",
-      "appActions": {
-        "label": "App Actions",
-        "addService": "Add service",
-        "addDomain": "Add domain",
-        "edit": "Edit app",
-        "editAppNameWarning": "If you change the app name, your app's services will be assigned a new private address on the service mesh. The public URL will not be changed.",
-        "pauseServices": "Pause all services",
-        "deleteApp": "Delete app"
-      },
-      "editAppDialog": {
-        "title": "Edit app",
-        "appNameLabel": "App name",
-        "appDomainLabel": "Koyeb subdomain",
-        "successNotification": "Your app was edited"
-      },
-      "pauseAppConfirmationDialog": {
-        "title": "Pause app services",
-        "description": "Your app's services will be paused and all their deployments stopped. Are you sure you want to continue?",
-        "confirm": "Pause services",
-        "successNotification": "Your app's service are being paused"
-      },
-      "deleteAppConfirmationDialog": {
-        "title": "Delete app",
-        "description": "Your app and all its associated services will be permanently deleted. Are you sure you want to continue?",
-        "confirm": "Delete app",
-        "successNotification": "Your app is being deleted"
+      "apps": {
+        "actions": {
+          "label": "App Actions",
+          "addService": "Add service",
+          "addDomain": "Add domain",
+          "edit": "Edit app",
+          "pauseServices": "Pause all services",
+          "deleteApp": "Delete app"
+        },
+        "edit": {
+          "title": "Edit app",
+          "appNameLabel": "App name",
+          "appDomainLabel": "Koyeb subdomain",
+          "warning": "If you change the app name, your app's services will be assigned a new private address on the service mesh. The public URL will not be changed.",
+          "success": "Your app was edited"
+        },
+        "pause": {
+          "title": "Pause app services",
+          "description": "Your app's services will be paused and all their deployments stopped. Are you sure you want to continue?",
+          "confirm": "Pause services",
+          "success": "Your app's service are being paused"
+        },
+        "delete": {
+          "title": "Delete app",
+          "description": "Your app and all its associated services will be permanently deleted. Are you sure you want to continue?",
+          "confirm": "Delete app",
+          "success": "Your app is being deleted"
+        }
       },
       "deploymentSource": {
         "archive": "Archive"
@@ -2222,11 +2225,6 @@
         "resume": "Triggered because you resumed this service",
         "git": "{commit} {branch} <by>by</by> {author}"
       },
-      "copyServiceUrlSuccess": "Service URL copied to clipboard",
-      "postgresVersion": "Postgres (v{version})",
-      "noServices": "This app has no services",
-      "deleteApp": "Delete app",
-      "deletingApp": "App <strong>{name}</strong> is being deleted",
       "activity": {
         "title": "Activity",
         "viewAll": "View all",
@@ -2375,7 +2373,7 @@
         "description": "Secrets enable you to secure your code by removing hardcoded credentials and let you pass environment variables securely to your applications",
         "cta": "Create secret"
       },
-      "secretsList": {
+      "list": {
         "name": "Name",
         "value": "Value",
         "updated": "Last updated",
@@ -2385,31 +2383,31 @@
           "delete": "Remove"
         }
       },
-      "bulkDelete": {
-        "title": "Delete secrets",
-        "description": "Are you sure you want to delete these {count} {count, plural, =1 {secret} other {secrets}}?",
-        "successNotification": "{count} {count, plural, =1 {secret} other {secrets}} deleted",
-        "confirmationText": "delete",
-        "cta": "Delete"
+      "edit": {
+        "title": "Edit secret",
+        "description": "All Secret values are automatically encrypted server-side to ensure secure storage",
+        "confirm": "Edit secret",
+        "successNotification": "Secret <strong>{name}</strong> updated"
       },
-      "bulkCreateSecretsDialog": {
+      "delete": {
+        "title": "Delete secret",
+        "description": "Are you sure you want to delete the <strong>{name}</strong> secret?",
+        "confirm": "Delete secret",
+        "successNotification": "Secret {name} deleted"
+      },
+      "bulkCreate": {
         "title": "Import secrets",
         "description": "Enter up to 30 secrets using the format <code>key=value</code>. Creating multi-line secrets is possible by wrapping the value between quotes.",
         "tooManySecrets": "Too many secrets",
         "successNotification": "{created} {created, plural, =1 {secret} other {secrets}} created",
         "errorNotification": "Failed to create {names}"
       },
-      "editSecretDialog": {
-        "title": "Edit secret",
-        "description": "All Secret values are automatically encrypted server-side to ensure secure storage",
-        "confirm": "Edit secret",
-        "successNotification": "Secret <strong>{name}</strong> updated"
-      },
-      "deleteSecretDialog": {
-        "title": "Delete secret",
-        "description": "Are you sure you want to delete the <strong>{name}</strong> secret?",
-        "confirm": "Delete secret",
-        "successNotification": "Secret {name} deleted"
+      "bulkDelete": {
+        "title": "Delete secrets",
+        "description": "Are you sure you want to delete these {count} {count, plural, =1 {secret} other {secrets}}?",
+        "successNotification": "{count} {count, plural, =1 {secret} other {secrets}} deleted",
+        "confirmationText": "delete",
+        "cta": "Delete"
       }
     },
     "service": {
@@ -2593,30 +2591,30 @@
         "title": "Service settings",
         "description": "Updating your service settings will create a new deployment.",
         "saved": "Service settings saved",
-        "duplicateService": {
+        "duplicate": {
           "title": "Duplicate service",
           "description": "Create a new service from this configuration.",
           "duplicate": "Duplicate"
         },
-        "pauseService": {
+        "pause": {
           "title": "Pause service",
           "description": "Once this operation is performed, your service will be paused and all active deployments stopped. You can wake-up your service by clicking the \"Resume\" button below.",
           "pause": "Pause",
           "resume": "Resume",
           "pausing": "Your service is being paused",
           "resuming": "Your service is being resumed",
-          "confirmationDialog": {
+          "confirmation": {
             "title": "Pause service",
             "description": "Your service will be paused and all its deployments stopped. Are you sure you want to continue?",
             "confirm": "Pause service"
           }
         },
-        "deleteService": {
+        "delete": {
           "title": "Delete service",
           "description": "Once this operation is performed, your service will be permanently deleted.",
           "delete": "Delete",
           "deleting": "Your service is being deleted",
-          "confirmationDialog": {
+          "confirmation": {
             "title": "Delete service",
             "description": "Your service will be permanently deleted. Are you sure you want to continue?",
             "confirm": "Delete service"
@@ -2909,11 +2907,11 @@
         "manage": "Manage",
         "switch": "Switch",
         "createOrganization": "Create organization",
-        "createOrganizationDialog": {
+        "create": {
           "title": "Create organization",
           "description": "Create a new organization to collaborate with others. To get started, name your new Koyeb organization.",
           "organizationNameLabel": "Organization name",
-          "successNotification": "The organization {organizationName} was created"
+          "success": "The organization {organizationName} was created"
         }
       },
       "apiCredential": {
@@ -2932,21 +2930,23 @@
             "cta": "Create access token"
           }
         },
-        "createDialog": {
+        "create": {
           "title": "Create personal access token",
           "description": "Create a personal token to access Koyeb programmatically. Those access tokens will be able to perform actions on behalf of your user <strong>{userName}</strong>.",
           "nameLabel": "Name",
           "descriptionLabel": "Description",
           "submitButton": "Create access token",
-          "successNotification": "Personal access token <strong>{name}</strong> created",
-          "createdTitle": "Access token created",
-          "createdDescription": "Your personal access token was created. Make sure you keep it stored it in a secure place, you won't be able to see it again."
+          "success": "Personal access token <strong>{name}</strong> created"
         },
-        "deleteDialog": {
+        "created": {
+          "title": "Access token created",
+          "description": "Your personal access token was created. Make sure you keep it stored it in a secure place, you won't be able to see it again."
+        },
+        "delete": {
           "title": "Delete personal access token",
           "description": "Are you sure you want to delete the <strong>{name}</strong> personal access token?",
           "confirm": "Delete token",
-          "successNotification": "The personal access token <strong>{name}</strong> was deleted"
+          "success": "The personal access token <strong>{name}</strong> was deleted"
         }
       }
     },
@@ -3003,7 +3003,12 @@
         "volumes": "Volumes",
         "snapshots": "Snapshots"
       },
-      "volumesList": {
+      "list": {
+        "noVolumes": {
+          "title": "You don't have any volumes yet",
+          "description": "Volumes provide additional, persistent, storage capacity for your services",
+          "cta": "Create volume"
+        },
         "header": {
           "search": "Search",
           "createVolume": "Create volume"
@@ -3025,75 +3030,6 @@
           "edit": "Edit",
           "createSnapshot": "Create snapshot",
           "delete": "Delete"
-        },
-        "noVolumes": {
-          "title": "You don't have any volumes yet",
-          "description": "Volumes provide additional, persistent, storage capacity for your services",
-          "cta": "Create volume"
-        },
-        "createSnapshotDialog": {
-          "title": "Create snapshot",
-          "description": "Choose a name for your snapshot",
-          "nameLabel": "Name",
-          "namePlaceholder": "my-snapshot",
-          "successNotification": "Snapshot <strong>{name}</strong> created"
-        },
-        "editDialog": {
-          "title": "Edit volume",
-          "description": "Change the name of your volume",
-          "name": {
-            "label": "Volume name",
-            "placeholder": "my-volume"
-          },
-          "updated": "Volume <strong>{name}</strong> updated"
-        },
-        "deleteDialog": {
-          "title": "Delete volume",
-          "description": "Are you sure you want to delete the {name} volume?",
-          "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
-          "confirm": "Delete volume",
-          "deleteSuccess": "Volume <strong>{name}</strong> is being deleted"
-        }
-      },
-      "snapshotsList": {
-        "title": "Snapshots",
-        "name": "Name",
-        "volumeName": "Parent volume",
-        "created": "Created",
-        "region": "Region",
-        "size": "Size",
-        "status": "Status",
-        "type": "Storage type",
-        "snapshotType": {
-          "invalid": "Invalid",
-          "local": "Local",
-          "remote": "Remote"
-        },
-        "actions": {
-          "createVolume": "Create volume",
-          "cannotCreateVolume": "Wait while we create the snapshot",
-          "update": "Edit",
-          "delete": "Delete"
-        },
-        "noSnapshots": {
-          "title": "You don't have any volume snapshots yet",
-          "description": "Snapshots are point-in-time copies of your volumes, allowing you to restore or create new volumes from previous states"
-        },
-        "createVolumeDialog": {
-          "title": "Create volume from snapshot"
-        },
-        "editDialog": {
-          "title": "Edit snapshot",
-          "nameLabel": "Name",
-          "namePlaceholder": "my-snapshot",
-          "successNotification": "Snapshot <strong>{name}</strong> edited"
-        },
-        "deleteDialog": {
-          "title": "Delete snapshot",
-          "description": "Are you sure you want to delete the {name} snapshot?",
-          "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
-          "confirm": "Delete snapshot",
-          "deleteSuccess": "Snapshot <strong>{name}</strong> is being deleted"
         }
       },
       "create": {
@@ -3119,6 +3055,72 @@
         },
         "submit": "Create volume",
         "created": "Volume <strong>{name}</strong> created"
+      },
+      "edit": {
+        "title": "Edit volume",
+        "description": "Change the name of your volume",
+        "name": {
+          "label": "Volume name",
+          "placeholder": "my-volume"
+        },
+        "updated": "Volume <strong>{name}</strong> updated"
+      },
+      "delete": {
+        "title": "Delete volume",
+        "description": "Are you sure you want to delete the <strong>{name}</strong> volume?",
+        "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
+        "confirm": "Delete volume",
+        "success": "Volume <strong>{name}</strong> is being deleted"
+      },
+      "createSnapshot": {
+        "title": "Create snapshot",
+        "description": "Choose a name for your snapshot",
+        "nameLabel": "Name",
+        "namePlaceholder": "my-snapshot",
+        "success": "Snapshot <strong>{name}</strong> created"
+      }
+    },
+    "snapshots": {
+      "list": {
+        "title": "Snapshots",
+        "name": "Name",
+        "volumeName": "Parent volume",
+        "created": "Created",
+        "region": "Region",
+        "size": "Size",
+        "status": "Status",
+        "type": "Storage type",
+        "snapshotType": {
+          "invalid": "Invalid",
+          "local": "Local",
+          "remote": "Remote"
+        },
+        "actions": {
+          "createVolume": "Create volume",
+          "cannotCreateVolume": "Wait while we create the snapshot",
+          "update": "Edit",
+          "delete": "Delete"
+        },
+        "noSnapshots": {
+          "title": "You don't have any volume snapshots yet",
+          "description": "Snapshots are point-in-time copies of your volumes, allowing you to restore or create new volumes from previous states"
+        }
+      },
+      "createVolume": {
+        "title": "Create volume from snapshot"
+      },
+      "edit": {
+        "title": "Edit snapshot",
+        "nameLabel": "Name",
+        "namePlaceholder": "my-snapshot",
+        "success": "Snapshot <strong>{name}</strong> edited"
+      },
+      "delete": {
+        "title": "Delete snapshot",
+        "description": "Are you sure you want to delete the <strong>{name}</strong> snapshot?",
+        "destructiveActionWarning": "All the data will be permanently deleted. This action cannot be undone.",
+        "confirm": "Delete snapshot",
+        "success": "Snapshot <strong>{name}</strong> is being deleted"
       }
     },
     "notFound": {

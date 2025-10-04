@@ -361,7 +361,7 @@ function DownloadUsageForm() {
       />
 
       <footer className="row justify-end gap-2">
-        <Button color="gray" variant="ghost" onClick={closeDialog}>
+        <Button color="gray" variant="ghost" onClick={() => closeDialog()}>
           <Translate id="common.close" />
         </Button>
         <Button type="submit" loading={form.formState.isSubmitting}>

@@ -19,7 +19,7 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('pages.volumes.snapshotsList.editDialog');
+const T = createTranslate('pages.snapshots.edit');
 
 const schema = z.object({
   name: z.string().min(2).max(63),
@@ -44,7 +44,7 @@ export function EditSnapshotDialog() {
     })),
     async onSuccess({ snapshot }) {
       await invalidate('get /v1/snapshots');
-      notify.success(t('successNotification', { name: snapshot!.name! }));
+      notify.success(t('success', { name: snapshot!.name! }));
       closeDialog();
     },
     onError: useFormErrorHandler(form),
