@@ -2,7 +2,7 @@ import { Alert, Button } from '@koyeb/design-system';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { useCatalogInstance, useRegionsCatalog } from 'src/api';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -11,7 +11,6 @@ import { ServiceFormSection } from '../../components/service-form-section';
 import { ServiceForm, ServiceFormSection as ServiceFormSectionType } from '../../service-form.types';
 import { useWatchServiceForm } from '../../use-service-form';
 
-import { CreateVolumeDialog } from './create-volume-dialog';
 import { VolumeFields } from './volume-fields';
 
 const T = createTranslate('modules.serviceForm.volumes');
@@ -34,7 +33,6 @@ export function VolumesSection() {
 
 function SectionContent() {
   const { fields, append, remove } = useFieldArray<ServiceForm, 'volumes'>({ name: 'volumes' });
-  const openDialog = Dialog.useOpen();
 
   const documentationLink = (children: React.ReactNode) => (
     <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
@@ -85,8 +83,6 @@ function SectionContent() {
           <T id="addVolume" />
         </Button>
       </div>
-
-      <CreateVolumeDialog />
     </>
   );
 }

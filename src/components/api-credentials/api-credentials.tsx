@@ -6,7 +6,7 @@ import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate } from 'src/intl/translate';
 import { ApiCredential, ApiCredentialType } from 'src/model';
 
-import { Dialog } from '../dialog';
+import { openDialog } from '../dialog';
 
 import { ApiCredentialsList } from './api-credentials-list';
 import { CreateApiCredentialDialog } from './create-api-credential-dialog';
@@ -19,8 +19,6 @@ type ApiCredentialsProps = {
 };
 
 export function ApiCredentials({ type, loading, error, credentials = [] }: ApiCredentialsProps) {
-  const openDialog = Dialog.useOpen();
-
   if (loading) {
     return (
       <Loading>

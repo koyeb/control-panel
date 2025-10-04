@@ -3,9 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
-import { UpgradeDialog } from 'src/components/payment-form';
 import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { OrganizationPlan } from 'src/model';
@@ -16,9 +15,6 @@ const T = createTranslate('pages.organizationSettings.plans');
 
 export function ChangePlanButton({ plan }: { plan: Plan }) {
   const organization = useOrganization();
-
-  const openDialog = Dialog.useOpen();
-  const closeDialog = Dialog.useClose();
 
   const onPlanChanged = () => {
     closeDialog();
@@ -31,7 +27,12 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
     if (organization?.hasPaymentMethod) {
       mutation.mutate(plan);
     } else {
-      openDialog('Upgrade', { plan });
+      openDialog('Upgrade', {
+        plan,
+        title: <T id="upgradeDialog.title" values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />,
+        submit: <T id="upgradeDialog.submit" />,
+        onPlanChanged,
+      });
     }
   };
 
@@ -60,29 +61,20 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   };
 
   return (
-    <>
-      <Tooltip content={organization?.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
-        {(props) => (
-          <div {...props}>
-            <Button
-              disabled={disabled()}
-              loading={mutation.isPending}
-              onClick={onChangePlan}
-              className="w-full"
-            >
-              {text()}
-            </Button>
-          </div>
-        )}
-      </Tooltip>
-
-      <UpgradeDialog
-        plan={plan}
-        onPlanChanged={onPlanChanged}
-        title={<T id="upgradeDialog.title" values={{ plan: <TranslateEnum enum="plans" value={plan} /> }} />}
-        submit={<T id="upgradeDialog.submit" />}
-      />
-    </>
+    <Tooltip content={organization?.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
+      {(props) => (
+        <div {...props}>
+          <Button
+            disabled={disabled()}
+            loading={mutation.isPending}
+            onClick={onChangePlan}
+            className="w-full"
+          >
+            {text()}
+          </Button>
+        </div>
+      )}
+    </Tooltip>
   );
 }
 

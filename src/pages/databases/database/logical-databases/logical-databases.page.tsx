@@ -1,19 +1,21 @@
 import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
+import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { isDatabaseDeployment, useDeployment, useService } from 'src/api';
+import { isDatabaseDeployment, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
+import { notify } from 'src/application/notify';
+import { updateDatabaseService } from 'src/application/service-functions';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useOnRouteStateCreate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
-import { DatabaseDeployment, LogicalDatabase, Service } from 'src/model';
+import { LogicalDatabase, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
-import { getName } from 'src/utils/object';
+import { getName, hasProperty } from 'src/utils/object';
 
 import { CreateLogicalDatabaseDialog } from './create-logical-database-dialog';
-import { DeleteLogicalDatabaseDialog } from './delete-logical-database-dialog';
 
 const T = createTranslate('pages.database.logicalDatabases');
 
@@ -22,10 +24,10 @@ export function LogicalDatabasesPage() {
   const service = useService(databaseServiceId);
   const deployment = useDeployment(service?.latestDeploymentId);
 
-  const openDialog = Dialog.useOpen();
-
   useOnRouteStateCreate(() => {
-    openDialog('CreateLogicalDatabase');
+    if (service) {
+      openDialog('CreateLogicalDatabase');
+    }
   });
 
   if (!service || !deployment) {
@@ -76,9 +78,7 @@ export function LogicalDatabasesPage() {
             },
             actions: {
               className: clsx('w-12'),
-              render: (database) => (
-                <DatabaseActions service={service} deployment={deployment} database={database} />
-              ),
+              render: (database) => <DatabaseActions service={service} database={database} />,
             },
           }}
         />
@@ -89,30 +89,52 @@ export function LogicalDatabasesPage() {
   );
 }
 
-type DatabaseActionsProps = {
-  service: Service;
-  deployment: DatabaseDeployment;
-  database: LogicalDatabase;
-};
+function DatabaseActions({ service, database }: { service: Service; database: LogicalDatabase }) {
+  const t = T.useTranslate();
 
-function DatabaseActions({ service, deployment, database }: DatabaseActionsProps) {
-  const openDialog = Dialog.useOpen();
+  const deleteMutation = useDeleteMutation();
+
+  const onDelete = () => {
+    openDialog('Confirmation', {
+      title: t('delete.title'),
+      description: t('delete.description'),
+      destructiveAction: true,
+      confirmationText: database.name,
+      submitText: t('delete.confirm'),
+      onConfirm: () => deleteMutation.mutateAsync([service, database]),
+    });
+  };
 
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <ButtonMenuItem
-            onClick={withClose(() =>
-              openDialog('ConfirmDeleteLogicalDatabase', { resourceId: database.name }),
-            )}
-          >
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        )}
-      </ActionsMenu>
-
-      <DeleteLogicalDatabaseDialog service={service} deployment={deployment} database={database} />
-    </>
+    <ActionsMenu>
+      {(withClose) => (
+        <ButtonMenuItem onClick={withClose(onDelete)}>
+          <T id="actions.delete" />
+        </ButtonMenuItem>
+      )}
+    </ActionsMenu>
   );
+}
+
+function useDeleteMutation() {
+  const t = T.useTranslate();
+  const invalidate = useInvalidateApiQuery();
+
+  return useMutation({
+    async mutationFn([service, database]: [service: Service, database: LogicalDatabase]) {
+      return updateDatabaseService(service.id, (definition) => {
+        const databases = definition.database!.neon_postgres!.databases!;
+        const index = databases.findIndex(hasProperty('name', database.name));
+
+        if (index >= 0) {
+          databases.splice(index, 1);
+        }
+      });
+    },
+    async onSuccess(_, [service, database]) {
+      await invalidate('get /v1/services/{id}', { path: { id: service.id } });
+      notify.info(t('delete.success', { name: database.name }));
+      closeDialog();
+    },
+  });
 }

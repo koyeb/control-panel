@@ -7,14 +7,14 @@ import { useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 import { randomString } from 'src/utils/random';
 
-const T = createTranslate('pages.database.roles.createDialog');
+const T = createTranslate('pages.database.roles.create');
 
 const schema = z.object({
   name: z.string().min(1).max(63),
@@ -23,7 +23,6 @@ const schema = z.object({
 export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
   const t = T.useTranslate();
 
-  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -44,7 +43,7 @@ export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
     },
     async onSuccess(_, { name }) {
       await invalidate('get /v1/services/{id}', { path: { id: service.id } });
-      notify.info(t('successNotification', { name }));
+      notify.info(t('success', { name }));
       closeDialog();
     },
     onError: useFormErrorHandler(form, mapError),

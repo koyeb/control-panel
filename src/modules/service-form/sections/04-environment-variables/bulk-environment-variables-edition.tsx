@@ -1,9 +1,10 @@
 import { Button, TextArea } from '@koyeb/design-system';
 import { useCallback, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { UseFormReturn, useWatch } from 'react-hook-form';
 
 import { useSecrets } from 'src/api';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { withPreventDefault } from 'src/application/dom-events';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { createTranslate } from 'src/intl/translate';
 
 import {
@@ -11,16 +12,15 @@ import {
   parseEnvironmentVariables,
   stringifyEnvironmentVariables,
 } from '../../helpers/parse-environment-variables';
-import { useWatchServiceForm } from '../../use-service-form';
+import { ServiceForm } from '../../service-form.types';
 
 const T = createTranslate('modules.serviceForm.environmentVariables.bulkEdition');
 
-export function BulkEnvironmentVariablesEditionDialog() {
-  const closeDialog = Dialog.useClose();
+export function BulkEnvironmentVariablesEditionDialog({ form }: { form: UseFormReturn<ServiceForm> }) {
   const t = T.useTranslate();
 
-  const { setValue, trigger } = useFormContext();
-  const environmentVariables = useWatchServiceForm('environmentVariables');
+  const { setValue, trigger } = form;
+  const environmentVariables = useWatch({ control: form.control, name: 'environmentVariables' });
   const stringifiedEnvironmentVariables = stringifyEnvironmentVariables(environmentVariables);
   const [unknownSecretName, setUnknownSecretName] = useState<string>();
 
@@ -28,9 +28,6 @@ export function BulkEnvironmentVariablesEditionDialog() {
 
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      event.stopPropagation();
-
       const data = new FormData(event.currentTarget);
       const value = data.get('environment-variables') as string;
 
@@ -53,7 +50,7 @@ export function BulkEnvironmentVariablesEditionDialog() {
         }
       }
     },
-    [setValue, trigger, closeDialog, secrets],
+    [setValue, trigger, secrets],
   );
 
   return (
@@ -72,7 +69,7 @@ export function BulkEnvironmentVariablesEditionDialog() {
         <T id="line1" values={{ code }} />
       </p>
 
-      <form onSubmit={handleSubmit} className="col gap-4">
+      <form onSubmit={withPreventDefault(handleSubmit)} className="col gap-4">
         <TextArea
           name="environment-variables"
           placeholder={t('variablesPlaceholder')}

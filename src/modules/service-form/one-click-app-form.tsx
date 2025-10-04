@@ -41,8 +41,7 @@ import { hasProperty } from 'src/utils/object';
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
 import { InstanceCategoryTabs } from '../instance-selector/instance-category-tabs';
 
-import { QuotaIncreaseRequestDialog } from './components/quota-increase-request-dialog';
-import { ServiceFormUpgradeDialog } from './components/service-form-upgrade-dialog';
+import { RequestQuotaIncreaseDialog } from './components/quota-increase-request-dialog';
 import { deploymentDefinitionToServiceForm } from './helpers/deployment-to-service-form';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
@@ -111,7 +110,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
   });
 
   const formRef = useRef<HTMLFormElement>(null);
-  const [requiredPlan, preSubmit] = usePreSubmitServiceForm();
+  const preSubmit = usePreSubmitServiceForm(formRef.current);
 
   useOnCostEstimationChanged(form, serviceForm, onCostChanged);
 
@@ -143,8 +142,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
         <VolumesSection serviceForm={serviceForm} />
       </form>
 
-      <QuotaIncreaseRequestDialog catalogInstanceId={form.watch('instance')} />
-      <ServiceFormUpgradeDialog plan={requiredPlan} submitForm={() => formRef.current?.requestSubmit()} />
+      <RequestQuotaIncreaseDialog />
     </FormProvider>
   );
 }

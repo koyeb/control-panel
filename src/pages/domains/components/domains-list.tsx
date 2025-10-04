@@ -1,18 +1,8 @@
-import {
-  Alert,
-  ButtonMenuItem,
-  Spinner,
-  Table,
-  TableColumnSelection,
-  useBreakpoint,
-} from '@koyeb/design-system';
+import { Alert, Spinner, Table, TableColumnSelection, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { useApps } from 'src/api';
-import { stopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
-import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
 import { IconChevronDown, IconCircleAlert, IconCircleCheck } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, TranslateStatus, createTranslate } from 'src/intl/translate';
@@ -20,11 +10,11 @@ import { Domain, type DomainStatus } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 import { ChangeAppForm } from './change-app-form';
-import { DeleteDomainDialog } from './delete-domain-dialog';
 import { DnsConfiguration } from './dns-configuration';
+import { DomainActions } from './domains-actions';
 import { NoDomains } from './no-domains';
 
-const T = createTranslate('pages.domains.domainsList');
+const T = createTranslate('pages.domains.list');
 
 type DomainsListProps = {
   domains: Domain[];
@@ -120,27 +110,6 @@ function AppName({ appId }: { appId: string | null }) {
   }
 
   return <Translate id="common.noValue" />;
-}
-
-function DomainActions({ domain }: { domain: Domain }) {
-  const openDialog = Dialog.useOpen();
-
-  return (
-    <div onClick={stopPropagation}>
-      <ActionsMenu>
-        {(withClose) => (
-          <ButtonMenuItem
-            disabled={domain.status === 'DELETING'}
-            onClick={withClose(() => openDialog('ConfirmDeleteDomain', { resourceId: domain.id }))}
-          >
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        )}
-      </ActionsMenu>
-
-      <DeleteDomainDialog domain={domain} />
-    </div>
-  );
 }
 
 function DomainError({ domain }: { domain: Domain }) {

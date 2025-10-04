@@ -6,7 +6,7 @@ import { useCallback, useEffect } from 'react';
 import { apiMutation, getApi, isComputeDeployment, mapDeployment, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { getServiceUrls, isServiceRunning } from 'src/application/service-functions';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useNavigate } from 'src/hooks/router';
 import { IconCopy, IconList, IconPause, IconPlay, IconRotateCw } from 'src/icons';
@@ -26,7 +26,6 @@ export function useServiceCommands(service: Service) {
 
   const { addItem } = useCommandPaletteContext();
 
-  const openDialog = Dialog.useOpen();
   const invalidate = useInvalidateApiQuery();
 
   const invalidateService = useCallback(async () => {
@@ -72,7 +71,7 @@ export function useServiceCommands(service: Service) {
       label: t('resumeService.label'),
       description: t('resumeService.description', { name }),
       Icon: IconPlay,
-      execute: () => setTimeout(() => openDialog('ResumeService', { resourceId: service.id }), 0),
+      execute: () => setTimeout(() => openDialog('ResumeService', service), 0),
     });
 
     if (isServiceRunning(service)) {
@@ -87,7 +86,7 @@ export function useServiceCommands(service: Service) {
     return () => {
       items.forEach((item) => item.remove());
     };
-  }, [addItem, service, redeploy, pause, openDialog, t]);
+  }, [addItem, service, redeploy, pause, t]);
 }
 
 export function useCreateServiceUrlsCommands(app: App, service: Service, deployment?: Deployment) {

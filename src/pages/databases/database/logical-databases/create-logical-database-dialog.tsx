@@ -7,14 +7,14 @@ import { useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
-import { CloseDialogButton, Dialog, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { DatabaseDeployment, Service } from 'src/model';
 import { getName } from 'src/utils/object';
 
-const T = createTranslate('pages.database.logicalDatabases.createDialog');
+const T = createTranslate('pages.database.logicalDatabases.create');
 
 const schema = z.object({
   name: z.string().min(1).max(63),
@@ -28,8 +28,6 @@ type CreateLogicalDatabaseDialogProps = {
 
 export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogicalDatabaseDialogProps) {
   const t = T.useTranslate();
-
-  const closeDialog = Dialog.useClose();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -48,7 +46,7 @@ export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogic
     },
     async onSuccess(_, { name }) {
       await invalidate('get /v1/services/{id}', { path: { id: service.id } });
-      notify.info(t('successNotification', { name }));
+      notify.info(t('success', { name }));
       closeDialog();
     },
   });

@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { apiMutation, useOrganization, useSwitchOrganization, useUserOrganizationMemberships } from 'src/api';
 import { notify } from 'src/application/notify';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError } from 'src/components/query-error';
@@ -19,8 +19,6 @@ import { OrganizationMember } from 'src/model';
 const T = createTranslate('pages.userSettings.organizations');
 
 export function OrganizationsPage() {
-  const openDialog = Dialog.useOpen();
-
   useOnRouteStateCreate(() => {
     openDialog('CreateOrganization');
   });
@@ -35,7 +33,7 @@ export function OrganizationsPage() {
           </Button>
         }
       />
-      <CreateOrganizationDialog />
+      <Create />
       <OrganizationList />
     </>
   );
@@ -45,7 +43,7 @@ const schema = z.object({
   organizationName: z.string().min(1).max(39),
 });
 
-function CreateOrganizationDialog() {
+function Create() {
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
@@ -69,23 +67,20 @@ function CreateOrganizationDialog() {
     async onSuccess({ organization }, { organizationName }) {
       await switchOrganization.mutateAsync(organization!.id!);
       await navigate({ to: '/' });
-      notify.success(t('createOrganizationDialog.successNotification', { organizationName }));
+      notify.success(t('create.success', { organizationName }));
     },
   });
 
   return (
     <Dialog id="CreateOrganization" onClosed={form.reset} className="col w-full max-w-xl gap-4">
-      <DialogHeader title={<T id="createOrganizationDialog.title" />} />
+      <DialogHeader title={<T id="create.title" />} />
 
       <p className="text-dim">
-        <T id="createOrganizationDialog.description" />
+        <T id="create.description" />
       </p>
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <OrganizationNameField
-          form={form}
-          label={<T id="createOrganizationDialog.organizationNameLabel" />}
-        />
+        <OrganizationNameField form={form} label={<T id="create.organizationNameLabel" />} />
 
         <DialogFooter>
           <CloseDialogButton>

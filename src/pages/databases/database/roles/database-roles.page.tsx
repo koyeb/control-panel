@@ -1,12 +1,13 @@
 import { Button, ButtonMenuItem, Spinner, Table, Tooltip } from '@koyeb/design-system';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { apiQuery, isDatabaseDeployment, useDeployment, useService } from 'src/api';
+import { apiQuery, isDatabaseDeployment, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
 import { notify } from 'src/application/notify';
+import { updateDatabaseService } from 'src/application/service-functions';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { useClipboard } from 'src/hooks/clipboard';
@@ -15,10 +16,9 @@ import { IconEye, IconEyeOff } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { DatabaseRole, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
-import { getName } from 'src/utils/object';
+import { getName, hasProperty } from 'src/utils/object';
 
 import { CreateDatabaseRoleDialog } from './create-database-role-dialog';
-import { DeleteDatabaseRoleDialog } from './delete-database-role-dialog';
 
 const T = createTranslate('pages.database.roles');
 
@@ -26,8 +26,6 @@ export function DatabaseRolesPage() {
   const databaseServiceId = useRouteParam('databaseServiceId');
   const service = useService(databaseServiceId);
   const deployment = useDeployment(service?.latestDeploymentId);
-
-  const openDialog = Dialog.useOpen();
 
   if (!service || !deployment) {
     return null;
@@ -142,27 +140,52 @@ function DatabaseRolePassword({ role }: { role: DatabaseRole }) {
   );
 }
 
-type DatabaseRoleActionsProps = {
-  service: Service;
-  role: DatabaseRole;
-};
+function DatabaseRoleActions({ service, role }: { service: Service; role: DatabaseRole }) {
+  const t = T.useTranslate();
 
-function DatabaseRoleActions({ service, role }: DatabaseRoleActionsProps) {
-  const openDialog = Dialog.useOpen();
+  const deleteMutation = useDeleteMutation();
+
+  const onDelete = () => {
+    openDialog('Confirmation', {
+      title: t('delete.title'),
+      description: t('delete.description'),
+      destructiveAction: true,
+      confirmationText: role.name,
+      submitText: t('delete.confirm'),
+      onConfirm: () => deleteMutation.mutateAsync([service, role]),
+    });
+  };
 
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <ButtonMenuItem
-            onClick={withClose(() => openDialog('ConfirmDeleteDatabaseRole', { resourceId: role.name }))}
-          >
-            <T id="actions.delete" />
-          </ButtonMenuItem>
-        )}
-      </ActionsMenu>
-
-      <DeleteDatabaseRoleDialog service={service} role={role} />
-    </>
+    <ActionsMenu>
+      {(withClose) => (
+        <ButtonMenuItem onClick={withClose(onDelete)}>
+          <T id="actions.delete" />
+        </ButtonMenuItem>
+      )}
+    </ActionsMenu>
   );
+}
+
+function useDeleteMutation() {
+  const t = T.useTranslate();
+  const invalidate = useInvalidateApiQuery();
+
+  return useMutation({
+    async mutationFn([service, role]: [service: Service, role: DatabaseRole]) {
+      await updateDatabaseService(service.id, (definition) => {
+        const roles = definition.database!.neon_postgres!.roles!;
+        const index = roles.findIndex(hasProperty('name', role.name));
+
+        if (index >= 0) {
+          roles.splice(index, 1);
+        }
+      });
+    },
+    async onSuccess(_, [service, role]) {
+      await invalidate('get /v1/services/{id}', { path: { id: service.id } });
+      notify.info(t('delete.success', { name: role.name }));
+      closeDialog();
+    },
+  });
 }

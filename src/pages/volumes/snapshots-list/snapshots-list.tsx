@@ -1,10 +1,8 @@
-import { ButtonMenuItem, Table, Tooltip, useBreakpoint } from '@koyeb/design-system';
+import { Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
 import { apiQuery, mapSnapshot, useVolume } from 'src/api';
-import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Pagination, usePagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
@@ -12,17 +10,15 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { VolumeSnapshotStatusBadge } from 'src/components/status-badges';
 import { Title } from 'src/components/title';
-import { useNavigate } from 'src/hooks/router';
-import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { VolumeSnapshot } from 'src/model';
 import { lowerCase } from 'src/utils/strings';
 
-import { DeleteSnapshotDialog } from './delete-snapshot-dialog';
 import { EditSnapshotDialog } from './edit-snapshot-dialog';
+import { SnapshotActions } from './snapshot-actions';
 
-const T = createTranslate('pages.volumes.snapshotsList');
+const T = createTranslate('pages.snapshots.list');
 
 export function SnapshotsListSection() {
   const pagination = usePagination();
@@ -64,7 +60,7 @@ export function SnapshotsListSection() {
 function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
   const lg = !useBreakpoint('lg');
 
-  return (
+  const table = (
     <Table
       items={snapshots}
       columns={{
@@ -109,10 +105,17 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
         },
         actions: {
           className: clsx('w-[1%]'),
-          render: (snapshot) => <Actions snapshot={snapshot} />,
+          render: (snapshot) => <SnapshotActions snapshot={snapshot} />,
         },
       }}
     />
+  );
+
+  return (
+    <>
+      {table}
+      <EditSnapshotDialog />
+    </>
   );
 }
 
@@ -120,52 +123,4 @@ function VolumeName({ volumeId }: { volumeId: string }) {
   const volume = useVolume(volumeId);
 
   return <>{volume?.name}</>;
-}
-
-function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {
-  const canCreate = snapshot.status === 'AVAILABLE' && snapshot.type === 'REMOTE';
-  const openDialog = Dialog.useOpen();
-  const navigate = useNavigate();
-
-  return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <>
-            <Tooltip content={canCreate ? undefined : <T id="actions.cannotCreateVolume" />}>
-              {(props) => (
-                <ButtonMenuItem
-                  {...props}
-                  disabled={!canCreate}
-                  onClick={withClose(() => {
-                    void navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
-                  })}
-                >
-                  <IconPlus className="size-4" />
-                  <T id="actions.createVolume" />
-                </ButtonMenuItem>
-              )}
-            </Tooltip>
-
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('EditSnapshot', { snapshotId: snapshot.id }))}
-            >
-              <IconPen className="size-4" />
-              <T id="actions.update" />
-            </ButtonMenuItem>
-
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('ConfirmDeleteSnapshot', { resourceId: snapshot.id }))}
-            >
-              <IconTrash className="size-4" />
-              <T id="actions.delete" />
-            </ButtonMenuItem>
-          </>
-        )}
-      </ActionsMenu>
-
-      <EditSnapshotDialog snapshot={snapshot} />
-      <DeleteSnapshotDialog snapshot={snapshot} />
-    </>
-  );
 }

@@ -1,9 +1,7 @@
-import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
+import { Button, Table } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { useSecretsQuery } from 'src/api';
-import { ActionsMenu } from 'src/components/actions-menu';
-import { Dialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
@@ -12,8 +10,8 @@ import { RegistrySecret } from 'src/model';
 import { RegistryType } from 'src/modules/secrets/registry/registry-type';
 import { createArray } from 'src/utils/arrays';
 
-import { DeleteRegistrySecretDialog } from './delete-registry-secret-dialog';
 import { EditRegistrySecretDialog } from './edit-registry-secret-dialog';
+import { RegistrySecretActions } from './registry-secret-actions';
 
 const T = createTranslate('pages.organizationSettings.registrySecrets.list');
 
@@ -45,24 +43,28 @@ export function RegistrySecretList({ onCreate }: { onCreate: () => void }) {
   }
 
   return (
-    <Table
-      items={secrets}
-      columns={{
-        name: {
-          header: <T id="name" />,
-          className: clsx('lg:w-72'),
-          render: (secret) => <>{secret.name}</>,
-        },
-        type: {
-          header: <T id="type" />,
-          render: (secret) => <RegistryType registry={secret.registry} />,
-        },
-        actions: {
-          className: clsx('w-12'),
-          render: (secret) => <RegistrySecretActions secret={secret} />,
-        },
-      }}
-    />
+    <>
+      <Table
+        items={secrets}
+        columns={{
+          name: {
+            header: <T id="name" />,
+            className: clsx('lg:w-72'),
+            render: (secret) => <>{secret.name}</>,
+          },
+          type: {
+            header: <T id="type" />,
+            render: (secret) => <RegistryType registry={secret.registry} />,
+          },
+          actions: {
+            className: clsx('w-12'),
+            render: (secret) => <RegistrySecretActions secret={secret} />,
+          },
+        }}
+      />
+
+      <EditRegistrySecretDialog />
+    </>
   );
 }
 
@@ -86,34 +88,5 @@ function Skeleton() {
         },
       }}
     />
-  );
-}
-
-function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
-  const openDialog = Dialog.useOpen();
-
-  return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <>
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('EditRegistrySecret', { secretId: secret.id }))}
-            >
-              <T id="actions.edit" />
-            </ButtonMenuItem>
-
-            <ButtonMenuItem
-              onClick={withClose(() => openDialog('ConfirmDeleteRegistrySecret', { resourceId: secret.id }))}
-            >
-              <T id="actions.delete" />
-            </ButtonMenuItem>
-          </>
-        )}
-      </ActionsMenu>
-
-      <EditRegistrySecretDialog secret={secret} />
-      <DeleteRegistrySecretDialog secret={secret} />
-    </>
   );
 }

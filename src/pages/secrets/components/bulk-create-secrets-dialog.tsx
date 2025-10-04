@@ -8,18 +8,17 @@ import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { ControlledTextArea } from 'src/components/controlled';
-import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { dotenvParse } from 'src/utils/dotenv';
 import { hasProperty } from 'src/utils/object';
 
-const T = createTranslate('pages.secrets.bulkCreateSecretsDialog');
+const T = createTranslate('pages.secrets.bulkCreate');
 
 export function BulkCreateSecretsDialog({ onCreated }: { onCreated?: () => void }) {
   const t = T.useTranslate();
 
-  const closeDialog = Dialog.useClose();
   const track = useTrackEvent();
 
   const form = useForm<{ value: string }>({

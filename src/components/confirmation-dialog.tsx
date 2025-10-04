@@ -7,9 +7,7 @@ import { Translate } from 'src/intl/translate';
 import { ControlledInput } from './controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
 
-type ConfirmationDialogProps = {
-  id: string;
-  resourceId?: string;
+export type ConfirmationDialogProps = {
   title: React.ReactNode;
   description: React.ReactNode;
   destructiveAction?: boolean;
@@ -21,16 +19,22 @@ type ConfirmationDialogProps = {
   onAutofill?: () => void;
 };
 
-export function ConfirmationDialog({
-  id,
-  resourceId,
+export function ConfirmationDialog() {
+  return (
+    <Dialog id="Confirmation" className="col w-full max-w-xl gap-4">
+      {(props) => <DialogContent {...props} />}
+    </Dialog>
+  );
+}
+
+function DialogContent({
   title,
   description,
   destructiveAction,
   destructiveActionMessage,
   confirmationText,
   submitText,
-  submitColor = 'red',
+  submitColor,
   onConfirm,
   onAutofill,
 }: ConfirmationDialogProps) {
@@ -41,12 +45,7 @@ export function ConfirmationDialog({
   });
 
   return (
-    <Dialog
-      id={id}
-      context={resourceId ? { resourceId } : undefined}
-      onClosed={form.reset}
-      className="col w-full max-w-xl gap-4"
-    >
+    <>
       <DialogHeader title={title} />
 
       <p className="text-dim">{description}</p>
@@ -94,6 +93,6 @@ export function ConfirmationDialog({
           </Button>
         </DialogFooter>
       </form>
-    </Dialog>
+    </>
   );
 }

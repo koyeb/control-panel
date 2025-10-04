@@ -14,8 +14,7 @@ import {
 import { ApiEndpoint } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
-import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { Dialog } from 'src/components/dialog';
+import { openDialog } from 'src/components/dialog';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
@@ -146,85 +145,72 @@ function OrganizationMember({ membership }: { membership: OrganizationMember }) 
 }
 
 function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }) {
-  const openDialog = Dialog.useOpen();
+  const t = T.useTranslate();
 
   const user = useUser();
-  const organization = useOrganization();
-  const organizationName = organization?.name ?? '';
 
   const resendInvitationMutation = useResendInvitation();
   const deleteInvitationMutation = useDeleteInvitation();
-  const removeOrganizationMemberMutation = useRemoveOrganizationMember();
-  const leaveOrganizationMutation = useLeaveOrganization();
+  const leaveOrganization = useLeaveOrganization();
+  const removeOrganizationMember = useRemoveOrganizationMember();
+
+  const onLeaveOrganization = (member: OrganizationMember) => {
+    openDialog('Confirmation', {
+      title: t('leaveOrganization.title'),
+      description: t('leaveOrganization.description', { organizationName: member.organization.name }),
+      confirmationText: member.organization.name,
+      submitText: t('leaveOrganization.submitButton'),
+      onConfirm: () => leaveOrganization.mutateAsync(member),
+    });
+  };
+
+  const onRemoveMember = (member: OrganizationMember) => {
+    openDialog('Confirmation', {
+      title: t('removeMember.title'),
+      description: t('removeMember.description', {
+        name: member.user.name,
+        organizationName: member.organization.name,
+      }),
+      confirmationText: member.organization.name,
+      submitText: t('removeMember.submitButton'),
+      onConfirm: () => removeOrganizationMember.mutateAsync(member),
+    });
+  };
 
   return (
-    <>
-      <ActionsMenu>
-        {(withClose) => (
-          <>
-            {isInvitation(item) && (
-              <>
-                <ButtonMenuItem onClick={withClose(() => resendInvitationMutation.mutate(item))}>
-                  <T id="actions.resendInvitation" />
-                </ButtonMenuItem>
-
-                <ButtonMenuItem onClick={withClose(() => deleteInvitationMutation.mutate(item))}>
-                  <T id="actions.deleteInvitation" />
-                </ButtonMenuItem>
-              </>
-            )}
-
-            {!isInvitation(item) && (
-              <>
-                {item.user.id === user?.id && (
-                  <ButtonMenuItem
-                    onClick={withClose(() =>
-                      openDialog('ConfirmLeaveOrganization', { resourceId: item.user.id }),
-                    )}
-                  >
-                    <T id="actions.leave" />
-                  </ButtonMenuItem>
-                )}
-
-                {item.user.id !== user?.id && (
-                  <ButtonMenuItem
-                    onClick={withClose(() => openDialog('ConfirmRemoveMember', { resourceId: item.user.id }))}
-                  >
-                    <T id="actions.removeMember" />
-                  </ButtonMenuItem>
-                )}
-              </>
-            )}
-          </>
-        )}
-      </ActionsMenu>
-
-      {!isInvitation(item) && (
+    <ActionsMenu>
+      {(withClose) => (
         <>
-          <ConfirmationDialog
-            id="ConfirmRemoveMember"
-            resourceId={item.user.id}
-            title={<T id="removeMember.title" />}
-            description={
-              <T id="removeMember.description" values={{ name: item.user.name, organizationName }} />
-            }
-            confirmationText={organizationName}
-            submitText={<T id="removeMember.submitButton" />}
-            onConfirm={() => removeOrganizationMemberMutation.mutateAsync(item)}
-          />
+          {isInvitation(item) && (
+            <>
+              <ButtonMenuItem onClick={withClose(() => resendInvitationMutation.mutate(item))}>
+                <T id="actions.resendInvitation" />
+              </ButtonMenuItem>
 
-          <ConfirmationDialog
-            id="ConfirmLeaveOrganization"
-            resourceId={item.user.id}
-            title={<T id="leaveOrganization.title" />}
-            description={<T id="leaveOrganization.description" values={{ organizationName }} />}
-            confirmationText={organizationName}
-            submitText={<T id="leaveOrganization.submitButton" />}
-            onConfirm={() => leaveOrganizationMutation.mutateAsync(item)}
-          />
+              <ButtonMenuItem onClick={withClose(() => deleteInvitationMutation.mutate(item))}>
+                <T id="actions.deleteInvitation" />
+              </ButtonMenuItem>
+            </>
+          )}
+
+          {!isInvitation(item) && (
+            <>
+              {item.user.id === user?.id && (
+                <ButtonMenuItem onClick={withClose(() => onLeaveOrganization(item))}>
+                  <T id="actions.leave" />
+                </ButtonMenuItem>
+              )}
+
+              {item.user.id !== user?.id && (
+                <ButtonMenuItem onClick={withClose(() => onRemoveMember(item))}>
+                  <T id="actions.removeMember" />
+                </ButtonMenuItem>
+              )}
+            </>
+          )}
         </>
       )}
-    </>
+    </ActionsMenu>
   );
 }
 
