@@ -10,7 +10,12 @@
         "kind": "build",
         "isDefault": true
       },
-      "label": "tsc: watch"
+      "label": "tsc: watch",
+      "options": {
+        "env": {
+          "NODE_OPTIONS": "--max-old-space-size=16384"
+        }
+      }
     }
   ]
 }

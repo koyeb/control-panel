@@ -16,6 +16,7 @@ import { Loading } from 'src/components/loading';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
+import { UpgradeDialog } from 'src/components/payment-form';
 import { useLocation } from 'src/hooks/router';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus, IconX } from 'src/icons';
@@ -64,6 +65,7 @@ export function MainLayout({ children }: LayoutProps) {
       <DocumentTitle />
 
       <ConfirmationDialog />
+      <UpgradeDialog />
       <FeatureFlagsDialog />
       <TrialWelcomeDialog />
       <ContextPalette />

@@ -43,7 +43,7 @@ const editAppSchema = z.object({
 export function EditAppDialog() {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
-  const app = useDialogContext<'EditApp'>();
+  const app = useDialogContext('EditApp');
 
   const koyebDomain = app?.domains.find(hasProperty('type', 'AUTOASSIGNED'));
   const [subdomain = '', domainSuffix] = splitDomain(koyebDomain);
