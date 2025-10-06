@@ -15,7 +15,7 @@ import { Title } from 'src/components/title';
 import { useNavigate } from 'src/hooks/router';
 import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { createTranslate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { VolumeSnapshot } from 'src/model';
 import { lowerCase } from 'src/utils/strings';
 
@@ -119,7 +119,7 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
 function VolumeName({ volumeId }: { volumeId: string }) {
   const volume = useVolume(volumeId);
 
-  return <>{volume?.name}</>;
+  return <>{volume?.name ?? <Translate id="common.noValue" />}</>;
 }
 
 function Actions({ snapshot }: { snapshot: VolumeSnapshot }) {

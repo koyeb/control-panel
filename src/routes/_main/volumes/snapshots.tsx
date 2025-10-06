@@ -34,7 +34,9 @@ export const Route = createFileRoute('/_main/volumes/snapshots')({
     await Promise.all(
       snapshots.map(async (snapshot) => {
         if (snapshot.volumeId) {
-          await ensureApiQueryData('get /v1/volumes/{id}', { path: { id: snapshot.volumeId } });
+          await ensureApiQueryData('get /v1/volumes/{id}', { path: { id: snapshot.volumeId } }).catch(
+            () => {},
+          );
         }
       }),
     );
