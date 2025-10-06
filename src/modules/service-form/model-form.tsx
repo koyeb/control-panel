@@ -34,7 +34,6 @@ import { slugify } from 'src/utils/strings';
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
 import { useInstanceSelector } from '../instance-selector/instance-selector-state';
 
-import { RequestQuotaIncreaseDialog } from './components/quota-increase-request-dialog';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
@@ -102,35 +101,31 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
   useOnCostEstimationChanged(form, onCostChanged);
 
   return (
-    <>
-      <form
-        ref={formRef}
-        onSubmit={handleSubmit(form, (values) => {
-          const instance = instances.find(hasProperty('id', values.instance));
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit(form, (values) => {
+        const instance = instances.find(hasProperty('id', values.instance));
 
-          if (instance && preSubmit(instance)) {
-            return mutation.mutateAsync(values);
-          }
-        })}
-        className="col gap-6"
-      >
-        <OverviewSection model={model} form={form} />
-        {initialModel === undefined && <ModelSection form={form} />}
-        <InstanceSection model={model} form={form} />
+        if (instance && preSubmit(instance)) {
+          return mutation.mutateAsync(values);
+        }
+      })}
+      className="col gap-6"
+    >
+      <OverviewSection model={model} form={form} />
+      {initialModel === undefined && <ModelSection form={form} />}
+      <InstanceSection model={model} form={form} />
 
-        <div className="row justify-end gap-2">
-          <LinkButton color="gray" to="/">
-            <Translate id="common.cancel" />
-          </LinkButton>
+      <div className="row justify-end gap-2">
+        <LinkButton color="gray" to="/">
+          <Translate id="common.cancel" />
+        </LinkButton>
 
-          <Button type="submit" loading={form.formState.isSubmitting}>
-            <T id="submitButton" />
-          </Button>
-        </div>
-      </form>
-
-      <RequestQuotaIncreaseDialog />
-    </>
+        <Button type="submit" loading={form.formState.isSubmitting}>
+          <T id="submitButton" />
+        </Button>
+      </div>
+    </form>
   );
 }
 

@@ -11,7 +11,6 @@ import { Translate } from 'src/intl/translate';
 
 import { GpuAlert } from './components/gpu-alert';
 import { QuotaAlert } from './components/quota-alert';
-import { RequestQuotaIncreaseDialog } from './components/quota-increase-request-dialog';
 import { ServiceFormSkeleton } from './components/service-form-skeleton';
 import { SubmitButton } from './components/submit-button';
 import { mapServiceFormApiValidationError } from './helpers/map-service-form-api-validation-error';
@@ -113,7 +112,6 @@ export function ServiceForm({ form, className, onDeployed, onSaved, onBack }: Se
 
       <BulkEnvironmentVariablesEditionDialog form={form} />
       <CreateVolumeDialog form={form} />
-      <RequestQuotaIncreaseDialog />
     </>
   );
 }

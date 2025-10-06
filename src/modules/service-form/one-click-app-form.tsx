@@ -41,7 +41,6 @@ import { hasProperty } from 'src/utils/object';
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
 import { InstanceCategoryTabs } from '../instance-selector/instance-category-tabs';
 
-import { RequestQuotaIncreaseDialog } from './components/quota-increase-request-dialog';
 import { deploymentDefinitionToServiceForm } from './helpers/deployment-to-service-form';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
@@ -141,8 +140,6 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
 
         <VolumesSection serviceForm={serviceForm} />
       </form>
-
-      <RequestQuotaIncreaseDialog />
     </FormProvider>
   );
 }

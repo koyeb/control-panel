@@ -222,13 +222,7 @@
           "submit": "Add credit card"
         },
         "requestAccess": "Request access",
-        "requestQuotaIncrease": "Request increase",
-        "requestQuotaIncreaseDialog": {
-          "title": "Quota increase request",
-          "line1": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
-          "line2": "Let's <link>chat</link> to learn more about your needs and get started.",
-          "cta": "Book a call"
-        }
+        "requestQuotaIncrease": "Request increase"
       }
     },
     "invitation": {
@@ -293,6 +287,13 @@
       "latency": "{ms, number, :: precision-integer}ms latency",
       "checkingLatency": "Checking latency...",
       "unavailable": "Unavailable"
+    },
+    "requestQuotaIncrease": {
+      "title": "Quota increase request",
+      "description": "Need more quota?",
+      "descriptionForInstance": "It looks like you're ready to deploy on a {instance} instance, but we'll need to increase your organization quota first.",
+      "chat": "Let's <link>chat</link> to learn more about your needs and get started.",
+      "cta": "Book a call"
     },
     "serviceEstimatedCost": {
       "title": "Estimated Cost",

@@ -1,10 +1,10 @@
-import { showNewMessage } from '@intercom/messenger-js-sdk';
 import { Alert, Button } from '@koyeb/design-system';
 import { Fragment, useMemo } from 'react';
 import { FormattedList } from 'react-intl';
 
 import { useInstancesCatalog, useOrganization, useOrganizationQuotas, useRegionsCatalog } from 'src/api';
 import { formatBytes } from 'src/application/memory';
+import { openDialog } from 'src/components/dialog';
 import { LinkButton } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -66,7 +66,7 @@ export function OrganizationQuotas() {
       </div>
 
       {organization?.plan !== 'hobby' && (
-        <Button color="gray" className="self-end" onClick={() => showNewMessage('')}>
+        <Button color="gray" className="self-end" onClick={() => openDialog('RequestQuotaIncrease', null)}>
           <T id="requestIncrease" />
         </Button>
       )}

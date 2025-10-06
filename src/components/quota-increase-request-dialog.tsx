@@ -3,7 +3,7 @@ import { ExternalLink, ExternalLinkButton } from 'src/components/link';
 import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { createTranslate } from 'src/intl/translate';
 
-const T = createTranslate('components.instanceSelector.actions.requestQuotaIncreaseDialog');
+const T = createTranslate('components.requestQuotaIncrease');
 
 export function RequestQuotaIncreaseDialog() {
   const instance = useDialogContext('RequestQuotaIncrease');
@@ -14,12 +14,13 @@ export function RequestQuotaIncreaseDialog() {
       <DialogHeader title={<T id="title" />} />
 
       <p>
-        <T id="line1" values={{ instance: instance?.displayName }} />
+        {!instance && <T id="description" />}
+        {instance && <T id="descriptionForInstance" values={{ instance: instance?.displayName }} />}
       </p>
 
       <p>
         <T
-          id="line2"
+          id="chat"
           values={{
             link: (children) => (
               <ExternalLink openInNewTab href={tallyLink} className="underline">

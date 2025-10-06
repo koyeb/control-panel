@@ -14,6 +14,7 @@ import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import Logo from 'src/components/logo.svg?react';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { UpgradeDialog } from 'src/components/payment-form';
+import { RequestQuotaIncreaseDialog } from 'src/components/quota-increase-request-dialog';
 import { useLocation } from 'src/hooks/router';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconChevronLeft, IconPlus, IconX } from 'src/icons';
@@ -56,6 +57,7 @@ export function MainLayout({ children }: LayoutProps) {
       <DocumentTitle />
 
       <UpgradeDialog />
+      <RequestQuotaIncreaseDialog />
       <FeatureFlagsDialog />
       <TrialWelcomeDialog />
       <ContextPalette />

@@ -12,7 +12,6 @@ import {
   App,
   CatalogInstance,
   ComputeDeployment,
-  OrganizationPlan,
   RegistrySecret,
   Secret,
   Service,
@@ -51,7 +50,6 @@ type Dialogs = {
   ResumeService: Service;
   DeploymentDefinition: ComputeDeployment;
   DeploymentsDiff: [ComputeDeployment, ComputeDeployment];
-  RequestQuotaIncrease: CatalogInstance;
   BulkEnvironmentVariablesEdition: null;
   CreateVolume: { index: number };
 
@@ -68,7 +66,7 @@ type Dialogs = {
   TrialWelcome: null;
   Confirmation: ConfirmationDialogProps;
   Upgrade: UpgradeDialogProps;
-  UpgradeInstanceSelector: OrganizationPlan;
+  RequestQuotaIncrease: CatalogInstance | null;
   DownloadUsage: null;
   FeatureFlags: null;
 };
