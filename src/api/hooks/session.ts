@@ -7,6 +7,7 @@ import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 
+import { ApiEndpoint } from '../api';
 import { ApiError } from '../api-error';
 import {
   mapOrganization,
@@ -50,10 +51,19 @@ export function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess({ token }) {
+      const queriesToRemove = [
+        'get /v1/organizations/{organization_id}/budget',
+        'get /v1/organizations/{organization_id}/quotas',
+        'get /v1/organizations/{organization_id}/summary',
+        'get /v1/subscriptions/{id}',
+      ] satisfies ApiEndpoint[];
+
+      queriesToRemove.map((endpoint) => queryClient.removeQueries({ queryKey: [endpoint] }));
+
       if (!authKit.user) {
-        await setToken(token!.id!, { queryClient });
+        void setToken(token!.id!, { queryClient });
       } else {
-        await queryClient.invalidateQueries();
+        void queryClient.invalidateQueries();
       }
 
       onSuccess?.();
