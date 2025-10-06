@@ -104,7 +104,12 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
       body: { plan },
     })),
     async onSuccess() {
-      await invalidate('get /v1/account/organization');
+      await Promise.all([
+        invalidate('get /v1/account/organization'),
+        invalidate('get /v1/organizations/{organization_id}/quotas'),
+        invalidate('get /v1/subscriptions/{id}'),
+      ]);
+
       onPlanChanged?.();
     },
   });
