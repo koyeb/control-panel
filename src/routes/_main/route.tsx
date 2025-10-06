@@ -50,6 +50,8 @@ export const Route = createFileRoute('/_main')({
   async loader({ context: { queryClient }, location, abortController }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient, abortController);
 
+    void preloadDatacentersLatencies(queryClient);
+
     const user = await ensureApiQueryData('get /v1/account/profile', {}).then((result) =>
       mapUser(result.user!),
     );
@@ -90,25 +92,6 @@ export const Route = createFileRoute('/_main')({
     }
 
     await Promise.all(promises);
-
-    const datacenters = await ensureApiQueryData('get /v1/catalog/datacenters', {}).then((result) =>
-      result.datacenters!.map(mapCatalogDatacenter),
-    );
-
-    await Promise.all(
-      datacenters.map(async ({ id, domain }) => {
-        if (id.includes('aws')) {
-          return;
-        }
-
-        const url = `https://${domain}/health`;
-
-        await queryClient.ensureQueryData({
-          queryKey: ['datacenterLatency', url],
-          queryFn: () => getUrlLatency(url),
-        });
-      }),
-    );
   },
 });
 
@@ -126,6 +109,29 @@ async function switchOrganization(queryClient: QueryClient, organizationId: stri
     search: (prev) => ({ ...prev, 'organization-id': undefined }),
     reloadDocument: true,
   });
+}
+
+async function preloadDatacentersLatencies(queryClient: QueryClient) {
+  const ensureApiQueryData = createEnsureApiQueryData(queryClient);
+
+  const datacenters = await ensureApiQueryData('get /v1/catalog/datacenters', {}).then((result) =>
+    result.datacenters!.map(mapCatalogDatacenter),
+  );
+
+  await Promise.all(
+    datacenters.map(async ({ id, domain }) => {
+      if (id.includes('aws')) {
+        return;
+      }
+
+      const url = `https://${domain}/health`;
+
+      await queryClient.ensureQueryData({
+        queryKey: ['datacenterLatency', url],
+        queryFn: () => getUrlLatency(url),
+      });
+    }),
+  );
 }
 
 function Component() {
