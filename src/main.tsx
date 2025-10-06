@@ -19,6 +19,8 @@ import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
 import { accessTokenListener, getToken, isSessionToken, setToken } from './application/token';
+import { ConfirmationDialog } from './components/confirmation-dialog';
+import { closeDialog } from './components/dialog';
 import { NotificationContainer } from './components/notification';
 import { SeonAdapter } from './hooks/seon';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
@@ -158,9 +160,7 @@ const router = createRouter({
   },
   Wrap({ children }) {
     useEffect(() => {
-      accessTokenListener((token) => {
-        void setToken(token, { queryClient });
-      });
+      return accessTokenListener((token) => void setToken(token, { queryClient }));
     }, []);
 
     return (
@@ -172,10 +172,15 @@ const router = createRouter({
     );
   },
   InnerWrap({ children }) {
+    useEffect(() => {
+      return router.subscribe('onBeforeNavigate', () => closeDialog(true));
+    }, []);
+
     return (
       <PostHogProvider>
         {children}
         <NotificationContainer />
+        <ConfirmationDialog />
         <TanStackRouterDevtools />
         <ReactQueryDevtools />
       </PostHogProvider>

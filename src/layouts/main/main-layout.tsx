@@ -1,4 +1,3 @@
-import { useRouter } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import z from 'zod';
@@ -8,8 +7,6 @@ import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
 import { isSessionToken, useToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
-import { ConfirmationDialog } from 'src/components/confirmation-dialog';
-import { closeDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -49,12 +46,6 @@ type LayoutProps = {
 export function MainLayout({ children }: LayoutProps) {
   const banner = useBanner();
   const pageContext = usePageContext();
-  const location = useLocation();
-  const router = useRouter();
-
-  useEffect(() => {
-    router.subscribe('onBeforeNavigate', () => closeDialog(true));
-  }, [location, router]);
 
   if (!useOrganization()) {
     return null;
@@ -64,7 +55,6 @@ export function MainLayout({ children }: LayoutProps) {
     <CommandPaletteProvider>
       <DocumentTitle />
 
-      <ConfirmationDialog />
       <UpgradeDialog />
       <FeatureFlagsDialog />
       <TrialWelcomeDialog />
