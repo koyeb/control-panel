@@ -15,7 +15,7 @@ export function RequestQuotaIncreaseDialog() {
 
       <p>
         {!instance && <T id="description" />}
-        {instance && <T id="descriptionForInstance" values={{ instance: instance?.displayName }} />}
+        {instance && <T id="descriptionForInstance" values={{ instance: instance.displayName }} />}
       </p>
 
       <p>
