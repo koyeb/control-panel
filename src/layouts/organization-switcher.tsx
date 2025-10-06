@@ -10,6 +10,8 @@ import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { Organization } from 'src/model';
+import { not } from 'src/utils/generic';
+import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('layouts.organizationSwitcher');
 
@@ -35,7 +37,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
     offset: 4,
     matchReferenceSize: true,
 
-    items: organizations,
+    items: organizations.filter(not(hasProperty('status', 'DELETING'))),
 
     combobox: {
       isItemDisabled: (item) => item.id === currentOrganization?.id,
