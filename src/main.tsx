@@ -90,22 +90,19 @@ async function handleAuthenticationError(error: Error) {
   }
 
   if (getToken() !== null) {
-    await setToken(null, { queryClient });
+    void setToken(null, { queryClient });
   }
 
   const location = new URL(window.location.href);
 
   if (!location.pathname.startsWith('/auth') && !location.pathname.startsWith('/account')) {
-    const search: { next?: string } = {};
+    const href = new URL('/auth/signin', window.location.origin);
 
     if (location.pathname !== '/' || location.searchParams.size > 0) {
-      search.next = location.href.replace(location.origin, '');
+      href.searchParams.set('next', location.href.replace(location.origin, ''));
     }
 
-    await router.navigate({
-      to: '/auth/signin',
-      search,
-    });
+    window.location.href = href.toString();
   }
 }
 

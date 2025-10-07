@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
 import { useIdentifyUser } from 'src/application/posthog';
-import { setToken } from 'src/application/token';
+import { isSessionToken, setToken } from 'src/application/token';
 import { ValidateLinkOptions } from 'src/components/link';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 
@@ -79,7 +79,7 @@ export function useUserOrganizationMemberships() {
   });
 }
 
-export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?: boolean) {
+export function useLogoutMutation(redirect: ValidateLinkOptions['to']) {
   const queryClient = useQueryClient();
   const userQuery = useUserQuery();
   const navigate = useNavigate();
@@ -89,6 +89,8 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to'], session?:
     ...apiMutation('delete /v1/account/logout', {}),
     meta: { showError: !ApiError.isAccountLockedError(userQuery.error) },
     async onSettled() {
+      const session = isSessionToken();
+
       if (!session) {
         clearIdentify();
       }
