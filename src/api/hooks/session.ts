@@ -130,7 +130,7 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to']) {
         clearIdentify();
       }
 
-      await setToken(null, { queryClient, session });
+      await setToken(null, { queryClient });
       await navigate(urlToLinkOptions(redirect));
     },
   });

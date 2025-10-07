@@ -37,6 +37,7 @@ export async function setToken(
   } else {
     sessionToken.write(null);
     accessToken.write(value);
+    sessionToken.write(null);
   }
 
   token = getSnapshot();
