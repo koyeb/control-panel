@@ -5,7 +5,7 @@ import { apiMutation, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
 import { setToken } from 'src/application/token';
-import { openDialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { User } from 'src/model';
@@ -29,6 +29,7 @@ export function DeleteAccount() {
       path: { id: user.id },
     })),
     async onSuccess() {
+      closeDialog();
       clearIdentify();
       setToken(null);
       queryClient.clear();

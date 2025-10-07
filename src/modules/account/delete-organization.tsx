@@ -1,8 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { apiMutation, apiQuery, useOrganization } from 'src/api';
-import { ApiEndpoint } from 'src/api/api';
+import { apiMutation, apiQuery, getApiQueryKey, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
@@ -30,7 +29,10 @@ export function DeleteOrganization() {
       path: { id: organization.id },
     })),
     async onSuccess(_, organization) {
-      queryClient.removeQueries({ queryKey: ['get /v1/account/organization' satisfies ApiEndpoint] });
+      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
+      queryClient.removeQueries({ predicate: (query) => !query.isActive() });
+      void queryClient.invalidateQueries();
+
       await navigate({ to: '/' });
       notify.info(t('success', { organizationName: organization.name }));
     },
