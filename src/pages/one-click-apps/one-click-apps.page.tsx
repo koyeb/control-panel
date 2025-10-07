@@ -2,7 +2,6 @@ import { Input } from '@koyeb/design-system';
 import { useMemo, useState } from 'react';
 
 import { useOneClickApps } from 'src/api';
-import { getConfig } from 'src/application/config';
 import { Link } from 'src/components/link';
 import { IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -22,12 +21,6 @@ export function OneClickAppsPage() {
   );
 
   const models = apps.filter((app) => app.category.toLowerCase() === 'model');
-
-  const officialModels = models.filter((app) =>
-    // cspell:disable-next-line
-    ['deepseek-r1-llama-8b', 'mistral-small-3-instruct'].includes(app.slug),
-  );
-
   const others = apps.filter((app) => app.category.toLocaleLowerCase() !== 'model');
 
   const [search, setSearch] = useState('');
@@ -79,13 +72,6 @@ export function OneClickAppsPage() {
 
       {!filteredApps && (
         <div className="col gap-8">
-          <section className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-            <SectionHeader title={<T id="officialModels" />} />
-            {officialModels.map((app) => (
-              <FeaturedApp key={app.slug} app={app} />
-            ))}
-          </section>
-
           <section className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             <SectionHeader
               title={<T id="models" />}
@@ -178,20 +164,6 @@ function SectionHeader({ title, right }: { title: React.ReactNode; right?: React
       <h2 className="text-2xl font-medium">{title}</h2>
       {right}
     </header>
-  );
-}
-
-function FeaturedApp({ app }: { app: OneClickApp }) {
-  return (
-    <Link to="/one-click-apps/$slug" params={{ slug: app.slug }} className="col gap-2">
-      <img
-        src={`${getConfig('websiteUrl')}${app.cover}`}
-        className="max-h-[16rem] w-full rounded-xl object-cover"
-      />
-      <div className="text-xs font-bold text-dim">{app.category}</div>
-      <div className="text-xl font-medium">{app.name}</div>
-      <div className="truncate text-dim">{app.description}</div>
-    </Link>
   );
 }
 
