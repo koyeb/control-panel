@@ -21,7 +21,7 @@ const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const user = useUser();
-  const logout = useLogoutMutation('/auth/signin');
+  const logout = useLogoutMutation();
 
   const isMobile = !useBreakpoint('sm');
   const [open, setOpen] = useState(false);

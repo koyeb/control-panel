@@ -26,14 +26,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     'session-token': z.string().optional(),
   }),
 
-  async beforeLoad({ context: { queryClient }, search }) {
+  async beforeLoad({ search }) {
     if (search.token !== undefined) {
-      await setToken(search.token.replace(/^Bearer /, ''), { queryClient });
+      setToken(search.token.replace(/^Bearer /, ''));
       throw redirect({ search: (prev) => ({ ...prev, token: undefined }) });
     }
 
     if (search['session-token'] !== undefined) {
-      await setToken(search['session-token'].replace(/^Bearer /, ''), { queryClient, session: true });
+      setToken(search['session-token'].replace(/^Bearer /, ''), true);
       throw redirect({ search: (prev) => ({ ...prev, 'session-token': undefined }) });
     }
   },

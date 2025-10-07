@@ -15,11 +15,12 @@ const T = createTranslate('modules.account.deleteAccount');
 export function DeleteAccount() {
   const t = T.useTranslate();
 
+  const queryClient = useQueryClient();
+
   const user = useUser();
   const organization = useOrganization();
   const canDelete = organization === undefined;
 
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
@@ -29,9 +30,10 @@ export function DeleteAccount() {
     })),
     async onSuccess() {
       clearIdentify();
-      await setToken(null, { queryClient });
-      await navigate({ to: '/auth/signin' });
+      setToken(null);
+      queryClient.clear();
       notify.success(t('success'));
+      await navigate({ to: '/auth/signin' });
     },
   });
 

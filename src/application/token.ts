@@ -1,4 +1,3 @@
-import { QueryClient } from '@tanstack/react-query';
 import { useSyncExternalStore } from 'react';
 
 import { StoredValue } from './storage';
@@ -28,14 +27,10 @@ export function isSessionToken() {
   return isSession;
 }
 
-export async function setToken(
-  value: string | null,
-  { queryClient, session }: { queryClient: QueryClient; session?: boolean },
-) {
+export function setToken(value: string | null, session = false) {
   if (session) {
     sessionToken.write(value);
   } else {
-    sessionToken.write(null);
     accessToken.write(value);
     sessionToken.write(null);
   }
@@ -45,13 +40,6 @@ export async function setToken(
 
   if (!isSession) {
     emitter.dispatchEvent(new Event('change'));
-  }
-
-  if (token) {
-    queryClient.removeQueries({ predicate: (query) => !query.isActive() });
-    await queryClient.invalidateQueries();
-  } else {
-    queryClient.clear();
   }
 }
 

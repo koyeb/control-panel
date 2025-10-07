@@ -11,7 +11,7 @@ const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
   const user = useUser();
-  const logout = useLogoutMutation('/auth/signin');
+  const logout = useLogoutMutation();
 
   const [open, setOpen] = useState(false);
 

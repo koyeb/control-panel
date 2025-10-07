@@ -12,7 +12,7 @@ export function useSettingsCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
 
-  const logout = useLogoutMutation('/auth/signin');
+  const logout = useLogoutMutation();
   const setTheme = useSetThemeMode();
 
   return (palette: CommandPalette) => {

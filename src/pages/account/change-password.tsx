@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -43,7 +43,6 @@ const schema = z.object({
 function ChangePasswordForm() {
   const t = T.useTranslate();
   const token = useRouteParam('token');
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -60,9 +59,9 @@ function ChangePasswordForm() {
       body: { id: token, password },
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!, { queryClient });
-      await navigate({ to: '/' });
+      setToken(token!.id!);
       notify.success(t('successNotification'));
+      await navigate({ to: '/' });
     },
     onError: useFormErrorHandler(form),
   });

@@ -70,7 +70,7 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
 
       if (search.setup_action === undefined) {
         assert(token?.id !== undefined);
-        await handleAuthentication(queryClient, token.id, redirectUrl);
+        await handleAuthentication(token.id, redirectUrl);
       }
 
       await handleGithubAppInstalled(queryClient, redirectUrl, deps);
@@ -92,8 +92,8 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
   onError: reportError,
 });
 
-async function handleAuthentication(queryClient: QueryClient, token: string, redirectUrl: URL) {
-  void setToken(token, { queryClient });
+async function handleAuthentication(token: string, redirectUrl: URL) {
+  setToken(token);
 
   throw redirect({
     to: redirectUrl.pathname,

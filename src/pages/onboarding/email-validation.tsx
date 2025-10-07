@@ -22,7 +22,7 @@ export function EmailValidation() {
     },
   });
 
-  const logoutMutation = useLogoutMutation('/auth/signup');
+  const logoutMutation = useLogoutMutation();
 
   return (
     <>

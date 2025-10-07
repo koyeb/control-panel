@@ -151,7 +151,7 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const logout = useLogoutMutation('/', true);
+  const logout = useLogoutMutation();
 
   return (
     <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">

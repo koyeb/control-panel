@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -29,7 +29,6 @@ const invalidCredentialApiMessages = [
 
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -48,7 +47,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
       body: credential,
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!, { queryClient });
+      setToken(token!.id!);
       await navigate(urlToLinkOptions(redirect));
     },
     onError(error) {

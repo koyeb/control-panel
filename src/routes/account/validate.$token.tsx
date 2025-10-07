@@ -1,7 +1,14 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { createEnsureApiQueryData, getApi, getApiQueryKey, mapOrganization, mapUser } from 'src/api';
+import {
+  apiQuery,
+  createEnsureApiQueryData,
+  getApi,
+  getApiQueryKey,
+  mapOrganization,
+  mapUser,
+} from 'src/api';
 import { AuthKitAdapter } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
@@ -61,8 +68,10 @@ async function createOrganization(authKit: AuthKitAdapter, queryClient: QueryCli
   });
 
   if (!authKit.user) {
-    await setToken(token!.id!, { queryClient });
+    setToken(token!.id!);
   }
+
+  await queryClient.fetchQuery(apiQuery('get /v1/account/organization', {}));
 }
 
 function defaultOrganizationName(user: User): string {

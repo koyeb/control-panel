@@ -96,12 +96,10 @@ async function handleAuthenticationError(error: Error) {
     return;
   }
 
-  if (getToken() !== null) {
-    if (authKit.user) {
-      setAuthKitToken(null);
-    } else {
-      void setToken(null, { queryClient });
-    }
+  if (authKit.user) {
+    setAuthKitToken(null);
+  } else if (getToken() !== null) {
+    setToken(null);
   }
 
   const location = new URL(window.location.href);
@@ -173,7 +171,10 @@ const router = createRouter({
   },
   Wrap({ children }) {
     useEffect(() => {
-      return accessTokenListener((token) => void setToken(token, { queryClient }));
+      return accessTokenListener((token) => {
+        setToken(token);
+        void queryClient.invalidateQueries();
+      });
     }, []);
 
     return (

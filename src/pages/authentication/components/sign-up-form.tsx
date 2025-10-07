@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -34,7 +34,6 @@ type SignUpFormProps = {
 
 export function SignUpForm({ initialValues }: SignUpFormProps) {
   const t = T.useTranslate();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
@@ -59,7 +58,7 @@ export function SignUpForm({ initialValues }: SignUpFormProps) {
       },
     })),
     async onSuccess({ token }) {
-      await setToken(token!.id!, { queryClient });
+      setToken(token!.id!);
       await navigate({ to: '/' });
     },
     onError: useFormErrorHandler(form, (error) => {

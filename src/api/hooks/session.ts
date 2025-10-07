@@ -3,11 +3,9 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { useAuthKit } from 'src/application/authkit';
 import { useIdentifyUser } from 'src/application/posthog';
 import { isSessionToken, setAuthKitToken, setToken } from 'src/application/token';
-import { ValidateLinkOptions } from 'src/components/link';
-import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
+import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 
-import { ApiEndpoint } from '../api';
 import { ApiError } from '../api-error';
 import {
   mapOrganization,
@@ -16,7 +14,7 @@ import {
   mapOrganizationSummary,
   mapUser,
 } from '../mappers/session';
-import { apiMutation, apiQuery } from '../query';
+import { apiMutation, apiQuery, getApiQueryKey } from '../query';
 
 export function useUserQuery() {
   return useQuery({
@@ -51,20 +49,13 @@ export function useSwitchOrganization(onSuccess?: () => void) {
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess({ token }) {
-      const queriesToRemove = [
-        'get /v1/organizations/{organization_id}/budget',
-        'get /v1/organizations/{organization_id}/quotas',
-        'get /v1/organizations/{organization_id}/summary',
-        'get /v1/subscriptions/{id}',
-      ] satisfies ApiEndpoint[];
-
-      queriesToRemove.map((endpoint) => queryClient.removeQueries({ queryKey: [endpoint] }));
-
       if (!authKit.user) {
-        void setToken(token!.id!, { queryClient });
-      } else {
-        void queryClient.invalidateQueries();
+        setToken(token!.id!);
       }
+
+      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
+      queryClient.removeQueries({ predicate: (query) => !query.isActive() });
+      void queryClient.invalidateQueries();
 
       onSuccess?.();
     },
@@ -113,7 +104,7 @@ export function useUserOrganizationMemberships() {
   });
 }
 
-export function useLogoutMutation(redirect: ValidateLinkOptions['to']) {
+export function useLogoutMutation() {
   const queryClient = useQueryClient();
   const authKit = useAuthKit();
   const userQuery = useUserQuery();
@@ -124,14 +115,13 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to']) {
     ...apiMutation('delete /v1/account/logout', {}),
     meta: { showError: !ApiError.isAccountLockedError(userQuery.error) },
     async onSettled() {
-      const session = isSessionToken();
-
-      if (!session) {
+      if (!isSessionToken()) {
         clearIdentify();
       }
 
-      await setToken(null, { queryClient });
-      await navigate(urlToLinkOptions(redirect));
+      queryClient.clear();
+      setToken(null);
+      await navigate({ to: '/auth/signin' });
     },
   });
 
@@ -139,14 +129,14 @@ export function useLogoutMutation(redirect: ValidateLinkOptions['to']) {
     mutationFn: async () => {
       authKit.client?.signOut({ returnTo: `${window.location.origin}/auth/signin` });
     },
-    onSuccess: () => {
-      const session = isSessionToken();
-
-      if (!session) {
+    onSuccess: async () => {
+      if (!isSessionToken()) {
         clearIdentify();
       }
 
+      queryClient.clear();
       setAuthKitToken(null);
+      await navigate({ to: '/auth/signin' });
     },
   });
 

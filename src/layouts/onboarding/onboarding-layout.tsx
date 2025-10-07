@@ -71,7 +71,7 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
 
 function UserMenu() {
   const user = useUser();
-  const logout = useLogoutMutation('/auth/signin');
+  const logout = useLogoutMutation();
   const [open, setOpen] = useState(false);
 
   return (

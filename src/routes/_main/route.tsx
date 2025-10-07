@@ -31,20 +31,20 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ location, search, context: { authKit, queryClient } }) {
+  async beforeLoad({ location, search, context: { authKit } }) {
     const token = getToken();
 
     if (token === null) {
-      const next = location.pathname !== '/' ? location.href : undefined;
-
       throw redirect({
         to: '/auth/signin',
-        search: { next },
+        search: {
+          next: location.pathname !== '/' ? location.href : undefined,
+        },
       });
     }
 
     if (search['organization-id']) {
-      await switchOrganization(authKit, queryClient, search['organization-id']);
+      await switchOrganization(authKit, search['organization-id']);
     }
   },
 
@@ -96,7 +96,7 @@ export const Route = createFileRoute('/_main')({
   },
 });
 
-async function switchOrganization(authKit: AuthKitAdapter, queryClient: QueryClient, organizationId: string) {
+async function switchOrganization(authKit: AuthKitAdapter, organizationId: string) {
   const api = getApi();
 
   const result = await api('post /v1/organizations/{id}/switch', {
@@ -105,7 +105,7 @@ async function switchOrganization(authKit: AuthKitAdapter, queryClient: QueryCli
   });
 
   if (!authKit.user) {
-    void setToken(result.token!.id!, { queryClient });
+    setToken(result.token!.id!);
   }
 
   throw redirect({
