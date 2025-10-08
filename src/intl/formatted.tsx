@@ -1,8 +1,12 @@
-import { Tooltip } from '@koyeb/design-system';
+import { Badge } from '@koyeb/design-system';
+import { Tooltip, TooltipTitle } from '@koyeb/design-system/next';
 import { useMemo } from 'react';
 import { FormattedDate, FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
+import { useNow } from 'src/hooks/timers';
 import { identity } from 'src/utils/generic';
+
+import { Translate } from './translate';
 
 type FormattedPriceProps = {
   /** value in cents */
@@ -33,14 +37,19 @@ export function FormattedDistanceToNow({
   children = identity,
   ...props
 }: FormattedDistanceToNowTimeProps) {
+  const formatted = formatDateInTimeZones(new Date(valueProp));
+  const now = useNow();
+
   const [value, unit] = useMemo(() => {
-    return getDistanceToNow(new Date(valueProp));
-  }, [valueProp]);
+    return getDistanceToNow(new Date(valueProp), now);
+  }, [valueProp, now]);
 
   return (
-    <Tooltip content={<FormattedDate value={valueProp} dateStyle="medium" timeStyle="medium" />}>
-      {(tooltipProps) => (
-        <span {...tooltipProps} {...props}>
+    <Tooltip
+      arrow
+      placement="top"
+      trigger={(triggerProps) => (
+        <span {...triggerProps} {...props}>
           {children(
             <FormattedRelativeTime
               value={value}
@@ -51,12 +60,73 @@ export function FormattedDistanceToNow({
           )}
         </span>
       )}
-    </Tooltip>
+      className="col min-w-60 gap-3 text-xs"
+      content={
+        <>
+          <TooltipTitle
+            title={
+              <FormattedRelativeTime
+                value={value}
+                unit={unit}
+                updateIntervalInSeconds={
+                  ['second', 'minute', 'hour'].includes(unit as string) ? 1 : undefined
+                }
+              />
+            }
+          />
+
+          <div className="row items-center gap-1">
+            <Badge size={1}>
+              <Translate id="common.utc" />
+            </Badge>
+            <div>
+              <FormattedDate value={formatted.utc} dateStyle="medium" />
+            </div>
+            <div className="ml-auto text-dim">
+              <FormattedDate value={formatted.utc} timeStyle="medium" />
+            </div>
+          </div>
+
+          <div className="row items-center gap-1">
+            <Badge size={1}>
+              <Translate id="common.utc" />
+              {formatted.utcOffset}
+            </Badge>
+            <div>
+              <FormattedDate value={formatted.local} dateStyle="medium" />
+            </div>
+            <div className="ml-auto text-dim">
+              <FormattedDate value={formatted.local} timeStyle="medium" />
+            </div>
+          </div>
+        </>
+      }
+    />
   );
 }
 
-function getDistanceToNow(date: Date): [number, RelativeTimeFormatSingularUnit] {
-  let value = (date.getTime() - Date.now()) / 1000;
+function formatDateInTimeZones(date: Date, opts?: Intl.DateTimeFormatOptions) {
+  const utc = date.toLocaleString('en-US', { timeZone: 'UTC', ...opts });
+
+  const local = date.toLocaleString(undefined, {
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    ...opts,
+  });
+
+  const offsetMinutes = date.getTimezoneOffset();
+  const offsetHours = -offsetMinutes / 60;
+  const sign = offsetHours >= 0 ? '+' : '-';
+  const utcOffset = `${sign}${Math.abs(offsetHours)}`;
+
+  return {
+    utc,
+    local,
+    utcOffset,
+  };
+}
+
+function getDistanceToNow(date: Date, now: Date): [number, RelativeTimeFormatSingularUnit] {
+  let value = (date.getTime() - now.getTime()) / 1000;
 
   if (Math.abs(value) < 60) {
     return [Math.round(value), 'second'];

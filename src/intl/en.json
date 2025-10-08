@@ -11,6 +11,7 @@
     "override": "Override",
     "noValue": "--",
     "notApplicable": "N/A",
+    "utc": "UTC",
     "new": "New",
     "plusCount": "+{count}",
     "clickToCopy": "Click to copy",
