@@ -122,7 +122,7 @@ function General({ definition }: { definition: DeploymentDefinition }) {
       <hr />
 
       <Data name={<T id="general.typeLabel" />}>
-        <ServiceTypeIcon type={definition.type} size="medium" />
+        <ServiceTypeIcon type={definition.type} />
         <TranslateEnum enum="serviceType" value={definition.type} />
       </Data>
 

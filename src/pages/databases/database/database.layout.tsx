@@ -44,7 +44,7 @@ export function DatabaseLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="col gap-6">
       <div className="row max-w-full min-w-0 items-center gap-2">
-        <ServiceTypeIcon type="database" size="big" />
+        <ServiceTypeIcon type="database" size={4} />
 
         <div className="col min-w-0 gap-1">
           <div className="typo-heading">{service.name}</div>

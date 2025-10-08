@@ -192,7 +192,7 @@ async function getAppsServices(apps: App[]): Promise<Service[]> {
 function ServiceItem({ app, service }: { app?: App; service: Service }) {
   return (
     <div className="row items-center gap-2">
-      <ServiceTypeIcon type={service.type} size="medium" />
+      <ServiceTypeIcon type={service.type} />
 
       <div className="col gap-0.5">
         <Translate

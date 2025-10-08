@@ -126,7 +126,7 @@ function Header({ app, service, deployment }: HeaderProps) {
 
   return (
     <div className="row max-w-full min-w-0 items-center gap-2">
-      <ServiceTypeIcon type={service.type} size="big" />
+      <ServiceTypeIcon type={service.type} size={4} />
 
       <div className="col min-w-0 gap-1">
         <div className="row items-center gap-2">

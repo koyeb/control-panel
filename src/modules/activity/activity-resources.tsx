@@ -140,7 +140,7 @@ function ServiceResource({
 
   return (
     <ActivityResource {...props}>
-      {serviceType && <ServiceTypeIcon size="small" type={serviceType} />}
+      {serviceType && <ServiceTypeIcon size={2} type={serviceType} />}
 
       <span className="truncate direction-rtl">
         <Translate id="common.appServiceName" values={{ appName, serviceName }} />

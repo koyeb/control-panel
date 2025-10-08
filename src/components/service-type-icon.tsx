@@ -5,10 +5,10 @@ import { ServiceType } from 'src/model';
 
 type ServiceTypeIconProps = {
   type: ServiceType | 'private' | 'batch' | 'model';
-  size?: 'small' | 'medium' | 'big';
+  size?: 1 | 2 | 3 | 4;
 };
 
-export function ServiceTypeIcon({ type, size = 'big' }: ServiceTypeIconProps) {
+export function ServiceTypeIcon({ type, size = 3 }: ServiceTypeIconProps) {
   const { Icon, className } = {
     web: { Icon: IconSquareCode, className: clsx('bg-green text-zinc-50') },
     private: { Icon: IconGlobeLock, className: clsx('bg-red text-zinc-50') },
@@ -22,18 +22,20 @@ export function ServiceTypeIcon({ type, size = 'big' }: ServiceTypeIconProps) {
     <span
       className={clsx(
         {
-          'rounded-lg p-1.5': size === 'big',
-          'rounded-md p-1': size === 'medium',
-          'rounded p-0.5': size === 'small',
+          'rounded-lg p-1.5': size === 4,
+          'rounded-md p-1': size === 3,
+          'rounded-sm p-0.5': size === 2,
+          'rounded-xs p-px': size === 1,
         },
         className,
       )}
     >
       <Icon
         className={clsx({
-          'size-6': size === 'big',
-          'size-4': size === 'medium',
-          'size-3': size === 'small',
+          'size-6': size === 4,
+          'size-4': size === 3,
+          'size-3': size === 2,
+          'size-2.5': size === 1,
         })}
       />
     </span>

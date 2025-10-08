@@ -46,7 +46,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
 
           <div className="ml-auto row items-center gap-2 font-medium">
             <TranslateEnum enum="serviceType" value={type} />
-            <ServiceTypeIcon type={type} size="medium" />
+            <ServiceTypeIcon type={type} />
           </div>
         </div>
 

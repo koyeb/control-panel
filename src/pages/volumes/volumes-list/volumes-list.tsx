@@ -173,7 +173,7 @@ function AttachedService({ volume, serviceId }: { volume: Volume; serviceId?: st
 
   return (
     <LinkButton to="/services/$serviceId" params={{ serviceId }} variant="outline" color="gray" size={1}>
-      <ServiceTypeIcon type={service.type} size="small" />
+      <ServiceTypeIcon type={service.type} size={2} />
       {service.name}
     </LinkButton>
   );
