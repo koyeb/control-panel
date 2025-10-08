@@ -49,6 +49,14 @@ export function isSlug(value: string): boolean {
   return /^[-.a-z0-9]*$/.exec(value) !== null;
 }
 
+export function ellipsis(value: string, max: number): string {
+  if (value.length <= max) {
+    return value;
+  }
+
+  return value.slice(0, max - 3) + '...';
+}
+
 export function shortId(uuid: string | undefined): string | undefined;
 export function shortId(uuid: string): string;
 export function shortId(uuid?: string) {

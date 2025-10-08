@@ -227,6 +227,7 @@ const databaseDeployment = createFactory<DatabaseDeployment>(() => ({
   appId: '',
   serviceId: '',
   name: '',
+  date: createDate(),
   status: 'HEALTHY',
   created_at: '',
   postgresVersion: 16,

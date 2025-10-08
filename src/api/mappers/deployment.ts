@@ -327,6 +327,7 @@ function mapDatabaseDeployment(deployment: API.Deployment): DatabaseDeployment {
     appId: deployment.app_id!,
     serviceId: deployment.service_id!,
     name: deployment.definition!.name!,
+    date: deployment.created_at!,
     status: deployment.status!,
     postgresVersion: definition.pg_version as PostgresVersion,
     region: definition.region!,

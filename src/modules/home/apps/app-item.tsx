@@ -20,12 +20,7 @@ export function AppItem({ app, services }: AppItemProps) {
 
       <div className="col gap-4">
         {services.map((service) => (
-          <ServiceItem
-            key={service.id}
-            app={app}
-            service={service}
-            deployment={service.activeDeployment ?? service.latestDeployment}
-          />
+          <ServiceItem key={service.id} app={app} service={service} deployment={service.latestDeployment} />
         ))}
 
         {services.length === 0 && <NoServicesFallback />}

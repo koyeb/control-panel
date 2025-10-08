@@ -1,8 +1,9 @@
 import { Badge } from '@koyeb/design-system';
-import { Tooltip, TooltipTitle } from '@koyeb/design-system/next';
+import { TooltipTitle } from '@koyeb/design-system/next';
 import { useMemo } from 'react';
-import { FormattedDate, FormattedNumber, FormattedRelativeTime } from 'react-intl';
+import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
+import { Tooltip } from 'src/components/tooltip';
 import { useNow } from 'src/hooks/timers';
 import { identity } from 'src/utils/generic';
 
@@ -79,12 +80,8 @@ export function FormattedDistanceToNow({
             <Badge size={1}>
               <Translate id="common.utc" />
             </Badge>
-            <div>
-              <FormattedDate value={formatted.utc} dateStyle="medium" />
-            </div>
-            <div className="ml-auto text-dim">
-              <FormattedDate value={formatted.utc} timeStyle="medium" />
-            </div>
+            <div>{formatted.utc({ dateStyle: 'medium' })}</div>
+            <div className="ml-auto text-dim">{formatted.utc({ timeStyle: 'medium' })}</div>
           </div>
 
           <div className="row items-center gap-1">
@@ -92,12 +89,8 @@ export function FormattedDistanceToNow({
               <Translate id="common.utc" />
               {formatted.utcOffset}
             </Badge>
-            <div>
-              <FormattedDate value={formatted.local} dateStyle="medium" />
-            </div>
-            <div className="ml-auto text-dim">
-              <FormattedDate value={formatted.local} timeStyle="medium" />
-            </div>
+            <div>{formatted.local({ dateStyle: 'medium' })}</div>
+            <div className="ml-auto text-dim">{formatted.local({ timeStyle: 'medium' })}</div>
           </div>
         </>
       }
@@ -105,23 +98,23 @@ export function FormattedDistanceToNow({
   );
 }
 
-function formatDateInTimeZones(date: Date, opts?: Intl.DateTimeFormatOptions) {
-  const utc = date.toLocaleString('en-US', { timeZone: 'UTC', ...opts });
-
-  const local = date.toLocaleString(undefined, {
-    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    ...opts,
-  });
-
+function formatDateInTimeZones(date: Date) {
   const offsetMinutes = date.getTimezoneOffset();
   const offsetHours = -offsetMinutes / 60;
   const sign = offsetHours >= 0 ? '+' : '-';
   const utcOffset = `${sign}${Math.abs(offsetHours)}`;
 
   return {
-    utc,
-    local,
     utcOffset,
+    utc: (opts?: Intl.DateTimeFormatOptions) => {
+      return date.toLocaleString('en-US', { timeZone: 'UTC', ...opts });
+    },
+    local: (opts?: Intl.DateTimeFormatOptions) => {
+      return date.toLocaleString(undefined, {
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        ...opts,
+      });
+    },
   };
 }
 

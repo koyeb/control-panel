@@ -419,6 +419,7 @@ export type DatabaseDeployment = {
   appId: string;
   serviceId: string;
   name: string;
+  date: string;
   status: DeploymentStatus;
   postgresVersion: PostgresVersion;
   region: string;

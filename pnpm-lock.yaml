@@ -21,8 +21,8 @@ importers:
         specifier: ^0.0.18
         version: 0.0.18
       '@koyeb/design-system':
-        specifier: ^0.9.3
-        version: 0.9.3(@floating-ui/react@0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@tanstack/react-ranger@0.0.4(react@19.1.1))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.1.1))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(immer@10.1.3)(lucide-react@0.544.0(react@19.1.1))(react@19.1.1)(shiki@3.12.2)
+        specifier: ^0.9.5
+        version: 0.9.5(@floating-ui/react@0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@tanstack/react-ranger@0.0.4(react@19.1.1))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.1.1))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(immer@10.1.3)(lucide-react@0.544.0(react@19.1.1))(react@19.1.1)(shiki@3.12.2)
       '@mapbox/search-js-core':
         specifier: 1.3.0
         version: 1.3.0
@@ -318,8 +318,8 @@ packages:
   '@asamuzakjp/css-color@4.0.5':
     resolution: {integrity: sha512-lMrXidNhPGsDjytDy11Vwlb6OIGrT3CmLg3VWNFyWkLWtijKl7xjvForlh8vuj0SHGjgl4qZEQzUmYTeQA2JFQ==}
 
-  '@asamuzakjp/dom-selector@6.5.7':
-    resolution: {integrity: sha512-cvdTPsi2qC1c22UppvuVmx/PDwuc6+QQkwt9OnwQD6Uotbh//tb2XDF0OoK2V0F4b8d02LIwNp3BieaDMAhIhA==}
+  '@asamuzakjp/dom-selector@6.6.1':
+    resolution: {integrity: sha512-8QT9pokVe1fUt1C8IrJketaeFOdRfTOS96DL3EBjE8CRZm3eHnwMlQe2NPoOSEYPwJ5Q25uYoX1+m9044l3ysQ==}
 
   '@asamuzakjp/nwsapi@2.3.9':
     resolution: {integrity: sha512-n8GuYSrI9bF7FFZ/SjhwevlHc8xaVlb/7HmHelnc/PZXBD2ZR49NnN9sMMuDdEGPeeRQ5d0hqlSlEpgCX3Wl0Q==}
@@ -955,8 +955,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@koyeb/design-system@0.9.3':
-    resolution: {integrity: sha512-50vFEj4u8QKc7JvjZRpIwLmBmz2RGlvQGaM7D/aYJ1UxMqupi4mxAwojYVxz7+mmQF68rYl1unzwYKsoZ+0JXQ==}
+  '@koyeb/design-system@0.9.5':
+    resolution: {integrity: sha512-zZp/F5UUD0t92sjxHBqQHyZpjMLUuTigAh/f0HyrIS8DFfOXLDS+ejh0bycgsnk+kX2DXDOWQotiUcMuCHrYCA==}
     peerDependencies:
       '@floating-ui/react': ^0.27.0
       '@tanstack/react-ranger': ^0.0.4
@@ -4904,7 +4904,7 @@ snapshots:
       lru-cache: 11.2.2
     optional: true
 
-  '@asamuzakjp/dom-selector@6.5.7':
+  '@asamuzakjp/dom-selector@6.6.1':
     dependencies:
       '@asamuzakjp/nwsapi': 2.3.9
       bidi-js: 1.0.3
@@ -5713,7 +5713,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@koyeb/design-system@0.9.3(@floating-ui/react@0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@tanstack/react-ranger@0.0.4(react@19.1.1))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.1.1))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(immer@10.1.3)(lucide-react@0.544.0(react@19.1.1))(react@19.1.1)(shiki@3.12.2)':
+  '@koyeb/design-system@0.9.5(@floating-ui/react@0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(@tanstack/react-ranger@0.0.4(react@19.1.1))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.1.1))(framer-motion@12.23.13(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(immer@10.1.3)(lucide-react@0.544.0(react@19.1.1))(react@19.1.1)(shiki@3.12.2)':
     dependencies:
       '@floating-ui/react': 0.27.16(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@tanstack/react-ranger': 0.0.4(react@19.1.1)
@@ -8479,7 +8479,7 @@ snapshots:
 
   jsdom@27.0.0(postcss@8.5.6):
     dependencies:
-      '@asamuzakjp/dom-selector': 6.5.7
+      '@asamuzakjp/dom-selector': 6.6.1
       cssstyle: 5.3.1(postcss@8.5.6)
       data-urls: 6.0.0
       decimal.js: 10.6.0

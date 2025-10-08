@@ -59,6 +59,7 @@ export {
   HouseIcon as IconHouse,
   InfoIcon as IconInfo,
   LaptopIcon as IconLaptop,
+  LayersIcon as IconLayers,
   LayoutDashboardIcon as IconLayoutDashboard,
   LightbulbIcon as IconLightbulb,
   LinkIcon as IconLink,

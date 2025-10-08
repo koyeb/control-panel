@@ -2218,6 +2218,32 @@
           "success": "Your app is being deleted"
         }
       },
+      "service": {
+        "scaling": "{healthy} <dim>of</dim> {total} <dim>running</dim>",
+        "postgresVersion": "Postgres (v{version})",
+        "latestDeployment": "Latest deployment",
+        "instanceTooltip": {
+          "title": "{category} instance",
+          "cpu": "{value} vCPU",
+          "ram": "{value} RAM",
+          "vram": "{value} VRAM",
+          "disk": "{value} Disk"
+        },
+        "regionsTooltip": {
+          "title": "Regions"
+        },
+        "scalingTooltip": {
+          "title": "Scaling",
+          "description": "The number of instances currently running for your service",
+          "count": "{healthy}/{total}"
+        },
+        "deploymentTrigger": {
+          "initial": "This is your first deployment",
+          "redeploy": "Triggered by a manual action on the service",
+          "resume": "Triggered because you resumed this service",
+          "git": "<dim>on</dim> {branch} <dim>by</dim> {author}"
+        }
+      },
       "deploymentSource": {
         "archive": "Archive"
       },
