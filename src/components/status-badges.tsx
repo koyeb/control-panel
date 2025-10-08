@@ -1,6 +1,7 @@
 import { Badge, BadgeColor, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 
+import { SvgProps } from 'src/application/types';
 import {
   IconCircleAlert,
   IconCircleCheck,
@@ -19,9 +20,11 @@ import {
   VolumeSnapshotStatus,
   VolumeStatus,
 } from 'src/model';
+import { Extend } from 'src/utils/types';
 
 type ResourceStatusProps<Status> = {
   ref?: React.Ref<React.ComponentRef<typeof Badge>>;
+  icon?: boolean;
   status: Status;
   className?: string;
 };
@@ -29,9 +32,16 @@ type ResourceStatusProps<Status> = {
 function createResourceStatus<Status extends string>(
   map: Record<Status, [React.ComponentType<{ className?: string }>, BadgeColor]>,
 ) {
-  return function ResourceStatus({ ref, status, className }: ResourceStatusProps<Status>) {
+  function Icon({ status, className, ...props }: Extend<{ status: Status }, SvgProps>) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const [Icon, color] = map[status] ?? unknownStatusBadge;
+
+    return <Icon className={clsx(colorMap[color], className)} {...props} />;
+  }
+
+  function ResourceStatus({ ref, icon = true, status, className }: ResourceStatusProps<Status>) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const [, color] = map[status] ?? unknownStatusBadge;
 
     return (
       <Badge
@@ -40,16 +50,26 @@ function createResourceStatus<Status extends string>(
         color={color}
         className={clsx('inline-flex flex-row items-center gap-1', className)}
       >
-        <Icon className="size-4" />
+        {icon && <Icon status={status} className="size-4" />}
         <TranslateStatus status={status} />
       </Badge>
     );
-  };
+  }
+
+  return [Icon, ResourceStatus] as const;
 }
 
 const unknownStatusBadge = [IconCircleDot, 'blue'] as const;
 
-export const ServiceStatusBadge = createResourceStatus<ServiceStatus>({
+const colorMap: Record<BadgeColor, string> = {
+  blue: clsx('text-blue'),
+  red: clsx('text-red'),
+  green: clsx('text-green'),
+  orange: clsx('text-orange'),
+  gray: clsx('text-gray'),
+};
+
+export const [ServiceStatusIcon, ServiceStatusBadge] = createResourceStatus<ServiceStatus>({
   STARTING: [Spinner, 'gray'],
   HEALTHY: [IconCircleCheck, 'green'],
   DEGRADED: [IconCircleAlert, 'orange'],
@@ -61,7 +81,7 @@ export const ServiceStatusBadge = createResourceStatus<ServiceStatus>({
   RESUMING: [Spinner, 'gray'],
 });
 
-export const DeploymentStatusBadge = createResourceStatus<DeploymentStatus>({
+export const [DeploymentStatusIcon, DeploymentStatusBadge] = createResourceStatus<DeploymentStatus>({
   PENDING: [IconCircleDashed, 'gray'],
   PROVISIONING: [Spinner, 'blue'],
   SCHEDULED: [IconCircleCheck, 'blue'],
@@ -80,7 +100,7 @@ export const DeploymentStatusBadge = createResourceStatus<DeploymentStatus>({
   SLEEPING: [IconMoon, 'gray'],
 });
 
-export const InstanceStatusBadge = createResourceStatus<InstanceStatus>({
+export const [InstanceStatusIcon, InstanceStatusBadge] = createResourceStatus<InstanceStatus>({
   ALLOCATING: [Spinner, 'blue'],
   STARTING: [Spinner, 'blue'],
   HEALTHY: [IconCircleCheck, 'green'],
@@ -91,7 +111,7 @@ export const InstanceStatusBadge = createResourceStatus<InstanceStatus>({
   SLEEPING: [IconMoon, 'gray'],
 });
 
-export const VolumeStatusBadge = createResourceStatus<VolumeStatus>({
+export const [VolumeStatusIcon, VolumeStatusBadge] = createResourceStatus<VolumeStatus>({
   INVALID: [IconCircleX, 'red'],
   ATTACHED: [IconCircleCheck, 'green'],
   DETACHED: [IconCircleCheck, 'blue'],
@@ -99,11 +119,12 @@ export const VolumeStatusBadge = createResourceStatus<VolumeStatus>({
   DELETED: [IconTrash, 'red'],
 });
 
-export const VolumeSnapshotStatusBadge = createResourceStatus<VolumeSnapshotStatus>({
-  INVALID: [IconCircleX, 'red'],
-  CREATING: [Spinner, 'gray'],
-  AVAILABLE: [IconCircleCheck, 'green'],
-  MIGRATING: [Spinner, 'blue'],
-  DELETING: [Spinner, 'orange'],
-  DELETED: [IconTrash, 'red'],
-});
+export const [VolumeSnapshotStatusIcon, VolumeSnapshotStatusBadge] =
+  createResourceStatus<VolumeSnapshotStatus>({
+    INVALID: [IconCircleX, 'red'],
+    CREATING: [Spinner, 'gray'],
+    AVAILABLE: [IconCircleCheck, 'green'],
+    MIGRATING: [Spinner, 'blue'],
+    DELETING: [Spinner, 'orange'],
+    DELETED: [IconTrash, 'red'],
+  });
