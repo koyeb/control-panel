@@ -14,6 +14,7 @@ import { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api';
+import { ApiEndpoint } from './api/api';
 import { AuthKitAdapter } from './application/authkit';
 import { getConfig } from './application/config';
 import { notify } from './application/notify';
@@ -52,7 +53,7 @@ const queryCache = new QueryCache({
 
     const { showError } = { showError: true, ...query.meta };
 
-    if (ApiError.is(error, 401)) {
+    if (ApiError.is(error, 401) && query.queryKey[0] === ('get /v1/account/profile' satisfies ApiEndpoint)) {
       await handleAuthenticationError(error);
     }
 
