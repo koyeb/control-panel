@@ -189,8 +189,8 @@ function BuildpackConfiguration() {
     <div className="col gap-4">
       <OverridableInput<BuilderForm, 'buildpack.buildCommand'>
         name="buildpack.buildCommand"
-        label={<T id="buildpack.configuration.runCommand.label" />}
-        helpTooltip={<T id="buildpack.configuration.runCommand.tooltip" />}
+        label={<T id="buildpack.configuration.buildCommand.label" />}
+        helpTooltip={<T id="buildpack.configuration.buildCommand.tooltip" />}
       />
 
       <OverridableInput<BuilderForm, 'buildpack.runCommand'>
