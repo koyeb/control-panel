@@ -1,4 +1,4 @@
-import { Alert, Button, DialogHeader, Tooltip } from '@koyeb/design-system';
+import { Alert, Button, DialogHeader } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,6 +13,7 @@ import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
 import { ControlledCheckbox } from 'src/components/controlled';
 import { Dialog, closeDialog } from 'src/components/dialog';
+import { Tooltip } from 'src/components/tooltip';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { IconArrowRight } from 'src/icons';
@@ -98,8 +99,10 @@ function DialogContent({ service }: { service: Service }) {
                 </div>
               </div>
 
-              <Tooltip content={latestStashed && <T id="skipBuild.latestStashed" />}>
-                {(props) => (
+              <Tooltip
+                mobile={false}
+                content={latestStashed && <T id="skipBuild.latestStashed" />}
+                trigger={(props) => (
                   <div {...props}>
                     <Button
                       type="submit"
@@ -115,7 +118,7 @@ function DialogContent({ service }: { service: Service }) {
                     </Button>
                   </div>
                 )}
-              </Tooltip>
+              />
             </div>
 
             <div className="col items-start gap-4 rounded-md border p-3">

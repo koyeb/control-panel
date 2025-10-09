@@ -1,4 +1,5 @@
-import { Tooltip } from '@koyeb/design-system';
+import '@koyeb/design-system';
+
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect } from 'react';
@@ -6,6 +7,7 @@ import { z } from 'zod';
 
 import { reportError } from 'src/application/sentry';
 import { ExternalLink } from 'src/components/link';
+import { Tooltip } from 'src/components/tooltip';
 import { IconSquareArrowOutUpRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
@@ -125,13 +127,15 @@ export function PlatformStatus({ collapsed }: { collapsed: boolean }) {
       />
 
       {!collapsed && (
-        <Tooltip allowHover content={message}>
-          {(props) => (
+        <Tooltip
+          allowHover
+          content={message}
+          trigger={(props) => (
             <span {...props}>
               <T id={status} />
             </span>
           )}
-        </Tooltip>
+        />
       )}
 
       {!collapsed && (

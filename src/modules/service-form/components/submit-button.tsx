@@ -1,10 +1,11 @@
-import { Button, ButtonMenuItem, Floating, Menu, Tooltip } from '@koyeb/design-system';
+import { Button, ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useIsFetching } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useFormContext, useFormState } from 'react-hook-form';
 
 import { ApiEndpoint } from 'src/api/api';
 import { Shortcut } from 'src/components/shortcut';
+import { Tooltip } from 'src/components/tooltip';
 import { useShortcut } from 'src/hooks/shortcut';
 import { IconChevronDown } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -99,8 +100,9 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
             />
           </ButtonMenuItem>
 
-          <Tooltip placement="top" content={!hasPreviousBuild && <T id="noPreviousBuild" />}>
-            {(props) => (
+          <Tooltip
+            content={!hasPreviousBuild && <T id="noPreviousBuild" />}
+            trigger={(props) => (
               <div {...props}>
                 <ButtonMenuItem
                   onClick={() => deploy({ skipBuild: true })}
@@ -115,7 +117,7 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
                 </ButtonMenuItem>
               </div>
             )}
-          </Tooltip>
+          />
         </Menu>
       )}
     />

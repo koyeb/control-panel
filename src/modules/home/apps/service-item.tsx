@@ -19,7 +19,7 @@ import { ExternalLink, Link } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { DeploymentStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
-import { Tooltip } from 'src/components/tooltip';
+import { InfoTooltip, Tooltip } from 'src/components/tooltip';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import {
   IconArchive,
@@ -32,7 +32,6 @@ import {
   IconGitBranch,
   IconGitCommitHorizontal,
   IconGithub,
-  IconInfo,
   IconLayers,
   IconMemoryStick,
   IconMicrochip,
@@ -438,20 +437,6 @@ function DeploymentTrigger({ deployment }: { deployment: ComputeDeployment }) {
         <T id="deploymentTrigger.git" values={{ branch, author }} />
       </div>
     </>
-  );
-}
-
-function InfoTooltip(props: Omit<React.ComponentProps<typeof Tooltip>, 'trigger'>) {
-  return (
-    <Tooltip
-      {...props}
-      allowHover
-      trigger={(props) => (
-        <div {...props}>
-          <IconInfo className="size-3.5 text-dim" />
-        </div>
-      )}
-    />
   );
 }
 

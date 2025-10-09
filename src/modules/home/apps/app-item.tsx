@@ -1,5 +1,4 @@
-import { HelpTooltip } from '@koyeb/design-system';
-
+import { InfoTooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
 import { App, AppFull } from 'src/model';
 
@@ -34,10 +33,7 @@ function AppHeader({ app }: { app: App }) {
     <div className="row items-center gap-4">
       <div className="row items-center gap-2">
         <span className="font-medium">{app.name}</span>
-
-        <HelpTooltip icon="info">
-          <T id="appTooltip" />
-        </HelpTooltip>
+        <InfoTooltip content={<T id="appTooltip" />} />
       </div>
 
       <AppActions app={app} />

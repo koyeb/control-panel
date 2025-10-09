@@ -1,6 +1,7 @@
-import { Tooltip } from '@koyeb/design-system';
+import '@koyeb/design-system';
 
-import { IconInfo, IconTicketPercent } from 'src/icons';
+import { InfoTooltip } from 'src/components/tooltip';
+import { IconTicketPercent } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 
@@ -11,9 +12,7 @@ export function DatabaseEstimatedCost({ cost }: { cost?: number }) {
     <div className="card col gap-4 p-4">
       <div className="row items-center gap-2 font-medium">
         <T id="title" />
-        <Tooltip content={<T id="tooltip" />}>
-          {(props) => <IconInfo {...props} className="size-4" />}
-        </Tooltip>
+        <InfoTooltip content={<T id="tooltip" />} />
       </div>
 
       {cost === 0 && (

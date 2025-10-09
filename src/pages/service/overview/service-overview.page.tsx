@@ -1,9 +1,10 @@
-import { Alert, IconButton, Tooltip, useBreakpoint } from '@koyeb/design-system';
+import { Alert, IconButton, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
+import { Tooltip } from 'src/components/tooltip';
 import { useRouteParam } from 'src/hooks/router';
 import { IconChevronLeft, IconChevronsLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -139,9 +140,7 @@ function DeploymentsListActions({
       </div>
 
       <Tooltip
-        content={activeDeploymentId === undefined && <T id="deployments.actions.noActiveDeployment" />}
-      >
-        {(props) => (
+        trigger={(props) => (
           <div {...props} className="md:px-2">
             <LinkButton
               variant="ghost"
@@ -156,7 +155,8 @@ function DeploymentsListActions({
             </LinkButton>
           </div>
         )}
-      </Tooltip>
+        content={activeDeploymentId === undefined && <T id="deployments.actions.noActiveDeployment" />}
+      />
 
       <div className="md:ps-2">
         <LinkButton

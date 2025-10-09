@@ -1,9 +1,10 @@
-import { Badge, Tooltip } from '@koyeb/design-system';
+import { Badge } from '@koyeb/design-system';
 
 import { useCatalogInstance, useRegionsCatalog, useVolumes } from 'src/api';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';
+import { Tooltip } from 'src/components/tooltip';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { DeploymentDefinition, EnvironmentVariable, type Scaling } from 'src/model';
 import { hasProperty } from 'src/utils/object';
@@ -48,13 +49,14 @@ export function RegionsMetadata({ regions }: { regions: string[] }) {
           {catalogRegion?.name}
 
           {otherRegions.length > 0 && (
-            <Tooltip content={<RegionsList regionIds={otherRegions} />}>
-              {(props) => (
+            <Tooltip
+              content={<RegionsList regionIds={otherRegions} />}
+              trigger={(props) => (
                 <Badge size={1} {...props}>
                   <Translate id="common.plusCount" values={{ count: otherRegions.length }} />
                 </Badge>
               )}
-            </Tooltip>
+            />
           )}
         </div>
       }
@@ -85,8 +87,11 @@ export function EnvironmentMetadata({ definition }: { definition: DeploymentDefi
     <Metadata
       label={<T id="environmentLabel" />}
       value={
-        <Tooltip allowHover content={content()} className="max-w-md">
-          {(props) => (
+        <Tooltip
+          allowHover
+          content={content()}
+          className="max-w-md"
+          trigger={(props) => (
             <span {...props}>
               <T
                 id="environmentValue"
@@ -94,7 +99,7 @@ export function EnvironmentMetadata({ definition }: { definition: DeploymentDefi
               />
             </span>
           )}
-        </Tooltip>
+        />
       }
     />
   );
@@ -134,13 +139,16 @@ export function VolumesMetadata({ definition }: { definition: DeploymentDefiniti
     <Metadata
       label={<T id="volumesLabel" />}
       value={
-        <Tooltip allowHover content={content()} className="max-w-md">
-          {(props) => (
+        <Tooltip
+          allowHover
+          content={content()}
+          className="max-w-md"
+          trigger={(props) => (
             <span {...props}>
               <T id="volumesValue" values={{ count: attachedVolumes.length }} />
             </span>
           )}
-        </Tooltip>
+        />
       }
     />
   );

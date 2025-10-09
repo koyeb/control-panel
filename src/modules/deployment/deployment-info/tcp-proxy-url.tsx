@@ -1,8 +1,9 @@
-import { Badge, InfoTooltip, Spinner, Tooltip } from '@koyeb/design-system';
+import { Badge, InfoTooltip, Spinner } from '@koyeb/design-system';
 
 import { ServiceUrl, getServiceUrls, isUpcomingDeployment } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Metadata } from 'src/components/metadata';
+import { Tooltip } from 'src/components/tooltip';
 import { IconArrowRight } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Deployment, Service } from 'src/model';
@@ -66,13 +67,15 @@ function TcpProxyUrlValue({ deployment, urls }: { deployment: Deployment; urls: 
       <CopyIconButton text={defined(url.tcpProxyUrl)} className="size-em" />
 
       {urls.length >= 2 && (
-        <Tooltip content={<UrlsList urls={urls.slice(1)} />}>
-          {(props) => (
+        <Tooltip
+          allowHover
+          content={<UrlsList urls={urls.slice(1)} />}
+          trigger={(props) => (
             <Badge size={1} {...props}>
               <Translate id="common.plusCount" values={{ count: urls.length - 1 }} />
             </Badge>
           )}
-        </Tooltip>
+        />
       )}
     </div>
   );

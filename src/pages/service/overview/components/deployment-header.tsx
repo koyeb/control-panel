@@ -1,7 +1,8 @@
-import { Tooltip } from '@koyeb/design-system';
+import '@koyeb/design-system';
 
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
+import { Tooltip } from 'src/components/tooltip';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { ComputeDeployment } from 'src/model';
 
@@ -15,9 +16,11 @@ export function DeploymentHeader({ deployment }: { deployment: ComputeDeployment
 
         <CopyIconButton text={deployment.id} className="size-4" />
 
-        <Tooltip allowHover content={<DeploymentMessages deployment={deployment} />}>
-          {(props) => <DeploymentStatusBadge {...props} status={deployment.status} />}
-        </Tooltip>
+        <Tooltip
+          allowHover
+          content={<DeploymentMessages deployment={deployment} />}
+          trigger={(props) => <DeploymentStatusBadge {...props} status={deployment.status} />}
+        />
 
         <div className="ml-auto text-dim">
           <FormattedDistanceToNow value={deployment.date} style="narrow" />
@@ -28,13 +31,9 @@ export function DeploymentHeader({ deployment }: { deployment: ComputeDeployment
         )}
       </div>
 
-      <Tooltip content={<DeploymentTrigger deployment={deployment} />}>
-        {(props) => (
-          <div {...props} className="max-w-full self-start truncate text-dim">
-            <DeploymentTrigger deployment={deployment} />
-          </div>
-        )}
-      </Tooltip>
+      <div className="max-w-full self-start truncate text-dim">
+        <DeploymentTrigger deployment={deployment} />
+      </div>
     </header>
   );
 }

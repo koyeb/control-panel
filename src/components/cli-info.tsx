@@ -1,6 +1,5 @@
-import { Tooltip } from '@koyeb/design-system';
-
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { Tooltip } from 'src/components/tooltip';
 import { IconInfo } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
@@ -18,13 +17,16 @@ export function CliInfoButton({ button, tooltip }: CliInfoButtonProps) {
     <div className="col items-end">
       {button}
 
-      <Tooltip allowHover color="neutral" content={tooltip} className="max-w-md">
-        {(props) => (
+      <Tooltip
+        allowHover
+        trigger={(props) => (
           <button type="button" className="text-xs text-dim/75 underline" {...props}>
             <T id="cta" values={{ icon: <IconInfo className="ml-1 inline-block size-3 align-middle" /> }} />
           </button>
         )}
-      </Tooltip>
+        content={tooltip}
+        className="max-w-md"
+      />
     </div>
   );
 }

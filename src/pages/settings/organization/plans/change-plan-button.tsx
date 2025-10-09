@@ -1,10 +1,11 @@
-import { Button, Tooltip } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { ExternalLinkButton } from 'src/components/link';
+import { Tooltip } from 'src/components/tooltip';
 import { tallyForms, useTallyLink } from 'src/hooks/tally';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { OrganizationPlan } from 'src/model';
@@ -61,8 +62,10 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
   };
 
   return (
-    <Tooltip content={organization?.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}>
-      {(props) => (
+    <Tooltip
+      mobile={false}
+      content={organization?.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}
+      trigger={(props) => (
         <div {...props}>
           <Button
             disabled={disabled()}
@@ -74,7 +77,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
           </Button>
         </div>
       )}
-    </Tooltip>
+    />
   );
 }
 

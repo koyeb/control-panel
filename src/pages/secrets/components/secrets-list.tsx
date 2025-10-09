@@ -1,10 +1,11 @@
-import { Button, Spinner, Table, TableColumnSelection, Tooltip, useBreakpoint } from '@koyeb/design-system';
+import { Button, Spinner, Table, TableColumnSelection, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { apiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
+import { Tooltip } from 'src/components/tooltip';
 import { useClipboard } from 'src/hooks/clipboard';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
@@ -98,8 +99,8 @@ function Value({ secret }: { secret: Secret }) {
       </Button>
 
       {showValue && query.data !== undefined ? (
-        <Tooltip content={<Translate id="common.clickToCopy" />}>
-          {(props) => (
+        <Tooltip
+          trigger={(props) => (
             <button
               {...props}
               className="text-start font-mono break-all whitespace-pre-line"
@@ -108,7 +109,8 @@ function Value({ secret }: { secret: Secret }) {
               {query.data}
             </button>
           )}
-        </Tooltip>
+          content={<Translate id="common.clickToCopy" />}
+        />
       ) : (
         <div className="text-dim">{masked}</div>
       )}

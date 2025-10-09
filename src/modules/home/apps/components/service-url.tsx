@@ -1,9 +1,10 @@
-import { Badge, Tooltip } from '@koyeb/design-system';
+import { Badge } from '@koyeb/design-system';
 import clsx from 'clsx';
 import sortBy from 'lodash-es/sortBy';
 
 import { notify } from 'src/application/notify';
 import { ExternalLink } from 'src/components/link';
+import { Tooltip } from 'src/components/tooltip';
 import { useClipboard } from 'src/hooks/clipboard';
 import { IconCopy, IconLink } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -35,13 +36,15 @@ export function ServiceUrl({ app, service, deployment }: ServiceUrlProps) {
       />
 
       {urls.length >= 2 && (
-        <Tooltip allowHover content={<ServiceUrlsList urls={urls} />}>
-          {(props) => (
+        <Tooltip
+          allowHover
+          content={<ServiceUrlsList urls={urls} />}
+          trigger={(props) => (
             <Badge {...props} size={1}>
               <Translate id="common.plusCount" values={{ count: urls.length - 1 }} />
             </Badge>
           )}
-        </Tooltip>
+        />
       )}
     </div>
   );

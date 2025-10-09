@@ -1,9 +1,10 @@
-import { InfoTooltip, Input, InputEnd } from '@koyeb/design-system';
+import { Input, InputEnd } from '@koyeb/design-system';
 
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { createTranslate } from 'src/intl/translate';
 
 import { ExternalLink } from './link';
+import { InfoTooltip } from './tooltip';
 
 const T = createTranslate('components.deployToKoyebButton');
 

@@ -1,7 +1,8 @@
-import { Alert, CheckboxInput, RadioInput, TabButton, TabButtons, Tooltip } from '@koyeb/design-system';
+import { Alert, CheckboxInput, RadioInput, TabButton, TabButtons } from '@koyeb/design-system';
 
 import { useCatalogRegionAvailability } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
+import { Tooltip } from 'src/components/tooltip';
 import { useRegionLatency } from 'src/hooks/region-latency';
 import { IconCircleGauge } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -145,13 +146,14 @@ function RegionLatency({ region }: { region: CatalogRegion }) {
   }
 
   return (
-    <Tooltip content={<T id="latencyTooltip" values={{ latency }} />}>
-      {(props) => (
+    <Tooltip
+      content={<T id="latencyTooltip" values={{ latency }} />}
+      trigger={(props) => (
         <div {...props} className="row items-center gap-1">
           <IconCircleGauge className="size-4" />
           <T id="regions.latency" values={{ value: latency }} />
         </div>
       )}
-    </Tooltip>
+    />
   );
 }

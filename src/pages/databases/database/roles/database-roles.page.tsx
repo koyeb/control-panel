@@ -1,4 +1,4 @@
-import { Button, ButtonMenuItem, Spinner, Table, Tooltip } from '@koyeb/design-system';
+import { Button, ButtonMenuItem, Spinner, Table } from '@koyeb/design-system';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -10,6 +10,7 @@ import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
+import { Tooltip } from 'src/components/tooltip';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useRouteParam } from 'src/hooks/router';
 import { IconEye, IconEyeOff } from 'src/icons';
@@ -126,13 +127,15 @@ function DatabaseRolePassword({ role }: { role: DatabaseRole }) {
       </Button>
 
       {showValue && query.data !== undefined ? (
-        <Tooltip content={<Translate id="common.clickToCopy" />}>
-          {(props) => (
+        <Tooltip
+          mobile={false}
+          content={<Translate id="common.clickToCopy" />}
+          trigger={(props) => (
             <button {...props} className="max-w-md truncate" onClick={copyValue}>
               {query.data.password}
             </button>
           )}
-        </Tooltip>
+        />
       ) : (
         <div className="text-dim">{masked}</div>
       )}

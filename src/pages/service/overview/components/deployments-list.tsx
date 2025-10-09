@@ -1,4 +1,4 @@
-import { Badge, Button, Collapse, Tooltip } from '@koyeb/design-system';
+import { Badge, Button, Collapse } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
@@ -10,7 +10,7 @@ import { DeploymentStatusBadge } from 'src/components/status-badges';
 import { IconChevronRight } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
-import { ComputeDeployment, GitDeploymentTrigger, Service } from 'src/model';
+import { ComputeDeployment, Service } from 'src/model';
 
 import { DeploymentTrigger } from './deployment-trigger';
 
@@ -222,16 +222,18 @@ function DeploymentItem({ service, deployment, selected, onClick }: DeploymentIt
             className="ml-auto text-xs font-medium text-dim"
           />
 
-          {deployment.trigger?.type == 'git' && <TriggerCommitAuthor trigger={deployment.trigger} />}
+          {deployment.trigger?.type == 'git' && (
+            <img
+              src={deployment.trigger.commit.author.avatar}
+              className="size-5 rounded-full"
+              title={deployment.trigger.commit.author.name}
+            />
+          )}
         </div>
 
-        <Tooltip content={<DeploymentTrigger deployment={deployment} />}>
-          {(props) => (
-            <div {...props} className="truncate text-xs text-dim">
-              <DeploymentTrigger deployment={deployment} />
-            </div>
-          )}
-        </Tooltip>
+        <div className="truncate text-xs text-dim">
+          <DeploymentTrigger deployment={deployment} />
+        </div>
       </div>
 
       {active && (
@@ -266,13 +268,5 @@ function DeploymentItem({ service, deployment, selected, onClick }: DeploymentIt
         </footer>
       )}
     </div>
-  );
-}
-
-function TriggerCommitAuthor({ trigger }: { trigger: GitDeploymentTrigger }) {
-  return (
-    <Tooltip content={trigger.commit.author.name}>
-      {(props) => <img {...props} src={trigger.commit.author.avatar} className="size-5 rounded-full" />}
-    </Tooltip>
   );
 }

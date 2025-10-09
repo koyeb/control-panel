@@ -1,9 +1,9 @@
-import { InfoTooltip } from '@koyeb/design-system';
 import { useMemo } from 'react';
 import { z } from 'zod';
 
 import { useApiCredentialsQuery } from 'src/api';
 import { createValidationGuard } from 'src/application/validation';
+import { InfoTooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
 import { Activity, ApiCredential } from 'src/model';
 import { hasProperty } from 'src/utils/object';
@@ -25,7 +25,6 @@ export function ActivityApiCredentialIcon({ activity }: { activity: Activity }) 
           values={{ credentialType: apiCredential.type, credentialName: apiCredential.name }}
         />
       }
-      iconClassName="text-dim"
     />
   );
 }

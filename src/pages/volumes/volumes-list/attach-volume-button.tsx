@@ -1,10 +1,11 @@
-import { Button, Combobox, InputBox, Spinner, Tooltip } from '@koyeb/design-system';
+import { Button, Combobox, InputBox, Spinner } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { getApi, mapApp, mapService } from 'src/api';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
+import { Tooltip } from 'src/components/tooltip';
 import { useNavigate } from 'src/hooks/router';
 import { IconChevronDown, IconSearch } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -62,8 +63,10 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
 
   return (
     <Combobox.Provider value={combobox}>
-      <Tooltip content={searchQuery.error?.message ?? (volume.serviceId && <T id="alreadyMounted" />)}>
-        {(props) => (
+      <Tooltip
+        mobile={false}
+        content={searchQuery.error?.message ?? (volume.serviceId && <T id="alreadyMounted" />)}
+        trigger={(props) => (
           <div {...props}>
             <Button
               {...combobox.getToggleButtonProps({ ref: combobox.floating.refs.setReference })}
@@ -76,7 +79,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
             </Button>
           </div>
         )}
-      </Tooltip>
+      />
 
       <Combobox.Dropdown onTransitionCancel={() => setSearch('')} className="w-full max-w-sm">
         <InputBox

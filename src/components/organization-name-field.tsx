@@ -1,8 +1,10 @@
-import { Tooltip } from '@koyeb/design-system';
+import '@koyeb/design-system';
+
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
+import { Tooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
 import { entries } from 'src/utils/object';
 
@@ -29,8 +31,7 @@ export function OrganizationNameField({ form, label }: OrganizationNameFieldProp
       offset={8}
       content={<OrganizationNameTooltip name={form.watch('organizationName')} />}
       className="!bg-muted"
-    >
-      {(props) => (
+      trigger={(props) => (
         <div {...props}>
           <ControlledInput
             control={form.control}
@@ -41,7 +42,7 @@ export function OrganizationNameField({ form, label }: OrganizationNameFieldProp
           />
         </div>
       )}
-    </Tooltip>
+    />
   );
 }
 

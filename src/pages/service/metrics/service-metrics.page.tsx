@@ -1,4 +1,4 @@
-import { ButtonGroup, InfoTooltip } from '@koyeb/design-system';
+import { ButtonGroup } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import type { API } from 'src/api';
@@ -6,6 +6,7 @@ import { useCatalogInstance, useComputeDeployment, useService } from 'src/api';
 import { parseBytes } from 'src/application/memory';
 import { LinkButton } from 'src/components/link';
 import { Title } from 'src/components/title';
+import { InfoTooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
 import { CpuGraph } from 'src/modules/metrics/graphs/cpu-graph';
 import { HttpThroughputGraph } from 'src/modules/metrics/graphs/http-throughput-graph';

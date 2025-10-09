@@ -1,10 +1,11 @@
-import { Spinner, Tooltip } from '@koyeb/design-system';
+import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { getServiceLink } from 'src/application/service-functions';
 import { SvgComponent } from 'src/application/types';
 import { Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
+import { Tooltip } from 'src/components/tooltip';
 import { IconCircleAlert, IconCircleCheck, IconCirclePause } from 'src/icons';
 import { TranslateEnum } from 'src/intl/translate';
 import { Service, ServiceStatus } from 'src/model';
@@ -16,8 +17,10 @@ export function ServiceName({ service }: { service: Service }) {
 
       <div className="col min-w-0 gap-2">
         <div className="row items-center gap-2">
-          <Tooltip className="max-w-none" content={service.name}>
-            {(props) => (
+          <Tooltip
+            content={service.name}
+            className="max-w-none"
+            trigger={(props) => (
               <Link
                 {...props}
                 {...getServiceLink(service)}
@@ -26,15 +29,16 @@ export function ServiceName({ service }: { service: Service }) {
                 {service.name}
               </Link>
             )}
-          </Tooltip>
+          />
 
-          <Tooltip content={<div className="capitalize">{service.status}</div>}>
-            {(props) => (
+          <Tooltip
+            content={<div className="capitalize">{service.status}</div>}
+            trigger={(props) => (
               <div {...props}>
                 <ServiceStatusIcon status={service.status} className="size-4" />
               </div>
             )}
-          </Tooltip>
+          />
         </div>
 
         <span className="text-dim">

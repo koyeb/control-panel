@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { add, endOfMonth, format, isBefore, isEqual, startOfMonth, sub } from 'date-fns';
@@ -12,6 +12,7 @@ import { formatBytes, parseBytes } from 'src/application/memory';
 import { ControlledSelect } from 'src/components/controlled';
 import { Dialog, DialogHeader, closeDialog, openDialog } from 'src/components/dialog';
 import { SectionHeader } from 'src/components/section-header';
+import { Tooltip } from 'src/components/tooltip';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -206,13 +207,15 @@ function UsageRowTime({ time }: UsageRowTimeProps) {
   }
 
   return (
-    <Tooltip allowHover content={<T id="usageSeconds" values={{ seconds: time }} />}>
-      {(props) => (
+    <Tooltip
+      allowHover
+      content={<T id="usageSeconds" values={{ seconds: time }} />}
+      trigger={(props) => (
         <span {...props}>
           <FormattedDuration seconds={time} />
         </span>
       )}
-    </Tooltip>
+    />
   );
 }
 

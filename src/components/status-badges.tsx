@@ -22,12 +22,15 @@ import {
 } from 'src/model';
 import { Extend } from 'src/utils/types';
 
-type ResourceStatusProps<Status> = {
-  ref?: React.Ref<React.ComponentRef<typeof Badge>>;
-  icon?: boolean;
-  status: Status;
-  className?: string;
-};
+type ResourceStatusProps<Status> = Extend<
+  React.ComponentProps<typeof Badge>,
+  {
+    ref?: React.Ref<React.ComponentRef<typeof Badge>>;
+    icon?: boolean;
+    status: Status;
+    className?: string;
+  }
+>;
 
 function createResourceStatus<Status extends string>(
   map: Record<Status, [React.ComponentType<{ className?: string }>, BadgeColor]>,
@@ -39,7 +42,7 @@ function createResourceStatus<Status extends string>(
     return <Icon className={clsx(colorMap[color], className)} {...props} />;
   }
 
-  function ResourceStatus({ ref, icon = true, status, className }: ResourceStatusProps<Status>) {
+  function ResourceStatus({ ref, icon = true, status, className, ...props }: ResourceStatusProps<Status>) {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const [, color] = map[status] ?? unknownStatusBadge;
 
@@ -49,6 +52,7 @@ function createResourceStatus<Status extends string>(
         size={1}
         color={color}
         className={clsx('inline-flex flex-row items-center gap-1', className)}
+        {...props}
       >
         {icon && <Icon status={status} className="size-4" />}
         <TranslateStatus status={status} />

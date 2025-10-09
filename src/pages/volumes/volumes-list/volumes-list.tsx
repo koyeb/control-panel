@@ -1,4 +1,4 @@
-import { InfoTooltip, Input, Table, useBreakpoint } from '@koyeb/design-system';
+import { Input, Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -13,6 +13,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { VolumeStatusBadge } from 'src/components/status-badges';
+import { InfoTooltip } from 'src/components/tooltip';
 import { IconSearch } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';

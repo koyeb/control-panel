@@ -1,8 +1,9 @@
-import { Badge, Tooltip } from '@koyeb/design-system';
+import { Badge } from '@koyeb/design-system';
 
 import { useCatalogRegion } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';
+import { Tooltip } from 'src/components/tooltip';
 import { Translate } from 'src/intl/translate';
 
 type DeploymentRegionsProps = {
@@ -24,13 +25,14 @@ export function DeploymentRegions({ regions }: DeploymentRegionsProps) {
       {region?.name}
 
       {regions.length >= 2 && (
-        <Tooltip content={<RegionsList regionIds={regions} />}>
-          {(props) => (
+        <Tooltip
+          content={<RegionsList regionIds={regions} />}
+          trigger={(props) => (
             <Badge {...props} size={1}>
               <Translate id="common.plusCount" values={{ count: regions.length - 1 }} />
             </Badge>
           )}
-        </Tooltip>
+        />
       )}
     </div>
   );

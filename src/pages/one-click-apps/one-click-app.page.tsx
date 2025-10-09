@@ -1,4 +1,4 @@
-import { Badge, Tooltip } from '@koyeb/design-system';
+import { Badge } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { lazy } from 'react';
 
@@ -7,6 +7,7 @@ import { SvgComponent } from 'src/application/types';
 import { ExternalLink, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
+import { Tooltip } from 'src/components/tooltip';
 import {
   IconCircleUser,
   IconDocker,
@@ -117,8 +118,9 @@ function Metadata({ metadata }: { metadata: OneClickAppMetadata }) {
   const [tooltip, label] = href ? [metadata.value, metadata.name] : [metadata.name, metadata.value];
 
   return (
-    <Tooltip content={tooltip}>
-      {(props) => (
+    <Tooltip
+      content={tooltip}
+      trigger={(props) => (
         <div {...props} className="row items-center gap-2">
           <div>{Icon && <Icon className="size-em" />}</div>
 
@@ -131,7 +133,7 @@ function Metadata({ metadata }: { metadata: OneClickAppMetadata }) {
           )}
         </div>
       )}
-    </Tooltip>
+    />
   );
 }
 

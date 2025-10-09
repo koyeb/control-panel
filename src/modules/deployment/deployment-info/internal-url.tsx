@@ -1,8 +1,9 @@
-import { Badge, Tooltip } from '@koyeb/design-system';
+import { Badge } from '@koyeb/design-system';
 
 import { ServiceUrl, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Metadata } from 'src/components/metadata';
+import { Tooltip } from 'src/components/tooltip';
 import { useClipboard } from 'src/hooks/clipboard';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Service } from 'src/model';
@@ -41,13 +42,15 @@ function InternalUrlValue({ urls: [firstUrl, ...urls] }: { urls: ServiceUrl[] })
       <CopyIconButton text={url} className="size-em" />
 
       {urls.length > 0 && (
-        <Tooltip allowHover content={<UrlsList urls={urls} />}>
-          {(props) => (
+        <Tooltip
+          allowHover
+          content={<UrlsList urls={urls} />}
+          trigger={(props) => (
             <Badge size={1} {...props}>
               <Translate id="common.plusCount" values={{ count: urls.length }} />
             </Badge>
           )}
-        </Tooltip>
+        />
       )}
     </div>
   );

@@ -1,10 +1,11 @@
-import { ButtonMenuItem, Tooltip } from '@koyeb/design-system';
+import { ButtonMenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
+import { Tooltip } from 'src/components/tooltip';
 import { useNavigate } from 'src/hooks/router';
 import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -44,14 +45,16 @@ export function SnapshotActions({ snapshot }: { snapshot: VolumeSnapshot }) {
     <ActionsMenu>
       {(withClose) => (
         <>
-          <Tooltip content={canCreate ? undefined : <T id="list.actions.cannotCreateVolume" />}>
-            {(props) => (
+          <Tooltip
+            mobile={false}
+            content={canCreate ? undefined : <T id="list.actions.cannotCreateVolume" />}
+            trigger={(props) => (
               <ButtonMenuItem {...props} disabled={!canCreate} onClick={withClose(onCreateVolume)}>
                 <IconPlus className="size-4" />
                 <T id="list.actions.createVolume" />
               </ButtonMenuItem>
             )}
-          </Tooltip>
+          />
 
           <ButtonMenuItem onClick={withClose(onEdit)}>
             <IconPen className="size-4" />
