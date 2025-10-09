@@ -236,7 +236,9 @@ const persister = createAsyncStoragePersister({ key: 'query-cache', storage: loc
 
 // eslint-disable-next-line react-refresh/only-export-components
 function PersistQueryClient({ children }: { children: React.ReactNode }) {
-  if (isSessionToken()) {
+  const location = new URL(window.location.href);
+
+  if (isSessionToken() || location.searchParams.has('session-token')) {
     return children;
   }
 
