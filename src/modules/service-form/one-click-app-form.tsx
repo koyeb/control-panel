@@ -28,13 +28,12 @@ import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/model';
-import { InstanceTypeMetadata } from 'src/modules/deployment/metadata/runtime-metadata';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
-import { RegionsMetadata } from '../deployment/metadata';
+import { InstanceMetadata, RegionsMetadata } from '../deployment/metadata';
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
 import { InstanceCategoryTabs } from '../instance-selector/instance-category-tabs';
 
@@ -238,7 +237,7 @@ function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: 
         </dl>
 
         <dl className="row flex-wrap gap-3 p-3 [&>div]:w-40">
-          <InstanceTypeMetadata instanceType={watch('instance')} />
+          <InstanceMetadata instance={watch('instance')} />
           <ScalingMetadata scaling={serviceForm.scaling} />
           <RegionsMetadata regions={watch('regions')} />
         </dl>

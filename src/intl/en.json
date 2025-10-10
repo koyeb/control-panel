@@ -565,7 +565,6 @@
         "privilegedLabel": "Privileged",
         "true": "True",
         "false": "False",
-        "instanceTypeLabel": "Instance type",
         "environmentLabel": "Environment",
         "environmentValue": "{variables} {variables, plural, one {variable} other {variables}}{files, plural, =0 {} =1 {, 1 file} other {, {files} files}}",
         "volumesLabel": "Volumes",
@@ -728,6 +727,16 @@
         }
       },
       "metadata": {
+        "instance": {
+          "label": "Instance",
+          "tooltip": {
+            "title": "{category} instance",
+            "cpu": "{value} vCPU",
+            "ram": "{value} RAM",
+            "vram": "{value} VRAM",
+            "disk": "{value} Disk"
+          }
+        },
         "regions": {
           "label": "Regions",
           "tooltip": {
@@ -2241,13 +2250,6 @@
       "service": {
         "postgresVersion": "Postgres (v{version})",
         "latestDeployment": "Latest deployment",
-        "instanceTooltip": {
-          "title": "{category} instance",
-          "cpu": "{value} vCPU",
-          "ram": "{value} RAM",
-          "vram": "{value} VRAM",
-          "disk": "{value} Disk"
-        },
         "deploymentTrigger": {
           "initial": "This is your first deployment",
           "redeploy": "Triggered by a manual action on the service",

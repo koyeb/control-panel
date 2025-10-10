@@ -1,4 +1,4 @@
-import { useCatalogInstance, useVolumes } from 'src/api';
+import { useVolumes } from 'src/api';
 import { Metadata } from 'src/components/metadata';
 import { Tooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
@@ -6,12 +6,6 @@ import { DeploymentDefinition, EnvironmentVariable } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentInfo');
-
-export function InstanceTypeMetadata({ instanceType }: { instanceType: string | null }) {
-  const instance = useCatalogInstance(instanceType);
-
-  return <Metadata label={<T id="instanceTypeLabel" />} value={instance?.displayName} />;
-}
 
 export function EnvironmentMetadata({ definition }: { definition: DeploymentDefinition }) {
   const { environmentVariables, files } = definition;

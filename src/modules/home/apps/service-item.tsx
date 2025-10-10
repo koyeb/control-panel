@@ -1,38 +1,35 @@
-import { Collapse, TooltipTitle } from '@koyeb/design-system';
+import { Collapse } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { isComputeDeployment, isDatabaseDeployment, useCatalogInstance, useDeploymentScaling } from 'src/api';
-import { formatBytes } from 'src/application/memory';
+import { isComputeDeployment, isDatabaseDeployment, useDeploymentScaling } from 'src/api';
 import { getServiceLink, getServiceUrls } from 'src/application/service-functions';
-import { SvgComponent } from 'src/application/types';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { ExternalLink, Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { DeploymentStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
-import { InfoTooltip } from 'src/components/tooltip';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import {
   IconArchive,
   IconArrowRight,
   IconChevronDown,
   IconClock,
-  IconCpu,
   IconDatabase,
   IconDocker,
   IconGitBranch,
   IconGitCommitHorizontal,
   IconGithub,
-  IconMemoryStick,
-  IconMicrochip,
-  IconRadioReceiver,
 } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
-import { App, CatalogInstance, ComputeDeployment, DatabaseDeployment, Deployment, Service } from 'src/model';
-import { RegionsMetadataValue, ScalingMetadataValue } from 'src/modules/deployment/metadata';
+import { App, ComputeDeployment, DatabaseDeployment, Deployment, Service } from 'src/model';
+import {
+  InstanceMetadataValue,
+  RegionsMetadataValue,
+  ScalingMetadataValue,
+} from 'src/modules/deployment/metadata';
 import { inArray } from 'src/utils/arrays';
-import { capitalize, ellipsis, shortId } from 'src/utils/strings';
+import { ellipsis, shortId } from 'src/utils/strings';
 
 import { ServiceItemOld } from './service-item-old';
 
@@ -135,12 +132,11 @@ function DeploymentInfo({ deployment }: { deployment: Deployment }) {
 
 function ComputeDeploymentInfo({ deployment }: { deployment: ComputeDeployment }) {
   const definition = deployment.definition;
-  const instance = useCatalogInstance(definition.instanceType);
   const replicas = useDeploymentScaling(deployment.id);
 
   return (
     <>
-      <Instance instance={instance} />
+      <InstanceMetadataValue instance={definition.instanceType} />
       <RegionsMetadataValue regions={definition.regions} />
       <ScalingMetadataValue replicas={replicas} definition={definition} />
     </>
@@ -148,32 +144,12 @@ function ComputeDeploymentInfo({ deployment }: { deployment: ComputeDeployment }
 }
 
 function DatabaseDeploymentInfo({ deployment }: { deployment: DatabaseDeployment }) {
-  const instance = useCatalogInstance(deployment.instance);
-
   return (
     <>
-      <Instance instance={instance} />
+      <InstanceMetadataValue instance={deployment.instance} />
       <RegionsMetadataValue regions={[deployment.region]} />
       <div />
     </>
-  );
-}
-
-function Instance({ instance }: { instance?: CatalogInstance }) {
-  return (
-    <div className="row items-center gap-2">
-      <div className="row min-w-0 items-center gap-1">
-        <div>
-          <IconCpu strokeWidth={1} className="size-4" />
-        </div>
-        <div className="truncate">{instance?.displayName}</div>
-      </div>
-
-      <InfoTooltip
-        className="md:min-w-42"
-        content={instance && <InstanceTooltipContent instance={instance} />}
-      />
-    </div>
   );
 }
 
@@ -368,55 +344,5 @@ function DeploymentTrigger({ deployment }: { deployment: ComputeDeployment }) {
         <T id="deploymentTrigger.git" values={{ branch, author }} />
       </div>
     </>
-  );
-}
-
-function InstanceTooltipContent({ instance }: { instance: CatalogInstance }) {
-  return (
-    <div className="col gap-3">
-      <TooltipTitle
-        title={<T id="instanceTooltip.title" values={{ category: capitalize(instance.category) }} />}
-      />
-
-      <div className="font-bold">{instance.displayName}</div>
-
-      <InstanceSpecValue
-        Icon={IconCpu}
-        value={<T id="instanceTooltip.cpu" values={{ value: instance.vcpuShares }} />}
-      />
-
-      <InstanceSpecValue
-        Icon={IconMemoryStick}
-        value={<T id="instanceTooltip.ram" values={{ value: instance.memory }} />}
-      />
-
-      {instance.vram !== undefined && (
-        <InstanceSpecValue
-          Icon={IconMicrochip}
-          value={
-            <T
-              id="instanceTooltip.vram"
-              values={{ value: formatBytes(instance.vram, { round: true, decimal: true }) }}
-            />
-          }
-        />
-      )}
-
-      <InstanceSpecValue
-        Icon={IconRadioReceiver}
-        value={<T id="instanceTooltip.disk" values={{ value: instance.disk }} />}
-      />
-    </div>
-  );
-}
-
-function InstanceSpecValue({ Icon, value }: { Icon: SvgComponent; value: React.ReactNode }) {
-  return (
-    <div className="row items-center gap-2">
-      <div>
-        <Icon strokeWidth={1} className="size-4" />
-      </div>
-      {value}
-    </div>
   );
 }

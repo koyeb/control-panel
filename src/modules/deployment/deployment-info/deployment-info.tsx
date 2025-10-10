@@ -4,7 +4,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Service } from 'src/model';
 
-import { RegionsMetadata, ScalingMetadata } from '../metadata';
+import { InstanceMetadata, RegionsMetadata, ScalingMetadata } from '../metadata';
 import {
   BranchMetadata,
   BuilderMetadata,
@@ -13,7 +13,7 @@ import {
   RepositoryMetadata,
 } from '../metadata/build-metadata';
 import { DockerImageMetadata } from '../metadata/docker-metadata';
-import { EnvironmentMetadata, InstanceTypeMetadata, VolumesMetadata } from '../metadata/runtime-metadata';
+import { EnvironmentMetadata, VolumesMetadata } from '../metadata/runtime-metadata';
 
 import { DeploymentDefinitionDialog } from './deployment-definition-dialog';
 import { ExternalUrl } from './external-url';
@@ -78,7 +78,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
         </div>
 
         <div className="row flex-wrap gap-6 p-3">
-          <InstanceTypeMetadata instanceType={definition.instanceType} />
+          <InstanceMetadata instance={definition.instanceType} />
           <ScalingMetadata definition={definition} replicas={replicas} />
           <RegionsMetadata regions={definition.regions} />
           <EnvironmentMetadata definition={definition} />
