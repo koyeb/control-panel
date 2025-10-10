@@ -1,5 +1,7 @@
+import { useAuthKit } from 'src/application/authkit';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
@@ -40,10 +42,21 @@ export function SignInPage() {
 }
 
 function SignUpLink() {
+  const authKit = useAuthKit();
+
   const link = (children: React.ReactNode[]) => (
-    <Link to="/auth/signup" className="text-default underline">
-      {children}
-    </Link>
+    <FeatureFlag
+      feature="work-os"
+      fallback={
+        <Link to="/auth/signup" className="text-default underline">
+          {children}
+        </Link>
+      }
+    >
+      <button type="button" onClick={() => void authKit.signUp()} className="text-default underline">
+        {children}
+      </button>
+    </FeatureFlag>
   );
 
   return (
