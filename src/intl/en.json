@@ -2300,11 +2300,6 @@
       "qualification": {
         "skip": "Skip",
         "continue": "Continue",
-        "fullName": {
-          "sidebar": "With <strong>Koyeb</strong>, run all your models and apps on high-performance <strong>CPUs</strong>, <strong>GPUs</strong>, and <strong>accelerators</strong> from AMD, Intel, and Nvidia",
-          "title": "What is your full name?",
-          "description": "Tell us a little about yourself to personalize your experience"
-        },
         "usage": {
           "sidebar": "With <strong>Koyeb</strong>, run all your models and apps on high-performance <strong>CPUs</strong>, <strong>GPUs</strong>, and <strong>accelerators</strong> from AMD, Intel, and Nvidia",
           "title": "How do you plan to use Koyeb?",

@@ -5,11 +5,11 @@ import omit from 'lodash-es/omit';
 import { useMemo } from 'react';
 import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { getApi, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
+import { getApi, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { hasMessage } from 'src/application/validation';
-import { ControlledInput, ControlledTextArea } from 'src/components/controlled';
+import { ControlledTextArea } from 'src/components/controlled';
 import { openDialog } from 'src/components/dialog';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { createTranslate } from 'src/intl/translate';
@@ -21,7 +21,7 @@ import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.qualification');
 
-type Step = 'fullName' | 'usage' | 'primaryUseCase' | 'currentSpending' | 'referralSource' | 'sendInvites';
+type Step = 'usage' | 'primaryUseCase' | 'currentSpending' | 'referralSource' | 'sendInvites';
 type Usage = 'personal' | 'education' | 'professional';
 // prettier-ignore
 type Occupation = 'founder' | 'cto' | 'devops'  | 'softwareEngineer' | 'engineeringManager' | 'freelancer' | 'hobbyist' | 'student' | 'teacher' | 'aiEngineer' | 'mlEngineer' | 'dataEngineer' | 'dataScientist' | 'researchEngineer' | 'other';
@@ -32,7 +32,6 @@ type CurrentSpending = 'lessThan500' | '500To2000' | '2000To10000' | 'moreThan10
 type ReferralSource = 'searchEngine' | 'recommendation' | 'socialMedia' | 'hackerNews' | 'reddit' | 'podcast' | 'meetup' | 'other';
 
 type QualificationFormType = {
-  fullName?: string;
   step: Step;
   usage?: Usage;
   occupation?: Occupation;
@@ -43,7 +42,6 @@ type QualificationFormType = {
 };
 
 export function Qualification() {
-  const user = useUser();
   const organization = useOrganization();
 
   const invalidate = useInvalidateApiQuery();
@@ -52,20 +50,13 @@ export function Qualification() {
   const form = useForm<QualificationFormType>({
     defaultValues: {
       primaryUseCase: [],
-      step: user?.githubUser ? 'fullName' : 'usage',
+      step: 'usage',
     },
   });
 
   const mutation = useMutation({
     async mutationFn(form: QualificationFormType) {
       const api = getApi();
-
-      if (form.fullName !== '') {
-        await api('patch /v1/account/profile', {
-          body: { name: form.fullName },
-          query: {},
-        });
-      }
 
       const values: Record<string, unknown> = {
         version: 3,
@@ -115,10 +106,6 @@ export function Qualification() {
   const steps: Step[] = ['usage', 'primaryUseCase'];
   const step = form.watch('step');
 
-  if (user?.githubUser) {
-    steps.unshift('fullName');
-  }
-
   if (form.watch('usage') === 'professional') {
     steps.push('currentSpending');
   }
@@ -149,7 +136,7 @@ export function Qualification() {
         <AuthButton
           onClick={() => handleSubmit(form.getValues())}
           className={clsx('border border-zinc-400 bg-neutral !text-default hover:bg-neutral', {
-            invisible: step === 'fullName' || step === 'usage',
+            invisible: step === 'usage',
           })}
         >
           <T id="skip" />
@@ -171,10 +158,6 @@ export function Qualification() {
 function QualificationStep() {
   const form = useFormContext<QualificationFormType>();
   const step = form.watch('step');
-
-  if (step === 'fullName') {
-    return <FullNameStep />;
-  }
 
   if (step === 'usage') {
     return (
@@ -203,28 +186,6 @@ function QualificationStep() {
   }
 
   return null;
-}
-
-function FullNameStep() {
-  return (
-    <section className="col gap-8">
-      <header className="col gap-1">
-        <h1 className="text-3xl font-semibold">
-          <T id="fullName.title" />
-        </h1>
-
-        <p className="text-dim">
-          <T id="fullName.description" />
-        </p>
-      </header>
-
-      <ControlledInput name="fullName" required />
-
-      <AuthButton type="submit" className="self-start">
-        <T id="continue" />
-      </AuthButton>
-    </section>
-  );
 }
 
 function UsageStep() {
