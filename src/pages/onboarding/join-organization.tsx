@@ -81,10 +81,12 @@ function CreateOrganization() {
   return (
     <section className="col flex-1 justify-center gap-8">
       <div>
-        <h1 className="mb-1 text-3xl font-semibold">
-          <T id="title" />
+        <div className="mb-1 row items-center gap-2">
+          <h1 className="text-3xl font-semibold">
+            <T id="title" />
+          </h1>
           <InfoTooltip content={<T id="tooltip" />} />
-        </h1>
+        </div>
         <p className="text-dim">
           <T id="canBeChanged" />
         </p>
