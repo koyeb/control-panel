@@ -566,7 +566,6 @@
         "true": "True",
         "false": "False",
         "instanceTypeLabel": "Instance type",
-        "regionsLabel": "Regions",
         "environmentLabel": "Environment",
         "environmentValue": "{variables} {variables, plural, one {variable} other {variables}}{files, plural, =0 {} =1 {, 1 file} other {, {files} files}}",
         "volumesLabel": "Volumes",
@@ -729,6 +728,12 @@
         }
       },
       "metadata": {
+        "regions": {
+          "label": "Regions",
+          "tooltip": {
+            "title": "Regions"
+          }
+        },
         "scaling": {
           "label": "Scaling",
           "value": "{healthy} <dim>of</dim> {total} <dim>running</dim>",
@@ -2242,9 +2247,6 @@
           "ram": "{value} RAM",
           "vram": "{value} VRAM",
           "disk": "{value} Disk"
-        },
-        "regionsTooltip": {
-          "title": "Regions"
         },
         "deploymentTrigger": {
           "initial": "This is your first deployment",

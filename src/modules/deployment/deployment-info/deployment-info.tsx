@@ -4,7 +4,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Service } from 'src/model';
 
-import { ScalingMetadata } from '../metadata';
+import { RegionsMetadata, ScalingMetadata } from '../metadata';
 import {
   BranchMetadata,
   BuilderMetadata,
@@ -13,12 +13,7 @@ import {
   RepositoryMetadata,
 } from '../metadata/build-metadata';
 import { DockerImageMetadata } from '../metadata/docker-metadata';
-import {
-  EnvironmentMetadata,
-  InstanceTypeMetadata,
-  RegionsMetadata,
-  VolumesMetadata,
-} from '../metadata/runtime-metadata';
+import { EnvironmentMetadata, InstanceTypeMetadata, VolumesMetadata } from '../metadata/runtime-metadata';
 
 import { DeploymentDefinitionDialog } from './deployment-definition-dialog';
 import { ExternalUrl } from './external-url';

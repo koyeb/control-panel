@@ -1,11 +1,7 @@
-import { Badge } from '@koyeb/design-system';
-
-import { useCatalogInstance, useRegionsCatalog, useVolumes } from 'src/api';
+import { useCatalogInstance, useVolumes } from 'src/api';
 import { Metadata } from 'src/components/metadata';
-import { RegionFlag } from 'src/components/region-flag';
-import { RegionsList } from 'src/components/regions-list';
 import { Tooltip } from 'src/components/tooltip';
-import { Translate, createTranslate } from 'src/intl/translate';
+import { createTranslate } from 'src/intl/translate';
 import { DeploymentDefinition, EnvironmentVariable } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
@@ -15,41 +11,6 @@ export function InstanceTypeMetadata({ instanceType }: { instanceType: string | 
   const instance = useCatalogInstance(instanceType);
 
   return <Metadata label={<T id="instanceTypeLabel" />} value={instance?.displayName} />;
-}
-
-export function RegionsMetadata({ regions }: { regions: string[] }) {
-  const [firstRegion, ...otherRegions] = regions;
-  const catalogRegions = useRegionsCatalog();
-
-  if (!firstRegion) {
-    return null;
-  }
-
-  const catalogRegion = catalogRegions.find(hasProperty('id', firstRegion));
-
-  return (
-    <Metadata
-      label={<T id="regionsLabel" />}
-      value={
-        <div className="row items-center gap-2">
-          <RegionFlag regionId={firstRegion} className="size-4" />
-
-          {catalogRegion?.name}
-
-          {otherRegions.length > 0 && (
-            <Tooltip
-              content={<RegionsList regionIds={otherRegions} />}
-              trigger={(props) => (
-                <Badge size={1} {...props}>
-                  <Translate id="common.plusCount" values={{ count: otherRegions.length }} />
-                </Badge>
-              )}
-            />
-          )}
-        </div>
-      }
-    />
-  );
 }
 
 export function EnvironmentMetadata({ definition }: { definition: DeploymentDefinition }) {

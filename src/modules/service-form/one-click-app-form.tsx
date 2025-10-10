@@ -28,12 +28,13 @@ import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/model';
-import { InstanceTypeMetadata, RegionsMetadata } from 'src/modules/deployment/metadata/runtime-metadata';
+import { InstanceTypeMetadata } from 'src/modules/deployment/metadata/runtime-metadata';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
+import { RegionsMetadata } from '../deployment/metadata';
 import { useGetInstanceBadges } from '../instance-selector/instance-badges';
 import { InstanceCategoryTabs } from '../instance-selector/instance-category-tabs';
 

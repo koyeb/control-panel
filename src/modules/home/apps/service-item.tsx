@@ -1,24 +1,16 @@
-import { Badge, Collapse, TooltipTitle } from '@koyeb/design-system';
+import { Collapse, TooltipTitle } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import {
-  isComputeDeployment,
-  isDatabaseDeployment,
-  useCatalogInstance,
-  useCatalogRegion,
-  useDeploymentScaling,
-  useRegionsCatalog,
-} from 'src/api';
+import { isComputeDeployment, isDatabaseDeployment, useCatalogInstance, useDeploymentScaling } from 'src/api';
 import { formatBytes } from 'src/application/memory';
 import { getServiceLink, getServiceUrls } from 'src/application/service-functions';
 import { SvgComponent } from 'src/application/types';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { ExternalLink, Link } from 'src/components/link';
-import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { DeploymentStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
-import { InfoTooltip, Tooltip } from 'src/components/tooltip';
+import { InfoTooltip } from 'src/components/tooltip';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import {
   IconArchive,
@@ -36,9 +28,9 @@ import {
   IconRadioReceiver,
 } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, CatalogInstance, ComputeDeployment, DatabaseDeployment, Deployment, Service } from 'src/model';
-import { ScalingMetadataValue } from 'src/modules/deployment/metadata';
+import { RegionsMetadataValue, ScalingMetadataValue } from 'src/modules/deployment/metadata';
 import { inArray } from 'src/utils/arrays';
 import { capitalize, ellipsis, shortId } from 'src/utils/strings';
 
@@ -149,7 +141,7 @@ function ComputeDeploymentInfo({ deployment }: { deployment: ComputeDeployment }
   return (
     <>
       <Instance instance={instance} />
-      <Regions regions={definition.regions} />
+      <RegionsMetadataValue regions={definition.regions} />
       <ScalingMetadataValue replicas={replicas} definition={definition} />
     </>
   );
@@ -161,7 +153,7 @@ function DatabaseDeploymentInfo({ deployment }: { deployment: DatabaseDeployment
   return (
     <>
       <Instance instance={instance} />
-      <Regions regions={[deployment.region]} />
+      <RegionsMetadataValue regions={[deployment.region]} />
       <div />
     </>
   );
@@ -181,31 +173,6 @@ function Instance({ instance }: { instance?: CatalogInstance }) {
         className="md:min-w-42"
         content={instance && <InstanceTooltipContent instance={instance} />}
       />
-    </div>
-  );
-}
-
-function Regions({ regions }: { regions: string[] }) {
-  const firstRegion = useCatalogRegion(regions[0]);
-
-  return (
-    <div className="row min-w-0 items-center gap-2">
-      <RegionFlag regionId={firstRegion?.id} className="size-3" />
-
-      <div className="truncate">{firstRegion?.name}</div>
-
-      {regions.length >= 2 && (
-        <Tooltip
-          allowHover
-          trigger={(props) => (
-            <Badge color="gray" size={1} className="text-default!" {...props}>
-              <Translate id="common.plusCount" values={{ count: 2 }} />
-            </Badge>
-          )}
-          content={<RegionsTooltipContent regions={regions} />}
-          className="md:min-w-36"
-        />
-      )}
     </div>
   );
 }
@@ -450,23 +417,6 @@ function InstanceSpecValue({ Icon, value }: { Icon: SvgComponent; value: React.R
         <Icon strokeWidth={1} className="size-4" />
       </div>
       {value}
-    </div>
-  );
-}
-
-function RegionsTooltipContent({ regions: regionIds }: { regions: string[] }) {
-  const regions = useRegionsCatalog(regionIds);
-
-  return (
-    <div className="col gap-3">
-      <TooltipTitle title={<T id="regionsTooltip.title" />} />
-
-      {regions.map((region) => (
-        <div key={region.id} className="row items-center gap-2">
-          <RegionFlag regionId={region.id} className="size-4" />
-          <div>{region.name}</div>
-        </div>
-      ))}
     </div>
   );
 }
