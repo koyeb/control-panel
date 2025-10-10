@@ -31,8 +31,8 @@ export class AuthKitAdapter {
     }
   }
 
-  signIn(next: string | null) {
-    void this.client?.signIn({ state: { next } });
+  signIn(email: string, next: string | null) {
+    void this.client?.signIn({ loginHint: email, state: { next } });
   }
 
   get next() {

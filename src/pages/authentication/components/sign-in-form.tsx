@@ -1,23 +1,31 @@
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { ApiError, apiMutation } from 'src/api';
+import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
+import { lowerCase } from 'src/utils/strings';
 
 import { AuthButton } from './auth-button';
 import { AuthInput } from './auth-input';
 
 const T = createTranslate('pages.authentication.signIn');
 
-const schema = z.object({
+const emailSchema = z.object({
+  email: z.string().email(),
+});
+
+const emailPasswordSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8).max(128),
 });
@@ -29,18 +37,43 @@ const invalidCredentialApiMessages = [
 
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
+  const authKit = useAuthKit();
+  const workOs = useFeatureFlag('work-os');
+
+  const [authenticationMethod, setAuthenticationMethod] = useState<'workos' | 'koyeb' | null>('koyeb');
+
+  useEffect(() => {
+    if (workOs) {
+      setAuthenticationMethod(null);
+    }
+  }, [workOs]);
+
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm<z.infer<typeof emailPasswordSchema>>({
     defaultValues: {
       email: '',
       password: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: useZodResolver(authenticationMethod === 'koyeb' ? emailPasswordSchema : emailSchema),
   });
 
-  const { mutateAsync: signIn } = useMutation({
+  const getAuthenticationMethodMutation = useMutation({
+    // ...apiMutation('get /v1/account/login_method', (email: string) => ({ query: { email } })),
+    mutationFn: async (email: string): Promise<{ method: 'WORKOS' | 'KOYEB' | undefined }> => ({
+      method: email.includes('workos') ? 'WORKOS' : 'KOYEB',
+    }),
+    async onSuccess({ method }, email) {
+      setAuthenticationMethod(lowerCase(method!));
+
+      if (method === 'WORKOS') {
+        await authKit.signIn(email, redirect);
+      }
+    },
+  });
+
+  const signInMutation = useMutation({
     ...apiMutation('post /v1/account/login', async (credential: FormValues<typeof form>) => ({
       header: { 'seon-fp': await getSeonFingerprint() },
       token: null,
@@ -71,8 +104,18 @@ export function SignInForm({ redirect }: { redirect: string }) {
     };
   }, [form]);
 
+  const onSubmit = async (values: FormValues<typeof form>) => {
+    if (authenticationMethod === null) {
+      await getAuthenticationMethodMutation.mutateAsync(values.email);
+    }
+
+    if (authenticationMethod === 'koyeb') {
+      await signInMutation.mutateAsync(values);
+    }
+  };
+
   return (
-    <form onSubmit={handleSubmit(form, signIn)} className="col gap-6">
+    <form onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
       <AuthInput
         control={form.control}
         autoFocus
@@ -88,8 +131,9 @@ export function SignInForm({ redirect }: { redirect: string }) {
         name="password"
         autoComplete="current-password"
         type="password"
-        required
+        required={authenticationMethod === 'koyeb'}
         placeholder={t('passwordPlaceholder')}
+        className={clsx({ hidden: authenticationMethod !== 'koyeb' })}
       />
 
       {form.formState.errors.root?.message === 'invalidCredential' && (
@@ -100,10 +144,10 @@ export function SignInForm({ redirect }: { redirect: string }) {
 
       <AuthButton
         type="submit"
-        disabled={form.formState.submitCount > 0 && !form.formState.isValid}
-        loading={form.formState.isSubmitting}
+        disabled={form.formState.submitCount > 1 && !form.formState.isValid}
+        loading={form.formState.isSubmitting || authenticationMethod === 'workos'}
       >
-        <T id="submit" />
+        <T id={authenticationMethod === null ? 'continue' : 'submit'} />
       </AuthButton>
     </form>
   );
