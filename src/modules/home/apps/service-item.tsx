@@ -12,7 +12,7 @@ import {
   useRegionsCatalog,
 } from 'src/api';
 import { formatBytes } from 'src/application/memory';
-import { getServiceUrls } from 'src/application/service-functions';
+import { getServiceLink, getServiceUrls } from 'src/application/service-functions';
 import { SvgComponent } from 'src/application/types';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { ExternalLink, Link } from 'src/components/link';
@@ -103,11 +103,7 @@ function ServiceInfo(props: { app: App; service: Service; deployment: Deployment
           <ServiceStatusIcon status={service.status} className="size-4" />
         </div>
 
-        <Link
-          to="/services/$serviceId"
-          params={{ serviceId: service.id }}
-          className="truncate text-sm font-medium"
-        >
+        <Link {...getServiceLink(service)} className="truncate text-sm font-medium">
           {service.name}
         </Link>
 
