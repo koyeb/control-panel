@@ -6,9 +6,9 @@ import { getConfig } from './config';
 type AuthKitClient = Awaited<ReturnType<typeof createClient>>;
 
 export class AuthKitAdapter {
-  public client?: AuthKitClient;
-  public user?: User | null;
+  private client?: AuthKitClient;
   private state?: Record<string, unknown>;
+  public user?: User | null;
 
   async initialize() {
     if (this.client !== undefined) {
@@ -33,6 +33,14 @@ export class AuthKitAdapter {
 
   signIn(email: string, next: string | null) {
     void this.client?.signIn({ loginHint: email, state: { next } });
+  }
+
+  signOut() {
+    this.client?.signOut({ returnTo: `${window.location.origin}/auth/signin` });
+  }
+
+  async getAccessToken() {
+    return this.client?.getAccessToken();
   }
 
   get next() {

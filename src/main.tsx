@@ -99,8 +99,11 @@ async function handleAuthenticationError(error: Error) {
 
   if (authKit.user) {
     setAuthKitToken(null);
+    authKit.signOut();
+    queryClient.clear();
   } else if (getToken() !== null) {
     setToken(null);
+    queryClient.clear();
   }
 
   const location = new URL(window.location.href);
@@ -214,7 +217,7 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
       await authKit.initialize();
 
       if (authKit.user) {
-        setAuthKitToken(await authKit.client?.getAccessToken());
+        setAuthKitToken(await authKit.getAccessToken());
       }
     }
 
