@@ -566,9 +566,6 @@
         "true": "True",
         "false": "False",
         "instanceTypeLabel": "Instance type",
-        "scalingLabel": "Scaling",
-        "fixedScalingValue": "{instances} {instances, plural, one {instance} other {instances}}",
-        "autoScalingValue": "{min}-{max} instances",
         "regionsLabel": "Regions",
         "environmentLabel": "Environment",
         "environmentValue": "{variables} {variables, plural, one {variable} other {variables}}{files, plural, =0 {} =1 {, 1 file} other {, {files} files}}",
@@ -728,6 +725,17 @@
                 }
               }
             }
+          }
+        }
+      },
+      "metadata": {
+        "scaling": {
+          "label": "Scaling",
+          "value": "{healthy} <dim>of</dim> {total} <dim>running</dim>",
+          "tooltip": {
+            "title": "Scaling",
+            "description": "The number of instances currently running for your service",
+            "count": "{healthy}/{total}"
           }
         }
       }
@@ -1052,8 +1060,15 @@
         "submitButton": "Deploy"
       },
       "oneClickAppForm": {
-        "overview": "Overview",
         "submitButton": "Deploy",
+        "metadata": {
+          "title": "Overview",
+          "scaling": {
+            "label": "Scaling",
+            "valueFixed": "{instances} {instances, plural, one {instance} other {instances}}",
+            "valueAutoscaling": "{min}-{max} instances"
+          }
+        },
         "environmentVariables": {
           "title": "Environment variables",
           "optional": "{count} optional {count, plural, =1 {variable} other {variables}}"
@@ -2219,7 +2234,6 @@
         }
       },
       "service": {
-        "scaling": "{healthy} <dim>of</dim> {total} <dim>running</dim>",
         "postgresVersion": "Postgres (v{version})",
         "latestDeployment": "Latest deployment",
         "instanceTooltip": {
@@ -2231,11 +2245,6 @@
         },
         "regionsTooltip": {
           "title": "Regions"
-        },
-        "scalingTooltip": {
-          "title": "Scaling",
-          "description": "The number of instances currently running for your service",
-          "count": "{healthy}/{total}"
         },
         "deploymentTrigger": {
           "initial": "This is your first deployment",

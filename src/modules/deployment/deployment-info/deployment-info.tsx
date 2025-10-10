@@ -1,8 +1,10 @@
+import { useDeploymentScaling } from 'src/api';
 import { openDialog } from 'src/components/dialog';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Service } from 'src/model';
 
+import { ScalingMetadata } from '../metadata';
 import {
   BranchMetadata,
   BuilderMetadata,
@@ -15,7 +17,6 @@ import {
   EnvironmentMetadata,
   InstanceTypeMetadata,
   RegionsMetadata,
-  ScalingMetadata,
   VolumesMetadata,
 } from '../metadata/runtime-metadata';
 
@@ -35,6 +36,8 @@ type DeploymentInfoProps = {
 export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps) {
   const { definition } = deployment;
   const { type, source, builder, privileged } = definition;
+
+  const replicas = useDeploymentScaling(deployment.id);
 
   return (
     <section className="rounded-md border">
@@ -81,7 +84,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
 
         <div className="row flex-wrap gap-6 p-3">
           <InstanceTypeMetadata instanceType={definition.instanceType} />
-          <ScalingMetadata scaling={definition.scaling} />
+          <ScalingMetadata definition={definition} replicas={replicas} />
           <RegionsMetadata regions={definition.regions} />
           <EnvironmentMetadata definition={definition} />
           <VolumesMetadata definition={definition} />

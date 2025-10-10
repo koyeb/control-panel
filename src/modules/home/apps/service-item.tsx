@@ -31,26 +31,15 @@ import {
   IconGitBranch,
   IconGitCommitHorizontal,
   IconGithub,
-  IconLayers,
   IconMemoryStick,
   IconMicrochip,
-  IconMoon,
   IconRadioReceiver,
 } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
-import {
-  App,
-  CatalogInstance,
-  ComputeDeployment,
-  DatabaseDeployment,
-  Deployment,
-  DeploymentDefinition,
-  Replica,
-  Service,
-} from 'src/model';
-import { inArray, unique } from 'src/utils/arrays';
-import { hasProperty } from 'src/utils/object';
+import { App, CatalogInstance, ComputeDeployment, DatabaseDeployment, Deployment, Service } from 'src/model';
+import { ScalingMetadataValue } from 'src/modules/deployment/metadata';
+import { inArray } from 'src/utils/arrays';
 import { capitalize, ellipsis, shortId } from 'src/utils/strings';
 
 import { ServiceItemOld } from './service-item-old';
@@ -161,7 +150,7 @@ function ComputeDeploymentInfo({ deployment }: { deployment: ComputeDeployment }
     <>
       <Instance instance={instance} />
       <Regions regions={definition.regions} />
-      <Scaling replicas={replicas} definition={definition} />
+      <ScalingMetadataValue replicas={replicas} definition={definition} />
     </>
   );
 }
@@ -217,30 +206,6 @@ function Regions({ regions }: { regions: string[] }) {
           className="md:min-w-36"
         />
       )}
-    </div>
-  );
-}
-
-function Scaling({ replicas, definition }: { replicas?: Replica[]; definition: DeploymentDefinition }) {
-  const ScalingIcon = definition.scaling.min === 0 ? IconMoon : IconLayers;
-
-  const scaling = {
-    healthy: replicas?.filter((replica) => replica.status === 'HEALTHY').length,
-    total: definition.scaling.max * definition.regions.length,
-  };
-
-  return (
-    <div className="row min-w-0 items-center gap-2">
-      <ScalingIcon className="size-3.5" />
-
-      <div className="truncate">
-        <T id="scaling" values={scaling} />
-      </div>
-
-      <InfoTooltip
-        className="md:max-w-54"
-        content={replicas && <ScalingTooltipContent replicas={replicas} />}
-      />
     </div>
   );
 }
@@ -502,41 +467,6 @@ function RegionsTooltipContent({ regions: regionIds }: { regions: string[] }) {
           <div>{region.name}</div>
         </div>
       ))}
-    </div>
-  );
-}
-
-function ScalingTooltipContent({ replicas }: { replicas: Replica[] }) {
-  const regionIds = unique(replicas.map((replica) => replica.region));
-  const regions = useRegionsCatalog(regionIds);
-
-  const groups = new Map(
-    regions.map((region) => [region, replicas.filter(hasProperty('region', region.id))]),
-  );
-
-  const scaling = (replicas: Replica[]) => ({
-    healthy: replicas.filter(hasProperty('status', 'HEALTHY')).length,
-    total: replicas.length,
-  });
-
-  return (
-    <div className="col gap-3">
-      <TooltipTitle title={<T id="scalingTooltip.title" />} />
-
-      <T id="scalingTooltip.description" />
-
-      {groups.size >= 2 &&
-        Array.from(groups.entries()).map(([region, replicas]) => (
-          <div key={region.id} className="row items-center gap-2">
-            <RegionFlag regionId={region.id} className="size-4" />
-
-            <div className="flex-1">{region.name}</div>
-
-            <Badge color="gray" size={1}>
-              <T id="scalingTooltip.count" values={scaling(replicas)} />
-            </Badge>
-          </div>
-        ))}
     </div>
   );
 }

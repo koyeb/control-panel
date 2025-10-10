@@ -6,7 +6,7 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionsList } from 'src/components/regions-list';
 import { Tooltip } from 'src/components/tooltip';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { DeploymentDefinition, EnvironmentVariable, type Scaling } from 'src/model';
+import { DeploymentDefinition, EnvironmentVariable } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.deploymentInfo');
@@ -15,18 +15,6 @@ export function InstanceTypeMetadata({ instanceType }: { instanceType: string | 
   const instance = useCatalogInstance(instanceType);
 
   return <Metadata label={<T id="instanceTypeLabel" />} value={instance?.displayName} />;
-}
-
-export function ScalingMetadata({ scaling }: { scaling: Scaling }) {
-  const value = () => {
-    if (scaling.min === scaling.max) {
-      return <T id="fixedScalingValue" values={{ instances: scaling.min }} />;
-    }
-
-    return <T id="autoScalingValue" values={{ min: scaling.min, max: scaling.max }} />;
-  };
-
-  return <Metadata label={<T id="scalingLabel" />} value={value()} />;
 }
 
 export function RegionsMetadata({ regions }: { regions: string[] }) {

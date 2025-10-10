@@ -28,11 +28,7 @@ import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/model';
-import {
-  InstanceTypeMetadata,
-  RegionsMetadata,
-  ScalingMetadata,
-} from 'src/modules/deployment/metadata/runtime-metadata';
+import { InstanceTypeMetadata, RegionsMetadata } from 'src/modules/deployment/metadata/runtime-metadata';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
@@ -46,7 +42,7 @@ import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
 import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
-import { ServiceForm } from './service-form.types';
+import { Scaling, ServiceForm } from './service-form.types';
 
 const T = createTranslate('modules.serviceForm.oneClickAppForm');
 
@@ -227,7 +223,7 @@ function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: 
   };
 
   return (
-    <Section title={<T id="overview" />}>
+    <Section title={<T id="metadata.title" />}>
       <div className="divide-y rounded bg-muted">
         <dl className="row flex-wrap gap-3 p-3">
           {app.metadata.map((metadata, index) => (
@@ -247,6 +243,21 @@ function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: 
         </dl>
       </div>
     </Section>
+  );
+}
+
+function ScalingMetadata({ scaling }: { scaling: Scaling }) {
+  return (
+    <Metadata
+      label={<T id="metadata.scaling.label" />}
+      value={
+        scaling.min === scaling.max ? (
+          <T id="metadata.scaling.valueFixed" values={{ instances: scaling.min }} />
+        ) : (
+          <T id="metadata.scaling.valueAutoscaling" values={{ min: scaling.min, max: scaling.max }} />
+        )
+      }
+    />
   );
 }
 
