@@ -5,7 +5,6 @@ import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
-import { AuthButton } from './components/auth-button';
 import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignInForm } from './components/sign-in-form';
 import { Separator } from './separator';
@@ -14,7 +13,6 @@ const T = createTranslate('pages.authentication.signIn');
 
 export function SignInPage() {
   const t = T.useTranslate();
-  const authKit = useAuthKit();
   const next = useSearchParams().get('next');
 
   return (
@@ -35,13 +33,6 @@ export function SignInPage() {
 
       <Separator />
 
-      <FeatureFlag feature="work-os">
-        <AuthButton type="button" onClick={() => authKit.signIn(next)}>
-          Sign in with WorkOS
-        </AuthButton>
-        <Separator />
-      </FeatureFlag>
-
       <SignInForm redirect={next ?? '/'} />
 
       <SignUpLink />
@@ -51,10 +42,21 @@ export function SignInPage() {
 }
 
 function SignUpLink() {
+  const authKit = useAuthKit();
+
   const link = (children: React.ReactNode[]) => (
-    <Link to="/auth/signup" className="text-default underline">
-      {children}
-    </Link>
+    <FeatureFlag
+      feature="work-os"
+      fallback={
+        <Link to="/auth/signup" className="text-default underline">
+          {children}
+        </Link>
+      }
+    >
+      <button type="button" onClick={() => void authKit.signUp()} className="text-default underline">
+        {children}
+      </button>
+    </FeatureFlag>
   );
 
   return (

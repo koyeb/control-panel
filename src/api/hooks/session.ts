@@ -127,7 +127,7 @@ export function useLogoutMutation() {
 
   const authKitLogout = useMutation({
     mutationFn: async () => {
-      authKit.client?.signOut({ returnTo: `${window.location.origin}/auth/signin` });
+      authKit.signOut();
     },
     onSuccess: async () => {
       if (!isSessionToken()) {

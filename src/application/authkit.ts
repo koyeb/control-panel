@@ -6,9 +6,9 @@ import { getConfig } from './config';
 type AuthKitClient = Awaited<ReturnType<typeof createClient>>;
 
 export class AuthKitAdapter {
-  public client?: AuthKitClient;
-  public user?: User | null;
+  private client?: AuthKitClient;
   private state?: Record<string, unknown>;
+  public user?: User | null;
 
   async initialize() {
     if (this.client !== undefined) {
@@ -16,10 +16,12 @@ export class AuthKitAdapter {
     }
 
     const clientId = getConfig('workOsClientId');
+    const apiHostname = getConfig('workOsApiHost');
 
     if (clientId) {
       this.client = await createClient(clientId, {
         devMode: this.devMode,
+        apiHostname,
         redirectUri: this.redirectUri,
         onRefresh: this.onRefresh,
         onRedirectCallback: this.onRedirectCallback,
@@ -29,8 +31,20 @@ export class AuthKitAdapter {
     }
   }
 
-  signIn(next: string | null) {
-    void this.client?.signIn({ state: { next } });
+  async signIn(email: string, next: string | null) {
+    await this.client?.signIn({ loginHint: email, state: { next } });
+  }
+
+  async signUp() {
+    await this.client?.signUp();
+  }
+
+  signOut() {
+    this.client?.signOut({ returnTo: `${window.location.origin}/auth/signin` });
+  }
+
+  async getAccessToken() {
+    return this.client?.getAccessToken();
   }
 
   get next() {
@@ -42,7 +56,7 @@ export class AuthKitAdapter {
   }
 
   private get devMode() {
-    return getConfig('environment') === 'development';
+    return getConfig('environment') !== 'production';
   }
 
   private get redirectUri() {

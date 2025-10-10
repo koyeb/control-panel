@@ -1893,6 +1893,7 @@
         "githubSignIn": "Sign in with GitHub",
         "emailPlaceholder": "Email",
         "passwordPlaceholder": "Password",
+        "continue": "Continue",
         "submit": "Sign in",
         "invalidCredential": "Incorrect email or password",
         "signUpLink": "Don't have an account? <link>Sign up</link>",

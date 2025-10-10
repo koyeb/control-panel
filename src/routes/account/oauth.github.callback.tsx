@@ -5,12 +5,14 @@ import { z } from 'zod';
 
 import { ApiError, createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
+import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { setToken } from 'src/application/token';
 import { createValidationGuard, hasMessage } from 'src/application/validation';
 import { Link } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { urlToLinkOptions } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { assert } from 'src/utils/assert';
@@ -197,6 +199,8 @@ function Component() {
 }
 
 function AccountNotFound() {
+  const authKit = useAuthKit();
+
   return (
     <div className="col gap-1">
       <div className="font-medium">
@@ -208,9 +212,18 @@ function AccountNotFound() {
           id="accountNotFound.link"
           values={{
             link: (children) => (
-              <Link to="/auth/signup" className="underline">
-                {children}
-              </Link>
+              <FeatureFlag
+                feature="work-os"
+                fallback={
+                  <Link to="/auth/signup" className="text-default underline">
+                    {children}
+                  </Link>
+                }
+              >
+                <button type="button" onClick={() => void authKit.signUp()} className="underline">
+                  {children}
+                </button>
+              </FeatureFlag>
             ),
           }}
         />
