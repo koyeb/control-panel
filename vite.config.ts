@@ -108,7 +108,7 @@ export default defineConfig({
   server: {
     port: 8000,
     proxy: {
-      '/v1': process.env.VITE_API_URL!,
+      '/v1': process.env.PROXY_API_URL!,
     },
   },
   preview: {
