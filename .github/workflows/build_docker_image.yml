@@ -44,6 +44,7 @@ jobs:
             --build-arg STRIPE_PUBLIC_KEY \
             --build-arg MAPBOX_TOKEN \
             --build-arg INTERCOM_APP_ID \
+            --build-arg WORK_OS_API_HOST \
             --build-arg WORK_OS_CLIENT_ID \
             --build-arg SENTRY_DSN \
             --build-arg SENTRY_AUTH_TOKEN \
@@ -60,6 +61,7 @@ jobs:
           STRIPE_PUBLIC_KEY: ${{ vars.STRIPE_PUBLIC_KEY }}
           MAPBOX_TOKEN: ${{ vars.MAPBOX_TOKEN }}
           INTERCOM_APP_ID: ${{ vars.INTERCOM_APP_ID }}
+          WORK_OS_API_HOST: ${{ vars.WORK_OS_API_HOST }}
           WORK_OS_CLIENT_ID: ${{ vars.WORK_OS_CLIENT_ID }}
           SENTRY_DSN: ${{ vars.SENTRY_DSN }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

@@ -14,6 +14,7 @@ const envVars = {
   stripePublicKey: 'VITE_STRIPE_PUBLIC_KEY',
   mapboxToken: 'VITE_MAPBOX_TOKEN',
   intercomAppId: 'VITE_INTERCOM_APP_ID',
+  workOsApiHost: 'VITE_WORK_OS_API_HOST',
   workOsClientId: 'VITE_WORK_OS_CLIENT_ID',
   sentryDsn: 'VITE_SENTRY_DSN',
 };

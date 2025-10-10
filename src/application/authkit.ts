@@ -16,10 +16,12 @@ export class AuthKitAdapter {
     }
 
     const clientId = getConfig('workOsClientId');
+    const apiHostname = getConfig('workOsApiHost');
 
     if (clientId) {
       this.client = await createClient(clientId, {
         devMode: this.devMode,
+        apiHostname,
         redirectUri: this.redirectUri,
         onRefresh: this.onRefresh,
         onRedirectCallback: this.onRedirectCallback,
@@ -42,7 +44,7 @@ export class AuthKitAdapter {
   }
 
   private get devMode() {
-    return getConfig('environment') === 'development';
+    return getConfig('environment') !== 'production';
   }
 
   private get redirectUri() {
