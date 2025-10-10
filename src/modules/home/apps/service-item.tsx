@@ -1,5 +1,4 @@
-import { Badge, Collapse } from '@koyeb/design-system';
-import { TooltipTitle } from '@koyeb/design-system/next';
+import { Badge, Collapse, TooltipTitle } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 

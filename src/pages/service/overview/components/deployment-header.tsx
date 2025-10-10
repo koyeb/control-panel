@@ -1,5 +1,3 @@
-import '@koyeb/design-system';
-
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
 import { Tooltip } from 'src/components/tooltip';

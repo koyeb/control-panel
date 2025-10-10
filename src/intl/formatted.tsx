@@ -1,5 +1,4 @@
-import { Badge } from '@koyeb/design-system';
-import { TooltipTitle } from '@koyeb/design-system/next';
+import { Badge, TooltipTitle } from '@koyeb/design-system';
 import { useMemo } from 'react';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 

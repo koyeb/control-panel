@@ -31,7 +31,7 @@ export function ServiceNameSection() {
       <ControlledInput
         name="serviceName"
         label={<T id="serviceNameLabel" />}
-        helpTooltip={<T id="serviceNameTooltip" />}
+        tooltip={<T id="serviceNameTooltip" />}
         helperText={errors.serviceName?.message}
         className="max-w-md"
       />

@@ -16,6 +16,8 @@ import { Control, FieldPath, FieldValues, PathValue, useController } from 'react
 import { usePureFunction } from 'src/hooks/lifecycle';
 import { Extend } from 'src/utils/types';
 
+import { InfoTooltip } from './tooltip';
+
 type ControlledProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Component extends React.JSXElementConstructor<any>,
@@ -33,18 +35,20 @@ type ControlledProps<
 export function ControlledCheckbox<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
->({ control, name, onChangeEffect, ...props }: ControlledProps<typeof Checkbox, Form, Name>) {
+>(props: ControlledProps<typeof Checkbox, Form, Name> & { tooltip?: React.ReactNode }) {
+  const { control, label, tooltip: tooltip, name, onChangeEffect, ...rest } = props;
   const { field } = useController({ control, name });
 
   return (
     <Checkbox
       {...field}
+      label={<LabelTooltip label={label} tooltip={tooltip} />}
       checked={field.value}
       onChange={(event) => {
         field.onChange(event);
         onChangeEffect?.(event);
       }}
-      {...props}
+      {...rest}
     />
   );
 }
@@ -52,11 +56,18 @@ export function ControlledCheckbox<
 export function ControlledRadio<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
->({ control, name, value, ...props }: ControlledProps<typeof Radio, Form, Name>) {
+>(props: ControlledProps<typeof Radio, Form, Name> & { tooltip?: React.ReactNode }) {
+  const { control, name, label, tooltip, value, ...rest } = props;
   const { field } = useController({ control, name });
 
   return (
-    <Radio {...field} checked={field.value === value} onChange={() => field.onChange(value)} {...props} />
+    <Radio
+      {...field}
+      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      checked={field.value === value}
+      onChange={() => field.onChange(value)}
+      {...rest}
+    />
   );
 }
 
@@ -117,7 +128,8 @@ export function ControlledSelectBox<
 export function ControlledInput<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
->({ ref, control, name, helperText, onChangeEffect, ...props }: ControlledProps<typeof Input, Form, Name>) {
+>(props: ControlledProps<typeof Input, Form, Name> & { tooltip?: React.ReactNode }) {
+  const { ref, control, name, label, tooltip, helperText, onChangeEffect, ...rest } = props;
   const { field, fieldState } = useController({ control, name });
 
   return (
@@ -125,13 +137,14 @@ export function ControlledInput<
       {...field}
       ref={mergeRefs(ref, field.ref)}
       invalid={fieldState.invalid}
+      label={<LabelTooltip label={label} tooltip={tooltip} />}
       helperText={fieldState.error?.message ?? helperText}
       value={Number.isNaN(field.value) ? '' : (field.value ?? '')}
       onChange={(event) => {
         field.onChange(props.type === 'number' ? event.target.valueAsNumber : event.target.value);
         onChangeEffect?.(event);
       }}
-      {...props}
+      {...rest}
     />
   );
 }
@@ -170,7 +183,9 @@ export function ControlledSelect<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
   Item = PathValue<Form, Name>,
->({ control, name, itemToValue, onChangeEffect, ...props }: ControlledSelectProps<Form, Name, Item>) {
+>(props: ControlledSelectProps<Form, Name, Item> & { tooltip?: React.ReactNode }) {
+  const { control, items, name, label, tooltip, itemToValue, onChangeEffect, ...rest } = props;
+
   const {
     field: { value, onChange, ...field },
     fieldState: { invalid, error },
@@ -180,24 +195,23 @@ export function ControlledSelect<
 
   const valueToItemMap = useMemo(() => {
     return new Map(
-      props.items
-        //
-        .map((item) => [itemToValuePure(item), item] as const)
-        .filter(([value]) => value !== null),
+      items.map((item) => [itemToValuePure(item), item] as const).filter(([value]) => value !== null),
     );
-  }, [props.items, itemToValuePure]);
+  }, [items, itemToValuePure]);
 
   return (
     <Select
       {...field}
-      invalid={invalid}
+      items={items}
+      label={<LabelTooltip label={label} tooltip={tooltip} />}
       helperText={error?.message}
+      invalid={invalid}
       selectedItem={valueToItemMap.get(value) ?? null}
       onSelectedItemChange={(item) => {
         onChange(itemToValue(item) ?? null);
         onChangeEffect?.(item);
       }}
-      {...props}
+      {...rest}
     />
   );
 }
@@ -216,14 +230,9 @@ export function ControlledAutocomplete<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
   Item = PathValue<Form, Name>,
->({
-  control,
-  name,
-  allItems,
-  itemToValue,
-  onChangeEffect,
-  ...props
-}: ControlledAutocompleteProps<Form, Name, Item>) {
+>(props: ControlledAutocompleteProps<Form, Name, Item> & { tooltip?: React.ReactNode }) {
+  const { control, name, label, tooltip, allItems, itemToValue, onChangeEffect, ...rest } = props;
+
   const {
     field: { value, onChange, ...field },
     fieldState: { invalid, error },
@@ -239,14 +248,32 @@ export function ControlledAutocomplete<
   return (
     <Autocomplete
       {...field}
-      invalid={invalid}
+      label={<LabelTooltip label={label} tooltip={tooltip} />}
       helperText={error?.message}
+      invalid={invalid}
       selectedItem={valueToItemMap.get(value) ?? null}
       onSelectedItemChange={(item) => {
         onChange(itemToValue(item));
         onChangeEffect?.(item);
       }}
-      {...props}
+      {...rest}
     />
+  );
+}
+
+export function LabelTooltip({ label, tooltip }: { label?: React.ReactNode; tooltip?: React.ReactNode }) {
+  if (!label) {
+    return null;
+  }
+
+  if (!tooltip) {
+    return label;
+  }
+
+  return (
+    <div className="inline-flex flex-row items-center gap-2">
+      {label}
+      <InfoTooltip content={tooltip} />
+    </div>
   );
 }

@@ -24,14 +24,14 @@ export function HttpHealthCheckFields({ index }: HttpHealthCheckFieldsProps) {
         name={`ports.${index}.healthCheck.path`}
         type="text"
         label={<T id="httpPathLabel" />}
-        helpTooltip={<T id="httpPathTooltip" />}
+        tooltip={<T id="httpPathTooltip" />}
         className="md:col-span-3"
       />
 
       <ControlledSelect
         name={`ports.${index}.healthCheck.method`}
         label={<T id="httpMethodLabel" />}
-        helpTooltip={<T id="httpMethodTooltip" />}
+        tooltip={<T id="httpMethodTooltip" />}
         items={['get', 'head', 'post', 'put', 'delete', 'connect', 'options', 'trace']}
         getKey={identity}
         itemToString={identity}

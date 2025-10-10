@@ -32,14 +32,14 @@ type OverridableInputProps<
 > = {
   name: Name;
   label: React.ReactNode;
-  helpTooltip?: React.ReactNode;
+  tooltip?: React.ReactNode;
   placeholder?: string;
 };
 
 export function OverridableInput<
   TFieldValues extends FieldValues,
   Name extends FieldPathByValue<TFieldValues, string | null>,
->({ name, label, helpTooltip, placeholder }: OverridableInputProps<TFieldValues, Name>) {
+>({ name, label, tooltip, placeholder }: OverridableInputProps<TFieldValues, Name>) {
   const { field } = useController<TFieldValues, Name>({ name });
 
   return (
@@ -51,7 +51,7 @@ export function OverridableInput<
         <ControlledInput
           name={name}
           label={label}
-          helpTooltip={helpTooltip}
+          tooltip={tooltip}
           placeholder={placeholder}
           disabled={disabled}
           className="w-full max-w-md"

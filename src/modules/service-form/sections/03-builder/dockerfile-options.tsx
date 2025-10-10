@@ -22,7 +22,7 @@ export function DockerfileOptions() {
       <OverridableInput
         name="builder.dockerfileOptions.dockerfile"
         label={<T id="dockerfileLocation.label" />}
-        helpTooltip={<T id="dockerfileLocation.tooltip" />}
+        tooltip={<T id="dockerfileLocation.tooltip" />}
       />
 
       <EntrypointInput />
@@ -32,19 +32,19 @@ export function DockerfileOptions() {
       <OverridableInput
         name="builder.dockerfileOptions.target"
         label={<T id="target.label" />}
-        helpTooltip={<T id="target.tooltip" />}
+        tooltip={<T id="target.tooltip" />}
       />
 
       <OverridableInput
         name="source.git.workDirectory"
         label={<T id="workDirectory.label" />}
-        helpTooltip={<T id="workDirectory.tooltip" />}
+        tooltip={<T id="workDirectory.tooltip" />}
       />
 
       <ControlledCheckbox<ServiceForm>
         name="builder.dockerfileOptions.privileged"
         label={<T id="privileged.label" />}
-        helpTooltip={<T id="privileged.tooltip" />}
+        tooltip={<T id="privileged.tooltip" />}
       />
     </div>
   );
@@ -62,7 +62,7 @@ function EntrypointInput() {
   return (
     <ShellCommandInput
       label={<T id="entrypoint.label" />}
-      helpTooltip={<T id="entrypoint.tooltip" />}
+      tooltip={<T id="entrypoint.tooltip" />}
       instruction="ENTRYPOINT"
       value={field.value}
       onChange={field.onChange}
@@ -86,7 +86,7 @@ function CommandInput() {
   return (
     <ShellCommandInput
       label={<T id="command.label" />}
-      helpTooltip={<T id="command.tooltip" />}
+      tooltip={<T id="command.tooltip" />}
       instruction="CMD"
       value={value}
       onChange={(value) => {

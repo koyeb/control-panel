@@ -45,7 +45,7 @@ export function DockerImageField() {
       name="source.docker.image"
       label={<T id="imageLabel" />}
       placeholder={t('imagePlaceholder')}
-      helpTooltip={<T id="imageTooltip" />}
+      tooltip={<T id="imageTooltip" />}
       helperText={
         <DockerImageHelperText
           verifying={verifying}

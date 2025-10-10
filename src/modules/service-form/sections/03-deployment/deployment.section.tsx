@@ -26,7 +26,7 @@ export function DeploymentSection() {
       <ControlledCheckbox<ServiceForm>
         name="dockerDeployment.privileged"
         label={<T id="privilegedLabel" />}
-        helpTooltip={<T id="privilegedTooltip" />}
+        tooltip={<T id="privilegedTooltip" />}
       />
     </ServiceFormSection>
   );
@@ -52,7 +52,7 @@ function EntrypointInput() {
   return (
     <ShellCommandInput
       label={<T id="entrypointLabel" />}
-      helpTooltip={<T id="entrypointTooltip" />}
+      tooltip={<T id="entrypointTooltip" />}
       placeholder={t('entrypointPlaceholder')}
       instruction="ENTRYPOINT"
       value={field.value}
@@ -79,7 +79,7 @@ function CommandInput() {
   return (
     <ShellCommandInput
       label={<T id="commandLabel" />}
-      helpTooltip={<T id="commandTooltip" />}
+      tooltip={<T id="commandTooltip" />}
       placeholder={t('commandPlaceholder')}
       instruction="CMD"
       value={value}

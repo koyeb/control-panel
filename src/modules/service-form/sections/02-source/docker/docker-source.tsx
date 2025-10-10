@@ -24,7 +24,7 @@ export function DockerSource() {
       <ControlledSelect<ServiceForm, 'source.docker.registrySecret', Secret | 'none' | 'create'>
         name="source.docker.registrySecret"
         label={<T id="registrySecretLabel" />}
-        helpTooltip={<T id="registrySecretTooltip" />}
+        tooltip={<T id="registrySecretTooltip" />}
         placeholder={<T id="registrySecretPlaceholder" />}
         items={['none', ...(secrets ?? []), 'create'] as const}
         getKey={(item) => (typeof item === 'string' ? item : item.id)}

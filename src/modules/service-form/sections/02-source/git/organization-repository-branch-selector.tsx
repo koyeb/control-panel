@@ -56,7 +56,7 @@ export function OrganizationRepositoryBranchSelector() {
     <ControlledAutocomplete<ServiceForm, 'source.git.organizationRepository.branch'>
       name="source.git.organizationRepository.branch"
       label={<T id="branchLabel" />}
-      helpTooltip={<T id="branchTooltip" />}
+      tooltip={<T id="branchTooltip" />}
       disabled={selectedRepository.repositoryName === null}
       items={branches}
       allItems={Array.from(allBranches.values())}

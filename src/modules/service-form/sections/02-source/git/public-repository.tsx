@@ -35,7 +35,7 @@ export function PublicRepository() {
         render={({ field, fieldState }) => (
           <PublicGithubRepositoryInput
             label={<T id="publicRepositoryLabel" />}
-            helpTooltip={<T id="publicRepositoryTooltip" />}
+            tooltip={<T id="publicRepositoryTooltip" />}
             placeholder={t('publicRepositoryPlaceholder')}
             value={field.value}
             onChange={(url) => {

@@ -38,7 +38,7 @@ export function SourceSection() {
             name="source.type"
             value="archive"
             label={<T id="archiveSourceLabel" />}
-            helpTooltip={<T id="archiveSourceTooltip" />}
+            tooltip={<T id="archiveSourceTooltip" />}
           />
         )}
 
@@ -46,14 +46,14 @@ export function SourceSection() {
           name="source.type"
           value="git"
           label={<T id="githubSourceLabel" />}
-          helpTooltip={<T id="githubSourceTooltip" />}
+          tooltip={<T id="githubSourceTooltip" />}
         />
 
         <ControlledRadio
           name="source.type"
           value="docker"
           label={<T id="dockerSourceLabel" />}
-          helpTooltip={<T id="dockerSourceTooltip" />}
+          tooltip={<T id="dockerSourceTooltip" />}
         />
       </div>
 

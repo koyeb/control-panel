@@ -1,5 +1,3 @@
-import '@koyeb/design-system';
-
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';

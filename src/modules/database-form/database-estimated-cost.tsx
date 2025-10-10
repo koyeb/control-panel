@@ -1,5 +1,3 @@
-import '@koyeb/design-system';
-
 import { InfoTooltip } from 'src/components/tooltip';
 import { IconTicketPercent } from 'src/icons';
 import { FormattedPrice } from 'src/intl/formatted';

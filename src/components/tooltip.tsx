@@ -1,5 +1,4 @@
-import { Button, useBreakpoint } from '@koyeb/design-system';
-import { TooltipDesktop, TooltipMobile } from '@koyeb/design-system/next';
+import { Button, TooltipDesktop, TooltipMobile, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 
 import { IconInfo } from 'src/icons';

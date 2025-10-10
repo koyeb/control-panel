@@ -23,7 +23,7 @@ export function PublicRepositoryBranchSelector({ branches }: PublicRepositoryBra
     <ControlledAutocomplete<ServiceForm, 'source.git.publicRepository.branch'>
       name="source.git.publicRepository.branch"
       label={<T id="branchLabel" />}
-      helpTooltip={<T id="branchTooltip" />}
+      tooltip={<T id="branchTooltip" />}
       disabled={selectedRepository.repositoryName === null}
       items={branches.filter((branch) => branch.includes(searchQuery))}
       allItems={branches.filter((branch) => branch.includes(searchQuery))}

@@ -5,16 +5,26 @@ import { formatCommand, parseCommand } from 'src/application/parse-command';
 import { OverridableField } from 'src/components/overridable-input';
 import { Extend } from 'src/utils/types';
 
+import { LabelTooltip } from './controlled';
+
 type CommandInputProps = Extend<
   React.ComponentProps<typeof Input>,
   {
+    tooltip?: React.ReactNode;
     instruction: string;
     value: string[] | null;
     onChange: (value: string[] | null) => void;
   }
 >;
 
-export function ShellCommandInput({ instruction, value, onChange, ...props }: CommandInputProps) {
+export function ShellCommandInput({
+  instruction,
+  value,
+  label,
+  tooltip,
+  onChange,
+  ...props
+}: CommandInputProps) {
   const ref = useRef<HTMLInputElement>(null);
 
   return (
@@ -31,6 +41,7 @@ export function ShellCommandInput({ instruction, value, onChange, ...props }: Co
       {(disabled) => (
         <Input
           ref={ref}
+          label={<LabelTooltip label={label} tooltip={tooltip} />}
           defaultValue={formatCommand(value ?? [])}
           onChange={(event) => onChange(parseCommand(event.target.value))}
           disabled={disabled}

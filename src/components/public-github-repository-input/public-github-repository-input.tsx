@@ -5,10 +5,13 @@ import { useEffect } from 'react';
 import { useTranslate } from 'src/intl/translate';
 import { GitRepository } from 'src/model';
 
+import { LabelTooltip } from '../controlled';
+
 import { fetchGithubRepository } from './github-api';
 import { parseGithubRepositoryQuery } from './parse-github-repository-query';
 
 type PublicGithubRepositoryInputOwnProps = {
+  tooltip?: React.ReactNode;
   value: string;
   onChange: (value: string) => void;
   onRepositoryFetched: (repository: GitRepository) => void;
@@ -22,6 +25,8 @@ type PublicGithubRepositoryInputProps = Omit<
   PublicGithubRepositoryInputOwnProps;
 
 export function PublicGithubRepositoryInput({
+  label,
+  tooltip,
   value,
   onChange,
   onRepositoryFetched,
@@ -59,5 +64,12 @@ export function PublicGithubRepositoryInput({
     };
   }, [value, mutate]);
 
-  return <Input value={value} onChange={(event) => onChange(event.target.value)} {...props} />;
+  return (
+    <Input
+      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      {...props}
+    />
+  );
 }

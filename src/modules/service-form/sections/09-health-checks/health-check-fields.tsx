@@ -43,7 +43,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         name={`ports.${index}.healthCheck.gracePeriod`}
         type="number"
         label={<T id="gracePeriodLabel" />}
-        helpTooltip={<T id="gracePeriodTooltip" />}
+        tooltip={<T id="gracePeriodTooltip" />}
         onKeyDown={onKeyDownPositiveInteger}
         min={5}
         max={15 * 60}
@@ -58,7 +58,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         name={`ports.${index}.healthCheck.interval`}
         type="number"
         label={<T id="intervalLabel" />}
-        helpTooltip={<T id="intervalTooltip" />}
+        tooltip={<T id="intervalTooltip" />}
         onKeyDown={onKeyDownPositiveInteger}
         min={3}
         max={5 * 60}
@@ -73,7 +73,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         name={`ports.${index}.healthCheck.restartLimit`}
         type="number"
         label={<T id="restartLimitLabel" />}
-        helpTooltip={<T id="restartLimitTooltip" />}
+        tooltip={<T id="restartLimitTooltip" />}
         min={1}
         max={10}
         onKeyDown={onKeyDownPositiveInteger}
@@ -83,7 +83,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         name={`ports.${index}.healthCheck.timeout`}
         type="number"
         label={<T id="timeoutLabel" />}
-        helpTooltip={<T id="timeoutTooltip" />}
+        tooltip={<T id="timeoutTooltip" />}
         onKeyDown={onKeyDownPositiveInteger}
         min={1}
         max={10 * 60}

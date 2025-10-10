@@ -19,25 +19,25 @@ export function BuildpackOptions() {
       <OverridableInput<ServiceForm, 'builder.buildpackOptions.buildCommand'>
         name="builder.buildpackOptions.buildCommand"
         label={<T id="buildCommand.label" />}
-        helpTooltip={<T id="buildCommand.tooltip" />}
+        tooltip={<T id="buildCommand.tooltip" />}
       />
 
       <OverridableInput<ServiceForm, 'builder.buildpackOptions.runCommand'>
         name="builder.buildpackOptions.runCommand"
         label={<T id="runCommand.label" />}
-        helpTooltip={<T id="runCommand.tooltip" />}
+        tooltip={<T id="runCommand.tooltip" />}
       />
 
       <OverridableInput<ServiceForm, 'source.git.workDirectory'>
         name="source.git.workDirectory"
         label={<T id="workDirectory.label" />}
-        helpTooltip={<T id="workDirectory.tooltip" />}
+        tooltip={<T id="workDirectory.tooltip" />}
       />
 
       <ControlledCheckbox<ServiceForm, 'builder.buildpackOptions.privileged'>
         name="builder.buildpackOptions.privileged"
         label={<T id="privileged.label" />}
-        helpTooltip={<T id="privileged.tooltip" />}
+        tooltip={<T id="privileged.tooltip" />}
       />
     </div>
   );

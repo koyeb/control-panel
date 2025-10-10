@@ -190,25 +190,25 @@ function BuildpackConfiguration() {
       <OverridableInput<BuilderForm, 'buildpack.buildCommand'>
         name="buildpack.buildCommand"
         label={<T id="buildpack.configuration.buildCommand.label" />}
-        helpTooltip={<T id="buildpack.configuration.buildCommand.tooltip" />}
+        tooltip={<T id="buildpack.configuration.buildCommand.tooltip" />}
       />
 
       <OverridableInput<BuilderForm, 'buildpack.runCommand'>
         name="buildpack.runCommand"
         label={<T id="buildpack.configuration.runCommand.label" />}
-        helpTooltip={<T id="buildpack.configuration.runCommand.tooltip" />}
+        tooltip={<T id="buildpack.configuration.runCommand.tooltip" />}
       />
 
       <OverridableInput<BuilderForm, 'buildpack.workDirectory'>
         name="buildpack.workDirectory"
         label={<T id="buildpack.configuration.workDirectory.label" />}
-        helpTooltip={<T id="buildpack.configuration.workDirectory.tooltip" />}
+        tooltip={<T id="buildpack.configuration.workDirectory.tooltip" />}
       />
 
       <ControlledCheckbox<BuilderForm, 'buildpack.privileged'>
         name="buildpack.privileged"
         label={<T id="buildpack.configuration.privileged.label" />}
-        helpTooltip={<T id="buildpack.configuration.privileged.tooltip" />}
+        tooltip={<T id="buildpack.configuration.privileged.tooltip" />}
       />
     </div>
   );
@@ -224,12 +224,12 @@ function DockerfileConfiguration() {
       <OverridableInput<BuilderForm, 'dockerfile.dockerfile'>
         name="dockerfile.dockerfile"
         label={<T id="dockerfile.configuration.dockerfileLocation.label" />}
-        helpTooltip={<T id="dockerfile.configuration.dockerfileLocation.tooltip" />}
+        tooltip={<T id="dockerfile.configuration.dockerfileLocation.tooltip" />}
       />
 
       <ShellCommandInput
         label={<T id="dockerfile.configuration.entrypoint.label" />}
-        helpTooltip={<T id="dockerfile.configuration.entrypoint.tooltip" />}
+        tooltip={<T id="dockerfile.configuration.entrypoint.tooltip" />}
         instruction="ENTRYPOINT"
         value={entrypoint.field.value}
         onChange={entrypoint.field.onChange}
@@ -239,7 +239,7 @@ function DockerfileConfiguration() {
 
       <ShellCommandInput
         label={<T id="dockerfile.configuration.command.label" />}
-        helpTooltip={<T id="dockerfile.configuration.command.tooltip" />}
+        tooltip={<T id="dockerfile.configuration.command.tooltip" />}
         instruction="CMD"
         value={command.field.value === null ? null : [command.field.value, ...(args.field.value ?? [])]}
         onChange={(value) => {
@@ -253,19 +253,19 @@ function DockerfileConfiguration() {
       <OverridableInput<BuilderForm, 'dockerfile.target'>
         name="dockerfile.target"
         label={<T id="dockerfile.configuration.target.label" />}
-        helpTooltip={<T id="dockerfile.configuration.target.tooltip" />}
+        tooltip={<T id="dockerfile.configuration.target.tooltip" />}
       />
 
       <OverridableInput<BuilderForm, 'dockerfile.workDirectory'>
         name="dockerfile.workDirectory"
         label={<T id="buildpack.configuration.workDirectory.label" />}
-        helpTooltip={<T id="buildpack.configuration.workDirectory.tooltip" />}
+        tooltip={<T id="buildpack.configuration.workDirectory.tooltip" />}
       />
 
       <ControlledCheckbox<BuilderForm, 'dockerfile.privileged'>
         name="dockerfile.privileged"
         label={<T id="buildpack.configuration.privileged.label" />}
-        helpTooltip={<T id="buildpack.configuration.privileged.tooltip" />}
+        tooltip={<T id="buildpack.configuration.privileged.tooltip" />}
       />
     </div>
   );

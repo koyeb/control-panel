@@ -1,9 +1,9 @@
-import { Badge, InfoTooltip, Spinner } from '@koyeb/design-system';
+import { Badge, Spinner } from '@koyeb/design-system';
 
 import { ServiceUrl, getServiceUrls, isUpcomingDeployment } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { Metadata } from 'src/components/metadata';
-import { Tooltip } from 'src/components/tooltip';
+import { InfoTooltip, Tooltip } from 'src/components/tooltip';
 import { IconArrowRight } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Deployment, Service } from 'src/model';

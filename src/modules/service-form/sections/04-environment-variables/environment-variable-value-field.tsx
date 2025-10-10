@@ -14,6 +14,7 @@ import { useCombobox } from 'downshift';
 import { useRef, useState } from 'react';
 import { useController } from 'react-hook-form';
 
+import { LabelTooltip } from 'src/components/controlled';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { useFormValues } from 'src/hooks/form';
 import { IconChevronDown } from 'src/icons';
@@ -141,8 +142,8 @@ export function EnvironmentVariableValueField({
     <Field
       label={
         label && (
-          <FieldLabel htmlFor={id} helpTooltip={tooltip} {...getLabelProps()}>
-            {label}
+          <FieldLabel htmlFor={id} {...getLabelProps()}>
+            <LabelTooltip label={label} tooltip={tooltip} />
           </FieldLabel>
         )
       }

@@ -37,7 +37,7 @@ export function OrganizationRepository() {
       <ControlledCheckbox<ServiceForm, 'source.git.organizationRepository.autoDeploy'>
         name="source.git.organizationRepository.autoDeploy"
         label={<T id="autoDeploy" />}
-        helpTooltip={<T id="autoDeployTooltip" />}
+        tooltip={<T id="autoDeployTooltip" />}
         className="self-start"
       />
 

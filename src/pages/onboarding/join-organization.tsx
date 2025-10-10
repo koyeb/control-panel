@@ -1,4 +1,3 @@
-import { InfoTooltip } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -8,6 +7,7 @@ import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
 import { QueryError, QueryGuard } from 'src/components/query-error';
+import { InfoTooltip } from 'src/components/tooltip';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
@@ -83,7 +83,7 @@ function CreateOrganization() {
       <div>
         <h1 className="mb-1 text-3xl font-semibold">
           <T id="title" />
-          <InfoTooltip content={<T id="tooltip" />} className="max-w-lg" iconClassName="inline-block ms-2" />
+          <InfoTooltip content={<T id="tooltip" />} />
         </h1>
         <p className="text-dim">
           <T id="canBeChanged" />
