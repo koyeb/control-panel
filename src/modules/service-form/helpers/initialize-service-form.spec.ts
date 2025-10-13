@@ -43,10 +43,11 @@ describe('initializeServiceForm', () => {
 
   function mockApi<E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>, response: unknown) {
     const [method, path] = endpoint.split(' ') as [string, string];
+    const pathParams = params.path as Record<string, string> | undefined;
 
     fetch.mock(
       method,
-      path.replaceAll(/\{(.*)\}/g, (_, key) => params.path?.[key] ?? ''),
+      path.replaceAll(/\{(.*)\}/g, (_, key: string) => pathParams?.[key] ?? ''),
       response,
     );
   }

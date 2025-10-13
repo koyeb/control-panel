@@ -57,9 +57,9 @@ export async function initializeServiceForm(
     const volumes = await getVolumes(api);
     const deployment = await getDeployment(api, service.latestDeploymentId);
 
-    values.meta.serviceId = service!.id!;
-    values.meta.appId = app!.id!;
-    values.appName = app!.name!;
+    values.meta.serviceId = service.id;
+    values.meta.appId = app.id;
+    values.appName = app.name;
 
     values = merge(
       values,
@@ -67,7 +67,7 @@ export async function initializeServiceForm(
     );
 
     values.meta.previousInstance = values.instance;
-    values.meta.hasPreviousBuild = service?.lastProvisionedDeploymentId !== undefined;
+    values.meta.hasPreviousBuild = service.lastProvisionedDeploymentId !== undefined;
 
     if (params.has('attach-volume')) {
       const volume = volumes?.find(hasProperty('id', params.get('attach-volume')));

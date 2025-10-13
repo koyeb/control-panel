@@ -292,16 +292,16 @@ function DatabaseServiceFooter({ deployment }: { deployment: Deployment }) {
 function DeploymentTrigger({ deployment }: { deployment: ComputeDeployment }) {
   const trigger = deployment.trigger;
 
-  if (!trigger) {
-    return null;
-  }
-
   if (inArray(trigger?.type, ['initial', 'redeploy', 'resume'] as const)) {
     return (
       <div className="truncate text-dim">
         <T id={`deploymentTrigger.${trigger.type}`} />
       </div>
     );
+  }
+
+  if (!trigger) {
+    return null;
   }
 
   const branch = (
