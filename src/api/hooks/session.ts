@@ -7,13 +7,7 @@ import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 
 import { ApiError } from '../api-error';
-import {
-  mapOrganization,
-  mapOrganizationMember,
-  mapOrganizationQuotas,
-  mapOrganizationSummary,
-  mapUser,
-} from '../mappers/session';
+import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 import { apiMutation, apiQuery, getApiQueryKey } from '../query';
 
 export function useUserQuery() {
@@ -91,17 +85,6 @@ export function useOrganizationQuotasQuery() {
 
 export function useOrganizationQuotas() {
   return useOrganizationQuotasQuery().data;
-}
-
-export function useUserOrganizationMemberships() {
-  const user = useUser();
-
-  return useQuery({
-    ...apiQuery('get /v1/organization_members', { query: { user_id: user?.id } }),
-    refetchInterval: false,
-    enabled: user !== undefined,
-    select: ({ members }) => members!.map(mapOrganizationMember),
-  });
 }
 
 export function useLogoutMutation() {

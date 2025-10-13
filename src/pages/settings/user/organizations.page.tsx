@@ -1,9 +1,16 @@
 import { Button, Spinner } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, useOrganization, useSwitchOrganization, useUserOrganizationMemberships } from 'src/api';
+import {
+  apiMutation,
+  apiQuery,
+  mapOrganizationMember,
+  useOrganization,
+  useSwitchOrganization,
+  useUser,
+} from 'src/api';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
@@ -102,7 +109,19 @@ function Create() {
 }
 
 function OrganizationList() {
-  const query = useUserOrganizationMemberships();
+  const user = useUser();
+
+  const query = useQuery({
+    ...apiQuery('get /v1/organization_members', {
+      query: {
+        user_id: user?.id,
+        organization_statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
+      },
+    }),
+    refetchInterval: false,
+    enabled: user !== undefined,
+    select: ({ members }) => members!.map(mapOrganizationMember),
+  });
 
   if (query.isPending) {
     return <Spinner className="size-4" />;
