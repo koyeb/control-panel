@@ -85,7 +85,7 @@ function useServiceFormResolver() {
         return schemaResult;
       }
 
-      const interpolationResults = getUnknownInterpolationErrors(values);
+      const interpolationResults = await getUnknownInterpolationErrors(values);
 
       if (Object.keys(interpolationResults).length > 0) {
         return { values: {}, errors: interpolationResults };
