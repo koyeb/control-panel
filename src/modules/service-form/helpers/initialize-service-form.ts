@@ -2,7 +2,20 @@ import { QueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { DeepPartial } from 'react-hook-form';
 
-import { createEnsureApiQueryData, mapRepository } from 'src/api';
+import {
+  createEnsureApiQueryData,
+  isComputeDeployment,
+  mapApp,
+  mapCatalogDatacenter,
+  mapCatalogInstance,
+  mapCatalogRegion,
+  mapDeployment,
+  mapGithubApp,
+  mapOrganization,
+  mapOrganizationQuotas,
+  mapRepository,
+  mapService,
+} from 'src/api';
 import { getDefaultRegion } from 'src/application/default-region';
 import { notify } from 'src/application/notify';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
@@ -10,10 +23,10 @@ import {
   CatalogDatacenter,
   CatalogInstance,
   CatalogRegion,
-  GithubApp,
   Organization,
   OrganizationQuotas,
 } from 'src/model';
+import { assert } from 'src/utils/assert';
 import { clamp } from 'src/utils/math';
 import { hasProperty } from 'src/utils/object';
 
@@ -25,38 +38,24 @@ import { generateAppName } from './generate-app-name';
 import { parseDeployParams } from './parse-deploy-params';
 import { getScaleToZeroBounds } from './service-form.schema';
 
+type ApiFn = ReturnType<typeof createEnsureApiQueryData>;
+
 export async function initializeServiceForm(
   params: URLSearchParams,
-  datacenters: CatalogDatacenter[],
-  regions: CatalogRegion[],
-  instances: CatalogInstance[],
-  organization: Organization | undefined,
-  quotas: OrganizationQuotas,
-  githubApp: GithubApp | null | undefined,
   serviceId: string | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {
   const api = createEnsureApiQueryData(queryClient);
   let values = defaultServiceForm();
 
-  const getApp = async (appId: string) => {
-    return api('get /v1/apps/{id}', { path: { id: appId } });
-  };
-
-  const getService = async (serviceId: string) => {
-    return api('get /v1/services/{id}', { path: { id: serviceId } });
-  };
-
-  const getDeployment = async (deploymentId: string) => {
-    return api('get /v1/deployments/{id}', { path: { id: deploymentId } });
-  };
+  const organization = await getOrganization(api);
+  const githubApp = await getGithubApp(api);
 
   if (serviceId) {
-    const { service } = await getService(serviceId);
-    const { app } = await getApp(service!.app_id!);
-    const { volumes } = await api('get /v1/volumes', { query: { limit: '100' } });
-    const deployment = await getDeployment(service!.latest_deployment_id!);
-    const definition = deployment.deployment!.definition!;
+    const service = await getService(api, serviceId);
+    const app = await getApp(api, service.appId);
+    const volumes = await getVolumes(api);
+    const deployment = await getDeployment(api, service.latestDeploymentId);
 
     values.meta.serviceId = service!.id!;
     values.meta.appId = app!.id!;
@@ -64,11 +63,11 @@ export async function initializeServiceForm(
 
     values = merge(
       values,
-      deploymentDefinitionToServiceForm(definition, githubApp?.organizationName, volumes!),
+      deploymentDefinitionToServiceForm(deployment.definitionApi, githubApp?.organizationName, volumes!),
     );
 
     values.meta.previousInstance = values.instance;
-    values.meta.hasPreviousBuild = service?.last_provisioned_deployment_id !== '';
+    values.meta.hasPreviousBuild = service?.lastProvisionedDeploymentId !== undefined;
 
     if (params.has('attach-volume')) {
       const volume = volumes?.find(hasProperty('id', params.get('attach-volume')));
@@ -90,16 +89,26 @@ export async function initializeServiceForm(
   const duplicateServiceId = params.get('duplicate-service-id');
 
   if (duplicateServiceId !== null) {
-    const { service } = await getService(duplicateServiceId);
-    const deployment = await getDeployment(service!.latest_deployment_id!);
-    const definition = deployment.deployment!.definition!;
+    const service = await getService(api, duplicateServiceId);
+    const deployment = await getDeployment(api, service.latestDeploymentId);
 
-    definition.volumes = [];
-
-    values = merge(values, deploymentDefinitionToServiceForm(definition, githubApp?.organizationName, []));
+    values = merge(
+      values,
+      deploymentDefinitionToServiceForm(
+        { ...deployment.definitionApi, volumes: [] },
+        githubApp?.organizationName,
+        [],
+      ),
+    );
   }
 
   if (!serviceId) {
+    const quotas = await getOrganizationQuotas(api, organization.id);
+
+    const instances = await getInstances(api);
+    const datacenters = await getDatacenters(api);
+    const regions = await getRegions(api);
+
     const parsedParams = parseDeployParams(params, instances, regions, githubApp?.organizationName);
 
     values = merge(values, parsedParams);
@@ -121,18 +130,11 @@ export async function initializeServiceForm(
       const { repositoryName } = values.source.git.organizationRepository;
 
       if (repositoryName) {
-        const repository = await api('get /v1/git/repositories', {
-          query: { name: repositoryName, name_search_op: 'equality' },
-        })
-          .then(({ repositories }) => repositories!.map(mapRepository))
-          .then(([repository]) => repository);
+        const repository = await getRepository(api, repositoryName);
 
         if (repository) {
           values.source.git.organizationRepository.id = repository.id;
           values.source.git.organizationRepository.branch ??= repository.defaultBranch;
-
-          queryClient.setQueryData(['listRepositories', repositoryName, 'equality'], [repository]);
-          queryClient.setQueryData(['listRepositoryBranches', repository.id, ''], [repository.defaultBranch]);
         } else {
           values.source.git.organizationRepository.repositoryName = null;
           values.source.git.organizationRepository.branch = null;
@@ -150,8 +152,6 @@ export async function initializeServiceForm(
       if (repository) {
         values.source.git.publicRepository.url = repository.url;
         values.source.git.publicRepository.branch ??= repository.defaultBranch;
-
-        queryClient.setQueryData(['getPublicRepository', repositoryName], repository);
       } else {
         values.source.git.publicRepository.url = '';
         values.source.git.publicRepository.repositoryName = null;
@@ -181,17 +181,72 @@ export async function initializeServiceForm(
   return values;
 }
 
-export function defaultHealthCheck(): HealthCheck {
-  return {
-    protocol: 'tcp',
-    gracePeriod: 5,
-    interval: 30,
-    restartLimit: 3,
-    timeout: 5,
-    method: 'get',
-    path: '/',
-    headers: [],
-  };
+async function getInstances(api: ApiFn) {
+  return api('get /v1/catalog/instances', { query: { limit: '100' } }).then(({ instances }) =>
+    instances!.map(mapCatalogInstance),
+  );
+}
+
+async function getDatacenters(api: ApiFn) {
+  return api('get /v1/catalog/datacenters', {}).then(({ datacenters }) =>
+    datacenters!.map(mapCatalogDatacenter),
+  );
+}
+
+async function getRegions(api: ApiFn) {
+  return api('get /v1/catalog/regions', { query: { limit: '100' } }).then(({ regions }) =>
+    regions!.map(mapCatalogRegion),
+  );
+}
+
+async function getOrganization(api: ApiFn) {
+  return api('get /v1/account/organization', {}).then(({ organization }) => mapOrganization(organization!));
+}
+
+async function getOrganizationQuotas(api: ApiFn, organizationId: string) {
+  return api('get /v1/organizations/{organization_id}/quotas', {
+    path: { organization_id: organizationId },
+  }).then(({ quotas }) => mapOrganizationQuotas(quotas!));
+}
+
+async function getGithubApp(api: ApiFn) {
+  try {
+    return await api('get /v1/github/installation', {}).then(mapGithubApp);
+  } catch {
+    return null;
+  }
+}
+
+async function getRepository(api: ApiFn, repositoryName: string) {
+  return api('get /v1/git/repositories', {
+    query: { name: repositoryName, name_search_op: 'equality' },
+  })
+    .then(({ repositories }) => repositories!.map(mapRepository))
+    .then(([repository]) => repository);
+}
+
+async function getApp(api: ApiFn, appId: string) {
+  return api('get /v1/apps/{id}', { path: { id: appId } }).then(({ app }) => mapApp(app!));
+}
+
+async function getService(api: ApiFn, serviceId: string) {
+  return api('get /v1/services/{id}', { path: { id: serviceId } }).then(({ service }) =>
+    mapService(service!),
+  );
+}
+
+async function getDeployment(api: ApiFn, deploymentId: string) {
+  return api('get /v1/deployments/{id}', { path: { id: deploymentId } })
+    .then(({ deployment }) => mapDeployment(deployment!))
+    .then((deployment) => {
+      assert(isComputeDeployment(deployment));
+      return deployment;
+    });
+}
+
+async function getVolumes(api: ApiFn) {
+  // todo: handle pagination at some point
+  return api('get /v1/volumes', { query: { limit: '100' } }).then(({ volumes }) => volumes);
 }
 
 export function defaultServiceForm(): ServiceForm {
@@ -293,6 +348,19 @@ export function defaultServiceForm(): ServiceForm {
       },
     ],
     volumes: [],
+  };
+}
+
+export function defaultHealthCheck(): HealthCheck {
+  return {
+    protocol: 'tcp',
+    gracePeriod: 5,
+    interval: 30,
+    restartLimit: 3,
+    timeout: 5,
+    method: 'get',
+    path: '/',
+    headers: [],
   };
 }
 

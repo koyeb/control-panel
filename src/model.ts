@@ -234,7 +234,7 @@ export type ComputeDeployment = {
   status: DeploymentStatus;
   messages: string[];
   definition: DeploymentDefinition;
-  definitionApi: object;
+  definitionApi: Record<string, unknown>;
   build?: DeploymentBuild;
   buildSkipped?: boolean;
   proxyPorts: DeploymentProxyPort[];

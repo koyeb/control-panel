@@ -3,14 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { FieldPath, Resolver, UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import {
-  useDatacentersCatalog,
-  useGithubApp,
-  useInstancesCatalog,
-  useOrganization,
-  useOrganizationQuotas,
-  useRegionsCatalog,
-} from 'src/api';
+import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { createValidationGuard } from 'src/application/validation';
 import { useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
@@ -25,29 +18,11 @@ import { ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
   const params = useSearchParams();
-  const datacenters = useDatacentersCatalog();
-  const regions = useRegionsCatalog();
-  const instances = useInstancesCatalog();
-  const organization = useOrganization();
-  const quotas = useOrganizationQuotas();
-  const githubApp = useGithubApp();
   const queryClient = useQueryClient();
 
   const form = useForm<ServiceForm>({
     mode: 'onChange',
-    defaultValues() {
-      return initializeServiceForm(
-        params,
-        datacenters,
-        regions,
-        instances,
-        organization,
-        quotas,
-        githubApp,
-        serviceId,
-        queryClient,
-      );
-    },
+    defaultValues: () => initializeServiceForm(params, serviceId, queryClient),
     resolver: useServiceFormResolver(),
   });
 

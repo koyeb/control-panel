@@ -4,6 +4,36 @@ import { createId } from 'src/utils/strings';
 
 import { API } from './api-types';
 
+export const createApiOrganization = createFactory<API.Organization>(() => ({
+  id: createId(),
+  plan: 'no_plan',
+  signup_qualification: {},
+  current_subscription_id: '',
+  latest_subscription_id: '',
+  trialing: false,
+}));
+
+export const createApiQuotas = createFactory<API.Quotas>(() => ({
+  apps: '0',
+  services: '0',
+  max_organization_members: '0',
+  instance_types: [],
+  max_instances_by_type: {},
+  regions: [],
+  persistent_volumes_by_region: {},
+  memory_mb: '0',
+  custom_domains: '0',
+  logs_retention: 0,
+  scale_to_zero: {
+    is_light_sleep_enabled: false,
+    light_sleep_idle_delay_min: 0,
+    light_sleep_idle_delay_max: 0,
+    is_deep_sleep_enabled: false,
+    deep_sleep_idle_delay_min: 0,
+    deep_sleep_idle_delay_max: 0,
+  },
+}));
+
 export const createApiApp = createFactory<API.App>(() => ({
   id: createId(),
 }));

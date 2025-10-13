@@ -4,21 +4,16 @@ import { MockedFunction, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   API,
   createApiApp,
+  createApiCatalogInstance,
   createApiDeployment,
+  createApiOrganization,
+  createApiQuotas,
   createApiService,
   createApiVolume,
-  getApiQueryKey,
 } from 'src/api';
+import { ApiEndpoint, ApiRequestParams } from 'src/api/api';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
-import {
-  CatalogDatacenter,
-  CatalogInstance,
-  CatalogRegion,
-  GithubApp,
-  Organization,
-  OrganizationQuotas,
-} from 'src/model';
-import { create } from 'src/utils/factories';
+import { assert } from 'src/utils/assert';
 
 import { ServiceForm, ServiceVolume } from '../service-form.types';
 
@@ -36,53 +31,66 @@ vi.mock('./generate-app-name.ts', () => ({
 
 describe('initializeServiceForm', () => {
   let params: URLSearchParams;
-  let datacenters: CatalogDatacenter[];
-  let regions: CatalogRegion[];
-  let instances: CatalogInstance[];
-  let organization: Organization;
-  let quotas: OrganizationQuotas;
-  let githubApp: GithubApp | undefined;
-  let serviceId: string | undefined;
   let queryClient: QueryClient;
+  let fetch: MockFetch;
+
+  let datacenters: API.DatacenterListItem[];
+  let regions: API.Region[];
+  let instances: API.CatalogInstance[];
+  let organization: API.Organization;
+  let quotas: API.Quotas;
+
+  function mockApi<E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>, response: unknown) {
+    const [method, path] = endpoint.split(' ') as [string, string];
+
+    fetch.mock(
+      method,
+      path.replaceAll(/\{(.*)\}/g, (_, key) => params.path?.[key] ?? ''),
+      response,
+    );
+  }
 
   beforeEach(() => {
     params = new URLSearchParams();
 
+    instances = [];
     datacenters = [];
     regions = [];
 
-    instances = [
-      create.instance({ id: 'free' }),
-      create.instance({ id: 'nano' }),
-      create.instance({ id: 'gpu', category: 'gpu' }),
-    ];
+    organization = createApiOrganization();
 
-    organization = create.organization();
-
-    quotas = create.quotas();
-    quotas.scaleToZero.lightSleepIdleDelayMin = 60;
-    quotas.scaleToZero.lightSleepIdleDelayMax = 3600;
-    quotas.scaleToZero.deepSleepIdleDelayMin = 300;
-    quotas.scaleToZero.deepSleepIdleDelayMax = 7200;
-
-    githubApp = undefined;
-    serviceId = undefined;
+    quotas = createApiQuotas({
+      scale_to_zero: {
+        is_light_sleep_enabled: true,
+        light_sleep_idle_delay_min: 60,
+        light_sleep_idle_delay_max: 3600,
+        is_deep_sleep_enabled: true,
+        deep_sleep_idle_delay_min: 300,
+        deep_sleep_idle_delay_max: 7200,
+      },
+    });
 
     queryClient = new QueryClient();
+    fetch = new MockFetch();
+    window.fetch = fetch.fetch;
+
+    mockApi('get /v1/catalog/instances', {}, { instances });
+    mockApi('get /v1/catalog/datacenters', {}, { datacenters });
+    mockApi('get /v1/catalog/regions', {}, { regions });
+    mockApi('get /v1/account/organization', {}, { organization });
+    mockApi(
+      'get /v1/organizations/{organization_id}/quotas',
+      { path: { organization_id: organization.id! } },
+      { quotas },
+    );
+
+    instances.push(createApiCatalogInstance({ id: 'free' }));
+    instances.push(createApiCatalogInstance({ id: 'nano' }));
+    instances.push(createApiCatalogInstance({ id: 'gpu', type: 'gpu' }));
   });
 
-  async function initialize() {
-    return initializeServiceForm(
-      params,
-      datacenters,
-      regions,
-      instances,
-      organization,
-      quotas,
-      githubApp,
-      serviceId,
-      queryClient,
-    );
+  async function initialize(serviceId?: string) {
+    return initializeServiceForm(params, serviceId, queryClient);
   }
 
   let serviceForm: ServiceForm;
@@ -113,10 +121,11 @@ describe('initializeServiceForm', () => {
     params.set('type', 'git');
     params.set('repository', 'org/repo');
 
-    githubApp = create.githubApp({ organizationName: 'org' });
+    mockApi('get /v1/github/installation', {}, { name: 'org' } satisfies API.GetGithubInstallationReply);
 
-    queryClient.setQueryData(
-      getApiQueryKey('get /v1/git/repositories', { query: { name: 'org/repo', name_search_op: 'equality' } }),
+    mockApi(
+      'get /v1/git/repositories',
+      { query: { name: 'org/repo', name_search_op: 'equality' } },
       { repositories: [] },
     );
 
@@ -149,11 +158,19 @@ describe('initializeServiceForm', () => {
     });
 
     test('attach volume', async () => {
-      serviceId = 'serviceId';
       params.set('attach-volume', 'volumeId');
 
       const definition: API.DeploymentDefinition = {
         name: '',
+        type: 'WEB',
+        strategy: { type: 'DEPLOYMENT_STRATEGY_TYPE_INVALID' },
+        docker: {},
+        env: [],
+        config_files: [],
+        volumes: [],
+        instance_types: [{ type: 'nano' }],
+        ports: [],
+        scalings: [{ min: 1, max: 1 }],
       };
 
       const volume = createApiVolume({
@@ -162,23 +179,23 @@ describe('initializeServiceForm', () => {
         max_size: 1,
       });
 
-      queryClient.setQueryData(getApiQueryKey('get /v1/apps/{id}', { path: { id: 'appId' } }), {
-        app: createApiApp(),
-      });
+      mockApi('get /v1/apps/{id}', { path: { id: 'appId' } }, { app: createApiApp() });
 
-      queryClient.setQueryData(getApiQueryKey('get /v1/services/{id}', { path: { id: 'serviceId' } }), {
-        service: createApiService({ app_id: 'appId', latest_deployment_id: 'deploymentId' }),
-      });
+      mockApi(
+        'get /v1/services/{id}',
+        { path: { id: 'serviceId' } },
+        { service: createApiService({ app_id: 'appId', latest_deployment_id: 'deploymentId' }) },
+      );
 
-      queryClient.setQueryData(getApiQueryKey('get /v1/deployments/{id}', { path: { id: 'deploymentId' } }), {
-        deployment: createApiDeployment({ definition }),
-      });
+      mockApi(
+        'get /v1/deployments/{id}',
+        { path: { id: 'deploymentId' } },
+        { deployment: createApiDeployment({ definition }) },
+      );
 
-      queryClient.setQueryData(getApiQueryKey('get /v1/volumes', { query: { limit: '100' } }), {
-        volumes: [volume],
-      });
+      mockApi('get /v1/volumes', { query: { limit: '100' } }, { volumes: [volume] });
 
-      const values = await initialize();
+      const values = await initialize('serviceId');
 
       expect(values).toHaveProperty('meta.expandedSection', 'volumes');
 
@@ -268,3 +285,29 @@ describe('initializeServiceForm', () => {
     });
   });
 });
+
+class MockFetch {
+  private mocks = new Map<string, unknown>();
+
+  readonly fetch = vi.fn<typeof globalThis.fetch>((...args) => this.mockImpl(...args));
+
+  mock(method: string, pathname: string, body: unknown) {
+    this.mocks.set(`${method.toUpperCase()} ${pathname}`, body);
+  }
+
+  private async mockImpl(url: string | URL | globalThis.Request, init?: RequestInit): Promise<Response> {
+    assert(url instanceof URL);
+    assert(init !== undefined);
+
+    const key = `${init.method} ${url.pathname}`;
+    const response = this.mocks.get(key);
+
+    if (!response) {
+      throw new Error(`Missing mock for ${key}`);
+    }
+
+    return new Response(JSON.stringify(response), {
+      headers: new Headers([['Content-Type', 'application/json']]),
+    });
+  }
+}
