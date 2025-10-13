@@ -54,6 +54,19 @@ export const createApiDeployment = createFactory<API.Deployment>(() => ({
   id: createId(),
 }));
 
+export const createApiDeploymentDefinition = createFactory<API.DeploymentDefinition>(() => ({
+  name: '',
+  type: 'WEB',
+  strategy: { type: 'DEPLOYMENT_STRATEGY_TYPE_INVALID' },
+  docker: {},
+  env: [],
+  config_files: [],
+  volumes: [],
+  instance_types: [{ type: 'nano' }],
+  ports: [],
+  scalings: [{ min: 1, max: 1 }],
+}));
+
 export const createApiVolume = createFactory<API.PersistentVolume>(() => ({
   id: createId(),
 }));

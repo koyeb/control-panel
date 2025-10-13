@@ -6,6 +6,7 @@ import {
   createApiApp,
   createApiCatalogInstance,
   createApiDeployment,
+  createApiDeploymentDefinition,
   createApiOrganization,
   createApiQuotas,
   createApiService,
@@ -143,43 +144,46 @@ describe('initializeServiceForm', () => {
     expect(await initialize()).toEqual(serviceForm);
   });
 
-  describe('service creation business rules', () => {
-    test('app name generation', async () => {
-      expect(await initialize()).toHaveProperty('appName', 'generated');
+  test('attach volume', async () => {
+    params.set('attach-volume', 'volumeId');
+
+    const volume = createApiVolume({
+      id: 'volumeId',
+      name: 'volume-name',
+      max_size: 1,
     });
 
-    test('scaling min and max set when instances_min is set', async () => {
-      params.set('instances_min', '2');
+    mockApi('get /v1/apps/{id}', { path: { id: 'appId' } }, { app: createApiApp() });
 
-      const values = await initialize();
+    mockApi(
+      'get /v1/services/{id}',
+      { path: { id: 'serviceId' } },
+      { service: createApiService({ app_id: 'appId', latest_deployment_id: 'deploymentId' }) },
+    );
 
-      expect(values).toHaveProperty('scaling.min', 2);
-      expect(values).toHaveProperty('scaling.max', 2);
-    });
+    mockApi(
+      'get /v1/deployments/{id}',
+      { path: { id: 'deploymentId' } },
+      { deployment: createApiDeployment({ definition: createApiDeploymentDefinition() }) },
+    );
 
-    test('attach volume', async () => {
-      params.set('attach-volume', 'volumeId');
+    mockApi('get /v1/volumes', { query: { limit: '100' } }, { volumes: [volume] });
 
-      const definition: API.DeploymentDefinition = {
-        name: '',
-        type: 'WEB',
-        strategy: { type: 'DEPLOYMENT_STRATEGY_TYPE_INVALID' },
-        docker: {},
-        env: [],
-        config_files: [],
-        volumes: [],
-        instance_types: [{ type: 'nano' }],
-        ports: [],
-        scalings: [{ min: 1, max: 1 }],
-      };
+    const values = await initialize('serviceId');
 
-      const volume = createApiVolume({
-        id: 'volumeId',
-        name: 'volume-name',
-        max_size: 1,
-      });
+    expect(values).toHaveProperty('meta.expandedSection', 'volumes');
 
-      mockApi('get /v1/apps/{id}', { path: { id: 'appId' } }, { app: createApiApp() });
+    expect(values).toHaveProperty<ServiceVolume[]>('volumes', [
+      { mounted: false, mountPath: '', name: 'volume-name', size: 1, volumeId: 'volumeId' },
+    ]);
+  });
+
+  describe('duplicate service', () => {
+    let definition: API.DeploymentDefinition;
+
+    beforeEach(() => {
+      params.set('duplicate-service-id', 'serviceId');
+      definition = createApiDeploymentDefinition();
 
       mockApi(
         'get /v1/services/{id}',
@@ -192,16 +196,40 @@ describe('initializeServiceForm', () => {
         { path: { id: 'deploymentId' } },
         { deployment: createApiDeployment({ definition }) },
       );
+    });
 
-      mockApi('get /v1/volumes', { query: { limit: '100' } }, { volumes: [volume] });
+    test('create service based on an existing definition', async () => {
+      definition.name = 'test';
 
-      const values = await initialize('serviceId');
+      expect(await initialize()).toHaveProperty('serviceName', 'test');
+    });
 
-      expect(values).toHaveProperty('meta.expandedSection', 'volumes');
+    test('do not keep volumes', async () => {
+      definition.volumes = [{ id: 'volumeId', path: '/data' }];
 
-      expect(values).toHaveProperty<ServiceVolume[]>('volumes', [
-        { mounted: false, mountPath: '', name: 'volume-name', size: 1, volumeId: 'volumeId' },
-      ]);
+      expect(await initialize()).toHaveProperty('volumes', []);
+    });
+
+    test('skip business rules validation', async () => {
+      definition.instance_types = [{ type: 'gpu' }];
+      definition.scalings = [{ min: 1, max: 1 }];
+
+      expect(await initialize()).toHaveProperty('scaling.min', 1);
+    });
+  });
+
+  describe('service creation business rules', () => {
+    test('app name generation', async () => {
+      expect(await initialize()).toHaveProperty('appName', 'generated');
+    });
+
+    test('scaling min and max set when instances_min is set', async () => {
+      params.set('instances_min', '2');
+
+      const values = await initialize();
+
+      expect(values).toHaveProperty('scaling.min', 2);
+      expect(values).toHaveProperty('scaling.max', 2);
     });
 
     describe('default instance', () => {

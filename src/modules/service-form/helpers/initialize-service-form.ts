@@ -103,26 +103,28 @@ export async function initializeServiceForm(
   }
 
   if (!serviceId) {
-    const quotas = await getOrganizationQuotas(api, organization.id);
-
     const instances = await getInstances(api);
-    const datacenters = await getDatacenters(api);
     const regions = await getRegions(api);
 
     const parsedParams = parseDeployParams(params, instances, regions, githubApp?.organizationName);
 
     values = merge(values, parsedParams);
 
-    ensureServiceCreationBusinessRules(
-      values,
-      datacenters,
-      regions,
-      instances,
-      organization,
-      quotas,
-      parsedParams,
-      queryClient,
-    );
+    if (!duplicateServiceId) {
+      const quotas = await getOrganizationQuotas(api, organization.id);
+      const datacenters = await getDatacenters(api);
+
+      ensureServiceCreationBusinessRules(
+        values,
+        datacenters,
+        regions,
+        instances,
+        organization,
+        quotas,
+        parsedParams,
+        queryClient,
+      );
+    }
   }
 
   if (values.source.type === 'git') {
