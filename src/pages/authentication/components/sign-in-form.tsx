@@ -60,10 +60,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
   });
 
   const getAuthenticationMethodMutation = useMutation({
-    // ...apiMutation('get /v1/account/login_method', (email: string) => ({ query: { email } })),
-    mutationFn: async (email: string): Promise<{ method: 'WORKOS' | 'KOYEB' | undefined }> => ({
-      method: email.includes('workos') ? 'WORKOS' : 'KOYEB',
-    }),
+    ...apiMutation('get /v1/account/login_method', (email: string) => ({ query: { email } })),
     async onSuccess({ method }, email) {
       setAuthenticationMethod(lowerCase(method!));
 

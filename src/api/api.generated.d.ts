@@ -71,6 +71,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/account/login_method": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the login method for an email address */
+        get: operations["LoginMethod"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/account/logout": {
         parameters: {
             query?: never;
@@ -1215,9 +1232,17 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** CreateAccessToken creates a short-lived access token in the scope of the specified organization,
-         *     provided the user making the request is part of said organization. It's possible to specify a validity
-         *     for the token, which defaults to 1h and must be no more than 24h. */
+        /**
+         * CreateAccessToken
+         * @description CreateAccessToken creates a short-lived access token in the scope of the
+         *     specified organization, provided the user making the request is part of
+         *     said organization.
+         *
+         *     It's possible to specify a validity for the token, which defaults to 1h
+         *     and must be no more than 24h. The format is `<number>s`, where `<number>`
+         *     is a floating point in seconds (so `123.456789012s` means 123 seconds and
+         *     456789012 nanoseconds). See: https://protobuf.dev/reference/php/api-docs/Google/Protobuf/Duration.html.
+         */
         post: operations["CreateAccessToken"];
         delete?: never;
         options?: never;
@@ -3938,6 +3963,14 @@ export interface components {
             labels?: Record<string, never>;
             msg?: string;
         };
+        LoginMethodReply: {
+            method?: components["schemas"]["LoginMethodReply.Method"];
+        };
+        /**
+         * @default KOYEB
+         * @enum {string}
+         */
+        "LoginMethodReply.Method": "KOYEB" | "WORKOS";
         LoginReply: {
             token?: components["schemas"]["Token"];
         };
@@ -5563,6 +5596,91 @@ export interface operations {
             };
         };
     };
+    LoginMethod: {
+        parameters: {
+            query?: {
+                email?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["LoginMethodReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
     Logout: {
         parameters: {
             query?: never;
@@ -6274,6 +6392,8 @@ export interface operations {
                 order?: string;
                 /** @description (Optional) Fuzzy case-insensitive search based on organization name or organization id */
                 search?: string;
+                /** @description (Optional) Only return organizations which status match one in the list */
+                statuses?: ("WARNING" | "LOCKED" | "ACTIVE" | "DEACTIVATING" | "DEACTIVATED" | "DELETING" | "DELETED")[];
             };
             header?: never;
             path?: never;
@@ -12032,6 +12152,8 @@ export interface operations {
                 offset?: string;
                 /** @description (Optional) Filter for an organization */
                 organization_id?: string;
+                /** @description (Optional) Filter for organization statuses */
+                organization_statuses?: ("WARNING" | "LOCKED" | "ACTIVE" | "DEACTIVATING" | "DEACTIVATED" | "DELETING" | "DELETED")[];
                 /** @description (Optional) Filter for an user */
                 user_id?: string;
             };
