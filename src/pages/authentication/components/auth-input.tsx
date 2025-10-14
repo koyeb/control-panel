@@ -8,17 +8,18 @@ type AuthInputProps<
 > = React.ComponentProps<'input'> & {
   control?: Control<Form>;
   name: Name;
+  onChangeEffect?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 export function AuthInput<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
->({ control, name, className, ...props }: AuthInputProps<Form, Name>) {
+>({ control, name, onChangeEffect, className, ...props }: AuthInputProps<Form, Name>) {
   const id = useId(props.id);
   const helperTextId = `${id}-helper-text`;
 
   const {
-    field,
+    field: { onChange, ...field },
     fieldState: { invalid, error },
   } = useController({ control, name });
 
@@ -28,6 +29,10 @@ export function AuthInput<
         aria-invalid={invalid}
         aria-errormessage={helperTextId}
         className={AuthInput.class({ invalid, className })}
+        onChange={(event) => {
+          onChange(event);
+          onChangeEffect?.(event);
+        }}
         {...field}
         {...props}
       />

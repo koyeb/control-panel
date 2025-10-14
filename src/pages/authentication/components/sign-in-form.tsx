@@ -121,6 +121,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
         type="email"
         autoComplete="email"
         placeholder={t('emailPlaceholder')}
+        onChangeEffect={() => workOs && setAuthenticationMethod(null)}
       />
 
       <AuthInput
@@ -139,11 +140,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
         </div>
       )}
 
-      <AuthButton
-        type="submit"
-        disabled={form.formState.submitCount > 1 && !form.formState.isValid}
-        loading={form.formState.isSubmitting || authenticationMethod === 'workos'}
-      >
+      <AuthButton type="submit" loading={form.formState.isSubmitting || authenticationMethod === 'workos'}>
         <T id={authenticationMethod === null ? 'continue' : 'submit'} />
       </AuthButton>
     </form>
