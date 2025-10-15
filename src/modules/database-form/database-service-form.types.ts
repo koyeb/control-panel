@@ -1,10 +1,8 @@
-import { PostgresVersion } from 'src/model';
-
 export type DatabaseServiceFormSection = 'engine' | 'region' | 'instance' | 'defaultRole' | 'serviceName';
 
 export type DatabaseServiceForm = {
   meta: ServiceFormMeta;
-  engine: { version: PostgresVersion };
+  engine: { version: 14 | 15 | 16 | 17 };
   region: string;
   instance: string;
   defaultRole: string;
