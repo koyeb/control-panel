@@ -1,7 +1,7 @@
 import { AccordionHeader, AccordionSection, Badge, Checkbox, FieldHelperText } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Controller,
   FormProvider,
@@ -12,7 +12,13 @@ import {
 } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useCatalogInstance, useGithubApp, useInstancesCatalog, useRegionsCatalog } from 'src/api';
+import {
+  createEnsureApiQueryData,
+  mapGithubApp,
+  useCatalogInstance,
+  useInstancesCatalog,
+  useRegionsCatalog,
+} from 'src/api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { tooBig, tooSmall } from 'src/application/zod';
@@ -20,6 +26,7 @@ import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';
+import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { handleSubmit } from 'src/hooks/form';
@@ -58,41 +65,17 @@ type OneClickAppFormProps = {
 };
 
 export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const searchParams = useSearchParams();
-  const appId = searchParams.get('app_id');
-
   const instances = useInstancesCatalog();
-  const githubApp = useGithubApp();
 
-  const serviceForm = useMemo(() => {
-    return merge(
-      { ...defaultServiceForm(), environmentVariables: [] },
-      deploymentDefinitionToServiceForm(app.deploymentDefinition, githubApp?.organizationName, []),
-      {
-        meta: { appId },
-        appName: app.slug,
-        volumes: app.volumes?.map((volume) => ({
-          name: volume.name,
-          size: volume.size,
-          mountPath: volume.path,
-          mounted: false,
-        })),
-      },
-    );
-  }, [app, githubApp, appId]);
+  const serviceFormRef = useRef(defaultServiceForm());
+  const serviceForm = serviceFormRef.current;
 
   const form = useForm<OneClickAppForm>({
-    defaultValues: {
-      instance: serviceForm.instance,
-      regions: serviceForm.regions,
-      environmentVariables: app.env.map((env) => ({
-        name: env.name,
-        value: String(env.default ?? ''),
-        regions: [],
-      })),
-    },
+    defaultValues: () => initialize(app, serviceFormRef.current, searchParams, queryClient),
     resolver: useZodResolver(createSchema(app)),
   });
 
@@ -138,6 +121,56 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
       </form>
     </FormProvider>
   );
+}
+
+async function initialize(
+  app: OneClickApp,
+  serviceForm: ServiceForm,
+  searchParams: URLSearchParams,
+  queryClient: QueryClient,
+) {
+  const api = createEnsureApiQueryData(queryClient);
+  const githubApp = await api('get /v1/github/installation', {})
+    .then(mapGithubApp)
+    .catch(() => null);
+
+  merge(
+    serviceForm,
+    deploymentDefinitionToServiceForm(app.deploymentDefinition, githubApp?.organizationName, []),
+    {
+      meta: { appId: searchParams.get('app_id') },
+      appName: app.slug,
+      volumes: app.volumes?.map((volume) => ({
+        name: volume.name,
+        size: volume.size,
+        mountPath: volume.path,
+        mounted: false,
+      })),
+    },
+  );
+
+  serviceForm.environmentVariables = [];
+
+  const git = serviceForm.source.git;
+
+  if (git.repositoryType === 'public' && git.publicRepository.repositoryName !== null) {
+    const repository = await fetchGithubRepository(git.publicRepository.repositoryName).catch(() => null);
+
+    if (repository) {
+      git.publicRepository.url = repository.url;
+      git.publicRepository.branch ??= repository.defaultBranch;
+    }
+  }
+
+  return {
+    instance: serviceForm.instance,
+    regions: serviceForm.regions,
+    environmentVariables: app.env.map((env) => ({
+      name: env.name,
+      value: String(env.default ?? ''),
+      regions: [],
+    })),
+  };
 }
 
 function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm> {
