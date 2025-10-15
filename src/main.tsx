@@ -53,13 +53,19 @@ const queryCache = new QueryCache({
 
     const { showError } = { showError: true, ...query.meta };
 
+    if (ApiError.is(error) && error.message === 'Token rejected') {
+      // organization is deactivated
+      await router.navigate({ to: '/settings' });
+      return;
+    }
+
     if (ApiError.is(error, 401) && query.queryKey[0] === ('get /v1/account/profile' satisfies ApiEndpoint)) {
-      await handleAuthenticationError(error);
+      await handleAuthenticationError();
     }
 
     // user removed from organization
     if (ApiError.is(error, 403) && error.message === 'User is not a member of the organization') {
-      await handleAuthenticationError(error);
+      await handleAuthenticationError();
     }
 
     if (ApiError.is(error, 429)) {
@@ -83,20 +89,14 @@ const mutationCache = new MutationCache({
     const { showError } = { showError: true, ...mutation.meta };
 
     if (ApiError.is(error, 401)) {
-      await handleAuthenticationError(error);
+      await handleAuthenticationError();
     } else if (mutation.options.onError === undefined && showError) {
       notify.error(error.message);
     }
   },
 });
 
-async function handleAuthenticationError(error: Error) {
-  if (ApiError.is(error) && error.message === 'Token rejected') {
-    // organization is deactivated
-    await router.navigate({ to: '/settings' });
-    return;
-  }
-
+async function handleAuthenticationError() {
   if (authKit.user) {
     setAuthKitToken(null);
     authKit.signOut();
@@ -109,13 +109,17 @@ async function handleAuthenticationError(error: Error) {
   const location = new URL(window.location.href);
 
   if (!location.pathname.startsWith('/auth') && !location.pathname.startsWith('/account')) {
-    const href = new URL('/auth/signin', window.location.origin);
+    const search: { next?: string } = {};
 
     if (location.pathname !== '/' || location.searchParams.size > 0) {
-      href.searchParams.set('next', location.href.replace(location.origin, ''));
+      search.next = location.href.replace(location.origin, '');
     }
 
-    window.location.href = href.toString();
+    await router.navigate({
+      to: '/auth/signin',
+      search,
+      reloadDocument: true,
+    });
   }
 }
 
@@ -155,6 +159,7 @@ const router = createRouter({
   defaultPreload: 'intent',
   defaultPreloadStaleTime: 0,
   scrollRestoration: true,
+  defaultOnCatch: reportError,
   parseSearch: qs.parse,
   stringifySearch: (value) => {
     const result = qs.stringify(value);
@@ -165,13 +170,6 @@ const router = createRouter({
     seon,
     authKit,
     translate: createTranslateFn(),
-  },
-  defaultOnCatch(error, errorInfo) {
-    if (ApiError.is(error, 401)) {
-      void handleAuthenticationError(error);
-    } else {
-      reportError(error, errorInfo);
-    }
   },
   Wrap({ children }) {
     useEffect(() => {
