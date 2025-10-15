@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getApi } from 'src/api';
+import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { AppFull } from 'src/model';
 
 import { mapDeployment } from '../mappers/deployment';
@@ -42,10 +43,20 @@ export function useAppsFull() {
       ]);
 
       const deployments = await Promise.all(
-        services
-          .services!.flatMap((service) => [service.active_deployment_id!, service.latest_deployment_id!])
-          .filter((id) => id !== '')
-          .map((id) => api('get /v1/deployments/{id}', { path: { id } }), { signal }),
+        services.services!.map(
+          async (service) => {
+            const { deployments } = await api('get /v1/deployments', {
+              query: {
+                service_id: service.id,
+                statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+                limit: '1',
+              },
+            });
+
+            return deployments![0]!;
+          },
+          { signal },
+        ),
       );
 
       return {
@@ -59,9 +70,7 @@ export function useAppsFull() {
       const services = results.services.services!.map(mapService);
 
       const deployments = new Map(
-        results.deployments
-          .map(({ deployment }) => mapDeployment(deployment!))
-          .map((deployment) => [deployment.id, deployment]),
+        results.deployments.map(mapDeployment).map((deployment) => [deployment.id, deployment]),
       );
 
       return apps.map((app) => ({
