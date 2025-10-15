@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 export {
   ActivityIcon as IconActivity,
   AlarmClockCheckIcon as IconAlarmClockCheck,

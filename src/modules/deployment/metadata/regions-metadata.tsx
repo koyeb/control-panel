@@ -1,5 +1,4 @@
-import { TooltipTitle } from '@koyeb/design-system';
-import { Badge } from 'lucide-react';
+import { Badge, TooltipTitle } from '@koyeb/design-system';
 
 import { useCatalogRegion, useRegionsCatalog } from 'src/api';
 import { Metadata } from 'src/components/metadata';

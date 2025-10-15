@@ -44,7 +44,7 @@ export default [
       ...reactQuery.configs.recommended.rules,
       ...eslintPluginBetterTailwindcss.configs['recommended'].rules,
       'no-console': ci ? 'error' : 'off',
-      'no-restricted-imports': ['warn', { paths: ['posthog-js', 'posthog-js/react'] }],
+      'no-restricted-imports': ['warn', { paths: ['posthog-js', 'posthog-js/react', 'lucide-react'] }],
       '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
       '@typescript-eslint/require-await': 'off',
       '@typescript-eslint/no-unnecessary-condition': ci ? 'warn' : 'off',
