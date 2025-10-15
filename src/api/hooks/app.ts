@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getApi } from 'src/api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { AppList } from 'src/model';
+import { hasProperty } from 'src/utils/object';
 
 import { mapDeployment, mapReplica } from '../mappers/deployment';
 import { mapApp, mapService } from '../mappers/service';
@@ -38,7 +39,12 @@ export function useAppsFull() {
     select(results): AppList {
       const apps = results.apps.apps!.map(mapApp);
 
-      const services = new Map(apps.map((app) => [app.id, results.services.services!.map(mapService)]));
+      const services = new Map(
+        apps.map((app) => [
+          app.id,
+          results.services.services!.map(mapService).filter(hasProperty('appId', app.id)),
+        ]),
+      );
 
       const activeDeployments = new Map(
         results.activeDeployments.map(mapDeployment).map((deployment) => [deployment.serviceId, deployment]),
