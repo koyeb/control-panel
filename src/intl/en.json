@@ -745,11 +745,11 @@
         },
         "scaling": {
           "label": "Scaling",
-          "value": "{healthy} <dim>of</dim> {total} <dim>running</dim>",
+          "value": "{running} <dim>of</dim> {total} <dim>running</dim>",
           "tooltip": {
             "title": "Scaling",
             "description": "The number of instances currently running for your service",
-            "count": "{healthy}/{total}"
+            "count": "{running}/{total}"
           }
         }
       }

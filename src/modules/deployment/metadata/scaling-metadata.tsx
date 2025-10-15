@@ -1,5 +1,4 @@
-import { TooltipTitle } from '@koyeb/design-system';
-import { Badge } from 'lucide-react';
+import { Badge, TooltipTitle } from '@koyeb/design-system';
 
 import { useRegionsCatalog } from 'src/api';
 import { Metadata } from 'src/components/metadata';
@@ -7,11 +6,13 @@ import { RegionFlag } from 'src/components/region-flag';
 import { InfoTooltip } from 'src/components/tooltip';
 import { IconLayers, IconMoon } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { DeploymentDefinition, Replica } from 'src/model';
+import { DeploymentDefinition, InstanceStatus, Replica } from 'src/model';
 import { unique } from 'src/utils/arrays';
-import { hasProperty } from 'src/utils/object';
+import { hasProperty, isOneOf } from 'src/utils/object';
 
 const T = createTranslate('modules.deployment.metadata.scaling');
+
+const runningStatus: InstanceStatus[] = ['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY'];
 
 type ScalingMetadataProps = {
   replicas?: Replica[];
@@ -26,8 +27,8 @@ export function ScalingMetadataValue({ replicas, definition }: ScalingMetadataPr
   const ScalingIcon = definition.scaling.min === 0 ? IconMoon : IconLayers;
 
   const scaling = {
-    healthy: replicas?.filter((replica) => replica.status === 'HEALTHY').length,
-    total: definition.scaling.max * definition.regions.length,
+    running: replicas?.filter(isOneOf('status', runningStatus)).length ?? '',
+    total: replicas?.length ?? '',
   };
 
   return (
@@ -55,7 +56,7 @@ function ScalingTooltipContent({ replicas }: { replicas: Replica[] }) {
   );
 
   const scaling = (replicas: Replica[]) => ({
-    healthy: replicas.filter(hasProperty('status', 'HEALTHY')).length,
+    running: replicas.filter(isOneOf('status', runningStatus)).length,
     total: replicas.length,
   });
 

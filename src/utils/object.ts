@@ -9,6 +9,10 @@ export function hasProperty<T, K extends keyof T>(property: K, value: T[K] | nul
   return (obj: T) => obj[property] === value;
 }
 
+export function isOneOf<T, K extends keyof T>(property: K, values: Array<T[K]>) {
+  return (obj: T) => values.includes(obj[property]);
+}
+
 function getter<P extends PropertyKey>(property: P) {
   return <T extends { [key in P]: V }, V>(obj: T): V => obj[property];
 }
