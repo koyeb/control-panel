@@ -2249,6 +2249,7 @@
         }
       },
       "service": {
+        "status": "Status",
         "postgresVersion": "Postgres (v{version})",
         "latestDeployment": "Latest deployment",
         "deploymentTrigger": {

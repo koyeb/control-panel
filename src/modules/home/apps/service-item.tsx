@@ -1,4 +1,4 @@
-import { Collapse } from '@koyeb/design-system';
+import { Collapse, TooltipTitle } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
@@ -7,7 +7,8 @@ import { getServiceLink, getServiceUrls } from 'src/application/service-function
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { ExternalLink, Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { DeploymentStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
+import { DeploymentStatusBadge, ServiceStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
+import { Tooltip } from 'src/components/tooltip';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import {
   IconArchive,
@@ -75,9 +76,20 @@ function ServiceInfo(props: { app: App; service: Service; deployment: Deployment
   return (
     <div>
       <div className="row items-center gap-2">
-        <div>
-          <ServiceStatusIcon status={service.status} className="size-4" />
-        </div>
+        <Tooltip
+          className="col gap-3"
+          trigger={(props) => (
+            <div {...props}>
+              <ServiceStatusIcon status={service.status} className="size-4" />
+            </div>
+          )}
+          content={
+            <>
+              <TooltipTitle title={<T id="status" />} />
+              <ServiceStatusBadge status={service.status} icon={false} />
+            </>
+          }
+        />
 
         <Link {...getServiceLink(service)} className="truncate text-sm font-medium">
           {service.name}
