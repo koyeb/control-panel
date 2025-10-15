@@ -1,9 +1,11 @@
 import { TabButtons } from '@koyeb/design-system';
 
+import { useOrganization } from 'src/api';
 import { DocumentTitle } from 'src/components/document-title';
 import { TabButtonLink } from 'src/components/link';
 import { Title } from 'src/components/title';
 import { createTranslate } from 'src/intl/translate';
+import { inArray } from 'src/utils/arrays';
 
 const T = createTranslate('pages.organizationSettings.layout');
 
@@ -21,6 +23,9 @@ export function OrganizationSettingsLayout({ children }: { children: React.React
 }
 
 function Navigation() {
+  const organization = useOrganization();
+  const isDeactivated = inArray(organization?.status, ['DEACTIVATING', 'DEACTIVATED']);
+
   return (
     <TabButtons className="self-start">
       <TabButtonLink to="/settings">
@@ -35,7 +40,7 @@ function Navigation() {
       <TabButtonLink to="/settings/api">
         <T id="navigation.api" />
       </TabButtonLink>
-      <TabButtonLink to="/settings/registry-configuration">
+      <TabButtonLink to="/settings/registry-configuration" disabled={isDeactivated}>
         <T id="navigation.registrySecrets" />
       </TabButtonLink>
     </TabButtons>
