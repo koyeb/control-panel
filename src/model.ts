@@ -569,7 +569,7 @@ export type App = {
 };
 
 export type AppFull = App & {
-  services: Array<Service & { activeDeployment?: Deployment; latestDeployment: Deployment }>;
+  services: Array<Service & { latestDeployment: Deployment }>;
 };
 
 export type AppStatus =

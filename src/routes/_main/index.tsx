@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import { useAppsFull } from 'src/api';
+import { listAppsFull, useAppsFull } from 'src/api';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -29,6 +29,13 @@ export const Route = createFileRoute('/_main/')({
       ])
       .optional(),
   }),
+
+  async loader({ context: { queryClient } }) {
+    await queryClient.ensureQueryData({
+      queryKey: ['listAppsFull'],
+      queryFn: listAppsFull,
+    });
+  },
 });
 
 const T = createTranslate('pages.home');
