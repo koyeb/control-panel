@@ -50,7 +50,7 @@ function getDefaultValues(appId?: string, deployment?: DatabaseDeployment): Data
       allowFreeInstanceIfAlreadyUsed: deployment?.instance === 'free',
     },
     engine: {
-      version: 17,
+      version: 18,
     },
     instance: deployment?.instance ?? 'small',
     region: deployment?.region ?? 'fra',
