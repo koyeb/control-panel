@@ -2,7 +2,7 @@ import { Select } from '@koyeb/design-system';
 import { useState } from 'react';
 
 import { createTranslate } from 'src/intl/translate';
-import { AppFull, Service, ServiceType } from 'src/model';
+import { AppList, Service, ServiceType } from 'src/model';
 import { identity } from 'src/utils/generic';
 import { hasProperty } from 'src/utils/object';
 
@@ -11,29 +11,37 @@ import { EditAppDialog } from './components/edit-app-dialog';
 
 const T = createTranslate('pages.home');
 
-export function Apps({ apps, showFilters = false }: { apps: AppFull[]; showFilters?: boolean }) {
+export function Apps({ apps, showFilters = false }: { apps: AppList; showFilters?: boolean }) {
   const [serviceType, setServiceType] = useState<ServiceType | 'all'>('all');
 
   return (
-    // https://css-tricks.com/flexbox-truncated-text/
     <div className="col min-w-0 flex-1 gap-6">
       <Header
         showFilters={showFilters}
-        services={apps.flatMap((app) => app.services)}
+        services={Array.from(apps.services.values()).flat()}
         serviceType={serviceType}
         setServiceType={setServiceType}
       />
 
-      {apps.map((app) => {
-        const services = app.services.filter(
-          (service) => serviceType === 'all' || service.type === serviceType,
-        );
+      {apps.apps.map((app) => {
+        const services = apps.services
+          .get(app.id)
+          ?.filter((service) => serviceType === 'all' || service.type === serviceType);
 
-        if (services.length === 0) {
+        if (!services?.length) {
           return null;
         }
 
-        return <AppItem key={app.id} app={app} services={services} />;
+        return (
+          <AppItem
+            key={app.id}
+            app={app}
+            services={services}
+            latestDeployments={apps.latestDeployments}
+            activeDeployments={apps.activeDeployments}
+            activeDeploymentsReplicas={apps.activeDeploymentsReplicas}
+          />
+        );
       })}
 
       <EditAppDialog />

@@ -568,8 +568,12 @@ export type App = {
   domains: AppDomain[];
 };
 
-export type AppFull = App & {
-  services: Array<Service & { latestDeployment: Deployment }>;
+export type AppList = {
+  apps: App[];
+  services: Map<string, Service[]>;
+  latestDeployments: Map<string, Deployment>;
+  activeDeployments: Map<string, Deployment>;
+  activeDeploymentsReplicas: Map<string, Replica[]>;
 };
 
 export type AppStatus =

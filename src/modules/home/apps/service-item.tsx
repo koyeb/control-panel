@@ -2,7 +2,7 @@ import { Collapse, TooltipTitle } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { isComputeDeployment, isDatabaseDeployment, useDeploymentScaling } from 'src/api';
+import { isComputeDeployment, isDatabaseDeployment } from 'src/api';
 import { getServiceLink, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { ExternalLink, Link } from 'src/components/link';
@@ -23,13 +23,14 @@ import {
 } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
-import { App, ComputeDeployment, DatabaseDeployment, Deployment, Service } from 'src/model';
+import { App, ComputeDeployment, DatabaseDeployment, Deployment, Replica, Service } from 'src/model';
 import {
   InstanceMetadataValue,
   RegionsMetadataValue,
   ScalingMetadataValue,
 } from 'src/modules/deployment/metadata';
 import { inArray } from 'src/utils/arrays';
+import { assert } from 'src/utils/assert';
 import { ellipsis, shortId } from 'src/utils/strings';
 
 import { ServiceItemOld } from './service-item-old';
@@ -39,7 +40,9 @@ const T = createTranslate('pages.home.service');
 export type ServiceItemProps = {
   app: App;
   service: Service;
-  deployment: Deployment;
+  activeDeployment?: Deployment;
+  latestDeployment: Deployment;
+  activeDeploymentReplicas?: Replica[];
 };
 
 export function ServiceItem(props: ServiceItemProps) {
@@ -70,7 +73,7 @@ export function ServiceItem(props: ServiceItemProps) {
   );
 }
 
-function ServiceInfo(props: { app: App; service: Service; deployment: Deployment }) {
+function ServiceInfo(props: ServiceItemProps) {
   const { service } = props;
 
   return (
@@ -108,8 +111,8 @@ function ServiceInfo(props: { app: App; service: Service; deployment: Deployment
   );
 }
 
-function ServiceUrl({ app, service, deployment }: { app: App; service: Service; deployment: Deployment }) {
-  const urls = getServiceUrls(app, service, deployment);
+function ServiceUrl({ app, service, activeDeployment }: ServiceItemProps) {
+  const urls = getServiceUrls(app, service, activeDeployment);
   const firstUrl = urls.find((url) => url.externalUrl !== undefined) ?? urls[0];
   const url = firstUrl?.externalUrl ?? firstUrl?.internalUrl;
 
@@ -130,27 +133,43 @@ function ServiceUrl({ app, service, deployment }: { app: App; service: Service; 
   );
 }
 
-function DeploymentInfo({ deployment }: { deployment: Deployment }) {
-  if (isComputeDeployment(deployment)) {
-    return <ComputeDeploymentInfo deployment={deployment} />;
+function DeploymentInfo({ latestDeployment, activeDeployment, activeDeploymentReplicas }: ServiceItemProps) {
+  if (isComputeDeployment(latestDeployment)) {
+    assert(activeDeployment === undefined || isComputeDeployment(activeDeployment));
+
+    return (
+      <ComputeDeploymentInfo
+        latestDeployment={latestDeployment}
+        activeDeployment={activeDeployment}
+        activeDeploymentReplicas={activeDeploymentReplicas}
+      />
+    );
   }
 
-  if (isDatabaseDeployment(deployment)) {
-    return <DatabaseDeploymentInfo deployment={deployment} />;
+  if (isDatabaseDeployment(latestDeployment)) {
+    return <DatabaseDeploymentInfo deployment={latestDeployment} />;
   }
 
   return null;
 }
 
-function ComputeDeploymentInfo({ deployment }: { deployment: ComputeDeployment }) {
-  const definition = deployment.definition;
-  const replicas = useDeploymentScaling(deployment.id);
+function ComputeDeploymentInfo({
+  latestDeployment,
+  activeDeployment,
+  activeDeploymentReplicas: replicas,
+}: {
+  latestDeployment: ComputeDeployment;
+  activeDeployment?: ComputeDeployment;
+  activeDeploymentReplicas?: Replica[];
+}) {
+  const definition = activeDeployment?.definition ?? latestDeployment.definition;
 
   return (
     <>
       <InstanceMetadataValue instance={definition.instanceType} />
       <RegionsMetadataValue regions={definition.regions} />
-      <ScalingMetadataValue replicas={replicas} definition={definition} />
+      {replicas !== undefined && <ScalingMetadataValue replicas={replicas} definition={definition} />}
+      {replicas === undefined && <div />}
     </>
   );
 }
@@ -165,9 +184,9 @@ function DatabaseDeploymentInfo({ deployment }: { deployment: DatabaseDeployment
   );
 }
 
-function ServiceAdditionalInfo({ deployment }: { deployment: Deployment }) {
-  if (isComputeDeployment(deployment)) {
-    const source = deployment.definition.source;
+function ServiceAdditionalInfo({ activeDeployment }: ServiceItemProps) {
+  if (isComputeDeployment(activeDeployment)) {
+    const source = activeDeployment.definition.source;
 
     const Icon = {
       docker: IconDocker,
@@ -194,7 +213,7 @@ function ServiceAdditionalInfo({ deployment }: { deployment: Deployment }) {
     );
   }
 
-  if (isDatabaseDeployment(deployment)) {
+  if (isDatabaseDeployment(activeDeployment)) {
     return (
       <div className="hidden min-w-0 items-center justify-end gap-1 @3xl:row">
         <div>
@@ -202,7 +221,7 @@ function ServiceAdditionalInfo({ deployment }: { deployment: Deployment }) {
         </div>
 
         <div className="truncate">
-          <T id="postgresVersion" values={{ version: deployment.postgresVersion }} />
+          <T id="postgresVersion" values={{ version: activeDeployment.postgresVersion }} />
         </div>
       </div>
     );
@@ -211,13 +230,13 @@ function ServiceAdditionalInfo({ deployment }: { deployment: Deployment }) {
   return null;
 }
 
-function ServiceFooter({ deployment }: { deployment: Deployment }) {
-  if (isComputeDeployment(deployment)) {
-    return <ComputeServiceFooter deployment={deployment} />;
+function ServiceFooter({ latestDeployment }: { latestDeployment?: Deployment }) {
+  if (isComputeDeployment(latestDeployment)) {
+    return <ComputeServiceFooter deployment={latestDeployment} />;
   }
 
-  if (isDatabaseDeployment(deployment)) {
-    return <DatabaseServiceFooter deployment={deployment} />;
+  if (isDatabaseDeployment(latestDeployment)) {
+    return <DatabaseServiceFooter deployment={latestDeployment} />;
   }
 
   return null;

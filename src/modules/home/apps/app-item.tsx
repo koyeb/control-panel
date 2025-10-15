@@ -1,6 +1,6 @@
 import { InfoTooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
-import { App, AppFull } from 'src/model';
+import { App, Deployment, Replica, Service } from 'src/model';
 
 import { AppActions } from './components/app-actions';
 import { ServiceItem } from './service-item';
@@ -9,17 +9,33 @@ const T = createTranslate('pages.home');
 
 type AppItemProps = {
   app: App;
-  services: AppFull['services'];
+  services: Service[];
+  latestDeployments: Map<string, Deployment>;
+  activeDeployments: Map<string, Deployment>;
+  activeDeploymentsReplicas: Map<string, Replica[]>;
 };
 
-export function AppItem({ app, services }: AppItemProps) {
+export function AppItem({
+  app,
+  services,
+  latestDeployments,
+  activeDeployments,
+  activeDeploymentsReplicas,
+}: AppItemProps) {
   return (
     <div className="col gap-2">
       <AppHeader app={app} />
 
       <div className="col gap-4">
         {services.map((service) => (
-          <ServiceItem key={service.id} app={app} service={service} deployment={service.latestDeployment} />
+          <ServiceItem
+            key={service.id}
+            app={app}
+            service={service}
+            latestDeployment={latestDeployments.get(service.id)!}
+            activeDeployment={activeDeployments.get(service.id)}
+            activeDeploymentReplicas={activeDeploymentsReplicas.get(service.id)}
+          />
         ))}
 
         {services.length === 0 && <NoServicesFallback />}

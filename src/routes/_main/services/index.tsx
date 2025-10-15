@@ -46,7 +46,7 @@ function ServicesPage() {
     return <QueryError error={query.error} />;
   }
 
-  if (query.data.length === 0) {
+  if (query.data.apps.length === 0) {
     return <ServiceCreation from="/services" />;
   }
 
