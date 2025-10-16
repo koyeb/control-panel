@@ -2853,7 +2853,7 @@
             "cta": "Create API token"
           }
         },
-        "createDialog": {
+        "create": {
           "title": "Create API token",
           "description": "Create an API token to access Koyeb programmatically. Those API access tokens will only be able to perform actions within the organization <strong>{organizationName}</strong>.",
           "nameLabel": "Name",
@@ -2863,7 +2863,7 @@
           "createdTitle": "API token created",
           "createdDescription": "Your API token was created. Make sure you keep it stored it in a secure place, you won't be able to see it again."
         },
-        "deleteDialog": {
+        "delete": {
           "title": "Delete API token",
           "description": "Are you sure you want to delete the <strong>{name}</strong> API token?",
           "confirm": "Delete token",
