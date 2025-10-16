@@ -1,11 +1,12 @@
 import { Collapse, TooltipTitle } from '@koyeb/design-system';
+import { useNavigate } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api';
 import { getServiceLink, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
-import { ExternalLink, Link } from 'src/components/link';
+import { ExternalLink } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { DeploymentStatusBadge, ServiceStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
 import { Tooltip } from 'src/components/tooltip';
@@ -46,18 +47,21 @@ export type ServiceItemProps = {
 };
 
 export function ServiceItem(props: ServiceItemProps) {
+  const navigate = useNavigate();
+
   return (
     <FeatureFlag feature="new-services-list" fallback={<ServiceItemOld {...props} />}>
       <div className="@container rounded-md border">
         <div
+          role="button"
+          onClick={() => void navigate(getServiceLink(props.service))}
           className={clsx(
-            'grid items-center gap-4 p-4 @2xl:p-3 @2xl:text-xs',
+            'grid h-17 cursor-pointer items-center gap-4 px-4 @max-2xl:h-auto @max-2xl:py-4 @2xl:px-3 @2xl:text-xs',
             'grid-cols-1',
             '@2xl:grid-cols-[14rem_6rem_7rem_9rem]',
             '@3xl:grid-cols-[14rem_6rem_7rem_9rem_auto]',
             '@4xl:grid-cols-[18rem_7.5rem_10rem_9rem_auto]',
             '@6xl:grid-cols-[24rem_7.5rem_10rem_9rem_auto]',
-            props.service.type === 'worker' && 'py-6!',
           )}
         >
           <ServiceInfo {...props} />
@@ -94,9 +98,7 @@ function ServiceInfo(props: ServiceItemProps) {
           }
         />
 
-        <Link {...getServiceLink(service)} className="truncate text-sm font-medium">
-          {service.name}
-        </Link>
+        <div className="truncate text-sm font-medium">{service.name}</div>
 
         <div className="hidden text-dim @2xl:block">/</div>
 
@@ -121,7 +123,10 @@ function ServiceUrl({ app, service, activeDeployment }: ServiceItemProps) {
   }
 
   return (
-    <div className="mt-4 row min-w-0 items-center gap-2 @2xl:mt-2">
+    <div
+      onClick={(event) => event.stopPropagation()}
+      className="mt-4 row min-w-0 items-center gap-2 @2xl:mt-2"
+    >
       <ExternalLink href={`https://${url}`} className="truncate font-medium">
         {url}
       </ExternalLink>
