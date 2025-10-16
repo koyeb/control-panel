@@ -41,7 +41,7 @@ export function ShellCommandInput({
       {(disabled) => (
         <Input
           ref={ref}
-          label={<LabelTooltip label={label} tooltip={tooltip} />}
+          label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
           defaultValue={formatCommand(value ?? [])}
           onChange={(event) => onChange(parseCommand(event.target.value))}
           disabled={disabled}

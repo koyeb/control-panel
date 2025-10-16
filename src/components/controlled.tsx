@@ -42,7 +42,7 @@ export function ControlledCheckbox<
   return (
     <Checkbox
       {...field}
-      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
       checked={field.value}
       onChange={(event) => {
         field.onChange(event);
@@ -63,7 +63,7 @@ export function ControlledRadio<
   return (
     <Radio
       {...field}
-      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
       checked={field.value === value}
       onChange={() => field.onChange(value)}
       {...rest}
@@ -137,7 +137,7 @@ export function ControlledInput<
       {...field}
       ref={mergeRefs(ref, field.ref)}
       invalid={fieldState.invalid}
-      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
       helperText={fieldState.error?.message ?? helperText}
       value={Number.isNaN(field.value) ? '' : (field.value ?? '')}
       onChange={(event) => {
@@ -203,7 +203,7 @@ export function ControlledSelect<
     <Select
       {...field}
       items={items}
-      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
       helperText={error?.message}
       invalid={invalid}
       selectedItem={valueToItemMap.get(value) ?? null}
@@ -248,7 +248,7 @@ export function ControlledAutocomplete<
   return (
     <Autocomplete
       {...field}
-      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
       helperText={error?.message}
       invalid={invalid}
       selectedItem={valueToItemMap.get(value) ?? null}
@@ -261,11 +261,7 @@ export function ControlledAutocomplete<
   );
 }
 
-export function LabelTooltip({ label, tooltip }: { label?: React.ReactNode; tooltip?: React.ReactNode }) {
-  if (!label) {
-    return null;
-  }
-
+export function LabelTooltip({ label, tooltip }: { label: React.ReactNode; tooltip?: React.ReactNode }) {
   if (!tooltip) {
     return label;
   }

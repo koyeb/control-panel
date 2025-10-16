@@ -66,7 +66,7 @@ export function PublicGithubRepositoryInput({
 
   return (
     <Input
-      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
       value={value}
       onChange={(event) => onChange(event.target.value)}
       {...props}
