@@ -92,7 +92,7 @@ describe('initializeServiceForm', () => {
   });
 
   async function initialize(serviceId?: string) {
-    return initializeServiceForm(params, serviceId, queryClient);
+    return initializeServiceForm(params, serviceId, undefined, queryClient);
   }
 
   let serviceForm: ServiceForm;

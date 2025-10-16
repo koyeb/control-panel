@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { createValidationGuard } from 'src/application/validation';
-import { useSearchParams } from 'src/hooks/router';
+import { useHistoryState, useSearchParams } from 'src/hooks/router';
 import { useZodResolver } from 'src/hooks/validation';
 import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
 import { Trim } from 'src/utils/types';
@@ -18,11 +18,12 @@ import { ServiceForm, ServiceFormSection } from './service-form.types';
 
 export function useServiceForm(serviceId?: string) {
   const params = useSearchParams();
+  const { expandedSection } = useHistoryState();
   const queryClient = useQueryClient();
 
   const form = useForm<ServiceForm>({
     mode: 'onChange',
-    defaultValues: () => initializeServiceForm(params, serviceId, queryClient),
+    defaultValues: () => initializeServiceForm(params, serviceId, expandedSection, queryClient),
     resolver: useServiceFormResolver(),
   });
 

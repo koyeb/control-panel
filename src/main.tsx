@@ -32,6 +32,7 @@ import { closeDialog } from './components/dialog';
 import { NotificationContainer } from './components/notification';
 import { SeonAdapter } from './hooks/seon';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
+import { ServiceFormSection } from './modules/service-form';
 import { routeTree } from './route-tree.generated';
 
 declare module '@tanstack/react-router' {
@@ -41,6 +42,7 @@ declare module '@tanstack/react-router' {
 
   interface HistoryState {
     githubAppInstallationRequested?: boolean;
+    expandedSection?: ServiceFormSection;
     create?: boolean;
   }
 }

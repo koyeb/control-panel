@@ -31,7 +31,7 @@ import { clamp } from 'src/utils/math';
 import { hasProperty } from 'src/utils/object';
 
 import { generateServiceName } from '../sections/00-service-name/use-generate-service-name';
-import { HealthCheck, ServiceForm } from '../service-form.types';
+import { HealthCheck, ServiceForm, ServiceFormSection } from '../service-form.types';
 
 import { deploymentDefinitionToServiceForm } from './deployment-to-service-form';
 import { generateAppName } from './generate-app-name';
@@ -43,6 +43,7 @@ type ApiFn = ReturnType<typeof createEnsureApiQueryData>;
 export async function initializeServiceForm(
   params: URLSearchParams,
   serviceId: string | undefined,
+  expandedSection: ServiceFormSection | undefined,
   queryClient: QueryClient,
 ): Promise<ServiceForm> {
   const api = createEnsureApiQueryData(queryClient);
@@ -170,6 +171,10 @@ export async function initializeServiceForm(
 
   if (params.get('github_error')) {
     notify.error(params.get('github_error'));
+  }
+
+  if (expandedSection !== undefined) {
+    values.meta.expandedSection = expandedSection;
   }
 
   if (!values.serviceName) {

@@ -23,6 +23,7 @@
     "apiError": "API error",
     "failedPrecondition": "Failed precondition",
     "validationError": "Validation error",
+    "upgrade": "Upgrade",
     "upgradePlan": "Upgrade plan",
     "invalidGithubRepositoryFormat": "Invalid GitHub repository format",
     "githubRepositoryNotFound": "GitHub repository not found",

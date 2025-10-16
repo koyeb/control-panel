@@ -1,12 +1,13 @@
-import { useDeploymentScaling, useVolumes } from 'src/api';
+import { useDeploymentScaling, useOrganization, useVolumes } from 'src/api';
 import { openDialog } from 'src/components/dialog';
-import { ExternalLink } from 'src/components/link';
+import { ExternalLink, Link } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Tooltip } from 'src/components/tooltip';
 import { IconDocker, IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/icons';
-import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, DeploymentDefinition, EnvironmentVariable, Service } from 'src/model';
+import { ServiceFormSection } from 'src/modules/service-form';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { shortId } from 'src/utils/strings';
@@ -30,6 +31,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
   const { definition } = deployment;
   const { type, source, builder, privileged } = definition;
 
+  const organization = useOrganization();
   const replicas = useDeploymentScaling(deployment.id);
 
   return (
@@ -76,11 +78,34 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
         </div>
 
         <div className="row flex-wrap gap-6 p-3">
-          <InstanceMetadata instance={definition.instanceType} />
-          <ScalingMetadata replicas={replicas} sleeping={deployment.status === 'SLEEPING'} />
-          <RegionsMetadata regions={definition.regions} />
-          <EnvironmentMetadata definition={definition} />
-          <VolumesMetadata definition={definition} />
+          <div className="col gap-1">
+            <InstanceMetadata instance={definition.instanceType} />
+            {organization?.plan === 'hobby' ? (
+              <MetadataUpgrade />
+            ) : (
+              <MetadataEdit service={service} section="instance" />
+            )}
+          </div>
+
+          <div className="col gap-1">
+            <ScalingMetadata replicas={replicas} sleeping={deployment.status === 'SLEEPING'} />
+            <MetadataEdit service={service} section="scaling" />
+          </div>
+
+          <div className="col gap-1">
+            <RegionsMetadata regions={definition.regions} />
+            <MetadataEdit service={service} section="instance" />
+          </div>
+
+          <div className="col gap-1">
+            <EnvironmentMetadata definition={definition} />
+            <MetadataEdit service={service} section="environmentVariables" />
+          </div>
+
+          <div className="col gap-1">
+            <VolumesMetadata definition={definition} />
+            <MetadataEdit service={service} section="volumes" />
+          </div>
         </div>
       </div>
 
@@ -92,6 +117,27 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
 
       <DeploymentDefinitionDialog />
     </section>
+  );
+}
+
+function MetadataUpgrade() {
+  return (
+    <button className="text-link text-xs" onClick={() => openDialog('Upgrade', { plan: 'starter' })}>
+      <Translate id="common.upgrade" />
+    </button>
+  );
+}
+
+function MetadataEdit({ service, section }: { service: Service; section: ServiceFormSection }) {
+  return (
+    <Link
+      to="/services/$serviceId/settings"
+      params={{ serviceId: service.id }}
+      state={{ expandedSection: section }}
+      className="text-link text-xs"
+    >
+      Configure
+    </Link>
   );
 }
 
