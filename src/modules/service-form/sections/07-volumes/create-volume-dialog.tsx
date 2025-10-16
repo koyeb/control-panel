@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, DialogHeader, InputEnd } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { UseFormReturn, useForm } from 'react-hook-form';
@@ -7,7 +8,6 @@ import { apiMutation, mapVolume, useInvalidateApiQuery } from 'src/api';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
 
@@ -60,7 +60,7 @@ export function CreateVolumeForm({ regions, onCreated }: CreateVolumeFormProps) 
       name: '',
       size: NaN,
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

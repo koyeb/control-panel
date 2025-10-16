@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, InputEnd } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -12,7 +13,6 @@ import { LinkButton } from 'src/components/link';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { RegionScope } from 'src/model';
 import { RegionScopeTabs, RegionSelector } from 'src/modules/instance-selector/region-selector';
@@ -48,7 +48,7 @@ export function CreateVolumePage() {
     ...apiQuery('get /v1/snapshots/{id}', { path: { id: snapshotId! } }),
   });
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: async () => {
       const { snapshot } = snapshotId ? await snapshotQuery.promise : {};
 
@@ -58,7 +58,7 @@ export function CreateVolumePage() {
         size: snapshot?.size ?? NaN,
       };
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

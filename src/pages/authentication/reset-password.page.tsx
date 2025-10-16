@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -8,7 +9,6 @@ import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from './components/auth-button';
@@ -39,16 +39,18 @@ export function ResetPasswordPage() {
 }
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 function ResetPasswordForm() {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof schema>>({
-    defaultValues: { email: '' },
-    resolver: useZodResolver(schema),
+  const form = useForm({
+    defaultValues: {
+      email: '',
+    },
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

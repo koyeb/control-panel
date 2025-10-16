@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -7,13 +8,12 @@ import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.team.inviteMember');
 
 const schema = z.object({
-  email: z.string().email().trim().toLowerCase(),
+  email: z.email().trim().toLowerCase(),
 });
 
 export function InviteMemberForm() {
@@ -21,11 +21,11 @@ export function InviteMemberForm() {
   const invalidate = useInvalidateApiQuery();
   const t = T.useTranslate();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       email: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

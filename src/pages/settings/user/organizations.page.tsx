@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Spinner } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -19,7 +20,6 @@ import { QueryError } from 'src/components/query-error';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { OrganizationMember } from 'src/model';
 
@@ -53,12 +53,12 @@ const schema = z.object({
 function Create() {
   const t = T.useTranslate();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     mode: 'onChange',
     defaultValues: {
       organizationName: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const switchOrganization = useSwitchOrganization();

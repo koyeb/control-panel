@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -7,7 +8,6 @@ import { apiMutation, useInvalidateApiQuery, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.userSettings.general.name');
@@ -20,11 +20,11 @@ export function UserNameForm() {
   const t = T.useTranslate();
   const user = useUser();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
-      name: user?.name,
+      name: user?.name ?? '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const invalidate = useInvalidateApiQuery();

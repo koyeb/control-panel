@@ -30,18 +30,18 @@
     "githubApiQuotaExceeded": "GitHub API quota exceeded, please try again later",
     "destructiveAction": "This can not be undone.",
     "confirmationDialogText": "Type <value>{confirmationText}</value> to confirm",
-    "appServiceName": "{appName}/{serviceName}",
-    "validation": {
-      "required": "Required",
-      "integer": "Must be an integer",
-      "min": "Must be at least {min}",
-      "max": "Must be lower than {max}",
-      "minLength": "Must be at least {min} {min, plural, =1 {character} other {characters}}",
-      "maxLength": "Must be at most {max} {max, plural, =1 {character} other {characters}}",
-      "email": "Must be a valid email address",
-      "startsWith": "Must start with \"{startsWith}\"",
-      "slug": "Must only contain lowercase letters, numbers, dashes and dots"
-    }
+    "appServiceName": "{appName}/{serviceName}"
+  },
+  "validation": {
+    "required": "Required",
+    "integer": "Must be an integer",
+    "min": "Must be at least {min}",
+    "max": "Must be lower than {max}",
+    "minLength": "Must be at least {min} {min, plural, =1 {character} other {characters}}",
+    "maxLength": "Must be at most {max} {max, plural, =1 {character} other {characters}}",
+    "email": "Must be a valid email address",
+    "startsWith": "Must start with \"{prefix}\"",
+    "slug": "Must only contain lowercase letters, numbers, dashes and dots"
   },
   "enums": {
     "catalogAvailability": {

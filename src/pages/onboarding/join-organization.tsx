@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -10,7 +11,6 @@ import { QueryError, QueryGuard } from 'src/components/query-error';
 import { InfoTooltip } from 'src/components/tooltip';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { defined } from 'src/utils/assert';
@@ -56,11 +56,11 @@ export function JoinOrganization() {
 function CreateOrganization() {
   const navigate = useNavigate();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       organizationName: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const switchOrganization = useSwitchOrganization();

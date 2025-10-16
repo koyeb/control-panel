@@ -1,6 +1,5 @@
 import { z } from 'zod';
 
-import { tooBig, tooSmall } from 'src/application/zod';
 import { EnvironmentVariable, Organization, OrganizationQuotas } from 'src/model';
 import { isSlug } from 'src/utils/strings';
 
@@ -127,24 +126,32 @@ function scaleToZero(organization: Organization | undefined, quotas: Organizatio
         return;
       }
 
+      const tooSmall = (path: 'idlePeriod' | 'lightToDeepPeriod', minimum: number) => {
+        ctx.addIssue({ code: 'too_small', origin: 'number', path: [path], minimum });
+      };
+
+      const tooBig = (path: 'idlePeriod' | 'lightToDeepPeriod', maximum: number) => {
+        ctx.addIssue({ code: 'too_big', origin: 'number', path: [path], maximum });
+      };
+
       const { idlePeriod, lightToDeepPeriod } = value;
       const bounds = getScaleToZeroBounds(quotas, value);
 
       if (idlePeriod < bounds.idlePeriod.min) {
-        ctx.addIssue(tooSmall('idlePeriod', bounds.idlePeriod.min));
+        return tooSmall('idlePeriod', bounds.idlePeriod.min);
       }
 
       if (idlePeriod > bounds.idlePeriod.max) {
-        ctx.addIssue(tooBig('idlePeriod', bounds.idlePeriod.max));
+        return tooBig('idlePeriod', bounds.idlePeriod.max);
       }
 
       if (bounds.lightToDeepPeriod) {
         if (lightToDeepPeriod < bounds.lightToDeepPeriod.min) {
-          ctx.addIssue(tooSmall('lightToDeepPeriod', bounds.lightToDeepPeriod.min));
+          return tooSmall('lightToDeepPeriod', bounds.lightToDeepPeriod.min);
         }
 
         if (lightToDeepPeriod > bounds.lightToDeepPeriod.max) {
-          ctx.addIssue(tooBig('lightToDeepPeriod', bounds.lightToDeepPeriod.max));
+          return tooBig('lightToDeepPeriod', bounds.lightToDeepPeriod.max);
         }
       }
     });
@@ -252,9 +259,35 @@ function preprocessVolumes(value: unknown) {
   return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
+function meta() {
+  return z.object({
+    expandedSection: z.union([
+      z.null(),
+      z.literal('serviceType'),
+      z.literal('source'),
+      z.literal('builder'),
+      z.literal('deployment'),
+      z.literal('environmentVariables'),
+      z.literal('instance'),
+      z.literal('scaling'),
+      z.literal('ports'),
+      z.literal('healthChecks'),
+      z.literal('volumes'),
+      z.literal('serviceName'),
+    ]),
+    appId: z.string().nullable(),
+    serviceId: z.string().nullable(),
+    previousInstance: z.string().nullable(),
+    hasPreviousBuild: z.boolean(),
+    skipBuild: z.boolean(),
+    saveOnly: z.boolean(),
+    proxyFields: z.record(z.string(), z.unknown()),
+  });
+}
+
 export function serviceFormSchema(organization: Organization | undefined, quotas: OrganizationQuotas) {
   return z.object({
-    meta: z.object({}).passthrough(),
+    meta: meta(),
     appName: z
       .string()
       .trim()
@@ -267,7 +300,7 @@ export function serviceFormSchema(organization: Organization | undefined, quotas
       .min(2)
       .max(63)
       .refine(isSlug, { params: { refinement: 'isSlug' } }),
-    serviceType: z.string(),
+    serviceType: z.union([z.literal('web'), z.literal('worker')]),
     source: z.discriminatedUnion('type', [
       z.object({ type: z.literal('archive'), archive: z.object({ archiveId: z.string() }) }),
       z.object({ type: z.literal('git'), git }),

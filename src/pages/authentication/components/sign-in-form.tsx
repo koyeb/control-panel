@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
@@ -12,7 +13,6 @@ import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { lowerCase } from 'src/utils/strings';
 
@@ -22,11 +22,11 @@ import { AuthInput } from './auth-input';
 const T = createTranslate('pages.authentication.signIn');
 
 const emailSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 const emailPasswordSchema = z.object({
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(8).max(128),
 });
 
@@ -51,12 +51,12 @@ export function SignInForm({ redirect }: { redirect: string }) {
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
-  const form = useForm<z.infer<typeof emailPasswordSchema>>({
+  const form = useForm<z.infer<typeof emailSchema | typeof emailPasswordSchema>>({
     defaultValues: {
       email: '',
       password: '',
     },
-    resolver: useZodResolver(authenticationMethod === 'koyeb' ? emailPasswordSchema : emailSchema),
+    resolver: zodResolver(authenticationMethod === 'koyeb' ? emailPasswordSchema : emailSchema),
   });
 
   const getAuthenticationMethodMutation = useMutation({

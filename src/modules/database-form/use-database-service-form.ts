@@ -1,8 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { UseFormReturn, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useZodResolver } from 'src/hooks/validation';
 import { DatabaseDeployment } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
@@ -13,10 +13,20 @@ const schema = z.object({
   meta: z.object({
     appId: z.string().nullable(),
     databaseServiceId: z.string().nullable(),
-    expandedSection: z.string().nullable(),
+    expandedSection: z
+      .union([
+        z.literal('engine'),
+        z.literal('region'),
+        z.literal('instance'),
+        z.literal('defaultRole'),
+        z.literal('serviceName'),
+      ])
+      .nullable(),
     allowFreeInstanceIfAlreadyUsed: z.boolean(),
   }),
-  engine: z.object({ version: z.number() }),
+  engine: z.object({
+    version: z.union([z.literal(14), z.literal(15), z.literal(16), z.literal(17), z.literal(18)]),
+  }),
   region: z.string(),
   instance: z.string(),
   defaultRole: z.string().min(1).max(63),
@@ -32,7 +42,7 @@ type UseDatabaseServiceFormProps = {
 export function useDatabaseServiceForm({ appId, deployment, onCostChanged }: UseDatabaseServiceFormProps) {
   const form = useForm<DatabaseServiceForm>({
     defaultValues: getDefaultValues(appId, deployment),
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   useExpandFirstSectionInError(form);

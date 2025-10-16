@@ -42,13 +42,11 @@ export class ApiError extends Error {
   }
 }
 
-const apiErrorSchema = z
-  .object({
-    status: z.number(),
-    code: z.string(),
-    message: z.string(),
-  })
-  .passthrough();
+const apiErrorSchema = z.looseObject({
+  status: z.number(),
+  code: z.string(),
+  message: z.string(),
+});
 
 const apiValidationErrorSchema = apiErrorSchema.extend({
   code: z.union([

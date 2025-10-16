@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -7,24 +8,23 @@ import { apiMutation, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.userSettings.general.email');
 
 const schema = z.object({
-  email: z.string().email(),
+  email: z.email(),
 });
 
 export function UserEmailForm() {
   const t = T.useTranslate();
   const user = useUser();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
-      email: user?.email,
+      email: user?.email ?? '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

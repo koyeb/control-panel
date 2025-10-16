@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Spinner } from '@koyeb/design-system';
 import { useIsMutating, useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
@@ -14,7 +15,6 @@ import { PublicGithubRepositoryInput } from 'src/components/public-github-reposi
 import { BoxSkeleton, CircleSkeleton, TextSkeleton } from 'src/components/skeleton';
 import { handleSubmit, useFormValues } from 'src/hooks/form';
 import { useHistoryState, useLocation } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { IconGithub, IconLock, IconRefreshCcw } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -270,7 +270,7 @@ function ResynchronizeButton() {
 }
 
 const schema = z.object({
-  url: z.string().refine((url) => url.match(/.+\/.+/)),
+  url: z.string().refine((url) => url.match(/.+\/.+/), { params: { refinement: 'isGithubRepository' } }),
   repositoryName: z.string().min(1),
 });
 
@@ -283,10 +283,12 @@ function PublicRepositorySelector({ onImport }: RepositorySelectorProps) {
       repositoryName: '',
     },
     mode: 'onChange',
-    resolver: useZodResolver(schema, (error) => {
-      if (error.code === 'custom' && error.path[0] === 'url') {
-        return t('publicRepository.invalidGithubRepositoryUrl');
-      }
+    resolver: zodResolver(schema, {
+      error: (iss) => {
+        if (iss.code === 'custom' && iss.params?.refinement === 'isGithubRepository') {
+          return t('publicRepository.invalidGithubRepositoryUrl');
+        }
+      },
     }),
   });
 

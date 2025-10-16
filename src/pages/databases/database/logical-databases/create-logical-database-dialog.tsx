@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, DialogFooter } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -9,7 +10,6 @@ import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { DatabaseDeployment, Service } from 'src/model';
 import { getName } from 'src/utils/object';
@@ -30,12 +30,12 @@ export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogic
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       name: '',
-      owner: deployment.roles?.[0]?.name,
+      owner: deployment.roles?.[0]?.name ?? '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

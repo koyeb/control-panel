@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { IconButton } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
@@ -9,7 +10,6 @@ import { getApi, useInvalidateApiQuery } from 'src/api';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
-import { useZodResolver } from 'src/hooks/validation';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
@@ -32,13 +32,13 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       name: secret?.name ?? '',
       value: '',
       multiline: false,
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   useUpdateEffect(() => {

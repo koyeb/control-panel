@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button } from '@koyeb/design-system';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
@@ -22,7 +23,6 @@ import { Metadata } from 'src/components/metadata';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { AiModel, CatalogInstance } from 'src/model';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
@@ -62,7 +62,7 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
 
   const form = useForm<ModelFormType>({
     defaultValues: useInitialValues(initialModel ?? defined(models[0])),
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -11,7 +12,6 @@ import { setToken } from 'src/application/token';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from './auth-button';
@@ -21,7 +21,7 @@ const T = createTranslate('pages.authentication.signUp');
 
 const schema = z.object({
   name: z.string().min(2).max(128),
-  email: z.string().email(),
+  email: z.email(),
   password: z.string().min(8).max(128),
 });
 
@@ -37,13 +37,13 @@ export function SignUpForm({ initialValues }: SignUpFormProps) {
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       name: initialValues.name ?? '',
       email: initialValues.email ?? '',
       password: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const { mutateAsync: signUp } = useMutation({

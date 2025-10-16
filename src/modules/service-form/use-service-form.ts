@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect } from 'react';
 import { FieldPath, Resolver, UseFormReturn, useForm, useWatch } from 'react-hook-form';
@@ -6,7 +7,6 @@ import { z } from 'zod';
 import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { createValidationGuard } from 'src/application/validation';
 import { useHistoryState, useSearchParams } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { TranslateFn, TranslateValues, TranslationKeys, useTranslate } from 'src/intl/translate';
 import { Trim } from 'src/utils/types';
 
@@ -21,7 +21,7 @@ export function useServiceForm(serviceId?: string) {
   const { expandedSection } = useHistoryState();
   const queryClient = useQueryClient();
 
-  const form = useForm<ServiceForm>({
+  const form = useForm({
     mode: 'onChange',
     defaultValues: () => initializeServiceForm(params, serviceId, expandedSection, queryClient),
     resolver: useServiceFormResolver(),
@@ -46,15 +46,19 @@ function useServiceFormResolver() {
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
 
-  const schemaResolver = useZodResolver(
-    serviceFormSchema(organization, quotas),
-    errorMessageHandler(translate),
-  );
-
   const getUnknownInterpolationErrors = useUnknownInterpolationErrors();
 
   return useCallback<Resolver<ServiceForm>>(
     async (values, context, options) => {
+      const schema = serviceFormSchema(organization, quotas) as unknown as z.ZodType<
+        ServiceForm,
+        ServiceForm
+      >;
+
+      const schemaResolver = zodResolver(schema, {
+        error: errorMessageHandler(translate),
+      });
+
       const schemaResult = await schemaResolver(values, context, options);
 
       if (Object.keys(schemaResult.errors).length > 0) {
@@ -69,17 +73,17 @@ function useServiceFormResolver() {
 
       return schemaResult;
     },
-    [schemaResolver, getUnknownInterpolationErrors],
+    [organization, quotas, translate, getUnknownInterpolationErrors],
   );
 }
 
-function errorMessageHandler(translate: TranslateFn) {
+function errorMessageHandler(translate: TranslateFn): z.core.$ZodErrorMap {
   const t = (key: Trim<TranslationKeys, `modules.serviceForm.errors.`>, values?: TranslateValues) => {
-    return translate(`modules.serviceForm.errors.${key}`, values);
+    return translate(`modules.serviceForm.errors.${key}`, values) as string;
   };
 
-  return (error: z.ZodIssueOptionalMessage) => {
-    const path = error.path.join('.') as FieldPath<ServiceForm>;
+  return (error) => {
+    const path = error.path?.join('.') as FieldPath<ServiceForm>;
 
     if (isStartsWithSlash(error)) {
       return t('startWithSlash');

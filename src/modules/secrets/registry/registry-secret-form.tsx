@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
@@ -9,7 +10,6 @@ import { readFile } from 'src/application/read-file';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { RegistrySecret, type RegistryType } from 'src/model';
 import { identity } from 'src/utils/generic';
@@ -57,7 +57,7 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
       registryUrl: '',
       keyFile: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   useUpdateEffect(() => {

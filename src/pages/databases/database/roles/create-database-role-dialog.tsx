@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -9,7 +10,6 @@ import { updateDatabaseService } from 'src/application/service-functions';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 import { randomString } from 'src/utils/random';
@@ -25,11 +25,11 @@ export function CreateDatabaseRoleDialog({ service }: { service: Service }) {
 
   const invalidate = useInvalidateApiQuery();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       name: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

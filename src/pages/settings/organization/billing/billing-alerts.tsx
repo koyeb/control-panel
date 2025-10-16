@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, InputEnd, InputStart } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -10,7 +11,6 @@ import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { TextSkeleton } from 'src/components/skeleton';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { FormattedPrice } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 
@@ -24,9 +24,11 @@ export function BillingAlerts() {
   const organization = useOrganization();
   const isHobby = organization?.plan === 'hobby';
 
-  const form = useForm<z.infer<typeof schema>>({
-    defaultValues: { amount: NaN },
-    resolver: useZodResolver(schema),
+  const form = useForm({
+    defaultValues: {
+      amount: NaN,
+    },
+    resolver: zodResolver(schema),
   });
 
   const { currentAmount, query, updateMutation, deleteMutation } = useSpendingLimit(form);

@@ -27,6 +27,7 @@ import {
   setAuthKitToken,
   setToken,
 } from './application/token';
+import { configureZod } from './application/validation';
 import { ConfirmationDialog } from './components/confirmation-dialog';
 import { closeDialog } from './components/dialog';
 import { NotificationContainer } from './components/notification';
@@ -156,6 +157,10 @@ const queryClient = new QueryClient({
   },
 });
 
+const translate = createTranslateFn();
+
+configureZod(translate);
+
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
@@ -171,7 +176,7 @@ const router = createRouter({
     queryClient,
     seon,
     authKit,
-    translate: createTranslateFn(),
+    translate,
   },
   Wrap({ children }) {
     useEffect(() => {

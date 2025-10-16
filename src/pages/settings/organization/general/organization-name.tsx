@@ -1,6 +1,6 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -9,7 +9,6 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.general.organizationName');
@@ -21,13 +20,12 @@ const schema = z.object({
 export function OrganizationName() {
   const organization = useOrganization();
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: useZodResolver(schema),
+  const form = useForm({
+    defaultValues: {
+      organizationName: organization?.name ?? '',
+    },
+    resolver: zodResolver(schema),
   });
-
-  useEffect(() => {
-    form.reset({ organizationName: organization?.name });
-  }, [form, organization]);
 
   const invalidate = useInvalidateApiQuery();
 

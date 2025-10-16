@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, DialogFooter } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -8,7 +9,6 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
 import { FormValues, handleSubmit } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
 
@@ -39,11 +39,11 @@ const schema = z.object({
 function EditVolumeForm({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       name: volume.name,
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

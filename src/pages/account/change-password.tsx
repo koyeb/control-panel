@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -9,7 +10,6 @@ import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
-import { useZodResolver } from 'src/hooks/validation';
 import { createTranslate } from 'src/intl/translate';
 import { AuthenticationLayout } from 'src/layouts/authentication/authentication.layout';
 
@@ -46,11 +46,11 @@ function ChangePasswordForm() {
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm({
     defaultValues: {
       password: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const mutation = useMutation({

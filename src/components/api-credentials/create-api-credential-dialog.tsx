@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Input } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
@@ -9,7 +10,6 @@ import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { ApiCredential } from 'src/model';
 import { upperCase } from 'src/utils/strings';
@@ -99,7 +99,7 @@ function CreateApiCredentialForm({ type, onCreated }: CreateApiCredentialFormPro
       name: '',
       description: '',
     },
-    resolver: useZodResolver(schema),
+    resolver: zodResolver(schema),
   });
 
   const invalidate = useInvalidateApiQuery();

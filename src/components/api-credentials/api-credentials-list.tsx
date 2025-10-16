@@ -71,7 +71,7 @@ function CredentialActions({ type, credential }: { type: ApiCredentialType; cred
     })),
     async onSuccess(_, { name }) {
       await invalidate('get /v1/credentials');
-      notify.info(t('deleteDialog.successNotification', { name }));
+      notify.info(t('delete.successNotification', { name }));
       closeDialog();
     },
   });

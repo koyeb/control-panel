@@ -1,6 +1,6 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -10,7 +10,6 @@ import { ControlledAddressField } from 'src/components/address-field/address-fie
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.billingInformation');
@@ -38,18 +37,15 @@ function BillingInformationForm() {
   const t = T.useTranslate();
 
   const form = useForm<z.infer<typeof schema>>({
-    resolver: useZodResolver(schema),
-  });
-
-  useEffect(() => {
-    form.reset({
-      name: organization?.billing.name ?? user?.name,
-      email: organization?.billing.email ?? user?.email,
+    defaultValues: {
+      name: organization?.billing.name ?? user?.name ?? '',
+      email: organization?.billing.email ?? user?.email ?? '',
       address: organization?.billing.address ?? {},
-      company: organization?.billing.company,
+      company: organization?.billing.company ?? false,
       vatNumber: organization?.billing.vatNumber ?? '',
-    });
-  }, [form, user, organization]);
+    },
+    resolver: zodResolver(schema),
+  });
 
   const invalidate = useInvalidateApiQuery();
 

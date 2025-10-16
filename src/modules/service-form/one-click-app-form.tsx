@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { AccordionHeader, AccordionSection, Badge, Checkbox, FieldHelperText } from '@koyeb/design-system';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
@@ -10,7 +11,7 @@ import {
   useForm,
   useFormContext,
 } from 'react-hook-form';
-import { z } from 'zod';
+import z from 'zod';
 
 import {
   createEnsureApiQueryData,
@@ -21,7 +22,6 @@ import {
 } from 'src/api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
-import { tooBig, tooSmall } from 'src/application/zod';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
@@ -32,7 +32,6 @@ import { RegionName } from 'src/components/region-name';
 import { handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
-import { useZodResolver } from 'src/hooks/validation';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/model';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
@@ -76,7 +75,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
 
   const form = useForm<OneClickAppForm>({
     defaultValues: () => initialize(app, serviceFormRef.current, searchParams, queryClient),
-    resolver: useZodResolver(createSchema(app)),
+    resolver: zodResolver(createSchema(app)),
   });
 
   const mutation = useMutation({
@@ -173,7 +172,7 @@ async function initialize(
   };
 }
 
-function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm> {
+function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm, OneClickAppForm> {
   return z.object({
     instance: z.string(),
     regions: z.array(z.string()).min(1),
@@ -181,7 +180,7 @@ function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm> {
   });
 }
 
-function createEnvironmentVariableSchema(env: OneClickAppEnv[]): z.ZodType<EnvironmentVariable> {
+function createEnvironmentVariableSchema(env: OneClickAppEnv[]) {
   return z.object({ name: z.string(), value: z.string(), regions: z.tuple([]) }).superRefine((value, ctx) => {
     const definition = env.find(hasProperty('name', value.name));
 
@@ -193,11 +192,11 @@ function createEnvironmentVariableSchema(env: OneClickAppEnv[]): z.ZodType<Envir
       }
 
       if (definition.min !== undefined && number < definition.min) {
-        ctx.addIssue(tooSmall('value', definition.min));
+        ctx.addIssue({ code: 'too_small', origin: 'number', minimum: definition.min });
       }
 
       if (definition.max !== undefined && number > definition.max) {
-        ctx.addIssue(tooBig('value', definition.max));
+        ctx.addIssue({ code: 'too_big', origin: 'number', maximum: definition.max });
       }
     }
   });
