@@ -1,5 +1,4 @@
-import { useDeploymentScaling } from 'src/api';
-import { useVolumes } from 'src/api';
+import { useDeploymentScaling, useVolumes } from 'src/api';
 import { openDialog } from 'src/components/dialog';
 import { ExternalLink } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
@@ -7,8 +6,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Tooltip } from 'src/components/tooltip';
 import { IconDocker, IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
-import { App, ComputeDeployment, Service } from 'src/model';
-import { DeploymentDefinition, EnvironmentVariable } from 'src/model';
+import { App, ComputeDeployment, DeploymentDefinition, EnvironmentVariable, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { shortId } from 'src/utils/strings';
@@ -79,7 +77,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
 
         <div className="row flex-wrap gap-6 p-3">
           <InstanceMetadata instance={definition.instanceType} />
-          <ScalingMetadata definition={definition} replicas={replicas} />
+          <ScalingMetadata replicas={replicas} sleeping={deployment.status === 'SLEEPING'} />
           <RegionsMetadata regions={definition.regions} />
           <EnvironmentMetadata definition={definition} />
           <VolumesMetadata definition={definition} />

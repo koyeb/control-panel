@@ -5,7 +5,7 @@ import { useCatalogInstance } from 'src/api';
 import { formatBytes } from 'src/application/memory';
 import { SvgComponent } from 'src/application/types';
 import { Metadata } from 'src/components/metadata';
-import { InfoTooltip } from 'src/components/tooltip';
+import { Tooltip } from 'src/components/tooltip';
 import { IconCpu, IconMemoryStick, IconMicrochip, IconRadioReceiver } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { CatalogInstance } from 'src/model';
@@ -24,19 +24,18 @@ export function InstanceMetadataValue({ instance: instanceId }: InstanceMetadata
   const instance = useCatalogInstance(instanceId);
 
   return (
-    <div className="row items-center gap-2">
-      <div className="row min-w-0 items-center gap-1">
-        <div>
-          <IconCpu strokeWidth={1} className="size-4" />
+    <Tooltip
+      className="md:min-w-42"
+      content={instance && <InstanceTooltipContent instance={instance} />}
+      trigger={(props) => (
+        <div {...props} className="inline-flex min-w-0 flex-row items-center gap-2">
+          <div>
+            <IconCpu strokeWidth={1} className="size-4" />
+          </div>
+          <div className="truncate">{instance?.displayName}</div>
         </div>
-        <div className="truncate">{instance?.displayName}</div>
-      </div>
-
-      <InfoTooltip
-        className="md:min-w-42"
-        content={instance && <InstanceTooltipContent instance={instance} />}
-      />
-    </div>
+      )}
+    />
   );
 }
 

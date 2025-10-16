@@ -20,24 +20,24 @@ export function RegionsMetadataValue({ regions }: RegionsMetadataProps) {
   const firstRegion = useCatalogRegion(regions[0]);
 
   return (
-    <div className="row min-w-0 items-center gap-2">
-      <RegionFlag regionId={firstRegion?.id} className="size-3" />
+    <Tooltip
+      allowHover
+      className="md:min-w-36"
+      content={regions.length >= 2 && <RegionsTooltipContent regions={regions} />}
+      trigger={(props) => (
+        <div {...props} className="inline-flex min-w-0 flex-row items-center gap-2">
+          <RegionFlag regionId={firstRegion?.id} className="size-3" />
 
-      <div className="truncate">{firstRegion?.name}</div>
+          <div className="truncate">{firstRegion?.name}</div>
 
-      {regions.length >= 2 && (
-        <Tooltip
-          allowHover
-          trigger={(props) => (
+          {regions.length >= 2 && (
             <Badge color="gray" size={1} className="text-default!" {...props}>
               <Translate id="common.plusCount" values={{ count: 2 }} />
             </Badge>
           )}
-          content={<RegionsTooltipContent regions={regions} />}
-          className="md:min-w-36"
-        />
+        </div>
       )}
-    </div>
+    />
   );
 }
 

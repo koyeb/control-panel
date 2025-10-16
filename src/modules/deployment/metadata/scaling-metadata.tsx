@@ -3,10 +3,10 @@ import { Badge, TooltipTitle } from '@koyeb/design-system';
 import { useRegionsCatalog } from 'src/api';
 import { Metadata } from 'src/components/metadata';
 import { RegionFlag } from 'src/components/region-flag';
-import { InfoTooltip } from 'src/components/tooltip';
+import { Tooltip } from 'src/components/tooltip';
 import { IconLayers, IconMoon } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { DeploymentDefinition, InstanceStatus, Replica } from 'src/model';
+import { InstanceStatus, Replica } from 'src/model';
 import { unique } from 'src/utils/arrays';
 import { hasProperty, isOneOf } from 'src/utils/object';
 
@@ -16,15 +16,15 @@ const runningStatus: InstanceStatus[] = ['ALLOCATING', 'STARTING', 'HEALTHY', 'U
 
 type ScalingMetadataProps = {
   replicas?: Replica[];
-  definition: DeploymentDefinition;
+  sleeping?: boolean;
 };
 
 export function ScalingMetadata(props: ScalingMetadataProps) {
   return <Metadata label={<T id="label" />} value={<ScalingMetadataValue {...props} />} />;
 }
 
-export function ScalingMetadataValue({ replicas, definition }: ScalingMetadataProps) {
-  const ScalingIcon = definition.scaling.min === 0 ? IconMoon : IconLayers;
+export function ScalingMetadataValue({ replicas, sleeping }: ScalingMetadataProps) {
+  const ScalingIcon = sleeping ? IconMoon : IconLayers;
 
   const scaling = {
     running: replicas?.filter(isOneOf('status', runningStatus)).length ?? '',
@@ -32,18 +32,19 @@ export function ScalingMetadataValue({ replicas, definition }: ScalingMetadataPr
   };
 
   return (
-    <div className="row min-w-0 items-center gap-2">
-      <ScalingIcon className="size-3.5" />
+    <Tooltip
+      className="md:max-w-54"
+      content={replicas && <ScalingTooltipContent replicas={replicas} />}
+      trigger={(props) => (
+        <div {...props} className="inline-flex min-w-0 flex-row items-center gap-2">
+          <ScalingIcon className="size-3.5" />
 
-      <div className="truncate">
-        <T id="value" values={scaling} />
-      </div>
-
-      <InfoTooltip
-        className="md:max-w-54"
-        content={replicas && <ScalingTooltipContent replicas={replicas} />}
-      />
-    </div>
+          <div className="truncate">
+            <T id="value" values={scaling} />
+          </div>
+        </div>
+      )}
+    />
   );
 }
 

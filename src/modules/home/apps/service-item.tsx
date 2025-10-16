@@ -51,7 +51,7 @@ export function ServiceItem(props: ServiceItemProps) {
       <div className="@container rounded-md border">
         <div
           className={clsx(
-            'grid gap-4 p-4 @2xl:p-3 @2xl:text-xs',
+            'grid items-center gap-4 p-4 @2xl:p-3 @2xl:text-xs',
             'grid-cols-1',
             '@2xl:grid-cols-[14rem_6rem_7rem_9rem]',
             '@3xl:grid-cols-[14rem_6rem_7rem_9rem_auto]',
@@ -126,7 +126,7 @@ function ServiceUrl({ app, service, activeDeployment }: ServiceItemProps) {
         {url}
       </ExternalLink>
 
-      <div>
+      <div className="leading-0">
         <CopyIconButton text={url} className="size-3.5" />
       </div>
     </div>
@@ -163,13 +163,19 @@ function ComputeDeploymentInfo({
   activeDeploymentReplicas?: Replica[];
 }) {
   const definition = activeDeployment?.definition ?? latestDeployment.definition;
+  const sleeping = activeDeployment?.status === 'SLEEPING';
 
   return (
     <>
-      <InstanceMetadataValue instance={definition.instanceType} />
-      <RegionsMetadataValue regions={definition.regions} />
-      {replicas !== undefined && <ScalingMetadataValue replicas={replicas} definition={definition} />}
-      {replicas === undefined && <div />}
+      <div>
+        <InstanceMetadataValue instance={definition.instanceType} />
+      </div>
+
+      <div>
+        <RegionsMetadataValue regions={definition.regions} />
+      </div>
+
+      <div>{replicas !== undefined && <ScalingMetadataValue replicas={replicas} sleeping={sleeping} />}</div>
     </>
   );
 }
@@ -177,8 +183,14 @@ function ComputeDeploymentInfo({
 function DatabaseDeploymentInfo({ deployment }: { deployment: DatabaseDeployment }) {
   return (
     <>
-      <InstanceMetadataValue instance={deployment.instance} />
-      <RegionsMetadataValue regions={[deployment.region]} />
+      <div>
+        <InstanceMetadataValue instance={deployment.instance} />
+      </div>
+
+      <div>
+        <RegionsMetadataValue regions={[deployment.region]} />
+      </div>
+
       <div />
     </>
   );
