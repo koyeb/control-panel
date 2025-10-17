@@ -39,6 +39,7 @@ declare module '@tanstack/react-router' {
   }
 
   interface HistoryState {
+    clearCache?: boolean;
     githubAppInstallationRequested?: boolean;
     expandedSection?: ServiceFormSection;
     create?: boolean;
@@ -224,8 +225,13 @@ const router = createRouter({
 
     useEffect(() => {
       router.subscribe('onBeforeRouteMount', ({ toLocation }) => {
-        if (toLocation.pathname.startsWith('/auth')) {
+        if (toLocation.pathname.startsWith('/auth') || toLocation.state.clearCache) {
+          queryClient.clear();
           void persistStore.clear();
+        }
+
+        if (toLocation.state.clearCache) {
+          void router.navigate({ state: {} });
         }
       });
     }, []);
