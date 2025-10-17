@@ -1,9 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import { createEnsureApiQueryData, listAppsFull, mapOrganization, mapUser, useAppsFull } from 'src/api';
+import { listAppsFull, useAppsFull } from 'src/api';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
-import { getOnboardingStep } from 'src/application/onboarding';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Apps } from 'src/modules/home/apps/apps';
@@ -28,20 +27,11 @@ export const Route = createFileRoute('/_main/services/')({
       .optional(),
   }),
 
-  async loader({ context: { queryClient }, abortController }) {
-    const api = createEnsureApiQueryData(queryClient, abortController);
-
-    const [user, organization] = await Promise.all([
-      api('get /v1/account/profile', {}).then(({ user }) => mapUser(user!)),
-      api('get /v1/account/organization', {}).then(({ organization }) => mapOrganization(organization!)),
-    ]);
-
-    if (getOnboardingStep(user, organization) !== null) {
-      await queryClient.ensureQueryData({
-        queryKey: ['listAppsFull'],
-        queryFn: listAppsFull,
-      });
-    }
+  async loader({ context: { queryClient } }) {
+    await queryClient.ensureQueryData({
+      queryKey: ['listAppsFull'],
+      queryFn: listAppsFull,
+    });
   },
 });
 
