@@ -260,6 +260,7 @@ function PersistGate({ children }: { children: React.ReactNode }) {
   const [restoring, setRestoring] = useState(true);
 
   useEffect(() => {
+    localStorage.removeItem('query-cache');
     void persister.restoreQueries(queryClient).finally(() => setRestoring(false));
   }, []);
 
