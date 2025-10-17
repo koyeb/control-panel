@@ -3,10 +3,12 @@ import '@fontsource-variable/jetbrains-mono';
 import './side-effects';
 import './styles.css';
 
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import {
+  PersistedQuery,
+  experimental_createQueryPersister as createQueryPersister,
+} from '@tanstack/query-persist-client-core';
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import qs from 'query-string';
@@ -17,16 +19,11 @@ import { ApiError } from './api';
 import { ApiEndpoint } from './api/api';
 import { AuthKitAdapter } from './application/authkit';
 import { getConfig } from './application/config';
+import { IndexDBAdapter } from './application/index-db';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
-import {
-  accessTokenListener,
-  getToken,
-  isSessionToken,
-  setAuthKitToken,
-  setToken,
-} from './application/token';
+import { accessTokenListener, getToken, setAuthKitToken, setToken } from './application/token';
 import { configureZod } from './application/validation';
 import { ConfirmationDialog } from './components/confirmation-dialog';
 import { closeDialog } from './components/dialog';
@@ -142,11 +139,23 @@ const seon = new SeonAdapter();
 
 const authKit = new AuthKitAdapter();
 
+const persistStore = new IndexDBAdapter('tanstack-query', 'cache');
+
+const persister = createQueryPersister({
+  maxAge: 1000 * 60 * 60 * 24 * 2, // 48 hours
+  buster: getConfig('version'),
+  prefix: 'query',
+  serialize: (value) => value,
+  deserialize: (value) => value as PersistedQuery,
+  storage: persistStore,
+});
+
 const queryClient = new QueryClient({
   queryCache,
   mutationCache,
   defaultOptions: {
     queries: {
+      persister: persister.persisterFn,
       refetchInterval: 5_000,
       throwOnError,
       retry,
@@ -189,9 +198,7 @@ const router = createRouter({
     return (
       <AuthKitProvider>
         <IntlProvider>
-          <QueryClientProvider client={queryClient}>
-            <PersistQueryClient>{children}</PersistQueryClient>
-          </QueryClientProvider>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
         </IntlProvider>
       </AuthKitProvider>
     );
@@ -199,6 +206,14 @@ const router = createRouter({
   InnerWrap({ children }) {
     useEffect(() => {
       return router.subscribe('onBeforeNavigate', () => closeDialog(true));
+    }, []);
+
+    useEffect(() => {
+      router.subscribe('onBeforeRouteMount', ({ toLocation }) => {
+        if (toLocation.pathname.startsWith('/auth')) {
+          persistStore.clear();
+        }
+      });
     }, []);
 
     return (
@@ -240,24 +255,19 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
   return loading ? null : children;
 }
 
-const persister = createAsyncStoragePersister({ key: 'query-cache', storage: localStorage });
-
 // eslint-disable-next-line react-refresh/only-export-components
-function PersistQueryClient({ children }: { children: React.ReactNode }) {
-  const location = new URL(window.location.href);
+function PersistGate({ children }: { children: React.ReactNode }) {
+  const [restoring, setRestoring] = useState(true);
 
-  if (isSessionToken() || location.searchParams.has('session-token')) {
-    return children;
+  useEffect(() => {
+    void persister.restoreQueries(queryClient).finally(() => setRestoring(false));
+  }, []);
+
+  if (restoring) {
+    return null;
   }
 
-  return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister, buster: getConfig('version') }}
-    >
-      {children}
-    </PersistQueryClientProvider>
-  );
+  return children;
 }
 
 const rootElement = document.getElementById('root')!;
@@ -267,7 +277,9 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <PersistGate>
+        <RouterProvider router={router} />
+      </PersistGate>
     </StrictMode>,
   );
 }
