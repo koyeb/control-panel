@@ -1,12 +1,11 @@
 import { Collapse, TooltipTitle } from '@koyeb/design-system';
-import { useNavigate } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { isComputeDeployment, isDatabaseDeployment } from 'src/api';
 import { getServiceLink, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
-import { ExternalLink } from 'src/components/link';
+import { ExternalLink, Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { DeploymentStatusBadge, ServiceStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
 import { Tooltip } from 'src/components/tooltip';
@@ -47,16 +46,12 @@ export type ServiceItemProps = {
 };
 
 export function ServiceItem(props: ServiceItemProps) {
-  const navigate = useNavigate();
-
   return (
     <FeatureFlag feature="new-services-list" fallback={<ServiceItemOld {...props} />}>
       <div className="@container rounded-md border">
         <div
-          role="button"
-          onClick={() => void navigate(getServiceLink(props.service))}
           className={clsx(
-            'grid h-17 cursor-pointer items-center gap-4 px-4 @max-2xl:h-auto @max-2xl:py-4 @2xl:px-3 @2xl:text-xs',
+            'grid h-17 items-center gap-4 px-4 @max-2xl:h-auto @max-2xl:py-4 @2xl:px-3 @2xl:text-xs',
             'grid-cols-1',
             '@2xl:grid-cols-[14rem_6rem_7rem_9rem]',
             '@3xl:grid-cols-[14rem_6rem_7rem_9rem_auto]',
@@ -82,7 +77,7 @@ function ServiceInfo(props: ServiceItemProps) {
 
   return (
     <div>
-      <div className="row items-center gap-2">
+      <Link {...getServiceLink(service)} className="row items-center gap-2">
         <Tooltip
           className="col gap-3"
           trigger={(props) => (
@@ -106,7 +101,7 @@ function ServiceInfo(props: ServiceItemProps) {
           <ServiceTypeIcon size={1} type={service.type} />
           <TranslateEnum enum="serviceType" value={service.type} />
         </div>
-      </div>
+      </Link>
 
       <ServiceUrl {...props} />
     </div>
