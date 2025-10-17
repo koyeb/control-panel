@@ -15,8 +15,8 @@ export const Route = createFileRoute('/_main/services/$serviceId')({
     breadcrumb: () => <AppServiceCrumb serviceId={params.serviceId} link={{ to: Route.fullPath, params }} />,
   }),
 
-  async loader({ context: { queryClient }, params, abortController }) {
-    const ensureApiQueryData = createEnsureApiQueryData(queryClient, abortController);
+  async loader({ context: { queryClient }, params }) {
+    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     const service = await ensureApiQueryData('get /v1/services/{id}', {
       path: { id: params.serviceId },

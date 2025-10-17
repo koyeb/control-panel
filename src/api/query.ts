@@ -66,9 +66,7 @@ export function useInvalidateApiQuery() {
   );
 }
 
-export function createEnsureApiQueryData(queryClient: QueryClient, abortController?: AbortController) {
-  void abortController;
-
+export function createEnsureApiQueryData(queryClient: QueryClient) {
   return <E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) => {
     return queryClient.ensureQueryData(apiQuery(endpoint, params));
   };

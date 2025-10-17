@@ -38,8 +38,8 @@ export const Route = createRootRouteWithContext<RouterContext>()({
     }
   },
 
-  async loader({ context: { queryClient }, abortController }) {
-    const ensureApiQueryData = createEnsureApiQueryData(queryClient, abortController);
+  async loader({ context: { queryClient } }) {
+    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (getToken()) {
       await Promise.all([

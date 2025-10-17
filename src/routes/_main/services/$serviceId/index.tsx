@@ -16,13 +16,8 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
     deploymentId: search.deploymentId,
   }),
 
-  loader: async ({
-    context: { queryClient },
-    params: { serviceId },
-    deps: { deploymentId },
-    abortController,
-  }) => {
-    const ensureApiQueryData = createEnsureApiQueryData(queryClient, abortController);
+  loader: async ({ context: { queryClient }, params: { serviceId }, deps: { deploymentId } }) => {
+    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
     const [service_id, deployment_id] = [serviceId, deploymentId];
 
     if (deploymentId === undefined) {

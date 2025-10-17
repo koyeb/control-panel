@@ -48,8 +48,8 @@ export const Route = createFileRoute('/_main')({
     }
   },
 
-  async loader({ context: { queryClient }, location, abortController }) {
-    const ensureApiQueryData = createEnsureApiQueryData(queryClient, abortController);
+  async loader({ context: { queryClient }, location }) {
+    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     void preloadDatacentersLatencies(queryClient);
 

@@ -30,8 +30,8 @@ export const Route = createFileRoute('/_main/')({
       .optional(),
   }),
 
-  async loader({ context: { queryClient }, abortController }) {
-    const api = createEnsureApiQueryData(queryClient, abortController);
+  async loader({ context: { queryClient } }) {
+    const api = createEnsureApiQueryData(queryClient);
 
     const organization = await api('get /v1/account/organization', {}).then(({ organization }) =>
       mapOrganization(organization!),
