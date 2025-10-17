@@ -1,5 +1,7 @@
 import * as idb from 'idb-keyval';
 
+// cspell:words keyval
+
 export class IndexDBAdapter {
   private store: idb.UseStore;
 

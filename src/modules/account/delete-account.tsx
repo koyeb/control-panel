@@ -1,5 +1,5 @@
 import { Button } from '@koyeb/design-system';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useOrganization, useUser } from 'src/api';
 import { useAuthKit } from 'src/application/authkit';
@@ -62,7 +62,6 @@ export function DeleteAccount() {
 
 function useDeleteMutation() {
   const t = T.useTranslate();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
@@ -73,15 +72,13 @@ function useDeleteMutation() {
       path: { id: user.id },
     })),
     async onSuccess() {
-      closeDialog();
-
       if (authkit.user) {
         authkit.signOut();
       }
 
+      closeDialog();
       clearIdentify();
       setToken(null);
-      queryClient.clear();
 
       notify.success(t('success'));
       await navigate({ to: '/auth/signin' });

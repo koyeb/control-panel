@@ -85,6 +85,20 @@ const queryCache = new QueryCache({
 });
 
 const mutationCache = new MutationCache({
+  async onSuccess(data, variables, onMutateResult, mutation) {
+    const keys = new Array<unknown>(
+      'logout', // authkit logout
+      'delete /v1/account/logout',
+      'delete /v1/organizations/{id}',
+      'delete /v1/users/{id}',
+      'delete /v2/users/{id}',
+    );
+
+    if (keys.includes(mutation.options.mutationKey?.[0])) {
+      await persistStore.clear();
+      queryClient.clear();
+    }
+  },
   async onError(error, variables, context, mutation) {
     const { showError } = { showError: true, ...mutation.meta };
 
@@ -211,7 +225,7 @@ const router = createRouter({
     useEffect(() => {
       router.subscribe('onBeforeRouteMount', ({ toLocation }) => {
         if (toLocation.pathname.startsWith('/auth')) {
-          persistStore.clear();
+          void persistStore.clear();
         }
       });
     }, []);

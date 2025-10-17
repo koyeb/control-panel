@@ -88,7 +88,6 @@ export function useOrganizationQuotas() {
 }
 
 export function useLogoutMutation() {
-  const queryClient = useQueryClient();
   const authKit = useAuthKit();
   const userQuery = useUserQuery();
   const navigate = useNavigate();
@@ -102,13 +101,13 @@ export function useLogoutMutation() {
         clearIdentify();
       }
 
-      queryClient.clear();
       setToken(null);
       await navigate({ to: '/auth/signin' });
     },
   });
 
   const authKitLogout = useMutation({
+    mutationKey: ['logout'],
     mutationFn: async () => {
       authKit.signOut();
     },
@@ -117,7 +116,6 @@ export function useLogoutMutation() {
         clearIdentify();
       }
 
-      queryClient.clear();
       setAuthKitToken(null);
       await navigate({ to: '/auth/signin' });
     },
