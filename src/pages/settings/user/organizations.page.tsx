@@ -47,7 +47,7 @@ export function OrganizationsPage() {
 }
 
 const schema = z.object({
-  organizationName: z.string().min(1).max(39),
+  organizationName: z.string().min(1).max(64),
 });
 
 function Create() {

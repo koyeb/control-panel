@@ -23,7 +23,7 @@ const schema = z.object({
   organizationName: z
     .string()
     .min(1)
-    .max(39)
+    .max(64)
     .refine((value) => value.match(/^[-a-z0-9]+$/) !== null),
 });
 
