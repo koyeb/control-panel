@@ -3,6 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 
 import { apiMutation, useUser } from 'src/api';
+import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { handleSubmit } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
@@ -13,6 +14,7 @@ export function UserPasswordForm() {
   const t = T.useTranslate();
   const user = useUser();
   const form = useForm();
+  const authKit = useAuthKit();
 
   const mutation = useMutation({
     ...apiMutation('post /v1/account/reset_password', {
@@ -22,6 +24,10 @@ export function UserPasswordForm() {
       notify.success(t('successNotification'));
     },
   });
+
+  if (authKit.user) {
+    return null;
+  }
 
   return (
     <form onSubmit={handleSubmit(form, () => mutation.mutateAsync())} className="card">
