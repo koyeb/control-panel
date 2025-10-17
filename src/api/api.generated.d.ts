@@ -2048,6 +2048,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v2/account/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update User V2 */
+        put: operations["UpdateUserV2"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update User V2 */
+        patch: operations["UpdateUserV22"];
+        trace?: never;
+    };
+    "/v2/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** V2 Delete user */
+        delete: operations["DeleteUserV2"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2166,8 +2201,10 @@ export interface components {
              * @description The provisioned space for the archive.
              */
             size?: string;
-            /** @description The URL where to upload the archive. This URL is signed and can only be
-             *     used to upload the archive until `valid_until`. */
+            /**
+             * @description The URL where to upload the archive. This URL is signed and can only be
+             *     used to upload the archive until `valid_until`.
+             */
             upload_url?: string;
         };
         ArchiveDeploymentMetadata: {
@@ -2898,7 +2935,7 @@ export interface components {
             type?: components["schemas"]["DeploymentStrategyType"];
         };
         /**
-         * @description  - DEPLOYMENT_STRATEGY_TYPE_INVALID: Invalid / Zero value.
+         * @description - DEPLOYMENT_STRATEGY_TYPE_INVALID: Invalid / Zero value.
          *      - DEPLOYMENT_STRATEGY_TYPE_CANARY: Use canary strategy.
          *      - DEPLOYMENT_STRATEGY_TYPE_ROLLING: Use rolling strategy.
          *      - DEPLOYMENT_STRATEGY_TYPE_BLUE_GREEN: Use blue green strategy.
@@ -3103,12 +3140,14 @@ export interface components {
             replicas?: components["schemas"]["GetDeploymentScalingReplyItem"][];
         };
         GetDeploymentScalingReplyItem: {
-            /** @description An array of `active` and `starting` instances.
+            /**
+             * @description An array of `active` and `starting` instances.
              *
              *     Status of the active instance (and if none the most recent instance)
              *      string status = 4;
              *      Status message of the active instance (and if none the most recent instance)
-             *      string message = 5; */
+             *      string message = 5;
+             */
             instances?: components["schemas"]["Instance"][];
             /** The replica region */
             region?: string;
@@ -3345,9 +3384,11 @@ export interface components {
             type?: string;
             /** Format: date-time */
             updated_at?: string;
-            /** @description WARNING: Please don't use the following attribute.
+            /**
+             * @description WARNING: Please don't use the following attribute.
              *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-             *     USE AT YOUR OWN RISK. */
+             *     USE AT YOUR OWN RISK.
+             */
             xyz_deployment_id?: string;
         };
         /**
@@ -3389,9 +3430,11 @@ export interface components {
             type?: string;
             /** Format: date-time */
             updated_at?: string;
-            /** @description WARNING: Please don't use the following attribute.
+            /**
+             * @description WARNING: Please don't use the following attribute.
              *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-             *     USE AT YOUR OWN RISK. */
+             *     USE AT YOUR OWN RISK.
+             */
             xyz_deployment_id?: string;
         };
         InstancesSummary: {
@@ -3974,10 +4017,12 @@ export interface components {
         LoginReply: {
             token?: components["schemas"]["Token"];
         };
-        /** @example {
+        /**
+         * @example {
          *       "email": "john@snow.com",
          *       "password": "..."
-         *     } */
+         *     }
+         */
         LoginRequest: {
             /** User email */
             email?: string;
@@ -4100,11 +4145,15 @@ export interface components {
         OAuthCallbackRequest: {
             /** The code returned by the OAuth provider */
             code?: string;
-            /** @description installation_id is populated in the context of a GitHub app installation request. For logins and
-             *     signups, it is not set. */
+            /**
+             * @description installation_id is populated in the context of a GitHub app installation request. For logins and
+             *     signups, it is not set.
+             */
             installation_id?: string;
-            /** @description setup_action is populated in the context of a GitHub app installation request. For logins and
-             *     signups, it is not set. */
+            /**
+             * @description setup_action is populated in the context of a GitHub app installation request. For logins and
+             *     signups, it is not set.
+             */
             setup_action?: string;
             /** The state created at the origin of the OAuth flow */
             state?: string;
@@ -4460,8 +4509,10 @@ export interface components {
         "RedeployRequest.Info": {
             deployment_group?: string;
             sha?: string;
-            /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
-             *     The call fails if no previous successful builds happened. */
+            /**
+             * @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
+             *     The call fails if no previous successful builds happened.
+             */
             skip_build?: boolean;
             use_cache?: boolean;
         };
@@ -4621,9 +4672,11 @@ export interface components {
             invitation?: components["schemas"]["OrganizationInvitation"];
         };
         ResetPasswordReply: Record<string, never>;
-        /** @example {
+        /**
+         * @example {
          *       "email": "john@snow.com"
-         *     } */
+         *     }
+         */
         ResetPasswordRequest: {
             email?: string;
         };
@@ -4922,12 +4975,14 @@ export interface components {
              */
             port?: number;
         };
-        /** @example {
+        /**
+         * @example {
          *       "id": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
          *       "expires": "2022-09-08T14:00:00Z",
          *       "user_id": "996d7822-6b58-11e9-956f-32001b70f000",
          *       "organization_id": "9f33b2c6-6b58-11e9-883c-32001b70f000"
-         *     } */
+         *     }
+         */
         Token: {
             /** Format: date-time */
             expires_at?: string;
@@ -4993,10 +5048,12 @@ export interface components {
         UpdateOrganizationReply: {
             organization?: components["schemas"]["Organization"];
         };
-        /** @example {
+        /**
+         * @example {
          *       "id": "...",
          *       "password": "..."
-         *     } */
+         *     }
+         */
         UpdatePasswordRequest: {
             id?: string;
             password?: string;
@@ -5012,8 +5069,10 @@ export interface components {
             metadata?: components["schemas"]["DeploymentMetadata"];
             /** If set, do not trigger a deployment, only store the new settings */
             save_only?: boolean;
-            /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
-             *     The call fails if no previous successful builds happened. */
+            /**
+             * @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
+             *     The call fails if no previous successful builds happened.
+             */
             skip_build?: boolean;
         };
         UpdateServiceReply: {
@@ -10194,9 +10253,11 @@ export interface operations {
                 offset?: string;
                 /** @description (Optional) A filter for statuses */
                 statuses?: ("PENDING" | "ACTIVE" | "ERROR" | "DELETING" | "DELETED")[];
-                /** @description (Optional) A filter for types
+                /**
+                 * @description (Optional) A filter for types
                  *
-                 *      - AUTOASSIGNED: Domain like <appName>-<orgName>.koyeb.app */
+                 *      - AUTOASSIGNED: Domain like <appName>-<orgName>.koyeb.app
+                 */
                 types?: ("AUTOASSIGNED" | "CUSTOM")[];
             };
             header?: never;
@@ -10719,8 +10780,10 @@ export interface operations {
             query?: {
                 /** @description (Optional) The number of items to return. */
                 limit?: string;
-                /** @description (Optional) Filter on branch name using a fuzzy search.
-                 *     Repository filter is required to enable this filter. */
+                /**
+                 * @description (Optional) Filter on branch name using a fuzzy search.
+                 *     Repository filter is required to enable this filter.
+                 */
                 name?: string;
                 /** @description (Optional) The offset in the list of item to return. */
                 offset?: string;
@@ -11709,9 +11772,11 @@ export interface operations {
                 offset?: string;
                 /** @description (Optional) Filter on organization invitation statuses */
                 statuses?: ("INVALID" | "PENDING" | "ACCEPTED" | "REFUSED" | "EXPIRED")[];
-                /** @description (Optional) Filter on invitee ID. Will match both invitations sent to
+                /**
+                 * @description (Optional) Filter on invitee ID. Will match both invitations sent to
                  *     that user_id and invitations sent to the email of that user_id.
-                 *     The only valid value is the requester's user_id */
+                 *     The only valid value is the requester's user_id
+                 */
                 user_id?: string;
             };
             header?: never;
@@ -12866,8 +12931,10 @@ export interface operations {
         requestBody: {
             content: {
                 "*/*": {
-                    /** @description if set to true, skip_confirmation will directly start the deactivation process,
-                     *     without sending a confirmation email beforehand. */
+                    /**
+                     * @description if set to true, skip_confirmation will directly start the deactivation process,
+                     *     without sending a confirmation email beforehand.
+                     */
                     skip_confirmation?: boolean;
                 };
             };
@@ -16536,8 +16603,10 @@ export interface operations {
     ResumeService: {
         parameters: {
             query?: {
-                /** @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
-                 *     The call fails if no previous successful builds happened. */
+                /**
+                 * @description If set to true, the build stage will be skipped and the image coming from the last successful build step will be used instead.
+                 *     The call fails if no previous successful builds happened.
+                 */
                 skip_build?: boolean;
                 use_cache?: boolean;
             };
@@ -16635,14 +16704,16 @@ export interface operations {
                 organization_id?: string;
                 /** @description (Optional) A filter for the region */
                 region?: string;
-                /** @description (Optional) Filter by status
+                /**
+                 * @description (Optional) Filter by status
                  *
                  *      - SNAPSHOT_STATUS_INVALID: zero value, invalid
                  *      - SNAPSHOT_STATUS_CREATING: the snapshot is being created
                  *      - SNAPSHOT_STATUS_AVAILABLE: the snapshot is complete and available
                  *      - SNAPSHOT_STATUS_MIGRATING: the snapshot is being migrated
                  *      - SNAPSHOT_STATUS_DELETING: the snapshot is being deleted
-                 *      - SNAPSHOT_STATUS_DELETED: the snapshot is deleted */
+                 *      - SNAPSHOT_STATUS_DELETED: the snapshot is deleted
+                 */
                 statuses?: ("SNAPSHOT_STATUS_INVALID" | "SNAPSHOT_STATUS_CREATING" | "SNAPSHOT_STATUS_AVAILABLE" | "SNAPSHOT_STATUS_MIGRATING" | "SNAPSHOT_STATUS_DELETING" | "SNAPSHOT_STATUS_DELETED")[];
             };
             header?: never;
@@ -18463,6 +18534,270 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["DeletePersistentVolumeReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateUserV2: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateUserRequest.UserUpdateBody"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UserReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateUserV22: {
+        parameters: {
+            query?: {
+                update_mask?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": components["schemas"]["UpdateUserRequest.UserUpdateBody"];
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UserReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    DeleteUserV2: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description The id of the user */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["DeleteUserReply"];
                 };
             };
             /** @description Validation error */
