@@ -5,7 +5,7 @@ import { apiMutation, useOrganization, useUser } from 'src/api';
 import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
-import { setToken } from 'src/application/token';
+import { setAuthKitToken, setToken } from 'src/application/token';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -72,13 +72,15 @@ function useDeleteMutation() {
       path: { id: user.id },
     })),
     async onSuccess() {
-      if (authkit.user) {
-        authkit.signOut();
-      }
-
       closeDialog();
       clearIdentify();
-      setToken(null);
+
+      if (authkit.user) {
+        await authkit.signOut();
+        setAuthKitToken(null);
+      } else {
+        setToken(null);
+      }
 
       notify.success(t('success'));
       await navigate({ to: '/auth/signin' });

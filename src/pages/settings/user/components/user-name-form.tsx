@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, useInvalidateApiQuery, useUser } from 'src/api';
+import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/controlled';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -19,6 +20,7 @@ const schema = z.object({
 export function UserNameForm() {
   const t = T.useTranslate();
   const user = useUser();
+  const authKit = useAuthKit();
 
   const form = useForm({
     defaultValues: {
@@ -30,10 +32,13 @@ export function UserNameForm() {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...apiMutation('patch /v1/account/profile', ({ name }: FormValues<typeof form>) => ({
-      query: {},
-      body: { name },
-    })),
+    ...apiMutation(
+      authKit.user ? 'patch /v2/account/profile' : 'patch /v1/account/profile',
+      ({ name }: FormValues<typeof form>) => ({
+        query: {},
+        body: { name },
+      }),
+    ),
     async onSuccess(_, { name }) {
       await invalidate('get /v1/account/profile');
       form.reset({ name });

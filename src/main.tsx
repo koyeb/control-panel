@@ -113,8 +113,8 @@ const mutationCache = new MutationCache({
 
 async function handleAuthenticationError() {
   if (authKit.user) {
+    await authKit.signOut();
     setAuthKitToken(null);
-    authKit.signOut();
     queryClient.clear();
   } else if (getToken() !== null) {
     setToken(null);

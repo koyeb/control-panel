@@ -39,8 +39,9 @@ export class AuthKitAdapter {
     await this.client?.signUp();
   }
 
-  signOut() {
-    this.client?.signOut({ returnTo: `${window.location.origin}/auth/signin` });
+  async signOut() {
+    await this.client?.signOut({ navigate: false });
+    this.user = null;
   }
 
   async getAccessToken() {

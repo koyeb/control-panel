@@ -108,9 +108,7 @@ export function useLogoutMutation() {
 
   const authKitLogout = useMutation({
     mutationKey: ['logout'],
-    mutationFn: async () => {
-      authKit.signOut();
-    },
+    mutationFn: async () => authKit.signOut(),
     onSuccess: async () => {
       if (!isSessionToken()) {
         clearIdentify();
