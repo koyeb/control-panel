@@ -64,7 +64,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   return (
     <Combobox.Provider value={combobox}>
       <Tooltip
-        mobile={false}
+        forceDesktop
         content={searchQuery.error?.message ?? (volume.serviceId && <T id="alreadyMounted" />)}
         trigger={(props) => (
           <div {...props}>

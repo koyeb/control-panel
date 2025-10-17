@@ -63,7 +63,7 @@ export function ChangePlanButton({ plan }: { plan: Plan }) {
 
   return (
     <Tooltip
-      mobile={false}
+      forceDesktop
       content={organization?.plan === 'enterprise' && plan !== 'enterprise' && <T id="contactUs" />}
       trigger={(props) => (
         <div {...props}>

@@ -46,7 +46,7 @@ export function SnapshotActions({ snapshot }: { snapshot: VolumeSnapshot }) {
       {(withClose) => (
         <>
           <Tooltip
-            mobile={false}
+            forceDesktop
             content={canCreate ? undefined : <T id="list.actions.cannotCreateVolume" />}
             trigger={(props) => (
               <ButtonMenuItem {...props} disabled={!canCreate} onClick={withClose(onCreateVolume)}>

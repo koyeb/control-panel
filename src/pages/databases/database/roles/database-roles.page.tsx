@@ -128,7 +128,7 @@ function DatabaseRolePassword({ role }: { role: DatabaseRole }) {
 
       {showValue && query.data !== undefined ? (
         <Tooltip
-          mobile={false}
+          forceDesktop
           content={<Translate id="common.clickToCopy" />}
           trigger={(props) => (
             <button {...props} className="max-w-md truncate" onClick={copyValue}>

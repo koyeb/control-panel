@@ -100,7 +100,7 @@ function DialogContent({ service }: { service: Service }) {
               </div>
 
               <Tooltip
-                mobile={false}
+                forceDesktop
                 content={latestStashed && <T id="skipBuild.latestStashed" />}
                 trigger={(props) => (
                   <div {...props}>
