@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AccordionHeader, AccordionSection, Badge, Checkbox, FieldHelperText } from '@koyeb/design-system';
+import { AccordionHeader, AccordionSection, Badge, Checkbox } from '@koyeb/design-system';
+import { FieldHelperText } from '@koyeb/design-system/next';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { useEffect, useRef, useState } from 'react';

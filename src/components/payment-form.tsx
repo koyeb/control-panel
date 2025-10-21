@@ -1,6 +1,6 @@
 import { showNewMessage } from '@intercom/messenger-js-sdk';
-import { Button, Field, FieldLabel } from '@koyeb/design-system';
-import { InputEnd, InputStart } from '@koyeb/design-system/next';
+import { Button } from '@koyeb/design-system';
+import { Field, FieldLabel, InputEnd, InputStart } from '@koyeb/design-system/next';
 import { CardCvcElement, CardExpiryElement, CardNumberElement, useStripe } from '@stripe/react-stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';

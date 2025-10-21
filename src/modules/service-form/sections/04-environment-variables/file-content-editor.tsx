@@ -1,4 +1,5 @@
-import { Field, FieldHelperText, FieldLabel, IconButton } from '@koyeb/design-system';
+import { IconButton } from '@koyeb/design-system';
+import { Field, FieldHelperText, FieldLabel } from '@koyeb/design-system/next';
 import { useId, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
@@ -25,7 +26,6 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
   const form = useFormContext<ServiceForm>();
 
   const id = useId();
-  const helperTextId = `${id}-error-text`;
 
   const onFileDropped = (file: File) => {
     if (file.size > 4096) {
@@ -51,11 +51,10 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
   return (
     <FileDropZone onDrop={([file]) => file && onFileDropped(file)}>
       <Field
+        id={id}
         label={
           <div className="row flex-wrap items-end gap-2 self-stretch">
-            <FieldLabel htmlFor={id} className="me-auto">
-              {<T id="label" />}
-            </FieldLabel>
+            <FieldLabel className="me-auto">{<T id="label" />}</FieldLabel>
 
             <CodeEditorLanguageSelect codeEditor={codeEditor} placeholder={t('languageSelect.placeholder')} />
 
@@ -65,9 +64,7 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
           </div>
         }
         helperText={
-          <FieldHelperText id={helperTextId} invalid={fieldState.invalid}>
-            {fieldState.error?.message}
-          </FieldHelperText>
+          <FieldHelperText invalid={fieldState.invalid}>{fieldState.error?.message}</FieldHelperText>
         }
         className="relative"
       >
@@ -84,6 +81,7 @@ export function FileContentEditor({ index }: FileContentEditorProps) {
 
           <CodeEditor
             autoFocus
+            id={id}
             editor={codeEditor}
             value={field.value}
             onChange={field.onChange}

@@ -9,6 +9,7 @@ import { type CodeEditor } from './use-code-editor';
 
 type CodeEditorProps = {
   editor: CodeEditor;
+  id?: string;
   autoFocus?: boolean;
   value: string;
   onChange: (value: string) => void;
