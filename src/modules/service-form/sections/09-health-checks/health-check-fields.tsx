@@ -1,9 +1,11 @@
-import { Button, Input, InputEnd } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
+import { InputEnd } from '@koyeb/design-system/next';
 import isEqual from 'lodash-es/isEqual';
 import { useFormContext } from 'react-hook-form';
 
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { Input } from 'src/components/forms/input';
 import { IconRefreshCcw } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';

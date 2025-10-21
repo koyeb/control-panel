@@ -73,7 +73,6 @@ export function Files() {
               placeholder={t('content.placeholder')}
               onFocus={() => setExpandedIndex(index)}
               className="flex-1"
-              inputClassName="truncate"
             />
 
             <ControlledInput<ServiceForm, `files.${number}.mountPath`>

@@ -1,4 +1,5 @@
-import { Button, Combobox, InputBox, Spinner } from '@koyeb/design-system';
+import { Button, Combobox, Spinner } from '@koyeb/design-system';
+import { InputBox } from '@koyeb/design-system/next';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -87,7 +88,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
           type="search"
           start={<Icon className="ml-3 size-4 text-dim" />}
           placeholder={t('placeholder')}
-          boxClassName={clsx('items-center rounded-b-none border-x-0 border-t-0 outline-none', {
+          className={clsx('items-center rounded-b-none border-x-0 border-t-0 outline-none', {
             hidden: total !== undefined && total <= 10,
           })}
         />

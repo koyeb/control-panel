@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, InputEnd } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
+import { InputEnd } from '@koyeb/design-system/next';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';

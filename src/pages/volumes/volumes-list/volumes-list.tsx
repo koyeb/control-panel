@@ -1,10 +1,11 @@
-import { Input, Table, useBreakpoint } from '@koyeb/design-system';
+import { Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { apiQuery, mapSnapshot, mapVolume, useService } from 'src/api';
 import { formatBytes } from 'src/application/memory';
+import { Input } from 'src/components/forms/input';
 import { LinkButton } from 'src/components/link';
 import { NoResource } from 'src/components/no-resource';
 import { Pagination, usePagination } from 'src/components/pagination';
@@ -30,10 +31,10 @@ export function VolumesListSection() {
   const t = T.useTranslate();
 
   const pagination = usePagination();
-  const [name, setName] = useState<string>();
+  const [name, setName] = useState('');
 
   const query = useQuery({
-    ...apiQuery('get /v1/volumes', { query: { ...pagination.query, name } }),
+    ...apiQuery('get /v1/volumes', { query: { ...pagination.query, name: name || undefined } }),
     placeholderData: keepPreviousData,
     select: ({ volumes, has_next }) => ({
       volumes: volumes!.map(mapVolume),
@@ -49,14 +50,14 @@ export function VolumesListSection() {
         <section className="col gap-4">
           <div className="row items-center justify-between gap-4">
             <Input
+              placeholder={t('header.search')}
+              value={name}
+              onChange={(event) => setName(event.target.value)}
               start={
                 <span className="row items-center self-stretch pl-1">
                   <IconSearch className="size-4 text-dim" />
                 </span>
               }
-              placeholder={t('header.search')}
-              value={name ?? ''}
-              onChange={(event) => setName(event.target.value)}
             />
 
             {volumes.length > 0 && (

@@ -1,11 +1,10 @@
-import { Input } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
 import { useTranslate } from 'src/intl/translate';
 import { GitRepository } from 'src/model';
 
-import { LabelTooltip } from '../controlled';
+import { Input } from '../forms/input';
 
 import { fetchGithubRepository } from './github-api';
 import { parseGithubRepositoryQuery } from './parse-github-repository-query';
@@ -66,7 +65,8 @@ export function PublicGithubRepositoryInput({
 
   return (
     <Input
-      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
+      label={label}
+      tooltip={tooltip}
       value={value}
       onChange={(event) => onChange(event.target.value)}
       {...props}

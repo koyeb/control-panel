@@ -1,7 +1,7 @@
-import { Input } from '@koyeb/design-system';
 import { useMemo, useState } from 'react';
 
 import { useOneClickApps } from 'src/api';
+import { Input } from 'src/components/forms/input';
 import { Link } from 'src/components/link';
 import { IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

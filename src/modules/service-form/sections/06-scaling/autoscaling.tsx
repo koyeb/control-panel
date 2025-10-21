@@ -1,4 +1,4 @@
-import { InputEnd } from '@koyeb/design-system';
+import { InputEnd } from '@koyeb/design-system/next';
 import { useFormContext, useFormState } from 'react-hook-form';
 
 import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';

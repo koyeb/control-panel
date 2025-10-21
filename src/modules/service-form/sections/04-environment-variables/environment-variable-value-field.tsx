@@ -1,14 +1,5 @@
-import {
-  Dropdown,
-  DropdownGroup,
-  Field,
-  FieldHelperText,
-  FieldLabel,
-  IconButton,
-  InputBox,
-  useDropdown,
-  useId,
-} from '@koyeb/design-system';
+import { Dropdown, DropdownGroup, IconButton, useDropdown } from '@koyeb/design-system';
+import { Field, FieldHelperText, InputBox } from '@koyeb/design-system/next';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import { useRef, useState } from 'react';
@@ -40,9 +31,6 @@ export function EnvironmentVariableValueField({
   label,
 }: EnvironmentVariableValueFieldProps) {
   const t = T.useTranslate();
-
-  const id = useId();
-  const helperTextId = `${id}-helper-text`;
 
   const variables = useServiceVariables(useFormValues<ServiceForm>());
 
@@ -85,7 +73,6 @@ export function EnvironmentVariableValueField({
     useCombobox({
       isOpen,
       onIsOpenChange: ({ isOpen }) => setIsOpen(isOpen),
-      id,
       itemToString: String,
       items,
       inputValue: field.value,
@@ -140,24 +127,12 @@ export function EnvironmentVariableValueField({
 
   return (
     <Field
-      label={
-        label && (
-          <FieldLabel htmlFor={id} {...getLabelProps()}>
-            <LabelTooltip label={label} tooltip={tooltip} />
-          </FieldLabel>
-        )
-      }
-      helperText={
-        <FieldHelperText id={helperTextId} invalid={fieldState.invalid}>
-          {fieldState.error?.message}
-        </FieldHelperText>
-      }
+      label={label && <LabelTooltip {...getLabelProps()} label={label} tooltip={tooltip} />}
+      helperText={<FieldHelperText invalid={fieldState.invalid}>{fieldState.error?.message}</FieldHelperText>}
     >
       <InputBox
-        boxRef={dropdown.setReference}
-        boxClassName={clsx(isOpen && '!rounded-b-none')}
-        className="peer"
         placeholder={t('valuePlaceholder')}
+        invalid={fieldState.invalid}
         end={
           <IconButton
             variant="ghost"
@@ -168,8 +143,8 @@ export function EnvironmentVariableValueField({
             className={clsx(isOpen && 'rotate-180')}
           />
         }
-        aria-invalid={fieldState.invalid}
-        aria-errormessage={helperTextId}
+        boxRef={dropdown.setReference}
+        className={clsx(isOpen && '!rounded-b-none')}
         {...getInputProps({ ...field, ref: inputRef })}
       />
 

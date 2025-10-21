@@ -1,8 +1,9 @@
-import { Input, InputEnd } from '@koyeb/design-system';
+import { InputEnd } from '@koyeb/design-system/next';
 
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { createTranslate } from 'src/intl/translate';
 
+import { Input } from './forms/input';
 import { ExternalLink } from './link';
 import { InfoTooltip } from './tooltip';
 
@@ -25,12 +26,12 @@ export function DeployToKoyebButton({ deployUrl }: { deployUrl?: string }) {
       <Input
         readOnly
         value={markdown}
-        inputClassName="text-xs"
         end={
           <InputEnd>
             <CopyIconButton text={markdown} className="size-4" />
           </InputEnd>
         }
+        className="text-xs"
       />
 
       <ExternalLink openInNewTab href={deployUrl}>

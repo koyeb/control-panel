@@ -1,4 +1,5 @@
-import { InputEnd, InputStart, Spinner } from '@koyeb/design-system';
+import { Spinner } from '@koyeb/design-system';
+import { InputEnd, InputStart } from '@koyeb/design-system/next';
 import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 

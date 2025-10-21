@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -15,6 +15,7 @@ import { ApiCredential } from 'src/model';
 import { upperCase } from 'src/utils/strings';
 
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from '../dialog';
+import { Input } from '../forms/input';
 
 type CreateApiCredentialDialogProps = {
   type: ApiCredential['type'];
@@ -67,7 +68,6 @@ export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogPro
           readOnly
           end={<CopyIconButton text={created!} className="mx-2 size-4 self-center" />}
           onClick={() => inputRef.current?.select()}
-          inputClassName="truncate"
         />
 
         <DialogFooter>

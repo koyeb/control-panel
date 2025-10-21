@@ -1,11 +1,10 @@
-import { Input } from '@koyeb/design-system';
 import { useRef } from 'react';
 
 import { formatCommand, parseCommand } from 'src/application/parse-command';
 import { OverridableField } from 'src/components/overridable-input';
 import { Extend } from 'src/utils/types';
 
-import { LabelTooltip } from './controlled';
+import { Input } from './forms/input';
 
 type CommandInputProps = Extend<
   React.ComponentProps<typeof Input>,
@@ -41,7 +40,8 @@ export function ShellCommandInput({
       {(disabled) => (
         <Input
           ref={ref}
-          label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
+          label={label}
+          tooltip={tooltip}
           defaultValue={formatCommand(value ?? [])}
           onChange={(event) => onChange(parseCommand(event.target.value))}
           disabled={disabled}

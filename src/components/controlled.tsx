@@ -1,14 +1,4 @@
-import {
-  Autocomplete,
-  Checkbox,
-  Input,
-  Radio,
-  SelectBox,
-  Slider,
-  Switch,
-  TextArea,
-  mergeRefs,
-} from '@koyeb/design-system';
+import { Autocomplete, Checkbox, Radio, SelectBox, Slider, Switch, TextArea } from '@koyeb/design-system';
 import { FieldLabel } from '@koyeb/design-system/next';
 import clsx from 'clsx';
 import React, { useMemo } from 'react';
@@ -19,6 +9,7 @@ import { Extend } from 'src/utils/types';
 
 import { InfoTooltip } from './tooltip';
 
+export { ControlledInput } from './forms/input';
 export { ControlledSelect } from './forms/select';
 
 export type ControlledProps<
@@ -128,30 +119,6 @@ export function ControlledSelectBox<
   return <SelectBox {...field} {...controlProps} {...props} />;
 }
 
-export function ControlledInput<
-  Form extends FieldValues = FieldValues,
-  Name extends FieldPath<Form> = FieldPath<Form>,
->(props: ControlledProps<typeof Input, Form, Name> & { tooltip?: React.ReactNode }) {
-  const { ref, control, name, label, tooltip, helperText, onChangeEffect, ...rest } = props;
-  const { field, fieldState } = useController({ control, name });
-
-  return (
-    <Input
-      {...field}
-      ref={mergeRefs(ref, field.ref)}
-      invalid={fieldState.invalid}
-      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
-      helperText={fieldState.error?.message ?? helperText}
-      value={Number.isNaN(field.value) ? '' : (field.value ?? '')}
-      onChange={(event) => {
-        field.onChange(props.type === 'number' ? event.target.valueAsNumber : event.target.value);
-        onChangeEffect?.(event);
-      }}
-      {...rest}
-    />
-  );
-}
-
 export function ControlledTextArea<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
@@ -227,6 +194,10 @@ type LabelTooltipProps = Extend<
 >;
 
 export function LabelTooltip({ label, tooltip, className, ...props }: LabelTooltipProps) {
+  if (!label) {
+    return null;
+  }
+
   return (
     <FieldLabel className={clsx(tooltip && 'inline-flex flex-row items-center gap-2', className)} {...props}>
       {label}

@@ -89,8 +89,8 @@ export function PortFields({ index, onRemove }: { index: number; onRemove?: () =
           <div className="col gap-4 rounded-lg bg-muted px-3 py-4">
             <ControlledInput<ServiceForm, `ports.${number}.path`>
               label={<T id="path.label" />}
-              labelPosition="left"
               name={`ports.${index}.path`}
+              className="grid grid-cols-[auto_1fr] items-center! gap-x-2"
             />
 
             <div className="text-xs text-dim">
