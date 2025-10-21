@@ -253,16 +253,9 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function initialize() {
-      await authKit.initialize();
-
-      if (authKit.user) {
-        setAuthKitToken(await authKit.getAccessToken());
-      }
-    }
-
     const id = setTimeout(() => {
-      initialize()
+      authKit
+        .initialize()
         .catch(reportError)
         .finally(() => setLoading(false));
     });

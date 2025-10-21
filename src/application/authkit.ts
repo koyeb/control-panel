@@ -2,6 +2,7 @@ import { useRouteContext } from '@tanstack/react-router';
 import { OnRefreshResponse, User, createClient } from '@workos-inc/authkit-js';
 
 import { getConfig } from './config';
+import { setAuthKitToken } from './token';
 
 type AuthKitClient = Awaited<ReturnType<typeof createClient>>;
 
@@ -65,6 +66,7 @@ export class AuthKitAdapter {
   }
 
   private onRefresh = (response: OnRefreshResponse) => {
+    setAuthKitToken(response.accessToken);
     this.user = response.user;
   };
 
