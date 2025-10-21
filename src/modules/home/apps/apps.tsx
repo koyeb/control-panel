@@ -1,6 +1,6 @@
-import { Select } from '@koyeb/design-system';
 import { useState } from 'react';
 
+import { Select } from 'src/components/forms/select';
 import { createTranslate } from 'src/intl/translate';
 import { AppList, Service, ServiceType } from 'src/model';
 import { identity } from 'src/utils/generic';
@@ -81,11 +81,11 @@ function Header({ showFilters, services, serviceType, setServiceType }: HeaderPr
       {showFilters && (
         <Select<ServiceType | 'all'>
           items={['all', 'web', 'worker', 'database']}
-          selectedItem={serviceType}
-          onSelectedItemChange={setServiceType}
           getKey={identity}
           itemToString={identity}
           renderItem={(type) => <T id={`serviceType.${type}`} />}
+          value={serviceType}
+          onChange={setServiceType}
           className="w-full max-w-64 sm:ml-auto"
         />
       )}

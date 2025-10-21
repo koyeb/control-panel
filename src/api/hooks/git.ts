@@ -13,7 +13,7 @@ const isNoGithubAppError = (error: unknown) => {
   return ApiError.is(error, 400) && error.message === 'No GitHub Installation';
 };
 
-export function useGithubAppQuery(refetchInterval = 5000) {
+export function useGithubAppQuery(refetchInterval = 5 * 60 * 1000) {
   const organization = useOrganization();
 
   return useQuery({

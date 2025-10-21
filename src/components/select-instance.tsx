@@ -1,8 +1,8 @@
-import { Select } from '@koyeb/design-system';
-
 import { useCatalogInstance, useCatalogRegion } from 'src/api';
 import { Instance } from 'src/model';
 import { getId, getName } from 'src/utils/object';
+
+import { Select } from './forms/select';
 
 type SelectInstanceOwnProps = {
   instances: Instance[];
@@ -18,20 +18,11 @@ type SelectInstanceProps = SelectInstanceOwnProps &
     'items' | 'selectedItem' | 'onSelectedItemChange' | 'getKey' | 'itemToString' | 'renderItem'
   >;
 
-export function SelectInstance({
-  instances,
-  value,
-  onChange,
-  unselect,
-  onUnselect,
-  ...props
-}: SelectInstanceProps) {
+export function SelectInstance({ instances, unselect, onUnselect, ...props }: SelectInstanceProps) {
   return (
     <Select
       items={instances}
-      selectedItem={value}
-      onSelectedItemChange={onChange}
-      onItemClick={(instance) => instance === value && onUnselect?.()}
+      onItemClick={(instance) => instance === props.value && onUnselect?.()}
       getKey={getId}
       itemToString={getName}
       renderItem={(instance) => <InstanceItem instance={instance} />}

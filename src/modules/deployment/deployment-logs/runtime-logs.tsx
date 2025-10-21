@@ -1,4 +1,5 @@
-import { IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
+import { IconButton, Spinner } from '@koyeb/design-system';
+import { Dropdown, Menu, MenuItem } from '@koyeb/design-system/next';
 import clsx from 'clsx';
 import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
@@ -189,11 +190,8 @@ type LogsHeaderProps = {
 
 function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps) {
   const regionalDeployments = useRegionalDeployments(deployment.id);
-  const periods = useRetentionPeriods();
   const regions = useRegionsCatalog();
   const t = T.useTranslate();
-
-  const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
 
   return (
     <header className="col gap-4">
@@ -203,39 +201,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
 
       <div className="row flex-wrap gap-2">
         <FeatureFlag feature="logs-filters">
-          <ControlledSelect
-            control={filters.control}
-            name="period"
-            items={periods}
-            getKey={identity}
-            itemToString={identity}
-            itemToValue={identity}
-            renderItem={(period) => (
-              <div className="first-letter:capitalize">
-                <T id={`retentionPeriods.${period}`} />
-              </div>
-            )}
-            renderSelectedItem={() =>
-              [
-                formatPeriodDate(filters.watch('start')),
-                filters.watch('period') === 'live' ? t('header.now') : formatPeriodDate(filters.watch('end')),
-              ].join(' - ')
-            }
-            onChangeEffect={(period) => {
-              const now = new Date();
-              const duration: Duration = {};
-
-              if (period === '1h') duration.hours = 1;
-              if (period === '6h') duration.hours = 6;
-              if (period === '24h') duration.hours = 24;
-              if (period === '7d') duration.days = 7;
-              if (period === '30d') duration.days = 30;
-
-              filters.setValue('start', sub(now, duration));
-              filters.setValue('end', now);
-            }}
-            className="min-w-80"
-          />
+          <SelectPeriod filters={filters} />
         </FeatureFlag>
 
         <ControlledSelect
@@ -298,6 +264,64 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
         </div>
       </div>
     </header>
+  );
+}
+
+type SelectPeriodProps = {
+  filters: UseFormReturn<LogsFilters>;
+};
+
+function SelectPeriod({ filters }: SelectPeriodProps) {
+  const periods = useRetentionPeriods();
+  const t = T.useTranslate();
+
+  const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
+
+  const renderPeriod = (period: LogsPeriod) => {
+    return [
+      formatPeriodDate(filters.watch('start')),
+      period === 'live' ? t('header.now') : formatPeriodDate(filters.watch('end')),
+    ].join(' - ');
+  };
+
+  return (
+    <ControlledSelect
+      control={filters.control}
+      name="period"
+      items={periods}
+      itemToValue={identity}
+      renderValue={renderPeriod}
+      onChangeEffect={(period) => {
+        const now = new Date();
+        const duration: Duration = {};
+
+        if (period === '1h') duration.hours = 1;
+        if (period === '6h') duration.hours = 6;
+        if (period === '24h') duration.hours = 24;
+        if (period === '7d') duration.days = 7;
+        if (period === '30d') duration.days = 30;
+
+        filters.setValue('start', sub(now, duration));
+        filters.setValue('end', now);
+      }}
+      menu={({ select, dropdown }) => (
+        <Dropdown dropdown={dropdown}>
+          <Menu {...select.getMenuProps()}>
+            {periods.map((period, index) => (
+              <MenuItem
+                {...select.getItemProps({ item: period, index })}
+                key={index}
+                highlighted={index === select.highlightedIndex}
+                className="first-letter:capitalize"
+              >
+                <T id={`retentionPeriods.${period}`} />
+              </MenuItem>
+            ))}
+          </Menu>
+        </Dropdown>
+      )}
+      className="min-w-80"
+    />
   );
 }
 

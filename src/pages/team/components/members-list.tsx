@@ -1,4 +1,4 @@
-import { Badge, ButtonMenuItem, Select, Table, useBreakpoint } from '@koyeb/design-system';
+import { Badge, ButtonMenuItem, Table, useBreakpoint } from '@koyeb/design-system';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 
@@ -15,6 +15,7 @@ import { ApiEndpoint } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { ActionsMenu } from 'src/components/actions-menu';
 import { openDialog } from 'src/components/dialog';
+import { Select } from 'src/components/forms/select';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
@@ -22,7 +23,6 @@ import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { OrganizationInvitation, type OrganizationMember } from 'src/model';
-import { identity } from 'src/utils/generic';
 
 const T = createTranslate('pages.team.membersList');
 
@@ -80,9 +80,7 @@ export function MembersList() {
                 <Select
                   disabled
                   items={['owner']}
-                  selectedItem="owner"
-                  getKey={identity}
-                  itemToString={identity}
+                  value="owner"
                   renderItem={() => <T id="owner" />}
                   className="w-full max-w-64"
                 />

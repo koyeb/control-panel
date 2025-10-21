@@ -1,9 +1,11 @@
-import { Button, Select } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useCallback, useEffect, useState } from 'react';
 
 import { IconChevronLeft, IconChevronRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
+
+import { Select } from './forms/select';
 
 const T = createTranslate('components.pagination');
 
@@ -35,10 +37,10 @@ export function Pagination({ pagination }: { pagination: ReturnType<typeof usePa
               <Select
                 items={[10, 25, 50, 100]}
                 getKey={identity}
-                itemToString={String}
                 renderItem={identity}
-                selectedItem={pagination.pageSize}
-                onSelectedItemChange={pagination.setPageSize}
+                itemToString={String}
+                value={pagination.pageSize}
+                onChange={pagination.setPageSize}
                 className="min-w-20"
               />
             ),

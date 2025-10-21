@@ -3,13 +3,14 @@ import {
   Checkbox,
   Input,
   Radio,
-  Select,
   SelectBox,
   Slider,
   Switch,
   TextArea,
   mergeRefs,
 } from '@koyeb/design-system';
+import { FieldLabel } from '@koyeb/design-system/next';
+import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import { Control, FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
 
@@ -18,7 +19,9 @@ import { Extend } from 'src/utils/types';
 
 import { InfoTooltip } from './tooltip';
 
-type ControlledProps<
+export { ControlledSelect } from './forms/select';
+
+export type ControlledProps<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Component extends React.JSXElementConstructor<any>,
   Form extends FieldValues = FieldValues,
@@ -170,52 +173,6 @@ export function ControlledTextArea<
   );
 }
 
-type ControlledSelectProps<
-  Form extends FieldValues = FieldValues,
-  Name extends FieldPath<Form> = FieldPath<Form>,
-  Item = PathValue<Form, Name>,
-> = Omit<ControlledProps<typeof Select<Item>, Form, Name>, 'onChangeEffect'> & {
-  itemToValue: (item: Item) => PathValue<Form, Name>;
-  onChangeEffect?: (value: Item) => void;
-};
-
-export function ControlledSelect<
-  Form extends FieldValues = FieldValues,
-  Name extends FieldPath<Form> = FieldPath<Form>,
-  Item = PathValue<Form, Name>,
->(props: ControlledSelectProps<Form, Name, Item> & { tooltip?: React.ReactNode }) {
-  const { control, items, name, label, tooltip, itemToValue, onChangeEffect, ...rest } = props;
-
-  const {
-    field: { value, onChange, ...field },
-    fieldState: { invalid, error },
-  } = useController({ control, name });
-
-  const itemToValuePure = usePureFunction(itemToValue);
-
-  const valueToItemMap = useMemo(() => {
-    return new Map(
-      items.map((item) => [itemToValuePure(item), item] as const).filter(([value]) => value !== null),
-    );
-  }, [items, itemToValuePure]);
-
-  return (
-    <Select
-      {...field}
-      items={items}
-      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
-      helperText={error?.message}
-      invalid={invalid}
-      selectedItem={valueToItemMap.get(value) ?? null}
-      onSelectedItemChange={(item) => {
-        onChange(itemToValue(item) ?? null);
-        onChangeEffect?.(item);
-      }}
-      {...rest}
-    />
-  );
-}
-
 type ControlledAutocompleteProps<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
@@ -261,15 +218,19 @@ export function ControlledAutocomplete<
   );
 }
 
-export function LabelTooltip({ label, tooltip }: { label: React.ReactNode; tooltip?: React.ReactNode }) {
-  if (!tooltip) {
-    return label;
+type LabelTooltipProps = Extend<
+  React.ComponentProps<typeof FieldLabel>,
+  {
+    label: React.ReactNode;
+    tooltip?: React.ReactNode;
   }
+>;
 
+export function LabelTooltip({ label, tooltip, className, ...props }: LabelTooltipProps) {
   return (
-    <div className="inline-flex flex-row items-center gap-2">
+    <FieldLabel className={clsx(tooltip && 'inline-flex flex-row items-center gap-2', className)} {...props}>
       {label}
-      <InfoTooltip content={tooltip} />
-    </div>
+      {tooltip && <InfoTooltip content={tooltip} />}
+    </FieldLabel>
   );
 }
