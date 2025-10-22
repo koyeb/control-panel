@@ -1,8 +1,26 @@
-import { Radio } from '@koyeb/design-system';
+import { Radio as BaseRadio, RadioLabel } from '@koyeb/design-system/next';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
+
+import { Extend } from 'src/utils/types';
 
 import { ControlledProps } from './controlled-props';
 import { LabelTooltip } from './label-tooltip';
+
+type RadioProps = Extend<
+  React.ComponentProps<typeof BaseRadio>,
+  {
+    label?: React.ReactNode;
+  }
+>;
+
+export function Radio({ label, className, ...props }: RadioProps) {
+  return (
+    <RadioLabel disabled={props.disabled} className={className}>
+      <BaseRadio {...props} />
+      {label}
+    </RadioLabel>
+  );
+}
 
 export function ControlledRadio<
   Form extends FieldValues = FieldValues,

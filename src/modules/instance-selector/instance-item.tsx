@@ -1,4 +1,4 @@
-import { Badge, Button, Radio } from '@koyeb/design-system';
+import { Badge, Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useRef } from 'react';
 
@@ -6,6 +6,7 @@ import { useCatalogInstanceAvailability, useOrganization } from 'src/api';
 import { formatBytes, parseBytes } from 'src/application/memory';
 import { isTenstorrentGpu } from 'src/application/tenstorrent';
 import { openDialog } from 'src/components/dialog';
+import { Radio } from 'src/components/forms';
 import { ExternalLinkButton } from 'src/components/link';
 import { useMount } from 'src/hooks/lifecycle';
 import { tallyForms } from 'src/hooks/tally';

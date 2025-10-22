@@ -1,7 +1,25 @@
-import { Switch } from '@koyeb/design-system';
+import { Switch as BaseSwitch, SwitchLabel } from '@koyeb/design-system/next';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
+import { Extend } from 'src/utils/types';
+
 import { ControlledProps } from './controlled-props';
+
+type SwitchProps = Extend<
+  React.ComponentProps<typeof BaseSwitch>,
+  {
+    label?: React.ReactNode;
+  }
+>;
+
+export function Switch({ label, className, ...props }: SwitchProps) {
+  return (
+    <SwitchLabel disabled={props.disabled} className={className}>
+      <BaseSwitch {...props} />
+      {label}
+    </SwitchLabel>
+  );
+}
 
 export function ControlledSwitch<
   Form extends FieldValues = FieldValues,

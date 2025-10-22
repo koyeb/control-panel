@@ -1,4 +1,5 @@
-import { Alert, CheckboxInput, RadioInput, TabButton, TabButtons } from '@koyeb/design-system';
+import { Alert, TabButton, TabButtons } from '@koyeb/design-system';
+import { Checkbox, Radio } from '@koyeb/design-system/next';
 
 import { useCatalogRegionAvailability } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';
@@ -130,8 +131,8 @@ function RegionItem({
         )}
       </div>
 
-      {type === 'radio' && <RadioInput checked={selected} onChange={onSelected} />}
-      {type === 'checkbox' && <CheckboxInput checked={selected} onChange={onSelected} />}
+      {type === 'radio' && <Radio checked={selected} onChange={onSelected} />}
+      {type === 'checkbox' && <Checkbox checked={selected} onChange={onSelected} />}
     </label>
   );
 }

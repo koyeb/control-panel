@@ -1,8 +1,26 @@
-import { Checkbox } from '@koyeb/design-system';
+import { Checkbox as BaseCheckbox, CheckboxLabel } from '@koyeb/design-system/next';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
+
+import { Extend } from 'src/utils/types';
 
 import { ControlledProps } from './controlled-props';
 import { LabelTooltip } from './label-tooltip';
+
+type CheckboxProps = Extend<
+  React.ComponentProps<typeof BaseCheckbox>,
+  {
+    label?: React.ReactNode;
+  }
+>;
+
+export function Checkbox({ label, className, ...props }: CheckboxProps) {
+  return (
+    <CheckboxLabel disabled={props.disabled} className={className}>
+      <BaseCheckbox {...props} />
+      {label}
+    </CheckboxLabel>
+  );
+}
 
 export function ControlledCheckbox<
   Form extends FieldValues = FieldValues,

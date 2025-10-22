@@ -1,4 +1,4 @@
-import { Checkbox, MultiSelect, Spinner } from '@koyeb/design-system';
+import { MultiSelect, Spinner } from '@koyeb/design-system';
 import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { getApi, getApiQueryKey, mapActivity } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
 import { DocumentTitle } from 'src/components/document-title';
+import { Checkbox } from 'src/components/forms';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';

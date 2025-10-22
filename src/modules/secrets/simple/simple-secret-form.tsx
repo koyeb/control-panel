@@ -128,13 +128,7 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
         />
       )}
 
-      <ControlledSwitch
-        control={form.control}
-        name="multiline"
-        label="Multi-line"
-        labelPosition="left"
-        className="self-start"
-      />
+      <ControlledSwitch control={form.control} name="multiline" label="Multi-line" className="self-start" />
 
       {renderFooter(form.formState)}
     </form>

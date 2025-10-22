@@ -7,7 +7,7 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
-import { AccordionSection, Badge, Button, Checkbox, MultiSelect } from '@koyeb/design-system';
+import { AccordionSection, Badge, Button, MultiSelect } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
@@ -15,6 +15,7 @@ import { Controller, useForm } from 'react-hook-form';
 
 import { useInstancesQuery, useRegionalDeployment } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
+import { Checkbox } from 'src/components/forms';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';

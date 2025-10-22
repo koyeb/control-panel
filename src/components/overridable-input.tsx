@@ -1,7 +1,6 @@
-import { Switch } from '@koyeb/design-system';
 import { FieldPathByValue, FieldValues, useController } from 'react-hook-form';
 
-import { ControlledInput } from 'src/components/forms';
+import { ControlledInput, Switch } from 'src/components/forms';
 import { Translate } from 'src/intl/translate';
 
 type OverridableFieldProps = {
@@ -16,9 +15,8 @@ export function OverridableField({ override, onOverride, children }: Overridable
       {children(!override)}
 
       <Switch
-        className="mt-6"
+        className="mt-6 flex-row items-center"
         label={<Translate id="common.override" />}
-        labelPosition="left"
         checked={override}
         onChange={(event) => onOverride(event.target.checked)}
       />

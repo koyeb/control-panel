@@ -1,8 +1,8 @@
-import { Switch } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 import { apiMutation, apiQuery, mapUserSettings, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
+import { Switch } from 'src/components/forms';
 import { TextSkeleton } from 'src/components/skeleton';
 import { createTranslate } from 'src/intl/translate';
 
