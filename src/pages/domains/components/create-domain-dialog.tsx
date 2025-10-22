@@ -6,8 +6,8 @@ import { z } from 'zod';
 
 import { apiMutation, useApps, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledInput, ControlledSelect } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
+import { ControlledInput, ControlledSelect } from 'src/components/forms';
 import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';

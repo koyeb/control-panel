@@ -1,10 +1,11 @@
-import { Button, TextArea } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useCallback, useState } from 'react';
 import { UseFormReturn, useWatch } from 'react-hook-form';
 
 import { useSecrets } from 'src/api';
 import { withPreventDefault } from 'src/application/dom-events';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
+import { TextArea } from 'src/components/forms';
 import { createTranslate } from 'src/intl/translate';
 
 import {

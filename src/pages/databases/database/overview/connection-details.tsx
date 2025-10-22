@@ -6,8 +6,8 @@ import { z } from 'zod';
 
 import { apiQuery } from 'src/api';
 import { createValidationGuard } from 'src/application/validation';
-import { ControlledSelect } from 'src/components/controlled';
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { ControlledSelect } from 'src/components/forms';
 import { IconEye, IconEyeOff } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { DatabaseDeployment, DatabaseRole, LogicalDatabase } from 'src/model';

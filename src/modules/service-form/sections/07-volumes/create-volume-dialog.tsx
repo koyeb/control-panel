@@ -6,8 +6,8 @@ import { UseFormReturn, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, mapVolume, useInvalidateApiQuery } from 'src/api';
-import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, closeDialog } from 'src/components/dialog';
+import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';

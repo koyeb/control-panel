@@ -5,16 +5,14 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useFormValues } from 'src/hooks/form';
 import { getId, getName, hasProperty } from 'src/utils/object';
 
-import {
-  ControlledAutocomplete,
-  ControlledCheckbox,
-  ControlledInput,
-  ControlledRadio,
-  ControlledSelect,
-  ControlledSelectBox,
-  ControlledSlider,
-  ControlledSwitch,
-} from './controlled';
+import { ControlledAutocomplete } from './autocomplete';
+import { ControlledCheckbox } from './checkbox';
+import { ControlledInput } from './input';
+import { ControlledRadio } from './radio';
+import { ControlledSelect } from './select';
+import { ControlledSelectBox } from './select-box';
+import { ControlledSlider } from './slider';
+import { ControlledSwitch } from './switch';
 
 const meta = {
   title: 'Components/Controlled',

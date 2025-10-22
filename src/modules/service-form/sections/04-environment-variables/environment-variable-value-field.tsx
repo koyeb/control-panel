@@ -5,8 +5,8 @@ import { useCombobox } from 'downshift';
 import { useRef, useState } from 'react';
 import { useController } from 'react-hook-form';
 
-import { LabelTooltip } from 'src/components/controlled';
 import { DocumentationLink } from 'src/components/documentation-link';
+import { LabelTooltip } from 'src/components/forms/label-tooltip';
 import { useFormValues } from 'src/hooks/form';
 import { IconChevronDown } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

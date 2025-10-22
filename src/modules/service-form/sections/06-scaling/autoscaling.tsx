@@ -1,7 +1,7 @@
 import { InputEnd } from '@koyeb/design-system/next';
 import { useFormContext, useFormState } from 'react-hook-form';
 
-import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
+import { ControlledCheckbox, ControlledInput } from 'src/components/forms';
 import { createTranslate } from 'src/intl/translate';
 
 import { useScalingRules } from '../../helpers/scaling-rules';

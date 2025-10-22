@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
-import { ControlledCheckbox } from 'src/components/controlled';
+import { ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { Link } from 'src/components/link';
 import { getInitialLogOptions } from 'src/components/logs/log-options';

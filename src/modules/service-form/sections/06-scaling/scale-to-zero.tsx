@@ -3,7 +3,7 @@ import { InputEnd } from '@koyeb/design-system/next';
 import { useFormContext, useFormState } from 'react-hook-form';
 
 import { useCatalogInstance, useOrganization } from 'src/api';
-import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
+import { ControlledCheckbox, ControlledInput } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
 

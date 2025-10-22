@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { addressSchema, apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledAddressField } from 'src/components/address-field/address-field';
-import { ControlledCheckbox, ControlledInput } from 'src/components/controlled';
+import { ControlledCheckbox, ControlledInput } from 'src/components/forms';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';

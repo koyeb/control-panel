@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { SvgComponent } from 'src/application/types';
-import { ControlledRadio } from 'src/components/controlled';
+import { ControlledRadio } from 'src/components/forms';
 import { IconArchive, IconDocker, IconGitBranch, IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 

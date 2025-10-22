@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 
-import { ControlledInput } from './controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from './dialog';
+import { ControlledInput } from './forms';
 
 export type ConfirmationDialogProps = {
   title: React.ReactNode;

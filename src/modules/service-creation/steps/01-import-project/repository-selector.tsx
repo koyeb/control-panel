@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { apiMutation, useGithubApp, useGithubAppQuery, useOrganization, useRepositoriesQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ActionsList, ActionsListButton } from 'src/components/actions-list';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { ExternalLink, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { PublicGithubRepositoryInput } from 'src/components/public-github-repository-input/public-github-repository-input';

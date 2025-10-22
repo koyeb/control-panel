@@ -17,7 +17,7 @@ import { getDefaultRegion } from 'src/application/default-region';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes } from 'src/application/memory';
 import { notify } from 'src/application/notify';
-import { ControlledSelect } from 'src/components/controlled';
+import { ControlledSelect } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
 import { FormValues, handleSubmit } from 'src/hooks/form';

@@ -23,7 +23,7 @@ import {
 } from 'src/api';
 import { useInstanceAvailabilities } from 'src/application/instance-region-availability';
 import { formatBytes, parseBytes } from 'src/application/memory';
-import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ControlledInput, ControlledSelect } from 'src/components/forms';
 import { ExternalLink } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { Metadata } from 'src/components/metadata';

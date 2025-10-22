@@ -2,7 +2,7 @@ import { AccordionHeader, AccordionSection, Button, SelectBox } from '@koyeb/des
 import { useState } from 'react';
 import { FormProvider, useController, useForm } from 'react-hook-form';
 
-import { ControlledCheckbox } from 'src/components/controlled';
+import { ControlledCheckbox } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { OverridableInput } from 'src/components/overridable-input';
 import { ShellCommandInput } from 'src/components/shell-command-input';

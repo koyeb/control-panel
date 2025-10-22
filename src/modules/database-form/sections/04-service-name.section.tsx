@@ -1,6 +1,6 @@
 import { useWatch } from 'react-hook-form';
 
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { createTranslate } from 'src/intl/translate';
 
 import { DatabaseServiceFormSection } from '../components/database-service-form-section';

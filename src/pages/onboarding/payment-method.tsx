@@ -7,7 +7,7 @@ import { apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'sr
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
 import { ControlledAddressField } from 'src/components/address-field/address-field';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { PaymentFormFields, PaymentMethodTimeout } from 'src/components/payment-form';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { usePaymentMethodMutation } from 'src/hooks/stripe';

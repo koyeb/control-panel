@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ControlledAutocomplete } from 'src/components/controlled';
+import { ControlledAutocomplete } from 'src/components/forms';
 import { useFormValues } from 'src/hooks/form';
 import { IconGitBranch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

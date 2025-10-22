@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { apiMutation, useInvalidateApiQuery, useUser } from 'src/api';
 import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 

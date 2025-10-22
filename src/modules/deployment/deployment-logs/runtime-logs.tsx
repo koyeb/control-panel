@@ -7,7 +7,7 @@ import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
 import { isDeploymentRunning } from 'src/application/service-functions';
-import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {

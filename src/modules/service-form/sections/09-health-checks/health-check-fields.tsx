@@ -4,7 +4,7 @@ import isEqual from 'lodash-es/isEqual';
 import { useFormContext } from 'react-hook-form';
 
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
-import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ControlledInput, ControlledSelect } from 'src/components/forms';
 import { Input } from 'src/components/forms/input';
 import { IconRefreshCcw } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';

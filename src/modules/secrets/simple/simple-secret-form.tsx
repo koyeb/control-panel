@@ -7,7 +7,7 @@ import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { getApi, useInvalidateApiQuery } from 'src/api';
-import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/controlled';
+import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/forms';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { IconEye, IconEyeOff } from 'src/icons';

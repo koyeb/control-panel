@@ -11,8 +11,8 @@ import {
 } from 'src/api';
 import { notify } from 'src/application/notify';
 import { hasBuild } from 'src/application/service-functions';
-import { ControlledCheckbox } from 'src/components/controlled';
 import { Dialog, closeDialog } from 'src/components/dialog';
+import { ControlledCheckbox } from 'src/components/forms';
 import { Tooltip } from 'src/components/tooltip';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';

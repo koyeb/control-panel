@@ -8,7 +8,7 @@ import { entries } from 'src/utils/object';
 
 import { IconCheck } from '../icons';
 
-import { ControlledInput } from './controlled';
+import { ControlledInput } from './forms';
 
 const T = createTranslate('components.organizationNameField');
 

@@ -1,7 +1,7 @@
 import { Switch } from '@koyeb/design-system';
 import { FieldPathByValue, FieldValues, useController } from 'react-hook-form';
 
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { Translate } from 'src/intl/translate';
 
 type OverridableFieldProps = {

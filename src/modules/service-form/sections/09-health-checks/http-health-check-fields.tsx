@@ -2,7 +2,7 @@ import { Button, IconButton, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useFieldArray } from 'react-hook-form';
 
-import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ControlledInput, ControlledSelect } from 'src/components/forms';
 import { IconPlus, IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';

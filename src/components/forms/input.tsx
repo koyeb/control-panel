@@ -1,14 +1,14 @@
 import { useMergeRefs } from '@floating-ui/react';
 import { Input as BaseInput, Field, FieldHelperText } from '@koyeb/design-system/next';
-import { ComponentProps } from 'react';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { Extend } from 'src/utils/types';
 
-import { ControlledProps, LabelTooltip } from '../controlled';
+import { ControlledProps } from './controlled-props';
+import { LabelTooltip } from './label-tooltip';
 
 type InputProps = Extend<
-  ComponentProps<typeof BaseInput>,
+  React.ComponentProps<typeof BaseInput>,
   {
     label?: React.ReactNode;
     tooltip?: React.ReactNode;
@@ -23,8 +23,8 @@ export function Input({
   label,
   tooltip,
   helperText,
-  error,
   value,
+  error,
   invalid = Boolean(error),
   className,
   inputClassName,

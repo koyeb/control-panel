@@ -1,4 +1,4 @@
-import { ControlledCheckbox } from 'src/components/controlled';
+import { ControlledCheckbox } from 'src/components/forms';
 import { OverridableInput } from 'src/components/overridable-input';
 import { createTranslate } from 'src/intl/translate';
 

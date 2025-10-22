@@ -2,7 +2,7 @@ import identity from 'lodash-es/identity';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useDeploymentScalingQuery, useRegionsCatalog } from 'src/api';
-import { ControlledSelect } from 'src/components/controlled';
+import { ControlledSelect } from 'src/components/forms';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';

@@ -17,8 +17,8 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { Address, OrganizationPlan } from 'src/model';
 
 import { ControlledAddressField } from './address-field/address-field';
-import { ControlledInput } from './controlled';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from './dialog';
+import { ControlledInput } from './forms';
 
 const T = createTranslate('components.upgradeDialog');
 

@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import { apiMutation, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { useSearchParams } from 'src/hooks/router';

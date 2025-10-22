@@ -2,7 +2,7 @@ import { IconButton, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

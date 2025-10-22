@@ -6,8 +6,8 @@ import { z } from 'zod';
 
 import { getApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledInput } from 'src/components/controlled';
 import { CloseDialogButton, Dialog, DialogFooter, closeDialog } from 'src/components/dialog';
+import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, AppDomain } from 'src/model';

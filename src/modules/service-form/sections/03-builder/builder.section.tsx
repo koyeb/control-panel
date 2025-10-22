@@ -1,5 +1,5 @@
 import { SvgComponent } from 'src/application/types';
-import { ControlledSelectBox } from 'src/components/controlled';
+import { ControlledSelectBox } from 'src/components/forms';
 import { IconDocker, IconPackage } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { BuilderType } from 'src/model';

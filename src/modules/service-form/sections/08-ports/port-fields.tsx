@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { preventDefault } from 'src/application/dom-events';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
-import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
 import { IconTrash } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';

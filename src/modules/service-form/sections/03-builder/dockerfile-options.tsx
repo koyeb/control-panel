@@ -1,6 +1,6 @@
 import { useController } from 'react-hook-form';
 
-import { ControlledCheckbox } from 'src/components/controlled';
+import { ControlledCheckbox } from 'src/components/forms';
 import { OverridableInput } from 'src/components/overridable-input';
 import { ShellCommandInput } from 'src/components/shell-command-input';
 import { createTranslate } from 'src/intl/translate';

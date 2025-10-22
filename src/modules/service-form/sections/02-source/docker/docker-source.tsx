@@ -1,8 +1,8 @@
 import { useFormContext } from 'react-hook-form';
 
 import { useSecrets } from 'src/api';
-import { ControlledSelect } from 'src/components/controlled';
 import { openDialog } from 'src/components/dialog';
+import { ControlledSelect } from 'src/components/forms';
 import { createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';

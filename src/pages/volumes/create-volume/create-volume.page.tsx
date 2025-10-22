@@ -8,8 +8,8 @@ import { z } from 'zod';
 
 import { apiMutation, apiQuery, useInvalidateApiQuery, useRegionsCatalog } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledInput } from 'src/components/controlled';
 import { DocumentTitle } from 'src/components/document-title';
+import { ControlledInput } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';

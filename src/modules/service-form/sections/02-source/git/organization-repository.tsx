@@ -1,5 +1,5 @@
 import { useGithubApp } from 'src/api';
-import { ControlledCheckbox } from 'src/components/controlled';
+import { ControlledCheckbox } from 'src/components/forms';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../../service-form.types';

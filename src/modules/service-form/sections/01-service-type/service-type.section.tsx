@@ -1,6 +1,6 @@
 import { useCatalogInstance } from 'src/api';
 import { SvgComponent } from 'src/application/types';
-import { ControlledSelectBox } from 'src/components/controlled';
+import { ControlledSelectBox } from 'src/components/forms';
 import { IconGlobe, IconSettings } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { ServiceType } from 'src/model';

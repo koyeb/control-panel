@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { apiMutation, useSwitchOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';

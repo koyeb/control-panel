@@ -25,7 +25,8 @@ import { usePureFunction } from 'src/hooks/lifecycle';
 import { Translate } from 'src/intl/translate';
 import { Extend } from 'src/utils/types';
 
-import { ControlledProps, LabelTooltip } from '../controlled';
+import { ControlledProps } from './controlled-props';
+import { LabelTooltip } from './label-tooltip';
 
 export type SelectContext<T = unknown> = {
   select: UseSelectReturnValue<T>;

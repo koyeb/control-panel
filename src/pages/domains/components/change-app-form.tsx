@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 
 import { getApi, useApps, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledSelect } from 'src/components/controlled';
+import { ControlledSelect } from 'src/components/forms';
 import { handleSubmit } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
 import { Domain } from 'src/model';

@@ -6,7 +6,7 @@ import { useController, useFormContext } from 'react-hook-form';
 
 import { useCatalogRegion, useVolumes } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput } from 'src/components/forms';
 import { Select } from 'src/components/forms/select';
 import { IconUnlink } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';

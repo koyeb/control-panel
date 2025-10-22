@@ -1,7 +1,6 @@
-import { Slider } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
-import { ControlledInput } from 'src/components/controlled';
+import { ControlledInput, Slider } from 'src/components/forms';
 import { IconMoon } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 

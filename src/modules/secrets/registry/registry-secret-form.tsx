@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 import { API, getApi, useInvalidateApiQuery } from 'src/api';
 import { readFile } from 'src/application/read-file';
-import { ControlledInput, ControlledSelect } from 'src/components/controlled';
+import { ControlledInput, ControlledSelect } from 'src/components/forms';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';

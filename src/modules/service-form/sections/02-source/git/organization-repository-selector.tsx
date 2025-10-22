@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useRepositories } from 'src/api';
-import { ControlledAutocomplete } from 'src/components/controlled';
+import { ControlledAutocomplete } from 'src/components/forms';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
 import { IconGithub, IconLock } from 'src/icons';

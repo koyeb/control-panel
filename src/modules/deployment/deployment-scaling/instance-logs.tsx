@@ -6,7 +6,7 @@ import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useApp, useService } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
-import { ControlledCheckbox } from 'src/components/controlled';
+import { ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { LogOptions, getInitialLogOptions } from 'src/components/logs/log-options';
 import { LogLines, LogsFooter } from 'src/components/logs/logs';

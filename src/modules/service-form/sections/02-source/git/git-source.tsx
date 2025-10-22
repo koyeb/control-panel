@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { Controller } from 'react-hook-form';
 
 import { useGithubApp } from 'src/api';
-import { ControlledSelect } from 'src/components/controlled';
+import { ControlledSelect } from 'src/components/forms';
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 

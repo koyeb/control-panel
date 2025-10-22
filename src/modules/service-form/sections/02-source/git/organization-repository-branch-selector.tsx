@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
 import { apiQuery } from 'src/api';
-import { ControlledAutocomplete } from 'src/components/controlled';
+import { ControlledAutocomplete } from 'src/components/forms';
 import { useEntityAdapter } from 'src/hooks/entity-adapter';
 import { useFormValues } from 'src/hooks/form';
 import { IconGitBranch } from 'src/icons';
