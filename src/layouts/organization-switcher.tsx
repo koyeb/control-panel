@@ -101,7 +101,9 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
           {...combobox.getInputProps()}
           type="search"
           placeholder={t('placeholder')}
-          className={clsx('max-w-full border-b bg-transparent px-3 py-1.5', { hidden: count <= 10 })}
+          className={clsx('max-w-full border-b bg-transparent px-3 py-1.5 outline-none', {
+            hidden: count <= 10,
+          })}
         />
 
         <Combobox.Menu>

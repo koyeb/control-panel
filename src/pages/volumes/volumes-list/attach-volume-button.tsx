@@ -1,5 +1,5 @@
 import { Button, Combobox, Spinner } from '@koyeb/design-system';
-import { InputBox } from '@koyeb/design-system/next';
+import { Input } from '@koyeb/design-system/next';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -83,7 +83,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
       />
 
       <Combobox.Dropdown onTransitionCancel={() => setSearch('')} className="w-full max-w-sm">
-        <InputBox
+        <Input
           {...combobox.getInputProps()}
           type="search"
           start={<Icon className="ml-3 size-4 text-dim" />}

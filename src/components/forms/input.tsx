@@ -1,5 +1,5 @@
-import { mergeRefs } from '@koyeb/design-system';
-import { Input as BaseInput, FieldHelperText } from '@koyeb/design-system/next';
+import { useMergeRefs } from '@floating-ui/react';
+import { Input as BaseInput, Field, FieldHelperText } from '@koyeb/design-system/next';
 import { ComponentProps } from 'react';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
@@ -14,23 +14,36 @@ type InputProps = Extend<
     tooltip?: React.ReactNode;
     helperText?: React.ReactNode;
     error?: React.ReactNode;
+    className?: string;
+    inputClassName?: string;
   }
 >;
 
-export function Input(props: InputProps) {
-  const { label, tooltip, helperText, error, value, ...rest } = props;
-  const invalid = props.invalid ?? Boolean(error);
-
+export function Input({
+  label,
+  tooltip,
+  helperText,
+  error,
+  value,
+  invalid = Boolean(error),
+  className,
+  inputClassName,
+  ...props
+}: InputProps) {
   return (
-    <BaseInput
-      field={{
-        label: <LabelTooltip label={label} tooltip={tooltip} />,
-        helperText: <FieldHelperText invalid={invalid}>{error ?? helperText}</FieldHelperText>,
-      }}
-      value={Number.isNaN(value) ? '' : value}
-      invalid={invalid}
-      {...rest}
-    />
+    <Field
+      id={props.id}
+      label={<LabelTooltip label={label} tooltip={tooltip} />}
+      helperText={<FieldHelperText invalid={invalid}>{error ?? helperText}</FieldHelperText>}
+      className={className}
+    >
+      <BaseInput
+        value={Number.isNaN(value) ? '' : value}
+        invalid={invalid}
+        className={inputClassName}
+        {...props}
+      />
+    </Field>
   );
 }
 
@@ -41,10 +54,12 @@ export function ControlledInput<
   const { ref, control, name, helperText, onChangeEffect, ...rest } = props;
   const { field, fieldState } = useController({ control, name });
 
+  const mergedRefs = useMergeRefs([ref, field.ref]);
+
   return (
     <Input
       {...field}
-      ref={mergeRefs(ref, field.ref)}
+      ref={mergedRefs}
       invalid={fieldState.invalid}
       helperText={fieldState.error?.message ?? helperText}
       value={Number.isNaN(field.value) ? '' : (field.value ?? '')}

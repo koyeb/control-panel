@@ -1,5 +1,5 @@
 import { Dropdown, DropdownGroup, IconButton, useDropdown } from '@koyeb/design-system';
-import { Field, FieldHelperText, InputBox } from '@koyeb/design-system/next';
+import { Field, FieldHelperText, Input } from '@koyeb/design-system/next';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import { useRef, useState } from 'react';
@@ -130,7 +130,7 @@ export function EnvironmentVariableValueField({
       label={label && <LabelTooltip {...getLabelProps()} label={label} tooltip={tooltip} />}
       helperText={<FieldHelperText invalid={fieldState.invalid}>{fieldState.error?.message}</FieldHelperText>}
     >
-      <InputBox
+      <Input
         placeholder={t('valuePlaceholder')}
         invalid={fieldState.invalid}
         end={
@@ -143,8 +143,10 @@ export function EnvironmentVariableValueField({
             className={clsx(isOpen && 'rotate-180')}
           />
         }
-        boxRef={dropdown.setReference}
-        className={clsx(isOpen && '!rounded-b-none')}
+        root={{
+          ref: dropdown.setReference,
+          className: clsx(isOpen && '!rounded-b-none'),
+        }}
         {...getInputProps({ ...field, ref: inputRef })}
       />
 
