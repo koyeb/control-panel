@@ -1,32 +1,46 @@
+import { Badge } from '@koyeb/design-system';
 import {
-  Select as BaseSelect,
   Dropdown,
+  Field,
   FieldHelperText,
   Menu,
   MenuItem,
   SelectToggleButton,
+  UseDropdown,
+  UseDropdownProps,
+  useDropdown,
 } from '@koyeb/design-system/next';
-import { ComponentProps, useMemo } from 'react';
+import {
+  UseSelectProps,
+  UseSelectReturnValue,
+  UseSelectState,
+  UseSelectStateChangeOptions,
+  useSelect,
+} from 'downshift';
+import { useCallback, useMemo, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
 
 import { usePureFunction } from 'src/hooks/lifecycle';
+import { Translate } from 'src/intl/translate';
 import { Extend } from 'src/utils/types';
 
 import { ControlledProps, LabelTooltip } from '../controlled';
 
-type BaseSelectProps<T> = ComponentProps<typeof BaseSelect<T>>;
+export type SelectContext<T = unknown> = {
+  select: UseSelectReturnValue<T>;
+  dropdown: UseDropdown;
+};
 
 export type SelectProps<T> = {
   ref?: React.Ref<HTMLDivElement>;
   items: T[];
   getKey?: (item: T) => React.Key;
   itemToString?: (item: T) => string; // todo;
-  renderValue?: (item: T) => React.ReactNode;
+  renderValue?: (item: T | null) => React.ReactNode;
   renderItem?: (item: T) => React.ReactNode;
   renderNoItems?: () => React.ReactNode;
   onItemClick?: (item: T) => void;
-  toggleButton?: BaseSelectProps<T>['toggleButton'];
-  menu?: BaseSelectProps<T>['menu'];
   value?: T | null;
   onChange?: (value: T) => void;
   label?: React.ReactNode;
@@ -38,93 +52,220 @@ export type SelectProps<T> = {
   readOnly?: boolean;
   invalid?: boolean;
   className?: string;
+
+  // override defaults
+  select?: Omit<UseSelectProps<T>, 'items'>;
+  dropdown?: UseDropdownProps;
+  field?: (context: SelectContext<T>) => Omit<React.ComponentProps<typeof Field>, 'children'>;
+  toggleButton?: (context: SelectContext<T>) => React.ReactNode;
+  menu?: (context: SelectContext<T>) => React.ReactNode;
 };
 
-export function Select<T>({
-  ref,
-  items,
-  getKey,
-  renderValue,
-  renderItem,
-  renderNoItems,
-  onItemClick,
-  toggleButton,
-  menu,
-  value,
-  onChange,
-  label,
-  tooltip,
-  size,
-  placeholder,
-  disabled,
-  readOnly,
-  invalid,
-  helperText,
-  className,
-}: SelectProps<T>) {
+export function Select<T>(props: SelectProps<T>) {
+  const { renderValue, renderItem } = props;
+
   const toggleButtonValue = (value: T | null) => {
+    if (renderValue) {
+      return renderValue(value);
+    }
+
     if (value !== null) {
-      return renderValue?.(value) ?? renderItem?.(value);
+      return renderItem?.(value);
     }
   };
 
-  return (
-    <BaseSelect
-      root={document.getElementById('root')}
-      field={({ select }) => ({
-        label: label ? <LabelTooltip {...select.getLabelProps()} label={label} tooltip={tooltip} /> : null,
-        helperText: <FieldHelperText invalid={invalid}>{helperText}</FieldHelperText>,
-        className,
-      })}
-      select={{
-        items,
-        selectedItem: value,
-        onSelectedItemChange({ selectedItem }: { selectedItem: T | null }) {
-          if (selectedItem) {
-            onChange?.(selectedItem);
-          }
-        },
-      }}
-      dropdown={{
-        offset: 8,
-        flip: true,
-        matchReferenceSize: true,
-      }}
-      toggleButton={(context) =>
-        toggleButton?.(context) ?? (
-          <SelectToggleButton
-            ref={ref}
-            size={size}
-            placeholder={placeholder}
-            disabled={disabled}
-            readOnly={readOnly}
-            invalid={invalid}
-          >
-            {toggleButtonValue(context.select.selectedItem)}
-          </SelectToggleButton>
-        )
-      }
-      menu={(context) =>
-        menu?.(context) ?? (
-          <Dropdown dropdown={context.dropdown}>
-            {items.length === 0 && renderNoItems?.()}
+  const { ref, size, placeholder, disabled, readOnly, invalid } = props;
 
-            <Menu {...context.select.getMenuProps()}>
-              {items.map((item, index) => (
-                <MenuItem
-                  {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
-                  key={getKey?.(item) ?? index}
-                  highlighted={index === context.select.highlightedIndex}
-                >
-                  {renderItem?.(item)}
-                </MenuItem>
-              ))}
-            </Menu>
-          </Dropdown>
-        )
-      }
-    />
+  const defaultToggleButton = (context: SelectContext<T>) => (
+    <SelectToggleButton
+      {...context}
+      ref={ref}
+      size={size}
+      placeholder={placeholder}
+      disabled={disabled}
+      readOnly={readOnly}
+      invalid={invalid}
+    >
+      {toggleButtonValue(context.select.selectedItem)}
+    </SelectToggleButton>
   );
+
+  const { getKey, renderNoItems, onItemClick } = props;
+
+  const defaultMenu = (context: SelectContext<T>) => (
+    <Dropdown dropdown={context.dropdown}>
+      {items.length === 0 && renderNoItems?.()}
+
+      <Menu {...context.select.getMenuProps()}>
+        {items.map((item, index) => (
+          <MenuItem
+            {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
+            key={getKey?.(item) ?? index}
+            highlighted={index === context.select.highlightedIndex}
+          >
+            {renderItem?.(item)}
+          </MenuItem>
+        ))}
+      </Menu>
+    </Dropdown>
+  );
+
+  const { items, value, onChange } = props;
+
+  const select = useSelect({
+    items,
+    selectedItem: value,
+    onSelectedItemChange({ selectedItem }) {
+      if (selectedItem) {
+        onChange?.(selectedItem);
+      }
+    },
+    ...props.select,
+  });
+
+  const dropdown = useDropdown(select.isOpen, {
+    offset: 8,
+    flip: true,
+    matchReferenceSize: true,
+    ...props.dropdown,
+  });
+
+  const context = {
+    select,
+    dropdown,
+  };
+
+  const { label, tooltip, helperText, className } = props;
+  const { toggleButton = defaultToggleButton, menu = defaultMenu } = props;
+
+  const root = document.getElementById('root') ?? document.body;
+
+  return (
+    <Field
+      id={props.select?.id}
+      label={label && <LabelTooltip {...context.select.getLabelProps()} label={label} tooltip={tooltip} />}
+      helperText={<FieldHelperText invalid={invalid}>{helperText}</FieldHelperText>}
+      className={className}
+      {...props.field?.(context)}
+    >
+      {toggleButton(context)}
+      {createPortal(menu(context), root)}
+    </Field>
+  );
+}
+
+type MultiSelectMenuProps<T> = {
+  context: SelectContext<T>;
+  items: T[];
+  selected: T[];
+  onSelectAll: () => void;
+  onClearAll: () => void;
+  getKey?: (item: T) => React.Key;
+  renderItem?: (item: T, selected: boolean) => React.ReactNode;
+  renderNoItems?: () => React.ReactNode;
+  onItemClick?: (item: T) => void;
+  className?: string;
+};
+
+export function MultiSelectMenu<T>({
+  context,
+  items,
+  selected,
+  onSelectAll,
+  onClearAll,
+  getKey,
+  renderItem,
+  renderNoItems,
+  onItemClick,
+  className,
+}: MultiSelectMenuProps<T>) {
+  const ref = useClickAway(
+    [context.dropdown.refs.reference.current as Element, context.dropdown.refs.floating.current],
+    context.select.closeMenu,
+  );
+
+  return (
+    <Dropdown ref={ref} dropdown={context.dropdown} className={className}>
+      <div className="row justify-between border-b px-6 py-3">
+        <button
+          type="button"
+          disabled={selected.length === items.length}
+          onClick={onSelectAll}
+          className="text-xs font-medium disabled:text-dim"
+        >
+          <Translate id="common.selectAll" />
+        </button>
+
+        <button
+          type="button"
+          disabled={selected.length === 0}
+          onClick={onClearAll}
+          className="text-xs font-medium disabled:text-dim"
+        >
+          <Translate id="common.clearAll" />
+        </button>
+      </div>
+
+      {items.length === 0 && renderNoItems?.()}
+
+      <Menu {...context.select.getMenuProps()}>
+        {items.map((item, index) => (
+          <MenuItem
+            {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
+            key={getKey?.(item) ?? index}
+            highlighted={index === context.select.highlightedIndex}
+          >
+            {renderItem?.(item, selected.includes(item))}
+          </MenuItem>
+        ))}
+      </Menu>
+    </Dropdown>
+  );
+}
+
+export function SelectedCountBadge({ selected, total }: { selected: number; total: number }) {
+  return (
+    <Badge size={1}>
+      <Translate id="common.selectedCount" values={{ selected, total }} />
+    </Badge>
+  );
+}
+
+function useClickAway(elements: Array<Element | null>, cb: () => void) {
+  const refs = useRef<Array<Element | null>>([]);
+
+  refs.current = [...elements];
+
+  return useCallback(() => {
+    const onClick = (event: MouseEvent) => {
+      const isInside = refs.current.some((ref) => ref?.contains(event.target as Element));
+
+      if (!isInside) {
+        cb();
+      }
+    };
+
+    document.addEventListener('click', onClick);
+
+    return () => {
+      document.removeEventListener('click', onClick);
+    };
+  }, [cb]);
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+export function multiSelectStateReducer<T>(
+  state: UseSelectState<T>,
+  { type, changes }: UseSelectStateChangeOptions<T>,
+) {
+  switch (type) {
+    case useSelect.stateChangeTypes.ToggleButtonBlur:
+    case useSelect.stateChangeTypes.ItemClick:
+      return { ...changes, isOpen: true, highlightedIndex: state.highlightedIndex };
+
+    default:
+      return changes;
+  }
 }
 
 type ControlledSelectProps<
@@ -146,6 +287,7 @@ export function ControlledSelect<
 >({
   control,
   name,
+  items,
   itemToValue: getValue,
   onChangeEffect,
   ...props
@@ -158,12 +300,13 @@ export function ControlledSelect<
   const getValuePure = usePureFunction(getValue);
 
   const valueToItem = useMemo(() => {
-    return new Map(props.items.map((item) => [getValuePure(item), item] as const));
-  }, [props.items, getValuePure]);
+    return new Map(items?.map((item) => [getValuePure(item), item] as const));
+  }, [items, getValuePure]);
 
   return (
     <Select
       {...field}
+      items={items}
       invalid={invalid}
       helperText={error?.message}
       value={valueToItem.get(value) ?? null}

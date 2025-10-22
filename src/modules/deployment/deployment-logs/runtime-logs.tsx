@@ -277,7 +277,11 @@ function SelectPeriod({ filters }: SelectPeriodProps) {
 
   const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
 
-  const renderPeriod = (period: LogsPeriod) => {
+  const renderPeriod = (period: LogsPeriod | null) => {
+    if (period === null) {
+      return null;
+    }
+
     return [
       formatPeriodDate(filters.watch('start')),
       period === 'live' ? t('header.now') : formatPeriodDate(filters.watch('end')),
