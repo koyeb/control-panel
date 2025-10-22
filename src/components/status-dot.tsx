@@ -1,15 +1,18 @@
 import clsx from 'clsx';
 
 import { AppStatus, DomainStatus, InstanceStatus, ServiceStatus } from 'src/model';
+import { Extend } from 'src/utils/types';
 
-type StatusDotProps<Status extends string> = {
-  status: Status;
-  className?: string;
-};
+type StatusDotProps<Status extends string> = Extend<
+  React.ComponentProps<'span'>,
+  {
+    status: Status;
+  }
+>;
 
 function createStatusDotComponent<Status extends string>(colors: Record<Status, string>) {
-  return function StatusDot({ status, className }: StatusDotProps<Status>) {
-    return <span className={clsx('inline-block rounded-full', colors[status], className)} />;
+  return function StatusDot({ status, className, ...props }: StatusDotProps<Status>) {
+    return <span className={clsx('inline-block rounded-full', colors[status], className)} {...props} />;
   };
 }
 

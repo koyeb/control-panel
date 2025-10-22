@@ -610,14 +610,14 @@ export type ServiceType = 'web' | 'worker' | 'database';
 
 export type ServiceStatus =
   | 'STARTING'
+  | 'RESUMING'
   | 'HEALTHY'
   | 'DEGRADED'
   | 'UNHEALTHY'
-  | 'DELETING'
-  | 'DELETED'
   | 'PAUSING'
   | 'PAUSED'
-  | 'RESUMING';
+  | 'DELETING'
+  | 'DELETED';
 
 // session
 

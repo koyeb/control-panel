@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { getApi } from 'src/api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
-import { AppList } from 'src/model';
+import { AppList, ServiceStatus, ServiceType } from 'src/model';
 import { hasProperty } from 'src/utils/object';
 
 import { mapDeployment, mapReplica } from '../mappers/deployment';
@@ -32,10 +32,17 @@ export function useApp(appId?: string) {
   return useAppQuery(appId).data;
 }
 
-export function useAppsFull() {
+type AppsFullFilters = Partial<{
+  name: string;
+  types: Uppercase<ServiceType>[];
+  statuses: ServiceStatus[];
+}>;
+
+export function useAppsFull(filters: AppsFullFilters = {}) {
   return useQuery({
-    queryKey: ['listAppsFull'],
-    queryFn: listAppsFull,
+    placeholderData: keepPreviousData,
+    queryKey: ['listAppsFull', { filters }],
+    queryFn: ({ signal }) => listAppsFull(filters, signal),
     select(results): AppList {
       const apps = results.apps.apps!.map(mapApp);
 
@@ -71,12 +78,22 @@ export function useAppsFull() {
   });
 }
 
-export async function listAppsFull({ signal }: { signal: AbortSignal }) {
+export async function listAppsFull(filters: AppsFullFilters = {}, signal?: AbortSignal) {
   const api = getApi();
+
+  if (filters.types?.length === 0 || filters.statuses?.length === 0) {
+    return {
+      apps: { apps: [] },
+      services: { services: [] },
+      activeDeployments: [],
+      latestNonStashedDeployments: [],
+      scalings: [],
+    };
+  }
 
   const [apps, services] = await Promise.all([
     api('get /v1/apps', { query: { limit: '100' } }, { signal }),
-    api('get /v1/services', { query: { limit: '100' } }, { signal }),
+    api('get /v1/services', { query: { limit: '100', ...filters } }, { signal }),
   ]);
 
   const activeDeploymentsPromises = services

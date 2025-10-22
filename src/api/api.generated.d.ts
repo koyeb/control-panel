@@ -4455,6 +4455,8 @@ export interface components {
             /** Format: int64 */
             apps?: string;
             /** Format: int64 */
+            archive_max_size_mb?: string;
+            /** Format: int64 */
             archives?: string;
             /** Format: int64 */
             custom_domains?: string;
@@ -15807,6 +15809,8 @@ export interface operations {
                 name?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
+                /** @description (Optional) Filter on service statuses */
+                statuses?: ("STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "DELETING" | "DELETED" | "PAUSING" | "PAUSED" | "RESUMING")[];
                 /** @description (Optional) Filter on service types */
                 types?: ("INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE")[];
             };

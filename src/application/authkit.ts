@@ -26,6 +26,7 @@ export class AuthKitAdapter {
         redirectUri: this.redirectUri,
         onRefresh: this.onRefresh,
         onRedirectCallback: this.onRedirectCallback,
+        onBeforeAutoRefresh: () => true,
       });
 
       this.user = this.client.getUser();

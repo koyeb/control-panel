@@ -1766,7 +1766,7 @@
         "default": "default"
       },
       "breadcrumbs": {
-        "/services": "Services",
+        "/services/": "Services",
         "/volumes": "Volumes",
         "/volumes/new": "Create volume",
         "/volumes/snapshots": "Snapshots",
@@ -2210,19 +2210,10 @@
     },
     "home": {
       "title": "Overview",
-      "services": "Services",
-      "servicesSummary": "{web} {web, plural, one {web service} other {web services}}, {worker} {worker, plural, one {worker} other {workers}}, {database} {database, plural, one {database} other {databases}}",
       "copyServiceUrlSuccess": "Service URL copied to clipboard",
       "postgresVersion": "Postgres (v{version})",
       "noServices": "This app has no services",
       "appTooltip": "Apps allow you to group your services together and provide a gateway to expose web services under the same domain",
-      "serviceType": {
-        "all": "All services",
-        "web": "Web services",
-        "worker": "Workers",
-        "database": "Database services",
-        "model": "Models"
-      },
       "apps": {
         "actions": {
           "label": "App Actions",
@@ -2403,6 +2394,26 @@
       },
       "automaticReview": {
         "pending": "Your account is being validated"
+      }
+    },
+    "services": {
+      "title": "Services",
+      "servicesCount": "{web} {web, plural, =1 {Web service} other {Web Services}}, {workers} {workers, plural, =1 {Worker} other {Workers}}, {databases} {databases, plural, =1 {Database} other {Databases}}",
+      "noResults": {
+        "title": "No results",
+        "description": "No deployments match the current filters",
+        "removeFilters": "Remove filters"
+      },
+      "filters": {
+        "search": {
+          "placeholder": "Search"
+        },
+        "type": {
+          "label": "Type"
+        },
+        "status": {
+          "label": "Status"
+        }
       }
     },
     "secrets": {
