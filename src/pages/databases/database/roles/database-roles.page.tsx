@@ -1,4 +1,4 @@
-import { Button, ButtonMenuItem, Spinner, Table } from '@koyeb/design-system';
+import { Button, Spinner, Table } from '@koyeb/design-system';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -6,8 +6,8 @@ import { useState } from 'react';
 import { apiQuery, isDatabaseDeployment, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
+import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
 import { NoResource } from 'src/components/no-resource';
 import { Title } from 'src/components/title';
 import { Tooltip } from 'src/components/tooltip';
@@ -161,11 +161,9 @@ function DatabaseRoleActions({ service, role }: { service: Service; role: Databa
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <ButtonMenuItem onClick={withClose(onDelete)}>
-          <T id="actions.delete" />
-        </ButtonMenuItem>
-      )}
+      <ButtonMenuItem onClick={onDelete}>
+        <T id="actions.delete" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

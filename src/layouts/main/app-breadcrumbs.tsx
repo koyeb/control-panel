@@ -1,10 +1,10 @@
-import { Floating, Menu } from '@koyeb/design-system';
 import { RegisteredRouter, ValidateLinkOptions, linkOptions, useRouterState } from '@tanstack/react-router';
 import clsx from 'clsx';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
 import { useAppQuery, useServiceQuery, useServices } from 'src/api';
-import { Link, LinkMenuItem } from 'src/components/link';
+import { DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
+import { Link } from 'src/components/link';
 import { TextSkeleton } from 'src/components/skeleton';
 import { ServiceStatusDot } from 'src/components/status-dot';
 import { IconCheck, IconChevronDown, IconChevronRight, IconHouse } from 'src/icons';
@@ -97,7 +97,6 @@ export function AppServiceCrumb<Router extends RegisteredRouter, Options>({
 }
 
 export function ServiceSwitcherMenu({ appId, serviceId }: { appId: string; serviceId: string }) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const appServices = useServices(appId);
 
   const linkProps = (service: Service) => {
@@ -115,36 +114,28 @@ export function ServiceSwitcherMenu({ appId, serviceId }: { appId: string; servi
   };
 
   return (
-    <Floating
-      open={menuOpen}
-      setOpen={setMenuOpen}
-      placement="bottom-start"
-      offset={8}
-      renderReference={(props) => (
+    <DropdownMenu
+      reference={(props) => (
         <button
           type="button"
-          onClick={() => setMenuOpen(true)}
           className={clsx({ hidden: !appServices || appServices.length <= 1 })}
           {...props}
         >
           <IconChevronDown className="size-4 text-icon" />
         </button>
       )}
-      renderFloating={(props) => (
-        <Menu className="min-w-48" {...props}>
-          {appServices?.map((service) => (
-            <LinkMenuItem key={service.id} onClick={() => setMenuOpen(false)} {...linkProps(service)}>
-              <div>
-                <ServiceStatusDot status={service.status} className="size-2" />
-              </div>
+    >
+      {appServices?.map((service) => (
+        <LinkMenuItem key={service.id} {...linkProps(service)}>
+          <div>
+            <ServiceStatusDot status={service.status} className="size-2" />
+          </div>
 
-              {service.name}
+          {service.name}
 
-              {service.id === serviceId && <IconCheck className="ml-auto size-4 text-icon" />}
-            </LinkMenuItem>
-          ))}
-        </Menu>
-      )}
-    />
+          {service.id === serviceId && <IconCheck className="ml-auto size-4 text-icon" />}
+        </LinkMenuItem>
+      ))}
+    </DropdownMenu>
   );
 }

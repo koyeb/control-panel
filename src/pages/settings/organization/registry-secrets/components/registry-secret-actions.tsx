@@ -1,10 +1,9 @@
-import { ButtonMenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
+import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
 import { createTranslate } from 'src/intl/translate';
 import { RegistrySecret, Secret } from 'src/model';
 
@@ -12,10 +11,6 @@ const T = createTranslate('pages.organizationSettings.registrySecrets');
 
 export function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
   const t = T.useTranslate();
-
-  const onEdit = () => {
-    openDialog('EditRegistrySecret', secret);
-  };
 
   const deleteMutation = useDeleteMutation();
 
@@ -31,17 +26,13 @@ export function RegistrySecretActions({ secret }: { secret: RegistrySecret }) {
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <>
-          <ButtonMenuItem onClick={withClose(onEdit)}>
-            <T id="list.actions.edit" />
-          </ButtonMenuItem>
+      <ButtonMenuItem onClick={() => openDialog('EditRegistrySecret', secret)}>
+        <T id="list.actions.edit" />
+      </ButtonMenuItem>
 
-          <ButtonMenuItem onClick={withClose(onDelete)}>
-            <T id="list.actions.delete" />
-          </ButtonMenuItem>
-        </>
-      )}
+      <ButtonMenuItem onClick={onDelete}>
+        <T id="list.actions.delete" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

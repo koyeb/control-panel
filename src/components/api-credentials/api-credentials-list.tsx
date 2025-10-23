@@ -1,4 +1,4 @@
-import { Button, ButtonMenuItem, Table } from '@koyeb/design-system';
+import { Button, Table } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
@@ -8,8 +8,8 @@ import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { ApiCredential, ApiCredentialType } from 'src/model';
 
-import { ActionsMenu } from '../actions-menu';
 import { closeDialog, openDialog } from '../dialog';
+import { ActionsMenu, ButtonMenuItem } from '../dropdown-menu';
 
 type ApiCredentialListProps = {
   type: ApiCredentialType;
@@ -92,11 +92,9 @@ function CredentialActions({ type, credential }: { type: ApiCredentialType; cred
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <ButtonMenuItem onClick={withClose(onDelete)}>
-          <T id="list.actions.delete" />
-        </ButtonMenuItem>
-      )}
+      <ButtonMenuItem onClick={onDelete}>
+        <T id="list.actions.delete" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

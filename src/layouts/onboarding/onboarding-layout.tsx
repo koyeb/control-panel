@@ -1,9 +1,7 @@
-import { ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
 
 import { apiQuery, useLogoutMutation, useUser } from 'src/api';
-import { LinkMenuItem } from 'src/components/link';
+import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useSearchParams } from 'src/hooks/router';
@@ -72,17 +70,15 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
 function UserMenu() {
   const user = useUser();
   const logout = useLogoutMutation();
-  const [open, setOpen] = useState(false);
 
   return (
-    <Floating
-      open={open}
-      setOpen={setOpen}
-      hover
-      placement="left-end"
-      offset={8}
-      renderReference={(props) => (
-        <div className="row items-center gap-2 py-2 transition-colors hover:bg-muted/50" {...props}>
+    <DropdownMenu
+      reference={(props) => (
+        <button
+          type="button"
+          className="row items-center gap-2 py-2 transition-colors hover:bg-muted/50"
+          {...props}
+        >
           <UserAvatar user={user} />
 
           <span className="flex-1 truncate font-medium">{user?.name}</span>
@@ -90,26 +86,18 @@ function UserMenu() {
           <span>
             <IconChevronRight className="size-4 text-dim" />
           </span>
-        </div>
+        </button>
       )}
-      renderFloating={(props) => (
-        <Menu className="min-w-32" {...props}>
-          <LinkMenuItem
-            to="/"
-            search={{ settings: 'true' }}
-            onClick={() => setOpen(false)}
-            className="row gap-2"
-          >
-            <IconUser className="icon" />
-            <T id="userSettings" />
-          </LinkMenuItem>
+    >
+      <LinkMenuItem to="/" search={{ settings: 'true' }} className="row gap-2">
+        <IconUser className="icon" />
+        <T id="userSettings" />
+      </LinkMenuItem>
 
-          <ButtonMenuItem onClick={() => logout.mutate()}>
-            <IconLogOut className="icon" />
-            <T id="logout" />
-          </ButtonMenuItem>
-        </Menu>
-      )}
-    />
+      <ButtonMenuItem onClick={() => logout.mutate()}>
+        <IconLogOut className="icon" />
+        <T id="logout" />
+      </ButtonMenuItem>
+    </DropdownMenu>
   );
 }

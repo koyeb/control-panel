@@ -15,6 +15,7 @@ import {
   UseComboboxStateChangeTypes,
   useCombobox,
 } from 'downshift';
+import merge from 'lodash-es/merge';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
@@ -109,11 +110,19 @@ export function Combobox<T>({
     ...props.combobox,
   });
 
-  const dropdown = useDropdown(combobox.isOpen, {
-    offset: 8,
-    flip: true,
-    matchReferenceSize: true,
-  });
+  const dropdown = useDropdown(
+    merge(
+      {
+        offset: 8,
+        flip: true,
+        matchReferenceSize: true,
+        floating: {
+          open: combobox.isOpen,
+        },
+      },
+      props.dropdown,
+    ),
+  );
 
   const defaultInput = ({ combobox }: ComboboxContext<T>) => (
     <Input

@@ -1,12 +1,9 @@
-import { ButtonMenuItem, MenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
-import { LinkMenuItem } from 'src/components/link';
-import { IconEllipsis } from 'src/icons';
+import { ActionsMenu, ButtonMenuItem, LabelMenuItem, LinkMenuItem } from 'src/components/dropdown-menu';
 import { createTranslate } from 'src/intl/translate';
 import { App } from 'src/model';
 
@@ -14,10 +11,6 @@ const T = createTranslate('pages.home.apps');
 
 export function AppActions({ app }: { app: App }) {
   const t = T.useTranslate();
-
-  const onEdit = () => {
-    openDialog('EditApp', app);
-  };
 
   const pauseMutation = usePauseMutation();
 
@@ -45,34 +38,30 @@ export function AppActions({ app }: { app: App }) {
   };
 
   return (
-    <ActionsMenu Icon={IconEllipsis}>
-      {(withClose, onClose) => (
-        <>
-          <MenuItem className="text-dim hover:!bg-inherit">
-            <T id="actions.label" />
-          </MenuItem>
+    <ActionsMenu>
+      <LabelMenuItem>
+        <T id="actions.label" />
+      </LabelMenuItem>
 
-          <LinkMenuItem to="/services/new" search={{ app_id: app.id }} onClick={onClose}>
-            <T id="actions.addService" />
-          </LinkMenuItem>
+      <LinkMenuItem to="/services/new">
+        <T id="actions.addService" />
+      </LinkMenuItem>
 
-          <LinkMenuItem to="/domains" onClick={onClose} state={{ create: true }}>
-            <T id="actions.addDomain" />
-          </LinkMenuItem>
+      <LinkMenuItem to="/domains">
+        <T id="actions.addDomain" />
+      </LinkMenuItem>
 
-          <ButtonMenuItem onClick={withClose(onEdit)}>
-            <T id="actions.edit" />
-          </ButtonMenuItem>
+      <ButtonMenuItem onClick={() => openDialog('EditApp', app)}>
+        <T id="actions.edit" />
+      </ButtonMenuItem>
 
-          <ButtonMenuItem onClick={withClose(onPause)}>
-            <T id="actions.pauseServices" />
-          </ButtonMenuItem>
+      <ButtonMenuItem onClick={onPause}>
+        <T id="actions.pauseServices" />
+      </ButtonMenuItem>
 
-          <ButtonMenuItem onClick={withClose(onDelete)}>
-            <T id="actions.deleteApp" />
-          </ButtonMenuItem>
-        </>
-      )}
+      <ButtonMenuItem onClick={onDelete}>
+        <T id="actions.deleteApp" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

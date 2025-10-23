@@ -18,6 +18,7 @@ import {
   UseSelectStateChangeOptions,
   useSelect,
 } from 'downshift';
+import merge from 'lodash-es/merge';
 import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
@@ -128,12 +129,17 @@ export function Select<T>(props: SelectProps<T>) {
     ...props.select,
   });
 
-  const dropdown = useDropdown(select.isOpen, {
-    offset: 8,
-    flip: true,
-    matchReferenceSize: true,
-    ...props.dropdown,
-  });
+  const dropdown = useDropdown(
+    merge(
+      {
+        floating: { open: select.isOpen },
+        offset: 8,
+        flip: true,
+        matchReferenceSize: true,
+      },
+      props.dropdown,
+    ),
+  );
 
   const { label, tooltip, helperText, className } = props;
   const { toggleButton = defaultToggleButton, menu = defaultMenu } = props;

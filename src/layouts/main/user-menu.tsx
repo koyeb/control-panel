@@ -1,9 +1,10 @@
-import { ButtonMenuItem, Collapse, Floating, Menu, useBreakpoint } from '@koyeb/design-system';
+import { Collapse, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 import { useLogoutMutation, useUser } from 'src/api';
-import { LinkMenuItem } from 'src/components/link';
+import { withStopPropagation } from 'src/application/dom-events';
+import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
 import { UserAvatar } from 'src/components/user-avatar';
 import { useSetThemeMode, useThemeMode } from 'src/hooks/theme';
 import {
@@ -24,19 +25,19 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const logout = useLogoutMutation();
 
   const isMobile = !useBreakpoint('sm');
-  const [open, setOpen] = useState(false);
 
   return (
-    <Floating
-      open={open}
-      setOpen={setOpen}
-      hover
-      placement={isMobile ? 'top-end' : 'left-end'}
-      offset={8}
-      renderReference={(props) => (
+    <DropdownMenu
+      openOnHover
+      dropdown={{
+        offset: 8,
+        floating: {
+          placement: isMobile ? 'top-end' : 'left-end',
+        },
+      }}
+      reference={(props) => (
         <div
-          role="menuitem"
-          className="row items-center gap-2 py-2 pr-2 pl-3 transition-colors hover:bg-muted/50"
+          className="row items-center gap-2 py-2 pr-2 pl-3 text-start transition-colors hover:bg-muted/50"
           {...props}
         >
           <UserAvatar user={user} />
@@ -50,22 +51,19 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
           )}
         </div>
       )}
-      renderFloating={(props) => (
-        <Menu {...props}>
-          <LinkMenuItem to="/user/settings" onClick={() => setOpen(false)} className="row gap-2">
-            <IconUser className="icon" />
-            <T id="userSettings" />
-          </LinkMenuItem>
+    >
+      <LinkMenuItem to="/user/settings" className="row gap-2">
+        <IconUser className="icon" />
+        <T id="userSettings" />
+      </LinkMenuItem>
 
-          <ThemeMenuItem />
+      <ThemeMenuItem />
 
-          <ButtonMenuItem onClick={() => logout.mutate()}>
-            <IconLogOut className="icon" />
-            <T id="logout" />
-          </ButtonMenuItem>
-        </Menu>
-      )}
-    />
+      <ButtonMenuItem onClick={() => logout.mutate()}>
+        <IconLogOut className="icon" />
+        <T id="logout" />
+      </ButtonMenuItem>
+    </DropdownMenu>
   );
 }
 
@@ -76,7 +74,7 @@ function ThemeMenuItem() {
 
   return (
     <>
-      <ButtonMenuItem onClick={() => setOpen(!open)}>
+      <ButtonMenuItem onClick={withStopPropagation(() => setOpen(!open))}>
         <IconSunDim className="icon" />
         <T id="theme" />
         <IconChevronRight className={clsx('ms-auto icon', open && 'rotate-90')} />

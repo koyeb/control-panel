@@ -61,8 +61,11 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
     },
   });
 
-  const dropdown = useDropdown(combobox.isOpen, {
-    floating: { placement: 'bottom-end' },
+  const dropdown = useDropdown({
+    floating: {
+      open: combobox.isOpen,
+      placement: 'bottom-end',
+    },
     offset: 4,
     flip: true,
   });

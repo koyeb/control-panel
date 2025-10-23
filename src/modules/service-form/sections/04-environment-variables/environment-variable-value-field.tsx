@@ -109,7 +109,9 @@ export function EnvironmentVariableValueField({
       },
     });
 
-  const dropdown = useDropdown(isOpen);
+  const dropdown = useDropdown({
+    floating: { open: isOpen },
+  });
 
   const tooltip = (
     <T

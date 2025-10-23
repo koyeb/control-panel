@@ -1,4 +1,4 @@
-import { Badge, ButtonMenuItem, Table, useBreakpoint } from '@koyeb/design-system';
+import { Badge, Table, useBreakpoint } from '@koyeb/design-system';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 
@@ -13,8 +13,8 @@ import {
 } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { openDialog } from 'src/components/dialog';
+import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Select } from 'src/components/forms/select';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -177,36 +177,28 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <>
-          {isInvitation(item) && (
-            <>
-              <ButtonMenuItem onClick={withClose(() => resendInvitationMutation.mutate(item))}>
-                <T id="actions.resendInvitation" />
-              </ButtonMenuItem>
+      {isInvitation(item) && (
+        <ButtonMenuItem onClick={() => resendInvitationMutation.mutate(item)}>
+          <T id="actions.resendInvitation" />
+        </ButtonMenuItem>
+      )}
 
-              <ButtonMenuItem onClick={withClose(() => deleteInvitationMutation.mutate(item))}>
-                <T id="actions.deleteInvitation" />
-              </ButtonMenuItem>
-            </>
-          )}
+      {isInvitation(item) && (
+        <ButtonMenuItem onClick={() => deleteInvitationMutation.mutate(item)}>
+          <T id="actions.deleteInvitation" />
+        </ButtonMenuItem>
+      )}
 
-          {!isInvitation(item) && (
-            <>
-              {item.user.id === user?.id && (
-                <ButtonMenuItem onClick={withClose(() => onLeaveOrganization(item))}>
-                  <T id="actions.leave" />
-                </ButtonMenuItem>
-              )}
+      {!isInvitation(item) && item.user.id === user?.id && (
+        <ButtonMenuItem onClick={() => onLeaveOrganization(item)}>
+          <T id="actions.leave" />
+        </ButtonMenuItem>
+      )}
 
-              {item.user.id !== user?.id && (
-                <ButtonMenuItem onClick={withClose(() => onRemoveMember(item))}>
-                  <T id="actions.removeMember" />
-                </ButtonMenuItem>
-              )}
-            </>
-          )}
-        </>
+      {!isInvitation(item) && item.user.id !== user?.id && (
+        <ButtonMenuItem onClick={() => onRemoveMember(item)}>
+          <T id="actions.removeMember" />
+        </ButtonMenuItem>
       )}
     </ActionsMenu>
   );

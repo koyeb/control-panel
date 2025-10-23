@@ -1,10 +1,9 @@
-import { ButtonMenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
+import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
 import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
@@ -30,24 +29,20 @@ export function VolumeActions({ volume }: { volume: Volume }) {
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <>
-          <ButtonMenuItem onClick={withClose(() => openDialog('EditVolume', volume))}>
-            <IconPen className="size-4" />
-            <T id="list.actions.edit" />
-          </ButtonMenuItem>
+      <ButtonMenuItem onClick={() => openDialog('EditVolume', volume)}>
+        <IconPen className="size-4" />
+        <T id="list.actions.edit" />
+      </ButtonMenuItem>
 
-          <ButtonMenuItem onClick={withClose(() => openDialog('CreateSnapshotFromVolume', volume))}>
-            <IconPlus className="size-4" />
-            <T id="list.actions.createSnapshot" />
-          </ButtonMenuItem>
+      <ButtonMenuItem onClick={() => openDialog('CreateSnapshotFromVolume', volume)}>
+        <IconPlus className="size-4" />
+        <T id="list.actions.createSnapshot" />
+      </ButtonMenuItem>
 
-          <ButtonMenuItem onClick={withClose(onDelete)}>
-            <IconTrash className="size-4" />
-            <T id="list.actions.delete" />
-          </ButtonMenuItem>
-        </>
-      )}
+      <ButtonMenuItem onClick={onDelete}>
+        <IconTrash className="size-4" />
+        <T id="list.actions.delete" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

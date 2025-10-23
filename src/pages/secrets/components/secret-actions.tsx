@@ -1,10 +1,9 @@
-import { ButtonMenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
+import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
 import { createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
 
@@ -27,16 +26,13 @@ export function SecretActions({ secret, onDeleted }: { secret: Secret; onDeleted
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <>
-          <ButtonMenuItem onClick={withClose(() => openDialog('EditSecret', secret))}>
-            <T id="list.actions.edit" />
-          </ButtonMenuItem>
-          <ButtonMenuItem onClick={withClose(onDelete)}>
-            <T id="list.actions.delete" />
-          </ButtonMenuItem>
-        </>
-      )}
+      <ButtonMenuItem onClick={() => openDialog('EditSecret', secret)}>
+        <T id="list.actions.edit" />
+      </ButtonMenuItem>
+
+      <ButtonMenuItem onClick={onDelete}>
+        <T id="list.actions.delete" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

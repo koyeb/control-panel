@@ -1,4 +1,4 @@
-import { Button, ButtonColor, ButtonSize, ButtonVariant, MenuItem, TabButton } from '@koyeb/design-system';
+import { Button, ButtonColor, ButtonSize, ButtonVariant, TabButton } from '@koyeb/design-system';
 import { Link as BaseLink, LinkComponent, ValidateLinkOptions, createLink } from '@tanstack/react-router';
 import clsx from 'clsx';
 
@@ -75,14 +75,6 @@ export const TabButtonLink: LinkComponent<typeof TabButtonLinkNative> = (props) 
   );
 };
 
-type LinkMenuItemNativeProps = React.ComponentProps<'a'>;
-
-export function LinkMenuItemNative({ className, ...props }: LinkMenuItemNativeProps) {
-  return <a className={clsx(MenuItem.className({ className }))} {...props} />;
-}
-
-export const LinkMenuItem = createLink(LinkMenuItemNative);
-
 type ExternalLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   openInNewTab?: boolean;
 };
@@ -117,8 +109,4 @@ export function ExternalLinkButton({
       {...props}
     />
   );
-}
-
-export function ExternalLinkMenuItem({ className, ...props }: ExternalLinkProps) {
-  return <ExternalLink className={MenuItem.className({ className })} {...props} />;
 }

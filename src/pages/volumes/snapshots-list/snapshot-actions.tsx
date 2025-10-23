@@ -1,12 +1,10 @@
-import { ButtonMenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
+import { ActionsMenu, ButtonMenuItem, LinkMenuItem } from 'src/components/dropdown-menu';
 import { Tooltip } from 'src/components/tooltip';
-import { useNavigate } from 'src/hooks/router';
 import { IconPen, IconPlus, IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { VolumeSnapshot } from 'src/model';
@@ -15,17 +13,8 @@ const T = createTranslate('pages.snapshots');
 
 export function SnapshotActions({ snapshot }: { snapshot: VolumeSnapshot }) {
   const t = T.useTranslate();
-  const navigate = useNavigate();
 
   const canCreate = snapshot.status === 'AVAILABLE' && snapshot.type === 'REMOTE';
-
-  const onCreateVolume = () => {
-    void navigate({ to: '/volumes/new', search: { snapshot: snapshot.id } });
-  };
-
-  const onEdit = () => {
-    openDialog('EditSnapshot', snapshot);
-  };
 
   const deleteMutation = useDeleteMutation();
 
@@ -43,30 +32,27 @@ export function SnapshotActions({ snapshot }: { snapshot: VolumeSnapshot }) {
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <>
-          <Tooltip
-            forceDesktop
-            content={canCreate ? undefined : <T id="list.actions.cannotCreateVolume" />}
-            trigger={(props) => (
-              <ButtonMenuItem {...props} disabled={!canCreate} onClick={withClose(onCreateVolume)}>
-                <IconPlus className="size-4" />
-                <T id="list.actions.createVolume" />
-              </ButtonMenuItem>
-            )}
-          />
+      <Tooltip
+        forceDesktop
+        content={canCreate ? undefined : <T id="list.actions.cannotCreateVolume" />}
+        aria-disabled={!canCreate}
+        trigger={(props) => (
+          <LinkMenuItem {...props} to="/volumes/new" search={{ snapshot: snapshot.id }} disabled={!canCreate}>
+            <IconPlus className="size-4" />
+            <T id="list.actions.createVolume" />
+          </LinkMenuItem>
+        )}
+      />
 
-          <ButtonMenuItem onClick={withClose(onEdit)}>
-            <IconPen className="size-4" />
-            <T id="list.actions.update" />
-          </ButtonMenuItem>
+      <ButtonMenuItem onClick={() => openDialog('EditSnapshot', snapshot)}>
+        <IconPen className="size-4" />
+        <T id="list.actions.update" />
+      </ButtonMenuItem>
 
-          <ButtonMenuItem onClick={withClose(onDelete)}>
-            <IconTrash className="size-4" />
-            <T id="list.actions.delete" />
-          </ButtonMenuItem>
-        </>
-      )}
+      <ButtonMenuItem onClick={onDelete}>
+        <IconTrash className="size-4" />
+        <T id="list.actions.delete" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

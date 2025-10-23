@@ -1,8 +1,7 @@
-import { Floating, Menu, useBreakpoint } from '@koyeb/design-system';
+import { useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 
-import { ExternalLinkMenuItem } from 'src/components/link';
+import { DropdownMenu, ExternalLinkMenuItem } from 'src/components/dropdown-menu';
 import {
   IconBookMarked,
   IconBookOpen,
@@ -18,22 +17,18 @@ const T = createTranslate('layouts.main.helpLinks');
 
 export function HelpLinks({ collapsed }: { collapsed: boolean }) {
   const isMobile = !useBreakpoint('sm');
-  const [open, setOpen] = useState(false);
-  const onClose = () => setOpen(false);
-
-  useEffect(() => {
-    onClose();
-  }, [collapsed]);
 
   return (
-    <Floating
-      open={open}
-      setOpen={setOpen}
-      hover
-      placement={isMobile ? 'top-end' : 'right-end'}
-      strategy="fixed"
-      offset={8}
-      renderReference={(props) => (
+    <DropdownMenu
+      openOnHover
+      dropdown={{
+        offset: 8,
+        floating: {
+          placement: isMobile ? 'top-end' : 'right-end',
+          strategy: 'fixed',
+        },
+      }}
+      reference={(props) => (
         <div
           className={clsx(
             'mx-4 row items-center gap-1',
@@ -50,53 +45,36 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
           </div>
         </div>
       )}
-      renderFloating={(props) => (
-        <Menu className="min-w-52" {...props}>
-          <LinkMenuItem href="https://koyeb.com/docs" onClick={onClose}>
-            <IconBookMarked className="icon" />
-            <T id="documentation" />
-          </LinkMenuItem>
+    >
+      <ExternalLinkMenuItem openInNewTab href="https://koyeb.com/docs">
+        <IconBookMarked className="icon" />
+        <T id="documentation" />
+      </ExternalLinkMenuItem>
 
-          <LinkMenuItem href="https://community.koyeb.com" onClick={onClose}>
-            <IconMessageCircleMore className="icon" />
-            <T id="community" />
-          </LinkMenuItem>
+      <ExternalLinkMenuItem openInNewTab href="https://community.koyeb.com">
+        <IconMessageCircleMore className="icon" />
+        <T id="community" />
+      </ExternalLinkMenuItem>
 
-          <LinkMenuItem href="https://feedback.koyeb.com" onClick={onClose}>
-            <IconLightbulb className="icon" />
-            <T id="feedback" />
-          </LinkMenuItem>
+      <ExternalLinkMenuItem openInNewTab href="https://feedback.koyeb.com">
+        <IconLightbulb className="icon" />
+        <T id="feedback" />
+      </ExternalLinkMenuItem>
 
-          <LinkMenuItem href="https://status.koyeb.com" onClick={onClose}>
-            <IconSignal className="icon" />
-            <T id="status" />
-          </LinkMenuItem>
+      <ExternalLinkMenuItem openInNewTab href="https://status.koyeb.com">
+        <IconSignal className="icon" />
+        <T id="status" />
+      </ExternalLinkMenuItem>
 
-          <LinkMenuItem href="https://www.koyeb.com/changelog" onClick={onClose}>
-            <IconNewspaper className="icon" />
-            <T id="changelog" />
-          </LinkMenuItem>
+      <ExternalLinkMenuItem openInNewTab href="https://www.koyeb.com/changelog">
+        <IconNewspaper className="icon" />
+        <T id="changelog" />
+      </ExternalLinkMenuItem>
 
-          <LinkMenuItem href="https://www.koyeb.com/blog" onClick={onClose}>
-            <IconBookOpen className="icon" />
-            <T id="blog" />
-          </LinkMenuItem>
-        </Menu>
-      )}
-    />
-  );
-}
-
-type LinkMenuItemProps = {
-  href: string;
-  onClick: () => void;
-  children: React.ReactNode;
-};
-
-function LinkMenuItem({ href, onClick, children }: LinkMenuItemProps) {
-  return (
-    <ExternalLinkMenuItem openInNewTab href={href} onClick={onClick}>
-      {children}
-    </ExternalLinkMenuItem>
+      <ExternalLinkMenuItem openInNewTab href="https://www.koyeb.com/blog">
+        <IconBookOpen className="icon" />
+        <T id="blog" />
+      </ExternalLinkMenuItem>
+    </DropdownMenu>
   );
 }

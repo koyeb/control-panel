@@ -56,27 +56,23 @@ function EditSnapshotForm({ snapshot }: { snapshot: VolumeSnapshot }) {
   });
 
   return (
-    <>
-      <DialogHeader title={<T id="title" />} />
+    <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
+      <ControlledInput
+        control={form.control}
+        name="name"
+        label={<T id="nameLabel" />}
+        placeholder={t('namePlaceholder')}
+      />
 
-      <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <ControlledInput
-          control={form.control}
-          name="name"
-          label={<T id="nameLabel" />}
-          placeholder={t('namePlaceholder')}
-        />
+      <DialogFooter>
+        <CloseDialogButton>
+          <Translate id="common.cancel" />
+        </CloseDialogButton>
 
-        <DialogFooter>
-          <CloseDialogButton>
-            <Translate id="common.cancel" />
-          </CloseDialogButton>
-
-          <Button type="submit" loading={form.formState.isSubmitting} autoFocus>
-            <Translate id="common.save" />
-          </Button>
-        </DialogFooter>
-      </form>
-    </>
+        <Button type="submit" loading={form.formState.isSubmitting} autoFocus>
+          <Translate id="common.save" />
+        </Button>
+      </DialogFooter>
+    </form>
   );
 }

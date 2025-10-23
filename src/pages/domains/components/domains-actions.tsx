@@ -1,10 +1,9 @@
-import { ButtonMenuItem } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ActionsMenu } from 'src/components/actions-menu';
 import { closeDialog, openDialog } from 'src/components/dialog';
+import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
 import { createTranslate } from 'src/intl/translate';
 import { Domain } from 'src/model';
 
@@ -31,11 +30,9 @@ export function DomainActions({ domain }: { domain: Domain }) {
 
   return (
     <ActionsMenu>
-      {(withClose) => (
-        <ButtonMenuItem disabled={domain.status === 'DELETING'} onClick={withClose(onDelete)}>
-          <T id="list.actions.delete" />
-        </ButtonMenuItem>
-      )}
+      <ButtonMenuItem disabled={domain.status === 'DELETING'} onClick={onDelete}>
+        <T id="list.actions.delete" />
+      </ButtonMenuItem>
     </ActionsMenu>
   );
 }

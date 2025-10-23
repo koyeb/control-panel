@@ -64,8 +64,8 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
     },
   });
 
-  const dropdown = useDropdown(combobox.isOpen, {
-    floating: { strategy: 'fixed' },
+  const dropdown = useDropdown({
+    floating: { open: combobox.isOpen, strategy: 'fixed' },
     matchReferenceSize: true,
     flip: true,
     offset: 8,

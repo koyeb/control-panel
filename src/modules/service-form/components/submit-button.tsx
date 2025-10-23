@@ -1,9 +1,10 @@
-import { Button, ButtonMenuItem, Floating, Menu } from '@koyeb/design-system';
+import { Button } from '@koyeb/design-system';
 import { useIsFetching } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useFormContext, useFormState } from 'react-hook-form';
 
 import { ApiEndpoint } from 'src/api/api';
+import { ButtonMenuItem, DropdownMenu } from 'src/components/dropdown-menu';
 import { Shortcut } from 'src/components/shortcut';
 import { Tooltip } from 'src/components/tooltip';
 import { useShortcut } from 'src/hooks/shortcut';
@@ -21,8 +22,6 @@ type SubmitButtonProps = {
 };
 
 export function SubmitButton({ loading }: SubmitButtonProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   const isNewService = useWatchServiceForm('meta.serviceId') === null;
   const hasPreviousBuild = useWatchServiceForm('meta.hasPreviousBuild');
 
@@ -46,8 +45,6 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
   const deploy = (options: { skipBuild?: boolean; saveOnly?: boolean } = {}) => {
     setValue('meta.skipBuild', Boolean(options.skipBuild));
     setValue('meta.saveOnly', Boolean(options.saveOnly));
-
-    setMenuOpen(false);
     submitButtonRef.current?.form?.requestSubmit();
   };
 
@@ -72,55 +69,43 @@ export function SubmitButton({ loading }: SubmitButtonProps) {
   );
 
   const deployWithBuildOptionsButton = (
-    <Floating
-      open={menuOpen}
-      setOpen={setMenuOpen}
-      placement="bottom-end"
-      offset={8}
-      renderReference={(props) => (
-        <Button
-          {...props}
-          disabled={disabled}
-          loading={loading && !saveOnly}
-          onClick={() => setMenuOpen(true)}
-        >
+    <DropdownMenu
+      reference={(props) => (
+        <Button {...props} disabled={disabled} loading={loading && !saveOnly}>
           <T id={isNewService ? 'deploy' : 'saveDeploy'} />
           <div>
             <IconChevronDown />
           </div>
         </Button>
       )}
-      renderFloating={(props) => (
-        <Menu {...props}>
-          <ButtonMenuItem onClick={() => deploy()} className="max-w-72 text-start">
-            <BuildOption
-              label={<T id="withBuild.label" />}
-              description={<T id="withBuild.description" />}
-              shortcut={<Shortcut keystrokes={['meta', 'D']} />}
-            />
-          </ButtonMenuItem>
+    >
+      <ButtonMenuItem onClick={() => deploy()} className="max-w-72 text-start">
+        <BuildOption
+          label={<T id="withBuild.label" />}
+          description={<T id="withBuild.description" />}
+          shortcut={<Shortcut keystrokes={['meta', 'D']} />}
+        />
+      </ButtonMenuItem>
 
-          <Tooltip
-            content={!hasPreviousBuild && <T id="noPreviousBuild" />}
-            trigger={(props) => (
-              <div {...props}>
-                <ButtonMenuItem
-                  onClick={() => deploy({ skipBuild: true })}
-                  disabled={!hasPreviousBuild}
-                  className="max-w-72 text-start"
-                >
-                  <BuildOption
-                    label={<T id="withoutBuild.label" />}
-                    description={<T id="withoutBuild.description" />}
-                    shortcut={<Shortcut keystrokes={['meta', 'S']} />}
-                  />
-                </ButtonMenuItem>
-              </div>
-            )}
-          />
-        </Menu>
-      )}
-    />
+      <Tooltip
+        content={!hasPreviousBuild && <T id="noPreviousBuild" />}
+        trigger={(props) => (
+          <div {...props}>
+            <ButtonMenuItem
+              onClick={() => deploy({ skipBuild: true })}
+              disabled={!hasPreviousBuild}
+              className="max-w-72 text-start"
+            >
+              <BuildOption
+                label={<T id="withoutBuild.label" />}
+                description={<T id="withoutBuild.description" />}
+                shortcut={<Shortcut keystrokes={['meta', 'S']} />}
+              />
+            </ButtonMenuItem>
+          </div>
+        )}
+      />
+    </DropdownMenu>
   );
 
   return (
