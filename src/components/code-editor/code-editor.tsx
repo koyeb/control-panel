@@ -1,9 +1,10 @@
-import { Autocomplete } from '@koyeb/design-system';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import CodeMirror from '@uiw/react-codemirror';
 import clsx from 'clsx';
 
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
+
+import { Combobox } from '../forms/combobox';
 
 import { type CodeEditor } from './use-code-editor';
 
@@ -38,15 +39,16 @@ type CodeEditorLanguageSelectProps = {
 
 export function CodeEditorLanguageSelect({ codeEditor, placeholder }: CodeEditorLanguageSelectProps) {
   return (
-    <Autocomplete
-      placeholder={placeholder}
+    <Combobox
       items={codeEditor.filteredLanguages}
       getKey={codeEditor.getLanguageName}
       itemToString={codeEditor.getLanguageName}
       renderItem={codeEditor.getLanguageName}
       onInputValueChange={codeEditor.onSearch}
-      selectedItem={codeEditor.selectedLanguage}
-      onSelectedItemChange={codeEditor.onLanguageSelected}
+      onClosed={codeEditor.onLanguageSelectorClosed}
+      value={codeEditor.selectedLanguage}
+      onChange={codeEditor.onLanguageSelected}
+      placeholder={placeholder}
       size={1}
     />
   );

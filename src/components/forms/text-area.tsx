@@ -3,7 +3,7 @@ import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { Extend } from 'src/utils/types';
 
-import { ControlledProps } from './controlled-props';
+import { ControlledProps } from './helpers/controlled-props';
 import { LabelTooltip } from './label-tooltip';
 
 type TextAreaProps = Extend<

@@ -59,7 +59,7 @@ export function ConnectionDetails({ deployment }: ConnectionDetailsProps) {
             items={deployment.roles ?? []}
             getKey={getName}
             itemToString={getName}
-            itemToValue={getName}
+            getValue={getName}
             renderItem={getName}
             className="min-w-64"
           />
@@ -70,7 +70,7 @@ export function ConnectionDetails({ deployment }: ConnectionDetailsProps) {
             items={deployment.databases ?? []}
             getKey={getName}
             itemToString={getName}
-            itemToValue={getName}
+            getValue={getName}
             renderItem={getName}
             className="min-w-64"
           />

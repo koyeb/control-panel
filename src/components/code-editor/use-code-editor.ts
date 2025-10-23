@@ -12,17 +12,13 @@ export type CodeEditor = ReturnType<typeof useCodeEditor>;
 
 export function useCodeEditor(filepath: string) {
   const filename = last(filepath.split('/'));
-  const extension = last((filename ?? '').split('.'));
+  const extension = last((filename ?? '').split('.')) ?? '';
 
-  const [selectedLanguage, setSelectedLanguage] = useState(getLanguage('txt'));
+  const [selectedLanguage, setSelectedLanguage] = useState<Language | null>(null);
   const [filteredLanguages, setFilteredLanguages] = useState<Language[]>(languageItems);
 
   useEffect(() => {
-    const language = getLanguage(extension ?? 'txt');
-
-    if (language) {
-      setSelectedLanguage(language);
-    }
+    setSelectedLanguage(getLanguage(extension) ?? null);
   }, [extension]);
 
   return {
@@ -31,10 +27,11 @@ export function useCodeEditor(filepath: string) {
     filteredLanguages,
     getLanguageName,
     onLanguageSelected: setSelectedLanguage,
+    onLanguageSelectorClosed: () => {
+      setFilteredLanguages(languageItems);
+    },
     onSearch: (search: string, isSelected: boolean) => {
-      if (isSelected) {
-        setFilteredLanguages(languageItems);
-      } else {
+      if (!isSelected) {
         setFilteredLanguages(languageItems.filter((language) => getLanguageName(language).includes(search)));
       }
     },

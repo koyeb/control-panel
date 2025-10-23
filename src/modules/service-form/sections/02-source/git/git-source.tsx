@@ -28,7 +28,7 @@ export function GitSource() {
         items={['organization', 'public']}
         getKey={identity}
         itemToString={identity}
-        itemToValue={identity}
+        getValue={identity}
         renderItem={(type) =>
           ({
             organization: githubApp?.organizationName,

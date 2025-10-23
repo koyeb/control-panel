@@ -129,7 +129,7 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
         items={registries}
         getKey={identity}
         itemToString={identity}
-        itemToValue={identity}
+        getValue={identity}
         renderItem={(registry) => <RegistryTypeComponent registry={registry} />}
       />
 

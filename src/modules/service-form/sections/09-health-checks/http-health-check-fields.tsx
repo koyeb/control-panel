@@ -35,7 +35,7 @@ export function HttpHealthCheckFields({ index }: HttpHealthCheckFieldsProps) {
         items={['get', 'head', 'post', 'put', 'delete', 'connect', 'options', 'trace']}
         getKey={identity}
         itemToString={identity}
-        itemToValue={identity}
+        getValue={identity}
         renderItem={upperCase}
         className="md:col-span-3"
       />

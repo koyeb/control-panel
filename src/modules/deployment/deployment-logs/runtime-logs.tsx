@@ -211,7 +211,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
           placeholder={<T id="header.allRegions" />}
           getKey={getId}
           itemToString={({ id }) => regions.find(hasProperty('id', id))?.name ?? ''}
-          itemToValue={getId}
+          getValue={getId}
           onItemClick={({ id }) =>
             id === filters.watch('regionalDeploymentId') && filters.setValue('regionalDeploymentId', null)
           }
@@ -293,7 +293,7 @@ function SelectPeriod({ filters }: SelectPeriodProps) {
       control={filters.control}
       name="period"
       items={periods}
-      itemToValue={identity}
+      getValue={identity}
       renderValue={renderPeriod}
       onChangeEffect={(period) => {
         const now = new Date();

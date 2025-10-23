@@ -36,7 +36,7 @@ export function HealthCheckFields({ port, index }: HealthCheckFieldsProps) {
         items={['tcp', 'http']}
         getKey={identity}
         itemToString={identity}
-        itemToValue={identity}
+        getValue={identity}
         renderItem={(protocol) => <TranslateEnum enum="portProtocol" value={protocol} />}
         onChangeEffect={() => void trigger(`ports.${index}.healthCheck.path`)}
       />

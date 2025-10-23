@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
-import { ControlledAutocomplete } from 'src/components/forms';
+import { ControlledCombobox } from 'src/components/forms/combobox';
+import { NoItems } from 'src/components/forms/helpers/no-items';
 import { useFormValues } from 'src/hooks/form';
 import { IconGitBranch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -15,24 +16,27 @@ type PublicRepositoryBranchSelectorProps = {
 };
 
 export function PublicRepositoryBranchSelector({ branches }: PublicRepositoryBranchSelectorProps) {
+  const [filteredBranches, setFilteredBranches] = useState(branches);
   const selectedRepository = useFormValues<ServiceForm>().source.git.publicRepository;
-  const [search, setSearch] = useState('');
-  const searchQuery = search === selectedRepository.branch ? '' : search;
 
   return (
-    <ControlledAutocomplete<ServiceForm, 'source.git.publicRepository.branch'>
+    <ControlledCombobox<ServiceForm, 'source.git.publicRepository.branch', string>
       name="source.git.publicRepository.branch"
       label={<T id="branchLabel" />}
       tooltip={<T id="branchTooltip" />}
       disabled={selectedRepository.repositoryName === null}
-      items={branches.filter((branch) => branch.includes(searchQuery))}
-      allItems={branches.filter((branch) => branch.includes(searchQuery))}
+      items={filteredBranches}
       getKey={String}
-      itemToValue={identity}
+      getValue={identity}
       itemToString={identity}
       renderItem={(branch) => <BranchItem branch={branch} />}
-      renderNoItems={() => <T id="branchNoResults" />}
-      onInputValueChange={setSearch}
+      renderNoItems={() => <NoItems message={<T id="branchNoResults" />} />}
+      onInputValueChange={(inputValue, isSelected) => {
+        if (!isSelected) {
+          setFilteredBranches(branches.filter((branch) => branch.includes(inputValue)));
+        }
+      }}
+      onClosed={() => setFilteredBranches(branches)}
       className="max-w-md"
     />
   );

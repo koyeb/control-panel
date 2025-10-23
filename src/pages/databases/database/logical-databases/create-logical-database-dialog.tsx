@@ -9,6 +9,7 @@ import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
 import { ControlledInput, ControlledSelect } from 'src/components/forms';
+import { NoItems } from 'src/components/forms/helpers/no-items';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { DatabaseDeployment, Service } from 'src/model';
@@ -65,9 +66,9 @@ export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogic
           items={deployment.roles ?? []}
           getKey={getName}
           itemToString={getName}
-          itemToValue={getName}
+          getValue={getName}
           renderItem={getName}
-          renderNoItems={() => <T id="noRoles" />}
+          renderNoItems={() => <NoItems message={<T id="noRoles" />} />}
         />
 
         <DialogFooter>

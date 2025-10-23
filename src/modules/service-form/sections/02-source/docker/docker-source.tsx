@@ -28,7 +28,7 @@ export function DockerSource() {
         placeholder={<T id="registrySecretPlaceholder" />}
         items={['none', ...(secrets ?? []), 'create'] as const}
         getKey={(item) => (typeof item === 'string' ? item : item.id)}
-        itemToValue={(item) => (typeof item === 'string' ? null : item.name)}
+        getValue={(item) => (typeof item === 'string' ? null : item.name)}
         itemToString={(item) => (typeof item === 'string' ? item : item.name)}
         renderItem={(item: 'none' | 'create' | Secret) => {
           if (item === 'none') {

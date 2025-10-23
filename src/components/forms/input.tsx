@@ -1,10 +1,11 @@
 import { useMergeRefs } from '@floating-ui/react';
 import { Input as BaseInput, Field, FieldHelperText } from '@koyeb/design-system/next';
+import clsx from 'clsx';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { Extend } from 'src/utils/types';
 
-import { ControlledProps } from './controlled-props';
+import { ControlledProps } from './helpers/controlled-props';
 import { LabelTooltip } from './label-tooltip';
 
 type InputProps = Extend<
@@ -35,7 +36,7 @@ export function Input({
       id={props.id}
       label={<LabelTooltip label={label} tooltip={tooltip} />}
       helperText={<FieldHelperText invalid={invalid}>{error ?? helperText}</FieldHelperText>}
-      className={className}
+      className={clsx('w-full', className)}
     >
       <BaseInput
         value={Number.isNaN(value) ? '' : value}

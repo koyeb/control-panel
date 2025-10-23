@@ -15,7 +15,7 @@ export default {
 } satisfies Meta;
 
 export const countrySelector: StoryFn = () => {
-  const [country, setCountry] = useState<string>();
+  const [country, setCountry] = useState('');
 
   return <CountrySelector value={country} onChange={setCountry} />;
 };

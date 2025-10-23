@@ -1,10 +1,9 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { useRepositories } from 'src/api';
-import { ControlledAutocomplete } from 'src/components/forms';
-import { useEntityAdapter } from 'src/hooks/entity-adapter';
+import { ControlledCombobox } from 'src/components/forms';
+import { NoItems } from 'src/components/forms/helpers/no-items';
 import { useFormValues } from 'src/hooks/form';
 import { IconGithub, IconLock } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
@@ -27,29 +26,17 @@ export function OrganizationRepositorySelector() {
   const selected = useFormValues<ServiceForm>().source.git.organizationRepository;
   const searchQuery = search === selected.repositoryName ? '' : search;
 
-  const queryClient = useQueryClient();
-
   const repositories = useRepositories(searchQuery);
 
-  const [allRepositories, { addMany: addRepositories }] = useEntityAdapter(
-    (repository) => repository.id,
-    queryClient.getQueryData<GitRepository[]>(['listRepositories', selected.repositoryName, 'equality']),
-  );
-
-  useEffect(() => {
-    addRepositories(...repositories);
-  }, [repositories, addRepositories]);
-
   return (
-    <ControlledAutocomplete<ServiceForm, 'source.git.organizationRepository.repositoryName', GitRepository>
+    <ControlledCombobox<ServiceForm, 'source.git.organizationRepository.repositoryName', GitRepository>
       name="source.git.organizationRepository.repositoryName"
       items={repositories}
-      allItems={Array.from(allRepositories.values())}
       getKey={getId}
-      itemToValue={getName}
+      getValue={getName}
       itemToString={getName}
       renderItem={(repository) => <RepositoryItem repository={repository} />}
-      renderNoItems={() => <T id="organizationRepositoryNoResults" />}
+      renderNoItems={() => <NoItems message={<T id="organizationRepositoryNoResults" />} />}
       label={<T id="organizationRepository" />}
       placeholder={t('organizationRepositoryPlaceholder')}
       onInputValueChange={setSearch}

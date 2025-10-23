@@ -129,7 +129,7 @@ function RegistrySecretField({ form }: RegistrySecretFieldProps) {
         placeholder={<T id="registryFieldPlaceholder" />}
         items={['none', ...(registrySecrets ?? []), 'create'] as const}
         getKey={(item) => (typeof item === 'string' ? item : item.id)}
-        itemToValue={(item) => (typeof item === 'string' ? null : item.name)}
+        getValue={(item) => (typeof item === 'string' ? null : item.name)}
         itemToString={(item) => (typeof item === 'string' ? item : item.name)}
         renderItem={(item: 'none' | 'create' | Secret) => {
           if (item === 'none') {

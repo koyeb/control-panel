@@ -84,7 +84,7 @@ function StatusFilter({ filters }: StatusFilterProps) {
       items={statuses}
       getKey={identity}
       itemToString={identity}
-      itemToValue={identity}
+      getValue={identity}
       placeholder={t('filters.allStatuses')}
       renderItem={(status) => <TranslateStatus status={status} />}
       onItemClick={(status) => status === filters.watch('status') && filters.setValue('status', null)}
@@ -108,7 +108,7 @@ function RegionFilter({ filters, regions }: RegionFilterProps) {
       items={regions}
       getKey={getId}
       itemToString={(region) => region.name}
-      itemToValue={getId}
+      getValue={getId}
       placeholder={t('filters.allRegions')}
       renderItem={(item) => {
         return (

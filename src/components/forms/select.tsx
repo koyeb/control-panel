@@ -10,6 +10,7 @@ import {
   UseDropdownProps,
   useDropdown,
 } from '@koyeb/design-system/next';
+import clsx from 'clsx';
 import {
   UseSelectProps,
   UseSelectReturnValue,
@@ -17,7 +18,7 @@ import {
   UseSelectStateChangeOptions,
   useSelect,
 } from 'downshift';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { FieldPath, FieldValues, PathValue, useController } from 'react-hook-form';
 
@@ -25,7 +26,7 @@ import { usePureFunction } from 'src/hooks/lifecycle';
 import { Translate } from 'src/intl/translate';
 import { Extend } from 'src/utils/types';
 
-import { ControlledProps } from './controlled-props';
+import { ControlledProps } from './helpers/controlled-props';
 import { LabelTooltip } from './label-tooltip';
 
 export type SelectContext<T = unknown> = {
@@ -37,7 +38,7 @@ export type SelectProps<T> = {
   ref?: React.Ref<HTMLDivElement>;
   items: T[];
   getKey?: (item: T) => React.Key;
-  itemToString?: (item: T) => string; // todo;
+  itemToString?: (item: T) => string;
   renderValue?: (item: T | null) => React.ReactNode;
   renderItem?: (item: T) => React.ReactNode;
   renderNoItems?: () => React.ReactNode;
@@ -97,7 +98,7 @@ export function Select<T>(props: SelectProps<T>) {
     <Dropdown dropdown={context.dropdown}>
       {items.length === 0 && renderNoItems?.()}
 
-      <Menu {...context.select.getMenuProps()}>
+      <Menu {...context.select.getMenuProps()} className={clsx({ hidden: items.length === 0 })}>
         {items.map((item, index) => (
           <MenuItem
             {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
@@ -111,11 +112,14 @@ export function Select<T>(props: SelectProps<T>) {
     </Dropdown>
   );
 
-  const { items, value, onChange } = props;
+  const { items, value, itemToString, onChange } = props;
 
   const select = useSelect({
     items,
     selectedItem: value,
+    itemToString(item) {
+      return item ? (itemToString?.(item) ?? '') : '';
+    },
     onSelectedItemChange({ selectedItem }) {
       if (selectedItem) {
         onChange?.(selectedItem);
@@ -131,11 +135,6 @@ export function Select<T>(props: SelectProps<T>) {
     ...props.dropdown,
   });
 
-  const context = {
-    select,
-    dropdown,
-  };
-
   const { label, tooltip, helperText, className } = props;
   const { toggleButton = defaultToggleButton, menu = defaultMenu } = props;
 
@@ -144,13 +143,13 @@ export function Select<T>(props: SelectProps<T>) {
   return (
     <Field
       id={props.select?.id}
-      label={label && <LabelTooltip {...context.select.getLabelProps()} label={label} tooltip={tooltip} />}
+      label={label && <LabelTooltip {...select.getLabelProps()} label={label} tooltip={tooltip} />}
       helperText={<FieldHelperText invalid={invalid}>{helperText}</FieldHelperText>}
       className={className}
-      {...props.field?.(context)}
+      {...props.field?.({ select, dropdown })}
     >
-      {toggleButton(context)}
-      {createPortal(menu(context), root)}
+      {toggleButton({ select, dropdown })}
+      {createPortal(menu({ select, dropdown }), root)}
     </Field>
   );
 }
@@ -276,7 +275,7 @@ type ControlledSelectProps<
 > = Extend<
   ControlledProps<typeof Select<Item>, Form, Name>,
   {
-    itemToValue: (item: Item) => PathValue<Form, Name>;
+    getValue: (item: Item) => PathValue<Form, Name>;
     onChangeEffect?: (item: Item) => void;
   }
 >;
@@ -285,14 +284,7 @@ export function ControlledSelect<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
   Item = PathValue<Form, Name>,
->({
-  control,
-  name,
-  items,
-  itemToValue: getValue,
-  onChangeEffect,
-  ...props
-}: ControlledSelectProps<Form, Name, Item>) {
+>({ control, name, items, getValue, onChangeEffect, ...props }: ControlledSelectProps<Form, Name, Item>) {
   const {
     field: { value, onChange, ...field },
     fieldState: { invalid, error },
@@ -300,8 +292,12 @@ export function ControlledSelect<
 
   const getValuePure = usePureFunction(getValue);
 
-  const valueToItem = useMemo(() => {
-    return new Map(items?.map((item) => [getValuePure(item), item] as const));
+  const valueToItem = useRef(new Map(items.map((item) => [getValue(item), item])));
+
+  useEffect(() => {
+    items.forEach((item) => {
+      valueToItem.current.set(getValuePure(item), item);
+    });
   }, [items, getValuePure]);
 
   return (
@@ -310,10 +306,10 @@ export function ControlledSelect<
       items={items}
       invalid={invalid}
       helperText={error?.message}
-      value={valueToItem.get(value) ?? null}
+      value={valueToItem.current.get(value) ?? null}
       onChange={(item) => {
         onChange(getValue(item));
-        onChangeEffect?.(value);
+        onChangeEffect?.(item);
       }}
       {...props}
     />

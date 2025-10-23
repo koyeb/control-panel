@@ -1,62 +1,69 @@
-import { Autocomplete } from '@koyeb/design-system';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { createTranslate } from 'src/intl/translate';
 import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
+
+import { Combobox } from '../forms/combobox';
+import { NoItems } from '../forms/helpers/no-items';
 
 import countriesJson from './countries.json';
 
 const T = createTranslate('components.addressAutocomplete');
 
 type CountrySelectorProps = {
+  ref?: React.Ref<HTMLInputElement>;
   countries?: string[];
-  name?: string;
-  value?: string;
   label?: React.ReactNode;
   required?: boolean;
   error?: string;
-  onChange?: (country: string) => void;
+  value: string;
+  onChange: (country: string) => void;
 };
 
 export const CountrySelector = ({
+  ref,
   countries = countriesJson,
-  value,
   label,
   required,
   error,
+  value,
   onChange,
 }: CountrySelectorProps) => {
-  const [inputValue, setInputValue] = useState(value ?? '');
   const [filteredCountries, setFilteredCountries] = useState(countries);
 
-  const onSearch = (query: string) => {
-    setInputValue(query);
-
-    if (query === '' || query === value) {
-      setFilteredCountries(countries);
-    } else {
-      setFilteredCountries(countries.filter((country) => lowerCase(country).includes(lowerCase(query))));
-    }
-  };
-
-  useEffect(() => {
-    setFilteredCountries(countries);
-  }, [countries, value]);
-
   return (
-    <Autocomplete
-      required={required}
+    <Combobox
+      ref={ref}
       label={label}
-      error={error}
+      required={required}
+      invalid={Boolean(error)}
+      helperText={error}
       items={filteredCountries}
       getKey={identity}
       itemToString={identity}
-      renderItem={(country) => country}
-      inputValue={inputValue}
-      onInputValueChange={onSearch}
-      onSelectedItemChange={onChange}
-      renderNoItems={() => <T id="noCountry" />}
+      renderItem={identity}
+      renderNoItems={() => <NoItems message={<T id="noCountry" />} />}
+      onInputValueChange={(inputValue, isSelected) => {
+        if (!isSelected) {
+          setFilteredCountries(countries.filter(getFilter(inputValue)));
+        }
+      }}
+      onClosed={() => setFilteredCountries(countries)}
+      value={value}
+      onChange={(country) => country && onChange(country)}
     />
   );
 };
+
+function getFilter(inputValue: string) {
+  const query = lowerCase(inputValue);
+
+  return (country: string) => {
+    if (query === '') {
+      return true;
+    }
+
+    return lowerCase(country).includes(query);
+  };
+}

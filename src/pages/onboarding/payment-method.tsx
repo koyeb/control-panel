@@ -1,12 +1,12 @@
 import { Spinner } from '@koyeb/design-system';
 import { InputEnd, InputStart } from '@koyeb/design-system/next';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
 import { apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
-import { ControlledAddressField } from 'src/components/address-field/address-field';
+import { AddressField } from 'src/components/address-field/address-field';
 import { ControlledInput } from 'src/components/forms';
 import { PaymentFormFields, PaymentMethodTimeout } from 'src/components/payment-form';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -123,13 +123,19 @@ function Form() {
         <div className="col gap-4">
           <PaymentFormFields />
 
-          <ControlledAddressField
+          <Controller
             control={form.control}
             name="address"
-            required
-            size={3}
-            label={<T id="creditCard.addressLabel" />}
-            placeholder={t('creditCard.addressPlaceholder')}
+            render={({ field, fieldState }) => (
+              <AddressField
+                {...field}
+                required
+                size={3}
+                label={<T id="creditCard.addressLabel" />}
+                placeholder={t('creditCard.addressPlaceholder')}
+                errors={fieldState.error}
+              />
+            )}
           />
 
           <div className="row items-center gap-3 rounded-md bg-gray/10 px-3 py-2">

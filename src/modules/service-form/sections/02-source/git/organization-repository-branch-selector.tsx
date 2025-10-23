@@ -1,9 +1,9 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { apiQuery } from 'src/api';
-import { ControlledAutocomplete } from 'src/components/forms';
-import { useEntityAdapter } from 'src/hooks/entity-adapter';
+import { ControlledCombobox } from 'src/components/forms/combobox';
+import { NoItems } from 'src/components/forms/helpers/no-items';
 import { useFormValues } from 'src/hooks/form';
 import { IconGitBranch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -22,7 +22,7 @@ export function OrganizationRepositoryBranchSelector() {
   const selectedRepository = values.source.git.organizationRepository;
   const searchQuery = search === selectedRepository.branch ? undefined : search;
 
-  const { data: branches = [] } = useQuery({
+  const query = useQuery({
     ...apiQuery('get /v1/git/branches', {
       query: {
         repository_id: repositoryId as string,
@@ -32,39 +32,22 @@ export function OrganizationRepositoryBranchSelector() {
     }),
     enabled: repositoryId !== null,
     refetchOnMount: true,
+    placeholderData: keepPreviousData,
     select: ({ branches }) => branches!.map((branch) => branch.name!),
   });
 
-  const queryClient = useQueryClient();
-
-  const [allBranches, { addMany: addBranches, clear: clearBranches }] = useEntityAdapter(
-    identity,
-    queryClient.getQueryData<string[]>(['listRepositoryBranches', repositoryId, '']),
-  );
-
-  useEffect(() => {
-    addBranches(...branches);
-  }, [branches, addBranches]);
-
-  useEffect(() => {
-    if (!repositoryId) {
-      clearBranches();
-    }
-  }, [repositoryId, clearBranches]);
-
   return (
-    <ControlledAutocomplete<ServiceForm, 'source.git.organizationRepository.branch'>
+    <ControlledCombobox<ServiceForm, 'source.git.organizationRepository.branch', string>
       name="source.git.organizationRepository.branch"
       label={<T id="branchLabel" />}
       tooltip={<T id="branchTooltip" />}
       disabled={selectedRepository.repositoryName === null}
-      items={branches}
-      allItems={Array.from(allBranches.values())}
+      items={query.data ?? []}
       getKey={identity}
-      itemToValue={identity}
+      getValue={identity}
       itemToString={identity}
       renderItem={(branch) => <BranchItem branch={branch} />}
-      renderNoItems={() => <T id="branchNoResults" />}
+      renderNoItems={() => <NoItems message={<T id="branchNoResults" />} />}
       onInputValueChange={setSearch}
       className="max-w-md"
     />

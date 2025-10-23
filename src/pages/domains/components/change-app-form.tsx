@@ -70,7 +70,7 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
         items={['none', ...(apps ?? [])] as const}
         getKey={(app) => (app === 'none' ? 'none' : app.id)}
         itemToString={(app) => (app === 'none' ? 'none' : app.name)}
-        itemToValue={(app) => (app === 'none' ? null : app.id)}
+        getValue={(app) => (app === 'none' ? null : app.id)}
         renderItem={(app) => (app === 'none' ? <T id="noApp" /> : app.name)}
         className="max-w-sm"
       />

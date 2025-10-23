@@ -23,7 +23,7 @@ export function DatabaseEngineSection() {
         label={<T id="engineLabel" />}
         items={[14, 15, 16, 17, 18]}
         getKey={identity}
-        itemToValue={identity}
+        getValue={identity}
         itemToString={String}
         renderItem={(version) => <T id="engineItem" values={{ version }} />}
         className="max-w-sm"

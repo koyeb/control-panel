@@ -359,7 +359,7 @@ function DownloadUsageForm() {
         placeholder="Select a period"
         getKey={(date) => date.toISOString()}
         itemToString={(date) => date.toString()}
-        itemToValue={(date) => date.toISOString()}
+        getValue={(date) => date.toISOString()}
         renderItem={(date) => <FormattedDate value={date} month="long" year="numeric" />}
       />
 

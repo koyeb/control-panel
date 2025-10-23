@@ -1,23 +1,25 @@
-import { Switch as BaseSwitch, SwitchLabel } from '@koyeb/design-system/next';
+import { Switch as BaseSwitch, InlineField } from '@koyeb/design-system/next';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { Extend } from 'src/utils/types';
 
-import { ControlledProps } from './controlled-props';
+import { ControlledProps } from './helpers/controlled-props';
+import { LabelTooltip } from './label-tooltip';
 
 type SwitchProps = Extend<
   React.ComponentProps<typeof BaseSwitch>,
   {
     label?: React.ReactNode;
+    tooltip?: React.ReactNode;
   }
 >;
 
-export function Switch({ label, className, ...props }: SwitchProps) {
+export function Switch({ label, tooltip, className, ...props }: SwitchProps) {
   return (
-    <SwitchLabel disabled={props.disabled} className={className}>
+    <InlineField className={className}>
       <BaseSwitch {...props} />
-      {label}
-    </SwitchLabel>
+      <LabelTooltip as="span" label={label} tooltip={tooltip} disabled={props.disabled} />
+    </InlineField>
   );
 }
 

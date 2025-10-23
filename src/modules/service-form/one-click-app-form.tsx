@@ -378,7 +378,7 @@ function EnvironmentVariableField({ index, env }: { index: number; env: OneClick
         items={env.options}
         getKey={({ label }) => label}
         itemToString={({ label }) => label}
-        itemToValue={({ value }) => value}
+        getValue={({ value }) => value}
         renderItem={({ label }) => label}
       />
     );

@@ -1,24 +1,25 @@
-import { Radio as BaseRadio, RadioLabel } from '@koyeb/design-system/next';
+import { Radio as BaseRadio, InlineField } from '@koyeb/design-system/next';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { Extend } from 'src/utils/types';
 
-import { ControlledProps } from './controlled-props';
+import { ControlledProps } from './helpers/controlled-props';
 import { LabelTooltip } from './label-tooltip';
 
 type RadioProps = Extend<
   React.ComponentProps<typeof BaseRadio>,
   {
     label?: React.ReactNode;
+    tooltip?: React.ReactNode;
   }
 >;
 
-export function Radio({ label, className, ...props }: RadioProps) {
+export function Radio({ label, tooltip, className, ...props }: RadioProps) {
   return (
-    <RadioLabel disabled={props.disabled} className={className}>
+    <InlineField className={className}>
       <BaseRadio {...props} />
-      {label}
-    </RadioLabel>
+      <LabelTooltip as="span" label={label} tooltip={tooltip} disabled={props.disabled} />
+    </InlineField>
   );
 }
 
@@ -26,16 +27,10 @@ export function ControlledRadio<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
 >(props: ControlledProps<typeof Radio, Form, Name> & { tooltip?: React.ReactNode }) {
-  const { control, name, label, tooltip, value, ...rest } = props;
+  const { control, name, value, ...rest } = props;
   const { field } = useController({ control, name });
 
   return (
-    <Radio
-      {...field}
-      label={label ? <LabelTooltip label={label} tooltip={tooltip} /> : null}
-      checked={field.value === value}
-      onChange={() => field.onChange(value)}
-      {...rest}
-    />
+    <Radio {...field} checked={field.value === value} onChange={() => field.onChange(value)} {...rest} />
   );
 }

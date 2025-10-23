@@ -1,4 +1,3 @@
-import { Autocomplete } from '@koyeb/design-system';
 import {
   AutofillSuggestion,
   AutofillSuggestionResponse,
@@ -6,49 +5,53 @@ import {
   SearchSession,
 } from '@mapbox/search-js-core';
 import { useEffect, useMemo, useState } from 'react';
-import { Control, useController } from 'react-hook-form';
+import { FieldError } from 'react-hook-form';
 
 import { getConfig } from 'src/application/config';
 import { createTranslate } from 'src/intl/translate';
 import { Address } from 'src/model';
-import { isDefined } from 'src/utils/generic';
-import { Extend } from 'src/utils/types';
+
+import { Combobox } from '../forms/combobox';
+import { InputEndSpinner } from '../forms/helpers/input-end-spinner';
+import { NoItems } from '../forms/helpers/no-items';
 
 import { FallbackAddressFields } from './fallback-address-fields';
 
 const T = createTranslate('components.addressAutocomplete');
 
-type AddressFieldOwnProps = {
-  value?: Address;
-  onChange?: (address: Address) => void;
-  errors?: Partial<Record<keyof Address, string>>;
+type AddressFieldProps = {
+  ref?: React.Ref<HTMLInputElement>;
+  required?: boolean;
+  size?: 1 | 2 | 3;
+  label?: React.ReactNode;
+  placeholder?: string;
+  value: Address;
+  onChange: (address: Address) => void;
+  errors?: unknown;
 };
 
-type AddressFieldProps = AddressFieldOwnProps &
-  Pick<
-    React.ComponentProps<typeof Autocomplete<AutofillSuggestion>>,
-    'required' | 'size' | 'label' | 'placeholder' | 'className'
-  >;
-
-export const AddressField = ({ value, onChange, errors, ...props }: AddressFieldProps) => {
-  const accessToken = getConfig('mapboxToken');
-
-  const [inputValue, setInputValue] = useState('');
+export function AddressField({
+  ref,
+  required,
+  size,
+  label,
+  placeholder,
+  value,
+  onChange,
+  errors,
+}: AddressFieldProps) {
+  const [inputValue, setInputValue] = useState(formatAddress(value));
+  const [pending, setPending] = useState(false);
   const [autofillDisabled, setAutofillDisabled] = useState(false);
   const [suggestions, setSuggestions] = useState<AutofillSuggestion[]>([]);
 
   const session = useMemo(() => {
-    return new SearchSession(new MapboxAutofill({ accessToken }), 500);
-  }, [accessToken]);
-
-  useEffect(() => {
-    if (value) {
-      setInputValue(formatAddress(value));
-    }
-  }, [value]);
+    return new SearchSession(new MapboxAutofill({ accessToken: getConfig('mapboxToken') }), 500);
+  }, []);
 
   useEffect(() => {
     const onSuggestions = (res: AutofillSuggestionResponse | null) => {
+      setPending(false);
       setSuggestions(res?.suggestions ?? []);
     };
 
@@ -60,19 +63,14 @@ export const AddressField = ({ value, onChange, errors, ...props }: AddressField
   }, [session]);
 
   useEffect(() => {
-    if (Object.values(errors ?? {}).filter(isDefined).length > 0) {
+    if (Object.keys(errors ?? {}).length > 0) {
       setAutofillDisabled(true);
     }
   }, [errors]);
 
   if (autofillDisabled) {
-    return <FallbackAddressFields value={value} onChange={onChange} errors={errors} />;
+    return <FallbackAddressFields value={value} onChange={onChange} errors={mapErrors(errors)} />;
   }
-
-  const onInputValueChange = (query: string) => {
-    setInputValue(query);
-    void session.suggest(query);
-  };
 
   const disableAutofillButton = (children: React.ReactNode) => (
     <button type="button" className="text-default underline" onClick={() => setAutofillDisabled(true)}>
@@ -81,21 +79,37 @@ export const AddressField = ({ value, onChange, errors, ...props }: AddressField
   );
 
   return (
-    <Autocomplete
-      {...props}
-      resetOnBlur={false}
+    <Combobox
+      ref={ref}
+      label={label}
+      helperText={<T id="cantFindAddress" values={{ link: disableAutofillButton }} />}
+      size={size}
+      placeholder={placeholder}
+      required={required}
       items={suggestions}
       getKey={(suggestion) => suggestion.full_address ?? ''}
       itemToString={(suggestion) => suggestion.full_address ?? ''}
       renderItem={(suggestion) => formatAddress(suggestionToAddress(suggestion))}
-      renderNoItems={() => <T id="searchAddress" />}
+      renderNoItems={() => <NoItems message={<T id="searchAddress" />} />}
       inputValue={inputValue}
-      onInputValueChange={onInputValueChange}
-      onSelectedItemChange={(suggestion) => onChange?.(suggestionToAddress(suggestion))}
-      helperText={<T id="cantFindAddress" values={{ link: disableAutofillButton }} />}
+      onInputValueChange={(inputValue, isSelected) => {
+        setInputValue(inputValue);
+
+        if (!isSelected) {
+          setPending(true);
+          void session.suggest(inputValue);
+        }
+      }}
+      end={<InputEndSpinner show={pending} />}
+      onClosed={() => setSuggestions([])}
+      onChange={(suggestion) => {
+        if (suggestion) {
+          onChange(suggestionToAddress(suggestion));
+        }
+      }}
     />
   );
-};
+}
 
 // place and region exist but are not declared in mapbox types
 function suggestionToAddress(suggestion: AutofillSuggestion & { place?: string; region?: string }): Address {
@@ -120,32 +134,15 @@ const formatAddress = (address: Address): string => {
     .join(', ');
 };
 
-type ControlledAddressFieldProps = Extend<
-  React.ComponentProps<typeof AddressField>,
-  {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    control?: Control<any>;
-    name: string;
-  }
->;
+function mapErrors(errors: unknown = {}) {
+  const err = errors as Partial<Record<keyof Address, FieldError>>;
 
-export function ControlledAddressField({ control, name, ...props }: ControlledAddressFieldProps) {
-  const { field, fieldState } = useController({ control, name });
-  const error = fieldState.error as Record<string, { message: string }> | undefined;
-
-  return (
-    <AddressField
-      {...props}
-      value={field.value as Address | undefined}
-      onChange={field.onChange}
-      errors={{
-        line1: error?.line1?.message,
-        line2: error?.line2?.message,
-        city: error?.city?.message,
-        postalCode: error?.postalCode?.message,
-        state: error?.state?.message,
-        country: error?.country?.message,
-      }}
-    />
-  );
+  return {
+    line1: err?.line1?.message,
+    line2: err?.line2?.message,
+    city: err?.city?.message,
+    postalCode: err?.postalCode?.message,
+    state: err?.state?.message,
+    country: err?.country?.message,
+  };
 }

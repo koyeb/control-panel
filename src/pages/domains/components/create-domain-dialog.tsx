@@ -8,6 +8,7 @@ import { apiMutation, useApps, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { ControlledInput, ControlledSelect } from 'src/components/forms';
+import { NoItems } from 'src/components/forms/helpers/no-items';
 import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { getId, getName } from 'src/utils/object';
@@ -102,9 +103,9 @@ function DomainForm({ onCreated, renderFooter }: DomainFormProps) {
         items={apps}
         getKey={getId}
         itemToString={getName}
-        itemToValue={getId}
+        getValue={getId}
         renderItem={getName}
-        renderNoItems={() => <T id="noApps" />}
+        renderNoItems={() => <NoItems message={<T id="noApps" />} />}
       />
 
       {renderFooter(form.formState)}

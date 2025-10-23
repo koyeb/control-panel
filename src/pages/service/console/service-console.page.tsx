@@ -2,6 +2,7 @@ import { Alert } from '@koyeb/design-system';
 import { useEffect, useMemo, useState } from 'react';
 
 import { useInstanceQuery, useInstancesQuery } from 'src/api';
+import { NoItems } from 'src/components/forms/helpers/no-items';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { SelectInstance } from 'src/components/select-instance';
@@ -39,13 +40,11 @@ export function ServiceConsolePage() {
   return (
     <>
       <SelectInstance
-        label={<T id="instanceLabel" />}
+        label={<T id="instanceSelector.label" />}
         instances={instances}
         value={instance}
         onChange={setInstance}
-        renderNoItems={() => (
-          <div className="col h-10 items-center justify-center text-dim">No healthy instances</div>
-        )}
+        renderNoItems={() => <NoItems message={<T id="instanceSelector.noInstances" />} />}
         className="w-full max-w-xs self-start"
       />
 

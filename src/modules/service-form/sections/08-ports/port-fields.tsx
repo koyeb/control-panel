@@ -60,7 +60,7 @@ export function PortFields({ index, onRemove }: { index: number; onRemove?: () =
           items={['http', 'http2', 'tcp']}
           getKey={identity}
           itemToString={identity}
-          itemToValue={identity}
+          getValue={identity}
           renderItem={(value) => <TranslateEnum enum="portProtocol" value={value} />}
           onChangeEffect={(protocol) => {
             if (protocol === 'tcp') {

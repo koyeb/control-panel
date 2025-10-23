@@ -1,5 +1,6 @@
-export * from './autocomplete';
+/* eslint-disable react-refresh/only-export-components */
 export * from './checkbox';
+export * from './combobox';
 export * from './input';
 export * from './radio';
 export * from './select';

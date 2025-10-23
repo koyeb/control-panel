@@ -1,12 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { addressSchema, apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
-import { ControlledAddressField } from 'src/components/address-field/address-field';
+import { AddressField } from 'src/components/address-field/address-field';
 import { ControlledCheckbox, ControlledInput } from 'src/components/forms';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
@@ -90,7 +90,15 @@ function BillingInformationForm() {
     <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col max-w-lg gap-4">
       <ControlledInput control={form.control} name="name" label={<T id="nameLabel" />} />
       <ControlledInput control={form.control} name="email" type="email" label={<T id="emailLabel" />} />
-      <ControlledAddressField control={form.control} name="address" label={<T id="addressLabel" />} />
+
+      <Controller
+        control={form.control}
+        name="address"
+        render={({ field, fieldState }) => (
+          <AddressField {...field} label={<T id="addressLabel" />} errors={fieldState.error} />
+        )}
+      />
+
       <ControlledCheckbox control={form.control} name="company" label={<T id="companyLabel" />} />
 
       {form.watch('company') && (

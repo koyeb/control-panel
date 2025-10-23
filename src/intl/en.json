@@ -2633,7 +2633,10 @@
           "title": "No running instances",
           "description": "You don't have any instances running, check your service's status"
         },
-        "instanceLabel": "Instance",
+        "instanceSelector": {
+          "label": "Instance",
+          "noInstances": "No healthy instances"
+        },
         "prompt": "Customize your command, then hit `return` to run. $ ",
         "restart": "Press any key to restart",
         "commandExited": "Command exited with code ",

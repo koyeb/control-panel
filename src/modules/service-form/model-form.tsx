@@ -226,7 +226,7 @@ function ModelSection({ form }: { form: ModelForm }) {
         items={models}
         getKey={(model) => model.slug}
         itemToString={getName}
-        itemToValue={(model) => model.slug}
+        getValue={(model) => model.slug}
         renderItem={(model) => model.name}
         onChangeEffect={(model) => {
           const instance = instances.find(instanceBestFit(model));

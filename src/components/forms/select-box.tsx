@@ -1,7 +1,7 @@
 import { SelectBox } from '@koyeb/design-system';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
-import { ControlledProps } from './controlled-props';
+import { ControlledProps } from './helpers/controlled-props';
 
 export function ControlledSelectBox<
   Form extends FieldValues = FieldValues,

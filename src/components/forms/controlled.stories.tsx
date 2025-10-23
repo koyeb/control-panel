@@ -2,11 +2,11 @@ import type { Decorator, Meta, StoryFn } from '@storybook/react-vite';
 import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { useFormValues } from 'src/hooks/form';
-import { getId, getName, hasProperty } from 'src/utils/object';
+import { getId, getName } from 'src/utils/object';
 
-import { ControlledAutocomplete } from './autocomplete';
 import { ControlledCheckbox } from './checkbox';
+import { ControlledCombobox } from './combobox';
+import { NoItems } from './helpers/no-items';
 import { ControlledInput } from './input';
 import { ControlledRadio } from './radio';
 import { ControlledSelect } from './select';
@@ -60,39 +60,36 @@ const games: Game[] = [
   { id: 9, name: 'Donkey Kong', released: '1981-07-01' },
 ];
 
-export const autocomplete: Story = () => {
-  const [search, setSearch] = useState('');
-  const { field } = useFormValues<{ field: number }>();
-  const selected = games.find(hasProperty('id', field));
+export const combobox: Story = () => {
+  const [filteredGames, setFilteredGames] = useState(games);
 
   return (
-    <ControlledAutocomplete
+    <ControlledCombobox
       name="field"
-      items={games.filter((game) => (search === selected?.name ? true : game.name.includes(search)))}
-      allItems={games}
+      items={filteredGames}
       getKey={getId}
-      itemToValue={getId}
+      getValue={getId}
       itemToString={getName}
-      onInputValueChange={setSearch}
       renderItem={getName}
+      renderNoItems={() => <NoItems message="No results" />}
+      onInputValueChange={(inputValue, isSelected) => {
+        if (!isSelected) {
+          setFilteredGames(games.filter((game) => game.name.includes(inputValue)));
+        }
+      }}
+      onClosed={() => setFilteredGames(games)}
       className="max-w-sm"
     />
   );
 };
 
-autocomplete.decorators = [form({ field: games[4]?.id })];
+combobox.decorators = [form({ field: games[4]?.id })];
 
 export const checkbox: Story = () => {
-  return <ControlledCheckbox name="field" />;
+  return <ControlledCheckbox name="field" label="Check it out" />;
 };
 
 checkbox.decorators = [form({ field: true })];
-
-export const input: Story = () => {
-  return <ControlledInput name="field" className="max-w-sm" />;
-};
-
-input.decorators = [form({ field: 'value' })];
 
 export const radio: Story = () => {
   return (
@@ -105,16 +102,22 @@ export const radio: Story = () => {
 
 radio.decorators = [form({ field: 'one' })];
 
+export const input: Story = () => {
+  return <ControlledInput name="field" className="max-w-64" />;
+};
+
+input.decorators = [form({ field: 'value' })];
+
 export const select: Story = () => {
   return (
     <ControlledSelect
       name="field"
       items={games}
       getKey={getId}
-      itemToValue={getId}
+      getValue={getId}
       itemToString={getName}
       renderItem={getName}
-      className="max-w-sm"
+      className="min-w-64"
     />
   );
 };
@@ -128,7 +131,7 @@ export const selectBox: Story = () => {
       type="checkbox"
       title="Title"
       description="Description"
-      className="max-w-sm"
+      className="min-w-64"
     />
   );
 };
@@ -136,7 +139,7 @@ export const selectBox: Story = () => {
 selectBox.decorators = [form({ field: true })];
 
 export const slider: Story = () => {
-  return <ControlledSlider name="field" min={1} max={10} step={1} className="max-w-sm" />;
+  return <ControlledSlider name="field" min={1} max={10} step={1} className="min-w-64" />;
 };
 
 slider.decorators = [form({ field: 4 })];

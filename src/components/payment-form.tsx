@@ -4,7 +4,7 @@ import { Field, FieldLabel, InputEnd, InputStart } from '@koyeb/design-system/ne
 import { CardCvcElement, CardExpiryElement, CardNumberElement, useStripe } from '@stripe/react-stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { FormState, useForm } from 'react-hook-form';
+import { Controller, FormState, useForm } from 'react-hook-form';
 
 import { apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { withStopPropagation } from 'src/application/dom-events';
@@ -16,7 +16,7 @@ import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Address, OrganizationPlan } from 'src/model';
 
-import { ControlledAddressField } from './address-field/address-field';
+import { AddressField } from './address-field/address-field';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from './dialog';
 import { ControlledInput } from './forms';
 
@@ -140,13 +140,19 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
     <form onSubmit={withStopPropagation(handleSubmit(form, onSubmit))} className="col gap-4">
       <PaymentFormFields />
 
-      <ControlledAddressField
+      <Controller
         control={form.control}
         name="address"
-        required
-        size={3}
-        label={<T id="addressLabel" />}
-        placeholder={t('addressPlaceholder')}
+        render={({ field, fieldState }) => (
+          <AddressField
+            {...field}
+            required
+            size={3}
+            label={<T id="addressLabel" />}
+            placeholder={t('addressPlaceholder')}
+            errors={fieldState.error}
+          />
+        )}
       />
 
       <p className="text-dim">
