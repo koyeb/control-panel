@@ -149,7 +149,10 @@ export async function initializeServiceForm(
       const { repositoryName } = values.source.git.publicRepository;
 
       const repository = repositoryName
-        ? await fetchGithubRepository(repositoryName).catch(() => null)
+        ? await queryClient.ensureQueryData({
+            queryKey: ['getPublicRepository', repositoryName],
+            queryFn: () => fetchGithubRepository(repositoryName).catch(() => null),
+          })
         : null;
 
       if (repository) {
