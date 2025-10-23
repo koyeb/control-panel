@@ -2876,15 +2876,17 @@
           "nameLabel": "Name",
           "descriptionLabel": "Description",
           "submitButton": "Create API token",
-          "successNotification": "API token <strong>{name}</strong> created",
-          "createdTitle": "API token created",
-          "createdDescription": "Your API token was created. Make sure you keep it stored it in a secure place, you won't be able to see it again."
+          "success": "API token <strong>{name}</strong> created"
+        },
+        "created": {
+          "title": "API token created",
+          "description": "Your API token was created. Make sure you keep it stored it in a secure place, you won't be able to see it again."
         },
         "delete": {
           "title": "Delete API token",
           "description": "Are you sure you want to delete the <strong>{name}</strong> API token?",
           "confirm": "Delete token",
-          "successNotification": "The API token <strong>{name}</strong> was deleted"
+          "success": "The API token <strong>{name}</strong> was deleted"
         }
       },
       "registrySecrets": {
