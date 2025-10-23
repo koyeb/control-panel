@@ -3,14 +3,12 @@ import clsx from 'clsx';
 import { useFormContext } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/forms';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
 import { EnvironmentVariableValueField } from './environment-variable-value-field';
-import { RegionsScope } from './regions-scope';
 
 const T = createTranslate('modules.serviceForm.environmentVariables');
 
@@ -30,17 +28,8 @@ export function EnvironmentVariableFields({
   const isMobile = !useBreakpoint('md');
   const showLabel = isMobile || index === 0;
 
-  const showScopes = useFeatureFlag('environment-variable-scopes');
-
   return (
-    <div
-      className={clsx(
-        'grid grid-cols-1 gap-4 rounded border px-6 py-5 md:border-none md:p-0',
-        showScopes ? 'md:grid-cols-[1fr_1fr_1fr_auto]' : 'md:grid-cols-[1fr_1fr_auto]',
-      )}
-    >
-      {showScopes && <RegionsScope index={index} label={showLabel && 'Regions'} className="w-full" />}
-
+    <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_auto] md:border-none md:p-0">
       <ControlledInput<ServiceForm>
         name={`environmentVariables.${index}.name`}
         type="text"

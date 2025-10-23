@@ -1,15 +1,16 @@
 import {
   Dropdown,
-  DropdownGroup,
   Field,
   FieldHelperText,
   IconButton,
   Input,
+  Menu,
+  MenuItem,
   useDropdown,
 } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
-import { useRef, useState } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import { useController } from 'react-hook-form';
 
 import { DocumentationLink } from 'src/components/documentation-link';
@@ -17,7 +18,6 @@ import { LabelTooltip } from 'src/components/forms/label-tooltip';
 import { useFormValues } from 'src/hooks/form';
 import { IconChevronDown } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { identity } from 'src/utils/generic';
 import { lowerCase } from 'src/utils/strings';
 
 import { useServiceVariables } from '../../helpers/service-variables';
@@ -49,7 +49,7 @@ export function EnvironmentVariableValueField({
 
   const variableName = useWatchServiceForm(`environmentVariables.${index}.name`);
 
-  const groups: Array<DropdownGroup<string>> = [
+  const groups = [
     {
       key: 'secrets',
       label: 'Secrets',
@@ -118,6 +118,9 @@ export function EnvironmentVariableValueField({
 
   const dropdown = useDropdown({
     floating: { open: isOpen },
+    offset: 8,
+    flip: true,
+    matchReferenceSize: true,
   });
 
   const tooltip = (
@@ -133,6 +136,9 @@ export function EnvironmentVariableValueField({
       }}
     />
   );
+
+  // code smell, but it works
+  let itemIndex = 0;
 
   return (
     <Field
@@ -153,21 +159,31 @@ export function EnvironmentVariableValueField({
           />
         }
         root={{
-          ref: dropdown.setReference,
+          ref: dropdown.refs.setReference,
           className: clsx(isOpen && '!rounded-b-none'),
         }}
         {...getInputProps({ ...field, ref: inputRef })}
       />
 
-      <Dropdown
-        dropdown={dropdown}
-        groups={groups.filter((group) => group.items.length > 0)}
-        highlightedIndex={highlightedIndex}
-        getMenuProps={getMenuProps}
-        getItemProps={getItemProps}
-        getKey={identity}
-        renderItem={(item) => (item === '__new_secret__' ? <T id="createSecret" /> : item)}
-      />
+      <Dropdown dropdown={dropdown}>
+        <Menu {...getMenuProps()} className="max-h-64 overflow-y-auto">
+          {groups.map(({ key, label, items }) => (
+            <Fragment key={key}>
+              <MenuItem className="pointer-events-none font-medium text-dim">{label}</MenuItem>
+
+              {items.map((item) => (
+                <MenuItem
+                  {...getItemProps({ item, index: ++itemIndex })}
+                  key={item}
+                  highlighted={itemIndex === highlightedIndex}
+                >
+                  {item === '__new_secret__' ? <T id="createSecret" /> : item}
+                </MenuItem>
+              ))}
+            </Fragment>
+          ))}
+        </Menu>
+      </Dropdown>
     </Field>
   );
 }

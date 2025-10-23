@@ -1,4 +1,4 @@
-import { MultiSelect, Spinner } from '@koyeb/design-system';
+import { Spinner } from '@koyeb/design-system';
 import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -6,20 +6,18 @@ import { useState } from 'react';
 import { getApi, getApiQueryKey, mapActivity } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
 import { DocumentTitle } from 'src/components/document-title';
-import { Checkbox } from 'src/components/forms';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
 import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Activity } from 'src/model';
 import { ActivityIcon } from 'src/modules/activity/activity-icon';
 import { ActivityItem } from 'src/modules/activity/activity-item';
 import { createArray } from 'src/utils/arrays';
-import { identity } from 'src/utils/generic';
 
 const T = createTranslate('pages.activity');
 
@@ -44,7 +42,6 @@ export function ActivityPage() {
   const t = T.useTranslate();
 
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const params = useSearchParams();
   const types = params.has('types') ? params.getAll('types') : allTypes;
@@ -87,27 +84,6 @@ export function ActivityPage() {
       <DocumentTitle title={t('documentTitle')} />
 
       <Title title={<T id="title" />} />
-
-      <MultiSelect
-        items={allTypes}
-        getKey={identity}
-        itemToString={identity}
-        renderItem={(type, selected) => (
-          <div className="row items-center gap-2">
-            <Checkbox checked={selected} readOnly className="pointer-events-none" />
-            {type}
-          </div>
-        )}
-        renderSelectedItems={(types) => `${types.length} types`}
-        selectedItems={types}
-        onItemsSelected={(item) => {
-          void navigate({ to: '/activity', search: { types: [...types, item] } });
-        }}
-        onItemsUnselected={(item) => {
-          void navigate({ to: '/activity', search: { types: types.filter((type) => type !== item) } });
-        }}
-        className="hidden max-w-64"
-      />
 
       <div className="col">
         {query.isPending && (

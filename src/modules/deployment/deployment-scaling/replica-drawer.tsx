@@ -11,18 +11,17 @@ import { AccordionSection, Badge, Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
 
 import { useInstancesQuery, useRegionalDeployment } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
-import { Checkbox } from 'src/components/forms';
+import { Select } from 'src/components/forms';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
 import { IconChevronRight } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
-import { Translate, TranslateStatus, createTranslate, translateStatus } from 'src/intl/translate';
+import { Translate, createTranslate, translateStatus } from 'src/intl/translate';
 import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/model';
 import { identity } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
@@ -118,19 +117,14 @@ type InstanceHistoryProps = {
 function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
   const [expanded, setExpanded] = useState<Instance>();
 
-  const filters = useForm<{ statuses: InstanceStatus[] }>({
-    defaultValues: {
-      statuses: [],
-    },
-  });
-
+  const [status, setStatus] = useState<InstanceStatus | null>(null);
   const regionalDeployment = useRegionalDeployment(deployment.id, replica.region);
 
   const query = useInstancesQuery({
     deploymentId: deployment.id,
     replicaIndex: replica.index,
     regionalDeploymentId: regionalDeployment?.id,
-    statuses: filters.watch('statuses'),
+    statuses: status ? [status] : [],
   });
 
   return (
@@ -139,13 +133,16 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
         <T id="instanceHistory.title" />
       </div>
 
-      <form>
-        <Controller
-          control={filters.control}
-          name="statuses"
-          render={({ field }) => <InstanceStatusMultiSelect {...field} />}
-        />
-      </form>
+      <Select<InstanceStatus>
+        items={['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY', 'STOPPING', 'STOPPED', 'ERROR', 'SLEEPING']}
+        getKey={identity}
+        value={status}
+        onChange={setStatus}
+        renderItem={translateStatus}
+        onItemClick={(s) => s === status && setStatus(null)}
+        placeholder={<T id="instanceHistory.filters.status.placeholder" />}
+        className="max-w-xs"
+      />
 
       <QueryGuard query={query}>
         {({ instances }) => (
@@ -153,56 +150,11 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
             instances={instances}
             expanded={expanded}
             setExpanded={setExpanded}
-            hasFilters={filters.watch('statuses').length > 0}
+            hasFilters={status !== null}
           />
         )}
       </QueryGuard>
     </div>
-  );
-}
-
-type InstanceStatusMultiSelectProps = {
-  value: InstanceStatus[];
-  onChange: (status: InstanceStatus[]) => void;
-};
-
-function InstanceStatusMultiSelect({ value, onChange }: InstanceStatusMultiSelectProps) {
-  const statuses: InstanceStatus[] = [
-    'ALLOCATING',
-    'STARTING',
-    'HEALTHY',
-    'UNHEALTHY',
-    'STOPPING',
-    'STOPPED',
-    'ERROR',
-    'SLEEPING',
-  ];
-
-  const placeholder = (
-    <span className="text-placeholder">
-      <T id="instanceHistory.filters.status.placeholder" />
-    </span>
-  );
-
-  return (
-    <MultiSelect
-      items={statuses}
-      getKey={identity}
-      itemToString={translateStatus}
-      renderItem={(status, selected) => (
-        <div className="row items-center gap-2">
-          <Checkbox checked={selected} onChange={() => {}} />
-          <TranslateStatus status={status} />
-        </div>
-      )}
-      renderSelectedItems={(statuses) =>
-        statuses.length === 0 ? placeholder : <>{statuses.map(translateStatus).join(', ')}</>
-      }
-      selectedItems={value}
-      onItemsSelected={(status) => onChange([...value, status])}
-      onItemsUnselected={(status) => onChange(value.filter((s) => s !== status))}
-      className="max-w-xs"
-    />
   );
 }
 
