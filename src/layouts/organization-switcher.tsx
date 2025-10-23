@@ -15,7 +15,7 @@ import { Organization } from 'src/model';
 
 const T = createTranslate('layouts.organizationSwitcher');
 
-const searchThreshold = 3;
+const limit = 10;
 
 type OrganizationSwitcherProps = {
   showCreateOrganization?: boolean;
@@ -104,7 +104,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
             type="search"
             placeholder={t('placeholder')}
             className={clsx('max-w-full border-b bg-transparent px-3 py-1.5 outline-none', {
-              hidden: count <= searchThreshold,
+              hidden: count <= limit,
             })}
           />
 
@@ -120,7 +120,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
             ))}
           </Menu>
 
-          <div className={clsx('px-3 py-1.5 text-xs text-dim', { hidden: count <= searchThreshold })}>
+          <div className={clsx('px-3 py-1.5 text-xs text-dim', { hidden: count <= limit })}>
             <T id="filtered" values={{ count: organizations.length, total: count }} />
           </div>
 
@@ -164,7 +164,7 @@ function useOrganizationList(search: string) {
     ...apiQuery('get /v1/account/organizations', {
       query: {
         search,
-        limit: '10',
+        limit: String(limit),
         statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
       },
     }),
