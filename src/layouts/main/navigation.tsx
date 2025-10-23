@@ -112,7 +112,7 @@ function NavigationItem({ collapsed, disabled, Icon, label, to, isActive, newBad
       <Link
         to={to}
         aria-disabled={disabled}
-        className={clsx('row items-center gap-2 p-2 hover:text-default', disabled && 'pointer-events-none')}
+        className="row items-center gap-2 p-2 hover:text-default aria-disabled:pointer-events-none aria-disabled:text-dim/50"
       >
         <div>
           <Icon className="size-icon" />

@@ -43,7 +43,7 @@ export function AppActions({ app }: { app: App }) {
         <T id="actions.label" />
       </LabelMenuItem>
 
-      <LinkMenuItem to="/services/new">
+      <LinkMenuItem to="/services/new" search={{ app_id: app.id }}>
         <T id="actions.addService" />
       </LinkMenuItem>
 

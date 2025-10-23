@@ -89,13 +89,13 @@ function VolumeField({ index, label, onCreate }: VolumeFieldProps) {
           return onCreate();
         }
 
-        field.onChange(item?.name);
+        field.onChange(item.name);
 
-        if (item && 'id' in item) {
+        if ('id' in item) {
           form.setValue(`volumes.${index}.volumeId`, item.id);
         }
       }}
-      renderItem={(item) => item !== 'create' && item?.name}
+      renderItem={(item) => item !== 'create' && item.name}
       menu={({ select, dropdown }) => (
         <Dropdown dropdown={dropdown}>
           <Menu {...select.getMenuProps()}>

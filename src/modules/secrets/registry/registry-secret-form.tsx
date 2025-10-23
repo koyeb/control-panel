@@ -21,11 +21,11 @@ const T = createTranslate('modules.secrets.registrySecretForm');
 const schema = z.object({
   name: z.string().min(2),
   type: z.string(),
-  username: z.string(),
-  password: z.string(),
-  registryName: z.string(),
-  registryUrl: z.string(),
-  keyFile: z.string(),
+  username: z.string().optional(),
+  password: z.string().optional(),
+  registryName: z.string().optional(),
+  registryUrl: z.string().optional(),
+  keyFile: z.string().optional(),
 });
 
 const registries = [

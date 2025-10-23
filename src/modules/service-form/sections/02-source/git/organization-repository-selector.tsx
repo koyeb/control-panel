@@ -42,7 +42,11 @@ export function OrganizationRepositorySelector() {
       onInputValueChange={setSearch}
       onChangeEffect={(repository) => {
         setValue('source.git.organizationRepository.id', repository.id);
-        setValue('source.git.organizationRepository.branch', repository.defaultBranch);
+
+        setValue('source.git.organizationRepository.branch', repository.defaultBranch, {
+          shouldValidate: true,
+        });
+
         generateServiceName();
       }}
       className="max-w-md"

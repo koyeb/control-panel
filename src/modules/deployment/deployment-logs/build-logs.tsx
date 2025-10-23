@@ -1,5 +1,4 @@
 import { Alert, IconButton, Menu, MenuItem } from '@koyeb/design-system';
-import clsx from 'clsx';
 import { useCallback } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
@@ -76,8 +75,8 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
         appName={app.name}
         serviceName={service.name}
         lines={logs.lines}
-        renderMenu={(props) => (
-          <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-60')} {...props}>
+        menu={
+          <Menu>
             {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
               <MenuItem key={option}>
                 <ControlledCheckbox
@@ -89,7 +88,7 @@ export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
               </MenuItem>
             ))}
           </Menu>
-        )}
+        }
       />
     </FullScreen>
   );

@@ -1,4 +1,4 @@
-import { Floating, IconButton, Spinner } from '@koyeb/design-system';
+import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedTime } from 'react-intl';
@@ -13,6 +13,8 @@ import { createTranslate } from 'src/intl/translate';
 import { LogLine } from 'src/model';
 import { shortId } from 'src/utils/strings';
 
+import { ActionsMenu } from '../dropdown-menu';
+
 import { LogOptions } from './log-options';
 
 export { type LogOptions };
@@ -23,12 +25,10 @@ type LogsFooterProps = {
   appName: string;
   serviceName: string;
   lines: LogLine[];
-  renderMenu: (props: Record<string, unknown>) => React.ReactNode;
+  menu: React.ReactNode;
 };
 
-export function LogsFooter({ appName, serviceName, lines, renderMenu }: LogsFooterProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
+export function LogsFooter({ appName, serviceName, lines, menu }: LogsFooterProps) {
   const downloadLogs = useDownloadLogs(appName, serviceName, lines);
   const copyLogs = useCopyLogs(lines);
 
@@ -44,23 +44,13 @@ export function LogsFooter({ appName, serviceName, lines, renderMenu }: LogsFoot
         <T id="copy" />
       </button>
 
-      <Floating
-        open={menuOpen}
-        setOpen={setMenuOpen}
-        placement="bottom-start"
-        renderReference={(props) => (
-          <div>
-            <IconButton
-              variant="ghost"
-              color="gray"
-              Icon={IconEllipsis}
-              onClick={() => setMenuOpen(!menuOpen)}
-              {...props}
-            />
-          </div>
-        )}
-        renderFloating={renderMenu}
-      />
+      <ActionsMenu
+        closeOnClick={false}
+        Icon={IconEllipsis}
+        dropdown={{ floating: { placement: 'bottom-start' } }}
+      >
+        {menu}
+      </ActionsMenu>
     </footer>
   );
 }

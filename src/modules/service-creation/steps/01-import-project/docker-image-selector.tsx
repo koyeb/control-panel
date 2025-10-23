@@ -1,19 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useEffect } from 'react';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { UseFormReturn, useController, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useSecrets } from 'src/api';
 import { openDialog } from 'src/components/dialog';
 import { DockerImageHelperText } from 'src/components/docker-image-input/docker-image-helper-text';
 import { useVerifyDockerImage } from 'src/components/docker-image-input/use-verify-docker-image';
-import { ControlledInput, ControlledSelect } from 'src/components/forms';
+import { ControlledInput, Select } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { handleSubmit } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Secret } from 'src/model';
 import { CreateRegistrySecretDialog } from 'src/modules/secrets/registry/create-registry-secret-dialog';
+import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('modules.serviceCreation.importProject.docker');
 
@@ -119,17 +120,20 @@ type RegistrySecretFieldProps = {
 };
 
 function RegistrySecretField({ form }: RegistrySecretFieldProps) {
-  const registrySecrets = useSecrets('registry');
+  const secrets = useSecrets('registry');
+
+  const { field, fieldState } = useController({
+    control: form.control,
+    name: 'registrySecret',
+  });
 
   return (
     <>
-      <ControlledSelect
-        control={form.control}
-        name="registrySecret"
+      <Select
+        ref={field.ref}
         placeholder={<T id="registryFieldPlaceholder" />}
-        items={['none', ...(registrySecrets ?? []), 'create'] as const}
+        items={['none', ...(secrets ?? []), 'create'] as const}
         getKey={(item) => (typeof item === 'string' ? item : item.id)}
-        getValue={(item) => (typeof item === 'string' ? null : item.name)}
         itemToString={(item) => (typeof item === 'string' ? item : item.name)}
         renderItem={(item: 'none' | 'create' | Secret) => {
           if (item === 'none') {
@@ -142,17 +146,22 @@ function RegistrySecretField({ form }: RegistrySecretFieldProps) {
 
           return item.name;
         }}
-        onChangeEffect={(item) => {
+        value={secrets?.find(hasProperty('name', field.value)) ?? null}
+        onChange={(item) => {
           if (item === 'create') {
             openDialog('CreateRegistrySecret');
+          } else if (item === 'none') {
+            field.onChange(null);
+          } else {
+            field.onChange(item.name);
           }
         }}
+        invalid={fieldState.invalid}
+        helperText={fieldState.error?.message}
         className="w-full max-w-xs"
       />
 
-      <CreateRegistrySecretDialog
-        onCreated={(secretName) => form.setValue('registrySecret', secretName, { shouldValidate: true })}
-      />
+      <CreateRegistrySecretDialog onCreated={field.onChange} />
     </>
   );
 }

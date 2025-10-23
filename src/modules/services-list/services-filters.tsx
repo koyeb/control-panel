@@ -46,6 +46,7 @@ export function ServicesFilters({ form }: { form: UseFormReturn<ServicesFiltersF
       <ControlledInput
         control={form.control}
         name="search"
+        type="search"
         placeholder={t('filters.search.placeholder')}
         start={
           <InputStart background={false}>
@@ -209,7 +210,7 @@ function StatusDots({ statuses: enabledStatuses }: { statuses: ServicesFiltersFo
             key={status}
             status={upperCase(status)}
             className={clsx(
-              '-ml-0.75 size-2 animate-none! border border-neutral',
+              '-ml-0.75 size-2.5 animate-none! border border-neutral',
               !enabledStatuses[status] && 'bg-muted!',
             )}
           />

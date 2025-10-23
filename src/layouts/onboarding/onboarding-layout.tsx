@@ -56,7 +56,7 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
     <aside className="dark col h-full gap-8 rounded-2xl bg-neutral/95 px-12 py-16">
       <LogoKoyeb className="h-8 self-start" />
 
-      {hasMultipleOrganizations && <OrganizationSwitcher />}
+      {hasMultipleOrganizations && <OrganizationSwitcher dark />}
 
       <div className="col flex-1 justify-center gap-6">
         <div className="text-base leading-relaxed text-dim">{sentence}</div>
@@ -73,10 +73,14 @@ function UserMenu() {
 
   return (
     <DropdownMenu
+      openOnHover
+      dropdown={{
+        floating: { placement: 'right-end' },
+      }}
       reference={(props) => (
         <button
           type="button"
-          className="row items-center gap-2 py-2 transition-colors hover:bg-muted/50"
+          className="row items-center gap-2 rounded-md p-2 text-start transition-colors hover:bg-muted/50"
           {...props}
         >
           <UserAvatar user={user} />

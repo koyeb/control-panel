@@ -6,6 +6,7 @@ import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
 import { isDeploymentRunning } from 'src/application/service-functions';
+import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { getInitialLogOptions } from 'src/components/logs/log-options';
@@ -88,20 +89,20 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
         appName={app.name}
         serviceName={service.name}
         lines={logs.lines}
-        renderMenu={(props) => (
-          <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-60')} {...props}>
+        menu={
+          <Menu>
             {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
-              <MenuItem key={option}>
+              <ButtonMenuItem key={option}>
                 <ControlledCheckbox
                   control={optionsForm.control}
                   name={option}
                   label={<Translate id={`components.logs.options.${option}`} />}
                   className="flex-1"
                 />
-              </MenuItem>
+              </ButtonMenuItem>
             ))}
           </Menu>
-        )}
+        }
       />
     </FullScreen>
   );
@@ -245,7 +246,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
             name="search"
             type="search"
             placeholder={t('header.search')}
-            className="min-w-64"
+            className="max-w-64"
           />
         </FeatureFlag>
 

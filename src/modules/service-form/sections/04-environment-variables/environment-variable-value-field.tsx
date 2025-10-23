@@ -49,7 +49,9 @@ export function EnvironmentVariableValueField({
 
   const variableName = useWatchServiceForm(`environmentVariables.${index}.name`);
 
-  const groups = [
+  type Group = { key: React.Key; label: React.ReactNode; items: string[] };
+
+  const groups: Group[] = [
     {
       key: 'secrets',
       label: 'Secrets',
@@ -137,9 +139,6 @@ export function EnvironmentVariableValueField({
     />
   );
 
-  // code smell, but it works
-  let itemIndex = 0;
-
   return (
     <Field
       label={label && <LabelTooltip {...getLabelProps()} label={label} tooltip={tooltip} />}
@@ -167,21 +166,34 @@ export function EnvironmentVariableValueField({
 
       <Dropdown dropdown={dropdown}>
         <Menu {...getMenuProps()} className="max-h-64 overflow-y-auto">
-          {groups.map(({ key, label, items }) => (
-            <Fragment key={key}>
-              <MenuItem className="pointer-events-none font-medium text-dim">{label}</MenuItem>
+          {
+            groups.reduce(
+              (result: { sections: React.ReactNode[]; offset: number }, { key, label, items }) => {
+                result.sections.push(
+                  <Fragment key={key}>
+                    {items.length > 0 && (
+                      <MenuItem className="pointer-events-none font-medium text-dim">{label}</MenuItem>
+                    )}
 
-              {items.map((item) => (
-                <MenuItem
-                  {...getItemProps({ item, index: ++itemIndex })}
-                  key={item}
-                  highlighted={itemIndex === highlightedIndex}
-                >
-                  {item === '__new_secret__' ? <T id="createSecret" /> : item}
-                </MenuItem>
-              ))}
-            </Fragment>
-          ))}
+                    {items.map((item, index) => (
+                      <MenuItem
+                        {...getItemProps({ item, index: index + result.offset })}
+                        key={item}
+                        highlighted={index + result.offset === highlightedIndex}
+                      >
+                        {item === '__new_secret__' ? <T id="createSecret" /> : item}
+                      </MenuItem>
+                    ))}
+                  </Fragment>,
+                );
+
+                result.offset += items.length;
+
+                return result;
+              },
+              { sections: [], offset: 0 },
+            ).sections
+          }
         </Menu>
       </Dropdown>
     </Field>

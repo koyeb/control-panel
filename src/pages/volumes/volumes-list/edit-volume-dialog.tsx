@@ -8,7 +8,7 @@ import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
 import { ControlledInput } from 'src/components/forms';
-import { FormValues, handleSubmit } from 'src/hooks/form';
+import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Volume } from 'src/model';
 
@@ -51,6 +51,7 @@ function EditVolumeForm({ volume }: { volume: Volume }) {
       path: { id: volume.id },
       body: { name },
     })),
+    onError: useFormErrorHandler(form),
     onSuccess(result) {
       notify.success(t('updated', { name: result.volume?.name }));
       closeDialog();

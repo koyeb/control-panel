@@ -1,11 +1,11 @@
-import { IconButton, Menu, MenuItem } from '@koyeb/design-system';
-import clsx from 'clsx';
+import { IconButton, Menu } from '@koyeb/design-system';
 import { max, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useApp, useService } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
+import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { LogOptions, getInitialLogOptions } from 'src/components/logs/log-options';
@@ -97,20 +97,20 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
           appName={app?.name ?? ''}
           serviceName={service?.name ?? ''}
           lines={logs.lines}
-          renderMenu={(props) => (
-            <Menu className={clsx(optionsForm.watch('fullScreen') && 'z-60')} {...props}>
+          menu={
+            <Menu>
               {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
-                <MenuItem key={option}>
+                <ButtonMenuItem key={option}>
                   <ControlledCheckbox
                     control={optionsForm.control}
                     name={option}
                     label={<Translate id={`components.logs.options.${option}`} />}
                     className="flex-1"
                   />
-                </MenuItem>
+                </ButtonMenuItem>
               ))}
             </Menu>
-          )}
+          }
         />
       </FullScreen>
     </div>

@@ -7,7 +7,7 @@ import { createPortal } from 'react-dom';
 
 import { apiQuery, mapOrganization, useOrganization, useSwitchOrganization, useUser } from 'src/api';
 import { SvgComponent } from 'src/application/types';
-import { Link } from 'src/components/link';
+import { LinkMenuItem } from 'src/components/dropdown-menu';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -19,10 +19,11 @@ const limit = 10;
 
 type OrganizationSwitcherProps = {
   showCreateOrganization?: boolean;
+  dark?: boolean;
   className?: string;
 };
 
-export function OrganizationSwitcher({ showCreateOrganization, className }: OrganizationSwitcherProps) {
+export function OrganizationSwitcher({ showCreateOrganization, dark, className }: OrganizationSwitcherProps) {
   const t = T.useTranslate();
   const currentOrganization = useOrganization();
 
@@ -98,7 +99,7 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
       </button>
 
       {createPortal(
-        <Dropdown dropdown={dropdown} onClosed={() => setInputValue('')}>
+        <Dropdown dropdown={dropdown} onClosed={() => setInputValue('')} className={clsx({ dark })}>
           <input
             {...combobox.getInputProps()}
             type="search"
@@ -126,16 +127,14 @@ export function OrganizationSwitcher({ showCreateOrganization, className }: Orga
 
           {showCreateOrganization && (
             <>
-              <hr className="my-1" />
+              <hr className="" />
 
-              <Link
-                to="/user/settings/organizations"
-                state={{ create: true }}
-                className="mb-1 row w-full gap-2 px-2 py-1.5"
-              >
-                <IconCirclePlus className="size-5" />
-                <T id="createOrganization" />
-              </Link>
+              <Menu>
+                <LinkMenuItem to="/user/settings/organizations" state={{ create: true }} className="py-0.5!">
+                  <IconCirclePlus className="size-5" />
+                  <T id="createOrganization" />
+                </LinkMenuItem>
+              </Menu>
             </>
           )}
         </Dropdown>,

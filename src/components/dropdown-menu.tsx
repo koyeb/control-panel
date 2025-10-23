@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import { merge } from 'lodash-es';
 import { useState } from 'react';
 
+import { stopPropagation, withStopPropagation } from 'src/application/dom-events';
 import { SvgComponent } from 'src/application/types';
 import { IconEllipsisVertical } from 'src/icons';
 
@@ -19,6 +20,7 @@ import { ExternalLink } from './link';
 
 type DropdownMenuProps = {
   openOnHover?: boolean;
+  closeOnClick?: boolean;
   dropdown?: UseDropdownProps;
   reference: (props: Record<string, unknown>) => React.ReactNode;
   children: React.ReactNode;
@@ -26,6 +28,7 @@ type DropdownMenuProps = {
 
 export function DropdownMenu({
   openOnHover,
+  closeOnClick = true,
   dropdown: dropdownProp,
   reference,
   children,
@@ -47,7 +50,7 @@ export function DropdownMenu({
     ),
   );
 
-  const dismiss = useDismiss(dropdown.context);
+  const dismiss = useDismiss(dropdown.context, { outsidePressEvent: 'mousedown' });
   const role = useRole(dropdown.context, { role: 'menu' });
   const hover = useHover(dropdown.context, { enabled: Boolean(openOnHover), handleClose: safePolygon() });
 
@@ -55,12 +58,22 @@ export function DropdownMenu({
 
   return (
     <>
-      {reference(getReferenceProps({ ref: dropdown.refs.setReference, onClick: () => setOpen(true) }))}
+      {reference(
+        getReferenceProps({
+          ref: dropdown.refs.setReference,
+          onClick: withStopPropagation(() => setOpen(true)),
+        }),
+      )}
 
       <FloatingPortal root={document.getElementById('root')}>
         {dropdown.transition.isMounted && (
-          <Dropdown dropdown={dropdown} {...getFloatingProps()} className="min-w-48">
-            <Menu onClick={() => setOpen(false)}>{children}</Menu>
+          <Dropdown
+            {...getFloatingProps()}
+            dropdown={dropdown}
+            onClick={stopPropagation}
+            className="min-w-48"
+          >
+            <Menu onClick={() => closeOnClick && setOpen(false)}>{children}</Menu>
           </Dropdown>
         )}
       </FloatingPortal>
@@ -85,22 +98,15 @@ export function LabelMenuItem({ className, ...props }: React.ComponentProps<'li'
 
 export function ButtonMenuItem({ className, ...props }: React.ComponentProps<'button'>) {
   return (
-    <MenuItem className={clsx(!props.disabled && 'hover:bg-muted')}>
-      <button
-        {...props}
-        className={clsx(
-          className,
-          'row w-full items-center gap-2 py-1 text-start',
-          props.disabled && 'text-dim',
-        )}
-      />
+    <MenuItem className={clsx(props.disabled ? 'text-dim' : 'hover:bg-muted')}>
+      <button {...props} className={clsx(className, 'row w-full items-center gap-2 py-1 text-start')} />
     </MenuItem>
   );
 }
 
 function NativeLinkMenuItem({ className, ...props }: React.ComponentProps<'a'>) {
   return (
-    <MenuItem className="hover:bg-muted">
+    <MenuItem className={clsx(props.href ? 'hover:bg-muted' : 'cursor-default! text-dim')}>
       <a {...props} className={clsx(className, 'row w-full items-center gap-2 py-1')} />
     </MenuItem>
   );

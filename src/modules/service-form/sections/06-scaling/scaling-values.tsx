@@ -47,7 +47,7 @@ function FixedScaling({ disabled, onChanged }: FixedScalingProps) {
           setValue('scaling.min', value);
           onChanged(value, value);
         }}
-        className="w-34"
+        className="w-34!"
       />
 
       <Slider
@@ -101,7 +101,7 @@ function AutoScaling({ disabled, onChanged }: AutoScalingProps) {
         min={minMin}
         max={minMax}
         onChangeEffect={(event) => onChanged(event.target.valueAsNumber, max)}
-        className="w-20"
+        className="w-20!"
       />
 
       <Slider
@@ -132,7 +132,7 @@ function AutoScaling({ disabled, onChanged }: AutoScalingProps) {
         min={maxMin}
         max={maxMax}
         onChangeEffect={(event) => onChanged(min, event.target.valueAsNumber)}
-        className="w-20"
+        className="w-20!"
       />
     </>
   );
