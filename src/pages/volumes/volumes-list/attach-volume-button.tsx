@@ -1,10 +1,14 @@
-import { Button, Combobox, Spinner } from '@koyeb/design-system';
-import { Input } from '@koyeb/design-system/next';
+import { Button } from '@koyeb/design-system';
+import { Dropdown, InputStart, Menu, MenuItem, useDropdown } from '@koyeb/design-system/next';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
+import { useCombobox } from 'downshift';
 import { useState } from 'react';
 
 import { getApi, mapApp, mapService } from 'src/api';
+import { Input } from 'src/components/forms';
+import { InputEndSpinner } from 'src/components/forms/helpers/input-end-spinner';
+import { NoItems } from 'src/components/forms/helpers/no-items';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Tooltip } from 'src/components/tooltip';
 import { useNavigate } from 'src/hooks/router';
@@ -17,6 +21,8 @@ import { wait } from 'src/utils/promises';
 
 const T = createTranslate('pages.volumes.list.attach');
 
+const limit = 3;
+
 export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
   const navigate = useNavigate();
@@ -24,53 +30,54 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const [search, setSearch] = useState('');
   const searchQuery = useSearchServicesQuery(search);
 
-  const combobox = Combobox.useCombobox({
-    placement: 'bottom-end',
-    offset: 4,
-    flip: true,
+  const combobox = useCombobox({
     items: searchQuery.data?.services ?? [],
-    combobox: {
-      itemToString: (service) => service?.name ?? '',
 
-      inputValue: search,
-      onInputValueChange({ inputValue }) {
-        setSearch(inputValue);
-      },
+    itemToString: (service) => service?.name ?? '',
 
-      onSelectedItemChange({ selectedItem: service }) {
-        if (service) {
-          void navigate({ to: `/services/${service.id}/settings`, search: { 'attach-volume': volume.id } });
-        }
-      },
+    inputValue: search,
+    onInputValueChange({ inputValue }) {
+      setSearch(inputValue);
+    },
 
-      stateReducer: (state, { type, changes }) => {
-        switch (type) {
-          case Combobox.stateChangeTypes.InputClick:
-            return { ...changes, isOpen: state.isOpen };
+    onSelectedItemChange({ selectedItem: service }) {
+      if (service) {
+        void navigate({ to: `/services/${service.id}/settings`, search: { 'attach-volume': volume.id } });
+      }
+    },
 
-          case Combobox.stateChangeTypes.ItemClick:
-          case Combobox.stateChangeTypes.InputKeyDownEnter:
-            return { ...changes, inputValue: state.inputValue };
+    stateReducer: (state, { type, changes }) => {
+      switch (type) {
+        case useCombobox.stateChangeTypes.InputClick:
+          return { ...changes, isOpen: state.isOpen };
 
-          default:
-            return changes;
-        }
-      },
+        case useCombobox.stateChangeTypes.ItemClick:
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+          return { ...changes, inputValue: state.inputValue };
+
+        default:
+          return changes;
+      }
     },
   });
 
+  const dropdown = useDropdown(combobox.isOpen, {
+    floating: { placement: 'bottom-end' },
+    offset: 4,
+    flip: true,
+  });
+
   const { apps, services, total } = searchQuery.data ?? {};
-  const Icon = searchQuery.isFetching ? Spinner : IconSearch;
 
   return (
-    <Combobox.Provider value={combobox}>
+    <>
       <Tooltip
         forceDesktop
         content={searchQuery.error?.message ?? (volume.serviceId && <T id="alreadyMounted" />)}
         trigger={(props) => (
           <div {...props}>
             <Button
-              {...combobox.getToggleButtonProps({ ref: combobox.floating.refs.setReference })}
+              {...combobox.getToggleButtonProps({ ref: dropdown.refs.setReference })}
               disabled={volume.serviceId !== undefined || searchQuery.isError}
               size={1}
               color="gray"
@@ -82,32 +89,38 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
         )}
       />
 
-      <Combobox.Dropdown onTransitionCancel={() => setSearch('')} className="w-full max-w-sm">
+      <Dropdown dropdown={dropdown} onClosed={() => setSearch('')} className="w-full max-w-sm">
         <Input
           {...combobox.getInputProps()}
           type="search"
-          start={<Icon className="ml-3 size-4 text-dim" />}
+          start={
+            <InputStart background={false}>
+              <IconSearch className="size-4 text-dim" />
+            </InputStart>
+          }
+          end={<InputEndSpinner show={searchQuery.isPending} />}
           placeholder={t('placeholder')}
-          className={clsx('items-center rounded-b-none border-x-0 border-t-0 outline-none', {
-            hidden: total !== undefined && total <= 10,
-          })}
+          className={clsx({ hidden: total !== undefined && total <= limit })}
+          root={{ className: 'rounded-b-none border-x-0 border-t-0 outline-none' }}
+          inputClassName={clsx('outline-none')}
         />
 
-        {services?.length === 0 && (
-          <div className="col min-h-24 items-center justify-center text-dim">
-            <T id="noServices" />
-          </div>
-        )}
+        {services?.length === 0 && <NoItems message={<T id="noServices" />} />}
 
-        <Combobox.Menu>
-          {services?.map((service) => (
-            <Combobox.MenuItem key={service.id} item={service} className="py-1.5">
+        <Menu {...combobox.getMenuProps()} className={clsx({ hidden: services?.length === 0 })}>
+          {services?.map((service, index) => (
+            <MenuItem
+              {...combobox.getItemProps({ item: service, index })}
+              key={service.id}
+              highlighted={index === combobox.highlightedIndex}
+              className="py-1.5"
+            >
               <ServiceItem app={apps?.[service.appId]} service={service} />
-            </Combobox.MenuItem>
+            </MenuItem>
           ))}
-        </Combobox.Menu>
-      </Combobox.Dropdown>
-    </Combobox.Provider>
+        </Menu>
+      </Dropdown>
+    </>
   );
 }
 
@@ -128,7 +141,7 @@ function useSearchServicesQuery(search: string) {
       const apps = new Map(matchingApps.map((app) => [app.id, app]));
 
       const appsServices = await getAppsServices(matchingApps);
-      const services = unique([...matchingServices, ...appsServices], getId).slice(0, 10);
+      const services = unique([...matchingServices, ...appsServices], getId).slice(0, limit);
 
       const missingAppIds = matchingServices
         .map((service) => service.appId)
@@ -156,7 +169,7 @@ async function getTotalServices(signal: AbortSignal): Promise<number> {
 async function searchApps(search: string, signal: AbortSignal): Promise<App[]> {
   const api = getApi();
 
-  return api('get /v1/apps', { query: { name: search, limit: '10' } }, { signal }).then(({ apps }) =>
+  return api('get /v1/apps', { query: { name: search, limit: String(limit) } }, { signal }).then(({ apps }) =>
     apps!.map(mapApp),
   );
 }
@@ -166,7 +179,7 @@ async function searchServices(search: string, signal: AbortSignal): Promise<Serv
 
   return api(
     'get /v1/services',
-    { query: { name: search, limit: '10', types: ['WEB', 'WORKER'] } },
+    { query: { name: search, limit: String(limit), types: ['WEB', 'WORKER'] } },
     { signal },
   ).then(({ services }) => services!.map(mapService));
 }

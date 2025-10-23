@@ -102,11 +102,7 @@ export function AddressField({
       }}
       end={<InputEndSpinner show={pending} />}
       onClosed={() => setSuggestions([])}
-      onChange={(suggestion) => {
-        if (suggestion) {
-          onChange(suggestionToAddress(suggestion));
-        }
-      }}
+      onChange={(suggestion) => onChange(suggestionToAddress(suggestion))}
     />
   );
 }
@@ -138,11 +134,11 @@ function mapErrors(errors: unknown = {}) {
   const err = errors as Partial<Record<keyof Address, FieldError>>;
 
   return {
-    line1: err?.line1?.message,
-    line2: err?.line2?.message,
-    city: err?.city?.message,
-    postalCode: err?.postalCode?.message,
-    state: err?.state?.message,
-    country: err?.country?.message,
+    line1: err.line1?.message,
+    line2: err.line2?.message,
+    city: err.city?.message,
+    postalCode: err.postalCode?.message,
+    state: err.state?.message,
+    country: err.country?.message,
   };
 }
