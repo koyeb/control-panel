@@ -1,5 +1,4 @@
-import { Button } from '@koyeb/design-system';
-import { Dropdown, InputStart, Menu, MenuItem, useDropdown } from '@koyeb/design-system/next';
+import { Button, Dropdown, InputStart, Menu, MenuItem, useDropdown } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';

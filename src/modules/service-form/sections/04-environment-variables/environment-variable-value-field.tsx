@@ -1,5 +1,12 @@
-import { Dropdown, DropdownGroup, IconButton, useDropdown } from '@koyeb/design-system';
-import { Field, FieldHelperText, Input } from '@koyeb/design-system/next';
+import {
+  Dropdown,
+  DropdownGroup,
+  Field,
+  FieldHelperText,
+  IconButton,
+  Input,
+  useDropdown,
+} from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import { useRef, useState } from 'react';

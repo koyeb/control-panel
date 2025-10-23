@@ -1,5 +1,4 @@
-import { Button } from '@koyeb/design-system';
-import { InputEnd } from '@koyeb/design-system/next';
+import { Button, InputEnd } from '@koyeb/design-system';
 import isEqual from 'lodash-es/isEqual';
 import { useFormContext } from 'react-hook-form';
 

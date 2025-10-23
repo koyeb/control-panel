@@ -1,5 +1,4 @@
-import { Alert, TabButton, TabButtons } from '@koyeb/design-system';
-import { Checkbox, Radio } from '@koyeb/design-system/next';
+import { Alert, Checkbox, Radio, TabButton, TabButtons } from '@koyeb/design-system';
 
 import { useCatalogRegionAvailability } from 'src/api';
 import { RegionFlag } from 'src/components/region-flag';

@@ -1,5 +1,4 @@
-import { Spinner } from '@koyeb/design-system';
-import { Dropdown, Menu, MenuItem, useDropdown } from '@koyeb/design-system/next';
+import { Dropdown, Menu, MenuItem, Spinner, useDropdown } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useCombobox } from 'downshift';

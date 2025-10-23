@@ -7,7 +7,7 @@ import {
   useInteractions,
   useRole,
 } from '@floating-ui/react';
-import { AccordionSection, Badge, Button, MultiSelect } from '@koyeb/design-system';
+import { AccordionSection, Badge, Button } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState } from 'react';

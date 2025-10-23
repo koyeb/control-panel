@@ -1,5 +1,4 @@
-import { IconButton, Spinner } from '@koyeb/design-system';
-import { Dropdown, Menu, MenuItem } from '@koyeb/design-system/next';
+import { Dropdown, IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { Duration, format, sub } from 'date-fns';
 import { useCallback, useMemo } from 'react';

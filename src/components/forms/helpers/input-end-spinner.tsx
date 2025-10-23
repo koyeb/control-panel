@@ -1,5 +1,4 @@
-import { Spinner } from '@koyeb/design-system';
-import { InputEnd } from '@koyeb/design-system/next';
+import { InputEnd, Spinner } from '@koyeb/design-system';
 
 export function InputEndSpinner({ show }: { show: boolean }) {
   if (!show) {

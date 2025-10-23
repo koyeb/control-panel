@@ -1,5 +1,4 @@
-import { Badge, Button } from '@koyeb/design-system';
-import { InputEnd } from '@koyeb/design-system/next';
+import { Badge, Button, InputEnd } from '@koyeb/design-system';
 import { useFormContext, useFormState } from 'react-hook-form';
 
 import { useCatalogInstance, useOrganization } from 'src/api';

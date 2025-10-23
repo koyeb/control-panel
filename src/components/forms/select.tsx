@@ -1,5 +1,5 @@
-import { Badge } from '@koyeb/design-system';
 import {
+  Badge,
   Dropdown,
   Field,
   FieldHelperText,
@@ -9,7 +9,7 @@ import {
   UseDropdown,
   UseDropdownProps,
   useDropdown,
-} from '@koyeb/design-system/next';
+} from '@koyeb/design-system';
 import clsx from 'clsx';
 import {
   UseSelectProps,

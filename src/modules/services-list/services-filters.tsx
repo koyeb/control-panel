@@ -1,4 +1,4 @@
-import { InputStart } from '@koyeb/design-system/next';
+import { InputStart } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { UseFormReturn, useController } from 'react-hook-form';
 

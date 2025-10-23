@@ -1,5 +1,4 @@
-import { IconButton } from '@koyeb/design-system';
-import { Field, FieldHelperText, FieldLabel } from '@koyeb/design-system/next';
+import { Field, FieldHelperText, FieldLabel, IconButton } from '@koyeb/design-system';
 import { useId, useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 

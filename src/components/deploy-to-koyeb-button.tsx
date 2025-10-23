@@ -1,4 +1,4 @@
-import { InputEnd } from '@koyeb/design-system/next';
+import { InputEnd } from '@koyeb/design-system';
 
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { createTranslate } from 'src/intl/translate';

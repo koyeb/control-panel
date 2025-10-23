@@ -1,4 +1,4 @@
-import { FieldLabel } from '@koyeb/design-system/next';
+import { FieldLabel } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { createElement } from 'react';
 

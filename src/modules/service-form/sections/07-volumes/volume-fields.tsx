@@ -1,5 +1,4 @@
-import { IconButton, useBreakpoint } from '@koyeb/design-system';
-import { Dropdown, Menu, MenuItem } from '@koyeb/design-system/next';
+import { Dropdown, IconButton, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';

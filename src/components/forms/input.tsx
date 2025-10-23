@@ -1,5 +1,5 @@
 import { useMergeRefs } from '@floating-ui/react';
-import { Input as BaseInput, Field, FieldHelperText } from '@koyeb/design-system/next';
+import { Input as BaseInput, Field, FieldHelperText } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 

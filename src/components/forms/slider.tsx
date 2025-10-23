@@ -1,4 +1,4 @@
-import { Slider as BaseSlider, Field, FieldHelperText } from '@koyeb/design-system/next';
+import { Slider as BaseSlider, Field, FieldHelperText } from '@koyeb/design-system';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { Extend } from 'src/utils/types';

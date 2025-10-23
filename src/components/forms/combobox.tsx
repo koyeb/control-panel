@@ -7,7 +7,7 @@ import {
   UseDropdown,
   UseDropdownProps,
   useDropdown,
-} from '@koyeb/design-system/next';
+} from '@koyeb/design-system';
 import clsx from 'clsx';
 import {
   UseComboboxProps,

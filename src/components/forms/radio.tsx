@@ -1,4 +1,4 @@
-import { Radio as BaseRadio, InlineField } from '@koyeb/design-system/next';
+import { Radio as BaseRadio, InlineField } from '@koyeb/design-system';
 import { FieldPath, FieldValues, useController } from 'react-hook-form';
 
 import { Extend } from 'src/utils/types';
