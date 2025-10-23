@@ -1,0 +1,18 @@
+.woswidgets-root {
+  min-height: unset;
+}
+
+.woswidgets-widget,
+.woswidgets-card-list {
+  box-shadow:
+    0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
+    0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+}
+
+.woswidgets-dialog-overlay {
+  z-index: 50;
+}
+
+.woswidgets-button {
+  cursor: pointer;
+}
