@@ -32,7 +32,7 @@ export function RegionsMetadataValue({ regions }: RegionsMetadataProps) {
 
           {regions.length >= 2 && (
             <Badge color="gray" size={1} className="text-default!" {...props}>
-              <Translate id="common.plusCount" values={{ count: 2 }} />
+              <Translate id="common.plusCount" values={{ count: regions.length - 1 }} />
             </Badge>
           )}
         </div>
