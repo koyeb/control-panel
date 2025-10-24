@@ -17,7 +17,7 @@ export function FullScreen({ enabled, exit, className, ...props }: FullScreenPro
 
   return (
     <FloatingPortal root={document.getElementById('root')}>
-      <FloatingOverlay lockScroll className={clsx('fixed inset-0 z-60 bg-neutral', className)} {...props} />
+      <FloatingOverlay lockScroll className={clsx('fixed inset-0 z-40 bg-neutral', className)} {...props} />
     </FloatingPortal>
   );
 }
