@@ -1,7 +1,6 @@
 import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { max, sub } from 'date-fns';
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { hasBuild, isDeploymentRunning } from 'src/application/service-functions';
@@ -116,16 +115,12 @@ type BuildSectionProps = {
 };
 
 function BuildSection({ app, service, deployment, expanded, setExpanded }: BuildSectionProps) {
-  const now = useRef(new Date());
-
   const logs = useLogs(deployment.build?.status === 'RUNNING', {
     deploymentId: deployment.id,
     regionalDeploymentId: null,
     instanceId: null,
     type: 'build',
     period: '30d',
-    start: new Date(deployment.build?.startedAt ?? deployment.date),
-    end: new Date(deployment.build?.finishedAt ?? now.current),
     search: '',
     logs: true,
     events: true,
@@ -253,15 +248,6 @@ type RuntimeSectionProps = {
 
 function RuntimeSection({ app, service, deployment, instances, expanded, setExpanded }: RuntimeSectionProps) {
   const logsFilters = useFeatureFlag('logs-filters');
-  const now = useMemo(() => new Date(), []);
-
-  const start = useMemo(() => {
-    return max([sub(now, logsFilters ? { hours: 1 } : { days: 30 }), deployment.date]);
-  }, [now, logsFilters, deployment.date]);
-
-  const end = useMemo(() => {
-    return new Date(deployment.terminatedAt ?? now);
-  }, [now, deployment.terminatedAt]);
 
   const filters: LogsFilters = {
     deploymentId: deployment.id,
@@ -269,8 +255,6 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
     instanceId: null,
     type: 'runtime',
     period: logsFilters ? '1h' : '30d',
-    start,
-    end,
     search: '',
     logs: true,
     events: true,

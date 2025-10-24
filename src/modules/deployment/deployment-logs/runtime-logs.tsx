@@ -1,6 +1,6 @@
 import { Dropdown, IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { Duration, format, sub } from 'date-fns';
+import { format } from 'date-fns';
 import { useCallback, useMemo } from 'react';
 import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 
@@ -25,7 +25,8 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
-import { LogsApi, LogsFilters, LogsPeriod } from 'src/hooks/logs';
+import { LogsApi, LogsFilters, LogsPeriod, getLogsStartDate } from 'src/hooks/logs';
+import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Service } from 'src/model';
@@ -272,8 +273,10 @@ type SelectPeriodProps = {
 };
 
 function SelectPeriod({ filters }: SelectPeriodProps) {
-  const periods = useRetentionPeriods();
   const t = T.useTranslate();
+
+  const periods = useRetentionPeriods();
+  const end = useNow();
 
   const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
 
@@ -283,8 +286,8 @@ function SelectPeriod({ filters }: SelectPeriodProps) {
     }
 
     return [
-      formatPeriodDate(filters.watch('start')),
-      period === 'live' ? t('header.now') : formatPeriodDate(filters.watch('end')),
+      formatPeriodDate(getLogsStartDate(end, period)),
+      period === 'live' ? t('header.now') : formatPeriodDate(end),
     ].join(' - ');
   };
 
@@ -295,19 +298,6 @@ function SelectPeriod({ filters }: SelectPeriodProps) {
       items={periods}
       getValue={identity}
       renderValue={renderPeriod}
-      onChangeEffect={(period) => {
-        const now = new Date();
-        const duration: Duration = {};
-
-        if (period === '1h') duration.hours = 1;
-        if (period === '6h') duration.hours = 6;
-        if (period === '24h') duration.hours = 24;
-        if (period === '7d') duration.days = 7;
-        if (period === '30d') duration.days = 30;
-
-        filters.setValue('start', sub(now, duration));
-        filters.setValue('end', now);
-      }}
       menu={({ select, dropdown }) => (
         <Dropdown dropdown={dropdown}>
           <Menu {...select.getMenuProps()}>

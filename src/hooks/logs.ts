@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { AnsiUp } from 'ansi_up';
-import { add, max, sub } from 'date-fns';
+import { Duration, add, max, sub } from 'date-fns';
+import { dequal } from 'dequal';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
@@ -8,7 +9,7 @@ import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src
 import { LogLine } from 'src/model';
 import { createId } from 'src/utils/strings';
 
-import { useDeepCompareMemo } from './lifecycle';
+import { useDeepCompareMemo, usePrevious } from './lifecycle';
 import { useDebouncedValue } from './timers';
 
 export type LogType = 'build' | 'runtime';
@@ -21,8 +22,6 @@ export type LogsFilters = {
   regionalDeploymentId: string | null;
   instanceId: string | null;
   period: LogsPeriod;
-  start: Date;
-  end: Date;
   search: string;
   logs: boolean;
   events: boolean;
@@ -39,9 +38,15 @@ export type LogsApi = {
 
 export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
   const filtersMemo = useDeepCompareMemo({ ...filters, search: useDebouncedValue(filters.search, 500) });
+  const prevFilters = usePrevious(filtersMemo);
+  const end = useRef(new Date());
 
-  const { data: historyLines = [], ...query } = useLogsHistory(filtersMemo);
-  const stream = useLogsStream(tail, filtersMemo);
+  if (!dequal(filtersMemo, prevFilters)) {
+    end.current = new Date();
+  }
+
+  const { data: historyLines = [], ...query } = useLogsHistory(filtersMemo, end.current);
+  const stream = useLogsStream(tail, filtersMemo, end.current);
 
   const { search } = filtersMemo;
   const highlightSearchMatches = useCallback(
@@ -74,20 +79,20 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
   };
 }
 
-function useLogsHistory(filters: LogsFilters) {
+function useLogsHistory(filters: LogsFilters, end: Date) {
   const quotas = useOrganizationQuotas();
 
   const initialPageParam = useMemo(() => {
-    const start = max([filters.start, add(sub(new Date(), { days: quotas.logsRetention }), { minutes: 1 })]);
-    const end = max([start, filters.end]);
+    const start = getLogsStartDate(end, filters.period);
 
     return {
       start: start.toISOString(),
       end: end.toISOString(),
     };
-  }, [quotas, filters.start, filters.end]);
+  }, [filters.period, end]);
 
   return useInfiniteQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: getApiQueryKey('get /v1/streams/logs/tail', {
       query: {
         type: filters.type,
@@ -106,8 +111,10 @@ function useLogsHistory(filters: LogsFilters) {
         return { data: [], pagination: { has_more: false } };
       }
 
+      const minStart = add(sub(new Date(), { days: quotas.logsRetention }), { minutes: 1 });
+
       return api('get /v1/streams/logs/query', {
-        query: { ...query, start, end },
+        query: { ...query, start: max([new Date(start), minStart]).toISOString(), end },
       });
     },
     refetchInterval: false,
@@ -136,9 +143,21 @@ function useLogsHistory(filters: LogsFilters) {
   });
 }
 
+export function getLogsStartDate(end: Date, period: LogsPeriod) {
+  const duration: Duration = {};
+
+  if (period === '1h') duration.hours = 1;
+  if (period === '6h') duration.hours = 6;
+  if (period === '24h') duration.hours = 24;
+  if (period === '7d') duration.days = 7;
+  if (period === '30d') duration.days = 30;
+
+  return sub(end, duration);
+}
+
 const reconnectTimeout = [0, 1_000, 5_000, 60_000];
 
-function useLogsStream(connect: boolean, filters: LogsFilters) {
+function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
   const filtersMemo = useDeepCompareMemo(filters);
 
   const stream = useRef<ReturnType<typeof tailLogs>>(null);
@@ -150,12 +169,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters) {
   const reconnectIndex = useRef<number>(null);
 
   const initialize = useCallback(() => {
-    const filters = {
-      ...filtersMemo,
-      start: filtersMemo.end,
-    };
-
-    stream.current = tailLogs(filters, {
+    stream.current = tailLogs(filtersMemo, start, {
       onOpen: () => {
         setError(undefined);
         setConnected(true);
@@ -173,7 +187,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters) {
       },
       onLogLine: (line) => setLines((lines) => [...lines, line]),
     });
-  }, [filtersMemo]);
+  }, [filtersMemo, start]);
 
   useEffect(() => {
     let timeout: number;
@@ -203,7 +217,7 @@ type LogStreamListeners = {
   onLogLine: (line: Omit<LogLine, 'html'>) => void;
 };
 
-function tailLogs(filters: LogsFilters, listeners: Partial<LogStreamListeners>) {
+function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStreamListeners>) {
   const apiStream = getApiStream();
 
   const stream = apiStream('get /v1/streams/logs/tail', {
@@ -212,7 +226,7 @@ function tailLogs(filters: LogsFilters, listeners: Partial<LogStreamListeners>) 
       deployment_id: filters.deploymentId,
       regional_deployment_id: filters.regionalDeploymentId ?? undefined,
       instance_id: filters.instanceId ?? undefined,
-      start: filters.start.toISOString(),
+      start: start.toISOString(),
       text: filters.search || undefined,
     },
   });

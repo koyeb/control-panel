@@ -1,6 +1,5 @@
 import { IconButton, Menu } from '@koyeb/design-system';
-import { max, sub } from 'date-fns';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useApp, useService } from 'src/api';
@@ -30,23 +29,11 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   const service = useService(useRouteParam('serviceId'));
   const app = useApp(service?.appId);
 
-  const now = useMemo(() => new Date(), []);
-
-  const start = useMemo(() => {
-    return max([sub(now, { days: 30 }), instance.createdAt]);
-  }, [now, instance.createdAt]);
-
-  const end = useMemo(() => {
-    return new Date(instance.terminatedAt ?? now);
-  }, [now, instance.terminatedAt]);
-
   const filtersForm = useForm<LogsFilters>({
     defaultValues: {
       instanceId: instance.id,
       type: 'runtime',
       period: '30d',
-      start,
-      end,
       search: '',
       logs: true,
       events: true,
