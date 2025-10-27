@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 
 import { useAuthKit } from 'src/application/authkit';
 import { useIdentifyUser } from 'src/application/posthog';
-import { isSessionToken, setAuthKitToken, setToken } from 'src/application/token';
+import { setAuthKitToken, setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 
@@ -97,10 +97,7 @@ export function useLogoutMutation() {
     ...apiMutation('delete /v1/account/logout', {}),
     meta: { showError: !ApiError.isAccountLockedError(userQuery.error) },
     async onSettled() {
-      if (!isSessionToken()) {
-        clearIdentify();
-      }
-
+      clearIdentify();
       setToken(null);
       await navigate({ to: '/auth/signin' });
     },
@@ -110,10 +107,7 @@ export function useLogoutMutation() {
     mutationKey: ['logout'],
     mutationFn: async () => authKit.signOut(),
     onSuccess: async () => {
-      if (!isSessionToken()) {
-        clearIdentify();
-      }
-
+      clearIdentify();
       setAuthKitToken(null);
       await navigate({ to: '/auth/signin' });
     },

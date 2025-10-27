@@ -171,12 +171,15 @@ const persister = createQueryPersister({
   storage: persistStore,
 });
 
+const location = new URL(window.location.href);
+const disablePersist = isSessionToken() || location.searchParams.has('session-token');
+
 const queryClient = new QueryClient({
   queryCache,
   mutationCache,
   defaultOptions: {
     queries: {
-      persister: persister.persisterFn,
+      persister: !disablePersist ? persister.persisterFn : undefined,
       refetchInterval: 5_000,
       throwOnError,
       retry,
@@ -274,27 +277,6 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
   return loading ? null : children;
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-function PersistGate({ children }: { children: React.ReactNode }) {
-  const [restoring, setRestoring] = useState(true);
-
-  useEffect(() => {
-    const location = new URL(window.location.href);
-
-    if (!isSessionToken() && !location.searchParams.has('session-token')) {
-      void persister.restoreQueries(queryClient).finally(() => setRestoring(false));
-    } else {
-      setRestoring(false);
-    }
-  }, []);
-
-  if (restoring) {
-    return null;
-  }
-
-  return children;
-}
-
 const rootElement = document.getElementById('root')!;
 
 if (!rootElement.innerHTML) {
@@ -302,9 +284,7 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <PersistGate>
-        <RouterProvider router={router} />
-      </PersistGate>
+      <RouterProvider router={router} />
     </StrictMode>,
   );
 }

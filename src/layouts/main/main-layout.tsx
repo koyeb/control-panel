@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
-import { useLogoutMutation, useOrganization, useUser } from 'src/api';
+import { useOrganization, useUser } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
 import { isSessionToken, useToken } from 'src/application/token';
@@ -17,7 +17,7 @@ import { UpgradeDialog } from 'src/components/payment-form';
 import { RequestQuotaIncreaseDialog } from 'src/components/quota-increase-request-dialog';
 import { useLocation } from 'src/hooks/router';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
-import { IconChevronLeft, IconPlus, IconX } from 'src/icons';
+import { IconChevronLeft, IconPlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { CommandPaletteProvider } from 'src/modules/command-palette';
 import { TrialBanner } from 'src/modules/trial/trial-banner';
@@ -151,14 +151,10 @@ function useBanner(): 'session' | 'trial' | void {
 
 function SessionTokenBanner() {
   const organization = useOrganization();
-  const logout = useLogoutMutation();
 
   return (
     <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">
       <T id="sessionTokenWarning" values={{ organizationName: organization?.name }} />
-      <button type="button" className="absolute inset-y-0 right-0 px-4" onClick={() => logout.mutate()}>
-        <IconX className="size-5" />
-      </button>
     </div>
   );
 }
