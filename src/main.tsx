@@ -23,7 +23,13 @@ import { IndexDBAdapter } from './application/index-db';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
-import { accessTokenListener, getToken, setAuthKitToken, setToken } from './application/token';
+import {
+  accessTokenListener,
+  getToken,
+  isSessionToken,
+  setAuthKitToken,
+  setToken,
+} from './application/token';
 import { configureZod } from './application/validation';
 import { ConfirmationDialog } from './components/confirmation-dialog';
 import { closeDialog } from './components/dialog';
@@ -273,8 +279,13 @@ function PersistGate({ children }: { children: React.ReactNode }) {
   const [restoring, setRestoring] = useState(true);
 
   useEffect(() => {
-    localStorage.removeItem('query-cache');
-    void persister.restoreQueries(queryClient).finally(() => setRestoring(false));
+    const location = new URL(window.location.href);
+
+    if (!isSessionToken() && !location.searchParams.has('session-token')) {
+      void persister.restoreQueries(queryClient).finally(() => setRestoring(false));
+    } else {
+      setRestoring(false);
+    }
   }, []);
 
   if (restoring) {
