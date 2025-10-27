@@ -48,6 +48,7 @@ export function useSubmitDatabaseServiceForm(
     async onSuccess(databaseServiceId) {
       await Promise.all([
         invalidate('get /v1/apps'),
+        queryClient.invalidateQueries({ queryKey: ['listAppsFull'] }),
         queryClient.prefetchQuery(apiQuery('get /v1/services/{id}', { path: { id: databaseServiceId } })),
       ]);
 

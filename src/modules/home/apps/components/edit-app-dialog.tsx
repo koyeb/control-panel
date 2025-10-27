@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Alert, Button, DialogHeader } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { getApi, useInvalidateApiQuery } from 'src/api';
+import { getApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, closeDialog } from 'src/components/dialog';
 import { ControlledInput } from 'src/components/forms';
@@ -47,7 +47,7 @@ export function EditAppDialog() {
 
 function EditAppForm({ app }: { app: App }) {
   const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
+  const queryClient = useQueryClient();
 
   const koyebDomain = app.domains.find(hasProperty('type', 'AUTOASSIGNED'));
   const [subdomain = '', domainSuffix] = splitDomain(koyebDomain);
@@ -88,7 +88,7 @@ function EditAppForm({ app }: { app: App }) {
       await Promise.all(promises);
     },
     async onSuccess(_, values) {
-      await invalidate('get /v1/apps');
+      await queryClient.invalidateQueries({ queryKey: ['listAppsFull'] });
       form.reset(values);
       notify.info(t('success'));
       closeDialog();

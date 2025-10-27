@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { apiMutation, useInvalidateApiQuery } from 'src/api';
+import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { ActionsMenu, ButtonMenuItem, LabelMenuItem, LinkMenuItem } from 'src/components/dropdown-menu';
@@ -68,14 +68,14 @@ export function AppActions({ app }: { app: App }) {
 
 function usePauseMutation() {
   const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
+  const queryClient = useQueryClient();
 
   return useMutation({
     ...apiMutation('post /v1/apps/{id}/pause', (app: App) => ({
       path: { id: app.id },
     })),
-    onSuccess() {
-      void invalidate('get /v1/apps');
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ['listAppsFull'] });
       notify.info(t('pause.success'));
       closeDialog();
     },
@@ -84,14 +84,14 @@ function usePauseMutation() {
 
 function useDeleteMutation() {
   const t = T.useTranslate();
-  const invalidate = useInvalidateApiQuery();
+  const queryClient = useQueryClient();
 
   return useMutation({
     ...apiMutation('delete /v1/apps/{id}', (app: App) => ({
       path: { id: app.id },
     })),
     async onSuccess() {
-      await invalidate('get /v1/apps');
+      await queryClient.invalidateQueries({ queryKey: ['listAppsFull'] });
       notify.info(t('delete.success'));
       closeDialog();
     },
