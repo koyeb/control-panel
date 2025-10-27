@@ -1,5 +1,5 @@
 import { Badge, Table, useBreakpoint } from '@koyeb/design-system';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
 import {
@@ -11,7 +11,6 @@ import {
   useOrganization,
   useUser,
 } from 'src/api';
-import { ApiEndpoint } from 'src/api/api';
 import { notify } from 'src/application/notify';
 import { openDialog } from 'src/components/dialog';
 import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
@@ -255,7 +254,6 @@ function useRemoveOrganizationMember() {
 
 function useLeaveOrganization() {
   const t = T.useTranslate();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   return useMutation({
@@ -263,8 +261,7 @@ function useLeaveOrganization() {
       path: { id: membership.id },
     })),
     async onSuccess(_, membership) {
-      queryClient.removeQueries({ queryKey: ['get /v1/account/organization' satisfies ApiEndpoint] });
-      await navigate({ to: '/' });
+      await navigate({ to: '/', reloadDocument: true });
       notify.info(t('actions.leaveSuccessNotification', { organizationName: membership.organization.name }));
     },
   });

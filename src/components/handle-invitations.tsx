@@ -53,7 +53,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   }
 
   return (
-    <div className="col w-full max-w-md items-center gap-12 pt-[15vh] text-center">
+    <div className="col w-full max-w-md items-center gap-12 text-center">
       <div className="col gap-2">
         <h1 className="text-4xl font-semibold text-dim">
           <T id="title" values={{ hasInviter: invitation.inviter !== null }} />

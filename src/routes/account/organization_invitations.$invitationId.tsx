@@ -1,5 +1,6 @@
 import { Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
+import { createFileRoute } from '@tanstack/react-router';
 
 import { ApiError, apiQuery, mapInvitation } from 'src/api';
 import { HandleInvitation } from 'src/components/handle-invitations';
@@ -7,8 +8,17 @@ import { LinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
+import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 
 const T = createTranslate('pages.account.invitation');
+
+export const Route = createFileRoute('/account/organization_invitations/$invitationId')({
+  component: () => (
+    <SecondaryLayout>
+      <InvitationPage />
+    </SecondaryLayout>
+  ),
+});
 
 export function InvitationPage() {
   const invitationId = useRouteParam('invitationId');
