@@ -149,8 +149,10 @@ export function getLogsStartDate(end: Date, period: LogsPeriod) {
   if (period === '1h') duration.hours = 1;
   if (period === '6h') duration.hours = 6;
   if (period === '24h') duration.hours = 24;
-  if (period === '7d') duration.days = 7;
-  if (period === '30d') duration.days = 30;
+
+  // using duration.days creates issues when changing time
+  if (period === '7d') duration.hours = 7 * 24;
+  if (period === '30d') duration.hours = 30 * 24;
 
   return sub(end, duration);
 }
