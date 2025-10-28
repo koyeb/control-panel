@@ -1,5 +1,14 @@
-import { Badge, Floating, useBreakpoint } from '@koyeb/design-system';
-import clsx from 'clsx';
+import {
+  FloatingPortal,
+  offset,
+  safePolygon,
+  useFloating,
+  useHover,
+  useInteractions,
+  useRole,
+  useTransitionStyles,
+} from '@floating-ui/react';
+import { Badge, useBreakpoint } from '@koyeb/design-system';
 import { isAfter } from 'date-fns';
 import { useState } from 'react';
 
@@ -21,11 +30,33 @@ export function OrganizationPlan() {
   const organization = useOrganization();
   const trial = useTrial();
   const isMobile = !useBreakpoint('sm');
-  const [open, setOpen] = useState(false);
   const location = useLocation();
 
+  const [open, setOpen] = useState(false);
+
+  const floating = useFloating({
+    open,
+    onOpenChange: setOpen,
+    strategy: 'fixed',
+    placement: isMobile ? 'top-end' : 'right-end',
+    middleware: [offset(8)],
+  });
+
+  const transition = useTransitionStyles(floating.context, {
+    duration: 100,
+  });
+
+  const hover = useHover(floating.context, {
+    enabled: true,
+    handleClose: safePolygon(),
+  });
+
+  const role = useRole(floating.context, { role: 'menu' });
+
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, role]);
+
   useObserve(location, () => {
-    setOpen(false);
+    floating.context.onOpenChange(false);
   });
 
   if (organization === undefined) {
@@ -36,58 +67,52 @@ export function OrganizationPlan() {
     return <HobbyPlan />;
   }
 
+  const Component = trial ? TrialSummaryPopup : EstimatedCostsPopup;
+
   return (
-    <Floating
-      open={open}
-      setOpen={setOpen}
-      hover
-      strategy="fixed"
-      placement={isMobile ? 'top-end' : 'right-end'}
-      offset={8}
-      renderReference={(props) => (
-        <div
-          role="menuitem"
-          className={clsx('col gap-4 py-2 pr-2 pl-3 text-start transition-colors', open && 'bg-muted/50')}
-          {...props}
-        >
-          <div className="row items-center gap-2">
-            <div>
-              <PlanIcon plan={organization.plan} className="size-6 text-dim" />
-            </div>
+    <>
+      <div
+        {...getReferenceProps({ ref: floating.refs.setReference })}
+        role="menuitem"
+        className="col gap-4 py-2 pr-2 pl-3 text-start transition-colors hover:bg-muted/50"
+      >
+        <div className="row items-center gap-2">
+          <div>
+            <PlanIcon plan={organization.plan} className="size-6 text-dim" />
+          </div>
 
-            <div>
-              <T
-                id="currentPlan"
-                values={{ plan: <TranslateEnum enum="plans" value={organization.plan} /> }}
-              />
-            </div>
-
-            {trial && (
-              <Badge size={1} color="green">
-                Trial
-              </Badge>
-            )}
-
-            <div className="ms-auto">
-              <IconChevronRight className="size-4 text-dim" />
-            </div>
+          <div>
+            <T id="currentPlan" values={{ plan: <TranslateEnum enum="plans" value={organization.plan} /> }} />
           </div>
 
           {trial && (
-            <LinkButton variant="outline" size={1} to="/settings/plans" className="w-full">
-              <T id="upgrade" />
-            </LinkButton>
+            <Badge size={1} color="green">
+              Trial
+            </Badge>
           )}
+
+          <div className="ms-auto">
+            <IconChevronRight className="size-4 text-dim" />
+          </div>
         </div>
+
+        {trial && (
+          <LinkButton variant="outline" size={1} to="/settings/plans" className="w-full">
+            <T id="upgrade" />
+          </LinkButton>
+        )}
+      </div>
+
+      {transition.isMounted && (
+        <FloatingPortal root={document.getElementById('root')}>
+          <Component
+            {...getFloatingProps({ ref: floating.refs.setFloating })}
+            style={{ ...floating.floatingStyles, ...transition.styles }}
+            className="z-50"
+          />
+        </FloatingPortal>
       )}
-      renderFloating={(props) =>
-        trial ? (
-          <TrialSummaryPopup className="z-50" {...props} />
-        ) : (
-          <EstimatedCostsPopup className="z-50" {...props} />
-        )
-      }
-    />
+    </>
   );
 }
 
