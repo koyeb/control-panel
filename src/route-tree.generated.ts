@@ -22,11 +22,11 @@ import { Route as MainDeployRouteImport } from './routes/_main/deploy'
 import { Route as MainActivityRouteImport } from './routes/_main/activity'
 import { Route as MainVolumesRouteRouteImport } from './routes/_main/volumes/route'
 import { Route as MainSettingsRouteRouteImport } from './routes/_main/settings/route'
-import { Route as MainOneClickAppsRouteRouteImport } from './routes/_main/one-click-apps/route'
+import { Route as MainOneClicksRouteRouteImport } from './routes/_main/one-clicks/route'
 import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/index'
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
 import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
-import { Route as MainOneClickAppsIndexRouteImport } from './routes/_main/one-click-apps/index'
+import { Route as MainOneClicksIndexRouteImport } from './routes/_main/one-clicks/index'
 import { Route as AccountWorkosCallbackRouteImport } from './routes/account/workos.callback'
 import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
 import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
@@ -42,12 +42,11 @@ import { Route as MainServicesDeployRouteImport } from './routes/_main/services/
 import { Route as MainDatabaseServicesNewRouteImport } from './routes/_main/database-services/new'
 import { Route as MainUserSettingsRouteRouteImport } from './routes/_main/user.settings/route'
 import { Route as MainServicesServiceIdRouteRouteImport } from './routes/_main/services/$serviceId/route'
-import { Route as MainOneClickAppsCategoryRouteRouteImport } from './routes/_main/one-click-apps/category.route'
-import { Route as MainOneClickAppsSlugRouteRouteImport } from './routes/_main/one-click-apps/$slug.route'
+import { Route as MainOneClicksSlugRouteRouteImport } from './routes/_main/one-clicks/$slug.route'
 import { Route as MainDatabaseServicesDatabaseServiceIdRouteRouteImport } from './routes/_main/database-services/$databaseServiceId/route'
 import { Route as MainUserSettingsIndexRouteImport } from './routes/_main/user.settings/index'
 import { Route as MainServicesServiceIdIndexRouteImport } from './routes/_main/services/$serviceId/index'
-import { Route as MainOneClickAppsSlugIndexRouteImport } from './routes/_main/one-click-apps/$slug.index'
+import { Route as MainOneClicksSlugIndexRouteImport } from './routes/_main/one-clicks/$slug.index'
 import { Route as MainDatabaseServicesDatabaseServiceIdIndexRouteImport } from './routes/_main/database-services/$databaseServiceId/index'
 import { Route as OrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/organization/deactivate.confirm.$confirmationId'
 import { Route as AccountOauthGithubCallbackRouteImport } from './routes/account/oauth.github.callback'
@@ -56,8 +55,7 @@ import { Route as MainUserSettingsApiRouteImport } from './routes/_main/user.set
 import { Route as MainServicesServiceIdSettingsRouteImport } from './routes/_main/services/$serviceId/settings'
 import { Route as MainServicesServiceIdMetricsRouteImport } from './routes/_main/services/$serviceId/metrics'
 import { Route as MainServicesServiceIdConsoleRouteImport } from './routes/_main/services/$serviceId/console'
-import { Route as MainOneClickAppsCategoryCategoryRouteImport } from './routes/_main/one-click-apps/category.$category'
-import { Route as MainOneClickAppsSlugDeployRouteImport } from './routes/_main/one-click-apps/$slug.deploy'
+import { Route as MainOneClicksSlugDeployRouteImport } from './routes/_main/one-clicks/$slug.deploy'
 import { Route as MainDatabaseServicesDatabaseServiceIdSettingsRouteImport } from './routes/_main/database-services/$databaseServiceId/settings'
 import { Route as MainDatabaseServicesDatabaseServiceIdRolesRouteImport } from './routes/_main/database-services/$databaseServiceId/roles'
 import { Route as MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport } from './routes/_main/database-services/$databaseServiceId/databases'
@@ -128,9 +126,9 @@ const MainSettingsRouteRoute = MainSettingsRouteRouteImport.update({
   path: '/settings',
   getParentRoute: () => MainRouteRoute,
 } as any)
-const MainOneClickAppsRouteRoute = MainOneClickAppsRouteRouteImport.update({
-  id: '/one-click-apps',
-  path: '/one-click-apps',
+const MainOneClicksRouteRoute = MainOneClicksRouteRouteImport.update({
+  id: '/one-clicks',
+  path: '/one-clicks',
   getParentRoute: () => MainRouteRoute,
 } as any)
 const MainVolumesIndexRoute = MainVolumesIndexRouteImport.update({
@@ -148,10 +146,10 @@ const MainServicesIndexRoute = MainServicesIndexRouteImport.update({
   path: '/services/',
   getParentRoute: () => MainRouteRoute,
 } as any)
-const MainOneClickAppsIndexRoute = MainOneClickAppsIndexRouteImport.update({
+const MainOneClicksIndexRoute = MainOneClicksIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => MainOneClickAppsRouteRoute,
+  getParentRoute: () => MainOneClicksRouteRoute,
 } as any)
 const AccountWorkosCallbackRoute = AccountWorkosCallbackRouteImport.update({
   id: '/account/workos/callback',
@@ -232,18 +230,11 @@ const MainServicesServiceIdRouteRoute =
     path: '/services/$serviceId',
     getParentRoute: () => MainRouteRoute,
   } as any)
-const MainOneClickAppsCategoryRouteRoute =
-  MainOneClickAppsCategoryRouteRouteImport.update({
-    id: '/category',
-    path: '/category',
-    getParentRoute: () => MainOneClickAppsRouteRoute,
-  } as any)
-const MainOneClickAppsSlugRouteRoute =
-  MainOneClickAppsSlugRouteRouteImport.update({
-    id: '/$slug',
-    path: '/$slug',
-    getParentRoute: () => MainOneClickAppsRouteRoute,
-  } as any)
+const MainOneClicksSlugRouteRoute = MainOneClicksSlugRouteRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MainOneClicksRouteRoute,
+} as any)
 const MainDatabaseServicesDatabaseServiceIdRouteRoute =
   MainDatabaseServicesDatabaseServiceIdRouteRouteImport.update({
     id: '/database-services/$databaseServiceId',
@@ -261,12 +252,11 @@ const MainServicesServiceIdIndexRoute =
     path: '/',
     getParentRoute: () => MainServicesServiceIdRouteRoute,
   } as any)
-const MainOneClickAppsSlugIndexRoute =
-  MainOneClickAppsSlugIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => MainOneClickAppsSlugRouteRoute,
-  } as any)
+const MainOneClicksSlugIndexRoute = MainOneClicksSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainOneClicksSlugRouteRoute,
+} as any)
 const MainDatabaseServicesDatabaseServiceIdIndexRoute =
   MainDatabaseServicesDatabaseServiceIdIndexRouteImport.update({
     id: '/',
@@ -314,18 +304,11 @@ const MainServicesServiceIdConsoleRoute =
     path: '/console',
     getParentRoute: () => MainServicesServiceIdRouteRoute,
   } as any)
-const MainOneClickAppsCategoryCategoryRoute =
-  MainOneClickAppsCategoryCategoryRouteImport.update({
-    id: '/$category',
-    path: '/$category',
-    getParentRoute: () => MainOneClickAppsCategoryRouteRoute,
-  } as any)
-const MainOneClickAppsSlugDeployRoute =
-  MainOneClickAppsSlugDeployRouteImport.update({
-    id: '/deploy',
-    path: '/deploy',
-    getParentRoute: () => MainOneClickAppsSlugRouteRoute,
-  } as any)
+const MainOneClicksSlugDeployRoute = MainOneClicksSlugDeployRouteImport.update({
+  id: '/deploy',
+  path: '/deploy',
+  getParentRoute: () => MainOneClicksSlugRouteRoute,
+} as any)
 const MainDatabaseServicesDatabaseServiceIdSettingsRoute =
   MainDatabaseServicesDatabaseServiceIdSettingsRouteImport.update({
     id: '/settings',
@@ -357,7 +340,7 @@ const MainAuthSsoCannyRoute = MainAuthSsoCannyRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
-  '/one-click-apps': typeof MainOneClickAppsRouteRouteWithChildren
+  '/one-clicks': typeof MainOneClicksRouteRouteWithChildren
   '/settings': typeof MainSettingsRouteRouteWithChildren
   '/volumes': typeof MainVolumesRouteRouteWithChildren
   '/activity': typeof MainActivityRoute
@@ -370,8 +353,7 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof MainIndexRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
-  '/one-click-apps/$slug': typeof MainOneClickAppsSlugRouteRouteWithChildren
-  '/one-click-apps/category': typeof MainOneClickAppsCategoryRouteRouteWithChildren
+  '/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
   '/services/$serviceId': typeof MainServicesServiceIdRouteRouteWithChildren
   '/user/settings': typeof MainUserSettingsRouteRouteWithChildren
   '/database-services/new': typeof MainDatabaseServicesNewRoute
@@ -387,7 +369,7 @@ export interface FileRoutesByFullPath {
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
-  '/one-click-apps/': typeof MainOneClickAppsIndexRoute
+  '/one-clicks/': typeof MainOneClicksIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/volumes/': typeof MainVolumesIndexRoute
@@ -396,8 +378,7 @@ export interface FileRoutesByFullPath {
   '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
-  '/one-click-apps/$slug/deploy': typeof MainOneClickAppsSlugDeployRoute
-  '/one-click-apps/category/$category': typeof MainOneClickAppsCategoryCategoryRoute
+  '/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
   '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -406,7 +387,7 @@ export interface FileRoutesByFullPath {
   '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
-  '/one-click-apps/$slug/': typeof MainOneClickAppsSlugIndexRoute
+  '/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
   '/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/user/settings/': typeof MainUserSettingsIndexRoute
 }
@@ -421,7 +402,6 @@ export interface FileRoutesByTo {
   '/auth/signin': typeof AuthSigninRoute
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof MainIndexRoute
-  '/one-click-apps/category': typeof MainOneClickAppsCategoryRouteRouteWithChildren
   '/database-services/new': typeof MainDatabaseServicesNewRoute
   '/services/deploy': typeof MainServicesDeployRoute
   '/services/new': typeof MainServicesNewRoute
@@ -435,7 +415,7 @@ export interface FileRoutesByTo {
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
-  '/one-click-apps': typeof MainOneClickAppsIndexRoute
+  '/one-clicks': typeof MainOneClicksIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/volumes': typeof MainVolumesIndexRoute
@@ -444,8 +424,7 @@ export interface FileRoutesByTo {
   '/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
-  '/one-click-apps/$slug/deploy': typeof MainOneClickAppsSlugDeployRoute
-  '/one-click-apps/category/$category': typeof MainOneClickAppsCategoryCategoryRoute
+  '/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
   '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -454,7 +433,7 @@ export interface FileRoutesByTo {
   '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
-  '/one-click-apps/$slug': typeof MainOneClickAppsSlugIndexRoute
+  '/one-clicks/$slug': typeof MainOneClicksSlugIndexRoute
   '/services/$serviceId': typeof MainServicesServiceIdIndexRoute
   '/user/settings': typeof MainUserSettingsIndexRoute
 }
@@ -462,7 +441,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_main': typeof MainRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/_main/one-click-apps': typeof MainOneClickAppsRouteRouteWithChildren
+  '/_main/one-clicks': typeof MainOneClicksRouteRouteWithChildren
   '/_main/settings': typeof MainSettingsRouteRouteWithChildren
   '/_main/volumes': typeof MainVolumesRouteRouteWithChildren
   '/_main/activity': typeof MainActivityRoute
@@ -475,8 +454,7 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/_main/': typeof MainIndexRoute
   '/_main/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
-  '/_main/one-click-apps/$slug': typeof MainOneClickAppsSlugRouteRouteWithChildren
-  '/_main/one-click-apps/category': typeof MainOneClickAppsCategoryRouteRouteWithChildren
+  '/_main/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
   '/_main/services/$serviceId': typeof MainServicesServiceIdRouteRouteWithChildren
   '/_main/user/settings': typeof MainUserSettingsRouteRouteWithChildren
   '/_main/database-services/new': typeof MainDatabaseServicesNewRoute
@@ -492,7 +470,7 @@ export interface FileRoutesById {
   '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
-  '/_main/one-click-apps/': typeof MainOneClickAppsIndexRoute
+  '/_main/one-clicks/': typeof MainOneClicksIndexRoute
   '/_main/services/': typeof MainServicesIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/volumes/': typeof MainVolumesIndexRoute
@@ -501,8 +479,7 @@ export interface FileRoutesById {
   '/_main/database-services/$databaseServiceId/databases': typeof MainDatabaseServicesDatabaseServiceIdDatabasesRoute
   '/_main/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/_main/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
-  '/_main/one-click-apps/$slug/deploy': typeof MainOneClickAppsSlugDeployRoute
-  '/_main/one-click-apps/category/$category': typeof MainOneClickAppsCategoryCategoryRoute
+  '/_main/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
   '/_main/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/_main/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/_main/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -511,7 +488,7 @@ export interface FileRoutesById {
   '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/_main/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
-  '/_main/one-click-apps/$slug/': typeof MainOneClickAppsSlugIndexRoute
+  '/_main/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
   '/_main/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/_main/user/settings/': typeof MainUserSettingsIndexRoute
 }
@@ -519,7 +496,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/auth'
-    | '/one-click-apps'
+    | '/one-clicks'
     | '/settings'
     | '/volumes'
     | '/activity'
@@ -532,8 +509,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/'
     | '/database-services/$databaseServiceId'
-    | '/one-click-apps/$slug'
-    | '/one-click-apps/category'
+    | '/one-clicks/$slug'
     | '/services/$serviceId'
     | '/user/settings'
     | '/database-services/new'
@@ -549,7 +525,7 @@ export interface FileRouteTypes {
     | '/account/reset-password/$token'
     | '/account/validate/$token'
     | '/account/workos/callback'
-    | '/one-click-apps/'
+    | '/one-clicks/'
     | '/services'
     | '/settings/'
     | '/volumes/'
@@ -558,8 +534,7 @@ export interface FileRouteTypes {
     | '/database-services/$databaseServiceId/databases'
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
-    | '/one-click-apps/$slug/deploy'
-    | '/one-click-apps/category/$category'
+    | '/one-clicks/$slug/deploy'
     | '/services/$serviceId/console'
     | '/services/$serviceId/metrics'
     | '/services/$serviceId/settings'
@@ -568,7 +543,7 @@ export interface FileRouteTypes {
     | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId/'
-    | '/one-click-apps/$slug/'
+    | '/one-clicks/$slug/'
     | '/services/$serviceId/'
     | '/user/settings/'
   fileRoutesByTo: FileRoutesByTo
@@ -583,7 +558,6 @@ export interface FileRouteTypes {
     | '/auth/signin'
     | '/auth/signup'
     | '/'
-    | '/one-click-apps/category'
     | '/database-services/new'
     | '/services/deploy'
     | '/services/new'
@@ -597,7 +571,7 @@ export interface FileRouteTypes {
     | '/account/reset-password/$token'
     | '/account/validate/$token'
     | '/account/workos/callback'
-    | '/one-click-apps'
+    | '/one-clicks'
     | '/services'
     | '/settings'
     | '/volumes'
@@ -606,8 +580,7 @@ export interface FileRouteTypes {
     | '/database-services/$databaseServiceId/databases'
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
-    | '/one-click-apps/$slug/deploy'
-    | '/one-click-apps/category/$category'
+    | '/one-clicks/$slug/deploy'
     | '/services/$serviceId/console'
     | '/services/$serviceId/metrics'
     | '/services/$serviceId/settings'
@@ -616,14 +589,14 @@ export interface FileRouteTypes {
     | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId'
-    | '/one-click-apps/$slug'
+    | '/one-clicks/$slug'
     | '/services/$serviceId'
     | '/user/settings'
   id:
     | '__root__'
     | '/_main'
     | '/auth'
-    | '/_main/one-click-apps'
+    | '/_main/one-clicks'
     | '/_main/settings'
     | '/_main/volumes'
     | '/_main/activity'
@@ -636,8 +609,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/_main/'
     | '/_main/database-services/$databaseServiceId'
-    | '/_main/one-click-apps/$slug'
-    | '/_main/one-click-apps/category'
+    | '/_main/one-clicks/$slug'
     | '/_main/services/$serviceId'
     | '/_main/user/settings'
     | '/_main/database-services/new'
@@ -653,7 +625,7 @@ export interface FileRouteTypes {
     | '/account/reset-password/$token'
     | '/account/validate/$token'
     | '/account/workos/callback'
-    | '/_main/one-click-apps/'
+    | '/_main/one-clicks/'
     | '/_main/services/'
     | '/_main/settings/'
     | '/_main/volumes/'
@@ -662,8 +634,7 @@ export interface FileRouteTypes {
     | '/_main/database-services/$databaseServiceId/databases'
     | '/_main/database-services/$databaseServiceId/roles'
     | '/_main/database-services/$databaseServiceId/settings'
-    | '/_main/one-click-apps/$slug/deploy'
-    | '/_main/one-click-apps/category/$category'
+    | '/_main/one-clicks/$slug/deploy'
     | '/_main/services/$serviceId/console'
     | '/_main/services/$serviceId/metrics'
     | '/_main/services/$serviceId/settings'
@@ -672,7 +643,7 @@ export interface FileRouteTypes {
     | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
     | '/_main/database-services/$databaseServiceId/'
-    | '/_main/one-click-apps/$slug/'
+    | '/_main/one-clicks/$slug/'
     | '/_main/services/$serviceId/'
     | '/_main/user/settings/'
   fileRoutesById: FileRoutesById
@@ -781,11 +752,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainSettingsRouteRouteImport
       parentRoute: typeof MainRouteRoute
     }
-    '/_main/one-click-apps': {
-      id: '/_main/one-click-apps'
-      path: '/one-click-apps'
-      fullPath: '/one-click-apps'
-      preLoaderRoute: typeof MainOneClickAppsRouteRouteImport
+    '/_main/one-clicks': {
+      id: '/_main/one-clicks'
+      path: '/one-clicks'
+      fullPath: '/one-clicks'
+      preLoaderRoute: typeof MainOneClicksRouteRouteImport
       parentRoute: typeof MainRouteRoute
     }
     '/_main/volumes/': {
@@ -809,12 +780,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainServicesIndexRouteImport
       parentRoute: typeof MainRouteRoute
     }
-    '/_main/one-click-apps/': {
-      id: '/_main/one-click-apps/'
+    '/_main/one-clicks/': {
+      id: '/_main/one-clicks/'
       path: '/'
-      fullPath: '/one-click-apps/'
-      preLoaderRoute: typeof MainOneClickAppsIndexRouteImport
-      parentRoute: typeof MainOneClickAppsRouteRoute
+      fullPath: '/one-clicks/'
+      preLoaderRoute: typeof MainOneClicksIndexRouteImport
+      parentRoute: typeof MainOneClicksRouteRoute
     }
     '/account/workos/callback': {
       id: '/account/workos/callback'
@@ -921,19 +892,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainServicesServiceIdRouteRouteImport
       parentRoute: typeof MainRouteRoute
     }
-    '/_main/one-click-apps/category': {
-      id: '/_main/one-click-apps/category'
-      path: '/category'
-      fullPath: '/one-click-apps/category'
-      preLoaderRoute: typeof MainOneClickAppsCategoryRouteRouteImport
-      parentRoute: typeof MainOneClickAppsRouteRoute
-    }
-    '/_main/one-click-apps/$slug': {
-      id: '/_main/one-click-apps/$slug'
+    '/_main/one-clicks/$slug': {
+      id: '/_main/one-clicks/$slug'
       path: '/$slug'
-      fullPath: '/one-click-apps/$slug'
-      preLoaderRoute: typeof MainOneClickAppsSlugRouteRouteImport
-      parentRoute: typeof MainOneClickAppsRouteRoute
+      fullPath: '/one-clicks/$slug'
+      preLoaderRoute: typeof MainOneClicksSlugRouteRouteImport
+      parentRoute: typeof MainOneClicksRouteRoute
     }
     '/_main/database-services/$databaseServiceId': {
       id: '/_main/database-services/$databaseServiceId'
@@ -956,12 +920,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainServicesServiceIdIndexRouteImport
       parentRoute: typeof MainServicesServiceIdRouteRoute
     }
-    '/_main/one-click-apps/$slug/': {
-      id: '/_main/one-click-apps/$slug/'
+    '/_main/one-clicks/$slug/': {
+      id: '/_main/one-clicks/$slug/'
       path: '/'
-      fullPath: '/one-click-apps/$slug/'
-      preLoaderRoute: typeof MainOneClickAppsSlugIndexRouteImport
-      parentRoute: typeof MainOneClickAppsSlugRouteRoute
+      fullPath: '/one-clicks/$slug/'
+      preLoaderRoute: typeof MainOneClicksSlugIndexRouteImport
+      parentRoute: typeof MainOneClicksSlugRouteRoute
     }
     '/_main/database-services/$databaseServiceId/': {
       id: '/_main/database-services/$databaseServiceId/'
@@ -1019,19 +983,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainServicesServiceIdConsoleRouteImport
       parentRoute: typeof MainServicesServiceIdRouteRoute
     }
-    '/_main/one-click-apps/category/$category': {
-      id: '/_main/one-click-apps/category/$category'
-      path: '/$category'
-      fullPath: '/one-click-apps/category/$category'
-      preLoaderRoute: typeof MainOneClickAppsCategoryCategoryRouteImport
-      parentRoute: typeof MainOneClickAppsCategoryRouteRoute
-    }
-    '/_main/one-click-apps/$slug/deploy': {
-      id: '/_main/one-click-apps/$slug/deploy'
+    '/_main/one-clicks/$slug/deploy': {
+      id: '/_main/one-clicks/$slug/deploy'
       path: '/deploy'
-      fullPath: '/one-click-apps/$slug/deploy'
-      preLoaderRoute: typeof MainOneClickAppsSlugDeployRouteImport
-      parentRoute: typeof MainOneClickAppsSlugRouteRoute
+      fullPath: '/one-clicks/$slug/deploy'
+      preLoaderRoute: typeof MainOneClicksSlugDeployRouteImport
+      parentRoute: typeof MainOneClicksSlugRouteRoute
     }
     '/_main/database-services/$databaseServiceId/settings': {
       id: '/_main/database-services/$databaseServiceId/settings'
@@ -1071,54 +1028,34 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface MainOneClickAppsSlugRouteRouteChildren {
-  MainOneClickAppsSlugDeployRoute: typeof MainOneClickAppsSlugDeployRoute
-  MainOneClickAppsSlugIndexRoute: typeof MainOneClickAppsSlugIndexRoute
+interface MainOneClicksSlugRouteRouteChildren {
+  MainOneClicksSlugDeployRoute: typeof MainOneClicksSlugDeployRoute
+  MainOneClicksSlugIndexRoute: typeof MainOneClicksSlugIndexRoute
 }
 
-const MainOneClickAppsSlugRouteRouteChildren: MainOneClickAppsSlugRouteRouteChildren =
+const MainOneClicksSlugRouteRouteChildren: MainOneClicksSlugRouteRouteChildren =
   {
-    MainOneClickAppsSlugDeployRoute: MainOneClickAppsSlugDeployRoute,
-    MainOneClickAppsSlugIndexRoute: MainOneClickAppsSlugIndexRoute,
+    MainOneClicksSlugDeployRoute: MainOneClicksSlugDeployRoute,
+    MainOneClicksSlugIndexRoute: MainOneClicksSlugIndexRoute,
   }
 
-const MainOneClickAppsSlugRouteRouteWithChildren =
-  MainOneClickAppsSlugRouteRoute._addFileChildren(
-    MainOneClickAppsSlugRouteRouteChildren,
+const MainOneClicksSlugRouteRouteWithChildren =
+  MainOneClicksSlugRouteRoute._addFileChildren(
+    MainOneClicksSlugRouteRouteChildren,
   )
 
-interface MainOneClickAppsCategoryRouteRouteChildren {
-  MainOneClickAppsCategoryCategoryRoute: typeof MainOneClickAppsCategoryCategoryRoute
+interface MainOneClicksRouteRouteChildren {
+  MainOneClicksSlugRouteRoute: typeof MainOneClicksSlugRouteRouteWithChildren
+  MainOneClicksIndexRoute: typeof MainOneClicksIndexRoute
 }
 
-const MainOneClickAppsCategoryRouteRouteChildren: MainOneClickAppsCategoryRouteRouteChildren =
-  {
-    MainOneClickAppsCategoryCategoryRoute:
-      MainOneClickAppsCategoryCategoryRoute,
-  }
-
-const MainOneClickAppsCategoryRouteRouteWithChildren =
-  MainOneClickAppsCategoryRouteRoute._addFileChildren(
-    MainOneClickAppsCategoryRouteRouteChildren,
-  )
-
-interface MainOneClickAppsRouteRouteChildren {
-  MainOneClickAppsSlugRouteRoute: typeof MainOneClickAppsSlugRouteRouteWithChildren
-  MainOneClickAppsCategoryRouteRoute: typeof MainOneClickAppsCategoryRouteRouteWithChildren
-  MainOneClickAppsIndexRoute: typeof MainOneClickAppsIndexRoute
+const MainOneClicksRouteRouteChildren: MainOneClicksRouteRouteChildren = {
+  MainOneClicksSlugRouteRoute: MainOneClicksSlugRouteRouteWithChildren,
+  MainOneClicksIndexRoute: MainOneClicksIndexRoute,
 }
 
-const MainOneClickAppsRouteRouteChildren: MainOneClickAppsRouteRouteChildren = {
-  MainOneClickAppsSlugRouteRoute: MainOneClickAppsSlugRouteRouteWithChildren,
-  MainOneClickAppsCategoryRouteRoute:
-    MainOneClickAppsCategoryRouteRouteWithChildren,
-  MainOneClickAppsIndexRoute: MainOneClickAppsIndexRoute,
-}
-
-const MainOneClickAppsRouteRouteWithChildren =
-  MainOneClickAppsRouteRoute._addFileChildren(
-    MainOneClickAppsRouteRouteChildren,
-  )
+const MainOneClicksRouteRouteWithChildren =
+  MainOneClicksRouteRoute._addFileChildren(MainOneClicksRouteRouteChildren)
 
 interface MainSettingsRouteRouteChildren {
   MainSettingsApiRoute: typeof MainSettingsApiRoute
@@ -1217,7 +1154,7 @@ const MainUserSettingsRouteRouteWithChildren =
   )
 
 interface MainRouteRouteChildren {
-  MainOneClickAppsRouteRoute: typeof MainOneClickAppsRouteRouteWithChildren
+  MainOneClicksRouteRoute: typeof MainOneClicksRouteRouteWithChildren
   MainSettingsRouteRoute: typeof MainSettingsRouteRouteWithChildren
   MainVolumesRouteRoute: typeof MainVolumesRouteRouteWithChildren
   MainActivityRoute: typeof MainActivityRoute
@@ -1238,7 +1175,7 @@ interface MainRouteRouteChildren {
 }
 
 const MainRouteRouteChildren: MainRouteRouteChildren = {
-  MainOneClickAppsRouteRoute: MainOneClickAppsRouteRouteWithChildren,
+  MainOneClicksRouteRoute: MainOneClicksRouteRouteWithChildren,
   MainSettingsRouteRoute: MainSettingsRouteRouteWithChildren,
   MainVolumesRouteRoute: MainVolumesRouteRouteWithChildren,
   MainActivityRoute: MainActivityRoute,

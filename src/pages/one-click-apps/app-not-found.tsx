@@ -6,7 +6,7 @@ const T = createTranslate('pages.oneClickApps.details.notFound');
 
 export function AppNotFound() {
   const link = (children: React.ReactNode) => (
-    <Link to="/one-click-apps" className="text-link font-medium">
+    <Link to="/one-clicks" className="text-link font-medium">
       {children}
     </Link>
   );

@@ -59,7 +59,7 @@ export function OneClickAppList() {
       >
         <ul>
           {apps.map((app) => (
-            <Link key={app.slug} to="/one-click-apps/$slug/deploy" params={{ slug: app.slug }}>
+            <Link key={app.slug} to="/one-clicks/$slug/deploy" params={{ slug: app.slug }}>
               <ServiceTypeItem
                 icon={
                   <div className="rounded-md bg-black/60 p-1.5">
@@ -72,7 +72,7 @@ export function OneClickAppList() {
           ))}
         </ul>
 
-        <Link to="/one-click-apps" className="ms-4 row items-center gap-1 text-link">
+        <Link to="/one-clicks" className="ms-4 row items-center gap-1 text-link">
           <T id="navigation.moreOneClickApps" />
           <IconArrowRight className="size-4" />
         </Link>

@@ -93,7 +93,7 @@ function Header({ app }: { app: OneClickApp }) {
         <p className="text-dim">{app.description}</p>
 
         <div className="mt-auto">
-          <LinkButton to="/one-click-apps/$slug/deploy" params={{ slug: app.slug }}>
+          <LinkButton to="/one-clicks/$slug/deploy" params={{ slug: app.slug }}>
             <T id="deploy" />
           </LinkButton>
         </div>

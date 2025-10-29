@@ -4,7 +4,7 @@ import { ApiError, useOneClickAppQuery } from 'src/api';
 import { TextSkeleton } from 'src/components/skeleton';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 
-export const Route = createFileRoute('/_main/one-click-apps/$slug')({
+export const Route = createFileRoute('/_main/one-clicks/$slug')({
   component: Outlet,
 
   beforeLoad: ({ params }) => ({

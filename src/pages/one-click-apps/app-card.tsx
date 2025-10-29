@@ -10,7 +10,7 @@ export function AppCard({ app }: { app: OneClickApp }) {
   return (
     <div className="relative">
       <Link
-        to="/one-click-apps/$slug/deploy"
+        to="/one-clicks/$slug/deploy"
         params={{ slug: app.slug }}
         className="absolute top-3 right-3 text-link pt-1 font-medium"
       >
@@ -18,7 +18,7 @@ export function AppCard({ app }: { app: OneClickApp }) {
       </Link>
 
       <Link
-        to="/one-click-apps/$slug"
+        to="/one-clicks/$slug"
         params={{ slug: app.slug }}
         className="col gap-2 rounded-md border p-3 transition-colors hover:bg-muted/50"
       >

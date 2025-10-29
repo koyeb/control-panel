@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 
 import { useOneClickApps } from 'src/api';
 import { Input } from 'src/components/forms/input';
-import { Link } from 'src/components/link';
 import { IconSearch } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { OneClickApp } from 'src/model';
@@ -76,13 +75,12 @@ export function OneClickAppsPage() {
             <SectionHeader
               title={<T id="models" />}
               right={
-                <Link
-                  to="/one-click-apps/category/$category"
-                  params={{ category: 'Model' }}
+                <button
+                  onClick={() => setActiveCategory('Model')}
                   className="text-link text-base font-medium"
                 >
                   <T id="seeAll" />
-                </Link>
+                </button>
               }
             />
             {models.map((app) => (
