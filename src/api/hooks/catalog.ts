@@ -219,7 +219,6 @@ function mapOneClickApp(app: ApiOneClickApp): OneClickApp {
 
   return {
     logo: app.logos[0]!,
-    deployUrl: getOneClickAppUrl(app.slug, app.deploy_button_url),
     env: [],
     metadata: fallbackMetadata(),
     volumes: app.template_volumes ?? [],
@@ -230,17 +229,6 @@ function mapOneClickApp(app: ApiOneClickApp): OneClickApp {
 
 export function useOneClickApps(): OneClickApp[] {
   return useOneClickAppsQuery().data ?? [];
-}
-
-function getOneClickAppUrl(appSlug: string, appUrl: string): string {
-  const url = new URL(appUrl);
-
-  url.protocol = window.location.protocol;
-  url.host = window.location.host;
-
-  // url.searchParams.set('one-click-app', appSlug);
-
-  return url.toString();
 }
 
 export function useModelsQuery() {

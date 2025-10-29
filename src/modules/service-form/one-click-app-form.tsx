@@ -300,10 +300,9 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
   const env = watch('environmentVariables');
   const index = (name: string) => env.findIndex(hasProperty('name', name));
 
-  const required = app.env.filter(hasProperty('required', true));
-  const optional = app.env.filter(hasProperty('required', false));
+  const advanced = app.env.filter(hasProperty('advanced', true));
 
-  if (required.length === 0 && optional.length === 0) {
+  if (env.length === 0) {
     return null;
   }
 
@@ -316,24 +315,24 @@ function EnvironmentVariablesSection({ app }: { app: OneClickApp }) {
       </header>
 
       <div className="col gap-6 px-3 pt-1 pb-3">
-        {required.map((env) => (
+        {app.env.filter(hasProperty('advanced', false)).map((env) => (
           <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
         ))}
 
-        {optional.length > 0 && (
+        {advanced.length > 0 && (
           <AccordionSection
             isExpanded={optionalExpanded}
             header={
               <AccordionHeader expanded={optionalExpanded} setExpanded={setOptionalExpanded}>
                 <div className="text-xs font-medium">
-                  <T id="environmentVariables.optional" values={{ count: optional.length }} />
+                  <T id="environmentVariables.advanced" values={{ count: advanced.length }} />
                 </div>
               </AccordionHeader>
             }
             className="rounded-md border bg-muted"
           >
             <div className="col gap-6 px-3 pt-1 pb-3">
-              {optional.map((env) => (
+              {advanced.map((env) => (
                 <EnvironmentVariableField key={env.name} index={index(env.name)} env={env} />
               ))}
             </div>

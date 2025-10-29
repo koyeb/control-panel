@@ -1,5 +1,6 @@
 import { Alert } from '@koyeb/design-system';
 import { UseQueryResult } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 import { ApiError } from 'src/api';
 import { Translate } from 'src/intl/translate';
@@ -24,6 +25,11 @@ export function QueryGuard<Data>({ query, children }: QueryGuardProps<Data>) {
 }
 
 export function QueryError({ error, className }: { error: Error; className?: string }) {
+  useEffect(() => {
+    // eslint-disable-next-line no-console
+    console.error(error);
+  }, [error]);
+
   const description = () => {
     if (ApiError.isValidationError(error) && error.body.fields[0]) {
       return error.body.fields[0].description;

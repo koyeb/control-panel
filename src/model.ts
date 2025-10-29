@@ -151,7 +151,6 @@ export type OneClickApp = {
   updatedAt: string;
   repository: string;
   license?: string;
-  deployUrl: string;
   metadata: OneClickAppMetadata[];
   env: OneClickAppEnv[];
   volumes?: OneClickAppVolume[];
@@ -169,6 +168,7 @@ type OneClickAppEnvBase = {
   label: string;
   description?: string;
   required: boolean;
+  advanced: boolean;
 };
 
 type OneClickAppEnvBoolean = OneClickAppEnvBase & {

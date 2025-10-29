@@ -1089,7 +1089,7 @@
         },
         "environmentVariables": {
           "title": "Environment variables",
-          "optional": "{count} optional {count, plural, =1 {variable} other {variables}}"
+          "advanced": "{count} advanced {count, plural, =1 {variable} other {variables}}"
         },
         "instance": {
           "title": "Instance"
