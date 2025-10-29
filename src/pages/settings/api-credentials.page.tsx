@@ -10,8 +10,11 @@ import { createTranslate } from 'src/intl/translate';
 import { ApiCredentialType } from 'src/model';
 import { upperCase } from 'src/utils/strings';
 
+const TO = createTranslate('pages.organizationSettings.apiCredential');
+const TU = createTranslate('pages.userSettings.apiCredential');
+
 export function BaseApiCredentialsPage({ type }: { type: ApiCredentialType }) {
-  const T = createTranslate(`pages.${type}Settings.apiCredential`);
+  const T = type === 'organization' ? TO : TU;
 
   const query = useQuery({
     ...apiQuery('get /v1/credentials', { query: { limit: '100', type: upperCase(type) } }),

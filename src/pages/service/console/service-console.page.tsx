@@ -25,6 +25,7 @@ export function ServiceConsolePage() {
 
   useEffect(() => {
     if (instance === null && instances[0] !== undefined) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setInstance(instances[0]);
     }
   }, [instances, instance]);

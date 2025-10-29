@@ -45,6 +45,7 @@ export function usePrompt(instanceId: string, stream: WebSocket | null, terminal
 
   useEffect(() => {
     if (!initialized && terminal) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       reset(terminal);
       setInitialized(true);
     }

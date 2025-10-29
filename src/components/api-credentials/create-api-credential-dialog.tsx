@@ -17,12 +17,11 @@ import { upperCase } from 'src/utils/strings';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from '../dialog';
 import { Input } from '../forms/input';
 
-type CreateApiCredentialDialogProps = {
-  type: ApiCredential['type'];
-};
+const TO = createTranslate('pages.organizationSettings.apiCredential');
+const TU = createTranslate('pages.userSettings.apiCredential');
 
-export function CreateApiCredentialDialog({ type }: CreateApiCredentialDialogProps) {
-  const T = createTranslate(`pages.${type}Settings.apiCredential`);
+export function CreateApiCredentialDialog({ type }: { type: ApiCredential['type'] }) {
+  const T = type === 'organization' ? TO : TU;
 
   const user = useUser();
   const organization = useOrganization();

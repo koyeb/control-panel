@@ -17,7 +17,7 @@ import { inArray } from 'src/utils/arrays';
 import { entries } from 'src/utils/object';
 
 export function ActivityIcon({ activity }: { activity: Activity }) {
-  const Icon = icons[activity.object.type] ?? (() => null);
+  const Icon = icons[activity.object.type] ?? NoIcon;
   const color = getActivityColor(activity);
 
   return (
@@ -39,6 +39,10 @@ export function ActivityIcon({ activity }: { activity: Activity }) {
       />
     </div>
   );
+}
+
+function NoIcon() {
+  return null;
 }
 
 const icons: Record<string, SvgComponent> = {

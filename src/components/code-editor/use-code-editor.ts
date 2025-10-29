@@ -18,6 +18,7 @@ export function useCodeEditor(filepath: string) {
   const [filteredLanguages, setFilteredLanguages] = useState<Language[]>(languageItems);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedLanguage(getLanguage(extension) ?? null);
   }, [extension]);
 

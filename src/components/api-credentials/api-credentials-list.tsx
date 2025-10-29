@@ -11,6 +11,9 @@ import { ApiCredential, ApiCredentialType } from 'src/model';
 import { closeDialog, openDialog } from '../dialog';
 import { ActionsMenu, ButtonMenuItem } from '../dropdown-menu';
 
+const TO = createTranslate('pages.organizationSettings.apiCredential.list');
+const TU = createTranslate('pages.userSettings.apiCredential.list');
+
 type ApiCredentialListProps = {
   type: ApiCredentialType;
   credentials: ApiCredential[];
@@ -18,7 +21,7 @@ type ApiCredentialListProps = {
 };
 
 export function ApiCredentialsList({ type, credentials, onCreate }: ApiCredentialListProps) {
-  const T = createTranslate(`pages.${type}Settings.apiCredential.list`);
+  const T = type === 'organization' ? TO : TU;
 
   if (credentials.length === 0) {
     return (

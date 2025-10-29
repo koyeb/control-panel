@@ -1,10 +1,9 @@
 import js from '@eslint/js';
 import reactQuery from '@tanstack/eslint-plugin-query';
-import eslintPluginBetterTailwindcss from 'eslint-plugin-better-tailwindcss';
+import betterTailwindcss from 'eslint-plugin-better-tailwindcss';
 import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import reactRecommended from 'eslint-plugin-react/configs/recommended.js';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -13,6 +12,11 @@ const ci = process.env.CI === 'true';
 export default [
   js.configs.recommended,
   ...(ci ? tseslint.configs.recommendedTypeChecked : tseslint.configs.recommended),
+  react.configs.flat.recommended,
+  react.configs.flat['jsx-runtime'],
+  reactHooks.configs.flat.recommended,
+  reactRefresh.configs.vite,
+  ...reactQuery.configs['flat/recommended'],
   {
     files: ['src/**/*.{ts,tsx}'],
     linterOptions: {
@@ -25,11 +29,7 @@ export default [
       },
     },
     plugins: {
-      react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-      '@tanstack/query': reactQuery,
-      'better-tailwindcss': eslintPluginBetterTailwindcss,
+      'better-tailwindcss': betterTailwindcss,
     },
     settings: {
       react: {
@@ -40,9 +40,7 @@ export default [
       },
     },
     rules: {
-      ...reactRecommended.rules,
-      ...reactQuery.configs.recommended.rules,
-      ...eslintPluginBetterTailwindcss.configs['recommended'].rules,
+      ...betterTailwindcss.configs.recommended['rules'],
       'no-console': ci ? 'error' : 'off',
       'no-restricted-imports': ['warn', { paths: ['posthog-js', 'posthog-js/react', 'lucide-react'] }],
       '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
@@ -57,6 +55,8 @@ export default [
       'react/prop-types': 'off',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/incompatible-library': 'off',
+      'react-hooks/refs': 'off',
       'react-refresh/only-export-components': 'error',
       'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
       'better-tailwindcss/no-conflicting-classes': 'warn',

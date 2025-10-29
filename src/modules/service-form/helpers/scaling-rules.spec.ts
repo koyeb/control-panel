@@ -20,7 +20,8 @@ describe('useScalingRules', () => {
   let form: UseFormReturn<ServiceForm>;
   let hook: ReturnType<typeof useScalingRules>;
 
-  const Wrapper = ({ children }: { children: React.ReactNode }) => {
+  const wrapper = ({ children }: { children: React.ReactNode }) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     form = useForm({
       defaultValues: defaultServiceForm(),
     });
@@ -31,7 +32,7 @@ describe('useScalingRules', () => {
   };
 
   beforeEach(() => {
-    const { result } = renderHook(() => useScalingRules(), { wrapper: Wrapper });
+    const { result } = renderHook(() => useScalingRules(), { wrapper });
 
     hook = result.current;
   });

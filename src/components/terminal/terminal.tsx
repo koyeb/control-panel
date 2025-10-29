@@ -78,6 +78,7 @@ function useTerminalTheme(xterm: XTerm) {
   useEffect(() => {
     const styles = getComputedStyle(document.body);
 
+    // eslint-disable-next-line react-hooks/immutability
     xterm.options.fontFamily = styles.getPropertyValue('--font-mono');
     xterm.options.fontSize = 12;
     xterm.options.theme = theme;

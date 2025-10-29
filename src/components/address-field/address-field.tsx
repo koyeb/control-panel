@@ -64,6 +64,7 @@ export function AddressField({
 
   useEffect(() => {
     if (Object.keys(errors ?? {}).length > 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAutofillDisabled(true);
     }
   }, [errors]);
