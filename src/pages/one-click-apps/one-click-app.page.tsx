@@ -6,8 +6,8 @@ import { ApiError, useOneClickAppQuery, useOneClickAppsQuery } from 'src/api';
 import { SvgComponent } from 'src/application/types';
 import { ExternalLink, LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
+import { Metadata } from 'src/components/metadata';
 import { QueryError } from 'src/components/query-error';
-import { Tooltip } from 'src/components/tooltip';
 import {
   IconCircleUser,
   IconDocker,
@@ -65,6 +65,9 @@ export function OneClickAppPage({ slug }: { slug: string }) {
       <hr />
 
       <AppMetadata app={app.metadata} />
+
+      <hr />
+
       <AppDescription description={app.description} />
 
       <hr className={clsx({ hidden: related.length === 0 })} />
@@ -104,36 +107,39 @@ function Header({ app }: { app: OneClickApp }) {
 
 function AppMetadata({ app }: { app: OneClickApp }) {
   return (
-    <section className="row flex-wrap items-center gap-x-6 gap-y-3">
+    <section className="row flex-wrap items-center gap-x-8 gap-y-3">
       {app.metadata.map((metadata, index) => (
-        <Metadata key={index} metadata={metadata} />
+        <Metadata key={index} label={metadata.name} value={<MetadataValue metadata={metadata} />} />
       ))}
     </section>
   );
 }
 
-function Metadata({ metadata }: { metadata: OneClickAppMetadata }) {
-  const { icon, href } = metadata;
-  const Icon = icon ? metadataIconMap[icon] : undefined;
-  const [tooltip, label] = href ? [metadata.value, metadata.name] : [metadata.name, metadata.value];
+function MetadataValue({ metadata }: { metadata: OneClickAppMetadata }) {
+  const Icon = metadata.icon && metadataIconMap[metadata.icon];
+
+  const icon = Icon && (
+    <div>
+      <Icon className="size-4" />
+    </div>
+  );
+
+  const value = <div className="max-w-64 truncate">{metadata.value}</div>;
+
+  if (metadata.href) {
+    return (
+      <ExternalLink href={metadata.href} className="row items-center gap-1 underline">
+        {icon}
+        {value}
+      </ExternalLink>
+    );
+  }
 
   return (
-    <Tooltip
-      content={tooltip}
-      trigger={(props) => (
-        <div {...props} className="row items-center gap-2">
-          <div>{Icon && <Icon className="size-em" />}</div>
-
-          {!href && <span className="max-w-64 truncate">{label}</span>}
-
-          {href && (
-            <ExternalLink href={href} className="max-w-64 truncate underline">
-              {label}
-            </ExternalLink>
-          )}
-        </div>
-      )}
-    />
+    <div className="row items-center gap-1">
+      {icon}
+      {value}
+    </div>
   );
 }
 
