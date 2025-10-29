@@ -669,8 +669,9 @@
             "allInstances": "All instances",
             "search": "Search...",
             "fullScreen": "Toggle full screen",
-            "logs": "Logs",
-            "events": "Events"
+            "stdout": "stdout",
+            "stderr": "stderr",
+            "koyeb": "event"
           },
           "waitingForLogs": {
             "title": "Booting up the magic",
@@ -722,8 +723,9 @@
               "logs": {
                 "title": "Logs",
                 "filters": {
-                  "logs": "Logs",
-                  "events": "Events"
+                  "stdout": "stdout",
+                  "stderr": "stderr",
+                  "koyeb": "events"
                 }
               }
             }

@@ -1,6 +1,6 @@
 import { Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useRef, useState } from 'react';
 import { FormattedTime } from 'react-intl';
 
 import { downloadFileFromString } from 'src/application/download-file-from-string';
@@ -77,20 +77,16 @@ type LogLinesProps = {
   options: LogOptions;
   setOption: (option: keyof LogOptions, value: boolean) => void;
   logs: LogsApi;
-  filterLine?: (line: LogLine) => boolean;
   renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
   renderNoLogs: () => React.ReactNode;
 };
 
-export function LogLines({ options, setOption, logs, filterLine, renderLine, renderNoLogs }: LogLinesProps) {
-  const lines = useMemo(
-    () => (filterLine ? logs.lines.filter(filterLine) : logs.lines),
-    [logs.lines, filterLine],
-  );
-
+export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }: LogLinesProps) {
   const container = useRef<HTMLDivElement>(null);
   const [before, setBefore] = useState<HTMLDivElement | null>(null);
   const [after, setAfter] = useState<HTMLDivElement | null>(null);
+
+  const lines = logs.lines;
 
   useEffect(() => {
     if (options.tail) {

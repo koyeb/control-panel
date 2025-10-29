@@ -1,21 +1,21 @@
 import { IconButton, Menu } from '@koyeb/design-system';
 import { useCallback } from 'react';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 
 import { useApp, useService } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
 import { ButtonMenuItem } from 'src/components/dropdown-menu';
-import { ControlledCheckbox } from 'src/components/forms';
+import { Checkbox, ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { LogOptions, getInitialLogOptions } from 'src/components/logs/log-options';
 import { LogLines, LogsFooter } from 'src/components/logs/logs';
 import { QueryError } from 'src/components/query-error';
-import { LogsFilters, useLogs } from 'src/hooks/logs';
+import { LogStream, LogsFilters, useLogs } from 'src/hooks/logs';
 import { useRouteParam } from 'src/hooks/router';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Instance, LogLine } from 'src/model';
-import { inArray } from 'src/utils/arrays';
+import { arrayToggle } from 'src/utils/arrays';
 
 import { NoRuntimeLogs, RuntimeLogLine } from '../deployment-logs/runtime-logs';
 
@@ -34,9 +34,8 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
       instanceId: instance.id,
       type: 'runtime',
       period: '30d',
+      streams: ['stdout', 'stderr', 'koyeb'],
       search: '',
-      logs: true,
-      events: true,
     },
   });
 
@@ -45,8 +44,6 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
-
-  const filterLine = useFilterLine(filtersForm.watch());
 
   const renderLine = useCallback((line: LogLine, options: LogOptions) => {
     return <RuntimeLogLine options={options} line={line} />;
@@ -69,7 +66,6 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
           options={optionsForm.watch()}
           setOption={optionsForm.setValue}
           logs={logs}
-          filterLine={filterLine}
           renderLine={renderLine}
           renderNoLogs={() => (
             <NoRuntimeLogs
@@ -116,9 +112,22 @@ function LogsHeader({ filtersForm, optionsForm }: LogsHeaderProps) {
         <T id="title" />
       </div>
 
-      <ControlledCheckbox control={filtersForm.control} name="logs" label={<T id="filters.logs" />} />
-
-      <ControlledCheckbox control={filtersForm.control} name="events" label={<T id="filters.events" />} />
+      <Controller
+        control={filtersForm.control}
+        name="streams"
+        render={({ field }) => (
+          <>
+            {(['stdout', 'stderr', 'koyeb'] satisfies LogStream[]).map((stream) => (
+              <Checkbox
+                key={stream}
+                label={<T id={`filters.${stream}`} />}
+                checked={field.value.includes(stream)}
+                onChange={() => field.onChange(arrayToggle(field.value, stream))}
+              />
+            ))}
+          </>
+        )}
+      />
 
       <IconButton
         variant="solid"
@@ -126,22 +135,5 @@ function LogsHeader({ filtersForm, optionsForm }: LogsHeaderProps) {
         onClick={() => optionsForm.setValue('fullScreen', !optionsForm.getValues('fullScreen'))}
       />
     </div>
-  );
-}
-
-function useFilterLine({ logs, events }: LogsFilters) {
-  return useCallback(
-    (line: LogLine) => {
-      if (!logs && inArray(line.stream, ['stdout', 'stderr'])) {
-        return false;
-      }
-
-      if (!events && inArray(line.stream, ['koyeb'])) {
-        return false;
-      }
-
-      return true;
-    },
-    [logs, events],
   );
 }

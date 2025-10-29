@@ -21,3 +21,7 @@ export function last<T>(array: T[]): T | undefined {
 export function isNotEmpty<T>(array: T[]): array is [T, ...T[]] {
   return array.length >= 1;
 }
+
+export function arrayToggle<T>(array: T[], element: T): T[] {
+  return array.includes(element) ? array.filter((e) => e !== element) : [...array, element];
+}

@@ -7,7 +7,7 @@ import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
 import { isDeploymentRunning } from 'src/application/service-functions';
 import { ButtonMenuItem } from 'src/components/dropdown-menu';
-import { ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
+import { Checkbox, ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {
@@ -25,12 +25,12 @@ import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
-import { LogsApi, LogsFilters, LogsPeriod, getLogsStartDate } from 'src/hooks/logs';
+import { LogStream, LogsApi, LogsFilters, LogsPeriod, getLogsStartDate } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Service } from 'src/model';
-import { inArray, last } from 'src/utils/arrays';
+import { arrayToggle, inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
 
@@ -49,8 +49,6 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
-
-  const filterLine = useFilterLine(filters.watch());
 
   const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
     return <RuntimeLogLine options={options} line={line} />;
@@ -79,7 +77,6 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
         options={optionsForm.watch()}
         setOption={optionsForm.setValue}
         logs={logs}
-        filterLine={filterLine}
         renderLine={renderLine}
         renderNoLogs={() => (
           <NoRuntimeLogs running={isDeploymentRunning(deployment)} loading={logs.loading} filters={filters} />
@@ -106,23 +103,6 @@ export function RuntimeLogs({ app, service, deployment, instances, filters, logs
         }
       />
     </FullScreen>
-  );
-}
-
-function useFilterLine({ logs, events }: LogsFilters) {
-  return useCallback(
-    (line: LogLineType) => {
-      if (!logs && inArray(line.stream, ['stdout', 'stderr'])) {
-        return false;
-      }
-
-      if (!events && inArray(line.stream, ['koyeb'])) {
-        return false;
-      }
-
-      return true;
-    },
-    [logs, events],
   );
 }
 
@@ -252,8 +232,22 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
         </FeatureFlag>
 
         <div className="ml-auto row gap-4">
-          <ControlledCheckbox control={filters.control} name="logs" label={<T id="header.logs" />} />
-          <ControlledCheckbox control={filters.control} name="events" label={<T id="header.events" />} />
+          <Controller
+            control={filters.control}
+            name="streams"
+            render={({ field }) => (
+              <>
+                {(['stdout', 'stderr', 'koyeb'] satisfies LogStream[]).map((stream) => (
+                  <Checkbox
+                    key={stream}
+                    label={<T id={`header.${stream}`} />}
+                    checked={field.value.includes(stream)}
+                    onChange={() => field.onChange(arrayToggle(field.value, stream))}
+                  />
+                ))}
+              </>
+            )}
+          />
 
           <IconButton
             variant="solid"

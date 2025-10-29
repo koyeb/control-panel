@@ -120,10 +120,9 @@ function BuildSection({ app, service, deployment, expanded, setExpanded }: Build
     regionalDeploymentId: null,
     instanceId: null,
     type: 'build',
+    streams: ['stdout', 'stderr', 'koyeb'],
     period: '30d',
     search: '',
-    logs: true,
-    events: true,
   });
 
   return (
@@ -254,10 +253,9 @@ function RuntimeSection({ app, service, deployment, instances, expanded, setExpa
     regionalDeploymentId: null,
     instanceId: null,
     type: 'runtime',
+    streams: ['stdout', 'stderr', 'koyeb'],
     period: logsFilters ? '1h' : '30d',
     search: '',
-    logs: true,
-    events: true,
   };
 
   const filtersForm = useForm<LogsFilters>({

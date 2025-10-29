@@ -21,10 +21,9 @@ export type LogsFilters = {
   deploymentId: string;
   regionalDeploymentId: string | null;
   instanceId: string | null;
+  streams: LogStream[];
   period: LogsPeriod;
   search: string;
-  logs: boolean;
-  events: boolean;
 };
 
 export type LogsApi = {
@@ -99,6 +98,7 @@ function useLogsHistory(filters: LogsFilters, end: Date) {
         deployment_id: filters.deploymentId,
         regional_deployment_id: filters.regionalDeploymentId ?? undefined,
         instance_id: filters.instanceId ?? undefined,
+        streams: filters.streams,
         text: filters.search || undefined,
         limit: String(100),
         ...initialPageParam,
@@ -228,6 +228,7 @@ function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStrea
       deployment_id: filters.deploymentId,
       regional_deployment_id: filters.regionalDeploymentId ?? undefined,
       instance_id: filters.instanceId ?? undefined,
+      streams: filters.streams,
       start: start.toISOString(),
       text: filters.search || undefined,
     },
