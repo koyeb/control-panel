@@ -8,6 +8,7 @@ import {
   IconCircleDashed,
   IconCircleDot,
   IconCircleOff,
+  IconCirclePause,
   IconCircleX,
   IconMoon,
   IconTrash,
@@ -81,7 +82,7 @@ export const [ServiceStatusIcon, ServiceStatusBadge] = createResourceStatus<Serv
   DELETING: [Spinner, 'gray'],
   DELETED: [IconCircleOff, 'gray'],
   PAUSING: [Spinner, 'gray'],
-  PAUSED: [IconCircleOff, 'gray'],
+  PAUSED: [IconCirclePause, 'gray'],
   RESUMING: [Spinner, 'gray'],
 });
 
