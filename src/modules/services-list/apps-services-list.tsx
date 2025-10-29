@@ -5,7 +5,7 @@ import { QueryGuard } from 'src/components/query-error';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
 import { AppList, Service } from 'src/model';
-import { entries, hasProperty } from 'src/utils/object';
+import { hasProperty } from 'src/utils/object';
 import { upperCase } from 'src/utils/strings';
 
 import { Apps } from '../home/apps/apps';
@@ -15,37 +15,18 @@ import { ServicesFilters, ServicesFiltersForm } from './services-filters';
 
 const T = createTranslate('pages.services');
 
-function getFormFiltersList<K extends string>(values: Record<K, boolean>): Array<Uppercase<K>> {
-  return entries(values)
-    .filter(([, status]) => status)
-    .map(([key]) => key)
-    .map((type) => upperCase(type));
-}
-
 export function AppsServicesList() {
   const filtersForm = useForm<ServicesFiltersForm>({
     defaultValues: {
       search: '',
-      types: {
-        web: true,
-        worker: true,
-        database: true,
-      },
-      statuses: {
-        STARTING: true,
-        RESUMING: true,
-        HEALTHY: true,
-        DEGRADED: true,
-        UNHEALTHY: true,
-        PAUSED: true,
-        DELETED: true,
-      },
+      types: ['web', 'worker', 'database'],
+      statuses: ['STARTING', 'RESUMING', 'HEALTHY', 'DEGRADED', 'UNHEALTHY', 'PAUSED', 'DELETED'],
     },
   });
 
   const name = useDebouncedValue(filtersForm.watch('search') || undefined, 200);
-  const types = getFormFiltersList(filtersForm.watch('types'));
-  const statuses = getFormFiltersList(filtersForm.watch('statuses'));
+  const types = filtersForm.watch('types').map((type) => upperCase(type));
+  const statuses = filtersForm.watch('statuses').slice();
 
   if (statuses.includes('PAUSED')) {
     statuses.push('PAUSING');

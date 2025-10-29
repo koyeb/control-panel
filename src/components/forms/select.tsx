@@ -30,12 +30,12 @@ import { Extend } from 'src/utils/types';
 import { ControlledProps } from './helpers/controlled-props';
 import { LabelTooltip } from './label-tooltip';
 
-export type SelectContext<T = unknown> = {
+type SelectContext<T = unknown> = {
   select: UseSelectReturnValue<T>;
   dropdown: UseDropdown;
 };
 
-export type SelectProps<T> = {
+type SelectProps<T> = {
   ref?: React.Ref<HTMLDivElement>;
   items: T[];
   getKey?: (item: T) => React.Key;
