@@ -111,6 +111,10 @@ export async function initializeServiceForm(
 
     values = merge(values, parsedParams);
 
+    if (!values.appName) {
+      values.appName = generateAppName();
+    }
+
     if (!duplicateServiceId) {
       const quotas = await getOrganizationQuotas(api, organization.id);
       const datacenters = await getDatacenters(api);
@@ -384,10 +388,6 @@ function ensureServiceCreationBusinessRules(
   parsedParams: DeepPartial<ServiceForm>,
   queryClient: QueryClient,
 ) {
-  if (!values.appName) {
-    values.appName = generateAppName();
-  }
-
   if (organization?.plan === 'hobby' && !parsedParams.instance) {
     values.instance = 'free';
   }
