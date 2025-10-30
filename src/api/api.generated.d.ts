@@ -4185,6 +4185,7 @@ export interface components {
             current_subscription_id?: string;
             deactivation_reason?: components["schemas"]["Organization.DeactivationReason"];
             email_domain_allowlist?: string[];
+            external_id?: string;
             has_payment_method?: boolean;
             id?: string;
             latest_subscription_id?: string;
@@ -17443,7 +17444,9 @@ export interface operations {
                 service_id?: string;
                 /** @description (Optional) Must always be before `end`. Defaults to 15 minutes ago. */
                 start?: string;
+                /** @description Deprecated, prefer using streams instead */
                 stream?: string;
+                streams?: string[];
                 /** @description (Optional) Looks for this string in logs. Can't be used with `regex`. */
                 text?: string;
                 type?: string;
@@ -17540,7 +17543,9 @@ export interface operations {
                 regional_deployment_id?: string;
                 service_id?: string;
                 start?: string;
+                /** @description Deprecated, prefer using streams instead */
                 stream?: string;
+                streams?: string[];
                 /** @description (Optional) Looks for this string in logs. Can't be used with `regex`. */
                 text?: string;
                 type?: string;
