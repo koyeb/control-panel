@@ -51,7 +51,7 @@ export function SignUpPage() {
 
         {method === null && (
           <FeatureFlag
-            feature="work-os"
+            feature="workos-signup"
             fallback={
               <Link to="/auth/signup" search={{ method: 'email' }} className="mx-auto row items-center gap-1">
                 <IconMail className="size-4" /> <T id="emailSignUp" />
