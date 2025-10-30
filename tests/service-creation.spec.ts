@@ -1,10 +1,10 @@
 import { expect, test } from '@playwright/test';
 
-import { authenticate, catchNewPage, deleteKoyebResources } from './test-utils';
+import { authenticate, catchNewPage, deleteAllApps } from './test-utils';
 
 test.beforeEach(({ page }) => authenticate(page));
-test.beforeEach(({ baseURL }) => deleteKoyebResources(baseURL));
-test.afterEach(({ baseURL }) => deleteKoyebResources(baseURL));
+test.beforeEach(deleteAllApps);
+test.afterEach(deleteAllApps);
 
 test('github service creation', async ({ context, page }) => {
   test.setTimeout(10 * 60 * 1000);

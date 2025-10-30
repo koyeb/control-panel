@@ -1,19 +1,13 @@
-name: E2E Tests
+name: Deploy one-click apps
 
 on:
   workflow_dispatch:
-  # push:
-  # deployment_status:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   tests:
     name: Run end-to-end tests
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 240
     container:
       image: mcr.microsoft.com/playwright:v1.56.1-noble
       options: --user 1001
@@ -33,15 +27,4 @@ jobs:
           USER_PASSWORD: ${{ secrets.E2E_USER_PASSWORD }}
           USER_GITHUB_PASSWORD: ${{ secrets.E2E_USER_GITHUB_PASSWORD }}
           USER_GITHUB_TOTP_KEY: ${{ secrets.E2E_USER_GITHUB_TOTP_KEY }}
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ failure() || cancelled() }}
-        with:
-          name: playwright-report
-          path: playwright-report
-
-      - uses: actions/upload-artifact@v4
-        if: ${{ failure() || cancelled() }}
-        with:
-          name: test-results
-          path: test-results
+          ONE_CLICK_APP: all

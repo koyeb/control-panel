@@ -1,6 +1,6 @@
 import { Page, expect, test } from '@playwright/test';
 
-import { authenticate, getOrganization } from './test-utils';
+import { api, authenticate } from './test-utils';
 
 test.beforeEach(async ({ page }) => {
   await authenticate(page);
@@ -40,8 +40,8 @@ test.describe('scaling', () => {
     );
   });
 
-  test('scale to zero message when the organization is on the starter plan', async ({ page, baseURL }) => {
-    const organization = await getOrganization(baseURL);
+  test('scale to zero message when the organization is on the starter plan', async ({ page }) => {
+    const { organization } = await api('get /v1/account/organization', {});
 
     test.skip(organization?.plan !== 'starter', 'The organization is not on the starter plan');
 

@@ -1,20 +1,20 @@
 import { BrowserContext, Page } from '@playwright/test';
 import { TOTP } from 'totp-generator';
 
-import type { Organization } from 'src/api';
-import { ApiError, api, mapOrganization } from 'src/api';
+import { ApiEndpoint, api as baseApi } from 'src/api/api';
 
 export const config = {
-  baseUrl: process.env.E2E_BASE_URL as string,
+  baseUrl: process.env.BASE_URL!,
+  websiteBaseUrl: process.env.WEBSITE_BASE_URL!,
   account: {
-    email: process.env.E2E_USER_EMAIL as string,
-    password: process.env.E2E_USER_PASSWORD as string,
-    token: process.env.E2E_USER_TOKEN as string,
+    email: process.env.USER_EMAIL!,
+    password: process.env.USER_PASSWORD!,
+    token: process.env.USER_TOKEN!,
   },
   github: {
-    email: process.env.E2E_USER_EMAIL as string,
-    password: process.env.E2E_USER_GITHUB_PASSWORD as string,
-    totpKey: process.env.E2E_USER_GITHUB_TOTP_KEY as string,
+    email: process.env.USER_EMAIL!,
+    password: process.env.USER_GITHUB_PASSWORD!,
+    totpKey: process.env.USER_GITHUB_TOTP_KEY!,
   },
 };
 
@@ -30,6 +30,14 @@ export function wait(ms: number): Promise<void> {
 
 export function pathname(page: Page) {
   return new URL(page.url()).pathname;
+}
+
+export async function catchNewPage(context: BrowserContext, fn: () => Promise<void>) {
+  const promise = context.waitForEvent('page');
+
+  await fn();
+
+  return promise;
 }
 
 export async function authenticate(page: Page) {
@@ -61,40 +69,24 @@ async function oneTimePassword() {
   return otp;
 }
 
-export async function deleteKoyebResources(baseUrl?: string) {
+export function api<E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof baseApi<E>>) {
   const token = config.account.token;
+  const baseUrl = config.baseUrl;
 
+  return baseApi(endpoint, params, { baseUrl, token, ...options });
+}
+
+export async function deleteAllApps() {
   const listAppIds = async () => {
-    const { apps } = await api('get /v1/apps', { query: { limit: '100' } }, { baseUrl, token });
+    const { apps } = await api('get /v1/apps', {});
     return apps!.map((app) => app.id!);
   };
 
-  for (const appId of await listAppIds()) {
-    await api('delete /v1/apps/{id}', { path: { id: appId } }, { baseUrl, token });
-  }
+  const appIds = await listAppIds();
+
+  await Promise.all(appIds.map((appId) => api('delete /v1/apps/{id}', { path: { id: appId } })));
 
   while ((await listAppIds()).length > 0) {
     await new Promise((r) => setTimeout(r, 1000));
   }
-}
-
-export async function catchNewPage(context: BrowserContext, fn: () => Promise<void>) {
-  const promise = context.waitForEvent('page');
-
-  await fn();
-
-  return promise;
-}
-
-export async function getOrganization(baseUrl?: string): Promise<Organization | undefined> {
-  return api('get /v1/account/organization', {}, { baseUrl, token: config.account.token }).then(
-    ({ organization }) => mapOrganization(organization!),
-    (error) => {
-      if (ApiError.is(error, 404)) {
-        return undefined;
-      }
-
-      throw error;
-    },
-  );
 }
