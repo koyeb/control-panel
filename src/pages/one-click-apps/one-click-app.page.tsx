@@ -153,7 +153,7 @@ const metadataIconMap: Record<string, SvgComponent> = {
   'circle-user': IconCircleUser,
   github: IconGithub,
   docker: IconDocker,
-  'hugging-face': IconHuggingFace,
+  huggingface: IconHuggingFace,
 };
 
 function AppDescription({ description }: { description: string }) {
