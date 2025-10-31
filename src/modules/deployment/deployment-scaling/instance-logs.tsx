@@ -7,10 +7,16 @@ import { isInstanceRunning } from 'src/application/service-functions';
 import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Checkbox, ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
-import { LogOptions, getInitialLogOptions } from 'src/components/logs/log-options';
-import { LogLines, LogsFooter } from 'src/components/logs/logs';
+import {
+  LogLines,
+  LogOptions,
+  LogStream,
+  LogsFilters,
+  LogsFooter,
+  getInitialLogOptions,
+  useLogs,
+} from 'src/components/logs';
 import { QueryError } from 'src/components/query-error';
-import { LogStream, LogsFilters, useLogs } from 'src/hooks/logs';
 import { useRouteParam } from 'src/hooks/router';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';

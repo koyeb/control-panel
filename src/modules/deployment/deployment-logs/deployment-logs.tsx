@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { hasBuild, isDeploymentRunning } from 'src/application/service-functions';
+import { LogsFilters, useLogs } from 'src/components/logs';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { useObserve } from 'src/hooks/lifecycle';
-import { LogsFilters, useLogs } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { IconCircleDashed } from 'src/icons';
 import { TranslateStatus, createTranslate } from 'src/intl/translate';

@@ -5,9 +5,9 @@ import { FormattedTime } from 'react-intl';
 
 import { downloadFileFromString } from 'src/application/download-file-from-string';
 import { notify } from 'src/application/notify';
+import { LogsApi } from 'src/components/logs/use-logs';
 import { useClipboard } from 'src/hooks/clipboard';
 import { useIntersectionObserver } from 'src/hooks/intersection-observer';
-import { LogsApi } from 'src/hooks/logs';
 import { IconCopy, IconDownload, IconEllipsis } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { LogLine } from 'src/model';

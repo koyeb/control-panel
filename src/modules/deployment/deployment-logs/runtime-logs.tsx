@@ -9,7 +9,6 @@ import { isDeploymentRunning } from 'src/application/service-functions';
 import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Checkbox, ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
-import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {
   LogLineContent,
   LogLineDate,
@@ -17,15 +16,20 @@ import {
   LogLineStream,
   LogLines,
   LogOptions,
+  LogStream,
+  LogsApi,
+  LogsFilters,
   LogsFooter,
-} from 'src/components/logs/logs';
-import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
+  LogsPeriod,
+  getInitialLogOptions,
+  getLogsStartDate,
+  waitingForLogsImage,
+} from 'src/components/logs';
 import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
-import { LogStream, LogsApi, LogsFilters, LogsPeriod, getLogsStartDate } from 'src/hooks/logs';
 import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';

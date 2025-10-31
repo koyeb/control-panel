@@ -6,18 +6,18 @@ import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { Link } from 'src/components/link';
-import { getInitialLogOptions } from 'src/components/logs/log-options';
 import {
   LogLineContent,
   LogLineDate,
   LogLineStream,
   LogLines,
   LogOptions,
+  LogsApi,
   LogsFooter,
-} from 'src/components/logs/logs';
-import waitingForLogsImage from 'src/components/logs/waiting-for-logs.gif';
+  getInitialLogOptions,
+  waitingForLogsImage,
+} from 'src/components/logs';
 import { QueryError } from 'src/components/query-error';
-import { LogsApi } from 'src/hooks/logs';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/model';
