@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
 import { AnsiUp } from 'ansi_up';
 import { Duration, add, max, sub } from 'date-fns';
 import { dequal } from 'dequal';
@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
 import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src/api';
+import { ApiResponseBody } from 'src/api/api';
 import { useDeepCompareMemo, usePrevious } from 'src/hooks/lifecycle';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { LogLine } from 'src/model';
@@ -146,12 +147,14 @@ function useLogsHistory(filters: LogsFilters, end: Date) {
         end: next_end!,
       };
     },
-    select: (data) => {
-      return data.pages.flatMap(({ data }) =>
-        data!.map((data) => getLogLine(data as unknown as ApiLogLine)).reverse(),
-      );
-    },
+    select: selectLogsHistory,
   });
+}
+
+function selectLogsHistory({ pages }: InfiniteData<ApiResponseBody<'get /v1/streams/logs/query'>>) {
+  return pages.flatMap(({ data }) =>
+    data!.map((data) => getLogLine(data as unknown as ApiLogLine)).reverse(),
+  );
 }
 
 export function getLogsStartDate(end: Date, period: LogsPeriod) {

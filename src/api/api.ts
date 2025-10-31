@@ -144,7 +144,7 @@ type ApiRequestBody<E extends ApiEndpoint> =
       : Body
     : never;
 
-type ApiResponseBody<E extends ApiEndpoint> =
+export type ApiResponseBody<E extends ApiEndpoint> =
   GetApiEndpoint<E> extends {
     responses: { 200: { content: { '*/*': infer Result } } };
   }
