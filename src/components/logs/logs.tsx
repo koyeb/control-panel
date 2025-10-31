@@ -15,10 +15,6 @@ import { shortId } from 'src/utils/strings';
 
 import { ActionsMenu } from '../dropdown-menu';
 
-import { LogOptions } from './log-options';
-
-export { type LogOptions };
-
 const T = createTranslate('components.logs');
 
 type LogsFooterProps = {
@@ -74,14 +70,15 @@ function useCopyLogs(lines: LogLine[]) {
 }
 
 type LogLinesProps = {
-  options: LogOptions;
-  setOption: (option: keyof LogOptions, value: boolean) => void;
+  fullScreen: boolean;
+  tail: boolean;
+  setTail: (tail: boolean) => void;
   logs: LogsApi;
-  renderLine: (line: LogLine, options: LogOptions) => React.ReactNode;
+  renderLine: (line: LogLine) => React.ReactNode;
   renderNoLogs: () => React.ReactNode;
 };
 
-export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }: LogLinesProps) {
+export function LogLines({ fullScreen, tail, setTail, logs, renderLine, renderNoLogs }: LogLinesProps) {
   const container = useRef<HTMLDivElement>(null);
   const [before, setBefore] = useState<HTMLDivElement | null>(null);
   const [after, setAfter] = useState<HTMLDivElement | null>(null);
@@ -89,10 +86,10 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
   const lines = logs.lines;
 
   useEffect(() => {
-    if (options.tail) {
+    if (tail) {
       container.current?.scrollTo({ top: container.current.scrollHeight });
     }
-  }, [options.tail, lines]);
+  }, [tail, lines]);
 
   useIntersectionObserver(
     before,
@@ -104,7 +101,7 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
   useIntersectionObserver(
     after,
     { root: container.current },
-    ([entry]) => setOption('tail', Boolean(entry?.isIntersecting)),
+    ([entry]) => setTail(Boolean(entry?.isIntersecting)),
     [after],
   );
 
@@ -127,8 +124,8 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
       ref={container}
       className={clsx(
         'scrollbar-thin overflow-auto rounded border py-2 scrollbar-green',
-        !options.fullScreen && 'h-[32rem] resize-y',
-        options.fullScreen && 'flex-1',
+        !fullScreen && 'h-[32rem] resize-y',
+        fullScreen && 'flex-1',
       )}
     >
       {lines.length === 0 && (
@@ -147,7 +144,7 @@ export function LogLines({ options, setOption, logs, renderLine, renderNoLogs }:
 
           <div className="min-w-min font-mono break-all">
             {lines.map((line) => (
-              <Fragment key={line.id}>{renderLine(line, options)}</Fragment>
+              <Fragment key={line.id}>{renderLine(line)}</Fragment>
             ))}
           </div>
 
@@ -180,10 +177,10 @@ export function LogLineInstanceId({ line }: { line: LogLine }) {
   return <LogLineMeta>{shortId(line.instanceId) ?? Array(8).fill(' ').join('')}</LogLineMeta>;
 }
 
-export function LogLineContent({ line, options }: { line: LogLine; options: LogOptions }) {
+export function LogLineContent({ line, wordWrap }: { line: LogLine; wordWrap: boolean }) {
   return (
     <span
-      className={clsx(options.wordWrap ? 'whitespace-pre-wrap' : 'whitespace-pre')}
+      className={clsx(wordWrap ? 'whitespace-pre-wrap' : 'whitespace-pre')}
       dangerouslySetInnerHTML={{ __html: line.html }}
     />
   );

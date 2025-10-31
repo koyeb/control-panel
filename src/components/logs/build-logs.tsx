@@ -1,6 +1,5 @@
 import { Alert, IconButton, Menu, MenuItem } from '@koyeb/design-system';
-import { useCallback, useEffect } from 'react';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { useEffect } from 'react';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { ControlledCheckbox } from 'src/components/forms';
@@ -14,8 +13,9 @@ import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
-import { LogOptions, getInitialLogOptions } from './log-options';
 import { LogLineContent, LogLineDate, LogLineStream, LogLines, LogsFooter } from './logs';
+import { useLogsFilters } from './logs-filters';
+import { LogsOptions, useLogsOptions } from './logs-options';
 import { useLogs } from './use-logs';
 import waitingForLogsImage from './waiting-for-logs.gif';
 
@@ -29,19 +29,13 @@ type BuildLogsProps = {
 };
 
 export function BuildLogs({ app, service, deployment, onLastLineChanged }: BuildLogsProps) {
-  const logs = useLogs(deployment.build?.status === 'RUNNING', {
-    deploymentId: deployment.id,
-    regionalDeploymentId: null,
-    instanceId: null,
-    type: 'build',
-    streams: ['stdout', 'stderr', 'koyeb'],
-    period: '30d',
-    search: '',
-  });
+  const optionsForm = useLogsOptions();
+  const options = optionsForm.watch();
 
-  const optionsForm = useForm<LogOptions>({
-    defaultValues: () => Promise.resolve(getInitialLogOptions()),
-  });
+  const filtersForm = useLogsFilters('build', { deployment });
+  const filters = filtersForm.watch();
+
+  const logs = useLogs(deployment.build?.status === 'RUNNING', 'interpret', filters);
 
   useEffect(() => {
     const lastLine = logs.lines[logs.lines.length - 1];
@@ -50,10 +44,6 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
       onLastLineChanged(lastLine);
     }
   }, [logs.lines, onLastLineChanged]);
-
-  const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
-    return <LogLine line={line} options={options} />;
-  }, []);
 
   if (deployment.buildSkipped) {
     return <BuiltInPreviousDeployment service={service} />;
@@ -69,17 +59,18 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
 
   return (
     <FullScreen
-      enabled={optionsForm.watch('fullScreen')}
+      enabled={options.fullScreen}
       exit={() => optionsForm.setValue('fullScreen', false)}
       className="col gap-2 p-4"
     >
-      <LogsHeader options={optionsForm} />
+      <LogsHeader toggleFullScreen={() => optionsForm.setValue('fullScreen', !options.fullScreen)} />
 
       <LogLines
-        options={optionsForm.watch()}
-        setOption={optionsForm.setValue}
+        fullScreen={options.fullScreen}
+        tail={options.tail}
+        setTail={(tail) => optionsForm.setValue('tail', tail)}
         logs={logs}
-        renderLine={renderLine}
+        renderLine={(line) => <LogLine line={line} options={options} />}
         renderNoLogs={() => <NoLogs />}
       />
 
@@ -172,10 +163,10 @@ function BuiltInPreviousDeployment({ service }: { service: Service }) {
 }
 
 type LogsHeaderProps = {
-  options: UseFormReturn<LogOptions>;
+  toggleFullScreen: () => void;
 };
 
-function LogsHeader({ options }: LogsHeaderProps) {
+function LogsHeader({ toggleFullScreen }: LogsHeaderProps) {
   const quotas = useOrganizationQuotas();
 
   return (
@@ -184,18 +175,14 @@ function LogsHeader({ options }: LogsHeaderProps) {
         <T id="header.title" values={{ retention: quotas.logsRetention }} />
       </div>
 
-      <IconButton
-        variant="solid"
-        Icon={IconFullscreen}
-        onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
-      >
+      <IconButton variant="solid" Icon={IconFullscreen} onClick={toggleFullScreen}>
         <T id="header.fullScreen" />
       </IconButton>
     </header>
   );
 }
 
-function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) {
+function LogLine({ options, line }: { options: LogsOptions; line: LogLineType }) {
   return (
     <div className="row px-4">
       {options.date && (
@@ -204,7 +191,7 @@ function LogLine({ options, line }: { options: LogOptions; line: LogLineType }) 
 
       {options.stream && <LogLineStream line={line} />}
 
-      <LogLineContent line={line} options={options} />
+      <LogLineContent line={line} wordWrap={options.wordWrap} />
     </div>
   );
 }

@@ -12,19 +12,12 @@ import { useDebouncedValue } from 'src/hooks/timers';
 import { LogLine } from 'src/model';
 import { createId, stripAnsi } from 'src/utils/strings';
 
+import { LogsFilters } from './logs-filters';
+
 export type LogType = 'build' | 'runtime';
 export type LogStream = 'stdout' | 'stderr' | 'koyeb';
 export type LogsPeriod = 'live' | '1h' | '6h' | '24h' | '7d' | '30d';
-
-export type LogsFilters = {
-  type: LogType;
-  deploymentId: string;
-  regionalDeploymentId: string | null;
-  instanceId: string | null;
-  streams: LogStream[];
-  period: LogsPeriod;
-  search: string;
-};
+export type LogsAnsiMode = 'interpret' | 'strip';
 
 export type LogsApi = {
   error?: Error;
@@ -35,7 +28,7 @@ export type LogsApi = {
   loadPrevious: () => void;
 };
 
-export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
+export function useLogs(tail: boolean, ansi: LogsAnsiMode, filters: LogsFilters): LogsApi {
   const filtersMemo = useDeepCompareMemo({ ...filters, search: useDebouncedValue(filters.search, 500) });
   const prevFilters = usePrevious(filtersMemo);
   const end = useRef(new Date());
@@ -50,8 +43,8 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
   const { search } = filtersMemo;
 
   const lines = useMemo<LogLine[]>(() => {
-    return processLogLines([...(historyQuery.data ?? []), ...stream.lines], { search, ansi: 'interpret' });
-  }, [historyQuery.data, stream.lines, search]);
+    return processLogLines([...(historyQuery.data ?? []), ...stream.lines], { search, ansi });
+  }, [historyQuery.data, stream.lines, search, ansi]);
 
   return {
     error: historyQuery.error ?? stream.error,
@@ -107,7 +100,7 @@ function useLogsHistory(filters: LogsFilters, end: Date) {
     queryKey: getApiQueryKey('get /v1/streams/logs/query', {
       query: {
         type: filters.type,
-        deployment_id: filters.deploymentId,
+        deployment_id: filters.deploymentId ?? undefined,
         regional_deployment_id: filters.regionalDeploymentId ?? undefined,
         instance_id: filters.instanceId ?? undefined,
         streams: filters.streams,
@@ -239,7 +232,7 @@ function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStrea
   const stream = apiStream('get /v1/streams/logs/tail', {
     query: {
       type: filters.type,
-      deployment_id: filters.deploymentId,
+      deployment_id: filters.deploymentId ?? undefined,
       regional_deployment_id: filters.regionalDeploymentId ?? undefined,
       instance_id: filters.instanceId ?? undefined,
       streams: filters.streams,

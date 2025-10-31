@@ -1,6 +1,5 @@
 import { IconButton, Menu } from '@koyeb/design-system';
-import { useCallback } from 'react';
-import { Controller, UseFormReturn, useForm } from 'react-hook-form';
+import { Controller, UseFormReturn } from 'react-hook-form';
 
 import { useApp, useService } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
@@ -11,13 +10,14 @@ import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { Instance, LogLine } from 'src/model';
+import { Instance } from 'src/model';
 import { arrayToggle } from 'src/utils/arrays';
 
-import { LogOptions, getInitialLogOptions } from './log-options';
 import { LogLines, LogsFooter } from './logs';
+import { LogsFilters, useLogsFilters } from './logs-filters';
+import { LogsOptions, useLogsOptions } from './logs-options';
 import { NoRuntimeLogs, RuntimeLogLine } from './runtime-logs';
-import { LogStream, LogsFilters, useLogs } from './use-logs';
+import { LogStream, useLogs } from './use-logs';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling.drawer.instanceHistory.logs');
 
@@ -29,25 +29,13 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   const service = useService(useRouteParam('serviceId'));
   const app = useApp(service?.appId);
 
-  const filtersForm = useForm<LogsFilters>({
-    defaultValues: {
-      instanceId: instance.id,
-      type: 'runtime',
-      period: '30d',
-      streams: ['stdout', 'stderr', 'koyeb'],
-      search: '',
-    },
-  });
+  const optionsForm = useLogsOptions();
+  const options = optionsForm.watch();
 
-  const logs = useLogs(isInstanceRunning(instance), filtersForm.watch());
+  const filtersForm = useLogsFilters('runtime', { instance });
+  const filters = filtersForm.watch();
 
-  const optionsForm = useForm<LogOptions>({
-    defaultValues: () => Promise.resolve(getInitialLogOptions()),
-  });
-
-  const renderLine = useCallback((line: LogLine, options: LogOptions) => {
-    return <RuntimeLogLine options={options} line={line} />;
-  }, []);
+  const logs = useLogs(isInstanceRunning(instance), 'interpret', filters);
 
   if (logs.error) {
     return <QueryError error={logs.error} className="m-4" />;
@@ -63,10 +51,11 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
         <LogsHeader filtersForm={filtersForm} optionsForm={optionsForm} />
 
         <LogLines
-          options={optionsForm.watch()}
-          setOption={optionsForm.setValue}
+          fullScreen={options.fullScreen}
+          tail={options.tail}
+          setTail={(tail) => optionsForm.setValue('tail', tail)}
           logs={logs}
-          renderLine={renderLine}
+          renderLine={(line) => <RuntimeLogLine line={line} options={options} />}
           renderNoLogs={() => (
             <NoRuntimeLogs
               running={isInstanceRunning(instance)}
@@ -102,7 +91,7 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
 
 type LogsHeaderProps = {
   filtersForm: UseFormReturn<LogsFilters>;
-  optionsForm: UseFormReturn<LogOptions>;
+  optionsForm: UseFormReturn<LogsOptions>;
 };
 
 function LogsHeader({ filtersForm, optionsForm }: LogsHeaderProps) {

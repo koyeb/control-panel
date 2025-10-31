@@ -75,7 +75,7 @@ export function normalizeDiacriticCharacters(string: string) {
 }
 
 // eslint-disable-next-line no-control-regex
-const stripAnsiRegexp = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+const stripAnsiRegexp = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g; // cspell:disable-line
 
 export function stripAnsi(text: string) {
   return text.replaceAll(stripAnsiRegexp, '');

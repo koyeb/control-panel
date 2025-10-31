@@ -1,8 +1,8 @@
 import { Dropdown, IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { useCallback, useEffect, useEffectEvent, useMemo } from 'react';
-import { Controller, UseFormReturn, useForm } from 'react-hook-form';
+import { useEffect, useMemo } from 'react';
+import { Controller, UseFormReturn } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
 import { isDeploymentRunning } from 'src/application/service-functions';
@@ -13,7 +13,7 @@ import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
-import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -22,9 +22,10 @@ import { arrayToggle, inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
 
-import { LogOptions, getInitialLogOptions } from './log-options';
 import { LogLineContent, LogLineDate, LogLineInstanceId, LogLineStream, LogLines, LogsFooter } from './logs';
-import { LogStream, LogsFilters, LogsPeriod, getLogsStartDate, useLogs } from './use-logs';
+import { LogsFilters, useLogsFilters } from './logs-filters';
+import { LogsOptions, useLogsOptions } from './logs-options';
+import { LogStream, LogsPeriod, getLogsStartDate, useLogs } from './use-logs';
 import waitingForLogsImage from './waiting-for-logs.gif';
 
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
@@ -38,31 +39,13 @@ type RuntimeLogsProps = {
 };
 
 export function RuntimeLogs({ app, service, deployment, instances, onLastLineChanged }: RuntimeLogsProps) {
-  const logsFilters = useFeatureFlag('logs-filters');
+  const optionsForm = useLogsOptions();
+  const options = optionsForm.watch();
 
-  const defaultFilters: LogsFilters = {
-    deploymentId: deployment.id,
-    regionalDeploymentId: null,
-    instanceId: null,
-    type: 'runtime',
-    streams: ['stdout', 'stderr', 'koyeb'],
-    period: logsFilters ? '1h' : '30d',
-    search: '',
-  };
+  const filtersForm = useLogsFilters('runtime', { deployment });
+  const filters = filtersForm.watch();
 
-  const filters = useForm<LogsFilters>({
-    defaultValues: defaultFilters,
-  });
-
-  const resetFilters = useEffectEvent(() => {
-    filters.reset(defaultFilters);
-  });
-
-  useEffect(() => {
-    resetFilters();
-  }, [deployment.id]);
-
-  const logs = useLogs(isDeploymentRunning(deployment), filters.watch());
+  const logs = useLogs(isDeploymentRunning(deployment), 'interpret', filters);
 
   useEffect(() => {
     const lastLine = logs.lines[logs.lines.length - 1];
@@ -71,14 +54,6 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
       onLastLineChanged(lastLine);
     }
   }, [logs.lines, onLastLineChanged]);
-
-  const optionsForm = useForm<LogOptions>({
-    defaultValues: () => Promise.resolve(getInitialLogOptions()),
-  });
-
-  const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
-    return <RuntimeLogLine options={options} line={line} />;
-  }, []);
 
   if (logs.error) {
     return <QueryError error={logs.error} className="m-4" />;
@@ -93,19 +68,24 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
 
   return (
     <FullScreen
-      enabled={optionsForm.watch('fullScreen')}
+      enabled={options.fullScreen}
       exit={() => optionsForm.setValue('fullScreen', false)}
       className="col gap-2 p-4"
     >
-      <LogsHeader deployment={deployment} filters={filters} options={optionsForm} instances={instances} />
+      <LogsHeader deployment={deployment} filters={filtersForm} options={optionsForm} instances={instances} />
 
       <LogLines
-        options={optionsForm.watch()}
-        setOption={optionsForm.setValue}
+        fullScreen={options.fullScreen}
+        tail={options.tail}
+        setTail={(tail) => optionsForm.setValue('tail', tail)}
         logs={logs}
-        renderLine={renderLine}
+        renderLine={(line) => <RuntimeLogLine line={line} options={options} />}
         renderNoLogs={() => (
-          <NoRuntimeLogs running={isDeploymentRunning(deployment)} loading={logs.loading} filters={filters} />
+          <NoRuntimeLogs
+            running={isDeploymentRunning(deployment)}
+            loading={logs.loading}
+            filters={filtersForm}
+          />
         )}
       />
 
@@ -191,7 +171,7 @@ function WaitingForLogs() {
 type LogsHeaderProps = {
   deployment: ComputeDeployment;
   filters: UseFormReturn<LogsFilters>;
-  options: UseFormReturn<LogOptions>;
+  options: UseFormReturn<LogsOptions>;
   instances: Instance[];
 };
 
@@ -361,7 +341,7 @@ function useRetentionPeriods() {
   }, [quotas]);
 }
 
-export function RuntimeLogLine({ options, line }: { options: LogOptions; line: LogLine }) {
+export function RuntimeLogLine({ line, options }: { line: LogLine; options: LogsOptions }) {
   const dateProps: Partial<React.ComponentProps<typeof LogLineDate>> = {
     year: 'numeric',
     month: '2-digit',
@@ -376,7 +356,7 @@ export function RuntimeLogLine({ options, line }: { options: LogOptions; line: L
       {options.date && <LogLineDate line={line} timeZone="UTC" {...dateProps} />}
       {options.stream && <LogLineStream line={line} />}
       {options.instance && <LogLineInstanceId line={line} />}
-      <LogLineContent line={line} options={options} />
+      <LogLineContent line={line} wordWrap={options.wordWrap} />
     </div>
   );
 }

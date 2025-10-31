@@ -1,6 +1,7 @@
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-export type LogOptions = {
+export type LogsOptions = {
   fullScreen: boolean;
   tail: boolean;
   stream: boolean;
@@ -9,14 +10,7 @@ export type LogOptions = {
   wordWrap: boolean;
 };
 
-const schema = z.object({
-  stream: z.boolean(),
-  date: z.boolean(),
-  instance: z.boolean(),
-  wordWrap: z.boolean(),
-});
-
-const defaultOptions: LogOptions = {
+const defaultOptions: LogsOptions = {
   fullScreen: false,
   tail: true,
   stream: false,
@@ -25,14 +19,23 @@ const defaultOptions: LogOptions = {
   wordWrap: false,
 };
 
-export function getInitialLogOptions(): LogOptions {
-  return {
-    ...defaultOptions,
-    ...getStoredOptions(),
-  };
+export function useLogsOptions() {
+  return useForm<LogsOptions>({
+    defaultValues: async () => ({
+      ...defaultOptions,
+      ...getStoredOptions(),
+    }),
+  });
 }
 
-function getStoredOptions(): Partial<LogOptions> {
+const schema = z.object({
+  stream: z.boolean(),
+  date: z.boolean(),
+  instance: z.boolean(),
+  wordWrap: z.boolean(),
+});
+
+function getStoredOptions(): Partial<LogsOptions> {
   const value = localStorage.getItem('logs');
 
   try {
