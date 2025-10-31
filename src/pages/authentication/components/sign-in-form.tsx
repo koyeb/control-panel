@@ -9,7 +9,6 @@ import { ApiError, apiMutation } from 'src/api';
 import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -38,15 +37,8 @@ const invalidCredentialApiMessages = [
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
   const authKit = useAuthKit();
-  const workOs = useFeatureFlag('work-os');
 
-  const [authenticationMethod, setAuthenticationMethod] = useState<'workos' | 'koyeb' | null>('koyeb');
-
-  useEffect(() => {
-    if (workOs) {
-      setAuthenticationMethod(null);
-    }
-  }, [workOs]);
+  const [authenticationMethod, setAuthenticationMethod] = useState<'workos' | 'koyeb' | null>(null);
 
   const navigate = useNavigate();
   const getSeonFingerprint = useSeon();
@@ -121,7 +113,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
         type="email"
         autoComplete="email"
         placeholder={t('emailPlaceholder')}
-        onChangeEffect={() => workOs && setAuthenticationMethod(null)}
+        onChangeEffect={() => setAuthenticationMethod(null)}
       />
 
       <AuthInput

@@ -213,7 +213,7 @@ function AccountNotFound() {
           values={{
             link: (children) => (
               <FeatureFlag
-                feature="work-os"
+                feature="workos-signup"
                 fallback={
                   <Link to="/auth/signup" className="text-default underline">
                     {children}
