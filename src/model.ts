@@ -534,7 +534,7 @@ export type Replica = {
 
 export type LogLine = {
   id: string;
-  date: Date;
+  date: string;
   stream: 'stdout' | 'stderr' | 'koyeb';
   instanceId?: string;
   text: string;

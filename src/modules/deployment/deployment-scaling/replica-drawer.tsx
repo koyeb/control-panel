@@ -15,6 +15,7 @@ import { useState } from 'react';
 import { useInstancesQuery, useRegionalDeployment } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
 import { Select } from 'src/components/forms';
+import { InstanceLogs } from 'src/components/logs';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
@@ -26,7 +27,6 @@ import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/model'
 import { identity } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
 
-import { InstanceLogs } from './instance-logs';
 import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling.drawer');

@@ -7,15 +7,6 @@ import { isInstanceRunning } from 'src/application/service-functions';
 import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Checkbox, ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
-import {
-  LogLines,
-  LogOptions,
-  LogStream,
-  LogsFilters,
-  LogsFooter,
-  getInitialLogOptions,
-  useLogs,
-} from 'src/components/logs';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
 import { IconFullscreen } from 'src/icons';
@@ -23,7 +14,10 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { Instance, LogLine } from 'src/model';
 import { arrayToggle } from 'src/utils/arrays';
 
-import { NoRuntimeLogs, RuntimeLogLine } from '../deployment-logs/runtime-logs';
+import { LogOptions, getInitialLogOptions } from './log-options';
+import { LogLines, LogsFooter } from './logs';
+import { NoRuntimeLogs, RuntimeLogLine } from './runtime-logs';
+import { LogStream, LogsFilters, useLogs } from './use-logs';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling.drawer.instanceHistory.logs');
 

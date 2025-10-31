@@ -9,7 +9,7 @@ import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src
 import { useDeepCompareMemo, usePrevious } from 'src/hooks/lifecycle';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { LogLine } from 'src/model';
-import { createId } from 'src/utils/strings';
+import { createId, stripAnsi } from 'src/utils/strings';
 
 export type LogType = 'build' | 'runtime';
 export type LogStream = 'stdout' | 'stderr' | 'koyeb';
@@ -43,38 +43,50 @@ export function useLogs(tail: boolean, filters: LogsFilters): LogsApi {
     end.current = new Date();
   }
 
-  const { data: historyLines = [], ...query } = useLogsHistory(filtersMemo, end.current);
+  const historyQuery = useLogsHistory(filtersMemo, end.current);
   const stream = useLogsStream(tail, filtersMemo, end.current);
 
   const { search } = filtersMemo;
-  const highlightSearchMatches = useCallback(
-    (html: string) => {
-      if (search === '') {
-        return html;
-      }
-
-      return html.replaceAll(search, (value) => `<mark>${value}</mark>`);
-    },
-    [search],
-  );
 
   const lines = useMemo<LogLine[]>(() => {
-    const ansi = new AnsiUp();
-
-    return [...historyLines, ...stream.lines].map((line) => ({
-      ...line,
-      html: highlightSearchMatches(ansi.ansi_to_html(line.text)),
-    }));
-  }, [historyLines, stream.lines, highlightSearchMatches]);
+    return processLogLines([...(historyQuery.data ?? []), ...stream.lines], { search, ansi: 'interpret' });
+  }, [historyQuery.data, stream.lines, search]);
 
   return {
-    error: query.error ?? stream.error,
+    error: historyQuery.error ?? stream.error,
     lines,
-    loading: query.isLoading,
-    fetching: query.isFetching,
-    hasPrevious: query.hasPreviousPage,
-    loadPrevious: () => !query.isFetching && void query.fetchPreviousPage(),
+    loading: historyQuery.isLoading,
+    fetching: historyQuery.isFetching,
+    hasPrevious: historyQuery.hasPreviousPage,
+    loadPrevious: () => !historyQuery.isFetching && void historyQuery.fetchPreviousPage(),
   };
+}
+
+function processLogLines(
+  lines: Array<Omit<LogLine, 'html'>>,
+  options: { search: string; ansi: 'strip' | 'interpret' },
+) {
+  const ansi = new AnsiUp();
+
+  const getLogLineHtml = (text: string) => {
+    let result = text;
+
+    if (options.ansi === 'strip') {
+      result = stripAnsi(result);
+    }
+
+    if (options.ansi === 'interpret') {
+      result = ansi.ansi_to_html(result);
+    }
+
+    if (options.search !== '') {
+      result = result.replaceAll(options.search, (value) => `<mark>${value}</mark>`);
+    }
+
+    return result;
+  };
+
+  return lines.map((line) => ({ ...line, html: getLogLineHtml(line.text) }));
 }
 
 function useLogsHistory(filters: LogsFilters, end: Date) {
@@ -91,7 +103,7 @@ function useLogsHistory(filters: LogsFilters, end: Date) {
 
   return useInfiniteQuery({
     // eslint-disable-next-line @tanstack/query/exhaustive-deps
-    queryKey: getApiQueryKey('get /v1/streams/logs/tail', {
+    queryKey: getApiQueryKey('get /v1/streams/logs/query', {
       query: {
         type: filters.type,
         deployment_id: filters.deploymentId,
@@ -268,7 +280,7 @@ function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStrea
 function getLogLine(result: ApiLogLine): Omit<LogLine, 'html'> {
   return {
     id: createId(),
-    date: new Date(result.created_at),
+    date: result.created_at,
     stream: result.labels.stream,
     instanceId: result.labels.instance_id,
     text: result.msg,

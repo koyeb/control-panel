@@ -73,3 +73,10 @@ export function snakeToCamelCase<Str extends string>(str: Str): SnakeToCamelCase
 export function normalizeDiacriticCharacters(string: string) {
   return string.normalize('NFD').replace(/\p{Diacritic}/gu, '');
 }
+
+// eslint-disable-next-line no-control-regex
+const stripAnsiRegexp = /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g;
+
+export function stripAnsi(text: string) {
+  return text.replaceAll(stripAnsiRegexp, '');
+}

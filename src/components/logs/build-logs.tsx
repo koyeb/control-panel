@@ -1,22 +1,11 @@
 import { Alert, IconButton, Menu, MenuItem } from '@koyeb/design-system';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { UseFormReturn, useForm } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { Link } from 'src/components/link';
-import {
-  LogLineContent,
-  LogLineDate,
-  LogLineStream,
-  LogLines,
-  LogOptions,
-  LogsApi,
-  LogsFooter,
-  getInitialLogOptions,
-  waitingForLogsImage,
-} from 'src/components/logs';
 import { QueryError } from 'src/components/query-error';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -25,19 +14,42 @@ import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
+import { LogOptions, getInitialLogOptions } from './log-options';
+import { LogLineContent, LogLineDate, LogLineStream, LogLines, LogsFooter } from './logs';
+import { useLogs } from './use-logs';
+import waitingForLogsImage from './waiting-for-logs.gif';
+
 const T = createTranslate('modules.deployment.deploymentLogs.build');
 
 type BuildLogsProps = {
   app: App;
   service: Service;
   deployment: ComputeDeployment;
-  logs: LogsApi;
+  onLastLineChanged: (line: LogLineType) => void;
 };
 
-export function BuildLogs({ app, service, deployment, logs }: BuildLogsProps) {
+export function BuildLogs({ app, service, deployment, onLastLineChanged }: BuildLogsProps) {
+  const logs = useLogs(deployment.build?.status === 'RUNNING', {
+    deploymentId: deployment.id,
+    regionalDeploymentId: null,
+    instanceId: null,
+    type: 'build',
+    streams: ['stdout', 'stderr', 'koyeb'],
+    period: '30d',
+    search: '',
+  });
+
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
+
+  useEffect(() => {
+    const lastLine = logs.lines[logs.lines.length - 1];
+
+    if (lastLine !== undefined) {
+      onLastLineChanged(lastLine);
+    }
+  }, [logs.lines, onLastLineChanged]);
 
   const renderLine = useCallback((line: LogLineType, options: LogOptions) => {
     return <LogLine line={line} options={options} />;

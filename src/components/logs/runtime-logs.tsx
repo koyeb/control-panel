@@ -1,7 +1,7 @@
 import { Dropdown, IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useEffectEvent, useMemo } from 'react';
 import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
@@ -9,27 +9,11 @@ import { isDeploymentRunning } from 'src/application/service-functions';
 import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Checkbox, ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
-import {
-  LogLineContent,
-  LogLineDate,
-  LogLineInstanceId,
-  LogLineStream,
-  LogLines,
-  LogOptions,
-  LogStream,
-  LogsApi,
-  LogsFilters,
-  LogsFooter,
-  LogsPeriod,
-  getInitialLogOptions,
-  getLogsStartDate,
-  waitingForLogsImage,
-} from 'src/components/logs';
 import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/select-instance';
-import { FeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
@@ -38,6 +22,11 @@ import { arrayToggle, inArray, last } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
 
+import { LogOptions, getInitialLogOptions } from './log-options';
+import { LogLineContent, LogLineDate, LogLineInstanceId, LogLineStream, LogLines, LogsFooter } from './logs';
+import { LogStream, LogsFilters, LogsPeriod, getLogsStartDate, useLogs } from './use-logs';
+import waitingForLogsImage from './waiting-for-logs.gif';
+
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
 
 type RuntimeLogsProps = {
@@ -45,11 +34,44 @@ type RuntimeLogsProps = {
   service: Service;
   deployment: ComputeDeployment;
   instances: Instance[];
-  filters: UseFormReturn<LogsFilters>;
-  logs: LogsApi;
+  onLastLineChanged: (line: LogLineType) => void;
 };
 
-export function RuntimeLogs({ app, service, deployment, instances, filters, logs }: RuntimeLogsProps) {
+export function RuntimeLogs({ app, service, deployment, instances, onLastLineChanged }: RuntimeLogsProps) {
+  const logsFilters = useFeatureFlag('logs-filters');
+
+  const defaultFilters: LogsFilters = {
+    deploymentId: deployment.id,
+    regionalDeploymentId: null,
+    instanceId: null,
+    type: 'runtime',
+    streams: ['stdout', 'stderr', 'koyeb'],
+    period: logsFilters ? '1h' : '30d',
+    search: '',
+  };
+
+  const filters = useForm<LogsFilters>({
+    defaultValues: defaultFilters,
+  });
+
+  const resetFilters = useEffectEvent(() => {
+    filters.reset(defaultFilters);
+  });
+
+  useEffect(() => {
+    resetFilters();
+  }, [deployment.id]);
+
+  const logs = useLogs(isDeploymentRunning(deployment), filters.watch());
+
+  useEffect(() => {
+    const lastLine = logs.lines[logs.lines.length - 1];
+
+    if (lastLine !== undefined) {
+      onLastLineChanged(lastLine);
+    }
+  }, [logs.lines, onLastLineChanged]);
+
   const optionsForm = useForm<LogOptions>({
     defaultValues: () => Promise.resolve(getInitialLogOptions()),
   });
