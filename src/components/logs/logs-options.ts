@@ -1,5 +1,8 @@
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { StoredValue } from 'src/application/storage';
 
 export type LogsOptions = {
   fullScreen: boolean;
@@ -21,13 +24,33 @@ const defaultOptions: LogsOptions = {
   interpretAnsi: true,
 };
 
+const storedOptions = new StoredValue('logs-options', {
+  parse: parseOptions,
+});
+
 export function useLogsOptions() {
-  return useForm<LogsOptions>({
+  const form = useForm<LogsOptions>({
     defaultValues: async () => ({
       ...defaultOptions,
-      ...getStoredOptions(),
+      ...storedOptions.read(),
     }),
   });
+
+  const watch = form.watch;
+
+  useEffect(() => {
+    const { unsubscribe } = watch(({ stream, date, instance, wordWrap, interpretAnsi }, { type }) => {
+      if (type === 'change') {
+        storedOptions.write({ stream, date, instance, wordWrap, interpretAnsi });
+      }
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [watch]);
+
+  return form;
 }
 
 const schema = z.object({
@@ -35,10 +58,11 @@ const schema = z.object({
   date: z.boolean(),
   instance: z.boolean(),
   wordWrap: z.boolean(),
+  interpretAnsi: z.boolean(),
 });
 
-function getStoredOptions(): Partial<LogsOptions> {
-  const value = localStorage.getItem('logs');
+function parseOptions(): Partial<LogsOptions> {
+  const value = localStorage.getItem('logs-options');
 
   try {
     const result = schema.safeParse(JSON.parse(value ?? '{}'));
