@@ -1,4 +1,4 @@
-import { Alert, IconButton, Menu, MenuItem } from '@koyeb/design-system';
+import { Alert, IconButton, Menu } from '@koyeb/design-system';
 import { useEffect } from 'react';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
@@ -12,6 +12,8 @@ import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/mod
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
+
+import { ButtonMenuItem } from '../dropdown-menu';
 
 import { LogLineContent, LogLineDate, LogLineStream, LogLines, LogsFooter } from './logs';
 import { useLogsFilters } from './logs-filters';
@@ -35,7 +37,11 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
   const filtersForm = useLogsFilters('build', { deployment });
   const filters = filtersForm.watch();
 
-  const logs = useLogs(deployment.build?.status === 'RUNNING', 'interpret', filters);
+  const logs = useLogs(
+    deployment.build?.status === 'RUNNING',
+    options.interpretAnsi ? 'interpret' : 'strip',
+    filters,
+  );
 
   useEffect(() => {
     const lastLine = logs.lines[logs.lines.length - 1];
@@ -80,15 +86,15 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
         lines={logs.lines}
         menu={
           <Menu>
-            {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
-              <MenuItem key={option}>
+            {(['tail', 'stream', 'date', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
+              <ButtonMenuItem key={option}>
                 <ControlledCheckbox
                   control={optionsForm.control}
                   name={option}
                   label={<Translate id={`components.logs.options.${option}`} />}
                   className="flex-1"
                 />
-              </MenuItem>
+              </ButtonMenuItem>
             ))}
           </Menu>
         }

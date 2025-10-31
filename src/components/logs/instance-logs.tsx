@@ -35,7 +35,7 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   const filtersForm = useLogsFilters('runtime', { instance });
   const filters = filtersForm.watch();
 
-  const logs = useLogs(isInstanceRunning(instance), 'interpret', filters);
+  const logs = useLogs(isInstanceRunning(instance), options.interpretAnsi ? 'interpret' : 'strip', filters);
 
   if (logs.error) {
     return <QueryError error={logs.error} className="m-4" />;
@@ -71,7 +71,7 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
           lines={logs.lines}
           menu={
             <Menu>
-              {(['tail', 'stream', 'date', 'wordWrap'] as const).map((option) => (
+              {(['tail', 'stream', 'date', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
                 <ButtonMenuItem key={option}>
                   <ControlledCheckbox
                     control={optionsForm.control}

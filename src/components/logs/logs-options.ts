@@ -8,6 +8,7 @@ export type LogsOptions = {
   date: boolean;
   instance: boolean;
   wordWrap: boolean;
+  interpretAnsi: boolean;
 };
 
 const defaultOptions: LogsOptions = {
@@ -17,6 +18,7 @@ const defaultOptions: LogsOptions = {
   date: false,
   instance: false,
   wordWrap: false,
+  interpretAnsi: true,
 };
 
 export function useLogsOptions() {

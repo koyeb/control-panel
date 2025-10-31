@@ -45,7 +45,11 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
   const filtersForm = useLogsFilters('runtime', { deployment });
   const filters = filtersForm.watch();
 
-  const logs = useLogs(isDeploymentRunning(deployment), 'interpret', filters);
+  const logs = useLogs(
+    isDeploymentRunning(deployment),
+    options.interpretAnsi ? 'interpret' : 'strip',
+    filters,
+  );
 
   useEffect(() => {
     const lastLine = logs.lines[logs.lines.length - 1];
@@ -95,7 +99,7 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
         lines={logs.lines}
         menu={
           <Menu>
-            {(['tail', 'stream', 'date', 'instance', 'wordWrap'] as const).map((option) => (
+            {(['tail', 'stream', 'date', 'instance', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
               <ButtonMenuItem key={option}>
                 <ControlledCheckbox
                   control={optionsForm.control}

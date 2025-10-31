@@ -250,7 +250,8 @@
         "stream": "Show stream",
         "instance": "Show instance",
         "date": "Show timestamp",
-        "wordWrap": "Word wrap"
+        "wordWrap": "Word wrap",
+        "interpretAnsi": "Show colors"
       }
     },
     "organizationNameField": {
