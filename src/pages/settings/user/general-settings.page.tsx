@@ -20,12 +20,18 @@ export function GeneralSettingsPage() {
 
   return (
     <>
+      {!authKit.user && (
+        <>
+          <UserNameForm />
+          <GithubAccount />
+          <UserEmailForm />
+          <UserPasswordForm />
+        </>
+      )}
+
       {authKit.user && <AuthKitUserSettings />}
-      <UserNameForm />
+
       <NotificationSettings />
-      <GithubAccount />
-      <UserEmailForm />
-      <UserPasswordForm />
       <DeleteAccount />
     </>
   );
