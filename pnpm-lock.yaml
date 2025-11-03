@@ -20,9 +20,6 @@ importers:
       '@intercom/messenger-js-sdk':
         specifier: ^0.0.18
         version: 0.0.18
-      '@koyeb/authkit-js':
-        specifier: ^0.14.1
-        version: 0.14.1
       '@koyeb/design-system':
         specifier: ^0.10.5
         version: 0.10.5(@floating-ui/react@0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-ranger@0.0.4(react@19.2.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.2.0))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(immer@10.1.3)(lucide-react@0.546.0(react@19.2.0))(react@19.2.0)(shiki@3.13.0)
@@ -74,6 +71,9 @@ importers:
       '@uiw/react-codemirror':
         specifier: ^4.25.2
         version: 4.25.2(@babel/runtime@7.28.4)(@codemirror/autocomplete@6.19.0)(@codemirror/language@6.11.3)(@codemirror/lint@6.9.0)(@codemirror/search@6.5.11)(@codemirror/state@6.5.2)(@codemirror/theme-one-dark@6.1.3)(@codemirror/view@6.38.6)(codemirror@6.0.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@workos-inc/authkit-js':
+        specifier: ^0.14.0
+        version: 0.14.0
       '@workos-inc/widgets':
         specifier: ^1.4.2
         version: 1.4.2(@radix-ui/themes@3.2.1(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-query@5.90.5(react@19.2.0))(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -1113,9 +1113,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@koyeb/authkit-js@0.14.1':
-    resolution: {integrity: sha512-hrjTeaC3EgZDUo0dttk3gR4farYhzUwCFyhPS0okt8H0UZ/HXTgSKvkdeJqwmM5iESkPdywNS9jkYNZuR4I0VQ==}
 
   '@koyeb/design-system@0.10.5':
     resolution: {integrity: sha512-JUiY4goOE7FET7LDtLbOgnWErARmCvyMABnlllZU4F8PTuxTliJnDuClkPI2j6yy63AoKVY+QpjHPxbs24Rdng==}
@@ -2948,6 +2945,9 @@ packages:
   '@vueless/storybook-dark-mode@9.0.9':
     resolution: {integrity: sha512-wXy4O/qgqxiPywKgyXDxYgIyP5r0lBRes+uJCCcEtcpNVISzUFieNEojFGz32oSOLLTk6EGGgYiwwy82OH4ylg==}
     engines: {node: '>=20'}
+
+  '@workos-inc/authkit-js@0.14.0':
+    resolution: {integrity: sha512-Wt6rKoZdZnuAgiEBlvMDKhleU9DAwpyyy1SibacrnOWQgF4rcNlC+NTnHiiXu6OiOjQo6pPxhW42kCL+Gi+fjw==}
 
   '@workos-inc/widgets@1.4.2':
     resolution: {integrity: sha512-Kp1SqhLpHdxaSkcYr0DgwbAd5OipG3pe8ysXI+TsM7+HGyNZVB2pD8+jooUlS0z0yO6qUgsfSr6EClnv4hc3XA==}
@@ -6815,8 +6815,6 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@koyeb/authkit-js@0.14.1': {}
-
   '@koyeb/design-system@0.10.5(@floating-ui/react@0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-ranger@0.0.4(react@19.2.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.2.0))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(immer@10.1.3)(lucide-react@0.546.0(react@19.2.0))(react@19.2.0)(shiki@3.13.0)':
     dependencies:
       '@floating-ui/react': 0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -8949,6 +8947,8 @@ snapshots:
     transitivePeerDependencies:
       - react
       - react-dom
+
+  '@workos-inc/authkit-js@0.14.0': {}
 
   '@workos-inc/widgets@1.4.2(@radix-ui/themes@3.2.1(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-query@5.90.5(react@19.2.0))(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:

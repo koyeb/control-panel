@@ -1,5 +1,5 @@
-import { OnRefreshResponse, User, createClient } from '@koyeb/authkit-js';
 import { useRouteContext } from '@tanstack/react-router';
+import { OnRefreshResponse, User, createClient } from '@workos-inc/authkit-js';
 
 import { getConfig } from './config';
 import { setAuthKitToken } from './token';
@@ -33,16 +33,12 @@ export class AuthKitAdapter {
     }
   }
 
-  async signIn(email: string, next: string | null) {
-    await this.client?.signIn({ loginHint: email, state: { next } });
+  async signIn({ email, next }: { email?: string; next?: string }) {
+    await this.client?.signIn({ loginHint: email, state: { next: next ?? null } });
   }
 
   async signUp() {
     await this.client?.signUp();
-  }
-
-  async authenticatedWithGithub(next: string | null) {
-    await this.client?.authenticatedWithSso({ provider: 'GitHubOAuth', state: { next } });
   }
 
   async signOut() {
@@ -66,7 +62,7 @@ export class AuthKitAdapter {
     return getConfig('environment') !== 'production';
   }
 
-  get redirectUri() {
+  private get redirectUri() {
     return `${window.location.origin}/account/workos/callback`;
   }
 

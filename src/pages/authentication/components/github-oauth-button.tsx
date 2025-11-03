@@ -2,12 +2,15 @@ import { useMutation } from '@tanstack/react-query';
 
 import { apiMutation } from 'src/api';
 import { useAuthKit } from 'src/application/authkit';
-import { useFeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { IconGithub } from 'src/icons';
+import { createTranslate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 import { AuthButton } from './auth-button';
+
+const T = createTranslate('pages.authentication.githubOAuth');
 
 type GithubOAuthButtonProps = {
   action: 'signin' | 'signup';
@@ -17,8 +20,7 @@ type GithubOAuthButtonProps = {
 };
 
 export function GithubOAuthButton({ action, metadata, className, children }: GithubOAuthButtonProps) {
-  const authkit = useAuthKit();
-  const workosSignup = useFeatureFlag('workos-signup');
+  const authKit = useAuthKit();
 
   const mutation = useMutation({
     ...apiMutation('get /v1/account/oauth', {
@@ -37,23 +39,28 @@ export function GithubOAuthButton({ action, metadata, className, children }: Git
     },
   });
 
-  const onClick = () => {
-    if (workosSignup) {
-      void authkit.authenticatedWithGithub(metadata ?? null);
-    } else {
-      mutation.mutate();
-    }
-  };
-
   return (
-    <AuthButton
-      type="button"
-      loading={mutation.isPending || mutation.isSuccess}
-      onClick={onClick}
-      className={className}
+    <FeatureFlag
+      feature="workos-signup"
+      fallback={
+        <AuthButton
+          type="button"
+          loading={mutation.isPending || mutation.isSuccess}
+          onClick={() => mutation.mutate()}
+          className={className}
+        >
+          <IconGithub className="size-4" />
+          {children}
+        </AuthButton>
+      }
     >
-      <IconGithub className="size-4" />
-      {children}
-    </AuthButton>
+      <AuthButton type="button" onClick={() => void authKit.signIn({ next: metadata })} className={className}>
+        <T id="button" />
+      </AuthButton>
+      <div className="mt-4 row items-center gap-1 text-dim">
+        <IconGithub className="size-4" />
+        <T id="details" />
+      </div>
+    </FeatureFlag>
   );
 }

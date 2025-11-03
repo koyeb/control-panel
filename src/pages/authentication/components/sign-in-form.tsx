@@ -65,7 +65,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
       setAuthenticationMethod(lowerCase(method!));
 
       if (method === 'WORKOS') {
-        await authKit.signIn(email, redirect);
+        await authKit.signIn({ email, next: redirect });
       }
     },
   });
