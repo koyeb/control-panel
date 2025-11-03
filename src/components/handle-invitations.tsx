@@ -29,8 +29,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     }),
     async onSuccess() {
       await switchOrganization.mutateAsync(invitation.organization.id);
-      await navigate({ to: '/' });
-      notify.info(t('acceptSuccess'));
+      await navigate({ to: '/', reloadDocument: true });
     },
   });
 

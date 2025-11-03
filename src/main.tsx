@@ -97,6 +97,7 @@ const mutationCache = new MutationCache({
       'logout', // authkit logout
       'delete /v1/account/logout',
       'delete /v1/organizations/{id}',
+      'delete /v1/organization_members/{id}',
       'delete /v1/users/{id}',
       'delete /v2/users/{id}',
     );

@@ -238,7 +238,6 @@
       "alreadyAccepted": "This invitation was already accepted",
       "alreadyDeclined": "This invitation was declined",
       "expired": "This invitation has expired",
-      "acceptSuccess": "The invitation was accepted",
       "declineSuccess": "The invitation was declined"
     },
     "logs": {
