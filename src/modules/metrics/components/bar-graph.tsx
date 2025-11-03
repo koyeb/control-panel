@@ -37,7 +37,7 @@ export function BarGraph({ loading, error, noData, labels, ...props }: BarGraphP
     <div ref={setRef} className="h-64">
       <ResponsiveBar
         theme={nivoTheme}
-        margin={{ top: 10, right: 10, bottom: 50, left: 50 }}
+        margin={{ top: 10, right: 10, bottom: 50, left: 65 }}
         gridXValues={tickValuesX}
         axisBottom={{
           format: (date: string) => intl.formatDate(date, { timeStyle: 'short' }),
