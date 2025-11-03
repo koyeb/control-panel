@@ -45,6 +45,7 @@ export function setToken(value: string | null, session = false) {
 
 export function setAuthKitToken(value: string | null = null) {
   token = value;
+  emitter.dispatchEvent(new Event('change'));
 }
 
 export function accessTokenListener(cb: (value: string | null) => void) {
@@ -53,6 +54,10 @@ export function accessTokenListener(cb: (value: string | null) => void) {
 
 export function useToken() {
   return useSyncExternalStore(subscribe, getSnapshot);
+}
+
+export function useAuthkitToken() {
+  return useSyncExternalStore(subscribe, getToken);
 }
 
 function subscribe(cb: () => void) {
