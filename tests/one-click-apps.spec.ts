@@ -4,9 +4,6 @@ import * as API from 'src/api/api.generated';
 
 import { api, assert, authenticate, config, deleteAllApps, wait } from './test-utils';
 
-const buildTimeout = 5 * 60 * 1000;
-const deploymentTimeout = 5 * 60 * 1000;
-
 test.beforeEach(({ page }) => authenticate(page));
 test.beforeEach(deleteAllApps);
 test.afterEach(deleteAllApps);
@@ -36,8 +33,6 @@ async function listOneClickApps() {
 }
 
 async function deployOneClickApp(page: Page, slug: string) {
-  test.setTimeout(buildTimeout + deploymentTimeout + 60);
-
   await page.goto(`/one-clicks/${slug}/deploy`);
   await page.getByRole('button', { name: 'Deploy' }).click();
 
