@@ -53,7 +53,7 @@ declare module '@tanstack/react-router' {
 }
 
 const queryCache = new QueryCache({
-  async onError(error, query) {
+  onError(error, query) {
     if (error.name === 'AbortError') {
       return;
     }
@@ -62,17 +62,17 @@ const queryCache = new QueryCache({
 
     if (ApiError.is(error) && error.message === 'Token rejected') {
       // organization is deactivated
-      await router.navigate({ to: '/settings' });
+      void router.navigate({ to: '/settings' });
       return;
     }
 
     if (ApiError.is(error, 401) && query.queryKey[0] === ('get /v1/account/profile' satisfies ApiEndpoint)) {
-      await handleAuthenticationError();
+      void handleAuthenticationError();
     }
 
     // user removed from organization
     if (ApiError.is(error, 403) && error.message === 'User is not a member of the organization') {
-      await handleAuthenticationError();
+      void handleAuthenticationError();
     }
 
     if (ApiError.is(error, 429)) {
