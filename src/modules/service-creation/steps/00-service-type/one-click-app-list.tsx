@@ -1,7 +1,5 @@
 import { useOneClickApps } from 'src/api';
-import { getConfig } from 'src/application/config';
-import { ExternalLink, Link } from 'src/components/link';
-import { FeatureFlag } from 'src/hooks/feature-flag';
+import { Link } from 'src/components/link';
 import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { isDefined } from 'src/utils/generic';
@@ -28,55 +26,25 @@ export function OneClickAppList() {
         <T id="navigation.deployOneClickApp" />
       </span>
 
-      <FeatureFlag
-        feature="one-click-apps-catalog"
-        fallback={
-          <>
-            <ul>
-              {apps.map((app) => (
-                <ExternalLink key={app.slug} href={`${getConfig('websiteUrl')}/deploy/${app.slug}`}>
-                  <ServiceTypeItem
-                    icon={
-                      <div className="rounded-md bg-black/60 p-1.5">
-                        <img src={app.logo} className="size-6 rounded-md grayscale" />
-                      </div>
-                    }
-                    label={app.name}
-                  />
-                </ExternalLink>
-              ))}
-            </ul>
+      <ul>
+        {apps.map((app) => (
+          <Link key={app.slug} to="/one-clicks/$slug/deploy" params={{ slug: app.slug }}>
+            <ServiceTypeItem
+              icon={
+                <div className="rounded-md bg-black/60 p-1.5">
+                  <img src={app.logo} className="size-6 rounded-md grayscale" />
+                </div>
+              }
+              label={app.name}
+            />
+          </Link>
+        ))}
+      </ul>
 
-            <ExternalLink
-              href={`${getConfig('websiteUrl')}/deploy`}
-              className="ms-4 row items-center gap-1 text-link"
-            >
-              <T id="navigation.moreOneClickApps" />
-              <IconArrowRight className="size-4" />
-            </ExternalLink>
-          </>
-        }
-      >
-        <ul>
-          {apps.map((app) => (
-            <Link key={app.slug} to="/one-clicks/$slug/deploy" params={{ slug: app.slug }}>
-              <ServiceTypeItem
-                icon={
-                  <div className="rounded-md bg-black/60 p-1.5">
-                    <img src={app.logo} className="size-6 rounded-md grayscale" />
-                  </div>
-                }
-                label={app.name}
-              />
-            </Link>
-          ))}
-        </ul>
-
-        <Link to="/one-clicks" className="ms-4 row items-center gap-1 text-link">
-          <T id="navigation.moreOneClickApps" />
-          <IconArrowRight className="size-4" />
-        </Link>
-      </FeatureFlag>
+      <Link to="/one-clicks" className="ms-4 row items-center gap-1 text-link">
+        <T id="navigation.moreOneClickApps" />
+        <IconArrowRight className="size-4" />
+      </Link>
     </>
   );
 }
