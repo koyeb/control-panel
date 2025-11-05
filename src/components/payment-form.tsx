@@ -48,7 +48,7 @@ const stylesDark = {
 };
 
 type PaymentFormProps = {
-  plan?: OrganizationPlan;
+  plan: OrganizationPlan;
   onPlanChanged?: () => void;
   renderFooter: (formState: FormState<{ address: Address }>) => React.ReactNode;
 };
@@ -128,7 +128,7 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
   const onSubmit = async ({ billingAlertAmount, address }: FormValues<typeof form>) => {
     await billingInfoMutation.mutateAsync(address);
     await paymentMethodMutation.mutateAsync();
-    await changePlanMutation.mutateAsync('starter');
+    await changePlanMutation.mutateAsync(plan);
 
     if (!Number.isNaN(billingAlertAmount)) {
       await updateBudgetMutation.mutateAsync(billingAlertAmount);
@@ -238,7 +238,13 @@ export function UpgradeDialog() {
   );
 }
 
-function UpgradeDialogContent({ plan, onPlanChanged, title, description, submit }: UpgradeDialogProps) {
+function UpgradeDialogContent({
+  plan = 'starter',
+  onPlanChanged,
+  title,
+  description,
+  submit,
+}: UpgradeDialogProps) {
   return (
     <>
       <DialogHeader title={title ?? <T id="title" />} />
