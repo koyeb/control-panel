@@ -28,7 +28,7 @@ export class ApiError extends Error {
     const result = apiErrorSchema.safeParse(body);
 
     if (!result.success) {
-      throw new UnexpectedError('Unknown API error', { body });
+      throw new UnexpectedError('Unknown API error', { status: response.status, body });
     }
 
     super(result.data.message);

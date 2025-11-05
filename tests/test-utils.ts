@@ -2,6 +2,7 @@ import { BrowserContext, Page } from '@playwright/test';
 import { TOTP } from 'totp-generator';
 
 import { ApiEndpoint, api as baseApi } from 'src/api/api';
+import { UnexpectedError } from 'src/application/errors';
 
 export const config = {
   baseUrl: process.env.BASE_URL!,
@@ -69,11 +70,22 @@ async function oneTimePassword() {
   return otp;
 }
 
-export function api<E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof baseApi<E>>) {
+export async function api<E extends ApiEndpoint>(
+  ...[endpoint, params, options]: Parameters<typeof baseApi<E>>
+) {
   const token = config.account.token;
   const baseUrl = config.baseUrl;
 
-  return baseApi(endpoint, params, { baseUrl, token, ...options });
+  try {
+    return await baseApi(endpoint, params, { baseUrl, token, ...options });
+  } catch (error) {
+    if (error instanceof UnexpectedError && (error.details as { status?: number }).status === 429) {
+      await wait(5000);
+      return api(endpoint, params, options);
+    } else {
+      throw error;
+    }
+  }
 }
 
 export async function deleteAllApps() {

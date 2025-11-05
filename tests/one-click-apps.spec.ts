@@ -2,11 +2,9 @@ import test, { Page, expect } from '@playwright/test';
 
 import * as API from 'src/api/api.generated';
 
-import { api, assert, authenticate, config, deleteAllApps, wait } from './test-utils';
+import { api, assert, authenticate, config, wait } from './test-utils';
 
 test.beforeEach(({ page }) => authenticate(page));
-test.beforeEach(deleteAllApps);
-test.afterEach(deleteAllApps);
 
 const target = process.env.ONE_CLICK_APP;
 
@@ -15,11 +13,35 @@ if (target && target !== 'all') {
     await deployOneClickApp(page, target);
   });
 } else {
-  for (const app of await listOneClickApps()) {
-    test(app.name, async ({ page }) => {
-      await deployOneClickApp(page, app.slug);
-    });
-  }
+  const instances = await listCatalogInstances();
+  const apps = await listOneClickApps();
+
+  const gpuApps = apps.filter((app) => {
+    const instanceId = app.template_definition.instance_types?.[0]?.type;
+    const instance = instances.find((instance) => instance.id === instanceId);
+
+    return instance?.type === 'gpu';
+  });
+
+  const nonGpuApps = apps.filter((app) => !gpuApps.includes(app));
+
+  test.describe('non GPU one-click apps', () => {
+    test.describe.configure({ mode: 'parallel' });
+
+    for (const app of nonGpuApps) {
+      test(app.name, async ({ page }) => {
+        await deployOneClickApp(page, app.slug);
+      });
+    }
+  });
+
+  test.describe('GPU one-click apps', () => {
+    for (const app of gpuApps) {
+      test(app.name, async ({ page }) => {
+        await deployOneClickApp(page, app.slug);
+      });
+    }
+  });
 }
 
 async function listOneClickApps() {
@@ -29,7 +51,8 @@ async function listOneClickApps() {
     throw new Error(await response.text());
   }
 
-  return response.json() as Promise<Array<{ slug: string; name: string }>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return response.json() as Promise<Array<{ slug: string; name: string; template_definition: any }>>;
 }
 
 async function deployOneClickApp(page: Page, slug: string) {
@@ -42,6 +65,10 @@ async function deployOneClickApp(page: Page, slug: string) {
 
   assert(serviceId !== null);
   await waitHealthy(serviceId);
+
+  const service = await getService(serviceId);
+
+  await api('delete /v1/apps/{id}', { path: { id: service.app_id! } });
 }
 
 async function waitHealthy(serviceId: string) {
@@ -54,6 +81,10 @@ async function waitHealthy(serviceId: string) {
   }
 
   expect(deployment.status).toBe('HEALTHY');
+}
+
+function listCatalogInstances() {
+  return api('get /v1/catalog/instances', { query: { limit: '100' } }).then(({ instances }) => instances!);
 }
 
 function getService(serviceId: string) {

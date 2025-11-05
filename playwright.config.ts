@@ -16,10 +16,11 @@ const oneClickApps = process.env.ONE_CLICK_APP !== undefined;
 export default defineConfig({
   testDir: './tests',
   timeout: oneClickApps ? ms({ minutes: 20 }) : undefined,
-  globalTimeout: oneClickApps ? ms({ hours: 4 }) : ms({ minutes: 25 }),
+  globalTimeout: oneClickApps ? ms({ hours: 6 }) : ms({ minutes: 25 }),
   forbidOnly: !!ci,
   retries: ci && !oneClickApps ? 2 : 0,
-  workers: 1,
+  maxFailures: oneClickApps ? 30 : undefined,
+  workers: 10,
   reporter: ci ? [['list'], ['github']] : 'list',
 
   grep: oneClickApps ? /one-click-apps/ : undefined,
