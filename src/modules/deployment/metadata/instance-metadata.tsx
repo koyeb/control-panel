@@ -28,7 +28,7 @@ export function InstanceMetadataValue({ instance: instanceId }: InstanceMetadata
       className="md:min-w-42"
       content={instance && <InstanceTooltipContent instance={instance} />}
       trigger={(props) => (
-        <div {...props} className="inline-flex min-w-0 flex-row items-center gap-2">
+        <div {...props} className="row items-center gap-2">
           <div>
             <IconCpu strokeWidth={1} className="size-4" />
           </div>

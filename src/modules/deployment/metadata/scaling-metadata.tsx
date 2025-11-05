@@ -36,7 +36,7 @@ export function ScalingMetadataValue({ replicas, sleeping }: ScalingMetadataProp
       className="md:max-w-54"
       content={replicas && <ScalingTooltipContent replicas={replicas} />}
       trigger={(props) => (
-        <div {...props} className="inline-flex min-w-0 flex-row items-center gap-2">
+        <div {...props} className="row items-center gap-2">
           <ScalingIcon className="size-3.5" />
 
           <div className="truncate">
