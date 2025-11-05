@@ -9,7 +9,6 @@ import { ExternalLink, Link } from 'src/components/link';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { DeploymentStatusBadge, ServiceStatusBadge, ServiceStatusIcon } from 'src/components/status-badges';
 import { Tooltip } from 'src/components/tooltip';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import {
   IconArchive,
   IconArrowRight,
@@ -33,11 +32,9 @@ import { inArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { ellipsis, shortId } from 'src/utils/strings';
 
-import { ServiceItemOld } from './service-item-old';
-
 const T = createTranslate('pages.home.service');
 
-export type ServiceItemProps = {
+type ServiceItemProps = {
   app: App;
   service: Service;
   activeDeployment?: Deployment;
@@ -47,28 +44,26 @@ export type ServiceItemProps = {
 
 export function ServiceItem(props: ServiceItemProps) {
   return (
-    <FeatureFlag feature="new-services-list" fallback={<ServiceItemOld {...props} />}>
-      <div className="@container rounded-md border">
-        <div
-          className={clsx(
-            'grid h-17 items-center gap-4 px-4 @max-2xl:h-auto @max-2xl:py-4 @2xl:px-3 @2xl:text-xs',
-            'grid-cols-1',
-            '@2xl:grid-cols-[14rem_6rem_7rem_9rem]',
-            '@3xl:grid-cols-[14rem_6rem_7rem_9rem_auto]',
-            '@4xl:grid-cols-[18rem_7.5rem_10rem_9rem_auto]',
-            '@6xl:grid-cols-[24rem_7.5rem_10rem_9rem_auto]',
-          )}
-        >
-          <ServiceInfo {...props} />
-          <DeploymentInfo {...props} />
-          <ServiceAdditionalInfo {...props} />
-        </div>
-
-        <div className="rounded-b-md border-t border-muted bg-muted/50 p-4 @2xl:px-3 @2xl:py-2 @2xl:text-xs">
-          <ServiceFooter {...props} />
-        </div>
+    <div className="@container rounded-md border">
+      <div
+        className={clsx(
+          'grid h-17 items-center gap-4 px-4 @max-2xl:h-auto @max-2xl:py-4 @2xl:px-3 @2xl:text-xs',
+          'grid-cols-1',
+          '@2xl:grid-cols-[14rem_6rem_7rem_9rem]',
+          '@3xl:grid-cols-[14rem_6rem_7rem_9rem_auto]',
+          '@4xl:grid-cols-[18rem_7.5rem_10rem_9rem_auto]',
+          '@6xl:grid-cols-[24rem_7.5rem_10rem_9rem_auto]',
+        )}
+      >
+        <ServiceInfo {...props} />
+        <DeploymentInfo {...props} />
+        <ServiceAdditionalInfo {...props} />
       </div>
-    </FeatureFlag>
+
+      <div className="rounded-b-md border-t border-muted bg-muted/50 p-4 @2xl:px-3 @2xl:py-2 @2xl:text-xs">
+        <ServiceFooter {...props} />
+      </div>
+    </div>
   );
 }
 
