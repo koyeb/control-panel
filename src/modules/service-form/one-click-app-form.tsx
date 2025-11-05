@@ -16,6 +16,7 @@ import z from 'zod';
 import {
   createEnsureApiQueryData,
   mapGithubApp,
+  mapVolume,
   useCatalogInstance,
   useInstancesCatalog,
   useRegionsCatalog,
@@ -33,7 +34,7 @@ import { handleSubmit } from 'src/hooks/form';
 import { useDeepCompareMemo } from 'src/hooks/lifecycle';
 import { useNavigate, useSearchParams } from 'src/hooks/router';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
-import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata } from 'src/model';
+import { EnvironmentVariable, OneClickApp, OneClickAppEnv, OneClickAppMetadata, Volume } from 'src/model';
 import { InstanceSelector } from 'src/modules/instance-selector/instance-selector';
 import { useInstanceSelector } from 'src/modules/instance-selector/instance-selector-state';
 import { inArray } from 'src/utils/arrays';
@@ -45,6 +46,7 @@ import { InstanceCategoryTabs } from '../instance-selector/instance-category-tab
 
 import { deploymentDefinitionToServiceForm } from './helpers/deployment-to-service-form';
 import { ServiceCost, computeEstimatedCost } from './helpers/estimated-cost';
+import { generateAppName } from './helpers/generate-app-name';
 import { defaultServiceForm } from './helpers/initialize-service-form';
 import { usePreSubmitServiceForm } from './helpers/pre-submit-service-form';
 import { submitServiceForm } from './helpers/submit-service-form';
@@ -129,18 +131,23 @@ async function initialize(
   queryClient: QueryClient,
 ) {
   const api = createEnsureApiQueryData(queryClient);
+
   const githubApp = await api('get /v1/github/installation', {})
     .then(mapGithubApp)
     .catch(() => null);
+
+  const volumes = await api('get /v1/volumes', { query: { limit: '100' } }).then(({ volumes }) =>
+    volumes!.map(mapVolume),
+  );
 
   merge(
     serviceForm,
     deploymentDefinitionToServiceForm(app.deploymentDefinition, githubApp?.organizationName, []),
     {
       meta: { appId: searchParams.get('app_id') },
-      appName: app.slug,
+      appName: generateAppName(),
       volumes: app.volumes?.map((volume) => ({
-        name: volume.name,
+        name: findAvailableVolumeName(volumes, volume.name),
         size: volume.size,
         mountPath: volume.path,
         mounted: false,
@@ -170,6 +177,16 @@ async function initialize(
       regions: [],
     })),
   };
+}
+
+function findAvailableVolumeName(volumes: Volume[], baseName: string, i = 0): string {
+  const name = i === 0 ? baseName : `${baseName}-${i}`;
+
+  if (volumes.some(hasProperty('name', name))) {
+    return findAvailableVolumeName(volumes, baseName, i + 1);
+  }
+
+  return name;
 }
 
 function createSchema(app: OneClickApp): z.ZodType<OneClickAppForm, OneClickAppForm> {
