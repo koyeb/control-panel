@@ -1896,6 +1896,7 @@
         "title": "Sign in to Koyeb",
         "subtitle": "Welcome back! To continue, sign in to your account",
         "githubSignIn": "Sign in with GitHub",
+        "otherOptions": "Show other options",
         "emailPlaceholder": "Email",
         "passwordPlaceholder": "Password",
         "continue": "Continue",
@@ -1924,10 +1925,6 @@
         "submit": "Send password reset email",
         "successNotification": "We've sent you an email with a password reset link",
         "signInLink": "Go back to <link>sign in</link>"
-      },
-      "githubOAuth": {
-        "button": "View other sign in methods",
-        "details": "Use this option to sign in with GitHub"
       },
       "sso": {
         "cannyError": "Error: failed to sign in to canny",

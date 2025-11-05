@@ -5,6 +5,7 @@ import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
+import { AuthButton } from './components/auth-button';
 import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignInForm } from './components/sign-in-form';
 import { Separator } from './separator';
@@ -14,29 +15,38 @@ const T = createTranslate('pages.authentication.signIn');
 export function SignInPage() {
   const t = T.useTranslate();
   const next = useSearchParams().get('next');
+  const authKit = useAuthKit();
 
   return (
-    <div className="mx-auto col w-full max-w-72 flex-1 justify-center py-8 text-center">
+    <div className="mx-auto col w-full max-w-90 flex-1 justify-center py-8 text-center">
       <DocumentTitle title={t('title')} />
 
       <h1 className="text-3xl font-semibold">
         <T id="title" />
       </h1>
 
-      <div className="mt-2 font-medium text-default/80">
+      <div className="mt-2 mb-10 font-medium text-default/80">
         <T id="subtitle" />
       </div>
 
-      <GithubOAuthButton action="signin" metadata={next ?? undefined} className="mt-12">
-        <T id="githubSignIn" />
-      </GithubOAuthButton>
+      <SignInForm redirect={next ?? '/'} />
 
       <Separator />
 
-      <SignInForm redirect={next ?? '/'} />
+      <FeatureFlag
+        feature="workos-signup"
+        fallback={
+          <GithubOAuthButton action="signin" metadata={next ?? undefined}>
+            <T id="githubSignIn" />
+          </GithubOAuthButton>
+        }
+      >
+        <AuthButton type="button" onClick={() => void authKit.signIn({ next })}>
+          <T id="otherOptions" />
+        </AuthButton>
+      </FeatureFlag>
 
       <SignUpLink />
-      <PasswordResetLink />
     </div>
   );
 }
@@ -48,12 +58,12 @@ function SignUpLink() {
     <FeatureFlag
       feature="workos-signup"
       fallback={
-        <Link to="/auth/signup" className="text-default underline">
+        <Link to="/auth/signup" className="font-medium text-default">
           {children}
         </Link>
       }
     >
-      <button type="button" onClick={() => void authKit.signUp()} className="text-default underline">
+      <button type="button" onClick={() => void authKit.signUp()} className="font-medium text-default">
         {children}
       </button>
     </FeatureFlag>
@@ -62,20 +72,6 @@ function SignUpLink() {
   return (
     <p className="mt-6 text-center text-xs text-dim">
       <T id="signUpLink" values={{ link }} />
-    </p>
-  );
-}
-
-function PasswordResetLink() {
-  const link = (children: React.ReactNode[]) => (
-    <Link to="/auth/reset-password" className="text-default underline">
-      {children}
-    </Link>
-  );
-
-  return (
-    <p className="mt-1 text-center text-xs text-dim">
-      <T id="forgotPasswordLink" values={{ link }} />
     </p>
   );
 }

@@ -21,7 +21,7 @@ export function SignUpPage() {
     <div className="col flex-1">
       <DocumentTitle title={t('title')} />
 
-      <div className="mx-auto col w-full max-w-72 flex-1 justify-center py-8 text-center">
+      <div className="mx-auto col w-full max-w-90 flex-1 justify-center py-8 text-center">
         <h1 className="text-3xl font-semibold">
           <T id="title" />
         </h1>
@@ -62,7 +62,7 @@ export function SignUpPage() {
 
 function SignInLink() {
   const link = (children: React.ReactNode) => (
-    <Link to="/auth/signin" className="text-default underline">
+    <Link to="/auth/signin" className="font-medium text-default">
       {children}
     </Link>
   );
@@ -76,7 +76,7 @@ function SignInLink() {
 
 function TermsOfServices() {
   const tos = (children: React.ReactNode) => (
-    <ExternalLink openInNewTab href="https://www.koyeb.com/docs/legal/terms" className="underline">
+    <ExternalLink openInNewTab href="https://www.koyeb.com/docs/legal/terms" className="font-medium">
       {children}
     </ExternalLink>
   );
@@ -85,7 +85,7 @@ function TermsOfServices() {
     <ExternalLink
       openInNewTab
       href="https://www.koyeb.com/docs/legal/data-processing-agreement"
-      className="underline"
+      className="font-medium"
     >
       {children}
     </ExternalLink>
@@ -100,13 +100,13 @@ function TermsOfServices() {
 
 function ReCaptcha() {
   const privacy = (children: React.ReactNode) => (
-    <ExternalLink href="https://policies.google.com/privacy" className="underline">
+    <ExternalLink href="https://policies.google.com/privacy" className="font-medium">
       {children}
     </ExternalLink>
   );
 
   const terms = (children: React.ReactNode) => (
-    <ExternalLink href="https://policies.google.com/terms" className="underline">
+    <ExternalLink href="https://policies.google.com/terms" className="font-medium">
       {children}
     </ExternalLink>
   );

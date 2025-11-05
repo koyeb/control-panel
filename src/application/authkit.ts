@@ -33,8 +33,8 @@ export class AuthKitAdapter {
     }
   }
 
-  async signIn({ email, next }: { email?: string; next?: string }) {
-    await this.client?.signIn({ loginHint: email, state: { next: next ?? null } });
+  async signIn({ email, next }: { email?: string; next?: string | null }) {
+    await this.client?.signIn({ loginHint: email, state: { next } });
   }
 
   async signUp() {

@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -9,6 +8,7 @@ import { ApiError, apiMutation } from 'src/api';
 import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
+import { Link } from 'src/components/link';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { urlToLinkOptions, useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -103,6 +103,12 @@ export function SignInForm({ redirect }: { redirect: string }) {
     }
   };
 
+  const resetPasswordLink = (children: React.ReactNode[]) => (
+    <Link to="/auth/reset-password" className="font-medium text-default">
+      {children}
+    </Link>
+  );
+
   return (
     <form onSubmit={handleSubmit(form, onSubmit)} className="col gap-6">
       <AuthInput
@@ -116,15 +122,21 @@ export function SignInForm({ redirect }: { redirect: string }) {
         onChangeEffect={() => setAuthenticationMethod(null)}
       />
 
-      <AuthInput
-        control={form.control}
-        name="password"
-        autoComplete="current-password"
-        type="password"
-        required={authenticationMethod === 'koyeb'}
-        placeholder={t('passwordPlaceholder')}
-        className={clsx({ hidden: authenticationMethod !== 'koyeb' })}
-      />
+      {authenticationMethod === 'koyeb' && (
+        <AuthInput
+          control={form.control}
+          name="password"
+          autoComplete="current-password"
+          type="password"
+          required={authenticationMethod === 'koyeb'}
+          placeholder={t('passwordPlaceholder')}
+          helperText={
+            <div className="text-dim">
+              <T id="forgotPasswordLink" values={{ link: resetPasswordLink }} />
+            </div>
+          }
+        />
+      )}
 
       {form.formState.errors.root?.message === 'invalidCredential' && (
         <div className="text-red">

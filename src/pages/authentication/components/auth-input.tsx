@@ -1,5 +1,6 @@
 import { useId } from '@koyeb/design-system';
 import { cva } from 'class-variance-authority';
+import clsx from 'clsx';
 import { Control, FieldPath, FieldValues, useController } from 'react-hook-form';
 
 type AuthInputProps<
@@ -9,12 +10,13 @@ type AuthInputProps<
   control?: Control<Form>;
   name: Name;
   onChangeEffect?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  helperText?: React.ReactNode;
 };
 
 export function AuthInput<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
->({ control, name, onChangeEffect, className, ...props }: AuthInputProps<Form, Name>) {
+>({ control, name, onChangeEffect, helperText, className, ...props }: AuthInputProps<Form, Name>) {
   const id = useId(props.id);
   const helperTextId = `${id}-helper-text`;
 
@@ -37,9 +39,9 @@ export function AuthInput<
         {...props}
       />
 
-      {invalid && (
-        <div id={helperTextId} className="mt-1 text-xs text-red">
-          {error?.message}
+      {(invalid || helperText) && (
+        <div id={helperTextId} className={clsx('mt-2 text-xs', { 'text-red': invalid })}>
+          {error?.message ?? helperText}
         </div>
       )}
     </div>
