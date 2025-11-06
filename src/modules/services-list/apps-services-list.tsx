@@ -6,7 +6,6 @@ import { useDebouncedValue } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
 import { AppList, Service } from 'src/model';
 import { hasProperty } from 'src/utils/object';
-import { upperCase } from 'src/utils/strings';
 
 import { Apps } from '../home/apps/apps';
 import { ServiceCreation } from '../service-creation/service-creation';
@@ -19,13 +18,13 @@ export function AppsServicesList() {
   const filtersForm = useForm<ServicesFiltersForm>({
     defaultValues: {
       search: '',
-      types: ['web', 'worker', 'database'],
+      types: ['WEB', 'WORKER', 'DATABASE'],
       statuses: ['STARTING', 'RESUMING', 'HEALTHY', 'DEGRADED', 'UNHEALTHY', 'PAUSED', 'DELETED'],
     },
   });
 
   const name = useDebouncedValue(filtersForm.watch('search') || undefined, 200);
-  const types = filtersForm.watch('types').map((type) => upperCase(type));
+  const types = filtersForm.watch('types');
   const statuses = filtersForm.watch('statuses').slice();
 
   if (statuses.includes('PAUSED')) {

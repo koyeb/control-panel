@@ -60,7 +60,7 @@ const banner = {
 };
 
 function HomePage() {
-  const query = useAppsFull({ types: ['WEB', 'WORKER', 'DATABASE'] });
+  const query = useAppsFull();
 
   if (query.isPending) {
     return <Loading />;

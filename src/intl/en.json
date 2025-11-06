@@ -98,6 +98,7 @@
       "web": "Web service",
       "private": "Private service",
       "worker": "Worker",
+      "sandbox": "Sandbox",
       "database": "Database",
       "model": "Model"
     }

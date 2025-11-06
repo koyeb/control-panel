@@ -16,13 +16,14 @@ import { TranslateEnum, createTranslate, translateStatus } from 'src/intl/transl
 import { ServiceStatus, ServiceType } from 'src/model';
 import { arrayToggle } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
+import { lowerCase } from 'src/utils/strings';
 
 const T = createTranslate('pages.services');
 
 export type ServicesFiltersForm = {
   search: string;
-  types: ServiceType[];
-  statuses: ServiceStatus[];
+  types: Array<Uppercase<ServiceType>>;
+  statuses: Array<ServiceStatus>;
 };
 
 export function ServicesFilters({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
@@ -54,7 +55,7 @@ function SearchInput({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
   );
 }
 
-const types: ServiceType[] = ['web', 'worker', 'database'];
+const types: Array<Uppercase<ServiceType>> = ['WEB', 'WORKER', 'DATABASE'];
 
 function TypesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
   const { field } = useController({
@@ -87,10 +88,10 @@ function TypesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
           onSelectAll={() => field.onChange(types)}
           renderItem={(type, selected) => (
             <div className="row items-center justify-between gap-2 px-3 py-1.5">
-              <ServiceTypeIcon size={1} type={type} />
+              <ServiceTypeIcon size={1} type={lowerCase(type)} />
 
               <div className="grow">
-                <TranslateEnum enum="serviceType" value={type} />
+                <TranslateEnum enum="serviceType" value={lowerCase(type)} />
               </div>
 
               {selected && <IconCheck className="size-4 text-green" />}

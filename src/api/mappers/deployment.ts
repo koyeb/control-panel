@@ -68,7 +68,7 @@ function mapComputeDeployment(deployment: API.Deployment): ComputeDeployment {
   const type = (): ComputeDeploymentType => {
     const type = definition.type;
 
-    if (!inArray(type, ['WEB', 'WORKER'] as const)) {
+    if (!inArray(type, ['WEB', 'WORKER', 'SANDBOX'] as const)) {
       throw new Error(`Invalid deployment type "${type}"`);
     }
 
