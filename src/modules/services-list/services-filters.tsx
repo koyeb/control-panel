@@ -1,5 +1,4 @@
 import { InputStart } from '@koyeb/design-system';
-import clsx from 'clsx';
 import { UseFormReturn, useController } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/forms/input';
@@ -11,12 +10,12 @@ import {
 } from 'src/components/forms/select';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { ServiceStatusDot } from 'src/components/status-dot';
+import { StatusesSelector } from 'src/components/statuses-selector';
 import { IconCheck, IconSearch } from 'src/icons';
 import { TranslateEnum, createTranslate, translateStatus } from 'src/intl/translate';
 import { ServiceStatus, ServiceType } from 'src/model';
 import { arrayToggle } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
-import { upperCase } from 'src/utils/strings';
 
 const T = createTranslate('pages.services');
 
@@ -26,42 +25,36 @@ export type ServicesFiltersForm = {
   statuses: ServiceStatus[];
 };
 
-const types: ServiceType[] = ['web', 'worker', 'database'];
-
-const statuses: ServiceStatus[] = [
-  'STARTING',
-  'RESUMING',
-  'HEALTHY',
-  'DEGRADED',
-  'UNHEALTHY',
-  'PAUSED',
-  'DELETED',
-];
-
 export function ServicesFilters({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
-  const t = T.useTranslate();
-
   return (
     <div className="row items-center gap-2">
-      <ControlledInput
-        control={form.control}
-        name="search"
-        type="search"
-        placeholder={t('filters.search.placeholder')}
-        start={
-          <InputStart background={false}>
-            <IconSearch className="size-4 text-dim" />
-          </InputStart>
-        }
-        className="w-full"
-      />
-
+      <SearchInput form={form} />
       <TypesSelector form={form} />
-
-      <StatusesSelector form={form} />
+      <ServiceStatusesSelector form={form} />
     </div>
   );
 }
+
+function SearchInput({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
+  const t = T.useTranslate();
+
+  return (
+    <ControlledInput
+      control={form.control}
+      name="search"
+      type="search"
+      placeholder={t('filters.search.placeholder')}
+      start={
+        <InputStart background={false}>
+          <IconSearch className="size-4 text-dim" />
+        </InputStart>
+      }
+      className="w-full"
+    />
+  );
+}
+
+const types: ServiceType[] = ['web', 'worker', 'database'];
 
 function TypesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
   const { field } = useController({
@@ -110,13 +103,23 @@ function TypesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
   );
 }
 
-function StatusesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
+const statuses: ServiceStatus[] = [
+  'STARTING',
+  'RESUMING',
+  'HEALTHY',
+  'DEGRADED',
+  'UNHEALTHY',
+  'PAUSED',
+  'DELETED',
+];
+
+function ServiceStatusesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
   const { field } = useController({
     control: form.control,
     name: 'statuses',
   });
 
-  const label = (status: ServiceStatus) => {
+  const renderItem = (status: ServiceStatus) => {
     if (status === 'PAUSED') {
       return [translateStatus('PAUSING'), translateStatus('PAUSED')].join(' / ');
     }
@@ -129,65 +132,14 @@ function StatusesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }
   };
 
   return (
-    <Select
+    <StatusesSelector<ServiceStatus>
       {...field}
-      items={statuses}
+      statuses={statuses}
       field={() => ({ className: 'min-w-48' })}
-      select={{ stateReducer: multiSelectStateReducer }}
       dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
-      value={null}
-      onChange={(status) => field.onChange(arrayToggle(field.value, status))}
-      renderValue={() => (
-        <div className="row items-center gap-2">
-          <StatusDots statuses={field.value} />
-          <T id="filters.status.label" />
-          <SelectedCountBadge selected={field.value.length} total={statuses.length} />
-        </div>
-      )}
-      menu={(context) => (
-        <MultiSelectMenu
-          context={context}
-          items={statuses}
-          selected={field.value}
-          getKey={identity}
-          onClearAll={() => field.onChange([])}
-          onSelectAll={() => field.onChange(statuses)}
-          renderItem={(status, selected) => (
-            <div className="row w-full items-center gap-2 px-3 py-1.5">
-              <ServiceStatusDot status={upperCase(status)} className="size-2" />
-
-              <div className="grow">{label(status)}</div>
-
-              {selected && (
-                <div>
-                  <IconCheck className="size-4 text-green" />
-                </div>
-              )}
-            </div>
-          )}
-          className="min-w-56"
-        />
-      )}
+      label={<T id="filters.status.label" />}
+      renderItem={renderItem}
+      Dot={ServiceStatusDot}
     />
-  );
-}
-
-function StatusDots({ statuses: enabledStatuses }: { statuses: ServicesFiltersForm['statuses'] }) {
-  return (
-    <div className="flex flex-row-reverse">
-      {statuses
-        .slice()
-        .reverse()
-        .map((status) => (
-          <ServiceStatusDot
-            key={status}
-            status={upperCase(status)}
-            className={clsx(
-              '-ml-0.75 size-2.5 animate-none! border border-neutral',
-              !enabledStatuses.includes(status) && 'bg-muted!',
-            )}
-          />
-        ))}
-    </div>
   );
 }
