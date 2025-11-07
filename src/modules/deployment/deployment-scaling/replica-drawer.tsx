@@ -14,17 +14,17 @@ import { useState } from 'react';
 
 import { useInstancesQuery, useRegionalDeployment } from 'src/api';
 import { isInstanceRunning } from 'src/application/service-functions';
-import { Select } from 'src/components/forms';
 import { InstanceLogs } from 'src/components/logs';
 import { Metadata } from 'src/components/metadata';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { InstanceStatusBadge } from 'src/components/status-badges';
+import { InstanceStatusDot } from 'src/components/status-dot';
+import { StatusesSelector } from 'src/components/statuses-selector';
 import { IconChevronRight } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate, translateStatus } from 'src/intl/translate';
 import { ComputeDeployment, Instance, InstanceStatus, Replica } from 'src/model';
-import { identity } from 'src/utils/generic';
 import { shortId } from 'src/utils/strings';
 
 import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
@@ -109,6 +109,17 @@ function NoActiveInstance({ replica }: { replica: Replica }) {
   return null;
 }
 
+const allStatuses: InstanceStatus[] = [
+  'ALLOCATING',
+  'STARTING',
+  'HEALTHY',
+  'UNHEALTHY',
+  'STOPPING',
+  'STOPPED',
+  'ERROR',
+  'SLEEPING',
+];
+
 type InstanceHistoryProps = {
   deployment: ComputeDeployment;
   replica: Replica;
@@ -117,14 +128,14 @@ type InstanceHistoryProps = {
 function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
   const [expanded, setExpanded] = useState<Instance>();
 
-  const [status, setStatus] = useState<InstanceStatus | null>(null);
+  const [statuses, setStatuses] = useState(allStatuses);
   const regionalDeployment = useRegionalDeployment(deployment.id, replica.region);
 
   const query = useInstancesQuery({
     deploymentId: deployment.id,
     replicaIndex: replica.index,
     regionalDeploymentId: regionalDeployment?.id,
-    statuses: status ? [status] : [],
+    statuses,
   });
 
   return (
@@ -133,24 +144,24 @@ function InstanceHistory({ deployment, replica }: InstanceHistoryProps) {
         <T id="instanceHistory.title" />
       </div>
 
-      <Select<InstanceStatus>
-        items={['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY', 'STOPPING', 'STOPPED', 'ERROR', 'SLEEPING']}
-        getKey={identity}
-        value={status}
-        onChange={setStatus}
+      <StatusesSelector
+        value={statuses}
+        onChange={setStatuses}
+        label={<T id="instanceHistory.filters.status.placeholder" />}
+        statuses={allStatuses}
         renderItem={translateStatus}
-        onItemClick={(s) => s === status && setStatus(null)}
-        placeholder={<T id="instanceHistory.filters.status.placeholder" />}
-        className="max-w-xs"
+        Dot={InstanceStatusDot}
+        field={() => ({ className: 'max-w-52' })}
+        dropdown={{ matchReferenceSize: true }}
       />
 
       <QueryGuard query={query}>
         {({ instances }) => (
           <InstanceList
-            instances={instances}
+            instances={statuses.length === 0 ? [] : instances}
             expanded={expanded}
             setExpanded={setExpanded}
-            hasFilters={status !== null}
+            hasFilters={statuses.length < allStatuses.length}
           />
         )}
       </QueryGuard>

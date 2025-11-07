@@ -1,43 +1,36 @@
-import identity from 'lodash-es/identity';
-import { UseFormReturn, useForm } from 'react-hook-form';
+import { UseFormReturn, useController, useForm } from 'react-hook-form';
 
 import { useDeploymentScalingQuery, useRegionsCatalog } from 'src/api';
-import { ControlledSelect } from 'src/components/forms';
 import { QueryGuard } from 'src/components/query-error';
-import { RegionFlag } from 'src/components/region-flag';
-import { RegionName } from 'src/components/region-name';
-import { TranslateStatus, createTranslate } from 'src/intl/translate';
-import { CatalogRegion, ComputeDeployment, InstanceStatus, Replica } from 'src/model';
+import { RegionsSelector } from 'src/components/regions-selector';
+import { InstanceStatusDot } from 'src/components/status-dot';
+import { StatusesSelector } from 'src/components/statuses-selector';
+import { createTranslate, translateStatus } from 'src/intl/translate';
+import { CatalogRegion, ComputeDeployment, InstanceStatus } from 'src/model';
 import { getId } from 'src/utils/object';
 
 import { ReplicaList } from './replica-list';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling');
 
+const statuses: InstanceStatus[] = ['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY', 'STOPPING', 'SLEEPING'];
+
 export type DeploymentScalingFilters = {
-  region: string | null;
-  status: InstanceStatus | null;
+  regions: string[];
+  statuses: InstanceStatus[];
 };
 
 export function DeploymentScaling({ deployment }: { deployment: ComputeDeployment }) {
   const regions = useRegionsCatalog(deployment.definition.regions);
 
-  const filters = useForm<DeploymentScalingFilters>({
+  const filtersForm = useForm<DeploymentScalingFilters>({
     defaultValues: {
-      region: null,
-      status: null,
+      regions: deployment.definition.regions,
+      statuses,
     },
   });
 
-  const query = useDeploymentScalingQuery(deployment.id, {
-    region: filters.watch('region') ?? undefined,
-  });
-
-  const filterReplicas = (replicas: Replica[]) => {
-    return replicas.filter(
-      (replica) => filters.watch('status') === null || replica.status === filters.watch('status'),
-    );
-  };
+  const query = useDeploymentScalingQuery(deployment.id, filtersForm.watch());
 
   return (
     <div className="m-4 mt-0 divide-y rounded-md border">
@@ -46,13 +39,13 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
           <T id="title" />
         </div>
 
-        <StatusFilter filters={filters} />
-        <RegionFilter filters={filters} regions={regions} />
+        <StatusFilter form={filtersForm} />
+        <RegionFilter form={filtersForm} regions={regions} />
       </div>
 
       <div className="p-3">
         <QueryGuard query={query}>
-          {(replicas) => <ReplicaList deployment={deployment} replicas={filterReplicas(replicas)} />}
+          {(replicas) => <ReplicaList deployment={deployment} replicas={replicas} />}
         </QueryGuard>
       </div>
     </div>
@@ -60,66 +53,46 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
 }
 
 type StatusFilterProps = {
-  filters: UseFormReturn<DeploymentScalingFilters>;
+  form: UseFormReturn<DeploymentScalingFilters>;
 };
 
-function StatusFilter({ filters }: StatusFilterProps) {
-  const t = T.useTranslate();
-
-  const statuses: InstanceStatus[] = [
-    'ALLOCATING',
-    'STARTING',
-    'HEALTHY',
-    'UNHEALTHY',
-    'STOPPING',
-    'STOPPED',
-    'ERROR',
-    'SLEEPING',
-  ];
+function StatusFilter({ form }: StatusFilterProps) {
+  const { field } = useController({
+    control: form.control,
+    name: 'statuses',
+  });
 
   return (
-    <ControlledSelect
-      control={filters.control}
-      name="status"
-      items={statuses}
-      getKey={identity}
-      itemToString={identity}
-      getValue={identity}
-      placeholder={t('filters.allStatuses')}
-      renderItem={(status) => <TranslateStatus status={status} />}
-      onItemClick={(status) => status === filters.watch('status') && filters.setValue('status', null)}
-      className="min-w-52"
+    <StatusesSelector
+      {...field}
+      field={() => ({ className: 'min-w-52' })}
+      label={<T id="filters.status" />}
+      statuses={statuses}
+      renderItem={translateStatus}
+      Dot={InstanceStatusDot}
+      dropdown={{ matchReferenceSize: true }}
     />
   );
 }
 
 type RegionFilterProps = {
-  filters: UseFormReturn<DeploymentScalingFilters>;
+  form: UseFormReturn<DeploymentScalingFilters>;
   regions: CatalogRegion[];
 };
 
-function RegionFilter({ filters, regions }: RegionFilterProps) {
-  const t = T.useTranslate();
+function RegionFilter({ form, regions }: RegionFilterProps) {
+  const { field } = useController({
+    control: form.control,
+    name: 'regions',
+  });
 
   return (
-    <ControlledSelect
-      control={filters.control}
-      name="region"
-      items={regions}
-      getKey={getId}
-      itemToString={(region) => region.name}
-      getValue={getId}
-      placeholder={t('filters.allRegions')}
-      renderItem={(item) => {
-        return (
-          <div className="row items-center gap-2">
-            <RegionFlag regionId={item.id} className="size-4" />
-            <RegionName regionId={item.id} />
-          </div>
-        );
-      }}
-      onItemClick={(region) => region.id === filters.watch('region') && filters.setValue('region', null)}
-      className="min-w-52"
+    <RegionsSelector
+      regions={regions}
+      value={regions.filter((region) => field.value.includes(region.id))}
+      onChange={(regions) => field.onChange(regions.map(getId))}
+      label={<T id="filters.regions" />}
+      dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
     />
   );
 }

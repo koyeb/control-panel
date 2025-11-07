@@ -1,6 +1,7 @@
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DeploymentStatus, InstanceStatus } from 'src/model';
+import { createArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
@@ -87,11 +88,17 @@ export function useRegionalDeployment(deploymentId: string | undefined, region: 
   return useRegionalDeployments(deploymentId)?.find(hasProperty('region', region));
 }
 
-export function useDeploymentScalingQuery(deploymentId?: string, filters?: { region?: string }) {
+type DeploymentScalingFilters = {
+  statuses?: InstanceStatus[];
+  regions?: string[];
+};
+
+export function useDeploymentScalingQuery(deploymentId?: string, filters?: DeploymentScalingFilters) {
   const queryClient = useQueryClient();
 
   return useQuery({
     enabled: deploymentId !== undefined,
+    placeholderData: keepPreviousData,
     queryKey: ['deploymentScaling', { deploymentId, filters }],
     queryFn: async (): Promise<
       Array<{ instances: API.Instance[]; region: string; replica_index: number }>
@@ -100,46 +107,44 @@ export function useDeploymentScalingQuery(deploymentId?: string, filters?: { reg
         apiQuery('get /v1/deployments/{id}', { path: { id: deploymentId! } }),
       );
 
-      let regionalDeployment: API.RegionalDeploymentListItem | undefined = undefined;
-
-      if (filters?.region) {
-        const { regional_deployments } = await queryClient.fetchQuery(
-          apiQuery('get /v1/regional_deployments', { query: { deployment_id: deploymentId, limit: '100' } }),
-        );
-
-        regionalDeployment = regional_deployments?.find((deployment) => deployment.region === filters.region);
-      }
-
       const { instances } = await queryClient.fetchQuery(
         apiQuery('get /v1/instances', {
           query: {
             deployment_id: deploymentId,
-            regional_deployment_id: regionalDeployment?.id,
-            statuses: ['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY', 'STOPPING'],
+            statuses: filters?.statuses ?? [
+              'ALLOCATING',
+              'STARTING',
+              'HEALTHY',
+              'UNHEALTHY',
+              'STOPPING',
+              'SLEEPING',
+            ],
             limit: '100',
           },
         }),
       );
 
-      const { regions, scalings } = deployment!.definition!;
+      const regions = filters?.regions ?? deployment!.definition!.regions!;
+      const replicasCount = deployment!.definition!.scalings![0]!.max!;
 
-      return regions!.flatMap((region) => {
-        return Array(scalings![0]!.max!)
-          .fill(null)
-          .map((_, i) => ({
-            region,
-            replica_index: i,
-            instances: instances!.filter(
-              (instance) => instance.region === region && instance.replica_index === i,
-            ),
-          }));
+      const getReplica = (region: string, index: number) => ({
+        region,
+        replica_index: index,
+        instances: instances!.filter(
+          (instance) => instance.region === region && instance.replica_index === index,
+        ),
       });
+
+      return regions
+        .slice()
+        .sort()
+        .flatMap((region) => createArray(replicasCount, (index) => getReplica(region, index)));
     },
     select: (replicas) => replicas.map(mapReplica),
   });
 }
 
-export function useDeploymentScaling(deploymentId?: string, filters?: { region?: string }) {
+export function useDeploymentScaling(deploymentId?: string, filters?: DeploymentScalingFilters) {
   return useDeploymentScalingQuery(deploymentId, filters).data;
 }
 

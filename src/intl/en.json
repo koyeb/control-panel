@@ -691,8 +691,8 @@
           "details": "Details",
           "noInstances": "There is no instance currently running in this replica",
           "filters": {
-            "allRegions": "All regions",
-            "allStatuses": "All statuses"
+            "regions": "Regions",
+            "status": "Status"
           },
           "metadata": {
             "cpu": "CPU",

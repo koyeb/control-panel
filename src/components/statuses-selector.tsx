@@ -15,6 +15,7 @@ type StatusSelectorProps<Status extends string> = Extend<
     onChange: (statuses: Status[]) => void;
     renderItem: (status: Status) => React.ReactNode;
     Dot: (props: { status: Status; className?: string }) => React.ReactNode;
+    menuClassName?: string;
   }
 >;
 
@@ -25,6 +26,7 @@ export function StatusesSelector<Status extends string>({
   onChange,
   renderItem,
   Dot,
+  menuClassName,
   ...props
 }: StatusSelectorProps<Status>) {
   return (
@@ -62,7 +64,7 @@ export function StatusesSelector<Status extends string>({
               )}
             </div>
           )}
-          className="min-w-56"
+          className={menuClassName}
         />
       )}
       {...props}

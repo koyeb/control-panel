@@ -141,6 +141,7 @@ function ServiceStatusesSelector({ form }: { form: UseFormReturn<ServicesFilters
       label={<T id="filters.status.label" />}
       renderItem={renderItem}
       Dot={ServiceStatusDot}
+      menuClassName="min-w-56"
     />
   );
 }
