@@ -5,7 +5,7 @@ import { useInstanceQuery, useInstancesQuery } from 'src/api';
 import { NoItems } from 'src/components/forms/helpers/no-items';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { SelectInstance } from 'src/components/select-instance';
+import { SelectInstance } from 'src/components/selectors/select-instance';
 import Terminal from 'src/components/terminal/terminal';
 import { useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';

@@ -6,9 +6,9 @@ import { arrayToggle } from 'src/utils/arrays';
 import { getId } from 'src/utils/object';
 import { Extend } from 'src/utils/types';
 
-import { MultiSelectMenu, Select, SelectedCountBadge, multiSelectStateReducer } from './forms';
-import { RegionFlag } from './region-flag';
-import { RegionName } from './region-name';
+import { MultiSelectMenu, Select, SelectedCountBadge, multiSelectStateReducer } from '../forms';
+import { RegionFlag } from '../region-flag';
+import { RegionName } from '../region-name';
 
 type RegionsSelectorProps = Extend<
   Omit<React.ComponentProps<typeof Select<CatalogRegion>>, 'items'>,

@@ -12,7 +12,7 @@ import { FullScreen } from 'src/components/full-screen';
 import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
-import { SelectInstance } from 'src/components/select-instance';
+import { SelectInstance } from 'src/components/selectors/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';

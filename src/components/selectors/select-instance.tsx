@@ -2,7 +2,7 @@ import { useCatalogInstance, useCatalogRegion } from 'src/api';
 import { Instance } from 'src/model';
 import { getId, getName } from 'src/utils/object';
 
-import { Select } from './forms/select';
+import { Select } from '../forms/select';
 
 type SelectInstanceOwnProps = {
   instances: Instance[];

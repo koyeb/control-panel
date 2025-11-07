@@ -5,7 +5,7 @@ import { arrayToggle } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
 import { Extend } from 'src/utils/types';
 
-import { MultiSelectMenu, Select, SelectedCountBadge, multiSelectStateReducer } from './forms';
+import { MultiSelectMenu, Select, SelectedCountBadge, multiSelectStateReducer } from '../forms';
 
 type StatusSelectorProps<Status extends string> = Extend<
   Omit<React.ComponentProps<typeof Select<Status>>, 'items'>,

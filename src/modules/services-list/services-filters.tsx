@@ -8,9 +8,9 @@ import {
   SelectedCountBadge,
   multiSelectStateReducer,
 } from 'src/components/forms/select';
+import { StatusesSelector } from 'src/components/selectors/statuses-selector';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { ServiceStatusDot } from 'src/components/status-dot';
-import { StatusesSelector } from 'src/components/statuses-selector';
 import { IconCheck, IconSearch } from 'src/icons';
 import { TranslateEnum, createTranslate, translateStatus } from 'src/intl/translate';
 import { ServiceStatus, ServiceType } from 'src/model';

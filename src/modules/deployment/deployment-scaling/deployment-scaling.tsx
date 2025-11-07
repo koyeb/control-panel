@@ -2,9 +2,9 @@ import { UseFormReturn, useController, useForm } from 'react-hook-form';
 
 import { useDeploymentScalingQuery, useRegionsCatalog } from 'src/api';
 import { QueryGuard } from 'src/components/query-error';
-import { RegionsSelector } from 'src/components/regions-selector';
+import { RegionsSelector } from 'src/components/selectors/regions-selector';
+import { StatusesSelector } from 'src/components/selectors/statuses-selector';
 import { InstanceStatusDot } from 'src/components/status-dot';
-import { StatusesSelector } from 'src/components/statuses-selector';
 import { createTranslate, translateStatus } from 'src/intl/translate';
 import { CatalogRegion, ComputeDeployment, InstanceStatus } from 'src/model';
 import { getId } from 'src/utils/object';
