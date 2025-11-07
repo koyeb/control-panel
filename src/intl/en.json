@@ -2689,7 +2689,34 @@
       "navigation": {
         "overview": "Overview",
         "metrics": "Metrics",
-        "console": "Console"
+        "console": "Console",
+        "actions": {
+          "pause": {
+            "button": "Pause",
+            "title": "Your sandbox will be paused",
+            "description": "Do you want to continue?",
+            "confirm": "Pause sandbox",
+            "success": "Your sandbox is being paused"
+          },
+          "resume": {
+            "button": "Resume",
+            "success": "Your sandbox is being resumed"
+          },
+          "delete": {
+            "button": "Destroy",
+            "title": "Your sandbox will be deleted",
+            "description": "Do you want to continue?",
+            "confirm": "Destroy sandbox",
+            "success": "Your sandbox is being destroyed"
+          }
+        }
+      },
+      "details": {
+        "metadata": {
+          "cpu": "CPU",
+          "memory": "Memory usage",
+          "date": "Creation date"
+        }
       }
     },
     "organizationSettings": {

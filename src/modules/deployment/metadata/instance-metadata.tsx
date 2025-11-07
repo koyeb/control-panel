@@ -14,10 +14,17 @@ const T = createTranslate('modules.deployment.metadata.instance');
 
 type InstanceMetadataProps = {
   instance?: string | null;
+  className?: string;
 };
 
-export function InstanceMetadata(props: InstanceMetadataProps) {
-  return <Metadata label={<T id="label" />} value={<InstanceMetadataValue {...props} />} />;
+export function InstanceMetadata({ instance, className }: InstanceMetadataProps) {
+  return (
+    <Metadata
+      label={<T id="label" />}
+      value={<InstanceMetadataValue instance={instance} />}
+      className={className}
+    />
+  );
 }
 
 export function InstanceMetadataValue({ instance: instanceId }: InstanceMetadataProps) {

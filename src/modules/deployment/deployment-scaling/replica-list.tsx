@@ -6,9 +6,9 @@ import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, Replica } from 'src/model';
 
+import { useDeploymentMetricsQuery } from './deployment-metrics';
 import { ReplicaDrawer } from './replica-drawer';
 import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
-import { useReplicaMetricsQuery } from './replica-metrics';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling');
 
@@ -18,7 +18,7 @@ type ReplicaListProps = {
 };
 
 export function ReplicaList({ deployment, replicas }: ReplicaListProps) {
-  const metrics = useReplicaMetricsQuery(deployment);
+  const metrics = useDeploymentMetricsQuery(deployment);
 
   if (replicas.length === 0 || metrics.isPending) {
     return null;

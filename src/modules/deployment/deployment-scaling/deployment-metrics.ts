@@ -8,7 +8,7 @@ import { identity, isDefined } from 'src/utils/generic';
 import { clamp } from 'src/utils/math';
 import { toObject } from 'src/utils/object';
 
-export function useReplicaMetricsQuery(deployment: ComputeDeployment) {
+export function useDeploymentMetricsQuery(deployment: ComputeDeployment) {
   const instance = useCatalogInstance(deployment.definition.instanceType);
 
   return useQueries({

@@ -10,10 +10,17 @@ const T = createTranslate('modules.deployment.metadata.regions');
 
 type RegionsMetadataProps = {
   regions: string[];
+  className?: string;
 };
 
-export function RegionsMetadata(props: RegionsMetadataProps) {
-  return <Metadata label={<T id="label" />} value={<RegionsMetadataValue {...props} />} />;
+export function RegionsMetadata({ regions, className }: RegionsMetadataProps) {
+  return (
+    <Metadata
+      label={<T id="label" />}
+      value={<RegionsMetadataValue regions={regions} />}
+      className={className}
+    />
+  );
 }
 
 export function RegionsMetadataValue({ regions }: RegionsMetadataProps) {
