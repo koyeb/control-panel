@@ -2690,7 +2690,7 @@ export interface components {
          * @default INVALID
          * @enum {string}
          */
-        "DeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER" | "DATABASE";
+        "DeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER" | "DATABASE" | "SANDBOX";
         DeploymentEnv: {
             key?: string;
             scopes?: string[];
@@ -4194,6 +4194,7 @@ export interface components {
             /** Format: date-time */
             plan_updated_at?: string;
             postal_code?: string;
+            provisioning?: boolean;
             qualifies_for_hobby23?: boolean;
             /** Format: date-time */
             reprocess_after?: string;
@@ -4606,7 +4607,7 @@ export interface components {
          * @default INVALID
          * @enum {string}
          */
-        "RegionalDeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER";
+        "RegionalDeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER" | "SANDBOX";
         RegionalDeploymentEvent: {
             id?: string;
             message?: string;
@@ -4799,7 +4800,7 @@ export interface components {
          * @default INVALID_TYPE
          * @enum {string}
          */
-        "Service.Type": "INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE";
+        "Service.Type": "INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE" | "SANDBOX";
         ServiceEvent: {
             id?: string;
             message?: string;
@@ -15813,7 +15814,7 @@ export interface operations {
                 /** @description (Optional) Filter on service statuses */
                 statuses?: ("STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "DELETING" | "DELETED" | "PAUSING" | "PAUSED" | "RESUMING")[];
                 /** @description (Optional) Filter on service types */
-                types?: ("INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE")[];
+                types?: ("INVALID_TYPE" | "WEB" | "WORKER" | "DATABASE" | "SANDBOX")[];
             };
             header?: never;
             path?: never;
@@ -17429,26 +17430,37 @@ export interface operations {
     QueryLogs: {
         parameters: {
             query?: {
+                /** @description (Optional) Filter on the provided app_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 app_id?: string;
+                /** @description (Optional) Filter on the provided deployment_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 deployment_id?: string;
                 /** @description (Optional) Must always be after `start`. Defaults to now. */
                 end?: string;
+                /** @description Deprecated, prefer using instance_ids instead. */
                 instance_id?: string;
+                /** @description (Optional) Filter on the provided instance_ids. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
+                instance_ids?: string[];
                 /** @description (Optional) Defaults to 100. Maximum of 1000. */
                 limit?: string;
                 /** @description (Optional) `asc` or `desc`. Defaults to `desc`. */
                 order?: string;
                 /** @description (Optional) Apply a regex to filter logs. Can't be used with `text`. */
                 regex?: string;
+                /** @description (Optional) Filter on the provided regional_deployment_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 regional_deployment_id?: string;
+                /** @description (Optional) Filter on the provided regions (e.g. ["fra", "was"]). */
+                regions?: string[];
+                /** @description (Optional) Filter on the provided service_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 service_id?: string;
                 /** @description (Optional) Must always be before `end`. Defaults to 15 minutes ago. */
                 start?: string;
-                /** @description Deprecated, prefer using streams instead */
+                /** @description Deprecated, prefer using streams instead. */
                 stream?: string;
+                /** @description (Optional) Filter on stream: either "stdout", "stderr" or "koyeb" (for system logs). */
                 streams?: string[];
                 /** @description (Optional) Looks for this string in logs. Can't be used with `regex`. */
                 text?: string;
+                /** @description Type of logs to retrieve, either "build" or "runtime". Defaults to "runtime". */
                 type?: string;
             };
             header?: never;
@@ -17534,20 +17546,33 @@ export interface operations {
     TailLogs: {
         parameters: {
             query?: {
+                /** @description (Optional) Filter on the provided app_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 app_id?: string;
+                /** @description (Optional) Filter on the provided deployment_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 deployment_id?: string;
+                /** @description Deprecated, prefer using instance_ids instead. */
                 instance_id?: string;
+                /** @description (Optional) Filter on the provided instance_ids. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
+                instance_ids?: string[];
+                /** @description (Optional) Defaults to 1000. Maximum of 1000. */
                 limit?: string;
                 /** @description (Optional) Apply a regex to filter logs. Can't be used with `text`. */
                 regex?: string;
+                /** @description (Optional) Filter on the provided regional_deployment_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 regional_deployment_id?: string;
+                /** @description (Optional) Filter on the provided regions (e.g. ["fra", "was"]). */
+                regions?: string[];
+                /** @description (Optional) Filter on the provided service_id. At least one of app_id, service_id, deployment_id, regional_deployment_id or instance_ids must be set. */
                 service_id?: string;
+                /** @description (Optional) Defaults to 24 hours ago. */
                 start?: string;
-                /** @description Deprecated, prefer using streams instead */
+                /** @description Deprecated, prefer using streams instead. */
                 stream?: string;
+                /** @description (Optional) Filter on stream: either "stdout", "stderr" or "koyeb" (for system logs). */
                 streams?: string[];
                 /** @description (Optional) Looks for this string in logs. Can't be used with `regex`. */
                 text?: string;
+                /** @description Type of logs to retrieve, either "build" or "runtime". Defaults to "runtime". */
                 type?: string;
             };
             header?: never;

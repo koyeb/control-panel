@@ -15,6 +15,7 @@ import { PublicDataTransferGraph } from 'src/modules/metrics/graphs/public-data-
 import { ResponseTimeGraph } from 'src/modules/metrics/graphs/response-time-graph';
 import { MetricsTimeFrame, metricsTimeFrames } from 'src/modules/metrics/metrics-helpers';
 import { useMetricsQueries } from 'src/modules/metrics/use-metrics';
+import { inArray } from 'src/utils/arrays';
 
 const T = createTranslate('pages.service.metrics');
 
@@ -88,7 +89,7 @@ function ServiceMetrics({ serviceId, timeFrame }: { serviceId: string; timeFrame
         </GraphCard>
       </div>
 
-      {service?.type === 'web' && (
+      {inArray(service?.type, ['web', 'sandbox']) && (
         <>
           <GraphCard label={<T id="responseTime.label" />} tooltip={<T id="responseTime.tooltip" />}>
             <ResponseTimeGraph

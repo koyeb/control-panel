@@ -46,6 +46,8 @@ export function ServiceTypeSection() {
 
 function Summary() {
   const serviceType = useWatchServiceForm('serviceType');
+
+  assert(serviceType !== 'sandbox');
   assert(serviceType !== 'database');
 
   const { Icon, title } = {

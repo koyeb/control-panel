@@ -306,7 +306,7 @@ export type DeploymentDefinition = {
   scaling: Scaling;
 };
 
-export type ComputeDeploymentType = 'web' | 'worker';
+export type ComputeDeploymentType = 'web' | 'worker' | 'sandbox';
 
 export type DeploymentStrategy = 'invalid' | 'canary' | 'rolling' | 'blue_green' | 'immediate';
 
@@ -607,7 +607,7 @@ export type Service = {
   createdAt: string;
 };
 
-export type ServiceType = 'web' | 'worker' | 'database';
+export type ServiceType = 'web' | 'worker' | 'sandbox' | 'database';
 
 export type ServiceStatus =
   | 'STARTING'

@@ -22,10 +22,17 @@ import { getApi } from '../api';
 
 type ServiceLink = ValidateLinkOptions<
   RegisteredRouter,
-  { to: '/database-services/$databaseServiceId' | '/services/$serviceId' }
+  { to: '/sandboxes/$serviceId' | '/database-services/$databaseServiceId' | '/services/$serviceId' }
 >;
 
 export function getServiceLink(service: Service): ServiceLink {
+  if (service.type === 'sandbox') {
+    return {
+      to: '/sandboxes/$serviceId',
+      params: { serviceId: service.id },
+    };
+  }
+
   if (service.type === 'database') {
     return {
       to: '/database-services/$databaseServiceId',

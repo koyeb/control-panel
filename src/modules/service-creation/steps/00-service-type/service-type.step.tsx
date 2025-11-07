@@ -11,10 +11,6 @@ import { ExtendedServiceType, ServiceTypeList } from './service-type-list';
 
 const T = createTranslate('modules.serviceCreation.serviceType');
 
-function isServiceType(value: unknown): value is ExtendedServiceType {
-  return inArray(value, ['web', 'private', 'worker', 'database', 'model']);
-}
-
 export function ServiceTypeStep() {
   const appId = useSearchParams().get('app_id');
   const serviceType = useSearchParams().get('service_type') ?? 'web';
@@ -28,7 +24,7 @@ export function ServiceTypeStep() {
       </nav>
 
       <div className="p-3 md:p-6 md:pl-12">
-        {isServiceType(serviceType) && serviceType !== 'database' && serviceType !== 'model' && (
+        {inArray(serviceType, ['web', 'private', 'worker'] as const) && (
           <div className="col gap-4">
             <div className="col gap-2">
               <div className="text-base font-medium">

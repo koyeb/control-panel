@@ -11,7 +11,12 @@ const T = createTranslate('modules.serviceCreation.serviceType');
 export type ExtendedServiceType = ServiceType | 'private' | 'model';
 
 export function ServiceTypeList({ serviceType }: { serviceType: ExtendedServiceType }) {
-  const serviceTypes: ExtendedServiceType[] = ['web', 'private', 'worker', 'database'];
+  const serviceTypes: Array<Exclude<ExtendedServiceType, 'sandbox'>> = [
+    'web',
+    'private',
+    'worker',
+    'database',
+  ];
 
   if (useFeatureFlag('ai-onboarding')) {
     serviceTypes.push('model');
