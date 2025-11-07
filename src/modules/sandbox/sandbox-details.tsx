@@ -1,14 +1,23 @@
 import { ProgressBar } from '@koyeb/design-system';
 import { FormattedDate, FormattedNumber } from 'react-intl';
 
-import { useComputeDeployment, useInstancesQuery, useServiceQuery } from 'src/api';
+import {
+  isComputeDeployment,
+  useAppQuery,
+  useComputeDeployment,
+  useDeploymentQuery,
+  useInstancesQuery,
+  useServiceQuery,
+} from 'src/api';
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { RuntimeLogs } from 'src/components/logs';
 import { Metadata } from 'src/components/metadata';
-import { QueryGuard } from 'src/components/query-error';
+import { QueryError, QueryGuard } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { ServiceStatusBadge } from 'src/components/status-badges';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
-import { ComputeDeployment } from 'src/model';
+import { ComputeDeployment, Service } from 'src/model';
+import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
 import { useDeploymentMetricsQuery } from '../deployment/deployment-scaling/deployment-metrics';
@@ -22,26 +31,64 @@ export function SandboxDetails({ serviceId }: { serviceId: string }) {
   return (
     <QueryGuard query={serviceQuery}>
       {(service) => (
-        <div className="col gap-6 rounded-md border px-3 py-4">
-          <div className="row items-start justify-between gap-4">
-            <div className="col gap-2">
-              <ServiceStatusBadge status={service.status} />
+        <>
+          <div className="col gap-6 rounded-md border px-3 py-4">
+            <div className="row items-start justify-between gap-4">
+              <div className="col gap-2">
+                <ServiceStatusBadge status={service.status} />
 
-              <div className="row items-center gap-2">
-                {shortId(service.id)} <CopyIconButton text={service.id} className="size-4" />
+                <div className="row items-center gap-2">
+                  {shortId(service.id)} <CopyIconButton text={service.id} className="size-4" />
+                </div>
+              </div>
+
+              <div className="row items-center gap-2 font-medium">
+                <TranslateEnum enum="serviceType" value="web" />
+                <ServiceTypeIcon type="web" />
               </div>
             </div>
 
-            <div className="row items-center gap-2 font-medium">
-              <TranslateEnum enum="serviceType" value="web" />
-              <ServiceTypeIcon type="web" />
-            </div>
+            <DeploymentMetadata deploymentId={service.latestDeploymentId} />
           </div>
 
-          <DeploymentMetadata deploymentId={service.latestDeploymentId} />
-        </div>
+          <SandboxLogs service={service} />
+        </>
       )}
     </QueryGuard>
+  );
+}
+
+function SandboxLogs({ service }: { service: Service }) {
+  const appQuery = useAppQuery(service.appId);
+  const deploymentQuery = useDeploymentQuery(service.latestDeploymentId);
+  const instancesQuery = useInstancesQuery({ deploymentId: service.latestDeploymentId });
+
+  if (appQuery.isPending || deploymentQuery.isPending || instancesQuery.isPending) {
+    return null;
+  }
+
+  if (appQuery.isError) {
+    return <QueryError error={appQuery.error} />;
+  }
+
+  if (deploymentQuery.isError) {
+    return <QueryError error={deploymentQuery.error} />;
+  }
+
+  if (instancesQuery.isError) {
+    return <QueryError error={instancesQuery.error} />;
+  }
+
+  const app = appQuery.data;
+  const deployment = deploymentQuery.data;
+  const { instances } = instancesQuery.data;
+
+  assert(isComputeDeployment(deployment));
+
+  return (
+    <div className="rounded-md border">
+      <RuntimeLogs app={app} service={service} deployment={deployment} instances={instances} />
+    </div>
   );
 }
 

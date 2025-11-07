@@ -35,7 +35,7 @@ type RuntimeLogsProps = {
   service: Service;
   deployment: ComputeDeployment;
   instances: Instance[];
-  onLastLineChanged: (line: LogLineType) => void;
+  onLastLineChanged?: (line: LogLineType) => void;
 };
 
 export function RuntimeLogs({ app, service, deployment, instances, onLastLineChanged }: RuntimeLogsProps) {
@@ -55,7 +55,7 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
     const lastLine = logs.lines[logs.lines.length - 1];
 
     if (lastLine !== undefined) {
-      onLastLineChanged(lastLine);
+      onLastLineChanged?.(lastLine);
     }
   }, [logs.lines, onLastLineChanged]);
 

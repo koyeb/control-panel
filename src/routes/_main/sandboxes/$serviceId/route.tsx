@@ -87,10 +87,10 @@ function Actions({ serviceId }: { serviceId: string }) {
 
   const deleteMutation = useMutation({
     ...apiMutation('delete /v1/services/{id}', (serviceId: string) => ({ path: { id: serviceId } })),
-    onSuccess: () => {
+    onSuccess: async () => {
       notify.info(t('actions.delete.success'));
       closeDialog();
-      navigate({ to: '/' });
+      await navigate({ to: '/' });
     },
   });
 
