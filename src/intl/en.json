@@ -1796,7 +1796,10 @@
         "/services/$serviceId/settings": "Settings",
         "/database-services/$databaseServiceId/databases": "Databases",
         "/database-services/$databaseServiceId/roles": "Roles",
-        "/database-services/$databaseServiceId/settings": "Settings"
+        "/database-services/$databaseServiceId/settings": "Settings",
+        "/sandboxes": "Sandbox",
+        "/sandboxes/$serviceId/metrics": "Metrics",
+        "/sandboxes/$serviceId/console": "Console"
       }
     },
     "secondary": {
@@ -2679,6 +2682,13 @@
             "confirm": "Delete service"
           }
         }
+      }
+    },
+    "sandbox": {
+      "navigation": {
+        "overview": "Overview",
+        "metrics": "Metrics",
+        "console": "Console"
       }
     },
     "organizationSettings": {

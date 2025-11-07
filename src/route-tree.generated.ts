@@ -22,6 +22,7 @@ import { Route as MainDeployRouteImport } from './routes/_main/deploy'
 import { Route as MainActivityRouteImport } from './routes/_main/activity'
 import { Route as MainVolumesRouteRouteImport } from './routes/_main/volumes/route'
 import { Route as MainSettingsRouteRouteImport } from './routes/_main/settings/route'
+import { Route as MainSandboxesRouteRouteImport } from './routes/_main/sandboxes/route'
 import { Route as MainOneClicksRouteRouteImport } from './routes/_main/one-clicks/route'
 import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/index'
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
@@ -42,10 +43,12 @@ import { Route as MainServicesDeployRouteImport } from './routes/_main/services/
 import { Route as MainDatabaseServicesNewRouteImport } from './routes/_main/database-services/new'
 import { Route as MainUserSettingsRouteRouteImport } from './routes/_main/user.settings/route'
 import { Route as MainServicesServiceIdRouteRouteImport } from './routes/_main/services/$serviceId/route'
+import { Route as MainSandboxesServiceIdRouteRouteImport } from './routes/_main/sandboxes/$serviceId/route'
 import { Route as MainOneClicksSlugRouteRouteImport } from './routes/_main/one-clicks/$slug.route'
 import { Route as MainDatabaseServicesDatabaseServiceIdRouteRouteImport } from './routes/_main/database-services/$databaseServiceId/route'
 import { Route as MainUserSettingsIndexRouteImport } from './routes/_main/user.settings/index'
 import { Route as MainServicesServiceIdIndexRouteImport } from './routes/_main/services/$serviceId/index'
+import { Route as MainSandboxesServiceIdIndexRouteImport } from './routes/_main/sandboxes/$serviceId/index'
 import { Route as MainOneClicksSlugIndexRouteImport } from './routes/_main/one-clicks/$slug.index'
 import { Route as MainDatabaseServicesDatabaseServiceIdIndexRouteImport } from './routes/_main/database-services/$databaseServiceId/index'
 import { Route as OrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/organization/deactivate.confirm.$confirmationId'
@@ -55,6 +58,8 @@ import { Route as MainUserSettingsApiRouteImport } from './routes/_main/user.set
 import { Route as MainServicesServiceIdSettingsRouteImport } from './routes/_main/services/$serviceId/settings'
 import { Route as MainServicesServiceIdMetricsRouteImport } from './routes/_main/services/$serviceId/metrics'
 import { Route as MainServicesServiceIdConsoleRouteImport } from './routes/_main/services/$serviceId/console'
+import { Route as MainSandboxesServiceIdMetricsRouteImport } from './routes/_main/sandboxes/$serviceId/metrics'
+import { Route as MainSandboxesServiceIdConsoleRouteImport } from './routes/_main/sandboxes/$serviceId/console'
 import { Route as MainOneClicksSlugDeployRouteImport } from './routes/_main/one-clicks/$slug.deploy'
 import { Route as MainDatabaseServicesDatabaseServiceIdSettingsRouteImport } from './routes/_main/database-services/$databaseServiceId/settings'
 import { Route as MainDatabaseServicesDatabaseServiceIdRolesRouteImport } from './routes/_main/database-services/$databaseServiceId/roles'
@@ -124,6 +129,11 @@ const MainVolumesRouteRoute = MainVolumesRouteRouteImport.update({
 const MainSettingsRouteRoute = MainSettingsRouteRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainSandboxesRouteRoute = MainSandboxesRouteRouteImport.update({
+  id: '/sandboxes',
+  path: '/sandboxes',
   getParentRoute: () => MainRouteRoute,
 } as any)
 const MainOneClicksRouteRoute = MainOneClicksRouteRouteImport.update({
@@ -230,6 +240,12 @@ const MainServicesServiceIdRouteRoute =
     path: '/services/$serviceId',
     getParentRoute: () => MainRouteRoute,
   } as any)
+const MainSandboxesServiceIdRouteRoute =
+  MainSandboxesServiceIdRouteRouteImport.update({
+    id: '/$serviceId',
+    path: '/$serviceId',
+    getParentRoute: () => MainSandboxesRouteRoute,
+  } as any)
 const MainOneClicksSlugRouteRoute = MainOneClicksSlugRouteRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -251,6 +267,12 @@ const MainServicesServiceIdIndexRoute =
     id: '/',
     path: '/',
     getParentRoute: () => MainServicesServiceIdRouteRoute,
+  } as any)
+const MainSandboxesServiceIdIndexRoute =
+  MainSandboxesServiceIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MainSandboxesServiceIdRouteRoute,
   } as any)
 const MainOneClicksSlugIndexRoute = MainOneClicksSlugIndexRouteImport.update({
   id: '/',
@@ -304,6 +326,18 @@ const MainServicesServiceIdConsoleRoute =
     path: '/console',
     getParentRoute: () => MainServicesServiceIdRouteRoute,
   } as any)
+const MainSandboxesServiceIdMetricsRoute =
+  MainSandboxesServiceIdMetricsRouteImport.update({
+    id: '/metrics',
+    path: '/metrics',
+    getParentRoute: () => MainSandboxesServiceIdRouteRoute,
+  } as any)
+const MainSandboxesServiceIdConsoleRoute =
+  MainSandboxesServiceIdConsoleRouteImport.update({
+    id: '/console',
+    path: '/console',
+    getParentRoute: () => MainSandboxesServiceIdRouteRoute,
+  } as any)
 const MainOneClicksSlugDeployRoute = MainOneClicksSlugDeployRouteImport.update({
   id: '/deploy',
   path: '/deploy',
@@ -341,6 +375,7 @@ const MainAuthSsoCannyRoute = MainAuthSsoCannyRouteImport.update({
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteRouteWithChildren
   '/one-clicks': typeof MainOneClicksRouteRouteWithChildren
+  '/sandboxes': typeof MainSandboxesRouteRouteWithChildren
   '/settings': typeof MainSettingsRouteRouteWithChildren
   '/volumes': typeof MainVolumesRouteRouteWithChildren
   '/activity': typeof MainActivityRoute
@@ -354,6 +389,7 @@ export interface FileRoutesByFullPath {
   '/': typeof MainIndexRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
   '/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
+  '/sandboxes/$serviceId': typeof MainSandboxesServiceIdRouteRouteWithChildren
   '/services/$serviceId': typeof MainServicesServiceIdRouteRouteWithChildren
   '/user/settings': typeof MainUserSettingsRouteRouteWithChildren
   '/database-services/new': typeof MainDatabaseServicesNewRoute
@@ -379,6 +415,8 @@ export interface FileRoutesByFullPath {
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
   '/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
+  '/sandboxes/$serviceId/console': typeof MainSandboxesServiceIdConsoleRoute
+  '/sandboxes/$serviceId/metrics': typeof MainSandboxesServiceIdMetricsRoute
   '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -388,11 +426,13 @@ export interface FileRoutesByFullPath {
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
+  '/sandboxes/$serviceId/': typeof MainSandboxesServiceIdIndexRoute
   '/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/user/settings/': typeof MainUserSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
+  '/sandboxes': typeof MainSandboxesRouteRouteWithChildren
   '/activity': typeof MainActivityRoute
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
@@ -425,6 +465,8 @@ export interface FileRoutesByTo {
   '/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
   '/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
+  '/sandboxes/$serviceId/console': typeof MainSandboxesServiceIdConsoleRoute
+  '/sandboxes/$serviceId/metrics': typeof MainSandboxesServiceIdMetricsRoute
   '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -434,6 +476,7 @@ export interface FileRoutesByTo {
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-clicks/$slug': typeof MainOneClicksSlugIndexRoute
+  '/sandboxes/$serviceId': typeof MainSandboxesServiceIdIndexRoute
   '/services/$serviceId': typeof MainServicesServiceIdIndexRoute
   '/user/settings': typeof MainUserSettingsIndexRoute
 }
@@ -442,6 +485,7 @@ export interface FileRoutesById {
   '/_main': typeof MainRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
   '/_main/one-clicks': typeof MainOneClicksRouteRouteWithChildren
+  '/_main/sandboxes': typeof MainSandboxesRouteRouteWithChildren
   '/_main/settings': typeof MainSettingsRouteRouteWithChildren
   '/_main/volumes': typeof MainVolumesRouteRouteWithChildren
   '/_main/activity': typeof MainActivityRoute
@@ -455,6 +499,7 @@ export interface FileRoutesById {
   '/_main/': typeof MainIndexRoute
   '/_main/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
   '/_main/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
+  '/_main/sandboxes/$serviceId': typeof MainSandboxesServiceIdRouteRouteWithChildren
   '/_main/services/$serviceId': typeof MainServicesServiceIdRouteRouteWithChildren
   '/_main/user/settings': typeof MainUserSettingsRouteRouteWithChildren
   '/_main/database-services/new': typeof MainDatabaseServicesNewRoute
@@ -480,6 +525,8 @@ export interface FileRoutesById {
   '/_main/database-services/$databaseServiceId/roles': typeof MainDatabaseServicesDatabaseServiceIdRolesRoute
   '/_main/database-services/$databaseServiceId/settings': typeof MainDatabaseServicesDatabaseServiceIdSettingsRoute
   '/_main/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
+  '/_main/sandboxes/$serviceId/console': typeof MainSandboxesServiceIdConsoleRoute
+  '/_main/sandboxes/$serviceId/metrics': typeof MainSandboxesServiceIdMetricsRoute
   '/_main/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/_main/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/_main/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -489,6 +536,7 @@ export interface FileRoutesById {
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/_main/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/_main/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
+  '/_main/sandboxes/$serviceId/': typeof MainSandboxesServiceIdIndexRoute
   '/_main/services/$serviceId/': typeof MainServicesServiceIdIndexRoute
   '/_main/user/settings/': typeof MainUserSettingsIndexRoute
 }
@@ -497,6 +545,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/auth'
     | '/one-clicks'
+    | '/sandboxes'
     | '/settings'
     | '/volumes'
     | '/activity'
@@ -510,6 +559,7 @@ export interface FileRouteTypes {
     | '/'
     | '/database-services/$databaseServiceId'
     | '/one-clicks/$slug'
+    | '/sandboxes/$serviceId'
     | '/services/$serviceId'
     | '/user/settings'
     | '/database-services/new'
@@ -535,6 +585,8 @@ export interface FileRouteTypes {
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
     | '/one-clicks/$slug/deploy'
+    | '/sandboxes/$serviceId/console'
+    | '/sandboxes/$serviceId/metrics'
     | '/services/$serviceId/console'
     | '/services/$serviceId/metrics'
     | '/services/$serviceId/settings'
@@ -544,11 +596,13 @@ export interface FileRouteTypes {
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId/'
     | '/one-clicks/$slug/'
+    | '/sandboxes/$serviceId/'
     | '/services/$serviceId/'
     | '/user/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
+    | '/sandboxes'
     | '/activity'
     | '/deploy'
     | '/domains'
@@ -581,6 +635,8 @@ export interface FileRouteTypes {
     | '/database-services/$databaseServiceId/roles'
     | '/database-services/$databaseServiceId/settings'
     | '/one-clicks/$slug/deploy'
+    | '/sandboxes/$serviceId/console'
+    | '/sandboxes/$serviceId/metrics'
     | '/services/$serviceId/console'
     | '/services/$serviceId/metrics'
     | '/services/$serviceId/settings'
@@ -590,6 +646,7 @@ export interface FileRouteTypes {
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId'
     | '/one-clicks/$slug'
+    | '/sandboxes/$serviceId'
     | '/services/$serviceId'
     | '/user/settings'
   id:
@@ -597,6 +654,7 @@ export interface FileRouteTypes {
     | '/_main'
     | '/auth'
     | '/_main/one-clicks'
+    | '/_main/sandboxes'
     | '/_main/settings'
     | '/_main/volumes'
     | '/_main/activity'
@@ -610,6 +668,7 @@ export interface FileRouteTypes {
     | '/_main/'
     | '/_main/database-services/$databaseServiceId'
     | '/_main/one-clicks/$slug'
+    | '/_main/sandboxes/$serviceId'
     | '/_main/services/$serviceId'
     | '/_main/user/settings'
     | '/_main/database-services/new'
@@ -635,6 +694,8 @@ export interface FileRouteTypes {
     | '/_main/database-services/$databaseServiceId/roles'
     | '/_main/database-services/$databaseServiceId/settings'
     | '/_main/one-clicks/$slug/deploy'
+    | '/_main/sandboxes/$serviceId/console'
+    | '/_main/sandboxes/$serviceId/metrics'
     | '/_main/services/$serviceId/console'
     | '/_main/services/$serviceId/metrics'
     | '/_main/services/$serviceId/settings'
@@ -644,6 +705,7 @@ export interface FileRouteTypes {
     | '/organization/deactivate/confirm/$confirmationId'
     | '/_main/database-services/$databaseServiceId/'
     | '/_main/one-clicks/$slug/'
+    | '/_main/sandboxes/$serviceId/'
     | '/_main/services/$serviceId/'
     | '/_main/user/settings/'
   fileRoutesById: FileRoutesById
@@ -750,6 +812,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof MainSettingsRouteRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/sandboxes': {
+      id: '/_main/sandboxes'
+      path: '/sandboxes'
+      fullPath: '/sandboxes'
+      preLoaderRoute: typeof MainSandboxesRouteRouteImport
       parentRoute: typeof MainRouteRoute
     }
     '/_main/one-clicks': {
@@ -892,6 +961,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainServicesServiceIdRouteRouteImport
       parentRoute: typeof MainRouteRoute
     }
+    '/_main/sandboxes/$serviceId': {
+      id: '/_main/sandboxes/$serviceId'
+      path: '/$serviceId'
+      fullPath: '/sandboxes/$serviceId'
+      preLoaderRoute: typeof MainSandboxesServiceIdRouteRouteImport
+      parentRoute: typeof MainSandboxesRouteRoute
+    }
     '/_main/one-clicks/$slug': {
       id: '/_main/one-clicks/$slug'
       path: '/$slug'
@@ -919,6 +995,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/services/$serviceId/'
       preLoaderRoute: typeof MainServicesServiceIdIndexRouteImport
       parentRoute: typeof MainServicesServiceIdRouteRoute
+    }
+    '/_main/sandboxes/$serviceId/': {
+      id: '/_main/sandboxes/$serviceId/'
+      path: '/'
+      fullPath: '/sandboxes/$serviceId/'
+      preLoaderRoute: typeof MainSandboxesServiceIdIndexRouteImport
+      parentRoute: typeof MainSandboxesServiceIdRouteRoute
     }
     '/_main/one-clicks/$slug/': {
       id: '/_main/one-clicks/$slug/'
@@ -982,6 +1065,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/services/$serviceId/console'
       preLoaderRoute: typeof MainServicesServiceIdConsoleRouteImport
       parentRoute: typeof MainServicesServiceIdRouteRoute
+    }
+    '/_main/sandboxes/$serviceId/metrics': {
+      id: '/_main/sandboxes/$serviceId/metrics'
+      path: '/metrics'
+      fullPath: '/sandboxes/$serviceId/metrics'
+      preLoaderRoute: typeof MainSandboxesServiceIdMetricsRouteImport
+      parentRoute: typeof MainSandboxesServiceIdRouteRoute
+    }
+    '/_main/sandboxes/$serviceId/console': {
+      id: '/_main/sandboxes/$serviceId/console'
+      path: '/console'
+      fullPath: '/sandboxes/$serviceId/console'
+      preLoaderRoute: typeof MainSandboxesServiceIdConsoleRouteImport
+      parentRoute: typeof MainSandboxesServiceIdRouteRoute
     }
     '/_main/one-clicks/$slug/deploy': {
       id: '/_main/one-clicks/$slug/deploy'
@@ -1056,6 +1153,36 @@ const MainOneClicksRouteRouteChildren: MainOneClicksRouteRouteChildren = {
 
 const MainOneClicksRouteRouteWithChildren =
   MainOneClicksRouteRoute._addFileChildren(MainOneClicksRouteRouteChildren)
+
+interface MainSandboxesServiceIdRouteRouteChildren {
+  MainSandboxesServiceIdConsoleRoute: typeof MainSandboxesServiceIdConsoleRoute
+  MainSandboxesServiceIdMetricsRoute: typeof MainSandboxesServiceIdMetricsRoute
+  MainSandboxesServiceIdIndexRoute: typeof MainSandboxesServiceIdIndexRoute
+}
+
+const MainSandboxesServiceIdRouteRouteChildren: MainSandboxesServiceIdRouteRouteChildren =
+  {
+    MainSandboxesServiceIdConsoleRoute: MainSandboxesServiceIdConsoleRoute,
+    MainSandboxesServiceIdMetricsRoute: MainSandboxesServiceIdMetricsRoute,
+    MainSandboxesServiceIdIndexRoute: MainSandboxesServiceIdIndexRoute,
+  }
+
+const MainSandboxesServiceIdRouteRouteWithChildren =
+  MainSandboxesServiceIdRouteRoute._addFileChildren(
+    MainSandboxesServiceIdRouteRouteChildren,
+  )
+
+interface MainSandboxesRouteRouteChildren {
+  MainSandboxesServiceIdRouteRoute: typeof MainSandboxesServiceIdRouteRouteWithChildren
+}
+
+const MainSandboxesRouteRouteChildren: MainSandboxesRouteRouteChildren = {
+  MainSandboxesServiceIdRouteRoute:
+    MainSandboxesServiceIdRouteRouteWithChildren,
+}
+
+const MainSandboxesRouteRouteWithChildren =
+  MainSandboxesRouteRoute._addFileChildren(MainSandboxesRouteRouteChildren)
 
 interface MainSettingsRouteRouteChildren {
   MainSettingsApiRoute: typeof MainSettingsApiRoute
@@ -1155,6 +1282,7 @@ const MainUserSettingsRouteRouteWithChildren =
 
 interface MainRouteRouteChildren {
   MainOneClicksRouteRoute: typeof MainOneClicksRouteRouteWithChildren
+  MainSandboxesRouteRoute: typeof MainSandboxesRouteRouteWithChildren
   MainSettingsRouteRoute: typeof MainSettingsRouteRouteWithChildren
   MainVolumesRouteRoute: typeof MainVolumesRouteRouteWithChildren
   MainActivityRoute: typeof MainActivityRoute
@@ -1176,6 +1304,7 @@ interface MainRouteRouteChildren {
 
 const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainOneClicksRouteRoute: MainOneClicksRouteRouteWithChildren,
+  MainSandboxesRouteRoute: MainSandboxesRouteRouteWithChildren,
   MainSettingsRouteRoute: MainSettingsRouteRouteWithChildren,
   MainVolumesRouteRoute: MainVolumesRouteRouteWithChildren,
   MainActivityRoute: MainActivityRoute,
