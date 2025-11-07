@@ -47,7 +47,11 @@ export function mapInstance(instance: API.Instance): Instance {
   };
 }
 
-export function mapReplica(replica: API.GetDeploymentScalingReplyItem): Replica {
+export function mapReplica(replica: {
+  region?: string;
+  replica_index?: number;
+  instances?: API.Instance[];
+}): Replica {
   const instance = replica.instances?.find(hasProperty('status', 'HEALTHY')) ?? replica.instances?.[0];
 
   return {

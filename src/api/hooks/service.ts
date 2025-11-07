@@ -1,9 +1,10 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DeploymentStatus, InstanceStatus } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
+import { API } from '../api-types';
 import {
   isComputeDeployment,
   mapDeployment,
@@ -86,22 +87,60 @@ export function useRegionalDeployment(deploymentId: string | undefined, region: 
   return useRegionalDeployments(deploymentId)?.find(hasProperty('region', region));
 }
 
-export function useDeploymentScalingQuery(deploymentId: string | undefined, filters?: { region?: string }) {
+export function useDeploymentScalingQuery(deploymentId?: string, filters?: { region?: string }) {
+  const queryClient = useQueryClient();
+
   return useQuery({
-    ...apiQuery('get /v1/deployment/{id}/scaling', {
-      path: { id: deploymentId! },
-      query: { ...filters },
-    }),
     enabled: deploymentId !== undefined,
-    placeholderData: keepPreviousData,
-    select: ({ replicas }) => replicas!.map(mapReplica),
+    queryKey: ['deploymentScaling', { deploymentId, filters }],
+    queryFn: async (): Promise<
+      Array<{ instances: API.Instance[]; region: string; replica_index: number }>
+    > => {
+      const { deployment } = await queryClient.fetchQuery(
+        apiQuery('get /v1/deployments/{id}', { path: { id: deploymentId! } }),
+      );
+
+      let regionalDeployment: API.RegionalDeploymentListItem | undefined = undefined;
+
+      if (filters?.region) {
+        const { regional_deployments } = await queryClient.fetchQuery(
+          apiQuery('get /v1/regional_deployments', { query: { deployment_id: deploymentId, limit: '100' } }),
+        );
+
+        regionalDeployment = regional_deployments?.find((deployment) => deployment.region === filters.region);
+      }
+
+      const { instances } = await queryClient.fetchQuery(
+        apiQuery('get /v1/instances', {
+          query: {
+            deployment_id: deploymentId,
+            regional_deployment_id: regionalDeployment?.id,
+            statuses: ['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY', 'STOPPING'],
+            limit: '100',
+          },
+        }),
+      );
+
+      const { regions, scalings } = deployment!.definition!;
+
+      return regions!.flatMap((region) => {
+        return Array(scalings![0]!.max!)
+          .fill(null)
+          .map((_, i) => ({
+            region,
+            replica_index: i,
+            instances: instances!.filter(
+              (instance) => instance.region === region && instance.replica_index === i,
+            ),
+          }));
+      });
+    },
+    select: (replicas) => replicas.map(mapReplica),
   });
 }
 
-export function useDeploymentScaling(deploymentId: string | undefined, filters?: { region?: string }) {
-  const { data } = useDeploymentScalingQuery(deploymentId, filters);
-
-  return data;
+export function useDeploymentScaling(deploymentId?: string, filters?: { region?: string }) {
+  return useDeploymentScalingQuery(deploymentId, filters).data;
 }
 
 type InstancesQueryOptions = {

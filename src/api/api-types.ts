@@ -29,7 +29,6 @@ export namespace API {
   export type DockerBuilder = schemas['DockerBuilder'];
   export type DockerSource = schemas['DockerSource'];
   export type Domain = schemas['Domain'];
-  export type GetDeploymentScalingReplyItem = schemas['GetDeploymentScalingReplyItem'];
   export type GetGithubInstallationReply = schemas['GetGithubInstallationReply'];
   export type GetIntercomProfileReply = schemas['GetIntercomProfileReply'];
   export type GetMetricsReply = schemas['GetMetricsReply'];
@@ -52,6 +51,7 @@ export namespace API {
   export type Quotas = schemas['Quotas'];
   export type Region = schemas['Region'];
   export type RegionalDeployment = schemas['RegionalDeployment'];
+  export type RegionalDeploymentListItem = schemas['RegionalDeploymentListItem'];
   export type Repository = schemas['kgitproxy.Repository'];
   export type RepositoryBranch = schemas['kgitproxy.Branch'];
   export type Route = schemas['Route'];
