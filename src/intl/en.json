@@ -1712,6 +1712,7 @@
         "services": "Services",
         "volumes": "Volumes",
         "domains": "Domains",
+        "sandboxes": "Sandboxes",
         "secrets": "Secrets",
         "activity": "Activity",
         "team": "Team",

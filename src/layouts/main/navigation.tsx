@@ -3,9 +3,11 @@ import clsx from 'clsx';
 import { useOrganization } from 'src/api';
 import { BadgeNew } from 'src/components/badge-new';
 import { Link, ValidateLinkOptions } from 'src/components/link';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { usePathname } from 'src/hooks/router';
 import {
   IconActivity,
+  IconBox,
   IconBoxes,
   IconFileKey,
   IconFolders,
@@ -55,6 +57,16 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
           label={<T id="domains" />}
           to="/domains"
         />
+
+        <FeatureFlag feature="sandbox">
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconBox}
+            label={<T id="sandboxes" />}
+            to="/sandboxes"
+          />
+        </FeatureFlag>
 
         <NavigationItem
           collapsed={collapsed}

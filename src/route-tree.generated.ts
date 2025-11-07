@@ -27,6 +27,7 @@ import { Route as MainOneClicksRouteRouteImport } from './routes/_main/one-click
 import { Route as MainVolumesIndexRouteImport } from './routes/_main/volumes/index'
 import { Route as MainSettingsIndexRouteImport } from './routes/_main/settings/index'
 import { Route as MainServicesIndexRouteImport } from './routes/_main/services/index'
+import { Route as MainSandboxesIndexRouteImport } from './routes/_main/sandboxes/index'
 import { Route as MainOneClicksIndexRouteImport } from './routes/_main/one-clicks/index'
 import { Route as AccountWorkosCallbackRouteImport } from './routes/account/workos.callback'
 import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
@@ -155,6 +156,11 @@ const MainServicesIndexRoute = MainServicesIndexRouteImport.update({
   id: '/services/',
   path: '/services/',
   getParentRoute: () => MainRouteRoute,
+} as any)
+const MainSandboxesIndexRoute = MainSandboxesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MainSandboxesRouteRoute,
 } as any)
 const MainOneClicksIndexRoute = MainOneClicksIndexRouteImport.update({
   id: '/',
@@ -406,6 +412,7 @@ export interface FileRoutesByFullPath {
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/one-clicks/': typeof MainOneClicksIndexRoute
+  '/sandboxes/': typeof MainSandboxesIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings/': typeof MainSettingsIndexRoute
   '/volumes/': typeof MainVolumesIndexRoute
@@ -432,7 +439,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteRouteWithChildren
-  '/sandboxes': typeof MainSandboxesRouteRouteWithChildren
   '/activity': typeof MainActivityRoute
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
@@ -456,6 +462,7 @@ export interface FileRoutesByTo {
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/one-clicks': typeof MainOneClicksIndexRoute
+  '/sandboxes': typeof MainSandboxesIndexRoute
   '/services': typeof MainServicesIndexRoute
   '/settings': typeof MainSettingsIndexRoute
   '/volumes': typeof MainVolumesIndexRoute
@@ -516,6 +523,7 @@ export interface FileRoutesById {
   '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/_main/one-clicks/': typeof MainOneClicksIndexRoute
+  '/_main/sandboxes/': typeof MainSandboxesIndexRoute
   '/_main/services/': typeof MainServicesIndexRoute
   '/_main/settings/': typeof MainSettingsIndexRoute
   '/_main/volumes/': typeof MainVolumesIndexRoute
@@ -576,6 +584,7 @@ export interface FileRouteTypes {
     | '/account/validate/$token'
     | '/account/workos/callback'
     | '/one-clicks/'
+    | '/sandboxes/'
     | '/services'
     | '/settings/'
     | '/volumes/'
@@ -602,7 +611,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
-    | '/sandboxes'
     | '/activity'
     | '/deploy'
     | '/domains'
@@ -626,6 +634,7 @@ export interface FileRouteTypes {
     | '/account/validate/$token'
     | '/account/workos/callback'
     | '/one-clicks'
+    | '/sandboxes'
     | '/services'
     | '/settings'
     | '/volumes'
@@ -685,6 +694,7 @@ export interface FileRouteTypes {
     | '/account/validate/$token'
     | '/account/workos/callback'
     | '/_main/one-clicks/'
+    | '/_main/sandboxes/'
     | '/_main/services/'
     | '/_main/settings/'
     | '/_main/volumes/'
@@ -848,6 +858,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/services'
       preLoaderRoute: typeof MainServicesIndexRouteImport
       parentRoute: typeof MainRouteRoute
+    }
+    '/_main/sandboxes/': {
+      id: '/_main/sandboxes/'
+      path: '/'
+      fullPath: '/sandboxes/'
+      preLoaderRoute: typeof MainSandboxesIndexRouteImport
+      parentRoute: typeof MainSandboxesRouteRoute
     }
     '/_main/one-clicks/': {
       id: '/_main/one-clicks/'
@@ -1174,11 +1191,13 @@ const MainSandboxesServiceIdRouteRouteWithChildren =
 
 interface MainSandboxesRouteRouteChildren {
   MainSandboxesServiceIdRouteRoute: typeof MainSandboxesServiceIdRouteRouteWithChildren
+  MainSandboxesIndexRoute: typeof MainSandboxesIndexRoute
 }
 
 const MainSandboxesRouteRouteChildren: MainSandboxesRouteRouteChildren = {
   MainSandboxesServiceIdRouteRoute:
     MainSandboxesServiceIdRouteRouteWithChildren,
+  MainSandboxesIndexRoute: MainSandboxesIndexRoute,
 }
 
 const MainSandboxesRouteRouteWithChildren =
