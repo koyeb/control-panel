@@ -13,7 +13,7 @@ export function mapService(service: API.Service): Service {
     ...snakeToCamelDeep(requiredDeep(service)),
     activeDeploymentId: service.active_deployment_id || undefined,
     lastProvisionedDeploymentId: service.last_provisioned_deployment_id || undefined,
-    type: lowerCase(service.type as 'WEB' | 'WORKER' | 'DATABASE'),
+    type: lowerCase(service.type as 'WEB' | 'WORKER' | 'SANDBOX' | 'DATABASE'),
     upcomingDeploymentIds: service.state?.desired_deployment?.groups?.[0]?.deployment_ids,
   };
 }

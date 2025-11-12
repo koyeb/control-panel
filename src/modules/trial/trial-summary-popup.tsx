@@ -48,7 +48,7 @@ export function TrialSummaryPopup({ className, ...props }: TrialSummaryPopupProp
           </div>
         </div>
 
-        <ProgressBar progress={trial.credits.currentSpend / trial.credits.maxSpend} label={false} />
+        <ProgressBar progress={trial.credits.currentSpend / trial.credits.maxSpend} />
 
         <div className="text-center text-xs text-dim">
           <T id="timeLeft" values={{ days: trial.daysLeft }} />

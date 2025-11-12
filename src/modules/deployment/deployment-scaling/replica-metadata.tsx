@@ -1,3 +1,4 @@
+import { ProgressBar } from '@koyeb/design-system';
 import { FormattedNumber } from 'react-intl';
 
 import { createTranslate } from 'src/intl/translate';
@@ -11,7 +12,7 @@ export function ReplicaCpu({ value }: { value: number }) {
         <T id="metadata.cpu" />
       </div>
 
-      <ProgressBar progress={value} />
+      <ProgressBar progress={value} className="w-10" />
 
       <div className="text-xs">
         <FormattedNumber value={value} style="percent" />
@@ -27,24 +28,11 @@ export function ReplicaMemory({ value }: { value: number }) {
         <T id="metadata.memory" />
       </div>
 
-      <ProgressBar progress={value} />
+      <ProgressBar progress={value} className="w-10" />
 
       <div className="text-xs">
         <FormattedNumber value={value} style="percent" />
       </div>
-    </div>
-  );
-}
-
-function ProgressBar({ progress }: { progress: number }) {
-  const percent = Math.round(progress * 100);
-
-  return (
-    <div className="relative h-1.5 w-10 rounded-full bg-gray/30">
-      <div
-        className="absolute inset-y-0 left-0 rounded-l-full bg-green transition-[width] will-change-[width]"
-        style={{ width: `${percent}%` }}
-      />
     </div>
   );
 }

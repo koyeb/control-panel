@@ -1,5 +1,6 @@
 import { ProgressBar } from '@koyeb/design-system';
 import { useEffect, useRef, useState } from 'react';
+import { FormattedNumber } from 'react-intl';
 
 import { createTranslate } from 'src/intl/translate';
 
@@ -23,7 +24,10 @@ export function DatabaseStarting(props: DatabaseStartingProps) {
         <T id="description" />
       </p>
 
-      <ProgressBar progress={progress} className="mt-4" />
+      <div className="col items-center gap-2">
+        <ProgressBar progress={progress} className="mt-4 w-full" />
+        <FormattedNumber value={progress} style="percent" />
+      </div>
     </div>
   );
 }
@@ -36,7 +40,7 @@ function useProgress({ isStarting, onCompleted }: DatabaseStartingProps, interpo
   useEffect(() => {
     function handler() {
       if (!isStarting) {
-        setProgress((p) => (p < 1 ? Math.min(1, p + 0.05) : p));
+        setProgress((p) => (p < 1 ? Math.min(1, p + 5 / 100) : p));
         return;
       }
 

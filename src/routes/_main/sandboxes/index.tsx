@@ -179,7 +179,7 @@ function MetricValue({ deployment, metric }: { deployment: ComputeDeployment; me
 
   return (
     <>
-      <ProgressBar progress={value} label={false} className="flex-1 max-2xl:hidden" />
+      <ProgressBar progress={value} className="flex-1 max-2xl:hidden" />
       <FormattedNumber value={value} style="percent" />
     </>
   );

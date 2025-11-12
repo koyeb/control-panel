@@ -122,7 +122,7 @@ function MetricMetadata({ deployment, metric }: { deployment: ComputeDeployment;
       label={<T id={`metadata.${metric}`} />}
       value={
         <div className="row items-center gap-2">
-          <ProgressBar progress={value} label={false} className="max-w-16 flex-1" />
+          <ProgressBar progress={value} className="max-w-16 flex-1 bg-neutral" />
           <FormattedNumber value={value} style="percent" />
         </div>
       }
