@@ -17,18 +17,10 @@ type RegionsSelectorProps = Extend<
     regions: CatalogRegion[];
     value: CatalogRegion[];
     onChange: (regions: CatalogRegion[]) => void;
-    menuClassName?: string;
   }
 >;
 
-export function RegionsSelector({
-  label,
-  regions,
-  value,
-  onChange,
-  menuClassName,
-  ...props
-}: RegionsSelectorProps) {
+export function RegionsSelector({ label, regions, value, onChange, ...props }: RegionsSelectorProps) {
   return (
     <Select
       items={regions}

@@ -28,6 +28,7 @@ export function InstanceSelector({
   regions,
   selectedInstance,
   selectedRegions,
+  singleRegion,
   onRegionScopeSelected,
   onInstanceSelected,
   onRegionSelected,
@@ -55,7 +56,7 @@ export function InstanceSelector({
             selected={selectedRegions}
             onSelected={onRegionSelected}
             instance={instance}
-            type={selectedInstance?.id === 'free' ? 'radio' : 'checkbox'}
+            type={singleRegion || selectedInstance?.id === 'free' ? 'radio' : 'checkbox'}
             showAvailability
             showLatency
           />

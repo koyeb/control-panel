@@ -422,10 +422,10 @@ function InstanceSection({ serviceForm }: { serviceForm: ServiceForm }) {
   const selectedInstance = instances.find(hasProperty('id', instanceCtrl.field.value));
   const selectedRegions = regions.filter((region) => inArray(region.id, regionsCtrl.field.value));
 
-  const availabilities = useInstanceAvailabilities({
-    serviceType: serviceForm.serviceType,
-    hasVolumes: serviceForm.volumes.length > 0,
-  });
+  const serviceType = serviceForm.serviceType;
+  const hasVolumes = serviceForm.volumes.length > 0;
+
+  const availabilities = useInstanceAvailabilities({ serviceType, hasVolumes });
 
   const selector = useInstanceSelector({
     instances,
@@ -433,6 +433,7 @@ function InstanceSection({ serviceForm }: { serviceForm: ServiceForm }) {
     availabilities,
     selectedInstance: selectedInstance ?? null,
     selectedRegions,
+    singleRegion: hasVolumes,
     setSelectedInstance: (instance) => instanceCtrl.field.onChange(instance?.id ?? null),
     setSelectedRegions: (regions) => regionsCtrl.field.onChange(regions.map((region) => region.id)),
   });

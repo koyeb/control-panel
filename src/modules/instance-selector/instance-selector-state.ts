@@ -33,6 +33,8 @@ export type InstanceSelector = {
   selectedRegions: CatalogRegion[];
   onRegionSelected: (region: CatalogRegion) => void;
 
+  singleRegion?: boolean;
+
   instances: CatalogInstance[];
   regions: CatalogRegion[];
 };
@@ -213,6 +215,8 @@ export function instanceSelector(
 
       update({ selectedRegions: regions });
     },
+
+    singleRegion,
 
     instances: filterInstances(instanceCategory),
     regions: filterRegions(regionScope, selectedInstance),
