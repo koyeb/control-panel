@@ -11,12 +11,13 @@ type AuthInputProps<
   name: Name;
   onChangeEffect?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   helperText?: React.ReactNode;
+  classes?: { root?: string; input?: string };
 };
 
 export function AuthInput<
   Form extends FieldValues = FieldValues,
   Name extends FieldPath<Form> = FieldPath<Form>,
->({ control, name, onChangeEffect, helperText, className, ...props }: AuthInputProps<Form, Name>) {
+>({ control, name, onChangeEffect, helperText, classes, ...props }: AuthInputProps<Form, Name>) {
   const id = useId(props.id);
   const helperTextId = `${id}-helper-text`;
 
@@ -26,11 +27,11 @@ export function AuthInput<
   } = useController({ control, name });
 
   return (
-    <div className="text-start">
+    <div className={clsx('text-start', classes?.root)}>
       <input
         aria-invalid={invalid}
         aria-errormessage={helperTextId}
-        className={AuthInput.class({ invalid, className })}
+        className={AuthInput.class({ invalid, className: classes?.input })}
         onChange={(event) => {
           onChange(event);
           onChangeEffect?.(event);

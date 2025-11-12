@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -122,21 +123,20 @@ export function SignInForm({ redirect }: { redirect: string }) {
         onChangeEffect={() => setAuthenticationMethod(null)}
       />
 
-      {authenticationMethod === 'koyeb' && (
-        <AuthInput
-          control={form.control}
-          name="password"
-          autoComplete="current-password"
-          type="password"
-          required={authenticationMethod === 'koyeb'}
-          placeholder={t('passwordPlaceholder')}
-          helperText={
-            <div className="text-dim">
-              <T id="forgotPasswordLink" values={{ link: resetPasswordLink }} />
-            </div>
-          }
-        />
-      )}
+      <AuthInput
+        control={form.control}
+        name="password"
+        autoComplete="current-password"
+        type="password"
+        required={authenticationMethod === 'koyeb'}
+        placeholder={t('passwordPlaceholder')}
+        helperText={
+          <div className="text-dim">
+            <T id="forgotPasswordLink" values={{ link: resetPasswordLink }} />
+          </div>
+        }
+        classes={{ root: clsx({ hidden: authenticationMethod !== 'koyeb' }) }}
+      />
 
       {form.formState.errors.root?.message === 'invalidCredential' && (
         <div className="text-red">
