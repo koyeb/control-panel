@@ -228,6 +228,7 @@ export type ComputeDeployment = {
   id: string;
   appId: string;
   serviceId: string;
+  lastProvisionedDeploymentId?: string;
   name: string;
   date: string;
   terminatedAt?: string;

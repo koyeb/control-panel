@@ -52,7 +52,7 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
   }, [logs.lines, onLastLineChanged]);
 
   if (deployment.buildSkipped) {
-    return <BuiltInPreviousDeployment service={service} />;
+    return <BuiltInPreviousDeployment service={service} deployment={deployment} />;
   }
 
   if (logs.error) {
@@ -133,12 +133,17 @@ function NoLogs() {
   );
 }
 
-function BuiltInPreviousDeployment({ service }: { service: Service }) {
-  const deploymentId = service.lastProvisionedDeploymentId;
+type BuiltInPreviousDeploymentProps = {
+  service: Service;
+  deployment: ComputeDeployment;
+};
+
+function BuiltInPreviousDeployment({ service, deployment }: BuiltInPreviousDeploymentProps) {
+  const deploymentId = deployment.lastProvisionedDeploymentId;
 
   assert(
     deploymentId !== undefined,
-    new AssertionError(`service ${service.id} has no last provisioned deployment id`),
+    new AssertionError(`deployment ${deployment.id} has no last provisioned deployment id`),
   );
 
   return (
@@ -153,7 +158,7 @@ function BuiltInPreviousDeployment({ service }: { service: Service }) {
               <Link
                 to="/services/$serviceId"
                 params={{ serviceId: service.id }}
-                search={{ deploymentId: service.lastProvisionedDeploymentId }}
+                search={{ deploymentId }}
                 className="underline"
               >
                 {children}
