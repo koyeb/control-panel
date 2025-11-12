@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AccordionHeader, AccordionSection, Badge, FieldHelperText } from '@koyeb/design-system';
+import { AccordionHeader, AccordionSection, Alert, Badge, FieldHelperText } from '@koyeb/design-system';
 import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import merge from 'lodash-es/merge';
 import { useEffect, useRef, useState } from 'react';
@@ -480,7 +480,9 @@ function InstanceSection({ serviceForm }: { serviceForm: ServiceForm }) {
         </AccordionHeader>
       }
     >
-      <div className="px-3 py-4">
+      <div className="col gap-4 px-3 py-4">
+        {hasVolumes && <Alert variant="info" description={<T id="singleRegionWithVolumes" />} />}
+
         <InstanceCategoryTabs
           category={selector.instanceCategory}
           setCategory={selector.onInstanceCategorySelected}

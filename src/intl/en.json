@@ -1081,6 +1081,7 @@
         "submitButton": "Deploy"
       },
       "oneClickAppForm": {
+        "singleRegionWithVolumes": "Multi-region deployment is unavailable when volumes are attached to the service",
         "submitButton": "Deploy",
         "metadata": {
           "title": "Overview",
