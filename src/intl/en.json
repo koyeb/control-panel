@@ -2687,6 +2687,7 @@
       }
     },
     "sandbox": {
+      "details": {
       "navigation": {
         "overview": "Overview",
         "metrics": "Metrics",
@@ -2712,7 +2713,6 @@
           }
         }
       },
-      "details": {
         "metadata": {
           "cpu": "CPU",
           "memory": "Memory usage",

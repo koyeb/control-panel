@@ -15,12 +15,12 @@ import { Metadata } from 'src/components/metadata';
 import { QueryError, QueryGuard } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { ServiceStatusBadge } from 'src/components/status-badges';
-import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
-import { useDeploymentMetricsQuery } from '../deployment/deployment-scaling/deployment-metrics';
+import { useDeploymentMetric } from '../deployment/deployment-metrics/deployment-metrics';
 import { InstanceMetadata, RegionsMetadata } from '../deployment/metadata';
 
 const T = createTranslate('pages.sandbox.details');
@@ -102,29 +102,30 @@ function DeploymentMetadata({ deploymentId }: { deploymentId: string }) {
   return (
     <div className="row flex-wrap gap-3 rounded-xl bg-muted/50 p-3">
       <InstanceMetadata instance={deployment.definition.instanceType} className="w-44" />
-      <CpuMetadata deployment={deployment} />
-      <MemoryMetadata deployment={deployment} />
+      <MetricMetadata deployment={deployment} metric="cpu" />
+      <MetricMetadata deployment={deployment} metric="memory" />
       <RegionsMetadata regions={deployment.definition.regions} className="w-44" />
       <DateMetadata date={deployment.date} />
     </div>
   );
 }
 
-function CpuMetadata({ deployment }: { deployment: ComputeDeployment }) {
-  return (
-    <Metadata
-      label={<T id="metadata.cpu" />}
-      value={<MetricMetadataValue deployment={deployment} metric="cpu" />}
-      className="w-44"
-    />
-  );
-}
+function MetricMetadata({ deployment, metric }: { deployment: ComputeDeployment; metric: 'cpu' | 'memory' }) {
+  const value = useDeploymentMetric(deployment, metric);
 
-function MemoryMetadata({ deployment }: { deployment: ComputeDeployment }) {
+  if (value === undefined) {
+    return null;
+  }
+
   return (
     <Metadata
-      label={<T id="metadata.memory" />}
-      value={<MetricMetadataValue deployment={deployment} metric="memory" />}
+      label={<T id={`metadata.${metric}`} />}
+      value={
+        <div className="row items-center gap-2">
+          <ProgressBar progress={value} label={false} className="max-w-16 flex-1" />
+          <FormattedNumber value={value} style="percent" />
+        </div>
+      }
       className="w-44"
     />
   );
@@ -138,41 +139,4 @@ function DateMetadata({ date }: { date: string }) {
       className="w-44"
     />
   );
-}
-
-type MetricMetadataValueProps = {
-  deployment: ComputeDeployment;
-  metric: 'cpu' | 'memory';
-};
-
-function MetricMetadataValue({ deployment, metric }: MetricMetadataValueProps) {
-  const metrics = useDeploymentMetricsQuery(deployment);
-  const instance = UseLatestInstance(deployment);
-  const value = instance && metrics.data[instance.id]?.[metric];
-
-  if (!instance) {
-    return null;
-  }
-
-  if (value === undefined) {
-    return <Translate id="common.noValue" />;
-  }
-
-  return (
-    <div className="row items-center gap-2 text-xs">
-      <div className="w-16">
-        <ProgressBar progress={value} label={false} />
-      </div>
-
-      <FormattedNumber value={value} style="percent" />
-    </div>
-  );
-}
-
-function UseLatestInstance(deployment: ComputeDeployment) {
-  const query = useInstancesQuery({ deploymentId: deployment.id, limit: 1 });
-
-  if (query.isSuccess) {
-    return query.data.instances[0];
-  }
 }

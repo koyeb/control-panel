@@ -6,7 +6,8 @@ import { InstanceStatusBadge } from 'src/components/status-badges';
 import { createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, Replica } from 'src/model';
 
-import { useDeploymentMetricsQuery } from './deployment-metrics';
+import { useDeploymentMetricsQuery } from '../deployment-metrics/deployment-metrics';
+
 import { ReplicaDrawer } from './replica-drawer';
 import { ReplicaCpu, ReplicaMemory } from './replica-metadata';
 

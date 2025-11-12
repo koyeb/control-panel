@@ -7,12 +7,13 @@ import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { TabButtonLink } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
+import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
 import { IconPause, IconPlay, IconTrash } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 
-const T = createTranslate('pages.sandbox.navigation');
+const T = createTranslate('pages.sandbox.details.navigation');
 
 export const Route = createFileRoute('/_main/sandboxes/$serviceId')({
   component: SandboxLayout,
@@ -27,7 +28,7 @@ function Crumb({ serviceId }: { serviceId: string }) {
 
   return (
     <CrumbLink to={Route.fullPath} params={{ serviceId }}>
-      {service?.name}
+      {service?.name ?? <TextSkeleton width={8} />}
     </CrumbLink>
   );
 }

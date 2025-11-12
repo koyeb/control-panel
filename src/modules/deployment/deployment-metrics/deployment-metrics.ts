@@ -1,6 +1,6 @@
 import { useQueries } from '@tanstack/react-query';
 
-import { API, apiQuery, useCatalogInstance } from 'src/api';
+import { API, apiQuery, useCatalogInstance, useInstancesQuery } from 'src/api';
 import { parseBytes } from 'src/application/memory';
 import { CatalogInstance, ComputeDeployment } from 'src/model';
 import { last, unique } from 'src/utils/arrays';
@@ -73,4 +73,21 @@ function getMetrics(
     cpu: getCpuPercent(),
     memory: getMemoryPercent(),
   };
+}
+
+export function useDeploymentMetric(deployment: ComputeDeployment, metric: 'cpu' | 'memory') {
+  const metricsQuery = useDeploymentMetricsQuery(deployment);
+  const instance = useLatestInstance(deployment);
+
+  if (instance) {
+    return metricsQuery.data[instance.id]?.[metric];
+  }
+}
+
+function useLatestInstance(deployment: ComputeDeployment) {
+  const query = useInstancesQuery({ deploymentId: deployment.id, limit: 1 });
+
+  if (query.isSuccess) {
+    return query.data.instances[0];
+  }
 }
