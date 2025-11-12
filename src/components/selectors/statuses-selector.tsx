@@ -11,8 +11,8 @@ type StatusSelectorProps<Status extends string> = Extend<
   Omit<React.ComponentProps<typeof Select<Status>>, 'items'>,
   {
     statuses: Status[];
-    value: Status[];
-    onChange: (statuses: Status[]) => void;
+    value?: Status[];
+    onChange?: (statuses: Status[]) => void;
     renderItem: (status: Status) => React.ReactNode;
     Dot: (props: { status: Status; className?: string }) => React.ReactNode;
     menuClassName?: string;
@@ -22,7 +22,7 @@ type StatusSelectorProps<Status extends string> = Extend<
 export function StatusesSelector<Status extends string>({
   label,
   statuses,
-  value,
+  value = [],
   onChange,
   renderItem,
   Dot,
@@ -32,7 +32,7 @@ export function StatusesSelector<Status extends string>({
   return (
     <Select
       items={statuses}
-      onChange={(status) => onChange(arrayToggle(value, status))}
+      onChange={(status) => onChange?.(arrayToggle(value, status))}
       select={{ stateReducer: multiSelectStateReducer }}
       dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
       value={null}
@@ -49,8 +49,8 @@ export function StatusesSelector<Status extends string>({
           items={statuses}
           selected={value}
           getKey={identity}
-          onClearAll={() => onChange([])}
-          onSelectAll={() => onChange(statuses)}
+          onClearAll={() => onChange?.([])}
+          onSelectAll={() => onChange?.(statuses)}
           renderItem={(status, selected) => (
             <div className="row w-full items-center gap-2 px-3 py-1.5">
               <Dot status={status} className="size-2" />

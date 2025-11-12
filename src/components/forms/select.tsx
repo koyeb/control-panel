@@ -231,7 +231,7 @@ export function MultiSelectMenu<T>({
 
 export function SelectedCountBadge({ selected, total }: { selected: number; total: number }) {
   return (
-    <Badge size={1}>
+    <Badge size={1} className="min-w-10">
       <Translate id="common.selectedCount" values={{ selected, total }} />
     </Badge>
   );

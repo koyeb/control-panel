@@ -1,5 +1,5 @@
 import { InputStart } from '@koyeb/design-system';
-import { UseFormReturn, useController } from 'react-hook-form';
+import { Controller, UseFormReturn, useController } from 'react-hook-form';
 
 import { ControlledInput } from 'src/components/forms/input';
 import {
@@ -8,11 +8,10 @@ import {
   SelectedCountBadge,
   multiSelectStateReducer,
 } from 'src/components/forms/select';
-import { StatusesSelector } from 'src/components/selectors/statuses-selector';
+import { ServiceStatusesSelector } from 'src/components/selectors/service-status-selector';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
-import { ServiceStatusDot } from 'src/components/status-dot';
 import { IconCheck, IconSearch } from 'src/icons';
-import { TranslateEnum, createTranslate, translateStatus } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { ServiceStatus, ServiceType } from 'src/model';
 import { arrayToggle } from 'src/utils/arrays';
 import { identity } from 'src/utils/generic';
@@ -31,7 +30,12 @@ export function ServicesFilters({ form }: { form: UseFormReturn<ServicesFiltersF
     <div className="row items-center gap-2">
       <SearchInput form={form} />
       <TypesSelector form={form} />
-      <ServiceStatusesSelector form={form} />
+
+      <Controller
+        control={form.control}
+        name="statuses"
+        render={({ field }) => <ServiceStatusesSelector label={<T id="filters.status.label" />} {...field} />}
+      />
     </div>
   );
 }
@@ -67,7 +71,6 @@ function TypesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
     <Select
       {...field}
       items={types}
-      field={() => ({ className: 'min-w-32' })}
       select={{ stateReducer: multiSelectStateReducer }}
       dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
       value={null}
@@ -100,48 +103,6 @@ function TypesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
           className="min-w-56"
         />
       )}
-    />
-  );
-}
-
-const statuses: ServiceStatus[] = [
-  'STARTING',
-  'RESUMING',
-  'HEALTHY',
-  'DEGRADED',
-  'UNHEALTHY',
-  'PAUSED',
-  'DELETED',
-];
-
-function ServiceStatusesSelector({ form }: { form: UseFormReturn<ServicesFiltersForm> }) {
-  const { field } = useController({
-    control: form.control,
-    name: 'statuses',
-  });
-
-  const renderItem = (status: ServiceStatus) => {
-    if (status === 'PAUSED') {
-      return [translateStatus('PAUSING'), translateStatus('PAUSED')].join(' / ');
-    }
-
-    if (status === 'DELETED') {
-      return [translateStatus('DELETING'), translateStatus('DELETED')].join(' / ');
-    }
-
-    return translateStatus(status);
-  };
-
-  return (
-    <StatusesSelector<ServiceStatus>
-      {...field}
-      statuses={statuses}
-      field={() => ({ className: 'min-w-48' })}
-      dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
-      label={<T id="filters.status.label" />}
-      renderItem={renderItem}
-      Dot={ServiceStatusDot}
-      menuClassName="min-w-56"
     />
   );
 }
