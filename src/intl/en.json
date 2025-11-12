@@ -2688,7 +2688,7 @@
     },
     "sandbox": {
       "list": {
-        "title": "Sandoxes",
+        "title": "Sandboxes",
         "search": "Search",
         "status": "Status",
         "cpu": "CPU",
