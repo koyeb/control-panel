@@ -23,7 +23,7 @@ export function AppsServicesList() {
     },
   });
 
-  const name = useDebouncedValue(filtersForm.watch('search') || undefined, 200);
+  const searchDebounced = useDebouncedValue(filtersForm.watch('search'), 200);
   const types = filtersForm.watch('types');
   const statuses = filtersForm.watch('statuses').slice();
 
@@ -36,7 +36,7 @@ export function AppsServicesList() {
   }
 
   const query = useAppsFull({
-    name,
+    name: searchDebounced || undefined,
     types,
     statuses,
   });

@@ -1799,7 +1799,7 @@
         "/database-services/$databaseServiceId/databases": "Databases",
         "/database-services/$databaseServiceId/roles": "Roles",
         "/database-services/$databaseServiceId/settings": "Settings",
-        "/sandboxes": "Sandbox",
+        "/sandboxes": "Sandboxes",
         "/sandboxes/$serviceId/metrics": "Metrics",
         "/sandboxes/$serviceId/console": "Console"
       }
@@ -2687,32 +2687,39 @@
       }
     },
     "sandbox": {
-      "details": {
-      "navigation": {
-        "overview": "Overview",
-        "metrics": "Metrics",
-        "console": "Console",
-        "actions": {
-          "pause": {
-            "button": "Pause",
-            "title": "Your sandbox will be paused",
-            "description": "Do you want to continue?",
-            "confirm": "Pause sandbox",
-            "success": "Your sandbox is being paused"
-          },
-          "resume": {
-            "button": "Resume",
-            "success": "Your sandbox is being resumed"
-          },
-          "delete": {
-            "button": "Destroy",
-            "title": "Your sandbox will be deleted",
-            "description": "Do you want to continue?",
-            "confirm": "Destroy sandbox",
-            "success": "Your sandbox is being destroyed"
-          }
-        }
+      "list": {
+        "title": "Sandoxes",
+        "search": "Search",
+        "status": "Status",
+        "cpu": "CPU",
+        "memory": "Memory"
       },
+      "details": {
+        "navigation": {
+          "overview": "Overview",
+          "metrics": "Metrics",
+          "console": "Console",
+          "actions": {
+            "pause": {
+              "button": "Pause",
+              "title": "Your sandbox will be paused",
+              "description": "Do you want to continue?",
+              "confirm": "Pause sandbox",
+              "success": "Your sandbox is being paused"
+            },
+            "resume": {
+              "button": "Resume",
+              "success": "Your sandbox is being resumed"
+            },
+            "delete": {
+              "button": "Destroy",
+              "title": "Your sandbox will be deleted",
+              "description": "Do you want to continue?",
+              "confirm": "Destroy sandbox",
+              "success": "Your sandbox is being destroyed"
+            }
+          }
+        },
         "metadata": {
           "cpu": "CPU",
           "memory": "Memory usage",
