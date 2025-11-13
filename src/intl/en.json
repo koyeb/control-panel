@@ -2737,17 +2737,20 @@
               "success": "Your sandbox is being resumed"
             },
             "delete": {
-              "button": "Destroy",
+              "button": "Delete",
               "title": "Your sandbox will be deleted",
               "description": "Do you want to continue?",
-              "confirm": "Destroy sandbox",
-              "success": "Your sandbox is being destroyed"
+              "confirm": "Delete",
+              "success": "Your sandbox is being deleted"
             }
           }
         },
         "metadata": {
+          "id": "ID",
+          "status": "Status",
           "cpu": "CPU",
           "memory": "Memory usage",
+          "dockerImage": "Docker image",
           "date": "Creation date"
         }
       }
