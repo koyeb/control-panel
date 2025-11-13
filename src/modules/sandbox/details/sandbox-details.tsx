@@ -7,12 +7,11 @@ import {
   useComputeDeployment,
   useDeploymentQuery,
   useInstancesQuery,
-  useServiceQuery,
 } from 'src/api';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { RuntimeLogs } from 'src/components/logs';
 import { Metadata } from 'src/components/metadata';
-import { QueryError, QueryGuard } from 'src/components/query-error';
+import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { ServiceStatusBadge } from 'src/components/status-badges';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -20,41 +19,35 @@ import { ComputeDeployment, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
-import { useDeploymentMetric } from '../deployment/deployment-metrics/deployment-metrics';
-import { InstanceMetadata, RegionsMetadata } from '../deployment/metadata';
+import { useDeploymentMetric } from '../../deployment/deployment-metrics/deployment-metrics';
+import { InstanceMetadata, RegionsMetadata } from '../../deployment/metadata';
 
 const T = createTranslate('pages.sandbox.details');
 
-export function SandboxDetails({ serviceId }: { serviceId: string }) {
-  const serviceQuery = useServiceQuery(serviceId);
-
+export function SandboxDetails({ service }: { service: Service }) {
   return (
-    <QueryGuard query={serviceQuery}>
-      {(service) => (
-        <>
-          <div className="col gap-6 rounded-md border px-3 py-4">
-            <div className="row items-start justify-between gap-4">
-              <div className="col gap-2">
-                <ServiceStatusBadge status={service.status} />
+    <>
+      <div className="col gap-6 rounded-md border px-3 py-4">
+        <div className="row items-start justify-between gap-4">
+          <div className="col gap-2">
+            <ServiceStatusBadge status={service.status} />
 
-                <div className="row items-center gap-2">
-                  {shortId(service.id)} <CopyIconButton text={service.id} className="size-4" />
-                </div>
-              </div>
-
-              <div className="row items-center gap-2 font-medium">
-                <TranslateEnum enum="serviceType" value="web" />
-                <ServiceTypeIcon type="web" />
-              </div>
+            <div className="row items-center gap-2">
+              {shortId(service.id)} <CopyIconButton text={service.id} className="size-4" />
             </div>
-
-            <DeploymentMetadata deploymentId={service.latestDeploymentId} />
           </div>
 
-          <SandboxLogs service={service} />
-        </>
-      )}
-    </QueryGuard>
+          <div className="row items-center gap-2 font-medium">
+            <TranslateEnum enum="serviceType" value="web" />
+            <ServiceTypeIcon type="web" />
+          </div>
+        </div>
+
+        <DeploymentMetadata deploymentId={service.latestDeploymentId} />
+      </div>
+
+      <SandboxLogs service={service} />
+    </>
   );
 }
 
