@@ -1,3 +1,4 @@
+import { dequal } from 'dequal';
 import cloneDeep from 'lodash-es/cloneDeep';
 import { useCallback } from 'react';
 import {
@@ -91,3 +92,7 @@ export const useFormValues = <Values extends FieldValues>(form?: UseFormReturn<V
 
   return useDeepCompareMemo(values);
 };
+
+export function useFormHasDefaultValues<Values extends FieldValues>(form: UseFormReturn<Values>) {
+  return dequal(form.watch(), form.formState.defaultValues);
+}

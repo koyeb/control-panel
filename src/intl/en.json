@@ -2692,7 +2692,32 @@
         "search": "Search",
         "status": "Status",
         "cpu": "CPU",
-        "memory": "Memory"
+        "memory": "Memory",
+        "noSandboxes": {
+          "intro": {
+            "sentence": "Two quick steps to run your code on Modal's infrastructure"
+          },
+          "step1": {
+            "title": "Download and configure the python client",
+            "line1": "Run this in order to install the Python library locally:",
+            "line2": "The first command will install the Modal client library on your computer, along with its dependencies.",
+            "line3": "The second command creates an API token by authenticating through your web browser. It will open a new tab, but you can close it when you are done."
+          },
+          "step2": {
+            "title": "Run some code",
+            "line1": "You're ready to run some code! here is a minimal script that computes the square of 42:",
+            "line2": "Save the code to a local file such as:",
+            "line3": "Now that the source code is saved locally, let's run it:"
+          },
+          "end": {
+            "sentence": "Congratulations! You just ran your first Modal app."
+          }
+        },
+        "noResults": {
+          "title": "No results",
+          "description": "No sandboxes match the current filters",
+          "removeFilters": "Remove filters"
+        }
       },
       "details": {
         "navigation": {
