@@ -32,7 +32,7 @@ export function RegionsMetadataValue({ regions }: RegionsMetadataProps) {
       className="md:min-w-36"
       content={regions.length >= 2 && <RegionsTooltipContent regions={regions} />}
       trigger={(props) => (
-        <div {...props} className="row items-center gap-2">
+        <div {...props} className="row max-w-fit items-center gap-2">
           <RegionFlag regionId={firstRegion?.id} className="size-3" />
 
           <div className="truncate">{firstRegion?.name}</div>

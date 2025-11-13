@@ -100,7 +100,7 @@ function Filters({ form }: { form: UseFormReturn<FiltersForm> }) {
   const t = T.useTranslate();
 
   return (
-    <form className="row items-center gap-2">
+    <form className="col items-start gap-3 sm:row sm:items-center sm:gap-2">
       <ControlledInput
         control={form.control}
         name="search"
@@ -134,15 +134,16 @@ function SandboxItem({ service }: { service: Service }) {
     <div
       className={clsx(
         'grid items-center gap-6 rounded-md border p-3',
-        'grid-cols-[7rem_6rem_7rem_4rem_5rem_7rem_7rem_auto]',
-        '2xl:grid-cols-[8rem_6rem_9rem_9rem_9rem_6rem_6rem_auto]',
+        'grid-cols-1',
+        'lg:grid-cols-[14rem_6rem_4rem_5rem_7rem_7rem_auto]',
+        '2xl:grid-cols-[16rem_9rem_9rem_9rem_6rem_6rem_auto]',
       )}
     >
-      <Link to="/sandboxes/$serviceId" params={{ serviceId: service.id }} className="truncate font-medium">
-        {service.name}
-      </Link>
+      <div className="row items-center justify-between gap-2 truncate">
+        <Link to="/sandboxes/$serviceId" params={{ serviceId: service.id }} className="truncate font-medium">
+          {service.name}
+        </Link>
 
-      <div className="row items-center gap-2 truncate">
         <DeploymentStatusBadge status={deployment.status} />
       </div>
 
@@ -151,7 +152,7 @@ function SandboxItem({ service }: { service: Service }) {
       </div>
 
       <div className="row items-center gap-2 text-xs">
-        <div className="text-dim">
+        <div className="text-dim max-lg:w-14">
           <T id="cpu" />
         </div>
 
@@ -159,7 +160,7 @@ function SandboxItem({ service }: { service: Service }) {
       </div>
 
       <div className="row items-center gap-2 text-xs">
-        <div className="text-dim">
+        <div className="text-dim max-lg:w-14">
           <T id="memory" />
         </div>
 
@@ -181,7 +182,7 @@ function SandboxItem({ service }: { service: Service }) {
         )}
       </div>
 
-      <div className="truncate text-right text-xs text-dim">
+      <div className="truncate text-xs text-dim lg:text-right">
         <FormattedDistanceToNow value={deployment.date} />
       </div>
     </div>
@@ -197,7 +198,7 @@ function MetricValue({ deployment, metric }: { deployment: ComputeDeployment; me
 
   return (
     <>
-      <ProgressBar progress={value} className="flex-1 max-2xl:hidden" />
+      <ProgressBar progress={value} className="max-w-32 flex-1 lg:max-2xl:hidden" />
       <FormattedNumber value={value} style="percent" />
     </>
   );
