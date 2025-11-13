@@ -1,6 +1,7 @@
 import { InputStart, ProgressBar } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Link, createFileRoute } from '@tanstack/react-router';
+import clsx from 'clsx';
 import { Controller, UseFormReturn, useForm } from 'react-hook-form';
 import { FormattedNumber } from 'react-intl';
 
@@ -8,7 +9,7 @@ import { apiQuery, mapService, useComputeDeployment } from 'src/api';
 import { ControlledInput } from 'src/components/forms';
 import { QueryGuard } from 'src/components/query-error';
 import { ServiceStatusesSelector } from 'src/components/selectors/service-status-selector';
-import { ServiceStatusBadge } from 'src/components/status-badges';
+import { DeploymentStatusBadge } from 'src/components/status-badges';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { IconDocker, IconSearch } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
@@ -120,15 +121,19 @@ function SandboxItem({ service }: { service: Service }) {
   const { source, instanceType, regions } = deployment.definition;
 
   return (
-    <div className="grid grid-cols-[7rem_6rem_7rem_4rem_5rem_7rem_7rem_auto] items-center gap-6 rounded-md border p-3 2xl:grid-cols-[8rem_6rem_9rem_9rem_9rem_6rem_6rem_auto]">
-      <div className="row items-center gap-2 truncate">
-        <Link to="/sandboxes/$serviceId" params={{ serviceId: service.id }} className="font-medium">
-          {service.name}
-        </Link>
-      </div>
+    <div
+      className={clsx(
+        'grid items-center gap-6 rounded-md border p-3',
+        'grid-cols-[7rem_6rem_7rem_4rem_5rem_7rem_7rem_auto]',
+        '2xl:grid-cols-[8rem_6rem_9rem_9rem_9rem_6rem_6rem_auto]',
+      )}
+    >
+      <Link to="/sandboxes/$serviceId" params={{ serviceId: service.id }} className="truncate font-medium">
+        {service.name}
+      </Link>
 
       <div className="row items-center gap-2 truncate">
-        <ServiceStatusBadge status={service.status} />
+        <DeploymentStatusBadge status={deployment.status} />
       </div>
 
       <div className="truncate text-xs">
@@ -155,10 +160,13 @@ function SandboxItem({ service }: { service: Service }) {
         <RegionsMetadataValue regions={regions} />
       </div>
 
-      <div className="row items-center gap-1 truncate text-xs">
+      <div className="row items-center gap-1 text-xs">
         {source.type === 'docker' && (
           <>
-            <IconDocker className="size-3" /> {source.image}
+            <div>
+              <IconDocker className="size-3" />
+            </div>
+            <div className="truncate">{source.image}</div>
           </>
         )}
       </div>
