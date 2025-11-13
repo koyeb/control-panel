@@ -7,6 +7,7 @@ import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { TabButtonLink } from 'src/components/link';
 import { QueryGuard } from 'src/components/query-error';
+import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
 import { IconPause, IconPlay, IconTrash } from 'src/icons';
@@ -41,7 +42,15 @@ function SandboxLayout() {
     <QueryGuard query={serviceQuery}>
       {(service) => (
         <div className="col gap-8">
-          <Title title={service.name} end={<Actions serviceId={serviceId} />} />
+          <Title
+            title={
+              <div className="row items-center gap-2">
+                <ServiceTypeIcon type="web" size={4} />
+                {service.name}
+              </div>
+            }
+            end={<Actions serviceId={serviceId} />}
+          />
 
           <TabButtons>
             <TabButtonLink to="/sandboxes/$serviceId" params={{ serviceId }}>
@@ -110,6 +119,7 @@ function Actions({ serviceId }: { serviceId: string }) {
               onConfirm: () => pauseMutation.mutateAsync(serviceId),
             })
           }
+          className="hidden!"
         >
           <IconPause className="size-4 fill-current stroke-none" />
           <T id="actions.pause.button" />
@@ -121,6 +131,7 @@ function Actions({ serviceId }: { serviceId: string }) {
           color="gray"
           loading={resumeMutation.isPending}
           onClick={() => resumeMutation.mutate(serviceId)}
+          className="hidden!"
         >
           <IconPlay className="size-4 fill-current stroke-none" />
           <T id="actions.resume.button" />
@@ -129,6 +140,7 @@ function Actions({ serviceId }: { serviceId: string }) {
 
       <Button
         color="red"
+        variant="outline"
         onClick={() =>
           openDialog('Confirmation', {
             title: t('actions.delete.title'),
@@ -139,6 +151,7 @@ function Actions({ serviceId }: { serviceId: string }) {
             onConfirm: () => deleteMutation.mutateAsync(serviceId),
           })
         }
+        className="text-red"
       >
         <IconTrash className="size-4" />
         <T id="actions.delete.button" />

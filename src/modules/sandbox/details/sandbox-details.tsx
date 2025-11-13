@@ -12,10 +12,10 @@ import { CopyIconButton } from 'src/components/copy-icon-button';
 import { RuntimeLogs } from 'src/components/logs';
 import { Metadata } from 'src/components/metadata';
 import { QueryError } from 'src/components/query-error';
-import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { ServiceStatusBadge } from 'src/components/status-badges';
-import { TranslateEnum, createTranslate } from 'src/intl/translate';
-import { ComputeDeployment, Service } from 'src/model';
+import { IconDocker } from 'src/icons';
+import { Translate, createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, DeploymentDefinition, Service } from 'src/model';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
@@ -27,25 +27,7 @@ const T = createTranslate('pages.sandbox.details');
 export function SandboxDetails({ service }: { service: Service }) {
   return (
     <>
-      <div className="col gap-6 rounded-md border px-3 py-4">
-        <div className="row items-start justify-between gap-4">
-          <div className="col gap-2">
-            <ServiceStatusBadge status={service.status} />
-
-            <div className="row items-center gap-2">
-              {shortId(service.id)} <CopyIconButton text={service.id} className="size-4" />
-            </div>
-          </div>
-
-          <div className="row items-center gap-2 font-medium">
-            <TranslateEnum enum="serviceType" value="web" />
-            <ServiceTypeIcon type="web" />
-          </div>
-        </div>
-
-        <DeploymentMetadata deploymentId={service.latestDeploymentId} />
-      </div>
-
+      <SandboxMetadata service={service} />
       <SandboxLogs service={service} />
     </>
   );
@@ -85,20 +67,60 @@ function SandboxLogs({ service }: { service: Service }) {
   );
 }
 
-function DeploymentMetadata({ deploymentId }: { deploymentId: string }) {
-  const deployment = useComputeDeployment(deploymentId);
-
+function SandboxMetadata({ service }: { service: Service }) {
+  const deployment = useComputeDeployment(service.latestDeploymentId);
   if (!deployment) {
     return null;
   }
 
+  const { source, instanceType, regions } = deployment.definition;
+
   return (
-    <div className="row flex-wrap gap-3 rounded-xl bg-muted/50 p-3">
-      <InstanceMetadata instance={deployment.definition.instanceType} className="w-44" />
-      <MetricMetadata deployment={deployment} metric="cpu" />
-      <MetricMetadata deployment={deployment} metric="memory" />
-      <RegionsMetadata regions={deployment.definition.regions} className="w-44" />
-      <DateMetadata date={deployment.date} />
+    <div className="divide-y rounded-md border">
+      <div className="row flex-wrap gap-3 p-3">
+        <Metadata label={<T id="metadata.id" />} value={<ServiceId service={service} />} className="w-44" />
+
+        <Metadata
+          label={<T id="metadata.status" />}
+          value={<ServiceStatusBadge status={service.status} />}
+          className="w-44"
+        />
+
+        <InstanceMetadata instance={instanceType} className="w-44" />
+
+        <RegionsMetadata regions={regions} className="w-44" />
+      </div>
+
+      <div className="row flex-wrap gap-3 p-3">
+        <MetricMetadata deployment={deployment} metric="cpu" />
+
+        <MetricMetadata deployment={deployment} metric="memory" />
+
+        <Metadata
+          label={<T id="metadata.dockerImage" />}
+          value={<DockerImage source={source} />}
+          className="w-44"
+        />
+
+        <DateMetadata date={deployment.date} />
+      </div>
+    </div>
+  );
+}
+
+function ServiceId({ service }: { service: Service }) {
+  return (
+    <div className="row items-center gap-2">
+      {shortId(service.id)} <CopyIconButton text={service.id} className="size-4" />
+    </div>
+  );
+}
+
+function DockerImage({ source }: { source: DeploymentDefinition['source'] }) {
+  return (
+    <div className="row items-center gap-2">
+      <IconDocker className="size-4" />
+      <div className="truncate">{source.type === 'docker' && source.image}</div>
     </div>
   );
 }
@@ -106,18 +128,18 @@ function DeploymentMetadata({ deploymentId }: { deploymentId: string }) {
 function MetricMetadata({ deployment, metric }: { deployment: ComputeDeployment; metric: 'cpu' | 'memory' }) {
   const value = useDeploymentMetric(deployment, metric);
 
-  if (value === undefined) {
-    return null;
-  }
-
   return (
     <Metadata
       label={<T id={`metadata.${metric}`} />}
       value={
-        <div className="row items-center gap-2">
-          <ProgressBar progress={value} className="max-w-16 flex-1 bg-neutral" />
-          <FormattedNumber value={value} style="percent" />
-        </div>
+        value !== undefined ? (
+          <div className="row items-center gap-2">
+            <ProgressBar progress={value} className="max-w-16 flex-1" />
+            <FormattedNumber value={value} style="percent" />
+          </div>
+        ) : (
+          <Translate id="common.noValue" />
+        )
       }
       className="w-44"
     />
