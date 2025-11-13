@@ -2692,7 +2692,32 @@
         "search": "Search",
         "status": "Status",
         "cpu": "CPU",
-        "memory": "Memory"
+        "memory": "Memory",
+        "noSandboxes": {
+          "intro": {
+            "sentence": "Programmer data store YAML big O model linked list node_modules."
+          },
+          "step1": {
+            "title": "Heap sort backend contribute DAG IoT bootcamp service worker team-player emoji.",
+            "line1": "Linux object library minification stack views gzip state:",
+            "line2": "Composition over inheritance git build tool parent Byzantine fault tolerance mechanical keyboard concurrency.",
+            "line3": "Edge imagemagick ELF pull request CSS grid scrum master. Configuration production incognito MacBook Chrome stack trace."
+          },
+          "step2": {
+            "title": "Bootcamp spaghetti code",
+            "line1": "Dynamic programming contribution ship it distributed systems architecture views vaporware class branch:",
+            "line2": "Dynamic types composition MIT license:",
+            "line3": "LGTM views MIT license package manager microservices FP emoji duck typing."
+          },
+          "end": {
+            "sentence": "Congratulations! Module kernel Slack cloud rm -rf * one-size-fits-all approach."
+          }
+        },
+        "noResults": {
+          "title": "No results",
+          "description": "No sandboxes match the current filters",
+          "removeFilters": "Remove filters"
+        }
       },
       "details": {
         "navigation": {

@@ -21,8 +21,8 @@ importers:
         specifier: ^0.0.18
         version: 0.0.18
       '@koyeb/design-system':
-        specifier: ^0.12.0
-        version: 0.12.0(@floating-ui/react@0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-ranger@0.0.4(react@19.2.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.2.0))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(immer@10.2.0)(lucide-react@0.546.0(react@19.2.0))(react@19.2.0)(shiki@3.14.0)
+        specifier: ^0.12.1
+        version: 0.12.1(@floating-ui/react@0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-ranger@0.0.4(react@19.2.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.2.0))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(immer@10.2.0)(lucide-react@0.546.0(react@19.2.0))(react@19.2.0)(shiki@3.14.0)
       '@mapbox/search-js-core':
         specifier: 1.5.0
         version: 1.5.0
@@ -1102,8 +1102,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@koyeb/design-system@0.12.0':
-    resolution: {integrity: sha512-Fha98C8fUoS1lX3n2+49kladtTCnZp3h1xSmoxloHOs2126IzFqg91fZQQz0QjEbTAC3Ei0pBzCCXZHK5rAS6Q==}
+  '@koyeb/design-system@0.12.1':
+    resolution: {integrity: sha512-18RffRMUQlzEhkxF6O/fcUpLEYvuoZpEHulb+V3IQe1ltaQ5QPW4p+woh/eZ6vwZurR4mKe/WfXnFux2aM4DyQ==}
     peerDependencies:
       '@floating-ui/react': ^0.27.0
       '@tanstack/react-ranger': ^0.0.4
@@ -6744,7 +6744,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@koyeb/design-system@0.12.0(@floating-ui/react@0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-ranger@0.0.4(react@19.2.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.2.0))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(immer@10.2.0)(lucide-react@0.546.0(react@19.2.0))(react@19.2.0)(shiki@3.14.0)':
+  '@koyeb/design-system@0.12.1(@floating-ui/react@0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-ranger@0.0.4(react@19.2.0))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.10(react@19.2.0))(framer-motion@12.23.24(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(immer@10.2.0)(lucide-react@0.546.0(react@19.2.0))(react@19.2.0)(shiki@3.14.0)':
     dependencies:
       '@floating-ui/react': 0.27.16(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@tanstack/react-ranger': 0.0.4(react@19.2.0)
