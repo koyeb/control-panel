@@ -7,6 +7,7 @@ import { FormattedNumber } from 'react-intl';
 
 import { apiQuery, mapService, useComputeDeployment } from 'src/api';
 import { ControlledInput } from 'src/components/forms';
+import { Pagination, usePagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
 import { ServiceStatusesSelector } from 'src/components/selectors/service-status-selector';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
@@ -48,22 +49,29 @@ function SandboxesListPage() {
     statuses.push('DELETING');
   }
 
+  const pagination = usePagination(100);
+
   const query = useQuery({
     ...apiQuery('get /v1/services', {
       query: {
+        ...pagination.query,
         types: ['SANDBOX'],
-        limit: '100',
         name: searchDebounced || undefined,
         statuses,
       },
     }),
     placeholderData: keepPreviousData,
-    select: ({ services }) => services!.map(mapService),
+    select: ({ services, has_next }) => ({
+      services: services!.map(mapService),
+      hasNext: Boolean(has_next),
+    }),
   });
+
+  pagination.useSync(query.data);
 
   return (
     <QueryGuard query={query}>
-      {(services) => (
+      {({ services }) => (
         <div className="col gap-8">
           <div className="row items-center gap-4">
             <h1 className="typo-heading">
@@ -80,6 +88,8 @@ function SandboxesListPage() {
               <SandboxItem key={service.id} service={service} />
             ))}
           </div>
+
+          {pagination.hasPages && <Pagination pagination={pagination} />}
         </div>
       )}
     </QueryGuard>

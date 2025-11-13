@@ -9,6 +9,8 @@ import { Select } from './forms/select';
 
 const T = createTranslate('components.pagination');
 
+type PageSize = 10 | 25 | 50 | 100;
+
 export function Pagination({ pagination }: { pagination: ReturnType<typeof usePagination> }) {
   return (
     <div className="row items-center justify-between gap-4">
@@ -34,7 +36,7 @@ export function Pagination({ pagination }: { pagination: ReturnType<typeof usePa
           id="pageSize"
           values={{
             select: (
-              <Select
+              <Select<PageSize>
                 items={[10, 25, 50, 100]}
                 getKey={identity}
                 renderItem={identity}
@@ -52,7 +54,7 @@ export function Pagination({ pagination }: { pagination: ReturnType<typeof usePa
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export function usePagination(initialPageSize = 10) {
+export function usePagination(initialPageSize: PageSize = 10) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [hasNext, setHasNext] = useState(false);
