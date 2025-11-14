@@ -21,7 +21,7 @@ export function DatabaseNotHealth({ service }: { service: Service }) {
     }),
     async onSuccess() {
       await invalidate('get /v1/services/{id}', { path: { id: service.id } });
-      await navigate({ to: '/' });
+      await navigate({ to: '/services' });
       notify.info(t('deleteSuccessNotification'));
     },
   });

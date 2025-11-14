@@ -79,7 +79,7 @@ function DeleteDatabaseService({ service }: { service: Service }) {
       await Promise.all([invalidate('get /v1/apps'), invalidate('get /v1/services')]);
 
       notify.info(t('delete.confirmation.success', { serviceName: service.name }));
-      await navigate({ to: '/' });
+      await navigate({ to: '/services' });
     },
   });
 

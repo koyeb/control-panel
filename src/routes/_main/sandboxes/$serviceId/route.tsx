@@ -100,7 +100,7 @@ function Actions({ serviceId }: { serviceId: string }) {
     onSuccess: async () => {
       notify.info(t('actions.delete.success'));
       closeDialog();
-      await navigate({ to: '/' });
+      await navigate({ to: '/sandboxes' });
     },
   });
 

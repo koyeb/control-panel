@@ -44,7 +44,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       closeDialog();
       notify.info(t('deleting'));
 
-      await navigate({ to: '/' });
+      await navigate({ to: '/services' });
     },
   });
 
