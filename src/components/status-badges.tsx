@@ -75,7 +75,7 @@ const colorMap: Record<BadgeColor, string> = {
 };
 
 export const [ServiceStatusIcon, ServiceStatusBadge] = createResourceStatus<ServiceStatus>({
-  STARTING: [Spinner, 'gray'],
+  STARTING: [Spinner, 'blue'],
   HEALTHY: [IconCircleCheck, 'green'],
   DEGRADED: [IconCircleAlert, 'orange'],
   UNHEALTHY: [IconCircleAlert, 'red'],
