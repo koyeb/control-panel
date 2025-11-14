@@ -17,7 +17,6 @@ import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding
 import { getToken, setToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
-import { SecondarySettings } from 'src/layouts/secondary/settings';
 import { AccountLocked } from 'src/modules/account/account-locked';
 import { TrialEnded } from 'src/modules/trial/trial-ended/trial-ended';
 import { useTrial } from 'src/modules/trial/use-trial';
@@ -138,8 +137,6 @@ async function preloadDatacentersLatencies(queryClient: QueryClient) {
 }
 
 function Component() {
-  const { settings } = Route.useSearch();
-
   const userQuery = useUserQuery();
   const organizationQuery = useOrganizationQuery();
 
@@ -151,10 +148,6 @@ function Component() {
     ApiError.isAccountLockedError(organizationQuery.error),
     organizationQuery.data?.statusMessage === 'VERIFICATION_FAILED',
   ].some(Boolean);
-
-  if (settings) {
-    return <SecondarySettings />;
-  }
 
   if (locked) {
     return <AccountLocked />;
