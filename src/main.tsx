@@ -75,6 +75,10 @@ const queryCache = new QueryCache({
       void handleAuthenticationError();
     }
 
+    if (ApiError.is(error, 404)) {
+      queryClient.setQueriesData({ queryKey: query.queryKey, exact: true }, undefined);
+    }
+
     if (ApiError.is(error, 429)) {
       notify.error(error.message);
     }
@@ -181,7 +185,7 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       persister: !disablePersist ? persister.persisterFn : undefined,
-      refetchInterval: 5_000,
+      refetchInterval: (query) => (query.state.error === null ? 5_000 : false),
       throwOnError,
       retry,
     },

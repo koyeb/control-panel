@@ -10,6 +10,7 @@
     "send": "Send",
     "override": "Override",
     "noValue": "--",
+    "notFound": "Not found",
     "notApplicable": "N/A",
     "utc": "UTC",
     "new": "New",
@@ -2720,6 +2721,7 @@
         }
       },
       "details": {
+        "notFound": "Sandbox not found",
         "navigation": {
           "overview": "Overview",
           "metrics": "Metrics",

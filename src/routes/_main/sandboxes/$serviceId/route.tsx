@@ -1,8 +1,8 @@
-import { Button, TabButtons } from '@koyeb/design-system';
+import { Alert, Button, TabButtons } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { Outlet, createFileRoute, useNavigate } from '@tanstack/react-router';
 
-import { apiMutation, useService, useServiceQuery } from 'src/api';
+import { ApiError, apiMutation, useService, useServiceQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { TabButtonLink } from 'src/components/link';
@@ -11,7 +11,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
 import { IconPause, IconPlay, IconTrash } from 'src/icons';
-import { createTranslate } from 'src/intl/translate';
+import { Translate, createTranslate } from 'src/intl/translate';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 
 const T = createTranslate('pages.sandbox.details.navigation');
@@ -25,11 +25,15 @@ export const Route = createFileRoute('/_main/sandboxes/$serviceId')({
 });
 
 function Crumb({ serviceId }: { serviceId: string }) {
-  const service = useService(serviceId);
+  const query = useServiceQuery(serviceId);
+
+  if (ApiError.is(query.error, 404)) {
+    return <Translate id="common.notFound" />;
+  }
 
   return (
     <CrumbLink to={Route.fullPath} params={{ serviceId }}>
-      {service?.name ?? <TextSkeleton width={8} />}
+      {query.data?.name ?? <TextSkeleton width={8} />}
     </CrumbLink>
   );
 }
@@ -37,6 +41,10 @@ function Crumb({ serviceId }: { serviceId: string }) {
 function SandboxLayout() {
   const { serviceId } = Route.useParams();
   const serviceQuery = useServiceQuery(serviceId);
+
+  if (ApiError.is(serviceQuery.error, 404)) {
+    return <SandboxNotFound />;
+  }
 
   return (
     <QueryGuard query={serviceQuery}>
@@ -71,6 +79,10 @@ function SandboxLayout() {
       )}
     </QueryGuard>
   );
+}
+
+function SandboxNotFound() {
+  return <Alert variant="warning" description={<Translate id="pages.sandbox.details.notFound" />} />;
 }
 
 function Actions({ serviceId }: { serviceId: string }) {
