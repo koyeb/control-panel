@@ -231,7 +231,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
           )}
         />
 
-        <FeatureFlag feature="logs-filters">
+        <FeatureFlag feature="logs-search">
           <ControlledInput
             control={filters.control}
             name="search"
