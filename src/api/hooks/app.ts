@@ -40,9 +40,22 @@ type AppsFullFilters = Partial<{
 
 export function useAppsFull(filters: AppsFullFilters = {}) {
   return useQuery({
-    placeholderData: keepPreviousData,
     queryKey: ['listAppsFull', { filters }],
     queryFn: ({ signal }) => listAppsFull(filters, signal),
+    placeholderData: keepPreviousData,
+    refetchInterval(query) {
+      const servicesCount = query.state.data?.services.count ?? 0;
+
+      if (servicesCount > 5) {
+        return 30_000;
+      }
+
+      if (servicesCount > 50) {
+        return 60_000;
+      }
+
+      return 5_000;
+    },
     select(results): AppList {
       const apps = results.apps.apps!.map(mapApp);
 
