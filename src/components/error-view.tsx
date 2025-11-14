@@ -8,11 +8,16 @@ import { createTranslate } from 'src/intl/translate';
 import { AccountLocked } from 'src/modules/account/account-locked';
 
 import { ExternalLink, Link } from './link';
+import { LogoLoading } from './logo-loading';
 
 const T = createTranslate('pages');
 
 export function ErrorComponent({ error, reset, info }: ErrorComponentProps) {
   const { code, status } = ApiError.is(error) ? error.body : {};
+
+  if (ApiError.is(error, 401)) {
+    return <LogoLoading />;
+  }
 
   if (ApiError.isAccountLockedError(error)) {
     return <AccountLocked />;
