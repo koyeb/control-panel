@@ -143,7 +143,9 @@ function SandboxItem({ service }: { service: Service }) {
           {service.name}
         </Link>
 
-        <DeploymentStatusBadge status={deployment.status} />
+        <div className="lg:w-24">
+          <DeploymentStatusBadge status={deployment.status} />
+        </div>
       </div>
 
       <div className="truncate text-xs">

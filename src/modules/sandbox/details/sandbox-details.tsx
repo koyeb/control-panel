@@ -119,7 +119,9 @@ function ServiceId({ service }: { service: Service }) {
 function DockerImage({ source }: { source: DeploymentDefinition['source'] }) {
   return (
     <div className="row items-center gap-2">
-      <IconDocker className="size-4" />
+      <div>
+        <IconDocker className="size-4" />
+      </div>
       <div className="truncate">{source.type === 'docker' && source.image}</div>
     </div>
   );
