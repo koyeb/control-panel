@@ -1,6 +1,7 @@
 import { Code as BaseCode, CodeLang } from '@koyeb/design-system';
 
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { Link } from 'src/components/link';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconPlay } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -9,17 +10,19 @@ const T = createTranslate('pages.sandbox.list.noSandboxes');
 
 // cspell:ignore randint
 const pythonCode = `
-import random
+# main.py
+from koyeb import Sandbox
 
-arr=[1,2,3,4,5,6]
-n=len(arr)-1
+sandbox = Sandbox.create(
+  image="ubuntu",
+  name="hello-world",
+  wait_ready=True,
+)
 
-for i in range(n):
-    random_index = random.randint(0, n)
-    temp = arr.pop(random_index)
-    arr.append(temp)
+result = sandbox.exec("echo 'Hello World'")
+print(result.stdout.strip())
 
-print(arr)
+sandbox.delete()
 `.trim();
 
 export function NoSandboxes() {
@@ -35,18 +38,19 @@ export function NoSandboxes() {
         </p>
 
         <div className="col gap-2">
-          <Code lang="shell" value="$ pip install lorem" />
+          <Code lang="shell" value="pip install koyeb-sdk" />
 
           <p className="text-dim">
-            <T id="step1.line2" />
-          </p>
-        </div>
-
-        <div className="col gap-2">
-          <Code lang="shell" value="$ python -m lorem ipsum" />
-
-          <p className="text-dim">
-            <T id="step1.line3" />
+            <T
+              id="step1.line2"
+              values={{
+                link: (children) => (
+                  <a href="https://koyeb.com/docs/python-sdk/quick-start" className="text-default underline">
+                    {children}
+                  </a>
+                ),
+              }}
+            />
           </p>
         </div>
       </Section>
@@ -62,10 +66,19 @@ export function NoSandboxes() {
 
         <div className="col gap-2">
           <p className="text-dim">
-            <T id="step2.line2" />
+            <T
+              id="step2.line2"
+              values={{
+                link: (children) => (
+                  <Link to="/settings/api" className="text-default underline">
+                    {children}
+                  </Link>
+                ),
+              }}
+            />
           </p>
 
-          <Code lang="shell" value="$ python -m lorem ipsum" />
+          <Code lang="shell" value="export KOYEB_API_TOKEN=<your-api-access-token>" />
         </div>
 
         <div className="col gap-2">
@@ -73,7 +86,7 @@ export function NoSandboxes() {
             <T id="step2.line3" />
           </p>
 
-          <Code lang="shell" value="$ python -m lorem ipsum" />
+          <Code lang="shell" value="python main.py" />
         </div>
       </Section>
 

@@ -50,14 +50,6 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
           }
         />
 
-        <NavigationItem
-          collapsed={collapsed}
-          disabled={disableComputeLinks}
-          Icon={IconGlobe}
-          label={<T id="domains" />}
-          to="/domains"
-        />
-
         <FeatureFlag feature="sandbox">
           <NavigationItem
             collapsed={collapsed}
@@ -65,8 +57,17 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
             Icon={IconBox}
             label={<T id="sandboxes" />}
             to="/sandboxes"
+            newBadge
           />
         </FeatureFlag>
+
+        <NavigationItem
+          collapsed={collapsed}
+          disabled={disableComputeLinks}
+          Icon={IconGlobe}
+          label={<T id="domains" />}
+          to="/domains"
+        />
 
         <NavigationItem
           collapsed={collapsed}

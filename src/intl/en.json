@@ -2696,22 +2696,21 @@
         "memory": "Memory",
         "noSandboxes": {
           "intro": {
-            "sentence": "Programmer data store YAML big O model linked list node_modules."
+            "sentence": "Sandboxes allow you to create fully isolated, secure, lightweight virtual machines designed to safely execute AI-generated or untrusted code"
           },
           "step1": {
-            "title": "Heap sort backend contribute DAG IoT bootcamp service worker team-player emoji.",
-            "line1": "Linux object library minification stack views gzip state:",
-            "line2": "Composition over inheritance git build tool parent Byzantine fault tolerance mechanical keyboard concurrency.",
-            "line3": "Edge imagemagick ELF pull request CSS grid scrum master. Configuration production incognito MacBook Chrome stack trace."
+            "title": "Install the Koyeb Python SDK",
+            "line1": "Koyeb offers a Python SDK to create and control Sandboxes. Run the following command to install the SDK on your machine:",
+            "line2": "Check out the <link>Sandboxes documentation</link> for more information on how to get started."
           },
           "step2": {
-            "title": "Bootcamp spaghetti code",
-            "line1": "Dynamic programming contribution ship it distributed systems architecture views vaporware class branch:",
-            "line2": "Dynamic types composition MIT license:",
-            "line3": "LGTM views MIT license package manager microservices FP emoji duck typing."
+            "title": "Create a sandbox",
+            "line1": "Write a minimal example that creates a sandbox and executes a command:",
+            "line2": "Generate an <link>API access token</link> to authenticate requests to the Koyeb API when using the Koyeb Python SDK, and export it as an environment variable:",
+            "line3": "Run the following code example using this command:"
           },
           "end": {
-            "sentence": "Congratulations! Module kernel Slack cloud rm -rf * one-size-fits-all approach."
+            "sentence": "Congratulations! You've created your first sandbox."
           }
         },
         "noResults": {
