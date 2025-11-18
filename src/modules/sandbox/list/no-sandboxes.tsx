@@ -1,6 +1,7 @@
 import { Code as BaseCode, CodeLang } from '@koyeb/design-system';
 
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { DocumentationLink } from 'src/components/documentation-link';
 import { Link } from 'src/components/link';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 import { IconPlay } from 'src/icons';
@@ -33,24 +34,17 @@ export function NoSandboxes() {
       </p>
 
       <Section number={1} title={<T id="step1.title" />}>
-        <p className="text-dim">
-          <T id="step1.line1" />
-        </p>
+        <div className="col gap-2">
+          <p className="text-dim">
+            <T id="step1.line1" />
+          </p>
+
+          <Code lang="shell" value="pip install koyeb-sdk" />
+        </div>
 
         <div className="col gap-2">
-          <Code lang="shell" value="pip install koyeb-sdk" />
-
           <p className="text-dim">
-            <T
-              id="step1.line2"
-              values={{
-                link: (children) => (
-                  <a href="https://koyeb.com/docs/python-sdk/quick-start" className="text-default underline">
-                    {children}
-                  </a>
-                ),
-              }}
-            />
+            <T id="step1.line2" values={{ link: docs }} />
           </p>
         </div>
       </Section>
@@ -99,6 +93,12 @@ export function NoSandboxes() {
     </div>
   );
 }
+
+const docs = (children: React.ReactNode) => (
+  <DocumentationLink path="/docs/python-sdk/quick-start" className="text-default underline">
+    {children}
+  </DocumentationLink>
+);
 
 type SectionProps = {
   number: number;
