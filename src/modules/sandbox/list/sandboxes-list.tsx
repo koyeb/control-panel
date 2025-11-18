@@ -5,6 +5,7 @@ import { Controller, UseFormReturn } from 'react-hook-form';
 import { FormattedNumber } from 'react-intl';
 
 import { useComputeDeployment, useOrganization } from 'src/api';
+import { DocumentationLink } from 'src/components/documentation-link';
 import { ControlledInput } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { Pagination } from 'src/components/pagination';
@@ -16,7 +17,6 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, Service, ServiceStatus } from 'src/model';
 import { useDeploymentMetric } from 'src/modules/deployment/deployment-metrics/deployment-metrics';
 import { InstanceMetadataValue, RegionsMetadataValue } from 'src/modules/deployment/metadata';
-import { createArray } from 'src/utils/arrays';
 
 import { NoSandboxes } from './no-sandboxes';
 
@@ -89,23 +89,20 @@ function UpgradeRequired() {
   const onClose = () => void navigate({ to: '/' });
 
   return (
-    <Dialog open onClose={onClose} className="col gap-4">
+    <Dialog open onClose={onClose} className="col gap-4 max-w-xl">
       <DialogHeader onClose={onClose} title={<T id="disabledInHobbyPlan.title" />} />
 
-      <p>
+      <p className="font-medium">
         <T id="disabledInHobbyPlan.line1" />
       </p>
 
-      <ul className="list-inside list-disc space-y-1">
-        {createArray(5, (i) => (
-          <li>
-            <T id={`disabledInHobbyPlan.bullets.${(i + 1) as 1 | 2 | 3 | 4 | 5}`} />
-          </li>
-        ))}
-      </ul>
-
       <p>
-        <T id="disabledInHobbyPlan.line1" />
+        <T
+          id="disabledInHobbyPlan.line2"
+          values={{
+            link: (children) => <DocumentationLink path="/docs/sandboxes">{children}</DocumentationLink>,
+          }}
+        />
       </p>
 
       <DialogFooter>
