@@ -2,11 +2,16 @@
   min-height: unset;
 }
 
-.woswidgets-widget,
-.woswidgets-card-list {
+[data-woswidgets-widget-id='user-profile'],
+[data-woswidgets-widget-id='user-security'] {
   box-shadow:
     0 1px 3px 0 var(--tw-shadow-color, rgb(0 0 0 / 0.1)),
     0 1px 2px -1px var(--tw-shadow-color, rgb(0 0 0 / 0.1));
+}
+
+[data-woswidgets-widget-id='users-management'] .rt-TableRoot {
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
 }
 
 .rt-DialogOverlay {

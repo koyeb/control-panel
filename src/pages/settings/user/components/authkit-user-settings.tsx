@@ -1,38 +1,23 @@
-import { useQueryClient } from '@tanstack/react-query';
-import { UserProfile, UserSecurity, WorkOsWidgets } from '@workos-inc/widgets';
+import { UserProfile, UserSecurity } from '@workos-inc/widgets';
+import { lazy } from 'react';
 
 import { useAuthkitToken } from 'src/application/token';
 
-import '@radix-ui/themes/styles.css';
-import '@workos-inc/widgets/styles.css';
-
-import { useThemeMode } from 'src/hooks/theme';
-
-import './authkit.css';
+const WorkOSWidgetsProvider = lazy(() => import('src/components/workos-widgets-provider'));
 
 export function AuthKitUserSettings() {
   const token = useAuthkitToken();
-  const queryClient = useQueryClient();
-  const theme = useThemeMode();
 
   if (!token) {
     return null;
   }
 
   return (
-    <WorkOsWidgets
-      queryClient={queryClient}
-      theme={{
-        appearance: theme === 'system' ? 'inherit' : theme,
-        fontFamily: 'var(--font-sans)',
-        accentColor: 'green',
-        grayColor: 'slate',
-      }}
-    >
+    <WorkOSWidgetsProvider>
       <div className="col gap-8">
         <UserProfile authToken={token} />
         <UserSecurity authToken={token} />
       </div>
-    </WorkOsWidgets>
+    </WorkOSWidgetsProvider>
   );
 }
