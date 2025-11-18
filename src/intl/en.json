@@ -2717,6 +2717,19 @@
           "title": "No results",
           "description": "No sandboxes match the current filters",
           "removeFilters": "Remove filters"
+        },
+        "disabledInHobbyPlan": {
+          "title": "Upgrade to access sandboxes",
+          "upgradeButton": "Upgrade to unlock",
+          "line1": "Run, test, and deploy AI-generated code with Koyeb Sandboxes",
+          "line2": "Sandboxes are available for users on the Starter, Pro, or Scale plans",
+          "bullets": {
+            "1": "Predictable billing with a single unified price for usage, including GPU, CPU, and RAM",
+            "2": "Sub-200ms wakeup times for Instances using Light Sleep",
+            "3": "Strong isolation (per-service network)",
+            "4": "CI/CD and secret management",
+            "5": "GPUs also available in addition to CPU, allowing for more flexibility in solutions"
+          }
         }
       },
       "details": {

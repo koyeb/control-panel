@@ -51,16 +51,14 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
         />
 
         <FeatureFlag feature="sandbox">
-          {organization?.plan !== 'hobby' && (
-            <NavigationItem
-              collapsed={collapsed}
-              disabled={disableComputeLinks}
-              Icon={IconBox}
-              label={<T id="sandboxes" />}
-              to="/sandboxes"
-              newBadge
-            />
-          )}
+          <NavigationItem
+            collapsed={collapsed}
+            disabled={disableComputeLinks}
+            Icon={IconBox}
+            label={<T id="sandboxes" />}
+            to="/sandboxes"
+            newBadge
+          />
         </FeatureFlag>
 
         <NavigationItem

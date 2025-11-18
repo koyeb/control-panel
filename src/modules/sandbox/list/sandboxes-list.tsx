@@ -1,11 +1,12 @@
-import { InputStart, ProgressBar } from '@koyeb/design-system';
-import { Link } from '@tanstack/react-router';
+import { Dialog, DialogFooter, DialogHeader, InputStart, ProgressBar } from '@koyeb/design-system';
+import { Link, useNavigate } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import { FormattedNumber } from 'react-intl';
 
-import { useComputeDeployment } from 'src/api';
+import { useComputeDeployment, useOrganization } from 'src/api';
 import { ControlledInput } from 'src/components/forms';
+import { LinkButton } from 'src/components/link';
 import { Pagination } from 'src/components/pagination';
 import { ServiceStatusesSelector } from 'src/components/selectors/service-status-selector';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
@@ -15,6 +16,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, Service, ServiceStatus } from 'src/model';
 import { useDeploymentMetric } from 'src/modules/deployment/deployment-metrics/deployment-metrics';
 import { InstanceMetadataValue, RegionsMetadataValue } from 'src/modules/deployment/metadata';
+import { createArray } from 'src/utils/arrays';
 
 import { NoSandboxes } from './no-sandboxes';
 
@@ -68,11 +70,54 @@ type EmptyStateProps = {
 };
 
 function EmptyState({ hasSandboxes, filtersForm }: EmptyStateProps) {
+  const organization = useOrganization();
+
   if (hasSandboxes) {
     return <NoResults resetFilters={() => filtersForm.reset()} />;
   }
 
-  return <NoSandboxes />;
+  return (
+    <>
+      {organization?.plan === 'hobby' && <UpgradeRequired />}
+      <NoSandboxes />
+    </>
+  );
+}
+
+function UpgradeRequired() {
+  const navigate = useNavigate();
+  const onClose = () => void navigate({ to: '/' });
+
+  return (
+    <Dialog open onClose={onClose} className="col gap-4">
+      <DialogHeader onClose={onClose} title={<T id="disabledInHobbyPlan.title" />} />
+
+      <p>
+        <T id="disabledInHobbyPlan.line1" />
+      </p>
+
+      <ul className="list-inside list-disc space-y-1">
+        {createArray(5, (i) => (
+          <li>
+            <T id={`disabledInHobbyPlan.bullets.${(i + 1) as 1 | 2 | 3 | 4 | 5}`} />
+          </li>
+        ))}
+      </ul>
+
+      <p>
+        <T id="disabledInHobbyPlan.line1" />
+      </p>
+
+      <DialogFooter>
+        <LinkButton variant="ghost" color="gray" to="/">
+          <Translate id="common.close" />
+        </LinkButton>
+        <LinkButton to="/settings/plans">
+          <T id="disabledInHobbyPlan.upgradeButton" />
+        </LinkButton>
+      </DialogFooter>
+    </Dialog>
+  );
 }
 
 function NoResults({ resetFilters }: { resetFilters: () => void }) {
