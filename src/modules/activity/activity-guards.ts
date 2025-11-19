@@ -20,7 +20,12 @@ export const isServiceObject = createValidationGuard(
     metadata: z.object({
       appId: z.string(),
       appName: z.string(),
-      serviceType: z.union([z.literal('web'), z.literal('worker'), z.literal('database')]),
+      serviceType: z.union([
+        z.literal('web'),
+        z.literal('worker'),
+        z.literal('sandbox'),
+        z.literal('database'),
+      ]),
     }),
   }),
 );
@@ -33,7 +38,11 @@ export const isDeploymentObject = createValidationGuard(
       appName: z.string(),
       serviceId: z.string(),
       serviceName: z.string(),
-      serviceType: z.literal('database').optional(),
+      definition: z
+        .object({
+          type: z.union([z.literal('WEB'), z.literal('WORKER'), z.literal('SANDBOX'), z.literal('DATABASE')]),
+        })
+        .optional(),
     }),
   }),
 );
@@ -52,6 +61,16 @@ export const isAutoscalingActivity = createValidationGuard(
         appName: z.string(),
         serviceId: z.string(),
         serviceName: z.string(),
+        definition: z
+          .object({
+            type: z.union([
+              z.literal('WEB'),
+              z.literal('WORKER'),
+              z.literal('SANDBOX'),
+              z.literal('DATABASE'),
+            ]),
+          })
+          .optional(),
       }),
     }),
   }),

@@ -7,6 +7,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { IconFolders } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { Activity, ServiceType } from 'src/model';
+import { lowerCase } from 'src/utils/strings';
 
 import {
   isAutoscalingActivity,
@@ -30,7 +31,7 @@ export function ActivityResources({ activity }: { activity: Activity }) {
   if (isAutoscalingActivity(activity)) {
     const { deleted } = activity.object;
     const { region } = activity.metadata;
-    const { appName, serviceId, serviceName } = activity.object.metadata;
+    const { appName, serviceId, serviceName, definition } = activity.object.metadata;
 
     return (
       <div className="row max-w-full flex-wrap gap-x-4 gap-y-2">
@@ -38,6 +39,7 @@ export function ActivityResources({ activity }: { activity: Activity }) {
           appName={appName}
           serviceName={serviceName}
           serviceId={serviceId}
+          serviceType={definition?.type ? lowerCase(definition.type) : undefined}
           deleted={deleted}
         />
 
@@ -63,14 +65,13 @@ export function ActivityResources({ activity }: { activity: Activity }) {
 
   if (isDeploymentObject(object)) {
     const { id: deploymentId, deleted } = object;
-    const { appName } = object.metadata;
-    const { serviceId, serviceName, serviceType } = object.metadata;
+    const { appName, serviceId, serviceName, definition } = object.metadata;
 
     return (
       <ServiceResource
         appName={appName}
         serviceName={serviceName}
-        serviceType={serviceType}
+        serviceType={definition?.type ? lowerCase(definition.type) : undefined}
         serviceId={serviceId}
         deploymentId={deploymentId}
         deleted={deleted}
@@ -128,7 +129,10 @@ function ServiceResource({
     props.component = Link;
     props.className = 'hover:bg-muted/50';
 
-    if (serviceType === 'database') {
+    if (serviceType === 'sandbox') {
+      props.to = '/sandboxes/$serviceId';
+      props.params = { serviceId };
+    } else if (serviceType === 'database') {
       props.to = '/database-services/$databaseServiceId';
       props.params = { databaseServiceId: serviceId };
     } else {
