@@ -2,6 +2,7 @@ import { Badge } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
 import { useCatalogInstance } from 'src/api';
+import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 import { useScalingRules } from '../../helpers/scaling-rules';
@@ -22,6 +23,7 @@ export function ScalingConfiguration() {
   const hasVolumes = watch('volumes').map((volume) => volume.name !== '').length > 0;
   const min = watch('scaling.min');
   const max = watch('scaling.max');
+  const allowLightSleepOnNvidiaGpu = useFeatureFlag('allow-light-sleep-on-nvidia-gpu');
 
   const { onScalingChanged } = useScalingRules();
 
@@ -39,6 +41,7 @@ export function ScalingConfiguration() {
         disabled={isFreeInstance || min > 0}
         isEcoInstance={isEcoInstance}
         hasVolumes={hasVolumes}
+        allowLightSleepOnNvidiaGpu={allowLightSleepOnNvidiaGpu}
       />
 
       <AutoscalingConfiguration disabled={min === max || max === 1} hasVolumes={hasVolumes} />

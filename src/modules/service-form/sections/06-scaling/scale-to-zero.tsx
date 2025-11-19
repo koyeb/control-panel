@@ -17,16 +17,31 @@ type ScaleToZeroConfigurationProps = {
   disabled: boolean;
   isEcoInstance: boolean;
   hasVolumes: boolean;
+  allowLightSleepOnNvidiaGpu?: boolean;
 };
 
 export function ScaleToZeroConfiguration({
   disabled,
   isEcoInstance,
   hasVolumes,
+  allowLightSleepOnNvidiaGpu,
 }: ScaleToZeroConfigurationProps) {
   const { watch } = useFormContext<ServiceForm>();
   const instance = useCatalogInstance(watch('instance'));
   const isGpu = instance?.category === 'gpu';
+  const isNvidiaGpu = isGpu && instance.id.includes('nvidia');
+
+  const lightSleepEnabled = () => {
+    if (disabled) {
+      return false;
+    }
+
+    if (isNvidiaGpu && allowLightSleepOnNvidiaGpu) {
+      return true;
+    }
+
+    return !isGpu;
+  };
 
   const { errors } = useFormState<ServiceForm>();
 
@@ -42,7 +57,7 @@ export function ScaleToZeroConfiguration({
       hasError={hasError}
     >
       <IdlePeriod disabled={disabled} />
-      <LightSleep disabled={disabled || isGpu} isGpu={isGpu} />
+      <LightSleep disabled={!lightSleepEnabled()} isGpu={isGpu} />
     </ScalingConfigSection>
   );
 }
