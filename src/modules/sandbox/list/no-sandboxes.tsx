@@ -95,7 +95,7 @@ export function NoSandboxes() {
 }
 
 const docs = (children: React.ReactNode) => (
-  <DocumentationLink path="/docs/python-sdk/quick-start" className="text-default underline">
+  <DocumentationLink path="/docs/sandboxes" className="text-default underline">
     {children}
   </DocumentationLink>
 );
