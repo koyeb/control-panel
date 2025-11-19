@@ -37,6 +37,7 @@ export function OneClickAppsPage() {
         query === '',
         lowerCase(app.name).includes(query),
         lowerCase(app.description).includes(query),
+        lowerCase(app.category).includes(query),
       ].some(Boolean);
     };
 
