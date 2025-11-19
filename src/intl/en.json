@@ -2727,6 +2727,7 @@
       },
       "details": {
         "notFound": "Sandbox not found",
+        "more": "View more",
         "navigation": {
           "overview": "Overview",
           "metrics": "Metrics",

@@ -9,6 +9,7 @@ import {
   useInstancesQuery,
 } from 'src/api';
 import { CopyIconButton } from 'src/components/copy-icon-button';
+import { openDialog } from 'src/components/dialog';
 import { RuntimeLogs } from 'src/components/logs';
 import { Metadata } from 'src/components/metadata';
 import { QueryError } from 'src/components/query-error';
@@ -16,6 +17,7 @@ import { ServiceStatusBadge } from 'src/components/status-badges';
 import { IconDocker } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, DeploymentDefinition, Service } from 'src/model';
+import { DeploymentDefinitionDialog } from 'src/modules/deployment/deployment-info/deployment-definition-dialog';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
@@ -27,6 +29,7 @@ const T = createTranslate('pages.sandbox.details');
 export function SandboxDetails({ service }: { service: Service }) {
   return (
     <>
+      <DeploymentDefinitionDialog />
       <SandboxMetadata service={service} />
       <SandboxLogs service={service} />
     </>
@@ -103,6 +106,16 @@ function SandboxMetadata({ service }: { service: Service }) {
         />
 
         <DateMetadata date={deployment.date} />
+      </div>
+
+      <div>
+        <button
+          type="button"
+          className="mx-auto my-2 block text-link py-1"
+          onClick={() => openDialog('DeploymentDefinition', deployment)}
+        >
+          <T id="more" />
+        </button>
       </div>
     </div>
   );
