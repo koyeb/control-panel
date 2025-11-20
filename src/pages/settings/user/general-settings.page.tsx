@@ -1,3 +1,4 @@
+import { UserProfile, UserSecurity } from '@workos-inc/widgets';
 import { lazy } from 'react';
 
 import { useAuthKit } from 'src/application/authkit';
@@ -9,11 +10,7 @@ import { UserEmailForm } from './components/user-email-form';
 import { UserNameForm } from './components/user-name-form';
 import { UserPasswordForm } from './components/user-password-form';
 
-const AuthKitUserSettings = lazy(() =>
-  import('./components/authkit-user-settings').then(({ AuthKitUserSettings }) => ({
-    default: AuthKitUserSettings,
-  })),
-);
+const WorkOSWidgetsProvider = lazy(() => import('src/components/workos-widgets-provider'));
 
 export function GeneralSettingsPage() {
   const authKit = useAuthKit();
@@ -34,5 +31,18 @@ export function GeneralSettingsPage() {
       <NotificationSettings />
       <DeleteAccount />
     </>
+  );
+}
+
+export function AuthKitUserSettings() {
+  return (
+    <WorkOSWidgetsProvider>
+      {(token) => (
+        <div className="col gap-8">
+          <UserProfile authToken={token} />
+          <UserSecurity authToken={token} />
+        </div>
+      )}
+    </WorkOSWidgetsProvider>
   );
 }

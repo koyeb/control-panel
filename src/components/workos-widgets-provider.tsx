@@ -1,20 +1,31 @@
-import { useQueryClient } from '@tanstack/react-query';
 import { WorkOsWidgets } from '@workos-inc/widgets';
 
+import { useAuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useThemeMode } from 'src/hooks/theme';
 
 import '@radix-ui/themes/styles.css';
 import '@workos-inc/widgets/styles.css';
+
+import { useAuthkitToken } from 'src/application/token';
+
 import 'src/workos.css';
 
-export default function WorkOSWidgetsProvider({ children }: { children: React.ReactNode }) {
-  const queryClient = useQueryClient();
+type WorkOSWidgetsProviderProps = {
+  children: (token: string) => React.ReactNode;
+};
+
+export default function WorkOSWidgetsProvider({ children }: WorkOSWidgetsProviderProps) {
   const theme = useThemeMode();
+  const token = useAuthkitToken();
+  const authKit = useAuthKit();
+
+  if (!token || !authKit.user) {
+    return null;
+  }
 
   return (
     <WorkOsWidgets
-      queryClient={queryClient}
       apiHostname={getConfig('workOsApiHost')}
       theme={{
         appearance: theme === 'system' ? 'inherit' : theme,
@@ -23,7 +34,7 @@ export default function WorkOSWidgetsProvider({ children }: { children: React.Re
         grayColor: 'slate',
       }}
     >
-      {children}
+      {children(token)}
     </WorkOsWidgets>
   );
 }

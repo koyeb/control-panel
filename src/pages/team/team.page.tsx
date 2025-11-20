@@ -37,9 +37,7 @@ export function AuthKitUsersManagement() {
     <div className="mt-4 col gap-4">
       <div className="font-medium">WorkOS</div>
 
-      <WorkOSWidgetsProvider>
-        <UsersManagement authToken={token} />
-      </WorkOSWidgetsProvider>
+      <WorkOSWidgetsProvider>{(token) => <UsersManagement authToken={token} />}</WorkOSWidgetsProvider>
     </div>
   );
 }
