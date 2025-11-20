@@ -1,17 +1,19 @@
-import { Dialog, DialogFooter, DialogHeader, InputStart, ProgressBar } from '@koyeb/design-system';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { InputStart, ProgressBar } from '@koyeb/design-system';
+import { Link } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import { FormattedNumber } from 'react-intl';
 
 import { useComputeDeployment, useOrganization } from 'src/api';
 import { DocumentationLink } from 'src/components/documentation-link';
+import { FeatureUnavailable } from 'src/components/feature-unavailable';
 import { ControlledInput } from 'src/components/forms';
 import { LinkButton } from 'src/components/link';
 import { Pagination } from 'src/components/pagination';
 import { ServiceStatusesSelector } from 'src/components/selectors/service-status-selector';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
-import { IconDocker, IconSearch } from 'src/icons';
+import { Title } from 'src/components/title';
+import { IconArrowRight, IconDocker, IconSearch } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, Service, ServiceStatus } from 'src/model';
@@ -35,7 +37,12 @@ type SandboxesListProps = {
 };
 
 export function SandboxesList({ hasSandboxes, services, pagination, filtersForm }: SandboxesListProps) {
+  const organization = useOrganization();
   const noResults = services.length === 0 || filtersForm.watch('statuses').length === 0;
+
+  if (organization?.plan === 'hobby') {
+    return <SandboxesUnavailable />;
+  }
 
   return (
     <div className="col gap-8">
@@ -64,57 +71,45 @@ export function SandboxesList({ hasSandboxes, services, pagination, filtersForm 
   );
 }
 
-type EmptyStateProps = {
-  hasSandboxes: boolean;
-  filtersForm: UseFormReturn<SandboxesFiltersForm>;
-};
-
-function EmptyState({ hasSandboxes, filtersForm }: EmptyStateProps) {
-  const organization = useOrganization();
-
-  if (hasSandboxes) {
-    return <NoResults resetFilters={() => filtersForm.reset()} />;
-  }
-
+function SandboxesUnavailable() {
   return (
-    <>
-      {organization?.plan === 'hobby' && <UpgradeRequired />}
-      <NoSandboxes />
-    </>
-  );
-}
+    <FeatureUnavailable>
+      <Title title={<T id="unavailable.title" />} />
 
-function UpgradeRequired() {
-  const navigate = useNavigate();
-  const onClose = () => void navigate({ to: '/' });
-
-  return (
-    <Dialog open onClose={onClose} className="col gap-4 max-w-xl">
-      <DialogHeader onClose={onClose} title={<T id="disabledInHobbyPlan.title" />} />
-
-      <p className="font-medium">
-        <T id="disabledInHobbyPlan.line1" />
+      <p className="mt-2 mb-4 max-w-xl font-medium">
+        <T id="unavailable.line1" />
       </p>
 
-      <p>
+      <p className="max-w-xl">
         <T
-          id="disabledInHobbyPlan.line2"
+          id="unavailable.line2"
           values={{
             link: (children) => <DocumentationLink path="/docs/sandboxes">{children}</DocumentationLink>,
           }}
         />
       </p>
 
-      <DialogFooter>
-        <LinkButton variant="ghost" color="gray" to="/">
-          <Translate id="common.close" />
-        </LinkButton>
+      <div className="mt-6 row items-center gap-4">
         <LinkButton to="/settings/plans">
-          <T id="disabledInHobbyPlan.upgradeButton" />
+          <T id="unavailable.upgrade" />
+          <IconArrowRight className="size-icon" />
         </LinkButton>
-      </DialogFooter>
-    </Dialog>
+      </div>
+    </FeatureUnavailable>
   );
+}
+
+type EmptyStateProps = {
+  hasSandboxes: boolean;
+  filtersForm: UseFormReturn<SandboxesFiltersForm>;
+};
+
+function EmptyState({ hasSandboxes, filtersForm }: EmptyStateProps) {
+  if (hasSandboxes) {
+    return <NoResults resetFilters={() => filtersForm.reset()} />;
+  }
+
+  return <NoSandboxes />;
 }
 
 function NoResults({ resetFilters }: { resetFilters: () => void }) {

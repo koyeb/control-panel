@@ -2714,11 +2714,11 @@
           "description": "No sandboxes match the current filters",
           "removeFilters": "Remove filters"
         },
-        "disabledInHobbyPlan": {
+        "unavailable": {
           "title": "Start using Sandboxes",
-          "upgradeButton": "Upgrade to unlock",
           "line1": "Sandboxes allow you to create fully isolated, secure, lightweight virtual machines designed to safely execute AI-generated or untrusted code",
-          "line2": "To get started, upgrade your plan to any of our pay-as-you-go plans, from Starter to Enterprise plans. Check out the <link>documentation</link> to learn more about Sandboxes."
+          "line2": "To get started, upgrade your plan to any of our pay-as-you-go plans, from Starter to Enterprise plans. Check out the <link>documentation</link> to learn more about Sandboxes.",
+          "upgrade": "Upgrade to unlock"
         }
       },
       "details": {
