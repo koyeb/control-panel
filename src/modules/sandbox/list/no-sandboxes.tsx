@@ -1,10 +1,12 @@
-import { Code as BaseCode, CodeLang } from '@koyeb/design-system';
+import { Code as BaseCode, Button, CodeLang, Spinner } from '@koyeb/design-system';
+import { useMutation } from '@tanstack/react-query';
 
+import { apiMutation, useOrganization } from 'src/api';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { Link } from 'src/components/link';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
-import { IconPlay } from 'src/icons';
+import { IconPlay, IconRefreshCcw } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.sandbox.list.noSandboxes');
@@ -39,7 +41,7 @@ export function NoSandboxes() {
             <T id="step1.line1" />
           </p>
 
-          <Code lang="shell" value="pip install koyeb-sdk" />
+          <Code lang="shell" prefix="$ " value="pip install koyeb-sdk" />
         </div>
 
         <div className="col gap-2">
@@ -72,7 +74,7 @@ export function NoSandboxes() {
             />
           </p>
 
-          <Code lang="shell" value="export KOYEB_API_TOKEN=<your-api-access-token>" />
+          <ApiTokenCode />
         </div>
 
         <div className="col gap-2">
@@ -80,7 +82,7 @@ export function NoSandboxes() {
             <T id="step2.line3" />
           </p>
 
-          <Code lang="shell" value="python main.py" />
+          <Code lang="shell" prefix="$ " value="python main.py" />
         </div>
       </Section>
 
@@ -99,6 +101,38 @@ const docs = (children: React.ReactNode) => (
     {children}
   </DocumentationLink>
 );
+
+function ApiTokenCode() {
+  const organization = useOrganization();
+
+  const mutation = useMutation({
+    ...apiMutation('post /v1/organizations/{id}/access_token', { path: { id: organization?.id as string } }),
+  });
+
+  const Icon = mutation.isPending ? Spinner : IconRefreshCcw;
+
+  const end = () => {
+    if (mutation.isSuccess) {
+      return null;
+    }
+
+    return (
+      <Button variant="outline" color="gray" onClick={() => mutation.mutate()} className="bg-neutral">
+        <Icon className="size-4" />
+        <T id="step2.generateToken" />
+      </Button>
+    );
+  };
+
+  return (
+    <Code
+      lang="shell"
+      prefix="$ "
+      value={`export KOYEB_API_TOKEN=${mutation.data?.token ?? ''}`}
+      end={end()}
+    />
+  );
+}
 
 type SectionProps = {
   number: number;
@@ -122,15 +156,22 @@ function Section({ number, title, children }: SectionProps) {
   );
 }
 
-function Code({ lang, value }: { lang: CodeLang; value: string }) {
+type CodeProps = {
+  lang: CodeLang;
+  value: string;
+  prefix?: string;
+  end?: React.ReactNode;
+};
+
+function Code({ lang, value, prefix = '', end }: CodeProps) {
   const theme = useThemeModeOrPreferred();
 
   return (
     <div className="row items-center rounded-md border bg-muted p-3">
-      <BaseCode lang={lang} value={value} theme={theme} className="flex-1 overflow-auto" />
+      <BaseCode lang={lang} value={prefix + value} theme={theme} className="flex-1 overflow-auto" />
 
       <div className="self-start">
-        <CopyIconButton text={value} className="size-8 rounded-md border bg-neutral p-2" />
+        {end ?? <CopyIconButton text={value} className="size-8 rounded-md border bg-neutral p-2" />}
       </div>
     </div>
   );

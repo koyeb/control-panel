@@ -2703,7 +2703,8 @@
             "title": "Create a sandbox",
             "line1": "Write a minimal example that creates a sandbox and executes a command:",
             "line2": "Generate an <link>API access token</link> to authenticate requests to the Koyeb API when using the Koyeb Python SDK, and export it as an environment variable:",
-            "line3": "Run the following code example using this command:"
+            "line3": "Run the following code example using this command:",
+            "generateToken": "Generate token"
           },
           "end": {
             "sentence": "Congratulations! You've created your first sandbox."
