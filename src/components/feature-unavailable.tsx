@@ -1,44 +1,31 @@
-import { BadgeNew } from 'src/components/badge-new';
-import { Title } from 'src/components/title';
-import { createTranslate } from 'src/intl/translate';
-
-const T = createTranslate('components.featureUnavailable');
-
-type FeatureUnavailableProps = {
-  preview?: 'technical' | 'public';
-  title: React.ReactNode;
-  subTitle: React.ReactNode;
-  description: React.ReactNode;
-  cta: React.ReactNode;
-  documentationLink?: React.ReactNode;
-};
-
-export function FeatureUnavailable({
-  preview,
-  title,
-  subTitle,
-  description,
-  cta,
-  documentationLink,
-}: FeatureUnavailableProps) {
+export function FeatureUnavailable({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      {preview !== undefined && (
-        <BadgeNew className="mb-2">
-          <T id={`${preview}Preview`} />
-        </BadgeNew>
-      )}
+    <div className="relative rounded-md border p-6">
+      {children}
+      <Background className="absolute right-2 bottom-0 h-full max-lg:hidden" />
+    </div>
+  );
+}
 
-      <Title title={title} />
-
-      <p className="mt-2 mb-4 font-medium">{subTitle}</p>
-
-      <p className="max-w-xl">{description}</p>
-
-      <div className="mt-6 row items-center gap-4">
-        {cta}
-        {documentationLink}
-      </div>
-    </>
+function Background({ className }: { className?: string }) {
+  return (
+    <svg
+      width="307"
+      height="234"
+      viewBox="0 0 307 234"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#00bc7d"
+      fillOpacity="0.05"
+      stroke="#00bc7d"
+      strokeOpacity="0.15"
+      className={className}
+    >
+      <rect x="0" y="140" width="75" height="75" />
+      <rect x="130" y="-30" width="100" height="100" strokeWidth="6" />
+      <path
+        d="M304 231L245 290L186 231L245 172L304 231ZM198 231L243 276L245 278L246 276L290 232L292 231L290 229L245 184L198 231ZM279 231L245 265L211 231L245 197L279 231Z"
+        strokeWidth="4"
+      />
+    </svg>
   );
 }

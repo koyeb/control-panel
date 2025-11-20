@@ -179,10 +179,6 @@
     "documentTitle": {
       "title": "{prefix, select, undefined {Koyeb} other {{prefix} - Koyeb}}"
     },
-    "featureUnavailable": {
-      "technicalPreview": "Technical preview",
-      "publicPreview": "Public preview"
-    },
     "instanceSelector": {
       "instanceType": {
         "standard": "CPU Standard ✨",
@@ -3136,6 +3132,7 @@
     "volumes": {
       "documentTitle": "Volumes",
       "unavailable": {
+        "publicPreview": "Public preview",
         "title": "Volumes",
         "subTitle": "Blazing-fast NVMe SSD for your data",
         "description": "Volumes provide additional, persistent, storage capacity for your services and come in addition to your instances provided ephemeral disk. The Starter plan is required to access the volumes public preview.",
