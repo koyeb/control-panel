@@ -1,7 +1,8 @@
+import { useQuery } from '@tanstack/react-query';
 import { UsersManagement } from '@workos-inc/widgets';
 import { lazy } from 'react';
 
-import { useAuthkitToken } from 'src/application/token';
+import { apiQuery, useOrganizationQuotas } from 'src/api';
 import { Title } from 'src/components/title';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
@@ -20,24 +21,38 @@ export function TeamPage() {
       <MembersList />
       <InviteMemberForm />
       <FeatureFlag feature="workos-user-management">
-        <AuthKitUsersManagement />
+        <WorkOSUsersManagement />
       </FeatureFlag>
     </div>
   );
 }
 
-export function AuthKitUsersManagement() {
-  const token = useAuthkitToken();
+export function WorkOSUsersManagement() {
+  const { data: membersCount = 0 } = useQuery({
+    ...apiQuery('get /v1/organization_members', {}),
+    select: ({ count }) => count!,
+  });
 
-  if (!token) {
-    return null;
-  }
+  const quotas = useOrganizationQuotas();
+  const canAddMembers = membersCount < quotas.maxOrganizationMembers;
 
   return (
-    <div className="mt-4 col gap-4">
-      <div className="font-medium">WorkOS</div>
+    <WorkOSWidgetsProvider>
+      {(token) => (
+        <div className="mt-4 col gap-4">
+          <div className="font-medium">WorkOS</div>
 
-      <WorkOSWidgetsProvider>{(token) => <UsersManagement authToken={token} />}</WorkOSWidgetsProvider>
-    </div>
+          {!canAddMembers && <style>{hideInviteUserButton}</style>}
+
+          <UsersManagement authToken={token} />
+        </div>
+      )}
+    </WorkOSWidgetsProvider>
   );
 }
+
+// cspell:ignore woswidgets
+const hideInviteUserButton = `
+.woswidgets-button--primary {
+  display: none;
+}`.trim();
