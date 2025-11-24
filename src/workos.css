@@ -14,8 +14,8 @@
   border-radius: 6px;
 }
 
-.rt-DialogOverlay {
-  z-index: 40;
+.woswidgets-dialog-overlay {
+  --color-overlay: transparent;
 }
 
 .woswidgets-button {
