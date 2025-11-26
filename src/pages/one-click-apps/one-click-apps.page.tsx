@@ -141,7 +141,7 @@ function Filters({ search, setSearch, categories, activeCategory, setActiveCateg
         className="w-full max-w-2xl"
       />
 
-      <div className="row items-center gap-3">
+      <div className="flex-wrap row items-center gap-3">
         {categories.map((category) => (
           <button
             key={category}
