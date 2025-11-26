@@ -854,6 +854,11 @@
           "title": "Create private service",
           "description": "Only exposed to your other services via the internal private network"
         },
+        "sandbox": {
+          "title": "Create a sandbox",
+          "description": "Sandboxes allow you to create fully isolated, secure, lightweight virtual machines designed to safely execute AI-generated or untrusted code",
+          "button": "Create a sandbox"
+        },
         "worker": {
           "title": "Create worker service",
           "description": "For long running processes like background processing and task execution"

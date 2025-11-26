@@ -8,6 +8,7 @@ export const deployParamsSchema = z.looseObject({
     .union([
       z.literal('web'),
       z.literal('worker'),
+      z.literal('sandbox'),
       z.literal('private'),
       z.literal('database'),
       z.literal('model'),

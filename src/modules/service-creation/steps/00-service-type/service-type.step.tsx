@@ -39,7 +39,7 @@ export function ServiceTypeStep() {
           </div>
         )}
 
-        {(serviceType === 'database' || serviceType === 'model') && (
+        {inArray(serviceType, ['sandbox', 'database', 'model'] as const) && (
           <div className="col gap-6">
             <div className="col gap-2">
               <div className="text-base font-medium">
@@ -60,8 +60,11 @@ export function ServiceTypeStep() {
   );
 }
 
-function getCreateServiceUrl(serviceType: 'database' | 'model', appId: string | null) {
+function getCreateServiceUrl(serviceType: 'sandbox' | 'database' | 'model', appId: string | null) {
   return {
+    sandbox: linkOptions({
+      to: '/sandboxes',
+    }),
     database: linkOptions({
       to: '/database-services/new',
       search: { app_id: appId ?? undefined },
