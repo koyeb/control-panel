@@ -70,7 +70,7 @@ function HomePage() {
     return <QueryError error={query.error} />;
   }
 
-  if (query.data.apps.length === 0) {
+  if (Object.values(query.data.services).length === 0) {
     return <ServiceCreation from="/" />;
   }
 
