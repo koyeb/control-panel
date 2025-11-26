@@ -7,6 +7,7 @@
 
 @theme {
   --breakpoint-3xl: 1920px;
+  --color-purple: #512dc6;
 }
 
 @layer base {

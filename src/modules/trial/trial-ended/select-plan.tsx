@@ -37,7 +37,7 @@ export function SelectPlan({ onDowngrade, onSelected }: SelectPlanProps) {
         <PlanItem plan="scale" onUpgrade={() => onSelected('scale')} />
       </div>
 
-      <DialogFooter className="!block text-dim">
+      <DialogFooter className="block! text-dim">
         <T
           id="footer"
           values={{
