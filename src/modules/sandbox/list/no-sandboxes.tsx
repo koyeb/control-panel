@@ -106,7 +106,13 @@ function ApiTokenCode() {
   const organization = useOrganization();
 
   const mutation = useMutation({
-    ...apiMutation('post /v1/organizations/{id}/access_token', { path: { id: organization?.id as string } }),
+    ...apiMutation('post /v1/credentials', {
+      body: {
+        name: 'Sandbox API token',
+        type: 'ORGANIZATION',
+        organization_id: organization?.id,
+      },
+    }),
   });
 
   const Icon = mutation.isPending ? Spinner : IconRefreshCcw;
@@ -128,7 +134,7 @@ function ApiTokenCode() {
     <Code
       lang="shell"
       prefix="$ "
-      value={`export KOYEB_API_TOKEN=${mutation.data?.token ?? ''}`}
+      value={`export KOYEB_API_TOKEN=${mutation.data?.credential?.id ?? ''}`}
       end={end()}
     />
   );
