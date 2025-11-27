@@ -134,7 +134,7 @@ function ApiTokenCode() {
     <Code
       lang="shell"
       prefix="$ "
-      value={`export KOYEB_API_TOKEN=${mutation.data?.credential?.id ?? ''}`}
+      value={`export KOYEB_API_TOKEN=${mutation.data?.credential?.token ?? ''}`}
       end={end()}
     />
   );
