@@ -219,8 +219,10 @@ const router = createRouter({
   Wrap({ children }) {
     useEffect(() => {
       return accessTokenListener((token) => {
-        setToken(token);
-        void queryClient.invalidateQueries();
+        if (!isSessionToken()) {
+          setToken(token);
+          void queryClient.invalidateQueries();
+        }
       });
     }, []);
 
