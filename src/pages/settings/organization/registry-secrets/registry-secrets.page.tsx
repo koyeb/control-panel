@@ -21,7 +21,7 @@ export function RegistrySecretsPage() {
         end={
           <Button
             onClick={() => openDialog('CreateRegistrySecret')}
-            className={clsx(secrets?.length === 0 && '!hidden')}
+            className={clsx(secrets?.length === 0 && 'hidden!')}
           >
             <T id="createRegistrySecret" />
           </Button>

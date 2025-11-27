@@ -83,7 +83,7 @@ export function InstanceRegionStep() {
         setCategory={selector.onInstanceCategorySelected}
       />
 
-      <div className="col max-h-[32rem] scrollbar-thin gap-3 overflow-auto rounded-md border p-2 scrollbar-green">
+      <div className="col max-h-128 scrollbar-thin gap-3 overflow-auto rounded-md border p-2 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
 

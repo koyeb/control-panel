@@ -3,7 +3,7 @@ import clsx from 'clsx';
 type BoxSkeletonProps = React.HTMLAttributes<HTMLSpanElement>;
 
 export function BoxSkeleton({ className, ...props }: BoxSkeletonProps) {
-  return <span className={clsx('inline-block animate-pulse rounded bg-muted', className)} {...props} />;
+  return <span className={clsx('inline-block animate-pulse rounded-sm bg-muted', className)} {...props} />;
 }
 
 type CircleSkeletonProps = {

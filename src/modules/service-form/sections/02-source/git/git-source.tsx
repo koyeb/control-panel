@@ -23,7 +23,7 @@ export function GitSource() {
     <>
       <ControlledSelect<ServiceForm, 'source.git.repositoryType'>
         name="source.git.repositoryType"
-        className="sm:!hidden"
+        className="sm:hidden!"
         label={<T id="repositoryTypeLabel" />}
         items={['organization', 'public']}
         getKey={identity}
@@ -56,11 +56,11 @@ export function GitSource() {
         />
       </div>
 
-      <div className={clsx('col gap-4', repositoryType !== 'organization' && '!hidden')}>
+      <div className={clsx('col gap-4', repositoryType !== 'organization' && 'hidden!')}>
         <OrganizationRepository />
       </div>
 
-      <div className={clsx('col gap-4', repositoryType !== 'public' && '!hidden')}>
+      <div className={clsx('col gap-4', repositoryType !== 'public' && 'hidden!')}>
         <PublicRepository />
       </div>
     </>

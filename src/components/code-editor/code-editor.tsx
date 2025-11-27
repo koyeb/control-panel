@@ -26,7 +26,7 @@ export function CodeEditor({ editor, className, ...props }: CodeEditorProps) {
       height="200px"
       theme={theme === 'light' ? githubLight : githubDark}
       extensions={editor.extensions}
-      className={clsx('overflow-hidden rounded border', className)}
+      className={clsx('overflow-hidden rounded-sm border', className)}
       minHeight="100%"
     />
   );

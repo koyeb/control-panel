@@ -175,7 +175,7 @@ function VolumeResource({ name, deleted }: { name: string; deleted: boolean }) {
 
   return (
     <ActivityResource component={component} {...props}>
-      <span className="rounded bg-green p-0.5">
+      <span className="rounded-sm bg-green p-0.5">
         <IconFolders className="size-3 text-white" />
       </span>
 
@@ -201,7 +201,7 @@ function ActivityResource({ component = 'div', className, children, ...props }: 
     component,
     {
       className: clsx(
-        'row max-w-full min-w-0 items-center gap-2 rounded border px-2 py-1 text-xs font-medium whitespace-nowrap',
+        'row max-w-full min-w-0 items-center gap-2 rounded-sm border px-2 py-1 text-xs font-medium whitespace-nowrap',
         className,
       ),
       ...props,

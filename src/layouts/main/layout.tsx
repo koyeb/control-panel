@@ -65,7 +65,7 @@ export function Layout({ banner, header, menu, menuCollapsed, main, context, con
       </div>
 
       <div className={clsx('sm:pl-16 xl:pl-64', banner && 'pt-8', contextExpanded && 'min-[120rem]:pr-128')}>
-        <div className="@container/main mx-auto max-w-[75rem]">
+        <div className="@container/main mx-auto max-w-300">
           <header
             className={clsx(
               'px-2 max-sm:z-10 sm:px-4',
@@ -80,7 +80,7 @@ export function Layout({ banner, header, menu, menuCollapsed, main, context, con
               color="gray"
               variant="ghost"
               onClick={() => dispatch({ type: 'menu:opened' })}
-              className="!px-1 sm:hidden"
+              className="px-1! sm:hidden"
             >
               <IconMenu className="size-5 text-dim" />
             </Button>

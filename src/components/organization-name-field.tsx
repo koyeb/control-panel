@@ -28,7 +28,7 @@ export function OrganizationNameField({ form, label }: OrganizationNameFieldProp
       placement="bottom-start"
       offset={8}
       content={<OrganizationNameTooltip name={form.watch('organizationName')} />}
-      className="!bg-muted"
+      className="bg-muted!"
       trigger={(props) => (
         <div {...props}>
           <ControlledInput

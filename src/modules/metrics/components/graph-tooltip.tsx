@@ -29,7 +29,7 @@ export function GraphTooltip({ data }: GraphTooltipProps) {
       <div className="inline-grid grid-cols-[repeat(3,min-content)] gap-x-3 gap-y-1 whitespace-nowrap">
         {data.map(({ id, label, color, value }) => (
           <Fragment key={id}>
-            <div className="size-4 rounded" style={{ backgroundColor: color }} />
+            <div className="size-4 rounded-sm" style={{ backgroundColor: color }} />
             <div>{label}</div>
             <div className="font-semibold">{value}</div>
           </Fragment>

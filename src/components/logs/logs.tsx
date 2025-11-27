@@ -123,8 +123,8 @@ export function LogLines({ fullScreen, tail, setTail, logs, renderLine, renderNo
     <div
       ref={container}
       className={clsx(
-        'scrollbar-thin overflow-auto rounded border py-2 scrollbar-green',
-        !fullScreen && 'h-[32rem] resize-y',
+        'scrollbar-thin overflow-auto rounded-sm border py-2 scrollbar-green',
+        !fullScreen && 'h-128 resize-y',
         fullScreen && 'flex-1',
       )}
     >

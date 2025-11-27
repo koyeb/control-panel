@@ -35,7 +35,7 @@ function SectionContent() {
   const { fields, append, remove } = useFieldArray<ServiceForm, 'volumes'>({ name: 'volumes' });
 
   const documentationLink = (children: React.ReactNode) => (
-    <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
+    <DocumentationLink path="/docs/reference/volumes" className="text-default! underline">
       {children}
     </DocumentationLink>
   );
@@ -114,7 +114,7 @@ function useVolumesUnavailableAlert(): { title: React.ReactNode; description: Re
     instancesLink: sectionLink('instance'),
     scalingLink: sectionLink('scaling'),
     documentationLink: (children: React.ReactNode) => (
-      <DocumentationLink path="/docs/reference/volumes" className="!text-default underline">
+      <DocumentationLink path="/docs/reference/volumes" className="text-default! underline">
         {children}
       </DocumentationLink>
     ),

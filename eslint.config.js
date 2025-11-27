@@ -40,7 +40,6 @@ export default [
       },
     },
     rules: {
-      ...betterTailwindcss.configs.recommended['rules'],
       'no-console': ci ? 'error' : 'off',
       'no-restricted-imports': ['warn', { paths: ['posthog-js', 'posthog-js/react', 'lucide-react'] }],
       '@typescript-eslint/no-deprecated': ci ? 'warn' : 'off',
@@ -58,9 +57,9 @@ export default [
       'react-hooks/incompatible-library': 'off',
       'react-hooks/refs': 'off',
       'react-refresh/only-export-components': 'error',
+      ...betterTailwindcss.configs['recommended'].rules,
       'better-tailwindcss/enforce-consistent-line-wrapping': 'off',
-      'better-tailwindcss/no-conflicting-classes': 'warn',
-      'better-tailwindcss/no-unregistered-classes': ['warn', { ignore: ['dark'] }],
+      'better-tailwindcss/no-unknown-classes': ['off', { ignore: 'dark' }],
     },
   },
   {

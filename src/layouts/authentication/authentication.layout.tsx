@@ -25,7 +25,7 @@ export function AuthenticationLayout({ slides = true, children }: Authentication
       </div>
 
       {slides && (
-        <div className="m-2 hidden max-w-3xl min-w-[36rem] flex-1 lg:block">
+        <div className="m-2 hidden max-w-3xl min-w-xl flex-1 lg:block">
           <Slides />
         </div>
       )}

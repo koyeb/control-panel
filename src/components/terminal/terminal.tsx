@@ -51,7 +51,7 @@ export default function Terminal({ ref, onSizeChange, onData }: TerminalProps) {
   useTerminalTheme(xterm);
 
   return (
-    <div className="rounded border py-2 pl-2">
+    <div className="rounded-sm border py-2 pl-2">
       <div ref={setContainer} className="h-96 resize-y overflow-hidden" />
     </div>
   );

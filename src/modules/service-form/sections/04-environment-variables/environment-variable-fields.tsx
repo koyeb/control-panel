@@ -29,7 +29,7 @@ export function EnvironmentVariableFields({
   const showLabel = isMobile || index === 0;
 
   return (
-    <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_auto] md:border-none md:p-0">
+    <div className="grid grid-cols-1 gap-4 rounded-sm border px-6 py-5 md:grid-cols-[1fr_1fr_auto] md:border-none md:p-0">
       <ControlledInput<ServiceForm>
         name={`environmentVariables.${index}.name`}
         type="text"
@@ -44,7 +44,7 @@ export function EnvironmentVariableFields({
         label={showLabel && <T id="valueLabel" />}
       />
 
-      <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
+      <div className={clsx(!isMobile && showLabel && 'mt-6.5')}>
         <IconButton color="gray" Icon={IconTrash} onClick={onRemove}>
           <T id="deleteVariable" />
         </IconButton>

@@ -60,7 +60,7 @@ type ScalingLineProps = {
 
 function Scaling({ cost }: ScalingLineProps) {
   return (
-    <div className="divide-y rounded border bg-muted px-2 dark:bg-muted/50">
+    <div className="divide-y rounded-sm border bg-muted px-2 dark:bg-muted/50">
       <div className="py-2">
         <div className="row items-center gap-1">
           <IconScale3d className="size-3.5" />
@@ -112,7 +112,7 @@ function Region({ cost }: RegionLineProps) {
   }
 
   return (
-    <div className="-mt-2 rounded border bg-muted p-2 dark:bg-muted/50">
+    <div className="-mt-2 rounded-sm border bg-muted p-2 dark:bg-muted/50">
       <div className="row items-center gap-1">
         <IconEarth className="size-3.5" />
         <T id="regionCount" values={{ count: (hasAutoscaling(cost) ? cost[0] : cost).regionCount }} />

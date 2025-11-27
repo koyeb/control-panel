@@ -90,7 +90,11 @@ function StripePortal({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <ExternalLink openInNewTab href={manageBillingQuery.data.url} className="rounded font-semibold focusable">
+    <ExternalLink
+      openInNewTab
+      href={manageBillingQuery.data.url}
+      className="rounded-sm font-semibold focusable"
+    >
       {children}
     </ExternalLink>
   );

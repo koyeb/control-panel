@@ -18,7 +18,7 @@ export function SecondaryLayoutHeader({ className }: { className?: string }) {
   return (
     <header
       className={clsx(
-        'fixed inset-x-0 top-0 z-10 row flex-wrap items-center gap-4 bg-gradient-to-b from-neutral from-75% to-transparent p-4',
+        'fixed inset-x-0 top-0 z-10 row flex-wrap items-center gap-4 bg-linear-to-b from-neutral from-75% to-transparent p-4',
         className,
       )}
     >

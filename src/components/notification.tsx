@@ -14,5 +14,5 @@ const transition = cssTransition({
 });
 
 export function Toast({ closeToast, data }: ToastContentProps<React.ComponentProps<typeof Notification>>) {
-  return <Notification {...data} className="flex-1 !text-default" onClose={closeToast} />;
+  return <Notification {...data} className="flex-1 text-default!" onClose={closeToast} />;
 }

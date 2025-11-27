@@ -31,7 +31,7 @@ export function VolumeFields({ index, onRemove, onCreate }: VolumeFieldsProps) {
   const showLabel = isMobile || index === 0;
 
   return (
-    <div className="grid grid-cols-1 gap-4 rounded border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_auto] md:border-none md:p-0">
+    <div className="grid grid-cols-1 gap-4 rounded-sm border px-6 py-5 md:grid-cols-[1fr_1fr_1fr_auto] md:border-none md:p-0">
       <VolumeField index={index} label={showLabel && <T id="volumeSelector.label" />} onCreate={onCreate} />
 
       <ControlledInput<ServiceForm, `volumes.${number}.mountPath`>
@@ -39,7 +39,7 @@ export function VolumeFields({ index, onRemove, onCreate }: VolumeFieldsProps) {
         label={showLabel && <T id="mountPathLabel" />}
       />
 
-      <div className={clsx(!isMobile && showLabel && 'mt-[1.625rem]')}>
+      <div className={clsx(!isMobile && showLabel && 'mt-6.5')}>
         <IconButton
           color="gray"
           Icon={IconUnlink}

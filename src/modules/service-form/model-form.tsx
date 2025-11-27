@@ -195,7 +195,7 @@ function OverviewSection({ model, form }: { model?: AiModel; form: ModelForm }) 
 
   return (
     <Section title={<T id="overview.title" />}>
-      <div className="divide-y rounded border">
+      <div className="divide-y rounded-sm border">
         {model && model.metadata.length > 0 && (
           <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
             {model.metadata.map(({ name, value }, index) => (

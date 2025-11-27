@@ -93,7 +93,7 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
     <>
       <button
         {...combobox.getToggleButtonProps({ ref: dropdown.refs.setReference, type: 'button' })}
-        className={clsx('rounded border px-2 py-1 text-start', className)}
+        className={clsx('rounded-sm border px-2 py-1 text-start', className)}
       >
         <OrganizationItem organization={currentOrganization} Icon={IconChevronsUpDown} />
       </button>

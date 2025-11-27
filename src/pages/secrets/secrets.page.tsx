@@ -71,7 +71,7 @@ export function SecretsPage() {
             </Button>
 
             <Button
-              className={clsx(secrets && secrets.length === 0 && '!hidden')}
+              className={clsx(secrets && secrets.length === 0 && 'hidden!')}
               onClick={() => openDialog('CreateSecret')}
             >
               <IconPlus className="size-4" />

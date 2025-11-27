@@ -66,8 +66,8 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
     <header
       className={clsx(
         'row cursor-pointer items-center gap-6 px-5 py-2',
-        expanded && 'bg-gradient-to-b from-inverted/5 to-inverted/0',
-        hasError && 'bg-gradient-to-b from-red/10 to-red/0',
+        expanded && 'bg-linear-to-b from-inverted/5 to-inverted/0',
+        hasError && 'bg-linear-to-b from-red/10 to-red/0',
       )}
       onClick={() => expand('click')}
     >
@@ -86,7 +86,7 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
         <IconChevronDown
           tabIndex={0}
           onKeyDown={(event) => event.key === ' ' && expand('keydown')}
-          className={clsx('size-5 rounded text-icon focusable', expanded && 'rotate-180')}
+          className={clsx('size-5 rounded-sm text-icon focusable', expanded && 'rotate-180')}
         />
       </div>
     </header>

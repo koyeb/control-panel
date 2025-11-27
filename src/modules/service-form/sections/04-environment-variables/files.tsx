@@ -82,7 +82,7 @@ export function Files() {
               className="flex-1"
             />
 
-            <IconButton color="gray" Icon={IconTrash} onClick={() => remove(index)} className="mt-[1.625rem]">
+            <IconButton color="gray" Icon={IconTrash} onClick={() => remove(index)} className="mt-6.5">
               <T id="remove" />
             </IconButton>
           </div>

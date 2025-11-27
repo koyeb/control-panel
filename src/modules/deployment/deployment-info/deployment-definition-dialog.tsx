@@ -60,7 +60,7 @@ function DeploymentJson({ definition }: { definition: object }) {
       <Json
         theme={theme}
         value={definition}
-        className="max-h-[32rem] overflow-auto rounded-md bg-muted p-2 scrollbar-green dark:bg-neutral"
+        className="max-h-128 overflow-auto rounded-md bg-muted p-2 scrollbar-green dark:bg-neutral"
       />
 
       <CopyIconButton text={JSON.stringify(definition)} className="absolute end-6 top-4 size-4 text-icon" />
@@ -86,7 +86,7 @@ function DeploymentParsed({ deployment: { definition } }: { deployment: ComputeD
 
 function Section({ title, children }: { title: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="rounded border">
+    <div className="rounded-sm border">
       <div className="p-4 font-medium">{title}</div>
       <div className="col gap-3 px-4 pb-4">{children}</div>
     </div>

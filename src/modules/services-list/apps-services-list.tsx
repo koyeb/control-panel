@@ -68,7 +68,7 @@ function AppsList({ apps, resetFilters }: { apps: AppList; resetFilters: () => v
 
 function NoResults({ resetFilters }: { resetFilters: () => void }) {
   return (
-    <div className="col min-h-64 items-center justify-center gap-4 rounded border p-3">
+    <div className="col min-h-64 items-center justify-center gap-4 rounded-sm border p-3">
       <div className="col gap-2 text-center">
         <div className="text-base font-medium">
           <T id="noResults.title" />

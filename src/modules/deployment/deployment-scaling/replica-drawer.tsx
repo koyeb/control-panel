@@ -295,7 +295,7 @@ function Drawer({ open, onClose, className, children }: DrawerProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: duration / 1000 }}
             style={{ overflow: 'hidden' }}
-            className="z-40 col items-center justify-center bg-neutral/50 backdrop-blur"
+            className="z-40 col items-center justify-center bg-neutral/50 backdrop-blur-sm"
             lockScroll
           >
             <FloatingFocusManager context={drawer.floating.context}>

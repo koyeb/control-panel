@@ -63,12 +63,12 @@ export function DomainsPage() {
             <Button
               variant="outline"
               onClick={onBulkDelete}
-              className={clsx(selected.size === 0 && '!hidden')}
+              className={clsx(selected.size === 0 && 'hidden!')}
             >
               <T id="deleteDomains" values={{ count: selected.size }} />
             </Button>
 
-            <Button className={clsx(!hasDomains && '!hidden')} onClick={() => openDialog('CreateDomain')}>
+            <Button className={clsx(!hasDomains && 'hidden!')} onClick={() => openDialog('CreateDomain')}>
               <T id="createDomain" />
             </Button>
           </div>

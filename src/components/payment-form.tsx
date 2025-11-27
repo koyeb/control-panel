@@ -23,7 +23,7 @@ const T = createTranslate('components.upgradeDialog');
 
 const classes = {
   base: clsx(
-    'col h-10 w-full justify-center rounded border px-2 -outline-offset-1',
+    'col h-10 w-full justify-center rounded-sm border px-2 -outline-offset-1',
     'bg-neutral', // todo: make sure it works with all instances of the payment form
   ),
   focus: clsx('focused'),

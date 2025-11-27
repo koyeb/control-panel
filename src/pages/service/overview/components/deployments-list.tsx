@@ -212,7 +212,7 @@ function DeploymentItem({ service, deployment, selected, onClick }: DeploymentIt
         <div className="row items-center gap-1">
           <DeploymentStatusBadge status={deployment.status} />
 
-          <Badge size={1} color="gray" className="!text-default">
+          <Badge size={1} color="gray" className="text-default!">
             {deployment.name}
           </Badge>
 
@@ -239,9 +239,9 @@ function DeploymentItem({ service, deployment, selected, onClick }: DeploymentIt
       {active && (
         <footer
           className={clsx(
-            '!justify-start gap-2 !px-3 !py-1',
-            !selected && '!bg-green/10 !text-green',
-            selected && '!bg-green text-white',
+            'justify-start! gap-2 px-3! py-1!',
+            !selected && 'bg-green/10! text-green!',
+            selected && 'bg-green! text-white',
           )}
         >
           <span className={clsx('size-2.5 rounded-full', !selected && 'bg-green', selected && 'bg-white')} />

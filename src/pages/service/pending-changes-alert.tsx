@@ -185,7 +185,7 @@ function Diff({ left, right }: { left: object; right: object }) {
   const diff = useMemo(() => diffJson(left, right), [left, right]);
 
   return (
-    <pre className="max-h-[32rem] overflow-auto rounded bg-muted p-2 scrollbar-green dark:bg-neutral">
+    <pre className="max-h-128 overflow-auto rounded-sm bg-muted p-2 scrollbar-green dark:bg-neutral">
       {diff.map(({ added, removed, value }, index) => (
         <span key={index} className={clsx(added && 'text-green', removed && 'text-red')}>
           {value}

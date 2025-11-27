@@ -159,7 +159,7 @@ export function EnvironmentVariableValueField({
         }
         root={{
           ref: dropdown.refs.setReference,
-          className: clsx(isOpen && '!rounded-b-none'),
+          className: clsx(isOpen && 'rounded-b-none!'),
         }}
         {...getInputProps({ ...field, ref: inputRef })}
       />

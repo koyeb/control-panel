@@ -273,7 +273,7 @@ function OverviewSection({ app, serviceForm }: { app: OneClickApp; serviceForm: 
 
   return (
     <Section title={<T id="metadata.title" />}>
-      <div className="divide-y rounded bg-muted">
+      <div className="divide-y rounded-sm bg-muted">
         <dl className="row flex-wrap gap-3 p-3">
           {app.metadata.map((metadata, index) => (
             <Metadata
@@ -489,7 +489,7 @@ function InstanceSection({ serviceForm }: { serviceForm: ServiceForm }) {
         />
       </div>
 
-      <div className="col max-h-[32rem] scrollbar-thin gap-3 overflow-auto px-3 pb-3 scrollbar-green">
+      <div className="col max-h-128 scrollbar-thin gap-3 overflow-auto px-3 pb-3 scrollbar-green">
         <InstanceSelector {...selector} getBadges={getBadges} />
       </div>
     </AccordionSection>
@@ -506,7 +506,7 @@ function VolumesSection({ serviceForm }: { serviceForm: ServiceForm }) {
   return (
     <Section title={<T id="volumes.title" />}>
       {volumes.map((volume) => (
-        <div key={volume.name} className="divide-y rounded bg-muted">
+        <div key={volume.name} className="divide-y rounded-sm bg-muted">
           <div className="row flex-wrap gap-x-12 gap-y-4 p-3">
             <Metadata label={<T id="volumes.name" />} value={volume.name} />
 

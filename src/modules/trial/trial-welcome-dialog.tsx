@@ -39,7 +39,7 @@ export function TrialWelcomeDialog() {
 
 function TrialFeature({ Icon, description }: { Icon: SvgComponent; description: React.ReactNode }) {
   return (
-    <div className="col gap-4 rounded-lg border p-4 shadow">
+    <div className="col gap-4 rounded-lg border p-4 shadow-sm">
       <Icon className="size-5 text-green" />
       <div className="font-medium">{description}</div>
     </div>

@@ -135,7 +135,7 @@ export function Qualification() {
 
         <AuthButton
           onClick={() => handleSubmit(form.getValues())}
-          className={clsx('border border-zinc-400 bg-neutral !text-default hover:bg-neutral', {
+          className={clsx('border border-zinc-400 bg-neutral text-default! hover:bg-neutral', {
             invisible: step === 'usage',
           })}
         >
@@ -430,7 +430,7 @@ function Tag({ name, label, ...props }: TagProps) {
     <label
       className={clsx(
         'inline-block cursor-pointer rounded-lg border px-4 py-2 font-semibold transition-colors',
-        'has-[:checked]:border-green has-[:checked]:bg-green/10 has-[:checked]:text-green',
+        'has-checked:border-green has-checked:bg-green/10 has-checked:text-green',
       )}
     >
       <input {...props} {...field} checked={checked} onChange={handleChange} className="sr-only" />

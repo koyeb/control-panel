@@ -47,7 +47,7 @@ export function CliInfoTooltip({ title, description, command }: CliInfoTooltipPr
         </div>
       </div>
 
-      <div className="row items-center justify-between gap-2 rounded bg-black p-2 font-mono text-white">
+      <div className="row items-center justify-between gap-2 rounded-sm bg-black p-2 font-mono text-white">
         $ {command}
         <div>
           <CopyIconButton text={command} className="size-4" />

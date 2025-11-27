@@ -39,7 +39,7 @@ export function OnboardingLayout({ sentence, children }: OnboardingLayoutProps) 
         <Slides sentence={sentence} />
       </div>
 
-      <div className="col flex-1 justify-center px-4 py-18 lg:ml-[24rem] lg:py-4">
+      <div className="col flex-1 justify-center px-4 py-18 lg:ml-96 lg:py-4">
         <main className="mx-auto w-full max-w-xl">{children}</main>
       </div>
     </div>

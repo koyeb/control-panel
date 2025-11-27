@@ -121,7 +121,7 @@ function NavigationItem({ collapsed, disabled, Icon, label, to, isActive, newBad
   const active = isActive?.(pathname) ?? pathname.startsWith(to);
 
   return (
-    <li className={clsx('mx-3 rounded', active && 'bg-muted', !active && 'text-dim')}>
+    <li className={clsx('mx-3 rounded-sm', active && 'bg-muted', !active && 'text-dim')}>
       <Link
         to={to}
         aria-disabled={disabled}

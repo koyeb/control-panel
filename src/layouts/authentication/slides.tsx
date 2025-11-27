@@ -88,7 +88,7 @@ export default function Slides() {
   }, [next]);
 
   return (
-    <div className="dark col h-full rounded-2xl bg-neutral/95 [&_*]:border-border" onClick={next}>
+    <div className="dark col h-full rounded-2xl bg-neutral/95 **:border-border" onClick={next}>
       <div className="row justify-center py-8" onClick={stopPropagation}>
         <Stepper totalSteps={3} activeStep={index} onClick={(i) => setIndex(i as typeof index)} />
       </div>
@@ -103,7 +103,7 @@ export default function Slides() {
 }
 
 const gradientText = clsx([
-  'bg-gradient-to-tr from-[#D1D8DC] via-[#B0A6B6] to-[#E2E7E9] bg-clip-text text-transparent',
+  'bg-linear-to-tr from-[#D1D8DC] via-[#B0A6B6] to-[#E2E7E9] bg-clip-text text-transparent',
   'text-5xl font-semibold',
   'px-6 py-3',
 ]);
@@ -128,7 +128,7 @@ function Slide({ illustration, line1, line2, features, images, logos }: SlidePro
     >
       <img src={illustration} className="mx-auto" style={{ maxHeight: '40vh' }} />
 
-      <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] [&>*]:border-t [&>*]:border-l">
+      <div className="ml-24 grid flex-1 grid-cols-[auto_1fr] grid-rows-[auto_auto_1fr] *:border-t *:border-l">
         <div className={clsx(gradientText, 'col-span-2 inline-block')}>{line1}</div>
 
         <div className="row-span-2 p-6">

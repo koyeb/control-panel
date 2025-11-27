@@ -75,7 +75,7 @@ export function DomainsList({ domains, expanded, toggleExpanded, onCreate, selec
       )}
       selection={selection}
       classes={{
-        tr: (domain) => clsx(expanded === domain?.id && 'bg-gradient-to-b from-inverted/5 to-inverted/0'),
+        tr: (domain) => clsx(expanded === domain?.id && 'bg-linear-to-b from-inverted/5 to-inverted/0'),
       }}
     />
   );
