@@ -9,15 +9,11 @@ export function Apps({ apps }: { apps: AppList }) {
       {apps.apps.map((app) => {
         const services = apps.services.get(app.id);
 
-        if (!services?.length) {
-          return null;
-        }
-
         return (
           <AppItem
             key={app.id}
             app={app}
-            services={services}
+            services={services ?? []}
             latestDeployments={apps.latestDeployments}
             activeDeployments={apps.activeDeployments}
             activeDeploymentsReplicas={apps.activeDeploymentsReplicas}

@@ -41,7 +41,7 @@ export function AppsServicesList() {
     statuses,
   });
 
-  if (!filtersForm.formState.isDirty && query.data?.services.size === 0) {
+  if (!filtersForm.formState.isDirty && query.data?.apps.length === 0) {
     return <ServiceCreation from="/services" />;
   }
 
