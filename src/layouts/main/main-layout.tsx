@@ -5,7 +5,7 @@ import z from 'zod';
 import { useOrganization, useUser } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
-import { isSessionToken, useToken } from 'src/application/token';
+import { isSessionToken, useAuthkitToken, useToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
@@ -168,7 +168,10 @@ type PageContextProps = {
 
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const pageContextBaseUrl = getConfig('pageContextBaseUrl');
-  const token = useToken();
+
+  const legacyToken = useToken();
+  const authkitToken = useAuthkitToken();
+  const token = legacyToken ?? authkitToken;
 
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
