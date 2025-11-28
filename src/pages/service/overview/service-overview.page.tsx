@@ -1,13 +1,22 @@
 import { Alert, IconButton, useBreakpoint } from '@koyeb/design-system';
 import clsx from 'clsx';
+import { useMemo, useState } from 'react';
 
+import {
+  isComputeDeployment,
+  useAppQuery,
+  useDeploymentQuery,
+  useDeploymentsInfiniteQuery,
+  useServiceQuery,
+} from 'src/api';
+import { isUpcomingDeployment } from 'src/application/service-functions';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { Tooltip } from 'src/components/tooltip';
-import { useRouteParam } from 'src/hooks/router';
 import { IconChevronLeft, IconChevronsLeft } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
+import { App, Deployment, Service } from 'src/model';
 import {
   useCreateServiceUrlsCommands,
   useDeploymentListCommand,
@@ -16,110 +25,193 @@ import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-i
 import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';
 import { DeploymentLogs } from 'src/modules/deployment/deployment-logs/deployment-logs';
 import { assert } from 'src/utils/assert';
+import { hasProperty } from 'src/utils/object';
 
 import { DeploymentHeader } from './components/deployment-header';
 import { DeploymentsList } from './components/deployments-list';
-import { type ServiceOverview, useServiceOverview } from './service-overview';
 
 const T = createTranslate('pages.service.overview');
 
-export function ServiceOverviewPage() {
-  const serviceId = useRouteParam('serviceId');
-  const props = useServiceOverview(serviceId);
+type ServiceOverviewPageProps = {
+  serviceId: string;
+  deploymentId?: string;
+};
 
-  return <ServiceOverview {...props} />;
-}
+export function ServiceOverviewPage({ serviceId, deploymentId }: ServiceOverviewPageProps) {
+  const serviceQuery = useServiceQuery(serviceId);
+  const appQuery = useAppQuery(serviceQuery.data?.appId);
+  const deploymentsQuery = useDeploymentsInfiniteQuery(serviceId);
+  const selectedDeploymentsQuery = useDeploymentQuery(deploymentId);
 
-function ServiceOverview(props: ServiceOverview) {
-  const { deploymentsQuery, listExpanded, selectedDeployment } = props;
-  const isMobile = !useBreakpoint('md');
-
-  if (deploymentsQuery.isPending) {
+  if (
+    appQuery.isPending ||
+    serviceQuery.isPending ||
+    deploymentsQuery.isPending ||
+    selectedDeploymentsQuery.isPending
+  ) {
     return <Loading />;
+  }
+
+  if (appQuery.error) {
+    return <QueryError error={appQuery.error} />;
+  }
+
+  if (serviceQuery.error) {
+    return <QueryError error={serviceQuery.error} />;
   }
 
   if (deploymentsQuery.error) {
     return <QueryError error={deploymentsQuery.error} />;
   }
 
+  if (selectedDeploymentsQuery.error) {
+    return <QueryError error={selectedDeploymentsQuery.error} />;
+  }
+
+  return (
+    <ServiceOverview
+      app={appQuery.data}
+      service={serviceQuery.data}
+      deployments={deploymentsQuery.data.deployments}
+      selectedDeployment={selectedDeploymentsQuery.data}
+    />
+  );
+}
+
+type ServiceOverviewProps = {
+  app: App;
+  service: Service;
+  deployments: Deployment[];
+  selectedDeployment?: Deployment;
+};
+
+function ServiceOverview({ app, service, deployments, selectedDeployment }: ServiceOverviewProps) {
+  const isMobile = !useBreakpoint('md');
+
+  const [upcoming, active, history] = useDeploymentsGroups(service, deployments);
+
+  const [listExpanded, setListExpanded] = useState(
+    upcoming.length > 0 || history.some(hasProperty('id', selectedDeployment?.id)),
+  );
+
+  useCreateServiceUrlsCommands(app, service, selectedDeployment);
+  useDeploymentListCommand(service);
+
+  const list = (
+    <DeploymentsList
+      service={service}
+      selected={selectedDeployment}
+      active={active}
+      upcoming={upcoming}
+      history={history}
+      setListExpanded={setListExpanded}
+    />
+  );
+
+  const content = selectedDeployment && (
+    <div className="min-w-0 flex-1">
+      <DeploymentsListActions
+        service={service}
+        deployments={deployments}
+        selectedDeployment={selectedDeployment}
+        listExpanded={listExpanded}
+        setListExpanded={setListExpanded}
+      />
+
+      <SelectedDeployment app={app} service={service} deployment={selectedDeployment} />
+    </div>
+  );
+
   if (isMobile) {
-    return (
-      <>
-        {listExpanded && <DeploymentsList {...props} />}
-        {!listExpanded && selectedDeployment && <SelectedDeployment {...props} />}
-      </>
-    );
+    if (listExpanded || !selectedDeployment) {
+      return list;
+    }
+
+    return content;
   }
 
   return (
     <div className="row">
       <div
-        className="row overflow-hidden transition-[max-width] will-change-[max-width]"
-        style={{ maxWidth: listExpanded ? 600 : 0 }}
+        className={clsx(
+          'row overflow-hidden transition-all will-change-[max-width]',
+          listExpanded ? 'max-w-[600px] opacity-100' : 'max-w-0 opacity-0',
+        )}
       >
-        <DeploymentsList {...props} />
+        {list}
         <div className="mx-8 border-l" />
       </div>
 
-      {selectedDeployment && <SelectedDeployment {...props} />}
+      {content}
     </div>
   );
 }
 
-function SelectedDeployment({ className, ...props }: ServiceOverview & { className?: string }) {
-  const { app, service, instances, selectedDeployment } = props;
+function useDeploymentsGroups(service: Service, deployments: Deployment[]) {
+  return useMemo(() => {
+    let active: Deployment | undefined = undefined;
+    const upcoming: Deployment[] = [];
+    const past: Deployment[] = [];
 
-  assert(selectedDeployment !== undefined);
+    for (const deployment of deployments) {
+      if (deployment.id === service.activeDeploymentId) {
+        active = deployment;
+      } else if (isUpcomingDeployment(deployment)) {
+        upcoming.push(deployment);
+      } else {
+        past.push(deployment);
+      }
+    }
+
+    return [upcoming, active, past] as const;
+  }, [service, deployments]);
+}
+
+type SelectedDeploymentProps = {
+  app: App;
+  service: Service;
+  deployment: Deployment;
+};
+
+function SelectedDeployment({ app, service, deployment }: SelectedDeploymentProps) {
+  assert(isComputeDeployment(deployment));
 
   return (
-    <section className="col min-w-0 flex-1 gap-8">
-      <RegisterDeploymentCommands {...props} />
+    <section className="col gap-8">
+      <DeploymentHeader deployment={deployment} />
 
-      <div className="col gap-4">
-        <DeploymentsListActions {...props} />
-        <DeploymentHeader deployment={selectedDeployment} />
-      </div>
+      <DeploymentFailedInfo deployment={deployment} layout="row" />
+      <DeploymentInfo app={app} service={service} deployment={deployment} />
 
-      <DeploymentFailedInfo deployment={selectedDeployment} layout="row" />
-      <DeploymentInfo app={app} service={service} deployment={selectedDeployment} />
-
-      {selectedDeployment.status === 'STASHED' && <DeploymentStashed />}
-      {selectedDeployment.status !== 'STASHED' && (
-        <DeploymentLogs app={app} service={service} instances={instances} deployment={selectedDeployment} />
+      {deployment.status === 'STASHED' && <DeploymentStashed />}
+      {deployment.status !== 'STASHED' && (
+        <DeploymentLogs app={app} service={service} deployment={deployment} />
       )}
     </section>
   );
 }
 
-function RegisterDeploymentCommands({ app, service, selectedDeployment }: ServiceOverview) {
-  useCreateServiceUrlsCommands(app, service, selectedDeployment);
-  useDeploymentListCommand(service);
-
-  return null;
-}
+type DeploymentsListActionsProps = {
+  service: Service;
+  deployments: Deployment[];
+  selectedDeployment?: Deployment;
+  listExpanded: boolean;
+  setListExpanded: (expanded: boolean) => void;
+};
 
 function DeploymentsListActions({
   service,
   deployments,
+  selectedDeployment,
   listExpanded,
   setListExpanded,
-  upcomingDeployments,
-  selectedDeployment,
-}: ServiceOverview) {
-  const { activeDeploymentId } = service;
-  const latestNonStashedDeployment = deployments[0];
-  const hasUpcoming = upcomingDeployments.length > 0;
-
-  const isActive = () => {
-    return selectedDeployment?.id === activeDeploymentId;
-  };
-
-  const isLatest = () => {
-    return selectedDeployment?.id === latestNonStashedDeployment?.id;
-  };
+}: DeploymentsListActionsProps) {
+  const { id: serviceId, activeDeploymentId } = service;
+  const latestDeploymentId = deployments[0]?.id;
+  const hasUpcoming = deployments.filter(isUpcomingDeployment).length > 0;
 
   return (
-    <div className="row items-center md:divide-x">
+    <div className="mb-4 row items-center md:divide-x">
       <div className="md:pe-2">
         <IconButton
           icon={
@@ -146,16 +238,18 @@ function DeploymentsListActions({
               variant="ghost"
               color="gray"
               size={1}
-              disabled={isActive() || activeDeploymentId === undefined}
+              disabled={selectedDeployment?.id === activeDeploymentId || activeDeploymentId === undefined}
               to="/services/$serviceId"
-              params={{ serviceId: service.id }}
+              params={{ serviceId }}
               search={{ deploymentId: activeDeploymentId }}
             >
               <T id="deployments.actions.activeDeployment" />
             </LinkButton>
           </div>
         )}
-        content={activeDeploymentId === undefined && <T id="deployments.actions.noActiveDeployment" />}
+        content={
+          service.activeDeploymentId === undefined && <T id="deployments.actions.noActiveDeployment" />
+        }
       />
 
       <div className="md:ps-2">
@@ -163,10 +257,10 @@ function DeploymentsListActions({
           variant="ghost"
           color="gray"
           size={1}
-          disabled={isLatest()}
+          disabled={selectedDeployment?.id === latestDeploymentId}
           to="/services/$serviceId"
-          params={{ serviceId: service.id }}
-          search={{ deploymentId: latestNonStashedDeployment?.id }}
+          params={{ serviceId }}
+          search={{ deploymentId: latestDeploymentId }}
         >
           <T id="deployments.actions.latestDeployment" />
         </LinkButton>

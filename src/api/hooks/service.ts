@@ -1,5 +1,7 @@
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getApi } from '..';
+import { keepPreviousData, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 
+import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { DeploymentStatus, InstanceStatus } from 'src/model';
 import { createArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
@@ -48,6 +50,44 @@ export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStat
 
 export function useDeployments(serviceId: string, statuses?: DeploymentStatus[]) {
   return useDeploymentsQuery(serviceId, statuses).data;
+}
+
+export function useDeploymentsInfiniteQuery(serviceId: string) {
+  return useInfiniteQuery({
+    ...apiQuery('get /v1/deployments', {
+      query: {
+        service_id: serviceId,
+        statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+      },
+    }),
+    async queryFn({ queryKey: [, { query }], pageParam }) {
+      const api = getApi();
+
+      return api('get /v1/deployments', {
+        query: {
+          ...query,
+          limit: String(10),
+          offset: String(10 * pageParam),
+        },
+      });
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, pages, lastPageParam) => {
+      const nextPage = lastPageParam + 1;
+
+      if (nextPage * 10 >= lastPage.count!) {
+        return undefined;
+      }
+
+      return nextPage;
+    },
+    select({ pages }) {
+      return {
+        count: pages[0]!.count!,
+        deployments: pages.flatMap((page) => page.deployments!.map(mapDeployment)),
+      };
+    },
+  });
 }
 
 export function useDeploymentQuery(deploymentId: string | undefined) {

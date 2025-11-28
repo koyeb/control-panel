@@ -2,6 +2,7 @@ import { AccordionHeader, AccordionSection } from '@koyeb/design-system';
 import clsx from 'clsx';
 import React, { useState } from 'react';
 
+import { useInstancesQuery } from 'src/api';
 import { hasBuild } from 'src/application/service-functions';
 import { BuildLogs, RuntimeLogs } from 'src/components/logs';
 import { useObserve } from 'src/hooks/lifecycle';
@@ -32,10 +33,10 @@ type DeploymentLogsProps = {
   app: App;
   service: Service;
   deployment: ComputeDeployment;
-  instances: Instance[];
 };
 
-export function DeploymentLogs({ app, service, deployment, instances }: DeploymentLogsProps) {
+export function DeploymentLogs({ app, service, deployment }: DeploymentLogsProps) {
+  const { data: { instances = [] } = {} } = useInstancesQuery({ deploymentId: deployment.id });
   const [expanded, setExpanded] = useState(() => getInitialPhase(deployment));
 
   useAutoExpandSection(setExpanded, deployment);

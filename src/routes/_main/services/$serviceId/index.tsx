@@ -6,7 +6,12 @@ import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
 
 export const Route = createFileRoute('/_main/services/$serviceId/')({
-  component: ServiceOverviewPage,
+  component: function Component() {
+    const { serviceId } = Route.useParams();
+    const { deploymentId } = Route.useSearch();
+
+    return <ServiceOverviewPage serviceId={serviceId} deploymentId={deploymentId} />;
+  },
 
   validateSearch: z.object({
     deploymentId: z.string().optional(),
