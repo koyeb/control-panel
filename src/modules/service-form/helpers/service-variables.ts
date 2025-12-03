@@ -3,6 +3,7 @@ import sort from 'lodash-es/sortBy';
 
 import { apiQuery } from 'src/api';
 import { useDebouncedValue } from 'src/hooks/timers';
+import { exclude } from 'src/utils/arrays';
 
 import { ServiceForm } from '../service-form.types';
 
@@ -35,7 +36,7 @@ export function mapServiceVariables({
 }: Partial<Record<string, string[]>>): ServiceVariables {
   return {
     secrets: secrets.map((name) => `secret.${name}`),
-    userEnv: sort(user_env).filter((value) => value !== ''),
+    userEnv: sort(exclude(user_env, '')),
     systemEnv: sort(system_env),
   };
 }

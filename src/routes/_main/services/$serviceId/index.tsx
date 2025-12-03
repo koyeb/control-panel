@@ -1,9 +1,10 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 import { z } from 'zod';
 
-import { createEnsureApiQueryData, getApi, getApiQueryKey, mapDeployment, mapService } from 'src/api';
+import { createEnsureApiQueryData, getApi, getApiQueryKey, mapService } from 'src/api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { ServiceOverviewPage } from 'src/pages/service/overview/service-overview.page';
+import { exclude } from 'src/utils/arrays';
 
 export const Route = createFileRoute('/_main/services/$serviceId/')({
   component: function Component() {
@@ -69,24 +70,19 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
         queryKey: getApiQueryKey('get /v1/deployments', {
           query: {
             service_id: params.serviceId,
-            statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+            statuses: exclude(allApiDeploymentStatuses, 'STASHED'),
           },
         }),
         queryFn: async ({ queryKey, pageParam }) => {
           const api = getApi();
 
-          const { count, deployments } = await api('get /v1/deployments', {
+          return api('get /v1/deployments', {
             query: {
               ...queryKey[1].query,
               limit: String(10),
               offset: String(10 * pageParam),
             },
           });
-
-          return {
-            count: count!,
-            deployments: deployments!.map(mapDeployment),
-          };
         },
         initialPageParam: 0,
       }),

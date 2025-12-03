@@ -3,6 +3,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getApi } from 'src/api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { AppList, ServiceStatus, ServiceType } from 'src/model';
+import { exclude } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
 
 import { mapDeployment, mapReplica } from '../mappers/deployment';
@@ -128,7 +129,7 @@ export async function listAppsFull(filters: AppsFullFilters = {}, signal?: Abort
       const { deployments } = await api('get /v1/deployments', {
         query: {
           service_id: service.id,
-          statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+          statuses: exclude(allApiDeploymentStatuses, 'STASHED'),
           limit: '1',
         },
       });

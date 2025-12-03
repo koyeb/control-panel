@@ -19,6 +19,7 @@ import { Dialog, DialogHeader, closeDialog, openDialog } from 'src/components/di
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
+import { exclude } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 
 const T = createTranslate('pages.service.layout.pendingChanges');
@@ -78,7 +79,7 @@ function useLatestNonStashedDeployment(service: Service) {
     ...apiQuery('get /v1/deployments', {
       query: {
         service_id: service.id,
-        statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+        statuses: exclude(allApiDeploymentStatuses, 'STASHED'),
         limit: '1',
       },
     }),

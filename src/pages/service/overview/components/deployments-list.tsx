@@ -3,21 +3,17 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useEffect, useEffectEvent, useState } from 'react';
 
-import {
-  apiMutation,
-  isComputeDeployment,
-  useDeploymentsInfiniteQuery,
-  useInvalidateApiQuery,
-} from 'src/api';
+import { apiMutation, isComputeDeployment, useDeploymentsQuery, useInvalidateApiQuery } from 'src/api';
 import { withPreventDefault } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
-import { isUpcomingDeployment } from 'src/application/service-functions';
+import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
 import { Link } from 'src/components/link';
 import { DeploymentStatusBadge } from 'src/components/status-badges';
 import { IconChevronRight } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { createTranslate } from 'src/intl/translate';
 import { Deployment, Service } from 'src/model';
+import { exclude } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
@@ -42,7 +38,8 @@ export function DeploymentsList({
   history,
   setListExpanded,
 }: DeploymentsListProps) {
-  const deploymentsQuery = useDeploymentsInfiniteQuery(service.id);
+  const deploymentsQuery = useDeploymentsQuery(service.id, exclude(allApiDeploymentStatuses, 'STASHED'));
+
   const { data: { count: deploymentsCount = 0 } = {} } = deploymentsQuery;
 
   const [upcomingExpanded, setUpcomingExpanded] = useState(upcoming.length > 0);

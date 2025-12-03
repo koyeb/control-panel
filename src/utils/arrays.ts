@@ -18,6 +18,10 @@ export function last<T>(array: T[]): T | undefined {
   return array.at(array.length - 1);
 }
 
+export function exclude<T>(array: T[], ...elements: T[]): T[] {
+  return array.filter((e) => !elements.includes(e));
+}
+
 export function isNotEmpty<T>(array: T[]): array is [T, ...T[]] {
   return array.length >= 1;
 }

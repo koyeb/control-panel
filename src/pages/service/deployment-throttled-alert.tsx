@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useDeployments, useOrganization } from 'src/api';
+import { useDeploymentsQuery, useOrganization } from 'src/api';
 import { upcomingDeploymentStatuses } from 'src/application/service-functions';
 import { IconRocket } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -15,8 +15,8 @@ type DeploymentThrottledAlertProps = {
 
 export function DeploymentThrottledAlert({ service }: DeploymentThrottledAlertProps) {
   const organization = useOrganization();
-  const upcomingDeployments = useDeployments(service.id, upcomingDeploymentStatuses);
-  const lastUpcoming = last(upcomingDeployments ?? []);
+  const upcomingDeployments = useDeploymentsQuery(service.id, upcomingDeploymentStatuses);
+  const lastUpcoming = last(upcomingDeployments.data?.deployments ?? []);
 
   const [throttled, setThrottled] = useState(false);
 

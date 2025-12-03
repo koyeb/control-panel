@@ -6,10 +6,10 @@ import {
   isComputeDeployment,
   useAppQuery,
   useDeploymentQuery,
-  useDeploymentsInfiniteQuery,
+  useDeploymentsQuery,
   useServiceQuery,
 } from 'src/api';
-import { isUpcomingDeployment } from 'src/application/service-functions';
+import { allApiDeploymentStatuses, isUpcomingDeployment } from 'src/application/service-functions';
 import { LinkButton } from 'src/components/link';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
@@ -24,6 +24,7 @@ import {
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
 import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';
 import { DeploymentLogs } from 'src/modules/deployment/deployment-logs/deployment-logs';
+import { exclude } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
@@ -40,7 +41,7 @@ type ServiceOverviewPageProps = {
 export function ServiceOverviewPage({ serviceId, deploymentId }: ServiceOverviewPageProps) {
   const serviceQuery = useServiceQuery(serviceId);
   const appQuery = useAppQuery(serviceQuery.data?.appId);
-  const deploymentsQuery = useDeploymentsInfiniteQuery(serviceId);
+  const deploymentsQuery = useDeploymentsQuery(serviceId, exclude(allApiDeploymentStatuses, 'STASHED'));
   const selectedDeploymentsQuery = useDeploymentQuery(deploymentId);
 
   if (

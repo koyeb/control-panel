@@ -1,7 +1,6 @@
 import { getApi } from '..';
 import { keepPreviousData, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { DeploymentStatus, InstanceStatus } from 'src/model';
 import { createArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
@@ -16,7 +15,7 @@ import {
   mapReplica,
 } from '../mappers/deployment';
 import { mapService } from '../mappers/service';
-import { apiQuery } from '../query';
+import { apiQuery, getApiQueryKey } from '../query';
 
 export function useServicesQuery(appId?: string) {
   return useQuery({
@@ -42,22 +41,11 @@ export function useService(serviceId?: string) {
 }
 
 export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStatus[]) {
-  return useQuery({
-    ...apiQuery('get /v1/deployments', { query: { service_id: serviceId, statuses } }),
-    select: ({ deployments }) => deployments!.map(mapDeployment),
-  });
-}
-
-export function useDeployments(serviceId: string, statuses?: DeploymentStatus[]) {
-  return useDeploymentsQuery(serviceId, statuses).data;
-}
-
-export function useDeploymentsInfiniteQuery(serviceId: string) {
   return useInfiniteQuery({
-    ...apiQuery('get /v1/deployments', {
+    queryKey: getApiQueryKey('get /v1/deployments', {
       query: {
         service_id: serviceId,
-        statuses: allApiDeploymentStatuses.filter((status) => status !== 'STASHED'),
+        statuses,
       },
     }),
     async queryFn({ queryKey: [, { query }], pageParam }) {
@@ -75,7 +63,7 @@ export function useDeploymentsInfiniteQuery(serviceId: string) {
     getNextPageParam: (lastPage, pages, lastPageParam) => {
       const nextPage = lastPageParam + 1;
 
-      if (nextPage * 10 >= lastPage.count!) {
+      if (nextPage * lastPage.limit! >= lastPage.count!) {
         return undefined;
       }
 
