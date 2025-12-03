@@ -17,9 +17,11 @@ export const Route = createFileRoute('/account/workos/callback')({
     state: z.string().optional(),
   }),
 
-  async loader({ context: { queryClient, authKit } }) {
+  async loader({ context: { queryClient } }) {
+    const next = '/'; // todo: retrieve from authkit
+
     await waitForUser(queryClient);
-    throw redirect(urlToLinkOptions(authKit.next ?? '/'));
+    throw redirect(urlToLinkOptions(next));
   },
 });
 

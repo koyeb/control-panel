@@ -1,4 +1,5 @@
-import { useAuthKit } from 'src/application/authkit';
+import { useAuth } from '@workos-inc/authkit-react';
+
 import { DocumentTitle } from 'src/components/document-title';
 import { Link } from 'src/components/link';
 import { FeatureFlag } from 'src/hooks/feature-flag';
@@ -15,7 +16,7 @@ const T = createTranslate('pages.authentication.signIn');
 export function SignInPage() {
   const t = T.useTranslate();
   const next = useSearchParams().get('next');
-  const authKit = useAuthKit();
+  const { signIn } = useAuth();
 
   return (
     <div className="mx-auto col w-full max-w-90 flex-1 justify-center py-8 text-center">
@@ -41,7 +42,7 @@ export function SignInPage() {
           </GithubOAuthButton>
         }
       >
-        <AuthButton type="button" onClick={() => void authKit.signIn({ next })}>
+        <AuthButton type="button" onClick={() => void signIn({ state: { next } })}>
           <T id="otherOptions" />
         </AuthButton>
       </FeatureFlag>
@@ -52,7 +53,7 @@ export function SignInPage() {
 }
 
 function SignUpLink() {
-  const authKit = useAuthKit();
+  const { signUp } = useAuth();
 
   const link = (children: React.ReactNode[]) => (
     <FeatureFlag
@@ -63,7 +64,7 @@ function SignUpLink() {
         </Link>
       }
     >
-      <button type="button" onClick={() => void authKit.signUp()} className="font-medium text-default">
+      <button type="button" onClick={() => void signUp()} className="font-medium text-default">
         {children}
       </button>
     </FeatureFlag>

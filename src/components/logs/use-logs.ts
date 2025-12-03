@@ -5,8 +5,11 @@ import { dequal } from 'dequal';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src/api';
+import { apiStream, getApi, getApiQueryKey, useOrganizationQuotas } from 'src/api';
 import { ApiResponseBody } from 'src/api/api';
+import { getConfig } from 'src/application/config';
+import { reportError } from 'src/application/sentry';
+import { getToken } from 'src/application/token';
 import { useDeepCompareMemo, usePrevious } from 'src/hooks/lifecycle';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { LogLine } from 'src/model';
@@ -169,7 +172,7 @@ const reconnectTimeout = [0, 1_000, 5_000, 60_000];
 function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
   const filtersMemo = useDeepCompareMemo(filters);
 
-  const stream = useRef<ReturnType<typeof tailLogs>>(null);
+  const stream = useRef<Awaited<ReturnType<typeof tailLogs>>>(null);
   const [connected, setConnected] = useState(false);
   const [lines, setLines] = useState<Omit<LogLine, 'html'>[]>([]);
   const [error, setError] = useState<Error>();
@@ -178,7 +181,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
   const reconnectIndex = useRef<number>(null);
 
   const initialize = useCallback(() => {
-    stream.current = tailLogs(filtersMemo, start, {
+    tailLogs(filtersMemo, start, {
       onOpen: () => {
         setError(undefined);
         setConnected(true);
@@ -195,7 +198,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
         reconnectIndex.current++;
       },
       onLogLine: (line) => setLines((lines) => [...lines, line]),
-    });
+    }).then((value) => (stream.current = value), reportError);
   }, [filtersMemo, start]);
 
   useEffect(() => {
@@ -226,20 +229,25 @@ type LogStreamListeners = {
   onLogLine: (line: Omit<LogLine, 'html'>) => void;
 };
 
-function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStreamListeners>) {
-  const apiStream = getApiStream();
-
-  const stream = apiStream('get /v1/streams/logs/tail', {
-    query: {
-      type: filters.type,
-      deployment_id: filters.deploymentId ?? undefined,
-      regional_deployment_id: filters.regionalDeploymentId ?? undefined,
-      instance_id: filters.instanceId ?? undefined,
-      streams: filters.streams,
-      start: start.toISOString(),
-      text: filters.search || undefined,
+async function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStreamListeners>) {
+  const stream = apiStream(
+    'get /v1/streams/logs/tail',
+    {
+      query: {
+        type: filters.type,
+        deployment_id: filters.deploymentId ?? undefined,
+        regional_deployment_id: filters.regionalDeploymentId ?? undefined,
+        instance_id: filters.instanceId ?? undefined,
+        streams: filters.streams,
+        start: start.toISOString(),
+        text: filters.search || undefined,
+      },
     },
-  });
+    {
+      baseUrl: getConfig('apiBaseUrl'),
+      token: await getToken(),
+    },
+  );
 
   const onOpen = () => listeners.onOpen?.();
   const onClose = () => listeners.onClose?.();

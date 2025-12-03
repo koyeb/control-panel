@@ -8,7 +8,6 @@ import { apiMutation } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
 import { getCaptcha } from 'src/application/recaptcha';
-import { setToken } from 'src/application/token';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
@@ -57,8 +56,7 @@ export function SignUpForm({ initialValues }: SignUpFormProps) {
         captcha: await getCaptcha('signup'),
       },
     })),
-    async onSuccess({ token }) {
-      setToken(token!.id!);
+    async onSuccess() {
       await navigate({ to: '/' });
     },
     onError: useFormErrorHandler(form, (error) => {

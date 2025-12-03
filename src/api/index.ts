@@ -1,7 +1,7 @@
 import { ApiEndpoint, api, apiStream } from 'src/api/api';
+import { getToken } from 'src/application/token';
 
 import { getConfig } from '../application/config';
-import { getToken } from '../application/token';
 
 export * from './mappers/activity';
 export * from './mappers/api-credential';
@@ -32,26 +32,13 @@ export * from './fixtures';
 export * from './query';
 
 export function getApi() {
-  return <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof api<E>>) => {
+  return async <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof api<E>>) => {
     return api(endpoint, params, {
-      ...getApiOptions(),
+      baseUrl: getConfig('apiBaseUrl'),
+      token: await getToken(),
       ...options,
     });
   };
 }
 
-export function getApiStream() {
-  return <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof apiStream<E>>) => {
-    return apiStream(endpoint, params, {
-      ...getApiOptions(),
-      ...options,
-    });
-  };
-}
-
-function getApiOptions() {
-  return {
-    baseUrl: getConfig('apiBaseUrl'),
-    token: getToken(),
-  };
-}
+export { apiStream };

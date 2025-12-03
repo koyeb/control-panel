@@ -1,13 +1,14 @@
 import { WorkOsWidgets } from '@workos-inc/widgets';
 
-import { useAuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useThemeMode } from 'src/hooks/theme';
 
 import '@radix-ui/themes/styles.css';
 import '@workos-inc/widgets/styles.css';
 
-import { useAuthkitToken } from 'src/application/token';
+import { useQuery } from '@tanstack/react-query';
+
+import { getToken } from 'src/application/token';
 
 import 'src/workos.css';
 
@@ -17,10 +18,9 @@ type WorkOSWidgetsProviderProps = {
 
 export default function WorkOSWidgetsProvider({ children }: WorkOSWidgetsProviderProps) {
   const theme = useThemeMode();
-  const token = useAuthkitToken();
-  const authKit = useAuthKit();
+  const { data: token } = useQuery({ queryKey: ['token'], queryFn: getToken });
 
-  if (!token || !authKit.user) {
+  if (!token) {
     return null;
   }
 

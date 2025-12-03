@@ -1,13 +1,11 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 
-import { useAuthKit } from 'src/application/authkit';
 import { useIdentifyUser } from 'src/application/posthog';
-import { setAuthKitToken, setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 
-import { ApiError } from '../api-error';
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
-import { apiMutation, apiQuery } from '../query';
+import { apiQuery } from '../query';
 
 export function useUserQuery() {
   return useQuery({
@@ -32,11 +30,11 @@ export function useOrganization() {
 }
 
 export function useSwitchOrganization(onSuccess?: () => void) {
-  const authKit = useAuthKit();
+  const { switchToOrganization } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (organizationId: string) => authKit.switchOrganization(organizationId),
+    mutationFn: (organizationId: string) => switchToOrganization({ organizationId }),
     async onSuccess() {
       queryClient.clear();
       onSuccess?.();
@@ -76,30 +74,16 @@ export function useOrganizationQuotas() {
 }
 
 export function useLogoutMutation() {
-  const authKit = useAuthKit();
-  const userQuery = useUserQuery();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
-  const apiLogout = useMutation({
-    ...apiMutation('delete /v1/account/logout', {}),
-    meta: { showError: !ApiError.isAccountLockedError(userQuery.error) },
-    async onSettled() {
-      clearIdentify();
-      setToken(null);
-      await navigate({ to: '/auth/signin' });
-    },
-  });
-
-  const authKitLogout = useMutation({
+  return useMutation({
     mutationKey: ['logout'],
-    mutationFn: async () => authKit.signOut(),
+    mutationFn: async () => signOut({}),
     onSuccess: async () => {
       clearIdentify();
-      setAuthKitToken(null);
       await navigate({ to: '/auth/signin' });
     },
   });
-
-  return authKit.user ? authKitLogout : apiLogout;
 }

@@ -5,7 +5,6 @@ import { z } from 'zod';
 
 import { apiMutation } from 'src/api';
 import { notify } from 'src/application/notify';
-import { setToken } from 'src/application/token';
 import { DocumentTitle } from 'src/components/document-title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
@@ -58,8 +57,7 @@ function ChangePasswordForm() {
       header: { 'seon-fp': await getSeonFingerprint() },
       body: { id: token, password },
     })),
-    async onSuccess({ token }) {
-      setToken(token!.id!);
+    async onSuccess() {
       notify.success(t('successNotification'));
       await navigate({ to: '/' });
     },
