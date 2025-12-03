@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { useAuth } from '@workos-inc/authkit-react';
 
 import { useIdentifyUser } from 'src/application/posthog';
-import { useNavigate } from 'src/hooks/router';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 import { apiQuery } from '../query';
@@ -75,15 +74,13 @@ export function useOrganizationQuotas() {
 
 export function useLogoutMutation() {
   const { signOut } = useAuth();
-  const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
   return useMutation({
     mutationKey: ['logout'],
-    mutationFn: async () => signOut({}),
-    onSuccess: async () => {
+    mutationFn: async () => {
       clearIdentify();
-      await navigate({ to: '/auth/signin' });
+      await signOut({ navigate: true });
     },
   });
 }

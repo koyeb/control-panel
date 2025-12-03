@@ -3,10 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiMutation, useOrganization, useUser } from 'src/api';
-import { notify } from 'src/application/notify';
 import { useIdentifyUser } from 'src/application/posthog';
 import { closeDialog, openDialog } from 'src/components/dialog';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { User } from 'src/model';
 
@@ -60,8 +58,6 @@ export function DeleteAccount() {
 }
 
 function useDeleteMutation() {
-  const t = T.useTranslate();
-  const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
 
   const { signOut } = useAuth();
@@ -74,10 +70,7 @@ function useDeleteMutation() {
       closeDialog();
       clearIdentify();
 
-      await signOut();
-
-      notify.success(t('success'));
-      await navigate({ to: '/auth/signin' });
+      await signOut({ navigate: true });
     },
   });
 }

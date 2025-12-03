@@ -32,12 +32,8 @@ export const Route = createFileRoute('/_main')({
     const token = getToken();
 
     if (token === null) {
-      throw redirect({
-        to: '/auth/signin',
-        search: {
-          next: location.pathname !== '/' ? location.href : undefined,
-        },
-      });
+      const next = location.pathname !== '/' ? location.href : undefined;
+      // todo
     }
 
     if (search['organization-id']) {

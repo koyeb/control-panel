@@ -9,12 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as MainRouteRouteImport } from './routes/_main/route'
 import { Route as MainIndexRouteImport } from './routes/_main/index'
-import { Route as AuthSignupRouteImport } from './routes/auth/signup'
-import { Route as AuthSigninRouteImport } from './routes/auth/signin'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as MainTeamRouteImport } from './routes/_main/team'
 import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
 import { Route as MainDomainsRouteImport } from './routes/_main/domains'
@@ -30,8 +26,6 @@ import { Route as MainServicesIndexRouteImport } from './routes/_main/services/i
 import { Route as MainSandboxesIndexRouteImport } from './routes/_main/sandboxes/index'
 import { Route as MainOneClicksIndexRouteImport } from './routes/_main/one-clicks/index'
 import { Route as AccountWorkosCallbackRouteImport } from './routes/account/workos.callback'
-import { Route as AccountValidateTokenRouteImport } from './routes/account/validate.$token'
-import { Route as AccountResetPasswordTokenRouteImport } from './routes/account/reset-password.$token'
 import { Route as AccountOrganization_invitationsInvitationIdRouteImport } from './routes/account/organization_invitations.$invitationId'
 import { Route as MainVolumesSnapshotsRouteImport } from './routes/_main/volumes/snapshots'
 import { Route as MainVolumesNewRouteImport } from './routes/_main/volumes/new'
@@ -53,7 +47,6 @@ import { Route as MainSandboxesServiceIdIndexRouteImport } from './routes/_main/
 import { Route as MainOneClicksSlugIndexRouteImport } from './routes/_main/one-clicks/$slug.index'
 import { Route as MainDatabaseServicesDatabaseServiceIdIndexRouteImport } from './routes/_main/database-services/$databaseServiceId/index'
 import { Route as OrganizationDeactivateConfirmConfirmationIdRouteImport } from './routes/organization/deactivate.confirm.$confirmationId'
-import { Route as AccountOauthGithubCallbackRouteImport } from './routes/account/oauth.github.callback'
 import { Route as MainUserSettingsOrganizationsRouteImport } from './routes/_main/user.settings/organizations'
 import { Route as MainUserSettingsApiRouteImport } from './routes/_main/user.settings/api'
 import { Route as MainServicesServiceIdSettingsRouteImport } from './routes/_main/services/$serviceId/settings'
@@ -68,11 +61,6 @@ import { Route as MainDatabaseServicesDatabaseServiceIdDatabasesRouteImport } fr
 import { Route as MainAuthSsoDiscourseRouteImport } from './routes/_main/auth/sso.discourse'
 import { Route as MainAuthSsoCannyRouteImport } from './routes/_main/auth/sso.canny'
 
-const AuthRouteRoute = AuthRouteRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MainRouteRoute = MainRouteRouteImport.update({
   id: '/_main',
   getParentRoute: () => rootRouteImport,
@@ -81,21 +69,6 @@ const MainIndexRoute = MainIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MainRouteRoute,
-} as any)
-const AuthSignupRoute = AuthSignupRouteImport.update({
-  id: '/signup',
-  path: '/signup',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthSigninRoute = AuthSigninRouteImport.update({
-  id: '/signin',
-  path: '/signin',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRouteRoute,
 } as any)
 const MainTeamRoute = MainTeamRouteImport.update({
   id: '/team',
@@ -172,17 +145,6 @@ const AccountWorkosCallbackRoute = AccountWorkosCallbackRouteImport.update({
   path: '/account/workos/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AccountValidateTokenRoute = AccountValidateTokenRouteImport.update({
-  id: '/account/validate/$token',
-  path: '/account/validate/$token',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AccountResetPasswordTokenRoute =
-  AccountResetPasswordTokenRouteImport.update({
-    id: '/account/reset-password/$token',
-    path: '/account/reset-password/$token',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AccountOrganization_invitationsInvitationIdRoute =
   AccountOrganization_invitationsInvitationIdRouteImport.update({
     id: '/account/organization_invitations/$invitationId',
@@ -297,12 +259,6 @@ const OrganizationDeactivateConfirmConfirmationIdRoute =
     path: '/organization/deactivate/confirm/$confirmationId',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AccountOauthGithubCallbackRoute =
-  AccountOauthGithubCallbackRouteImport.update({
-    id: '/account/oauth/github/callback',
-    path: '/account/oauth/github/callback',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const MainUserSettingsOrganizationsRoute =
   MainUserSettingsOrganizationsRouteImport.update({
     id: '/organizations',
@@ -379,7 +335,6 @@ const MainAuthSsoCannyRoute = MainAuthSsoCannyRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/auth': typeof AuthRouteRouteWithChildren
   '/one-clicks': typeof MainOneClicksRouteRouteWithChildren
   '/sandboxes': typeof MainSandboxesRouteRouteWithChildren
   '/settings': typeof MainSettingsRouteRouteWithChildren
@@ -389,9 +344,6 @@ export interface FileRoutesByFullPath {
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/auth/signin': typeof AuthSigninRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/': typeof MainIndexRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
   '/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
@@ -408,8 +360,6 @@ export interface FileRoutesByFullPath {
   '/volumes/new': typeof MainVolumesNewRoute
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/organization_invitations/$invitationId': typeof AccountOrganization_invitationsInvitationIdRoute
-  '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
-  '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/one-clicks/': typeof MainOneClicksIndexRoute
   '/sandboxes/': typeof MainSandboxesIndexRoute
@@ -429,7 +379,6 @@ export interface FileRoutesByFullPath {
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
   '/user/settings/api': typeof MainUserSettingsApiRoute
   '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
-  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
@@ -438,15 +387,11 @@ export interface FileRoutesByFullPath {
   '/user/settings/': typeof MainUserSettingsIndexRoute
 }
 export interface FileRoutesByTo {
-  '/auth': typeof AuthRouteRouteWithChildren
   '/activity': typeof MainActivityRoute
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/auth/signin': typeof AuthSigninRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/': typeof MainIndexRoute
   '/database-services/new': typeof MainDatabaseServicesNewRoute
   '/services/deploy': typeof MainServicesDeployRoute
@@ -458,8 +403,6 @@ export interface FileRoutesByTo {
   '/volumes/new': typeof MainVolumesNewRoute
   '/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/organization_invitations/$invitationId': typeof AccountOrganization_invitationsInvitationIdRoute
-  '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
-  '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/one-clicks': typeof MainOneClicksIndexRoute
   '/sandboxes': typeof MainSandboxesIndexRoute
@@ -479,7 +422,6 @@ export interface FileRoutesByTo {
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
   '/user/settings/api': typeof MainUserSettingsApiRoute
   '/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
-  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/one-clicks/$slug': typeof MainOneClicksSlugIndexRoute
@@ -490,7 +432,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_main': typeof MainRouteRouteWithChildren
-  '/auth': typeof AuthRouteRouteWithChildren
   '/_main/one-clicks': typeof MainOneClicksRouteRouteWithChildren
   '/_main/sandboxes': typeof MainSandboxesRouteRouteWithChildren
   '/_main/settings': typeof MainSettingsRouteRouteWithChildren
@@ -500,9 +441,6 @@ export interface FileRoutesById {
   '/_main/domains': typeof MainDomainsRoute
   '/_main/secrets': typeof MainSecretsRoute
   '/_main/team': typeof MainTeamRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
-  '/auth/signin': typeof AuthSigninRoute
-  '/auth/signup': typeof AuthSignupRoute
   '/_main/': typeof MainIndexRoute
   '/_main/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
   '/_main/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
@@ -519,8 +457,6 @@ export interface FileRoutesById {
   '/_main/volumes/new': typeof MainVolumesNewRoute
   '/_main/volumes/snapshots': typeof MainVolumesSnapshotsRoute
   '/account/organization_invitations/$invitationId': typeof AccountOrganization_invitationsInvitationIdRoute
-  '/account/reset-password/$token': typeof AccountResetPasswordTokenRoute
-  '/account/validate/$token': typeof AccountValidateTokenRoute
   '/account/workos/callback': typeof AccountWorkosCallbackRoute
   '/_main/one-clicks/': typeof MainOneClicksIndexRoute
   '/_main/sandboxes/': typeof MainSandboxesIndexRoute
@@ -540,7 +476,6 @@ export interface FileRoutesById {
   '/_main/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
   '/_main/user/settings/api': typeof MainUserSettingsApiRoute
   '/_main/user/settings/organizations': typeof MainUserSettingsOrganizationsRoute
-  '/account/oauth/github/callback': typeof AccountOauthGithubCallbackRoute
   '/organization/deactivate/confirm/$confirmationId': typeof OrganizationDeactivateConfirmConfirmationIdRoute
   '/_main/database-services/$databaseServiceId/': typeof MainDatabaseServicesDatabaseServiceIdIndexRoute
   '/_main/one-clicks/$slug/': typeof MainOneClicksSlugIndexRoute
@@ -551,7 +486,6 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/auth'
     | '/one-clicks'
     | '/sandboxes'
     | '/settings'
@@ -561,9 +495,6 @@ export interface FileRouteTypes {
     | '/domains'
     | '/secrets'
     | '/team'
-    | '/auth/reset-password'
-    | '/auth/signin'
-    | '/auth/signup'
     | '/'
     | '/database-services/$databaseServiceId'
     | '/one-clicks/$slug'
@@ -580,8 +511,6 @@ export interface FileRouteTypes {
     | '/volumes/new'
     | '/volumes/snapshots'
     | '/account/organization_invitations/$invitationId'
-    | '/account/reset-password/$token'
-    | '/account/validate/$token'
     | '/account/workos/callback'
     | '/one-clicks/'
     | '/sandboxes/'
@@ -601,7 +530,6 @@ export interface FileRouteTypes {
     | '/services/$serviceId/settings'
     | '/user/settings/api'
     | '/user/settings/organizations'
-    | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId/'
     | '/one-clicks/$slug/'
@@ -610,15 +538,11 @@ export interface FileRouteTypes {
     | '/user/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/auth'
     | '/activity'
     | '/deploy'
     | '/domains'
     | '/secrets'
     | '/team'
-    | '/auth/reset-password'
-    | '/auth/signin'
-    | '/auth/signup'
     | '/'
     | '/database-services/new'
     | '/services/deploy'
@@ -630,8 +554,6 @@ export interface FileRouteTypes {
     | '/volumes/new'
     | '/volumes/snapshots'
     | '/account/organization_invitations/$invitationId'
-    | '/account/reset-password/$token'
-    | '/account/validate/$token'
     | '/account/workos/callback'
     | '/one-clicks'
     | '/sandboxes'
@@ -651,7 +573,6 @@ export interface FileRouteTypes {
     | '/services/$serviceId/settings'
     | '/user/settings/api'
     | '/user/settings/organizations'
-    | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
     | '/database-services/$databaseServiceId'
     | '/one-clicks/$slug'
@@ -661,7 +582,6 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_main'
-    | '/auth'
     | '/_main/one-clicks'
     | '/_main/sandboxes'
     | '/_main/settings'
@@ -671,9 +591,6 @@ export interface FileRouteTypes {
     | '/_main/domains'
     | '/_main/secrets'
     | '/_main/team'
-    | '/auth/reset-password'
-    | '/auth/signin'
-    | '/auth/signup'
     | '/_main/'
     | '/_main/database-services/$databaseServiceId'
     | '/_main/one-clicks/$slug'
@@ -690,8 +607,6 @@ export interface FileRouteTypes {
     | '/_main/volumes/new'
     | '/_main/volumes/snapshots'
     | '/account/organization_invitations/$invitationId'
-    | '/account/reset-password/$token'
-    | '/account/validate/$token'
     | '/account/workos/callback'
     | '/_main/one-clicks/'
     | '/_main/sandboxes/'
@@ -711,7 +626,6 @@ export interface FileRouteTypes {
     | '/_main/services/$serviceId/settings'
     | '/_main/user/settings/api'
     | '/_main/user/settings/organizations'
-    | '/account/oauth/github/callback'
     | '/organization/deactivate/confirm/$confirmationId'
     | '/_main/database-services/$databaseServiceId/'
     | '/_main/one-clicks/$slug/'
@@ -722,24 +636,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   MainRouteRoute: typeof MainRouteRouteWithChildren
-  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   AccountOrganization_invitationsInvitationIdRoute: typeof AccountOrganization_invitationsInvitationIdRoute
-  AccountResetPasswordTokenRoute: typeof AccountResetPasswordTokenRoute
-  AccountValidateTokenRoute: typeof AccountValidateTokenRoute
   AccountWorkosCallbackRoute: typeof AccountWorkosCallbackRoute
-  AccountOauthGithubCallbackRoute: typeof AccountOauthGithubCallbackRoute
   OrganizationDeactivateConfirmConfirmationIdRoute: typeof OrganizationDeactivateConfirmConfirmationIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_main': {
       id: '/_main'
       path: ''
@@ -753,27 +656,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof MainIndexRouteImport
       parentRoute: typeof MainRouteRoute
-    }
-    '/auth/signup': {
-      id: '/auth/signup'
-      path: '/signup'
-      fullPath: '/auth/signup'
-      preLoaderRoute: typeof AuthSignupRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/signin': {
-      id: '/auth/signin'
-      path: '/signin'
-      fullPath: '/auth/signin'
-      preLoaderRoute: typeof AuthSigninRouteImport
-      parentRoute: typeof AuthRouteRoute
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRouteRoute
     }
     '/_main/team': {
       id: '/_main/team'
@@ -878,20 +760,6 @@ declare module '@tanstack/react-router' {
       path: '/account/workos/callback'
       fullPath: '/account/workos/callback'
       preLoaderRoute: typeof AccountWorkosCallbackRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account/validate/$token': {
-      id: '/account/validate/$token'
-      path: '/account/validate/$token'
-      fullPath: '/account/validate/$token'
-      preLoaderRoute: typeof AccountValidateTokenRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account/reset-password/$token': {
-      id: '/account/reset-password/$token'
-      path: '/account/reset-password/$token'
-      fullPath: '/account/reset-password/$token'
-      preLoaderRoute: typeof AccountResetPasswordTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account/organization_invitations/$invitationId': {
@@ -1039,13 +907,6 @@ declare module '@tanstack/react-router' {
       path: '/organization/deactivate/confirm/$confirmationId'
       fullPath: '/organization/deactivate/confirm/$confirmationId'
       preLoaderRoute: typeof OrganizationDeactivateConfirmConfirmationIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/account/oauth/github/callback': {
-      id: '/account/oauth/github/callback'
-      path: '/account/oauth/github/callback'
-      fullPath: '/account/oauth/github/callback'
-      preLoaderRoute: typeof AccountOauthGithubCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_main/user/settings/organizations': {
@@ -1348,31 +1209,11 @@ const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
   MainRouteRouteChildren,
 )
 
-interface AuthRouteRouteChildren {
-  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
-  AuthSigninRoute: typeof AuthSigninRoute
-  AuthSignupRoute: typeof AuthSignupRoute
-}
-
-const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthResetPasswordRoute: AuthResetPasswordRoute,
-  AuthSigninRoute: AuthSigninRoute,
-  AuthSignupRoute: AuthSignupRoute,
-}
-
-const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
-  AuthRouteRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   MainRouteRoute: MainRouteRouteWithChildren,
-  AuthRouteRoute: AuthRouteRouteWithChildren,
   AccountOrganization_invitationsInvitationIdRoute:
     AccountOrganization_invitationsInvitationIdRoute,
-  AccountResetPasswordTokenRoute: AccountResetPasswordTokenRoute,
-  AccountValidateTokenRoute: AccountValidateTokenRoute,
   AccountWorkosCallbackRoute: AccountWorkosCallbackRoute,
-  AccountOauthGithubCallbackRoute: AccountOauthGithubCallbackRoute,
   OrganizationDeactivateConfirmConfirmationIdRoute:
     OrganizationDeactivateConfirmConfirmationIdRoute,
 }
