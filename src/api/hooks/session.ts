@@ -4,11 +4,10 @@ import { useAuthKit } from 'src/application/authkit';
 import { useIdentifyUser } from 'src/application/posthog';
 import { setAuthKitToken, setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
-import { useSeon } from 'src/hooks/seon';
 
 import { ApiError } from '../api-error';
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
-import { apiMutation, apiQuery, getApiQueryKey } from '../query';
+import { apiMutation, apiQuery } from '../query';
 
 export function useUserQuery() {
   return useQuery({
@@ -33,24 +32,13 @@ export function useOrganization() {
 }
 
 export function useSwitchOrganization(onSuccess?: () => void) {
-  const getSeonFingerprint = useSeon();
   const authKit = useAuthKit();
   const queryClient = useQueryClient();
 
   return useMutation({
-    ...apiMutation('post /v1/organizations/{id}/switch', async (organizationId: string) => ({
-      path: { id: organizationId },
-      header: { 'seon-fp': await getSeonFingerprint() },
-    })),
-    async onSuccess({ token }) {
-      if (!authKit.user) {
-        setToken(token!.id!);
-      }
-
-      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
-      queryClient.removeQueries({ predicate: (query) => !query.isActive() });
-      void queryClient.invalidateQueries();
-
+    mutationFn: (organizationId: string) => authKit.switchOrganization(organizationId),
+    async onSuccess() {
+      queryClient.clear();
       onSuccess?.();
     },
   });

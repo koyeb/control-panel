@@ -50,6 +50,10 @@ export class AuthKitAdapter {
     return this.client?.getAccessToken();
   }
 
+  async switchOrganization(organizationId: string) {
+    await this.client?.switchToOrganization({ organizationId });
+  }
+
   get next() {
     const { next } = this.state ?? {};
 
