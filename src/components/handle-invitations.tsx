@@ -4,11 +4,11 @@ import { useMutation } from '@tanstack/react-query';
 import { apiMutation, useInvalidateApiQuery, useSwitchOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
+import { IconArrowRight } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { OrganizationInvitation } from 'src/model';
-import { AuthButton } from 'src/pages/authentication/components/auth-button';
 
-import { IconArrowRight } from '../icons';
+import { AuthButton } from './auth-button';
 
 const T = createTranslate('components.invitation');
 

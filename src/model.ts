@@ -633,7 +633,6 @@ export type User = {
   id: string;
   name: string;
   email: string;
-  emailValidated: boolean;
   avatarUrl: string;
   githubUser?: string;
   flags: string[];

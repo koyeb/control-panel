@@ -1,10 +1,10 @@
-import { Spinner } from '@koyeb/design-system';
+import { Button, Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { ApiError, apiQuery, mapInvitation } from 'src/api';
 import { HandleInvitation } from 'src/components/handle-invitations';
-import { LinkButton } from 'src/components/link';
 import { QueryError } from 'src/components/query-error';
 import { useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -54,6 +54,8 @@ export function InvitationPage() {
 }
 
 function UnauthenticatedError() {
+  const { signIn } = useAuth();
+
   return (
     <div className="col max-w-xl gap-4">
       <h1 className="text-3xl font-semibold">
@@ -64,9 +66,9 @@ function UnauthenticatedError() {
         <T id="unauthenticated.description" />
       </p>
 
-      <LinkButton to="/auth/signin" className="self-start">
+      <Button className="self-start" onClick={() => signIn()}>
         <T id="unauthenticated.cta" />
-      </LinkButton>
+      </Button>
     </div>
   );
 }

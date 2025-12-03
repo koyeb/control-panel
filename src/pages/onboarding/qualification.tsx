@@ -9,6 +9,7 @@ import { getApi, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { hasMessage } from 'src/application/validation';
+import { AuthButton } from 'src/components/auth-button';
 import { openDialog } from 'src/components/dialog';
 import { ControlledTextArea } from 'src/components/forms';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
@@ -16,8 +17,6 @@ import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { assert, defined } from 'src/utils/assert';
 import { Extend } from 'src/utils/types';
-
-import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.qualification');
 

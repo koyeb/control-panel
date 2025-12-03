@@ -16,10 +16,6 @@ export function getOnboardingStep(
     return null;
   }
 
-  if (!user.emailValidated) {
-    return 'emailValidation';
-  }
-
   if (user.name === '') {
     return 'setUserName';
   }
