@@ -13,6 +13,7 @@ import {
   createApiVolume,
 } from 'src/api';
 import { ApiEndpoint, ApiRequestParams } from 'src/api/api';
+import { setGetAccessToken } from 'src/application/token';
 import { fetchGithubRepository } from 'src/components/public-github-repository-input/github-api';
 import { assert } from 'src/utils/assert';
 
@@ -75,6 +76,8 @@ describe('initializeServiceForm', () => {
     queryClient = new QueryClient();
     fetch = new MockFetch();
     window.fetch = fetch.fetch;
+
+    setGetAccessToken(() => Promise.resolve(''));
 
     mockApi('get /v1/catalog/instances', {}, { instances });
     mockApi('get /v1/catalog/datacenters', {}, { datacenters });

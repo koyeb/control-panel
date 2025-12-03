@@ -18,3 +18,7 @@ export function getToken() {
 
   return _getAccessToken();
 }
+
+export function isSessionToken() {
+  return sessionToken !== null;
+}

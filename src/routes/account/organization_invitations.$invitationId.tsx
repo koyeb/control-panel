@@ -66,7 +66,7 @@ function UnauthenticatedError() {
         <T id="unauthenticated.description" />
       </p>
 
-      <Button className="self-start" onClick={() => signIn()}>
+      <Button className="self-start" onClick={() => void signIn()}>
         <T id="unauthenticated.cta" />
       </Button>
     </div>
