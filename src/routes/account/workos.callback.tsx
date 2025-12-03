@@ -27,11 +27,15 @@ async function waitForUser(queryClient: QueryClient) {
   try {
     await queryClient.ensureQueryData(apiQuery('get /v1/account/profile', {}));
   } catch (error) {
-    if (ApiError.is(error) && error.message === 'User id is not a uuid: ""') {
+    if (ApiError.is(error) && shouldRetry(error)) {
       await wait(1000);
       return waitForUser(queryClient);
     }
   }
+}
+
+function shouldRetry(error: ApiError) {
+  return error.status === 404 || error.message === 'User id is not a uuid: ""';
 }
 
 function getNextUrl() {
