@@ -187,6 +187,7 @@ const router = createRouter({
     return result !== '' ? `?${result}` : '';
   },
   context: {
+    auth: undefined!,
     queryClient,
     seon,
     translate,
@@ -228,6 +229,12 @@ const router = createRouter({
   },
 });
 
+declare global {
+  interface Window {
+    _next?: unknown;
+  }
+}
+
 // eslint-disable-next-line react-refresh/only-export-components
 function AuthKitProvider({ children }: { children: React.ReactNode }) {
   const clientId = getConfig('workOsClientId');
@@ -243,6 +250,7 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
       devMode={environment !== 'production'}
       redirectUri={`${window.location.origin}/account/workos/callback`}
       onBeforeAutoRefresh={() => true}
+      onRedirectCallback={({ state }) => (window._next = state?.next)}
     >
       {children}
     </BaseAuthKitProvider>
@@ -250,25 +258,25 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-function AuthKitConsumer({ children }: { children: React.ReactNode }) {
-  const { getAccessToken, isLoading, signIn } = useAuth();
+function AuthKitConsumer({ children }: { children: (auth: ReturnType<typeof useAuth>) => React.ReactNode }) {
+  const auth = useAuth();
 
   setGetAccessToken(async () => {
-    return getAccessToken().catch(async (error) => {
+    return auth.getAccessToken().catch(async (error) => {
       if (error instanceof LoginRequiredError) {
         await persistStore.clear();
-        await signIn();
+        await auth.signIn({ state: { next: window.location.href } });
       }
 
       throw error;
     });
   });
 
-  if (isLoading) {
+  if (auth.isLoading) {
     return <LogoLoading />;
   }
 
-  return children;
+  return children(auth);
 }
 
 const rootElement = document.getElementById('root')!;
@@ -279,9 +287,7 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <AuthKitProvider>
-        <AuthKitConsumer>
-          <RouterProvider router={router} />
-        </AuthKitConsumer>
+        <AuthKitConsumer>{(auth) => <RouterProvider router={router} context={{ auth }} />}</AuthKitConsumer>
       </AuthKitProvider>
     </StrictMode>,
   );

@@ -28,16 +28,21 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ location, search }) {
+  async beforeLoad({ location, search, context: { auth } }) {
     const token = getToken();
 
     if (token === null) {
       const next = location.pathname !== '/' ? location.href : undefined;
-      // todo
+
+      await auth.signIn({
+        state: { next },
+      });
     }
 
     if (search['organization-id']) {
-      // todo
+      await auth.switchToOrganization({
+        organizationId: search['organization-id'],
+      });
     }
   },
 
