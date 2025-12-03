@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, useUser } from 'src/api';
-import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -20,7 +19,6 @@ const schema = z.object({
 export function UserEmailForm() {
   const t = T.useTranslate();
   const user = useUser();
-  const authKit = useAuthKit();
 
   const form = useForm({
     defaultValues: {
@@ -30,13 +28,10 @@ export function UserEmailForm() {
   });
 
   const mutation = useMutation({
-    ...apiMutation(
-      authKit.user ? 'patch /v2/account/profile' : 'patch /v1/account/profile',
-      ({ email }: FormValues<typeof form>) => ({
-        query: {},
-        body: { email },
-      }),
-    ),
+    ...apiMutation('patch /v2/account/profile', ({ email }: FormValues<typeof form>) => ({
+      query: {},
+      body: { email },
+    })),
     async onSuccess(_, { email }) {
       form.reset({ email });
       notify.success(t('successNotification', { email }));

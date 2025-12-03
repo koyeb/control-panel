@@ -5,7 +5,7 @@ import z from 'zod';
 import { useOrganization, useUser } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
-import { isSessionToken, useAuthkitToken, useToken } from 'src/application/token';
+import { getToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
@@ -139,8 +139,9 @@ function Main({ children }: { children: React.ReactNode }) {
 
 function useBanner(): 'session' | 'trial' | void {
   const trial = useTrial();
+  const isSessionToken: boolean = false; // todo
 
-  if (isSessionToken()) {
+  if (isSessionToken) {
     return 'session';
   }
 
@@ -169,10 +170,6 @@ type PageContextProps = {
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const pageContextBaseUrl = getConfig('pageContextBaseUrl');
 
-  const legacyToken = useToken();
-  const authkitToken = useAuthkitToken();
-  const token = legacyToken ?? authkitToken;
-
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
@@ -192,9 +189,11 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
   useEffect(() => {
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+      getToken().then((token) => {
+        iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+      });
     }
-  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
+  }, [pageContextBaseUrl, iFrameRef, ready, location]);
 
   return (
     <>

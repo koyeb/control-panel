@@ -1,9 +1,9 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import { useForm } from 'react-hook-form';
 
 import { apiMutation, useUser } from 'src/api';
-import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { handleSubmit } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
@@ -14,7 +14,7 @@ export function UserPasswordForm() {
   const t = T.useTranslate();
   const user = useUser();
   const form = useForm();
-  const authKit = useAuthKit();
+  const authKit = useAuth();
 
   const mutation = useMutation({
     ...apiMutation('post /v1/account/reset_password', {

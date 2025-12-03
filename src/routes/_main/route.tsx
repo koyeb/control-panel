@@ -5,16 +5,14 @@ import z from 'zod';
 import {
   ApiError,
   createEnsureApiQueryData,
-  getApi,
   mapCatalogDatacenter,
   mapOrganization,
   mapUser,
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
-import { AuthKitAdapter } from 'src/application/authkit';
 import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
-import { getToken, setToken } from 'src/application/token';
+import { getToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -30,7 +28,7 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ location, search, context: { authKit } }) {
+  async beforeLoad({ location, search }) {
     const token = getToken();
 
     if (token === null) {
@@ -43,7 +41,7 @@ export const Route = createFileRoute('/_main')({
     }
 
     if (search['organization-id']) {
-      await switchOrganization(authKit, search['organization-id']);
+      // todo
     }
   },
 
@@ -94,24 +92,6 @@ export const Route = createFileRoute('/_main')({
     await Promise.all(promises);
   },
 });
-
-async function switchOrganization(authKit: AuthKitAdapter, organizationId: string) {
-  const api = getApi();
-
-  const result = await api('post /v1/organizations/{id}/switch', {
-    path: { id: organizationId },
-    header: {},
-  });
-
-  if (!authKit.user) {
-    setToken(result.token!.id!);
-  }
-
-  throw redirect({
-    search: (prev) => ({ ...prev, 'organization-id': undefined }),
-    reloadDocument: true,
-  });
-}
 
 async function preloadDatacentersLatencies(queryClient: QueryClient) {
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);

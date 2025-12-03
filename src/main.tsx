@@ -11,33 +11,30 @@ import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@ta
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { LoginRequiredError } from '@workos-inc/authkit-js';
+import { AuthKitProvider as BaseAuthKitProvider, useAuth } from '@workos-inc/authkit-react';
 import qs from 'query-string';
-import { StrictMode, useEffect, useState } from 'react';
+import { StrictMode, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api';
 import { ApiEndpoint } from './api/api';
-import { AuthKitAdapter } from './application/authkit';
 import { getConfig } from './application/config';
 import { IndexDBAdapter } from './application/index-db';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
-import {
-  accessTokenListener,
-  getToken,
-  isSessionToken,
-  setAuthKitToken,
-  setToken,
-} from './application/token';
+import { setGetAccessToken } from './application/token';
 import { configureZod } from './application/validation';
 import { ConfirmationDialog } from './components/confirmation-dialog';
 import { closeDialog } from './components/dialog';
+import { LogoLoading } from './components/logo-loading';
 import { NotificationContainer } from './components/notification';
 import { SeonAdapter } from './hooks/seon';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
 import { ServiceFormSection } from './modules/service-form';
 import { routeTree } from './route-tree.generated';
+import { assert } from './utils/assert';
 
 declare module '@tanstack/react-router' {
   interface Register {
@@ -123,29 +120,10 @@ const mutationCache = new MutationCache({
 });
 
 async function handleAuthenticationError() {
-  if (authKit.user) {
-    await authKit.signOut();
-    setAuthKitToken(null);
-    queryClient.clear();
-  } else if (getToken() !== null) {
-    setToken(null);
-    queryClient.clear();
-  }
-
-  const location = new URL(window.location.href);
+  queryClient.clear();
 
   if (!location.pathname.startsWith('/auth') && !location.pathname.startsWith('/account')) {
-    const search: { next?: string } = {};
-
-    if (location.pathname !== '/' || location.searchParams.size > 0) {
-      search.next = location.href.replace(location.origin, '');
-    }
-
-    await router.navigate({
-      to: '/auth/signin',
-      search,
-      reloadDocument: true,
-    });
+    window.location.reload();
   }
 }
 
@@ -163,8 +141,6 @@ function retry(failureCount: number, error: Error) {
 
 const seon = new SeonAdapter();
 
-const authKit = new AuthKitAdapter();
-
 const persistStore = new IndexDBAdapter('tanstack-query', 'cache');
 
 const persister = createQueryPersister({
@@ -177,7 +153,7 @@ const persister = createQueryPersister({
 });
 
 const location = new URL(window.location.href);
-const disablePersist = isSessionToken() || location.searchParams.has('session-token');
+const disablePersist = location.searchParams.has('session-token');
 
 const queryClient = new QueryClient({
   queryCache,
@@ -213,25 +189,13 @@ const router = createRouter({
   context: {
     queryClient,
     seon,
-    authKit,
     translate,
   },
   Wrap({ children }) {
-    useEffect(() => {
-      return accessTokenListener((token) => {
-        if (!isSessionToken()) {
-          setToken(token);
-          void queryClient.invalidateQueries();
-        }
-      });
-    }, []);
-
     return (
-      <AuthKitProvider>
-        <IntlProvider>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-        </IntlProvider>
-      </AuthKitProvider>
+      <IntlProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </IntlProvider>
     );
   },
   InnerWrap({ children }) {
@@ -266,22 +230,45 @@ const router = createRouter({
 
 // eslint-disable-next-line react-refresh/only-export-components
 function AuthKitProvider({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true);
+  const clientId = getConfig('workOsClientId');
+  const apiHostname = getConfig('workOsApiHost');
+  const environment = getConfig('environment');
 
-  useEffect(() => {
-    const id = setTimeout(() => {
-      authKit
-        .initialize()
-        .catch(reportError)
-        .finally(() => setLoading(false));
+  assert(clientId !== undefined);
+
+  return (
+    <BaseAuthKitProvider
+      clientId={clientId}
+      apiHostname={apiHostname}
+      devMode={environment !== 'production'}
+      redirectUri={`${window.location.origin}/account/workos/callback`}
+      onBeforeAutoRefresh={() => true}
+    >
+      {children}
+    </BaseAuthKitProvider>
+  );
+}
+
+// eslint-disable-next-line react-refresh/only-export-components
+function AuthKitConsumer({ children }: { children: React.ReactNode }) {
+  const { getAccessToken, isLoading, signIn } = useAuth();
+
+  setGetAccessToken(async () => {
+    return getAccessToken().catch(async (error) => {
+      if (error instanceof LoginRequiredError) {
+        await persistStore.clear();
+        await signIn();
+      }
+
+      throw error;
     });
+  });
 
-    return () => {
-      clearTimeout(id);
-    };
-  }, []);
+  if (isLoading) {
+    return <LogoLoading />;
+  }
 
-  return loading ? null : children;
+  return children;
 }
 
 const rootElement = document.getElementById('root')!;
@@ -291,7 +278,11 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <AuthKitProvider>
+        <AuthKitConsumer>
+          <RouterProvider router={router} />
+        </AuthKitConsumer>
+      </AuthKitProvider>
     </StrictMode>,
   );
 }

@@ -1,14 +1,13 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
 import { ApiError, createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
-import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
-import { setToken } from 'src/application/token';
 import { createValidationGuard, hasMessage } from 'src/application/validation';
 import { Link } from 'src/components/link';
 import { LogoLoading } from 'src/components/logo-loading';
@@ -95,8 +94,6 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
 });
 
 async function handleAuthentication(token: string, redirectUrl: URL) {
-  setToken(token);
-
   throw redirect({
     to: redirectUrl.pathname,
     search: Object.fromEntries(redirectUrl.searchParams),
@@ -199,7 +196,7 @@ function Component() {
 }
 
 function AccountNotFound() {
-  const authKit = useAuthKit();
+  const { signUp } = useAuth();
 
   return (
     <div className="col gap-1">
@@ -220,7 +217,7 @@ function AccountNotFound() {
                   </Link>
                 }
               >
-                <button type="button" onClick={() => void authKit.signUp()} className="underline">
+                <button type="button" onClick={() => void signUp()} className="underline">
                   {children}
                 </button>
               </FeatureFlag>
