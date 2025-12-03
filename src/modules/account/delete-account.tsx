@@ -66,11 +66,10 @@ function useDeleteMutation() {
     ...apiMutation('delete /v2/users/{id}', (user: User) => ({
       path: { id: user.id },
     })),
-    async onSuccess() {
+    onSuccess() {
       closeDialog();
       clearIdentify();
-
-      await signOut({ navigate: true });
+      signOut({ navigate: true });
     },
   });
 }

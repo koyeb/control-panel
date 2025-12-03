@@ -81,7 +81,7 @@ export function useLogoutMutation() {
     mutationKey: ['logout'],
     mutationFn: async () => {
       clearIdentify();
-      await signOut({ navigate: true });
+      signOut({ navigate: true });
     },
   });
 }

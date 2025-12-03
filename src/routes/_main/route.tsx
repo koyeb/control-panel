@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import { LoginRequiredError } from '@workos-inc/authkit-js';
 import z from 'zod';
 
 import {
@@ -13,7 +14,6 @@ import {
   useUserQuery,
 } from 'src/api';
 import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
-import { getToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -30,14 +30,16 @@ export const Route = createFileRoute('/_main')({
   }),
 
   async beforeLoad({ location, search, context: { auth } }) {
-    const token = getToken();
+    try {
+      await auth.getAccessToken();
+    } catch (error) {
+      if (error instanceof LoginRequiredError) {
+        const next = location.pathname !== '/' ? location.href : undefined;
 
-    if (token === null) {
-      const next = location.pathname !== '/' ? location.href : undefined;
-
-      await auth.signIn({
-        state: { next },
-      });
+        await auth.signIn({
+          state: { next },
+        });
+      }
     }
 
     if (search['organization-id']) {

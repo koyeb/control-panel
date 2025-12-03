@@ -250,7 +250,7 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
       devMode={environment !== 'production'}
       redirectUri={`${window.location.origin}/account/workos/callback`}
       onBeforeAutoRefresh={() => true}
-      onRedirectCallback={({ state }) => (window._next = state?.next)}
+      onRedirectCallback={({ state }) => (window._next = state?.next as string)}
     >
       {children}
     </BaseAuthKitProvider>
