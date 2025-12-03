@@ -5,6 +5,7 @@ import z from 'zod';
 import {
   ApiError,
   createEnsureApiQueryData,
+  getApi,
   mapCatalogDatacenter,
   mapOrganization,
   mapUser,
@@ -40,8 +41,15 @@ export const Route = createFileRoute('/_main')({
     }
 
     if (search['organization-id']) {
-      await auth.switchToOrganization({
-        organizationId: search['organization-id'],
+      const api = getApi();
+
+      await api('post /v1/organizations/{id}/switch', {
+        path: { id: search['organization-id'] },
+      });
+
+      throw redirect({
+        search: (prev) => ({ ...prev, 'organization-id': undefined }),
+        reloadDocument: true,
       });
     }
   },

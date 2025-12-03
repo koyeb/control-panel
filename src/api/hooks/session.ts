@@ -4,7 +4,7 @@ import { useAuth } from '@workos-inc/authkit-react';
 import { useIdentifyUser } from 'src/application/posthog';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
-import { apiQuery } from '../query';
+import { apiMutation, apiQuery } from '../query';
 
 export function useUserQuery() {
   return useQuery({
@@ -29,13 +29,14 @@ export function useOrganization() {
 }
 
 export function useSwitchOrganization(onSuccess?: () => void) {
-  const { switchToOrganization } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (organizationId: string) => switchToOrganization({ organizationId }),
+    ...apiMutation('post /v1/organizations/{id}/switch', (organizationId: string) => ({
+      path: { id: organizationId },
+    })),
     async onSuccess() {
-      queryClient.clear();
+      await queryClient.invalidateQueries();
       onSuccess?.();
     },
   });
