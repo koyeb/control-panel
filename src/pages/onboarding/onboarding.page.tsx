@@ -8,6 +8,7 @@ import { EmailValidation } from './email-validation';
 import { JoinOrganization } from './join-organization';
 import { PaymentMethod } from './payment-method';
 import { Qualification } from './qualification';
+import { SetUserName } from './set-user-name';
 
 export function OnboardingPage({ step }: { step: OnboardingStep }) {
   const Wrapper = step === 'emailValidation' || step === 'automaticReview' ? FullScreenLayout : Fragment;
@@ -15,6 +16,7 @@ export function OnboardingPage({ step }: { step: OnboardingStep }) {
   return (
     <Wrapper>
       {step === 'emailValidation' && <EmailValidation />}
+      {step === 'setUserName' && <SetUserName />}
       {step === 'joinOrganization' && <JoinOrganization />}
       {step === 'qualification' && <Qualification />}
       {step === 'automaticReview' && <AutomaticReview />}

@@ -2294,6 +2294,14 @@
         "resendEmailSuccessNotification": "A verification email was sent again to <strong>{email}</strong>",
         "emailAddressValidated": "Your email address was validated"
       },
+      "setUserName": {
+        "sidebar": "With Koyeb, run all your models and apps on high-performance CPUs, GPUs, and accelerators from AMD, Intel, and Nvidia",
+        "name": {
+          "label": "Name",
+          "placeholder": "Your full name"
+        },
+        "submit": "Continue"
+      },
       "joinOrganization": {
         "sidebar": "With Koyeb, run all your models and apps on high-performance CPUs, GPUs, and accelerators from AMD, Intel, and Nvidia",
         "title": "What is your organization's name?",
