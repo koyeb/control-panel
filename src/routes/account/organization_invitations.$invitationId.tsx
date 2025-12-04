@@ -13,11 +13,11 @@ import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 const T = createTranslate('pages.account.invitation');
 
 export const Route = createFileRoute('/account/organization_invitations/$invitationId')({
-  component: () => (
-    <SecondaryLayout>
-      <InvitationPage />
-    </SecondaryLayout>
-  ),
+  component: function Component() {
+    const { user } = useAuth();
+
+    return <SecondaryLayout>{user ? <InvitationPage /> : <UnauthenticatedError />}</SecondaryLayout>;
+  },
 });
 
 export function InvitationPage() {
@@ -38,10 +38,6 @@ export function InvitationPage() {
 
   if (invitationQuery.isError) {
     const error = invitationQuery.error;
-
-    if (ApiError.is(error, 401)) {
-      return <UnauthenticatedError />;
-    }
 
     if (ApiError.is(error, 404)) {
       return <NotFoundError />;
