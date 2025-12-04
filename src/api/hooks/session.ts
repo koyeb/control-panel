@@ -1,7 +1,4 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
-
-import { useIdentifyUser } from 'src/application/posthog';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 import { apiMutation, apiQuery } from '../query';
@@ -71,17 +68,4 @@ export function useOrganizationQuotasQuery() {
 
 export function useOrganizationQuotas() {
   return useOrganizationQuotasQuery().data;
-}
-
-export function useLogoutMutation() {
-  const { signOut } = useAuth();
-  const [, clearIdentify] = useIdentifyUser();
-
-  return useMutation({
-    mutationKey: ['logout'],
-    mutationFn: async () => {
-      clearIdentify();
-      signOut({ navigate: true });
-    },
-  });
 }

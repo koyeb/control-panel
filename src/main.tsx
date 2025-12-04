@@ -42,6 +42,7 @@ declare module '@tanstack/react-router' {
   }
 
   interface HistoryState {
+    next?: string;
     clearCache?: boolean;
     githubAppInstallationRequested?: boolean;
     expandedSection?: ServiceFormSection;
@@ -50,7 +51,7 @@ declare module '@tanstack/react-router' {
 }
 
 const queryCache = new QueryCache({
-  onError(error, query) {
+  async onError(error, query) {
     if (error.name === 'AbortError') {
       return;
     }
@@ -64,12 +65,12 @@ const queryCache = new QueryCache({
     }
 
     if (ApiError.is(error, 401) && query.queryKey[0] === ('get /v1/account/profile' satisfies ApiEndpoint)) {
-      void handleAuthenticationError();
+      await handleAuthenticationError();
     }
 
     // user removed from organization
     if (ApiError.is(error, 403) && error.message === 'User is not a member of the organization') {
-      void handleAuthenticationError();
+      await handleAuthenticationError();
     }
 
     if (ApiError.is(error, 404)) {
@@ -95,11 +96,8 @@ const queryCache = new QueryCache({
 const mutationCache = new MutationCache({
   async onSuccess(data, variables, onMutateResult, mutation) {
     const keys = new Array<unknown>(
-      'logout', // authkit logout
-      'delete /v1/account/logout',
       'delete /v1/organizations/{id}',
       'delete /v1/organization_members/{id}',
-      'delete /v1/users/{id}',
       'delete /v2/users/{id}',
     );
 
@@ -120,11 +118,18 @@ const mutationCache = new MutationCache({
 });
 
 async function handleAuthenticationError() {
-  queryClient.clear();
+  const href = router.latestLocation.href;
 
-  if (!location.pathname.startsWith('/auth') && !location.pathname.startsWith('/account')) {
-    window.location.reload();
+  if (href.startsWith('/auth') || href.startsWith('/account')) {
+    return;
   }
+
+  await persistStore.clear();
+
+  await router.navigate({
+    to: '/auth/signin',
+    state: { next: href === '/' ? undefined : href },
+  });
 }
 
 function throwOnError(error: Error) {
@@ -206,12 +211,9 @@ const router = createRouter({
 
     useEffect(() => {
       router.subscribe('onBeforeRouteMount', ({ toLocation }) => {
-        if (toLocation.pathname.startsWith('/auth') || toLocation.state.clearCache) {
+        if (toLocation.state.clearCache) {
           queryClient.clear();
           void persistStore.clear();
-        }
-
-        if (toLocation.state.clearCache) {
           void router.navigate({ state: {} });
         }
       });
@@ -261,15 +263,16 @@ function AuthKitProvider({ children }: { children: React.ReactNode }) {
 function AuthKitConsumer({ children }: { children: (auth: ReturnType<typeof useAuth>) => React.ReactNode }) {
   const auth = useAuth();
 
-  setGetAccessToken(async () => {
-    return auth.getAccessToken().catch(async (error) => {
-      if (error instanceof LoginRequiredError) {
-        await persistStore.clear();
-        await auth.signIn({ state: { next: window.location.href } });
-      }
+  const onError = async (error: unknown) => {
+    if (error instanceof LoginRequiredError) {
+      await handleAuthenticationError();
+    }
 
-      throw error;
-    });
+    throw error;
+  };
+
+  useEffect(() => {
+    setGetAccessToken(() => auth.getAccessToken().catch(onError));
   });
 
   if (auth.isLoading) {

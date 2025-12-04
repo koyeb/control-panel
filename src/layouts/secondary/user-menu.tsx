@@ -1,4 +1,6 @@
-import { useLogoutMutation, useUser } from 'src/api';
+import { useNavigate } from '@tanstack/react-router';
+
+import { useUser } from 'src/api';
 import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
 import { UserAvatar } from 'src/components/user-avatar';
 import { IconLogOut, IconSettings } from 'src/icons';
@@ -8,7 +10,7 @@ const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
   const user = useUser();
-  const logout = useLogoutMutation();
+  const navigate = useNavigate();
 
   return (
     <DropdownMenu
@@ -25,7 +27,7 @@ export function UserMenu() {
         </LinkMenuItem>
       )}
 
-      <ButtonMenuItem onClick={() => logout.mutate()} className="row gap-2">
+      <ButtonMenuItem onClick={() => navigate({ to: '/auth/signout' })} className="row gap-2">
         <IconLogOut className="icon" />
         <T id="logOut" />
       </ButtonMenuItem>

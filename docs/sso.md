@@ -14,7 +14,7 @@ and they are authenticated.
 When users click the "Log in" button on the third party website, they are redirected to the control panel on
 the `/auth/sso/...` page, with some query parameters.
 
-If they are not authenticated, the control panel redirects to `/auth/signin` with a `next` query parameter,
+If they are not authenticated, the control panel redirects to the authentication page with a `next` query parameter,
 containing the current URL. After they authenticate, the control panel redirects back to the SSO page and the
 flow resumes.
 

@@ -1,8 +1,9 @@
 import { Collapse, useBreakpoint } from '@koyeb/design-system';
+import { useNavigate } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useLogoutMutation, useUser } from 'src/api';
+import { useUser } from 'src/api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
 import { UserAvatar } from 'src/components/user-avatar';
@@ -22,7 +23,7 @@ const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
   const user = useUser();
-  const logout = useLogoutMutation();
+  const navigate = useNavigate();
 
   const isMobile = !useBreakpoint('sm');
 
@@ -59,7 +60,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
 
       <ThemeMenuItem />
 
-      <ButtonMenuItem onClick={() => logout.mutate()}>
+      <ButtonMenuItem onClick={() => navigate({ to: '/auth/signout' })}>
         <IconLogOut className="icon" />
         <T id="logout" />
       </ButtonMenuItem>

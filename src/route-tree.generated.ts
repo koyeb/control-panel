@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MainRouteRouteImport } from './routes/_main/route'
 import { Route as MainIndexRouteImport } from './routes/_main/index'
+import { Route as AuthSignoutRouteImport } from './routes/auth/signout'
+import { Route as AuthSigninRouteImport } from './routes/auth/signin'
 import { Route as MainTeamRouteImport } from './routes/_main/team'
 import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
 import { Route as MainDomainsRouteImport } from './routes/_main/domains'
@@ -69,6 +71,16 @@ const MainIndexRoute = MainIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MainRouteRoute,
+} as any)
+const AuthSignoutRoute = AuthSignoutRouteImport.update({
+  id: '/auth/signout',
+  path: '/auth/signout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthSigninRoute = AuthSigninRouteImport.update({
+  id: '/auth/signin',
+  path: '/auth/signin',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MainTeamRoute = MainTeamRouteImport.update({
   id: '/team',
@@ -344,6 +356,8 @@ export interface FileRoutesByFullPath {
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signout': typeof AuthSignoutRoute
   '/': typeof MainIndexRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
   '/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
@@ -392,6 +406,8 @@ export interface FileRoutesByTo {
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
   '/team': typeof MainTeamRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signout': typeof AuthSignoutRoute
   '/': typeof MainIndexRoute
   '/database-services/new': typeof MainDatabaseServicesNewRoute
   '/services/deploy': typeof MainServicesDeployRoute
@@ -441,6 +457,8 @@ export interface FileRoutesById {
   '/_main/domains': typeof MainDomainsRoute
   '/_main/secrets': typeof MainSecretsRoute
   '/_main/team': typeof MainTeamRoute
+  '/auth/signin': typeof AuthSigninRoute
+  '/auth/signout': typeof AuthSignoutRoute
   '/_main/': typeof MainIndexRoute
   '/_main/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
   '/_main/one-clicks/$slug': typeof MainOneClicksSlugRouteRouteWithChildren
@@ -495,6 +513,8 @@ export interface FileRouteTypes {
     | '/domains'
     | '/secrets'
     | '/team'
+    | '/auth/signin'
+    | '/auth/signout'
     | '/'
     | '/database-services/$databaseServiceId'
     | '/one-clicks/$slug'
@@ -543,6 +563,8 @@ export interface FileRouteTypes {
     | '/domains'
     | '/secrets'
     | '/team'
+    | '/auth/signin'
+    | '/auth/signout'
     | '/'
     | '/database-services/new'
     | '/services/deploy'
@@ -591,6 +613,8 @@ export interface FileRouteTypes {
     | '/_main/domains'
     | '/_main/secrets'
     | '/_main/team'
+    | '/auth/signin'
+    | '/auth/signout'
     | '/_main/'
     | '/_main/database-services/$databaseServiceId'
     | '/_main/one-clicks/$slug'
@@ -636,6 +660,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   MainRouteRoute: typeof MainRouteRouteWithChildren
+  AuthSigninRoute: typeof AuthSigninRoute
+  AuthSignoutRoute: typeof AuthSignoutRoute
   AccountOrganization_invitationsInvitationIdRoute: typeof AccountOrganization_invitationsInvitationIdRoute
   AccountWorkosCallbackRoute: typeof AccountWorkosCallbackRoute
   OrganizationDeactivateConfirmConfirmationIdRoute: typeof OrganizationDeactivateConfirmConfirmationIdRoute
@@ -656,6 +682,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof MainIndexRouteImport
       parentRoute: typeof MainRouteRoute
+    }
+    '/auth/signout': {
+      id: '/auth/signout'
+      path: '/auth/signout'
+      fullPath: '/auth/signout'
+      preLoaderRoute: typeof AuthSignoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/signin': {
+      id: '/auth/signin'
+      path: '/auth/signin'
+      fullPath: '/auth/signin'
+      preLoaderRoute: typeof AuthSigninRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_main/team': {
       id: '/_main/team'
@@ -1211,6 +1251,8 @@ const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   MainRouteRoute: MainRouteRouteWithChildren,
+  AuthSigninRoute: AuthSigninRoute,
+  AuthSignoutRoute: AuthSignoutRoute,
   AccountOrganization_invitationsInvitationIdRoute:
     AccountOrganization_invitationsInvitationIdRoute,
   AccountWorkosCallbackRoute: AccountWorkosCallbackRoute,
