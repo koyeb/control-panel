@@ -20,6 +20,10 @@ export function getOnboardingStep(
     return 'emailValidation';
   }
 
+  if (user.name === '') {
+    return 'setUserName';
+  }
+
   if (organization === undefined) {
     return 'joinOrganization';
   }

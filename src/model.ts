@@ -623,6 +623,7 @@ export type ServiceStatus =
 
 export type OnboardingStep =
   | 'emailValidation'
+  | 'setUserName'
   | 'joinOrganization'
   | 'qualification'
   | 'paymentMethod'
