@@ -27,7 +27,7 @@ export function UserMenu() {
         </LinkMenuItem>
       )}
 
-      <ButtonMenuItem onClick={() => navigate({ to: '/auth/signout' })} className="row gap-2">
+      <ButtonMenuItem onClick={() => void navigate({ to: '/auth/signout' })} className="row gap-2">
         <IconLogOut className="icon" />
         <T id="logOut" />
       </ButtonMenuItem>
