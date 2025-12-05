@@ -1,12 +1,9 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 
-import { useIdentifyUser } from 'src/application/posthog';
 import { setToken } from 'src/application/token';
-import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 
-import { ApiError } from '../api-error';
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 import { apiMutation, apiQuery, getApiQueryKey } from '../query';
 
@@ -85,32 +82,4 @@ export function useOrganizationQuotasQuery() {
 
 export function useOrganizationQuotas() {
   return useOrganizationQuotasQuery().data;
-}
-
-export function useLogoutMutation() {
-  const authKit = useAuth();
-  const userQuery = useUserQuery();
-  const navigate = useNavigate();
-  const [, clearIdentify] = useIdentifyUser();
-
-  const apiLogout = useMutation({
-    ...apiMutation('delete /v1/account/logout', {}),
-    meta: { showError: !ApiError.isAccountLockedError(userQuery.error) },
-    async onSettled() {
-      clearIdentify();
-      setToken(null);
-      await navigate({ to: '/auth/signin' });
-    },
-  });
-
-  const authKitLogout = useMutation({
-    mutationKey: ['logout'],
-    mutationFn: async () => authKit.signOut(),
-    onSuccess: async () => {
-      clearIdentify();
-      await navigate({ to: '/auth/signin' });
-    },
-  });
-
-  return authKit.user ? authKitLogout : apiLogout;
 }

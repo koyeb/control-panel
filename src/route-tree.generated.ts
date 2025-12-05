@@ -16,6 +16,7 @@ import { Route as AuthSignupRouteImport } from './routes/auth/signup'
 import { Route as AuthSigninRouteImport } from './routes/auth/signin'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as MainTeamRouteImport } from './routes/_main/team'
+import { Route as MainSignoutRouteImport } from './routes/_main/signout'
 import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
 import { Route as MainDomainsRouteImport } from './routes/_main/domains'
 import { Route as MainDeployRouteImport } from './routes/_main/deploy'
@@ -100,6 +101,11 @@ const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
 const MainTeamRoute = MainTeamRouteImport.update({
   id: '/team',
   path: '/team',
+  getParentRoute: () => MainRouteRoute,
+} as any)
+const MainSignoutRoute = MainSignoutRouteImport.update({
+  id: '/signout',
+  path: '/signout',
   getParentRoute: () => MainRouteRoute,
 } as any)
 const MainSecretsRoute = MainSecretsRouteImport.update({
@@ -388,6 +394,7 @@ export interface FileRoutesByFullPath {
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
+  '/signout': typeof MainSignoutRoute
   '/team': typeof MainTeamRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/signin': typeof AuthSigninRoute
@@ -443,6 +450,7 @@ export interface FileRoutesByTo {
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
+  '/signout': typeof MainSignoutRoute
   '/team': typeof MainTeamRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/signin': typeof AuthSigninRoute
@@ -499,6 +507,7 @@ export interface FileRoutesById {
   '/_main/deploy': typeof MainDeployRoute
   '/_main/domains': typeof MainDomainsRoute
   '/_main/secrets': typeof MainSecretsRoute
+  '/_main/signout': typeof MainSignoutRoute
   '/_main/team': typeof MainTeamRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
   '/auth/signin': typeof AuthSigninRoute
@@ -560,6 +569,7 @@ export interface FileRouteTypes {
     | '/deploy'
     | '/domains'
     | '/secrets'
+    | '/signout'
     | '/team'
     | '/auth/reset-password'
     | '/auth/signin'
@@ -615,6 +625,7 @@ export interface FileRouteTypes {
     | '/deploy'
     | '/domains'
     | '/secrets'
+    | '/signout'
     | '/team'
     | '/auth/reset-password'
     | '/auth/signin'
@@ -670,6 +681,7 @@ export interface FileRouteTypes {
     | '/_main/deploy'
     | '/_main/domains'
     | '/_main/secrets'
+    | '/_main/signout'
     | '/_main/team'
     | '/auth/reset-password'
     | '/auth/signin'
@@ -780,6 +792,13 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof MainTeamRouteImport
+      parentRoute: typeof MainRouteRoute
+    }
+    '/_main/signout': {
+      id: '/_main/signout'
+      path: '/signout'
+      fullPath: '/signout'
+      preLoaderRoute: typeof MainSignoutRouteImport
       parentRoute: typeof MainRouteRoute
     }
     '/_main/secrets': {
@@ -1308,6 +1327,7 @@ interface MainRouteRouteChildren {
   MainDeployRoute: typeof MainDeployRoute
   MainDomainsRoute: typeof MainDomainsRoute
   MainSecretsRoute: typeof MainSecretsRoute
+  MainSignoutRoute: typeof MainSignoutRoute
   MainTeamRoute: typeof MainTeamRoute
   MainIndexRoute: typeof MainIndexRoute
   MainDatabaseServicesDatabaseServiceIdRouteRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
@@ -1330,6 +1350,7 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainDeployRoute: MainDeployRoute,
   MainDomainsRoute: MainDomainsRoute,
   MainSecretsRoute: MainSecretsRoute,
+  MainSignoutRoute: MainSignoutRoute,
   MainTeamRoute: MainTeamRoute,
   MainIndexRoute: MainIndexRoute,
   MainDatabaseServicesDatabaseServiceIdRouteRoute:

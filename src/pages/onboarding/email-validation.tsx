@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 
-import { apiMutation, useLogoutMutation, useUser } from 'src/api';
+import { apiMutation, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { IconSend } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -12,8 +13,10 @@ import Background from './images/email-validation.svg?react';
 const T = createTranslate('pages.onboarding.emailValidation');
 
 export function EmailValidation() {
-  const user = useUser();
   const t = T.useTranslate();
+
+  const navigate = useNavigate();
+  const user = useUser();
 
   const resendMutation = useMutation({
     ...apiMutation('post /v1/account/resend_validation', {}),
@@ -21,8 +24,6 @@ export function EmailValidation() {
       notify.success(t('resendEmailSuccessNotification', { email: user?.email }));
     },
   });
-
-  const logoutMutation = useLogoutMutation();
 
   return (
     <>
@@ -61,7 +62,7 @@ export function EmailValidation() {
               logout: (children) => (
                 <button
                   type="button"
-                  onClick={() => logoutMutation.mutate()}
+                  onClick={() => void navigate({ to: '/signout' })}
                   className="text-default underline"
                 >
                   {children}

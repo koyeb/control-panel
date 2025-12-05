@@ -1,6 +1,6 @@
 import { CommandPalette } from '@koyeb/design-system';
+import { useNavigate } from '@tanstack/react-router';
 
-import { useLogoutMutation } from 'src/api';
 import { useSetThemeMode } from 'src/hooks/theme';
 import { IconLaptop, IconLogOut, IconMoon, IconSunDim, IconSunMoon } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
@@ -12,7 +12,7 @@ export function useSettingsCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
 
-  const logout = useLogoutMutation();
+  const navigate = useNavigate();
   const setTheme = useSetThemeMode();
 
   return (palette: CommandPalette) => {
@@ -50,7 +50,7 @@ export function useSettingsCommands() {
       label: t('settings:logout.label'),
       description: t('settings:logout.description'),
       Icon: IconLogOut,
-      execute: logout.mutateAsync,
+      execute: () => navigate({ to: '/signout' }),
     });
 
     return () => {
