@@ -1,13 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { Spinner } from '@koyeb/design-system';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
-import { apiMutation, useInvalidateApiQuery } from 'src/api';
+import { apiMutation, apiQuery } from 'src/api';
+import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
+import { waitFor } from 'src/utils/promises';
 
 import { AuthButton } from '../authentication/components/auth-button';
 
@@ -18,7 +21,7 @@ const schema = z.object({
 });
 
 export function SetUserName() {
-  const invalidate = useInvalidateApiQuery();
+  const queryClient = useQueryClient();
   const t = T.useTranslate();
 
   const form = useForm({
@@ -31,7 +34,14 @@ export function SetUserName() {
       body: { name },
     })),
     onSuccess: async () => {
-      await invalidate('get /v1/account/profile');
+      const checkName = async () => {
+        const { user } = await queryClient.fetchQuery(apiQuery('get /v1/account/profile', {}));
+        return user?.name !== '';
+      };
+
+      if (!(await waitFor(checkName, { timeout: 10 * 1000 }))) {
+        notify.warning(t('timeout'));
+      }
     },
   });
 
@@ -47,6 +57,7 @@ export function SetUserName() {
 
         <AuthButton type="submit" className="self-start">
           <T id="submit" />
+          {mutation.isPending && <Spinner className="size-4" />}
         </AuthButton>
       </form>
     </OnboardingLayout>

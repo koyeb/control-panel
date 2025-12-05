@@ -2300,7 +2300,8 @@
           "label": "Name",
           "placeholder": "Your full name"
         },
-        "submit": "Continue"
+        "submit": "Continue",
+        "timeout": "Timeout waiting for your name to be updated"
       },
       "joinOrganization": {
         "sidebar": "With Koyeb, run all your models and apps on high-performance CPUs, GPUs, and accelerators from AMD, Intel, and Nvidia",
