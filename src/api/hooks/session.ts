@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 
-import { useAuthKit } from 'src/application/authkit';
 import { useIdentifyUser } from 'src/application/posthog';
-import { setAuthKitToken, setToken } from 'src/application/token';
+import { setToken } from 'src/application/token';
 import { useNavigate } from 'src/hooks/router';
 import { useSeon } from 'src/hooks/seon';
 
@@ -34,7 +34,7 @@ export function useOrganization() {
 
 export function useSwitchOrganization(onSuccess?: () => void) {
   const getSeonFingerprint = useSeon();
-  const authKit = useAuthKit();
+  const authKit = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -88,7 +88,7 @@ export function useOrganizationQuotas() {
 }
 
 export function useLogoutMutation() {
-  const authKit = useAuthKit();
+  const authKit = useAuth();
   const userQuery = useUserQuery();
   const navigate = useNavigate();
   const [, clearIdentify] = useIdentifyUser();
@@ -108,7 +108,6 @@ export function useLogoutMutation() {
     mutationFn: async () => authKit.signOut(),
     onSuccess: async () => {
       clearIdentify();
-      setAuthKitToken(null);
       await navigate({ to: '/auth/signin' });
     },
   });

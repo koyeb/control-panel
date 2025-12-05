@@ -12,7 +12,7 @@ import {
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
-import { AuthKitAdapter } from 'src/application/authkit';
+import { AuthKit } from 'src/application/authkit';
 import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
 import { getToken, setToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
@@ -31,7 +31,7 @@ export const Route = createFileRoute('/_main')({
   }),
 
   async beforeLoad({ location, search, context: { authKit } }) {
-    const token = getToken();
+    const token = await getToken();
 
     if (token === null) {
       throw redirect({
@@ -95,7 +95,7 @@ export const Route = createFileRoute('/_main')({
   },
 });
 
-async function switchOrganization(authKit: AuthKitAdapter, organizationId: string) {
+async function switchOrganization(authKit: AuthKit, organizationId: string) {
   const api = getApi();
 
   const result = await api('post /v1/organizations/{id}/switch', {
