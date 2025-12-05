@@ -32,26 +32,21 @@ export * from './fixtures';
 export * from './query';
 
 export function getApi() {
-  return <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof api<E>>) => {
+  return async <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof api<E>>) => {
     return api(endpoint, params, {
-      ...getApiOptions(),
+      baseUrl: getConfig('apiBaseUrl'),
+      token: await getToken(),
       ...options,
     });
   };
 }
 
-export function getApiStream() {
+export function getApiStream(token?: string | null) {
   return <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof apiStream<E>>) => {
     return apiStream(endpoint, params, {
-      ...getApiOptions(),
+      baseUrl: getConfig('apiBaseUrl'),
+      token,
       ...options,
     });
-  };
-}
-
-function getApiOptions() {
-  return {
-    baseUrl: getConfig('apiBaseUrl'),
-    token: getToken(),
   };
 }

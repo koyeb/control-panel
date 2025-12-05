@@ -1,8 +1,8 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiMutation, useUser } from 'src/api';
-import { useAuthKit } from 'src/application/authkit';
 import { IconGithub } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 import { AssertionError, assert } from 'src/utils/assert';
@@ -12,7 +12,7 @@ const T = createTranslate('pages.userSettings.general.githubAccount');
 
 export function GithubAccount() {
   const user = useUser();
-  const authKit = useAuthKit();
+  const authKit = useAuth();
 
   const { mutate, isPending } = useMutation({
     ...apiMutation('get /v1/account/oauth', {
