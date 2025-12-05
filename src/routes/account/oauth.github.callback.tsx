@@ -1,11 +1,11 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
 import { ApiError, createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
-import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { setToken } from 'src/application/token';
@@ -199,7 +199,7 @@ function Component() {
 }
 
 function AccountNotFound() {
-  const authKit = useAuthKit();
+  const authKit = useAuth();
 
   return (
     <div className="col gap-1">

@@ -12,24 +12,17 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import qs from 'query-string';
-import { StrictMode, useEffect, useState } from 'react';
+import { StrictMode, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api';
-import { ApiEndpoint } from './api/api';
-import { AuthKitAdapter } from './application/authkit';
+import { AuthKitProvider } from './application/authkit';
 import { getConfig } from './application/config';
 import { IndexDBAdapter } from './application/index-db';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
-import {
-  accessTokenListener,
-  getToken,
-  isSessionToken,
-  setAuthKitToken,
-  setToken,
-} from './application/token';
+import { accessTokenListener, isSessionToken, setToken } from './application/token';
 import { configureZod } from './application/validation';
 import { ConfirmationDialog } from './components/confirmation-dialog';
 import { closeDialog } from './components/dialog';
@@ -45,6 +38,7 @@ declare module '@tanstack/react-router' {
   }
 
   interface HistoryState {
+    next?: string;
     clearCache?: boolean;
     githubAppInstallationRequested?: boolean;
     expandedSection?: ServiceFormSection;
@@ -64,15 +58,6 @@ const queryCache = new QueryCache({
       // organization is deactivated
       void router.navigate({ to: '/settings' });
       return;
-    }
-
-    if (ApiError.is(error, 401) && query.queryKey[0] === ('get /v1/account/profile' satisfies ApiEndpoint)) {
-      void handleAuthenticationError();
-    }
-
-    // user removed from organization
-    if (ApiError.is(error, 403) && error.message === 'User is not a member of the organization') {
-      void handleAuthenticationError();
     }
 
     if (ApiError.is(error, 404)) {
@@ -114,40 +99,11 @@ const mutationCache = new MutationCache({
   async onError(error, variables, context, mutation) {
     const { showError } = { showError: true, ...mutation.meta };
 
-    if (ApiError.is(error, 401)) {
-      await handleAuthenticationError();
-    } else if (mutation.options.onError === undefined && showError) {
+    if (mutation.options.onError === undefined && showError) {
       notify.error(error.message);
     }
   },
 });
-
-async function handleAuthenticationError() {
-  if (authKit.user) {
-    await authKit.signOut();
-    setAuthKitToken(null);
-    queryClient.clear();
-  } else if (getToken() !== null) {
-    setToken(null);
-    queryClient.clear();
-  }
-
-  const location = new URL(window.location.href);
-
-  if (!location.pathname.startsWith('/auth') && !location.pathname.startsWith('/account')) {
-    const search: { next?: string } = {};
-
-    if (location.pathname !== '/' || location.searchParams.size > 0) {
-      search.next = location.href.replace(location.origin, '');
-    }
-
-    await router.navigate({
-      to: '/auth/signin',
-      search,
-      reloadDocument: true,
-    });
-  }
-}
 
 function throwOnError(error: Error) {
   return ApiError.is(error) && error.status >= 500;
@@ -162,8 +118,6 @@ function retry(failureCount: number, error: Error) {
 }
 
 const seon = new SeonAdapter();
-
-const authKit = new AuthKitAdapter();
 
 const persistStore = new IndexDBAdapter('tanstack-query', 'cache');
 
@@ -211,9 +165,9 @@ const router = createRouter({
     return result !== '' ? `?${result}` : '';
   },
   context: {
+    authKit: undefined!,
     queryClient,
     seon,
-    authKit,
     translate,
   },
   Wrap({ children }) {
@@ -227,11 +181,9 @@ const router = createRouter({
     }, []);
 
     return (
-      <AuthKitProvider>
-        <IntlProvider>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-        </IntlProvider>
-      </AuthKitProvider>
+      <IntlProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      </IntlProvider>
     );
   },
   InnerWrap({ children }) {
@@ -264,24 +216,13 @@ const router = createRouter({
   },
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
-function AuthKitProvider({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true);
+async function onLoginRequired() {
+  queryClient.clear();
+  await persistStore.clear();
 
-  useEffect(() => {
-    const id = setTimeout(() => {
-      authKit
-        .initialize()
-        .catch(reportError)
-        .finally(() => setLoading(false));
-    });
-
-    return () => {
-      clearTimeout(id);
-    };
-  }, []);
-
-  return loading ? null : children;
+  if (!window.location.pathname.startsWith('/auth')) {
+    await router.navigate({ to: '/auth/signin' });
+  }
 }
 
 const rootElement = document.getElementById('root')!;
@@ -291,7 +232,9 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <AuthKitProvider navigate={router.navigate} queryClient={queryClient} onLoginRequired={onLoginRequired}>
+        {(authKit) => <RouterProvider router={router} context={{ authKit }} />}
+      </AuthKitProvider>
     </StrictMode>,
   );
 }

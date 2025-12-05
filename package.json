@@ -42,6 +42,7 @@
     "@uiw/codemirror-theme-github": "^4.25.2",
     "@uiw/react-codemirror": "^4.25.2",
     "@workos-inc/authkit-js": "^0.14.0",
+    "@workos-inc/authkit-react": "^0.13.0",
     "@workos-inc/widgets": "^1.5.0",
     "@xterm/addon-fit": "^0.10.0",
     "@xterm/xterm": "^5.5.0",

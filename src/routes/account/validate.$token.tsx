@@ -9,7 +9,7 @@ import {
   mapOrganization,
   mapUser,
 } from 'src/api';
-import { AuthKitAdapter } from 'src/application/authkit';
+import { AuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { hasMessage } from 'src/application/validation';
@@ -52,7 +52,7 @@ async function validateAccount(seon: SeonAdapter, queryClient: QueryClient, toke
   });
 }
 
-async function createOrganization(authKit: AuthKitAdapter, queryClient: QueryClient) {
+async function createOrganization(authKit: AuthKit, queryClient: QueryClient) {
   const api = getApi();
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
