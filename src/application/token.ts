@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react';
 
+import { getAccessToken } from './authkit';
 import { StoredValue } from './storage';
 
 const emitter = new EventTarget();
@@ -19,8 +20,8 @@ const sessionToken = new StoredValue('session-token', {
 let token = getSnapshot();
 let isSession = sessionToken.read() !== null;
 
-export function getToken() {
-  return token;
+export async function getToken() {
+  return token ?? getAccessToken();
 }
 
 export function isSessionToken() {
@@ -43,21 +44,12 @@ export function setToken(value: string | null, session = false) {
   }
 }
 
-export function setAuthKitToken(value: string | null = null) {
-  token = value;
-  emitter.dispatchEvent(new Event('change'));
-}
-
 export function accessTokenListener(cb: (value: string | null) => void) {
   return accessToken.listen(cb);
 }
 
 export function useToken() {
   return useSyncExternalStore(subscribe, getSnapshot);
-}
-
-export function useAuthkitToken() {
-  return useSyncExternalStore(subscribe, getToken);
 }
 
 function subscribe(cb: () => void) {

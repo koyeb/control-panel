@@ -74,6 +74,9 @@ importers:
       '@workos-inc/authkit-js':
         specifier: ^0.14.0
         version: 0.14.0
+      '@workos-inc/authkit-react':
+        specifier: ^0.13.0
+        version: 0.13.0(react@19.2.0)
       '@workos-inc/widgets':
         specifier: ^1.5.0
         version: 1.5.0(@radix-ui/themes@3.2.1(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-query@5.90.6(react@19.2.0))(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -3026,6 +3029,11 @@ packages:
 
   '@workos-inc/authkit-js@0.14.0':
     resolution: {integrity: sha512-Wt6rKoZdZnuAgiEBlvMDKhleU9DAwpyyy1SibacrnOWQgF4rcNlC+NTnHiiXu6OiOjQo6pPxhW42kCL+Gi+fjw==}
+
+  '@workos-inc/authkit-react@0.13.0':
+    resolution: {integrity: sha512-JhcPI9+I0MGOu7B33Gych76Xi7jKfKKfoZ4Mb6JPY9raeEqJQcnN4jMite2ynmMdmiZljIq7wkyf2WAsEU3SzQ==}
+    peerDependencies:
+      react: '>=17'
 
   '@workos-inc/widgets@1.5.0':
     resolution: {integrity: sha512-f/OASawBuCgX4puSRANYLCXnExczip7gjd5rlgqp5n1AnMltXrin/iE7dpoVh7PQXJHJpDIIOrIp/i3kFdInAw==}
@@ -8981,6 +8989,11 @@ snapshots:
       storybook: 10.0.3(@testing-library/dom@10.4.1)(prettier@3.6.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vite@7.1.12(@types/node@24.10.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.20.6)(yaml@2.8.1))
 
   '@workos-inc/authkit-js@0.14.0': {}
+
+  '@workos-inc/authkit-react@0.13.0(react@19.2.0)':
+    dependencies:
+      '@workos-inc/authkit-js': 0.14.0
+      react: 19.2.0
 
   '@workos-inc/widgets@1.5.0(@radix-ui/themes@3.2.1(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(@tanstack/react-query@5.90.6(react@19.2.0))(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:

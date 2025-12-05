@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, useUser } from 'src/api';
-import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit } from 'src/hooks/form';
@@ -20,7 +20,7 @@ const schema = z.object({
 export function UserEmailForm() {
   const t = T.useTranslate();
   const user = useUser();
-  const authKit = useAuthKit();
+  const authKit = useAuth();
 
   const form = useForm({
     defaultValues: {

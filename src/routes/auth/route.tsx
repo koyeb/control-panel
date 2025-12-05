@@ -19,8 +19,8 @@ export const Route = createFileRoute('/auth')({
     next: z.string().optional(),
   }),
 
-  beforeLoad({ search }) {
-    const token = getToken();
+  async beforeLoad({ search }) {
+    const token = await getToken();
 
     if (token !== null) {
       throw redirect({ to: search.next ?? '/' });

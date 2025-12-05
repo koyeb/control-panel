@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import { getApiStream } from 'src/api';
+import { getAccessToken } from 'src/application/authkit';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/sentry';
 import { createValidationGuard } from 'src/application/validation';
@@ -27,9 +28,11 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);
 
   const connect = useCallback((instanceId: string) => {
-    const apiStream = getApiStream();
-
-    setStream(apiStream('get /v1/streams/instances/exec', { query: { id: instanceId } }));
+    void getAccessToken()
+      .then(getApiStream)
+      .then((apiStream) => {
+        setStream(apiStream('get /v1/streams/instances/exec', { query: { id: instanceId } }));
+      });
   }, []);
 
   useMount(() => {

@@ -7,6 +7,7 @@ import { z } from 'zod';
 
 import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src/api';
 import { ApiResponseBody } from 'src/api/api';
+import { getAccessToken } from 'src/application/authkit';
 import { useDeepCompareMemo, usePrevious } from 'src/hooks/lifecycle';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { LogLine } from 'src/model';
@@ -169,7 +170,7 @@ const reconnectTimeout = [0, 1_000, 5_000, 60_000];
 function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
   const filtersMemo = useDeepCompareMemo(filters);
 
-  const stream = useRef<ReturnType<typeof tailLogs>>(null);
+  const stream = useRef<Awaited<ReturnType<typeof tailLogs>>>(null);
   const [connected, setConnected] = useState(false);
   const [lines, setLines] = useState<Omit<LogLine, 'html'>[]>([]);
   const [error, setError] = useState<Error>();
@@ -177,8 +178,8 @@ function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
   const [nonce, setNonce] = useState(Math.random());
   const reconnectIndex = useRef<number>(null);
 
-  const initialize = useCallback(() => {
-    stream.current = tailLogs(filtersMemo, start, {
+  const initialize = useCallback(async () => {
+    stream.current = await tailLogs(filtersMemo, start, {
       onOpen: () => {
         setError(undefined);
         setConnected(true);
@@ -202,7 +203,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
     let timeout: number;
 
     if (connect) {
-      timeout = window.setTimeout(initialize, reconnectTimeout[reconnectIndex.current ?? 0]);
+      timeout = window.setTimeout(() => void initialize(), reconnectTimeout[reconnectIndex.current ?? 0]);
     }
 
     return () => {
@@ -226,8 +227,9 @@ type LogStreamListeners = {
   onLogLine: (line: Omit<LogLine, 'html'>) => void;
 };
 
-function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStreamListeners>) {
-  const apiStream = getApiStream();
+async function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStreamListeners>) {
+  const token = await getAccessToken();
+  const apiStream = getApiStream(token);
 
   const stream = apiStream('get /v1/streams/logs/tail', {
     query: {

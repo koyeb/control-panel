@@ -1,12 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { ApiError, apiMutation } from 'src/api';
-import { useAuthKit } from 'src/application/authkit';
 import { notify } from 'src/application/notify';
 import { setToken } from 'src/application/token';
 import { Link } from 'src/components/link';
@@ -37,7 +37,7 @@ const invalidCredentialApiMessages = [
 
 export function SignInForm({ redirect }: { redirect: string }) {
   const t = T.useTranslate();
-  const authKit = useAuthKit();
+  const authKit = useAuth();
 
   const [authenticationMethod, setAuthenticationMethod] = useState<'workos' | 'koyeb' | null>(null);
 
@@ -58,7 +58,7 @@ export function SignInForm({ redirect }: { redirect: string }) {
       setAuthenticationMethod(lowerCase(method!));
 
       if (method === 'WORKOS') {
-        await authKit.signIn({ email, next: redirect });
+        await authKit.signIn({ loginHint: email, state: { next: redirect } });
       }
     },
   });

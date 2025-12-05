@@ -16,7 +16,7 @@ export function getApiQueryKey<E extends ApiEndpoint>(
 export function apiQuery<E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) {
   return {
     queryKey: getApiQueryKey(endpoint, params),
-    queryFn: ({
+    queryFn: async ({
       queryKey: [endpoint, params],
       signal,
       meta,
@@ -27,7 +27,7 @@ export function apiQuery<E extends ApiEndpoint>(endpoint: E, params: ApiRequestP
     }) => {
       return api(endpoint, params, {
         baseUrl: getConfig('apiBaseUrl'),
-        token: getToken(),
+        token: await getToken(),
         signal,
         ...meta,
       });
@@ -48,7 +48,7 @@ export function apiMutation<E extends ApiEndpoint, Variables = void>(
     mutationFn: async (variables: Variables, { meta }: { meta?: Record<string, unknown> }) => {
       return api<E>(endpoint, typeof params === 'function' ? await params(variables) : params, {
         baseUrl: getConfig('apiBaseUrl'),
-        token: getToken(),
+        token: await getToken(),
         ...meta,
       });
     },
