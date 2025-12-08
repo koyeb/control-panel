@@ -1,8 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiMutation, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
+import { LogoLoading } from 'src/components/logo-loading';
 import { IconSend } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
@@ -14,6 +16,7 @@ const T = createTranslate('pages.onboarding.emailValidation');
 
 export function EmailValidation() {
   const t = T.useTranslate();
+  const authKit = useAuth();
 
   const navigate = useNavigate();
   const user = useUser();
@@ -24,6 +27,10 @@ export function EmailValidation() {
       notify.success(t('resendEmailSuccessNotification', { email: user?.email }));
     },
   });
+
+  if (authKit.user) {
+    return <LogoLoading />;
+  }
 
   return (
     <>
