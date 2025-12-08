@@ -1,6 +1,7 @@
 import { Spinner } from '@koyeb/design-system';
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { ApiError, apiQuery, mapInvitation } from 'src/api';
 import { HandleInvitation } from 'src/components/handle-invitations';
@@ -13,20 +14,29 @@ import { SecondaryLayout } from 'src/layouts/secondary/secondary-layout';
 const T = createTranslate('pages.account.invitation');
 
 export const Route = createFileRoute('/account/organization_invitations/$invitationId')({
-  component: () => (
-    <SecondaryLayout>
-      <InvitationPage />
-    </SecondaryLayout>
-  ),
+  component: function Component() {
+    const invitationId = useRouteParam('invitationId');
+
+    return (
+      <SecondaryLayout>
+        <InvitationPage invitationId={invitationId} />
+      </SecondaryLayout>
+    );
+  },
 });
 
-export function InvitationPage() {
-  const invitationId = useRouteParam('invitationId');
+export function InvitationPage({ invitationId }: { invitationId: string }) {
+  const { user } = useAuth();
 
   const invitationQuery = useQuery({
     ...apiQuery('get /v1/organization_invitations/{id}', { path: { id: invitationId } }),
+    retry: (error) => !ApiError.is(error, 401),
     select: ({ invitation }) => mapInvitation(invitation!),
   });
+
+  if (!user) {
+    return <UnauthenticatedError />;
+  }
 
   if (invitationQuery.isPending) {
     return (
@@ -38,10 +48,6 @@ export function InvitationPage() {
 
   if (invitationQuery.isError) {
     const error = invitationQuery.error;
-
-    if (ApiError.is(error, 401)) {
-      return <UnauthenticatedError />;
-    }
 
     if (ApiError.is(error, 404)) {
       return <NotFoundError />;

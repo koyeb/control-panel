@@ -220,7 +220,7 @@ async function onLoginRequired() {
   queryClient.clear();
   await persistStore.clear();
 
-  if (!window.location.pathname.startsWith('/auth')) {
+  if (!['/auth', '/account'].some((prefix) => window.location.pathname.startsWith(prefix))) {
     await router.navigate({ to: '/auth/signin' });
   }
 }
