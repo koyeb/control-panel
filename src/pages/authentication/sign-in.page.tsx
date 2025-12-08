@@ -1,13 +1,10 @@
 import { useAuth } from '@workos-inc/authkit-react';
 
 import { DocumentTitle } from 'src/components/document-title';
-import { Link } from 'src/components/link';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 
 import { AuthButton } from './components/auth-button';
-import { GithubOAuthButton } from './components/github-oauth-button';
 import { SignInForm } from './components/sign-in-form';
 import { Separator } from './separator';
 
@@ -34,18 +31,9 @@ export function SignInPage() {
 
       <Separator />
 
-      <FeatureFlag
-        feature="workos-signup"
-        fallback={
-          <GithubOAuthButton action="signin" metadata={next ?? undefined}>
-            <T id="githubSignIn" />
-          </GithubOAuthButton>
-        }
-      >
-        <AuthButton type="button" onClick={() => void authKit.signIn({ state: { next } })}>
-          <T id="otherOptions" />
-        </AuthButton>
-      </FeatureFlag>
+      <AuthButton type="button" onClick={() => void authKit.signIn({ state: { next } })}>
+        <T id="otherOptions" />
+      </AuthButton>
 
       <SignUpLink />
     </div>
@@ -56,18 +44,9 @@ function SignUpLink() {
   const authKit = useAuth();
 
   const link = (children: React.ReactNode[]) => (
-    <FeatureFlag
-      feature="workos-signup"
-      fallback={
-        <Link to="/auth/signup" className="font-medium text-default">
-          {children}
-        </Link>
-      }
-    >
-      <button type="button" onClick={() => void authKit.signUp()} className="font-medium text-default">
-        {children}
-      </button>
-    </FeatureFlag>
+    <button type="button" onClick={() => void authKit.signUp()} className="font-medium text-default">
+      {children}
+    </button>
   );
 
   return (
