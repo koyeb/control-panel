@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -26,6 +27,10 @@ export function OrganizationName() {
     },
     resolver: zodResolver(schema),
   });
+
+  useEffect(() => {
+    form.resetField('organizationName', { defaultValue: organization?.name ?? '' });
+  }, [form, organization?.name]);
 
   const invalidate = useInvalidateApiQuery();
 
