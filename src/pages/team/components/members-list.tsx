@@ -12,7 +12,7 @@ import {
   useUser,
 } from 'src/api';
 import { notify } from 'src/application/notify';
-import { openDialog } from 'src/components/dialog';
+import { closeDialog, openDialog } from 'src/components/dialog';
 import { ActionsMenu, ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Select } from 'src/components/forms/select';
 import { Loading } from 'src/components/loading';
@@ -242,6 +242,8 @@ function useRemoveOrganizationMember() {
     async onSuccess(_, { user, organization }) {
       await invalidate('get /v1/organization_members');
 
+      closeDialog();
+
       notify.info(
         t('actions.removeMemberSuccessNotification', {
           memberName: user.name,
@@ -262,7 +264,14 @@ function useLeaveOrganization() {
     })),
     async onSuccess(_, membership) {
       await navigate({ to: '/', reloadDocument: true });
-      notify.info(t('actions.leaveSuccessNotification', { organizationName: membership.organization.name }));
+
+      closeDialog();
+
+      notify.info(
+        t('actions.leaveSuccessNotification', {
+          organizationName: membership.organization.name,
+        }),
+      );
     },
   });
 }
