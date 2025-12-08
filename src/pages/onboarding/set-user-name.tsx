@@ -47,19 +47,32 @@ export function SetUserName() {
 
   return (
     <OnboardingLayout sentence={<T id="sidebar" />}>
-      <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <ControlledInput
-          control={form.control}
-          name="name"
-          label={<T id="name.label" />}
-          placeholder={t('name.placeholder')}
-        />
+      <section className="col flex-1 justify-center gap-8">
+        <div>
+          <div className="mb-1 row items-center gap-2">
+            <h1 className="text-3xl font-semibold">
+              <T id="title" />
+            </h1>
+          </div>
+          <p className="text-dim">
+            <T id="description" />
+          </p>
+        </div>
 
-        <AuthButton type="submit" className="self-start">
-          <T id="submit" />
-          {mutation.isPending && <Spinner className="size-4" />}
-        </AuthButton>
-      </form>
+        <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
+          <ControlledInput
+            control={form.control}
+            name="name"
+            label={<T id="name.label" />}
+            placeholder={t('name.placeholder')}
+          />
+
+          <AuthButton type="submit" className="self-start">
+            <T id="submit" />
+            {mutation.isPending && <Spinner className="size-4" />}
+          </AuthButton>
+        </form>
+      </section>
     </OnboardingLayout>
   );
 }

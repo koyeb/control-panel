@@ -88,7 +88,7 @@ function CreateOrganization() {
           <InfoTooltip content={<T id="tooltip" />} />
         </div>
         <p className="text-dim">
-          <T id="canBeChanged" />
+          <T id="description" />
         </p>
       </div>
 
