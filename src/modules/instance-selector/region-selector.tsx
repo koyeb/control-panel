@@ -17,6 +17,7 @@ const scopes: RegionScope[] = ['metropolitan', 'continental'];
 type RegionSelectorProps = {
   regions: CatalogRegion[];
   selected: CatalogRegion[];
+  canSelect?: (region: CatalogRegion) => boolean;
   onSelected: (selected: CatalogRegion) => void;
 
   instance?: CatalogInstance;
@@ -28,6 +29,7 @@ type RegionSelectorProps = {
 export function RegionSelector({
   regions,
   selected,
+  canSelect,
   onSelected,
   instance,
   type,
@@ -45,6 +47,7 @@ export function RegionSelector({
               showAvailability={showAvailability}
               instance={instance}
               region={region}
+              disabled={canSelect && !canSelect(region)}
               selected={selected.includes(region)}
               onSelected={() => onSelected(region)}
             />
@@ -94,6 +97,7 @@ type RegionItemProps = {
   showAvailability?: boolean;
   instance?: CatalogInstance;
   region: CatalogRegion;
+  disabled?: boolean;
   selected: boolean;
   onSelected: () => void;
 };
@@ -103,6 +107,7 @@ function RegionItem({
   showLatency,
   showAvailability,
   region,
+  disabled,
   selected,
   onSelected,
   instance,
@@ -110,7 +115,7 @@ function RegionItem({
   const availability = useCatalogRegionAvailability(instance?.id, region.id);
 
   return (
-    <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 -outline-offset-2 has-checked:border-green has-focus-visible:outline">
+    <label className="row cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 -outline-offset-2 has-checked:border-green has-focus-visible:outline has-disabled:cursor-default">
       <RegionFlag regionId={region.id} className="size-6" />
 
       <div className="col flex-1 gap-1.5">
@@ -130,8 +135,8 @@ function RegionItem({
         )}
       </div>
 
-      {type === 'radio' && <Radio checked={selected} onChange={onSelected} />}
-      {type === 'checkbox' && <Checkbox checked={selected} onChange={onSelected} />}
+      {type === 'radio' && <Radio disabled={disabled} checked={selected} onChange={onSelected} />}
+      {type === 'checkbox' && <Checkbox disabled={disabled} checked={selected} onChange={onSelected} />}
     </label>
   );
 }

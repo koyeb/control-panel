@@ -1,7 +1,7 @@
 import { Collapse } from '@koyeb/design-system';
 
 import { createTranslate } from 'src/intl/translate';
-import { CatalogInstance } from 'src/model';
+import { CatalogInstance, CatalogRegion } from 'src/model';
 
 import { InstanceItem } from './instance-item';
 import { type InstanceSelector } from './instance-selector-state';
@@ -19,6 +19,7 @@ export type InstanceSelectorBadge =
 const T = createTranslate('components.instanceSelector');
 
 type InstanceSelectorProps = InstanceSelector & {
+  canSelectRegion?: (region: CatalogRegion) => boolean;
   getBadges: (instance: CatalogInstance) => InstanceSelectorBadge[];
 };
 
@@ -32,6 +33,7 @@ export function InstanceSelector({
   onRegionScopeSelected,
   onInstanceSelected,
   onRegionSelected,
+  canSelectRegion,
   getBadges,
 }: InstanceSelectorProps) {
   return instances.map((instance) => (
@@ -54,6 +56,7 @@ export function InstanceSelector({
           <RegionSelector
             regions={regions}
             selected={selectedRegions}
+            canSelect={canSelectRegion}
             onSelected={onRegionSelected}
             instance={instance}
             type={singleRegion || selectedInstance?.id === 'free' ? 'radio' : 'checkbox'}
