@@ -2303,7 +2303,7 @@
           "placeholder": "Your full name"
         },
         "submit": "Continue",
-        "timeout": "Timeout waiting for your name to be updated"
+        "timeout": "Your name couldn't be updated in time. Please try again by clicking <strong>Continue</strong>."
       },
       "joinOrganization": {
         "sidebar": "With Koyeb, run all your models and apps on high-performance CPUs, GPUs, and accelerators from AMD, Intel, and Nvidia",

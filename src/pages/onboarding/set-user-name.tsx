@@ -39,7 +39,7 @@ export function SetUserName() {
         return user?.name !== '';
       };
 
-      if (!(await waitFor(checkName, { timeout: 10 * 1000 }))) {
+      if (!(await waitFor(checkName, { timeout: 40 * 1000 }))) {
         notify.warning(t('timeout'));
       }
     },
