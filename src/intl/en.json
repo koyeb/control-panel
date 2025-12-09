@@ -2370,7 +2370,7 @@
         },
         "currentSpending": {
           "sidebar": "Use Koyeb to improve availability and get sub-100ms latency worldwide with over 50 locations. Pick between one and all locations.",
-          "title": "What is your monthly spend on could infrastructure?",
+          "title": "What is your monthly spend on cloud infrastructure?",
           "lessThan500": "< $500",
           "500To2000": "$500 - $2,000",
           "2000To10000": "$2,001 - $10,000",
