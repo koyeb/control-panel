@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, useInvitationsQuery, useSwitchOrganization, useUser } from 'src/api';
+import { apiMutation, useInvitationsQuery, useUser } from 'src/api';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -63,15 +63,16 @@ function CreateOrganization() {
     resolver: zodResolver(schema),
   });
 
-  const switchOrganization = useSwitchOrganization();
-
   const mutation = useMutation({
     ...apiMutation('post /v1/organizations', ({ organizationName }: FormValues<typeof form>) => ({
       body: { name: organizationName },
     })),
     async onSuccess({ organization }) {
-      await switchOrganization.mutateAsync(organization!.id!);
-      await navigate({ to: '/' });
+      await navigate({
+        to: '/',
+        search: { 'organization-id': organization!.id! },
+        reloadDocument: true,
+      });
     },
     onError: useFormErrorHandler(form, (error) => ({
       organizationName: error.name,
