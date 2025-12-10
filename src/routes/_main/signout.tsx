@@ -20,11 +20,13 @@ export const Route = createFileRoute('/_main/signout')({
     if (authKit.user) {
       authKit.signOut({ navigate: true, returnTo: `${window.location.origin}/auth/signin` });
     } else {
-      if (!(await isAccountLocked(queryClient))) {
-        await api('delete /v1/account/logout', {});
+      try {
+        if (!(await isAccountLocked(queryClient))) {
+          await api('delete /v1/account/logout', {});
+        }
+      } finally {
+        setToken(null);
       }
-
-      setToken(null);
     }
 
     posthog.reset();
