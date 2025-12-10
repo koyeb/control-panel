@@ -3,9 +3,10 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
 import { useOrganization, useUser } from 'src/api';
+import { getAccessToken } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
-import { isSessionToken, useToken } from 'src/application/token';
+import { isSessionToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
@@ -169,8 +170,6 @@ type PageContextProps = {
 function PageContext({ expanded, setExpanded }: PageContextProps) {
   const pageContextBaseUrl = getConfig('pageContextBaseUrl');
 
-  const token = useToken();
-
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
@@ -190,9 +189,11 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 
   useEffect(() => {
     if (pageContextBaseUrl !== undefined && ready) {
-      iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+      void getAccessToken().then((token) => {
+        iFrameRef.current?.contentWindow?.postMessage({ token, location }, pageContextBaseUrl);
+      });
     }
-  }, [pageContextBaseUrl, iFrameRef, ready, token, location]);
+  }, [pageContextBaseUrl, iFrameRef, ready, location]);
 
   return (
     <>

@@ -12,9 +12,8 @@ import {
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
-import { AuthKit } from 'src/application/authkit';
 import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
-import { getToken, setToken } from 'src/application/token';
+import { getToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -30,7 +29,7 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ location, search, context: { authKit } }) {
+  async beforeLoad({ location, search }) {
     const token = await getToken();
 
     if (token === null) {
@@ -43,7 +42,7 @@ export const Route = createFileRoute('/_main')({
     }
 
     if (search['organization-id']) {
-      await switchOrganization(authKit, search['organization-id']);
+      await switchOrganization(search['organization-id']);
     }
   },
 
@@ -95,17 +94,13 @@ export const Route = createFileRoute('/_main')({
   },
 });
 
-async function switchOrganization(authKit: AuthKit, organizationId: string) {
+async function switchOrganization(organizationId: string) {
   const api = getApi();
 
-  const result = await api('post /v1/organizations/{id}/switch', {
+  await api('post /v1/organizations/{id}/switch', {
     path: { id: organizationId },
     header: {},
   });
-
-  if (!authKit.user) {
-    setToken(result.token!.id!);
-  }
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),

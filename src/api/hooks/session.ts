@@ -1,7 +1,5 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
 
-import { setToken } from 'src/application/token';
 import { useSeon } from 'src/hooks/seon';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
@@ -31,7 +29,6 @@ export function useOrganization() {
 
 export function useSwitchOrganization(onSuccess?: () => void) {
   const getSeonFingerprint = useSeon();
-  const authKit = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -39,11 +36,7 @@ export function useSwitchOrganization(onSuccess?: () => void) {
       path: { id: organizationId },
       header: { 'seon-fp': await getSeonFingerprint() },
     })),
-    async onSuccess({ token }) {
-      if (!authKit.user) {
-        setToken(token!.id!);
-      }
-
+    async onSuccess() {
       await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
       queryClient.removeQueries({ predicate: (query) => !query.isActive() });
       void queryClient.invalidateQueries();

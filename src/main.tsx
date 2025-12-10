@@ -22,7 +22,7 @@ import { IndexDBAdapter } from './application/index-db';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
-import { accessTokenListener, isSessionToken, setToken } from './application/token';
+import { isSessionToken } from './application/token';
 import { configureZod } from './application/validation';
 import { ConfirmationDialog } from './components/confirmation-dialog';
 import { closeDialog } from './components/dialog';
@@ -171,15 +171,6 @@ const router = createRouter({
     translate,
   },
   Wrap({ children }) {
-    useEffect(() => {
-      return accessTokenListener((token) => {
-        if (!isSessionToken()) {
-          setToken(token);
-          void queryClient.invalidateQueries();
-        }
-      });
-    }, []);
-
     return (
       <IntlProvider>
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
