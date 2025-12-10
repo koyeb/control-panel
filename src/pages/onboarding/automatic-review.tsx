@@ -13,7 +13,7 @@ export function AutomaticReview() {
   });
 
   return (
-    <div className="row h-screen flex-1 items-center justify-center gap-2 overflow-auto p-3">
+    <div className="row items-center gap-2">
       <Spinner className="size-5" />
       <p className="text-base">
         <T id="pending" />

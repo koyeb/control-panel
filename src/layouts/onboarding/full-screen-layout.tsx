@@ -5,6 +5,8 @@ import { useForceThemeMode } from 'src/hooks/theme';
 import { SecondarySettings } from '../secondary/settings';
 import { UserMenu } from '../secondary/user-menu';
 
+import Background from './background.svg?react';
+
 export function FullScreenLayout({ children }: { children: React.ReactNode }) {
   const params = useSearchParams();
 
@@ -15,15 +17,17 @@ export function FullScreenLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="col h-screen p-3">
-      <div className="dark relative col flex-1 items-center rounded-2xl bg-neutral/95 p-16">
-        <div className="row justify-between self-stretch">
-          <LogoKoyeb className="h-8 self-start" />
-          <UserMenu />
-        </div>
-
-        {children}
+    <div className="relative col min-h-screen p-4">
+      <div className="absolute inset-0 -z-10 flex items-center justify-center overflow-hidden">
+        <Background className="size-full min-w-lg" />
       </div>
+
+      <div className="row justify-between">
+        <LogoKoyeb className="h-8 self-start" />
+        <UserMenu />
+      </div>
+
+      <div className="col flex-1 items-center justify-center">{children}</div>
     </div>
   );
 }
