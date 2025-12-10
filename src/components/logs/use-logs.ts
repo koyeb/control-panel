@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src/api';
 import { ApiResponseBody } from 'src/api/api';
-import { getAccessToken } from 'src/application/authkit';
+import { getToken } from 'src/application/token';
 import { useDeepCompareMemo, usePrevious } from 'src/hooks/lifecycle';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { LogLine } from 'src/model';
@@ -228,7 +228,7 @@ type LogStreamListeners = {
 };
 
 async function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStreamListeners>) {
-  const token = await getAccessToken();
+  const token = await getToken();
   const apiStream = getApiStream(token);
 
   const stream = apiStream('get /v1/streams/logs/tail', {
