@@ -1,3 +1,4 @@
+import { useUserQuery } from 'src/api';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { useSearchParams } from 'src/hooks/router';
 import { useForceThemeMode } from 'src/hooks/theme';
@@ -8,6 +9,7 @@ import { UserMenu } from '../secondary/user-menu';
 import Background from './background.svg?react';
 
 export function FullScreenLayout({ children }: { children: React.ReactNode }) {
+  const userQuery = useUserQuery();
   const params = useSearchParams();
 
   useForceThemeMode('light');
@@ -24,7 +26,7 @@ export function FullScreenLayout({ children }: { children: React.ReactNode }) {
 
       <div className="row justify-between">
         <LogoKoyeb className="h-8 self-start" />
-        <UserMenu />
+        {userQuery.isSuccess && <UserMenu />}
       </div>
 
       <div className="col flex-1 items-center justify-center">{children}</div>

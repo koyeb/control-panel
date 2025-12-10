@@ -8,7 +8,7 @@ import { ApiError, apiQuery } from 'src/api';
 import { LogoLoading } from 'src/components/logo-loading';
 import { urlToLinkOptions } from 'src/hooks/router';
 import { assert } from 'src/utils/assert';
-import { wait } from 'src/utils/promises';
+import { waitFor } from 'src/utils/promises';
 
 import { getConfig } from './config';
 
@@ -90,16 +90,10 @@ export function getAuthKitToken() {
 }
 
 async function waitForUser(queryClient: QueryClient) {
-  try {
-    await queryClient.ensureQueryData(apiQuery('get /v1/account/profile', {}));
-  } catch (error) {
-    if (ApiError.is(error) && shouldRetry(error)) {
-      await wait(1000);
-      return waitForUser(queryClient);
-    }
-  }
-}
-
-function shouldRetry(error: ApiError) {
-  return error.status === 404 || error.message === 'User id is not a uuid: ""';
+  await waitFor(async () => {
+    return queryClient.ensureQueryData(apiQuery('get /v1/account/profile', {})).then(
+      () => true,
+      (error) => !(ApiError.is(error) && error.status === 404),
+    );
+  });
 }

@@ -1837,6 +1837,12 @@
   },
   "pages": {
     "account": {
+      "workos": {
+        "creatingAccount": {
+          "title": "Your account is being created",
+          "description": "This will only take a moment, thanks for your patience!"
+        }
+      },
       "changePassword": {
         "title": "Reset password",
         "passwordPlaceholder": "New password",
