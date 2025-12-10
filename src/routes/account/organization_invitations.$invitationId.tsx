@@ -28,7 +28,7 @@ export function InvitationPage({ invitationId }: { invitationId: string }) {
   const { user } = useAuth();
 
   const invitationQuery = useQuery({
-    ...apiQuery('get /v1/organization_invitations/{id}', { path: { id: invitationId } }),
+    ...apiQuery('get /v1/account/organization_invitations/{id}', { path: { id: invitationId } }),
     select: ({ invitation }) => mapInvitation(invitation!),
   });
 

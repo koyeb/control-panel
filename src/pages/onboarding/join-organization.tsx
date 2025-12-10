@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, useInvitationsQuery, useUser } from 'src/api';
+import { apiMutation, apiQuery, mapInvitation } from 'src/api';
 import { AuthButton } from 'src/components/auth-button';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
@@ -27,8 +27,10 @@ const schema = z.object({
 });
 
 export function JoinOrganization() {
-  const user = useUser();
-  const invitationsQuery = useInvitationsQuery({ userId: user?.id, status: 'PENDING' });
+  const invitationsQuery = useQuery({
+    ...apiQuery('get /v1/account/organization_invitations', { query: { statuses: ['PENDING'] } }),
+    select: ({ invitations }) => invitations!.map(mapInvitation),
+  });
 
   if (invitationsQuery.isPending) {
     return <Loading />;

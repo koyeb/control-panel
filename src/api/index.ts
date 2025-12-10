@@ -20,7 +20,6 @@ export * from './hooks/billing';
 export * from './hooks/catalog';
 export * from './hooks/domain';
 export * from './hooks/git';
-export * from './hooks/invitation';
 export * from './hooks/secret';
 export * from './hooks/service';
 export * from './hooks/session';

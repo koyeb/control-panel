@@ -5,9 +5,9 @@ import clsx from 'clsx';
 import {
   apiMutation,
   apiQuery,
+  mapInvitation,
   mapOrganizationMember,
   useInvalidateApiQuery,
-  useInvitationsQuery,
   useOrganization,
   useUser,
 } from 'src/api';
@@ -29,7 +29,11 @@ export function MembersList() {
   const isMobile = !useBreakpoint('sm');
 
   const organization = useOrganization();
-  const invitationsQuery = useInvitationsQuery({ status: 'PENDING' });
+
+  const invitationsQuery = useQuery({
+    ...apiQuery('get /v1/organization_invitations', { query: { statuses: ['PENDING'] } }),
+    select: ({ invitations }) => invitations!.map(mapInvitation),
+  });
 
   const membersQuery = useQuery({
     ...apiQuery('get /v1/organization_members', { query: { organization_id: organization?.id } }),

@@ -43,7 +43,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
       }),
     ),
     async onSuccess() {
-      await invalidate('get /v1/organization_invitations');
+      await invalidate('get /v1/account/organization_invitations');
       await navigate({ to: '/' });
       notify.info(t('declineSuccess'));
     },
