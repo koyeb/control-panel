@@ -1833,30 +1833,6 @@
         "title": "Native autoscaling",
         "description": "Enjoy autoscaling with high-end performance thanks to high-frequency CPUs and secure Firecracker microVMs"
       }
-    },
-    "authentication": {
-      "zeroConfig": {
-        "line1": "Zero config",
-        "line2": "infrastructure",
-        "feature1": "Smart and fast autoscaling on GPU and CPU",
-        "feature2": "Zero-downtime deployments",
-        "feature3": "Built-in observability"
-      },
-      "seamlessDeployment": {
-        "line1": "Seamless",
-        "line2": "deployment",
-        "feature1": "Instant API endpoint",
-        "feature2": "Build and deploy anything from web apps to inference",
-        "feature3": "Native HTTP/2, WebSocket, and gRPC support"
-      },
-      "anyHardware": {
-        "line1": "Any hardware",
-        "line2": "anywhere",
-        "feature1": "High-performance CPUs, GPUs, and accelerators",
-        "feature2": "Available globally across 10 regions and 3 continents",
-        "feature3": "Ultra-fast NVME storage"
-      },
-      "argumentumAdPopulum": "Trusted by the most ambitious teams"
     }
   },
   "pages": {
@@ -1897,47 +1873,6 @@
       "documentTitle": "Activity",
       "title": "Recent activity",
       "loadMore": "Load more"
-    },
-    "authentication": {
-      "or": "or",
-      "signIn": {
-        "title": "Sign in to Koyeb",
-        "subtitle": "Welcome back! To continue, sign in to your account",
-        "githubSignIn": "Sign in with GitHub",
-        "otherOptions": "Show other options",
-        "emailPlaceholder": "Email",
-        "passwordPlaceholder": "Password",
-        "continue": "Continue",
-        "submit": "Sign in",
-        "invalidCredential": "Incorrect email or password",
-        "signUpLink": "Don't have an account? <link>Sign up</link>",
-        "forgotPasswordLink": "Forgot password? <link>Reset it</link>"
-      },
-      "signUp": {
-        "title": "Sign up for Koyeb",
-        "subtitle": "Get started deploying for free",
-        "githubSignUp": "Continue with GitHub",
-        "emailSignUp": "Continue with email",
-        "namePlaceholder": "Full name",
-        "emailPlaceholder": "Email",
-        "passwordPlaceholder": "Password",
-        "submit": "Continue",
-        "reCAPTCHA": "Protected by reCAPTCHA, <terms>Terms of Services</terms> and <privacy>Privacy Policy</privacy>",
-        "signInLink": "Already have an account? <link>Sign in</link>",
-        "agreements": "By signing up, you agree to the <tos>Terms of Services</tos> and <privacy>Privacy Policy</privacy>"
-      },
-      "resetPassword": {
-        "title": "Reset password",
-        "subtitle": "Enter the email associated with your account, and we will send you a password reset link",
-        "emailPlaceholder": "Email",
-        "submit": "Send password reset email",
-        "successNotification": "We've sent you an email with a password reset link",
-        "signInLink": "Go back to <link>sign in</link>"
-      },
-      "sso": {
-        "cannyError": "Error: failed to sign in to canny",
-        "discourseError": "Error: failed to sign in to discourse"
-      }
     },
     "createDatabaseService": {
       "documentTitle": "Create database service",
@@ -2775,6 +2710,10 @@
           "date": "Creation date"
         }
       }
+    },
+    "sso": {
+      "cannyError": "Error: failed to sign in to canny",
+      "discourseError": "Error: failed to sign in to discourse"
     },
     "organizationSettings": {
       "layout": {

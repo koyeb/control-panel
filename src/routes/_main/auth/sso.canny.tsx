@@ -43,7 +43,7 @@ export const Route = createFileRoute('/_main/auth/sso/canny')({
   },
 });
 
-const T = createTranslate('pages.authentication.sso');
+const T = createTranslate('pages.sso');
 
 function SsoError({ error }: { error: Error }) {
   return (

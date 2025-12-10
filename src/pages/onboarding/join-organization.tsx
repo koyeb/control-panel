@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { apiMutation, useInvitationsQuery, useUser } from 'src/api';
+import { AuthButton } from 'src/components/auth-button';
 import { HandleInvitation } from 'src/components/handle-invitations';
 import { Loading } from 'src/components/loading';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -14,8 +15,6 @@ import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { defined } from 'src/utils/assert';
-
-import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.joinOrganization');
 

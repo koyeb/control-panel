@@ -6,13 +6,12 @@ import z from 'zod';
 
 import { apiMutation, apiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
+import { AuthButton } from 'src/components/auth-button';
 import { ControlledInput } from 'src/components/forms';
 import { FormValues, handleSubmit } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
 import { OnboardingLayout } from 'src/layouts/onboarding/onboarding-layout';
 import { waitFor } from 'src/utils/promises';
-
-import { AuthButton } from '../authentication/components/auth-button';
 
 const T = createTranslate('pages.onboarding.setUserName');
 

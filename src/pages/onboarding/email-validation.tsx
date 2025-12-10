@@ -4,11 +4,10 @@ import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiMutation, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
+import { AuthButton } from 'src/components/auth-button';
 import { LogoLoading } from 'src/components/logo-loading';
 import { IconSend } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-
-import { AuthButton } from '../authentication/components/auth-button';
 
 import Background from './images/email-validation.svg?react';
 

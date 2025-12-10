@@ -1,12 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router';
-import z from 'zod';
 
-import { SignUpPage } from 'src/pages/authentication/sign-up.page';
+import { LogoLoading } from 'src/components/logo-loading';
 
 export const Route = createFileRoute('/auth/signup')({
-  component: SignUpPage,
+  pendingComponent: LogoLoading,
+  pendingMinMs: 0,
+  pendingMs: 0,
 
-  validateSearch: z.object({
-    method: z.literal('email').optional(),
-  }),
+  async loader({ context: { authKit } }) {
+    await authKit.signUp();
+  },
 });

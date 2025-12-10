@@ -6,9 +6,10 @@ import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { OrganizationInvitation } from 'src/model';
-import { AuthButton } from 'src/pages/authentication/components/auth-button';
 
 import { IconArrowRight } from '../icons';
+
+import { AuthButton } from './auth-button';
 
 const T = createTranslate('components.invitation');
 
