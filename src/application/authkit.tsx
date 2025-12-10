@@ -85,7 +85,7 @@ function AuthKitGuard({ onLoginRequired, children }: AuthKitGuardProps) {
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export function getAccessToken() {
+export function getAuthKitToken() {
   return globalThis._getAccessToken();
 }
 

@@ -2,9 +2,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
 import { useUser } from 'src/api';
-import { getAccessToken } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
+import { getToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
 import { Dialog, closeDialog, openDialog } from 'src/components/dialog';
 import { useLocation } from 'src/hooks/router';
@@ -40,7 +40,7 @@ export function ContextPalette() {
       }
 
       if (isReadyEvent(event.data)) {
-        void getAccessToken().then((token) => {
+        void getToken().then((token) => {
           postMessage({ token });
           setReady((ready) => ready + 1);
         });

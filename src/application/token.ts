@@ -1,10 +1,10 @@
-import { getAccessToken } from './authkit';
+import { getAuthKitToken } from './authkit';
 
 let token: string | null = null;
 let isSession = false;
 
 export async function getToken() {
-  return token ?? getAccessToken();
+  return token ?? getAuthKitToken();
 }
 
 export function isSessionToken() {
