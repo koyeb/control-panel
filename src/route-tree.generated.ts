@@ -12,9 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as MainRouteRouteImport } from './routes/_main/route'
 import { Route as MainIndexRouteImport } from './routes/_main/index'
 import { Route as AuthSignupRouteImport } from './routes/auth/signup'
+import { Route as AuthSignoutRouteImport } from './routes/auth/signout'
 import { Route as AuthSigninRouteImport } from './routes/auth/signin'
 import { Route as MainTeamRouteImport } from './routes/_main/team'
-import { Route as MainSignoutRouteImport } from './routes/_main/signout'
 import { Route as MainSecretsRouteImport } from './routes/_main/secrets'
 import { Route as MainDomainsRouteImport } from './routes/_main/domains'
 import { Route as MainDeployRouteImport } from './routes/_main/deploy'
@@ -79,6 +79,11 @@ const AuthSignupRoute = AuthSignupRouteImport.update({
   path: '/auth/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthSignoutRoute = AuthSignoutRouteImport.update({
+  id: '/auth/signout',
+  path: '/auth/signout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthSigninRoute = AuthSigninRouteImport.update({
   id: '/auth/signin',
   path: '/auth/signin',
@@ -87,11 +92,6 @@ const AuthSigninRoute = AuthSigninRouteImport.update({
 const MainTeamRoute = MainTeamRouteImport.update({
   id: '/team',
   path: '/team',
-  getParentRoute: () => MainRouteRoute,
-} as any)
-const MainSignoutRoute = MainSignoutRouteImport.update({
-  id: '/signout',
-  path: '/signout',
   getParentRoute: () => MainRouteRoute,
 } as any)
 const MainSecretsRoute = MainSecretsRouteImport.update({
@@ -368,9 +368,9 @@ export interface FileRoutesByFullPath {
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
-  '/signout': typeof MainSignoutRoute
   '/team': typeof MainTeamRoute
   '/auth/signin': typeof AuthSigninRoute
+  '/auth/signout': typeof AuthSignoutRoute
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof MainIndexRoute
   '/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
@@ -420,9 +420,9 @@ export interface FileRoutesByTo {
   '/deploy': typeof MainDeployRoute
   '/domains': typeof MainDomainsRoute
   '/secrets': typeof MainSecretsRoute
-  '/signout': typeof MainSignoutRoute
   '/team': typeof MainTeamRoute
   '/auth/signin': typeof AuthSigninRoute
+  '/auth/signout': typeof AuthSignoutRoute
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof MainIndexRoute
   '/database-services/new': typeof MainDatabaseServicesNewRoute
@@ -473,9 +473,9 @@ export interface FileRoutesById {
   '/_main/deploy': typeof MainDeployRoute
   '/_main/domains': typeof MainDomainsRoute
   '/_main/secrets': typeof MainSecretsRoute
-  '/_main/signout': typeof MainSignoutRoute
   '/_main/team': typeof MainTeamRoute
   '/auth/signin': typeof AuthSigninRoute
+  '/auth/signout': typeof AuthSignoutRoute
   '/auth/signup': typeof AuthSignupRoute
   '/_main/': typeof MainIndexRoute
   '/_main/database-services/$databaseServiceId': typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
@@ -531,9 +531,9 @@ export interface FileRouteTypes {
     | '/deploy'
     | '/domains'
     | '/secrets'
-    | '/signout'
     | '/team'
     | '/auth/signin'
+    | '/auth/signout'
     | '/auth/signup'
     | '/'
     | '/database-services/$databaseServiceId'
@@ -583,9 +583,9 @@ export interface FileRouteTypes {
     | '/deploy'
     | '/domains'
     | '/secrets'
-    | '/signout'
     | '/team'
     | '/auth/signin'
+    | '/auth/signout'
     | '/auth/signup'
     | '/'
     | '/database-services/new'
@@ -635,9 +635,9 @@ export interface FileRouteTypes {
     | '/_main/deploy'
     | '/_main/domains'
     | '/_main/secrets'
-    | '/_main/signout'
     | '/_main/team'
     | '/auth/signin'
+    | '/auth/signout'
     | '/auth/signup'
     | '/_main/'
     | '/_main/database-services/$databaseServiceId'
@@ -686,6 +686,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   MainRouteRoute: typeof MainRouteRouteWithChildren
   AuthSigninRoute: typeof AuthSigninRoute
+  AuthSignoutRoute: typeof AuthSignoutRoute
   AuthSignupRoute: typeof AuthSignupRoute
   AccountOrganization_invitationsInvitationIdRoute: typeof AccountOrganization_invitationsInvitationIdRoute
   AccountWorkosCallbackRoute: typeof AccountWorkosCallbackRoute
@@ -716,6 +717,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignupRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/signout': {
+      id: '/auth/signout'
+      path: '/auth/signout'
+      fullPath: '/auth/signout'
+      preLoaderRoute: typeof AuthSignoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth/signin': {
       id: '/auth/signin'
       path: '/auth/signin'
@@ -728,13 +736,6 @@ declare module '@tanstack/react-router' {
       path: '/team'
       fullPath: '/team'
       preLoaderRoute: typeof MainTeamRouteImport
-      parentRoute: typeof MainRouteRoute
-    }
-    '/_main/signout': {
-      id: '/_main/signout'
-      path: '/signout'
-      fullPath: '/signout'
-      preLoaderRoute: typeof MainSignoutRouteImport
       parentRoute: typeof MainRouteRoute
     }
     '/_main/secrets': {
@@ -1249,7 +1250,6 @@ interface MainRouteRouteChildren {
   MainDeployRoute: typeof MainDeployRoute
   MainDomainsRoute: typeof MainDomainsRoute
   MainSecretsRoute: typeof MainSecretsRoute
-  MainSignoutRoute: typeof MainSignoutRoute
   MainTeamRoute: typeof MainTeamRoute
   MainIndexRoute: typeof MainIndexRoute
   MainDatabaseServicesDatabaseServiceIdRouteRoute: typeof MainDatabaseServicesDatabaseServiceIdRouteRouteWithChildren
@@ -1272,7 +1272,6 @@ const MainRouteRouteChildren: MainRouteRouteChildren = {
   MainDeployRoute: MainDeployRoute,
   MainDomainsRoute: MainDomainsRoute,
   MainSecretsRoute: MainSecretsRoute,
-  MainSignoutRoute: MainSignoutRoute,
   MainTeamRoute: MainTeamRoute,
   MainIndexRoute: MainIndexRoute,
   MainDatabaseServicesDatabaseServiceIdRouteRoute:
@@ -1294,6 +1293,7 @@ const MainRouteRouteWithChildren = MainRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   MainRouteRoute: MainRouteRouteWithChildren,
   AuthSigninRoute: AuthSigninRoute,
+  AuthSignoutRoute: AuthSignoutRoute,
   AuthSignupRoute: AuthSignupRoute,
   AccountOrganization_invitationsInvitationIdRoute:
     AccountOrganization_invitationsInvitationIdRoute,

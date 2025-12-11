@@ -4,19 +4,18 @@ import { useEffect } from 'react';
 
 import { LogoLoading } from 'src/components/logo-loading';
 
-export const Route = createFileRoute('/_main/signout')({
+export const Route = createFileRoute('/auth/signout')({
   component: Component,
 });
 
 function Component() {
-  const { signOut } = useAuth();
+  const { signOut, signIn } = useAuth();
 
   useEffect(() => {
-    signOut({
-      navigate: true,
-      returnTo: `${window.location.origin}/auth/signin`,
-    });
-  }, [signOut]);
+    void Promise.resolve()
+      .then(() => signOut({ navigate: false }))
+      .then(() => signIn({}));
+  }, [signOut, signIn]);
 
   return <LogoLoading />;
 }

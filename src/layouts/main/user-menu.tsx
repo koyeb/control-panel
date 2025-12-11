@@ -59,7 +59,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
 
       <ThemeMenuItem />
 
-      <ButtonMenuItem onClick={() => void navigate({ to: '/signout' })}>
+      <ButtonMenuItem onClick={() => void navigate({ to: '/auth/signout' })}>
         <IconLogOut className="icon" />
         <T id="logout" />
       </ButtonMenuItem>

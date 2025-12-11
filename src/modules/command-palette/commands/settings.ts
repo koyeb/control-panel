@@ -50,7 +50,7 @@ export function useSettingsCommands() {
       label: t('settings:logout.label'),
       description: t('settings:logout.description'),
       Icon: IconLogOut,
-      execute: () => navigate({ to: '/signout' }),
+      execute: () => navigate({ to: '/auth/signout' }),
     });
 
     return () => {

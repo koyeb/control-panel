@@ -98,7 +98,7 @@ function UserMenu() {
         <T id="userSettings" />
       </LinkMenuItem>
 
-      <ButtonMenuItem onClick={() => void navigate({ to: '/signout' })}>
+      <ButtonMenuItem onClick={() => void navigate({ to: '/auth/signout' })}>
         <IconLogOut className="icon" />
         <T id="logout" />
       </ButtonMenuItem>

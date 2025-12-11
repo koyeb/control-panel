@@ -12,7 +12,7 @@ import {
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
-import { getOnboardingStep, useOnboardingStep } from 'src/application/onboarding';
+import { useOnboardingStep } from 'src/application/onboarding';
 import { getToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
@@ -46,23 +46,17 @@ export const Route = createFileRoute('/_main')({
     }
   },
 
-  async loader({ context: { queryClient }, location }) {
+  async loader({ context: { queryClient } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     void preloadDatacentersLatencies(queryClient);
 
-    const user = await ensureApiQueryData('get /v1/account/profile', {}).then((result) =>
-      mapUser(result.user!),
-    );
+    await ensureApiQueryData('get /v1/account/profile', {}).then((result) => mapUser(result.user!));
 
     const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
       (result) => mapOrganization(result.organization!),
       () => undefined,
     );
-
-    if (getOnboardingStep(user, organization) !== null && location.pathname !== '/') {
-      throw redirect({ to: '/' });
-    }
 
     const promises = new Set<Promise<unknown>>();
 
