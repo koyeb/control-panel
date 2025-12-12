@@ -136,7 +136,7 @@ function outputFile({ filePath, content }: OutputFileOptions): Plugin {
     configResolved(config) {
       dist = path.resolve(config.root, config.build.outDir);
     },
-    async closeBundle() {
+    async writeBundle() {
       await fs.writeFile(path.join(dist, filePath), content());
     },
   };

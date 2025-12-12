@@ -2,6 +2,7 @@ import { langs } from '@uiw/codemirror-extensions-langs';
 import { useEffect, useState } from 'react';
 
 import { last, unique } from 'src/utils/arrays';
+import { ValueOf } from 'src/utils/types';
 
 const languageItems = unique(
   Object.values(langs).map((lang) => lang()),
@@ -42,7 +43,7 @@ export function useCodeEditor(filepath: string) {
 type Language = NonNullable<ReturnType<typeof getLanguage>>;
 
 function getLanguage(lang: string) {
-  const languageFn = langs[lang];
+  const languageFn: ValueOf<typeof langs> | undefined = langs[lang as keyof typeof langs];
 
   if (languageFn) {
     return languageFn();
