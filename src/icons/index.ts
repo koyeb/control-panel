@@ -124,4 +124,6 @@ export { default as IconGcp } from './gcp.svg?react';
 export { default as IconGithub } from './github.svg?react';
 export { default as IconGitlab } from './gitlab.svg?react';
 export { default as IconHuggingFace } from './huggingface.svg?react';
+export { default as IconJavascript } from './javascript.svg?react';
 export { default as IconPrivateRegistry } from './private-registry.svg?react';
+export { default as IconPython } from './python.svg?react';

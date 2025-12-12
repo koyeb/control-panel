@@ -1,18 +1,24 @@
-import { Code as BaseCode, Button, CodeLang, Spinner } from '@koyeb/design-system';
+import { Code as BaseCode, Button, CodeLang, Spinner, TabButton, TabButtons } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
+import { useState } from 'react';
 
 import { apiMutation, useOrganization } from 'src/api';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { DocumentationLink } from 'src/components/documentation-link';
 import { Link } from 'src/components/link';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
-import { IconPlay, IconRefreshCcw } from 'src/icons';
+import { IconJavascript, IconPlay, IconPython, IconRefreshCcw } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.sandbox.list.noSandboxes');
 
 // cspell:ignore randint
-const pythonCode = `
+
+const content = {
+  python: {
+    install: 'pip install koyeb-sdk',
+    run: 'python main.py',
+    code: `
 # main.py
 from koyeb import Sandbox
 
@@ -26,22 +32,51 @@ result = sandbox.exec("echo 'Hello World'")
 print(result.stdout.strip())
 
 sandbox.delete()
-`.trim();
+`.trim(),
+  },
+
+  javascript: {
+    install: 'npm install @koyeb/sandbox-sdk',
+    run: 'node main.js',
+    code: `
+// main.js
+import { Sandbox } from '@koyeb/sandbox-sdk';
+
+const sandbox = await Sandbox.create({
+  image: 'ubuntu',
+  name: 'hello-world',
+  wait_ready: true,
+});
+
+const result = await sandbox.exec("echo 'Sandbox is ready!'");
+console.log(result.stdout);
+
+await sandbox.delete();
+`.trim(),
+  },
+};
 
 export function NoSandboxes() {
+  const [selectedLanguage, setSelectedLanguage] = useState<'python' | 'javascript'>('python');
+  const { install, run, code } = content[selectedLanguage];
+
+  const language = <T id={`languages.${selectedLanguage}`} />;
+
   return (
     <div className="col gap-6">
       <p className="text-dim">
         <T id="intro.sentence" />
       </p>
 
-      <Section number={1} title={<T id="step1.title" />}>
+      <LanguageSelector selected={selectedLanguage} setSelected={setSelectedLanguage} />
+
+      <Section number={1} title={<T id="step1.title" values={{ language }} />}>
         <div className="col gap-2">
           <p className="text-dim">
-            <T id="step1.line1" />
+            <T id="step1.line1" values={{ language }} />
           </p>
 
-          <Code lang="shell" prefix="$ " value="pip install koyeb-sdk" />
+          <Code lang="shell" prefix="$ " value={install} />
         </div>
 
         <div className="col gap-2">
@@ -57,7 +92,7 @@ export function NoSandboxes() {
             <T id="step2.line1" />
           </p>
 
-          <Code lang="python" value={pythonCode} />
+          <Code lang={selectedLanguage} value={code} />
         </div>
 
         <div className="col gap-2">
@@ -65,6 +100,7 @@ export function NoSandboxes() {
             <T
               id="step2.line2"
               values={{
+                language,
                 link: (children) => (
                   <Link to="/settings/api" className="text-default underline">
                     {children}
@@ -82,7 +118,7 @@ export function NoSandboxes() {
             <T id="step2.line3" />
           </p>
 
-          <Code lang="shell" prefix="$ " value="python main.py" />
+          <Code lang="shell" prefix="$ " value={run} />
         </div>
       </Section>
 
@@ -101,6 +137,34 @@ const docs = (children: React.ReactNode) => (
     {children}
   </DocumentationLink>
 );
+
+type LanguageSelectorProps = {
+  selected: 'python' | 'javascript';
+  setSelected: (lang: 'python' | 'javascript') => void;
+};
+
+function LanguageSelector({ selected: language, setSelected: setLanguage }: LanguageSelectorProps) {
+  return (
+    <TabButtons>
+      <TabButton
+        selected={language === 'python'}
+        onClick={() => setLanguage('python')}
+        className="row items-center gap-2"
+      >
+        <IconPython className="size-4 fill-current" />
+        <T id="languages.python" />
+      </TabButton>
+      <TabButton
+        selected={language === 'javascript'}
+        onClick={() => setLanguage('javascript')}
+        className="row items-center gap-2"
+      >
+        <IconJavascript className="size-4 fill-current" />
+        <T id="languages.javascript" />
+      </TabButton>
+    </TabButtons>
+  );
+}
 
 function ApiTokenCode() {
   const organization = useOrganization();
