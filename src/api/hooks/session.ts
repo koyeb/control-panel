@@ -1,7 +1,10 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
+
+import { apiQuery, getApi, getApiQueryKey } from 'src/api';
+import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
-import { apiMutation, apiQuery, getApiQueryKey } from '../query';
 
 export function useUserQuery() {
   return useQuery({
@@ -25,19 +28,24 @@ export function useOrganization() {
   return useOrganizationQuery().data;
 }
 
-export function useSwitchOrganization(onSuccess?: () => void) {
+export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => unknown } = {}) {
+  const { switchToOrganization } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
-    ...apiMutation('post /v1/organizations/{id}/switch', async (organizationId: string) => ({
-      path: { id: organizationId },
-    })),
+    mutationFn: async ({ id: organizationId, externalId }: { id: string; externalId?: string }) => {
+      if (externalId && (await isFeatureFlagEnabled('workos-switch-organization'))) {
+        await switchToOrganization({ organizationId: externalId });
+      } else {
+        const api = getApi();
+        await api('post /v1/organizations/{id}/switch', { path: { id: organizationId } });
+      }
+    },
     async onSuccess() {
-      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
       queryClient.removeQueries({ predicate: (query) => !query.isActive() });
-      void queryClient.invalidateQueries();
-
-      onSuccess?.();
+      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
+      await queryClient.invalidateQueries();
+      await onSuccess?.();
     },
   });
 }

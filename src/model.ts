@@ -645,6 +645,7 @@ export type UserSettings = {
 
 export type Organization = {
   id: string;
+  externalId?: string;
   name: string;
   status: OrganizationStatus;
   statusMessage: OrganizationStatusMessage;
@@ -666,40 +667,17 @@ export type Organization = {
   };
 };
 
-export type OrganizationStatus =
-  | 'WARNING'
-  | 'LOCKED'
-  | 'ACTIVE'
-  | 'DEACTIVATING'
-  | 'DEACTIVATED'
-  | 'DELETING'
-  | 'DELETED';
+// prettier-ignore
+export const organizationStatuses = ['WARNING', 'LOCKED', 'ACTIVE', 'DEACTIVATING', 'DEACTIVATED', 'DELETING', 'DELETED'] as const;
+export type OrganizationStatus = (typeof organizationStatuses)[number];
 
-export type OrganizationStatusMessage =
-  | 'NEW'
-  | 'EMAIL_NOT_VALIDATED'
-  | 'BILLING_INFO_MISSING'
-  | 'LOCKED'
-  | 'PAYMENT_FAILURE'
-  | 'VALID'
-  | 'PENDING_VERIFICATION'
-  | 'VERIFICATION_FAILED'
-  | 'REVIEWING_ACCOUNT'
-  | 'PLAN_UPGRADE_REQUIRED';
+// prettier-ignore
+export const organizationStatusMessages = ['NEW', 'EMAIL_NOT_VALIDATED', 'BILLING_INFO_MISSING', 'LOCKED', 'PAYMENT_FAILURE', 'VALID', 'PENDING_VERIFICATION', 'VERIFICATION_FAILED', 'REVIEWING_ACCOUNT', 'PLAN_UPGRADE_REQUIRED'] as const;
+export type OrganizationStatusMessage = (typeof organizationStatusMessages)[number];
 
-export type OrganizationPlan =
-  | 'hobby'
-  | 'starter'
-  | 'startup'
-  | 'business'
-  | 'enterprise'
-  | 'internal'
-  | 'hobby23'
-  | 'no_plan'
-  | 'pro'
-  | 'scale'
-  | 'partner_csp'
-  | 'partner_csp_unit';
+// prettier-ignore
+export const organizationPlans = [ 'hobby', 'starter', 'startup', 'business', 'enterprise', 'internal', 'hobby23', 'no_plan', 'pro', 'scale', 'partner_csp', 'partner_csp_unit'] as const;
+export type OrganizationPlan = (typeof organizationPlans)[number];
 
 export type OrganizationInvitation = {
   id: string;
