@@ -28,6 +28,7 @@ type DeploymentsListProps = {
   upcoming: Deployment[];
   history: Deployment[];
   setListExpanded: (expanded: boolean) => void;
+  onSelected: () => void;
 };
 
 export function DeploymentsList({
@@ -37,9 +38,9 @@ export function DeploymentsList({
   upcoming,
   history,
   setListExpanded,
+  onSelected,
 }: DeploymentsListProps) {
   const deploymentsQuery = useDeploymentsQuery(service.id, exclude(allApiDeploymentStatuses, 'STASHED'));
-
   const { data: { count: deploymentsCount = 0 } = {} } = deploymentsQuery;
 
   const [upcomingExpanded, setUpcomingExpanded] = useState(upcoming.length > 0);
@@ -47,9 +48,14 @@ export function DeploymentsList({
 
   useAutoExpand({ selected, setListExpanded, upcoming, setUpcomingExpanded, history, setHistoryExpanded });
 
-  const isSelected = (deployment: Deployment) => {
-    return deployment.id === selected?.id;
-  };
+  const deploymentItem = (deployment: Deployment) => (
+    <DeploymentItem
+      service={service}
+      deployment={deployment}
+      isSelected={deployment.id === selected?.id}
+      onSelected={onSelected}
+    />
+  );
 
   return (
     <div className="col w-full gap-6 md:w-72">
@@ -62,20 +68,14 @@ export function DeploymentsList({
         >
           <ol className="col gap-2">
             {upcoming.map((deployment) => (
-              <li key={deployment.id}>
-                <DeploymentItem
-                  service={service}
-                  deployment={deployment}
-                  isSelected={isSelected(deployment)}
-                />
-              </li>
+              <li key={deployment.id}>{deploymentItem(deployment)}</li>
             ))}
           </ol>
         </DeploymentsSection>
       )}
 
       <DeploymentsSection title={<T id="active.title" />} description={<T id="active.description" />}>
-        {active && <DeploymentItem service={service} deployment={active} isSelected={isSelected(active)} />}
+        {active && deploymentItem(active)}
 
         {!active && (
           <div className="col min-h-24 items-center justify-center rounded-md border border-dashed bg-muted/50 text-xs text-dim">
@@ -93,13 +93,7 @@ export function DeploymentsList({
         >
           <ol className="col gap-2">
             {history.map((deployment) => (
-              <li key={deployment.id}>
-                <DeploymentItem
-                  service={service}
-                  deployment={deployment}
-                  isSelected={isSelected(deployment)}
-                />
-              </li>
+              <li key={deployment.id}>{deploymentItem(deployment)}</li>
             ))}
 
             {deploymentsQuery.hasNextPage && (
@@ -172,9 +166,10 @@ type DeploymentItemProps = {
   service: Service;
   deployment: Deployment;
   isSelected: boolean;
+  onSelected: () => void;
 };
 
-function DeploymentItem({ service, deployment, isSelected }: DeploymentItemProps) {
+function DeploymentItem({ service, deployment, isSelected, onSelected }: DeploymentItemProps) {
   const t = T.useTranslate();
   const invalidate = useInvalidateApiQuery();
 
@@ -199,6 +194,7 @@ function DeploymentItem({ service, deployment, isSelected }: DeploymentItemProps
       params={{ serviceId: service.id }}
       search={(prev) => ({ ...prev, deploymentId: deployment.id })}
       role="button"
+      onClick={onSelected}
       className={clsx('card block shadow-none', isSelected && 'border-green')}
     >
       <div className={clsx('col gap-2 p-3', isSelected && 'bg-green/10')}>

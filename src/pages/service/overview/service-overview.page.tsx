@@ -87,6 +87,7 @@ type ServiceOverviewProps = {
 };
 
 function ServiceOverview({ app, service, deployments, selectedDeployment }: ServiceOverviewProps) {
+  const [mobileView, setMobileView] = useState<'list' | 'details'>('details');
   const isMobile = !useBreakpoint('md');
 
   const [upcoming, active, history] = useDeploymentsGroups(service, deployments);
@@ -106,6 +107,7 @@ function ServiceOverview({ app, service, deployments, selectedDeployment }: Serv
       upcoming={upcoming}
       history={history}
       setListExpanded={setListExpanded}
+      onSelected={() => setMobileView('details')}
     />
   );
 
@@ -116,7 +118,10 @@ function ServiceOverview({ app, service, deployments, selectedDeployment }: Serv
         deployments={deployments}
         selectedDeployment={selectedDeployment}
         listExpanded={listExpanded}
-        setListExpanded={setListExpanded}
+        setListExpanded={(expanded) => {
+          setListExpanded(expanded);
+          setMobileView(expanded ? 'details' : 'list');
+        }}
       />
 
       <SelectedDeployment app={app} service={service} deployment={selectedDeployment} />
@@ -124,11 +129,7 @@ function ServiceOverview({ app, service, deployments, selectedDeployment }: Serv
   );
 
   if (isMobile) {
-    if (listExpanded || !selectedDeployment) {
-      return list;
-    }
-
-    return content;
+    return mobileView === 'list' ? list : content;
   }
 
   return (
