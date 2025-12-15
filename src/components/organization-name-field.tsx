@@ -24,6 +24,7 @@ export function OrganizationNameField({ form, label }: OrganizationNameFieldProp
     <Tooltip
       open={inputFocused}
       allowHover
+      forceDesktop
       arrow={false}
       placement="bottom-start"
       offset={8}
