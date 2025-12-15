@@ -1,7 +1,10 @@
 import { QueryClient } from '@tanstack/react-query';
 import { NavigateFn } from '@tanstack/react-router';
-import { LoginRequiredError } from '@workos-inc/authkit-js';
-import { AuthKitProvider as BaseAuthKitProvider, useAuth } from '@workos-inc/authkit-react';
+import {
+  AuthKitProvider as BaseAuthKitProvider,
+  LoginRequiredError,
+  useAuth,
+} from '@workos-inc/authkit-react';
 import { useEffect } from 'react';
 
 import { ApiError, apiQuery } from 'src/api';
