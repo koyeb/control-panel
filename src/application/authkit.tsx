@@ -5,7 +5,7 @@ import {
   LoginRequiredError,
   useAuth,
 } from '@workos-inc/authkit-react';
-import { useEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 import { ApiError, apiQuery } from 'src/api';
 import { LogoLoading } from 'src/components/logo-loading';
@@ -14,6 +14,7 @@ import { assert } from 'src/utils/assert';
 import { waitFor } from 'src/utils/promises';
 
 import { getConfig } from './config';
+import { getToken } from './token';
 
 export type AuthKit = ReturnType<typeof useAuth>;
 
@@ -39,6 +40,8 @@ export function AuthKitProvider({
 
   assert(clientId !== undefined);
 
+  const [key, setKey] = useState(0);
+
   const onRedirectCallback = async (next?: string) => {
     await waitForUser(queryClient);
     await navigate(urlToLinkOptions(next ?? '/'));
@@ -52,8 +55,9 @@ export function AuthKitProvider({
       redirectUri={`${window.location.origin}/account/workos/callback`}
       onRedirectCallback={({ state }) => void onRedirectCallback(state?.next as string | undefined)}
       onBeforeAutoRefresh={() => true}
+      onRefresh={() => setKey(key + 1)}
     >
-      <AuthKitGuard {...props} />
+      <AuthKitGuard key={key} {...props} />
     </BaseAuthKitProvider>
   );
 }
@@ -66,7 +70,7 @@ type AuthKitGuardProps = {
 function AuthKitGuard({ onLoginRequired, children }: AuthKitGuardProps) {
   const authKit = useAuth();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const onError = async (error: unknown) => {
       if (error instanceof LoginRequiredError) {
         await onLoginRequired();
@@ -93,10 +97,19 @@ export function getAuthKitToken() {
 }
 
 async function waitForUser(queryClient: QueryClient) {
-  await waitFor(async () => {
-    return queryClient.ensureQueryData(apiQuery('get /v1/account/profile', {})).then(
-      () => true,
-      (error) => !(ApiError.is(error) && error.status === 404),
-    );
-  });
+  await waitFor(
+    async () => {
+      if (!(await getToken())) {
+        return false;
+      }
+
+      return queryClient.ensureQueryData(apiQuery('get /v1/account/profile', {})).then(
+        () => true,
+        (error) => !(ApiError.is(error) && error.status === 404),
+      );
+    },
+    {
+      interval: 100,
+    },
+  );
 }

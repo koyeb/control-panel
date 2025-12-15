@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, useSwitchOrganization } from 'src/api';
+import { apiMutation, mapOrganization, useSwitchOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/forms';
 import { Link } from 'src/components/link';
@@ -40,7 +40,7 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
     })),
 
     async onSuccess({ organization }) {
-      await switchOrganization.mutateAsync(organization!.id!);
+      await switchOrganization.mutateAsync(mapOrganization(organization!));
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({
