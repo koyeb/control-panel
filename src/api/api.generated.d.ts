@@ -4246,6 +4246,7 @@ export interface components {
          */
         "OrganizationInvitation.Status": "INVALID" | "PENDING" | "ACCEPTED" | "REFUSED" | "EXPIRED";
         OrganizationMember: {
+            external_id?: string;
             id?: string;
             /** Format: date-time */
             joined_at?: string;
@@ -4604,10 +4605,11 @@ export interface components {
             volumes?: components["schemas"]["RegionalDeploymentVolume"][];
         };
         /**
+         * - _: We match with DeploymentDefinition.Type, so we skip 3 which is DATABASE
          * @default INVALID
          * @enum {string}
          */
-        "RegionalDeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER" | "SANDBOX";
+        "RegionalDeploymentDefinition.Type": "INVALID" | "WEB" | "WORKER" | "_" | "SANDBOX";
         RegionalDeploymentEvent: {
             id?: string;
             message?: string;
@@ -6541,7 +6543,10 @@ export interface operations {
     GetCurrentUser: {
         parameters: {
             query?: never;
-            header?: never;
+            header?: {
+                /** @description Seon Fingerprint */
+                "seon-fp"?: string;
+            };
             path?: never;
             cookie?: never;
         };

@@ -46,12 +46,14 @@ export const Route = createFileRoute('/_main')({
     }
   },
 
-  async loader({ context: { queryClient } }) {
+  async loader({ context: { queryClient, seon } }) {
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     void preloadDatacentersLatencies(queryClient);
 
-    await ensureApiQueryData('get /v1/account/profile', {}).then((result) => mapUser(result.user!));
+    await ensureApiQueryData('get /v1/account/profile', {
+      header: { 'seon-fp': await seon.getFingerprint() },
+    }).then((result) => mapUser(result.user!));
 
     const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
       (result) => mapOrganization(result.organization!),

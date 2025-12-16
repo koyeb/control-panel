@@ -1,7 +1,5 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 
-import { useSeon } from 'src/hooks/seon';
-
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 import { apiMutation, apiQuery, getApiQueryKey } from '../query';
 
@@ -28,13 +26,11 @@ export function useOrganization() {
 }
 
 export function useSwitchOrganization(onSuccess?: () => void) {
-  const getSeonFingerprint = useSeon();
   const queryClient = useQueryClient();
 
   return useMutation({
     ...apiMutation('post /v1/organizations/{id}/switch', async (organizationId: string) => ({
       path: { id: organizationId },
-      header: { 'seon-fp': await getSeonFingerprint() },
     })),
     async onSuccess() {
       await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
