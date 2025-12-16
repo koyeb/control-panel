@@ -4,11 +4,11 @@ import z from 'zod';
 
 import {
   ApiError,
+  apiQuery,
   createEnsureApiQueryData,
   getApi,
   mapCatalogDatacenter,
   mapOrganization,
-  mapUser,
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
@@ -51,9 +51,11 @@ export const Route = createFileRoute('/_main')({
 
     void preloadDatacentersLatencies(queryClient);
 
-    await ensureApiQueryData('get /v1/account/profile', {
-      header: { 'seon-fp': await seon.getFingerprint() },
-    }).then((result) => mapUser(result.user!));
+    await queryClient.fetchQuery(
+      apiQuery('get /v1/account/profile', {
+        header: { 'seon-fp': await seon.getFingerprint() },
+      }),
+    );
 
     const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
       (result) => mapOrganization(result.organization!),
