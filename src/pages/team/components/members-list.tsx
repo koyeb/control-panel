@@ -9,6 +9,8 @@ import {
   mapOrganizationMember,
   useInvalidateApiQuery,
   useOrganization,
+  useOtherOrganization,
+  useSwitchOrganization,
   useUser,
 } from 'src/api';
 import { notify } from 'src/application/notify';
@@ -147,6 +149,7 @@ function OrganizationMember({ membership }: { membership: OrganizationMember }) 
 
 function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }) {
   const t = T.useTranslate();
+  const navigate = useNavigate();
 
   const user = useUser();
 
@@ -155,13 +158,24 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
   const leaveOrganization = useLeaveOrganization();
   const removeOrganizationMember = useRemoveOrganizationMember();
 
+  const otherOrganization = useOtherOrganization();
+  const switchOrganization = useSwitchOrganization({
+    onSuccess: () => navigate({ to: '/' }),
+  });
+
   const onLeaveOrganization = (member: OrganizationMember) => {
     openDialog('Confirmation', {
       title: t('leaveOrganization.title'),
       description: t('leaveOrganization.description', { organizationName: member.organization.name }),
       confirmationText: member.organization.name,
       submitText: t('leaveOrganization.submitButton'),
-      onConfirm: () => leaveOrganization.mutateAsync(member),
+      onConfirm: async () => {
+        if (otherOrganization) {
+          await switchOrganization.mutateAsync(otherOrganization);
+        }
+
+        await leaveOrganization.mutateAsync(member);
+      },
     });
   };
 
