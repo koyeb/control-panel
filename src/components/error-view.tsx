@@ -120,7 +120,6 @@ export function ErrorView({
         <div className="mt-6 self-center">
           <Link
             to="/"
-            state={{ clearCache: true }}
             className="rounded-full bg-green px-6 py-3 font-medium hover:no-underline"
             onClick={onReset}
           >

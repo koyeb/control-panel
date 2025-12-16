@@ -3,10 +3,6 @@ import '@fontsource-variable/jetbrains-mono';
 import './side-effects';
 import './styles.css';
 
-import {
-  PersistedQuery,
-  experimental_createQueryPersister as createQueryPersister,
-} from '@tanstack/query-persist-client-core';
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
@@ -17,12 +13,9 @@ import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api';
 import { AuthKitProvider } from './application/authkit';
-import { getConfig } from './application/config';
-import { IndexDBAdapter } from './application/index-db';
 import { notify } from './application/notify';
 import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
-import { isSessionToken } from './application/token';
 import { configureZod } from './application/validation';
 import { ConfirmationDialog } from './components/confirmation-dialog';
 import { closeDialog } from './components/dialog';
@@ -39,12 +32,13 @@ declare module '@tanstack/react-router' {
 
   interface HistoryState {
     next?: string;
-    clearCache?: boolean;
     githubAppInstallationRequested?: boolean;
     expandedSection?: ServiceFormSection;
     create?: boolean;
   }
 }
+
+window.indexedDB.deleteDatabase('tanstack-query');
 
 const queryCache = new QueryCache({
   onError(error, query) {
@@ -83,7 +77,6 @@ const queryCache = new QueryCache({
 const mutationCache = new MutationCache({
   async onSuccess(data, variables, onMutateResult, mutation) {
     const keys = new Array<unknown>(
-      'logout', // authkit logout
       'delete /v1/account/logout',
       'delete /v1/organizations/{id}',
       'delete /v1/organization_members/{id}',
@@ -92,7 +85,6 @@ const mutationCache = new MutationCache({
     );
 
     if (keys.includes(mutation.options.mutationKey?.[0])) {
-      await persistStore.clear();
       queryClient.clear();
     }
   },
@@ -119,26 +111,11 @@ function retry(failureCount: number, error: Error) {
 
 const seon = new SeonAdapter();
 
-const persistStore = new IndexDBAdapter('tanstack-query', 'cache');
-
-const persister = createQueryPersister({
-  maxAge: 1000 * 60 * 60 * 24 * 2, // 48 hours
-  buster: getConfig('version'),
-  prefix: 'query',
-  serialize: (value) => value,
-  deserialize: (value) => value as PersistedQuery,
-  storage: persistStore,
-});
-
-const location = new URL(window.location.href);
-const disablePersist = isSessionToken() || location.searchParams.has('session-token');
-
 const queryClient = new QueryClient({
   queryCache,
   mutationCache,
   defaultOptions: {
     queries: {
-      persister: !disablePersist ? persister.persisterFn : undefined,
       refetchInterval: (query) => (query.state.error === null ? 5_000 : false),
       throwOnError,
       retry,
@@ -182,19 +159,6 @@ const router = createRouter({
       return router.subscribe('onBeforeNavigate', () => closeDialog(true));
     }, []);
 
-    useEffect(() => {
-      router.subscribe('onBeforeRouteMount', ({ toLocation }) => {
-        if (toLocation.pathname.startsWith('/auth') || toLocation.state.clearCache) {
-          queryClient.clear();
-          void persistStore.clear();
-        }
-
-        if (toLocation.state.clearCache) {
-          void router.navigate({ state: {} });
-        }
-      });
-    }, []);
-
     return (
       <PostHogProvider>
         {children}
@@ -208,9 +172,6 @@ const router = createRouter({
 });
 
 async function onLoginRequired() {
-  queryClient.clear();
-  await persistStore.clear();
-
   if (!['/auth', '/account'].some((prefix) => window.location.pathname.startsWith(prefix))) {
     await router.navigate({ to: '/auth/signin' });
   }
