@@ -1,6 +1,6 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
-import { useAuth } from '@workos-inc/authkit-react';
+import { useNavigate } from '@tanstack/react-router';
 
 import { apiMutation, useOrganization, useUser } from 'src/api';
 import { useIdentifyUser } from 'src/application/posthog';
@@ -59,16 +59,16 @@ export function DeleteAccount() {
 
 function useDeleteMutation() {
   const [, clearIdentify] = useIdentifyUser();
-  const authkit = useAuth();
+  const navigate = useNavigate();
 
   return useMutation({
-    ...apiMutation('delete /v2/users/{id}', (user: User) => ({
+    ...apiMutation('delete /v1/users/{id}', (user: User) => ({
       path: { id: user.id },
     })),
     async onSuccess() {
       closeDialog();
       clearIdentify();
-      authkit.signOut({ navigate: true });
+      await navigate({ to: '/auth/signout' });
     },
   });
 }
