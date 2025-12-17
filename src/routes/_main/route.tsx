@@ -13,7 +13,6 @@ import {
   useUserQuery,
 } from 'src/api';
 import { useOnboardingStep } from 'src/application/onboarding';
-import { getToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -29,18 +28,7 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ location, search }) {
-    const token = await getToken();
-
-    if (token === null) {
-      throw redirect({
-        to: '/auth/signin',
-        search: {
-          next: location.pathname !== '/' ? location.href : undefined,
-        },
-      });
-    }
-
+  async beforeLoad({ search }) {
     if (search['organization-id']) {
       await switchOrganization(search['organization-id']);
     }
