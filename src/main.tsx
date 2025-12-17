@@ -75,19 +75,6 @@ const queryCache = new QueryCache({
 });
 
 const mutationCache = new MutationCache({
-  async onSuccess(data, variables, onMutateResult, mutation) {
-    const keys = new Array<unknown>(
-      'delete /v1/account/logout',
-      'delete /v1/organizations/{id}',
-      'delete /v1/organization_members/{id}',
-      'delete /v1/users/{id}',
-      'delete /v2/users/{id}',
-    );
-
-    if (keys.includes(mutation.options.mutationKey?.[0])) {
-      queryClient.clear();
-    }
-  },
   async onError(error, variables, context, mutation) {
     const { showError } = { showError: true, ...mutation.meta };
 
@@ -171,12 +158,6 @@ const router = createRouter({
   },
 });
 
-async function onLoginRequired() {
-  if (!['/auth', '/account'].some((prefix) => window.location.pathname.startsWith(prefix))) {
-    await router.navigate({ to: '/auth/signin' });
-  }
-}
-
 const rootElement = document.getElementById('root')!;
 
 if (!rootElement.innerHTML) {
@@ -184,7 +165,7 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <AuthKitProvider navigate={router.navigate} queryClient={queryClient} onLoginRequired={onLoginRequired}>
+      <AuthKitProvider router={router} queryClient={queryClient}>
         {(authKit) => <RouterProvider router={router} context={{ authKit }} />}
       </AuthKitProvider>
     </StrictMode>,

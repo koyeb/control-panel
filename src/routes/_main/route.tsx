@@ -14,7 +14,6 @@ import {
 } from 'src/api';
 import { AuthKit } from 'src/application/authkit';
 import { useOnboardingStep } from 'src/application/onboarding';
-import { getToken } from 'src/application/token';
 import { getUrlLatency } from 'src/application/url-latency';
 import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
 import { MainLayout } from 'src/layouts/main/main-layout';
@@ -31,18 +30,7 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ location, search, context: { authKit } }) {
-    const token = await getToken();
-
-    if (token === null) {
-      throw redirect({
-        to: '/auth/signin',
-        search: {
-          next: location.pathname !== '/' ? location.href : undefined,
-        },
-      });
-    }
-
+  async beforeLoad({ search, context: { authKit } }) {
     if (search['organization-id']) {
       await switchOrganization(authKit, search['organization-id']);
     }
