@@ -3,8 +3,6 @@ import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiQuery, getApi, getApiQueryKey } from 'src/api';
 import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
-import { organizationStatuses } from 'src/model';
-import { exclude } from 'src/utils/arrays';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 
@@ -50,17 +48,6 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => unknown
       await onSuccess?.();
     },
   });
-}
-
-export function useOtherOrganization(organizationId?: string) {
-  const organizations = useQuery({
-    ...apiQuery('get /v1/account/organizations', {
-      query: { statuses: exclude(organizationStatuses, 'DELETING', 'DELETED') },
-    }),
-    select: (result) => result.organizations!.map((org) => mapOrganization(org)),
-  });
-
-  return organizations.data?.find((org) => org.id !== organizationId);
 }
 
 export function useOrganizationSummaryQuery() {

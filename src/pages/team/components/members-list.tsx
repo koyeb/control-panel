@@ -9,8 +9,6 @@ import {
   mapOrganizationMember,
   useInvalidateApiQuery,
   useOrganization,
-  useOtherOrganization,
-  useSwitchOrganization,
   useUser,
 } from 'src/api';
 import { notify } from 'src/application/notify';
@@ -149,7 +147,6 @@ function OrganizationMember({ membership }: { membership: OrganizationMember }) 
 
 function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }) {
   const t = T.useTranslate();
-  const navigate = useNavigate();
 
   const user = useUser();
 
@@ -158,24 +155,13 @@ function Actions({ item }: { item: OrganizationInvitation | OrganizationMember }
   const leaveOrganization = useLeaveOrganization();
   const removeOrganizationMember = useRemoveOrganizationMember();
 
-  const otherOrganization = useOtherOrganization();
-  const switchOrganization = useSwitchOrganization({
-    onSuccess: () => navigate({ to: '/' }),
-  });
-
   const onLeaveOrganization = (member: OrganizationMember) => {
     openDialog('Confirmation', {
       title: t('leaveOrganization.title'),
       description: t('leaveOrganization.description', { organizationName: member.organization.name }),
       confirmationText: member.organization.name,
       submitText: t('leaveOrganization.submitButton'),
-      onConfirm: async () => {
-        if (otherOrganization) {
-          await switchOrganization.mutateAsync(otherOrganization);
-        }
-
-        await leaveOrganization.mutateAsync(member);
-      },
+      onConfirm: () => leaveOrganization.mutateAsync(member),
     });
   };
 
@@ -273,23 +259,14 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const t = T.useTranslate();
   const navigate = useNavigate();
 
   return useMutation({
     ...apiMutation('delete /v1/organization_members/{id}', (membership: OrganizationMember) => ({
       path: { id: membership.id },
     })),
-    async onSuccess(_, membership) {
-      await navigate({ to: '/', reloadDocument: true });
-
-      closeDialog();
-
-      notify.info(
-        t('actions.leaveSuccessNotification', {
-          organizationName: membership.organization.name,
-        }),
-      );
+    async onSuccess(_) {
+      await navigate({ to: '/auth/signin' });
     },
   });
 }
