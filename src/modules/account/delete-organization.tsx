@@ -2,7 +2,7 @@ import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 
-import { apiMutation, apiQuery, useOrganization, useOtherOrganization, useSwitchOrganization } from 'src/api';
+import { apiMutation, apiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
@@ -16,7 +16,6 @@ export function DeleteOrganization() {
   const navigate = useNavigate();
 
   const organization = useOrganization();
-  const otherOrganization = useOtherOrganization(organization?.id);
 
   const unpaidInvoicesQuery = useQuery({
     ...apiQuery('get /v1/billing/has_unpaid_invoices', {}),
@@ -29,13 +28,9 @@ export function DeleteOrganization() {
       path: { id: organization.id },
     })),
     async onSuccess(_, organization) {
-      await navigate({ to: '/' });
+      await navigate({ to: '/auth/signin' });
       notify.info(t('success', { organizationName: organization.name }));
     },
-  });
-
-  const switchOrganization = useSwitchOrganization({
-    onSuccess: () => deleteOrganization.mutateAsync(organization!),
   });
 
   const isDeactivated = organization?.status === 'DEACTIVATED';
@@ -51,14 +46,6 @@ export function DeleteOrganization() {
     return <QueryError error={unpaidInvoicesQuery.error} />;
   }
 
-  const onDelete = () => {
-    if (otherOrganization) {
-      switchOrganization.mutate(otherOrganization);
-    } else {
-      deleteOrganization.mutate(organization!);
-    }
-  };
-
   return (
     <section className="card">
       <div className="row items-center gap-4 p-3">
@@ -66,9 +53,9 @@ export function DeleteOrganization() {
 
         <Button
           color="red"
-          loading={switchOrganization.isPending || deleteOrganization.isPending}
+          loading={deleteOrganization.isPending}
           disabled={!canDeleteOrganization}
-          onClick={onDelete}
+          onClick={() => deleteOrganization.mutate(organization!)}
         >
           <T id="delete" />
         </Button>

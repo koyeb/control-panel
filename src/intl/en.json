@@ -3071,8 +3071,7 @@
           "resendInvitationSuccessNotification": "The invitation was sent again to <strong>{email}</strong>",
           "removeMember": "Remove",
           "removeMemberSuccessNotification": "<strong>{memberName}</strong> was removed from the organization <strong>{organizationName}</strong>",
-          "leave": "Leave",
-          "leaveSuccessNotification": "You left the organization <strong>{organizationName}</strong>"
+          "leave": "Leave"
         },
         "removeMember": {
           "title": "Remove member",
