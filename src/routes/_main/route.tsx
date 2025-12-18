@@ -84,10 +84,9 @@ export const Route = createFileRoute('/_main')({
 
 async function switchOrganization(authKit: AuthKit, organizationId: string) {
   const api = getApi();
-  const { organization } = await api('get /v1/organizations/{id}', { path: { id: organizationId } });
 
-  if (organization?.external_id && (await isFeatureFlagEnabled('workos-switch-organization'))) {
-    await authKit.switchToOrganization({ organizationId: organization.external_id });
+  if (organizationId.startsWith('org_') && (await isFeatureFlagEnabled('workos-switch-organization'))) {
+    await authKit.switchToOrganization({ organizationId });
   } else {
     await api('post /v1/organizations/{id}/switch', { path: { id: organizationId }, header: {} });
   }

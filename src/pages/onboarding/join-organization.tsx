@@ -71,7 +71,7 @@ function CreateOrganization() {
     async onSuccess({ organization }) {
       await navigate({
         to: '/',
-        search: { 'organization-id': organization!.id! },
+        search: { 'organization-id': organization!.external_id! },
         reloadDocument: true,
       });
     },

@@ -12,7 +12,6 @@ import {
   useSwitchOrganization,
   useUser,
 } from 'src/api';
-import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -41,7 +40,9 @@ export function OrganizationsPage() {
           </Button>
         }
       />
-      <Create />
+
+      <CreateOrganization />
+
       <OrganizationList />
     </>
   );
@@ -51,9 +52,7 @@ const schema = z.object({
   organizationName: z.string().min(1).max(64),
 });
 
-function Create() {
-  const t = T.useTranslate();
-
+function CreateOrganization() {
   const form = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -62,7 +61,6 @@ function Create() {
     resolver: zodResolver(schema),
   });
 
-  const switchOrganization = useSwitchOrganization();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -72,10 +70,12 @@ function Create() {
     onError: useFormErrorHandler(form, (error) => ({
       organizationName: error.name,
     })),
-    async onSuccess({ organization }, { organizationName }) {
-      await switchOrganization.mutateAsync(mapOrganization(organization!));
-      await navigate({ to: '/' });
-      notify.success(t('create.success', { organizationName }));
+    async onSuccess({ organization }) {
+      await navigate({
+        to: '/',
+        search: { 'organization-id': organization!.external_id! },
+        reloadDocument: true,
+      });
     },
   });
 
