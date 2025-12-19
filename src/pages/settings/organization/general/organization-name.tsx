@@ -35,7 +35,7 @@ export function OrganizationName() {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...apiMutation('patch /v1/organizations/{id}', ({ organizationName }: FormValues<typeof form>) => ({
+    ...apiMutation('put /v1/organizations/{id}/name', ({ organizationName }: FormValues<typeof form>) => ({
       query: {},
       path: { id: organization!.id },
       body: { name: organizationName },
