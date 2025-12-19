@@ -259,23 +259,14 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const t = T.useTranslate();
   const navigate = useNavigate();
 
   return useMutation({
     ...apiMutation('delete /v1/organization_members/{id}', (membership: OrganizationMember) => ({
       path: { id: membership.id },
     })),
-    async onSuccess(_, membership) {
-      await navigate({ to: '/', reloadDocument: true });
-
-      closeDialog();
-
-      notify.info(
-        t('actions.leaveSuccessNotification', {
-          organizationName: membership.organization.name,
-        }),
-      );
+    async onSuccess(_) {
+      await navigate({ to: '/auth/signin' });
     },
   });
 }
