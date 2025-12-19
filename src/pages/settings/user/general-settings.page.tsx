@@ -1,5 +1,6 @@
 import { Switch } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import { UserProfile, UserSecurity } from '@workos-inc/widgets';
 import { lazy } from 'react';
 
@@ -22,14 +23,14 @@ export function GeneralSettingsPage() {
 }
 
 export function AuthKitUserSettings() {
+  const { getAccessToken } = useAuth();
+
   return (
     <WorkOSWidgetsProvider>
-      {(token) => (
-        <div className="col gap-8">
-          <UserProfile authToken={token} />
-          <UserSecurity authToken={token} />
-        </div>
-      )}
+      <div className="col gap-8">
+        <UserProfile authToken={getAccessToken} />
+        <UserSecurity authToken={getAccessToken} />
+      </div>
     </WorkOSWidgetsProvider>
   );
 }

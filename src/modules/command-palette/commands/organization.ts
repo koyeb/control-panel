@@ -1,6 +1,6 @@
 import { CommandPalette } from '@koyeb/design-system';
 
-import { getApi, useSwitchOrganization } from 'src/api';
+import { getApi, mapOrganization, useSwitchOrganization } from 'src/api';
 import { useNavigate } from 'src/hooks/router';
 import { IconCirclePlus, IconRefreshCcw } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
@@ -11,8 +11,11 @@ export function useOrganizationCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
 
-  const switchOrganization = useSwitchOrganization();
   const navigate = useNavigate();
+
+  const switchOrganization = useSwitchOrganization({
+    onSuccess: () => navigate({ to: '/' }),
+  });
 
   return (palette: CommandPalette) => {
     const group = palette.addGroup({
@@ -30,12 +33,14 @@ export function useOrganizationCommands() {
         palette.setIcon(IconRefreshCcw);
         palette.setPlaceholder(t('organization:switch.placeholder'));
 
-        const organizations = await api('get /v1/account/organizations', { query: {} });
+        const organizations = await api('get /v1/account/organizations', { query: {} }).then(
+          ({ organizations }) => organizations!.map(mapOrganization),
+        );
 
-        for (const organization of organizations.organizations!) {
+        for (const organization of organizations) {
           palette.addItem({
-            label: organization.name!,
-            execute: () => switchOrganization.mutateAsync(organization.id!),
+            label: organization.name,
+            execute: () => switchOrganization.mutateAsync(organization),
           });
         }
       },

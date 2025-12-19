@@ -3015,8 +3015,7 @@
         "create": {
           "title": "Create organization",
           "description": "Create a new organization to collaborate with others. To get started, name your new Koyeb organization.",
-          "organizationNameLabel": "Organization name",
-          "success": "The organization {organizationName} was created"
+          "organizationNameLabel": "Organization name"
         }
       },
       "apiCredential": {

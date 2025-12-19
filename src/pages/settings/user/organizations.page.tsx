@@ -7,12 +7,11 @@ import { z } from 'zod';
 import {
   apiMutation,
   apiQuery,
-  mapOrganizationMember,
+  mapOrganization,
   useOrganization,
   useSwitchOrganization,
   useUser,
 } from 'src/api';
-import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, openDialog } from 'src/components/dialog';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { OrganizationNameField } from 'src/components/organization-name-field';
@@ -21,7 +20,8 @@ import { Title } from 'src/components/title';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { OrganizationMember } from 'src/model';
+import { Organization, organizationStatuses } from 'src/model';
+import { exclude } from 'src/utils/arrays';
 
 const T = createTranslate('pages.userSettings.organizations');
 
@@ -40,7 +40,9 @@ export function OrganizationsPage() {
           </Button>
         }
       />
-      <Create />
+
+      <CreateOrganization />
+
       <OrganizationList />
     </>
   );
@@ -50,9 +52,7 @@ const schema = z.object({
   organizationName: z.string().min(1).max(64),
 });
 
-function Create() {
-  const t = T.useTranslate();
-
+function CreateOrganization() {
   const form = useForm({
     mode: 'onChange',
     defaultValues: {
@@ -61,7 +61,6 @@ function Create() {
     resolver: zodResolver(schema),
   });
 
-  const switchOrganization = useSwitchOrganization();
   const navigate = useNavigate();
 
   const mutation = useMutation({
@@ -71,10 +70,12 @@ function Create() {
     onError: useFormErrorHandler(form, (error) => ({
       organizationName: error.name,
     })),
-    async onSuccess({ organization }, { organizationName }) {
-      await switchOrganization.mutateAsync(organization!.id!);
-      await navigate({ to: '/' });
-      notify.success(t('create.success', { organizationName }));
+    async onSuccess({ organization }) {
+      await navigate({
+        to: '/',
+        search: { 'organization-id': organization!.external_id! },
+        reloadDocument: true,
+      });
     },
   });
 
@@ -112,15 +113,15 @@ function OrganizationList() {
   const user = useUser();
 
   const query = useQuery({
-    ...apiQuery('get /v1/organization_members', {
+    ...apiQuery('get /v1/account/organizations', {
       query: {
-        user_id: user?.id,
-        organization_statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
+        statuses: exclude(organizationStatuses, 'DELETING', 'DELETED'),
+        limit: String('100'),
       },
     }),
     refetchInterval: false,
     enabled: user !== undefined,
-    select: ({ members }) => members!.map(mapOrganizationMember),
+    select: ({ organizations }) => organizations!.map(mapOrganization),
   });
 
   if (query.isPending) {
@@ -131,33 +132,33 @@ function OrganizationList() {
     return <QueryError error={query.error} />;
   }
 
-  const memberships = query.data;
+  const organizations = query.data;
 
-  if (memberships.length === 0) {
-    return <>No organizations</>;
+  if (organizations.length === 0) {
+    return null;
   }
 
   return (
     <ul className="divide-y rounded-md border">
-      {memberships.map((membership) => (
-        <li key={membership.id} className="p-2">
-          <OrganizationListItem organization={membership.organization} />
+      {organizations.map((organization) => (
+        <li key={organization.id} className="p-2">
+          <OrganizationListItem organization={organization} />
         </li>
       ))}
     </ul>
   );
 }
 
-function OrganizationListItem({ organization }: { organization: OrganizationMember['organization'] }) {
+function OrganizationListItem({ organization }: { organization: Organization }) {
   const currentOrganization = useOrganization();
   const navigate = useNavigate();
 
-  const switchOrganization = useSwitchOrganization(() => {
-    void navigate({ to: '/' });
+  const switchOrganization = useSwitchOrganization({
+    onSuccess: () => navigate({ to: '/' }),
   });
 
-  const manageOrganization = useSwitchOrganization(() => {
-    void navigate({ to: '/settings' });
+  const manageOrganization = useSwitchOrganization({
+    onSuccess: () => navigate({ to: '/user/settings/organizations' }),
   });
 
   return (
@@ -173,12 +174,12 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
 
       <div className="ml-auto row gap-2">
         {organization.id !== currentOrganization?.id && (
-          <Button variant="outline" color="gray" onClick={() => switchOrganization.mutate(organization.id)}>
+          <Button variant="outline" color="gray" onClick={() => switchOrganization.mutate(organization)}>
             <T id="switch" />
           </Button>
         )}
 
-        <Button variant="outline" color="gray" onClick={() => manageOrganization.mutate(organization.id)}>
+        <Button variant="outline" color="gray" onClick={() => manageOrganization.mutate(organization)}>
           <T id="manage" />
         </Button>
       </div>

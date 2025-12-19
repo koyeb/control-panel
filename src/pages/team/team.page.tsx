@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import { UsersManagement } from '@workos-inc/widgets';
 import { lazy } from 'react';
 
@@ -28,6 +29,8 @@ export function TeamPage() {
 }
 
 export function WorkOSUsersManagement() {
+  const { getAccessToken } = useAuth();
+
   const { data: membersCount = 0 } = useQuery({
     ...apiQuery('get /v1/organization_members', {}),
     select: ({ count }) => count!,
@@ -38,15 +41,13 @@ export function WorkOSUsersManagement() {
 
   return (
     <WorkOSWidgetsProvider>
-      {(token) => (
-        <div className="mt-4 col gap-4">
-          <div className="font-medium">WorkOS</div>
+      <div className="mt-4 col gap-4">
+        <div className="font-medium">WorkOS</div>
 
-          {!canAddMembers && <style>{hideInviteUserButton}</style>}
+        {!canAddMembers && <style>{hideInviteUserButton}</style>}
 
-          <UsersManagement authToken={token} />
-        </div>
-      )}
+        <UsersManagement authToken={getAccessToken} />
+      </div>
     </WorkOSWidgetsProvider>
   );
 }
