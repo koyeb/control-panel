@@ -30,7 +30,10 @@ export interface paths {
         /** Begin a session with iDenfy, emit an authToken */
         get: operations["GetIdenfyToken"];
         put?: never;
-        /** ClearIdenfyVerificationResult marks the current result for idenfy as superseded */
+        /**
+         * ClearIdenfyVerificationResult marks the current result for idenfy as
+         *     superseded
+         */
         post: operations["ClearIdenfyVerificationResult"];
         delete?: never;
         options?: never;
@@ -537,8 +540,8 @@ export interface paths {
         /**
          * Experimental: Has unpaid invoices
          * @description WARNING: Please don't use the following method.
-         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-         *     USE AT YOUR OWN RISK.
+         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve
+         *     the right to completely drop it without notice. USE AT YOUR OWN RISK.
          */
         get: operations["HasUnpaidInvoices"];
         put?: never;
@@ -575,8 +578,8 @@ export interface paths {
         /**
          * Experimental: Fetch next invoice
          * @description WARNING: Please don't use the following method.
-         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve the right to completely drop it without notice.
-         *     USE AT YOUR OWN RISK.
+         *     Koyeb doesn't guarantee backwards compatible breaking change and reserve
+         *     the right to completely drop it without notice. USE AT YOUR OWN RISK.
          */
         get: operations["NextInvoice"];
         put?: never;
@@ -1241,7 +1244,8 @@ export interface paths {
          *     It's possible to specify a validity for the token, which defaults to 1h
          *     and must be no more than 24h. The format is `<number>s`, where `<number>`
          *     is a floating point in seconds (so `123.456789012s` means 123 seconds and
-         *     456789012 nanoseconds). See: https://protobuf.dev/reference/php/api-docs/Google/Protobuf/Duration.html.
+         *     456789012 nanoseconds). See:
+         *     https://protobuf.dev/reference/php/api-docs/Google/Protobuf/Duration.html.
          */
         post: operations["CreateAccessToken"];
         delete?: never;
@@ -1261,6 +1265,23 @@ export interface paths {
         put?: never;
         /** Deactivate an Organization */
         post: operations["DeactivateOrganization"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/organizations/{id}/name": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Update Organization */
+        put: operations["UpdateOrganizationName"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -2117,6 +2138,7 @@ export interface components {
             created_at?: string;
             domains?: components["schemas"]["Domain"][];
             id?: string;
+            life_cycle?: components["schemas"]["AppLifeCycle"];
             messages?: string[];
             name?: string;
             organization_id?: string;
@@ -2150,6 +2172,9 @@ export interface components {
             type?: string;
             /** Format: date-time */
             when?: string;
+        };
+        AppLifeCycle: {
+            delete_when_empty?: boolean;
         };
         AppListItem: {
             /** Format: date-time */
@@ -2414,6 +2439,7 @@ export interface components {
             password: string;
         };
         CreateApp: {
+            life_cycle?: components["schemas"]["AppLifeCycle"];
             name?: string;
         };
         CreateAppReply: {
@@ -2513,6 +2539,7 @@ export interface components {
         CreateService: {
             app_id?: string;
             definition?: components["schemas"]["DeploymentDefinition"];
+            life_cycle?: components["schemas"]["ServiceLifeCycle"];
         };
         CreateServiceReply: {
             service?: components["schemas"]["Service"];
@@ -3280,13 +3307,19 @@ export interface components {
             app_id?: string;
             /** The github app name */
             app_name?: string;
-            /** The state required by the protocol, it is only valid 10 minutes and encodes information about the type of flow */
+            /**
+             * The state required by the protocol, it is only valid 10 minutes and encodes
+             *     information about the type of flow
+             */
             state?: string;
             /** The url to start the installation flow */
             url?: string;
         };
         GithubInstallationRequest: {
-            /** A small (limited to 400 characters) string of arbitrary metadata which will be encoded in the state */
+            /**
+             * A small (limited to 400 characters) string of arbitrary metadata which will
+             *     be encoded in the state
+             */
             metadata?: string;
         };
         GitHubRegistryConfiguration: {
@@ -4146,13 +4179,13 @@ export interface components {
             /** The code returned by the OAuth provider */
             code?: string;
             /**
-             * @description installation_id is populated in the context of a GitHub app installation request. For logins and
-             *     signups, it is not set.
+             * @description installation_id is populated in the context of a GitHub app installation
+             *     request. For logins and signups, it is not set.
              */
             installation_id?: string;
             /**
-             * @description setup_action is populated in the context of a GitHub app installation request. For logins and
-             *     signups, it is not set.
+             * @description setup_action is populated in the context of a GitHub app installation
+             *     request. For logins and signups, it is not set.
              */
             setup_action?: string;
             /** The state created at the origin of the OAuth flow */
@@ -4161,7 +4194,10 @@ export interface components {
         OAuthProvider: {
             /** The name of the provider (.e.g github, google) */
             id?: string;
-            /** The OAuth state required by the protocol, it is only valid 10 minutes and encodes information about the type of flow */
+            /**
+             * The OAuth state required by the protocol, it is only valid 10 minutes and
+             *     encodes information about the type of flow
+             */
             state?: string;
             /** The URL to call to initiate the OAuth flow */
             url?: string;
@@ -4772,6 +4808,7 @@ export interface components {
             id?: string;
             last_provisioned_deployment_id?: string;
             latest_deployment_id?: string;
+            life_cycle?: components["schemas"]["ServiceLifeCycle"];
             messages?: string[];
             name?: string;
             organization_id?: string;
@@ -4812,6 +4849,12 @@ export interface components {
             type?: string;
             /** Format: date-time */
             when?: string;
+        };
+        ServiceLifeCycle: {
+            /** Format: int64 */
+            delete_after_create?: number;
+            /** Format: int64 */
+            delete_after_sleep?: number;
         };
         ServiceListItem: {
             active_deployment_id?: string;
@@ -5028,6 +5071,7 @@ export interface components {
         "TriggerGitDeploymentMetadata.Provider": "UNKNOWN" | "GITHUB";
         UnscopeOrganizationTokenRequest: Record<string, never>;
         UpdateApp: {
+            life_cycle?: components["schemas"]["AppLifeCycle"];
             name?: string;
         };
         UpdateAppReply: {
@@ -5047,6 +5091,9 @@ export interface components {
         };
         UpdateDomainReply: {
             domain?: components["schemas"]["Domain"];
+        };
+        UpdateOrganizationNameReply: {
+            organization?: components["schemas"]["Organization"];
         };
         UpdateOrganizationPlanReply: {
             organization?: components["schemas"]["Organization"];
@@ -5072,6 +5119,7 @@ export interface components {
         };
         UpdateService: {
             definition?: components["schemas"]["DeploymentDefinition"];
+            life_cycle?: components["schemas"]["ServiceLifeCycle"];
             metadata?: components["schemas"]["DeploymentMetadata"];
             /** If set, do not trigger a deployment, only store the new settings */
             save_only?: boolean;
@@ -5834,7 +5882,10 @@ export interface operations {
             query?: {
                 /** @description Which authentication flow is being initiated */
                 action?: "signin" | "signup" | "register";
-                /** @description A small (limited to 400 characters) string of arbitrary metadata which will be encoded in the state */
+                /**
+                 * @description A small (limited to 400 characters) string of arbitrary metadata which will
+                 *     be encoded in the state
+                 */
                 metadata?: string;
             };
             header?: never;
@@ -6455,7 +6506,10 @@ export interface operations {
                 offset?: string;
                 /** @description (Optional) Sorts the list in the ascending or the descending order */
                 order?: string;
-                /** @description (Optional) Fuzzy case-insensitive search based on organization name or organization id */
+                /**
+                 * @description (Optional) Fuzzy case-insensitive search based on organization name or
+                 *     organization id
+                 */
                 search?: string;
                 /** @description (Optional) Only return organizations which status match one in the list */
                 statuses?: ("WARNING" | "LOCKED" | "ACTIVE" | "DEACTIVATING" | "DEACTIVATED" | "DELETING" | "DELETED")[];
@@ -12941,8 +12995,8 @@ export interface operations {
             content: {
                 "*/*": {
                     /**
-                     * @description if set to true, skip_confirmation will directly start the deactivation process,
-                     *     without sending a confirmation email beforehand.
+                     * @description if set to true, skip_confirmation will directly start the deactivation
+                     *     process, without sending a confirmation email beforehand.
                      */
                     skip_confirmation?: boolean;
                 };
@@ -12956,6 +13010,97 @@ export interface operations {
                 };
                 content: {
                     "*/*": components["schemas"]["DeactivateOrganizationReply"];
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ErrorWithFields"];
+                };
+            };
+            /** @description Returned when the token is not valid. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the user does not have permission to access the resource. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned when the resource does not exist. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Returned in case of server error. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description Service is unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["Error"];
+                };
+            };
+            /** @description An unexpected error response. */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["google.rpc.Status"];
+                };
+            };
+        };
+    };
+    UpdateOrganizationName: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "*/*": {
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            /** @description A successful response. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["UpdateOrganizationNameReply"];
                 };
             };
             /** @description Validation error */
@@ -16169,6 +16314,8 @@ export interface operations {
             query?: {
                 /** @description If set, run validation and check that the service exists */
                 dry_run?: boolean;
+                "life_cycle.delete_after_create"?: number;
+                "life_cycle.delete_after_sleep"?: number;
             };
             header?: never;
             path: {
@@ -16348,6 +16495,8 @@ export interface operations {
             query?: {
                 /** @description If set, run validation and check that the service exists */
                 dry_run?: boolean;
+                "life_cycle.delete_after_create"?: number;
+                "life_cycle.delete_after_sleep"?: number;
             };
             header?: never;
             path: {
