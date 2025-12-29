@@ -33,7 +33,7 @@ export function InvitationPage({ invitationId }: { invitationId: string }) {
   });
 
   if (!user) {
-    return <UnauthenticatedError />;
+    return <UnauthenticatedError invitationId={invitationId} />;
   }
 
   if (invitationQuery.isPending) {
@@ -57,9 +57,9 @@ export function InvitationPage({ invitationId }: { invitationId: string }) {
   return <HandleInvitation invitation={invitationQuery.data} />;
 }
 
-function UnauthenticatedError() {
+function UnauthenticatedError({ invitationId }: { invitationId: string }) {
   const { signIn } = useAuth();
-  const next = Route.useMatch().id;
+  const next = `/account/organization_invitations/${invitationId}`;
 
   return (
     <div className="col max-w-xl gap-4">
