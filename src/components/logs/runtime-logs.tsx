@@ -13,12 +13,13 @@ import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/selectors/select-instance';
-import { FeatureFlag } from 'src/hooks/feature-flag';
+import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Service } from 'src/model';
 import { arrayToggle, inArray, last } from 'src/utils/arrays';
+import { defined } from 'src/utils/assert';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
 
@@ -125,7 +126,8 @@ type NoLogsProps = {
 export function NoRuntimeLogs({ running, loading, filters }: NoLogsProps) {
   const organization = useOrganization();
   const periods = useRetentionPeriods();
-  const period = filters.watch('period');
+  const hasLogsFilters = useFeatureFlag('logs-filters');
+  const period = hasLogsFilters ? filters.watch('period') : defined(last(periods));
 
   if (loading) {
     return <Spinner className="size-6" />;
