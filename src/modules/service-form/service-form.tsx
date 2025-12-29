@@ -30,6 +30,7 @@ import { CreateVolumeDialog } from './sections/07-volumes/create-volume-dialog';
 import { VolumesSection } from './sections/07-volumes/volumes.section';
 import { PortsSection } from './sections/08-ports/ports.section';
 import { HealthChecksSection } from './sections/09-health-checks/health-checks.section';
+import { LifeCycleSection } from './sections/10-life-cycle/life-cycle.section';
 import { type ServiceForm, ServiceFormSection } from './service-form.types';
 
 type ServiceFormProps = {
@@ -128,6 +129,7 @@ const sectionComponents: Record<ServiceFormSection, React.ComponentType<unknown>
   ports: PortsSection,
   healthChecks: HealthChecksSection,
   serviceName: ServiceNameSection,
+  lifeCycle: LifeCycleSection,
 };
 
 function mapError(fields: Record<string, string>): Record<string, string> {

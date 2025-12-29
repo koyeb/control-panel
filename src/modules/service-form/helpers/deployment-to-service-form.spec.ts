@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { type API } from 'src/api';
+import { ServiceLifeCycle } from 'src/model';
 
 import { HealthCheck } from '../service-form.types';
 
@@ -17,14 +18,13 @@ describe('deploymentDefinitionToServiceForm', () => {
         ],
       };
 
-      expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-        'environmentVariables',
-        [
-          { name: 'VAR1', value: '', regions: [] },
-          { name: 'VAR2', value: '', regions: ['fra'] },
-          { name: 'VAR3', value: '', regions: [] },
-        ],
-      );
+      const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+      expect(serviceForm).toHaveProperty('environmentVariables', [
+        { name: 'VAR1', value: '', regions: [] },
+        { name: 'VAR2', value: '', regions: ['fra'] },
+        { name: 'VAR3', value: '', regions: [] },
+      ]);
     });
   });
 
@@ -34,8 +34,10 @@ describe('deploymentDefinitionToServiceForm', () => {
         scalings: [{ min: 1, max: 1 }],
       };
 
-      expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.min', 1);
-      expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.max', 1);
+      const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+      expect(serviceForm).toHaveProperty('scaling.min', 1);
+      expect(serviceForm).toHaveProperty('scaling.max', 1);
     });
 
     it('autoscaling', () => {
@@ -49,7 +51,9 @@ describe('deploymentDefinitionToServiceForm', () => {
         ],
       };
 
-      expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty('scaling.targets', {
+      const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+      expect(serviceForm).toHaveProperty('scaling.targets', {
         cpu: { enabled: false, value: undefined },
         memory: { enabled: true, value: 1000 },
         requests: { enabled: false, value: undefined },
@@ -70,13 +74,12 @@ describe('deploymentDefinitionToServiceForm', () => {
           ],
         };
 
-        expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-          'scaling.scaleToZero',
-          {
-            idlePeriod: 300,
-            lightSleepEnabled: false,
-          },
-        );
+        const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+        expect(serviceForm).toHaveProperty('scaling.scaleToZero', {
+          idlePeriod: 300,
+          lightSleepEnabled: false,
+        });
       });
 
       it('no light sleep', () => {
@@ -90,13 +93,12 @@ describe('deploymentDefinitionToServiceForm', () => {
           ],
         };
 
-        expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-          'scaling.scaleToZero',
-          {
-            idlePeriod: 300,
-            lightSleepEnabled: false,
-          },
-        );
+        const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+        expect(serviceForm).toHaveProperty('scaling.scaleToZero', {
+          idlePeriod: 300,
+          lightSleepEnabled: false,
+        });
       });
 
       it('light sleep', () => {
@@ -110,14 +112,13 @@ describe('deploymentDefinitionToServiceForm', () => {
           ],
         };
 
-        expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
-          'scaling.scaleToZero',
-          {
-            idlePeriod: 60,
-            lightToDeepPeriod: 240,
-            lightSleepEnabled: true,
-          },
-        );
+        const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+        expect(serviceForm).toHaveProperty('scaling.scaleToZero', {
+          idlePeriod: 60,
+          lightToDeepPeriod: 240,
+          lightSleepEnabled: true,
+        });
       });
     });
   });
@@ -130,7 +131,9 @@ describe('deploymentDefinitionToServiceForm', () => {
 
       const volumes: API.PersistentVolume[] = [{ id: 'volumeId', name: 'volume-name', cur_size: 10 }];
 
-      expect(deploymentDefinitionToServiceForm(definition, undefined, volumes)).toHaveProperty('volumes', [
+      const serviceForm = deploymentDefinitionToServiceForm(definition, { volumes });
+
+      expect(serviceForm).toHaveProperty('volumes', [
         {
           volumeId: 'volumeId',
           name: 'volume-name',
@@ -155,7 +158,9 @@ describe('deploymentDefinitionToServiceForm', () => {
         ],
       };
 
-      expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
+      const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+      expect(serviceForm).toHaveProperty(
         'ports.0.healthCheck',
         expect.objectContaining<Partial<HealthCheck>>({
           protocol: 'http',
@@ -175,13 +180,33 @@ describe('deploymentDefinitionToServiceForm', () => {
         health_checks: [],
       };
 
-      expect(deploymentDefinitionToServiceForm(definition, undefined, [])).toHaveProperty(
+      const serviceForm = deploymentDefinitionToServiceForm(definition);
+
+      expect(serviceForm).toHaveProperty(
         'ports.0.healthCheck',
         expect.objectContaining<Partial<HealthCheck>>({
           protocol: 'tcp',
           gracePeriod: 5,
         }),
       );
+    });
+  });
+
+  describe('life cycle', () => {
+    it('service life cycle', () => {
+      const definition: API.DeploymentDefinition = {};
+
+      const serviceLifeCycle: ServiceLifeCycle = {
+        deleteAfterCreate: 1,
+        deleteAfterSleep: 2,
+      };
+
+      const serviceForm = deploymentDefinitionToServiceForm(definition, { serviceLifeCycle });
+
+      expect(serviceForm).toHaveProperty('lifeCycle', {
+        deleteAfterCreate: 1,
+        deleteAfterSleep: 2,
+      });
     });
   });
 });

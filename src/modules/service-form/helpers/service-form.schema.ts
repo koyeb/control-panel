@@ -259,6 +259,13 @@ function preprocessVolumes(value: unknown) {
   return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
+function lifeCycle() {
+  return z.object({
+    deleteAfterCreate: z.union([z.nan(), z.number().min(0).nullable()]),
+    deleteAfterSleep: z.union([z.nan(), z.number().min(0).nullable()]),
+  });
+}
+
 function meta() {
   return z.object({
     expandedSection: z.union([
@@ -274,6 +281,7 @@ function meta() {
       z.literal('healthChecks'),
       z.literal('volumes'),
       z.literal('serviceName'),
+      z.literal('lifeCycle'),
     ]),
     appId: z.string().nullable(),
     serviceId: z.string().nullable(),
@@ -315,5 +323,6 @@ export function serviceFormSchema(organization: Organization | undefined, quotas
     scaling: scaling(organization, quotas),
     ports: z.array(ports),
     volumes: z.preprocess(preprocessVolumes, z.array(volumes)),
+    lifeCycle: lifeCycle(),
   });
 }

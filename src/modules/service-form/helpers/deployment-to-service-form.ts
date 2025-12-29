@@ -1,7 +1,7 @@
 import merge from 'lodash-es/merge';
 
 import { API } from 'src/api';
-import { EnvironmentVariable, ServiceType } from 'src/model';
+import { EnvironmentVariable, ServiceLifeCycle, ServiceType } from 'src/model';
 import { AssertionError, assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 import { DeepPartial } from 'src/utils/types';
@@ -25,13 +25,16 @@ import { getScaleToZero } from './scaling-rules';
 
 export function deploymentDefinitionToServiceForm(
   definition: API.DeploymentDefinition,
-  githubOrganization: string | undefined,
-  apiVolumes: API.PersistentVolume[],
+  options?: Partial<{
+    githubOrganization: string;
+    volumes: API.PersistentVolume[];
+    serviceLifeCycle: ServiceLifeCycle;
+  }>,
 ): DeepPartial<ServiceForm> {
   return {
     serviceName: definition.name,
     serviceType: serviceType(definition),
-    source: source(definition, githubOrganization),
+    source: source(definition, options?.githubOrganization),
     builder: builder(definition),
     dockerDeployment: dockerDeployment(definition),
     regions: definition.regions,
@@ -39,8 +42,9 @@ export function deploymentDefinitionToServiceForm(
     scaling: scaling(definition),
     environmentVariables: environmentVariables(definition),
     ports: ports(definition),
-    volumes: volumes(definition, apiVolumes),
+    volumes: volumes(definition, options?.volumes),
     files: files(definition),
+    lifeCycle: lifeCycle(options?.serviceLifeCycle),
   };
 }
 
@@ -51,7 +55,7 @@ function serviceType(definition: API.DeploymentDefinition): ServiceType | undefi
 
 function source(
   definition: API.DeploymentDefinition,
-  githubOrganization: string | undefined,
+  githubOrganization?: string,
 ): DeepPartial<ServiceForm['source']> | undefined {
   if (definition.archive) {
     return {
@@ -262,7 +266,7 @@ function healthCheck(definition: API.DeploymentDefinition, port: API.Port): Heal
 
 function volumes(
   definition: API.DeploymentDefinition,
-  apiVolumes: API.PersistentVolume[],
+  apiVolumes: API.PersistentVolume[] = [],
 ): Array<DeepPartial<ServiceVolume>> | undefined {
   return definition.volumes?.map(({ id, path }) => {
     const volume = apiVolumes.find(hasProperty('id', id));
@@ -279,6 +283,13 @@ function volumes(
   });
 }
 
+function lifeCycle(lifeCycle?: ServiceLifeCycle): DeepPartial<ServiceForm['lifeCycle']> {
+  return {
+    deleteAfterCreate: getNumber(lifeCycle?.deleteAfterCreate),
+    deleteAfterSleep: getNumber(lifeCycle?.deleteAfterSleep),
+  };
+}
+
 // gRPC considers empty strings and arrays as unset
 function getString(value: string | undefined): string | undefined {
   if (value === undefined || value === '') {
@@ -290,6 +301,15 @@ function getString(value: string | undefined): string | undefined {
 
 function getStringArray(value: string[] | undefined): string[] | undefined {
   if (value === undefined || value.length === 0) {
+    return undefined;
+  }
+
+  return value;
+}
+
+// gRPC considers the value 0 as unset
+function getNumber(value: number | undefined): number | undefined {
+  if (value === undefined || value === 0) {
     return undefined;
   }
 

@@ -64,7 +64,11 @@ export async function initializeServiceForm(
 
     values = merge(
       values,
-      deploymentDefinitionToServiceForm(deployment.definitionApi, githubApp?.organizationName, volumes!),
+      deploymentDefinitionToServiceForm(deployment.definitionApi, {
+        githubOrganization: githubApp?.organizationName,
+        volumes,
+        serviceLifeCycle: service.lifeCycle,
+      }),
     );
 
     values.meta.previousInstance = values.instance;
@@ -97,8 +101,7 @@ export async function initializeServiceForm(
       values,
       deploymentDefinitionToServiceForm(
         { ...deployment.definitionApi, volumes: [] },
-        githubApp?.organizationName,
-        [],
+        { githubOrganization: githubApp?.organizationName, serviceLifeCycle: service.lifeCycle },
       ),
     );
   }
@@ -362,6 +365,10 @@ export function defaultServiceForm(): ServiceForm {
       },
     ],
     volumes: [],
+    lifeCycle: {
+      deleteAfterCreate: null,
+      deleteAfterSleep: null,
+    },
   };
 }
 

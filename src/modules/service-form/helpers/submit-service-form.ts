@@ -3,7 +3,10 @@ import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../service-form.types';
 
-import { serviceFormToDeploymentDefinition } from './service-form-to-deployment';
+import {
+  serviceFormToDeploymentDefinition,
+  serviceFormToServiceLifeCycle,
+} from './service-form-to-deployment';
 
 const uuid = '15c6a049-6594-4df0-99c3-a5c262e69624';
 
@@ -122,6 +125,7 @@ async function createService(
 ): Promise<SubmitServiceFormResult | void> {
   const api = getApi();
   const definition = serviceFormToDeploymentDefinition(form);
+  const lifeCycle = serviceFormToServiceLifeCycle(form);
 
   if (dryRun) {
     definition.volumes = definition.volumes?.filter((volume) => volume.id !== undefined);
@@ -131,6 +135,7 @@ async function createService(
     query: { dry_run: dryRun },
     body: {
       app_id: appId,
+      life_cycle: lifeCycle,
       definition,
     },
   });
@@ -154,6 +159,7 @@ async function updateService(serviceId: string, form: ServiceForm): Promise<Subm
     query: { dry_run: false },
     body: {
       definition: serviceFormToDeploymentDefinition(form),
+      life_cycle: serviceFormToServiceLifeCycle(form),
       skip_build: form.meta.skipBuild,
       save_only: form.meta.saveOnly,
     },

@@ -83,7 +83,7 @@ function errorMessageHandler(translate: TranslateFn): z.core.$ZodErrorMap {
   };
 
   return (error) => {
-    const path = error.path?.join('.') as FieldPath<ServiceForm>;
+    const path = error.path?.join('.') as FieldPath<ServiceForm> | undefined;
 
     if (isStartsWithSlash(error)) {
       return t('startWithSlash');
@@ -101,19 +101,19 @@ function errorMessageHandler(translate: TranslateFn): z.core.$ZodErrorMap {
       return t('noDockerImageSelected');
     }
 
-    if (path.match(/^scaling.(scaleToZero|targets).\w+.value$/)) {
+    if (path?.match(/^scaling.(scaleToZero|targets).\w+.value$/)) {
       if (error.code === 'invalid_type') return t('scalingTargetEmpty');
       if (error.code === 'too_small') return t('scalingTargetTooSmall', { min: error.minimum });
       if (error.code === 'too_big') return t('scalingTargetTooBig', { max: error.maximum });
     }
 
-    if (path.match(/^ports.\d+.portNumber$/)) {
+    if (path?.match(/^ports.\d+.portNumber$/)) {
       if (error.code === 'invalid_type') return t('portNumberTooSmall');
       if (error.code === 'too_small') return t('portNumberTooSmall');
       if (error.code === 'too_big') return t('portNumberTooBig', { max: error.maximum });
     }
 
-    if (path.match(/^ports.\d+.path$/) && error.code === 'custom' && error.params?.noWhiteSpace) {
+    if (path?.match(/^ports.\d+.path$/) && error.code === 'custom' && error.params?.noWhiteSpace) {
       return t('portPathHasWhiteSpaces');
     }
   };

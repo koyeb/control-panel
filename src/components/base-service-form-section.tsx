@@ -76,11 +76,11 @@ function Header({ expanded, hasError, title, description, shortcut, expand }: He
         <span className="text-xs text-dim">{description}</span>
       </div>
 
-      {shortcut !== undefined && (
-        <div className="ms-auto">
+      <div className="ms-auto">
+        {shortcut !== undefined && (
           <Shortcut keystrokes={['meta', shortcut]} onTrigger={() => expand('shortcut')} />
-        </div>
-      )}
+        )}
+      </div>
 
       <div>
         <IconChevronDown

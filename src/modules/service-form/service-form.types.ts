@@ -10,6 +10,7 @@ export type ServiceFormSection =
   | 'scaling'
   | 'ports'
   | 'healthChecks'
+  | 'lifeCycle'
   | 'volumes'
   | 'serviceName';
 
@@ -28,6 +29,7 @@ export type ServiceForm = {
   scaling: Scaling;
   ports: Port[];
   volumes: ServiceVolume[];
+  lifeCycle: ServiceLifeCycle;
 };
 
 type ServiceFormMeta = {
@@ -168,4 +170,9 @@ export type ServiceVolume = {
   size: number;
   mountPath: string;
   mounted: boolean;
+};
+
+export type ServiceLifeCycle = {
+  deleteAfterCreate: number | null;
+  deleteAfterSleep: number | null;
 };

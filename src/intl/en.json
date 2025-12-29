@@ -1559,6 +1559,32 @@
           "defaultValues": "Restore defaults"
         }
       },
+      "lifeCycle": {
+        "title": "Life cycle",
+        "action": "Configure life cycle",
+        "summary": {
+          "default": "Default lifecycle",
+          "custom": "Custom lifecycle ({details})",
+          "deleteAfter": "delete after: {deleteAfter}",
+          "deleteAfterSleep": "delete after sleep: {deleteAfterSleep}"
+        },
+        "info": "Scale to zero must be activated to configure",
+        "alerts": {
+          "noScaleToZero": "Activate scale to zero to configure auto deletion after sleep"
+        },
+        "deleteAfterCreate": {
+          "label": "Enable auto deletion",
+          "tooltip": "Number of seconds to wait before deleting the instance",
+          "placeholder": "21600",
+          "unit": "s"
+        },
+        "deleteAfterSleep": {
+          "label": "Enable deletion after sleep",
+          "tooltip": "Number of seconds to wait before deleting the instance if it receives no traffic",
+          "placeholder": "300",
+          "unit": "s"
+        }
+      },
       "volumes": {
         "action": "Edit volumes",
         "title": "Volumes",

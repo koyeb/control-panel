@@ -142,7 +142,9 @@ async function initialize(
 
   merge(
     serviceForm,
-    deploymentDefinitionToServiceForm(app.deploymentDefinition, githubApp?.organizationName, []),
+    deploymentDefinitionToServiceForm(app.deploymentDefinition, {
+      githubOrganization: githubApp?.organizationName,
+    }),
     {
       meta: { appId: searchParams.get('app_id') },
       appName: generateAppName(),

@@ -15,6 +15,7 @@ export function getServiceFormSections(form: ServiceForm) {
     form.serviceType === 'web' && 'ports',
     form.serviceType === 'web' && 'healthChecks',
     'serviceName',
+    'lifeCycle',
   ];
 
   return sections.filter((section): section is ServiceFormSection => section !== false);
@@ -60,5 +61,8 @@ export function sectionHasError(section: ServiceFormSection, errors: FieldErrors
 
     case 'healthChecks':
       return errors.ports?.some?.((port) => port?.healthCheck !== undefined);
+
+    case 'lifeCycle':
+      return errors.lifeCycle !== undefined;
   }
 }

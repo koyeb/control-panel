@@ -604,6 +604,7 @@ export type Service = {
   name: string;
   status: ServiceStatus;
   createdAt: string;
+  lifeCycle: ServiceLifeCycle;
 };
 
 export type ServiceType = 'web' | 'worker' | 'sandbox' | 'database';
@@ -618,6 +619,11 @@ export type ServiceStatus =
   | 'PAUSED'
   | 'DELETING'
   | 'DELETED';
+
+export type ServiceLifeCycle = {
+  deleteAfterCreate?: number;
+  deleteAfterSleep?: number;
+};
 
 // session
 

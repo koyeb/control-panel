@@ -18,6 +18,13 @@ import {
 
 import { getDeepSleepValue, getLightSleepValue } from './scaling-rules';
 
+export function serviceFormToServiceLifeCycle(form: ServiceForm): API.Service['life_cycle'] {
+  return {
+    delete_after_create: form.lifeCycle.deleteAfterCreate ?? undefined,
+    delete_after_sleep: form.lifeCycle.deleteAfterSleep ?? undefined,
+  };
+}
+
 export function serviceFormToDeploymentDefinition(form: ServiceForm): API.DeploymentDefinition {
   return {
     name: form.serviceName,
