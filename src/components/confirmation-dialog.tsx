@@ -61,6 +61,9 @@ function DialogContent({
           ref={(ref) => void (ref && setTimeout(() => ref.focus(), 0))}
           control={form.control}
           name="confirmationText"
+          autoCorrect="off"
+          autoCapitalize="none"
+          spellCheck={false}
           label={
             <Translate
               id="common.confirmationDialogText"
