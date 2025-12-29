@@ -29,7 +29,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
     async onSuccess() {
       await navigate({
         to: '/',
-        search: { 'organization-id': invitation.organization.id },
+        search: { 'organization-id': invitation.organization.externalId },
         reloadDocument: true,
       });
     },

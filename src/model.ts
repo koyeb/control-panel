@@ -684,6 +684,7 @@ export type OrganizationInvitation = {
   status: InvitationStatus;
   organization: {
     id: string;
+    externalId: string;
     name: string;
   };
   email: string;
