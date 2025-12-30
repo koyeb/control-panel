@@ -274,7 +274,9 @@ function mapComputeDeployment(deployment: API.Deployment): ComputeDeployment {
     id: deployment.id!,
     appId: deployment.app_id!,
     serviceId: deployment.service_id!,
-    lastProvisionedDeploymentId: deployment.metadata?.git?.last_provisioned_deployment_id,
+    lastProvisionedDeploymentId:
+      deployment.metadata?.archive?.last_provisioned_deployment_id ??
+      deployment.metadata?.git?.last_provisioned_deployment_id,
     name: shortId(deployment.id)!,
     date: deployment.created_at!,
     terminatedAt: deployment.terminated_at!,
