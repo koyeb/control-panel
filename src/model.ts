@@ -343,6 +343,7 @@ export type HealthCheckHeader = {
 export type Scaling = {
   min: number;
   max: number;
+  lightSleepEnabled: boolean;
 };
 
 export type ArchiveDeploymentSource = {

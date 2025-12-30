@@ -219,6 +219,9 @@ function mapComputeDeployment(deployment: API.Deployment): ComputeDeployment {
     return {
       min: scaling.min!,
       max: scaling.max!,
+      lightSleepEnabled: Boolean(
+        scaling.targets?.some((target) => Boolean(target.sleep_idle_delay?.light_sleep_value)),
+      ),
     };
   };
 

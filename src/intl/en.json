@@ -2745,6 +2745,17 @@
         "metadata": {
           "id": "ID",
           "status": "Status",
+          "deleteAfterCreate": {
+            "label": "Time to live",
+            "fallback": "Always on"
+          },
+          "deleteAfterSleep": {
+            "label": "Deletion timing",
+            "value": "{value} after sleep",
+            "valueLightSleep": "{value} after light sleep",
+            "fallbackNoScaleToZero": "No deletion scheduled. Scale to 0 is not set.",
+            "fallback": "No deletion scheduled"
+          },
           "cpu": "CPU",
           "memory": "Memory usage",
           "dockerImage": "Docker image",

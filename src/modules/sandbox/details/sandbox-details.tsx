@@ -19,6 +19,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, DeploymentDefinition, Service } from 'src/model';
 import { DeploymentDefinitionDialog } from 'src/modules/deployment/deployment-info/deployment-definition-dialog';
 import { assert } from 'src/utils/assert';
+import { formatSecondsDuration } from 'src/utils/date';
 import { shortId } from 'src/utils/strings';
 
 import { useDeploymentMetric } from '../../deployment/deployment-metrics/deployment-metrics';
@@ -92,6 +93,10 @@ function SandboxMetadata({ service }: { service: Service }) {
         <InstanceMetadata instance={instanceType} className="w-44" />
 
         <RegionsMetadata regions={regions} className="w-44" />
+
+        <DeleteAfterCreateMetadata service={service} />
+
+        <DeleteAfterSleepMetadata service={service} />
       </div>
 
       <div className="row flex-wrap gap-3 p-3">
@@ -169,4 +174,45 @@ function DateMetadata({ date }: { date: string }) {
       className="w-44"
     />
   );
+}
+
+function DeleteAfterCreateMetadata({ service }: { service: Service }) {
+  const value = () => {
+    if (service.lifeCycle.deleteAfterCreate) {
+      return formatSecondsDuration(service.lifeCycle.deleteAfterCreate);
+    }
+
+    return <T id="metadata.deleteAfterCreate.fallback" />;
+  };
+
+  return <Metadata label={<T id="metadata.deleteAfterCreate.label" />} value={value()} className="w-44" />;
+}
+
+function DeleteAfterSleepMetadata({ service }: { service: Service }) {
+  const deployment = useComputeDeployment(service.latestDeploymentId);
+
+  const value = () => {
+    if (deployment === undefined) {
+      return <Translate id="common.noValue" />;
+    }
+
+    if (service.lifeCycle.deleteAfterSleep) {
+      const { lightSleepEnabled } = deployment.definition.scaling;
+
+      return (
+        <T
+          id={`metadata.deleteAfterSleep.${lightSleepEnabled ? 'valueLightSleep' : 'value'}`}
+          values={{ value: formatSecondsDuration(service.lifeCycle.deleteAfterSleep) }}
+        />
+      );
+    }
+
+    if (deployment.definition.scaling.min > 0) {
+      return <T id="metadata.deleteAfterSleep.fallbackNoScaleToZero" />;
+    }
+
+    return <T id="metadata.deleteAfterSleep.fallback" />;
+  };
+
+  return <Metadata label={<T id="metadata.deleteAfterSleep.label" />} value={value()} className="w-44" />;
 }
