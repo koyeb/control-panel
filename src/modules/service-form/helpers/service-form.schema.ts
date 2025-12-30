@@ -259,10 +259,18 @@ function preprocessVolumes(value: unknown) {
   return (value as Array<{ name: string }>).filter((value) => value.name !== '');
 }
 
-function lifeCycle() {
+function lifeCycle(quotas: OrganizationQuotas) {
   return z.object({
-    deleteAfterCreate: z.union([z.nan(), z.number().min(0).nullable()]),
-    deleteAfterSleep: z.union([z.nan(), z.number().min(0).nullable()]),
+    deleteAfterCreate: z.union([
+      z.nan(),
+      z.null(),
+      z.number().min(quotas.deleteAfterCreateMin).max(quotas.deleteAfterCreateMax),
+    ]),
+    deleteAfterSleep: z.union([
+      z.nan(),
+      z.null(),
+      z.number().min(quotas.deleteAfterSleepMin).max(quotas.deleteAfterSleepMax),
+    ]),
   });
 }
 
@@ -323,6 +331,6 @@ export function serviceFormSchema(organization: Organization | undefined, quotas
     scaling: scaling(organization, quotas),
     ports: z.array(ports),
     volumes: z.preprocess(preprocessVolumes, z.array(volumes)),
-    lifeCycle: lifeCycle(),
+    lifeCycle: lifeCycle(quotas),
   });
 }

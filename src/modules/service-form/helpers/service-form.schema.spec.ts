@@ -194,6 +194,26 @@ describe('serviceFormSchema', () => {
     expect(parse()).toHaveProperty('volumes', []);
   });
 
+  it('life cycle quotas', () => {
+    quotas.deleteAfterCreateMin = 60;
+    form.lifeCycle.deleteAfterCreate = 50;
+    expect(() => parse()).toThrowError('Too small: expected number to be >=60');
+
+    quotas.deleteAfterCreateMax = 120;
+    form.lifeCycle.deleteAfterCreate = 130;
+    expect(() => parse()).toThrowError('Too big: expected number to be <=120');
+
+    form.lifeCycle.deleteAfterCreate = 100;
+
+    quotas.deleteAfterSleepMin = 60;
+    form.lifeCycle.deleteAfterSleep = 50;
+    expect(() => parse()).toThrowError('Too small: expected number to be >=60');
+
+    quotas.deleteAfterSleepMax = 120;
+    form.lifeCycle.deleteAfterSleep = 130;
+    expect(() => parse()).toThrowError('Too big: expected number to be <=120');
+  });
+
   it('trims whitespace on app and service names', () => {
     form.appName = ' app ';
     form.serviceName = ' service ';

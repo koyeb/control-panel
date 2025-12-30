@@ -112,6 +112,11 @@ export function mapOrganizationQuotas(quotas: API.Quotas): OrganizationQuotas {
     maxMemory: parseBytes(`${quotas.memory_mb}MiB`),
     maxDomains: Number(quotas.custom_domains),
     logsRetention: quotas.logs_retention!,
+    // todo: remove
+    deleteAfterCreateMin: -Infinity,
+    deleteAfterCreateMax: Infinity,
+    deleteAfterSleepMin: -Infinity,
+    deleteAfterSleepMax: Infinity,
     scaleToZero: snakeToCamelDeep(requiredDeep(quotas.scale_to_zero!)),
   };
 }

@@ -730,6 +730,10 @@ export type OrganizationQuotas = {
   maxMemory: number;
   maxDomains: number;
   logsRetention: number;
+  deleteAfterCreateMin: number;
+  deleteAfterCreateMax: number;
+  deleteAfterSleepMin: number;
+  deleteAfterSleepMax: number;
   scaleToZero: {
     isDeepSleepEnabled: boolean;
     deepSleepIdleDelayMin: number;

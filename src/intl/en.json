@@ -1576,13 +1576,15 @@
           "label": "Enable auto deletion",
           "tooltip": "Number of seconds to wait before deleting the instance",
           "placeholder": "21600",
-          "unit": "s"
+          "unit": "s",
+          "helperText": "Deletion will happen before the instance enters deep sleep"
         },
         "deleteAfterSleep": {
           "label": "Enable deletion after sleep",
           "tooltip": "Number of seconds to wait before deleting the instance if it receives no traffic",
           "placeholder": "300",
-          "unit": "s"
+          "unit": "s",
+          "helperText": "Deletion will happen before the instance enters deep sleep"
         }
       },
       "volumes": {

@@ -57,6 +57,10 @@ const quotas = createFactory<OrganizationQuotas>(() => ({
   maxMemory: 0,
   maxDomains: 0,
   logsRetention: 0,
+  delete_after_create_min: 0,
+  delete_after_create_max: 0,
+  delete_after_sleep_min: 0,
+  delete_after_sleep_max: 0,
   scaleToZero: {
     isDeepSleepEnabled: false,
     deepSleepIdleDelayMin: 0,
