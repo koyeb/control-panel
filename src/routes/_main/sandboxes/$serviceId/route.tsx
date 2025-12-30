@@ -14,7 +14,7 @@ import { IconPause, IconPlay, IconTrash } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 
-const T = createTranslate('pages.sandbox.details.navigation');
+const T = createTranslate('pages.sandbox.details.layout');
 
 export const Route = createFileRoute('/_main/sandboxes/$serviceId')({
   component: SandboxLayout,
@@ -62,15 +62,19 @@ function SandboxLayout() {
 
           <TabButtons>
             <TabButtonLink to="/sandboxes/$serviceId" params={{ serviceId }}>
-              <T id="overview" />
+              <T id="navigation.overview" />
             </TabButtonLink>
 
             <TabButtonLink to="/sandboxes/$serviceId/metrics" params={{ serviceId }}>
-              <T id="metrics" />
+              <T id="navigation.metrics" />
             </TabButtonLink>
 
             <TabButtonLink to="/sandboxes/$serviceId/console" params={{ serviceId }}>
-              <T id="console" />
+              <T id="navigation.console" />
+            </TabButtonLink>
+
+            <TabButtonLink to="/sandboxes/$serviceId/settings" params={{ serviceId }}>
+              <T id="navigation.settings" />
             </TabButtonLink>
           </TabButtons>
 

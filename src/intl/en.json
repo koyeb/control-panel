@@ -2715,12 +2715,13 @@
         }
       },
       "details": {
-        "notFound": "Sandbox not found",
-        "more": "View more",
-        "navigation": {
-          "overview": "Overview",
-          "metrics": "Metrics",
-          "console": "Console",
+        "layout": {
+          "navigation": {
+            "overview": "Overview",
+            "metrics": "Metrics",
+            "console": "Console",
+            "settings": "Settings"
+          },
           "actions": {
             "pause": {
               "button": "Pause",
@@ -2739,6 +2740,34 @@
               "description": "Do you want to continue?",
               "confirm": "Delete",
               "success": "Your sandbox is being deleted"
+            }
+          }
+        },
+        "notFound": "Sandbox not found",
+        "more": "View more",
+        "settings": {
+          "lifeCycle": {
+            "title": "Life cycle",
+            "action": "Configure life cycle",
+            "summary": {
+              "default": "Default lifecycle",
+              "custom": "Custom lifecycle ({details})",
+              "deleteAfter": "delete after: {deleteAfter}",
+              "deleteAfterSleep": "delete after sleep: {deleteAfterSleep}"
+            },
+            "deleteAfterCreate": {
+              "label": "Enable auto deletion",
+              "tooltip": "Number of seconds to wait before deleting the instance",
+              "placeholder": "21600",
+              "unit": "s",
+              "helperText": "Deletion will happen before the instance enters deep sleep"
+            },
+            "deleteAfterSleep": {
+              "label": "Enable deletion after sleep",
+              "tooltip": "Number of seconds to wait before deleting the instance if it receives no traffic",
+              "placeholder": "300",
+              "unit": "s",
+              "helperText": "Deletion will happen before the instance enters deep sleep"
             }
           }
         },

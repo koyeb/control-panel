@@ -56,6 +56,7 @@ import { Route as MainUserSettingsApiRouteImport } from './routes/_main/user.set
 import { Route as MainServicesServiceIdSettingsRouteImport } from './routes/_main/services/$serviceId/settings'
 import { Route as MainServicesServiceIdMetricsRouteImport } from './routes/_main/services/$serviceId/metrics'
 import { Route as MainServicesServiceIdConsoleRouteImport } from './routes/_main/services/$serviceId/console'
+import { Route as MainSandboxesServiceIdSettingsRouteImport } from './routes/_main/sandboxes/$serviceId/settings'
 import { Route as MainSandboxesServiceIdMetricsRouteImport } from './routes/_main/sandboxes/$serviceId/metrics'
 import { Route as MainSandboxesServiceIdConsoleRouteImport } from './routes/_main/sandboxes/$serviceId/console'
 import { Route as MainOneClicksSlugDeployRouteImport } from './routes/_main/one-clicks/$slug.deploy'
@@ -313,6 +314,12 @@ const MainServicesServiceIdConsoleRoute =
     path: '/console',
     getParentRoute: () => MainServicesServiceIdRouteRoute,
   } as any)
+const MainSandboxesServiceIdSettingsRoute =
+  MainSandboxesServiceIdSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => MainSandboxesServiceIdRouteRoute,
+  } as any)
 const MainSandboxesServiceIdMetricsRoute =
   MainSandboxesServiceIdMetricsRouteImport.update({
     id: '/metrics',
@@ -402,6 +409,7 @@ export interface FileRoutesByFullPath {
   '/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
   '/sandboxes/$serviceId/console': typeof MainSandboxesServiceIdConsoleRoute
   '/sandboxes/$serviceId/metrics': typeof MainSandboxesServiceIdMetricsRoute
+  '/sandboxes/$serviceId/settings': typeof MainSandboxesServiceIdSettingsRoute
   '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -449,6 +457,7 @@ export interface FileRoutesByTo {
   '/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
   '/sandboxes/$serviceId/console': typeof MainSandboxesServiceIdConsoleRoute
   '/sandboxes/$serviceId/metrics': typeof MainSandboxesServiceIdMetricsRoute
+  '/sandboxes/$serviceId/settings': typeof MainSandboxesServiceIdSettingsRoute
   '/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -507,6 +516,7 @@ export interface FileRoutesById {
   '/_main/one-clicks/$slug/deploy': typeof MainOneClicksSlugDeployRoute
   '/_main/sandboxes/$serviceId/console': typeof MainSandboxesServiceIdConsoleRoute
   '/_main/sandboxes/$serviceId/metrics': typeof MainSandboxesServiceIdMetricsRoute
+  '/_main/sandboxes/$serviceId/settings': typeof MainSandboxesServiceIdSettingsRoute
   '/_main/services/$serviceId/console': typeof MainServicesServiceIdConsoleRoute
   '/_main/services/$serviceId/metrics': typeof MainServicesServiceIdMetricsRoute
   '/_main/services/$serviceId/settings': typeof MainServicesServiceIdSettingsRoute
@@ -565,6 +575,7 @@ export interface FileRouteTypes {
     | '/one-clicks/$slug/deploy'
     | '/sandboxes/$serviceId/console'
     | '/sandboxes/$serviceId/metrics'
+    | '/sandboxes/$serviceId/settings'
     | '/services/$serviceId/console'
     | '/services/$serviceId/metrics'
     | '/services/$serviceId/settings'
@@ -612,6 +623,7 @@ export interface FileRouteTypes {
     | '/one-clicks/$slug/deploy'
     | '/sandboxes/$serviceId/console'
     | '/sandboxes/$serviceId/metrics'
+    | '/sandboxes/$serviceId/settings'
     | '/services/$serviceId/console'
     | '/services/$serviceId/metrics'
     | '/services/$serviceId/settings'
@@ -669,6 +681,7 @@ export interface FileRouteTypes {
     | '/_main/one-clicks/$slug/deploy'
     | '/_main/sandboxes/$serviceId/console'
     | '/_main/sandboxes/$serviceId/metrics'
+    | '/_main/sandboxes/$serviceId/settings'
     | '/_main/services/$serviceId/console'
     | '/_main/services/$serviceId/metrics'
     | '/_main/services/$serviceId/settings'
@@ -1025,6 +1038,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainServicesServiceIdConsoleRouteImport
       parentRoute: typeof MainServicesServiceIdRouteRoute
     }
+    '/_main/sandboxes/$serviceId/settings': {
+      id: '/_main/sandboxes/$serviceId/settings'
+      path: '/settings'
+      fullPath: '/sandboxes/$serviceId/settings'
+      preLoaderRoute: typeof MainSandboxesServiceIdSettingsRouteImport
+      parentRoute: typeof MainSandboxesServiceIdRouteRoute
+    }
     '/_main/sandboxes/$serviceId/metrics': {
       id: '/_main/sandboxes/$serviceId/metrics'
       path: '/metrics'
@@ -1116,6 +1136,7 @@ const MainOneClicksRouteRouteWithChildren =
 interface MainSandboxesServiceIdRouteRouteChildren {
   MainSandboxesServiceIdConsoleRoute: typeof MainSandboxesServiceIdConsoleRoute
   MainSandboxesServiceIdMetricsRoute: typeof MainSandboxesServiceIdMetricsRoute
+  MainSandboxesServiceIdSettingsRoute: typeof MainSandboxesServiceIdSettingsRoute
   MainSandboxesServiceIdIndexRoute: typeof MainSandboxesServiceIdIndexRoute
 }
 
@@ -1123,6 +1144,7 @@ const MainSandboxesServiceIdRouteRouteChildren: MainSandboxesServiceIdRouteRoute
   {
     MainSandboxesServiceIdConsoleRoute: MainSandboxesServiceIdConsoleRoute,
     MainSandboxesServiceIdMetricsRoute: MainSandboxesServiceIdMetricsRoute,
+    MainSandboxesServiceIdSettingsRoute: MainSandboxesServiceIdSettingsRoute,
     MainSandboxesServiceIdIndexRoute: MainSandboxesServiceIdIndexRoute,
   }
 
