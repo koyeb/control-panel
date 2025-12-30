@@ -2673,6 +2673,11 @@
         "status": "Status",
         "cpu": "CPU",
         "memory": "Memory",
+        "lifeCycle": {
+          "deleteAfterCreate": "Deletes {value}",
+          "tooltipTitle": "Scheduled for deletion on:",
+          "deleteAfterSleepInfo": "Info: Deletion may occur earlier. If the sandbox goes to sleep, it will be deleted after 10 minutes."
+        },
         "noSandboxes": {
           "languages": {
             "python": "Python",

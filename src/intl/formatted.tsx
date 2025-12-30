@@ -1,4 +1,5 @@
 import { Badge, TooltipTitle } from '@koyeb/design-system';
+import clsx from 'clsx';
 import { useMemo } from 'react';
 import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
@@ -25,6 +26,11 @@ type RelativeTimeFormatSingularUnit = React.ComponentProps<typeof FormattedRelat
 type FormattedDistanceToNowTimeOwnProps = {
   value: Date | string;
   style?: Intl.RelativeTimeFormatStyle;
+  tooltip?: {
+    title?: React.ReactNode;
+    extra?: React.ReactNode;
+    className?: string;
+  };
   children?: (formatted: React.ReactNode) => React.ReactNode;
 };
 
@@ -34,6 +40,7 @@ type FormattedDistanceToNowTimeProps = Omit<React.HTMLAttributes<HTMLSpanElement
 export function FormattedDistanceToNow({
   value: valueProp,
   style,
+  tooltip,
   children = identity,
   ...props
 }: FormattedDistanceToNowTimeProps) {
@@ -60,18 +67,20 @@ export function FormattedDistanceToNow({
           )}
         </span>
       )}
-      className="col min-w-60 gap-3 text-xs"
+      className={clsx('col min-w-60 gap-3 text-xs', tooltip?.className)}
       content={
         <>
           <TooltipTitle
             title={
-              <FormattedRelativeTime
-                value={value}
-                unit={unit}
-                updateIntervalInSeconds={
-                  ['second', 'minute', 'hour'].includes(unit as string) ? 1 : undefined
-                }
-              />
+              tooltip?.title ?? (
+                <FormattedRelativeTime
+                  value={value}
+                  unit={unit}
+                  updateIntervalInSeconds={
+                    ['second', 'minute', 'hour'].includes(unit as string) ? 1 : undefined
+                  }
+                />
+              )
             }
           />
 
@@ -91,6 +100,8 @@ export function FormattedDistanceToNow({
             <div>{formatted.local({ dateStyle: 'medium' })}</div>
             <div className="ml-auto text-dim">{formatted.local({ timeStyle: 'medium' })}</div>
           </div>
+
+          {tooltip?.extra}
         </>
       }
     />

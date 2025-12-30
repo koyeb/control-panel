@@ -1,6 +1,7 @@
 import { InputStart, ProgressBar } from '@koyeb/design-system';
 import { Link } from '@tanstack/react-router';
 import clsx from 'clsx';
+import { addSeconds } from 'date-fns';
 import { Controller, UseFormReturn } from 'react-hook-form';
 import { FormattedNumber } from 'react-intl';
 
@@ -180,7 +181,7 @@ function SandboxItem({ service }: { service: Service }) {
           {service.name}
         </Link>
 
-        <div className="lg:w-24">
+        <div className="leading-0 lg:w-24">
           <DeploymentStatusBadge status={deployment.status} />
         </div>
       </div>
@@ -220,8 +221,9 @@ function SandboxItem({ service }: { service: Service }) {
         )}
       </div>
 
-      <div className="truncate text-xs text-dim lg:text-right">
-        <FormattedDistanceToNow value={deployment.date} />
+      <div className="col gap-1 truncate text-xs text-dim lg:text-right">
+        <FormattedDistanceToNow value={deployment.date} className="truncate" />
+        <LifeCycleInfo service={service} />
       </div>
     </div>
   );
@@ -239,5 +241,27 @@ function MetricValue({ deployment, metric }: { deployment: ComputeDeployment; me
       <ProgressBar progress={value} className="max-w-32 flex-1 lg:max-2xl:hidden" />
       <FormattedNumber value={value} style="percent" />
     </>
+  );
+}
+
+function LifeCycleInfo({ service }: { service: Service }) {
+  const deleteAfterCreate = service.lifeCycle.deleteAfterCreate || undefined;
+  const deleteAfterSleep = service.lifeCycle.deleteAfterSleep || undefined;
+
+  if (deleteAfterCreate === undefined) {
+    return null;
+  }
+
+  return (
+    <FormattedDistanceToNow
+      value={new Date(addSeconds(new Date(), deleteAfterCreate))}
+      tooltip={{
+        title: <T id="lifeCycle.tooltipTitle" />,
+        extra: deleteAfterSleep && <T id="lifeCycle.deleteAfterSleepInfo" />,
+        className: 'max-w-xs',
+      }}
+    >
+      {(value) => <T id="lifeCycle.deleteAfterCreate" values={{ value }} />}
+    </FormattedDistanceToNow>
   );
 }

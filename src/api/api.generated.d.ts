@@ -4864,6 +4864,7 @@ export interface components {
             created_at?: string;
             id?: string;
             latest_deployment_id?: string;
+            life_cycle?: components["schemas"]["ServiceLifeCycle"];
             messages?: string[];
             name?: string;
             organization_id?: string;
