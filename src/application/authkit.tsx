@@ -17,6 +17,9 @@ import { waitFor } from 'src/utils/promises';
 import { getConfig } from './config';
 import { getToken } from './token';
 
+// eslint-disable-next-line react-refresh/only-export-components
+export const workOsQueryClient = new QueryClient();
+
 export type AuthKit = ReturnType<typeof useAuth>;
 
 declare global {

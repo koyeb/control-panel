@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tansta
 import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiQuery, getApi, getApiQueryKey } from 'src/api';
+import { workOsQueryClient } from 'src/application/authkit';
 import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
@@ -45,6 +46,7 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => unknown
       queryClient.removeQueries({ predicate: (query) => !query.isActive() });
       await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
       await queryClient.invalidateQueries();
+      await workOsQueryClient.invalidateQueries({ queryKey: ['/_widgets/'] });
       await onSuccess?.();
     },
   });
