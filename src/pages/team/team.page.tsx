@@ -19,9 +19,15 @@ export function TeamPage() {
   return (
     <div className="col gap-4">
       <Title title={<T id="title" />} />
-      <MembersList />
-      <InviteMemberForm />
-      <FeatureFlag feature="workos-user-management">
+      <FeatureFlag
+        feature="workos-user-management"
+        fallback={
+          <>
+            <MembersList />
+            <InviteMemberForm />
+          </>
+        }
+      >
         <WorkOSUsersManagement />
       </FeatureFlag>
     </div>
