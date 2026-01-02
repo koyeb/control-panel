@@ -3,6 +3,7 @@ import { createRootRouteWithContext } from '@tanstack/react-router';
 
 import { AuthKit } from 'src/application/authkit';
 import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
+import { LogoLoading } from 'src/components/logo-loading';
 import { SeonAdapter } from 'src/hooks/seon';
 import { TranslateFn } from 'src/intl/translate';
 
@@ -17,4 +18,9 @@ type RouterContext = {
 export const Route = createRootRouteWithContext<RouterContext>()({
   errorComponent: ErrorComponent,
   notFoundComponent: NotFoundComponent,
+  pendingComponent: PendingComponent,
 });
+
+function PendingComponent() {
+  return <LogoLoading />;
+}
