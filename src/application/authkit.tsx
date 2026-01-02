@@ -41,8 +41,8 @@ export function AuthKitProvider({ router, children }: AuthKitProviderProps) {
 
   assert(clientId !== undefined);
 
-  const onRedirectCallback = ({ state }: RedirectParams) => {
-    void router.navigate({ ...urlToLinkOptions(state?.next ?? '/'), reloadDocument: true });
+  const onRedirectCallback = async ({ state }: RedirectParams) => {
+    await router.navigate({ ...urlToLinkOptions(state?.next ?? '/'), reloadDocument: true });
   };
 
   return (
@@ -51,7 +51,7 @@ export function AuthKitProvider({ router, children }: AuthKitProviderProps) {
       apiHostname={apiHostname}
       devMode={environment !== 'production'}
       redirectUri={`${window.location.origin}/account/workos/callback`}
-      onRedirectCallback={onRedirectCallback}
+      onRedirectCallback={(params) => void onRedirectCallback(params)}
     >
       <AuthKitGuard router={router}>{children}</AuthKitGuard>
     </BaseAuthKitProvider>

@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { createRootRouteWithContext } from '@tanstack/react-router';
+import { waitFor } from '@testing-library/react';
 
 import { AuthKit } from 'src/application/authkit';
 import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
@@ -19,6 +20,10 @@ export const Route = createRootRouteWithContext<RouterContext>()({
   errorComponent: ErrorComponent,
   notFoundComponent: NotFoundComponent,
   pendingComponent: PendingComponent,
+
+  async beforeLoad({ context: { authKit } }) {
+    await waitFor(() => !authKit.isLoading, { interval: 0 });
+  },
 });
 
 function PendingComponent() {
