@@ -1,11 +1,11 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useNavigate } from '@tanstack/react-router';
 
 import { apiMutation, apiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Organization } from 'src/model';
 
@@ -28,7 +28,7 @@ export function DeleteOrganization() {
       path: { id: organization.id },
     })),
     async onSuccess(_, organization) {
-      await navigate({ to: '/', reloadDocument: true });
+      await navigate({ to: '/auth/signin' });
       notify.info(t('success', { organizationName: organization.name }));
     },
   });

@@ -11,7 +11,8 @@ import { LinkMenuItem } from 'src/components/dropdown-menu';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
 import { IconCheck, IconChevronsUpDown, IconCirclePlus } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
-import { Organization } from 'src/model';
+import { Organization, organizationStatuses } from 'src/model';
+import { exclude } from 'src/utils/arrays';
 
 const T = createTranslate('layouts.organizationSwitcher');
 
@@ -45,7 +46,7 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
     selectedItem: null,
     onSelectedItemChange({ selectedItem: organization }) {
       if (organization) {
-        switchOrganizationMutation.mutate(organization.id);
+        switchOrganizationMutation.mutate(organization);
       }
     },
 
@@ -71,8 +72,8 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
     offset: 8,
   });
 
-  const switchOrganizationMutation = useSwitchOrganization(() => {
-    combobox.closeMenu();
+  const switchOrganizationMutation = useSwitchOrganization({
+    onSuccess: () => combobox.closeMenu(),
   });
 
   const getItemIcon = (organization: Organization) => {
@@ -80,7 +81,7 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
       return IconCheck;
     }
 
-    if (switchOrganizationMutation.isPending && switchOrganizationMutation.variables === organization.id) {
+    if (switchOrganizationMutation.isPending && switchOrganizationMutation.variables === organization) {
       return Spinner;
     }
   };
@@ -164,7 +165,7 @@ function useOrganizationList(search: string) {
       query: {
         search,
         limit: String(limit),
-        statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
+        statuses: exclude(organizationStatuses, 'DELETING', 'DELETED'),
       },
     }),
     refetchInterval: false,
