@@ -1,5 +1,5 @@
 import { CommandPalette } from '@koyeb/design-system';
-import { useNavigate } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { useSetThemeMode } from 'src/hooks/theme';
 import { IconLaptop, IconLogOut, IconMoon, IconSunDim, IconSunMoon } from 'src/icons';
@@ -12,7 +12,7 @@ export function useSettingsCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
 
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const setTheme = useSetThemeMode();
 
   return (palette: CommandPalette) => {
@@ -50,7 +50,7 @@ export function useSettingsCommands() {
       label: t('settings:logout.label'),
       description: t('settings:logout.description'),
       Icon: IconLogOut,
-      execute: () => navigate({ to: '/auth/signout' }),
+      execute: () => signOut(),
     });
 
     return () => {

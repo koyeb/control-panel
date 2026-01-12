@@ -1,5 +1,6 @@
 import { Badge, Table, useBreakpoint } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import clsx from 'clsx';
 
 import {
@@ -18,7 +19,6 @@ import { Select } from 'src/components/forms/select';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { useSha256 } from 'src/hooks/hash';
-import { useNavigate } from 'src/hooks/router';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { OrganizationInvitation, type OrganizationMember } from 'src/model';
@@ -259,23 +259,14 @@ function useRemoveOrganizationMember() {
 }
 
 function useLeaveOrganization() {
-  const t = T.useTranslate();
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   return useMutation({
     ...apiMutation('delete /v1/organization_members/{id}', (membership: OrganizationMember) => ({
       path: { id: membership.id },
     })),
-    async onSuccess(_, membership) {
-      await navigate({ to: '/', reloadDocument: true });
-
-      closeDialog();
-
-      notify.info(
-        t('actions.leaveSuccessNotification', {
-          organizationName: membership.organization.name,
-        }),
-      );
+    onSuccess() {
+      signOut();
     },
   });
 }

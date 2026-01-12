@@ -1,4 +1,4 @@
-import { useNavigate } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { useUser } from 'src/api';
 import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
@@ -9,7 +9,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('layouts.secondary.header');
 
 export function UserMenu() {
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const user = useUser();
 
   return (
@@ -27,7 +27,7 @@ export function UserMenu() {
         </LinkMenuItem>
       )}
 
-      <ButtonMenuItem onClick={() => void navigate({ to: '/auth/signout' })} className="row gap-2">
+      <ButtonMenuItem onClick={() => signOut()} className="row gap-2">
         <IconLogOut className="icon" />
         <T id="logOut" />
       </ButtonMenuItem>

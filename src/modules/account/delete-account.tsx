@@ -59,16 +59,16 @@ export function DeleteAccount() {
 
 function useDeleteMutation() {
   const [, clearIdentify] = useIdentifyUser();
-  const authkit = useAuth();
+  const { signOut } = useAuth();
 
   return useMutation({
     ...apiMutation('delete /v2/users/{id}', (user: User) => ({
       path: { id: user.id },
     })),
-    async onSuccess() {
+    onSuccess() {
       closeDialog();
       clearIdentify();
-      authkit.signOut({ navigate: true });
+      signOut();
     },
   });
 }

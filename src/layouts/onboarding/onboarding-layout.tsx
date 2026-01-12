@@ -1,10 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiQuery, useUser } from 'src/api';
 import { ButtonMenuItem, DropdownMenu, LinkMenuItem } from 'src/components/dropdown-menu';
 import LogoKoyeb from 'src/components/logo-koyeb.svg?react';
 import { UserAvatar } from 'src/components/user-avatar';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useSearchParams } from 'src/hooks/router';
 import { useForceThemeMode } from 'src/hooks/theme';
 import { IconChevronRight, IconLogOut, IconUser } from 'src/icons';
 import { createTranslate } from 'src/intl/translate';
@@ -68,7 +69,7 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
 }
 
 function UserMenu() {
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const user = useUser();
 
   return (
@@ -98,7 +99,7 @@ function UserMenu() {
         <T id="userSettings" />
       </LinkMenuItem>
 
-      <ButtonMenuItem onClick={() => void navigate({ to: '/auth/signout' })}>
+      <ButtonMenuItem onClick={() => signOut()}>
         <IconLogOut className="icon" />
         <T id="logout" />
       </ButtonMenuItem>

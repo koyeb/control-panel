@@ -1,5 +1,5 @@
 import { Collapse, useBreakpoint } from '@koyeb/design-system';
-import { useNavigate } from '@tanstack/react-router';
+import { useAuth } from '@workos-inc/authkit-react';
 import clsx from 'clsx';
 import { useState } from 'react';
 
@@ -22,7 +22,7 @@ import { createTranslate } from 'src/intl/translate';
 const T = createTranslate('layouts.main.userMenu');
 
 export function UserMenu({ collapsed }: { collapsed: boolean }) {
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const user = useUser();
   const isMobile = !useBreakpoint('sm');
 
@@ -59,7 +59,7 @@ export function UserMenu({ collapsed }: { collapsed: boolean }) {
 
       <ThemeMenuItem />
 
-      <ButtonMenuItem onClick={() => void navigate({ to: '/auth/signout' })}>
+      <ButtonMenuItem onClick={() => signOut()}>
         <IconLogOut className="icon" />
         <T id="logout" />
       </ButtonMenuItem>

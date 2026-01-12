@@ -354,7 +354,6 @@
         "title": "Delete the organization",
         "description": "Permanently delete the organization and the associated payment information",
         "delete": "Delete",
-        "success": "Your organization {organizationName} was deleted",
         "unpaidInvoicesPending": "Checking for unpaid invoices...",
         "hasUnpaidInvoices": "Your organization has unpaid invoices. Settle the outstanding payment to be able to delete the organization.",
         "mustBeDeactivated": "The organization must first be deactivated before it can be deleted"
@@ -3072,8 +3071,7 @@
           "resendInvitationSuccessNotification": "The invitation was sent again to <strong>{email}</strong>",
           "removeMember": "Remove",
           "removeMemberSuccessNotification": "<strong>{memberName}</strong> was removed from the organization <strong>{organizationName}</strong>",
-          "leave": "Leave",
-          "leaveSuccessNotification": "You left the organization <strong>{organizationName}</strong>"
+          "leave": "Leave"
         },
         "removeMember": {
           "title": "Remove member",

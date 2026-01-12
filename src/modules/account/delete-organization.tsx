@@ -1,19 +1,17 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiMutation, apiQuery, useOrganization } from 'src/api';
-import { notify } from 'src/application/notify';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
-import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Organization } from 'src/model';
 
 const T = createTranslate('modules.account.deleteOrganization');
 
 export function DeleteOrganization() {
-  const t = T.useTranslate();
-  const navigate = useNavigate();
+  const { signOut } = useAuth();
 
   const organization = useOrganization();
 
@@ -27,9 +25,8 @@ export function DeleteOrganization() {
     ...apiMutation('delete /v1/organizations/{id}', (organization: Organization) => ({
       path: { id: organization.id },
     })),
-    async onSuccess(_, organization) {
-      await navigate({ to: '/', reloadDocument: true });
-      notify.info(t('success', { organizationName: organization.name }));
+    onSuccess() {
+      signOut();
     },
   });
 
