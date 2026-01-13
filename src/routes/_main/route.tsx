@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import { LoginRequiredError } from '@workos-inc/authkit-react';
 import z from 'zod';
 
 import {
@@ -12,6 +13,7 @@ import {
   useOrganizationQuery,
   useUserQuery,
 } from 'src/api';
+import { AuthKit } from 'src/application/authkit';
 import { useOnboardingStep } from 'src/application/onboarding';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
@@ -28,7 +30,9 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ search }) {
+  async beforeLoad({ search, location, context: { authKit } }) {
+    await checkAuthentication(authKit, location.pathname + location.searchStr);
+
     if (search['organization-id']) {
       await switchOrganization(search['organization-id']);
     }
@@ -79,6 +83,20 @@ export const Route = createFileRoute('/_main')({
     await Promise.all(promises);
   },
 });
+
+async function checkAuthentication(authKit: AuthKit | undefined, currentUrl: string) {
+  try {
+    await authKit?.getAccessToken();
+  } catch (error) {
+    if (error instanceof LoginRequiredError) {
+      await authKit?.signIn({
+        state: { next: currentUrl !== '/' ? currentUrl : undefined },
+      });
+    } else {
+      throw error;
+    }
+  }
+}
 
 async function switchOrganization(organizationId: string) {
   const api = getApi();

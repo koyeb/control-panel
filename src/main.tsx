@@ -7,6 +7,7 @@ import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@ta
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
+import { LoginRequiredError } from '@workos-inc/authkit-react';
 import qs from 'query-string';
 import { StrictMode, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
@@ -47,6 +48,11 @@ const queryCache = new QueryCache({
     }
 
     const { showError } = { showError: true, ...query.meta };
+
+    if (error instanceof LoginRequiredError) {
+      void router.navigate({ to: '/auth/signin' });
+      return;
+    }
 
     if (ApiError.is(error) && error.message === 'Token rejected') {
       // organization is deactivated
@@ -89,6 +95,10 @@ function throwOnError(error: Error) {
 }
 
 function retry(failureCount: number, error: Error) {
+  if (error instanceof LoginRequiredError) {
+    return false;
+  }
+
   if (ApiError.is(error) && Math.floor(error.status / 100) === 4) {
     return false;
   }
@@ -165,7 +175,7 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <AuthKitProvider router={router} queryClient={queryClient}>
+      <AuthKitProvider router={router}>
         {(authKit) => <RouterProvider router={router} context={{ authKit }} />}
       </AuthKitProvider>
     </StrictMode>,

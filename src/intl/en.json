@@ -1762,6 +1762,10 @@
         "estimatedCost": "Estimated cost",
         "viewBilling": "View billing"
       },
+      "creatingAccount": {
+        "title": "Your account is being created",
+        "description": "This will only take a moment, thanks for your patience!"
+      },
       "featureFlags": {
         "title": "Feature flags",
         "disableAll": "Disable all",
@@ -1836,12 +1840,6 @@
   },
   "pages": {
     "account": {
-      "workos": {
-        "creatingAccount": {
-          "title": "Your account is being created",
-          "description": "This will only take a moment, thanks for your patience!"
-        }
-      },
       "changePassword": {
         "title": "Reset password",
         "passwordPlaceholder": "New password",
