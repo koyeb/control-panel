@@ -1,7 +1,7 @@
 import { Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation, useInvalidateApiQuery } from 'src/api';
+import { apiMutation, useInvalidateApiQuery, useSwitchOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useNavigate } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
@@ -22,16 +22,16 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   const navigate = useNavigate();
   const t = T.useTranslate();
 
+  const switchOrganization = useSwitchOrganization({
+    onSuccess: () => navigate({ to: '/' }),
+  });
+
   const acceptMutation = useMutation({
     ...apiMutation('post /v1/account/organization_invitations/{id}/accept', {
       path: { id: invitation.id },
     }),
     async onSuccess() {
-      await navigate({
-        to: '/',
-        search: { 'organization-id': invitation.organization.id },
-        reloadDocument: true,
-      });
+      await switchOrganization.mutateAsync(invitation.organization);
     },
   });
 

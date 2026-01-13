@@ -16,6 +16,7 @@ import {
 import { AuthKit } from 'src/application/authkit';
 import { useOnboardingStep } from 'src/application/onboarding';
 import { getUrlLatency } from 'src/application/url-latency';
+import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
 import { TrialEnded } from 'src/modules/trial/trial-ended/trial-ended';
@@ -34,7 +35,7 @@ export const Route = createFileRoute('/_main')({
     await checkAuthentication(authKit, location.pathname + location.searchStr);
 
     if (search['organization-id']) {
-      await switchOrganization(search['organization-id']);
+      await switchOrganization(search['organization-id'], authKit);
     }
   },
 
@@ -98,17 +99,17 @@ async function checkAuthentication(authKit: AuthKit | undefined, currentUrl: str
   }
 }
 
-async function switchOrganization(organizationId: string) {
+async function switchOrganization(organizationId: string, authKit: AuthKit) {
   const api = getApi();
 
-  await api('post /v1/organizations/{id}/switch', {
-    path: { id: organizationId },
-    header: {},
-  });
+  if (organizationId.startsWith('org_') && (await isFeatureFlagEnabled('workos-switch-organization'))) {
+    await authKit.switchToOrganization({ organizationId });
+  } else {
+    await api('post /v1/organizations/{id}/switch', { path: { id: organizationId }, header: {} });
+  }
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),
-    reloadDocument: true,
   });
 }
 

@@ -1,5 +1,6 @@
 import { WorkOsWidgets } from '@workos-inc/widgets';
 
+import { workOsQueryClient } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useThemeMode } from 'src/hooks/theme';
 
@@ -13,6 +14,7 @@ export default function WorkOSWidgetsProvider({ children }: { children: React.Re
   return (
     <WorkOsWidgets
       apiHostname={getConfig('workOsApiHost')}
+      queryClient={workOsQueryClient}
       theme={{
         appearance: theme === 'system' ? 'inherit' : theme,
         fontFamily: 'var(--font-sans)',

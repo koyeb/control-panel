@@ -22,6 +22,7 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { OrganizationMember } from 'src/model';
+import { requiredDeep } from 'src/utils/object';
 
 const T = createTranslate('pages.userSettings.organizations');
 
@@ -40,7 +41,9 @@ export function OrganizationsPage() {
           </Button>
         }
       />
-      <Create />
+
+      <CreateOrganization />
+
       <OrganizationList />
     </>
   );
@@ -50,7 +53,7 @@ const schema = z.object({
   organizationName: z.string().min(1).max(64),
 });
 
-function Create() {
+function CreateOrganization() {
   const t = T.useTranslate();
 
   const form = useForm({
@@ -72,7 +75,7 @@ function Create() {
       organizationName: error.name,
     })),
     async onSuccess({ organization }, { organizationName }) {
-      await switchOrganization.mutateAsync(organization!.id!);
+      await switchOrganization.mutateAsync(requiredDeep(organization!));
       await navigate({ to: '/' });
       notify.success(t('create.success', { organizationName }));
     },
@@ -152,12 +155,12 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
   const currentOrganization = useOrganization();
   const navigate = useNavigate();
 
-  const switchOrganization = useSwitchOrganization(() => {
-    void navigate({ to: '/' });
+  const switchOrganization = useSwitchOrganization({
+    onSuccess: () => void navigate({ to: '/' }),
   });
 
-  const manageOrganization = useSwitchOrganization(() => {
-    void navigate({ to: '/settings' });
+  const manageOrganization = useSwitchOrganization({
+    onSuccess: () => void navigate({ to: '/settings' }),
   });
 
   return (
@@ -173,12 +176,12 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
 
       <div className="ml-auto row gap-2">
         {organization.id !== currentOrganization?.id && (
-          <Button variant="outline" color="gray" onClick={() => switchOrganization.mutate(organization.id)}>
+          <Button variant="outline" color="gray" onClick={() => switchOrganization.mutate(organization)}>
             <T id="switch" />
           </Button>
         )}
 
-        <Button variant="outline" color="gray" onClick={() => manageOrganization.mutate(organization.id)}>
+        <Button variant="outline" color="gray" onClick={() => manageOrganization.mutate(organization)}>
           <T id="manage" />
         </Button>
       </div>

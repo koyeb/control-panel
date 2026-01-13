@@ -1,3 +1,4 @@
+import { QueryClient } from '@tanstack/react-query';
 import { RegisteredRouter } from '@tanstack/react-router';
 import { AuthKitProvider as BaseAuthKitProvider, useAuth } from '@workos-inc/authkit-react';
 import { useEffect, useState } from 'react';
@@ -8,6 +9,9 @@ import { urlToLinkOptions } from 'src/hooks/router';
 import { assert } from 'src/utils/assert';
 
 import { getConfig } from './config';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const workOsQueryClient = new QueryClient();
 
 export type AuthKit = ReturnType<typeof useAuth>;
 

@@ -45,7 +45,7 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
     selectedItem: null,
     onSelectedItemChange({ selectedItem: organization }) {
       if (organization) {
-        switchOrganizationMutation.mutate(organization.id);
+        switchOrganizationMutation.mutate(organization);
       }
     },
 
@@ -71,8 +71,8 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
     offset: 8,
   });
 
-  const switchOrganizationMutation = useSwitchOrganization(() => {
-    combobox.closeMenu();
+  const switchOrganizationMutation = useSwitchOrganization({
+    onSuccess: () => combobox.closeMenu(),
   });
 
   const getItemIcon = (organization: Organization) => {
@@ -80,7 +80,7 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
       return IconCheck;
     }
 
-    if (switchOrganizationMutation.isPending && switchOrganizationMutation.variables === organization.id) {
+    if (switchOrganizationMutation.isPending && switchOrganizationMutation.variables.id === organization.id) {
       return Spinner;
     }
   };

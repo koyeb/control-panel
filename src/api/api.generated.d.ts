@@ -4464,6 +4464,7 @@ export interface components {
          */
         ProxyPortProtocol: "tcp";
         PublicOrganization: {
+            external_id?: string;
             id?: string;
             name?: string;
             plan?: components["schemas"]["Plan"];
