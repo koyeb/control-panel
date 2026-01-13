@@ -38,7 +38,7 @@ export function AuthKitProvider({ router, children }: AuthKitProviderProps) {
   assert(clientId !== undefined);
 
   const onRedirectCallback = async ({ state }: RedirectParams) => {
-    await new Promise((r) => setTimeout(r, 100));
+    await Promise.resolve();
     await router.navigate(urlToLinkOptions(state?.next ?? '/'));
   };
 

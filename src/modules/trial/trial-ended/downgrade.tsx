@@ -10,7 +10,6 @@ import { ControlledInput } from 'src/components/forms';
 import { Link } from 'src/components/link';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { createTranslate } from 'src/intl/translate';
-import { requiredDeep } from 'src/utils/object';
 import { isSlug } from 'src/utils/strings';
 
 const T = createTranslate('modules.trial.ended.downgrade');
@@ -41,7 +40,11 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
     })),
 
     async onSuccess({ organization }) {
-      await switchOrganization.mutateAsync(requiredDeep(organization!));
+      await switchOrganization.mutateAsync({
+        id: organization!.id!,
+        externalId: organization!.external_id!,
+      });
+
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({

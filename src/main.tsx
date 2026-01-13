@@ -95,10 +95,6 @@ function throwOnError(error: Error) {
 }
 
 function retry(failureCount: number, error: Error) {
-  if (error instanceof LoginRequiredError) {
-    return false;
-  }
-
   if (ApiError.is(error) && Math.floor(error.status / 100) === 4) {
     return false;
   }

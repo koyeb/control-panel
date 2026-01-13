@@ -23,7 +23,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
   const t = T.useTranslate();
 
   const switchOrganization = useSwitchOrganization({
-    onSuccess: () => navigate({ to: '/' }),
+    onSuccess: () => navigate({ to: '/', reloadDocument: true }),
   });
 
   const acceptMutation = useMutation({

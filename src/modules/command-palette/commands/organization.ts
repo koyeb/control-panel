@@ -4,7 +4,6 @@ import { getApi, useSwitchOrganization } from 'src/api';
 import { useNavigate } from 'src/hooks/router';
 import { IconCirclePlus, IconRefreshCcw } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
-import { requiredDeep } from 'src/utils/object';
 
 const T = createTranslate('modules.commandPalette.commands');
 
@@ -36,7 +35,11 @@ export function useOrganizationCommands() {
         for (const organization of organizations.organizations!) {
           palette.addItem({
             label: organization.name!,
-            execute: () => switchOrganization.mutateAsync(requiredDeep(organization)),
+            execute: () =>
+              switchOrganization.mutateAsync({
+                id: organization.id!,
+                externalId: organization.external_id,
+              }),
           });
         }
       },

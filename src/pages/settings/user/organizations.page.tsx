@@ -22,7 +22,6 @@ import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate, useOnRouteStateCreate } from 'src/hooks/router';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { OrganizationMember } from 'src/model';
-import { requiredDeep } from 'src/utils/object';
 
 const T = createTranslate('pages.userSettings.organizations');
 
@@ -75,7 +74,11 @@ function CreateOrganization() {
       organizationName: error.name,
     })),
     async onSuccess({ organization }, { organizationName }) {
-      await switchOrganization.mutateAsync(requiredDeep(organization!));
+      await switchOrganization.mutateAsync({
+        id: organization!.id!,
+        externalId: organization!.external_id!,
+      });
+
       await navigate({ to: '/' });
       notify.success(t('create.success', { organizationName }));
     },

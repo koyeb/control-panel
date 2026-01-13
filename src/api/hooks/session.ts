@@ -29,7 +29,7 @@ export function useOrganization() {
   return useOrganizationQuery().data;
 }
 
-export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void } = {}) {
+export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | Promise<void> } = {}) {
   const queryClient = useQueryClient();
   const { switchToOrganization } = useAuth();
 
