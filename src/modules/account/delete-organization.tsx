@@ -26,6 +26,7 @@ export function DeleteOrganization() {
       path: { id: organization.id },
     })),
     onSuccess() {
+      window.sessionStorage.removeItem('workos_organization_id');
       signOut();
     },
   });
