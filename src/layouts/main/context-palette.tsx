@@ -1,10 +1,10 @@
+import { useAuth } from '@workos-inc/authkit-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import z from 'zod';
 
 import { useUser } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { notify } from 'src/application/notify';
-import { getToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
 import { Dialog, closeDialog, openDialog } from 'src/components/dialog';
 import { useLocation } from 'src/hooks/router';
@@ -12,6 +12,7 @@ import { useShortcut } from 'src/hooks/shortcut';
 import { useThemeModeOrPreferred } from 'src/hooks/theme';
 
 export function ContextPalette() {
+  const { getAccessToken } = useAuth();
   const location = useLocation();
   const theme = useThemeModeOrPreferred();
 
@@ -40,7 +41,7 @@ export function ContextPalette() {
       }
 
       if (isReadyEvent(event.data)) {
-        void getToken().then((token) => {
+        void getAccessToken().then((token) => {
           postMessage({ token });
           setReady((ready) => ready + 1);
         });
@@ -60,7 +61,7 @@ export function ContextPalette() {
     return () => {
       window.removeEventListener('message', listener);
     };
-  }, [iFrameRef, postMessage]);
+  }, [getAccessToken, iFrameRef, postMessage]);
 
   useEffect(() => {
     if (ready) {
