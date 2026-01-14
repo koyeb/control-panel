@@ -1,20 +1,14 @@
-import { QueryClient } from '@tanstack/react-query';
-import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router';
-import { useAuth } from '@workos-inc/authkit-react';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
-import { ApiError, createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
-import { ApiEndpoint } from 'src/api/api';
+import { createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
-import { setToken } from 'src/application/token';
-import { createValidationGuard, hasMessage } from 'src/application/validation';
-import { Link } from 'src/components/link';
+import { hasMessage } from 'src/application/validation';
 import { LogoLoading } from 'src/components/logo-loading';
 import { urlToLinkOptions } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
-import { assert } from 'src/utils/assert';
 
 const jwtSchema = z.object({
   action: z.string().optional(),
@@ -25,6 +19,7 @@ const jwtSchema = z.object({
 export const Route = createFileRoute('/account/oauth/github/callback')({
   component: Component,
   pendingComponent: LogoLoading,
+  onError: reportError,
   pendingMs: 0,
 
   validateSearch: z.object({
@@ -46,7 +41,7 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
     };
   },
 
-  async loader({ deps, context: { authKit, seon, queryClient } }) {
+  async loader({ deps, context: { authKit, queryClient } }) {
     const api = getApi(authKit.getAccessToken);
 
     const search = deps.search;
@@ -57,130 +52,39 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
     }
 
     try {
-      const { token } = await api('post /v1/account/oauth', {
-        header: {
-          'seon-fp': await seon.getFingerprint(),
-        },
-        body: {
-          code: search.code,
-          state: search.state,
-          setup_action: search.setup_action,
-          installation_id: search.installation_id,
-        },
-      });
+      await api('post /v1/account/oauth', { body: search });
 
-      if (search.setup_action === undefined) {
-        assert(token?.id !== undefined);
-        await handleAuthentication(token.id, redirectUrl);
+      if (search.setup_action === 'install' && search.state) {
+        throw redirect({
+          to: redirectUrl.pathname,
+          search: Object.fromEntries(redirectUrl.searchParams),
+          replace: true,
+        });
       }
 
-      await handleGithubAppInstalled(queryClient, redirectUrl, deps);
+      const ensureApiQueryData = createEnsureApiQueryData(queryClient);
+
+      const currentOrganization = await ensureApiQueryData('get /v1/account/organization', {}).then(
+        ({ organization }) => mapOrganization(organization!),
+      );
+
+      if (currentOrganization.id === deps.organizationId) {
+        throw redirect({
+          to: redirectUrl.pathname,
+          search: Object.fromEntries(redirectUrl.searchParams),
+          replace: true,
+          state: { githubAppInstallationRequested: search.setup_action === 'requested' },
+        });
+      }
     } catch (error) {
-      if (isRedirect(error)) {
-        throw error;
+      if (hasMessage(error)) {
+        notify.error(error.message);
       }
 
-      if (search.setup_action === undefined) {
-        await handleAuthenticationError(error, deps);
-      } else {
-        await handleGithubAppInstallationError(error, redirectUrl);
-      }
-
-      throw error;
+      throw redirect({ ...urlToLinkOptions(redirectUrl), replace: true });
     }
   },
-
-  onError: reportError,
 });
-
-async function handleAuthentication(token: string, redirectUrl: URL) {
-  setToken(token);
-
-  throw redirect({
-    to: redirectUrl.pathname,
-    search: Object.fromEntries(redirectUrl.searchParams),
-    replace: true,
-  });
-}
-
-async function handleAuthenticationError(error: unknown, deps: typeof Route.types.loaderDeps) {
-  const redirectUrl = new URL('/auth/signin', window.location.origin);
-
-  if (deps.action === 'register') {
-    redirectUrl.pathname = '/user/settings';
-  }
-
-  if (deps.action === 'signin' && isAccountNotFoundError(error)) {
-    notify.error(<AccountNotFound />);
-  } else if (deps.action === 'signup' && isAccountAlreadyExistsError(error)) {
-    notify.error(<AccountAlreadyExists />);
-    redirectUrl.pathname = '/auth/signup';
-  } else if (isUnauthorizedAccountError(error)) {
-    notify.error(error.message);
-  }
-
-  throw redirect({
-    ...urlToLinkOptions(redirectUrl),
-    replace: true,
-  });
-}
-
-async function handleGithubAppInstalled(
-  queryClient: QueryClient,
-  redirectUrl: URL,
-  { search, organizationId }: typeof Route.types.loaderDeps,
-) {
-  if (search.setup_action === 'install' && search.state) {
-    await queryClient.invalidateQueries({ queryKey: ['get /v1/github/installation' satisfies ApiEndpoint] });
-
-    throw redirect({
-      to: redirectUrl.pathname,
-      search: Object.fromEntries(redirectUrl.searchParams),
-      replace: true,
-    });
-  }
-
-  const ensureApiQueryData = createEnsureApiQueryData(queryClient);
-
-  const currentOrganization = await ensureApiQueryData('get /v1/account/organization', {}).then(
-    ({ organization }) => mapOrganization(organization!),
-  );
-
-  if (currentOrganization.id === organizationId) {
-    throw redirect({
-      to: redirectUrl.pathname,
-      search: Object.fromEntries(redirectUrl.searchParams),
-      replace: true,
-      state: { githubAppInstallationRequested: search.setup_action === 'requested' },
-    });
-  }
-}
-
-async function handleGithubAppInstallationError(error: unknown, redirectUrl: URL) {
-  assert(hasMessage(error));
-  notify.error(error.message);
-  throw redirect({ ...urlToLinkOptions(redirectUrl), replace: true });
-}
-
-function isAccountNotFoundError(error: unknown) {
-  if (!ApiError.isValidationError(error)) {
-    return false;
-  }
-
-  return Boolean(error.body.fields[0]?.description === 'not found');
-}
-
-function isAccountAlreadyExistsError(error: unknown) {
-  if (!ApiError.isValidationError(error)) {
-    return false;
-  }
-
-  return Boolean(error.body.fields[0]?.description.match(/Email: '.*' already used/));
-}
-
-const isUnauthorizedAccountError = createValidationGuard(
-  z.object({ message: z.literal('This OAuth2 account is not authorized to sign up') }),
-);
 
 const T = createTranslate('pages.account.githubOAuthCallback');
 
@@ -192,54 +96,6 @@ function Component() {
       </div>
       <div>
         <T id="githubAppInstalled.description" />
-      </div>
-    </div>
-  );
-}
-
-function AccountNotFound() {
-  const authKit = useAuth();
-
-  return (
-    <div className="col gap-1">
-      <div className="font-medium">
-        <T id="accountNotFound.title" />
-      </div>
-
-      <div className="text-xs">
-        <T
-          id="accountNotFound.link"
-          values={{
-            link: (children) => (
-              <button type="button" onClick={() => void authKit.signUp()} className="underline">
-                {children}
-              </button>
-            ),
-          }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function AccountAlreadyExists() {
-  return (
-    <div className="col gap-1">
-      <div className="font-medium">
-        <T id="accountAlreadyExists.title" />
-      </div>
-
-      <div className="text-xs">
-        <T
-          id="accountAlreadyExists.link"
-          values={{
-            link: (children) => (
-              <Link to="/auth/signin" className="underline">
-                {children}
-              </Link>
-            ),
-          }}
-        />
       </div>
     </div>
   );

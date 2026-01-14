@@ -1847,14 +1847,6 @@
         "successNotification": "Your password was updated successfully"
       },
       "githubOAuthCallback": {
-        "accountNotFound": {
-          "title": "No Koyeb account is linked to this GitHub profile",
-          "link": "Do you want to <link>sign up</link>?"
-        },
-        "accountAlreadyExists": {
-          "title": "A Koyeb account is already linked to this GitHub profile",
-          "link": "Do you want to <link>sign in</link>?"
-        },
         "githubAppInstalled": {
           "title": "GitHub app installation successful",
           "description": "You've approved the Koyeb GitHub app installation request. You can now close this tab."
