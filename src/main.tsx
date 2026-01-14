@@ -171,7 +171,7 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <StrictMode>
-      <AuthKitProvider router={router}>
+      <AuthKitProvider router={router} queryClient={queryClient}>
         {(authKit) => <RouterProvider router={router} context={{ authKit }} />}
       </AuthKitProvider>
     </StrictMode>,

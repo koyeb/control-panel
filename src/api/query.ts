@@ -2,9 +2,13 @@ import { QueryClient, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
 import { getConfig } from 'src/application/config';
-import { getToken } from 'src/application/token';
 
 import { ApiEndpoint, ApiRequestParams, api } from './api';
+
+type Meta = {
+  [key: string]: unknown;
+  getAccessToken?: () => Promise<string | null>;
+};
 
 export function getApiQueryKey<E extends ApiEndpoint>(
   endpoint: E,
@@ -23,11 +27,11 @@ export function apiQuery<E extends ApiEndpoint>(endpoint: E, params: ApiRequestP
     }: {
       queryKey: readonly [E, ApiRequestParams<E>];
       signal: AbortSignal;
-      meta?: Record<string, unknown>;
+      meta?: Meta;
     }) => {
       return api(endpoint, params, {
         baseUrl: getConfig('apiBaseUrl'),
-        token: await getToken(),
+        token: await meta?.getAccessToken?.(),
         signal,
         ...meta,
       });
@@ -45,10 +49,10 @@ export function apiMutation<E extends ApiEndpoint, Variables = void>(
 ) {
   return {
     mutationKey: [endpoint, typeof params === 'object' ? params : null] as const,
-    mutationFn: async (variables: Variables, { meta }: { meta?: Record<string, unknown> }) => {
+    mutationFn: async (variables: Variables, { meta }: { meta?: Meta }) => {
       return api<E>(endpoint, typeof params === 'function' ? await params(variables) : params, {
         baseUrl: getConfig('apiBaseUrl'),
-        token: await getToken(),
+        token: await meta?.getAccessToken?.(),
         ...meta,
       });
     },

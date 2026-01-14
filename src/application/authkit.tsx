@@ -27,10 +27,11 @@ type RedirectParams = {
 
 type AuthKitProviderProps = {
   router: RegisteredRouter;
+  queryClient: QueryClient;
   children: (authKit: AuthKit) => React.ReactNode;
 };
 
-export function AuthKitProvider({ router, children }: AuthKitProviderProps) {
+export function AuthKitProvider({ router, queryClient, children }: AuthKitProviderProps) {
   const clientId = getConfig('workOsClientId');
   const apiHostname = getConfig('workOsApiHost');
   const environment = getConfig('environment');
@@ -50,20 +51,27 @@ export function AuthKitProvider({ router, children }: AuthKitProviderProps) {
       redirectUri={`${window.location.origin}/account/workos/callback`}
       onRedirectCallback={(params) => void onRedirectCallback(params)}
     >
-      <AuthKitGuard>{children}</AuthKitGuard>
+      <AuthKitGuard queryClient={queryClient}>{children}</AuthKitGuard>
     </BaseAuthKitProvider>
   );
 }
 
 type AuthKitGuardProps = {
+  queryClient: QueryClient;
   children: (authKit: AuthKit) => React.ReactNode;
 };
 
-function AuthKitGuard({ children }: AuthKitGuardProps) {
+function AuthKitGuard({ queryClient, children }: AuthKitGuardProps) {
   const [error, setError] = useState<unknown>(null);
   const authKit = useAuth();
 
   useEffect(() => {
+    queryClient.setDefaultOptions({
+      queries: {
+        meta: { getAccessToken: () => authKit.getAccessToken() },
+      },
+    });
+
     globalThis._getAccessToken = () => authKit.getAccessToken();
     (globalThis as { authKit?: AuthKit }).authKit = authKit;
   });
