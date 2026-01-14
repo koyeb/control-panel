@@ -1,10 +1,10 @@
+import { useAuth } from '@workos-inc/authkit-react';
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
 import { getApiStream } from 'src/api';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/sentry';
-import { getToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useMount } from 'src/hooks/lifecycle';
@@ -21,19 +21,24 @@ const { brightBlack, brightRed } = terminalColors;
 export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boolean } = {}) {
   const t = T.useTranslate();
 
+  const { getAccessToken } = useAuth();
+
   const [terminal, setTerminal] = useState<TerminalRef | null>(null);
   const [stream, setStream] = useState<WebSocket | null>(null);
   const [size, setSize] = useState<{ width: number; height: number }>();
 
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);
 
-  const connect = useCallback((instanceId: string) => {
-    void getToken()
-      .then(getApiStream)
-      .then((apiStream) => {
-        setStream(apiStream('get /v1/streams/instances/exec', { query: { id: instanceId } }));
-      });
-  }, []);
+  const connect = useCallback(
+    (instanceId: string) => {
+      void getAccessToken()
+        .then(getApiStream)
+        .then((apiStream) => {
+          setStream(apiStream('get /v1/streams/instances/exec', { query: { id: instanceId } }));
+        });
+    },
+    [getAccessToken],
+  );
 
   useMount(() => {
     connect(instanceId);

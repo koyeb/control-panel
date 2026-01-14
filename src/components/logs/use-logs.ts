@@ -1,4 +1,5 @@
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import { AnsiUp } from 'ansi_up';
 import { Duration, add, max, sub } from 'date-fns';
 import { dequal } from 'dequal';
@@ -7,7 +8,6 @@ import { z } from 'zod';
 
 import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src/api';
 import { ApiResponseBody } from 'src/api/api';
-import { getToken } from 'src/application/token';
 import { useDeepCompareMemo, usePrevious } from 'src/hooks/lifecycle';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { LogLine } from 'src/model';
@@ -168,6 +168,8 @@ export function getLogsStartDate(end: Date, period: LogsPeriod) {
 const reconnectTimeout = [0, 1_000, 5_000, 60_000];
 
 function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
+  const { getAccessToken } = useAuth();
+
   const filtersMemo = useDeepCompareMemo(filters);
 
   const stream = useRef<Awaited<ReturnType<typeof tailLogs>>>(null);
@@ -179,7 +181,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
   const reconnectIndex = useRef<number>(null);
 
   const initialize = useCallback(async () => {
-    stream.current = await tailLogs(filtersMemo, start, {
+    stream.current = await tailLogs(await getAccessToken(), filtersMemo, start, {
       onOpen: () => {
         setError(undefined);
         setConnected(true);
@@ -197,7 +199,7 @@ function useLogsStream(connect: boolean, filters: LogsFilters, start: Date) {
       },
       onLogLine: (line) => setLines((lines) => [...lines, line]),
     });
-  }, [filtersMemo, start]);
+  }, [getAccessToken, filtersMemo, start]);
 
   useEffect(() => {
     let timeout: number;
@@ -227,8 +229,12 @@ type LogStreamListeners = {
   onLogLine: (line: Omit<LogLine, 'html'>) => void;
 };
 
-async function tailLogs(filters: LogsFilters, start: Date, listeners: Partial<LogStreamListeners>) {
-  const token = await getToken();
+async function tailLogs(
+  token: string,
+  filters: LogsFilters,
+  start: Date,
+  listeners: Partial<LogStreamListeners>,
+) {
   const apiStream = getApiStream(token);
 
   const stream = apiStream('get /v1/streams/logs/tail', {
