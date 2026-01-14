@@ -47,6 +47,7 @@ type LayoutProps = {
 export function MainLayout({ children }: LayoutProps) {
   const trial = useTrial();
   const pageContext = usePageContext();
+  const authKit = useAuth();
 
   if (!useOrganization()) {
     return null;
@@ -61,6 +62,8 @@ export function MainLayout({ children }: LayoutProps) {
       <FeatureFlagsDialog />
       <TrialWelcomeDialog />
       <ContextPalette />
+
+      {authKit.impersonator && <Impersonation email={authKit.user?.email} />}
 
       <Layout
         banner={trial && <TrialBanner />}
@@ -134,6 +137,16 @@ function Main({ children }: { children: React.ReactNode }) {
         {children}
       </Suspense>
     </main>
+  );
+}
+
+function Impersonation({ email }: { email?: string }) {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-70 border-4 border-orange">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-t-md bg-orange px-2 pt-1 text-xs text-black">
+        <T id="impersonating" values={{ email }} />
+      </div>
+    </div>
   );
 }
 
