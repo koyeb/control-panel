@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useInvalidateApiQuery } from 'src/api';
+import { useApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { CloseDialogButton, Dialog, DialogHeader, closeDialog } from 'src/components/dialog';
@@ -29,6 +29,8 @@ type CreateLogicalDatabaseDialogProps = {
 
 export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogicalDatabaseDialogProps) {
   const t = T.useTranslate();
+
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm({
@@ -41,7 +43,7 @@ export function CreateLogicalDatabaseDialog({ service, deployment }: CreateLogic
 
   const mutation = useMutation({
     async mutationFn({ name, owner }: FormValues<typeof form>) {
-      await updateDatabaseService(service.id, (definition) => {
+      await updateDatabaseService(api, service.id, (definition) => {
         definition.database!.neon_postgres!.databases?.push({ name, owner });
       });
     },

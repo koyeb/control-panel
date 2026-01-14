@@ -1,7 +1,9 @@
+import { useAuth } from '@workos-inc/authkit-react';
+import { useCallback } from 'react';
+
 import { ApiEndpoint, api, apiStream } from 'src/api/api';
 
 import { getConfig } from '../application/config';
-import { getToken } from '../application/token';
 
 export * from './mappers/activity';
 export * from './mappers/api-credential';
@@ -30,14 +32,27 @@ export * from './api-types';
 export * from './fixtures';
 export * from './query';
 
-export function getApi() {
-  return async <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof api<E>>) => {
+export type ApiFn = typeof api;
+
+export function getApi(getAccessToken: () => Promise<string>): ApiFn {
+  return async (endpoint, params, options) => {
     return api(endpoint, params, {
       baseUrl: getConfig('apiBaseUrl'),
-      token: await getToken(),
+      token: await getAccessToken(),
       ...options,
     });
   };
+}
+
+export function useApi() {
+  const { getAccessToken } = useAuth();
+
+  return useCallback<ApiFn>(
+    (...params) => {
+      return getApi(getAccessToken)(...params);
+    },
+    [getAccessToken],
+  );
 }
 
 export function getApiStream(token?: string | null) {

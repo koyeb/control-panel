@@ -23,8 +23,8 @@ export const Route = createFileRoute('/_main/auth/sso/canny')({
     };
   },
 
-  async loader({ deps }) {
-    const api = getApi();
+  async loader({ deps, context: { authKit } }) {
+    const api = getApi(authKit.getAccessToken);
 
     const { token } = await api('post /v1/sso/canny', {});
 

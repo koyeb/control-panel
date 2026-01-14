@@ -6,7 +6,7 @@ import { dequal } from 'dequal';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { z } from 'zod';
 
-import { getApi, getApiQueryKey, getApiStream, useOrganizationQuotas } from 'src/api';
+import { getApiQueryKey, getApiStream, useApi, useOrganizationQuotas } from 'src/api';
 import { ApiResponseBody } from 'src/api/api';
 import { useDeepCompareMemo, usePrevious } from 'src/hooks/lifecycle';
 import { useDebouncedValue } from 'src/hooks/timers';
@@ -86,6 +86,7 @@ function processLogLines(
 
 function useLogsHistory(filters: LogsFilters, end: Date) {
   const quotas = useOrganizationQuotas();
+  const api = useApi();
 
   const initialPageParam = useMemo(() => {
     const start = getLogsStartDate(end, filters.period);
@@ -111,8 +112,6 @@ function useLogsHistory(filters: LogsFilters, end: Date) {
       },
     }),
     queryFn: ({ queryKey: [, { query }], pageParam: { start, end } }) => {
-      const api = getApi();
-
       if (start === end) {
         return { data: [], pagination: { has_more: false } };
       }

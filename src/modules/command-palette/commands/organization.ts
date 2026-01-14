@@ -1,6 +1,6 @@
 import { CommandPalette } from '@koyeb/design-system';
 
-import { getApi, useSwitchOrganization } from 'src/api';
+import { useApi, useSwitchOrganization } from 'src/api';
 import { useNavigate } from 'src/hooks/router';
 import { IconCirclePlus, IconRefreshCcw } from 'src/icons';
 import { createTranslate, useTranslate } from 'src/intl/translate';
@@ -10,6 +10,8 @@ const T = createTranslate('modules.commandPalette.commands');
 export function useOrganizationCommands() {
   const t = T.useTranslate();
   const t2 = useTranslate();
+
+  const api = useApi();
 
   const switchOrganization = useSwitchOrganization();
   const navigate = useNavigate();
@@ -25,8 +27,6 @@ export function useOrganizationCommands() {
       Icon: IconRefreshCcw,
       hasSubItems: true,
       execute: async () => {
-        const api = getApi();
-
         palette.setIcon(IconRefreshCcw);
         palette.setPlaceholder(t('organization:switch.placeholder'));
 

@@ -3,7 +3,14 @@ import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { apiQuery, isDatabaseDeployment, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
+import {
+  apiQuery,
+  isDatabaseDeployment,
+  useApi,
+  useDeployment,
+  useInvalidateApiQuery,
+  useService,
+} from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { closeDialog, openDialog } from 'src/components/dialog';
@@ -170,11 +177,13 @@ function DatabaseRoleActions({ service, role }: { service: Service; role: Databa
 
 function useDeleteMutation() {
   const t = T.useTranslate();
+
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   return useMutation({
     async mutationFn([service, role]: [service: Service, role: DatabaseRole]) {
-      await updateDatabaseService(service.id, (definition) => {
+      await updateDatabaseService(api, service.id, (definition) => {
         const roles = definition.database!.neon_postgres!.roles!;
         const index = roles.findIndex(hasProperty('name', role.name));
 

@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { FieldErrors } from 'react-hook-form';
 
-import { getApi } from 'src/api';
+import { useApi } from 'src/api';
 import { createTranslate } from 'src/intl/translate';
 import { EnvironmentVariable } from 'src/model';
 import { assert, defined } from 'src/utils/assert';
@@ -16,12 +16,12 @@ const T = createTranslate('modules.serviceForm.errors');
 
 export function useUnknownInterpolationErrors() {
   const t = T.useTranslate();
+  const api = useApi();
+
   const ctrl = useRef<AbortController>(null);
 
   return useCallback(
     async (values: ServiceForm) => {
-      const api = getApi();
-
       ctrl.current?.abort();
       ctrl.current = new AbortController();
 
@@ -68,7 +68,7 @@ export function useUnknownInterpolationErrors() {
 
       return errors;
     },
-    [t],
+    [t, api],
   );
 }
 

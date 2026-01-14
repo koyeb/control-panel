@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FieldValues, FormState, Path, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { API, getApi, useInvalidateApiQuery } from 'src/api';
+import { API, useApi, useInvalidateApiQuery } from 'src/api';
 import { readFile } from 'src/application/read-file';
 import { ControlledInput, ControlledSelect } from 'src/components/forms';
 import { useFormErrorHandler } from 'src/hooks/form';
@@ -66,12 +66,11 @@ export function RegistrySecretForm({ secret, renderFooter, onSubmitted }: Regist
     }
   }, [form, secret]);
 
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const { mutateAsync: createSecret } = useMutation({
     async mutationFn(values: z.infer<typeof schema>) {
-      const api = getApi();
-
       if (secret) {
         return api('put /v1/secrets/{id}', {
           path: { id: secret.id },

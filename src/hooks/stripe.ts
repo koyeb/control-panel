@@ -2,7 +2,7 @@ import { CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-
 import { StripeError as BaseStripeError, Stripe, StripeElements } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 
-import { getApi } from 'src/api';
+import { ApiFn, useApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { inArray } from 'src/utils/arrays';
@@ -25,6 +25,8 @@ type PaymentMutationProps = {
 };
 
 export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutationProps = {}) {
+  const api = useApi();
+
   const stripe = useStripe();
   const elements = useElements();
 
@@ -33,8 +35,8 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
       assert(stripe !== null);
       assert(elements !== null);
 
-      await submitPaymentMethod(stripe, elements);
-      await waitForPaymentMethod();
+      await submitPaymentMethod(api, stripe, elements);
+      await waitForPaymentMethod(api);
     },
     onError(error) {
       if (error instanceof StripeError) {
@@ -53,8 +55,7 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
   });
 }
 
-async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
-  const api = getApi();
+async function submitPaymentMethod(api: ApiFn, stripe: Stripe, elements: StripeElements) {
   const { payment_method } = await api('post /v1/payment_methods', {});
 
   try {
@@ -76,9 +77,7 @@ async function submitPaymentMethod(stripe: Stripe, elements: StripeElements) {
   }
 }
 
-async function waitForPaymentMethod() {
-  const api = getApi();
-
+async function waitForPaymentMethod(api: ApiFn) {
   const start = new Date().getTime();
   const elapsed = () => new Date().getTime() - start;
 

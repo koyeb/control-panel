@@ -6,6 +6,7 @@ import { UseFormReturn, useController, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import {
+  useApi,
   useCatalogInstance,
   useDatacentersCatalog,
   useInstancesCatalog,
@@ -56,9 +57,11 @@ type ModelFormProps = {
 };
 
 export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps) {
+  const api = useApi();
+  const navigate = useNavigate();
+
   const instances = useInstancesCatalog();
   const models = useModels();
-  const navigate = useNavigate();
 
   const form = useForm<ModelFormType>({
     defaultValues: useInitialValues(initialModel ?? defined(models[0])),
@@ -85,7 +88,7 @@ export function ModelForm({ model: initialModel, onCostChanged }: ModelFormProps
       assert(serviceForm.ports[0] !== undefined);
       serviceForm.ports[0].healthCheck.gracePeriod = 300;
 
-      return submitServiceForm(serviceForm);
+      return submitServiceForm(api, serviceForm);
     },
     onError: (error) => notify.error(error.message),
     async onSuccess({ serviceId }) {

@@ -2,7 +2,7 @@
 import { PostHog, PostHogProvider as PostHogJsProvider, usePostHog as usePostHogJs } from 'posthog-js/react';
 import { useCallback, useEffect } from 'react';
 
-import { useUser } from 'src/api';
+import { useApi, useUser } from 'src/api';
 import { useLocation } from 'src/hooks/router';
 import { User } from 'src/model';
 
@@ -74,22 +74,23 @@ function TrackPageViews() {
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useIdentifyUser() {
+  const api = useApi();
   const posthog = usePostHog();
 
   const identify = useCallback(
     (user: User) => {
       posthog?.identify(user.id);
       identifyUserInSentry(user);
-      void identifyUserInIntercom(user);
+      void identifyUserInIntercom(api, user);
     },
-    [posthog],
+    [posthog, api],
   );
 
   const clear = useCallback(() => {
     posthog?.reset();
     identifyUserInSentry(null);
-    void identifyUserInIntercom(null);
-  }, [posthog]);
+    void identifyUserInIntercom(api, null);
+  }, [posthog, api]);
 
   return [identify, clear] as const;
 }

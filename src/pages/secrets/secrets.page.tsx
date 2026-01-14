@@ -2,7 +2,7 @@ import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { getApi, useInvalidateApiQuery, useSecretsQuery } from 'src/api';
+import { useApi, useInvalidateApiQuery, useSecretsQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
@@ -103,12 +103,12 @@ export function SecretsPage() {
 
 function useBulkDeleteMutation(onDeleted: () => void) {
   const t = T.useTranslate();
+
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   return useMutation({
     async mutationFn(secrets: Secret[]) {
-      const api = getApi();
-
       return Promise.allSettled(
         secrets.map((secret) => api('delete /v1/secrets/{id}', { path: { id: secret.id } })),
       );

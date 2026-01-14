@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { getApi } from 'src/api';
+import { useApi } from 'src/api';
 import { GitRepository } from 'src/model';
 
 import { ApiError } from '../api-error';
@@ -15,12 +15,11 @@ const isNoGithubAppError = (error: unknown) => {
 
 export function useGithubAppQuery(refetchInterval = 5 * 60 * 1000) {
   const organization = useOrganization();
+  const api = useApi();
 
   return useQuery({
     queryKey: getApiQueryKey('get /v1/github/installation', {}),
     queryFn: async ({ signal }) => {
-      const api = getApi();
-
       return api('get /v1/github/installation', {}, { signal }).catch((error) => {
         if (isNoGithubAppError(error)) {
           return null;

@@ -1,8 +1,7 @@
 import Intercom, { boot, shutdown } from '@intercom/messenger-js-sdk';
 
+import { ApiFn } from 'src/api';
 import { User } from 'src/model';
-
-import { getApi } from '../api';
 
 import { getConfig } from './config';
 
@@ -14,7 +13,7 @@ export function initIntercom() {
   }
 }
 
-export async function identifyUserInIntercom(user: User | null) {
+export async function identifyUserInIntercom(api: ApiFn, user: User | null) {
   const appId = getConfig('intercomAppId');
 
   if (!appId) {
@@ -22,18 +21,14 @@ export async function identifyUserInIntercom(user: User | null) {
   }
 
   if (user) {
+    const { hash } = await api('get /v1/intercom/profile', {});
+
     boot({
       app_id: appId,
       user_id: user.id,
-      user_hash: await getUserHash(),
+      user_hash: hash,
     });
   } else {
     shutdown();
   }
-}
-
-async function getUserHash() {
-  const api = getApi();
-
-  return api('get /v1/intercom/profile', {}).then(({ hash }) => hash);
 }

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import z from 'zod';
 
-import { listAppsFull } from 'src/api';
+import { getApi, listAppsFull } from 'src/api';
 import { deployParamsSchema } from 'src/application/deploy-params-schema';
 import { CrumbLink } from 'src/layouts/main/app-breadcrumbs';
 import { AppsServicesList } from 'src/modules/services-list/apps-services-list';
@@ -29,10 +29,12 @@ export const Route = createFileRoute('/_main/services/')({
     breadcrumb: () => <CrumbLink to={Route.fullPath} />,
   }),
 
-  async loader({ context: { queryClient } }) {
+  async loader({ context: { authKit, queryClient } }) {
+    const api = getApi(authKit.getAccessToken);
+
     await queryClient.ensureQueryData({
-      queryKey: ['listAppsFull'],
-      queryFn: () => listAppsFull(),
+      queryKey: ['listAppsFull', { api }],
+      queryFn: () => listAppsFull(api),
     });
   },
 });

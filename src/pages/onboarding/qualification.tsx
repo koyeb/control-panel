@@ -5,7 +5,7 @@ import omit from 'lodash-es/omit';
 import { useMemo } from 'react';
 import { FieldPath, FormProvider, useController, useForm, useFormContext, useWatch } from 'react-hook-form';
 
-import { getApi, useInvalidateApiQuery, useOrganization } from 'src/api';
+import { useApi, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { hasMessage } from 'src/application/validation';
@@ -41,10 +41,11 @@ type QualificationFormType = {
 };
 
 export function Qualification() {
-  const organization = useOrganization();
-
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
   const track = useTrackEvent();
+
+  const organization = useOrganization();
 
   const form = useForm<QualificationFormType>({
     defaultValues: {
@@ -55,8 +56,6 @@ export function Qualification() {
 
   const mutation = useMutation({
     async mutationFn(form: QualificationFormType) {
-      const api = getApi();
-
       const values: Record<string, unknown> = {
         version: 3,
         usage: form.usage,

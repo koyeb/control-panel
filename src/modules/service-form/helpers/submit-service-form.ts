@@ -1,4 +1,4 @@
-import { ApiError, getApi } from 'src/api';
+import { ApiError, ApiFn } from 'src/api';
 import { hasProperty } from 'src/utils/object';
 
 import { ServiceForm } from '../service-form.types';
@@ -13,30 +13,28 @@ type SubmitServiceFormResult = {
   deploymentId: string;
 };
 
-export async function submitServiceForm(form: ServiceForm): Promise<SubmitServiceFormResult> {
+export async function submitServiceForm(api: ApiFn, form: ServiceForm): Promise<SubmitServiceFormResult> {
   let appId = form.meta.appId ?? undefined;
   const serviceId = form.meta.serviceId;
 
   if (serviceId === null) {
-    await createService(uuid, form, true);
+    await createService(api, uuid, form, true);
   }
 
   if (!appId) {
-    appId = await findOrCreateApp(form.appName);
+    appId = await findOrCreateApp(api, form.appName);
   }
 
-  await createVolumes(form);
+  await createVolumes(api, form);
 
   if (serviceId === null) {
-    return createService(appId, form);
+    return createService(api, appId, form);
   } else {
-    return updateService(serviceId, form);
+    return updateService(api, serviceId, form);
   }
 }
 
-async function findOrCreateApp(appName: string): Promise<string> {
-  const api = getApi();
-
+async function findOrCreateApp(api: ApiFn, appName: string): Promise<string> {
   const { apps } = await api('get /v1/apps', {
     query: { name: appName, limit: '100' },
   });
@@ -54,9 +52,7 @@ async function findOrCreateApp(appName: string): Promise<string> {
   return newApp!.id!;
 }
 
-async function createVolumes(form: ServiceForm): Promise<void> {
-  const api = getApi();
-
+async function createVolumes(api: ApiFn, form: ServiceForm): Promise<void> {
   const { volumes: existingVolumes } = await api('get /v1/volumes', {
     query: { limit: '100' },
   });
@@ -74,6 +70,7 @@ async function createVolumes(form: ServiceForm): Promise<void> {
     }
 
     volume.volumeId = await createVolume(
+      api,
       form.volumes.indexOf(volume),
       volume.name,
       volume.size,
@@ -82,9 +79,13 @@ async function createVolumes(form: ServiceForm): Promise<void> {
   }
 }
 
-async function createVolume(index: number, name: string, size: number, region: string): Promise<string> {
-  const api = getApi();
-
+async function createVolume(
+  api: ApiFn,
+  index: number,
+  name: string,
+  size: number,
+  region: string,
+): Promise<string> {
   try {
     const response = await api('post /v1/volumes', {
       body: {
@@ -107,20 +108,21 @@ async function createVolume(index: number, name: string, size: number, region: s
   }
 }
 
-async function createService(appId: string, form: ServiceForm, dryRun: true): Promise<void>;
+async function createService(api: ApiFn, appId: string, form: ServiceForm, dryRun: true): Promise<void>;
 
 async function createService(
+  api: ApiFn,
   appId: string,
   form: ServiceForm,
   dryRun?: false,
 ): Promise<SubmitServiceFormResult>;
 
 async function createService(
+  api: ApiFn,
   appId: string,
   form: ServiceForm,
   dryRun = false,
 ): Promise<SubmitServiceFormResult | void> {
-  const api = getApi();
   const definition = serviceFormToDeploymentDefinition(form);
 
   if (dryRun) {
@@ -146,9 +148,11 @@ async function createService(
   };
 }
 
-async function updateService(serviceId: string, form: ServiceForm): Promise<SubmitServiceFormResult> {
-  const api = getApi();
-
+async function updateService(
+  api: ApiFn,
+  serviceId: string,
+  form: ServiceForm,
+): Promise<SubmitServiceFormResult> {
   const result = await api('put /v1/services/{id}', {
     path: { id: serviceId },
     query: { dry_run: false },

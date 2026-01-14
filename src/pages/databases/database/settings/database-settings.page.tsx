@@ -4,8 +4,8 @@ import { useState } from 'react';
 
 import {
   apiMutation,
-  getApi,
   isDatabaseDeployment,
+  useApi,
   useDeployment,
   useInvalidateApiQuery,
   useService,
@@ -52,6 +52,7 @@ export function DatabaseSettingsPage() {
 function DeleteDatabaseService({ service }: { service: Service }) {
   const t = T.useTranslate();
 
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
 
@@ -66,8 +67,6 @@ function DeleteDatabaseService({ service }: { service: Service }) {
       path: { id: service.id },
     })),
     async onSuccess() {
-      const api = getApi();
-
       const { services } = await api('get /v1/services', {
         query: { app_id: service.appId },
       });

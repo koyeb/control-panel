@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { getApi, useInvalidateApiQuery } from 'src/api';
+import { useApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { useTrackEvent } from 'src/application/posthog';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader, closeDialog } from 'src/components/dialog';
@@ -19,6 +19,8 @@ const T = createTranslate('pages.secrets.bulkCreate');
 export function BulkCreateSecretsDialog({ onCreated }: { onCreated?: () => void }) {
   const t = T.useTranslate();
 
+  const api = useApi();
+  const invalidate = useInvalidateApiQuery();
   const track = useTrackEvent();
 
   const form = useForm<{ value: string }>({
@@ -34,11 +36,8 @@ export function BulkCreateSecretsDialog({ onCreated }: { onCreated?: () => void 
     ),
   });
 
-  const invalidate = useInvalidateApiQuery();
-
   const mutation = useMutation({
     async mutationFn({ value }: FormValues<typeof form>) {
-      const api = getApi();
       const values = dotenvParse(value);
 
       const results = await Promise.allSettled(

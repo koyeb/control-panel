@@ -2,7 +2,7 @@ import { Button, Table } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { isDatabaseDeployment, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
+import { isDatabaseDeployment, useApi, useDeployment, useInvalidateApiQuery, useService } from 'src/api';
 import { notify } from 'src/application/notify';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { closeDialog, openDialog } from 'src/components/dialog';
@@ -116,11 +116,13 @@ function DatabaseActions({ service, database }: { service: Service; database: Lo
 
 function useDeleteMutation() {
   const t = T.useTranslate();
+
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   return useMutation({
     async mutationFn([service, database]: [service: Service, database: LogicalDatabase]) {
-      return updateDatabaseService(service.id, (definition) => {
+      return updateDatabaseService(api, service.id, (definition) => {
         const databases = definition.database!.neon_postgres!.databases!;
         const index = databases.findIndex(hasProperty('name', database.name));
 

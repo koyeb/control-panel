@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import { useCallback, useEffect } from 'react';
 
-import { apiMutation, getApi, isComputeDeployment, mapDeployment, useInvalidateApiQuery } from 'src/api';
+import { apiMutation, isComputeDeployment, mapDeployment, useApi, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { getServiceUrls, isServiceRunning } from 'src/application/service-functions';
 import { openDialog } from 'src/components/dialog';
@@ -166,6 +166,8 @@ export function useCreateServiceUrlsCommands(app: App, service: Service, deploym
 export function useDeploymentListCommand(service: Service) {
   const t = T.useTranslate();
 
+  const api = useApi();
+
   const { addItem, setIcon, setPlaceholder } = useCommandPaletteContext();
   const navigate = useNavigate();
 
@@ -178,8 +180,6 @@ export function useDeploymentListCommand(service: Service) {
       Icon: IconList,
       hasSubItems: true,
       execute: async () => {
-        const api = getApi();
-
         setIcon(IconList);
         setPlaceholder(t('listDeployments.placeholder'));
 
@@ -214,7 +214,7 @@ export function useDeploymentListCommand(service: Service) {
     return () => {
       item.remove();
     };
-  }, [addItem, setIcon, setPlaceholder, service, navigate, t]);
+  }, [addItem, setIcon, setPlaceholder, service, navigate, t, api]);
 }
 
 function getDeploymentDescription(deployment: ComputeDeployment, t: ReturnType<typeof T.useTranslate>) {

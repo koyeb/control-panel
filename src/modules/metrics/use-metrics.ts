@@ -2,7 +2,7 @@ import { useQueries } from '@tanstack/react-query';
 import { Duration, sub } from 'date-fns';
 
 import type { API } from 'src/api';
-import { getApi, getApiQueryKey } from 'src/api';
+import { getApiQueryKey, useApi } from 'src/api';
 import { identity } from 'src/utils/generic';
 import { toObject } from 'src/utils/object';
 
@@ -37,6 +37,8 @@ type UseMetricsOptions = {
 };
 
 export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }: UseMetricsOptions) {
+  const api = useApi();
+
   return useQueries({
     queries: metrics.map((name) => {
       const query = {
@@ -52,7 +54,6 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
         refetchInterval: 60 * 1000,
         queryKey: getApiQueryKey('get /v1/streams/metrics', { query }),
         queryFn: () => {
-          const api = getApi();
           const duration = timeFrameToDuration[timeFrame];
           const start = sub(new Date(), duration).toISOString();
 

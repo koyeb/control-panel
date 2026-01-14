@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { UseFormReturn } from 'react-hook-form';
 
-import { API, apiQuery, getApi, useInvalidateApiQuery, useOrganization } from 'src/api';
+import { API, ApiFn, apiQuery, useApi, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { updateDatabaseService } from 'src/application/service-functions';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useNavigate } from 'src/hooks/router';
@@ -18,6 +18,7 @@ export function useSubmitDatabaseServiceForm(
   form: UseFormReturn<DatabaseServiceForm>,
   onPlanUpgradeRequired: (plan: OrganizationPlan) => void,
 ) {
+  const api = useApi();
   const organization = useOrganization();
 
   const queryClient = useQueryClient();
@@ -26,11 +27,10 @@ export function useSubmitDatabaseServiceForm(
 
   const mutation = useMutation({
     async mutationFn(values: DatabaseServiceForm) {
-      const api = getApi();
       const { appId, databaseServiceId } = values.meta;
 
       if (databaseServiceId) {
-        await updateDatabaseService(databaseServiceId, (definition) => {
+        await updateDatabaseService(api, databaseServiceId, (definition) => {
           definition.name = values.serviceName;
           definition.database!.neon_postgres!.instance_type = values.instance;
         });
@@ -39,7 +39,7 @@ export function useSubmitDatabaseServiceForm(
       } else {
         const { service } = await api('post /v1/services', {
           query: { dry_run: false },
-          body: createApiService(appId ?? (await getDatabaseAppId(values.serviceName)), values),
+          body: createApiService(appId ?? (await getDatabaseAppId(api, values.serviceName)), values),
         });
 
         return service!.id!;
@@ -70,9 +70,7 @@ export function useSubmitDatabaseServiceForm(
   };
 }
 
-async function getDatabaseAppId(appName: string): Promise<string> {
-  const api = getApi();
-
+async function getDatabaseAppId(api: ApiFn, appName: string): Promise<string> {
   const { apps } = await api('get /v1/apps', {
     query: { name: appName },
   });

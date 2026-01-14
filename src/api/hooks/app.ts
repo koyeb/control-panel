@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { getApi } from 'src/api';
+import { ApiFn, useApi } from 'src/api';
 import { allApiDeploymentStatuses } from 'src/application/service-functions';
 import { AppList, ServiceStatus, ServiceType } from 'src/model';
 import { exclude } from 'src/utils/arrays';
@@ -40,9 +40,12 @@ type AppsFullFilters = Partial<{
 }>;
 
 export function useAppsFull(filters: AppsFullFilters = {}) {
+  const api = useApi();
+
   return useQuery({
+    // eslint-disable-next-line @tanstack/query/exhaustive-deps
     queryKey: ['listAppsFull', { filters }],
-    queryFn: ({ signal }) => listAppsFull(filters, signal),
+    queryFn: ({ signal }) => listAppsFull(api, filters, signal),
     placeholderData: keepPreviousData,
     refetchInterval(query) {
       const servicesCount = query.state.data?.services.count ?? 0;
@@ -92,9 +95,7 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
   });
 }
 
-export async function listAppsFull(filters: AppsFullFilters = {}, signal?: AbortSignal) {
-  const api = getApi();
-
+export async function listAppsFull(api: ApiFn, filters: AppsFullFilters = {}, signal?: AbortSignal) {
   if (filters.types?.length === 0 || filters.statuses?.length === 0) {
     return {
       apps: { apps: [] },

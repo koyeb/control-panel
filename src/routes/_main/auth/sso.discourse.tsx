@@ -23,8 +23,8 @@ export const Route = createFileRoute('/_main/auth/sso/discourse')({
     };
   },
 
-  async loader({ deps }) {
-    const api = getApi();
+  async loader({ deps, context: { authKit } }) {
+    const api = getApi(authKit.getAccessToken);
 
     const result = await api('post /v1/sso/discourse', {
       body: {

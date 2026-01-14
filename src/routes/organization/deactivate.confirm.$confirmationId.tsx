@@ -10,8 +10,8 @@ export const Route = createFileRoute('/organization/deactivate/confirm/$confirma
   pendingMinMs: 0,
   pendingMs: 0,
 
-  async loader({ params, context: { queryClient, translate } }) {
-    const api = getApi();
+  async loader({ params, context: { authKit, queryClient, translate } }) {
+    const api = getApi(authKit.getAccessToken);
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     try {

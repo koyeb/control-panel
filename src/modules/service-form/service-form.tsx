@@ -4,9 +4,9 @@ import clsx from 'clsx';
 import { useRef } from 'react';
 import { FormProvider, UseFormReturn } from 'react-hook-form';
 
-import { useCatalogInstance, useInvalidateApiQuery } from 'src/api';
+import { useApi, useCatalogInstance, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
-import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { Translate } from 'src/intl/translate';
 
 import { GpuAlert } from './components/gpu-alert';
@@ -41,14 +41,16 @@ type ServiceFormProps = {
 };
 
 export function ServiceForm({ form, className, onDeployed, onSaved, onBack }: ServiceFormProps) {
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
+
   const instance = useCatalogInstance(form.watch('instance'));
 
   const formRef = useRef<HTMLFormElement>(null);
   const preSubmit = usePreSubmitServiceForm(formRef.current, form.watch('meta.previousInstance'));
 
   const mutation = useMutation({
-    mutationFn: submitServiceForm,
+    mutationFn: (values: FormValues<typeof form>) => submitServiceForm(api, values),
     onError: useFormErrorHandler(form, mapError),
     async onSuccess(result, { meta }) {
       await Promise.all([

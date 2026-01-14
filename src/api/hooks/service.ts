@@ -1,4 +1,3 @@
-import { getApi } from '..';
 import { keepPreviousData, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { DeploymentStatus, InstanceStatus } from 'src/model';
@@ -7,6 +6,7 @@ import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
 import { API } from '../api-types';
+import { useApi } from '../index';
 import {
   isComputeDeployment,
   mapDeployment,
@@ -41,6 +41,8 @@ export function useService(serviceId?: string) {
 }
 
 export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStatus[]) {
+  const api = useApi();
+
   return useInfiniteQuery({
     queryKey: getApiQueryKey('get /v1/deployments', {
       query: {
@@ -49,8 +51,6 @@ export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStat
       },
     }),
     async queryFn({ queryKey: [, { query }], pageParam }) {
-      const api = getApi();
-
       return api('get /v1/deployments', {
         query: {
           ...query,

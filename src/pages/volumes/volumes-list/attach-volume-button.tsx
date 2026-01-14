@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import { useState } from 'react';
 
-import { getApi, mapApp, mapService } from 'src/api';
+import { ApiFn, mapApp, mapService, useApi } from 'src/api';
 import { Input } from 'src/components/forms';
 import { InputEndSpinner } from 'src/components/forms/helpers/input-end-spinner';
 import { NoItems } from 'src/components/forms/helpers/no-items';
@@ -127,29 +127,31 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
 }
 
 function useSearchServicesQuery(search: string) {
+  const api = useApi();
+
   return useQuery({
-    queryKey: ['searchServices', { search }],
+    queryKey: ['searchServices', { api, search }],
     refetchInterval: false,
     placeholderData: keepPreviousData,
     queryFn: async ({ signal }) => {
       await wait(200, signal);
 
       const [total, matchingApps, matchingServices] = await Promise.all([
-        getTotalServices(signal),
-        searchApps(search, signal),
-        searchServices(search, signal),
+        getTotalServices(api, signal),
+        searchApps(api, search, signal),
+        searchServices(api, search, signal),
       ]);
 
       const apps = new Map(matchingApps.map((app) => [app.id, app]));
 
-      const appsServices = await getAppsServices(matchingApps);
+      const appsServices = await getAppsServices(api, matchingApps);
       const services = unique([...matchingServices, ...appsServices], getId).slice(0, limit);
 
       const missingAppIds = matchingServices
         .map((service) => service.appId)
         .filter((appId) => !apps.has(appId));
 
-      for (const app of await getApps(missingAppIds)) {
+      for (const app of await getApps(api, missingAppIds)) {
         apps.set(app.id, app);
       }
 
@@ -162,23 +164,17 @@ function useSearchServicesQuery(search: string) {
   });
 }
 
-async function getTotalServices(signal: AbortSignal): Promise<number> {
-  const api = getApi();
-
+async function getTotalServices(api: ApiFn, signal: AbortSignal): Promise<number> {
   return api('get /v1/services', { query: { limit: '1' } }, { signal }).then(({ count }) => count!);
 }
 
-async function searchApps(search: string, signal: AbortSignal): Promise<App[]> {
-  const api = getApi();
-
+async function searchApps(api: ApiFn, search: string, signal: AbortSignal): Promise<App[]> {
   return api('get /v1/apps', { query: { name: search, limit: String(limit) } }, { signal }).then(({ apps }) =>
     apps!.map(mapApp),
   );
 }
 
-async function searchServices(search: string, signal: AbortSignal): Promise<Service[]> {
-  const api = getApi();
-
+async function searchServices(api: ApiFn, search: string, signal: AbortSignal): Promise<Service[]> {
   return api(
     'get /v1/services',
     { query: { name: search, limit: String(limit), types: ['WEB', 'WORKER'] } },
@@ -186,17 +182,13 @@ async function searchServices(search: string, signal: AbortSignal): Promise<Serv
   ).then(({ services }) => services!.map(mapService));
 }
 
-async function getApps(appIds: string[]): Promise<App[]> {
-  const api = getApi();
-
+async function getApps(api: ApiFn, appIds: string[]): Promise<App[]> {
   return Promise.all(
     appIds.map((appId) => api('get /v1/apps/{id}', { path: { id: appId } }).then(({ app }) => mapApp(app!))),
   );
 }
 
-async function getAppsServices(apps: App[]): Promise<Service[]> {
-  const api = getApi();
-
+async function getAppsServices(api: ApiFn, apps: App[]): Promise<Service[]> {
   const services = await Promise.all(
     apps.map((app) =>
       api('get /v1/services', { query: { app_id: app.id } }).then(({ services }) =>

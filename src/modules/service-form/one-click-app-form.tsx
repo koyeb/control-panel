@@ -17,6 +17,7 @@ import {
   createEnsureApiQueryData,
   mapGithubApp,
   mapVolume,
+  useApi,
   useCatalogInstance,
   useInstancesCatalog,
   useRegionsCatalog,
@@ -66,10 +67,11 @@ type OneClickAppFormProps = {
 };
 
 export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
+  const api = useApi();
   const queryClient = useQueryClient();
+  const searchParams = useSearchParams();
   const navigate = useNavigate();
 
-  const searchParams = useSearchParams();
   const instances = useInstancesCatalog();
 
   const serviceFormRef = useRef(defaultServiceForm());
@@ -82,7 +84,7 @@ export function OneClickAppForm({ app, onCostChanged }: OneClickAppFormProps) {
 
   const mutation = useMutation({
     mutationKey: ['deployOneClickApp'],
-    mutationFn: (values: OneClickAppForm) => submitServiceForm(merge(serviceForm, values)),
+    mutationFn: (values: OneClickAppForm) => submitServiceForm(api, merge(serviceForm, values)),
     async onSuccess({ serviceId }) {
       await navigate({ to: '/services/new', search: { step: 'initialDeployment', serviceId } });
     },

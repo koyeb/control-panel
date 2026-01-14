@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { getApi, useApps, useInvalidateApiQuery } from 'src/api';
+import { useApi, useApps, useInvalidateApiQuery } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledSelect } from 'src/components/forms';
 import { handleSubmit } from 'src/hooks/form';
@@ -16,8 +16,10 @@ const T = createTranslate('pages.domains.list.changeApp');
 export function ChangeAppForm({ domain }: { domain: Domain }) {
   const t = T.useTranslate();
 
-  const apps = useApps();
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
+
+  const apps = useApps();
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -29,8 +31,6 @@ export function ChangeAppForm({ domain }: { domain: Domain }) {
 
   const mutation = useMutation({
     async mutationFn({ appId }: { appId: string | null }) {
-      const api = getApi();
-
       if (appId === domain.appId) {
         return false;
       }

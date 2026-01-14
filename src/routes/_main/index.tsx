@@ -39,8 +39,8 @@ export const Route = createFileRoute('/_main/')({
 
     if (organization.status === 'ACTIVE') {
       await queryClient.ensureQueryData({
-        queryKey: ['listAppsFull'],
-        queryFn: () => listAppsFull(),
+        queryKey: ['listAppsFull', { api }],
+        queryFn: () => listAppsFull(api),
       });
     }
   },

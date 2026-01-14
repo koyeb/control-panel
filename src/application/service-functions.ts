@@ -1,6 +1,6 @@
 import { RegisteredRouter } from '@tanstack/react-router';
 
-import { API, databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api';
+import { API, ApiFn, databaseQuotas, isComputeDeployment, isDatabaseDeployment } from 'src/api';
 import { ValidateLinkOptions } from 'src/components/link';
 import {
   App,
@@ -17,8 +17,6 @@ import {
 } from 'src/model';
 import { inArray } from 'src/utils/arrays';
 import { hasProperty } from 'src/utils/object';
-
-import { getApi } from '../api';
 
 type ServiceLink = ValidateLinkOptions<
   RegisteredRouter,
@@ -145,11 +143,10 @@ export function isInstanceRunning({ status }: Instance) {
 }
 
 export async function updateDatabaseService(
+  api: ApiFn,
   serviceId: string,
   updater: (deployment: API.DeploymentDefinition) => void,
 ) {
-  const api = getApi();
-
   const { service } = await api('get /v1/services/{id}', { path: { id: serviceId } });
   const { deployment } = await api('get /v1/deployments/{id}', {
     path: { id: service!.latest_deployment_id! },

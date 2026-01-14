@@ -5,6 +5,7 @@ import z from 'zod';
 
 import {
   ApiError,
+  ApiFn,
   apiQuery,
   createEnsureApiQueryData,
   getApi,
@@ -32,10 +33,13 @@ export const Route = createFileRoute('/_main')({
   }),
 
   async beforeLoad({ search, location, context: { authKit } }) {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const api = getApi(authKit?.getAccessToken);
+
     await checkAuthentication(authKit, location.pathname + location.searchStr);
 
     if (search['organization-id']) {
-      await switchOrganization(search['organization-id'], authKit);
+      await switchOrganization(api, search['organization-id'], authKit);
     }
   },
 
@@ -99,9 +103,7 @@ async function checkAuthentication(authKit: AuthKit | undefined, currentUrl: str
   }
 }
 
-async function switchOrganization(organizationId: string, authKit: AuthKit) {
-  const api = getApi();
-
+async function switchOrganization(api: ApiFn, organizationId: string, authKit: AuthKit) {
   if (organizationId.startsWith('org_') && (await isFeatureFlagEnabled('workos-switch-organization'))) {
     await authKit.switchToOrganization({ organizationId });
   } else {

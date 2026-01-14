@@ -46,8 +46,8 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
     };
   },
 
-  async loader({ deps, context: { seon, queryClient } }) {
-    const api = getApi();
+  async loader({ deps, context: { authKit, seon, queryClient } }) {
+    const api = getApi(authKit.getAccessToken);
 
     const search = deps.search;
     const redirectUrl = new URL(deps.metadata, window.location.origin);

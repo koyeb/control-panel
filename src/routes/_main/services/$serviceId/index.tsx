@@ -22,7 +22,8 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
     deploymentId: search.deploymentId,
   }),
 
-  loader: async ({ context: { queryClient }, params, deps }) => {
+  loader: async ({ context: { authKit, queryClient }, params, deps }) => {
+    const api = getApi(authKit.getAccessToken);
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (deps.deploymentId === undefined) {
@@ -74,8 +75,6 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
           },
         }),
         queryFn: async ({ queryKey, pageParam }) => {
-          const api = getApi();
-
           return api('get /v1/deployments', {
             query: {
               ...queryKey[1].query,

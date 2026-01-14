@@ -1,7 +1,7 @@
 import { Alert } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { ApiError, getApi } from 'src/api';
+import { ApiError, useApi } from 'src/api';
 import { ExternalLinkButton } from 'src/components/link';
 import { Translate } from 'src/intl/translate';
 import { wait } from 'src/utils/promises';
@@ -21,6 +21,8 @@ export function QuotaAlert(props: QuotaAlertProps) {
   const serviceId = props.serviceId;
   const values = getValues(props);
 
+  const api = useApi();
+
   const { data: message } = useQuery({
     placeholderData: keepPreviousData,
     queryKey: ['quotaAlert', { serviceId, dryRun: true, values }],
@@ -30,7 +32,6 @@ export function QuotaAlert(props: QuotaAlertProps) {
         return null;
       }
 
-      const api = getApi();
       const definition = serviceFormToDeploymentDefinition(values);
 
       try {

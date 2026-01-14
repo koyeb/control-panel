@@ -1,29 +1,21 @@
 import { QueryClient } from '@tanstack/react-query';
 import { RegisteredRouter } from '@tanstack/react-router';
 import { AuthKitProvider as BaseAuthKitProvider, useAuth } from '@workos-inc/authkit-react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import { ErrorComponent } from 'src/components/error-view';
-import { LogoLoading } from 'src/components/logo-loading';
 import { urlToLinkOptions } from 'src/hooks/router';
 import { assert } from 'src/utils/assert';
 
 import { getConfig } from './config';
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const workOsQueryClient = new QueryClient();
-
 export type AuthKit = ReturnType<typeof useAuth>;
-
-declare global {
-  var _getAccessToken: () => Promise<string | null>;
-}
-
-globalThis._getAccessToken = () => Promise.resolve(null);
 
 type RedirectParams = {
   state: { next?: string } | null;
 };
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const workOsQueryClient = new QueryClient();
 
 type AuthKitProviderProps = {
   router: RegisteredRouter;
@@ -62,32 +54,22 @@ type AuthKitGuardProps = {
 };
 
 function AuthKitGuard({ queryClient, children }: AuthKitGuardProps) {
-  const [error, setError] = useState<unknown>(null);
   const authKit = useAuth();
 
   useEffect(() => {
+    const meta = { getAccessToken: authKit.getAccessToken };
+    const options = queryClient.getDefaultOptions();
+
     queryClient.setDefaultOptions({
-      queries: {
-        meta: { getAccessToken: () => authKit.getAccessToken() },
-      },
+      ...options,
+      queries: { ...options.queries, meta },
+      mutations: { ...options.mutations, meta },
     });
-
-    globalThis._getAccessToken = () => authKit.getAccessToken();
-    (globalThis as { authKit?: AuthKit }).authKit = authKit;
   });
-
-  if (error instanceof Error) {
-    return <ErrorComponent error={error} reset={() => setError(null)} />;
-  }
 
   if (authKit.isLoading) {
     return <LogoLoading />;
   }
 
   return children(authKit);
-}
-
-// eslint-disable-next-line react-refresh/only-export-components
-export function getAuthKitToken() {
-  return globalThis._getAccessToken();
 }

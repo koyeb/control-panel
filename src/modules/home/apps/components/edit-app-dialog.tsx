@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { getApi } from 'src/api';
+import { useApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { CloseDialogButton, Dialog, DialogFooter, closeDialog } from 'src/components/dialog';
 import { ControlledInput } from 'src/components/forms';
@@ -47,6 +47,8 @@ export function EditAppDialog() {
 
 function EditAppForm({ app }: { app: App }) {
   const t = T.useTranslate();
+
+  const api = useApi();
   const queryClient = useQueryClient();
 
   const koyebDomain = app.domains.find(hasProperty('type', 'AUTOASSIGNED'));
@@ -62,7 +64,6 @@ function EditAppForm({ app }: { app: App }) {
 
   const mutation = useMutation({
     async mutationFn(values: FormValues<typeof form>) {
-      const api = getApi();
       const promises: Promise<unknown>[] = [];
 
       if (values.name !== app.name) {

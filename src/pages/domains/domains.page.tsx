@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { getApi, useDomainsQuery, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
+import { useApi, useDomainsQuery, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
@@ -99,12 +99,12 @@ export function DomainsPage() {
 
 function useBulkDeleteMutation(onDeleted: () => void) {
   const t = T.useTranslate();
+
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   return useMutation({
     async mutationFn(domains: Domain[]) {
-      const api = getApi();
-
       return Promise.allSettled(
         domains.map((domain) => api('delete /v1/domains/{id}', { path: { id: domain.id } })),
       );

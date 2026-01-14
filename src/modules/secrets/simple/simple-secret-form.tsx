@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { FieldValues, FormState, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { getApi, useInvalidateApiQuery } from 'src/api';
+import { useApi, useInvalidateApiQuery } from 'src/api';
 import { ControlledInput, ControlledSwitch, ControlledTextArea } from 'src/components/forms';
 import { useFormErrorHandler } from 'src/hooks/form';
 import { useUpdateEffect } from 'src/hooks/lifecycle';
@@ -30,6 +30,8 @@ type SecretFormProps = {
 
 export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProps) {
   const t = T.useTranslate();
+
+  const api = useApi();
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm({
@@ -49,8 +51,6 @@ export function SecretForm({ secret, renderFooter, onSubmitted }: SecretFormProp
 
   const { mutateAsync: createSecret } = useMutation({
     async mutationFn(param: { name: string; value: string }) {
-      const api = getApi();
-
       if (secret) {
         return api('put /v1/secrets/{id}', {
           path: { id: secret.id },

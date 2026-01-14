@@ -3,7 +3,7 @@ import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanst
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { getApi, getApiQueryKey, mapActivity } from 'src/api';
+import { getApiQueryKey, mapActivity, useApi } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
 import { DocumentTitle } from 'src/components/document-title';
 import { Loading } from 'src/components/loading';
@@ -41,6 +41,7 @@ const allTypes = [
 export function ActivityPage() {
   const t = T.useTranslate();
 
+  const api = useApi();
   const queryClient = useQueryClient();
 
   const params = useSearchParams();
@@ -49,8 +50,6 @@ export function ActivityPage() {
   const query = useInfiniteQuery({
     queryKey: getApiQueryKey('get /v1/activities', { query: { types } }),
     async queryFn({ pageParam }) {
-      const api = getApi();
-
       return api('get /v1/activities', {
         query: {
           offset: String(pageParam * pageSize),

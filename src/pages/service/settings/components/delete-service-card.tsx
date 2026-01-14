@@ -1,7 +1,7 @@
 import { Button } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 
-import { apiMutation, getApi } from 'src/api';
+import { apiMutation, useApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { useNavigate } from 'src/hooks/router';
@@ -17,6 +17,7 @@ type DeleteServiceCardProps = {
 export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   const t = T.useTranslate();
 
+  const api = useApi();
   const navigate = useNavigate();
 
   const deleteAppMutation = useMutation({
@@ -30,8 +31,6 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
       path: { id: service.id },
     })),
     async onSuccess(_, service) {
-      const api = getApi();
-
       const { services } = await api('get /v1/services', {
         query: { app_id: service.appId },
       });

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 
-import { apiQuery, getApi, getApiQueryKey } from 'src/api';
+import { apiQuery, getApiQueryKey, useApi } from 'src/api';
 import { workOsQueryClient } from 'src/application/authkit';
 import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
 
@@ -32,13 +32,13 @@ export function useOrganization() {
 export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | Promise<void> } = {}) {
   const queryClient = useQueryClient();
   const { switchToOrganization } = useAuth();
+  const api = useApi();
 
   return useMutation({
     mutationFn: async ({ id: organizationId, externalId }: { id: string; externalId?: string }) => {
       if (externalId && (await isFeatureFlagEnabled('workos-switch-organization'))) {
         await switchToOrganization({ organizationId: externalId });
       } else {
-        const api = getApi();
         await api('post /v1/organizations/{id}/switch', { path: { id: organizationId } });
       }
     },
