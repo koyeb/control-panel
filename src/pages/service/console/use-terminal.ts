@@ -2,7 +2,8 @@ import { useAuth } from '@workos-inc/authkit-react';
 import { useCallback, useEffect, useState } from 'react';
 import { z } from 'zod';
 
-import { getApiStream } from 'src/api';
+import { apiStream } from 'src/api/api';
+import { getConfig } from 'src/application/config';
 import { UnexpectedError } from 'src/application/errors';
 import { reportError } from 'src/application/sentry';
 import { createValidationGuard } from 'src/application/validation';
@@ -30,18 +31,25 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
   const { prompt, reset } = usePrompt(instanceId, stream, terminal);
 
   const connect = useCallback(
-    (instanceId: string) => {
-      void getAccessToken()
-        .then(getApiStream)
-        .then((apiStream) => {
-          setStream(apiStream('get /v1/streams/instances/exec', { query: { id: instanceId } }));
-        });
+    async (instanceId: string) => {
+      const stream = apiStream(
+        'get /v1/streams/instances/exec',
+        {
+          query: { id: instanceId },
+        },
+        {
+          baseUrl: getConfig('apiBaseUrl'),
+          token: await getAccessToken(),
+        },
+      );
+
+      setStream(stream);
     },
     [getAccessToken],
   );
 
   useMount(() => {
-    connect(instanceId);
+    void connect(instanceId);
   });
 
   useEffect(() => {
@@ -52,7 +60,7 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
     if (stream && terminal) {
       stream.close();
       reset(terminal);
-      connect(instanceId);
+      void connect(instanceId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instanceId]);
@@ -73,7 +81,7 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
         }
       } else if (terminal) {
         reset(terminal);
-        connect(instanceId);
+        void connect(instanceId);
       }
     },
     [prompt, stream, terminal, reset, connect, instanceId, readOnly],

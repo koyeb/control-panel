@@ -1,9 +1,9 @@
 import { useAuth } from '@workos-inc/authkit-react';
 import { useCallback } from 'react';
 
-import { ApiEndpoint, api, apiStream } from 'src/api/api';
+import { getConfig } from 'src/application/config';
 
-import { getConfig } from '../application/config';
+import { api } from './api';
 
 export * from './mappers/activity';
 export * from './mappers/api-credential';
@@ -53,14 +53,4 @@ export function useApi() {
     },
     [getAccessToken],
   );
-}
-
-export function getApiStream(token?: string | null) {
-  return <E extends ApiEndpoint>(...[endpoint, params, options]: Parameters<typeof apiStream<E>>) => {
-    return apiStream(endpoint, params, {
-      baseUrl: getConfig('apiBaseUrl'),
-      token,
-      ...options,
-    });
-  };
 }
