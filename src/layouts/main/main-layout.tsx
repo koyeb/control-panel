@@ -6,7 +6,6 @@ import z from 'zod';
 import { useOrganization, useUser } from 'src/api';
 import { getConfig } from 'src/application/config';
 import { StoredValue } from 'src/application/storage';
-import { isSessionToken } from 'src/application/token';
 import { createValidationGuard } from 'src/application/validation';
 import { DocumentTitle } from 'src/components/document-title';
 import { Link, LinkButton } from 'src/components/link';
@@ -46,7 +45,7 @@ type LayoutProps = {
 };
 
 export function MainLayout({ children }: LayoutProps) {
-  const banner = useBanner();
+  const trial = useTrial();
   const pageContext = usePageContext();
 
   if (!useOrganization()) {
@@ -64,7 +63,7 @@ export function MainLayout({ children }: LayoutProps) {
       <ContextPalette />
 
       <Layout
-        banner={banner ? { session: <SessionTokenBanner />, trial: <TrialBanner /> }[banner] : null}
+        banner={trial && <TrialBanner />}
         header={<AppBreadcrumbs />}
         menu={<Menu />}
         menuCollapsed={<Menu collapsed />}
@@ -135,28 +134,6 @@ function Main({ children }: { children: React.ReactNode }) {
         {children}
       </Suspense>
     </main>
-  );
-}
-
-function useBanner(): 'session' | 'trial' | void {
-  const trial = useTrial();
-
-  if (isSessionToken()) {
-    return 'session';
-  }
-
-  if (trial) {
-    return 'trial';
-  }
-}
-
-function SessionTokenBanner() {
-  const organization = useOrganization();
-
-  return (
-    <div className="bg-orange px-4 py-1.5 text-center font-medium md:h-full md:whitespace-nowrap">
-      <T id="sessionTokenWarning" values={{ organizationName: organization?.name }} />
-    </div>
   );
 }
 
