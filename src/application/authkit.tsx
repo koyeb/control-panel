@@ -68,7 +68,7 @@ function AuthKitGuard({ queryClient, children }: AuthKitGuardProps) {
   });
 
   if (authKit.isLoading) {
-    return <LogoLoading />;
+    return null;
   }
 
   return children(authKit);
