@@ -95,7 +95,11 @@ function CreateOrganization() {
       </div>
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)}>
-        <OrganizationNameField form={form} label={<T id="organizationNameLabel" />} />
+        <OrganizationNameField
+          form={form}
+          label={<T id="organizationNameLabel" />}
+          tooltipPlacement="bottom-end"
+        />
 
         <AuthButton
           type="submit"

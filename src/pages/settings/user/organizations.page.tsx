@@ -93,7 +93,11 @@ function CreateOrganization() {
       </p>
 
       <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
-        <OrganizationNameField form={form} label={<T id="create.organizationNameLabel" />} />
+        <OrganizationNameField
+          form={form}
+          label={<T id="create.organizationNameLabel" />}
+          tooltipPlacement="bottom-start"
+        />
 
         <DialogFooter>
           <CloseDialogButton>

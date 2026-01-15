@@ -15,9 +15,10 @@ const T = createTranslate('components.organizationNameField');
 type OrganizationNameFieldProps = {
   form: UseFormReturn<{ organizationName: string }>;
   label: React.ReactNode;
+  tooltipPlacement: 'bottom-start' | 'bottom-end';
 };
 
-export function OrganizationNameField({ form, label }: OrganizationNameFieldProps) {
+export function OrganizationNameField({ form, label, tooltipPlacement }: OrganizationNameFieldProps) {
   const [inputFocused, setInputFocused] = useState(false);
 
   return (
@@ -26,7 +27,7 @@ export function OrganizationNameField({ form, label }: OrganizationNameFieldProp
       allowHover
       forceDesktop
       arrow={false}
-      placement="bottom-start"
+      placement={tooltipPlacement}
       offset={8}
       content={<OrganizationNameTooltip name={form.watch('organizationName')} />}
       className="bg-muted!"
