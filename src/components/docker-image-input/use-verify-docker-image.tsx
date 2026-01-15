@@ -18,7 +18,6 @@ export function useVerifyDockerImage(image: string, registrySecretName: string |
     refetchInterval: false,
     refetchOnWindowFocus: false,
     retry: false,
-    meta: { delay: 500 },
     ...apiQuery('get /v1/docker-helper/verify', {
       query: {
         image: image.trim(),
