@@ -33,8 +33,7 @@ export const Route = createFileRoute('/_main')({
   }),
 
   async beforeLoad({ search, location, context: { authKit } }) {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const api = getApi(authKit?.getAccessToken);
+    const api = getApi(authKit.getAccessToken);
 
     await checkAuthentication(authKit, location.pathname + location.searchStr);
 
