@@ -10,8 +10,8 @@ type DuplicateServiceCardProps = {
 
 export function DuplicateServiceCard({ service }: DuplicateServiceCardProps) {
   return (
-    <div className="col-start-1 card row items-center gap-4 p-3">
-      <div className="col flex-1 gap-2">
+    <section className="col-start-1 card col gap-4 p-3">
+      <div className="col gap-2">
         <strong>
           <T id="title" />
         </strong>
@@ -21,14 +21,11 @@ export function DuplicateServiceCard({ service }: DuplicateServiceCardProps) {
         </p>
       </div>
 
-      <LinkButton
-        color="gray"
-        to="/services/deploy"
-        search={{ 'duplicate-service-id': service.id }}
-        className="ml-auto"
-      >
-        <T id="duplicate" />
-      </LinkButton>
-    </div>
+      <div className="row items-center gap-4">
+        <LinkButton color="gray" to="/services/deploy" search={{ 'duplicate-service-id': service.id }}>
+          <T id="duplicate" />
+        </LinkButton>
+      </div>
+    </section>
   );
 }

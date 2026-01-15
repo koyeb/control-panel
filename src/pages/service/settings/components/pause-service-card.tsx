@@ -40,8 +40,8 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
   };
 
   return (
-    <div className="col-start-1 card row items-center gap-4 p-3">
-      <div className="col flex-1 gap-2">
+    <section className="col-start-1 card col gap-4 p-3">
+      <div className="col gap-2">
         <strong>
           <T id="title" />
         </strong>
@@ -51,7 +51,7 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
         </p>
       </div>
 
-      <div className="ml-auto row gap-4">
+      <div className="row items-center gap-4">
         <Button
           color="gray"
           onClick={() => openDialog('ResumeService', service)}
@@ -68,6 +68,6 @@ export function PauseServiceCard({ service }: PauseServiceCardProps) {
           <T id="pause" />
         </Button>
       </div>
-    </div>
+    </section>
   );
 }

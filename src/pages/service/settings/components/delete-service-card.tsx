@@ -59,8 +59,8 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
   };
 
   return (
-    <div className="col-start-1 card row items-center gap-4 p-3">
-      <div className="col flex-1 gap-2">
+    <section className="col-start-1 card col gap-4 p-3">
+      <div className="col gap-2">
         <strong>
           <T id="title" />
         </strong>
@@ -70,7 +70,7 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
         </p>
       </div>
 
-      <div className="ml-auto row gap-4">
+      <div className="row items-center gap-4">
         <Button
           color="red"
           onClick={onDelete}
@@ -79,6 +79,6 @@ export function DeleteServiceCard({ service }: DeleteServiceCardProps) {
           <T id="delete" />
         </Button>
       </div>
-    </div>
+    </section>
   );
 }
