@@ -93,50 +93,53 @@ export function VolumesList({ volumes }: { volumes: Volume[] }) {
 
   return (
     <>
-      <Table
-        items={volumes}
-        columns={{
-          name: {
-            header: <T id="name" />,
-            render: (volume) => <VolumeName volume={volume} />,
-          },
-          status: {
-            header: <T id="status" />,
-            render: (volume) => <VolumeStatusBadge status={volume.status} />,
-          },
-          region: {
-            hidden: lg,
-            header: <T id="region" />,
-            render: (volume) => (
-              <div className="row items-center gap-2">
-                <RegionFlag regionId={volume.region} className="size-4" />
-                <RegionName regionId={volume.region} />
-              </div>
-            ),
-          },
-          size: {
-            header: <T id="size" />,
-            className: clsx('w-26'),
-            render: (volume) => formatBytes(volume.size, { decimal: true }),
-          },
-          created: {
-            hidden: lg,
-            header: <T id="created" />,
-            className: clsx('w-34'),
-            render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
-          },
-          service: {
-            hidden: lg,
-            header: <T id="attachedTo" />,
-            className: clsx('w-26'),
-            render: (volume) => <AttachedService volume={volume} serviceId={volume.serviceId} />,
-          },
-          actions: {
-            className: clsx('w-[1%]'),
-            render: (volume) => <VolumeActions volume={volume} />,
-          },
-        }}
-      />
+      <div className="overflow-x-auto">
+        <Table
+          items={volumes}
+          columns={{
+            name: {
+              header: <T id="name" />,
+              render: (volume) => <VolumeName volume={volume} />,
+            },
+            status: {
+              header: <T id="status" />,
+              render: (volume) => <VolumeStatusBadge status={volume.status} />,
+            },
+            region: {
+              hidden: lg,
+              header: <T id="region" />,
+              render: (volume) => (
+                <div className="row items-center gap-2">
+                  <RegionFlag regionId={volume.region} className="size-4" />
+                  <RegionName regionId={volume.region} />
+                </div>
+              ),
+            },
+            size: {
+              header: <T id="size" />,
+              className: clsx('w-26'),
+              render: (volume) => (
+                <div className="whitespace-nowrap">{formatBytes(volume.size, { decimal: true })}</div>
+              ),
+            },
+            created: {
+              hidden: lg,
+              header: <T id="created" />,
+              className: clsx('w-34'),
+              render: (volume) => <FormattedDistanceToNow value={volume.createdAt} />,
+            },
+            service: {
+              header: <T id="attachedTo" />,
+              className: clsx('w-26'),
+              render: (volume) => <AttachedService volume={volume} serviceId={volume.serviceId} />,
+            },
+            actions: {
+              className: clsx('w-[1%]'),
+              render: (volume) => <VolumeActions volume={volume} />,
+            },
+          }}
+        />
+      </div>
 
       <EditVolumeDialog />
       <CreateSnapshotDialog />
