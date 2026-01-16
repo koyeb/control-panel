@@ -3,7 +3,6 @@ import { useAuth } from '@workos-inc/authkit-react';
 
 import { apiQuery, getApiQueryKey, useApi } from 'src/api';
 import { workOsQueryClient } from 'src/application/authkit';
-import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 
@@ -36,7 +35,7 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
 
   return useMutation({
     mutationFn: async ({ id: organizationId, externalId }: { id: string; externalId?: string }) => {
-      if (externalId && (await isFeatureFlagEnabled('workos-switch-organization'))) {
+      if (externalId) {
         await switchToOrganization({ organizationId: externalId });
       } else {
         await api('post /v1/organizations/{id}/switch', { path: { id: organizationId } });

@@ -17,7 +17,6 @@ import {
 import { AuthKit } from 'src/application/authkit';
 import { useOnboardingStep } from 'src/application/onboarding';
 import { getUrlLatency } from 'src/application/url-latency';
-import { isFeatureFlagEnabled } from 'src/hooks/feature-flag';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
 import { TrialEnded } from 'src/modules/trial/trial-ended/trial-ended';
@@ -103,7 +102,7 @@ async function checkAuthentication(authKit: AuthKit | undefined, currentUrl: str
 }
 
 async function switchOrganization(api: ApiFn, organizationId: string, authKit: AuthKit) {
-  if (organizationId.startsWith('org_') && (await isFeatureFlagEnabled('workos-switch-organization'))) {
+  if (organizationId.startsWith('org_')) {
     await authKit.switchToOrganization({ organizationId });
   } else {
     await api('post /v1/organizations/{id}/switch', { path: { id: organizationId }, header: {} });
