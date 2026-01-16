@@ -43,7 +43,7 @@ export function useCodeEditor(filepath: string) {
 type Language = NonNullable<ReturnType<typeof getLanguage>>;
 
 function getLanguage(lang: string) {
-  const languageFn: ValueOf<typeof langs> | undefined = langs[lang as keyof typeof langs];
+  const languageFn = langs[lang as keyof typeof langs] as ValueOf<typeof langs> | undefined;
 
   if (languageFn) {
     return languageFn();

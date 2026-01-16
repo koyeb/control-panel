@@ -195,7 +195,7 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
           !expanded && 'opacity-0 hover:opacity-100',
         )}
       >
-        <IconChevronLeft className={clsx('size-6 text-dim', expanded && '-scale-x-100')} />
+        <IconChevronLeft className={clsx('icon', expanded && '-scale-x-100')} />
       </button>
 
       <iframe

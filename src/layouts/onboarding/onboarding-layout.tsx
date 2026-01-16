@@ -60,7 +60,7 @@ function Slides({ sentence }: { sentence: React.ReactNode }) {
       {hasMultipleOrganizations && <OrganizationSwitcher dark />}
 
       <div className="col flex-1 justify-center gap-6">
-        <div className="text-base leading-relaxed text-dim">{sentence}</div>
+        <div className="text-base/relaxed text-dim">{sentence}</div>
       </div>
 
       <UserMenu />

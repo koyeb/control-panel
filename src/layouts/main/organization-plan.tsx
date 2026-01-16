@@ -78,7 +78,7 @@ export function OrganizationPlan() {
       >
         <div className="row items-center gap-2">
           <div>
-            <PlanIcon plan={organization.plan} className="size-6 text-dim" />
+            <PlanIcon plan={organization.plan} className="icon" />
           </div>
 
           <div>
