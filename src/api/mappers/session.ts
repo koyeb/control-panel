@@ -113,5 +113,6 @@ export function mapOrganizationQuotas(quotas: API.Quotas): OrganizationQuotas {
     maxDomains: Number(quotas.custom_domains),
     logsRetention: quotas.logs_retention!,
     scaleToZero: snakeToCamelDeep(requiredDeep(quotas.scale_to_zero!)),
+    lifeCycle: snakeToCamelDeep(requiredDeep(quotas.lifecycle!)),
   };
 }

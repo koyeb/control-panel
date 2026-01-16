@@ -4,6 +4,7 @@ import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
 import { Tooltip } from 'src/components/tooltip';
 import { useNow } from 'src/hooks/timers';
+import { formatDateInTimeZones } from 'src/utils/date';
 import { identity } from 'src/utils/generic';
 
 import { Translate } from './translate';
@@ -95,26 +96,6 @@ export function FormattedDistanceToNow({
       }
     />
   );
-}
-
-function formatDateInTimeZones(date: Date) {
-  const offsetMinutes = date.getTimezoneOffset();
-  const offsetHours = -offsetMinutes / 60;
-  const sign = offsetHours >= 0 ? '+' : '-';
-  const utcOffset = `${sign}${Math.abs(offsetHours)}`;
-
-  return {
-    utcOffset,
-    utc: (opts?: Intl.DateTimeFormatOptions) => {
-      return date.toLocaleString('en-US', { timeZone: 'UTC', ...opts });
-    },
-    local: (opts?: Intl.DateTimeFormatOptions) => {
-      return date.toLocaleString(undefined, {
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        ...opts,
-      });
-    },
-  };
 }
 
 function getDistanceToNow(date: Date, now: Date): [number, RelativeTimeFormatSingularUnit] {

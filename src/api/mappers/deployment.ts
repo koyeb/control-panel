@@ -215,10 +215,15 @@ function mapComputeDeployment(deployment: API.Deployment): ComputeDeployment {
 
   const scaling = (): DeploymentDefinition['scaling'] => {
     const scaling = definition.scalings![0]!;
+    const sleepIdleDelay = scaling.targets?.find(
+      (target) => target.sleep_idle_delay !== undefined,
+    )?.sleep_idle_delay;
 
     return {
       min: scaling.min!,
       max: scaling.max!,
+      deepSleepValue: sleepIdleDelay?.deep_sleep_value || undefined,
+      lightSleepValue: sleepIdleDelay?.light_sleep_value || undefined,
     };
   };
 

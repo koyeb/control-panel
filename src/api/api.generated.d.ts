@@ -3620,6 +3620,22 @@ export interface components {
             id?: string;
             name?: string;
         };
+        LifecycleQuotas: {
+            /** Format: int64 */
+            delete_after_create_max?: number;
+            /**
+             * delete after create limits
+             * Format: int64
+             */
+            delete_after_create_min?: number;
+            /** Format: int64 */
+            delete_after_sleep_max?: number;
+            /**
+             * delete after sleep limits
+             * Format: int64
+             */
+            delete_after_sleep_min?: number;
+        };
         ListAppEventsReply: {
             /** The collection of events */
             events?: components["schemas"]["AppEvent"][];
@@ -4507,6 +4523,7 @@ export interface components {
             domains?: string;
             domains_load_balancer?: components["schemas"]["DomainLoadBalancerQuotas"];
             instance_types?: string[];
+            lifecycle?: components["schemas"]["LifecycleQuotas"];
             /**
              * Time in days
              * Format: int32
@@ -16315,8 +16332,6 @@ export interface operations {
             query?: {
                 /** @description If set, run validation and check that the service exists */
                 dry_run?: boolean;
-                "life_cycle.delete_after_create"?: number;
-                "life_cycle.delete_after_sleep"?: number;
             };
             header?: never;
             path: {
@@ -16496,8 +16511,6 @@ export interface operations {
             query?: {
                 /** @description If set, run validation and check that the service exists */
                 dry_run?: boolean;
-                "life_cycle.delete_after_create"?: number;
-                "life_cycle.delete_after_sleep"?: number;
             };
             header?: never;
             path: {

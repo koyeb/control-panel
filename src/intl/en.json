@@ -2603,6 +2603,27 @@
           "description": "Create a new service from this configuration.",
           "duplicate": "Duplicate"
         },
+        "lifeCycle": {
+          "title": "Automatic service deletion",
+          "description": "Configure the number of seconds before the service is deleted, either from now or after it scales to zero",
+          "deleteAfterCreate": {
+            "label": "Automatically delete in",
+            "placeholder": "21 600",
+            "unit": "s",
+            "info": "deletion will occur on <badge>UTC {offset}</badge> {date} at {time}",
+            "infoUtc": "{date} UTC"
+          },
+          "deleteAfterSleep": {
+            "label": "Automatically delete",
+            "placeholder": "300",
+            "unit": "s",
+            "info": "after scaling to zero",
+            "configureScaleToZero": "Configure scale to zero"
+          },
+          "deletionBeforeScaleToZero": "Deletion will happen before the service scales to zero",
+          "deletionBeforeDeepSleep": "Deletion will happen before the instance enters deep sleep",
+          "saved": "Automatic service deletion settings saved"
+        },
         "pause": {
           "title": "Pause service",
           "description": "Once this operation is performed, your service will be paused and all active deployments stopped. You can wake-up your service by clicking the \"Resume\" button below.",

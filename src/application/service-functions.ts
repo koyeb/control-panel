@@ -5,6 +5,7 @@ import { ValidateLinkOptions } from 'src/components/link';
 import {
   App,
   AppDomain,
+  ComputeDeployment,
   DatabaseDeployment,
   Deployment,
   DeploymentProxyPort,
@@ -140,6 +141,22 @@ export function isDeploymentRunning({ status }: Deployment) {
 
 export function isInstanceRunning({ status }: Instance) {
   return inArray<InstanceStatus>(status, ['ALLOCATING', 'STARTING', 'HEALTHY', 'UNHEALTHY', 'STOPPING']);
+}
+
+export function scaleToZeroValues(deployment?: ComputeDeployment) {
+  if (deployment === undefined || deployment.definition.scaling.min > 0) {
+    return {};
+  }
+
+  const { lightSleepValue, deepSleepValue } = deployment.definition.scaling;
+
+  const idlePeriod = lightSleepValue ?? deepSleepValue;
+  const lightToDeepPeriod = lightSleepValue !== undefined ? deepSleepValue : undefined;
+
+  return {
+    idlePeriod,
+    lightToDeepPeriod,
+  };
 }
 
 export async function updateDatabaseService(

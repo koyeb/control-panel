@@ -4,6 +4,7 @@ import { useService } from 'src/api';
 import { notify } from 'src/application/notify';
 import { DeployToKoyebButton } from 'src/components/deploy-to-koyeb-button';
 import { ServiceEstimatedCost } from 'src/components/service-estimated-cost';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { useNavigate, useRouteParam } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import {
@@ -18,6 +19,7 @@ import { defined } from 'src/utils/assert';
 import { DeleteServiceCard } from './components/delete-service-card';
 import { DuplicateServiceCard } from './components/duplicate-service-card';
 import { PauseServiceCard } from './components/pause-service-card';
+import { ServiceLifeCycleCard } from './components/service-life-cycle-card';
 
 const T = createTranslate('pages.service.settings');
 
@@ -30,6 +32,11 @@ export function ServiceSettingsPage() {
       <Suspense fallback={<ServiceFormSkeleton />}>
         <ServiceFormWrapper serviceId={serviceId} />
       </Suspense>
+
+      <FeatureFlag feature="service-lifecycle">
+        <ServiceLifeCycleCard service={service} />
+      </FeatureFlag>
+
       <PauseServiceCard service={service} />
       <DuplicateServiceCard service={service} />
       <DeleteServiceCard service={service} />

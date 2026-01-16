@@ -343,6 +343,8 @@ export type HealthCheckHeader = {
 export type Scaling = {
   min: number;
   max: number;
+  deepSleepValue?: number;
+  lightSleepValue?: number;
 };
 
 export type ArchiveDeploymentSource = {
@@ -605,6 +607,10 @@ export type Service = {
   name: string;
   status: ServiceStatus;
   createdAt: string;
+  lifeCycle?: {
+    deleteAfterCreate?: number;
+    deleteAfterSleep?: number;
+  };
 };
 
 export type ServiceType = 'web' | 'worker' | 'sandbox' | 'database';
@@ -754,6 +760,12 @@ export type OrganizationQuotas = {
     isLightSleepEnabled: boolean;
     lightSleepIdleDelayMin: number;
     lightSleepIdleDelayMax: number;
+  };
+  lifeCycle?: {
+    deleteAfterCreateMax?: number;
+    deleteAfterCreateMin?: number;
+    deleteAfterSleepMax?: number;
+    deleteAfterSleepMin?: number;
   };
 };
 
