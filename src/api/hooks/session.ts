@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
+import { unstable_useWidgetsInvalidator as useWidgetsInvalidator } from '@workos-inc/widgets/utils';
 
 import { apiQuery, getApiQueryKey, useApi } from 'src/api';
-import { workOsQueryClient } from 'src/application/authkit';
 
 import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser } from '../mappers/session';
 
@@ -31,6 +31,7 @@ export function useOrganization() {
 export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | Promise<void> } = {}) {
   const queryClient = useQueryClient();
   const { switchToOrganization } = useAuth();
+  const invalidateWidgets = useWidgetsInvalidator();
   const api = useApi();
 
   return useMutation({
@@ -42,9 +43,12 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
       }
     },
     async onSuccess() {
-      await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
-      await queryClient.invalidateQueries();
-      await workOsQueryClient.invalidateQueries({ queryKey: ['/_widgets/'] });
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) }),
+        queryClient.invalidateQueries(),
+        invalidateWidgets(),
+      ]);
+
       await onSuccess?.();
     },
   });

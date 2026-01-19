@@ -12,9 +12,6 @@ type RedirectParams = {
   state: { next?: string } | null;
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const workOsQueryClient = new QueryClient();
-
 type AuthKitProviderProps = {
   queryClient: QueryClient;
   children: (authKit: AuthKit) => React.ReactNode;
