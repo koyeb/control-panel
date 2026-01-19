@@ -1,4 +1,5 @@
 import { useQueries } from '@tanstack/react-query';
+import { useAuth } from '@workos-inc/authkit-react';
 import { Duration, sub } from 'date-fns';
 
 import type { API } from 'src/api';
@@ -38,6 +39,7 @@ type UseMetricsOptions = {
 
 export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }: UseMetricsOptions) {
   const api = useApi();
+  const { getAccessToken } = useAuth();
 
   return useQueries({
     queries: metrics.map((name) => {
@@ -50,7 +52,7 @@ export function useMetricsQueries({ serviceId, instanceId, metrics, timeFrame }:
       };
 
       return {
-        meta: { showError: false },
+        meta: { getAccessToken, showError: false },
         refetchInterval: 60 * 1000,
         queryKey: getApiQueryKey('get /v1/streams/metrics', { query }),
         queryFn: () => {
