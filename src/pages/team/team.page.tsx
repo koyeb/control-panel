@@ -19,9 +19,16 @@ export function TeamPage() {
   return (
     <div className="col gap-4">
       <Title title={<T id="title" />} />
-      <MembersList />
-      <InviteMemberForm />
-      <FeatureFlag feature="workos-user-management">
+
+      <FeatureFlag
+        feature="workos-user-management"
+        fallback={
+          <>
+            <MembersList />
+            <InviteMemberForm />
+          </>
+        }
+      >
         <WorkOSUsersManagement />
       </FeatureFlag>
     </div>
@@ -42,10 +49,7 @@ export function WorkOSUsersManagement() {
   return (
     <WorkOSWidgetsProvider>
       <div className="mt-4 col gap-4">
-        <div className="font-medium">WorkOS</div>
-
         {!canAddMembers && <style>{hideInviteUserButton}</style>}
-
         <UsersManagement authToken={getAccessToken} />
       </div>
     </WorkOSWidgetsProvider>
