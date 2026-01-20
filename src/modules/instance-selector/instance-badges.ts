@@ -16,7 +16,7 @@ export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions = {}) 
   return (instance: CatalogInstance): InstanceSelectorBadge[] => {
     const result = new Array<InstanceSelectorBadge>();
 
-    if (instance.category === 'gpu') {
+    if (newInstances.includes(instance.id)) {
       result.push('new');
     }
 
@@ -39,3 +39,11 @@ export function useGetInstanceBadges(options: UseGetInstanceBadgesOptions = {}) 
     return result;
   };
 }
+
+const newInstances = [
+  'gpu-nvidia-rtx-pro-6000',
+  'gpu-nvidia-h200',
+  'gpu-nvidia-rtx-a6000',
+  'gpu-tenstorrent-n300s',
+  '4-gpu-tenstorrent-n300s',
+];
