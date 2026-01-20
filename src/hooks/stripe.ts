@@ -42,7 +42,7 @@ export function usePaymentMethodMutation({ onSuccess, onTimeout }: PaymentMutati
       if (error instanceof StripeError) {
         notify.error(error.message);
 
-        if (!inArray(error.error.type, ['validation_error', 'card_error'])) {
+        if (!inArray(error.error.type, ['validation_error', 'card_error', 'invalid_request_error'])) {
           reportError(error, { type: error.error.type, code: error.error.code });
         }
       } else if (error instanceof TimeoutError) {
