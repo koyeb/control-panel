@@ -7,7 +7,6 @@ import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Checkbox, ControlledCheckbox } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { QueryError } from 'src/components/query-error';
-import { useRouteParam } from 'src/hooks/router';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { Instance } from 'src/model';
@@ -26,7 +25,7 @@ type InstanceLogsProps = {
 };
 
 export function InstanceLogs({ instance }: InstanceLogsProps) {
-  const service = useService(useRouteParam('serviceId'));
+  const service = useService(instance.serviceId);
   const app = useApp(service?.appId);
 
   const optionsForm = useLogsOptions();
