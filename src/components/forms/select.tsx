@@ -96,7 +96,7 @@ export function Select<T>(props: SelectProps<T>) {
   const { getKey, renderNoItems, onItemClick } = props;
 
   const defaultMenu = (context: SelectContext<T>) => (
-    <Dropdown dropdown={context.dropdown}>
+    <Dropdown dropdown={context.dropdown} className="max-h-48 overflow-auto">
       {items.length === 0 && renderNoItems?.()}
 
       <Menu {...context.select.getMenuProps()} className={clsx({ hidden: items.length === 0 })}>
