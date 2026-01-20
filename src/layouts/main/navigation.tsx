@@ -3,7 +3,6 @@ import clsx from 'clsx';
 import { useOrganization } from 'src/api';
 import { BadgeNew } from 'src/components/badge-new';
 import { Link, ValidateLinkOptions } from 'src/components/link';
-import { FeatureFlag } from 'src/hooks/feature-flag';
 import { usePathname } from 'src/hooks/router';
 import {
   IconActivity,
@@ -50,16 +49,14 @@ export function Navigation({ collapsed }: { collapsed: boolean }) {
           }
         />
 
-        <FeatureFlag feature="sandbox">
-          <NavigationItem
-            collapsed={collapsed}
-            disabled={disableComputeLinks}
-            Icon={IconBox}
-            label={<T id="sandboxes" />}
-            to="/sandboxes"
-            newBadge
-          />
-        </FeatureFlag>
+        <NavigationItem
+          collapsed={collapsed}
+          disabled={disableComputeLinks}
+          Icon={IconBox}
+          label={<T id="sandboxes" />}
+          to="/sandboxes"
+          newBadge
+        />
 
         <NavigationItem
           collapsed={collapsed}

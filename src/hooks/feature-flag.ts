@@ -36,12 +36,6 @@ export function useFeatureFlag(flag: string) {
   return useFeatureFlags().isEnabled(flag);
 }
 
-export async function isFeatureFlagEnabled(flag: string) {
-  await new Promise((resolve) => posthog.onFeatureFlags(resolve));
-
-  return Boolean(new FeatureFlags().isEnabled(flag));
-}
-
 class FeatureFlags {
   private static storageEmitter = new EventTarget();
   private static storageKey = 'feature-flags';
