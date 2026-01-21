@@ -14,10 +14,10 @@
   border-radius: 6px;
 }
 
-.woswidgets-dialog-overlay {
-  --color-overlay: transparent;
-}
-
 .woswidgets-button {
   cursor: pointer;
+}
+
+.rt-BaseDialogOverlay {
+  z-index: 40;
 }
