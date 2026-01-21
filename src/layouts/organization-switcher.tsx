@@ -5,7 +5,7 @@ import { useCombobox } from 'downshift';
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { apiQuery, mapOrganization, useOrganization, useSwitchOrganization, useUser } from 'src/api';
+import { apiQuery, useOrganization, useOrganizationsList, useSwitchOrganization, useUser } from 'src/api';
 import { SvgComponent } from 'src/application/types';
 import { LinkMenuItem } from 'src/components/dropdown-menu';
 import { OrganizationAvatar } from 'src/components/organization-avatar';
@@ -28,7 +28,7 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
   const currentOrganization = useOrganization();
 
   const [inputValue, setInputValue] = useState('');
-  const organizations = useOrganizationList(inputValue);
+  const organizations = useOrganizationsList({ search: inputValue, limit });
   const count = useOrganizationCount();
 
   const combobox = useCombobox({
@@ -156,23 +156,6 @@ function useOrganizationCount() {
   });
 
   return data ?? 0;
-}
-
-function useOrganizationList(search: string) {
-  const { data } = useQuery({
-    ...apiQuery('get /v1/account/organizations', {
-      query: {
-        search,
-        limit: String(limit),
-        statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
-      },
-    }),
-    refetchInterval: false,
-    placeholderData: keepPreviousData,
-    select: ({ organizations }) => organizations!.map(mapOrganization),
-  });
-
-  return data ?? [];
 }
 
 type OrganizationItemProps = {

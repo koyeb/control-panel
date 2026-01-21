@@ -2,7 +2,7 @@ import { Button } from '@koyeb/design-system';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 
-import { apiMutation, apiQuery, useOrganization } from 'src/api';
+import { apiMutation, apiQuery, useOrganization, useOrganizationsList, useSwitchOrganization } from 'src/api';
 import { QueryError } from 'src/components/query-error';
 import { SectionHeader } from 'src/components/section-header';
 import { createTranslate } from 'src/intl/translate';
@@ -14,6 +14,8 @@ export function DeleteOrganization() {
   const { signOut } = useAuth();
 
   const organization = useOrganization();
+  const organizations = useOrganizationsList();
+  const switchOrganization = useSwitchOrganization();
 
   const unpaidInvoicesQuery = useQuery({
     ...apiQuery('get /v1/billing/has_unpaid_invoices', {}),
@@ -25,9 +27,14 @@ export function DeleteOrganization() {
     ...apiMutation('delete /v1/organizations/{id}', (organization: Organization) => ({
       path: { id: organization.id },
     })),
-    onSuccess() {
-      window.sessionStorage.removeItem('workos_organization_id');
-      signOut();
+    async onSuccess() {
+      const otherOrganization = organizations.find((org) => org.id !== organization?.id);
+
+      if (otherOrganization) {
+        await switchOrganization.mutateAsync(otherOrganization);
+      } else {
+        signOut();
+      }
     },
   });
 

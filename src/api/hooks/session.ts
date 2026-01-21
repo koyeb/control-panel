@@ -1,4 +1,10 @@
-import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 import { unstable_useWidgetsInvalidator as useWidgetsInvalidator } from '@workos-inc/widgets/utils';
 
@@ -52,6 +58,22 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
       await onSuccess?.();
     },
   });
+}
+
+export function useOrganizationsList({ search, limit }: { search?: string; limit?: number } = {}) {
+  const { data } = useQuery({
+    ...apiQuery('get /v1/account/organizations', {
+      query: {
+        search,
+        limit: limit ? String(limit) : undefined,
+        statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
+      },
+    }),
+    placeholderData: keepPreviousData,
+    select: ({ organizations }) => organizations!.map(mapOrganization),
+  });
+
+  return data ?? [];
 }
 
 export function useOrganizationSummaryQuery() {
