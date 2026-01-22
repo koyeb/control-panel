@@ -8,15 +8,6 @@ import { apiQuery } from '../query';
 
 import { useOrganization, useOrganizationQuery } from './session';
 
-export function useManageBillingQuery() {
-  const organization = useOrganization();
-
-  return useQuery({
-    enabled: organization?.latestSubscriptionId !== undefined && !organization.trial,
-    ...apiQuery('get /v1/billing/manage', {}),
-  });
-}
-
 export function useSubscriptionQuery(subscriptionId: string | undefined) {
   const organizationQuery = useOrganizationQuery();
 

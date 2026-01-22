@@ -1,20 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@koyeb/design-system';
+import { Button, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import {
-  addressSchema,
-  apiMutation,
-  useInvalidateApiQuery,
-  useManageBillingQuery,
-  useOrganization,
-} from 'src/api';
+import { addressSchema, apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { AddressField } from 'src/components/address-field/address-field';
 import { ControlledInput } from 'src/components/forms';
-import { ExternalLink } from 'src/components/link';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { IconSquareArrowOutUpRight } from 'src/icons';
@@ -23,10 +16,16 @@ import { Translate, createTranslate } from 'src/intl/translate';
 const T = createTranslate('pages.organizationSettings.billing.billingInformation');
 
 export function BillingInformation() {
+  const organization = useOrganization();
+
+  if (!organization?.currentSubscriptionId) {
+    return null;
+  }
+
   return (
     <section className="col gap-6">
       <SectionHeader title={<T id="title" />} description={<T id="description" />} />
-      <BillingInformationForm />
+      <BillingInformationForm key={organization.id} />
     </section>
   );
 }
@@ -122,17 +121,24 @@ function BillingInformationForm() {
 }
 
 function BillingPortalInfo() {
-  const query = useManageBillingQuery();
+  const mutation = useMutation({
+    ...apiMutation('get /v1/billing/manage', {}),
+    onSuccess({ url }) {
+      window.open(url, '_blank');
+    },
+  });
+
+  const Icon = mutation.isPending ? Spinner : IconSquareArrowOutUpRight;
 
   return (
     <T
       id="billingPortal"
       values={{
         link: (children) => (
-          <ExternalLink openInNewTab href={query.data?.url} className="text-link">
+          <button type="button" onClick={() => mutation.mutate()} className="text-link">
             {children}
-            <IconSquareArrowOutUpRight className="ms-1 inline-block size-em" />
-          </ExternalLink>
+            <Icon className="ms-1 inline-block size-em" />
+          </button>
         ),
       }}
     />

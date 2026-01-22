@@ -1,6 +1,7 @@
 import { Alert, Spinner } from '@koyeb/design-system';
+import { useMutation } from '@tanstack/react-query';
 
-import { useManageBillingQuery, useOrganization, useSubscriptionQuery } from 'src/api';
+import { apiMutation, useOrganization, useSubscriptionQuery } from 'src/api';
 import { useIdenfyLink } from 'src/application/idenfy';
 import { ExternalLink } from 'src/components/link';
 import { createTranslate } from 'src/intl/translate';
@@ -83,19 +84,16 @@ function PendingUpdateAlert() {
 }
 
 function StripePortal({ children }: { children: React.ReactNode }) {
-  const manageBillingQuery = useManageBillingQuery();
-
-  if (!manageBillingQuery.isSuccess) {
-    return children;
-  }
+  const mutation = useMutation({
+    ...apiMutation('get /v1/billing/manage', {}),
+    onSuccess({ url }) {
+      window.open(url, '_blank');
+    },
+  });
 
   return (
-    <ExternalLink
-      openInNewTab
-      href={manageBillingQuery.data.url}
-      className="rounded-sm font-semibold focusable"
-    >
+    <button type="button" onClick={() => mutation.mutate()} className="rounded-sm font-semibold focusable">
       {children}
-    </ExternalLink>
+    </button>
   );
 }
