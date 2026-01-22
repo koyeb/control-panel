@@ -2,7 +2,7 @@ import { InputEnd, InputStart, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 
-import { apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
+import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
 import { AddressField } from 'src/components/address-field/address-field';
@@ -33,9 +33,7 @@ export function PaymentMethod() {
 function Form() {
   const t = T.useTranslate();
 
-  const user = useUser();
   const organization = useOrganization();
-
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<{ address: Address; billingAlertAmount: number }>({
@@ -61,8 +59,6 @@ function Form() {
         postal_code: address.postalCode,
         state: address.state,
         country: address.country,
-        billing_name: organization?.billing.name === undefined ? user?.name : undefined,
-        billing_email: organization?.billing.email === undefined ? user?.email : undefined,
       },
     })),
     onError: useFormErrorHandler(form, (error) => ({

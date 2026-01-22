@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { Controller, FormState, useForm } from 'react-hook-form';
 
-import { apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
+import { apiMutation, useInvalidateApiQuery, useOrganization } from 'src/api';
 import { withStopPropagation } from 'src/application/dom-events';
 import { notify } from 'src/application/notify';
 import { StripeProvider } from 'src/application/stripe';
@@ -56,9 +56,7 @@ type PaymentFormProps = {
 export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormProps) {
   const t = T.useTranslate();
 
-  const user = useUser();
   const organization = useOrganization();
-
   const invalidate = useInvalidateApiQuery();
 
   const form = useForm<{ billingAlertAmount: number; address: Address }>({
@@ -84,8 +82,6 @@ export function PaymentForm({ plan, onPlanChanged, renderFooter }: PaymentFormPr
         postal_code: address.postalCode,
         state: address.state,
         country: address.country,
-        billing_name: organization?.billing.name === undefined ? user?.name : undefined,
-        billing_email: organization?.billing.email === undefined ? user?.email : undefined,
       },
     })),
     onError: useFormErrorHandler(form, (error) => ({
