@@ -57,7 +57,7 @@
     "highlight.js": "^11.11.1",
     "immer": "^11.1.3",
     "jwt-decode": "^4.0.0",
-    "lodash-es": "^4.17.22",
+    "lodash-es": "^4.17.23",
     "lucide-react": "^0.562.0",
     "motion": "^12.26.2",
     "posthog-js": "^1.325.0",
