@@ -60,7 +60,9 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
       return 5_000;
     },
     select(results): AppList {
-      const apps = results.apps.apps!.map(mapApp);
+      const apps = results.apps
+        .apps!.map(mapApp)
+        .filter((app) => results.services.services!.find(hasProperty('app_id', app.id)));
 
       const services = new Map(
         apps.map((app) => [
