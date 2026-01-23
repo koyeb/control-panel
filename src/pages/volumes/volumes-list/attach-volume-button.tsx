@@ -27,7 +27,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const navigate = useNavigate();
 
   const [search, setSearch] = useState('');
-  const searchQuery = useSearchServicesQuery(search);
+  const searchQuery = useSearchServicesQuery(search, volume.region);
 
   const combobox = useCombobox({
     items: searchQuery.data?.services ?? [],
@@ -126,11 +126,11 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   );
 }
 
-function useSearchServicesQuery(search: string) {
+function useSearchServicesQuery(search: string, volumeRegion: string) {
   const api = useApi();
 
   return useQuery({
-    queryKey: ['searchServices', { api, search }],
+    queryKey: ['searchServices', { api, search, volumeRegion }],
     refetchInterval: false,
     placeholderData: keepPreviousData,
     queryFn: async ({ signal }) => {
@@ -145,11 +145,13 @@ function useSearchServicesQuery(search: string) {
       const apps = new Map(matchingApps.map((app) => [app.id, app]));
 
       const appsServices = await getAppsServices(api, matchingApps);
-      const services = unique([...matchingServices, ...appsServices], getId).slice(0, limit);
+      const allServices = unique([...matchingServices, ...appsServices], getId);
 
-      const missingAppIds = matchingServices
-        .map((service) => service.appId)
-        .filter((appId) => !apps.has(appId));
+      // Filter services by region
+      const filteredServices = await filterServicesByRegion(api, allServices, volumeRegion, signal);
+      const services = filteredServices.slice(0, limit);
+
+      const missingAppIds = services.map((service) => service.appId).filter((appId) => !apps.has(appId));
 
       for (const app of await getApps(api, missingAppIds)) {
         apps.set(app.id, app);
@@ -198,6 +200,28 @@ async function getAppsServices(api: ApiFn, apps: App[]): Promise<Service[]> {
   );
 
   return services.flat().filter((service) => service.type !== 'database');
+}
+
+async function filterServicesByRegion(
+  api: ApiFn,
+  services: Service[],
+  volumeRegion: string,
+  signal: AbortSignal,
+): Promise<Service[]> {
+  const serviceDeployments = await Promise.all(
+    services.map((service) =>
+      api('get /v1/deployments/{id}', { path: { id: service.latestDeploymentId } }, { signal }).then(
+        ({ deployment }) => ({
+          service,
+          regions: deployment?.definition?.regions ?? [],
+        }),
+      ),
+    ),
+  );
+
+  return serviceDeployments
+    .filter(({ regions }) => regions.includes(volumeRegion))
+    .map(({ service }) => service);
 }
 
 function ServiceItem({ app, service }: { app?: App; service: Service }) {
