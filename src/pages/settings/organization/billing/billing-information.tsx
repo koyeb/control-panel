@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@koyeb/design-system';
+import { Button, Spinner } from '@koyeb/design-system';
 import { useMutation } from '@tanstack/react-query';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -7,9 +7,10 @@ import { z } from 'zod';
 import { addressSchema, apiMutation, useInvalidateApiQuery, useOrganization, useUser } from 'src/api';
 import { notify } from 'src/application/notify';
 import { AddressField } from 'src/components/address-field/address-field';
-import { ControlledCheckbox, ControlledInput } from 'src/components/forms';
+import { ControlledInput, Input } from 'src/components/forms';
 import { SectionHeader } from 'src/components/section-header';
 import { FormValues, handleSubmit, useFormErrorHandler } from 'src/hooks/form';
+import { IconSquareArrowOutUpRight } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 
 const T = createTranslate('pages.organizationSettings.billing.billingInformation');
@@ -33,8 +34,6 @@ const schema = z.object({
   name: z.string().min(1),
   email: z.string().min(1),
   address: addressSchema,
-  company: z.boolean(),
-  vatNumber: z.string(),
 });
 
 function BillingInformationForm() {
@@ -47,8 +46,6 @@ function BillingInformationForm() {
       name: organization?.billing.name ?? user?.name ?? '',
       email: organization?.billing.email ?? user?.email ?? '',
       address: organization?.billing.address ?? {},
-      company: organization?.billing.company ?? false,
-      vatNumber: organization?.billing.vatNumber ?? '',
     },
     resolver: zodResolver(schema),
   });
@@ -56,25 +53,20 @@ function BillingInformationForm() {
   const invalidate = useInvalidateApiQuery();
 
   const mutation = useMutation({
-    ...apiMutation(
-      'patch /v1/organizations/{id}',
-      ({ name, email, address, company, vatNumber }: FormValues<typeof form>) => ({
-        path: { id: organization!.id },
-        query: {},
-        body: {
-          billing_name: name,
-          billing_email: email,
-          address1: address.line1,
-          address2: address.line2,
-          city: address.city,
-          postal_code: address.postalCode,
-          state: address.state,
-          country: address.country,
-          company,
-          vat_number: vatNumber,
-        },
-      }),
-    ),
+    ...apiMutation('patch /v1/organizations/{id}', ({ name, email, address }: FormValues<typeof form>) => ({
+      path: { id: organization!.id },
+      query: {},
+      body: {
+        billing_name: name,
+        billing_email: email,
+        address1: address.line1,
+        address2: address.line2,
+        city: address.city,
+        postal_code: address.postalCode,
+        state: address.state,
+        country: address.country,
+      },
+    })),
     async onSuccess(_, values) {
       await invalidate('get /v1/account/organization');
       form.reset(values);
@@ -105,11 +97,12 @@ function BillingInformationForm() {
         )}
       />
 
-      <ControlledCheckbox control={form.control} name="company" label={<T id="companyLabel" />} />
-
-      {form.watch('company') && (
-        <ControlledInput control={form.control} name="vatNumber" label={<T id="vatNumberLabel" />} />
-      )}
+      <Input
+        value={organization?.billing.vatNumber || ''}
+        label={<T id="vatNumberLabel" />}
+        helperText={<VatNumberHelperText />}
+        disabled
+      />
 
       <footer className="row gap-2">
         <Button type="reset" color="gray" disabled={!form.formState.isDirty} onClick={() => form.reset()}>
@@ -121,5 +114,30 @@ function BillingInformationForm() {
         </Button>
       </footer>
     </form>
+  );
+}
+
+function VatNumberHelperText() {
+  const mutation = useMutation({
+    ...apiMutation('get /v1/billing/manage', {}),
+    onSuccess({ url }) {
+      window.open(url, '_blank');
+    },
+  });
+
+  const Icon = mutation.isPending ? Spinner : IconSquareArrowOutUpRight;
+
+  return (
+    <T
+      id="vatNumberHelperText"
+      values={{
+        link: (children) => (
+          <button type="button" onClick={() => mutation.mutate()} className="text-link">
+            {children}
+            <Icon className="ms-1 inline-block size-em" />
+          </button>
+        ),
+      }}
+    />
   );
 }

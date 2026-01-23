@@ -2825,6 +2825,7 @@
           "addressLabel": "Address",
           "companyLabel": "For business",
           "vatNumberLabel": "VAT Number",
+          "vatNumberHelperText": "This information can be changed from <link>the billing portal</link>",
           "successNotification": "Your organization's billing information were updated"
         },
         "billingAlerts": {
