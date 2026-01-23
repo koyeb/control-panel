@@ -4,23 +4,17 @@ import './side-effects';
 import './styles.css';
 
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { LoginRequiredError } from '@workos-inc/authkit-react';
 import qs from 'query-string';
-import { StrictMode, useEffect } from 'react';
+import { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import { ApiError } from './api';
 import { AuthKitProvider } from './application/authkit';
 import { notify } from './application/notify';
-import { PostHogProvider } from './application/posthog';
 import { reportError } from './application/sentry';
 import { configureZod } from './application/validation';
-import { ConfirmationDialog } from './components/confirmation-dialog';
-import { closeDialog } from './components/dialog';
-import { NotificationContainer } from './components/notification';
 import { SeonAdapter } from './hooks/seon';
 import { IntlProvider, createTranslateFn } from './intl/translation-provider';
 import { ServiceFormSection } from './modules/service-form';
@@ -95,6 +89,10 @@ function throwOnError(error: Error) {
 }
 
 function retry(failureCount: number, error: Error) {
+  if (error instanceof LoginRequiredError) {
+    return failureCount === 0;
+  }
+
   if (ApiError.is(error) && Math.floor(error.status / 100) === 4) {
     return false;
   }
@@ -145,21 +143,6 @@ const router = createRouter({
       <IntlProvider>
         <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </IntlProvider>
-    );
-  },
-  InnerWrap({ children }) {
-    useEffect(() => {
-      return router.subscribe('onBeforeNavigate', () => closeDialog(true));
-    }, []);
-
-    return (
-      <PostHogProvider>
-        {children}
-        <NotificationContainer />
-        <ConfirmationDialog />
-        <TanStackRouterDevtools />
-        <ReactQueryDevtools />
-      </PostHogProvider>
     );
   },
 });
