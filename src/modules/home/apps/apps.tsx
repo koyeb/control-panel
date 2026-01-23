@@ -16,7 +16,6 @@ export function Apps({ apps }: { apps: AppList }) {
             services={services ?? []}
             latestDeployments={apps.latestDeployments}
             activeDeployments={apps.activeDeployments}
-            activeDeploymentsReplicas={apps.activeDeploymentsReplicas}
           />
         );
       })}

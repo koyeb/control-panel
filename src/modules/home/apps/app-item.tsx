@@ -1,6 +1,6 @@
 import { InfoTooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
-import { App, Deployment, Replica, Service } from 'src/model';
+import { App, Deployment, Service } from 'src/model';
 
 import { AppActions } from './components/app-actions';
 import { ServiceItem } from './service-item';
@@ -12,16 +12,9 @@ type AppItemProps = {
   services: Service[];
   latestDeployments: Map<string, Deployment>;
   activeDeployments: Map<string, Deployment>;
-  activeDeploymentsReplicas: Map<string, Replica[]>;
 };
 
-export function AppItem({
-  app,
-  services,
-  latestDeployments,
-  activeDeployments,
-  activeDeploymentsReplicas,
-}: AppItemProps) {
+export function AppItem({ app, services, latestDeployments, activeDeployments }: AppItemProps) {
   return (
     <div className="col gap-2">
       <AppHeader app={app} />
@@ -34,7 +27,6 @@ export function AppItem({
             service={service}
             latestDeployment={latestDeployments.get(service.id)!}
             activeDeployment={activeDeployments.get(service.id)}
-            activeDeploymentReplicas={activeDeploymentsReplicas.get(service.id)}
           />
         ))}
 

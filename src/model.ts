@@ -577,7 +577,6 @@ export type AppList = {
   services: Map<string, Service[]>;
   latestDeployments: Map<string, Deployment>;
   activeDeployments: Map<string, Deployment>;
-  activeDeploymentsReplicas: Map<string, Replica[]>;
 };
 
 export type AppStatus =

@@ -2,7 +2,7 @@ import { Collapse, TooltipTitle } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { isComputeDeployment, isDatabaseDeployment } from 'src/api';
+import { isComputeDeployment, isDatabaseDeployment, useDeploymentScaling } from 'src/api';
 import { getServiceLink, getServiceUrls } from 'src/application/service-functions';
 import { CopyIconButton } from 'src/components/copy-icon-button';
 import { ExternalLink, Link } from 'src/components/link';
@@ -22,7 +22,7 @@ import {
 } from 'src/icons';
 import { FormattedDistanceToNow } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
-import { App, ComputeDeployment, DatabaseDeployment, Deployment, Replica, Service } from 'src/model';
+import { App, ComputeDeployment, DatabaseDeployment, Deployment, Service } from 'src/model';
 import {
   InstanceMetadataValue,
   RegionsMetadataValue,
@@ -39,7 +39,6 @@ type ServiceItemProps = {
   service: Service;
   activeDeployment?: Deployment;
   latestDeployment: Deployment;
-  activeDeploymentReplicas?: Replica[];
 };
 
 export function ServiceItem(props: ServiceItemProps) {
@@ -128,17 +127,11 @@ function ServiceUrl({ app, service, activeDeployment }: ServiceItemProps) {
   );
 }
 
-function DeploymentInfo({ latestDeployment, activeDeployment, activeDeploymentReplicas }: ServiceItemProps) {
+function DeploymentInfo({ latestDeployment, activeDeployment }: ServiceItemProps) {
   if (isComputeDeployment(latestDeployment)) {
     assert(activeDeployment === undefined || isComputeDeployment(activeDeployment));
 
-    return (
-      <ComputeDeploymentInfo
-        latestDeployment={latestDeployment}
-        activeDeployment={activeDeployment}
-        activeDeploymentReplicas={activeDeploymentReplicas}
-      />
-    );
+    return <ComputeDeploymentInfo latestDeployment={latestDeployment} activeDeployment={activeDeployment} />;
   }
 
   if (isDatabaseDeployment(latestDeployment)) {
@@ -151,12 +144,12 @@ function DeploymentInfo({ latestDeployment, activeDeployment, activeDeploymentRe
 function ComputeDeploymentInfo({
   latestDeployment,
   activeDeployment,
-  activeDeploymentReplicas: replicas,
 }: {
   latestDeployment: ComputeDeployment;
   activeDeployment?: ComputeDeployment;
-  activeDeploymentReplicas?: Replica[];
 }) {
+  const replicas = useDeploymentScaling(activeDeployment?.id);
+
   const definition = activeDeployment?.definition ?? latestDeployment.definition;
   const sleeping = activeDeployment?.status === 'SLEEPING';
 

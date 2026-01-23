@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useAppsFull } from 'src/api';
@@ -41,7 +42,13 @@ export function AppsServicesList() {
     statuses,
   });
 
-  if (!filtersForm.formState.isDirty && query.data?.apps.length === 0) {
+  const showServiceCreation = useRef<boolean>(null);
+
+  if (query.isSuccess && showServiceCreation.current === null) {
+    showServiceCreation.current = query.data.apps.length === 0;
+  }
+
+  if (showServiceCreation.current) {
     return <ServiceCreation from="/services" />;
   }
 
