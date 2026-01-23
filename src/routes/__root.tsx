@@ -17,4 +17,9 @@ type RouterContext = {
 export const Route = createRootRouteWithContext<RouterContext>()({
   errorComponent: ErrorComponent,
   notFoundComponent: NotFoundComponent,
+
+  async beforeLoad() {
+    // wait for authkit to be initialized
+    await Promise.resolve();
+  },
 });

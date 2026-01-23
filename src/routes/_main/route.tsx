@@ -1,14 +1,10 @@
 import { QueryClient } from '@tanstack/react-query';
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
-import { LoginRequiredError } from '@workos-inc/authkit-react';
 import z from 'zod';
 
 import {
   ApiError,
-  ApiFn,
-  apiQuery,
   createEnsureApiQueryData,
-  getApi,
   mapCatalogDatacenter,
   mapOrganization,
   useOrganizationQuery,
@@ -31,14 +27,17 @@ export const Route = createFileRoute('/_main')({
     settings: z.literal('true').optional(),
   }),
 
-  async beforeLoad({ search, location, context: { authKit } }) {
-    const api = getApi(authKit.getAccessToken);
-
-    await checkAuthentication(authKit, location.pathname + location.searchStr);
+  async beforeLoad({ search, context: { authKit, queryClient } }) {
+    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
     if (search['organization-id']) {
-      await switchOrganization(api, search['organization-id'], authKit);
+      await switchOrganization(authKit, search['organization-id']);
     }
+
+    await Promise.all([
+      ensureApiQueryData('get /v1/account/profile', {}),
+      ensureApiQueryData('get /v1/account/organization', {}).catch(() => undefined),
+    ]);
   },
 
   async loader({ context: { queryClient, seon } }) {
@@ -46,11 +45,9 @@ export const Route = createFileRoute('/_main')({
 
     void preloadDatacentersLatencies(queryClient);
 
-    await queryClient.fetchQuery(
-      apiQuery('get /v1/account/profile', {
-        header: { 'seon-fp': await seon.getFingerprint() },
-      }),
-    );
+    void ensureApiQueryData('get /v1/account/profile', {
+      header: { 'seon-fp': await seon.getFingerprint() },
+    });
 
     const organization = await ensureApiQueryData('get /v1/account/organization', {}).then(
       (result) => mapOrganization(result.organization!),
@@ -87,26 +84,8 @@ export const Route = createFileRoute('/_main')({
   },
 });
 
-async function checkAuthentication(authKit: AuthKit | undefined, currentUrl: string) {
-  try {
-    await authKit?.getAccessToken();
-  } catch (error) {
-    if (error instanceof LoginRequiredError) {
-      await authKit?.signIn({
-        state: { next: currentUrl !== '/' ? currentUrl : undefined },
-      });
-    } else {
-      throw error;
-    }
-  }
-}
-
-async function switchOrganization(api: ApiFn, organizationId: string, authKit: AuthKit) {
-  if (organizationId.startsWith('org_')) {
-    await authKit.switchToOrganization({ organizationId });
-  } else {
-    await api('post /v1/organizations/{id}/switch', { path: { id: organizationId }, header: {} });
-  }
+async function switchOrganization(authKit: AuthKit, externalId: string) {
+  await authKit.switchToOrganization({ organizationId: externalId });
 
   throw redirect({
     search: (prev) => ({ ...prev, 'organization-id': undefined }),
