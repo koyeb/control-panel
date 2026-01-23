@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useCombobox } from 'downshift';
 import { useState } from 'react';
 
-import { ApiFn, mapApp, mapService, useApi } from 'src/api';
+import { ApiFn, apiQuery, mapApp, mapService, useApi } from 'src/api';
 import { Input } from 'src/components/forms';
 import { InputEndSpinner } from 'src/components/forms/helpers/input-end-spinner';
 import { NoItems } from 'src/components/forms/helpers/no-items';
@@ -14,20 +14,25 @@ import { useNavigate } from 'src/hooks/router';
 import { IconChevronDown, IconSearch } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, Service, Volume } from 'src/model';
-import { unique } from 'src/utils/arrays';
-import { getId } from 'src/utils/object';
+import { hasProperty } from 'src/utils/object';
 import { wait } from 'src/utils/promises';
 
 const T = createTranslate('pages.volumes.list.attach');
 
-const limit = 3;
+const limit = 10;
 
 export function AttachVolumeButton({ volume }: { volume: Volume }) {
   const t = T.useTranslate();
   const navigate = useNavigate();
 
   const [search, setSearch] = useState('');
-  const searchQuery = useSearchServicesQuery(search);
+  const searchQuery = useSearchServicesQuery(volume.region, search);
+
+  const servicesCountQuery = useQuery({
+    ...apiQuery('get /v1/services', { query: { limit: '1', regions: [volume.region] } }),
+    refetchInterval: false,
+    select: ({ count }) => count,
+  });
 
   const combobox = useCombobox({
     items: searchQuery.data?.services ?? [],
@@ -69,7 +74,8 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
     flip: true,
   });
 
-  const { apps, services, total } = searchQuery.data ?? {};
+  const { apps, services } = searchQuery.data ?? {};
+  const servicesCount = servicesCountQuery.data;
 
   return (
     <>
@@ -102,9 +108,8 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
           }
           end={<InputEndSpinner show={searchQuery.isPending} />}
           placeholder={t('placeholder')}
-          className={clsx({ hidden: total !== undefined && total <= limit })}
+          className={clsx({ hidden: servicesCount === undefined || servicesCount <= limit })}
           root={{ className: 'rounded-b-none border-x-0 border-t-0 outline-none' }}
-          inputClassName={clsx('outline-none')}
         />
 
         {services?.length === 0 && <NoItems message={<T id="noServices" />} />}
@@ -117,7 +122,7 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
               highlighted={index === combobox.highlightedIndex}
               className="py-1.5"
             >
-              <ServiceItem app={apps?.[service.appId]} service={service} />
+              <ServiceItem app={apps?.find(hasProperty('id', service.appId))} service={service} />
             </MenuItem>
           ))}
         </Menu>
@@ -126,78 +131,56 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
   );
 }
 
-function useSearchServicesQuery(search: string) {
+function useSearchServicesQuery(region: string, search: string) {
   const api = useApi();
 
   return useQuery({
-    queryKey: ['searchServices', { api, search }],
+    queryKey: ['searchServices', { api, region, search }],
     refetchInterval: false,
     placeholderData: keepPreviousData,
     queryFn: async ({ signal }) => {
       await wait(200, signal);
 
-      const [total, matchingApps, matchingServices] = await Promise.all([
-        getTotalServices(api, signal),
-        searchApps(api, search, signal),
-        searchServices(api, search, signal),
+      const [apps, services] = await Promise.all([
+        listApps(api, signal),
+        searchServices(api, region, search, signal),
       ]);
 
-      const apps = new Map(matchingApps.map((app) => [app.id, app]));
-
-      const appsServices = await getAppsServices(api, matchingApps);
-      const services = unique([...matchingServices, ...appsServices], getId).slice(0, limit);
-
-      const missingAppIds = matchingServices
-        .map((service) => service.appId)
-        .filter((appId) => !apps.has(appId));
-
-      for (const app of await getApps(api, missingAppIds)) {
-        apps.set(app.id, app);
-      }
+      await Promise.all(
+        services.map(async (service) => {
+          if (!apps.find(hasProperty('id', service.appId))) {
+            apps.push(await getApp(api, service.appId, signal));
+          }
+        }),
+      );
 
       return {
-        total,
-        apps: Object.fromEntries(apps.entries()),
+        apps,
         services,
       };
     },
   });
 }
 
-async function getTotalServices(api: ApiFn, signal: AbortSignal): Promise<number> {
-  return api('get /v1/services', { query: { limit: '1' } }, { signal }).then(({ count }) => count!);
+async function listApps(api: ApiFn, signal: AbortSignal): Promise<App[]> {
+  return api('get /v1/apps', { query: { limit: '100' } }, { signal }).then(({ apps }) => apps!.map(mapApp));
 }
 
-async function searchApps(api: ApiFn, search: string, signal: AbortSignal): Promise<App[]> {
-  return api('get /v1/apps', { query: { name: search, limit: String(limit) } }, { signal }).then(({ apps }) =>
-    apps!.map(mapApp),
-  );
+async function getApp(api: ApiFn, appId: string, signal: AbortSignal): Promise<App> {
+  return api('get /v1/apps/{id}', { path: { id: appId } }, { signal }).then(({ app }) => mapApp(app!));
 }
 
-async function searchServices(api: ApiFn, search: string, signal: AbortSignal): Promise<Service[]> {
+async function searchServices(
+  api: ApiFn,
+  region: string,
+  search: string,
+  signal: AbortSignal,
+): Promise<Service[]> {
   return api(
     'get /v1/services',
-    { query: { name: search, limit: String(limit), types: ['WEB', 'WORKER'] } },
+    { query: { name: search, regions: [region], limit: String(limit), types: ['WEB', 'WORKER'] } },
     { signal },
   ).then(({ services }) => services!.map(mapService));
-}
-
-async function getApps(api: ApiFn, appIds: string[]): Promise<App[]> {
-  return Promise.all(
-    appIds.map((appId) => api('get /v1/apps/{id}', { path: { id: appId } }).then(({ app }) => mapApp(app!))),
-  );
-}
-
-async function getAppsServices(api: ApiFn, apps: App[]): Promise<Service[]> {
-  const services = await Promise.all(
-    apps.map((app) =>
-      api('get /v1/services', { query: { app_id: app.id } }).then(({ services }) =>
-        services!.map(mapService),
-      ),
-    ),
-  );
-
-  return services.flat().filter((service) => service.type !== 'database');
 }
 
 function ServiceItem({ app, service }: { app?: App; service: Service }) {

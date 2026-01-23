@@ -2962,7 +2962,8 @@ export interface components {
             type?: components["schemas"]["DeploymentStrategyType"];
         };
         /**
-         * @description - DEPLOYMENT_STRATEGY_TYPE_INVALID: Invalid / Zero value.
+         * @description - DEPLOYMENT_STRATEGY_TYPE_INVALID: DEPRECATED: Use DEPLOYMENT_STRATEGY_TYPE_DEFAULT instead.
+         *      - DEPLOYMENT_STRATEGY_TYPE_DEFAULT: Default/unspecified strategy (resolves to platform default, currently ROLLING).
          *      - DEPLOYMENT_STRATEGY_TYPE_CANARY: Use canary strategy.
          *      - DEPLOYMENT_STRATEGY_TYPE_ROLLING: Use rolling strategy.
          *      - DEPLOYMENT_STRATEGY_TYPE_BLUE_GREEN: Use blue green strategy.
@@ -2970,7 +2971,7 @@ export interface components {
          * @default DEPLOYMENT_STRATEGY_TYPE_INVALID
          * @enum {string}
          */
-        DeploymentStrategyType: "DEPLOYMENT_STRATEGY_TYPE_INVALID" | "DEPLOYMENT_STRATEGY_TYPE_CANARY" | "DEPLOYMENT_STRATEGY_TYPE_ROLLING" | "DEPLOYMENT_STRATEGY_TYPE_BLUE_GREEN" | "DEPLOYMENT_STRATEGY_TYPE_IMMEDIATE";
+        DeploymentStrategyType: "DEPLOYMENT_STRATEGY_TYPE_INVALID" | "DEPLOYMENT_STRATEGY_TYPE_DEFAULT" | "DEPLOYMENT_STRATEGY_TYPE_CANARY" | "DEPLOYMENT_STRATEGY_TYPE_ROLLING" | "DEPLOYMENT_STRATEGY_TYPE_BLUE_GREEN" | "DEPLOYMENT_STRATEGY_TYPE_IMMEDIATE";
         DeploymentVolume: {
             /** the id of the volume */
             id?: string;
@@ -4455,10 +4456,11 @@ export interface components {
          *      - PERSISTENT_VOLUME_STATUS_DETACHED: the volume is free to use
          *      - PERSISTENT_VOLUME_STATUS_DELETING: the volume will be deleted
          *      - PERSISTENT_VOLUME_STATUS_DELETED: the volume was deleted
+         *      - PERSISTENT_VOLUME_STATUS_ARCHIVING: the volume is being archived (snapshot being created and migrated to remote storage)
          * @default PERSISTENT_VOLUME_STATUS_INVALID
          * @enum {string}
          */
-        PersistentVolumeStatus: "PERSISTENT_VOLUME_STATUS_INVALID" | "PERSISTENT_VOLUME_STATUS_ATTACHED" | "PERSISTENT_VOLUME_STATUS_DETACHED" | "PERSISTENT_VOLUME_STATUS_DELETING" | "PERSISTENT_VOLUME_STATUS_DELETED";
+        PersistentVolumeStatus: "PERSISTENT_VOLUME_STATUS_INVALID" | "PERSISTENT_VOLUME_STATUS_ATTACHED" | "PERSISTENT_VOLUME_STATUS_DETACHED" | "PERSISTENT_VOLUME_STATUS_DELETING" | "PERSISTENT_VOLUME_STATUS_DELETED" | "PERSISTENT_VOLUME_STATUS_ARCHIVING";
         /**
          * @default hobby
          * @enum {string}
@@ -4881,6 +4883,7 @@ export interface components {
             created_at?: string;
             id?: string;
             latest_deployment_id?: string;
+            life_cycle?: components["schemas"]["ServiceLifeCycle"];
             messages?: string[];
             name?: string;
             organization_id?: string;
@@ -15979,6 +15982,8 @@ export interface operations {
                 name?: string;
                 /** @description (Optional) The offset in the list of item to return */
                 offset?: string;
+                /** @description (Optional) Filter on regions */
+                regions?: string[];
                 /** @description (Optional) Filter on service statuses */
                 statuses?: ("STARTING" | "HEALTHY" | "DEGRADED" | "UNHEALTHY" | "DELETING" | "DELETED" | "PAUSING" | "PAUSED" | "RESUMING")[];
                 /** @description (Optional) Filter on service types */
@@ -16332,6 +16337,7 @@ export interface operations {
             query?: {
                 /** @description If set, run validation and check that the service exists */
                 dry_run?: boolean;
+                update_mask?: string;
             };
             header?: never;
             path: {
@@ -16511,6 +16517,7 @@ export interface operations {
             query?: {
                 /** @description If set, run validation and check that the service exists */
                 dry_run?: boolean;
+                update_mask?: string;
             };
             header?: never;
             path: {
