@@ -32,6 +32,7 @@ export function createFactory<T>(getDefaults: () => T): Factory<T> {
 
 const organization = createFactory<Organization>(() => ({
   id: createId(),
+  externalId: '',
   name: '',
   status: 'ACTIVE',
   statusMessage: 'VALID',

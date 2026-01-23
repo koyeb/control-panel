@@ -31,6 +31,10 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
   const organizations = useOrganizationsList({ search: inputValue, limit });
   const count = useOrganizationCount();
 
+  const switchOrganizationMutation = useSwitchOrganization({
+    onSuccess: () => combobox.closeMenu(),
+  });
+
   const combobox = useCombobox({
     items: organizations,
 
@@ -45,7 +49,7 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
     selectedItem: null,
     onSelectedItemChange({ selectedItem: organization }) {
       if (organization) {
-        switchOrganizationMutation.mutate(organization);
+        switchOrganizationMutation.mutate(organization.externalId);
       }
     },
 
@@ -71,16 +75,15 @@ export function OrganizationSwitcher({ showCreateOrganization, dark, className }
     offset: 8,
   });
 
-  const switchOrganizationMutation = useSwitchOrganization({
-    onSuccess: () => combobox.closeMenu(),
-  });
-
   const getItemIcon = (organization: Organization) => {
     if (organization.id === currentOrganization?.id) {
       return IconCheck;
     }
 
-    if (switchOrganizationMutation.isPending && switchOrganizationMutation.variables.id === organization.id) {
+    if (
+      switchOrganizationMutation.isPending &&
+      switchOrganizationMutation.variables === organization.externalId
+    ) {
       return Spinner;
     }
   };

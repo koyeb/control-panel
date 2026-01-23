@@ -35,11 +35,7 @@ export function useOrganizationCommands() {
         for (const organization of organizations.organizations!) {
           palette.addItem({
             label: organization.name!,
-            execute: () =>
-              switchOrganization.mutateAsync({
-                id: organization.id!,
-                externalId: organization.external_id,
-              }),
+            execute: () => switchOrganization.mutateAsync(organization.external_id!),
           });
         }
       },

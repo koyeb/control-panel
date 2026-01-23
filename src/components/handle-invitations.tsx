@@ -31,7 +31,7 @@ export function HandleInvitation({ invitation }: HandleInvitationsProps) {
       path: { id: invitation.id },
     }),
     async onSuccess() {
-      await switchOrganization.mutateAsync(invitation.organization);
+      await switchOrganization.mutateAsync(invitation.organization.externalId);
     },
   });
 

@@ -74,11 +74,7 @@ function CreateOrganization() {
       organizationName: error.name,
     })),
     async onSuccess({ organization }, { organizationName }) {
-      await switchOrganization.mutateAsync({
-        id: organization!.id!,
-        externalId: organization!.external_id!,
-      });
-
+      await switchOrganization.mutateAsync(organization!.external_id!);
       await navigate({ to: '/' });
       notify.success(t('create.success', { organizationName }));
     },
@@ -162,13 +158,8 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
   const currentOrganization = useOrganization();
   const navigate = useNavigate();
 
-  const switchOrganization = useSwitchOrganization({
-    onSuccess: () => void navigate({ to: '/' }),
-  });
-
-  const manageOrganization = useSwitchOrganization({
-    onSuccess: () => void navigate({ to: '/settings' }),
-  });
+  const switchOrganization = useSwitchOrganization({ onSuccess: () => navigate({ to: '/' }) });
+  const manageOrganization = useSwitchOrganization({ onSuccess: () => navigate({ to: '/settings' }) });
 
   return (
     <div className="row items-center gap-2">
@@ -183,12 +174,20 @@ function OrganizationListItem({ organization }: { organization: OrganizationMemb
 
       <div className="ml-auto row gap-2">
         {organization.id !== currentOrganization?.id && (
-          <Button variant="outline" color="gray" onClick={() => switchOrganization.mutate(organization)}>
+          <Button
+            variant="outline"
+            color="gray"
+            onClick={() => switchOrganization.mutate(organization.externalId)}
+          >
             <T id="switch" />
           </Button>
         )}
 
-        <Button variant="outline" color="gray" onClick={() => manageOrganization.mutate(organization)}>
+        <Button
+          variant="outline"
+          color="gray"
+          onClick={() => manageOrganization.mutate(organization.externalId)}
+        >
           <T id="manage" />
         </Button>
       </div>

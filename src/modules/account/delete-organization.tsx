@@ -31,7 +31,7 @@ export function DeleteOrganization() {
       const otherOrganization = organizations.find((org) => org.id !== organization?.id);
 
       if (otherOrganization) {
-        await switchOrganization.mutateAsync(otherOrganization);
+        await switchOrganization.mutateAsync(otherOrganization.externalId);
       } else {
         signOut();
       }

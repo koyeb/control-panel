@@ -652,6 +652,7 @@ export type UserSettings = {
 
 export type Organization = {
   id: string;
+  externalId: string;
   name: string;
   status: OrganizationStatus;
   statusMessage: OrganizationStatusMessage;
@@ -736,6 +737,7 @@ export type OrganizationMember = {
   };
   organization: {
     id: string;
+    externalId: string;
     name: string;
     status: OrganizationStatus;
   };

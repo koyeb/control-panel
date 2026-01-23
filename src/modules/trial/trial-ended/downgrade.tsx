@@ -38,13 +38,8 @@ export function Downgrade({ onCancel }: { onCancel: () => void }) {
     ...apiMutation('post /v1/organizations', ({ organizationName }: FormValues<typeof form>) => ({
       body: { name: organizationName },
     })),
-
     async onSuccess({ organization }) {
-      await switchOrganization.mutateAsync({
-        id: organization!.id!,
-        externalId: organization!.external_id!,
-      });
-
+      await switchOrganization.mutateAsync(organization!.external_id!);
       notify.success(t('successNotification'));
     },
     onError: useFormErrorHandler(form, (error) => ({
