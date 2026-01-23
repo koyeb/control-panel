@@ -2822,9 +2822,9 @@
           "description": "This information appears on your monthly invoice and should be the legal address of your home or business",
           "nameLabel": "Name",
           "emailLabel": "Email",
-          "vatNumberLabel": "VAT Number",
-          "billingPortal": "This information can be edited from <link>the billing portal</link>",
           "addressLabel": "Address",
+          "companyLabel": "For business",
+          "vatNumberLabel": "VAT Number",
           "successNotification": "Your organization's billing information were updated"
         },
         "billingAlerts": {
