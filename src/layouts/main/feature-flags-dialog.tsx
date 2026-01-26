@@ -3,26 +3,32 @@ import { Button, ButtonGroup } from '@koyeb/design-system';
 import { CloseDialogButton, Dialog, DialogFooter, DialogHeader } from 'src/components/dialog';
 import { useFeatureFlags } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
+import { identity } from 'src/utils/generic';
+import { toObject } from 'src/utils/object';
 
 const T = createTranslate('layouts.main.featureFlags');
 
 export function FeatureFlagsDialog() {
   const flags = useFeatureFlags();
 
+  const setAllLocalValues = (value: boolean | undefined) => {
+    flags.writeStoredFlags(toObject(flags.listFlags(), identity, () => value));
+  };
+
   return (
     <Dialog id="FeatureFlags" className="col w-full max-w-xl gap-4">
       <DialogHeader title={<T id="title" />} />
 
       <div className="row justify-end gap-4">
-        <Button color="gray" variant="outline" onClick={() => flags.setAllLocalValues(false)}>
+        <Button color="gray" variant="outline" onClick={() => setAllLocalValues(false)}>
           <T id="disableAll" />
         </Button>
 
-        <Button color="gray" variant="outline" onClick={() => flags.setAllLocalValues(true)}>
+        <Button color="gray" variant="outline" onClick={() => setAllLocalValues(true)}>
           <T id="enableAll" />
         </Button>
 
-        <Button color="gray" variant="outline" onClick={() => flags.setAllLocalValues(undefined)}>
+        <Button color="gray" variant="outline" onClick={() => setAllLocalValues(undefined)}>
           <T id="resetAll" />
         </Button>
       </div>
@@ -41,8 +47,12 @@ export function FeatureFlagsDialog() {
 }
 
 function FeatureFlagItem({ flag }: { flag: string }) {
-  const flags = useFeatureFlags();
-  const [posthog, local] = flags.getValue(flag);
+  const { getValue, readStoredFlags, writeStoredFlags } = useFeatureFlags();
+  const [local, posthog] = getValue(flag);
+
+  const setLocalValue = (flag: string, value: boolean | undefined) => {
+    return writeStoredFlags({ ...readStoredFlags(), [flag]: value });
+  };
 
   return (
     <div className="row items-center justify-between gap-2">
@@ -56,7 +66,7 @@ function FeatureFlagItem({ flag }: { flag: string }) {
       <ButtonGroup>
         <Button
           variant={local === true ? 'solid' : 'outline'}
-          onClick={() => flags.setLocalValue(flag, true)}
+          onClick={() => setLocalValue(flag, true)}
           className="capitalize"
         >
           <T id="enabled" />
@@ -64,7 +74,7 @@ function FeatureFlagItem({ flag }: { flag: string }) {
 
         <Button
           variant={local === false ? 'solid' : 'outline'}
-          onClick={() => flags.setLocalValue(flag, false)}
+          onClick={() => setLocalValue(flag, false)}
           className="capitalize"
         >
           <T id="disabled" />
@@ -72,7 +82,7 @@ function FeatureFlagItem({ flag }: { flag: string }) {
 
         <Button
           variant={local === undefined ? 'solid' : 'outline'}
-          onClick={() => flags.setLocalValue(flag, undefined)}
+          onClick={() => setLocalValue(flag, undefined)}
           className="capitalize"
         >
           <T id="default" />

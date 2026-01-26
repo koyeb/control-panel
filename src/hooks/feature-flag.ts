@@ -23,80 +23,72 @@ export function FeatureFlag({ feature, fallback = null, children }: FeatureFlagP
 }
 
 export function useFeatureFlags() {
-  const [flags, setFlags] = useState(() => new FeatureFlags());
+  const localFlags = useLocalFlags();
+  const posthogFlags = usePosthogFlags();
 
-  useEffect(() => {
-    flags.addListener(() => setFlags(new FeatureFlags()));
-  }, [flags]);
-
-  return flags;
+  return {
+    listFlags: (): string[] => Object.keys(posthogFlags),
+    getValue: (flag: string): [local?: boolean, posthog?: boolean] => [localFlags[flag], posthogFlags[flag]],
+    isEnabled: (flag: string): boolean | undefined => localFlags[flag] ?? posthogFlags[flag],
+    readStoredFlags,
+    writeStoredFlags,
+  };
 }
 
 export function useFeatureFlag(flag: string) {
   return useFeatureFlags().isEnabled(flag);
 }
 
-class FeatureFlags {
-  private static storageEmitter = new EventTarget();
-  private static storageKey = 'feature-flags';
-  private storageValue = localStorage.getItem(FeatureFlags.storageKey);
+function useLocalFlags() {
+  const [flags, setFlags] = useState(readStoredFlags);
 
-  private get storageFlags() {
-    try {
-      const schema = z.record(z.string(), z.boolean());
-      const localStorageFlags: unknown = JSON.parse(this.storageValue ?? '');
+  useEffect(() => {
+    const onChange = () => setFlags(readStoredFlags);
 
-      return schema.parse(localStorageFlags);
-    } catch {
-      localStorage.removeItem('feature-flags');
-      return {};
-    }
-  }
+    storageEmitter.addEventListener('change', onChange);
 
-  listFlags(): string[] {
-    return posthog.featureFlags.getFlags();
-  }
+    return () => {
+      storageEmitter.removeEventListener('change', onChange);
+    };
+  }, []);
 
-  getValue(flag: string): [posthog: boolean | undefined, local: boolean | undefined] {
-    return [posthog.isFeatureEnabled(flag), this.storageFlags[flag]];
-  }
+  return flags;
+}
 
-  isEnabled(flag: string): boolean | undefined {
-    const [posthog, local] = this.getValue(flag);
+function usePosthogFlags() {
+  const [flags, setFlags] = useState<Record<string, boolean>>({});
 
-    if (local !== undefined) {
-      return local;
-    }
-
-    return posthog;
-  }
-
-  setLocalValue(flag: string, value: boolean | undefined): void {
-    localStorage.setItem(
-      FeatureFlags.storageKey,
-      JSON.stringify({
-        ...this.storageFlags,
-        [flag]: value,
-      }),
-    );
-
-    FeatureFlags.storageEmitter.dispatchEvent(new Event('change'));
-  }
-
-  setAllLocalValues(value: boolean | undefined): void {
-    if (value === undefined) {
-      localStorage.removeItem(FeatureFlags.storageKey);
-    } else {
-      localStorage.setItem(
-        FeatureFlags.storageKey,
-        JSON.stringify(toObject(this.listFlags(), identity, () => value)),
+  useEffect(() => {
+    return posthog.onFeatureFlags(() => {
+      const flags = toObject(posthog.featureFlags.getFlags(), identity, (flag) =>
+        Boolean(posthog.isFeatureEnabled(flag)),
       );
-    }
 
-    FeatureFlags.storageEmitter.dispatchEvent(new Event('change'));
-  }
+      setFlags(flags);
+    });
+  }, []);
 
-  addListener(listener: () => void) {
-    FeatureFlags.storageEmitter.addEventListener('change', listener);
+  return flags;
+}
+
+const storageEmitter = new EventTarget();
+const storageKey = 'feature-flags';
+
+function readStoredFlags() {
+  const value = localStorage.getItem(storageKey);
+
+  try {
+    const schema = z.record(z.string(), z.boolean());
+    const localStorageFlags: unknown = JSON.parse(value ?? '');
+
+    return schema.parse(localStorageFlags);
+  } catch {
+    localStorage.removeItem(storageKey);
+    return {};
   }
+}
+
+function writeStoredFlags(flags: Partial<Record<string, boolean>>) {
+  localStorage.setItem(storageKey, JSON.stringify(flags));
+  storageEmitter.dispatchEvent(new Event('change'));
 }
