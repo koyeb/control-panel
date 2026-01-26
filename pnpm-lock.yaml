@@ -24,8 +24,8 @@ importers:
         specifier: ^0.0.18
         version: 0.0.18
       '@koyeb/design-system':
-        specifier: ^0.12.3
-        version: 0.12.3(@floating-ui/react@0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@tanstack/react-ranger@0.0.5(react@19.2.3))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.13(react@19.2.3))(framer-motion@12.28.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(immer@11.1.3)(lucide-react@0.562.0(react@19.2.3))(react@19.2.3)(shiki@3.21.0)
+        specifier: ^0.12.4
+        version: 0.12.4(@floating-ui/react@0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@tanstack/react-ranger@0.0.5(react@19.2.3))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.13(react@19.2.3))(framer-motion@12.28.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(immer@11.1.3)(lucide-react@0.562.0(react@19.2.3))(react@19.2.3)(shiki@3.21.0)
       '@mapbox/search-js-core':
         specifier: 1.5.1
         version: 1.5.1
@@ -645,9 +645,8 @@ packages:
     peerDependencies:
       '@csstools/css-tokenizer': ^3.0.4
 
-  '@csstools/css-syntax-patches-for-csstree@1.0.25':
-    resolution: {integrity: sha512-g0Kw9W3vjx5BEBAF8c5Fm2NcB/Fs8jJXh85aXqwEXiL+tqtOut07TWgyaGzAAfTM+gKckrrncyeGEZPcaRgm2Q==}
-    engines: {node: '>=18'}
+  '@csstools/css-syntax-patches-for-csstree@1.0.26':
+    resolution: {integrity: sha512-6boXK0KkzT5u5xOgF6TKB+CLq9SOpEGmkZw0g5n9/7yg85wab3UzSxB8TxhLJ31L4SGJ6BCFRw/iftTha1CJXA==}
 
   '@csstools/css-tokenizer@3.0.4':
     resolution: {integrity: sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw==}
@@ -1118,8 +1117,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@koyeb/design-system@0.12.3':
-    resolution: {integrity: sha512-a57TXmvk8rpMWMFahtyPww94lr+PlJfO1pYfYo3YfU9SuT53+6LuDCn+MSr1RNy7kqY/oevtA4/0YqkuolKcZw==}
+  '@koyeb/design-system@0.12.4':
+    resolution: {integrity: sha512-5aokG3oxviBBlXuaKgmpjGKyKXmU1F3+GYY/OOe05f5qdwMgw20xXezhUG0r20gUA2MXBWuTBwOTOjP9401q9w==}
     peerDependencies:
       '@floating-ui/react': ^0.27.0
       '@tanstack/react-ranger': <1.0.0
@@ -4558,6 +4557,10 @@ packages:
     resolution: {integrity: sha512-B5Y16Jr9LB9dHVkh6ZevG+vAbOsNOYCX+sXvFWFu7B3Iz5mijW3zdbMyhsh8ANd2mSWBYdJgnqi+mL7/LrOPYg==}
     engines: {node: 20 || >=22}
 
+  lru-cache@11.2.5:
+    resolution: {integrity: sha512-vFrFJkWtJvJnD5hg+hJvVE8Lh/TcMzKnTgCWmtBipwI5yLX/iX+5UB2tfuyODF5E7k9xEzMdYgGqaSb1c0c5Yw==}
+    engines: {node: 20 || >=22}
+
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
@@ -5260,8 +5263,18 @@ packages:
     peerDependencies:
       seroval: ^1.0
 
+  seroval-plugins@1.5.0:
+    resolution: {integrity: sha512-EAHqADIQondwRZIdeW2I636zgsODzoBDwb3PT/+7TLDWyw1Dy/Xv7iGUIEXXav7usHDE9HVhOU61irI3EnyyHA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      seroval: ^1.0
+
   seroval@1.4.2:
     resolution: {integrity: sha512-N3HEHRCZYn3cQbsC4B5ldj9j+tHdf4JZoYPlcI4rRYu0Xy4qN8MQf1Z08EibzB0WpgRG5BGK08FTrmM66eSzKQ==}
+    engines: {node: '>=10'}
+
+  seroval@1.5.0:
+    resolution: {integrity: sha512-OE4cvmJ1uSPrKorFIH9/w/Qwuvi/IMcGbv5RKgcJ/zjA/IohDLU6SVaxFN9FwajbP7nsX0dQqMDes1whk3y+yw==}
     engines: {node: '>=10'}
 
   set-function-length@1.2.2:
@@ -5988,7 +6001,7 @@ snapshots:
       '@csstools/css-color-parser': 3.1.0(@csstools/css-parser-algorithms@3.0.5(@csstools/css-tokenizer@3.0.4))(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-parser-algorithms': 3.0.5(@csstools/css-tokenizer@3.0.4)
       '@csstools/css-tokenizer': 3.0.4
-      lru-cache: 11.2.4
+      lru-cache: 11.2.5
     optional: true
 
   '@asamuzakjp/dom-selector@6.7.6':
@@ -5997,7 +6010,7 @@ snapshots:
       bidi-js: 1.0.3
       css-tree: 3.1.0
       is-potential-custom-element-name: 1.0.1
-      lru-cache: 11.2.4
+      lru-cache: 11.2.5
     optional: true
 
   '@asamuzakjp/nwsapi@2.3.9':
@@ -6575,7 +6588,7 @@ snapshots:
     dependencies:
       '@csstools/css-tokenizer': 3.0.4
 
-  '@csstools/css-syntax-patches-for-csstree@1.0.25':
+  '@csstools/css-syntax-patches-for-csstree@1.0.26':
     optional: true
 
   '@csstools/css-tokenizer@3.0.4': {}
@@ -6912,7 +6925,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@koyeb/design-system@0.12.3(@floating-ui/react@0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@tanstack/react-ranger@0.0.5(react@19.2.3))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.13(react@19.2.3))(framer-motion@12.28.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(immer@11.1.3)(lucide-react@0.562.0(react@19.2.3))(react@19.2.3)(shiki@3.21.0)':
+  '@koyeb/design-system@0.12.4(@floating-ui/react@0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(@tanstack/react-ranger@0.0.5(react@19.2.3))(class-variance-authority@0.7.1)(clsx@2.1.1)(downshift@9.0.13(react@19.2.3))(framer-motion@12.28.1(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(immer@11.1.3)(lucide-react@0.562.0(react@19.2.3))(react@19.2.3)(shiki@3.21.0)':
     dependencies:
       '@floating-ui/react': 0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@tanstack/react-ranger': 0.0.5(react@19.2.3)
@@ -8688,8 +8701,8 @@ snapshots:
       '@tanstack/history': 1.154.7
       '@tanstack/store': 0.8.0
       cookie-es: 2.0.0
-      seroval: 1.4.2
-      seroval-plugins: 1.4.2(seroval@1.4.2)
+      seroval: 1.5.0
+      seroval-plugins: 1.5.0(seroval@1.5.0)
       tiny-invariant: 1.3.3
       tiny-warning: 1.0.3
 
@@ -9580,9 +9593,9 @@ snapshots:
   cssstyle@5.3.7:
     dependencies:
       '@asamuzakjp/css-color': 4.1.1
-      '@csstools/css-syntax-patches-for-csstree': 1.0.25
+      '@csstools/css-syntax-patches-for-csstree': 1.0.26
       css-tree: 3.1.0
-      lru-cache: 11.2.4
+      lru-cache: 11.2.5
     optional: true
 
   csstype@3.2.3: {}
@@ -10811,6 +10824,9 @@ snapshots:
 
   lru-cache@11.2.4: {}
 
+  lru-cache@11.2.5:
+    optional: true
+
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
@@ -11863,7 +11879,13 @@ snapshots:
     dependencies:
       seroval: 1.4.2
 
+  seroval-plugins@1.5.0(seroval@1.5.0):
+    dependencies:
+      seroval: 1.5.0
+
   seroval@1.4.2: {}
+
+  seroval@1.5.0: {}
 
   set-function-length@1.2.2:
     dependencies:
