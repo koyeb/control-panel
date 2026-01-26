@@ -76,25 +76,29 @@ export function FormattedDistanceToNow({
             }
           />
 
-          <div className="row items-center gap-1">
-            <Badge size={1}>
-              <Translate id="common.utc" />
-            </Badge>
-            <div>{formatted.utc({ dateStyle: 'medium' })}</div>
-            <div className="ml-auto text-dim">{formatted.utc({ timeStyle: 'medium' })}</div>
-          </div>
-
-          <div className="row items-center gap-1">
-            <Badge size={1}>
-              <Translate id="common.utc" />
-              {formatted.utcOffset}
-            </Badge>
-            <div>{formatted.local({ dateStyle: 'medium' })}</div>
-            <div className="ml-auto text-dim">{formatted.local({ timeStyle: 'medium' })}</div>
-          </div>
+          <FormattedDateTime type="utc" formatted={formatted} />
+          <FormattedDateTime type="local" formatted={formatted} />
         </>
       }
     />
+  );
+}
+
+type FormattedDateTime = {
+  type: 'utc' | 'local';
+  formatted: ReturnType<typeof formatDateInTimeZones>;
+};
+
+export function FormattedDateTime({ type, formatted }: FormattedDateTime) {
+  return (
+    <div className="row items-center gap-1">
+      <Badge size={1}>
+        <Translate id="common.utc" />
+        {type === 'local' && formatted.utcOffset}
+      </Badge>
+      <div>{formatted[type]({ dateStyle: 'medium' })}</div>
+      <div className="ml-auto text-dim">{formatted[type]({ timeStyle: 'medium' })}</div>
+    </div>
   );
 }
 
