@@ -11,6 +11,7 @@ import {
   useUserQuery,
 } from 'src/api';
 import { AuthKit } from 'src/application/authkit';
+import { getConfig } from 'src/application/config';
 import { useOnboardingStep } from 'src/application/onboarding';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
@@ -94,6 +95,10 @@ async function switchOrganization(authKit: AuthKit, externalId: string) {
 
 async function preloadDatacentersLatencies(queryClient: QueryClient) {
   const ensureApiQueryData = createEnsureApiQueryData(queryClient);
+
+  if (getConfig('environment') !== 'production') {
+    return;
+  }
 
   const datacenters = await ensureApiQueryData('get /v1/catalog/datacenters', {}).then((result) =>
     result.datacenters!.map(mapCatalogDatacenter),
