@@ -41,7 +41,7 @@ export const deployParamsSchema = z.looseObject({
   image: z.string().optional(),
 
   // git | docker
-  entrypoint: z.array(z.string()).optional(),
+  entrypoint: z.union([z.string(), z.array(z.string())]).optional(),
   command: z.string().optional(),
   args: z.array(z.string()).optional(),
 
