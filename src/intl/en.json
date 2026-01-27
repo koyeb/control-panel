@@ -65,6 +65,7 @@
     },
     "deploymentStrategy": {
       "invalid": "Invalid",
+      "default": "Default",
       "canary": "Canary",
       "rolling": "Rolling",
       "blue_green": "Blue green",

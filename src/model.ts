@@ -308,7 +308,7 @@ export type DeploymentDefinition = {
 
 export type ComputeDeploymentType = 'web' | 'worker' | 'sandbox';
 
-export type DeploymentStrategy = 'invalid' | 'canary' | 'rolling' | 'blue_green' | 'immediate';
+export type DeploymentStrategy = 'invalid' | 'default' | 'canary' | 'rolling' | 'blue_green' | 'immediate';
 
 export type EnvironmentVariable = {
   name: string;
@@ -798,7 +798,7 @@ export type Volume = {
   createdAt: string;
 };
 
-export type VolumeStatus = 'INVALID' | 'ATTACHED' | 'DETACHED' | 'DELETING' | 'DELETED';
+export type VolumeStatus = 'INVALID' | 'ATTACHED' | 'DETACHED' | 'ARCHIVING' | 'DELETING' | 'DELETED';
 
 export type VolumeSnapshot = {
   id: string;

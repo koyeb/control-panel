@@ -120,6 +120,7 @@ export const [VolumeStatusIcon, VolumeStatusBadge] = createResourceStatus<Volume
   INVALID: [IconCircleX, 'red'],
   ATTACHED: [IconCircleCheck, 'green'],
   DETACHED: [IconCircleCheck, 'blue'],
+  ARCHIVING: [Spinner, 'blue'],
   DELETING: [Spinner, 'orange'],
   DELETED: [IconTrash, 'red'],
 });
