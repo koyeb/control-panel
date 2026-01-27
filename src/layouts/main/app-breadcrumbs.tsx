@@ -86,9 +86,7 @@ export function AppServiceCrumb<Router extends RegisteredRouter, Options>({
           <ServiceStatusDot status={service.status} className="size-2" />
         </div>
 
-        <div className="truncate direction-rtl">
-          <Translate id="common.appServiceName" values={{ appName: app.name, serviceName: service.name }} />
-        </div>
+        <div className="truncate direction-rtl">{`${app.name}/${service.name}`}</div>
       </Link>
 
       <ServiceSwitcherMenu appId={app.id} serviceId={serviceId} />

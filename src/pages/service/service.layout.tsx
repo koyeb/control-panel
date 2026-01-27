@@ -12,7 +12,6 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { useRouteParam } from 'src/hooks/router';
-import { useServiceName } from 'src/hooks/service';
 import { IconArrowLeft } from 'src/icons';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, Deployment, Service } from 'src/model';
@@ -38,7 +37,6 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
   const serviceQuery = useServiceQuery(serviceId);
   const appQuery = useAppQuery(serviceQuery.data?.appId);
   const activeDeploymentQuery = useDeploymentQuery(serviceQuery.data?.activeDeploymentId);
-  const serviceName = useServiceName(serviceId);
 
   if (serviceQuery.isError && ApiError.is(serviceQuery.error, 404)) {
     return <ServiceNotFound />;
@@ -66,7 +64,7 @@ export function ServiceLayout({ children }: ServiceLayoutProps) {
 
   return (
     <div className="col gap-8">
-      <DocumentTitle title={serviceName ?? undefined} />
+      <DocumentTitle title={[app.name, service.name].join('/')} />
       <RegisterServiceCommands service={service} />
 
       <RedeployServiceDialog />

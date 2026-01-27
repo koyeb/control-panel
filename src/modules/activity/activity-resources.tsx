@@ -5,7 +5,7 @@ import { Link } from 'src/components/link';
 import { RegionFlag } from 'src/components/region-flag';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { IconFolders } from 'src/icons';
-import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { Activity, ServiceType } from 'src/model';
 import { lowerCase } from 'src/utils/strings';
 
@@ -146,9 +146,7 @@ function ServiceResource({
     <ActivityResource {...props}>
       {serviceType && <ServiceTypeIcon size={2} type={serviceType} />}
 
-      <span className="truncate direction-rtl">
-        <Translate id="common.appServiceName" values={{ appName, serviceName }} />
-      </span>
+      <span className="truncate direction-rtl">{`${appName}/${serviceName}`}</span>
 
       {serviceType && (
         <div className="font-normal text-dim">

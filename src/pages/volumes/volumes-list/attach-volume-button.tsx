@@ -12,7 +12,7 @@ import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Tooltip } from 'src/components/tooltip';
 import { useNavigate } from 'src/hooks/router';
 import { IconChevronDown, IconSearch } from 'src/icons';
-import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
+import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, Service, Volume } from 'src/model';
 import { unique } from 'src/utils/arrays';
 import { getId } from 'src/utils/object';
@@ -206,10 +206,7 @@ function ServiceItem({ app, service }: { app?: App; service: Service }) {
       <ServiceTypeIcon type={service.type} />
 
       <div className="col gap-0.5">
-        <Translate
-          id="common.appServiceName"
-          values={{ appName: app?.name ?? '', serviceName: service.name }}
-        />
+        {app !== undefined && `${app.name}/${service.name}`}
 
         <div className="text-xs text-dim">
           <TranslateEnum enum="serviceType" value={service.type} />
