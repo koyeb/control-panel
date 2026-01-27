@@ -12,7 +12,7 @@
     "noValue": "--",
     "notFound": "Not found",
     "notApplicable": "N/A",
-    "utc": "UTC",
+    "utc": "UTC{offset}",
     "new": "New",
     "plusCount": "+{count}",
     "selectedCount": "{selected}/{total}",

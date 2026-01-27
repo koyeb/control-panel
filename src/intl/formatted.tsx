@@ -1,10 +1,11 @@
 import { Badge, TooltipTitle } from '@koyeb/design-system';
 import { useMemo } from 'react';
-import { FormattedNumber, FormattedRelativeTime } from 'react-intl';
+import { FormattedDate, FormattedNumber, FormattedRelativeTime } from 'react-intl';
 
 import { Tooltip } from 'src/components/tooltip';
 import { useNow } from 'src/hooks/timers';
-import { formatDateInTimeZones } from 'src/utils/date';
+import { inArray } from 'src/utils/arrays';
+import { getUtcOffset } from 'src/utils/date';
 import { identity } from 'src/utils/generic';
 
 import { Translate } from './translate';
@@ -33,17 +34,18 @@ type FormattedDistanceToNowTimeProps = Omit<React.HTMLAttributes<HTMLSpanElement
   FormattedDistanceToNowTimeOwnProps;
 
 export function FormattedDistanceToNow({
-  value: valueProp,
+  value,
   style,
   children = identity,
   ...props
 }: FormattedDistanceToNowTimeProps) {
-  const formatted = formatDateInTimeZones(new Date(valueProp));
   const now = useNow();
 
-  const [value, unit] = useMemo(() => {
-    return getDistanceToNow(new Date(valueProp), now);
-  }, [valueProp, now]);
+  const [relativeTime, unit] = useMemo(() => {
+    return getDistanceToNow(new Date(value), now);
+  }, [value, now]);
+
+  const updateIntervalInSeconds = inArray(unit, ['second', 'minute', 'hour']) ? 1 : undefined;
 
   return (
     <Tooltip
@@ -53,10 +55,10 @@ export function FormattedDistanceToNow({
         <span {...triggerProps} {...props}>
           {children(
             <FormattedRelativeTime
-              value={value}
+              value={relativeTime}
               unit={unit}
               style={style}
-              updateIntervalInSeconds={['second', 'minute', 'hour'].includes(unit as string) ? 1 : undefined}
+              updateIntervalInSeconds={updateIntervalInSeconds}
             />,
           )}
         </span>
@@ -67,37 +69,39 @@ export function FormattedDistanceToNow({
           <TooltipTitle
             title={
               <FormattedRelativeTime
-                value={value}
+                value={relativeTime}
                 unit={unit}
-                updateIntervalInSeconds={
-                  ['second', 'minute', 'hour'].includes(unit as string) ? 1 : undefined
-                }
+                updateIntervalInSeconds={updateIntervalInSeconds}
               />
             }
           />
 
-          <FormattedDateTime type="utc" formatted={formatted} />
-          <FormattedDateTime type="local" formatted={formatted} />
+          <FormattedDateTime date={value} utc />
+          <FormattedDateTime date={value} />
         </>
       }
     />
   );
 }
 
-type FormattedDateTime = {
-  type: 'utc' | 'local';
-  formatted: ReturnType<typeof formatDateInTimeZones>;
+type FormattedDateTimeProps = {
+  date: string | Date;
+  utc?: boolean;
 };
 
-export function FormattedDateTime({ type, formatted }: FormattedDateTime) {
+function FormattedDateTime({ date, utc }: FormattedDateTimeProps) {
   return (
-    <div className="row items-center gap-1">
-      <Badge size={1}>
-        <Translate id="common.utc" />
-        {type === 'local' && formatted.utcOffset}
-      </Badge>
-      <div>{formatted[type]({ dateStyle: 'medium' })}</div>
-      <div className="ml-auto text-dim">{formatted[type]({ timeStyle: 'medium' })}</div>
+    <div className="row items-center gap-4">
+      <div className="row items-center gap-1">
+        <Badge size={1}>
+          <Translate id="common.utc" values={{ offset: utc ? null : getUtcOffset() }} />
+        </Badge>
+        <FormattedDate value={date} timeZone={utc ? 'utc' : undefined} dateStyle="medium" />
+      </div>
+
+      <div className="ml-auto text-dim">
+        <FormattedDate value={date} timeZone={utc ? 'utc' : undefined} timeStyle="medium" />
+      </div>
     </div>
   );
 }
