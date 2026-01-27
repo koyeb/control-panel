@@ -1,4 +1,5 @@
 import * as Sentry from '@sentry/react';
+import { LoginRequiredError } from '@workos-inc/authkit-react';
 
 import { ApiError } from 'src/api';
 import { User } from 'src/model';
@@ -17,6 +18,10 @@ export function initSentry() {
     ignoreErrors: ['Failed to fetch', 'Load failed', 'NetworkError when attempting to fetch resource'],
     beforeSend(event, hint) {
       const error = hint.originalException;
+
+      if (error instanceof LoginRequiredError) {
+        return null;
+      }
 
       if (ApiError.is(error) && error.status < 500) {
         return null;
