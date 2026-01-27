@@ -5,8 +5,9 @@ import { z } from 'zod';
 import { apiStream } from 'src/api/api';
 import { getConfig } from 'src/application/config';
 import { UnexpectedError } from 'src/application/errors';
+import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
-import { createValidationGuard } from 'src/application/validation';
+import { createValidationGuard, hasMessage } from 'src/application/validation';
 import { TerminalRef } from 'src/components/terminal/terminal';
 import { useMount } from 'src/hooks/lifecycle';
 import { createTranslate } from 'src/intl/translate';
@@ -65,11 +66,9 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instanceId]);
 
-  const onData = useCallback(
+  const sendMessage = useCallback(
     (data: string) => {
-      if (prompt !== undefined) {
-        prompt(data);
-      } else if (stream?.readyState === WebSocket.OPEN) {
+      try {
         const message: ExecInputStdin = {
           body: {
             stdin: { data: btoa(data) },
@@ -77,14 +76,27 @@ export function useTerminal(instanceId: string, { readOnly }: { readOnly?: boole
         };
 
         if (!readOnly) {
-          stream.send(JSON.stringify(message));
+          stream?.send(JSON.stringify(message));
         }
+      } catch (error) {
+        notify.error(hasMessage(error) ? error.message : t('unexpectedError'));
+      }
+    },
+    [stream, readOnly, t],
+  );
+
+  const onData = useCallback(
+    (data: string) => {
+      if (prompt !== undefined) {
+        prompt(data);
+      } else if (stream?.readyState === WebSocket.OPEN) {
+        sendMessage(data);
       } else if (terminal) {
         reset(terminal);
         void connect(instanceId);
       }
     },
-    [prompt, stream, terminal, reset, connect, instanceId, readOnly],
+    [prompt, reset, connect, sendMessage, stream, terminal, instanceId],
   );
 
   useEffect(() => {
