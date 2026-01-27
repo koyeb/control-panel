@@ -33,8 +33,7 @@
     "githubRepositoryNotFound": "GitHub repository not found",
     "githubApiQuotaExceeded": "GitHub API quota exceeded, please try again later",
     "destructiveAction": "This can not be undone.",
-    "confirmationDialogText": "Type <value>{confirmationText}</value> to confirm",
-    "appServiceName": "{appName}/{serviceName}"
+    "confirmationDialogText": "Type <value>{confirmationText}</value> to confirm"
   },
   "validation": {
     "required": "Required",
