@@ -42,16 +42,17 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
   },
 
   async loader({ deps, context: { authKit, queryClient } }) {
+    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
     const api = getApi(authKit.getAccessToken);
 
     const search = deps.search;
     const redirectUrl = new URL(deps.metadata, window.location.origin);
 
-    if (search.error_description) {
-      throw new Error(search.error_description);
-    }
-
     try {
+      if (search.error_description) {
+        throw new Error(search.error_description);
+      }
+
       await api('post /v1/account/oauth', { body: search });
 
       if (search.setup_action === 'install' && search.state) {
@@ -61,8 +62,6 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
           replace: true,
         });
       }
-
-      const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
       const currentOrganization = await ensureApiQueryData('get /v1/account/organization', {}).then(
         ({ organization }) => mapOrganization(organization!),
