@@ -3139,7 +3139,7 @@
         "attach": {
           "label": "Attach volume to",
           "placeholder": "Search",
-          "noServices": "No serivce found",
+          "noServices": "No service found in region {region}",
           "alreadyMounted": "This volume has already been attached to a service and cannot be attached again."
         },
         "actions": {
