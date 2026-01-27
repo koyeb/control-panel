@@ -48,6 +48,11 @@ const queryCache = new QueryCache({
       return;
     }
 
+    if (query.queryKey[0] === 'get /v1/account/organization' && ApiError.is(error, 403)) {
+      void router.navigate({ to: '/auth/signout' });
+      return;
+    }
+
     if (ApiError.is(error) && error.message === 'Token rejected') {
       // organization is deactivated
       void router.navigate({ to: '/settings' });
