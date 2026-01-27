@@ -49,15 +49,15 @@ export function useAppsFull(filters: AppsFullFilters = {}) {
     refetchInterval(query) {
       const servicesCount = query.state.data?.services.count ?? 0;
 
-      if (servicesCount > 5) {
-        return 10_000;
+      if (servicesCount <= 5) {
+        return 5_000;
       }
 
-      if (servicesCount > 50) {
+      if (servicesCount <= 50) {
         return 30_000;
       }
 
-      return 5_000;
+      return 60_000;
     },
     select(results): AppList {
       const apps = results.apps

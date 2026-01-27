@@ -1,11 +1,10 @@
-import { keepPreviousData, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
-import { DeploymentStatus, InstanceStatus } from 'src/model';
+import { ComputeDeployment, DeploymentStatus, InstanceStatus } from 'src/model';
 import { createArray } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
 
-import { API } from '../api-types';
 import { useApi } from '../index';
 import {
   isComputeDeployment,
@@ -121,39 +120,40 @@ type DeploymentScalingFilters = {
   regions?: string[];
 };
 
-export function useDeploymentScalingQuery(deploymentId?: string, filters?: DeploymentScalingFilters) {
-  const queryClient = useQueryClient();
+type DeploymentScalingOptions = {
+  filters?: DeploymentScalingFilters;
+  refetchInterval?: number;
+};
+
+export function useDeploymentScalingQuery(
+  deployment?: ComputeDeployment,
+  { filters, refetchInterval }: DeploymentScalingOptions = {},
+) {
+  const deploymentId = deployment?.id;
 
   return useQuery({
+    ...apiQuery('get /v1/instances', {
+      query: {
+        deployment_id: deploymentId,
+        statuses: filters?.statuses ?? [
+          'ALLOCATING',
+          'STARTING',
+          'HEALTHY',
+          'UNHEALTHY',
+          'STOPPING',
+          'SLEEPING',
+        ],
+        limit: '100',
+      },
+    }),
+    refetchInterval,
     enabled: deploymentId !== undefined,
     placeholderData: keepPreviousData,
-    queryKey: ['deploymentScaling', { deploymentId, filters }],
-    queryFn: async (): Promise<
-      Array<{ instances: API.Instance[]; region: string; replica_index: number }>
-    > => {
-      const { deployment } = await queryClient.fetchQuery(
-        apiQuery('get /v1/deployments/{id}', { path: { id: deploymentId! } }),
-      );
+    select: ({ instances }) => {
+      assert(deployment !== undefined);
 
-      const { instances } = await queryClient.fetchQuery(
-        apiQuery('get /v1/instances', {
-          query: {
-            deployment_id: deploymentId,
-            statuses: filters?.statuses ?? [
-              'ALLOCATING',
-              'STARTING',
-              'HEALTHY',
-              'UNHEALTHY',
-              'STOPPING',
-              'SLEEPING',
-            ],
-            limit: '100',
-          },
-        }),
-      );
-
-      const regions = filters?.regions ?? deployment!.definition!.regions!;
-      const replicasCount = deployment!.definition!.scalings![0]!.max!;
+      const regions = filters?.regions ?? deployment.definition.regions;
+      const replicasCount = deployment.definition.scaling.max;
 
       const getReplica = (region: string, index: number) => ({
         region,
@@ -163,17 +163,18 @@ export function useDeploymentScalingQuery(deploymentId?: string, filters?: Deplo
         ),
       });
 
-      return regions
+      const replicas = regions
         .slice()
         .sort()
         .flatMap((region) => createArray(replicasCount, (index) => getReplica(region, index)));
+
+      return replicas.map(mapReplica);
     },
-    select: (replicas) => replicas.map(mapReplica),
   });
 }
 
-export function useDeploymentScaling(deploymentId?: string, filters?: DeploymentScalingFilters) {
-  return useDeploymentScalingQuery(deploymentId, filters).data;
+export function useDeploymentScaling(deployment?: ComputeDeployment, options?: DeploymentScalingOptions) {
+  return useDeploymentScalingQuery(deployment, options).data;
 }
 
 type InstancesQueryOptions = {

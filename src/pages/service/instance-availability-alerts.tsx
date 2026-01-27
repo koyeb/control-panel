@@ -52,7 +52,7 @@ export function InstanceAvailabilityAlerts({ service }: InstanceAvailabilityAler
 
 function useCanScaleToMax(deployment?: ComputeDeployment) {
   const instanceAvailability = useCatalogInstanceAvailability(deployment?.definition.instanceType);
-  const scaling = useDeploymentScaling(deployment?.id);
+  const scaling = useDeploymentScaling(deployment);
 
   if (deployment == undefined || scaling === undefined) {
     return true;

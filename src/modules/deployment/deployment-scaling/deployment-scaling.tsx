@@ -24,7 +24,9 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
     },
   });
 
-  const query = useDeploymentScalingQuery(deployment.id, filtersForm.watch());
+  const query = useDeploymentScalingQuery(deployment, {
+    filters: filtersForm.watch(),
+  });
 
   return (
     <div className="m-4 mt-0 divide-y rounded-md border">

@@ -32,7 +32,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
   const { type, source, builder, privileged } = definition;
 
   const organization = useOrganization();
-  const replicas = useDeploymentScaling(deployment.id);
+  const replicas = useDeploymentScaling(deployment);
 
   return (
     <section className="rounded-md border">
