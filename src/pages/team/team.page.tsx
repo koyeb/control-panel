@@ -58,6 +58,6 @@ export function WorkOSUsersManagement() {
 
 // cspell:ignore woswidgets
 const hideInviteUserButton = `
-.woswidgets-button--primary {
+.woswidgets-button.button--primary {
   display: none;
 }`.trim();
