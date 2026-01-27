@@ -141,14 +141,13 @@ function DeploymentInfo({ latestDeployment, activeDeployment }: ServiceItemProps
   return null;
 }
 
-function ComputeDeploymentInfo({
-  latestDeployment,
-  activeDeployment,
-}: {
+type ComputeDeploymentInfoProps = {
   latestDeployment: ComputeDeployment;
   activeDeployment?: ComputeDeployment;
-}) {
-  const replicas = useDeploymentScaling(activeDeployment?.id);
+};
+
+function ComputeDeploymentInfo({ latestDeployment, activeDeployment }: ComputeDeploymentInfoProps) {
+  const replicas = useDeploymentScaling(activeDeployment, { refetchInterval: 15_000 });
 
   const definition = activeDeployment?.definition ?? latestDeployment.definition;
   const sleeping = activeDeployment?.status === 'SLEEPING';
