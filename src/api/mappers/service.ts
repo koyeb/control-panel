@@ -14,5 +14,9 @@ export function mapService(service: API.Service): Service {
     activeDeploymentId: service.active_deployment_id || undefined,
     lastProvisionedDeploymentId: service.last_provisioned_deployment_id || undefined,
     type: lowerCase(service.type as 'WEB' | 'WORKER' | 'SANDBOX' | 'DATABASE'),
+    lifeCycle: {
+      deleteAfterCreate: service.life_cycle?.delete_after_create || undefined,
+      deleteAfterSleep: service.life_cycle?.delete_after_sleep || undefined,
+    },
   };
 }

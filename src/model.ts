@@ -606,7 +606,7 @@ export type Service = {
   name: string;
   status: ServiceStatus;
   createdAt: string;
-  lifeCycle?: {
+  lifeCycle: {
     deleteAfterCreate?: number;
     deleteAfterSleep?: number;
   };

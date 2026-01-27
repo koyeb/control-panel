@@ -102,6 +102,12 @@
       "sandbox": "Sandbox",
       "database": "Database",
       "model": "Model"
+    },
+    "timeUnit": {
+      "seconds": "Seconds",
+      "minutes": "Minutes",
+      "hours": "Hours",
+      "days": "Days"
     }
   },
   "components": {
@@ -2603,25 +2609,36 @@
           "description": "Create a new service from this configuration.",
           "duplicate": "Duplicate"
         },
-        "lifeCycle": {
+        "lifecycle": {
           "title": "Automatic service deletion",
-          "description": "Configure the number of seconds before the service is deleted, either from now or after it scales to zero",
+          "description": "Configure the delay before the service is deleted, either starting now or after it scales down to zero",
           "deleteAfterCreate": {
-            "label": "Automatically delete in",
-            "placeholder": "21 600",
-            "unit": "s",
-            "info": "deletion will occur on <badge>UTC {offset}</badge> {date} at {time}",
-            "infoUtc": "{date} UTC"
+            "label": "Scheduled deletion",
+            "description": "Automatically delete the service after a period of time",
+            "placeholder": "21 600"
           },
           "deleteAfterSleep": {
-            "label": "Automatically delete",
-            "placeholder": "300",
-            "unit": "s",
-            "info": "after scaling to zero",
-            "configureScaleToZero": "Configure scale to zero"
+            "label": "Delete after inactivity",
+            "description": "Automatically delete the service once it has scaled to zero and remains inactive for the specified duration",
+            "placeholder": "300"
           },
-          "deletionBeforeScaleToZero": "Deletion will happen before the service scales to zero",
-          "deletionBeforeDeepSleep": "Deletion will happen before the instance enters deep sleep",
+          "footer": {
+            "afterCreate": "Deletion will occur in {value}",
+            "afterSleep": "Deletion will occur {value} after scale to zero",
+            "both": "Deletion will occur {afterSleep} after scale to zero or in {afterCreate}",
+            "none": "No auto deletion configured",
+            "afterCreateTooltip": {
+              "title": "Service will be deleted",
+              "relativeTime": "In {value}",
+              "relativeTimeSeconds": "{seconds}s",
+              "date": "On {badge} {date}"
+            },
+            "afterSleepTooltip": {
+              "title": "Service will be deleted",
+              "relativeTime": "{value} after inactivity",
+              "relativeTimeSeconds": "{seconds}s"
+            }
+          },
           "saved": "Automatic service deletion settings saved"
         },
         "pause": {

@@ -181,6 +181,7 @@ const service = createFactory<Service>(() => ({
   name: '',
   status: 'HEALTHY',
   createdAt: createDate(),
+  lifeCycle: {},
 }));
 
 const computeDeployment = createFactory<ComputeDeployment>(() => ({
