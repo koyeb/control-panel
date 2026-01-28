@@ -13,6 +13,7 @@ export function useSubscriptionQuery(subscriptionId: string | undefined) {
 
   return useQuery({
     ...apiQuery('get /v1/subscriptions/{id}', { path: { id: subscriptionId as string } }),
+    staleTime: Infinity,
     enabled: subscriptionId !== undefined && !organizationQuery.isFetching,
     select: ({ subscription }) => mapSubscription(subscription!),
   });

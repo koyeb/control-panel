@@ -44,6 +44,7 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
   return useMutation({
     mutationFn: (externalId: string) => switchToOrganization({ organizationId: externalId }),
     async onSuccess() {
+      await queryClient.cancelQueries();
       await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
       await Promise.all([queryClient.invalidateQueries(), invalidateWidgets()]);
       await onSuccess?.();
