@@ -153,7 +153,6 @@ function useOrganizationCount() {
   const { data } = useQuery({
     ...apiQuery('get /v1/organization_members', { query: { user_id: user?.id } }),
     enabled: user !== undefined,
-    refetchInterval: false,
     placeholderData: keepPreviousData,
     select: ({ count }) => count,
   });

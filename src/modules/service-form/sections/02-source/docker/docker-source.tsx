@@ -15,7 +15,7 @@ import { DockerImageField } from './docker-image-field';
 const T = createTranslate('modules.serviceForm.source.docker');
 
 export function DockerSource() {
-  const secrets = useSecrets('registry');
+  const secrets = useSecrets('REGISTRY');
 
   const { field, fieldState } = useController<ServiceForm, 'source.docker.registrySecret'>({
     name: 'source.docker.registrySecret',

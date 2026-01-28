@@ -8,7 +8,7 @@ import { hasProperty } from 'src/utils/object';
 export function useVerifyDockerImage(image: string, registrySecretName: string | undefined) {
   const { getAccessToken } = useAuth();
 
-  const secrets = useSecrets('registry');
+  const secrets = useSecrets('REGISTRY');
   const secretId = secrets?.find(hasProperty('name', registrySecretName))?.id;
 
   const {
@@ -18,7 +18,6 @@ export function useVerifyDockerImage(image: string, registrySecretName: string |
     refetch,
   } = useQuery({
     enabled: image.length > 0,
-    refetchInterval: false,
     refetchOnWindowFocus: false,
     retry: false,
     meta: { getAccessToken, delay: 500 },

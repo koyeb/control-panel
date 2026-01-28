@@ -42,6 +42,7 @@ function SandboxesListRoute() {
         statuses,
       },
     }),
+    refetchInterval: 5_000,
     placeholderData: keepPreviousData,
     select: ({ services, has_next }) => ({
       services: services!.map(mapService),
@@ -51,6 +52,7 @@ function SandboxesListRoute() {
 
   const hasSandboxes = useQuery({
     ...apiQuery('get /v1/services', { query: { types: ['SANDBOX'] } }),
+    refetchInterval: 5_000,
     select: ({ count }) => count! > 0,
   });
 

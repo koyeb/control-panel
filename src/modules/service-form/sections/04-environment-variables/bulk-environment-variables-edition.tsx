@@ -25,7 +25,7 @@ export function BulkEnvironmentVariablesEditionDialog({ form }: { form: UseFormR
   const stringifiedEnvironmentVariables = stringifyEnvironmentVariables(environmentVariables);
   const [unknownSecretName, setUnknownSecretName] = useState<string>();
 
-  const secrets = useSecrets('simple');
+  const secrets = useSecrets('SIMPLE');
 
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {

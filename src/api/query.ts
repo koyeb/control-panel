@@ -64,7 +64,10 @@ export function useInvalidateApiQuery() {
 
   return useCallback(
     <E extends ApiEndpoint>(endpoint: E, params?: Partial<ApiRequestParams<E>>) => {
-      return queryClient.invalidateQueries({ queryKey: [endpoint, ...(params ? [params] : [])] });
+      return queryClient.invalidateQueries({
+        queryKey: [endpoint, ...(params ? [params] : [])],
+        refetchType: 'all',
+      });
     },
     [queryClient],
   );

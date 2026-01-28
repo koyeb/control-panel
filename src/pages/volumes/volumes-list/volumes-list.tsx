@@ -34,7 +34,12 @@ export function VolumesListSection() {
   const [name, setName] = useState('');
 
   const query = useQuery({
-    ...apiQuery('get /v1/volumes', { query: { ...pagination.query, name: name || undefined } }),
+    ...apiQuery('get /v1/volumes', {
+      query: {
+        ...pagination.query,
+        name: name || undefined,
+      },
+    }),
     placeholderData: keepPreviousData,
     select: ({ volumes, has_next }) => ({
       volumes: volumes!.map(mapVolume),
@@ -148,6 +153,7 @@ function VolumeName({ volume }: { volume: Volume }) {
   const snapshot = useQuery({
     ...apiQuery('get /v1/snapshots/{id}', { path: { id: volume.snapshotId! } }),
     enabled: volume.snapshotId !== undefined,
+    refetchInterval: 5_000,
     select: ({ snapshot }) => mapSnapshot(snapshot!),
   });
 

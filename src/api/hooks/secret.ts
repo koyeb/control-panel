@@ -1,19 +1,19 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { usePagination } from 'src/components/pagination';
-import { upperCase } from 'src/utils/strings';
+import { SecretType } from 'src/model';
 
 import { mapSecret } from '../mappers/secret';
 import { apiQuery } from '../query';
 
-export function useSecretsQuery(type?: 'simple' | 'registry') {
+export function useSecretsQuery(type?: SecretType) {
   const pagination = usePagination(100);
 
   const query = useQuery({
     ...apiQuery('get /v1/secrets', {
       query: {
         ...pagination.query,
-        types: type !== undefined ? [upperCase(type)] : undefined,
+        types: type !== undefined ? [type] : undefined,
       },
     }),
     placeholderData: keepPreviousData,
@@ -28,6 +28,6 @@ export function useSecretsQuery(type?: 'simple' | 'registry') {
   return [query, pagination] as const;
 }
 
-export function useSecrets(type?: 'simple' | 'registry') {
+export function useSecrets(type?: SecretType) {
   return useSecretsQuery(type)[0].data?.secrets;
 }

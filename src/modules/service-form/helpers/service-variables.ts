@@ -16,7 +16,6 @@ export function useServiceVariables(values: ServiceForm) {
     ...apiQuery('post /v1/services-autocomplete', {
       body: { definition: serviceFormToDeploymentDefinition(valuesDebounced) },
     }),
-    refetchInterval: false,
     select: mapServiceVariables,
   });
 

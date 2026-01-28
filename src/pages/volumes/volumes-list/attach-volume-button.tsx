@@ -33,7 +33,6 @@ export function AttachVolumeButton({ volume }: { volume: Volume }) {
 
   const servicesCountQuery = useQuery({
     ...apiQuery('get /v1/services', { query: { limit: '1', regions: [regionId] } }),
-    refetchInterval: false,
     select: ({ count }) => count,
   });
 
@@ -141,7 +140,6 @@ function useSearchServicesQuery(region: string, search: string) {
 
   return useQuery({
     queryKey: ['searchServices', { api, region, search }],
-    refetchInterval: false,
     placeholderData: keepPreviousData,
     queryFn: async ({ signal }) => {
       await wait(200, signal);

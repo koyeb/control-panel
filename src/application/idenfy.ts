@@ -12,7 +12,6 @@ export function useIdenfyLink() {
     meta: { getAccessToken, showError: false },
     retry: true,
     refetchOnMount: false,
-    refetchInterval: false,
   });
 
   if (query.isSuccess) {

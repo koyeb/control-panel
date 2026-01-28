@@ -32,11 +32,13 @@ export function MembersList() {
 
   const invitationsQuery = useQuery({
     ...apiQuery('get /v1/organization_invitations', { query: { statuses: ['PENDING'] } }),
+    refetchInterval: 5_000,
     select: ({ invitations }) => invitations!.map(mapInvitation),
   });
 
   const membersQuery = useQuery({
     ...apiQuery('get /v1/organization_members', { query: { organization_id: organization?.id } }),
+    refetchInterval: 5_000,
     select: ({ members }) => members!.map(mapOrganizationMember),
   });
 

@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, InputEnd } from '@koyeb/design-system';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { apiMutation, apiQuery, useInvalidateApiQuery, useRegionsCatalog } from 'src/api';
+import { apiMutation, useApi, useInvalidateApiQuery, useRegionsCatalog } from 'src/api';
 import { notify } from 'src/application/notify';
 import { DocumentTitle } from 'src/components/document-title';
 import { ControlledInput } from 'src/components/forms';
@@ -29,28 +29,23 @@ const schema = z.object({
 
 export function CreateVolumePage() {
   const t = T.useTranslate();
+
   const invalidate = useInvalidateApiQuery();
   const navigate = useNavigate();
+  const api = useApi();
 
+  const snapshotId = useSearchParams().get('snapshot');
   const [scope, setScope] = useState<RegionScope>('continental');
 
   const regions = useRegionsCatalog()
     .filter((region) => !region.id.startsWith('aws-'))
     .filter(hasProperty('status', 'available'));
 
-  const snapshotId = useSearchParams().get('snapshot');
-  const fromSnapshot = snapshotId !== null;
-
-  const snapshotQuery = useQuery({
-    enabled: fromSnapshot,
-    refetchInterval: false,
-    experimental_prefetchInRender: true,
-    ...apiQuery('get /v1/snapshots/{id}', { path: { id: snapshotId! } }),
-  });
-
   const form = useForm({
     defaultValues: async () => {
-      const { snapshot } = snapshotId ? await snapshotQuery.promise : {};
+      const { snapshot } = snapshotId
+        ? await api('get /v1/snapshots/{id}', { path: { id: snapshotId } })
+        : {};
 
       return {
         name: '',
@@ -138,7 +133,7 @@ export function CreateVolumePage() {
         <ControlledInput
           control={form.control}
           name="size"
-          disabled={fromSnapshot}
+          disabled={snapshotId !== undefined}
           type="number"
           label={<T id="size.label" />}
           placeholder={t('size.placeholder')}

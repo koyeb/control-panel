@@ -68,7 +68,6 @@ function Value({ secret }: { secret: Secret }) {
   const query = useQuery({
     ...apiQuery('post /v1/secrets/{id}/reveal', { path: { id: secret.id } }),
     enabled: showValue,
-    refetchInterval: false,
     placeholderData: keepPreviousData,
     select: (result) => result.value as unknown as string,
   });

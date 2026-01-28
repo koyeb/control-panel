@@ -9,7 +9,7 @@ const T = createTranslate('pages.onboarding.automaticReview');
 export function AutomaticReview() {
   useQuery({
     ...apiQuery('get /v1/account/organization', {}),
-    refetchInterval: 1000,
+    refetchInterval: 1_000,
   });
 
   return (

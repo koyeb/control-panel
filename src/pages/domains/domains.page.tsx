@@ -106,7 +106,7 @@ function useCustomDomainsQuery() {
         types: ['CUSTOM'],
       },
     }),
-    refetchInterval: 5_000,
+    refetchInterval: 10_000,
     select: ({ domains }) => domains!.map(mapDomain),
   });
 }

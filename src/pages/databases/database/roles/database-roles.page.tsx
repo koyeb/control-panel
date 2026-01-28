@@ -103,7 +103,6 @@ function DatabaseRolePassword({ role }: { role: DatabaseRole }) {
   const query = useQuery({
     ...apiQuery('post /v1/secrets/{id}/reveal', { path: { id: role.secretId } }),
     enabled: showValue,
-    refetchInterval: false,
     placeholderData: keepPreviousData,
     select: (result) => result.value as unknown as { password: string },
   });

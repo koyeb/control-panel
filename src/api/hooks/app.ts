@@ -13,6 +13,7 @@ import { apiQuery } from '../query';
 export function useAppsQuery() {
   return useQuery({
     ...apiQuery('get /v1/apps', { query: { limit: '100' } }),
+    refetchInterval: 5_000,
     select: ({ apps }) => apps!.map(mapApp),
   });
 }
@@ -25,6 +26,7 @@ export function useAppQuery(appId?: string) {
   return useQuery({
     ...apiQuery('get /v1/apps/{id}', { path: { id: appId! } }),
     enabled: appId !== undefined,
+    refetchInterval: 5_000,
     select: ({ app }) => mapApp(app!),
   });
 }

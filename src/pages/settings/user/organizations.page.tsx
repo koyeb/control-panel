@@ -124,7 +124,6 @@ function OrganizationList() {
         organization_statuses: ['ACTIVE', 'WARNING', 'LOCKED', 'DEACTIVATING', 'DEACTIVATED'],
       },
     }),
-    refetchInterval: false,
     enabled: user !== undefined,
     select: ({ members }) => members!.map(mapOrganizationMember),
   });

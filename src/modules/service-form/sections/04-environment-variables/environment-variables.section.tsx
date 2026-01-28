@@ -80,7 +80,7 @@ function EnvironmentVariables() {
 
   const [createSecretIndex, setCreateSecretIndex] = useState<number>();
 
-  const secrets = useSecrets('simple');
+  const secrets = useSecrets('SIMPLE');
 
   const environmentFileDropped = async (file: File) => {
     if (file.type !== '' && file.type !== 'text/plain') {

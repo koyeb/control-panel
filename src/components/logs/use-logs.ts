@@ -123,7 +123,6 @@ function useLogsHistory(filters: LogsFilters, end: Date) {
         query: { ...query, start: max([new Date(start), minStart]).toISOString(), end },
       });
     },
-    refetchInterval: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
