@@ -2,7 +2,7 @@ import { Table, useBreakpoint } from '@koyeb/design-system';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
-import { apiQuery, mapSnapshot, useVolume } from 'src/api';
+import { apiQuery, mapSnapshot } from 'src/api';
 import { NoResource } from 'src/components/no-resource';
 import { Pagination, usePagination } from 'src/components/pagination';
 import { QueryGuard } from 'src/components/query-error';
@@ -120,7 +120,10 @@ function SnapshotsList({ snapshots }: { snapshots: VolumeSnapshot[] }) {
 }
 
 function VolumeName({ volumeId }: { volumeId: string }) {
-  const volume = useVolume(volumeId);
+  const query = useQuery({
+    ...apiQuery('get /v1/volumes/{id}', { path: { id: volumeId } }),
+    select: ({ volume }) => volume!.name,
+  });
 
-  return <>{volume?.name ?? <Translate id="common.noValue" />}</>;
+  return <>{query.data ?? <Translate id="common.noValue" />}</>;
 }

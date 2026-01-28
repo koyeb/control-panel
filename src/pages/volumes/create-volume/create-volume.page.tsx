@@ -133,7 +133,7 @@ export function CreateVolumePage() {
         <ControlledInput
           control={form.control}
           name="size"
-          disabled={snapshotId !== undefined}
+          disabled={snapshotId !== null}
           type="number"
           label={<T id="size.label" />}
           placeholder={t('size.placeholder')}

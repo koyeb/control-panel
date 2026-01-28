@@ -23,7 +23,6 @@ export * from './hooks/git';
 export * from './hooks/secret';
 export * from './hooks/service';
 export * from './hooks/session';
-export * from './hooks/volume';
 
 export * from './api-error';
 export * from './api-types';
