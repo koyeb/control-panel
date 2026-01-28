@@ -19,7 +19,6 @@ export * from './mappers/volume';
 export * from './hooks/app';
 export * from './hooks/billing';
 export * from './hooks/catalog';
-export * from './hooks/domain';
 export * from './hooks/git';
 export * from './hooks/secret';
 export * from './hooks/service';

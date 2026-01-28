@@ -1,9 +1,10 @@
 import { Button } from '@koyeb/design-system';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useState } from 'react';
 
-import { useApi, useDomainsQuery, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
+import { apiQuery, useApi, useInvalidateApiQuery, useOrganizationQuotas } from 'src/api';
+import { mapDomain } from 'src/api/mappers/domain';
 import { notify } from 'src/application/notify';
 import { closeDialog, openDialog } from 'src/components/dialog';
 import { DocumentTitle } from 'src/components/document-title';
@@ -32,7 +33,7 @@ export function DomainsPage() {
 
   const quotas = useOrganizationQuotas();
 
-  const query = useDomainsQuery('custom');
+  const query = useCustomDomainsQuery();
   const domains = query.data;
   const hasDomains = domains !== undefined && domains.length > 0;
 
@@ -95,6 +96,19 @@ export function DomainsPage() {
       />
     </div>
   );
+}
+
+function useCustomDomainsQuery() {
+  return useQuery({
+    ...apiQuery('get /v1/domains', {
+      query: {
+        limit: '100',
+        types: ['CUSTOM'],
+      },
+    }),
+    refetchInterval: 5_000,
+    select: ({ domains }) => domains!.map(mapDomain),
+  });
 }
 
 function useBulkDeleteMutation(onDeleted: () => void) {
