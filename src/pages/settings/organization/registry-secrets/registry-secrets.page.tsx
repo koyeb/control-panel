@@ -12,7 +12,7 @@ import { RegistrySecretList } from './components/registry-secret-list';
 const T = createTranslate('pages.organizationSettings.registrySecrets');
 
 export function RegistrySecretsPage() {
-  const secrets = useSecrets('registry');
+  const secrets = useSecrets('REGISTRY');
 
   return (
     <>

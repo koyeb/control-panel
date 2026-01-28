@@ -60,8 +60,6 @@ const statusPageUrl = 'https://status.koyeb.com';
 export function PlatformStatus({ collapsed }: { collapsed: boolean }) {
   const query = useQuery({
     queryKey: ['instatus'],
-    meta: { showError: false },
-    throwOnError: false,
     async queryFn() {
       const response = await fetch(`${statusPageUrl}/summary.json`);
 
@@ -71,7 +69,12 @@ export function PlatformStatus({ collapsed }: { collapsed: boolean }) {
 
       return response.json() as Promise<unknown>;
     },
-    select: (result): [status: Status, message?: string] => {
+
+    refetchInterval: 60_000,
+    throwOnError: false,
+    meta: { showError: false },
+
+    select(result): [status: Status, message?: string] {
       const summary = schema.parse(result);
 
       if (summary.page.status === 'UP') {

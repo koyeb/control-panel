@@ -31,7 +31,6 @@ export function OrganizationRepositoryBranchSelector() {
       },
     }),
     enabled: repositoryId !== null,
-    refetchOnMount: true,
     placeholderData: keepPreviousData,
     select: ({ branches }) => branches!.map((branch) => branch.name!),
   });

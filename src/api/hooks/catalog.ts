@@ -27,7 +27,7 @@ export function useInstancesCatalogQuery() {
     ...apiQuery('get /v1/catalog/instances', {
       query: { limit: '100' },
     }),
-    refetchInterval: false,
+    staleTime: Infinity,
     select: ({ instances }) => {
       return instances!.map(mapCatalogInstance).sort((a, b) => (a.vram ?? 0) - (b.vram ?? 0));
     },
@@ -53,7 +53,7 @@ export function useRegionsCatalogQuery() {
     ...apiQuery('get /v1/catalog/regions', {
       query: { limit: '100' },
     }),
-    refetchInterval: false,
+    staleTime: Infinity,
     select: ({ regions }) => regions!.map(mapCatalogRegion),
   });
 }
@@ -75,7 +75,7 @@ export function useCatalogRegion(id?: string) {
 export function useDatacentersCatalogQuery() {
   return useSuspenseQuery({
     ...apiQuery('get /v1/catalog/datacenters', {}),
-    refetchInterval: false,
+    staleTime: Infinity,
     select: ({ datacenters }) => datacenters!.map(mapCatalogDatacenter),
   });
 }
@@ -89,7 +89,7 @@ export function useDatacentersCatalog() {
 export function useCatalogUsageQuery() {
   return useQuery({
     ...apiQuery('get /v1/catalog/usage', {}),
-    refetchInterval: false,
+    staleTime: Infinity,
     select: ({ usage }) => mapCatalogUsage(usage!),
   });
 }
@@ -128,6 +128,7 @@ export function useCatalogInstanceRegionsAvailability(
     }
   }
 }
+
 export type ApiOneClickApp = {
   slug: string;
   cover: string;
@@ -185,19 +186,19 @@ async function fetchOneClickApp(slug: string): Promise<{ metadata: ApiOneClickAp
 
 export function useOneClickAppsQuery() {
   return useQuery({
-    refetchInterval: false,
     queryKey: ['listOneClickApps'],
     queryFn: fetchOneClickApps,
+    staleTime: Infinity,
     select: (apps) => apps.map(mapOneClickApp),
   });
 }
 
 export function useOneClickAppQuery(slug: string) {
   return useQuery({
-    refetchInterval: false,
     queryKey: ['getOneClickApp', slug],
-    retry: false,
     queryFn: () => fetchOneClickApp(slug),
+    retry: false,
+    staleTime: Infinity,
     select: ({ metadata, description }) => ({
       metadata: mapOneClickApp(metadata),
       description,
@@ -233,9 +234,9 @@ export function useOneClickApps(): OneClickApp[] {
 
 export function useModelsQuery() {
   return useSuspenseQuery({
-    refetchInterval: false,
     queryKey: ['listOneClickApps'],
     queryFn: fetchOneClickApps,
+    staleTime: Infinity,
     select: (apps) => apps.filter((app) => app.category === 'Model').map(mapOneClickModel),
   });
 }

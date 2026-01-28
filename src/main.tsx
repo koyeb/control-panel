@@ -112,7 +112,6 @@ const queryClient = new QueryClient({
   mutationCache,
   defaultOptions: {
     queries: {
-      refetchInterval: (query) => (query.state.error === null ? 5_000 : false),
       throwOnError,
       retry,
     },

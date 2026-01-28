@@ -1,9 +1,10 @@
 import { Dropdown, IconButton, Menu, MenuItem, useBreakpoint } from '@koyeb/design-system';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 
-import { useCatalogRegion, useVolumes } from 'src/api';
+import { apiQuery, mapVolume, useCatalogRegion } from 'src/api';
 import { notify } from 'src/application/notify';
 import { ControlledInput } from 'src/components/forms';
 import { Select } from 'src/components/forms/select';
@@ -143,15 +144,20 @@ function useVolumeItems() {
   const [region] = useWatchServiceForm('regions');
   const formVolumes = useWatchServiceForm('volumes');
 
-  const volumes = useVolumes(region)?.filter(
-    (volume) => volume.serviceId === undefined || volume.serviceId === serviceId,
-  );
+  const volumesQuery = useQuery({
+    ...apiQuery('get /v1/volumes', { query: { limit: '100', region } }),
+    select({ volumes }) {
+      return volumes!
+        .map(mapVolume)
+        .filter((volume) => volume.serviceId === undefined || volume.serviceId === serviceId);
+    },
+  });
 
   return useMemo(() => {
     const volumesToCreate = formVolumes.filter(
-      ({ name }) => name !== '' && !volumes?.some(hasProperty('name', name)),
+      ({ name }) => name !== '' && !volumesQuery.data?.some(hasProperty('name', name)),
     );
 
-    return [...(volumes ?? []), ...volumesToCreate];
-  }, [volumes, formVolumes]);
+    return [...(volumesQuery.data ?? []), ...volumesToCreate];
+  }, [volumesQuery.data, formVolumes]);
 }

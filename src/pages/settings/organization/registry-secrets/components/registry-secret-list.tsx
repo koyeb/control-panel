@@ -16,7 +16,7 @@ import { RegistrySecretActions } from './registry-secret-actions';
 const T = createTranslate('pages.organizationSettings.registrySecrets.list');
 
 export function RegistrySecretList({ onCreate }: { onCreate: () => void }) {
-  const [secretsQuery] = useSecretsQuery('registry');
+  const [secretsQuery] = useSecretsQuery('REGISTRY');
 
   if (secretsQuery.isPending) {
     return <Skeleton />;

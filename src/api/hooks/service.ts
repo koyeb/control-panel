@@ -19,6 +19,7 @@ import { apiQuery, getApiQueryKey } from '../query';
 export function useServicesQuery(appId?: string) {
   return useQuery({
     ...apiQuery('get /v1/services', { query: { limit: '100', app_id: appId } }),
+    refetchInterval: 5_000,
     select: ({ services }) => services!.map(mapService),
   });
 }
@@ -31,6 +32,7 @@ export function useServiceQuery(serviceId?: string) {
   return useQuery({
     ...apiQuery('get /v1/services/{id}', { path: { id: serviceId! } }),
     enabled: serviceId !== undefined,
+    refetchInterval: 5_000,
     select: ({ service }) => mapService(service!),
   });
 }
@@ -49,15 +51,17 @@ export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStat
         statuses,
       },
     }),
+
     async queryFn({ queryKey: [, { query }], pageParam }) {
       return api('get /v1/deployments', {
         query: {
-          ...query,
           limit: String(10),
           offset: String(10 * pageParam),
+          ...query,
         },
       });
     },
+
     initialPageParam: 0,
     getNextPageParam: (lastPage, pages, lastPageParam) => {
       const nextPage = lastPageParam + 1;
@@ -68,6 +72,9 @@ export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStat
 
       return nextPage;
     },
+
+    refetchInterval: 5_000,
+
     select({ pages }) {
       return {
         count: pages[0]!.count!,
@@ -81,6 +88,7 @@ export function useDeploymentQuery(deploymentId: string | undefined) {
   return useQuery({
     ...apiQuery('get /v1/deployments/{id}', { path: { id: deploymentId as string } }),
     enabled: deploymentId !== undefined,
+    refetchInterval: 5_000,
     select: ({ deployment }) => mapDeployment(deployment!),
   });
 }
@@ -103,6 +111,7 @@ export function useRegionalDeploymentsQuery(deploymentId: string | undefined) {
   return useQuery({
     ...apiQuery('get /v1/regional_deployments', { query: { deployment_id: deploymentId } }),
     enabled: deploymentId !== undefined,
+    refetchInterval: 5_000,
     select: ({ regional_deployments }) => regional_deployments!.map(mapRegionalDeployment),
   });
 }
@@ -127,7 +136,7 @@ type DeploymentScalingOptions = {
 
 export function useDeploymentScalingQuery(
   deployment?: ComputeDeployment,
-  { filters, refetchInterval }: DeploymentScalingOptions = {},
+  { filters, refetchInterval = 5_000 }: DeploymentScalingOptions = {},
 ) {
   const deploymentId = deployment?.id;
 
@@ -211,6 +220,7 @@ export function useInstancesQuery({
     }),
     placeholderData: keepPreviousData,
     enabled: serviceId !== undefined || deploymentId !== undefined || regionalDeploymentId !== undefined,
+    refetchInterval: 5_000,
     select: ({ count, instances }) => ({
       instances: instances!.map((instance) => mapInstance(instance)),
       count: count!,
@@ -222,6 +232,7 @@ export function useInstanceQuery(instanceId: string) {
   return useQuery({
     ...apiQuery('get /v1/instances/{id}', { path: { id: instanceId } }),
     placeholderData: keepPreviousData,
+    refetchInterval: 5_000,
     select: ({ instance }) => mapInstance(instance!),
   });
 }

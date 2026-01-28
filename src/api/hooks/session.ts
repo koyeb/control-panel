@@ -15,6 +15,7 @@ import { mapOrganization, mapOrganizationQuotas, mapOrganizationSummary, mapUser
 export function useUserQuery() {
   return useQuery({
     ...apiQuery('get /v1/account/profile', {}),
+    refetchInterval: 5_000,
     select: (result) => mapUser(result.user!),
   });
 }
@@ -26,6 +27,7 @@ export function useUser() {
 export function useOrganizationQuery() {
   return useQuery({
     ...apiQuery('get /v1/account/organization', {}),
+    refetchInterval: 5_000,
     select: (result) => mapOrganization(result.organization!),
   });
 }
@@ -42,6 +44,7 @@ export function useSwitchOrganization({ onSuccess }: { onSuccess?: () => void | 
   return useMutation({
     mutationFn: (externalId: string) => switchToOrganization({ organizationId: externalId }),
     async onSuccess() {
+      await queryClient.cancelQueries();
       await queryClient.refetchQueries({ queryKey: getApiQueryKey('get /v1/account/organization', {}) });
       await Promise.all([queryClient.invalidateQueries(), invalidateWidgets()]);
       await onSuccess?.();
@@ -72,6 +75,7 @@ export function useOrganizationSummaryQuery() {
     ...apiQuery('get /v1/organizations/{organization_id}/summary', {
       path: { organization_id: organization?.id as string },
     }),
+    refetchInterval: 5_000,
     select: ({ summary }) => mapOrganizationSummary(summary!),
   });
 }
@@ -87,7 +91,6 @@ export function useOrganizationQuotasQuery() {
     ...apiQuery('get /v1/organizations/{organization_id}/quotas', {
       path: { organization_id: organization?.id as string },
     }),
-    refetchInterval: false,
     select: ({ quotas }) => mapOrganizationQuotas(quotas!),
   });
 }

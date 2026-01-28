@@ -51,6 +51,7 @@ function ActivityList() {
         ],
       },
     }),
+    refetchInterval: 5_000,
     select: ({ activities }) => activities!.map(mapActivity),
   });
 

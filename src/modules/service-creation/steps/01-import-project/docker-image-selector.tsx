@@ -120,7 +120,7 @@ type RegistrySecretFieldProps = {
 };
 
 function RegistrySecretField({ form }: RegistrySecretFieldProps) {
-  const secrets = useSecrets('registry');
+  const secrets = useSecrets('REGISTRY');
 
   const { field, fieldState } = useController({
     control: form.control,

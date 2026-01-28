@@ -1,7 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { useApi } from 'src/api';
-import { GitRepository } from 'src/model';
 
 import { ApiError } from '../api-error';
 import { mapGithubApp, mapRepository } from '../mappers/git';
@@ -13,7 +12,7 @@ const isNoGithubAppError = (error: unknown) => {
   return ApiError.is(error, 400) && error.message === 'No GitHub Installation';
 };
 
-export function useGithubAppQuery(refetchInterval = 5 * 60 * 1000) {
+export function useGithubAppQuery(refetchInterval?: number) {
   const organization = useOrganization();
   const api = useApi();
 
@@ -51,8 +50,6 @@ export function useRepositoriesQuery(search: string) {
   });
 }
 
-const emptyArray: GitRepository[] = [];
-
 export function useRepositories(search: string) {
-  return useRepositoriesQuery(search).data ?? emptyArray;
+  return useRepositoriesQuery(search).data ?? [];
 }

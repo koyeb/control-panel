@@ -83,10 +83,11 @@ function useLatestNonStashedDeployment(service: Service) {
         limit: '1',
       },
     }),
-    select: ({ deployments }) => deployments!.map(mapDeployment),
+    refetchInterval: 5_000,
+    select: ({ deployments }) => deployments!.map(mapDeployment).at(0),
   });
 
-  return data?.[0];
+  return data;
 }
 
 function useDiscardChanges(service: Service) {

@@ -29,7 +29,7 @@ export function SecretsPage() {
     openDialog('CreateSecret');
   });
 
-  const [query, pagination] = useSecretsQuery('simple');
+  const [query, pagination] = useSecretsQuery('SIMPLE');
   const secrets = query.data?.secrets;
 
   const [selected, { toggle, set, clear }] = useSet<Secret>();

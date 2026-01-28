@@ -1,4 +1,7 @@
-import { useDeploymentScaling, useOrganization, useVolumes } from 'src/api';
+import { Spinner } from '@koyeb/design-system';
+import { useQuery } from '@tanstack/react-query';
+
+import { apiQuery, useDeploymentScaling, useOrganization } from 'src/api';
 import { openDialog } from 'src/components/dialog';
 import { ExternalLink, Link } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
@@ -9,7 +12,6 @@ import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, DeploymentDefinition, EnvironmentVariable, Service } from 'src/model';
 import { ServiceFormSection } from 'src/modules/service-form';
 import { assert } from 'src/utils/assert';
-import { hasProperty } from 'src/utils/object';
 import { shortId } from 'src/utils/strings';
 
 import { InstanceMetadata, RegionsMetadata, ScalingMetadata } from '../metadata';
@@ -306,7 +308,6 @@ function formatEnvironmentVariable({ name, value }: EnvironmentVariable) {
 
 export function VolumesMetadata({ definition }: { definition: DeploymentDefinition }) {
   const { volumes: attachedVolumes } = definition;
-  const volumes = useVolumes();
 
   const content = () => {
     if (attachedVolumes.length === 0) {
@@ -316,15 +317,7 @@ export function VolumesMetadata({ definition }: { definition: DeploymentDefiniti
     return (
       <div className="whitespace-nowrap">
         {attachedVolumes.map(({ volumeId, mountPath }) => (
-          <div key={volumeId} className="truncate">
-            <T
-              id="attachedVolume"
-              values={{
-                volumeName: volumes?.find(hasProperty('id', volumeId))?.name,
-                mountPath,
-              }}
-            />
-          </div>
+          <AttachedVolume key={volumeId} volumeId={volumeId} mountPath={mountPath} />
         ))}
       </div>
     );
@@ -346,5 +339,21 @@ export function VolumesMetadata({ definition }: { definition: DeploymentDefiniti
         />
       }
     />
+  );
+}
+
+function AttachedVolume({ volumeId, mountPath }: { volumeId: string; mountPath: string }) {
+  const query = useQuery({
+    ...apiQuery('get /v1/volumes/{id}', { path: { id: volumeId } }),
+    select: ({ volume }) => volume!.name,
+  });
+
+  return (
+    <div key={volumeId} className="truncate">
+      <T
+        id="attachedVolume"
+        values={{ volumeName: query.data ?? <Spinner className="size-em" />, mountPath }}
+      />
+    </div>
   );
 }
