@@ -1,12 +1,11 @@
-import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
-import { useApiCredentialsQuery } from 'src/api';
+import { apiQuery, mapApiCredential } from 'src/api';
 import { createValidationGuard } from 'src/application/validation';
 import { InfoTooltip } from 'src/components/tooltip';
 import { createTranslate } from 'src/intl/translate';
 import { Activity, ApiCredential } from 'src/model';
-import { hasProperty } from 'src/utils/object';
 
 const T = createTranslate('components.activity');
 
@@ -30,19 +29,17 @@ export function ActivityApiCredentialIcon({ activity }: { activity: Activity }) 
 }
 
 function useApiCredential(activity: Activity): ApiCredential | undefined {
-  const query = useApiCredentialsQuery();
+  const credentialId = isCredentialActivity(activity)
+    ? activity.metadata.authTokenRef.replace(/^credential:/, '')
+    : undefined;
 
-  return useMemo(() => {
-    const tokenId = isCredentialActivity(activity)
-      ? activity.metadata.authTokenRef.replace(/^credential:/, '')
-      : undefined;
+  const query = useQuery({
+    ...apiQuery('get /v1/credentials/{id}', { path: { id: credentialId! } }),
+    enabled: credentialId !== undefined,
+    select: ({ credential }) => mapApiCredential(credential!),
+  });
 
-    if (tokenId === undefined || !query.isSuccess) {
-      return;
-    }
-
-    return query.data.find(hasProperty('id', tokenId));
-  }, [activity, query]);
+  return query.data;
 }
 
 const isCredentialActivity = createValidationGuard(

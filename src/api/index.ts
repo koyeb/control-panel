@@ -16,7 +16,6 @@ export * from './mappers/service';
 export * from './mappers/session';
 export * from './mappers/volume';
 
-export * from './hooks/api-credential';
 export * from './hooks/app';
 export * from './hooks/billing';
 export * from './hooks/catalog';
