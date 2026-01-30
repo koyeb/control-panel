@@ -14,12 +14,16 @@ export function OverridableField({ override, onOverride, children }: Overridable
     <div className="row items-start gap-4">
       {children(!override)}
 
-      <Switch
-        className="mt-6 flex-row items-center"
-        label={<Translate id="common.override" />}
-        checked={override}
-        onChange={(event) => onOverride(event.target.checked)}
-      />
+      <div className="col gap-y-1.5">
+        <div className="h-5" />
+        <div className="row h-8 items-center">
+          <Switch
+            label={<Translate id="common.override" />}
+            checked={override}
+            onChange={(event) => onOverride(event.target.checked)}
+          />
+        </div>
+      </div>
     </div>
   );
 }
