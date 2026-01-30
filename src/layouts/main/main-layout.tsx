@@ -211,10 +211,14 @@ function PageContext({ expanded, setExpanded }: PageContextProps) {
 const pageContextExpanded = new StoredValue<boolean>('page-context-expanded');
 
 function usePageContext() {
+  const { impersonator } = useAuth();
   const user = useUser();
   const pageContextBaseUrl = getConfig('pageContextBaseUrl');
 
-  const enabled = Boolean(pageContextBaseUrl !== undefined && user?.flags.includes('ADMIN'));
+  const enabled = Boolean(
+    pageContextBaseUrl !== undefined && (user?.flags.includes('ADMIN') || impersonator !== null),
+  );
+
   const [expanded, setExpanded] = useState(pageContextExpanded.read() ?? false);
 
   return {
