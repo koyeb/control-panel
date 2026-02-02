@@ -136,11 +136,11 @@ function ServiceOverview({ app, service, deployments, selectedDeployment }: Serv
     <div className="row">
       <div
         className={clsx(
-          'row overflow-hidden transition-all will-change-[max-width]',
+          'row overflow-hidden transition-all ease-out will-change-[max-width]',
           listExpanded ? 'max-w-[600px] opacity-100' : 'max-w-0 opacity-0',
         )}
       >
-        {list}
+        <div className="w-full">{list}</div>
         <div className="mx-8 border-l" />
       </div>
 
