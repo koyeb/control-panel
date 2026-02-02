@@ -3,9 +3,10 @@ import { UseFormReturn } from 'react-hook-form';
 import { onKeyDownPositiveInteger } from 'src/application/restrict-keys';
 import { ControlledInput, ControlledSelect, ControlledSwitch } from 'src/components/forms';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
+import { TimeUnit } from 'src/utils/date';
 import { identity } from 'src/utils/generic';
 
-import { ServiceLifecycleFormType, TimeUnit } from './service-lifecycle-form';
+import { ServiceLifecycleFormType } from './service-lifecycle-form';
 
 const T = createTranslate('pages.service.settings.lifecycle.deleteAfterSleep');
 

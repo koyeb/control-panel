@@ -321,6 +321,19 @@
       "total": "Total cost",
       "pricePerMonth": "{price}/mo",
       "pricePerHour": "{price}/hr"
+    },
+    "serviceLifecycleBadges": {
+      "afterCreateTooltip": {
+        "title": "Service will be deleted",
+        "relativeTime": "In {value}",
+        "relativeTimeSeconds": "{seconds}s",
+        "date": "On {badge} {date}"
+      },
+      "afterSleepTooltip": {
+        "title": "Service will be deleted",
+        "relativeTime": "{value} after inactivity",
+        "relativeTimeSeconds": "{seconds}s"
+      }
     }
   },
   "modules": {
@@ -2626,18 +2639,7 @@
             "afterCreate": "Deletion will occur in {value}",
             "afterSleep": "Deletion will occur {value} after scale to zero",
             "both": "Deletion will occur {afterSleep} after scale to zero or in {afterCreate}",
-            "none": "No auto deletion configured",
-            "afterCreateTooltip": {
-              "title": "Service will be deleted",
-              "relativeTime": "In {value}",
-              "relativeTimeSeconds": "{seconds}s",
-              "date": "On {badge} {date}"
-            },
-            "afterSleepTooltip": {
-              "title": "Service will be deleted",
-              "relativeTime": "{value} after inactivity",
-              "relativeTimeSeconds": "{seconds}s"
-            }
+            "none": "No auto deletion configured"
           },
           "saved": "Automatic service deletion settings saved"
         },

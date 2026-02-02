@@ -9,13 +9,12 @@ import { handleSubmit, useFormErrorHandler } from 'src/hooks/form';
 import { useNow } from 'src/hooks/timers';
 import { Translate } from 'src/intl/translate';
 import { Service } from 'src/model';
+import { TimeUnit } from 'src/utils/date';
 
 import { DeleteAfterCreate } from './delete-after-create';
 import { DeleteAfterSleep } from './delete-after-sleep';
 import { FooterInfo } from './footer-info';
 import { serviceLifecycleSchema } from './service-lifecycle-schema';
-
-export type TimeUnit = 'seconds' | 'minutes' | 'hours' | 'days';
 
 export type ServiceLifecycleFormType = {
   deleteAfterCreate: {

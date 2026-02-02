@@ -2,8 +2,7 @@ import { differenceInSeconds } from 'date-fns';
 import z from 'zod';
 
 import { OrganizationQuotas, Service } from 'src/model';
-
-import { TimeUnit } from './service-lifecycle-form';
+import { TimeUnit } from 'src/utils/date';
 
 const timeUnit = z.union([z.literal('seconds'), z.literal('minutes'), z.literal('hours'), z.literal('days')]);
 

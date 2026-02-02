@@ -1,5 +1,7 @@
 import { intervalToDuration } from 'date-fns';
 
+export type TimeUnit = 'seconds' | 'minutes' | 'hours' | 'days';
+
 export function createDate(value?: string): string {
   return (value ? new Date(value) : new Date()).toISOString();
 }

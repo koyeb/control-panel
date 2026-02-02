@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 
 import { OrganizationQuotas, Service } from 'src/model';
+import { TimeUnit } from 'src/utils/date';
 import { create } from 'src/utils/factories';
 
-import { ServiceLifecycleFormType, TimeUnit } from './service-lifecycle-form';
+import { ServiceLifecycleFormType } from './service-lifecycle-form';
 import { serviceLifecycleSchema } from './service-lifecycle-schema';
 
 describe('serviceLifecycleSchema', () => {
