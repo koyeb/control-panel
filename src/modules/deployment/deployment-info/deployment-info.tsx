@@ -5,9 +5,13 @@ import { apiQuery, useDeploymentScaling, useOrganization } from 'src/api';
 import { openDialog } from 'src/components/dialog';
 import { ExternalLink, Link } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
+import {
+  ServiceDeleteAfterCreateBadge,
+  ServiceDeleteAfterSleepBadge,
+} from 'src/components/service-lifecycle-badges';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Tooltip } from 'src/components/tooltip';
-import { IconDocker, IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/icons';
+import { IconClock, IconDocker, IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/icons';
 import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, DeploymentDefinition, EnvironmentVariable, Service } from 'src/model';
 import { ServiceFormSection } from 'src/modules/service-form';
@@ -37,8 +41,8 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
   const replicas = useDeploymentScaling(deployment);
 
   return (
-    <section className="rounded-md border">
-      <header className="col gap-3 p-3">
+    <section className="col gap-4 rounded-md border p-3">
+      <header className="col gap-3">
         <div className="row items-center gap-4">
           <div className="text-base font-medium">
             <T id="overview" />
@@ -59,7 +63,9 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
         )}
       </header>
 
-      <div className="m-3 divide-y rounded-md border">
+      <ServiceLifecycle service={service} />
+
+      <div className="divide-y rounded-md border">
         <div className="row flex-wrap gap-6 p-3">
           {source.type === 'git' && (
             <>
@@ -111,7 +117,7 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
         </div>
       </div>
 
-      <div className="mb-4 row justify-center">
+      <div className="mb-1 row justify-center">
         <button className="text-link" onClick={() => openDialog('DeploymentDefinition', deployment)}>
           <T id="viewMore" />
         </button>
@@ -119,6 +125,53 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
 
       <DeploymentDefinitionDialog />
     </section>
+  );
+}
+
+function ServiceLifecycle({ service }: { service: Service }) {
+  const { deleteAfterCreate, deleteAfterSleep } = service.lifeCycle;
+
+  const afterCreate = deleteAfterCreate !== undefined && (
+    <ServiceDeleteAfterCreateBadge service={service} deleteAfterCreate={deleteAfterCreate} />
+  );
+
+  const afterSleep = deleteAfterSleep !== undefined && (
+    <ServiceDeleteAfterSleepBadge deleteAfterSleep={deleteAfterSleep} />
+  );
+
+  const message = () => {
+    if (afterCreate && afterSleep) {
+      return <T id="serviceLifecycle.both" values={{ afterCreate, afterSleep }} />;
+    }
+
+    if (afterCreate) {
+      return <T id="serviceLifecycle.afterCreate" values={{ afterCreate }} />;
+    }
+
+    if (afterSleep) {
+      return <T id="serviceLifecycle.afterSleep" values={{ afterSleep }} />;
+    }
+  };
+
+  if (!afterCreate && !afterSleep) {
+    return null;
+  }
+
+  return (
+    <div className="row items-center justify-between gap-2 rounded-md border p-3">
+      <IconClock className="inline-block size-4 text-dim" />
+
+      <p>{message()}</p>
+
+      <Link
+        to="/services/$serviceId/settings"
+        hash="lifeCycle"
+        params={{ serviceId: service.id }}
+        className="ml-auto text-link text-xs"
+      >
+        <T id="configure" />
+      </Link>
+    </div>
   );
 }
 
@@ -138,7 +191,7 @@ function MetadataEdit({ service, section }: { service: Service; section: Service
       state={{ expandedSection: section }}
       className="text-link text-xs"
     >
-      Configure
+      <T id="configure" />
     </Link>
   );
 }

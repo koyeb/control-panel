@@ -7,7 +7,7 @@ const T = createTranslate('pages.service.settings.lifecycle');
 
 export function ServiceLifeCycleCard({ service }: { service: Service }) {
   return (
-    <section className="col-start-1 card col gap-4 p-3">
+    <section id="lifeCycle" className="col-start-1 card col gap-4 p-3">
       <div className="col gap-2">
         <strong>
           <T id="title" />

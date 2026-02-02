@@ -1,4 +1,4 @@
-import { Badge, TooltipTitle } from '@koyeb/design-system';
+import { Badge, BadgeColor, TooltipTitle } from '@koyeb/design-system';
 import { addSeconds, differenceInSeconds } from 'date-fns';
 import { FormattedDate } from 'react-intl';
 
@@ -11,11 +11,13 @@ import { TimeUnit, formatSeconds, getUtcOffset } from 'src/utils/date';
 const T = createTranslate('components.serviceLifecycleBadges');
 
 type ServiceDeleteAfterCreateBadgeProps = {
+  color?: BadgeColor;
   service: Service;
   deleteAfterCreate: number;
 };
 
 export function ServiceDeleteAfterCreateBadge({
+  color,
   service,
   deleteAfterCreate,
 }: ServiceDeleteAfterCreateBadgeProps) {
@@ -69,7 +71,7 @@ export function ServiceDeleteAfterCreateBadge({
         </>
       }
       trigger={(props) => (
-        <Badge {...props} size={1} color="blue" className="inline-block">
+        <Badge {...props} size={1} color={color} className="inline-block">
           {relativeTimeValue(t, roundSeconds(seconds))}
         </Badge>
       )}
@@ -78,10 +80,11 @@ export function ServiceDeleteAfterCreateBadge({
 }
 
 type ServiceDeleteAfterSleepProps = {
+  color?: BadgeColor;
   deleteAfterSleep: number;
 };
 
-export function ServiceDeleteAfterSleepBadge({ deleteAfterSleep }: ServiceDeleteAfterSleepProps) {
+export function ServiceDeleteAfterSleepBadge({ color, deleteAfterSleep }: ServiceDeleteAfterSleepProps) {
   const t = useTranslate();
 
   const relativeTime = (
@@ -106,7 +109,7 @@ export function ServiceDeleteAfterSleepBadge({ deleteAfterSleep }: ServiceDelete
         </>
       }
       trigger={(props) => (
-        <Badge {...props} size={1} color="blue" className="inline-block">
+        <Badge {...props} size={1} color={color} className="inline-block">
           {relativeTimeValue(t, roundSeconds(deleteAfterSleep))}
         </Badge>
       )}

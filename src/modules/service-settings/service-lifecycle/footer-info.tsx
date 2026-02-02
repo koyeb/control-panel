@@ -11,11 +11,11 @@ export function FooterInfo({ service }: { service: Service }) {
   const { deleteAfterCreate, deleteAfterSleep } = service.lifeCycle;
 
   const afterCreate = deleteAfterCreate !== undefined && (
-    <ServiceDeleteAfterCreateBadge service={service} deleteAfterCreate={deleteAfterCreate} />
+    <ServiceDeleteAfterCreateBadge color="blue" service={service} deleteAfterCreate={deleteAfterCreate} />
   );
 
   const afterSleep = deleteAfterSleep !== undefined && (
-    <ServiceDeleteAfterSleepBadge deleteAfterSleep={deleteAfterSleep} />
+    <ServiceDeleteAfterSleepBadge color="blue" deleteAfterSleep={deleteAfterSleep} />
   );
 
   const message = () => {

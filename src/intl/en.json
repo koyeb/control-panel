@@ -575,6 +575,12 @@
           "unavailable": "TCP proxy is unavailable on inactive deployments",
           "deploymentSleeping": "TCP proxy is unavailable because this deployment is currently sleeping (scaled to zero)"
         },
+        "serviceLifecycle": {
+          "afterCreate": "Service will be deleted in {afterCreate}",
+          "afterSleep": "Service will be deleted {afterSleep} after scale to zero",
+          "both": "Service will be deleted {afterSleep} after scale to zero or in {afterCreate}"
+        },
+        "configure": "Configure",
         "repositoryLabel": "Repository",
         "branchLabel": "Branch",
         "commitLabel": "Commit",
