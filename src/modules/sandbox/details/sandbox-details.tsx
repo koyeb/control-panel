@@ -17,7 +17,7 @@ import { ServiceStatusBadge } from 'src/components/status-badges';
 import { IconDocker } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, DeploymentDefinition, Service } from 'src/model';
-import { DeploymentDefinitionDialog } from 'src/modules/deployment/deployment-info/deployment-definition-dialog';
+import { DeploymentDefinitionDialog } from 'src/modules/deployment/deployment-definition-dialog/deployment-definition-dialog';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 

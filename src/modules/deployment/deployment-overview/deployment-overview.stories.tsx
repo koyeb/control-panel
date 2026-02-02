@@ -3,10 +3,10 @@ import { Meta } from '@storybook/react-vite';
 import { createDate } from 'src/utils/date';
 import { create } from 'src/utils/factories';
 
-import { DeploymentInfo } from './deployment-info';
+import { DeploymentOverview } from './deployment-overview';
 
 export default {
-  title: 'Components/DeploymentInfo',
+  title: 'Components/DeploymentOverview',
 } satisfies Meta;
 
 const app = create.app({
@@ -48,4 +48,6 @@ const deployment = create.computeDeployment({
   },
 });
 
-export const deploymentInfo = () => <DeploymentInfo app={app} service={service} deployment={deployment} />;
+export const deploymentOverview = () => (
+  <DeploymentOverview app={app} service={service} deployment={deployment} />
+);

@@ -22,8 +22,8 @@ import {
   useDeploymentListCommand,
 } from 'src/modules/command-palette/commands/service';
 import { DeploymentFailedInfo } from 'src/modules/deployment/deployment-failed-info/deployment-failed-info';
-import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';
 import { DeploymentLogs } from 'src/modules/deployment/deployment-logs/deployment-logs';
+import { DeploymentOverview } from 'src/modules/deployment/deployment-overview/deployment-overview';
 import { exclude } from 'src/utils/arrays';
 import { assert } from 'src/utils/assert';
 import { hasProperty } from 'src/utils/object';
@@ -179,17 +179,17 @@ function SelectedDeployment({ app, service, deployment }: SelectedDeploymentProp
   assert(isComputeDeployment(deployment));
 
   return (
-    <section className="col gap-8">
+    <div className="col gap-8">
       <DeploymentHeader deployment={deployment} />
 
       <DeploymentFailedInfo deployment={deployment} layout="row" />
-      <DeploymentInfo app={app} service={service} deployment={deployment} />
+      <DeploymentOverview app={app} service={service} deployment={deployment} />
 
       {deployment.status === 'STASHED' && <DeploymentStashed />}
       {deployment.status !== 'STASHED' && (
         <DeploymentLogs app={app} service={service} deployment={deployment} />
       )}
-    </section>
+    </div>
   );
 }
 

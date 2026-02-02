@@ -5,119 +5,84 @@ import { apiQuery, useDeploymentScaling, useOrganization } from 'src/api';
 import { openDialog } from 'src/components/dialog';
 import { ExternalLink, Link } from 'src/components/link';
 import { Metadata } from 'src/components/metadata';
-import {
-  ServiceDeleteAfterCreateBadge,
-  ServiceDeleteAfterSleepBadge,
-} from 'src/components/service-lifecycle-badges';
-import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { Tooltip } from 'src/components/tooltip';
-import { IconClock, IconDocker, IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/icons';
-import { Translate, TranslateEnum, createTranslate } from 'src/intl/translate';
-import { App, ComputeDeployment, DeploymentDefinition, EnvironmentVariable, Service } from 'src/model';
+import { IconDocker, IconGitBranch, IconGitCommitHorizontal, IconGithub } from 'src/icons';
+import { Translate, createTranslate } from 'src/intl/translate';
+import { ComputeDeployment, type DeploymentDefinition, EnvironmentVariable, Service } from 'src/model';
 import { ServiceFormSection } from 'src/modules/service-form';
 import { assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
 
+import { DeploymentDefinitionDialog } from '../deployment-definition-dialog/deployment-definition-dialog';
 import { InstanceMetadata, RegionsMetadata, ScalingMetadata } from '../metadata';
 
-import { DeploymentDefinitionDialog } from './deployment-definition-dialog';
-import { ExternalUrl } from './external-url';
-import { InternalUrl } from './internal-url';
-import { TcpProxyUrl } from './tcp-proxy-url';
+const T = createTranslate('modules.deployment.deploymentDefinition');
 
-const T = createTranslate('modules.deployment.deploymentInfo');
-
-type DeploymentInfoProps = {
-  app: App;
+type DeploymentDefinitionProps = {
   service: Service;
   deployment: ComputeDeployment;
 };
 
-export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps) {
+export function DeploymentDefinition({ service, deployment }: DeploymentDefinitionProps) {
   const { definition } = deployment;
-  const { type, source, builder, privileged } = definition;
+  const { source, builder, privileged } = definition;
 
   const organization = useOrganization();
   const replicas = useDeploymentScaling(deployment);
 
   return (
-    <section className="col gap-4 rounded-md border p-3">
-      <header className="col gap-3">
-        <div className="row items-center gap-4">
-          <div className="text-base font-medium">
-            <T id="overview" />
-          </div>
-
-          <div className="ml-auto row items-center gap-2 font-medium">
-            <TranslateEnum enum="serviceType" value={type} />
-            <ServiceTypeIcon type={type} />
-          </div>
-        </div>
-
-        {type !== 'worker' && (
-          <div className="row flex-wrap gap-x-16 gap-y-4">
-            <ExternalUrl app={app} service={service} deployment={deployment} />
-            <InternalUrl app={app} service={service} deployment={deployment} />
-            <TcpProxyUrl app={app} service={service} deployment={deployment} />
-          </div>
+    <section className="rounded-md border p-3">
+      <div className="row flex-wrap gap-6 border-b py-3">
+        {source.type === 'git' && (
+          <>
+            <RepositoryMetadata repository={source.repository} />
+            <BranchMetadata repository={source.repository} branch={source.branch} />
+            <CommitMetadata deployment={deployment} />
+          </>
         )}
-      </header>
 
-      <ServiceLifecycle service={service} />
+        {(source.type === 'git' || source.type === 'archive') && (
+          <>
+            <BuilderMetadata builder={builder} />
+            <PrivilegedMetadata privileged={privileged} />
+          </>
+        )}
 
-      <div className="divide-y rounded-md border">
-        <div className="row flex-wrap gap-6 p-3">
-          {source.type === 'git' && (
-            <>
-              <RepositoryMetadata repository={source.repository} />
-              <BranchMetadata repository={source.repository} branch={source.branch} />
-              <CommitMetadata deployment={deployment} />
-            </>
+        {source.type === 'docker' && <DockerImageMetadata image={source.image} />}
+      </div>
+
+      <div className="row flex-wrap gap-6 border-b py-3">
+        <div className="col gap-1">
+          <InstanceMetadata instance={definition.instanceType} />
+          {organization?.plan === 'hobby' ? (
+            <MetadataUpgrade />
+          ) : (
+            <MetadataEdit service={service} section="instance" />
           )}
-
-          {(source.type === 'git' || source.type === 'archive') && (
-            <>
-              <BuilderMetadata builder={builder} />
-              <PrivilegedMetadata privileged={privileged} />
-            </>
-          )}
-
-          {source.type === 'docker' && <DockerImageMetadata image={source.image} />}
         </div>
 
-        <div className="row flex-wrap gap-6 p-3">
-          <div className="col gap-1">
-            <InstanceMetadata instance={definition.instanceType} />
-            {organization?.plan === 'hobby' ? (
-              <MetadataUpgrade />
-            ) : (
-              <MetadataEdit service={service} section="instance" />
-            )}
-          </div>
+        <div className="col gap-1">
+          <ScalingMetadata replicas={replicas} sleeping={deployment.status === 'SLEEPING'} />
+          <MetadataEdit service={service} section="scaling" />
+        </div>
 
-          <div className="col gap-1">
-            <ScalingMetadata replicas={replicas} sleeping={deployment.status === 'SLEEPING'} />
-            <MetadataEdit service={service} section="scaling" />
-          </div>
+        <div className="col gap-1">
+          <RegionsMetadata regions={definition.regions} />
+          <MetadataEdit service={service} section="instance" />
+        </div>
 
-          <div className="col gap-1">
-            <RegionsMetadata regions={definition.regions} />
-            <MetadataEdit service={service} section="instance" />
-          </div>
+        <div className="col gap-1">
+          <EnvironmentMetadata definition={definition} />
+          <MetadataEdit service={service} section="environmentVariables" />
+        </div>
 
-          <div className="col gap-1">
-            <EnvironmentMetadata definition={definition} />
-            <MetadataEdit service={service} section="environmentVariables" />
-          </div>
-
-          <div className="col gap-1">
-            <VolumesMetadata definition={definition} />
-            <MetadataEdit service={service} section="volumes" />
-          </div>
+        <div className="col gap-1">
+          <VolumesMetadata definition={definition} />
+          <MetadataEdit service={service} section="volumes" />
         </div>
       </div>
 
-      <div className="mb-1 row justify-center">
+      <div className="row justify-center pt-3">
         <button className="text-link" onClick={() => openDialog('DeploymentDefinition', deployment)}>
           <T id="viewMore" />
         </button>
@@ -125,53 +90,6 @@ export function DeploymentInfo({ app, service, deployment }: DeploymentInfoProps
 
       <DeploymentDefinitionDialog />
     </section>
-  );
-}
-
-function ServiceLifecycle({ service }: { service: Service }) {
-  const { deleteAfterCreate, deleteAfterSleep } = service.lifeCycle;
-
-  const afterCreate = deleteAfterCreate !== undefined && (
-    <ServiceDeleteAfterCreateBadge service={service} deleteAfterCreate={deleteAfterCreate} />
-  );
-
-  const afterSleep = deleteAfterSleep !== undefined && (
-    <ServiceDeleteAfterSleepBadge deleteAfterSleep={deleteAfterSleep} />
-  );
-
-  const message = () => {
-    if (afterCreate && afterSleep) {
-      return <T id="serviceLifecycle.both" values={{ afterCreate, afterSleep }} />;
-    }
-
-    if (afterCreate) {
-      return <T id="serviceLifecycle.afterCreate" values={{ afterCreate }} />;
-    }
-
-    if (afterSleep) {
-      return <T id="serviceLifecycle.afterSleep" values={{ afterSleep }} />;
-    }
-  };
-
-  if (!afterCreate && !afterSleep) {
-    return null;
-  }
-
-  return (
-    <div className="row items-center justify-between gap-2 rounded-md border p-3">
-      <IconClock className="inline-block size-4 text-dim" />
-
-      <p>{message()}</p>
-
-      <Link
-        to="/services/$serviceId/settings"
-        hash="lifeCycle"
-        params={{ serviceId: service.id }}
-        className="ml-auto text-link text-xs"
-      >
-        <T id="configure" />
-      </Link>
-    </div>
   );
 }
 
@@ -191,7 +109,7 @@ function MetadataEdit({ service, section }: { service: Service; section: Service
       state={{ expandedSection: section }}
       className="text-link text-xs"
     >
-      <T id="configure" />
+      <Translate id="common.configure" />
     </Link>
   );
 }

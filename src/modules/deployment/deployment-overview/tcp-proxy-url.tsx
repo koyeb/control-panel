@@ -9,7 +9,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Deployment, Service } from 'src/model';
 import { defined } from 'src/utils/assert';
 
-const T = createTranslate('modules.deployment.deploymentInfo');
+const T = createTranslate('modules.deployment.deploymentOverview.tcpProxyUrl');
 
 type TcpProxyUrlProps = {
   app: App;
@@ -25,10 +25,7 @@ export function TcpProxyUrl({ app, service, deployment }: TcpProxyUrlProps) {
   }
 
   return (
-    <Metadata
-      label={<T id="tcpProxyUrl.label" />}
-      value={<TcpProxyUrlValue deployment={deployment} urls={urls} />}
-    />
+    <Metadata label={<T id="label" />} value={<TcpProxyUrlValue deployment={deployment} urls={urls} />} />
   );
 }
 
@@ -38,14 +35,14 @@ function TcpProxyUrlValue({ deployment, urls }: { deployment: Deployment; urls: 
       return (
         <Badge size={1} color="blue" className="row gap-2">
           <Spinner className="size-4" />
-          <T id="tcpProxyUrl.pending" />
+          <T id="pending" />
         </Badge>
       );
     }
 
     return (
       <Badge size={1} color="gray">
-        <T id="tcpProxyUrl.unavailable" />
+        <T id="unavailable" />
       </Badge>
     );
   }
@@ -57,12 +54,10 @@ function TcpProxyUrlValue({ deployment, urls }: { deployment: Deployment; urls: 
       <div className="max-w-64 truncate">{url.tcpProxyUrl}</div>
 
       <span className="hidden text-dim sm:inline">
-        <T id="tcpProxyUrl.forwardedPort" values={{ portNumber: url.portNumber }} />
+        <T id="forwardedPort" values={{ portNumber: url.portNumber }} />
       </span>
 
-      {deployment.status === 'SLEEPING' && (
-        <InfoTooltip content={<T id="tcpProxyUrl.deploymentSleeping" />} />
-      )}
+      {deployment.status === 'SLEEPING' && <InfoTooltip content={<T id="deploymentSleeping" />} />}
 
       <CopyIconButton text={defined(url.tcpProxyUrl)} className="size-em" />
 

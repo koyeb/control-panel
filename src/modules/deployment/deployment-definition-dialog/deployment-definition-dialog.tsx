@@ -24,7 +24,7 @@ import type {
 } from 'src/model';
 import { assert } from 'src/utils/assert';
 
-const T = createTranslate('modules.deployment.deploymentInfo.definitionDialog');
+const T = createTranslate('modules.deployment.deploymentDefinitionDialog');
 
 export function DeploymentDefinitionDialog() {
   const [tab, setTab] = useState<'json' | 'parsed'>('json');

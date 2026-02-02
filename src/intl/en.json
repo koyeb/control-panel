@@ -9,6 +9,7 @@
     "import": "Import",
     "send": "Send",
     "override": "Override",
+    "configure": "Configure",
     "noValue": "--",
     "notFound": "Not found",
     "notApplicable": "N/A",
@@ -563,7 +564,7 @@
           }
         }
       },
-      "deploymentInfo": {
+      "deploymentOverview": {
         "overview": "Overview",
         "externalUrlLabel": "Public URL",
         "externalUrlValueForwardedPort": "(forwarded to port {portNumber})",
@@ -580,7 +581,9 @@
           "afterSleep": "Service will be deleted {afterSleep} after scale to zero",
           "both": "Service will be deleted {afterSleep} after scale to zero or in {afterCreate}"
         },
-        "configure": "Configure",
+        "deploymentDefinition": "Deployment definition"
+      },
+      "deploymentDefinition": {
         "repositoryLabel": "Repository",
         "branchLabel": "Branch",
         "commitLabel": "Commit",
@@ -596,61 +599,61 @@
         "volumesLabel": "Volumes",
         "volumesValue": "{count} {count, plural, one {volume} other {volumes}} attached",
         "attachedVolume": "{volumeName} mounted at {mountPath}",
-        "viewMore": "View more",
-        "definitionDialog": {
-          "title": "Deployment definition",
-          "json": "JSON",
-          "parsed": "Parsed",
-          "general": {
-            "title": "General",
-            "nameLabel": "Name:",
-            "typeLabel": "Type:",
-            "strategyLabel": "Deployment strategy:"
+        "viewMore": "View more"
+      },
+      "deploymentDefinitionDialog": {
+        "title": "Deployment definition",
+        "json": "JSON",
+        "parsed": "Parsed",
+        "general": {
+          "title": "General",
+          "nameLabel": "Name:",
+          "typeLabel": "Type:",
+          "strategyLabel": "Deployment strategy:"
+        },
+        "source": {
+          "title": "Deployment Source",
+          "git": {
+            "repositoryLabel": "Repository:",
+            "branchLabel": "Branch:",
+            "autodeployLabel": "Autodeploy:",
+            "privilegedLabel": "Privileged:",
+            "builderTypeLabel": "Builder type:",
+            "buildpack": "Buildpack",
+            "dockerfileLabel": "Dockerfile",
+            "buildCommandLabel": "Build command:",
+            "runCommandLabel": "Run command:",
+            "entrypointLabel": "Entrypoint:",
+            "commandLabel": "Command:",
+            "argumentsLabel": "Args:",
+            "targetLabel": "Target:"
           },
-          "source": {
-            "title": "Deployment Source",
-            "git": {
-              "repositoryLabel": "Repository:",
-              "branchLabel": "Branch:",
-              "autodeployLabel": "Autodeploy:",
-              "privilegedLabel": "Privileged:",
-              "builderTypeLabel": "Builder type:",
-              "buildpack": "Buildpack",
-              "dockerfileLabel": "Dockerfile",
-              "buildCommandLabel": "Build command:",
-              "runCommandLabel": "Run command:",
-              "entrypointLabel": "Entrypoint:",
-              "commandLabel": "Command:",
-              "argumentsLabel": "Args:",
-              "targetLabel": "Target:"
-            },
-            "docker": {
-              "imageLabel": "Image:",
-              "entrypointLabel": "Entrypoint:",
-              "commandLabel": "Command:",
-              "argumentsLabel": "Args:",
-              "privilegedLabel": "Privileged:"
-            }
-          },
-          "instances": {
-            "title": "Instances",
-            "typeLabel": "Type:",
-            "scalingLabel": "Scaling:",
-            "regionsLabel": "Regions:",
-            "autoscaling": "Between {min} and {max}"
-          },
-          "ports": {
-            "title": "Ports",
-            "http": "HTTP",
-            "http2": "HTTP/2",
-            "tcp": "TCP",
-            "publicPort": "{portNumber}, mapped to {path} expecting {protocol} traffic",
-            "privatePort": "{portNumber}, exposed on the service mesh"
-          },
-          "environmentVariables": {
-            "title": "Environment variables",
-            "noVariables": "No variables configured"
+          "docker": {
+            "imageLabel": "Image:",
+            "entrypointLabel": "Entrypoint:",
+            "commandLabel": "Command:",
+            "argumentsLabel": "Args:",
+            "privilegedLabel": "Privileged:"
           }
+        },
+        "instances": {
+          "title": "Instances",
+          "typeLabel": "Type:",
+          "scalingLabel": "Scaling:",
+          "regionsLabel": "Regions:",
+          "autoscaling": "Between {min} and {max}"
+        },
+        "ports": {
+          "title": "Ports",
+          "http": "HTTP",
+          "http2": "HTTP/2",
+          "tcp": "TCP",
+          "publicPort": "{portNumber}, mapped to {path} expecting {protocol} traffic",
+          "privatePort": "{portNumber}, exposed on the service mesh"
+        },
+        "environmentVariables": {
+          "title": "Environment variables",
+          "noVariables": "No variables configured"
         }
       },
       "deploymentLogs": {
@@ -1482,7 +1485,6 @@
         "expandedTitle": "Configure ports",
         "info": "Configure the ports and protocols required by your services",
         "noPorts": "No ports configured",
-        "configure": "Configure",
         "close": "Close",
         "publicTcp": {
           "enabled": "Public TCP access enabled",

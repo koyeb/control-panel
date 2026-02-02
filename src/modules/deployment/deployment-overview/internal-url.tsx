@@ -9,7 +9,7 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Service } from 'src/model';
 import { assert, defined } from 'src/utils/assert';
 
-const T = createTranslate('modules.deployment.deploymentInfo');
+const T = createTranslate('modules.deployment.deploymentOverview');
 
 type InternalUrlProps = {
   app: App;

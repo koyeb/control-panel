@@ -1,8 +1,8 @@
 import { isComputeDeployment, useAppQuery, useDeploymentQuery, useServiceQuery } from 'src/api';
 import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
-import { DeploymentInfo } from 'src/modules/deployment/deployment-info/deployment-info';
 import { DeploymentLogs } from 'src/modules/deployment/deployment-logs/deployment-logs';
+import { DeploymentOverview } from 'src/modules/deployment/deployment-overview/deployment-overview';
 import { assert } from 'src/utils/assert';
 
 import { DeploymentStatusDetails } from './components/deployment-status-details';
@@ -37,7 +37,7 @@ export function InitialDeploymentStep({ serviceId }: { serviceId: string }) {
   return (
     <div className="col gap-8 xl:row">
       <div className="col min-w-0 flex-1 gap-8">
-        <DeploymentInfo app={app} service={service} deployment={deployment} />
+        <DeploymentOverview app={app} service={service} deployment={deployment} />
         <DeploymentLogs app={app} service={service} deployment={deployment} />
       </div>
 
