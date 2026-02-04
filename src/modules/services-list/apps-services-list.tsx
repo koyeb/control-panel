@@ -1,7 +1,6 @@
-import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { useAppsFull } from 'src/api';
+import { useApps, useAppsFull } from 'src/api';
 import { QueryGuard } from 'src/components/query-error';
 import { useDebouncedValue } from 'src/hooks/timers';
 import { createTranslate } from 'src/intl/translate';
@@ -36,19 +35,16 @@ export function AppsServicesList() {
     statuses.push('DELETING');
   }
 
+  const apps = useApps();
+  const showServiceCreation = apps?.length === 0;
+
   const query = useAppsFull({
     name: searchDebounced || undefined,
     types,
     statuses,
   });
 
-  const showServiceCreation = useRef<boolean>(null);
-
-  if (query.isSuccess && showServiceCreation.current === null) {
-    showServiceCreation.current = query.data.apps.length === 0;
-  }
-
-  if (showServiceCreation.current) {
+  if (showServiceCreation) {
     return <ServiceCreation from="/services" />;
   }
 
