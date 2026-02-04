@@ -1,8 +1,8 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router';
 import { jwtDecode } from 'jwt-decode';
 import { z } from 'zod';
 
-import { createEnsureApiQueryData, getApi, mapOrganization } from 'src/api';
+import { getApi } from 'src/api';
 import { notify } from 'src/application/notify';
 import { reportError } from 'src/application/sentry';
 import { hasMessage } from 'src/application/validation';
@@ -41,9 +41,8 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
     };
   },
 
-  async loader({ deps, context: { authKit, queryClient } }) {
-    const ensureApiQueryData = createEnsureApiQueryData(queryClient);
-    const api = getApi(authKit.getAccessToken);
+  async loader({ deps, context: { authKit } }) {
+    const api = getApi(() => authKit.getAccessToken().catch(() => undefined));
 
     const search = deps.search;
     const redirectUrl = new URL(deps.metadata, window.location.origin);
@@ -55,7 +54,12 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
 
       await api('post /v1/account/oauth', { body: search });
 
-      if (search.setup_action === 'install' && search.state) {
+      if (search.setup_action === 'install') {
+        if (!search.state) {
+          // 2-step validation
+          return;
+        }
+
         throw redirect({
           to: redirectUrl.pathname,
           search: Object.fromEntries(redirectUrl.searchParams),
@@ -63,19 +67,19 @@ export const Route = createFileRoute('/account/oauth/github/callback')({
         });
       }
 
-      const currentOrganization = await ensureApiQueryData('get /v1/account/organization', {}).then(
-        ({ organization }) => mapOrganization(organization!),
-      );
-
-      if (currentOrganization.id === deps.organizationId) {
+      if (search.setup_action === 'request') {
         throw redirect({
           to: redirectUrl.pathname,
           search: Object.fromEntries(redirectUrl.searchParams),
           replace: true,
-          state: { githubAppInstallationRequested: search.setup_action === 'requested' },
+          state: { githubAppInstallationRequested: true },
         });
       }
     } catch (error) {
+      if (isRedirect(error)) {
+        throw error;
+      }
+
       if (hasMessage(error)) {
         notify.error(error.message);
       }

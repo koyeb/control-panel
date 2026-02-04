@@ -31,7 +31,7 @@ export * from './query';
 
 export type ApiFn = typeof api;
 
-export function getApi(getAccessToken: () => Promise<string>): ApiFn {
+export function getApi(getAccessToken: () => Promise<string | undefined>): ApiFn {
   return async (endpoint, params, options) => {
     return api(endpoint, params, {
       baseUrl: getConfig('apiBaseUrl'),

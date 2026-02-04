@@ -1,5 +1,5 @@
 import { useMount } from 'src/hooks/lifecycle';
-import { useNavigate, useSearchParams } from 'src/hooks/router';
+import { useHistoryState, useNavigate, useSearchParams } from 'src/hooks/router';
 
 import { DockerImageSelector } from './docker-image-selector';
 import { RepositorySelector } from './repository-selector';
@@ -7,11 +7,13 @@ import { RepositorySelector } from './repository-selector';
 export function ImportProjectStep() {
   const type = useSearchParams().get('type');
   const navigate = useNavigate();
+  const state = useHistoryState();
 
   useMount(() => {
     void navigate({
       to: '/services/new',
       search: (prev) => ({ ...prev, repository: undefined, image: undefined }),
+      state,
       replace: true,
     });
   });
