@@ -12,7 +12,6 @@ const T = createTranslate('pages.service.settings.lifecycle.deleteAfterSleep');
 
 export function DeleteAfterSleep({ form }: { form: UseFormReturn<ServiceLifecycleFormType> }) {
   const t = T.useTranslate();
-  const enabled = form.watch('deleteAfterSleep.enabled');
 
   return (
     <div className="row items-start gap-4 rounded-md border px-3 py-2">
@@ -21,15 +20,12 @@ export function DeleteAfterSleep({ form }: { form: UseFormReturn<ServiceLifecycl
           <div className="text-xs/5 font-medium">
             <T id="label" />
           </div>
-
-          {enabled && (
-            <div className="text-xs text-dim">
-              <T id="description" />
-            </div>
-          )}
+          <div className="text-xs text-dim">
+            <T id="description" />
+          </div>
         </div>
 
-        {enabled && (
+        {form.watch('deleteAfterSleep.enabled') && (
           <div className="row gap-2">
             <ControlledInput
               control={form.control}

@@ -12,7 +12,6 @@ const T = createTranslate('pages.service.settings.lifecycle.deleteAfterCreate');
 
 export function DeleteAfterCreate({ form }: { form: UseFormReturn<ServiceLifecycleFormType> }) {
   const t = T.useTranslate();
-  const enabled = form.watch('deleteAfterCreate.enabled');
 
   return (
     <div className="row items-start gap-4 rounded-md border px-3 py-2">
@@ -21,15 +20,12 @@ export function DeleteAfterCreate({ form }: { form: UseFormReturn<ServiceLifecyc
           <div className="text-xs/5 font-medium">
             <T id="label" />
           </div>
-
-          {enabled && (
-            <div className="text-xs text-dim">
-              <T id="description" />
-            </div>
-          )}
+          <div className="text-xs text-dim">
+            <T id="description" />
+          </div>
         </div>
 
-        {enabled && (
+        {form.watch('deleteAfterCreate.enabled') && (
           <div className="row gap-2">
             <ControlledInput
               control={form.control}

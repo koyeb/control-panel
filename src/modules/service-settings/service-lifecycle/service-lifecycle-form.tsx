@@ -61,7 +61,6 @@ export function ServiceLifecycleForm({ service }: { service: Service }) {
   return (
     <form onSubmit={handleSubmit(form, mutation.mutateAsync)} className="col gap-4">
       <DeleteAfterCreate form={form} />
-
       {service.type !== 'worker' && <DeleteAfterSleep form={form} />}
 
       <div className="row items-center gap-4">

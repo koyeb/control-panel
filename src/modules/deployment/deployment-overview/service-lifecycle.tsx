@@ -39,16 +39,20 @@ export function ServiceLifecycle({ service }: { service: Service }) {
   }
 
   return (
-    <div className="row items-center justify-between gap-2 rounded-md bg-muted/50 p-3">
-      <IconClock className="inline-block size-4 text-dim" />
+    <div className="col justify-between gap-2 rounded-md bg-muted/50 p-3 @sm:row @sm:items-center @sm:gap-4">
+      <div className="row items-center gap-2">
+        <div>
+          <IconClock className="size-4 text-dim" />
+        </div>
 
-      <p>{message()}</p>
+        <p>{message()}</p>
+      </div>
 
       <Link
         to="/services/$serviceId/settings"
         hash="lifeCycle"
         params={{ serviceId: service.id }}
-        className="ml-auto text-link text-xs"
+        className="text-link"
       >
         <Translate id="common.configure" />
       </Link>

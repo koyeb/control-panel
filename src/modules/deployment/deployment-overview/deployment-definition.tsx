@@ -31,8 +31,8 @@ export function DeploymentDefinition({ service, deployment }: DeploymentDefiniti
   const replicas = useDeploymentScaling(deployment);
 
   return (
-    <section className="rounded-md border p-3">
-      <div className="row flex-wrap gap-6 border-b py-3">
+    <section className="rounded-md border">
+      <div className="row flex-wrap gap-6 border-b p-3">
         {source.type === 'git' && (
           <>
             <RepositoryMetadata repository={source.repository} />
@@ -51,7 +51,7 @@ export function DeploymentDefinition({ service, deployment }: DeploymentDefiniti
         {source.type === 'docker' && <DockerImageMetadata image={source.image} />}
       </div>
 
-      <div className="row flex-wrap gap-6 border-b py-3">
+      <div className="row flex-wrap gap-6 border-b p-3">
         <div className="col gap-1">
           <InstanceMetadata instance={definition.instanceType} />
           {organization?.plan === 'hobby' ? (
@@ -82,7 +82,7 @@ export function DeploymentDefinition({ service, deployment }: DeploymentDefiniti
         </div>
       </div>
 
-      <div className="row justify-center pt-3">
+      <div className="row justify-center p-3">
         <button className="text-link" onClick={() => openDialog('DeploymentDefinition', deployment)}>
           <T id="viewMore" />
         </button>

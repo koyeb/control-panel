@@ -1,4 +1,5 @@
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Service } from 'src/model';
 
@@ -17,40 +18,50 @@ type DeploymentInfoProps = {
 };
 
 export function DeploymentOverview({ app, service, deployment }: DeploymentInfoProps) {
+  return (
+    <section className="@container rounded-md border">
+      <FeatureFlag feature="service-lifecycle">
+        <ServiceLifecycle service={service} />
+      </FeatureFlag>
+
+      <div className="col gap-4 p-3">
+        <Overview app={app} service={service} deployment={deployment} />
+
+        {(service.type !== 'worker' || service.lifeCycle.deleteAfterCreate) && (
+          <div className="font-medium">
+            <T id="deploymentDefinition" />
+          </div>
+        )}
+
+        <DeploymentDefinition service={service} deployment={deployment} />
+      </div>
+    </section>
+  );
+}
+
+function Overview({ app, service, deployment }: DeploymentInfoProps) {
   const { type } = deployment.definition;
 
   return (
-    <section className="col gap-4 rounded-md border p-3">
-      <header className="col gap-3">
-        <div className="row items-center gap-4">
-          <div className="text-base font-medium">
-            <T id="overview" />
-          </div>
-
-          <div className="ml-auto row items-center gap-2 font-medium">
-            <TranslateEnum enum="serviceType" value={type} />
-            <ServiceTypeIcon type={type} />
-          </div>
+    <div className="col gap-3">
+      <div className="row items-center gap-4">
+        <div className="text-base font-medium">
+          <T id="overview" />
         </div>
 
-        {type !== 'worker' && (
-          <div className="row flex-wrap gap-x-16 gap-y-4">
-            <ExternalUrl app={app} service={service} deployment={deployment} />
-            <InternalUrl app={app} service={service} deployment={deployment} />
-            <TcpProxyUrl app={app} service={service} deployment={deployment} />
-          </div>
-        )}
-      </header>
+        <div className="ml-auto row items-center gap-2 font-medium">
+          <TranslateEnum enum="serviceType" value={type} />
+          <ServiceTypeIcon type={type} />
+        </div>
+      </div>
 
-      <ServiceLifecycle service={service} />
-
-      {(service.type !== 'worker' || service.lifeCycle.deleteAfterCreate) && (
-        <div className="font-medium">
-          <T id="deploymentDefinition" />
+      {type !== 'worker' && (
+        <div className="row flex-wrap gap-x-16 gap-y-4">
+          <ExternalUrl app={app} service={service} deployment={deployment} />
+          <InternalUrl app={app} service={service} deployment={deployment} />
+          <TcpProxyUrl app={app} service={service} deployment={deployment} />
         </div>
       )}
-
-      <DeploymentDefinition service={service} deployment={deployment} />
-    </section>
+    </div>
   );
 }
