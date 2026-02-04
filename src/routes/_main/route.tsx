@@ -13,6 +13,7 @@ import {
 import { AuthKit } from 'src/application/authkit';
 import { getConfig } from 'src/application/config';
 import { useOnboardingStep } from 'src/application/onboarding';
+import { PostHogProvider } from 'src/application/posthog';
 import { getUrlLatency } from 'src/application/url-latency';
 import { MainLayout } from 'src/layouts/main/main-layout';
 import { AccountLocked } from 'src/modules/account/account-locked';
@@ -21,7 +22,11 @@ import { useTrial } from 'src/modules/trial/use-trial';
 import { OnboardingPage } from 'src/pages/onboarding/onboarding.page';
 
 export const Route = createFileRoute('/_main')({
-  component: Component,
+  component: () => (
+    <PostHogProvider>
+      <Component />
+    </PostHogProvider>
+  ),
 
   validateSearch: z.object({
     'organization-id': z.string().optional(),

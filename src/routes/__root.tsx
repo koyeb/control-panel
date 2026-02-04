@@ -5,7 +5,6 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { useEffect } from 'react';
 
 import { AuthKit } from 'src/application/authkit';
-import { PostHogProvider } from 'src/application/posthog';
 import { ConfirmationDialog } from 'src/components/confirmation-dialog';
 import { closeDialog } from 'src/components/dialog';
 import { ErrorComponent, NotFoundComponent } from 'src/components/error-view';
@@ -38,12 +37,12 @@ function Component() {
   }, [router]);
 
   return (
-    <PostHogProvider>
+    <>
       <Outlet />
       <NotificationContainer />
       <ConfirmationDialog />
       <TanStackRouterDevtools />
       <ReactQueryDevtools />
-    </PostHogProvider>
+    </>
   );
 }
