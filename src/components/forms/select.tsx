@@ -102,9 +102,9 @@ export function Select<T>(props: SelectProps<T>) {
       <Menu {...context.select.getMenuProps()} className={clsx({ hidden: items.length === 0 })}>
         {items.map((item, index) => (
           <MenuItem
-            {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
             key={getKey?.(item) ?? index}
             highlighted={index === context.select.highlightedIndex}
+            {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
           >
             {renderItem?.(item)}
           </MenuItem>
@@ -217,9 +217,9 @@ export function MultiSelectMenu<T>({
       <Menu {...context.select.getMenuProps()}>
         {items.map((item, index) => (
           <MenuItem
-            {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
             key={getKey?.(item) ?? index}
             highlighted={index === context.select.highlightedIndex}
+            {...context.select.getItemProps({ item, index, onClick: () => onItemClick?.(item) })}
           >
             {renderItem?.(item, selected.includes(item))}
           </MenuItem>

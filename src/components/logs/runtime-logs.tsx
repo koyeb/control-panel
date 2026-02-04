@@ -22,8 +22,6 @@ import { defined } from 'src/utils/assert';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
 
-import { ButtonMenuItem } from '../dropdown-menu';
-
 import { LogLine, LogsLines } from './log-lines';
 import { LogsFilters, useLogsFilters } from './logs-filters';
 import { LogsFooter } from './logs-footer';
@@ -99,18 +97,18 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
         serviceName={service.name}
         lines={logs.lines}
         menu={
-          <Menu>
+          <>
             {(['tail', 'stream', 'date', 'instance', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
-              <ButtonMenuItem key={option}>
+              <MenuItem key={option} className="p-0!">
                 <ControlledCheckbox
                   control={control}
                   name={option}
                   label={<Translate id={`components.logs.options.${option}`} />}
-                  className="flex-1"
+                  className="w-full p-2 hover:bg-muted"
                 />
-              </ButtonMenuItem>
+              </MenuItem>
             ))}
-          </Menu>
+          </>
         }
       />
     </FullScreen>

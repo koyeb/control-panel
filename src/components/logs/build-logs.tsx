@@ -1,4 +1,4 @@
-import { Alert, IconButton, Menu } from '@koyeb/design-system';
+import { Alert, IconButton, MenuItem } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useCallback, useEffect } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
@@ -14,8 +14,6 @@ import { App, ComputeDeployment, LogLine as LogLineType, Service } from 'src/mod
 import { inArray } from 'src/utils/arrays';
 import { AssertionError, assert } from 'src/utils/assert';
 import { shortId } from 'src/utils/strings';
-
-import { ButtonMenuItem } from '../dropdown-menu';
 
 import { LogLine, LogsLines } from './log-lines';
 import { useLogsFilters } from './logs-filters';
@@ -81,18 +79,18 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
         serviceName={service.name}
         lines={logs.lines}
         menu={
-          <Menu>
+          <>
             {(['tail', 'stream', 'date', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
-              <ButtonMenuItem key={option}>
+              <MenuItem key={option} className="p-0!">
                 <ControlledCheckbox
                   control={control}
                   name={option}
                   label={<Translate id={`components.logs.options.${option}`} />}
-                  className="flex-1"
+                  className="w-full p-2 hover:bg-muted"
                 />
-              </ButtonMenuItem>
+              </MenuItem>
             ))}
-          </Menu>
+          </>
         }
       />
     </FullScreen>

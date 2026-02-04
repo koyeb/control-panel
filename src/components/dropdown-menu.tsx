@@ -93,21 +93,21 @@ export function ActionsMenu(props: Omit<DropdownMenuProps, 'reference'> & { Icon
 }
 
 export function LabelMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
-  return <MenuItem className={clsx(className, 'pointer-events-none py-2 text-dim')} {...props} />;
+  return <MenuItem className={clsx(className, 'pointer-events-none text-dim')} {...props} />;
 }
 
 export function ButtonMenuItem({ className, ...props }: React.ComponentProps<'button'>) {
   return (
-    <MenuItem className={clsx(props.disabled ? 'text-dim' : 'hover:bg-muted')}>
-      <button {...props} className={clsx(className, 'row w-full items-center gap-2 py-1 text-start')} />
+    <MenuItem className={clsx('p-0!', props.disabled ? 'text-dim' : 'hover:bg-muted')}>
+      <button {...props} className={clsx(className, 'row w-full items-center gap-4 p-2 text-start')} />
     </MenuItem>
   );
 }
 
 function NativeLinkMenuItem({ className, ...props }: React.ComponentProps<'a'>) {
   return (
-    <MenuItem className={clsx(props.href ? 'hover:bg-muted' : 'cursor-default! text-dim')}>
-      <a {...props} className={clsx(className, 'row w-full items-center gap-2 py-1')} />
+    <MenuItem className={clsx('p-0!', props.href ? 'hover:bg-muted' : 'cursor-default! text-dim')}>
+      <a {...props} className={clsx(className, 'row w-full items-center gap-4 p-2')} />
     </MenuItem>
   );
 }
@@ -116,8 +116,8 @@ export const LinkMenuItem = createLink(NativeLinkMenuItem);
 
 export function ExternalLinkMenuItem({ className, ...props }: React.ComponentProps<typeof ExternalLink>) {
   return (
-    <MenuItem className="hover:bg-muted">
-      <ExternalLink {...props} className={clsx(className, 'row w-full items-center gap-2 py-1')} />
+    <MenuItem className="p-0! hover:bg-muted">
+      <ExternalLink {...props} className={clsx(className, 'row w-full items-center gap-4 p-2')} />
     </MenuItem>
   );
 }
