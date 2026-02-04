@@ -1,5 +1,7 @@
 import { Alert, IconButton, Menu } from '@koyeb/design-system';
-import { useEffect } from 'react';
+import clsx from 'clsx';
+import { useCallback, useEffect } from 'react';
+import { UseFormSetValue } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { ControlledCheckbox } from 'src/components/forms';
@@ -15,10 +17,11 @@ import { shortId } from 'src/utils/strings';
 
 import { ButtonMenuItem } from '../dropdown-menu';
 
-import { LogLineContent, LogLineDate, LogLineStream, LogLines, LogsFooter } from './logs';
+import { LogLine, LogsLines } from './log-lines';
 import { useLogsFilters } from './logs-filters';
+import { LogsFooter } from './logs-footer';
 import { LogsOptions, useLogsOptions } from './logs-options';
-import { useLogs } from './use-logs';
+import { LogsApi, useLogs } from './use-logs';
 import waitingForLogsImage from './waiting-for-logs.gif';
 
 const T = createTranslate('modules.deployment.deploymentLogs.build');
@@ -31,8 +34,8 @@ type BuildLogsProps = {
 };
 
 export function BuildLogs({ app, service, deployment, onLastLineChanged }: BuildLogsProps) {
-  const optionsForm = useLogsOptions();
-  const options = optionsForm.watch();
+  const { setValue, watch, control } = useLogsOptions();
+  const options = watch();
 
   const filtersForm = useLogsFilters('build', { deployment });
   const filters = filtersForm.watch();
@@ -66,19 +69,12 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
   return (
     <FullScreen
       enabled={options.fullScreen}
-      exit={() => optionsForm.setValue('fullScreen', false)}
+      exit={() => setValue('fullScreen', false)}
       className="col gap-2 p-4"
     >
-      <LogsHeader toggleFullScreen={() => optionsForm.setValue('fullScreen', !options.fullScreen)} />
+      <LogsHeader toggleFullScreen={() => setValue('fullScreen', !options.fullScreen)} />
 
-      <LogLines
-        fullScreen={options.fullScreen}
-        tail={options.tail}
-        setTail={(tail) => optionsForm.setValue('tail', tail)}
-        logs={logs}
-        renderLine={(line) => <LogLine line={line} options={options} />}
-        renderNoLogs={() => <NoLogs />}
-      />
+      <BuildLogLines logs={logs} options={options} setOption={setValue} />
 
       <LogsFooter
         appName={app.name}
@@ -89,7 +85,7 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
             {(['tail', 'stream', 'date', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
               <ButtonMenuItem key={option}>
                 <ControlledCheckbox
-                  control={optionsForm.control}
+                  control={control}
                   name={option}
                   label={<Translate id={`components.logs.options.${option}`} />}
                   className="flex-1"
@@ -118,7 +114,55 @@ function WaitingForLogs() {
   );
 }
 
-function NoLogs() {
+type RuntimeLogLinesProps = {
+  logs: LogsApi;
+  options: LogsOptions;
+  setOption: UseFormSetValue<LogsOptions>;
+};
+
+function BuildLogLines({ logs, options, setOption }: RuntimeLogLinesProps) {
+  const onScrollTop = logs.loadPrevious;
+
+  const onScrollBottom = useCallback(() => {
+    setOption('tail', true);
+  }, [setOption]);
+
+  if (logs.lines.length === 0) {
+    return (
+      <div
+        className={clsx(
+          'col h-128 items-center justify-center gap-2 rounded-md border',
+          options.fullScreen && 'flex-1',
+        )}
+      >
+        <NoBuildLogs />
+      </div>
+    );
+  }
+
+  return (
+    <LogsLines
+      lines={logs.lines}
+      hasPrevious={logs.hasPrevious}
+      tail={options.tail}
+      renderLine={(line) => (
+        <LogLine
+          line={line}
+          showDate={options.date}
+          dateFormat={{ timeStyle: 'medium' }}
+          showStream={options.stream}
+          wordWrap={options.wordWrap}
+        />
+      )}
+      onWheel={(event) => event.deltaY < 0 && setOption('tail', false)}
+      onScrollToTop={onScrollTop}
+      onScrollToBottom={onScrollBottom}
+      className={clsx('h-128 resize-y', options.fullScreen && 'flex-1')}
+    />
+  );
+}
+
+function NoBuildLogs() {
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
 
@@ -190,19 +234,5 @@ function LogsHeader({ toggleFullScreen }: LogsHeaderProps) {
         <T id="header.fullScreen" />
       </IconButton>
     </header>
-  );
-}
-
-function LogLine({ options, line }: { options: LogsOptions; line: LogLineType }) {
-  return (
-    <div className="row px-4">
-      {options.date && (
-        <LogLineDate line={line} timeZone="UTC" hour="2-digit" minute="2-digit" second="2-digit" />
-      )}
-
-      {options.stream && <LogLineStream line={line} />}
-
-      <LogLineContent line={line} wordWrap={options.wordWrap} />
-    </div>
   );
 }

@@ -1,12 +1,11 @@
 import { Dropdown, IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { format } from 'date-fns';
-import { useEffect, useMemo } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
+import { useCallback, useEffect, useMemo } from 'react';
+import { Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
 import { isDeploymentRunning } from 'src/application/service-functions';
-import { ButtonMenuItem } from 'src/components/dropdown-menu';
 import { Checkbox, ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { QueryError } from 'src/components/query-error';
@@ -17,16 +16,19 @@ import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
 import { useNow } from 'src/hooks/timers';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
-import { App, ComputeDeployment, Instance, LogLine, LogLine as LogLineType, Service } from 'src/model';
+import { App, ComputeDeployment, Instance, LogLine as LogLineType, Service } from 'src/model';
 import { arrayToggle, inArray, last } from 'src/utils/arrays';
 import { defined } from 'src/utils/assert';
 import { identity } from 'src/utils/generic';
 import { getId, hasProperty } from 'src/utils/object';
 
-import { LogLineContent, LogLineDate, LogLineInstanceId, LogLineStream, LogLines, LogsFooter } from './logs';
+import { ButtonMenuItem } from '../dropdown-menu';
+
+import { LogLine, LogsLines } from './log-lines';
 import { LogsFilters, useLogsFilters } from './logs-filters';
+import { LogsFooter } from './logs-footer';
 import { LogsOptions, useLogsOptions } from './logs-options';
-import { LogStream, LogsPeriod, getLogsStartDate, useLogs } from './use-logs';
+import { LogStream, LogsApi, LogsPeriod, getLogsStartDate, useLogs } from './use-logs';
 import waitingForLogsImage from './waiting-for-logs.gif';
 
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
@@ -40,8 +42,8 @@ type RuntimeLogsProps = {
 };
 
 export function RuntimeLogs({ app, service, deployment, instances, onLastLineChanged }: RuntimeLogsProps) {
-  const optionsForm = useLogsOptions();
-  const options = optionsForm.watch();
+  const { watch, setValue, control } = useLogsOptions();
+  const options = watch();
 
   const filtersForm = useLogsFilters('runtime', { deployment });
   const filters = filtersForm.watch();
@@ -74,24 +76,22 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
   return (
     <FullScreen
       enabled={options.fullScreen}
-      exit={() => optionsForm.setValue('fullScreen', false)}
+      exit={() => setValue('fullScreen', false)}
       className="col gap-2 p-4"
     >
-      <LogsHeader deployment={deployment} filters={filtersForm} options={optionsForm} instances={instances} />
+      <LogsHeader
+        deployment={deployment}
+        filters={filtersForm}
+        instances={instances}
+        toggleFullScreen={() => setValue('fullScreen', !options.fullScreen)}
+      />
 
-      <LogLines
-        fullScreen={options.fullScreen}
-        tail={options.tail}
-        setTail={(tail) => optionsForm.setValue('tail', tail)}
+      <RuntimeLogLines
         logs={logs}
-        renderLine={(line) => <RuntimeLogLine line={line} options={options} />}
-        renderNoLogs={() => (
-          <NoRuntimeLogs
-            running={isDeploymentRunning(deployment)}
-            loading={logs.loading}
-            filters={filtersForm}
-          />
-        )}
+        running={isDeploymentRunning(deployment)}
+        filtersForm={filtersForm}
+        options={options}
+        setOption={setValue}
       />
 
       <LogsFooter
@@ -103,7 +103,7 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
             {(['tail', 'stream', 'date', 'instance', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
               <ButtonMenuItem key={option}>
                 <ControlledCheckbox
-                  control={optionsForm.control}
+                  control={control}
                   name={option}
                   label={<Translate id={`components.logs.options.${option}`} />}
                   className="flex-1"
@@ -117,13 +117,72 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
   );
 }
 
-type NoLogsProps = {
+type RuntimeLogLinesProps = {
+  logs: LogsApi;
+  running: boolean;
+  filtersForm: UseFormReturn<LogsFilters>;
+  options: LogsOptions;
+  setOption: UseFormSetValue<LogsOptions>;
+};
+
+export function RuntimeLogLines({ logs, running, filtersForm, options, setOption }: RuntimeLogLinesProps) {
+  const onScrollTop = logs.loadPrevious;
+
+  const onScrollBottom = useCallback(() => {
+    setOption('tail', true);
+  }, [setOption]);
+
+  if (logs.lines.length === 0) {
+    return (
+      <div
+        className={clsx(
+          'col h-128 items-center justify-center gap-2 rounded-md border',
+          options.fullScreen && 'flex-1',
+        )}
+      >
+        <NoRuntimeLogs running={running} loading={logs.loading} filters={filtersForm} />
+      </div>
+    );
+  }
+
+  const dateFormat: Intl.DateTimeFormatOptions = {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  };
+
+  return (
+    <LogsLines
+      lines={logs.lines}
+      hasPrevious={logs.hasPrevious}
+      tail={options.tail}
+      renderLine={(line) => (
+        <LogLine
+          line={line}
+          showDate={options.date}
+          dateFormat={dateFormat}
+          showStream={options.stream}
+          wordWrap={options.wordWrap}
+        />
+      )}
+      onWheel={(event) => event.deltaY < 0 && setOption('tail', false)}
+      onScrollToTop={onScrollTop}
+      onScrollToBottom={onScrollBottom}
+      className={clsx('h-128 resize-y', options.fullScreen && 'flex-1')}
+    />
+  );
+}
+
+type NoRuntimeLogsProps = {
   running: boolean;
   loading: boolean;
   filters: UseFormReturn<LogsFilters>;
 };
 
-export function NoRuntimeLogs({ running, loading, filters }: NoLogsProps) {
+export function NoRuntimeLogs({ running, loading, filters }: NoRuntimeLogsProps) {
   const organization = useOrganization();
   const periods = useRetentionPeriods();
   const hasLogsFilters = useFeatureFlag('logs-filters');
@@ -176,12 +235,12 @@ function WaitingForLogs() {
 
 type LogsHeaderProps = {
   deployment: ComputeDeployment;
-  filters: UseFormReturn<LogsFilters>;
-  options: UseFormReturn<LogsOptions>;
   instances: Instance[];
+  filters: UseFormReturn<LogsFilters>;
+  toggleFullScreen: () => void;
 };
 
-function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps) {
+function LogsHeader({ deployment, instances, filters, toggleFullScreen }: LogsHeaderProps) {
   const regionalDeployments = useRegionalDeployments(deployment.id);
   const regions = useRegionsCatalog();
   const t = T.useTranslate();
@@ -261,11 +320,7 @@ function LogsHeader({ deployment, filters, options, instances }: LogsHeaderProps
             )}
           />
 
-          <IconButton
-            variant="solid"
-            Icon={IconFullscreen}
-            onClick={() => options.setValue('fullScreen', !options.getValues('fullScreen'))}
-          >
+          <IconButton variant="solid" Icon={IconFullscreen} onClick={toggleFullScreen}>
             <T id="header.fullScreen" />
           </IconButton>
         </div>
@@ -345,24 +400,4 @@ function useRetentionPeriods() {
 
     return periods;
   }, [quotas]);
-}
-
-export function RuntimeLogLine({ line, options }: { line: LogLine; options: LogsOptions }) {
-  const dateProps: Partial<React.ComponentProps<typeof LogLineDate>> = {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  };
-
-  return (
-    <div className={clsx('row px-4', line.stream === 'koyeb' && 'bg-blue/10')}>
-      {options.date && <LogLineDate line={line} timeZone="UTC" {...dateProps} />}
-      {options.stream && <LogLineStream line={line} />}
-      {options.instance && <LogLineInstanceId line={line} />}
-      <LogLineContent line={line} wordWrap={options.wordWrap} />
-    </div>
-  );
 }

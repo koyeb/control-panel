@@ -12,10 +12,10 @@ import { Translate, createTranslate } from 'src/intl/translate';
 import { Instance } from 'src/model';
 import { arrayToggle } from 'src/utils/arrays';
 
-import { LogLines, LogsFooter } from './logs';
 import { LogsFilters, useLogsFilters } from './logs-filters';
-import { LogsOptions, useLogsOptions } from './logs-options';
-import { NoRuntimeLogs, RuntimeLogLine } from './runtime-logs';
+import { LogsFooter } from './logs-footer';
+import { useLogsOptions } from './logs-options';
+import { RuntimeLogLines } from './runtime-logs';
 import { LogStream, useLogs } from './use-logs';
 
 const T = createTranslate('modules.deployment.deploymentLogs.scaling.drawer.instanceHistory.logs');
@@ -28,8 +28,8 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   const service = useService(instance.serviceId);
   const app = useApp(service?.appId);
 
-  const optionsForm = useLogsOptions();
-  const options = optionsForm.watch();
+  const { watch, setValue, control } = useLogsOptions();
+  const options = watch();
 
   const filtersForm = useLogsFilters('runtime', { instance });
   const filters = filtersForm.watch();
@@ -43,25 +43,21 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   return (
     <div className="m-4 mt-0 rounded-md border">
       <FullScreen
-        enabled={optionsForm.watch('fullScreen')}
-        exit={() => optionsForm.setValue('fullScreen', false)}
+        enabled={watch('fullScreen')}
+        exit={() => setValue('fullScreen', false)}
         className="col gap-2 p-4"
       >
-        <LogsHeader filtersForm={filtersForm} optionsForm={optionsForm} />
+        <LogsHeader
+          filtersForm={filtersForm}
+          toggleFullScreen={() => setValue('fullScreen', options.fullScreen)}
+        />
 
-        <LogLines
-          fullScreen={options.fullScreen}
-          tail={options.tail}
-          setTail={(tail) => optionsForm.setValue('tail', tail)}
+        <RuntimeLogLines
+          running={isInstanceRunning(instance)}
           logs={logs}
-          renderLine={(line) => <RuntimeLogLine line={line} options={options} />}
-          renderNoLogs={() => (
-            <NoRuntimeLogs
-              running={isInstanceRunning(instance)}
-              loading={logs.loading}
-              filters={filtersForm}
-            />
-          )}
+          filtersForm={filtersForm}
+          options={options}
+          setOption={setValue}
         />
 
         <LogsFooter
@@ -73,7 +69,7 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
               {(['tail', 'stream', 'date', 'wordWrap', 'interpretAnsi'] as const).map((option) => (
                 <ButtonMenuItem key={option}>
                   <ControlledCheckbox
-                    control={optionsForm.control}
+                    control={control}
                     name={option}
                     label={<Translate id={`components.logs.options.${option}`} />}
                     className="flex-1"
@@ -90,10 +86,10 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
 
 type LogsHeaderProps = {
   filtersForm: UseFormReturn<LogsFilters>;
-  optionsForm: UseFormReturn<LogsOptions>;
+  toggleFullScreen: () => void;
 };
 
-function LogsHeader({ filtersForm, optionsForm }: LogsHeaderProps) {
+function LogsHeader({ filtersForm, toggleFullScreen }: LogsHeaderProps) {
   return (
     <div className="row items-center gap-4">
       <div className="me-auto">
@@ -117,11 +113,7 @@ function LogsHeader({ filtersForm, optionsForm }: LogsHeaderProps) {
         )}
       />
 
-      <IconButton
-        variant="solid"
-        Icon={IconFullscreen}
-        onClick={() => optionsForm.setValue('fullScreen', !optionsForm.getValues('fullScreen'))}
-      />
+      <IconButton variant="solid" Icon={IconFullscreen} onClick={toggleFullScreen} />
     </div>
   );
 }

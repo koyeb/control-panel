@@ -1,7 +1,6 @@
 import { Spinner } from '@koyeb/design-system';
 import { UseInfiniteQueryResult, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
-import { useState } from 'react';
 
 import { getApiQueryKey, mapActivity, useApi } from 'src/api';
 import { ApiEndpoint } from 'src/api/api';
@@ -10,8 +9,8 @@ import { Loading } from 'src/components/loading';
 import { QueryError } from 'src/components/query-error';
 import { TextSkeleton } from 'src/components/skeleton';
 import { Title } from 'src/components/title';
-import { useIntersectionObserver } from 'src/hooks/intersection-observer';
 import { useMount } from 'src/hooks/lifecycle';
+import { useIntersectionObserver } from 'src/hooks/observers';
 import { useSearchParams } from 'src/hooks/router';
 import { createTranslate } from 'src/intl/translate';
 import { Activity } from 'src/model';
@@ -103,11 +102,8 @@ export function ActivityPage() {
 
 function useInfiniteScroll(query: UseInfiniteQueryResult) {
   const { error, hasNextPage, isFetchingNextPage, fetchNextPage } = query;
-  const [elementRef, setElementRef] = useState<HTMLElement | null>(null);
 
-  useIntersectionObserver(
-    elementRef,
-    { root: null },
+  return useIntersectionObserver(
     ([entry]) => {
       if (entry?.intersectionRatio === 0) {
         return;
@@ -117,10 +113,9 @@ function useInfiniteScroll(query: UseInfiniteQueryResult) {
         void fetchNextPage();
       }
     },
+    undefined,
     [error, hasNextPage, isFetchingNextPage, fetchNextPage],
   );
-
-  return setElementRef;
 }
 
 function ActivitySkeleton() {

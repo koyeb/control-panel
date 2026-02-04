@@ -13,6 +13,7 @@ import {
   GitRepository,
   GithubApp,
   Instance,
+  LogLine,
   Organization,
   OrganizationQuotas,
   OrganizationSummary,
@@ -242,6 +243,14 @@ const databaseDeployment = createFactory<DatabaseDeployment>(() => ({
   disk: {},
 }));
 
+const logLine = createFactory<LogLine>(() => ({
+  id: createId(),
+  date: createDate(),
+  html: '',
+  stream: 'stdout',
+  text: '',
+}));
+
 export const create = {
   organization,
   organizationSummary,
@@ -263,4 +272,5 @@ export const create = {
   deploymentDefinition,
   deploymentInstance,
   databaseDeployment,
+  logLine,
 };

@@ -48,13 +48,21 @@ export function useLogs(tail: boolean, ansi: LogsAnsiMode, filters: LogsFilters)
     return processLogLines([...(historyQuery.data ?? []), ...stream.lines], { search, ansi });
   }, [historyQuery.data, stream.lines, search, ansi]);
 
+  const { isFetching, fetchPreviousPage } = historyQuery;
+
+  const loadPrevious = useCallback(() => {
+    if (!isFetching) {
+      void fetchPreviousPage();
+    }
+  }, [isFetching, fetchPreviousPage]);
+
   return {
     error: historyQuery.error ?? stream.error,
     lines,
     loading: historyQuery.isLoading,
     fetching: historyQuery.isFetching,
     hasPrevious: historyQuery.hasPreviousPage,
-    loadPrevious: () => !historyQuery.isFetching && void historyQuery.fetchPreviousPage(),
+    loadPrevious,
   };
 }
 
