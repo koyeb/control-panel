@@ -160,24 +160,25 @@ export function useDeploymentScalingQuery(
     placeholderData: keepPreviousData,
     select: ({ instances }) => {
       assert(deployment !== undefined);
+      assert(instances !== undefined);
 
       const regions = filters?.regions ?? deployment.definition.regions;
-      const replicasCount = deployment.definition.scaling.max;
 
-      const getReplica = (region: string, index: number) => ({
-        region,
-        replica_index: index,
-        instances: instances!.filter(
-          (instance) => instance.region === region && instance.replica_index === index,
-        ),
-      });
-
-      const replicas = regions
+      return regions
         .slice()
         .sort()
-        .flatMap((region) => createArray(replicasCount, (index) => getReplica(region, index)));
+        .flatMap((region) => {
+          const regionInstances = instances.filter((instance) => instance.region === region);
+          const maxReplicaIndex = Math.max(-1, ...regionInstances.map(({ replica_index }) => replica_index ?? 0));
+          const replicasCount = Math.max(deployment.definition.scaling.max, maxReplicaIndex + 1);
 
-      return replicas.map(mapReplica);
+          return createArray(replicasCount, (index) => ({
+            region,
+            replica_index: index,
+            instances: regionInstances.filter(({ replica_index }) => replica_index === index),
+          }));
+        })
+        .map(mapReplica);
     },
   });
 }
