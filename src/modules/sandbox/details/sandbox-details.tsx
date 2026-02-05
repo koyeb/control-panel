@@ -13,7 +13,9 @@ import { openDialog } from 'src/components/dialog';
 import { RuntimeLogs } from 'src/components/logs';
 import { Metadata } from 'src/components/metadata';
 import { QueryError } from 'src/components/query-error';
+import { ServiceLifecycleInfo } from 'src/components/service-lifecycle-info';
 import { ServiceStatusBadge } from 'src/components/status-badges';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { IconDocker } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { ComputeDeployment, DeploymentDefinition, Service } from 'src/model';
@@ -79,7 +81,11 @@ function SandboxMetadata({ service }: { service: Service }) {
   const { source, instanceType, regions } = deployment.definition;
 
   return (
-    <div className="divide-y rounded-md border">
+    <div className="rounded-md border">
+      <FeatureFlag feature="service-lifecycle">
+        <ServiceLifecycleInfo service={service} />
+      </FeatureFlag>
+
       <div className="row flex-wrap gap-3 p-3">
         <Metadata label={<T id="metadata.id" />} value={<ServiceId service={service} />} className="w-44" />
 

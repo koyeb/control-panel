@@ -323,7 +323,11 @@
       "pricePerMonth": "{price}/mo",
       "pricePerHour": "{price}/hr"
     },
-    "serviceLifecycleBadges": {
+    "serviceLifecycle": {
+      "afterCreate": "Service will be deleted in {afterCreate}",
+      "afterSleep": "Service will be deleted {afterSleep} after scale to zero",
+      "both": "Service will be deleted {afterSleep} after scale to zero or in {afterCreate}",
+      "update": "Update",
       "afterCreateTooltip": {
         "title": "Service will be deleted",
         "relativeTime": "In {value}",
@@ -575,11 +579,6 @@
           "pending": "Initializing TCP proxy. This may take a few seconds...",
           "unavailable": "TCP proxy is unavailable on inactive deployments",
           "deploymentSleeping": "TCP proxy is unavailable because this deployment is currently sleeping (scaled to zero)"
-        },
-        "serviceLifecycle": {
-          "afterCreate": "Service will be deleted in {afterCreate}",
-          "afterSleep": "Service will be deleted {afterSleep} after scale to zero",
-          "both": "Service will be deleted {afterSleep} after scale to zero or in {afterCreate}"
         },
         "deploymentDefinition": "Deployment definition"
       },

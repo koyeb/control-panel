@@ -1,14 +1,73 @@
 import { Badge, BadgeColor, TooltipTitle } from '@koyeb/design-system';
+import { RegisteredRouter } from '@tanstack/react-router';
 import { addSeconds, differenceInSeconds } from 'date-fns';
 import { FormattedDate } from 'react-intl';
 
+import { Link, ValidateLinkOptions } from 'src/components/link';
 import { Tooltip } from 'src/components/tooltip';
 import { useNow } from 'src/hooks/timers';
+import { IconClock } from 'src/icons';
 import { Translate, TranslateFn, createTranslate, useTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 import { TimeUnit, formatSeconds, getUtcOffset } from 'src/utils/date';
 
-const T = createTranslate('components.serviceLifecycleBadges');
+const T = createTranslate('components.serviceLifecycle');
+
+type ServiceLifecycleInfoProps<LinkOptions> = {
+  service: Service;
+  link?: ValidateLinkOptions<RegisteredRouter, LinkOptions>;
+};
+
+export function ServiceLifecycleInfo<LinkOptions = unknown>({
+  service,
+  link,
+}: ServiceLifecycleInfoProps<LinkOptions>) {
+  const { deleteAfterCreate, deleteAfterSleep } = service.lifeCycle;
+
+  const afterCreate = deleteAfterCreate !== undefined && (
+    <ServiceDeleteAfterCreateBadge service={service} deleteAfterCreate={deleteAfterCreate} />
+  );
+
+  const afterSleep = deleteAfterSleep !== undefined && (
+    <ServiceDeleteAfterSleepBadge deleteAfterSleep={deleteAfterSleep} />
+  );
+
+  const message = () => {
+    if (afterCreate && afterSleep) {
+      return <T id="both" values={{ afterCreate, afterSleep }} />;
+    }
+
+    if (afterCreate) {
+      return <T id="afterCreate" values={{ afterCreate }} />;
+    }
+
+    if (afterSleep) {
+      return <T id="afterSleep" values={{ afterSleep }} />;
+    }
+  };
+
+  if (!afterCreate && !afterSleep) {
+    return null;
+  }
+
+  return (
+    <div className="col justify-between gap-2 rounded-md bg-muted/50 p-3 @sm:row @sm:items-center @sm:gap-4">
+      <div className="row items-center gap-2">
+        <div>
+          <IconClock className="size-4 text-dim" />
+        </div>
+
+        <p className="row items-center gap-1">{message()}</p>
+      </div>
+
+      {link && (
+        <Link className="text-link" {...link}>
+          <T id="update" />
+        </Link>
+      )}
+    </div>
+  );
+}
 
 type ServiceDeleteAfterCreateBadgeProps = {
   color?: BadgeColor;
@@ -71,7 +130,7 @@ export function ServiceDeleteAfterCreateBadge({
         </>
       }
       trigger={(props) => (
-        <Badge {...props} size={1} color={color} className="inline-block">
+        <Badge {...props} size={1} color={color}>
           {relativeTimeValue(t, roundSeconds(seconds))}
         </Badge>
       )}
@@ -104,12 +163,12 @@ export function ServiceDeleteAfterSleepBadge({ color, deleteAfterSleep }: Servic
       className="col gap-3"
       content={
         <>
-          <TooltipTitle title={<T id="afterCreateTooltip.title" />} />
+          <TooltipTitle title={<T id="afterSleepTooltip.title" />} />
           {relativeTime}
         </>
       }
       trigger={(props) => (
-        <Badge {...props} size={1} color={color} className="inline-block">
+        <Badge {...props} size={1} color={color}>
           {relativeTimeValue(t, roundSeconds(deleteAfterSleep))}
         </Badge>
       )}
@@ -131,7 +190,7 @@ function relativeTimeValue(t: TranslateFn, seconds: number) {
     }
   }
 
-  return result.join(' ');
+  return result.join(' ').trim();
 }
 
 function formatTimeValue(t: TranslateFn, value: number, unit: TimeUnit) {

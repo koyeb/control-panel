@@ -1,3 +1,4 @@
+import { ServiceLifecycleInfo } from 'src/components/service-lifecycle-info';
 import { ServiceTypeIcon } from 'src/components/service-type-icon';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
@@ -6,7 +7,6 @@ import { App, ComputeDeployment, Service } from 'src/model';
 import { DeploymentDefinition } from './deployment-definition';
 import { ExternalUrl } from './external-url';
 import { InternalUrl } from './internal-url';
-import { ServiceLifecycle } from './service-lifecycle';
 import { TcpProxyUrl } from './tcp-proxy-url';
 
 const T = createTranslate('modules.deployment.deploymentOverview');
@@ -21,7 +21,10 @@ export function DeploymentOverview({ app, service, deployment }: DeploymentInfoP
   return (
     <section className="@container rounded-md border">
       <FeatureFlag feature="service-lifecycle">
-        <ServiceLifecycle service={service} />
+        <ServiceLifecycleInfo
+          service={service}
+          link={{ to: '/services/$serviceId/settings', hash: 'lifeCycle', params: { serviceId: service.id } }}
+        />
       </FeatureFlag>
 
       <div className="col gap-4 p-3">

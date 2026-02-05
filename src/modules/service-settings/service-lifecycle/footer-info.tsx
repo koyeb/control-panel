@@ -1,7 +1,7 @@
 import {
   ServiceDeleteAfterCreateBadge,
   ServiceDeleteAfterSleepBadge,
-} from 'src/components/service-lifecycle-badges';
+} from 'src/components/service-lifecycle-info';
 import { createTranslate } from 'src/intl/translate';
 import { Service } from 'src/model';
 
