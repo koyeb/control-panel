@@ -683,7 +683,7 @@
           "header": {
             "title": "Logs",
             "now": "Now",
-            "allRegions": "All regions",
+            "regions": "Regions",
             "allInstances": "All instances",
             "search": "Search...",
             "fullScreen": "Toggle full screen",

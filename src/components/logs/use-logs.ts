@@ -20,7 +20,8 @@ type UseLogsParams = {
   deploymentId?: string;
   instanceId?: string;
   type: LogType;
-  streams: LogStream[];
+  regions?: string[];
+  streams?: LogStream[];
   search?: string;
   tail: boolean;
   ansiMode: LogsAnsiMode;
@@ -36,32 +37,11 @@ export type LogsApi = {
   loadPrevious: () => void;
 };
 
-export function useLogs({
-  type,
-  deploymentId,
-  instanceId,
-  streams,
-  search,
-  tail,
-  ansiMode,
-}: UseLogsParams): LogsApi {
+export function useLogs({ tail, ansiMode, ...params }: UseLogsParams): LogsApi {
   const [end] = useState(new Date().toISOString());
 
-  const history = useLogsHistory(end, {
-    deploymentId,
-    instanceId,
-    streams,
-    type,
-    search,
-  });
-
-  const stream = useLogsStream(tail, end, {
-    deploymentId,
-    instanceId,
-    streams,
-    type,
-    search,
-  });
+  const history = useLogsHistory(end, params);
+  const stream = useLogsStream(tail, end, params);
 
   const lines = useMemo(() => {
     const ansi = new AnsiUp();
@@ -85,7 +65,7 @@ export function useLogs({
 
 function useLogsHistory(
   end: string,
-  { deploymentId, instanceId, streams, type, search }: Omit<UseLogsParams, 'tail' | 'ansiMode'>,
+  { deploymentId, instanceId, type, regions, streams, search }: Omit<UseLogsParams, 'tail' | 'ansiMode'>,
 ) {
   const api = useApi();
   const { logsRetention } = useOrganizationQuotas();
@@ -101,6 +81,7 @@ function useLogsHistory(
         deploymentId,
         instanceId,
         type,
+        regions,
         streams,
         search,
         logsRetention,
@@ -113,7 +94,8 @@ function useLogsHistory(
           deployment_id: deploymentId,
           instance_id: instanceId,
           type,
-          streams,
+          regions: regions?.length === 0 ? ['none'] : regions,
+          streams: streams?.length === 0 ? [''] : streams,
           text: search || undefined,
           start: pageParam.start,
           end: pageParam.end,
@@ -149,7 +131,7 @@ function useLogsHistory(
 function useLogsStream(
   connect: boolean,
   start: string,
-  { deploymentId, instanceId, type, streams, search }: Omit<UseLogsParams, 'tail' | 'ansiMode'>,
+  { deploymentId, instanceId, type, regions, streams, search }: Omit<UseLogsParams, 'tail' | 'ansiMode'>,
 ) {
   const { getAccessToken } = useAuth();
 
@@ -181,7 +163,8 @@ function useLogsStream(
             deployment_id: deploymentId,
             instance_id: instanceId,
             type,
-            streams,
+            regions: regions?.length === 0 ? ['none'] : regions,
+            streams: streams?.length === 0 ? [''] : streams,
             text: search || undefined,
             start,
           },
@@ -212,7 +195,7 @@ function useLogsStream(
         dispatch({ type: 'close' });
       }
     };
-  }, [getAccessToken, connect, start, deploymentId, instanceId, type, streams, search]);
+  }, [getAccessToken, connect, start, deploymentId, instanceId, type, regions, streams, search]);
 
   return stream;
 }

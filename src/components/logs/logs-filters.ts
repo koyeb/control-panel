@@ -8,8 +8,8 @@ import { LogStream, LogType } from './use-logs';
 export type LogsFilters = {
   type: LogType;
   deploymentId: string | null;
-  regionalDeploymentId: string | null;
   instanceId: string | null;
+  regions: string[];
   streams: LogStream[];
   search: string;
 };
@@ -21,8 +21,8 @@ export function useLogsFilters(
   const defaultFilters: LogsFilters = {
     type,
     deploymentId: deployment?.id ?? null,
-    regionalDeploymentId: null,
     instanceId: instance?.id ?? null,
+    regions: deployment?.definition.regions ?? [],
     streams: ['stdout', 'stderr', 'koyeb'],
     search: '',
   };

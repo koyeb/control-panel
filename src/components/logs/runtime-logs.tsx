@@ -3,20 +3,20 @@ import clsx from 'clsx';
 import { useCallback, useEffect } from 'react';
 import { Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 
-import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
+import { useOrganization, useOrganizationQuotas } from 'src/api';
 import { isDeploymentRunning } from 'src/application/service-functions';
-import { Checkbox, ControlledCheckbox, ControlledInput, ControlledSelect } from 'src/components/forms';
+import { Checkbox, ControlledCheckbox, ControlledInput } from 'src/components/forms';
 import { FullScreen } from 'src/components/full-screen';
 import { QueryError } from 'src/components/query-error';
-import { RegionFlag } from 'src/components/region-flag';
-import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/selectors/select-instance';
 import { FeatureFlag } from 'src/hooks/feature-flag';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Instance, LogLine as LogLineType, Service } from 'src/model';
 import { arrayToggle, inArray } from 'src/utils/arrays';
-import { getId, hasProperty } from 'src/utils/object';
+import { hasProperty } from 'src/utils/object';
+
+import { RegionsSelector } from '../selectors/regions-selector';
 
 import { LogLine, LogsLines } from './log-lines';
 import { LogsFilters, useLogsFilters } from './logs-filters';
@@ -46,6 +46,7 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
     deploymentId: filters.deploymentId ?? undefined,
     instanceId: filters.instanceId ?? undefined,
     type: filters.type,
+    regions: filters.regions,
     streams: filters.streams,
     search: filters.search,
     tail: isDeploymentRunning(deployment),
@@ -231,8 +232,6 @@ type LogsHeaderProps = {
 };
 
 function LogsHeader({ deployment, instances, filters, toggleFullScreen }: LogsHeaderProps) {
-  const regionalDeployments = useRegionalDeployments(deployment.id);
-  const regions = useRegionsCatalog();
   const t = T.useTranslate();
 
   return (
@@ -242,24 +241,19 @@ function LogsHeader({ deployment, instances, filters, toggleFullScreen }: LogsHe
       </div>
 
       <div className="row flex-wrap gap-2">
-        <ControlledSelect
+        <Controller
           control={filters.control}
-          name="regionalDeploymentId"
-          items={regionalDeployments ?? []}
-          placeholder={<T id="header.allRegions" />}
-          getKey={getId}
-          itemToString={({ id }) => regions.find(hasProperty('id', id))?.name ?? ''}
-          getValue={getId}
-          onItemClick={({ id }) =>
-            id === filters.watch('regionalDeploymentId') && filters.setValue('regionalDeploymentId', null)
-          }
-          renderItem={({ region }) => (
-            <div className="row gap-2 whitespace-nowrap">
-              <RegionFlag regionId={region} className="size-4" />
-              <RegionName regionId={region} className="size-4" />
-            </div>
+          name="regions"
+          render={({ field }) => (
+            <RegionsSelector
+              label={<T id="header.regions" />}
+              regions={deployment.definition.regions}
+              value={field.value ?? []}
+              onChange={field.onChange}
+              dropdown={{ floating: { placement: 'bottom-start' }, matchReferenceSize: false }}
+              className="min-w-48"
+            />
           )}
-          className="min-w-48"
         />
 
         <Controller

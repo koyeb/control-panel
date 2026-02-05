@@ -1,11 +1,10 @@
-import { UseFormReturn, useController, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 
-import { useDeploymentScalingQuery, useRegionsCatalog } from 'src/api';
+import { useDeploymentScalingQuery } from 'src/api';
 import { QueryGuard } from 'src/components/query-error';
 import { RegionsSelector } from 'src/components/selectors/regions-selector';
 import { createTranslate } from 'src/intl/translate';
-import { CatalogRegion, ComputeDeployment } from 'src/model';
-import { getId } from 'src/utils/object';
+import { ComputeDeployment } from 'src/model';
 
 import { ReplicaList } from './replica-list';
 
@@ -16,8 +15,6 @@ export type DeploymentScalingFilters = {
 };
 
 export function DeploymentScaling({ deployment }: { deployment: ComputeDeployment }) {
-  const regions = useRegionsCatalog(deployment.definition.regions);
-
   const filtersForm = useForm<DeploymentScalingFilters>({
     defaultValues: {
       regions: deployment.definition.regions,
@@ -35,7 +32,20 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
           <T id="title" />
         </div>
 
-        <RegionFilter form={filtersForm} regions={regions} />
+        <Controller
+          control={filtersForm.control}
+          name="regions"
+          render={({ field }) => (
+            <RegionsSelector
+              label={<T id="filters.regions" />}
+              regions={deployment.definition.regions}
+              value={field.value ?? []}
+              onChange={field.onChange}
+              dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
+              className="min-w-48"
+            />
+          )}
+        />
       </div>
 
       <div className="p-3">
@@ -44,27 +54,5 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
         </QueryGuard>
       </div>
     </div>
-  );
-}
-
-type RegionFilterProps = {
-  form: UseFormReturn<DeploymentScalingFilters>;
-  regions: CatalogRegion[];
-};
-
-function RegionFilter({ form, regions }: RegionFilterProps) {
-  const { field } = useController({
-    control: form.control,
-    name: 'regions',
-  });
-
-  return (
-    <RegionsSelector
-      regions={regions}
-      value={regions.filter((region) => field.value.includes(region.id))}
-      onChange={(regions) => field.onChange(regions.map(getId))}
-      label={<T id="filters.regions" />}
-      dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
-    />
   );
 }
