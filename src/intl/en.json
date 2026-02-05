@@ -123,6 +123,8 @@
         "serviceScaledToZeroDetails": "Service was inactive",
         "serviceScaledFromZero": "Woke up",
         "serviceScaledFromZeroDetails": "Service received traffic",
+        "manualScalingDeleted": "Manual scaling configuration deleted",
+        "manualScalingUpdated": "Manual scaling configuration updated",
         "deploymentSucceeded": "Deployment {name} succeeded",
         "deploymentFailed": "Deployment {name} failed",
         "volume": "volume",

@@ -35,6 +35,14 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
     return <T id="serviceScaled" values={{ direction, previousCount, count }} />;
   }
 
+  if (activity.verb === 'manual_scaling_deleted') {
+    return <T id="manualScalingDeleted" />;
+  }
+
+  if (activity.verb === 'manual_scaling_updated') {
+    return <T id="manualScalingUpdated" />;
+  }
+
   if (isAppActivity(activity)) {
     const name = activity.object.name;
 
