@@ -86,7 +86,7 @@ function SandboxMetadata({ service }: { service: Service }) {
         <ServiceLifecycleInfo service={service} />
       </FeatureFlag>
 
-      <div className="row flex-wrap gap-3 p-3">
+      <div className="row flex-wrap gap-3 border-b p-3">
         <Metadata label={<T id="metadata.id" />} value={<ServiceId service={service} />} className="w-44" />
 
         <Metadata
@@ -100,7 +100,7 @@ function SandboxMetadata({ service }: { service: Service }) {
         <RegionsMetadata regions={regions} className="w-44" />
       </div>
 
-      <div className="row flex-wrap gap-3 p-3">
+      <div className="row flex-wrap gap-3 border-b p-3">
         <MetricMetadata deployment={deployment} metric="cpu" />
 
         <MetricMetadata deployment={deployment} metric="memory" />
