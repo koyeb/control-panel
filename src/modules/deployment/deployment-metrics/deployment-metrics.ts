@@ -10,7 +10,6 @@ import { toObject } from 'src/utils/object';
 
 export function useDeploymentMetricsQuery(deployment: ComputeDeployment) {
   const instance = useCatalogInstance(deployment.definition.instanceType);
-  const instancesQuery = useInstancesQuery({ deploymentId: deployment.id });
 
   return useQueries({
     queries: [
@@ -22,20 +21,13 @@ export function useDeploymentMetricsQuery(deployment: ComputeDeployment) {
       }),
     ],
     combine([cpu, memory]) {
-      // Get all instance IDs from the instances query to ensure we create entries for all instances
-      const allInstanceIds = instancesQuery.data?.instances.map((instance) => instance.id) ?? [];
-      
-      // Also include any instance IDs that have metrics (in case there are orphaned metrics)
-      const instanceIdsWithMetrics = unique([
+      const instanceIds = unique([
         ...(cpu.data?.metrics?.map(({ labels }) => labels?.instance_id) ?? []),
         ...(memory.data?.metrics?.map(({ labels }) => labels?.instance_id) ?? []),
       ]).filter(isDefined);
 
-      // Combine both sets of instance IDs
-      const instanceIds = unique([...allInstanceIds, ...instanceIdsWithMetrics]);
-
       return {
-        isPending: cpu.isPending || memory.isPending || instancesQuery.isPending,
+        isPending: cpu.isPending || memory.isPending,
         data: toObject(instanceIds, identity, (instanceId) =>
           getMetrics(instance, instanceId, cpu.data?.metrics, memory.data?.metrics),
         ),

@@ -169,7 +169,10 @@ export function useDeploymentScalingQuery(
         .sort()
         .flatMap((region) => {
           const regionInstances = instances.filter((instance) => instance.region === region);
-          const maxReplicaIndex = Math.max(-1, ...regionInstances.map(({ replica_index }) => replica_index ?? 0));
+          const maxReplicaIndex = Math.max(
+            -1,
+            ...regionInstances.map(({ replica_index }) => replica_index ?? 0),
+          );
           const replicasCount = Math.max(deployment.definition.scaling.max, maxReplicaIndex + 1);
 
           return createArray(replicasCount, (index) => ({
