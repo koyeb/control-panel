@@ -680,14 +680,6 @@
         "runtime": {
           "title": "Deployment",
           "notStarted": "Not started",
-          "retentionPeriods": {
-            "live": "live",
-            "1h": "last hour",
-            "6h": "last 6 hours",
-            "24h": "last 24 hours",
-            "7d": "last 7 days",
-            "30d": "last 30 days"
-          },
           "header": {
             "title": "Logs",
             "now": "Now",
@@ -704,8 +696,7 @@
             "description": "We're juicing up the servers and provisioning the resources to deploy your service"
           },
           "noLogs": {
-            "expiredLive": "No logs available",
-            "expired": "No logs available in the {period}",
+            "expired": "No logs available in the last {days} days",
             "upgrade": "<upgrade>Upgrade</upgrade> your plan to increase retention period",
             "tailing": "New logs will show up here"
           }

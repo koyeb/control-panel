@@ -5,6 +5,7 @@ import { FormattedDate } from 'react-intl';
 
 import { useIntersectionObserver, useResizeObserver } from 'src/hooks/observers';
 import { LogLine as LogLineType } from 'src/model';
+import { shortId } from 'src/utils/strings';
 
 type LogsLinesProps = {
   lines: LogLineType[];
@@ -59,8 +60,8 @@ export function LogsLines({
   );
 
   useLayoutEffect(() => {
-    if (scrollHeight.current !== null) {
-      scrollingContainer.current?.scrollTo({
+    if (scrollingContainer.current?.scrollTop === 0 && scrollHeight.current !== null) {
+      scrollingContainer.current.scrollTo({
         top: scrollingContainer.current.scrollHeight - scrollHeight.current,
       });
     }
@@ -143,7 +144,7 @@ type LogLineInstanceIdProps = {
 };
 
 function LogLineInstanceId({ line, hidden }: LogLineInstanceIdProps) {
-  return <LogLineMeta hidden={hidden}>{line.instanceId}</LogLineMeta>;
+  return <LogLineMeta hidden={hidden}>{shortId(line.instanceId)}</LogLineMeta>;
 }
 
 type LogLineMetaProps = {

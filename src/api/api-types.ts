@@ -36,6 +36,7 @@ export namespace API {
   export type GitSource = schemas['GitSource'];
   export type HTTPHealthCheck = schemas['HTTPHealthCheck'];
   export type Instance = schemas['Instance'];
+  export type LogEntry = schemas['LogEntry'];
   export type MetricName = schemas['MetricName'];
   export type NeonPostgresDatabase = schemas['NeonPostgresDatabase'];
   export type NextInvoiceReply = schemas['NextInvoiceReply'];

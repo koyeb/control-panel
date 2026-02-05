@@ -34,7 +34,15 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
   const filtersForm = useLogsFilters('runtime', { instance });
   const filters = filtersForm.watch();
 
-  const logs = useLogs(isInstanceRunning(instance), options.interpretAnsi ? 'interpret' : 'strip', filters);
+  const logs = useLogs({
+    deploymentId: filters.deploymentId ?? undefined,
+    instanceId: filters.instanceId ?? undefined,
+    type: filters.type,
+    streams: filters.streams,
+    search: filters.search,
+    tail: isInstanceRunning(instance),
+    ansiMode: options.interpretAnsi ? 'interpret' : 'strip',
+  });
 
   if (logs.error) {
     return <QueryError error={logs.error} className="m-4" />;
@@ -53,9 +61,8 @@ export function InstanceLogs({ instance }: InstanceLogsProps) {
         />
 
         <RuntimeLogLines
-          running={isInstanceRunning(instance)}
+          tailing={logs.stream === 'connected'}
           logs={logs}
-          filtersForm={filtersForm}
           options={options}
           setOption={setValue}
         />

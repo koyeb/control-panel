@@ -1,7 +1,6 @@
-import { Dropdown, IconButton, Menu, MenuItem, Spinner } from '@koyeb/design-system';
+import { IconButton, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { format } from 'date-fns';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas, useRegionalDeployments, useRegionsCatalog } from 'src/api';
@@ -12,21 +11,18 @@ import { QueryError } from 'src/components/query-error';
 import { RegionFlag } from 'src/components/region-flag';
 import { RegionName } from 'src/components/region-name';
 import { SelectInstance } from 'src/components/selectors/select-instance';
-import { FeatureFlag, useFeatureFlag } from 'src/hooks/feature-flag';
-import { useNow } from 'src/hooks/timers';
+import { FeatureFlag } from 'src/hooks/feature-flag';
 import { IconFullscreen } from 'src/icons';
 import { Translate, createTranslate } from 'src/intl/translate';
 import { App, ComputeDeployment, Instance, LogLine as LogLineType, Service } from 'src/model';
-import { arrayToggle, inArray, last } from 'src/utils/arrays';
-import { defined } from 'src/utils/assert';
-import { identity } from 'src/utils/generic';
+import { arrayToggle, inArray } from 'src/utils/arrays';
 import { getId, hasProperty } from 'src/utils/object';
 
 import { LogLine, LogsLines } from './log-lines';
 import { LogsFilters, useLogsFilters } from './logs-filters';
 import { LogsFooter } from './logs-footer';
 import { LogsOptions, useLogsOptions } from './logs-options';
-import { LogStream, LogsApi, LogsPeriod, getLogsStartDate, useLogs } from './use-logs';
+import { LogStream, LogsApi, useLogs } from './use-logs';
 import waitingForLogsImage from './waiting-for-logs.gif';
 
 const T = createTranslate('modules.deployment.deploymentLogs.runtime');
@@ -46,11 +42,15 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
   const filtersForm = useLogsFilters('runtime', { deployment });
   const filters = filtersForm.watch();
 
-  const logs = useLogs(
-    isDeploymentRunning(deployment),
-    options.interpretAnsi ? 'interpret' : 'strip',
-    filters,
-  );
+  const logs = useLogs({
+    deploymentId: filters.deploymentId ?? undefined,
+    instanceId: filters.instanceId ?? undefined,
+    type: filters.type,
+    streams: filters.streams,
+    search: filters.search,
+    tail: isDeploymentRunning(deployment),
+    ansiMode: options.interpretAnsi ? 'interpret' : 'strip',
+  });
 
   useEffect(() => {
     const lastLine = logs.lines[logs.lines.length - 1];
@@ -86,8 +86,7 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
 
       <RuntimeLogLines
         logs={logs}
-        running={isDeploymentRunning(deployment)}
-        filtersForm={filtersForm}
+        tailing={logs.stream === 'connected'}
         options={options}
         setOption={setValue}
       />
@@ -117,13 +116,12 @@ export function RuntimeLogs({ app, service, deployment, instances, onLastLineCha
 
 type RuntimeLogLinesProps = {
   logs: LogsApi;
-  running: boolean;
-  filtersForm: UseFormReturn<LogsFilters>;
+  tailing: boolean;
   options: LogsOptions;
   setOption: UseFormSetValue<LogsOptions>;
 };
 
-export function RuntimeLogLines({ logs, running, filtersForm, options, setOption }: RuntimeLogLinesProps) {
+export function RuntimeLogLines({ logs, tailing, options, setOption }: RuntimeLogLinesProps) {
   const onScrollTop = logs.loadPrevious;
 
   const onScrollBottom = useCallback(() => {
@@ -138,7 +136,7 @@ export function RuntimeLogLines({ logs, running, filtersForm, options, setOption
           options.fullScreen && 'flex-1',
         )}
       >
-        <NoRuntimeLogs running={running} loading={logs.loading} filters={filtersForm} />
+        <NoRuntimeLogs tailing={tailing} loading={logs.loading} />
       </div>
     );
   }
@@ -163,6 +161,7 @@ export function RuntimeLogLines({ logs, running, filtersForm, options, setOption
           showDate={options.date}
           dateFormat={dateFormat}
           showStream={options.stream}
+          showInstanceId={options.instance}
           wordWrap={options.wordWrap}
         />
       )}
@@ -175,16 +174,13 @@ export function RuntimeLogLines({ logs, running, filtersForm, options, setOption
 }
 
 type NoRuntimeLogsProps = {
-  running: boolean;
+  tailing: boolean;
   loading: boolean;
-  filters: UseFormReturn<LogsFilters>;
 };
 
-export function NoRuntimeLogs({ running, loading, filters }: NoRuntimeLogsProps) {
+export function NoRuntimeLogs({ tailing, loading }: NoRuntimeLogsProps) {
   const organization = useOrganization();
-  const periods = useRetentionPeriods();
-  const hasLogsFilters = useFeatureFlag('logs-filters');
-  const period = hasLogsFilters ? filters.watch('period') : defined(last(periods));
+  const quotas = useOrganizationQuotas();
 
   if (loading) {
     return <Spinner className="size-6" />;
@@ -193,20 +189,16 @@ export function NoRuntimeLogs({ running, loading, filters }: NoRuntimeLogsProps)
   return (
     <>
       <p className="text-base">
-        {period === 'live' ? (
-          <T id="noLogs.expiredLive" />
-        ) : (
-          <T id="noLogs.expired" values={{ period: <T id={`retentionPeriods.${period}`} /> }} />
-        )}
+        <T id="noLogs.expired" values={{ days: quotas.logsRetention }} />
       </p>
 
-      {inArray(organization?.plan, ['hobby', 'starter', 'pro', 'scale']) && period === last(periods) && (
+      {organization?.plan !== 'enterprise' && (
         <p>
           <T id="noLogs.upgrade" />
         </p>
       )}
 
-      {running && (
+      {tailing && (
         <p>
           <T id="noLogs.tailing" />
         </p>
@@ -250,10 +242,6 @@ function LogsHeader({ deployment, instances, filters, toggleFullScreen }: LogsHe
       </div>
 
       <div className="row flex-wrap gap-2">
-        <FeatureFlag feature="logs-filters">
-          <SelectPeriod filters={filters} />
-        </FeatureFlag>
-
         <ControlledSelect
           control={filters.control}
           name="regionalDeploymentId"
@@ -325,77 +313,4 @@ function LogsHeader({ deployment, instances, filters, toggleFullScreen }: LogsHe
       </div>
     </header>
   );
-}
-
-type SelectPeriodProps = {
-  filters: UseFormReturn<LogsFilters>;
-};
-
-function SelectPeriod({ filters }: SelectPeriodProps) {
-  const t = T.useTranslate();
-
-  const periods = useRetentionPeriods();
-  const end = useNow();
-
-  const formatPeriodDate = (date: Date) => format(date, 'MMM dd, hh:mm aa');
-
-  const renderPeriod = (period: LogsPeriod | null) => {
-    if (period === null) {
-      return null;
-    }
-
-    return [
-      formatPeriodDate(getLogsStartDate(end, period)),
-      period === 'live' ? t('header.now') : formatPeriodDate(end),
-    ].join(' - ');
-  };
-
-  return (
-    <ControlledSelect
-      control={filters.control}
-      name="period"
-      items={periods}
-      getValue={identity}
-      renderValue={renderPeriod}
-      menu={({ select, dropdown }) => (
-        <Dropdown dropdown={dropdown}>
-          <Menu {...select.getMenuProps()}>
-            {periods.map((period, index) => (
-              <MenuItem
-                {...select.getItemProps({ item: period, index })}
-                key={index}
-                highlighted={index === select.highlightedIndex}
-                className="first-letter:capitalize"
-              >
-                <T id={`retentionPeriods.${period}`} />
-              </MenuItem>
-            ))}
-          </Menu>
-        </Dropdown>
-      )}
-      className="min-w-80"
-    />
-  );
-}
-
-function useRetentionPeriods() {
-  const quotas = useOrganizationQuotas();
-
-  return useMemo(() => {
-    const periods: LogsPeriod[] = ['live', '1h', '6h'];
-
-    if (quotas.logsRetention >= 1) {
-      periods.push('24h');
-    }
-
-    if (quotas.logsRetention >= 7) {
-      periods.push('7d');
-    }
-
-    if (quotas.logsRetention >= 30) {
-      periods.push('30d');
-    }
-
-    return periods;
-  }, [quotas]);
 }

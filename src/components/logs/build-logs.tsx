@@ -38,11 +38,15 @@ export function BuildLogs({ app, service, deployment, onLastLineChanged }: Build
   const filtersForm = useLogsFilters('build', { deployment });
   const filters = filtersForm.watch();
 
-  const logs = useLogs(
-    deployment.build?.status === 'RUNNING',
-    options.interpretAnsi ? 'interpret' : 'strip',
-    filters,
-  );
+  const logs = useLogs({
+    deploymentId: filters.deploymentId ?? undefined,
+    instanceId: filters.instanceId ?? undefined,
+    type: filters.type,
+    streams: filters.streams,
+    search: filters.search,
+    tail: deployment.build?.status === 'RUNNING',
+    ansiMode: options.interpretAnsi ? 'interpret' : 'strip',
+  });
 
   useEffect(() => {
     const lastLine = logs.lines[logs.lines.length - 1];
