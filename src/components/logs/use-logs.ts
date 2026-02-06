@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 import { AnsiUp } from 'ansi_up';
 import { sub } from 'date-fns';
@@ -38,7 +38,30 @@ export type LogsApi = {
 };
 
 export function useLogs({ tail, ansiMode, ...params }: UseLogsParams): LogsApi {
-  const [end] = useState(new Date().toISOString());
+  const [end, setEnd] = useState(new Date().toISOString());
+  const queryClient = useQueryClient();
+
+  const regionsMemo = params.regions?.join(':');
+  const streamsMemo = params.streams?.join(':');
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setEnd(new Date().toISOString());
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeout);
+    };
+  }, [
+    queryClient,
+    tail,
+    params.deploymentId,
+    params.instanceId,
+    params.type,
+    regionsMemo,
+    streamsMemo,
+    params.search,
+  ]);
 
   const history = useLogsHistory(end, params);
   const stream = useLogsStream(tail, end, params);
@@ -85,6 +108,7 @@ function useLogsHistory(
         streams,
         search,
         logsRetention,
+        end,
       },
     ],
 
@@ -142,6 +166,8 @@ function useLogsStream(
   });
 
   useEffect(() => {
+    dispatch({ type: 'reset' });
+
     if (!connect) {
       return;
     }
@@ -150,7 +176,7 @@ function useLogsStream(
 
     const onOpen = () => dispatch({ type: 'open' });
     const onClose = () => dispatch({ type: 'close' });
-    const onError = () => dispatch({ type: 'error', error: new Error('Websocket error') });
+    const onError = () => dispatch({ type: 'error', error: new Error('WebSocket error') });
     const onMessage = ({ data }: { data: string }) => dispatch({ type: 'message', data: JSON.parse(data) });
 
     const timeout = window.setTimeout(async () => {
@@ -195,7 +221,9 @@ function useLogsStream(
         dispatch({ type: 'close' });
       }
     };
-  }, [getAccessToken, connect, start, deploymentId, instanceId, type, regions, streams, search]);
+    // start changes whenever the dependencies change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getAccessToken, connect, start]);
 
   return stream;
 }
@@ -219,6 +247,9 @@ type StreamState = {
 
 type StreamAction =
   | {
+      type: 'reset';
+    }
+  | {
       type: 'connecting';
     }
   | {
@@ -237,16 +268,20 @@ type StreamAction =
     };
 
 function reducer(state: StreamState, action: StreamAction): StreamState {
+  if (action.type === 'reset') {
+    return { status: 'disconnected', error: null, lines: [] };
+  }
+
   if (action.type === 'connecting') {
-    return { ...state, status: 'connecting', lines: [] };
+    return { ...state, status: 'connecting' };
   }
 
   if (action.type === 'open') {
-    return { ...state, status: 'connected', lines: [] };
+    return { ...state, status: 'connected' };
   }
 
   if (action.type === 'close') {
-    return { ...state, status: 'disconnected', lines: [] };
+    return { ...state, status: 'disconnected' };
   }
 
   if (action.type === 'error') {
