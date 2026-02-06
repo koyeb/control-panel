@@ -34,7 +34,7 @@ export type LogsApi = {
   loading: boolean;
   fetching: boolean;
   hasPrevious: boolean;
-  loadPrevious: () => void;
+  loadPrevious: () => Promise<unknown>;
 };
 
 export function useLogs({ tail, ansiMode, ...params }: UseLogsParams): LogsApi {
@@ -176,9 +176,16 @@ function useLogsStream(
 
     const onOpen = () => dispatch({ type: 'open' });
     const onClose = () => dispatch({ type: 'close' });
-    const onError = () => dispatch({ type: 'error', error: new Error('WebSocket error') });
-    const onMessage = ({ data }: { data: string }) => dispatch({ type: 'message', data: JSON.parse(data) });
 
+    const onError = () => {
+      dispatch({ type: 'error', error: new Error('WebSocket error') });
+    };
+
+    const onMessage = ({ data }: { data: string }) => {
+      dispatch({ type: 'message', data: JSON.parse(data) as ApiLogData });
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const timeout = window.setTimeout(async () => {
       dispatch({ type: 'connecting' });
 
@@ -239,6 +246,8 @@ function transformLogLine(entry: API.LogEntry): LogLine {
   };
 }
 
+type ApiLogData = { result: API.LogEntry } | { error: { message: string } };
+
 type StreamState = {
   status: LogStreamStatus;
   error: Error | null;
@@ -264,7 +273,7 @@ type StreamAction =
     }
   | {
       type: 'message';
-      data: { result: API.LogEntry } | { error: { message: string } };
+      data: ApiLogData;
     };
 
 function reducer(state: StreamState, action: StreamAction): StreamState {
@@ -288,13 +297,9 @@ function reducer(state: StreamState, action: StreamAction): StreamState {
     return { ...state, error: action.error };
   }
 
-  if (action.type === 'message') {
-    if ('error' in action.data) {
-      return { ...state, error: new Error(action.data.error.message) };
-    } else {
-      return { ...state, lines: [...state.lines, transformLogLine(action.data.result)] };
-    }
+  if ('error' in action.data) {
+    return { ...state, error: new Error(action.data.error.message) };
+  } else {
+    return { ...state, lines: [...state.lines, transformLogLine(action.data.result)] };
   }
-
-  return state;
 }

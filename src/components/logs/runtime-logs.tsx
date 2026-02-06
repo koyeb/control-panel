@@ -1,6 +1,6 @@
 import { IconButton, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Controller, UseFormReturn, UseFormSetValue } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
@@ -123,12 +123,6 @@ type RuntimeLogLinesProps = {
 };
 
 export function RuntimeLogLines({ logs, tailing, options, setOption }: RuntimeLogLinesProps) {
-  const onScrollTop = logs.loadPrevious;
-
-  const onScrollBottom = useCallback(() => {
-    setOption('tail', true);
-  }, [setOption]);
-
   if (logs.lines.length === 0) {
     return (
       <div
@@ -167,8 +161,8 @@ export function RuntimeLogLines({ logs, tailing, options, setOption }: RuntimeLo
         />
       )}
       onWheel={(event) => event.deltaY < 0 && setOption('tail', false)}
-      onScrollToTop={onScrollTop}
-      onScrollToBottom={onScrollBottom}
+      onScrollToTop={() => void logs.loadPrevious()}
+      onScrollToBottom={() => setOption('tail', true)}
       className={clsx('h-128 resize-y', options.fullScreen && 'flex-1')}
     />
   );
@@ -248,7 +242,7 @@ function LogsHeader({ deployment, instances, filters, toggleFullScreen }: LogsHe
             <RegionsSelector
               label={<T id="header.regions" />}
               regions={deployment.definition.regions}
-              value={field.value ?? []}
+              value={field.value}
               onChange={field.onChange}
               dropdown={{ floating: { placement: 'bottom-start' }, matchReferenceSize: false }}
               className="min-w-48"

@@ -51,9 +51,6 @@ const data = [
   createLogLine('stdout', 'GET /v1/account/organization 200 6ms'),
 ];
 
-const onScrollToTop = action('onScrollToTop');
-const onScrollToBottom = action('onScrollToBottom');
-
 export const logs: StoryFn<Args> = (args) => {
   const [lines, setLines] = useState<LogLineType[]>(data);
 
@@ -79,8 +76,8 @@ export const logs: StoryFn<Args> = (args) => {
     <LogsLines
       lines={lines}
       renderLine={(line) => <LogLine line={line} {...args} />}
-      onScrollToTop={onScrollToTop}
-      onScrollToBottom={onScrollToBottom}
+      onScrollToTop={action('onScrollToTop')}
+      onScrollToBottom={action('onScrollToBottom')}
       className="h-64"
       {...args}
     />

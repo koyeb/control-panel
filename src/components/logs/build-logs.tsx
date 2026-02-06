@@ -1,6 +1,6 @@
 import { Alert, IconButton, MenuItem } from '@koyeb/design-system';
 import clsx from 'clsx';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 
 import { useOrganization, useOrganizationQuotas } from 'src/api';
@@ -123,12 +123,6 @@ type RuntimeLogLinesProps = {
 };
 
 function BuildLogLines({ logs, options, setOption }: RuntimeLogLinesProps) {
-  const onScrollTop = logs.loadPrevious;
-
-  const onScrollBottom = useCallback(() => {
-    setOption('tail', true);
-  }, [setOption]);
-
   if (logs.lines.length === 0) {
     return (
       <div
@@ -157,8 +151,8 @@ function BuildLogLines({ logs, options, setOption }: RuntimeLogLinesProps) {
         />
       )}
       onWheel={(event) => event.deltaY < 0 && setOption('tail', false)}
-      onScrollToTop={onScrollTop}
-      onScrollToBottom={onScrollBottom}
+      onScrollToTop={() => void logs.loadPrevious()}
+      onScrollToBottom={() => setOption('tail', true)}
       className={clsx('h-128 resize-y', options.fullScreen && 'flex-1')}
     />
   );

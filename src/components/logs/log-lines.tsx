@@ -40,7 +40,7 @@ export function LogsLines({
       scrollHeight.current = scrollingContainer.current.scrollHeight;
 
       if (tail) {
-        scrollingContainer.current?.scrollTo({ top: scrollHeight.current });
+        scrollingContainer.current.scrollTo({ top: scrollHeight.current });
       }
     },
     undefined,
@@ -50,13 +50,13 @@ export function LogsLines({
   const before = useIntersectionObserver(
     ([entry]) => entry?.isIntersecting && onScrollToTop?.(),
     { root: scrollingContainer.current },
-    [onScrollToTop],
+    [],
   );
 
   const after = useIntersectionObserver(
     ([entry]) => entry?.isIntersecting && onScrollToBottom?.(),
     { root: scrollingContainer.current },
-    [onScrollToBottom],
+    [],
   );
 
   useLayoutEffect(() => {

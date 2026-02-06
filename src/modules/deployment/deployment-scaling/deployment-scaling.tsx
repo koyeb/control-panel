@@ -39,7 +39,7 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
             <RegionsSelector
               label={<T id="filters.regions" />}
               regions={deployment.definition.regions}
-              value={field.value ?? []}
+              value={field.value}
               onChange={field.onChange}
               dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
               className="min-w-48"
