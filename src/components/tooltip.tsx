@@ -13,30 +13,21 @@ type TooltipProps = Extend<
 >;
 
 export function Tooltip({ className, content, ...props }: TooltipProps) {
-  const getContent = () => {
-    if (!content) {
-      return undefined;
-    }
-
-    if (props.forceDesktop) {
-      return () => content;
-    }
-
-    // eslint-disable-next-line react/display-name
-    return (props: { onClose: () => void }) => (
-      <>
-        {content}
-        <CloseButton onClick={props.onClose} />
-      </>
-    );
-  };
-
   return (
     <BaseTooltip
       placement="top"
       className={clsx('md:text-xs', className)}
       root={document.getElementById('root')}
-      content={getContent()}
+      content={
+        !content
+          ? undefined
+          : ({ isMobile, onClose }) => (
+              <>
+                {content}
+                {isMobile && <CloseButton onClick={onClose} />}
+              </>
+            )
+      }
       {...props}
     />
   );
