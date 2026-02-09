@@ -124,16 +124,7 @@ type RuntimeLogLinesProps = {
 
 export function RuntimeLogLines({ logs, tailing, options, setOption }: RuntimeLogLinesProps) {
   if (logs.lines.length === 0) {
-    return (
-      <div
-        className={clsx(
-          'col h-128 items-center justify-center gap-2 rounded-md border',
-          options.fullScreen && 'flex-1',
-        )}
-      >
-        <NoRuntimeLogs tailing={tailing} loading={logs.loading} />
-      </div>
-    );
+    return <NoRuntimeLogs tailing={tailing} loading={logs.loading} fullScreen={options.fullScreen} />;
   }
 
   const dateFormat: Intl.DateTimeFormatOptions = {
@@ -171,34 +162,42 @@ export function RuntimeLogLines({ logs, tailing, options, setOption }: RuntimeLo
 type NoRuntimeLogsProps = {
   tailing: boolean;
   loading: boolean;
+  fullScreen?: boolean;
 };
 
-export function NoRuntimeLogs({ tailing, loading }: NoRuntimeLogsProps) {
+export function NoRuntimeLogs({ tailing, loading, fullScreen }: NoRuntimeLogsProps) {
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
 
-  if (loading) {
-    return <Spinner className="size-6" />;
-  }
-
   return (
-    <>
-      <p className="text-base">
-        <T id="noLogs.expired" values={{ days: quotas.logsRetention }} />
-      </p>
-
-      {organization?.plan !== 'enterprise' && (
-        <p>
-          <T id="noLogs.upgrade" />
-        </p>
+    <div
+      className={clsx(
+        'col h-128 items-center justify-center gap-2 rounded-md border',
+        fullScreen && 'flex-1',
       )}
+    >
+      {loading ? (
+        <Spinner className="size-6" />
+      ) : (
+        <>
+          <p className="text-base">
+            <T id="noLogs.expired" values={{ days: quotas.logsRetention }} />
+          </p>
 
-      {tailing && (
-        <p>
-          <T id="noLogs.tailing" />
-        </p>
+          {organization?.plan !== 'enterprise' && (
+            <p>
+              <T id="noLogs.upgrade" />
+            </p>
+          )}
+
+          {tailing && (
+            <p>
+              <T id="noLogs.tailing" />
+            </p>
+          )}
+        </>
       )}
-    </>
+    </div>
   );
 }
 

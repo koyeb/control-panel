@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@workos-inc/authkit-react';
 import { AnsiUp } from 'ansi_up';
 import { sub } from 'date-fns';
@@ -38,8 +38,9 @@ export type LogsApi = {
 };
 
 export function useLogs({ tail, ansiMode, ...params }: UseLogsParams): LogsApi {
-  const [end, setEnd] = useState(new Date().toISOString());
   const queryClient = useQueryClient();
+
+  const [end, setEnd] = useState(new Date().toISOString());
 
   const regionsMemo = params.regions?.join(':');
   const streamsMemo = params.streams?.join(':');
@@ -52,16 +53,13 @@ export function useLogs({ tail, ansiMode, ...params }: UseLogsParams): LogsApi {
     return () => {
       window.clearTimeout(timeout);
     };
-  }, [
-    queryClient,
-    tail,
-    params.deploymentId,
-    params.instanceId,
-    params.type,
-    regionsMemo,
-    streamsMemo,
-    params.search,
-  ]);
+  }, [params.deploymentId, params.instanceId, params.type, regionsMemo, streamsMemo, params.search]);
+
+  useEffect(() => {
+    if (!tail) {
+      void queryClient.invalidateQueries({ queryKey: ['logsHistory'] });
+    }
+  }, [queryClient, tail]);
 
   const history = useLogsHistory(end, params);
   const stream = useLogsStream(tail, end, params);
@@ -98,6 +96,8 @@ function useLogsHistory(
     refetchOnReconnect: false,
     refetchOnWindowFocus: false,
 
+    placeholderData: keepPreviousData,
+
     queryKey: [
       'logsHistory',
       {
@@ -108,7 +108,6 @@ function useLogsHistory(
         streams,
         search,
         logsRetention,
-        end,
       },
     ],
 

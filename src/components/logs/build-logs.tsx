@@ -1,4 +1,4 @@
-import { Alert, IconButton, MenuItem } from '@koyeb/design-system';
+import { Alert, IconButton, MenuItem, Spinner } from '@koyeb/design-system';
 import clsx from 'clsx';
 import { useEffect } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
@@ -116,24 +116,15 @@ function WaitingForLogs() {
   );
 }
 
-type RuntimeLogLinesProps = {
+type BuildLogLinesProps = {
   logs: LogsApi;
   options: LogsOptions;
   setOption: UseFormSetValue<LogsOptions>;
 };
 
-function BuildLogLines({ logs, options, setOption }: RuntimeLogLinesProps) {
+function BuildLogLines({ logs, options, setOption }: BuildLogLinesProps) {
   if (logs.lines.length === 0) {
-    return (
-      <div
-        className={clsx(
-          'col h-128 items-center justify-center gap-2 rounded-md border',
-          options.fullScreen && 'flex-1',
-        )}
-      >
-        <NoBuildLogs />
-      </div>
-    );
+    return <NoBuildLogs loading={logs.loading} fullScreen={options.fullScreen} />;
   }
 
   return (
@@ -158,18 +149,31 @@ function BuildLogLines({ logs, options, setOption }: RuntimeLogLinesProps) {
   );
 }
 
-function NoBuildLogs() {
+function NoBuildLogs({ loading, fullScreen }: { loading?: boolean; fullScreen?: boolean }) {
   const organization = useOrganization();
   const quotas = useOrganizationQuotas();
 
   return (
-    <>
-      <p className="text-base">
-        <T id="noLogs.expired" values={{ retention: quotas.logsRetention }} />
-      </p>
+    <div
+      className={clsx(
+        'col h-128 items-center justify-center gap-2 rounded-md border',
+        fullScreen && 'flex-1',
+      )}
+    >
+      {loading ? (
+        <Spinner className="size-6" />
+      ) : (
+        <>
+          <p className="text-base">
+            <T id="noLogs.expired" values={{ retention: quotas.logsRetention }} />
+          </p>
 
-      <p>{inArray(organization?.plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}</p>
-    </>
+          <p>
+            {inArray(organization?.plan, ['hobby', 'starter', 'pro', 'scale']) && <T id="noLogs.upgrade" />}
+          </p>
+        </>
+      )}
+    </div>
   );
 }
 
