@@ -81,7 +81,16 @@ function getActivityColor(activity: Activity): Color {
 const verbMapping: Record<Color, string[]> = {
   green: ['created', 'succeeded', 'joined', 'accepted'],
   red: ['deleted', 'failed', 'payment_failed', 'left', 'revoked', 'declined'],
-  blue: ['updated', 'resumed', 'autoscaled', 'payment_succeeded', 'resent', 'attached', 'detached'],
+  blue: [
+    'updated',
+    'resumed',
+    'autoscaled',
+    'manually-scaled',
+    'payment_succeeded',
+    'resent',
+    'attached',
+    'detached',
+  ],
   orange: ['paused'],
   gray: [],
 };

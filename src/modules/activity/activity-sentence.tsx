@@ -1,3 +1,4 @@
+import { RegionFlag } from 'src/components/region-flag';
 import { FormattedPrice } from 'src/intl/formatted';
 import { TranslateEnum, createTranslate } from 'src/intl/translate';
 import { Activity } from 'src/model';
@@ -9,6 +10,7 @@ import {
   isAutoscalingActivity,
   isBudgetThresholdReachedActivity,
   isDeploymentActivity,
+  isManuallyScaledActivity,
   isOrganizationActivity,
   isOrganizationInvitationActivity,
   isOrganizationMemberActivity,
@@ -35,12 +37,20 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
     return <T id="serviceScaled" values={{ direction, previousCount, count }} />;
   }
 
-  if (activity.verb === 'manual_scaling_deleted') {
-    return <T id="manualScalingDeleted" />;
+  if (isManuallyScaledActivity(activity)) {
+    const { count, region } = activity.metadata;
+
+    return (
+      <span className="row items-center gap-1.5">
+        <T id="manuallyScaled" values={{ count }} />
+        <RegionFlag regionId={region} className="size-4" />
+        <span className="uppercase text-dim">{region}</span>
+      </span>
+    );
   }
 
-  if (activity.verb === 'manual_scaling_updated') {
-    return <T id="manualScalingUpdated" />;
+  if (activity.verb === 'manual_scaling_deleted') {
+    return <T id="manualScalingDeleted" />;
   }
 
   if (isAppActivity(activity)) {
