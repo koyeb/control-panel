@@ -76,6 +76,16 @@ export const isAutoscalingActivity = createValidationGuard(
   }),
 );
 
+export const isManuallyScaledActivity = createValidationGuard(
+  z.object({
+    verb: z.literal('manually-scaled'),
+    metadata: z.object({
+      count: z.number(),
+      region: z.string(),
+    }),
+  }),
+);
+
 export const isInvitationObject = createValidationGuard(
   z.object({
     type: z.literal('organization_invitation'),
