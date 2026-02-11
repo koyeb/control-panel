@@ -86,6 +86,12 @@ export const isManuallyScaledActivity = createValidationGuard(
   }),
 );
 
+export const isManuallyScalingDeletedActivity = createValidationGuard(
+  z.object({
+    verb: z.literal('manual_scaling_deleted')
+  }),
+);
+
 export const isInvitationObject = createValidationGuard(
   z.object({
     type: z.literal('organization_invitation'),
