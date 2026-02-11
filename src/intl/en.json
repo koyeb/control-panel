@@ -4,6 +4,7 @@
     "create": "Create",
     "close": "Close",
     "save": "Save",
+    "apply": "Apply",
     "back": "Back",
     "next": "Next",
     "import": "Import",
@@ -709,6 +710,22 @@
           "filters": {
             "regions": "Regions",
             "status": "Status"
+          },
+          "initiateManualScaling": "Manual scaling",
+          "manualScaling": {
+            "label": "Instance count",
+            "removing": "removing {count} per region",
+            "adding": "adding {count} per region",
+            "saved": {
+              "title": "Manual scaling configuration saved to {instances} {instances, plural, =1 {instance} other {instances}} per region",
+              "description": {
+                "nextDeployment": "Changes will take effect at next deployment",
+                "immediate": "Changes take effect immediately",
+                "wakeUp": "Changes will take effect when deployment wakes up"
+              }
+            },
+            "delete": "Reset default scaling",
+            "deleted": "Manual scaling configuration deleted"
           },
           "metadata": {
             "cpu": "CPU",

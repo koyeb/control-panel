@@ -41,6 +41,17 @@ export function useService(serviceId?: string) {
   return useServiceQuery(serviceId).data;
 }
 
+export function useServiceScalingQuery(serviceId: string) {
+  return useQuery({
+    ...apiQuery('get /v1/services/{id}/scale', { path: { id: serviceId } }),
+    select: (data) => data.scalings?.[0] ?? null,
+  });
+}
+
+export function useServiceScaling(serviceId: string) {
+  return useServiceScalingQuery(serviceId).data;
+}
+
 export function useDeploymentsQuery(serviceId: string, statuses?: DeploymentStatus[]) {
   const api = useApi();
 

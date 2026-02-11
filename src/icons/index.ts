@@ -74,6 +74,7 @@ export {
   MenuIcon as IconMenu,
   MessageCircleMoreIcon as IconMessageCircleMore,
   MicrochipIcon as IconMicrochip,
+  MinusIcon as IconMinus,
   MoonIcon as IconMoon,
   NetworkIcon as IconNetwork,
   NewspaperIcon as IconNewspaper,
