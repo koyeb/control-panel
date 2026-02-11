@@ -14,6 +14,7 @@ import {
   isDeploymentObject,
   isDomainObject,
   isInvitationObject,
+  isManuallyScaledActivity,
   isSecretObject,
   isServiceObject,
   isVolumeActivity,
@@ -40,6 +41,27 @@ export function ActivityResources({ activity }: { activity: Activity }) {
           serviceName={serviceName}
           serviceId={serviceId}
           serviceType={definition?.type ? lowerCase(definition.type) : undefined}
+          deleted={deleted}
+        />
+
+        <RegionResource regionId={region} />
+      </div>
+    );
+  }
+
+  if (isManuallyScaledActivity(activity)) {
+    const { deleted } = activity.object;
+    const { region } = activity.metadata;
+    const { id: serviceId, name: serviceName } = activity.object;
+    const { appName, serviceType } = activity.object.metadata;
+
+    return (
+      <div className="row max-w-full flex-wrap gap-x-4 gap-y-2">
+        <ServiceResource
+          appName={appName}
+          serviceName={serviceName}
+          serviceId={serviceId}
+          serviceType={serviceType}
           deleted={deleted}
         />
 

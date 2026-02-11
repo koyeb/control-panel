@@ -83,12 +83,21 @@ export const isManuallyScaledActivity = createValidationGuard(
       count: z.number(),
       region: z.string(),
     }),
-  }),
-);
-
-export const isManuallyScalingDeletedActivity = createValidationGuard(
-  z.object({
-    verb: z.literal('manual_scaling_deleted')
+    object: z.object({
+      id: z.string(),
+      deleted: z.boolean(),
+      name: z.string(),
+      metadata: z.object({
+        appId: z.string(),
+        appName: z.string(),
+        serviceType: z.union([
+          z.literal('web'),
+          z.literal('worker'),
+          z.literal('sandbox'),
+          z.literal('database'),
+        ]),
+      }),
+    }),
   }),
 );
 
