@@ -11,6 +11,7 @@ import {
   isBudgetThresholdReachedActivity,
   isDeploymentActivity,
   isManuallyScaledActivity,
+  isManuallyScalingDeletedActivity,
   isOrganizationActivity,
   isOrganizationInvitationActivity,
   isOrganizationMemberActivity,
@@ -49,8 +50,12 @@ export function ActivitySentence({ activity }: { activity: Activity }) {
     );
   }
 
-  if (activity.verb === 'manual_scaling_deleted') {
-    return <T id="manualScalingDeleted" />;
+  if (isManuallyScalingDeletedActivity(activity)) {
+    return (
+      <span className="row items-center gap-1.5">
+        <T id="manualScalingDeleted" />
+      </span>
+    );
   }
 
   if (isAppActivity(activity)) {
