@@ -72,9 +72,9 @@ export function ManualScaling({ deployment, defaultValue, onChanged }: ManualSca
   return (
     <form
       onSubmit={handleSubmit(form, setScalingMutation.mutateAsync)}
-      className="my-2 row justify-between gap-4 rounded-md bg-muted p-3"
+      className="my-2 col justify-between gap-4 rounded-md bg-muted p-3 md:row"
     >
-      <div className="row items-center gap-2">
+      <div className="col items-center gap-2 md:row">
         <label htmlFor={field.name}>
           <T id="label" />
         </label>
@@ -85,8 +85,8 @@ export function ManualScaling({ deployment, defaultValue, onChanged }: ManualSca
           min={1}
           max={20}
           onChange={(event) => field.onChange(event.target.valueAsNumber)}
-          className="max-w-fit"
-          inputClassName="max-w-10 text-center px-0!"
+          className="md:max-w-fit"
+          inputClassName="md:max-w-10 max-md:h-12 text-center px-0!"
           start={
             <InputButton
               Icon={IconMinus}
@@ -111,10 +111,15 @@ export function ManualScaling({ deployment, defaultValue, onChanged }: ManualSca
 
       {showButtons && (
         <div className="row items-center gap-2">
-          <Button type="reset" color="gray" onClick={onCancel}>
+          <Button type="reset" color="gray" onClick={onCancel} className="flex-1">
             <Translate id="common.cancel" />
           </Button>
-          <Button type="submit" disabled={!form.formState.isDirty} loading={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            disabled={!form.formState.isDirty}
+            loading={form.formState.isSubmitting}
+            className="flex-1"
+          >
             <Translate id="common.apply" />
           </Button>
         </div>
@@ -139,7 +144,7 @@ type InputButtonProps = React.ComponentProps<'button'> & {
 
 function InputButton({ Icon, className, ...props }: InputButtonProps) {
   return (
-    <button type="button" className={clsx('px-2 disabled:text-dim', className)} {...props}>
+    <button type="button" className={clsx('px-4 disabled:text-dim md:px-2', className)} {...props}>
       <Icon className="size-4" />
     </button>
   );
@@ -150,7 +155,7 @@ function CurrentValueInfo({ serviceId, value }: { serviceId: string; value: numb
   const count = value - (currentScaling?.instances ?? 1);
 
   return (
-    <div className={clsx('text-dim', { invisible: Number.isNaN(value) || count === 0 })}>
+    <div className={clsx('text-dim', { hidden: Number.isNaN(value) || count === 0 })}>
       <T id={count > 0 ? 'adding' : 'removing'} values={{ count: Math.abs(count) }} />
     </div>
   );

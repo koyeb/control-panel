@@ -39,35 +39,42 @@ export function DeploymentScaling({ deployment }: { deployment: ComputeDeploymen
 
   return (
     <div id="scaling" className="m-4 mt-0 divide-y rounded-md border">
-      <div className="row flex-wrap items-center gap-4 px-3 py-4">
-        <div className="me-auto font-medium">
+      <div
+        className={clsx(
+          'col flex-wrap justify-between gap-4 px-3 py-4 md:row md:items-center',
+          showManualScaling && 'row items-center',
+        )}
+      >
+        <div className="font-medium">
           <T id="title" />
         </div>
 
-        <FeatureFlag feature="manual-scaling">
-          <Button
-            color="gray"
-            onClick={() => setInitiateManualScaling(true)}
-            className={clsx({ invisible: !isActiveDeployment || showManualScaling })}
-          >
-            <T id="initiateManualScaling" />
-          </Button>
-        </FeatureFlag>
+        <div className="row flex-wrap items-center gap-4">
+          <FeatureFlag feature="manual-scaling">
+            <Button
+              color="gray"
+              onClick={() => setInitiateManualScaling(true)}
+              className={clsx({ 'hidden!': !isActiveDeployment || showManualScaling })}
+            >
+              <T id="initiateManualScaling" />
+            </Button>
+          </FeatureFlag>
 
-        <Controller
-          control={filtersForm.control}
-          name="regions"
-          render={({ field }) => (
-            <RegionsSelector
-              label={<T id="filters.regions" />}
-              regions={deployment.definition.regions}
-              value={field.value}
-              onChange={field.onChange}
-              dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
-              className="min-w-48"
-            />
-          )}
-        />
+          <Controller
+            control={filtersForm.control}
+            name="regions"
+            render={({ field }) => (
+              <RegionsSelector
+                label={<T id="filters.regions" />}
+                regions={deployment.definition.regions}
+                value={field.value}
+                onChange={field.onChange}
+                dropdown={{ floating: { placement: 'bottom-end' }, matchReferenceSize: false }}
+                className="min-w-48"
+              />
+            )}
+          />
+        </div>
       </div>
 
       <div className="col gap-3 p-3">
