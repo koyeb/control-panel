@@ -8,8 +8,8 @@ import { createTranslate } from 'src/intl/translate';
 
 import { ServiceForm } from '../../service-form.types';
 
+import { ScalingConfigSection, ScalingConfigSectionFooter } from './components/scaling-config-section';
 import { ScalingConfigValue } from './components/scaling-config-value';
-import { ScalingConfigSection, ScalingConfigSectionFooter } from './components/scaling-section';
 
 const T = createTranslate('modules.serviceForm.scaling.scaleToZero');
 
