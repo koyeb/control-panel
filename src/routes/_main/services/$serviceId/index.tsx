@@ -22,7 +22,7 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
     deploymentId: search.deploymentId,
   }),
 
-  loader: async ({ context: { authKit, queryClient }, params, deps }) => {
+  loader: async ({ context: { authKit, queryClient }, location, params, deps }) => {
     const api = getApi(authKit.getAccessToken);
     const ensureApiQueryData = createEnsureApiQueryData(queryClient);
 
@@ -34,6 +34,7 @@ export const Route = createFileRoute('/_main/services/$serviceId/')({
       throw redirect({
         to: '/services/$serviceId',
         params,
+        hash: location.hash,
         search: (prev) => ({
           ...prev,
           deploymentId: service.activeDeploymentId ?? service.latestDeploymentId,

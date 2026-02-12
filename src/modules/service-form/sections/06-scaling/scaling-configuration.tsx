@@ -1,12 +1,14 @@
-import { Badge } from '@koyeb/design-system';
+import { Alert, Badge } from '@koyeb/design-system';
 import { useFormContext } from 'react-hook-form';
 
-import { useCatalogInstance } from 'src/api';
+import { useCatalogInstance, useServiceScaling } from 'src/api';
+import { Link } from 'src/components/link';
 import { useFeatureFlag } from 'src/hooks/feature-flag';
 import { createTranslate } from 'src/intl/translate';
 
 import { useScalingRules } from '../../helpers/scaling-rules';
 import { ServiceForm } from '../../service-form.types';
+import { useWatchServiceForm } from '../../use-service-form';
 
 import { AutoscalingConfiguration } from './autoscaling';
 import { ScaleToZeroConfiguration } from './scale-to-zero';
@@ -15,6 +17,8 @@ import { ScalingValues } from './scaling-values';
 const T = createTranslate('modules.serviceForm.scaling');
 
 export function ScalingConfiguration() {
+  const serviceId = useWatchServiceForm('meta.serviceId');
+
   const { watch } = useFormContext<ServiceForm>();
   const instance = useCatalogInstance(watch('instance'));
 
@@ -24,12 +28,14 @@ export function ScalingConfiguration() {
   const min = watch('scaling.min');
   const max = watch('scaling.max');
   const allowLightSleepOnNvidiaGpu = useFeatureFlag('allow-light-sleep-on-nvidia-gpu');
+  const serviceScaling = useServiceScaling(serviceId ?? undefined);
 
   const { onScalingChanged } = useScalingRules();
 
   return (
     <>
       {isFreeInstance && <FreeInstanceInfo />}
+      {serviceScaling && serviceId && <ManualScalingInfo serviceId={serviceId} />}
 
       <ScalingValues
         type={isEcoInstance && !isFreeInstance ? 'fixed' : 'autoscaling'}
@@ -55,4 +61,14 @@ function FreeInstanceInfo() {
       <T id="freeInstanceInfo" />
     </Badge>
   );
+}
+
+function ManualScalingInfo({ serviceId }: { serviceId: string }) {
+  const link = (children: React.ReactNode) => (
+    <Link to="/services/$serviceId" params={{ serviceId }} hash="scaling" className="font-medium text-blue">
+      {children}
+    </Link>
+  );
+
+  return <Alert variant="info" description={<T id="manualScalingEnabled" values={{ link }} />} />;
 }

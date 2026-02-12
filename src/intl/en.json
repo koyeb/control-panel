@@ -1370,6 +1370,7 @@
         "summaryFixedScaling": "Fixed ({value} instance/region)",
         "summaryAutoScaling": "Autoscaling ({min}-{max} instances/region)",
         "freeInstanceInfo": "The free instance scales down to zero after periods of inactivity. Select any paid instance type to configure scaling.",
+        "manualScalingEnabled": "Updates to scaling settings will apply once manual scaling is disabled on the <link>Overview</link> page",
         "fixedLabel": "Instance per region",
         "min": "Minimum",
         "max": "Maximum",

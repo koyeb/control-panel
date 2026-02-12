@@ -41,14 +41,15 @@ export function useService(serviceId?: string) {
   return useServiceQuery(serviceId).data;
 }
 
-export function useServiceScalingQuery(serviceId: string) {
+export function useServiceScalingQuery(serviceId?: string) {
   return useQuery({
-    ...apiQuery('get /v1/services/{id}/scale', { path: { id: serviceId } }),
+    ...apiQuery('get /v1/services/{id}/scale', { path: { id: serviceId! } }),
+    enabled: serviceId !== undefined,
     select: (data) => data.scalings?.[0] ?? null,
   });
 }
 
-export function useServiceScaling(serviceId: string) {
+export function useServiceScaling(serviceId?: string) {
   return useServiceScalingQuery(serviceId).data;
 }
 
