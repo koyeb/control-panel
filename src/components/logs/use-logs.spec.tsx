@@ -107,7 +107,7 @@ describe('useLogs', () => {
 
     expect(result.current).toHaveProperty<LogLine[]>('lines', [
       {
-        id: createDate('2020-01-02'),
+        id: `${createDate('2020-01-02')}-instanceId`,
         date: createDate('2020-01-02'),
         stream: 'stdout',
         instanceId: 'instanceId',
@@ -236,6 +236,26 @@ describe('useLogs', () => {
     act(() => server.error());
 
     await waitFor(() => expect(result.current.error).toHaveProperty('message', 'WebSocket error'));
+  });
+
+  it('refetches the logs history when the parameters change', async () => {
+    logEntries = [createApiLogEntry({ msg: 'Line 1' })];
+
+    const { result, rerender } = renderHook(
+      (deploymentId: string = 'deployment1') => useLogs(params({ deploymentId })),
+      { wrapper },
+    );
+
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.lines).toHaveLength(1);
+
+    logEntries.push(createApiLogEntry({ msg: 'Line 2' }));
+
+    rerender('deployment2');
+
+    await act(async () => {});
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    expect(result.current.lines).toHaveLength(2);
   });
 });
 

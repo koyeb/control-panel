@@ -1,4 +1,5 @@
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryKey, useQueryClient } from '@tanstack/react-query';
+import { dequal } from 'dequal';
 import { useCallback } from 'react';
 
 import { getConfig } from 'src/application/config';
@@ -15,6 +16,18 @@ export function getApiQueryKey<E extends ApiEndpoint>(
   params: ApiRequestParams<E>,
 ): [E, ApiRequestParams<E>] {
   return [endpoint, params];
+}
+
+export function isApiQueryKey<E extends ApiEndpoint>(
+  queryKey: QueryKey,
+  endpoint?: E,
+  params?: ApiRequestParams<E>,
+): queryKey is [E, ApiRequestParams<E>] {
+  return [
+    queryKey.length === 2,
+    endpoint === undefined || queryKey[0] === endpoint,
+    params === undefined || dequal(queryKey[1], params),
+  ].every(Boolean);
 }
 
 export function apiQuery<E extends ApiEndpoint>(endpoint: E, params: ApiRequestParams<E>) {
