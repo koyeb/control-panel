@@ -238,7 +238,7 @@ describe('useLogs', () => {
     await waitFor(() => expect(result.current.error).toHaveProperty('message', 'WebSocket error'));
   });
 
-  it('refetches the logs history when the parameters change', async () => {
+  it('re-fetches the logs history when the parameters change', async () => {
     logEntries = [createApiLogEntry({ msg: 'Line 1' })];
 
     const { result, rerender } = renderHook(
