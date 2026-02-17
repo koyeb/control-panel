@@ -6,7 +6,6 @@ import {
   IconBookMarked,
   IconBookOpen,
   IconChevronRight,
-  IconLightbulb,
   IconMessageCircleMore,
   IconNewspaper,
   IconSignal,
@@ -54,11 +53,6 @@ export function HelpLinks({ collapsed }: { collapsed: boolean }) {
       <ExternalLinkMenuItem openInNewTab href="https://community.koyeb.com">
         <IconMessageCircleMore className="icon" />
         <T id="community" />
-      </ExternalLinkMenuItem>
-
-      <ExternalLinkMenuItem openInNewTab href="https://feedback.koyeb.com">
-        <IconLightbulb className="icon" />
-        <T id="feedback" />
       </ExternalLinkMenuItem>
 
       <ExternalLinkMenuItem openInNewTab href="https://status.koyeb.com">
